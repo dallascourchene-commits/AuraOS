@@ -1,0 +1,169 @@
+name: Verify final Construction renderer integrity
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-construction-g7-g8-integrity-final.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-construction-g7-g8-integrity-final-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  integrity:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Apply final renderer and claims corrections
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              target = Path(path)
+              text = target.read_text(encoding="utf-8")
+              count = text.count(old)
+              if count != 1:
+                  raise RuntimeError(f"{path}: expected one exact span, observed {count}")
+              target.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          renderer = Path("aura_spatial_web/webgl2_renderer.js")
+          text = renderer.read_text(encoding="utf-8")
+          initialize_pattern = re.compile(
+              r'''  initialize\(scenePayload, planPayload\) \{.*?\n  \}\n\n  present\(''',
+              re.DOTALL,
+          )
+          initialize_replacement = '''  initialize(scenePayload, planPayload) {\n    super.initialize(scenePayload, planPayload);\n    this.gl =\n      this.gl ||\n      this.canvas?.getContext?.("webgl2", {\n        antialias: true,\n        alpha: false,\n        powerPreference: "high-performance",\n      });\n    if (!this.gl) {\n      this.scene = null;\n      this.plan = null;\n      this.state = RENDERER_STATES.LOST;\n      throw new Error("WebGL2 unavailable");\n    }\n    try {\n      this.program = createProgram(this.gl, VERTEX, FRAGMENT);\n      this.resources.add(this.program);\n      const entityPositions = new Float32Array(\n        this.scene.entities.flatMap((entity) => entity.position),\n      );\n      const byId = new Map(\n        this.scene.entities.map((entity) => [entity.entity_id, entity.position]),\n      );\n      const linkPositions = new Float32Array(\n        this.scene.links.flatMap((link) => [\n          ...byId.get(link.source_entity_id),\n          ...byId.get(link.target_entity_id),\n        ]),\n      );\n      this.entityBuffer = createBuffer(this.gl, entityPositions);\n      this.buffers.push(this.entityBuffer);\n      this.resources.add(this.entityBuffer);\n      this.linkBuffer = createBuffer(this.gl, linkPositions);\n      this.buffers.push(this.linkBuffer);\n      this.resources.add(this.linkBuffer);\n      return this.status();\n    } catch (error) {\n      for (const buffer of [...this.buffers].reverse()) {\n        this.gl.deleteBuffer?.(buffer);\n      }\n      if (this.program) this.gl.deleteProgram?.(this.program);\n      this.buffers = [];\n      this.entityBuffer = null;\n      this.linkBuffer = null;\n      this.program = null;\n      this.resources.clear();\n      this.entityScreenPositions.clear();\n      this.scene = null;\n      this.plan = null;\n      this.state = RENDERER_STATES.LOST;\n      throw error;\n    }\n  }\n\n  present('''
+          text, count = initialize_pattern.subn(initialize_replacement, text, count=1)
+          if count != 1:
+              raise RuntimeError(f"WebGL2 initialize span count was {count}")
+
+          program_pattern = re.compile(
+              r'''function createProgram\(gl, vertexSource, fragmentSource\) \{.*?\n\}\n\nfunction createBuffer''',
+              re.DOTALL,
+          )
+          program_replacement = '''function createProgram(gl, vertexSource, fragmentSource) {\n  const shaders = [];\n  let program = null;\n  try {\n    const vertex = createShader(gl, gl.VERTEX_SHADER, vertexSource);\n    shaders.push(vertex);\n    const fragment = createShader(gl, gl.FRAGMENT_SHADER, fragmentSource);\n    shaders.push(fragment);\n    program = gl.createProgram();\n    if (!program) throw new Error("unable to allocate program");\n    gl.attachShader(program, vertex);\n    gl.attachShader(program, fragment);\n    gl.linkProgram(program);\n    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {\n      const log = gl.getProgramInfoLog(program);\n      throw new Error(`program link failed: ${log}`);\n    }\n    return program;\n  } catch (error) {\n    if (program) gl.deleteProgram(program);\n    throw error;\n  } finally {\n    for (const shader of shaders) gl.deleteShader(shader);\n  }\n}\n\nfunction createBuffer'''
+          text, count = program_pattern.subn(program_replacement, text, count=1)
+          if count != 1:
+              raise RuntimeError(f"WebGL2 program span count was {count}")
+          renderer.write_text(text, encoding="utf-8")
+
+          webgl_test = Path("tests/js/spatial-webgl2.test.mjs")
+          text = webgl_test.read_text(encoding="utf-8")
+          addition = '''\n\ntest("webgl2 initialization releases partial GPU allocations and fails closed", () => {\n  const gl = fakeGL();\n  const allocate = gl.createBuffer;\n  let allocation = 0;\n  gl.createBuffer = () => {\n    allocation += 1;\n    return allocation === 2 ? null : allocate();\n  };\n  const renderer = new WebGL2Renderer({ gl });\n  assert.throws(\n    () => renderer.initialize(sceneFixture(), planFixture("WEBGL2")),\n    /unable to allocate buffer/,\n  );\n  assert.equal(renderer.status().state, "LOST");\n  assert.equal(renderer.status().resource_count, 0);\n  assert.equal(gl.calls.filter((call) => call[0] === "deleteBuffer").length, 1);\n  assert.equal(gl.calls.filter((call) => call[0] === "deleteProgram").length, 1);\n});\n'''
+          if "releases partial GPU allocations" not in text:
+              webgl_test.write_text(text + addition, encoding="utf-8")
+
+          app = Path("aura_spatial_web/construction_demo_app.js")
+          text = app.read_text(encoding="utf-8")
+          if 'setRepresentationMode("SPLATS")' not in text:
+              replace = '''  await state.renderer.initialize(scene, packet.render_plan, {\n    meshPayloads,\n    gaussianPayloads,\n  });\n  state.renderer.setRepresentationMode("SPLATS");\n  document.querySelectorAll("button[data-mode]").forEach((button) => {\n    const supported = button.dataset.mode === "SPLATS";\n    button.disabled = !supported;\n    button.classList.toggle("active", supported);\n    if (!supported) {\n      button.title = "Browser GLB decoding and mesh drawing are not implemented; mode is fail-closed";\n    }\n  });\n  return state.renderer.status();'''
+              original = '''  await state.renderer.initialize(scene, packet.render_plan, {\n    meshPayloads,\n    gaussianPayloads,\n  });\n  return state.renderer.status();'''
+              if text.count(original) != 1:
+                  raise RuntimeError("Construction renderer initialization span changed")
+              text = text.replace(original, replace, 1)
+              app.write_text(text, encoding="utf-8")
+
+          review_test = Path("tests/js/spatial-construction-review-regressions.test.mjs")
+          text = review_test.read_text(encoding="utf-8")
+          addition = '''\n\ntest("Construction recording UI advertises only implemented representation modes", async () => {\n  const { readFile } = await import("node:fs/promises");\n  const source = await readFile(\n    new URL("../../aura_spatial_web/construction_demo_app.js", import.meta.url),\n    "utf8",\n  );\n  assert.match(source, /setRepresentationMode\("SPLATS"\)/);\n  assert.match(source, /button\.disabled = !supported/);\n  assert.match(source, /Browser GLB decoding and mesh drawing are not implemented/);\n});\n'''
+          if "advertises only implemented representation modes" not in text:
+              review_test.write_text(text + addition, encoding="utf-8")
+
+          marker = "<!-- AURA_CONSTRUCTION_G7_G8 -->"
+          readme = Path("README.md")
+          prefix = readme.read_text(encoding="utf-8").split(marker, 1)[0].rstrip()
+          section = '''<!-- AURA_CONSTRUCTION_G7_G8 -->
+## Construction Arena G0–G8 — complete refactor
+
+The Construction Arena implementation covers architecture/dependency lock; fictional BIM acquisition and immutable asset contracts; deterministic IFC-to-storey GLB/SVG compilation; bounded degree-0 Gaussian PLY/SPZ compilation; an asset-bound synthetic Construction fixture; Spatial Projection V2; local WebGL2 Gaussian/graph/overlay composition; and a deterministic cinematic director.
+
+Launch the local video-ready fallback:
+
+```bash
+python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --serve
+```
+
+Open `http://127.0.0.1:8767/demo/construction?tour=full`. The recording client renders the deterministic Gaussian fallback plus graph and overlay context. Mesh contracts remain implemented, but the browser disables mesh/hybrid modes until repository-owned GLB decoding and a real mesh draw pass exist. An admitted real asset pack can be compiled and validated into a packet, but the browser refuses to substitute fallback geometry for real digests.
+
+The source BIM is fictional and attributed under CC BY 4.0. All project records are synthetic. The Arena cannot authorize physical work, payment, access, professional certification, legal/regulatory action, survey truth, production mutation, publication, or merge. Unsafe drilling remains hard-blocked and the safe alternative remains human-review-only. See [`docs/AURA_CONSTRUCTION_ARENA_G7_G8.md`](docs/AURA_CONSTRUCTION_ARENA_G7_G8.md).
+'''
+          readme.write_text(prefix + "\n\n" + section, encoding="utf-8")
+
+          guide = Path("USER_GUIDE.md")
+          prefix = guide.read_text(encoding="utf-8").split(marker, 1)[0].rstrip()
+          section = '''<!-- AURA_CONSTRUCTION_G7_G8 -->
+## 27. Run the cinematic Construction Arena demo
+
+Compile the deterministic fallback packet with `python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --output /tmp/aura-construction-demo.packet.json`. Launch the loopback-only interface with `python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --serve`, then open `http://127.0.0.1:8767/demo/construction?tour=full`.
+
+Supported tours are `full`, `blocked-work`, `alternatives`, and `timeline`. Controls include orbit, zoom, storey isolation, show all, explode/collapse, splats, floor plans, work status, trades, blockers, budgets, inspections, dependencies, synthetic rules, timeline scrub, picking, reset, play, pause, next step, and dissolve. Mesh and hybrid controls are disabled until a browser GLB decoder and real mesh draw pass exist.
+
+Use `--asset-pack demo_assets/construction_tuwien/generated/asset-pack.manifest.json` for deterministic packet compilation and contract validation only. The browser currently refuses admitted real packs because GLB/SPZ browser decoding is not implemented; it never substitutes fabricated geometry. Omit `--asset-pack` for the deterministic five-storey recording fallback. The fallback is presentation-only and is not survey geometry.
+
+Every packet keeps physical work, payment, access, certification, legal/regulatory authority, survey authority, renderer authority, automatic execution, publication, and merge false. Human review remains required.
+'''
+          guide.write_text(prefix + "\n\n" + section, encoding="utf-8")
+
+          docs = Path("docs/AURA_CONSTRUCTION_ARENA_G7_G8.md")
+          text = docs.read_text(encoding="utf-8")
+          text = text.replace(
+              "→ G6 local WebGL2 mesh/Gaussian/overlay composition",
+              "→ G6 local WebGL2 Gaussian/graph/overlay composition with fail-closed mesh contracts",
+              1,
+          )
+          text = text.replace("the hybrid building", "the deterministic Gaussian building view", 1)
+          text = re.sub(
+              r'''Use an admitted generated asset pack when available:.*?## Director tours''',
+              '''Use an admitted generated asset pack for deterministic packet compilation and contract validation. The browser recording client refuses a real pack until repository-owned GLB/SPZ browser decoders and a real mesh draw pass are implemented. It never replaces admitted real-pack digests with fallback geometry. Without a pack path, the director uses the deterministic five-storey Gaussian recording fallback; it is not survey geometry.\n\n## Director tours''',
+              text,
+              count=1,
+              flags=re.DOTALL,
+          )
+          text = re.sub(
+              r'''The local browser surface supports:\n\n```text\n.*?```\n\nExploded transforms''',
+              '''The local browser surface supports:\n\n```text\norbit · zoom · storey isolation · show all · explode · collapse\nsplats · mesh/hybrid visibly disabled until real browser decoding exists\nfloor plans · status · trades · blockers · budgets · inspections\ndependencies · synthetic rules · timeline scrub · picking · reset\nguided tour · pause · next step · dissolve\n```\n\nExploded transforms''',
+              text,
+              count=1,
+              flags=re.DOTALL,
+          )
+          docs.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Verify renderer integrity and honest UI claims
+        run: |
+          node --check aura_spatial_web/webgl2_renderer.js
+          node --check aura_spatial_web/construction_demo_app.js
+          node --test tests/js/spatial-webgl2.test.mjs
+          node --test tests/js/spatial-construction-demo.test.mjs
+          node --test tests/js/spatial-construction-review-regressions.test.mjs
+          git diff --check
+
+      - name: Commit and publish verified integrity fixes
+        env:
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS Review Repair Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add README.md USER_GUIDE.md docs/AURA_CONSTRUCTION_ARENA_G7_G8.md \
+            aura_spatial_web/webgl2_renderer.js aura_spatial_web/construction_demo_app.js \
+            tests/js/spatial-webgl2.test.mjs tests/js/spatial-construction-review-regressions.test.mjs
+          git commit -m "fix(g8): close final renderer integrity gaps"
+          git fetch --no-tags origin "$TARGET_BRANCH"
+          git rebase "origin/$TARGET_BRANCH"
+          git push origin HEAD:"$TARGET_BRANCH"
