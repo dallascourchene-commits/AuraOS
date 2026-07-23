@@ -10,6 +10,6 @@ It serves only:
 
 It rejects path traversal, encoded traversal, backslash paths, NUL-containing paths, and all other repository locations. Responses carry no-store caching, content-type hardening, a no-referrer policy, and a restrictive Content Security Policy.
 
-The exact local static boundary is regression-tested before final review and merge.
+The exact local static boundary is regression-tested before final review, exact-head verification, and merge.
 
 The server grants no Construction, filesystem-mutation, payment, access, professional, legal, regulatory, survey, publication, or merge authority.
