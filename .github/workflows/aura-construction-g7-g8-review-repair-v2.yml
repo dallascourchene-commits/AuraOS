@@ -1,0 +1,179 @@
+name: Finalize Construction G7-G8 review repairs
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-construction-g7-g8-review-repair-v2.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-construction-g7-g8-review-repair-v2-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Apply reviewed repairs and additional boundary findings
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          workflow = Path('.github/workflows/aura-construction-g7-g8-review-repair.yml')
+          source = workflow.read_text(encoding='utf-8')
+          marker = "          python - <<'PY'\n"
+          start = source.index(marker) + len(marker)
+          end = source.index("\n          PY\n\n      - name: Install focused", start)
+          patch_script = textwrap.dedent(source[start:end])
+          exec(compile(patch_script, str(workflow), 'exec'), {})
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              target = Path(path)
+              text = target.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise RuntimeError(f'{path}: expected one source span, observed {count}')
+              target.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          # A single prior-disposer failure is terminal but is not an AggregateError.
+          replace_once(
+              'tests/js/spatial-construction-demo.test.mjs',
+              '''test("Construction mesh cleanup failure is terminal and preserves both errors", async () => {\n  const { scene } = constructionFixture();\n  const pass = new ConstructionMeshPass({\n    drawMeshPass: async () => () => { throw new Error("forced mesh cleanup failure"); },\n  });\n  pass.initialize(scene, [{\n    asset_id: "asset:mesh",\n    source_digest: "1".repeat(64),\n    decoded_byte_length: 256,\n    resource: { local: true },\n  }]);\n  await pass.present();\n  await assert.rejects(\n    pass.present(),\n    (error) => error instanceof AggregateError && /cleanup/.test(error.message),\n  );\n  assert.equal(pass.status().disposed, true);\n  assert.equal(pass.status().initialized, false);\n});\n''',
+              '''test("Construction mesh cleanup failure is terminal", async () => {\n  const { scene } = constructionFixture();\n  const pass = new ConstructionMeshPass({\n    drawMeshPass: async () => () => { throw new Error("forced mesh cleanup failure"); },\n  });\n  pass.initialize(scene, [{\n    asset_id: "asset:mesh",\n    source_digest: "1".repeat(64),\n    decoded_byte_length: 256,\n    resource: { local: true },\n  }]);\n  await pass.present();\n  await assert.rejects(pass.present(), /forced mesh cleanup failure/);\n  assert.equal(pass.status().disposed, true);\n  assert.equal(pass.status().initialized, false);\n});\n''',
+          )
+
+          # GET and HEAD share one allowlisted router; HEAD cannot probe repository metadata.
+          director = Path('aura_construction_demo_director.py')
+          text = director.read_text(encoding='utf-8')
+          start_marker = '    def do_GET(self) -> None:\n'
+          end_marker = '    def log_message(self, format: str, *args: Any) -> None:\n'
+          start = text.index(start_marker)
+          end = text.index(end_marker, start)
+          replacement = '''    def _route_static_request(self) -> bool:\n        parsed = urlparse(self.path)\n        if parsed.path in {"/demo/construction", "/demo/construction/"}:\n            self.path = "/aura_spatial_web/construction_demo.html"\n            return True\n        safe_file = _safe_construction_demo_static_file(\n            Path(self.directory), self.path\n        )\n        if safe_file is None:\n            self.send_error(404)\n            return False\n        self.path, _ = safe_file\n        return True\n\n    def _send_packet(self, *, include_body: bool) -> None:\n        self.send_response(200)\n        self.send_header("Content-Type", "application/json; charset=utf-8")\n        self.send_header("Content-Length", str(len(self.packet)))\n        self.end_headers()\n        if include_body:\n            self.wfile.write(self.packet)\n\n    def do_GET(self) -> None:\n        if urlparse(self.path).path == "/api/construction-demo":\n            self._send_packet(include_body=True)\n            return\n        if self._route_static_request():\n            super().do_GET()\n\n    def do_HEAD(self) -> None:\n        if urlparse(self.path).path == "/api/construction-demo":\n            self._send_packet(include_body=False)\n            return\n        if self._route_static_request():\n            super().do_HEAD()\n\n'''
+          director.write_text(text[:start] + replacement + text[end:], encoding='utf-8')
+
+          # Existing source bytes are reusable only with the complete pinned manifest identity.
+          replace_once(
+              'scripts/aura_fetch_construction_demo_source.py',
+              '''    parsed = ConstructionDemoSourceManifest.from_dict(manifest)\n    if parsed.observed_sha256 != PINNED_SHA256 or parsed.source_byte_length != PINNED_BYTE_LENGTH:\n        raise ValueError("existing source bytes differ from the pinned Construction demo artifact")\n''',
+              '''    parsed = ConstructionDemoSourceManifest.from_dict(manifest)\n    expected = ConstructionDemoSourceManifest.from_dict(\n        _manifest(repo_root, parsed.downloaded_at)\n    )\n    if parsed != expected:\n        raise ValueError("existing source manifest differs from the pinned Construction demo identity")\n    if parsed.observed_sha256 != PINNED_SHA256 or parsed.source_byte_length != PINNED_BYTE_LENGTH:\n        raise ValueError("existing source bytes differ from the pinned Construction demo artifact")\n''',
+          )
+
+          # Add a validly re-digested but false DOI regression.
+          test_path = Path('tests/test_aura_fetch_construction_demo_source.py')
+          test_text = test_path.read_text(encoding='utf-8')
+          addition = '''\n\ndef test_acquire_source_refuses_validly_redigested_false_manifest_identity(\n    monkeypatch: pytest.MonkeyPatch,\n    tmp_path: Path,\n) -> None:\n    payload = b"pinned-manifest"\n    _pin_payload(monkeypatch, payload)\n    fetcher.acquire_source(\n        repo_root=tmp_path,\n        output_dir=Path("assets"),\n        record_doi=fetcher.PINNED_RECORD_DOI,\n        accept_network_download=True,\n        opener=_Opener(_Response(payload)),\n    )\n    manifest_path = tmp_path / "assets" / "source-manifest.json"\n    forged = json.loads(manifest_path.read_text(encoding="utf-8"))\n    forged["doi"] = "10.0000/forged"\n    forged.pop("source_manifest_digest", None)\n    contract = fetcher.ConstructionDemoSourceManifest.from_dict(forged)\n    manifest_path.write_text(\n        json.dumps(contract.to_dict(), sort_keys=True, indent=2) + "\\n",\n        encoding="utf-8",\n    )\n    with pytest.raises(ValueError, match="manifest differs"):\n        fetcher.acquire_source(\n            repo_root=tmp_path,\n            output_dir=Path("assets"),\n            record_doi=fetcher.PINNED_RECORD_DOI,\n            accept_network_download=True,\n            opener=_Opener(_Response(payload)),\n        )\n'''
+          if 'validly_redigested_false_manifest_identity' not in test_text:
+              test_path.write_text(test_text + addition, encoding='utf-8')
+
+          # Integration test both HTTP verbs and repeated encoding against a real handler.
+          test_path = Path('tests/test_aura_construction_demo_director.py')
+          text = test_path.read_text(encoding='utf-8')
+          text = text.replace(
+              'import json\nfrom pathlib import Path\n',
+              'from functools import partial\nfrom http.client import HTTPConnection\nfrom http.server import ThreadingHTTPServer\nimport json\nfrom pathlib import Path\nimport threading\n',
+              1,
+          )
+          text = text.replace(
+              '    _safe_construction_demo_static_file,\n',
+              '    _ConstructionDemoHandler,\n    _safe_construction_demo_static_file,\n',
+              1,
+          )
+          addition = '''\n\ndef test_g7_http_get_and_head_share_the_static_allowlist(tmp_path: Path) -> None:\n    spatial = tmp_path / "aura_spatial_web"\n    spatial.mkdir()\n    (spatial / "construction_demo.html").write_text("demo", encoding="utf-8")\n    (tmp_path / "README.md").write_text("private", encoding="utf-8")\n    handler_type = type(\n        "TestConstructionDemoHandler",\n        (_ConstructionDemoHandler,),\n        {"packet": b"{}\\n"},\n    )\n    server = ThreadingHTTPServer(\n        ("127.0.0.1", 0),\n        partial(handler_type, directory=str(tmp_path)),\n    )\n    thread = threading.Thread(target=server.serve_forever, daemon=True)\n    thread.start()\n    try:\n        connection = HTTPConnection("127.0.0.1", server.server_port, timeout=5)\n        for method, path, expected in (\n            ("GET", "/demo/construction", 200),\n            ("HEAD", "/demo/construction", 200),\n            ("GET", "/aura_spatial_web/%252e%252e/README.md", 404),\n            ("HEAD", "/README.md", 404),\n        ):\n            connection.request(method, path)\n            response = connection.getresponse()\n            response.read()\n            assert response.status == expected\n        connection.close()\n    finally:\n        server.shutdown()\n        server.server_close()\n        thread.join(timeout=5)\n'''
+          if 'http_get_and_head_share_the_static_allowlist' not in text:
+              test_path.write_text(text + addition, encoding='utf-8')
+          PY
+
+      - name: Install focused dependencies
+        run: |
+          python -m pip install -q --disable-pip-version-check -r requirements.txt
+          python -m pip install -q --disable-pip-version-check pytest ruff
+
+      - name: Verify Python source and provenance
+        run: |
+          python -m py_compile \
+            aura_construction_demo_director.py \
+            aura_spatial_cli.py \
+            scripts/aura_fetch_construction_demo_source.py
+          ruff check \
+            aura_construction_demo_director.py \
+            aura_spatial_cli.py \
+            scripts/aura_fetch_construction_demo_source.py \
+            tests/test_aura_construction_demo_director.py \
+            tests/test_aura_spatial_cli_construction_security.py \
+            tests/test_aura_fetch_construction_demo_source.py
+          python -m pytest -q --tb=short tests/test_aura_construction_demo_director.py
+          python -m pytest -q --tb=short tests/test_aura_spatial_cli_construction_security.py
+          python -m pytest -q --tb=short tests/test_aura_fetch_construction_demo_source.py
+
+      - name: Verify JavaScript syntax
+        run: |
+          node --check aura_spatial_web/construction_demo_app.js
+          node --check aura_spatial_web/construction_mesh_pass.js
+          node --check aura_spatial_web/construction_overlay_pass.js
+          node --check aura_spatial_web/construction_scene_renderer.js
+          node --check aura_spatial_web/gaussian_renderer.js
+          node --check aura_spatial_web/webgl2_gaussian_pass.js
+
+      - name: Verify Construction renderer contracts
+        run: node --test tests/js/spatial-construction-demo.test.mjs
+
+      - name: Verify Construction review regressions
+        run: node --test tests/js/spatial-construction-review-regressions.test.mjs
+
+      - name: Verify Gaussian covariance regression
+        run: node --test tests/js/spatial-gaussian-covariance.test.mjs
+
+      - name: Publish verified repair commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS Review Repair Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            aura_construction_demo_director.py \
+            aura_spatial_cli.py \
+            aura_spatial_web/construction_demo_app.js \
+            aura_spatial_web/construction_mesh_pass.js \
+            aura_spatial_web/construction_overlay_pass.js \
+            aura_spatial_web/construction_scene_renderer.js \
+            aura_spatial_web/gaussian_renderer.js \
+            aura_spatial_web/webgl2_gaussian_pass.js \
+            scripts/aura_fetch_construction_demo_source.py \
+            tests/test_aura_construction_demo_director.py \
+            tests/test_aura_spatial_cli_construction_security.py \
+            tests/test_aura_fetch_construction_demo_source.py \
+            tests/js/spatial-construction-demo.test.mjs \
+            tests/js/spatial-construction-review-regressions.test.mjs
+          git commit -m "fix(g8): resolve adversarial Construction review findings"
+          git fetch --no-tags origin "$TARGET_BRANCH"
+          if ! git merge-base --is-ancestor "$EXPECTED_HEAD" "origin/$TARGET_BRANCH"; then
+            echo "branch moved by a non-descendant source change" >&2
+            exit 1
+          fi
+          git rebase "origin/$TARGET_BRANCH"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            push origin HEAD:"$TARGET_BRANCH"
