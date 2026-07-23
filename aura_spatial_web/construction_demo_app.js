@@ -22,6 +22,8 @@ const state = {
   tourIndex: 0,
   playing: false,
   paused: false,
+  stepInFlight: false,
+  dissolving: false,
   disposed: false,
 };
 
@@ -182,13 +184,13 @@ function buildControls() {
     await present();
   });
 
-  $("#play-tour").addEventListener("click", () => playTour());
+  $("#play-tour").addEventListener("click", () => { void playTour(); });
   $("#pause-tour").addEventListener("click", () => {
     state.paused = true;
     $("#tour-status").textContent = "Paused";
   });
-  $("#next-step").addEventListener("click", () => runNextStep());
-  $("#dissolve").addEventListener("click", () => dissolve());
+  $("#next-step").addEventListener("click", () => { void runNextStep(); });
+  $("#dissolve").addEventListener("click", () => { void dissolve(); });
 }
 
 async function present() {
@@ -306,23 +308,57 @@ async function applyStep(step) {
   await present();
 }
 
+function reportUiError(error) {
+  console.error(error);
+  const message = error instanceof Error ? error.message : String(error);
+  $("#scene-state").textContent = "Failed closed";
+  $("#selected-card").textContent = message;
+  $("#tour-status").textContent = "Presentation stopped after a verified error";
+}
+
 async function runNextStep() {
   const steps = state.packet?.tour_steps || [];
-  if (!steps.length || state.tourIndex >= steps.length) return;
-  const step = steps[state.tourIndex++];
-  await applyStep(step);
+  if (
+    state.playing ||
+    state.stepInFlight ||
+    state.disposed ||
+    !steps.length ||
+    state.tourIndex >= steps.length
+  ) return;
+  const step = steps[state.tourIndex];
+  state.stepInFlight = true;
+  try {
+    await applyStep(step);
+    state.tourIndex += 1;
+  } catch (error) {
+    state.paused = true;
+    reportUiError(error);
+  } finally {
+    state.stepInFlight = false;
+  }
 }
 
 async function playTour() {
-  if (state.playing || state.disposed) return;
+  if (state.playing || state.stepInFlight || state.disposed) return;
   state.playing = true;
   state.paused = false;
   try {
     while (state.tourIndex < state.packet.tour_steps.length && !state.paused && !state.disposed) {
-      const step = state.packet.tour_steps[state.tourIndex++];
-      await applyStep(step);
-      if (!state.paused && !state.disposed) await sleep(Math.min(4000, Math.max(250, step.duration_ms)));
+      const step = state.packet.tour_steps[state.tourIndex];
+      state.stepInFlight = true;
+      try {
+        await applyStep(step);
+        state.tourIndex += 1;
+      } finally {
+        state.stepInFlight = false;
+      }
+      if (!state.paused && !state.disposed) {
+        await sleep(Math.min(4000, Math.max(250, step.duration_ms)));
+      }
     }
+  } catch (error) {
+    state.paused = true;
+    reportUiError(error);
   } finally {
     state.playing = false;
     if (!state.disposed && state.tourIndex >= state.packet.tour_steps.length) {
@@ -332,21 +368,35 @@ async function playTour() {
 }
 
 async function dissolve() {
-  if (!state.renderer || state.disposed) return;
-  await state.renderer.dispose();
+  if (!state.renderer || state.disposed || state.dissolving) return;
+  state.dissolving = true;
+  state.playing = false;
+  state.paused = true;
   state.disposed = true;
-  $("#scene-state").textContent = "Dissolved";
-  $("#tour-status").textContent = "Renderer released · zero active presentation resources";
-  $("#intent-line").textContent = "Arena dissolved. Source geometry remained immutable.";
   document.querySelectorAll("button, input").forEach((control) => {
     if (control.id !== "reset") control.disabled = true;
   });
+  try {
+    await state.renderer.dispose();
+    $("#scene-state").textContent = "Dissolved";
+    $("#tour-status").textContent = "Renderer released · zero active presentation resources";
+    $("#intent-line").textContent = "Arena dissolved. Source geometry remained immutable.";
+  } catch (error) {
+    reportUiError(error);
+  } finally {
+    state.dissolving = false;
+  }
 }
 
 async function main() {
   const response = await fetch("/api/construction-demo", { cache: "no-store" });
   if (!response.ok) throw new Error(`Construction demo packet failed: ${response.status}`);
   state.packet = await response.json();
+  if (state.packet.fallback_asset_pack !== true) {
+    throw new Error(
+      "Generated asset-pack browser decoding is not implemented; refusing synthetic geometry substitution",
+    );
+  }
   $("#attribution").textContent = state.packet.attribution;
   resizeCanvas();
   const canvas = $("#construction-canvas");
@@ -366,7 +416,7 @@ async function main() {
   const requestedTour = new URLSearchParams(globalThis.location.search).get("tour");
   if (requestedTour) {
     await sleep(650);
-    playTour();
+    void playTour();
   }
 }
 

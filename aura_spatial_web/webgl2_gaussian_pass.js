@@ -206,25 +206,29 @@ function compileShader(gl, type, source) {
 }
 
 function createProgram(gl) {
-  const vertex = compileShader(gl, gl.VERTEX_SHADER, VERTEX);
-  const fragment = compileShader(gl, gl.FRAGMENT_SHADER, FRAGMENT);
-  const program = gl.createProgram();
-  if (!program) {
-    gl.deleteShader(vertex);
-    gl.deleteShader(fragment);
-    throw new Error("unable to allocate Gaussian program");
+  const shaders = [];
+  let program = null;
+  try {
+    const vertex = compileShader(gl, gl.VERTEX_SHADER, VERTEX);
+    shaders.push(vertex);
+    const fragment = compileShader(gl, gl.FRAGMENT_SHADER, FRAGMENT);
+    shaders.push(fragment);
+    program = gl.createProgram();
+    if (!program) throw new Error("unable to allocate Gaussian program");
+    gl.attachShader(program, vertex);
+    gl.attachShader(program, fragment);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      const log = gl.getProgramInfoLog(program);
+      throw new Error(`Gaussian program link failed: ${log}`);
+    }
+    return program;
+  } catch (error) {
+    if (program) gl.deleteProgram(program);
+    throw error;
+  } finally {
+    for (const shader of shaders) gl.deleteShader(shader);
   }
-  gl.attachShader(program, vertex);
-  gl.attachShader(program, fragment);
-  gl.linkProgram(program);
-  gl.deleteShader(vertex);
-  gl.deleteShader(fragment);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    const log = gl.getProgramInfoLog(program);
-    gl.deleteProgram(program);
-    throw new Error(`Gaussian program link failed: ${log}`);
-  }
-  return program;
 }
 
 function createBuffer(gl, data) {
@@ -327,11 +331,15 @@ export function createWebGL2GaussianPass({
         gl,
         new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
       );
+      buffers.push(corner);
       const position = createBuffer(gl, gathered.positions);
+      buffers.push(position);
       const rotation = createBuffer(gl, gathered.rotations);
+      buffers.push(rotation);
       const scaleBuffer = createBuffer(gl, gathered.scales);
+      buffers.push(scaleBuffer);
       const color = createBuffer(gl, gathered.colors);
-      buffers.push(corner, position, rotation, scaleBuffer, color);
+      buffers.push(color);
       bindAttribute(gl, program, "a_corner", corner, 2, 0);
       bindAttribute(gl, program, "a_position", position, 3, 1);
       bindAttribute(gl, program, "a_rotation", rotation, 4, 1);
@@ -363,6 +371,9 @@ export function createWebGL2GaussianPass({
       if (vao) gl.deleteVertexArray?.(vao);
       if (program) gl.deleteProgram?.(program);
       throw error;
+    } finally {
+      gl.depthMask?.(true);
+      gl.bindVertexArray?.(null);
     }
 
     return Object.freeze({

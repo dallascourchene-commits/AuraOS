@@ -329,3 +329,17 @@ test("Construction renderer matches canonical unit-scaled frame composition", as
   }
   await renderer.dispose();
 });
+
+
+test("Construction demo browser refuses real-pack synthetic substitution and serializes tour steps", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const source = await readFile(
+    new URL("../../aura_spatial_web/construction_demo_app.js", import.meta.url),
+    "utf8",
+  );
+  assert.match(source, /fallback_asset_pack !== true/);
+  assert.match(source, /refusing synthetic geometry substitution/);
+  assert.match(source, /stepInFlight/);
+  assert.match(source, /state\.tourIndex \+= 1/);
+  assert.doesNotMatch(source, /state\.tourIndex\+\+/);
+});

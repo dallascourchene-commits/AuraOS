@@ -1,13 +1,19 @@
 from __future__ import annotations
 
+from functools import partial
+from http.client import HTTPConnection
+from http.server import ThreadingHTTPServer
 import json
 from pathlib import Path
+import threading
 
 import pytest
 
 from aura_construction_demo_director import (
     CONSTRUCTION_DEMO_TOURS,
     FALLBACK_GAUSSIAN_REPRESENTATION_DIGEST,
+    _ConstructionDemoHandler,
+    _safe_construction_demo_static_file,
     _safe_construction_demo_static_path,
     build_fallback_construction_demo_asset_pack,
     compile_construction_demo_packet,
@@ -46,8 +52,7 @@ def test_g7_full_tour_packet_is_deterministic_and_review_only() -> None:
     gaussian_assets = [item for item in first["scene"]["assets"] if item["asset_type"] == "GAUSSIAN_SPLAT"]
     assert gaussian_assets
     assert all(
-        item["metadata"]["representation_digest"] == FALLBACK_GAUSSIAN_REPRESENTATION_DIGEST
-        for item in gaussian_assets
+        item["metadata"]["representation_digest"] == FALLBACK_GAUSSIAN_REPRESENTATION_DIGEST for item in gaussian_assets
     )
     assert all(item["metadata"]["gaussian_sh_degree"] == 0 for item in gaussian_assets)
 
@@ -79,9 +84,7 @@ def test_g7_rejects_unknown_tour() -> None:
 
 def test_g7_local_static_boundary_rejects_repository_exposure() -> None:
     assert (
-        _safe_construction_demo_static_path(
-            "/aura_spatial_web/construction_demo.html"
-        )
+        _safe_construction_demo_static_path("/aura_spatial_web/construction_demo.html")
         == "/aura_spatial_web/construction_demo.html"
     )
     assert (
@@ -94,7 +97,55 @@ def test_g7_local_static_boundary_rejects_repository_exposure() -> None:
         "/README.md",
         "/../README.md",
         "/%2e%2e/README.md",
+        "/aura_spatial_web/%252e%252e/README.md",
+        "/aura_spatial_web/%25252e%25252e/README.md",
         "/aura_spatial_web/../README.md",
         "\\README.md",
     ):
         assert _safe_construction_demo_static_path(rejected) is None
+
+
+def test_g7_local_static_boundary_rejects_symlink_escape(tmp_path: Path) -> None:
+    spatial = tmp_path / "aura_spatial_web"
+    generated = tmp_path / "demo_assets" / "construction_tuwien" / "generated"
+    spatial.mkdir(parents=True)
+    generated.mkdir(parents=True)
+    outside = tmp_path / "private.txt"
+    outside.write_text("secret", encoding="utf-8")
+    link = spatial / "escape.txt"
+    try:
+        link.symlink_to(outside)
+    except (OSError, NotImplementedError):
+        pytest.skip("symlink creation is unavailable")
+    assert _safe_construction_demo_static_file(tmp_path, "/aura_spatial_web/escape.txt") is None
+
+
+def test_g7_http_get_and_head_share_the_static_allowlist(tmp_path: Path) -> None:
+    spatial = tmp_path / "aura_spatial_web"
+    spatial.mkdir()
+    (spatial / "construction_demo.html").write_text("demo", encoding="utf-8")
+    (tmp_path / "README.md").write_text("private", encoding="utf-8")
+    handler_type = type("TestConstructionDemoHandler", (_ConstructionDemoHandler,), {"packet": b"{}\n"})
+    server = ThreadingHTTPServer(
+        ("127.0.0.1", 0),
+        partial(handler_type, directory=str(tmp_path)),
+    )
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        connection = HTTPConnection("127.0.0.1", server.server_port, timeout=5)
+        for method, path, expected in (
+            ("GET", "/demo/construction", 200),
+            ("HEAD", "/demo/construction", 200),
+            ("GET", "/aura_spatial_web/%252e%252e/README.md", 404),
+            ("HEAD", "/README.md", 404),
+        ):
+            connection.request(method, path)
+            response = connection.getresponse()
+            response.read()
+            assert response.status == expected
+        connection.close()
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=5)

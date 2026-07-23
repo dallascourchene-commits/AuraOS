@@ -40,9 +40,7 @@ from aura_spatial_render_plan import compile_spatial_device_profile, negotiate_s
 
 CONSTRUCTION_DEMO_DIRECTOR_VERSION = "AURA_CONSTRUCTION_DEMO_DIRECTOR_V1"
 CONSTRUCTION_DEMO_TOURS = ("full", "blocked-work", "alternatives", "timeline")
-FALLBACK_GAUSSIAN_REPRESENTATION_DIGEST = (
-    "5e4620fc5ea92315714eaf3bfe0247f4a18f6ed51997efb9c5c389d20536d7b7"
-)
+FALLBACK_GAUSSIAN_REPRESENTATION_DIGEST = "5e4620fc5ea92315714eaf3bfe0247f4a18f6ed51997efb9c5c389d20536d7b7"
 
 
 @dataclass(frozen=True)
@@ -135,9 +133,7 @@ def build_fallback_construction_demo_asset_pack() -> ConstructionDemoAssetPack:
                 name=f"Storey {ordinal:02d}",
                 elevation_m=float(ordinal * 4),
                 ordinal=ordinal,
-                source_ifc_ref=(
-                    f"demo_assets/construction_tuwien/generated/storeys/{storey_id}/{storey_id}.ifc"
-                ),
+                source_ifc_ref=(f"demo_assets/construction_tuwien/generated/storeys/{storey_id}/{storey_id}.ifc"),
                 mesh_asset_id=f"asset-{storey_id}-glb",
                 floor_plan_asset_id=f"asset-{storey_id}-svg",
                 gaussian_asset_id=f"asset-{storey_id}-spz",
@@ -190,63 +186,29 @@ def load_construction_demo_asset_pack(
 
 def _full_tour() -> tuple[ConstructionDemoTourStep, ...]:
     return (
-        ConstructionDemoTourStep(
-            "01-attribution", "Open source attribution", "SHOW_ATTRIBUTION", 1800
-        ),
-        ConstructionDemoTourStep(
-            "02-building", "Complete hybrid building", "SHOW_ALL", 2200
-        ),
-        ConstructionDemoTourStep(
-            "03-orbit", "Orbit the building", "ORBIT", 2600, value=0.55
-        ),
-        ConstructionDemoTourStep(
-            "04-explode", "Explode storeys", "EXPLODE", 2200, value=4.0
-        ),
-        ConstructionDemoTourStep(
-            "05-plans", "Reveal floor plans", "TOGGLE_LAYER", 1600, "floorPlans", "on"
-        ),
-        ConstructionDemoTourStep(
-            "06-timeline", "Replay project progress", "TIMELINE", 3200, value=12.0
-        ),
-        ConstructionDemoTourStep(
-            "07-blocked", "Find blocked drilling", "FOCUS_STATUS", 2400, "BLOCKED"
-        ),
-        ConstructionDemoTourStep(
-            "08-evidence", "Show blocking evidence", "TOGGLE_LAYER", 1800, "blockers", "on"
-        ),
-        ConstructionDemoTourStep(
-            "09-unsafe", "Keep unsafe option blocked", "FOCUS_BLOCKED_ALTERNATIVE", 2200
-        ),
-        ConstructionDemoTourStep(
-            "10-alternate", "Show safe alternate work", "FOCUS_RECOMMENDED_ALTERNATIVE", 2400
-        ),
-        ConstructionDemoTourStep(
-            "11-trades", "Show subcontractor history", "TOGGLE_LAYER", 1800, "trades", "on"
-        ),
-        ConstructionDemoTourStep(
-            "12-dependencies", "Show dependencies", "TOGGLE_LAYER", 1800, "dependencies", "on"
-        ),
-        ConstructionDemoTourStep(
-            "13-rules", "Show synthetic rule gates", "TOGGLE_LAYER", 1800, "syntheticRules", "on"
-        ),
-        ConstructionDemoTourStep(
-            "14-budget", "Compare schedule and budget", "TOGGLE_LAYER", 2200, "budgets", "on"
-        ),
+        ConstructionDemoTourStep("01-attribution", "Open source attribution", "SHOW_ATTRIBUTION", 1800),
+        ConstructionDemoTourStep("02-building", "Complete hybrid building", "SHOW_ALL", 2200),
+        ConstructionDemoTourStep("03-orbit", "Orbit the building", "ORBIT", 2600, value=0.55),
+        ConstructionDemoTourStep("04-explode", "Explode storeys", "EXPLODE", 2200, value=4.0),
+        ConstructionDemoTourStep("05-plans", "Reveal floor plans", "TOGGLE_LAYER", 1600, "floorPlans", "on"),
+        ConstructionDemoTourStep("06-timeline", "Replay project progress", "TIMELINE", 3200, value=12.0),
+        ConstructionDemoTourStep("07-blocked", "Find blocked drilling", "FOCUS_STATUS", 2400, "BLOCKED"),
+        ConstructionDemoTourStep("08-evidence", "Show blocking evidence", "TOGGLE_LAYER", 1800, "blockers", "on"),
+        ConstructionDemoTourStep("09-unsafe", "Keep unsafe option blocked", "FOCUS_BLOCKED_ALTERNATIVE", 2200),
+        ConstructionDemoTourStep("10-alternate", "Show safe alternate work", "FOCUS_RECOMMENDED_ALTERNATIVE", 2400),
+        ConstructionDemoTourStep("11-trades", "Show subcontractor history", "TOGGLE_LAYER", 1800, "trades", "on"),
+        ConstructionDemoTourStep("12-dependencies", "Show dependencies", "TOGGLE_LAYER", 1800, "dependencies", "on"),
+        ConstructionDemoTourStep("13-rules", "Show synthetic rule gates", "TOGGLE_LAYER", 1800, "syntheticRules", "on"),
+        ConstructionDemoTourStep("14-budget", "Compare schedule and budget", "TOGGLE_LAYER", 2200, "budgets", "on"),
         ConstructionDemoTourStep(
             "15-review",
             "Select recommendation for human review",
             "FOCUS_RECOMMENDED_ALTERNATIVE",
             2200,
         ),
-        ConstructionDemoTourStep(
-            "16-observatory", "Open evidence summary", "SHOW_OBSERVATORY", 2200
-        ),
-        ConstructionDemoTourStep(
-            "17-decision", "Produce human decision packet", "SHOW_DECISION_PACKET", 2200
-        ),
-        ConstructionDemoTourStep(
-            "18-dissolve", "Dissolve Arena and release renderer", "DISSOLVE", 1800
-        ),
+        ConstructionDemoTourStep("16-observatory", "Open evidence summary", "SHOW_OBSERVATORY", 2200),
+        ConstructionDemoTourStep("17-decision", "Produce human decision packet", "SHOW_DECISION_PACKET", 2200),
+        ConstructionDemoTourStep("18-dissolve", "Dissolve Arena and release renderer", "DISSOLVE", 1800),
     )
 
 
@@ -350,9 +312,7 @@ def compile_construction_demo_packet(
             "Analysis in IFC format, DOI 10.48436/a185k-86v39, CC BY 4.0. All project, "
             "schedule, budget, organization, hazard, rule, and status data are fictional."
         ),
-        "recommended_alternative_id": (
-            recommended.alternative_id if recommended is not None else None
-        ),
+        "recommended_alternative_id": (recommended.alternative_id if recommended is not None else None),
         "blocked_work_package_id": fixture.focus_scope.work_package_id,
         "physical_work_authorized": False,
         "payment_released": False,
@@ -382,9 +342,21 @@ _ALLOWED_STATIC_PREFIXES = (
 )
 
 
+def _fully_decode_static_path(value: str, *, maximum_rounds: int = 4) -> str | None:
+    current = value
+    for _ in range(maximum_rounds):
+        decoded = unquote(current)
+        if decoded == current:
+            return decoded
+        current = decoded
+    return current if unquote(current) == current else None
+
+
 def _safe_construction_demo_static_path(raw_path: str) -> str | None:
-    decoded = unquote(urlparse(raw_path).path)
-    if "\\" in decoded or "\x00" in decoded:
+    decoded = _fully_decode_static_path(urlparse(raw_path).path)
+    if decoded is None or "\\" in decoded or "\x00" in decoded or "%" in decoded:
+        return None
+    if "?" in decoded or "#" in decoded:
         return None
     candidate = PurePosixPath(decoded)
     if ".." in candidate.parts:
@@ -393,6 +365,18 @@ def _safe_construction_demo_static_path(raw_path: str) -> str | None:
     if not any(normalized.startswith(prefix) for prefix in _ALLOWED_STATIC_PREFIXES):
         return None
     return normalized
+
+
+def _safe_construction_demo_static_file(root: Path, raw_path: str) -> tuple[str, Path] | None:
+    safe_path = _safe_construction_demo_static_path(raw_path)
+    if safe_path is None:
+        return None
+    repository = root.expanduser().resolve(strict=True)
+    candidate = (repository / safe_path.lstrip("/")).resolve(strict=False)
+    allowed_roots = tuple((repository / prefix.strip("/")).resolve(strict=False) for prefix in _ALLOWED_STATIC_PREFIXES)
+    if not any(candidate.is_relative_to(allowed) for allowed in allowed_roots):
+        return None
+    return safe_path, candidate
 
 
 class _ConstructionDemoHandler(SimpleHTTPRequestHandler):
@@ -410,24 +394,39 @@ class _ConstructionDemoHandler(SimpleHTTPRequestHandler):
         self.send_header("Referrer-Policy", "no-referrer")
         super().end_headers()
 
-    def do_GET(self) -> None:
+    def _route_static_request(self) -> bool:
         parsed = urlparse(self.path)
         if parsed.path in {"/demo/construction", "/demo/construction/"}:
             self.path = "/aura_spatial_web/construction_demo.html"
-        elif parsed.path == "/api/construction-demo":
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Content-Length", str(len(self.packet)))
-            self.end_headers()
+            return True
+        safe_file = _safe_construction_demo_static_file(Path(self.directory), self.path)
+        if safe_file is None:
+            self.send_error(404)
+            return False
+        self.path, _ = safe_file
+        return True
+
+    def _send_packet(self, *, include_body: bool) -> None:
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(self.packet)))
+        self.end_headers()
+        if include_body:
             self.wfile.write(self.packet)
+
+    def do_GET(self) -> None:
+        if urlparse(self.path).path == "/api/construction-demo":
+            self._send_packet(include_body=True)
             return
-        else:
-            safe_path = _safe_construction_demo_static_path(self.path)
-            if safe_path is None:
-                self.send_error(404)
-                return
-            self.path = safe_path
-        super().do_GET()
+        if self._route_static_request():
+            super().do_GET()
+
+    def do_HEAD(self) -> None:
+        if urlparse(self.path).path == "/api/construction-demo":
+            self._send_packet(include_body=False)
+            return
+        if self._route_static_request():
+            super().do_HEAD()
 
     def log_message(self, format: str, *args: Any) -> None:
         return

@@ -195,14 +195,20 @@ export class ConstructionMeshPass {
       throw new Error("Construction mesh pass is not initialized");
     }
     if (signal?.aborted) throw new Error("Construction mesh presentation cancelled");
-    await this.releaseDrawResources();
-    const visible = this.meshes.filter(
-      (mesh) => this.visibleFrameIds === null || this.visibleFrameIds.has(mesh.frame_id),
-    );
-    if (visible.length > this.limits.maxVisibleMeshes) {
-      throw new RangeError("Construction visible-mesh budget exceeded");
+    try {
+      await this.releaseDrawResources();
+    } catch (error) {
+      this.initialized = false;
+      this.disposed = true;
+      throw error;
     }
     try {
+      const visible = this.meshes.filter(
+        (mesh) => this.visibleFrameIds === null || this.visibleFrameIds.has(mesh.frame_id),
+      );
+      if (visible.length > this.limits.maxVisibleMeshes) {
+        throw new RangeError("Construction visible-mesh budget exceeded");
+      }
       for (const mesh of visible) {
         if (signal?.aborted) throw new Error("Construction mesh presentation cancelled");
         const disposer = requireDisposer(
@@ -219,48 +225,58 @@ export class ConstructionMeshPass {
             }),
           ),
         );
-        if (signal?.aborted) {
-          await this.releaseDrawResources();
-          this.initialized = false;
-          this.disposed = true;
-          throw new Error("Construction mesh presentation cancelled");
-        }
         this.disposers.add(disposer);
+        if (signal?.aborted) throw new Error("Construction mesh presentation cancelled");
       }
+      return Object.freeze({
+        version: CONSTRUCTION_MESH_PASS_VERSION,
+        outcome: "PRESENTED",
+        visible_mesh_count: visible.length,
+        decoded_byte_length: visible.reduce(
+          (total, item) => total + item.decoded_byte_length,
+          0,
+        ),
+        source_transform_immutable: true,
+        ...AUTHORITY_ENVELOPE,
+      });
     } catch (error) {
-      await this.releaseDrawResources();
+      let cleanupError = null;
+      try {
+        await this.releaseDrawResources();
+      } catch (cleanup) {
+        cleanupError = cleanup;
+      }
       this.initialized = false;
       this.disposed = true;
+      if (cleanupError) {
+        throw new AggregateError(
+          [error, cleanupError],
+          "Construction mesh presentation and cleanup failed",
+        );
+      }
       throw error;
     }
-    return Object.freeze({
-      version: CONSTRUCTION_MESH_PASS_VERSION,
-      outcome: "PRESENTED",
-      visible_mesh_count: visible.length,
-      decoded_byte_length: visible.reduce(
-        (total, item) => total + item.decoded_byte_length,
-        0,
-      ),
-      source_transform_immutable: true,
-      ...AUTHORITY_ENVELOPE,
-    });
   }
 
   async releaseDrawResources() {
     let firstError = null;
-    for (const dispose of [...this.disposers].reverse()) {
+    const failed = [];
+    const pending = [...this.disposers].reverse();
+    this.disposers.clear();
+    for (const dispose of pending) {
       try {
         await dispose();
       } catch (error) {
         firstError ||= error;
+        failed.push(dispose);
       }
     }
-    this.disposers.clear();
+    for (const dispose of failed) this.disposers.add(dispose);
     if (firstError) throw firstError;
   }
 
   async dispose() {
-    if (this.disposed) return this.status();
+    if (this.disposed && this.disposers.size === 0) return this.status();
     try {
       await this.releaseDrawResources();
     } finally {

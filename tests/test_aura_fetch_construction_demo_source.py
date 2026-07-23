@@ -23,7 +23,7 @@ class _Response:
     def geturl(self) -> str:
         return self._url
 
-    def __enter__(self) -> "_Response":
+    def __enter__(self) -> _Response:
         return self
 
     def __exit__(self, *args: object) -> None:
@@ -186,4 +186,36 @@ def test_stream_verification_fails_closed_on_digest_or_size(tmp_path: Path) -> N
             expected_byte_length=3,
             expected_md5=hashlib.md5(b"abc", usedforsecurity=False).hexdigest(),
             expected_sha256="0" * 64,
+        )
+
+
+def test_acquire_source_refuses_validly_redigested_false_manifest_identity(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    payload = b"pinned-manifest"
+    _pin_payload(monkeypatch, payload)
+    fetcher.acquire_source(
+        repo_root=tmp_path,
+        output_dir=Path("assets"),
+        record_doi=fetcher.PINNED_RECORD_DOI,
+        accept_network_download=True,
+        opener=_Opener(_Response(payload)),
+    )
+    manifest_path = tmp_path / "assets" / "source-manifest.json"
+    forged = json.loads(manifest_path.read_text(encoding="utf-8"))
+    forged["doi"] = "10.0000/forged"
+    forged.pop("source_manifest_digest", None)
+    contract = fetcher._load_contract(tmp_path).from_dict(forged)
+    manifest_path.write_text(
+        json.dumps(contract.to_dict(), sort_keys=True, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="manifest differs"):
+        fetcher.acquire_source(
+            repo_root=tmp_path,
+            output_dir=Path("assets"),
+            record_doi=fetcher.PINNED_RECORD_DOI,
+            accept_network_download=True,
+            opener=_Opener(_Response(payload)),
         )

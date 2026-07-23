@@ -5,6 +5,7 @@ This script is operator-only. Aura startup and demo runtime must never import or
 invoke it. It accepts no arbitrary URL and writes only a verified local source
 file plus its immutable source manifest.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -158,9 +159,17 @@ def _validate_existing(repo_root: Path, source_path: Path, manifest_path: Path) 
     data = json.loads(manifest_path.read_text(encoding="utf-8"))
     contract = _load_contract(repo_root)
     parsed = contract.from_dict(data)
+    expected = contract.from_dict(_manifest(repo_root, parsed.downloaded_at))
+    if parsed != expected:
+        raise ValueError("existing source manifest differs from the pinned Construction demo identity")
     if parsed.observed_sha256 != PINNED_SHA256 or parsed.source_byte_length != PINNED_BYTE_LENGTH:
         raise ValueError("existing source manifest differs from pinned source identity")
-    return {"state": "already_verified", "source": str(source_path), "manifest": str(manifest_path), "source_manifest_digest": parsed.source_manifest_digest}
+    return {
+        "state": "already_verified",
+        "source": str(source_path),
+        "manifest": str(manifest_path),
+        "source_manifest_digest": parsed.source_manifest_digest,
+    }
 
 
 def acquire_source(
@@ -203,7 +212,9 @@ def acquire_source(
             content_length = response.headers.get("Content-Length")
             if content_length is not None and int(content_length) != PINNED_BYTE_LENGTH:
                 raise ValueError("source Content-Length differs from the pinned byte length")
-            with tempfile.NamedTemporaryFile(prefix=".construction-source-", suffix=".tmp", dir=output, delete=False) as temporary:
+            with tempfile.NamedTemporaryFile(
+                prefix=".construction-source-", suffix=".tmp", dir=output, delete=False
+            ) as temporary:
                 temp_source = Path(temporary.name)
             verification = _stream_verified_response(
                 response,
@@ -213,7 +224,9 @@ def acquire_source(
                 expected_sha256=PINNED_SHA256,
             )
         manifest = _manifest(root, _canonical_utc(now))
-        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", prefix=".construction-manifest-", suffix=".tmp", dir=output, delete=False) as temporary_manifest:
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf-8", prefix=".construction-manifest-", suffix=".tmp", dir=output, delete=False
+        ) as temporary_manifest:
             temp_manifest = Path(temporary_manifest.name)
             json.dump(manifest, temporary_manifest, indent=2, sort_keys=True)
             temporary_manifest.write("\n")

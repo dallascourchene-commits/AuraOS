@@ -32,9 +32,7 @@ _LOOPBACK_HOSTS = frozenset({"127.0.0.1", "localhost"})
 
 def _loopback_host(value: str) -> str:
     if value not in _LOOPBACK_HOSTS:
-        raise argparse.ArgumentTypeError(
-            "Construction video demo host must be loopback-only: 127.0.0.1 or localhost"
-        )
+        raise argparse.ArgumentTypeError("Construction video demo host must be loopback-only: 127.0.0.1 or localhost")
     return value
 
 

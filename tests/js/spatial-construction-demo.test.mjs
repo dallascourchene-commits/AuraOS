@@ -788,3 +788,79 @@ test("PUBLIC overlay classification survives provenance redaction", () => {
   assert.equal(model.inspections.length, 1);
   assert.equal(model.synthetic_rules.length, 1);
 });
+
+
+test("Construction mesh cleanup failure is terminal, visible, and retryable", async () => {
+  const { scene } = constructionFixture();
+  let failCleanup = true;
+  let released = 0;
+  const pass = new ConstructionMeshPass({
+    drawMeshPass: async () => async () => {
+      if (failCleanup) throw new Error("forced mesh cleanup failure");
+      released += 1;
+    },
+  });
+  pass.initialize(scene, [{
+    asset_id: "asset:mesh",
+    source_digest: "1".repeat(64),
+    decoded_byte_length: 256,
+    resource: { local: true },
+  }]);
+  await pass.present();
+  await assert.rejects(pass.present(), /forced mesh cleanup failure/);
+  assert.equal(pass.status().disposed, true);
+  assert.equal(pass.status().initialized, false);
+  assert.equal(pass.status().active_disposer_count, 1);
+  failCleanup = false;
+  await pass.dispose();
+  assert.equal(released, 1);
+  assert.equal(pass.status().active_disposer_count, 0);
+});
+
+test("WebGL2 Gaussian partial buffer allocation releases earlier resources", async () => {
+  const gl = fakeGl();
+  const originalCreateBuffer = gl.createBuffer;
+  let calls = 0;
+  gl.createBuffer = () => {
+    calls += 1;
+    return calls === 2 ? null : originalCreateBuffer();
+  };
+  const pass = createWebGL2GaussianPass({ gl, maxVisibleSplats: 1 });
+  await assert.rejects(
+    pass({
+      positions: new Float32Array([0, 0, 0]),
+      rotations_xyzw: new Float32Array([0, 0, 0, 1]),
+      scales_xyz: new Float32Array([1, 1, 1]),
+      opacities: new Float32Array([1]),
+      colors_rgba: new Uint8Array([255, 0, 255, 255]),
+      sorted_indices: new Uint32Array([0]),
+    }, { asset_id: "asset:splats", sh_degree: 0 }),
+    /allocate Gaussian buffer/,
+  );
+  assert.equal(gl.calls.deletedBuffers, 1);
+  assert.equal(gl.calls.deletedPrograms, 1);
+  assert.equal(gl.calls.deletedVaos, 1);
+});
+
+
+test("Construction mesh pass releases a handle when abort occurs inside draw", async () => {
+  const { scene } = constructionFixture();
+  const controller = new AbortController();
+  let disposed = 0;
+  const pass = new ConstructionMeshPass({
+    drawMeshPass: async () => {
+      controller.abort();
+      return () => { disposed += 1; };
+    },
+  });
+  pass.initialize(scene, [{
+    asset_id: "asset:mesh",
+    source_digest: "1".repeat(64),
+    decoded_byte_length: 256,
+    resource: { local: true },
+  }]);
+  await assert.rejects(pass.present({ signal: controller.signal }), /cancelled/);
+  assert.equal(disposed, 1);
+  assert.equal(pass.status().active_disposer_count, 0);
+  assert.equal(pass.status().disposed, true);
+});

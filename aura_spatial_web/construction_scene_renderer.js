@@ -485,24 +485,12 @@ export class ConstructionSceneRenderer {
               cameraPosition: this._cameraPosition(),
               signal,
             });
-      if (signal?.aborted || this.cancelled) {
-        await this._disposeOwnedResources();
-        this.state = RENDERER_STATES.LOST;
-        throw new Error("Construction presentation cancelled");
-      }
+      if (signal?.aborted || this.cancelled) throw new Error("Construction presentation cancelled");
       const meshReceipt =
         this.mode === "SPLATS" ? null : await this.meshPass.present({ signal });
-      if (signal?.aborted || this.cancelled) {
-        await this._disposeOwnedResources();
-        this.state = RENDERER_STATES.LOST;
-        throw new Error("Construction presentation cancelled");
-      }
+      if (signal?.aborted || this.cancelled) throw new Error("Construction presentation cancelled");
       const overlayReceipt = await this.overlayPass.present({ signal });
-      if (signal?.aborted || this.cancelled) {
-        await this._disposeOwnedResources();
-        this.state = RENDERER_STATES.LOST;
-        throw new Error("Construction presentation cancelled");
-      }
+      if (signal?.aborted || this.cancelled) throw new Error("Construction presentation cancelled");
       this.state = RENDERER_STATES.PRESENTED;
       return Object.freeze({
         version: CONSTRUCTION_SCENE_RENDERER_VERSION,
@@ -520,8 +508,14 @@ export class ConstructionSceneRenderer {
         ...AUTHORITY_ENVELOPE,
       });
     } catch (error) {
-      await this._disposeOwnedResources();
+      const cleanupError = await this._disposeOwnedResources();
       this.state = RENDERER_STATES.LOST;
+      if (cleanupError) {
+        throw new AggregateError(
+          [error, cleanupError],
+          "Construction presentation and cleanup failed",
+        );
+      }
       throw error;
     }
   }

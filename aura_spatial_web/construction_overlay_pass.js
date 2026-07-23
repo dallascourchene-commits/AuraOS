@@ -299,37 +299,61 @@ export class ConstructionOverlayPass {
   }
 
   async present({ signal } = {}) {
-    if (signal?.aborted) throw new Error("Construction overlay presentation cancelled");
-    await this.releaseDrawResources();
-    const model = this.buildModel();
-    if (this.drawOverlayPass) {
-      this.disposer = requireDisposer(
-        await this.drawOverlayPass(model, Object.freeze({ signal, ...AUTHORITY_ENVELOPE })),
-      );
-      if (signal?.aborted) {
-        await this.releaseDrawResources();
-        throw new Error("Construction overlay presentation cancelled");
-      }
+    if (!this.initialized || this.disposed) {
+      throw new Error("Construction overlay pass is not initialized");
     }
-    return Object.freeze({
-      version: CONSTRUCTION_OVERLAY_PASS_VERSION,
-      outcome: "PRESENTED",
-      model,
-      drawn: Boolean(this.drawOverlayPass),
-      source_geometry_mutated: false,
-      ...AUTHORITY_ENVELOPE,
-    });
+    if (signal?.aborted) throw new Error("Construction overlay presentation cancelled");
+    try {
+      await this.releaseDrawResources();
+    } catch (error) {
+      this.initialized = false;
+      this.disposed = true;
+      throw error;
+    }
+    try {
+      const model = this.buildModel();
+      if (this.drawOverlayPass) {
+        this.disposer = requireDisposer(
+          await this.drawOverlayPass(model, Object.freeze({ signal, ...AUTHORITY_ENVELOPE })),
+        );
+        if (signal?.aborted) throw new Error("Construction overlay presentation cancelled");
+      }
+      return Object.freeze({
+        version: CONSTRUCTION_OVERLAY_PASS_VERSION,
+        outcome: "PRESENTED",
+        model,
+        drawn: Boolean(this.drawOverlayPass),
+        source_geometry_mutated: false,
+        ...AUTHORITY_ENVELOPE,
+      });
+    } catch (error) {
+      let cleanupError = null;
+      try {
+        await this.releaseDrawResources();
+      } catch (cleanup) {
+        cleanupError = cleanup;
+      }
+      this.initialized = false;
+      this.disposed = true;
+      if (cleanupError) {
+        throw new AggregateError(
+          [error, cleanupError],
+          "Construction overlay presentation and cleanup failed",
+        );
+      }
+      throw error;
+    }
   }
 
   async releaseDrawResources() {
     if (!this.disposer) return;
     const dispose = this.disposer;
-    this.disposer = null;
     await dispose();
+    if (this.disposer === dispose) this.disposer = null;
   }
 
   async dispose() {
-    if (this.disposed) return this.status();
+    if (this.disposed && !this.disposer) return this.status();
     try {
       await this.releaseDrawResources();
     } finally {
