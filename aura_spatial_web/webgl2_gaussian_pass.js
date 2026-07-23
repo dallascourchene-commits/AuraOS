@@ -10,17 +10,26 @@ in vec4 a_rotation;
 in vec3 a_scale;
 in vec4 a_color;
 uniform mat4 u_viewProjection;
-uniform vec3 u_presentationTranslation;
-uniform vec3 u_presentationScale;
+uniform mat4 u_model;
 out vec2 v_corner;
 out vec4 v_color;
+
+vec3 rotateByQuaternion(vec4 rotation, vec3 vector) {
+  return vector + 2.0 * cross(
+    rotation.xyz,
+    cross(rotation.xyz, vector) + rotation.w * vector
+  );
+}
+
 void main() {
-  float angle = 2.0 * atan(a_rotation.z, a_rotation.w);
-  float c = cos(angle);
-  float s = sin(angle);
-  vec2 local = mat2(c, -s, s, c) * (a_corner * max(a_scale.xy, vec2(0.00001)));
-  vec3 center = a_position * u_presentationScale + u_presentationTranslation;
-  gl_Position = u_viewProjection * vec4(center + vec3(local, 0.0), 1.0);
+  vec4 normalizedRotation = normalize(a_rotation);
+  vec3 localAxis = rotateByQuaternion(
+    normalizedRotation,
+    vec3(a_corner * max(a_scale.xy, vec2(0.00001)), 0.0)
+  );
+  vec3 center = (u_model * vec4(a_position, 1.0)).xyz;
+  vec3 transformedAxis = mat3(u_model) * localAxis;
+  gl_Position = u_viewProjection * vec4(center + transformedAxis, 1.0);
   v_corner = a_corner;
   v_color = a_color;
 }`;
@@ -61,6 +70,49 @@ function finiteVector(value, length, label, fallback) {
     throw new TypeError(`${label} must be a finite ${length}-vector`);
   }
   return candidate;
+}
+
+function normalizedQuaternion(value, label) {
+  const rotation = finiteVector(value, 4, label, [0, 0, 0, 1]);
+  const norm = Math.hypot(...rotation);
+  if (norm <= 1e-12) throw new TypeError(`${label} must not be a zero quaternion`);
+  return rotation.map((item) => item / norm);
+}
+
+function modelMatrix(transform) {
+  const translation = finiteVector(
+    transform?.translation,
+    3,
+    "presentation translation",
+    [0, 0, 0],
+  );
+  const scale = finiteVector(transform?.scale, 3, "presentation scale", [1, 1, 1]);
+  if (scale.some((item) => item <= 0)) {
+    throw new RangeError("presentation scale must remain positive");
+  }
+  const [x, y, z, w] = normalizedQuaternion(
+    transform?.rotation_xyzw,
+    "presentation rotation",
+  );
+  const [sx, sy, sz] = scale;
+  return Object.freeze([
+    (1 - 2 * (y * y + z * z)) * sx,
+    (2 * (x * y + z * w)) * sx,
+    (2 * (x * z - y * w)) * sx,
+    0,
+    (2 * (x * y - z * w)) * sy,
+    (1 - 2 * (x * x + z * z)) * sy,
+    (2 * (y * z + x * w)) * sy,
+    0,
+    (2 * (x * z + y * w)) * sz,
+    (2 * (y * z - x * w)) * sz,
+    (1 - 2 * (x * x + y * y)) * sz,
+    0,
+    translation[0],
+    translation[1],
+    translation[2],
+    1,
+  ]);
 }
 
 function compileShader(gl, type, source) {
@@ -177,16 +229,7 @@ export function createWebGL2GaussianPass({
     }
     const gathered = gather(resources, context, visibleLimit, isVisible);
     const presentation = getPresentationTransform(context.asset_id) || {};
-    const translation = finiteVector(
-      presentation.translation,
-      3,
-      "presentation translation",
-      [0, 0, 0],
-    );
-    const scale = finiteVector(presentation.scale, 3, "presentation scale", [1, 1, 1]);
-    if (scale.some((item) => item <= 0)) {
-      throw new RangeError("presentation scale must remain positive");
-    }
+    const model = modelMatrix(presentation);
     const viewProjection = finiteVector(
       Array.from(getViewProjection(context)),
       16,
@@ -224,13 +267,10 @@ export function createWebGL2GaussianPass({
         false,
         new Float32Array(viewProjection),
       );
-      gl.uniform3fv(
-        gl.getUniformLocation(program, "u_presentationTranslation"),
-        new Float32Array(translation),
-      );
-      gl.uniform3fv(
-        gl.getUniformLocation(program, "u_presentationScale"),
-        new Float32Array(scale),
+      gl.uniformMatrix4fv(
+        gl.getUniformLocation(program, "u_model"),
+        false,
+        new Float32Array(model),
       );
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);

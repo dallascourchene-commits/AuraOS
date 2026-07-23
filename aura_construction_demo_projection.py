@@ -60,16 +60,56 @@ def _ref(value: str, privacy: SpatialPrivacyClass) -> str:
     return stable_digest({"construction_demo_public_ref": value})[:16]
 
 
+def _export_digest(value: str, export_scope: str) -> str:
+    return stable_digest(
+        {
+            "construction_demo_public_export_scope": export_scope,
+            "value": value,
+        },
+        digest_size=32,
+    )
+
+
+def _export_ref(value: str, export_scope: str) -> str:
+    return _export_digest(value, export_scope)[:16]
+
+
+def _projected_asset_id(
+    asset_id: str,
+    privacy: SpatialPrivacyClass,
+    export_scope: str,
+) -> str:
+    if privacy is SpatialPrivacyClass.PROJECT:
+        return asset_id
+    return f"public-asset-{_export_digest(f'asset:{asset_id}', export_scope)[:24]}"
+
+
 def _asset_manifest(
     binding: ConstructionDemoAssetBinding,
     *,
     frame_id: str,
+    projected_asset_id: str,
     privacy: SpatialPrivacyClass,
+    export_scope: str,
 ) -> SpatialAssetManifest:
+    project_visible = privacy is SpatialPrivacyClass.PROJECT
+    representation_digest = (
+        binding.representation_digest
+        if project_visible
+        else _export_digest(f"representation:{binding.representation_digest}", export_scope)
+    )
+    import_receipt_digest = (
+        binding.import_receipt_digest
+        if project_visible
+        else _export_digest(f"import-receipt:{binding.import_receipt_digest}", export_scope)
+    )
+    content_digest = (
+        binding.content_digest if project_visible else _export_digest(f"content:{binding.content_digest}", export_scope)
+    )
     metadata: dict[str, Any] = {
         "representation": binding.representation,
-        "representation_digest": binding.representation_digest,
-        "import_receipt_digest": binding.import_receipt_digest,
+        "representation_digest": representation_digest,
+        "import_receipt_digest": import_receipt_digest,
         "coordinate_system": binding.coordinate_system,
         "unit_scale_meters": binding.unit_scale_meters,
         "survey_authority": False,
@@ -96,29 +136,26 @@ def _asset_manifest(
                 "gaussian_color_space": "SPZ_INTERNAL_WIDE_RGB",
             }
         )
-    return SpatialAssetManifest(
-        asset_id=binding.asset_id,
-        asset_type=_ASSET_TYPES[binding.representation],
-        uri=binding.uri,
-        media_type=binding.media_type,
-        content_digest=f"sha256:{binding.content_digest}",
-        byte_length=binding.byte_length,
-        frame_id=frame_id,
-        bounds_min=binding.bounds_min,
-        bounds_max=binding.bounds_max,
-        source_refs=tuple(
+    source_refs = (
+        tuple(
             sorted(
                 set(
                     (
-                        *(_ref(ref, privacy) for ref in binding.source_refs),
-                        _ref(f"construction-demo-asset:{binding.asset_id}", privacy),
-                        _ref(f"representation:{binding.representation_digest}", privacy),
-                        _ref(f"import-receipt:{binding.import_receipt_digest}", privacy),
+                        *(_export_ref(ref, export_scope) for ref in binding.source_refs),
+                        _export_ref(f"construction-demo-asset:{binding.asset_id}", export_scope),
+                        _export_ref(
+                            f"representation:{binding.representation_digest}",
+                            export_scope,
+                        ),
+                        _export_ref(
+                            f"import-receipt:{binding.import_receipt_digest}",
+                            export_scope,
+                        ),
                     )
                 )
             )
         )
-        if privacy is not SpatialPrivacyClass.PROJECT
+        if not project_visible
         else tuple(
             sorted(
                 set(
@@ -130,7 +167,19 @@ def _asset_manifest(
                     )
                 )
             )
-        ),
+        )
+    )
+    return SpatialAssetManifest(
+        asset_id=projected_asset_id,
+        asset_type=_ASSET_TYPES[binding.representation],
+        uri=(binding.uri if project_visible else f"aura://public/{projected_asset_id}"),
+        media_type=binding.media_type,
+        content_digest=f"sha256:{content_digest}",
+        byte_length=binding.byte_length,
+        frame_id=frame_id,
+        bounds_min=binding.bounds_min,
+        bounds_max=binding.bounds_max,
+        source_refs=source_refs,
         truth_class=SpatialTruthClass.PRESENTATION,
         metadata=metadata,
     )
@@ -199,6 +248,14 @@ def project_construction_demo_to_scene(
     privacy = _privacy(privacy_class)
     if privacy in {SpatialPrivacyClass.RESTRICTED, SpatialPrivacyClass.SENSITIVE}:
         raise ValueError("restricted or sensitive Construction demo scenes cannot expose geometry")
+    public_export_scope = stable_digest(
+        {
+            "projection_version": CONSTRUCTION_DEMO_PROJECTION_VERSION,
+            "scene_id": scene_id,
+            "purpose_digest": purpose_digest,
+        },
+        digest_size=32,
+    )
 
     baseline = project_construction_state_to_scene(
         fixture.state,
@@ -208,6 +265,14 @@ def project_construction_demo_to_scene(
         scene_id=f"{scene_id}-canonical-base",
     )
     asset_pack = fixture.asset_pack
+    projected_asset_ids = {
+        binding.asset_id: _projected_asset_id(
+            binding.asset_id,
+            privacy,
+            public_export_scope,
+        )
+        for binding in asset_pack.assets
+    }
     storeys = tuple(sorted(asset_pack.storeys, key=lambda item: (item.ordinal, item.storey_id)))
     assets_by_storey: dict[str, list[ConstructionDemoAssetBinding]] = {item.storey_id: [] for item in storeys}
     for binding in asset_pack.assets:
@@ -267,7 +332,9 @@ def project_construction_demo_to_scene(
         _asset_manifest(
             binding,
             frame_id=next(item.frame_id for item in storeys if item.storey_id == binding.storey_id),
+            projected_asset_id=projected_asset_ids[binding.asset_id],
             privacy=privacy,
+            export_scope=public_export_scope,
         )
         for binding in asset_pack.assets
     )
@@ -298,8 +365,22 @@ def project_construction_demo_to_scene(
             metadata={
                 "building_ref": _ref(asset_pack.building_id, privacy),
                 "storey_count": len(storeys),
-                "asset_pack_digest": asset_pack.asset_pack_digest,
-                "state_digest": fixture.state.state_digest,
+                "asset_pack_digest": (
+                    asset_pack.asset_pack_digest
+                    if privacy is SpatialPrivacyClass.PROJECT
+                    else _export_digest(
+                        f"asset-pack:{asset_pack.asset_pack_digest}",
+                        public_export_scope,
+                    )
+                ),
+                "state_digest": (
+                    fixture.state.state_digest
+                    if privacy is SpatialPrivacyClass.PROJECT
+                    else _export_digest(
+                        f"state:{fixture.state.state_digest}",
+                        public_export_scope,
+                    )
+                ),
                 "precision_class": "NON_SURVEY_PRESENTATION",
                 "person_level_data_included": False,
                 "projection_only": True,
@@ -311,12 +392,14 @@ def project_construction_demo_to_scene(
     for storey in storeys:
         entity_id = _id("construction-storey", storey.storey_id)
         storey_entities[storey.storey_id] = entity_id
-        storey_asset_ids = tuple(sorted(item.asset_id for item in assets_by_storey[storey.storey_id]))
+        storey_asset_ids = tuple(
+            sorted(projected_asset_ids[item.asset_id] for item in assets_by_storey[storey.storey_id])
+        )
         entities.append(
             _entity(
                 entity_id,
                 SpatialEntityType.ASSET_INSTANCE,
-                storey.name,
+                (storey.name if privacy is SpatialPrivacyClass.PROJECT else f"Storey {storey.ordinal + 1}"),
                 storey.frame_id,
                 asset_ids=storey_asset_ids,
                 source_refs=(_ref(f"construction-demo-storey:{storey.storey_digest}", privacy),)
@@ -508,6 +591,7 @@ def project_construction_demo_to_scene(
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-trade:{trade.trade_id}",),
                 metadata={
+                    "overlay_kind": "TRADE",
                     "trade_ref": _ref(trade.trade_id, privacy),
                     "subcontractor_ref": _ref(trade.subcontractor_id, privacy),
                     "person_level_data_included": False,
@@ -606,6 +690,7 @@ def project_construction_demo_to_scene(
                     if privacy is not SpatialPrivacyClass.PROJECT
                     else (f"construction-demo-rule:{rule.rule_id}",),
                     metadata={
+                        "overlay_kind": "SYNTHETIC_RULE",
                         "rule_ref": _ref(rule.rule_id, privacy),
                         "work_package_ref": _ref(package_id, privacy),
                         "requirement": rule.requirement,
@@ -640,6 +725,7 @@ def project_construction_demo_to_scene(
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-inspection:{inspection.inspection_id}",),
                 metadata={
+                    "overlay_kind": "INSPECTION",
                     "inspection_ref": _ref(inspection.inspection_id, privacy),
                     "status_overlay": inspection.status,
                     "scheduled_day": inspection.scheduled_day,

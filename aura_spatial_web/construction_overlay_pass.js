@@ -73,8 +73,8 @@ function deepFreeze(value) {
   return value;
 }
 
-function sourceRefIncludes(record, prefix) {
-  return record.source_refs.some((item) => item.startsWith(prefix));
+function hasOverlayKind(record, kind) {
+  return record.metadata?.overlay_kind === kind;
 }
 
 export class ConstructionOverlayPass {
@@ -208,7 +208,7 @@ export class ConstructionOverlayPass {
         : [],
       trades: this.layers.get("trades")
         ? entities
-            .filter((item) => sourceRefIncludes(item, "construction-demo-trade:"))
+            .filter((item) => hasOverlayKind(item, "TRADE"))
             .map((item) => ({
               entity_id: item.entity_id,
               frame_id: item.frame_id,
@@ -228,7 +228,7 @@ export class ConstructionOverlayPass {
         : [],
       inspections: this.layers.get("inspections")
         ? entities
-            .filter((item) => sourceRefIncludes(item, "construction-demo-inspection:"))
+            .filter((item) => hasOverlayKind(item, "INSPECTION"))
             .map((item) => ({
               entity_id: item.entity_id,
               frame_id: item.frame_id,
@@ -249,7 +249,7 @@ export class ConstructionOverlayPass {
         : [],
       synthetic_rules: this.layers.get("syntheticRules")
         ? entities
-            .filter((item) => sourceRefIncludes(item, "construction-demo-rule:"))
+            .filter((item) => hasOverlayKind(item, "SYNTHETIC_RULE"))
             .map((item) => ({
               entity_id: item.entity_id,
               frame_id: item.frame_id,

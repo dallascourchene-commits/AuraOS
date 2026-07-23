@@ -157,7 +157,7 @@ function constructionFixture() {
       selectable: true,
       projection_only: true,
       patch_authority: false,
-      metadata: {},
+      metadata: { overlay_kind: "TRADE" },
     },
     {
       entity_id: "entity:inspection",
@@ -173,7 +173,11 @@ function constructionFixture() {
       selectable: true,
       projection_only: true,
       patch_authority: false,
-      metadata: { status_overlay: "SCHEDULED", scheduled_day: 8 },
+      metadata: {
+        overlay_kind: "INSPECTION",
+        status_overlay: "SCHEDULED",
+        scheduled_day: 8,
+      },
     },
     {
       entity_id: "entity:rule",
@@ -189,7 +193,11 @@ function constructionFixture() {
       selectable: true,
       projection_only: true,
       patch_authority: false,
-      metadata: { requirement: "Human review required", truth_class: "SYNTHETIC_DEMO_RULE" },
+      metadata: {
+        overlay_kind: "SYNTHETIC_RULE",
+        requirement: "Human review required",
+        truth_class: "SYNTHETIC_DEMO_RULE",
+      },
     },
   ];
   scene.links = [
@@ -296,7 +304,13 @@ class TestPresentationRenderer {
 
 function fakeGl() {
   let next = 1;
-  const calls = { drawInstances: [], deletedBuffers: 0, deletedPrograms: 0, deletedVaos: 0 };
+  const calls = {
+    drawInstances: [],
+    deletedBuffers: 0,
+    deletedPrograms: 0,
+    deletedVaos: 0,
+    uniformMatrices: new Map(),
+  };
   return {
     calls,
     VERTEX_SHADER: 1,
@@ -336,7 +350,9 @@ function fakeGl() {
     vertexAttribDivisor() {},
     useProgram() {},
     getUniformLocation: (_program, name) => name,
-    uniformMatrix4fv() {},
+    uniformMatrix4fv(location, _transpose, value) {
+      calls.uniformMatrices.set(location, Array.from(value));
+    },
     uniform3fv() {},
     enable() {},
     blendFunc() {},
@@ -690,4 +706,52 @@ test("Construction storey isolation filters Gaussian assets", async () => {
   assert.equal(all.base_receipt.splat_count, 2);
   assert.deepEqual(drawn.slice(-2), ["asset:splats", "asset:splats:second"]);
   await renderer.dispose();
+});
+
+
+test("degree-0 Gaussian pass applies the full rotated model matrix", async () => {
+  const gl = fakeGl();
+  const rootHalf = Math.sqrt(0.5);
+  const pass = createWebGL2GaussianPass({
+    gl,
+    getPresentationTransform: () => ({
+      translation: [1, 2, 3],
+      rotation_xyzw: [0, 0, rootHalf, rootHalf],
+      scale: [2, 3, 4],
+    }),
+  });
+  const handle = await pass({
+    positions: new Float32Array([0, 0, 0]),
+    rotations_xyzw: new Float32Array([0, 0, 0, 1]),
+    scales_xyz: new Float32Array([1, 1, 1]),
+    opacities: new Float32Array([1]),
+    colors_rgba: new Uint8Array([255, 255, 255, 255]),
+    sorted_indices: new Uint32Array([0]),
+  }, { asset_id: "asset:splats", sh_degree: 0 });
+
+  const actual = gl.calls.uniformMatrices.get("u_model");
+  const expected = [
+    0, 2, 0, 0,
+    -3, 0, 0, 0,
+    0, 0, 4, 0,
+    1, 2, 3, 1,
+  ];
+  assert.equal(actual.length, 16);
+  actual.forEach((value, index) => {
+    assert.ok(Math.abs(value - expected[index]) < 1e-6);
+  });
+  handle.dispose();
+});
+
+test("PUBLIC overlay classification survives provenance redaction", () => {
+  const { scene } = constructionFixture();
+  for (const entity of scene.entities) {
+    entity.source_refs = ["0123456789abcdef"];
+  }
+  const pass = new ConstructionOverlayPass();
+  pass.initialize(scene);
+  const model = pass.buildModel();
+  assert.equal(model.trades.length, 1);
+  assert.equal(model.inspections.length, 1);
+  assert.equal(model.synthetic_rules.length, 1);
 });

@@ -300,3 +300,64 @@ def test_g5_rejects_restricted_or_sensitive_geometry_projection() -> None:
                 purpose_digest="9" * 64,
                 privacy_class=privacy,
             )
+
+
+def test_g5_public_projection_uses_export_scoped_asset_aliases() -> None:
+    fixture = build_construction_demo_project_fixture(_pack())
+    packet = build_construction_demo_runtime_packet(fixture)
+    first = project_construction_demo_to_scene(
+        fixture,
+        packet,
+        purpose_digest="9" * 64,
+        privacy_class=SpatialPrivacyClass.PUBLIC,
+        scene_id="public-export-a",
+    )
+    second = project_construction_demo_to_scene(
+        fixture,
+        packet,
+        purpose_digest="9" * 64,
+        privacy_class=SpatialPrivacyClass.PUBLIC,
+        scene_id="public-export-b",
+    )
+
+    first_payload = first.to_dict()
+    second_payload = second.to_dict()
+    first_assets = first_payload["assets"]
+    first_aliases = {item["asset_id"] for item in first_assets}
+    second_aliases = {item["asset_id"] for item in second_payload["assets"]}
+    assert first_aliases
+    assert first_aliases.isdisjoint(second_aliases)
+    assert all(item.startswith("public-asset-") for item in first_aliases)
+    assert all(item["uri"] == f"aura://public/{item['asset_id']}" for item in first_assets)
+
+    raw_values: set[str] = set()
+    for binding in fixture.asset_pack.assets:
+        raw_values.update(
+            {
+                binding.asset_id,
+                binding.uri,
+                binding.content_digest,
+                binding.import_receipt_digest,
+                binding.representation_digest,
+            }
+        )
+    raw_values.update(storey.name for storey in fixture.asset_pack.storeys)
+    serialized = str(first_payload)
+    assert all(value not in serialized for value in raw_values)
+
+    storey_entities = [
+        item for item in first_payload["entities"] if item["entity_type"] == SpatialEntityType.ASSET_INSTANCE.value
+    ]
+    assert storey_entities
+    assert all(set(item["asset_ids"]) <= first_aliases for item in storey_entities)
+    assert all(item["label"].startswith("Storey ") for item in storey_entities)
+    assert all(
+        item["metadata"]["representation_digest"]
+        not in {binding.representation_digest for binding in fixture.asset_pack.assets}
+        for item in first_assets
+    )
+    assert all(
+        item["metadata"]["import_receipt_digest"]
+        not in {binding.import_receipt_digest for binding in fixture.asset_pack.assets}
+        for item in first_assets
+    )

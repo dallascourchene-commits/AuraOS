@@ -278,3 +278,54 @@ test("Construction renderer rejects higher-order splats before initializing owne
   assert.equal(presentation.initialized, 0);
   assert.equal(presentation.disposed, 0);
 });
+
+
+test("Construction renderer matches canonical unit-scaled frame composition", async () => {
+  const { scene, plan } = meshScene();
+  const root = scene.frames.find((item) => item.frame_id === "frame:root");
+  root.unit_scale_meters = 0.001;
+  root.translation = [1000, 0, 0];
+  root.rotation_xyzw = [0, 0, 1, 1];
+  root.scale = [2, 2, 2];
+  const storey = scene.frames.find((item) => item.frame_id === "frame:storey:one");
+  storey.unit_scale_meters = 0.01;
+  storey.translation = [0, 400, 0];
+  storey.rotation_xyzw = [0, 0, 0, 2];
+
+  const renderer = new ConstructionSceneRenderer({
+    presentationRenderer: new PresentationRenderer(),
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+  });
+  await renderer.initialize(scene, plan, {
+    meshPayloads: [
+      {
+        asset_id: "asset:mesh:one",
+        source_digest: "1".repeat(64),
+        decoded_byte_length: 128,
+        resource: { local: true },
+      },
+      {
+        asset_id: "asset:mesh:two",
+        source_digest: "2".repeat(64),
+        decoded_byte_length: 128,
+        resource: { local: true },
+      },
+    ],
+  });
+
+  const transform = renderer.getAssetRenderTransform("asset:mesh:one");
+  const expectedRotation = [0, 0, Math.sqrt(0.5), Math.sqrt(0.5)];
+  const expectedTranslation = [-7, 0, 0];
+  const expectedScale = [0.02, 0.02, 0.02];
+  for (const [actual, expected] of [
+    [transform.translation, expectedTranslation],
+    [transform.rotation_xyzw, expectedRotation],
+    [transform.scale, expectedScale],
+  ]) {
+    actual.forEach((value, index) => {
+      assert.ok(Math.abs(value - expected[index]) < 1e-9);
+    });
+  }
+  await renderer.dispose();
+});

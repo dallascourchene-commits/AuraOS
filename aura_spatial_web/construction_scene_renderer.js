@@ -30,6 +30,13 @@ function finite(value, label) {
   return number;
 }
 
+function normalizeQuaternion(value, label) {
+  const rotation = value.map((item) => finite(item, label));
+  const norm = Math.hypot(...rotation);
+  if (norm <= 1e-12) throw new TypeError(`${label} must not be a zero quaternion`);
+  return Object.freeze(rotation.map((item) => item / norm));
+}
+
 function canonicalTransform(frame, label) {
   const translation = frame?.translation;
   const rotation = frame?.rotation_xyzw;
@@ -55,22 +62,30 @@ function canonicalTransform(frame, label) {
   ) {
     throw new TypeError(`${label}.scale must be a positive finite 3-vector`);
   }
+  const unitScaleMeters = finite(frame?.unit_scale_meters ?? 1, `${label}.unit_scale_meters`);
+  if (unitScaleMeters <= 0) {
+    throw new TypeError(`${label}.unit_scale_meters must be positive`);
+  }
   return Object.freeze({
     translation: Object.freeze([...translation]),
-    rotation_xyzw: Object.freeze([...rotation]),
+    rotation_xyzw: normalizeQuaternion(rotation, `${label}.rotation_xyzw`),
     scale: Object.freeze([...scale]),
+    unit_scale_meters: unitScaleMeters,
   });
 }
 
 function quaternionMultiply(left, right) {
   const [lx, ly, lz, lw] = left;
   const [rx, ry, rz, rw] = right;
-  return Object.freeze([
-    lw * rx + lx * rw + ly * rz - lz * ry,
-    lw * ry - lx * rz + ly * rw + lz * rx,
-    lw * rz + lx * ry - ly * rx + lz * rw,
-    lw * rw - lx * rx - ly * ry - lz * rz,
-  ]);
+  return normalizeQuaternion(
+    [
+      lw * rx + lx * rw + ly * rz - lz * ry,
+      lw * ry - lx * rz + ly * rw + lz * rx,
+      lw * rz + lx * ry - ly * rx + lz * rw,
+      lw * rw - lx * rx - ly * ry - lz * rz,
+    ],
+    "composed coordinate-frame rotation",
+  );
 }
 
 function rotateVector(rotation, vector) {
@@ -86,16 +101,39 @@ function rotateVector(rotation, vector) {
   ];
 }
 
+function rootWorldTransform(local) {
+  const geometricScale = Object.freeze([...local.scale]);
+  return Object.freeze({
+    translation: Object.freeze(
+      local.translation.map((value) => value * local.unit_scale_meters),
+    ),
+    rotation_xyzw: local.rotation_xyzw,
+    geometric_scale: geometricScale,
+    scale: Object.freeze(
+      geometricScale.map((value) => value * local.unit_scale_meters),
+    ),
+  });
+}
+
 function composeTransforms(parent, local) {
-  const scaledLocal = local.translation.map((value, index) => value * parent.scale[index]);
+  const localTranslationMeters = local.translation.map(
+    (value) => value * local.unit_scale_meters,
+  );
+  const scaledLocal = localTranslationMeters.map(
+    (value, index) => value * parent.geometric_scale[index],
+  );
   const rotatedLocal = rotateVector(parent.rotation_xyzw, scaledLocal);
+  const geometricScale = Object.freeze(
+    parent.geometric_scale.map((value, index) => value * local.scale[index]),
+  );
   return Object.freeze({
     translation: Object.freeze(
       parent.translation.map((value, index) => value + rotatedLocal[index]),
     ),
     rotation_xyzw: quaternionMultiply(parent.rotation_xyzw, local.rotation_xyzw),
+    geometric_scale: geometricScale,
     scale: Object.freeze(
-      parent.scale.map((value, index) => value * local.scale[index]),
+      geometricScale.map((value) => value * local.unit_scale_meters),
     ),
   });
 }
@@ -112,7 +150,7 @@ function resolveWorldTransform(frames, frameId, cache, active = new Set()) {
         resolveWorldTransform(frames, frame.parent_frame_id, cache, active),
         local,
       )
-    : local;
+    : rootWorldTransform(local);
   active.delete(frameId);
   cache.set(frameId, world);
   return world;
