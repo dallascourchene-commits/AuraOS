@@ -5,16 +5,16 @@ import pytest
 from aura_construction_demo_contracts import (
     CC_BY_4_0,
     CC_BY_4_0_URL,
+    TU_WIEN_DOI,
+    TU_WIEN_PUBLISHED_MD5,
+    TU_WIEN_SOURCE_FILENAME,
+    TU_WIEN_SOURCE_ID,
     ConstructionDemoAssetBinding,
     ConstructionDemoAssetPack,
     ConstructionDemoRepresentation,
     ConstructionDemoSourceManifest,
     ConstructionDemoStorey,
     ConstructionDemoTruthClass,
-    TU_WIEN_DOI,
-    TU_WIEN_PUBLISHED_MD5,
-    TU_WIEN_SOURCE_FILENAME,
-    TU_WIEN_SOURCE_ID,
 )
 from aura_construction_demo_fixture import (
     MINIMUM_TRADE_NAMES,
@@ -125,12 +125,8 @@ def test_g4_fixture_is_deterministic_complete_and_asset_bound() -> None:
     assert first == second
     assert first.fixture_digest == second.fixture_digest
     assert {item.name for item in first.trades} == MINIMUM_TRADE_NAMES
-    assert {item.status for item in first.work_packages} == {
-        item.value for item in ConstructionDemoWorkStatus
-    }
-    assert {item.storey_id for item in first.work_packages}.issubset(
-        {item.storey_id for item in pack.storeys}
-    )
+    assert {item.status for item in first.work_packages} == {item.value for item in ConstructionDemoWorkStatus}
+    assert {item.storey_id for item in first.work_packages}.issubset({item.storey_id for item in pack.storeys})
     assert all(item.scope.project_id == first.state.project_id for item in first.work_packages)
     assert all(item.scope.zone_id == item.zone_id for item in first.work_packages)
     assert len(first.budget_lines) == len(first.work_packages)
@@ -149,14 +145,8 @@ def test_g4_blocked_clearance_and_safe_alternative_remain_review_only() -> None:
     assert readiness.ready is False
     assert "non_dispositive_evidence_only" in readiness.blockers
 
-    unsafe = next(
-        item for item in fixture.alternatives
-        if item.alternative_id == "alternative-continue-drilling"
-    )
-    safe = next(
-        item for item in fixture.alternatives
-        if item.alternative_id == "alternative-shift-preparation"
-    )
+    unsafe = next(item for item in fixture.alternatives if item.alternative_id == "alternative-continue-drilling")
+    safe = next(item for item in fixture.alternatives if item.alternative_id == "alternative-shift-preparation")
     assert unsafe.admissible is False
     assert unsafe.automatic_execution is False
     assert safe.admissible is True
@@ -172,14 +162,8 @@ def test_g4_blocked_clearance_and_safe_alternative_remain_review_only() -> None:
 def test_g4_runtime_packet_hard_blocks_unsafe_candidate() -> None:
     fixture = build_construction_demo_project_fixture(_pack())
     packet = build_construction_demo_runtime_packet(fixture)
-    unsafe_id = next(
-        item.candidate_id for item in fixture.candidates
-        if item.title == "Continue upper-floor drilling"
-    )
-    assessment = next(
-        item for item in packet["evaluation"]["assessments"]
-        if item["candidate_id"] == unsafe_id
-    )
+    unsafe_id = next(item.candidate_id for item in fixture.candidates if item.title == "Continue upper-floor drilling")
+    assessment = next(item for item in packet["evaluation"]["assessments"] if item["candidate_id"] == unsafe_id)
 
     assert packet["state_digest"] == fixture.state.state_digest
     assert packet["proposal_only"] is True
