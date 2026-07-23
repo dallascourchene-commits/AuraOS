@@ -46,6 +46,16 @@ jobs:
           PY
           ruff check --fix aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
           ruff format aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
+      - name: Reproduce docs and cleanup mutations
+        run: |
+          printf '\n<!-- AURA_CONSTRUCTION_G7_G8 -->\nConstruction finalization diagnostic.\n' >> README.md
+          printf '\n<!-- AURA_CONSTRUCTION_G7_G8 -->\nConstruction finalization diagnostic.\n' >> USER_GUIDE.md
+          printf '\n<!-- AURA_CONSTRUCTION_G7_G8 -->\nConstruction finalization diagnostic.\n' >> .aura/ARCHITECTURE.md
+          rm -f .github/pull_request_template_construction_g7_g8.md
+          rm -f .github/workflows/aura-construction-g7-g8-finalize.yml
+          rm -f .github/workflows/aura-construction-g7-g8-repair.yml
+          rm -f .github/workflows/aura-construction-g7-g8-publish.yml
+          rm -f docs/AURA_CONSTRUCTION_ARENA_G7_G8_{COMPLETION_ORDER,DEFINITION_OF_DONE,DOC_SYNC_REQUIREMENTS,EXACT_HEAD_POLICY,FINAL_HANDOFF,FINAL_REVIEW_PROMPT,MERGE_GATES,NO_NEW_AUTHORITY,OPERATOR_CHECKLIST,PROOF_MATRIX,RECOVERY_POINT,RELEASE_NOTES,SCOPE_LOCK,TEST_INVENTORY,VERIFICATION_COMMANDS}.md
       - name: Reproduce navigation generation
         run: |
           python aura_codebase_navigator.py
