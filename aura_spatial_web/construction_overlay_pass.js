@@ -28,6 +28,44 @@ function finiteDay(value) {
   return day;
 }
 
+function finiteVector(value, length, label, fallback, { positive = false } = {}) {
+  const candidate = value ?? fallback;
+  if (
+    !Array.isArray(candidate) ||
+    candidate.length !== length ||
+    candidate.some(
+      (item) =>
+        typeof item !== "number" ||
+        !Number.isFinite(item) ||
+        (positive && item <= 0),
+    )
+  ) {
+    throw new TypeError(`${label} must be a finite ${length}-vector`);
+  }
+  return Object.freeze([...candidate]);
+}
+
+function canonicalTransform(value, label = "presentation_transform") {
+  const source = value || {};
+  return Object.freeze({
+    translation: finiteVector(
+      source.translation,
+      3,
+      `${label}.translation`,
+      [0, 0, 0],
+    ),
+    rotation_xyzw: finiteVector(
+      source.rotation_xyzw,
+      4,
+      `${label}.rotation_xyzw`,
+      [0, 0, 0, 1],
+    ),
+    scale: finiteVector(source.scale, 3, `${label}.scale`, [1, 1, 1], {
+      positive: true,
+    }),
+  });
+}
+
 function deepFreeze(value) {
   if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
   Object.freeze(value);
@@ -53,6 +91,7 @@ export class ConstructionOverlayPass {
     this.layers = new Map(CONSTRUCTION_OVERLAY_LAYERS.map((name) => [name, true]));
     this.timelineDay = 1_000_000;
     this.visibleFrameIds = null;
+    this.presentationTransforms = new Map();
     this.disposer = null;
     this.initialized = false;
     this.disposed = false;
@@ -64,6 +103,12 @@ export class ConstructionOverlayPass {
     }
     validateSceneProjection(scenePayload);
     this.scene = deepFreeze(structuredClone(scenePayload));
+    for (const frame of this.scene.frames) {
+      this.presentationTransforms.set(
+        frame.frame_id,
+        canonicalTransform(frame, `frame ${frame.frame_id}`),
+      );
+    }
     this.initialized = true;
     return this.status();
   }
@@ -89,6 +134,26 @@ export class ConstructionOverlayPass {
     this.visibleFrameIds = new Set(frameIds);
   }
 
+  setPresentationTransform(frameId, transform) {
+    if (!this.presentationTransforms.has(frameId)) {
+      throw new RangeError("unknown Construction overlay frame");
+    }
+    this.presentationTransforms.set(
+      frameId,
+      canonicalTransform(transform, `frame ${frameId} presentation_transform`),
+    );
+  }
+
+  resetPresentationTransforms() {
+    if (!this.scene) return;
+    for (const frame of this.scene.frames) {
+      this.presentationTransforms.set(
+        frame.frame_id,
+        canonicalTransform(frame, `frame ${frame.frame_id}`),
+      );
+    }
+  }
+
   _frameVisible(frameId) {
     return this.visibleFrameIds === null || this.visibleFrameIds.has(frameId);
   }
@@ -98,7 +163,8 @@ export class ConstructionOverlayPass {
       throw new Error("Construction overlay pass is not initialized");
     }
     const entities = this.scene.entities.filter((item) => this._frameVisible(item.frame_id));
-    const entityIds = new Set(entities.map((item) => item.entity_id));
+    const entitiesById = new Map(entities.map((item) => [item.entity_id, item]));
+    const entityIds = new Set(entitiesById.keys());
     const links = this.scene.links.filter(
       (item) => entityIds.has(item.source_entity_id) && entityIds.has(item.target_entity_id),
     );
@@ -106,9 +172,18 @@ export class ConstructionOverlayPass {
       const day = item.metadata?.day ?? item.metadata?.planned_start_day ?? -Infinity;
       return typeof day !== "number" || day <= this.timelineDay;
     };
+    const presentationTransform = (frameId) =>
+      this.presentationTransforms.get(frameId) || canonicalTransform(null);
     const model = {
       version: CONSTRUCTION_OVERLAY_PASS_VERSION,
       timeline_day: this.timelineDay,
+      presentation_transforms: Object.freeze(
+        Object.fromEntries(
+          [...this.presentationTransforms.entries()].sort(([left], [right]) =>
+            left.localeCompare(right),
+          ),
+        ),
+      ),
       floor_plans: this.layers.get("floorPlans")
         ? this.scene.assets
             .filter((item) => item.asset_type === "PLANE" && this._frameVisible(item.frame_id))
@@ -117,6 +192,7 @@ export class ConstructionOverlayPass {
               frame_id: item.frame_id,
               content_digest: item.content_digest,
               source_transform_immutable: true,
+              presentation_transform: presentationTransform(item.frame_id),
             }))
         : [],
       status: this.layers.get("status")
@@ -127,12 +203,18 @@ export class ConstructionOverlayPass {
               frame_id: item.frame_id,
               status: item.metadata.status_overlay,
               label: item.label,
+              presentation_transform: presentationTransform(item.frame_id),
             }))
         : [],
       trades: this.layers.get("trades")
         ? entities
             .filter((item) => sourceRefIncludes(item, "construction-demo-trade:"))
-            .map((item) => ({ entity_id: item.entity_id, label: item.label }))
+            .map((item) => ({
+              entity_id: item.entity_id,
+              frame_id: item.frame_id,
+              label: item.label,
+              presentation_transform: presentationTransform(item.frame_id),
+            }))
         : [],
       blockers: this.layers.get("blockers")
         ? links
@@ -149,9 +231,11 @@ export class ConstructionOverlayPass {
             .filter((item) => sourceRefIncludes(item, "construction-demo-inspection:"))
             .map((item) => ({
               entity_id: item.entity_id,
+              frame_id: item.frame_id,
               label: item.label,
               status: item.metadata?.status_overlay || "UNKNOWN",
               scheduled_day: item.metadata?.scheduled_day ?? null,
+              presentation_transform: presentationTransform(item.frame_id),
             }))
         : [],
       dependencies: this.layers.get("dependencies")
@@ -168,11 +252,13 @@ export class ConstructionOverlayPass {
             .filter((item) => sourceRefIncludes(item, "construction-demo-rule:"))
             .map((item) => ({
               entity_id: item.entity_id,
+              frame_id: item.frame_id,
               label: item.label,
               requirement: item.metadata?.requirement || "",
               truth_class: item.metadata?.truth_class || "",
               legal_authority: false,
               regulatory_authority: false,
+              presentation_transform: presentationTransform(item.frame_id),
             }))
         : [],
       source_geometry_mutated: false,
@@ -180,7 +266,15 @@ export class ConstructionOverlayPass {
       ...AUTHORITY_ENVELOPE,
     };
     const itemCount = CONSTRUCTION_OVERLAY_LAYERS.reduce(
-      (total, name) => total + model[name === "floorPlans" ? "floor_plans" : name === "syntheticRules" ? "synthetic_rules" : name].length,
+      (total, name) =>
+        total +
+        model[
+          name === "floorPlans"
+            ? "floor_plans"
+            : name === "syntheticRules"
+              ? "synthetic_rules"
+              : name
+        ].length,
       0,
     );
     if (itemCount > this.maxOverlayItems) {
@@ -226,6 +320,7 @@ export class ConstructionOverlayPass {
     } finally {
       this.scene = null;
       this.visibleFrameIds = null;
+      this.presentationTransforms.clear();
       this.initialized = false;
       this.disposed = true;
     }
