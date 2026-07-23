@@ -1,0 +1,121 @@
+name: Format and publish Construction G7-G8 review repairs
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-construction-g7-g8-review-repair-v4.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-construction-g7-g8-review-repair-v4-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Apply complete reviewed patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import textwrap
+          workflow = Path('.github/workflows/aura-construction-g7-g8-review-repair-v3.yml')
+          source = workflow.read_text(encoding='utf-8')
+          marker = "          python - <<'PY'\n"
+          start = source.index(marker) + len(marker)
+          end = source.index("\n          PY\n\n      - name: Install focused", start)
+          exec(compile(textwrap.dedent(source[start:end]), str(workflow), 'exec'), {})
+          PY
+
+      - name: Install focused dependencies
+        run: |
+          python -m pip install -q --disable-pip-version-check -r requirements.txt
+          python -m pip install -q --disable-pip-version-check pytest ruff
+
+      - name: Format repaired Python
+        run: |
+          ruff check --fix \
+            aura_construction_demo_director.py \
+            aura_spatial_cli.py \
+            scripts/aura_fetch_construction_demo_source.py \
+            tests/test_aura_construction_demo_director.py \
+            tests/test_aura_spatial_cli_construction_security.py \
+            tests/test_aura_fetch_construction_demo_source.py
+          ruff format \
+            aura_construction_demo_director.py \
+            aura_spatial_cli.py \
+            scripts/aura_fetch_construction_demo_source.py \
+            tests/test_aura_construction_demo_director.py \
+            tests/test_aura_spatial_cli_construction_security.py \
+            tests/test_aura_fetch_construction_demo_source.py
+
+      - name: Verify Python compilation and lint
+        run: |
+          python -m py_compile aura_construction_demo_director.py aura_spatial_cli.py scripts/aura_fetch_construction_demo_source.py
+          ruff check aura_construction_demo_director.py aura_spatial_cli.py scripts/aura_fetch_construction_demo_source.py \
+            tests/test_aura_construction_demo_director.py tests/test_aura_spatial_cli_construction_security.py \
+            tests/test_aura_fetch_construction_demo_source.py
+          ruff format --check aura_construction_demo_director.py aura_spatial_cli.py scripts/aura_fetch_construction_demo_source.py \
+            tests/test_aura_construction_demo_director.py tests/test_aura_spatial_cli_construction_security.py \
+            tests/test_aura_fetch_construction_demo_source.py
+
+      - name: Verify director and HTTP security
+        run: python -m pytest -q --tb=short tests/test_aura_construction_demo_director.py
+      - name: Verify CLI serving security
+        run: python -m pytest -q --tb=short tests/test_aura_spatial_cli_construction_security.py
+      - name: Verify source provenance
+        run: python -m pytest -q --tb=short tests/test_aura_fetch_construction_demo_source.py
+
+      - name: Verify JavaScript syntax
+        run: |
+          node --check aura_spatial_web/construction_demo_app.js
+          node --check aura_spatial_web/construction_mesh_pass.js
+          node --check aura_spatial_web/construction_overlay_pass.js
+          node --check aura_spatial_web/construction_scene_renderer.js
+          node --check aura_spatial_web/gaussian_renderer.js
+          node --check aura_spatial_web/webgl2_gaussian_pass.js
+      - name: Verify renderer contracts
+        run: node --test tests/js/spatial-construction-demo.test.mjs
+      - name: Verify review regressions
+        run: node --test tests/js/spatial-construction-review-regressions.test.mjs
+      - name: Verify Gaussian covariance
+        run: node --test tests/js/spatial-gaussian-covariance.test.mjs
+
+      - name: Publish exact verified tree
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS Review Repair Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add aura_construction_demo_director.py aura_spatial_cli.py \
+            aura_spatial_web/construction_demo_app.js aura_spatial_web/construction_mesh_pass.js \
+            aura_spatial_web/construction_overlay_pass.js aura_spatial_web/construction_scene_renderer.js \
+            aura_spatial_web/gaussian_renderer.js aura_spatial_web/webgl2_gaussian_pass.js \
+            scripts/aura_fetch_construction_demo_source.py tests/test_aura_construction_demo_director.py \
+            tests/test_aura_spatial_cli_construction_security.py tests/test_aura_fetch_construction_demo_source.py \
+            tests/js/spatial-construction-demo.test.mjs tests/js/spatial-construction-review-regressions.test.mjs
+          git commit -m "fix(g8): resolve complete adversarial Construction review"
+          git fetch --no-tags origin "$TARGET_BRANCH"
+          git merge-base --is-ancestor "$EXPECTED_HEAD" "origin/$TARGET_BRANCH"
+          git rebase "origin/$TARGET_BRANCH"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" push origin HEAD:"$TARGET_BRANCH"
