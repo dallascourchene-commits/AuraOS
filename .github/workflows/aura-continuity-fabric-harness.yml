@@ -1,0 +1,103 @@
+name: Aura Continuity Fabric Architecture Scan
+
+on:
+  push:
+    branches:
+      - "analysis/aura-continuity-fabric-harness-*"
+    paths:
+      - ".aura/CONTINUITY_FABRIC_HARNESS_REQUEST"
+
+permissions:
+  contents: read
+  statuses: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Check out exact analysis snapshot
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Prepare Aura architecture harness
+        run: |
+          python scripts/aura_architecture_harness.py \
+            --repo-root . \
+            prepare \
+            --venv "${RUNNER_TEMP}/aura-harness-venv" \
+            --install-requirements
+
+      - name: Validate Aura architecture surfaces
+        run: |
+          python scripts/aura_architecture_harness.py \
+            --repo-root . \
+            doctor \
+            --venv "${RUNNER_TEMP}/aura-harness-venv" \
+            > "${RUNNER_TEMP}/aura-harness-doctor.json"
+
+      - name: Run objective-bounded Aura architecture scan
+        run: |
+          python scripts/aura_architecture_harness.py \
+            --repo-root . \
+            run \
+            --venv "${RUNNER_TEMP}/aura-harness-venv" \
+            --output-dir "${RUNNER_TEMP}/aura-continuity-fabric-run" \
+            --objective "Determine the highest-leverage, lowest-duplication integration of purpose-conditioned sensitivity geometry, protected computational pathways, safe-update boundaries, low-interference mutation, adaptive memory admission, immutable raw-evidence retention, recurrence-gated consolidation, episodic-to-procedural-to-rule promotion and demotion, sensitivity-weighted replay, evidence-sufficiency retrieval, adaptive ST3GG fidelity, active graph reconstruction, model-endpoint sensitivity, and topology consequence mapping across Aura's DIKWP, J-Space, QDKT, ST3GG, FST routing, Capability Connectome, Relational Index, Relationship Atlas, Relational Synthesis, Emergent Properties, Crucible, Planning Board, Model Cognome, Waboose, Agent Bridge, Council V3, Architect, and Observatory while preserving canonical owners, authority boundaries, human or community decision rights, and exact-source patch authority." \
+            --combine-with "Capability Connectome" "Relational Index" "Relationship Atlas" "Relational Synthesis" "Emergent Properties" "DIKWP" "J-Space" "QDKT" "ST3GG" "FST Routing" "Crucible" "Planning Board" "Model Cognome" "Coding Waboose" "Agent Bridge" "Council V3" "Architect" "Observatory" \
+            --reference-file docs/AURA_CONTINUITY_FABRIC_RESEARCH_INPUT.md \
+            --atlas-profile MINIMAL \
+            --top 30 \
+            --watchdog-checkin-seconds 600 \
+            --watchdog-pause-seconds 1200 \
+            > "${RUNNER_TEMP}/aura-continuity-fabric-console.json"
+
+      - name: Record exact source identity
+        env:
+          OUTPUT_DIR: ${{ runner.temp }}/aura-continuity-fabric-run
+        run: |
+          python - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+          out = Path(os.environ["OUTPUT_DIR"])
+          payload = {
+              "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "source_branch": os.environ.get("GITHUB_REF_NAME", ""),
+              "workflow_run_id": os.environ.get("GITHUB_RUN_ID", ""),
+              "authority": "read_only_proposal_only_architecture_analysis",
+          }
+          (out / "source_identity.json").write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+          PY
+
+      - name: Upload Aura architecture evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-continuity-fabric-harness-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/aura-continuity-fabric-run/**
+            ${{ runner.temp }}/aura-harness-doctor.json
+            ${{ runner.temp }}/aura-continuity-fabric-console.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish discoverable run status
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          STATE="success"
+          if [ "${{ job.status }}" != "success" ]; then STATE="failure"; fi
+          gh api \
+            --method POST \
+            "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+            -f state="$STATE" \
+            -f context="aura-continuity-fabric-harness" \
+            -f description="Aura-native continuity integration scan; run ${GITHUB_RUN_ID}" \
+            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
