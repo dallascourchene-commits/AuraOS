@@ -1,0 +1,426 @@
+name: Aura Construction G6 Acceptance Repair
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-construction-g6-acceptance-repair.yml"
+      - "aura_spatial_web/gaussian_renderer.js"
+      - "aura_spatial_web/construction_scene_renderer.js"
+      - "tests/js/spatial-construction-demo.test.mjs"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-construction-g6-acceptance-repair-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Clone exact pull-request head
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git clone --no-tags --single-branch --depth=64 --branch "$HEAD_REF" "https://github.com/${GITHUB_REPOSITORY}.git" .
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Apply exact G6 acceptance repairs
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          gaussian_path = Path("aura_spatial_web/gaussian_renderer.js")
+          gaussian = gaussian_path.read_text(encoding="utf-8")
+          if "setVisibleAssetIds(assetIds = null)" not in gaussian:
+              gaussian = gaussian.replace(
+                  "    this.assets = Object.freeze([]);\n"
+                  "    this.limits = null;\n"
+                  "    this.buffers = new Set();\n"
+                  "    this.passDisposers = new Set();\n"
+                  "    this.cancelled = false;\n",
+                  "    this.assets = Object.freeze([]);\n"
+                  "    this.visibleAssetIds = null;\n"
+                  "    this.limits = null;\n"
+                  "    this.buffers = new Set();\n"
+                  "    this.passDisposers = new Set();\n"
+                  "    this.presentationDisposed = false;\n"
+                  "    this.cancelled = false;\n",
+                  1,
+              )
+              gaussian = gaussian.replace(
+                  "        await this.presentationRenderer.dispose();\n",
+                  "        await this._disposePresentationRenderer();\n",
+                  1,
+              )
+              anchor = "  async _releaseRepresentationResources() {\n"
+              methods = '''  setVisibleAssetIds(assetIds = null) {
+              if (![RENDERER_STATES.INITIALIZED, RENDERER_STATES.PRESENTED].includes(this.state)) {
+                throw new Error("Gaussian renderer is not initialized");
+              }
+              if (assetIds === null) {
+                this.visibleAssetIds = null;
+                return this.status();
+              }
+              if (!Array.isArray(assetIds) || assetIds.some((item) => typeof item !== "string")) {
+                throw new TypeError("visible Gaussian asset IDs must be null or an array of strings");
+              }
+              const ids = [...new Set(assetIds)].sort();
+              const known = new Set(this.assets.map((asset) => asset.asset_id));
+              const unknown = ids.filter((assetId) => !known.has(assetId));
+              if (unknown.length) throw new RangeError(`unknown Gaussian asset IDs: ${unknown.join(", ")}`);
+              this.visibleAssetIds = new Set(ids);
+              return this.status();
+            }
+
+            async _disposePresentationRenderer() {
+              if (this.presentationDisposed) return;
+              this.presentationDisposed = true;
+              await this.presentationRenderer.dispose();
+            }
+
+            async _releaseDrawResources() {
+              let firstError = null;
+              for (const dispose of [...this.passDisposers].reverse()) {
+                try {
+                  await dispose();
+                } catch (error) {
+                  firstError ||= error;
+                }
+              }
+              this.passDisposers.clear();
+              this.buffers.clear();
+              if (firstError) throw firstError;
+            }
+
+          '''
+              if anchor not in gaussian:
+                  raise SystemExit("Gaussian resource-release anchor is missing")
+              gaussian = gaussian.replace(anchor, methods + anchor, 1)
+              old_release = '''  async _releaseRepresentationResources() {
+              let firstError = null;
+              for (const dispose of [...this.passDisposers].reverse()) {
+                try {
+                  await dispose();
+                } catch (error) {
+                  firstError ||= error;
+                }
+              }
+              this.passDisposers.clear();
+              this.buffers.clear();
+              this.assets = Object.freeze([]);
+              if (firstError) throw firstError;
+            }
+          '''
+              new_release = '''  async _releaseRepresentationResources() {
+              let cleanupError = null;
+              try {
+                await this._releaseDrawResources();
+              } catch (error) {
+                cleanupError = error;
+              }
+              this.assets = Object.freeze([]);
+              this.visibleAssetIds = null;
+              if (cleanupError) throw cleanupError;
+            }
+          '''
+              if old_release not in gaussian:
+                  raise SystemExit("Gaussian representation-release span is missing")
+              gaussian = gaussian.replace(old_release, new_release, 1)
+              gaussian = gaussian.replace(
+                  '    if (this.state !== RENDERER_STATES.INITIALIZED) throw new Error("Gaussian renderer is not initialized");\n'
+                  '    if (signal?.aborted || this.cancelled) throw new Error("Gaussian presentation cancelled");\n'
+                  '    const started = this.now();\n',
+                  '    if (![RENDERER_STATES.INITIALIZED, RENDERER_STATES.PRESENTED].includes(this.state)) {\n'
+                  '      throw new Error("Gaussian renderer is not initialized");\n'
+                  '    }\n'
+                  '    if (signal?.aborted || this.cancelled) throw new Error("Gaussian presentation cancelled");\n'
+                  '    await this._releaseDrawResources();\n'
+                  '    const visibleAssets =\n'
+                  '      this.visibleAssetIds === null\n'
+                  '        ? this.assets\n'
+                  '        : this.assets.filter((asset) => this.visibleAssetIds.has(asset.asset_id));\n'
+                  '    const started = this.now();\n',
+                  1,
+              )
+              gaussian = gaussian.replace("      for (const asset of this.assets) {\n", "      for (const asset of visibleAssets) {\n", 1)
+              gaussian = gaussian.replace(
+                  "      gpu_bytes: this.assets.reduce((total, asset) => total + asset.gpu_bytes, 0),\n"
+                  "      allocation_bytes: this.assets.reduce(\n",
+                  "      gpu_bytes: visibleAssets.reduce((total, asset) => total + asset.gpu_bytes, 0),\n"
+                  "      allocation_bytes: visibleAssets.reduce(\n",
+                  1,
+              )
+              start = gaussian.index("  async markDeviceLost() {")
+              end = gaussian.index("\n\n  status() {", start)
+              replacement = '''  async markDeviceLost() {
+              if (this.state === RENDERER_STATES.DISPOSED) return this.status();
+              this.cancelled = true;
+              const errors = [];
+              try {
+                await this._releaseRepresentationResources();
+              } catch (error) {
+                errors.push(error);
+              }
+              try {
+                await this._disposePresentationRenderer();
+              } catch (error) {
+                errors.push(error);
+              }
+              this.scene = null;
+              this.plan = null;
+              this.limits = null;
+              this.visibleAssetIds = null;
+              this.state = RENDERER_STATES.LOST;
+              if (errors.length === 1) throw errors[0];
+              if (errors.length > 1) throw new AggregateError(errors, "Gaussian device-loss cleanup failed");
+              return this.status();
+            }
+
+            async dispose() {
+              if (this.state === RENDERER_STATES.DISPOSED) return this.status();
+              this.cancelled = true;
+              const errors = [];
+              try {
+                await this._releaseRepresentationResources();
+              } catch (error) {
+                errors.push(error);
+              }
+              this.scene = null;
+              this.plan = null;
+              this.limits = null;
+              this.visibleAssetIds = null;
+              try {
+                await this._disposePresentationRenderer();
+              } catch (error) {
+                errors.push(error);
+              }
+              if (errors.length) {
+                this.state = RENDERER_STATES.LOST;
+                if (errors.length === 1) throw errors[0];
+                throw new AggregateError(errors, "Gaussian disposal failed");
+              }
+              this.state = RENDERER_STATES.DISPOSED;
+              return this.status();
+            }
+          '''
+              gaussian = gaussian[:start] + replacement + gaussian[end:]
+              gaussian = gaussian.replace(
+                  "      presentation_owner_retained: true,\n",
+                  "      presentation_owner_retained: !this.presentationDisposed,\n"
+                  "      visible_asset_filter_count:\n"
+                  "        this.visibleAssetIds === null ? null : this.visibleAssetIds.size,\n",
+                  1,
+              )
+              gaussian_path.write_text(gaussian, encoding="utf-8")
+
+          controller_path = Path("aura_spatial_web/construction_scene_renderer.js")
+          controller = controller_path.read_text(encoding="utf-8")
+          if "visibleGaussianAssetIds" not in controller:
+              controller = controller.replace(
+                  "    this.meshPass.setVisibleFrameIds([frameId]);\n"
+                  "    this.overlayPass.setVisibleFrameIds([frameId]);\n",
+                  "    this.meshPass.setVisibleFrameIds([frameId]);\n"
+                  "    this.overlayPass.setVisibleFrameIds([frameId]);\n"
+                  "    if (this.gaussianOwnerActive) {\n"
+                  "      const visibleGaussianAssetIds = this.scene.assets\n"
+                  "        .filter((asset) => asset.asset_type === \"GAUSSIAN_SPLAT\" && asset.frame_id === frameId)\n"
+                  "        .map((asset) => asset.asset_id);\n"
+                  "      this.gaussianRenderer.setVisibleAssetIds(visibleGaussianAssetIds);\n"
+                  "    }\n",
+                  1,
+              )
+              controller = controller.replace(
+                  "    this.meshPass.setVisibleFrameIds(null);\n"
+                  "    this.overlayPass.setVisibleFrameIds(null);\n",
+                  "    this.meshPass.setVisibleFrameIds(null);\n"
+                  "    this.overlayPass.setVisibleFrameIds(null);\n"
+                  "    if (this.gaussianOwnerActive) this.gaussianRenderer.setVisibleAssetIds(null);\n",
+                  1,
+              )
+              controller_path.write_text(controller, encoding="utf-8")
+
+          test_path = Path("tests/js/spatial-construction-demo.test.mjs")
+          tests = test_path.read_text(encoding="utf-8")
+          old_device = '''  const status = await renderer.markDeviceLost();
+            assert.equal(status.state, "LOST");
+            assert.equal(status.renderer_authority, false);
+          });
+          '''
+          new_device = '''  const status = await renderer.markDeviceLost();
+            assert.equal(status.state, "LOST");
+            assert.equal(status.renderer_authority, false);
+            assert.equal(presentation.disposed, 1);
+            await renderer.dispose();
+            assert.equal(presentation.disposed, 1);
+          });
+          '''
+          if old_device in tests:
+              tests = tests.replace(old_device, new_device, 1)
+          elif new_device not in tests:
+              raise SystemExit("Construction device-loss test span is missing")
+
+          test_name = "Construction storey isolation filters Gaussian assets"
+          if test_name not in tests:
+              tests += '''
+
+          test("Construction storey isolation filters Gaussian assets", async () => {
+            const { scene, plan } = constructionFixture();
+            scene.frames.push({
+              frame_id: "frame:storey:second",
+              parent_frame_id: "frame:root",
+              handedness: "RIGHT_HANDED",
+              up_axis: "Y_UP",
+              unit_scale_meters: 1,
+              translation: [0, 8, 0],
+              rotation_xyzw: [0, 0, 0, 1],
+              scale: [1, 1, 1],
+              source_refs: ["fixture:storey:second"],
+              truth_class: "PRESENTATION",
+              projection_only: true,
+            });
+            scene.assets.push({
+              asset_id: "asset:splats:second",
+              asset_type: "GAUSSIAN_SPLAT",
+              uri: "aura://construction/splats-second.spz",
+              media_type: "application/vnd.aura.spz",
+              content_digest: `sha256:${"4".repeat(64)}`,
+              byte_length: 48,
+              frame_id: "frame:storey:second",
+              bounds_min: [0, 0, 0],
+              bounds_max: [1, 1, 1],
+              source_refs: ["fixture:splats:second"],
+              truth_class: "PRESENTATION",
+              immutable: true,
+              metadata: {
+                import_receipt_digest: "b".repeat(64),
+                representation_digest: REPRESENTATION_DIGEST,
+                representation_digest_version: "AURA_GAUSSIAN_REPRESENTATION_V1",
+                representation_bytes_per_splat: 60,
+                sh_degree: 0,
+                gaussian_sh_degree: 0,
+                gaussian_color_space: "SPZ_INTERNAL_WIDE_RGB",
+              },
+            });
+            scene.entities.push({
+              entity_id: "entity:storey:second",
+              entity_type: "ASSET_INSTANCE",
+              label: "Second storey",
+              frame_id: "frame:storey:second",
+              asset_ids: ["asset:splats:second"],
+              source_refs: ["construction-demo-storey:second"],
+              position: [0, 0, 0],
+              rotation_xyzw: [0, 0, 0, 1],
+              scale: [1, 1, 1],
+              truth_class: "PRESENTATION",
+              selectable: true,
+              projection_only: true,
+              patch_authority: false,
+              metadata: {
+                source_transform: { translation: [0, 8, 0], rotation_xyzw: [0, 0, 0, 1], scale: [1, 1, 1] },
+                presentation_transform: { translation: [0, 0, 0], rotation_xyzw: [0, 0, 0, 1], scale: [1, 1, 1] },
+              },
+            });
+            plan.scene_entity_count = scene.entities.length;
+            plan.scene_asset_count = scene.assets.length;
+            plan.scene_asset_bytes = scene.assets.reduce((total, item) => total + item.byte_length, 0);
+
+            const presentation = new TestPresentationRenderer();
+            const drawn = [];
+            const renderer = new ConstructionSceneRenderer({
+              presentationRenderer: presentation,
+              meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+              overlayPass: new ConstructionOverlayPass(),
+              gaussianRenderer: new GaussianRenderer({
+                presentationRenderer: presentation,
+                drawGaussianPass: async (_resources, context) => {
+                  drawn.push(context.asset_id);
+                  return () => {};
+                },
+                now: () => 0,
+              }),
+            });
+            const secondPayload = {
+              ...gaussianPayload(),
+              asset_id: "asset:splats:second",
+              source_digest: "4".repeat(64),
+              derived_asset_digest: "b".repeat(64),
+            };
+            await renderer.initialize(scene, plan, {
+              meshPayloads: [{
+                asset_id: "asset:mesh",
+                source_digest: "1".repeat(64),
+                decoded_byte_length: 256,
+                resource: { local: true },
+              }],
+              gaussianPayloads: [gaussianPayload(), secondPayload],
+            });
+
+            renderer.isolateStorey("frame:storey");
+            const isolated = await renderer.present();
+            assert.equal(isolated.base_receipt.splat_count, 1);
+            assert.deepEqual(drawn, ["asset:splats"]);
+
+            renderer.showAllStoreys();
+            const all = await renderer.present();
+            assert.equal(all.base_receipt.splat_count, 2);
+            assert.deepEqual(drawn.slice(-2), ["asset:splats", "asset:splats:second"]);
+            await renderer.dispose();
+          });
+          '''
+          test_path.write_text(tests, encoding="utf-8")
+          PY
+
+          node --check aura_spatial_web/gaussian_renderer.js
+          node --check aura_spatial_web/construction_scene_renderer.js
+          node --check tests/js/spatial-construction-demo.test.mjs
+          node --test tests/js/spatial-construction-demo.test.mjs
+          npm run test:spatial
+
+      - name: Commit each repaired owner
+        run: |
+          set -euo pipefail
+          git config user.name "Aura Architecture Harness"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          commit_owner() {
+            path="$1"
+            message="$2"
+            if ! git diff --quiet -- "$path"; then
+              git add "$path"
+              git commit -m "$message"
+            fi
+          }
+
+          commit_owner aura_spatial_web/gaussian_renderer.js \
+            "fix(web): filter Gaussian assets and dispose owners exactly"
+          commit_owner aura_spatial_web/construction_scene_renderer.js \
+            "fix(web): isolate Gaussian Construction storeys"
+          commit_owner tests/js/spatial-construction-demo.test.mjs \
+            "test(web): verify Gaussian isolation and device loss"
+          test -z "$(git status --short)"
+
+      - name: Push G6 acceptance stack
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          EVENT_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          if test "$(git rev-parse HEAD)" = "$EVENT_HEAD"; then
+            echo "G6 acceptance repairs already present."
+            exit 0
+          fi
+          git fetch --no-tags origin "$HEAD_REF"
+          test "$(git rev-parse FETCH_HEAD)" = "$EVENT_HEAD"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin "HEAD:${HEAD_REF}"
