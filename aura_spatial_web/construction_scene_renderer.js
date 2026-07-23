@@ -30,6 +30,38 @@ function finite(value, label) {
   return number;
 }
 
+function canonicalTransform(frame, label) {
+  const translation = frame?.translation;
+  const rotation = frame?.rotation_xyzw;
+  const scale = frame?.scale;
+  if (
+    !Array.isArray(translation) ||
+    translation.length !== 3 ||
+    translation.some((item) => typeof item !== "number" || !Number.isFinite(item))
+  ) {
+    throw new TypeError(`${label}.translation must be a finite 3-vector`);
+  }
+  if (
+    !Array.isArray(rotation) ||
+    rotation.length !== 4 ||
+    rotation.some((item) => typeof item !== "number" || !Number.isFinite(item))
+  ) {
+    throw new TypeError(`${label}.rotation_xyzw must be a finite 4-vector`);
+  }
+  if (
+    !Array.isArray(scale) ||
+    scale.length !== 3 ||
+    scale.some((item) => typeof item !== "number" || !Number.isFinite(item) || item <= 0)
+  ) {
+    throw new TypeError(`${label}.scale must be a positive finite 3-vector`);
+  }
+  return Object.freeze({
+    translation: Object.freeze([...translation]),
+    rotation_xyzw: Object.freeze([...rotation]),
+    scale: Object.freeze([...scale]),
+  });
+}
+
 function viewProjection(renderer) {
   const camera = renderer?.camera;
   const canvas = renderer?.canvas;
@@ -113,6 +145,7 @@ export class ConstructionSceneRenderer {
     this.selectedEntityId = null;
     this.storeyFrames = Object.freeze([]);
     this.assetFrames = new Map();
+    this.basePresentationTransforms = new Map();
     this.presentationTransforms = new Map();
     this.hasMeshes = false;
     this.hasSplats = false;
@@ -133,6 +166,21 @@ export class ConstructionSceneRenderer {
     this.plan = validateRenderPlan(planPayload, this.scene);
     this.hasMeshes = this.scene.assets.some((item) => item.asset_type === "MESH");
     this.hasSplats = this.scene.assets.some((item) => item.asset_type === "GAUSSIAN_SPLAT");
+    if (this.hasSplats) {
+      const invalidManifest = this.scene.assets.some(
+        (asset) =>
+          asset.asset_type === "GAUSSIAN_SPLAT" &&
+          (asset.metadata?.gaussian_sh_degree !== 0 || asset.metadata?.sh_degree !== 0),
+      );
+      const invalidPayload =
+        Array.isArray(gaussianPayloads) && gaussianPayloads.some((payload) => payload?.sh_degree !== 0);
+      if (invalidManifest || invalidPayload) {
+        this.scene = null;
+        this.plan = null;
+        this.state = RENDERER_STATES.LOST;
+        throw new TypeError("Construction renderer accepts degree-0 Gaussian SPZ assets only");
+      }
+    }
     this.storeyFrames = Object.freeze(
       this.scene.entities
         .filter((item) => item.entity_type === "ASSET_INSTANCE")
@@ -143,17 +191,24 @@ export class ConstructionSceneRenderer {
     for (const asset of this.scene.assets) {
       this.assetFrames.set(asset.asset_id, asset.frame_id);
     }
+    const rawFrames = new Map(scenePayload.frames.map((frame) => [frame.frame_id, frame]));
     for (const frameId of this.storeyFrames) {
-      this.presentationTransforms.set(frameId, Object.freeze({
-        translation: Object.freeze([0, 0, 0]),
-        rotation_xyzw: Object.freeze([0, 0, 0, 1]),
-        scale: Object.freeze([1, 1, 1]),
-      }));
+      const frame = rawFrames.get(frameId);
+      if (!frame) throw new TypeError("Construction storey frame is missing");
+      const transform = canonicalTransform(frame, `frame ${frameId}`);
+      this.basePresentationTransforms.set(frameId, transform);
+      this.presentationTransforms.set(frameId, transform);
     }
 
     try {
       this.meshPass.initialize(scenePayload, meshPayloads);
       this.overlayPass.initialize(scenePayload);
+      for (const [frameId, transform] of this.presentationTransforms) {
+        if (this.scene.assets.some((asset) => asset.asset_type === "MESH" && asset.frame_id === frameId)) {
+          this.meshPass.setPresentationTransform(frameId, transform);
+        }
+        this.overlayPass.setPresentationTransform(frameId, transform);
+      }
       if (this.hasSplats) {
         this.gaussianOwnerActive = true;
         await this.gaussianRenderer.initialize(
@@ -210,24 +265,32 @@ export class ConstructionSceneRenderer {
     const amount = finite(spacing, "explode spacing");
     if (amount < 0 || amount > 100) throw new RangeError("explode spacing must be in [0, 100]");
     this.storeyFrames.forEach((frameId, index) => {
+      const base = this.basePresentationTransforms.get(frameId);
       const transform = Object.freeze({
-        translation: Object.freeze([0, index * amount, 0]),
-        rotation_xyzw: Object.freeze([0, 0, 0, 1]),
-        scale: Object.freeze([1, 1, 1]),
+        translation: Object.freeze([
+          base.translation[0],
+          base.translation[1] + index * amount,
+          base.translation[2],
+        ]),
+        rotation_xyzw: base.rotation_xyzw,
+        scale: base.scale,
       });
       this.presentationTransforms.set(frameId, transform);
-      this.meshPass.setPresentationTransform(frameId, transform);
+      if (this.scene.assets.some((asset) => asset.asset_type === "MESH" && asset.frame_id === frameId)) {
+        this.meshPass.setPresentationTransform(frameId, transform);
+      }
+      this.overlayPass.setPresentationTransform(frameId, transform);
     });
   }
 
   collapseStoreys() {
-    this.meshPass.resetPresentationTransforms();
     for (const frameId of this.storeyFrames) {
-      this.presentationTransforms.set(frameId, Object.freeze({
-        translation: Object.freeze([0, 0, 0]),
-        rotation_xyzw: Object.freeze([0, 0, 0, 1]),
-        scale: Object.freeze([1, 1, 1]),
-      }));
+      const transform = this.basePresentationTransforms.get(frameId);
+      this.presentationTransforms.set(frameId, transform);
+      if (this.scene.assets.some((asset) => asset.asset_type === "MESH" && asset.frame_id === frameId)) {
+        this.meshPass.setPresentationTransform(frameId, transform);
+      }
+      this.overlayPass.setPresentationTransform(frameId, transform);
     }
   }
 
@@ -411,6 +474,7 @@ export class ConstructionSceneRenderer {
     this.scene = null;
     this.plan = null;
     this.assetFrames.clear();
+    this.basePresentationTransforms.clear();
     this.presentationTransforms.clear();
     this.storeyFrames = Object.freeze([]);
     this.selectedEntityId = null;
