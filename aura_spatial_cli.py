@@ -47,8 +47,11 @@ def _tcp_port(value: str) -> int:
 
 
 def _head(root: Path) -> str:
+    git_executable = shutil.which("git")
+    if not git_executable:
+        return "0" * 40
     result = subprocess.run(
-        ["git", "rev-parse", "HEAD"],
+        [git_executable, "rev-parse", "HEAD"],
         cwd=root,
         check=False,
         capture_output=True,

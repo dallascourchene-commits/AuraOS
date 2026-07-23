@@ -9,8 +9,8 @@ import sys
 import pytest
 
 from scripts.aura_verify_construction_demo_assets import (
-    CommandReceipt,
     MAX_COMMAND_OUTPUT_BYTES,
+    CommandReceipt,
     atomic_json,
     run_bounded_command,
     sanitize_svg,
@@ -220,7 +220,6 @@ def test_run_bounded_command_times_out_and_terminates_process_group(tmp_path: Pa
         assert not marker.exists()
 
 
-
 def test_command_receipt_digest_excludes_volatile_duration() -> None:
     first = CommandReceipt(
         command=("tool", "--version"),
@@ -252,20 +251,10 @@ def test_run_bounded_command_terminates_descendants_after_parent_success(tmp_pat
     if os.name == "nt":
         pytest.skip("POSIX process-group semantics required")
     marker = tmp_path / "orphan-finished"
-    child_code = (
-        "import time,pathlib; "
-        "time.sleep(0.4); "
-        f"pathlib.Path(r'{marker}').write_text('bad')"
-    )
-    code = (
-        "import subprocess,sys; "
-        f"subprocess.Popen([sys.executable, '-c', {child_code!r}]); "
-        "print('parent-done')"
-    )
+    child_code = f"import time,pathlib; time.sleep(0.4); pathlib.Path(r'{marker}').write_text('bad')"
+    code = f"import subprocess,sys; subprocess.Popen([sys.executable, '-c', {child_code!r}]); print('parent-done')"
 
-    receipt = run_bounded_command(
-        [sys.executable, "-c", code], cwd=tmp_path, timeout_seconds=5
-    )
+    receipt = run_bounded_command([sys.executable, "-c", code], cwd=tmp_path, timeout_seconds=5)
     assert receipt.returncode == 0
     import time
 
@@ -327,9 +316,7 @@ def test_atomic_json_replaces_complete_document_without_predictable_temp(tmp_pat
 
 def test_verify_glb_rejects_missing_bin_and_invalid_ranges(tmp_path: Path) -> None:
     path = tmp_path / "ranges.glb"
-    path.write_bytes(
-        _glb({"asset": {"version": "2.0"}, "buffers": [{"byteLength": 4}]})
-    )
+    path.write_bytes(_glb({"asset": {"version": "2.0"}, "buffers": [{"byteLength": 4}]}))
     with pytest.raises(ValueError, match="BIN chunk"):
         verify_glb(path, root=tmp_path)
 
@@ -352,9 +339,7 @@ def test_verify_glb_rejects_missing_bin_and_invalid_ranges(tmp_path: Path) -> No
                 "asset": {"version": "2.0"},
                 "buffers": [{"byteLength": 4}],
                 "bufferViews": [{"buffer": 0, "byteLength": 4}],
-                "accessors": [
-                    {"bufferView": 0, "componentType": 5126, "count": 2, "type": "SCALAR"}
-                ],
+                "accessors": [{"bufferView": 0, "componentType": 5126, "count": 2, "type": "SCALAR"}],
             },
             (0x004E4942, b"\x00\x00\x00\x00"),
         )
@@ -368,9 +353,7 @@ def test_verify_glb_rejects_missing_bin_and_invalid_ranges(tmp_path: Path) -> No
                 "asset": {"version": "2.0"},
                 "buffers": [{"byteLength": 4}],
                 "bufferViews": [{"buffer": 0, "byteLength": 4}],
-                "accessors": [
-                    {"bufferView": 0, "componentType": 5126, "count": 1, "type": "SCALAR"}
-                ],
+                "accessors": [{"bufferView": 0, "componentType": 5126, "count": 1, "type": "SCALAR"}],
                 "meshes": [{"primitives": [{"attributes": {"POSITION": 1}}]}],
             },
             (0x004E4942, b"\x00\x00\x00\x00"),

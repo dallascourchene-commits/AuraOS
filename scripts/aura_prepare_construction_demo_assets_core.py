@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402
 """Deterministic IFC split and GLB/SVG preparation for the Construction demo.
 
 This build-only orchestrator never runs during Aura startup or demo runtime. It
 requires the pinned source manifest and authoritative IfcOpenShell hierarchy,
 uses bounded tool invocations, validates every output, and writes receipts.
 """
+
 from __future__ import annotations
 
 import argparse
+from collections.abc import Callable, Mapping, Sequence
 import json
 import os
 from pathlib import Path
@@ -15,7 +18,7 @@ import re
 import shutil
 import sys
 import tempfile
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(_REPO_ROOT) not in sys.path:
@@ -34,7 +37,6 @@ from scripts.aura_verify_construction_demo_assets import (
     run_bounded_command,
     sanitize_svg,
     sha256_file,
-    verify_glb,
 )
 
 ASSET_PREPARATION_VERSION = "AURA_CONSTRUCTION_DEMO_ASSET_PREPARATION_V1"
@@ -106,9 +108,7 @@ def _secure_copy_atomic(source: Path, destination: Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     if destination.exists() and destination.is_symlink():
         raise ValueError("copy destination must not be a symlink")
-    descriptor, temporary_name = tempfile.mkstemp(
-        prefix=f".{destination.name}.", suffix=".tmp", dir=destination.parent
-    )
+    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{destination.name}.", suffix=".tmp", dir=destination.parent)
     temporary = Path(temporary_name)
     try:
         with source.open("rb") as reader, os.fdopen(descriptor, "wb") as writer:
@@ -170,8 +170,6 @@ def _validate_split_receipt(
     return tuple(validated)
 
 
-
-
 def _validate_ifcconvert_identity(value: Any) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
         raise ValueError("IfcConvert identity is missing")
@@ -204,7 +202,7 @@ def _capture_ifcconvert_identity(
         cwd=repository,
         timeout_seconds=min(timeout_seconds, 30.0),
     )
-    version_text = (version_receipt.stdout.strip() or version_receipt.stderr.strip())
+    version_text = version_receipt.stdout.strip() or version_receipt.stderr.strip()
     if not version_text or len(version_text.encode("utf-8")) > 4096:
         raise ValueError("IfcConvert --version must emit bounded identity text")
     body = {
@@ -315,9 +313,7 @@ def _validate_conversion_receipt(
                 or canonicalization.get("face_colors_preserved") is not True
             ):
                 raise ValueError("canonical GLB evidence does not match conversion output")
-            colors = load_face_color_asset(
-                canonicalization.get("face_color_asset"), repo_root=repository
-            )
+            colors = load_face_color_asset(canonicalization.get("face_color_asset"), repo_root=repository)
             if len(colors) != canonicalization.get("triangle_count"):
                 raise ValueError("face-color asset does not cover canonical triangles")
         elif canonicalization is not None or runtime_digest is not None:
@@ -368,7 +364,6 @@ def _load_modules(ifcopenshell_module: Any | None, ifcpatch_module: Any | None) 
         except ImportError as exc:
             raise RuntimeError("IfcPatch is required for storey splitting") from exc
     return ifcopenshell_module, ifcpatch_module
-
 
 
 def split_storeys(
@@ -541,9 +536,7 @@ def convert_ifc_assets(
         hierarchy_digest=hierarchy_digest,
     )
 
-    jobs: list[tuple[str, Path, Path, bool]] = [
-        ("building-full-glb", source_path, output / "building-full.glb", False)
-    ]
+    jobs: list[tuple[str, Path, Path, bool]] = [("building-full-glb", source_path, output / "building-full.glb", False)]
     for item in split_rows:
         storey_id = _canonical_storey_id(item["storey_id"])
         split_path = _resolve_inside(repository, Path(str(item["path"])))
@@ -587,9 +580,7 @@ def convert_ifc_assets(
                 os.replace(temporary, job_output)
                 verification = sanitize_svg(job_output, root=repository)
             else:
-                canonicalization = glb_canonicalizer(
-                    temporary, job_output, repo_root=repository
-                )
+                canonicalization = glb_canonicalizer(temporary, job_output, repo_root=repository)
                 _validate_digest_record(canonicalization)
                 verification = canonicalization.get("verification")
                 if not isinstance(verification, Mapping):
@@ -597,9 +588,7 @@ def convert_ifc_assets(
         except Exception:
             temporary.unlink(missing_ok=True)
             job_output.unlink(missing_ok=True)
-            job_output.with_name(f"{job_output.name}.face-colors.bin").unlink(
-                missing_ok=True
-            )
+            job_output.with_name(f"{job_output.name}.face-colors.bin").unlink(missing_ok=True)
             raise
         job_receipt = {
             "version": ASSET_PREPARATION_VERSION,
@@ -620,9 +609,7 @@ def convert_ifc_assets(
             "verification": verification,
             "canonicalization": canonicalization,
             "runtime_import_receipt_digest": (
-                None
-                if canonicalization is None
-                else canonicalization["import_receipt_digest"]
+                None if canonicalization is None else canonicalization["import_receipt_digest"]
             ),
             "survey_authority": False,
             "production_mutation": False,
@@ -686,9 +673,7 @@ def compile_gaussian_assets(
         hierarchy_digest=hierarchy_digest,
         split_receipt_digest=str(split_receipt["receipt_digest"]),
     )
-    source_rows = [
-        item for item in conversion_rows if item.get("representation") == "MESH_GLB"
-    ]
+    source_rows = [item for item in conversion_rows if item.get("representation") == "MESH_GLB"]
     if not source_rows:
         raise ValueError("conversion receipt contains no GLB meshes")
     job_ids = [str(item.get("job_id") or "") for item in source_rows]
@@ -697,9 +682,7 @@ def compile_gaussian_assets(
     }
     if len(job_ids) != len(set(job_ids)) or set(job_ids) != expected_mesh_jobs:
         raise ValueError("conversion receipt must contain the exact full-building and storey GLB jobs")
-    split_by_storey = {
-        _canonical_storey_id(item.get("storey_id")): item for item in split_rows
-    }
+    split_by_storey = {_canonical_storey_id(item.get("storey_id")): item for item in split_rows}
     for item in source_rows:
         job_id = str(item["job_id"])
         if job_id == "building-full-glb":
@@ -709,9 +692,7 @@ def compile_gaussian_assets(
             continue
         storey_id = job_id.removesuffix("-glb")
         split_item = split_by_storey[storey_id]
-        expected_output = (
-            output / "storeys" / storey_id / f"{storey_id}.glb"
-        ).relative_to(repository).as_posix()
+        expected_output = (output / "storeys" / storey_id / f"{storey_id}.glb").relative_to(repository).as_posix()
         if item.get("source") != split_item.get("path") or item.get("output") != expected_output:
             raise ValueError("storey GLB job does not match its canonical split source and output")
 
@@ -755,9 +736,7 @@ def compile_gaussian_assets(
             raise ValueError("Gaussian compiler must emit both PLY and SPZ receipts")
         for representation_receipt in (ply_receipt, spz_receipt):
             _validate_digest_record(representation_receipt)
-            representation_path = _resolve_inside(
-                repository, Path(str(representation_receipt.get("path")))
-            )
+            representation_path = _resolve_inside(repository, Path(str(representation_receipt.get("path"))))
             if (
                 not representation_path.is_file()
                 or representation_path.is_symlink()

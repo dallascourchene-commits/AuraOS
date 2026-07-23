@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402
 """Fail-closed verification helpers for Construction demo build assets."""
+
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 import hashlib
 import json
@@ -9,6 +12,7 @@ import math
 import os
 from pathlib import Path
 import re
+import shutil
 import signal
 import struct
 import subprocess
@@ -16,8 +20,9 @@ import sys
 import tempfile
 import threading
 import time
-from typing import Any, BinaryIO, Mapping, Sequence
-import xml.etree.ElementTree as ET
+from typing import Any, BinaryIO
+
+from defusedxml import ElementTree as ET
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(_REPO_ROOT) not in sys.path:
@@ -189,9 +194,19 @@ def run_bounded_command(
                 raise ValueError("command environment must contain bounded strings")
             merged_env[key] = value
 
+    requested_executable = Path(command[0]).expanduser()
+    if requested_executable.is_absolute():
+        executable = requested_executable.resolve(strict=True)
+    else:
+        discovered = shutil.which(command[0], path=merged_env["PATH"])
+        if not discovered:
+            raise FileNotFoundError(f"command executable is unavailable: {command[0]}")
+        executable = Path(discovered).resolve(strict=True)
+    argv = [str(executable), *command[1:]]
+
     started = time.monotonic()
     process = subprocess.Popen(
-        list(command),
+        argv,
         cwd=workdir,
         env=merged_env,
         stdout=subprocess.PIPE,
@@ -249,7 +264,7 @@ def run_bounded_command(
     stderr, stderr_truncated = _bounded_text(bytes(stderr_buffer))
     returncode = -1 if timed_out else (-2 if output_limit_exceeded else int(process.returncode or 0))
     receipt = CommandReceipt(
-        command=tuple(command),
+        command=tuple(argv),
         returncode=returncode,
         duration_seconds=duration,
         stdout=stdout,
@@ -314,9 +329,7 @@ def _parse_glb_chunks(data: bytes) -> tuple[dict[str, Any], int, bytes | None]:
     return document, chunk_index, binary_payload
 
 
-def _validate_glb_embedded_layout(
-    document: Mapping[str, Any], binary_payload: bytes | None
-) -> None:
+def _validate_glb_embedded_layout(document: Mapping[str, Any], binary_payload: bytes | None) -> None:
     buffers = document.get("buffers", [])
     if not isinstance(buffers, list) or len(buffers) > 1:
         raise ValueError("GLB buffers must contain at most one embedded buffer")
@@ -355,12 +368,7 @@ def _validate_glb_embedded_layout(
             or byte_offset + byte_length > buffer_byte_length
             or (
                 byte_stride is not None
-                and (
-                    type(byte_stride) is not int
-                    or byte_stride < 4
-                    or byte_stride > 252
-                    or byte_stride % 4 != 0
-                )
+                and (type(byte_stride) is not int or byte_stride < 4 or byte_stride > 252 or byte_stride % 4 != 0)
             )
         ):
             raise ValueError("GLB bufferView range or stride is invalid")
@@ -412,9 +420,7 @@ def _validate_glb_embedded_layout(
             or required > view_length
         ):
             raise ValueError("GLB accessor range exceeds its bufferView")
-        accessor_metadata.append(
-            (view_offset + byte_offset, count, stride, component_type, element_size)
-        )
+        accessor_metadata.append((view_offset + byte_offset, count, stride, component_type, element_size))
 
     images = document.get("images", [])
     if not isinstance(images, list):
@@ -442,39 +448,32 @@ def _validate_glb_embedded_layout(
             if not isinstance(attributes, Mapping) or not attributes:
                 raise ValueError("GLB mesh primitive attributes are invalid")
             for accessor_index in attributes.values():
-                if (
-                    type(accessor_index) is not int
-                    or accessor_index < 0
-                    or accessor_index >= len(accessors)
-                ):
+                if type(accessor_index) is not int or accessor_index < 0 or accessor_index >= len(accessors):
                     raise ValueError("GLB mesh attribute accessor index is invalid")
             position_index = attributes.get("POSITION")
             if type(position_index) is not int or position_index < 0 or position_index >= len(accessors):
                 raise ValueError("GLB mesh primitive lacks a valid POSITION accessor")
             if "indices" in primitive:
                 accessor_index = primitive["indices"]
-                if (
-                    type(accessor_index) is not int
-                    or accessor_index < 0
-                    or accessor_index >= len(accessors)
-                ):
+                if type(accessor_index) is not int or accessor_index < 0 or accessor_index >= len(accessors):
                     raise ValueError("GLB mesh index accessor is invalid")
                 index_accessor = accessors[accessor_index]
-                if (
-                    index_accessor.get("type") != "SCALAR"
-                    or index_accessor.get("componentType") not in {5121, 5123, 5125}
-                ):
+                if index_accessor.get("type") != "SCALAR" or index_accessor.get("componentType") not in {
+                    5121,
+                    5123,
+                    5125,
+                }:
                     raise ValueError("GLB mesh index accessor type is invalid")
                 if binary_payload is None:
                     raise ValueError("GLB mesh indices require an embedded BIN chunk")
-                absolute_offset, count, stride, component_type, element_size = accessor_metadata[
-                    accessor_index
-                ]
+                absolute_offset, count, stride, component_type, element_size = accessor_metadata[accessor_index]
                 format_by_component = {5121: "<B", 5123: "<H", 5125: "<I"}
                 if element_size not in {1, 2, 4}:
                     raise ValueError("GLB mesh index accessor width is invalid")
                 max_index = max(
-                    struct.unpack_from(format_by_component[component_type], binary_payload, absolute_offset + i * stride)[0]
+                    struct.unpack_from(
+                        format_by_component[component_type], binary_payload, absolute_offset + i * stride
+                    )[0]
                     for i in range(count)
                 )
                 position_count = accessors[position_index].get("count")
@@ -487,9 +486,7 @@ def _validate_glb_embedded_layout(
     for node in nodes:
         if not isinstance(node, Mapping):
             raise ValueError("GLB node must be an object")
-        if "mesh" in node and (
-            type(node["mesh"]) is not int or node["mesh"] < 0 or node["mesh"] >= len(meshes)
-        ):
+        if "mesh" in node and (type(node["mesh"]) is not int or node["mesh"] < 0 or node["mesh"] >= len(meshes)):
             raise ValueError("GLB node mesh index is invalid")
         children = node.get("children", [])
         if not isinstance(children, list) or any(
@@ -507,9 +504,7 @@ def _validate_glb_embedded_layout(
         ):
             raise ValueError("GLB scene node index is invalid")
     if "scene" in document and (
-        type(document["scene"]) is not int
-        or document["scene"] < 0
-        or document["scene"] >= len(scenes)
+        type(document["scene"]) is not int or document["scene"] < 0 or document["scene"] >= len(scenes)
     ):
         raise ValueError("GLB default scene index is invalid")
 

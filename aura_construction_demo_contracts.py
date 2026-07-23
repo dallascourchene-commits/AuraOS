@@ -6,14 +6,16 @@ regulatory truth, professional release, renderer authority, or physical location
 truth. Every asset is local, content-addressed, projection-only, and explicitly
 non-survey-authoritative.
 """
+
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from enum import Enum
 import math
 from pathlib import PurePosixPath
 import re
-from typing import Any, Mapping
+from typing import Any
 
 from aura_event_contracts import stable_digest
 
@@ -165,7 +167,11 @@ class ConstructionDemoSourceManifest:
         object.__setattr__(self, "publisher", _text(self.publisher, "publisher"))
         object.__setattr__(self, "doi", _text(self.doi, "doi", maximum=128))
         object.__setattr__(self, "source_filename", _text(self.source_filename, "source_filename", maximum=256))
-        object.__setattr__(self, "source_byte_length", _nonnegative_int(self.source_byte_length, "source_byte_length", maximum=268_435_456))
+        object.__setattr__(
+            self,
+            "source_byte_length",
+            _nonnegative_int(self.source_byte_length, "source_byte_length", maximum=268_435_456),
+        )
         if type(self.published_md5) is not str or _MD5.fullmatch(self.published_md5) is None:
             raise ValueError("published_md5 must be a lowercase MD5 digest")
         object.__setattr__(self, "observed_sha256", _sha256(self.observed_sha256, "observed_sha256"))
@@ -212,7 +218,7 @@ class ConstructionDemoSourceManifest:
         return {**self._body(), "source_manifest_digest": self.source_manifest_digest}
 
     @classmethod
-    def from_dict(cls, value: Mapping[str, Any]) -> "ConstructionDemoSourceManifest":
+    def from_dict(cls, value: Mapping[str, Any]) -> ConstructionDemoSourceManifest:
         return cls(
             source_id=value["source_id"],
             title=value["title"],
@@ -254,7 +260,14 @@ class ConstructionDemoStorey:
     version: str = CONSTRUCTION_DEMO_CONTRACTS_VERSION
 
     def __post_init__(self) -> None:
-        for field_name in ("storey_id", "ifc_global_id", "mesh_asset_id", "floor_plan_asset_id", "gaussian_asset_id", "frame_id"):
+        for field_name in (
+            "storey_id",
+            "ifc_global_id",
+            "mesh_asset_id",
+            "floor_plan_asset_id",
+            "gaussian_asset_id",
+            "frame_id",
+        ):
             object.__setattr__(self, field_name, _identifier(getattr(self, field_name), field_name))
         object.__setattr__(self, "name", _text(self.name, "name"))
         object.__setattr__(self, "elevation_m", _finite(self.elevation_m, "elevation_m"))
@@ -296,14 +309,22 @@ class ConstructionDemoStorey:
         return {**self._body(), "storey_digest": self.storey_digest}
 
     @classmethod
-    def from_dict(cls, value: Mapping[str, Any]) -> "ConstructionDemoStorey":
+    def from_dict(cls, value: Mapping[str, Any]) -> ConstructionDemoStorey:
         return cls(
-            storey_id=value["storey_id"], ifc_global_id=value["ifc_global_id"], name=value["name"],
-            elevation_m=value["elevation_m"], ordinal=value["ordinal"], source_ifc_ref=value["source_ifc_ref"],
-            mesh_asset_id=value["mesh_asset_id"], floor_plan_asset_id=value["floor_plan_asset_id"],
-            gaussian_asset_id=value["gaussian_asset_id"], bounds_min=tuple(value["bounds_min"]),
-            bounds_max=tuple(value["bounds_max"]), frame_id=value["frame_id"],
-            source_refs=tuple(value["source_refs"]), storey_digest=value.get("storey_digest", ""),
+            storey_id=value["storey_id"],
+            ifc_global_id=value["ifc_global_id"],
+            name=value["name"],
+            elevation_m=value["elevation_m"],
+            ordinal=value["ordinal"],
+            source_ifc_ref=value["source_ifc_ref"],
+            mesh_asset_id=value["mesh_asset_id"],
+            floor_plan_asset_id=value["floor_plan_asset_id"],
+            gaussian_asset_id=value["gaussian_asset_id"],
+            bounds_min=tuple(value["bounds_min"]),
+            bounds_max=tuple(value["bounds_max"]),
+            frame_id=value["frame_id"],
+            source_refs=tuple(value["source_refs"]),
+            storey_digest=value.get("storey_digest", ""),
             version=value.get("version", CONSTRUCTION_DEMO_CONTRACTS_VERSION),
         )
 
@@ -368,28 +389,46 @@ class ConstructionDemoAssetBinding:
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "version": self.version, "asset_id": self.asset_id, "storey_id": self.storey_id,
-            "representation": self.representation, "uri": self.uri, "media_type": self.media_type,
-            "content_digest": self.content_digest, "byte_length": self.byte_length,
-            "coordinate_system": self.coordinate_system, "unit_scale_meters": self.unit_scale_meters,
-            "bounds_min": list(self.bounds_min), "bounds_max": list(self.bounds_max),
-            "source_refs": list(self.source_refs), "import_receipt_digest": self.import_receipt_digest,
-            "representation_digest": self.representation_digest, "truth_class": self.truth_class,
+            "version": self.version,
+            "asset_id": self.asset_id,
+            "storey_id": self.storey_id,
+            "representation": self.representation,
+            "uri": self.uri,
+            "media_type": self.media_type,
+            "content_digest": self.content_digest,
+            "byte_length": self.byte_length,
+            "coordinate_system": self.coordinate_system,
+            "unit_scale_meters": self.unit_scale_meters,
+            "bounds_min": list(self.bounds_min),
+            "bounds_max": list(self.bounds_max),
+            "source_refs": list(self.source_refs),
+            "import_receipt_digest": self.import_receipt_digest,
+            "representation_digest": self.representation_digest,
+            "truth_class": self.truth_class,
             "survey_authority": self.survey_authority,
             "person_level_data_included": self.person_level_data_included,
             "projection_only": self.projection_only,
         }
 
     @classmethod
-    def from_dict(cls, value: Mapping[str, Any]) -> "ConstructionDemoAssetBinding":
+    def from_dict(cls, value: Mapping[str, Any]) -> ConstructionDemoAssetBinding:
         return cls(
-            asset_id=value["asset_id"], storey_id=value["storey_id"], representation=value["representation"],
-            uri=value["uri"], media_type=value["media_type"], content_digest=value["content_digest"],
-            byte_length=value["byte_length"], coordinate_system=value["coordinate_system"],
-            unit_scale_meters=value["unit_scale_meters"], bounds_min=tuple(value["bounds_min"]),
-            bounds_max=tuple(value["bounds_max"]), source_refs=tuple(value["source_refs"]),
-            import_receipt_digest=value["import_receipt_digest"], representation_digest=value["representation_digest"],
-            truth_class=value["truth_class"], survey_authority=value.get("survey_authority", False),
+            asset_id=value["asset_id"],
+            storey_id=value["storey_id"],
+            representation=value["representation"],
+            uri=value["uri"],
+            media_type=value["media_type"],
+            content_digest=value["content_digest"],
+            byte_length=value["byte_length"],
+            coordinate_system=value["coordinate_system"],
+            unit_scale_meters=value["unit_scale_meters"],
+            bounds_min=tuple(value["bounds_min"]),
+            bounds_max=tuple(value["bounds_max"]),
+            source_refs=tuple(value["source_refs"]),
+            import_receipt_digest=value["import_receipt_digest"],
+            representation_digest=value["representation_digest"],
+            truth_class=value["truth_class"],
+            survey_authority=value.get("survey_authority", False),
             person_level_data_included=value.get("person_level_data_included", False),
             projection_only=value.get("projection_only", True),
             version=value.get("version", CONSTRUCTION_DEMO_CONTRACTS_VERSION),
@@ -425,9 +464,17 @@ class ConstructionDemoAssetPack:
             raise ValueError("source_manifest must be a ConstructionDemoSourceManifest")
         object.__setattr__(self, "building_id", _identifier(self.building_id, "building_id"))
         object.__setattr__(self, "building_frame_id", _identifier(self.building_frame_id, "building_frame_id"))
-        if type(self.storeys) is not tuple or not self.storeys or not all(isinstance(item, ConstructionDemoStorey) for item in self.storeys):
+        if (
+            type(self.storeys) is not tuple
+            or not self.storeys
+            or not all(isinstance(item, ConstructionDemoStorey) for item in self.storeys)
+        ):
             raise ValueError("storeys must be a non-empty tuple of ConstructionDemoStorey")
-        if type(self.assets) is not tuple or not self.assets or not all(isinstance(item, ConstructionDemoAssetBinding) for item in self.assets):
+        if (
+            type(self.assets) is not tuple
+            or not self.assets
+            or not all(isinstance(item, ConstructionDemoAssetBinding) for item in self.assets)
+        ):
             raise ValueError("assets must be a non-empty tuple of ConstructionDemoAssetBinding")
         storey_ids = [item.storey_id for item in self.storeys]
         if storey_ids != sorted(set(storey_ids)):
@@ -451,7 +498,9 @@ class ConstructionDemoAssetPack:
                 (storey.floor_plan_asset_id, ConstructionDemoRepresentation.FLOOR_PLAN_SVG.value),
                 (storey.gaussian_asset_id, ConstructionDemoRepresentation.GAUSSIAN_SPZ.value),
             )
-            if any(assets_by_id[asset_id].representation != representation for asset_id, representation in role_bindings):
+            if any(
+                assets_by_id[asset_id].representation != representation for asset_id, representation in role_bindings
+            ):
                 raise ValueError("storey GLB/SVG/SPZ asset roles do not match their bindings")
             if any(assets_by_id[item].storey_id != storey.storey_id for item in expected):
                 raise ValueError("storey asset binding references a different storey")
@@ -508,14 +557,17 @@ class ConstructionDemoAssetPack:
         return {**self._body(), "asset_pack_digest": self.asset_pack_digest}
 
     @classmethod
-    def from_dict(cls, value: Mapping[str, Any]) -> "ConstructionDemoAssetPack":
+    def from_dict(cls, value: Mapping[str, Any]) -> ConstructionDemoAssetPack:
         return cls(
             source_manifest=ConstructionDemoSourceManifest.from_dict(value["source_manifest"]),
-            building_id=value["building_id"], building_frame_id=value["building_frame_id"],
+            building_id=value["building_id"],
+            building_frame_id=value["building_frame_id"],
             storeys=tuple(ConstructionDemoStorey.from_dict(item) for item in value["storeys"]),
             assets=tuple(ConstructionDemoAssetBinding.from_dict(item) for item in value["assets"]),
-            element_index_digest=value["element_index_digest"], hierarchy_digest=value["hierarchy_digest"],
-            generator_version=value["generator_version"], generator_request_digest=value["generator_request_digest"],
+            element_index_digest=value["element_index_digest"],
+            hierarchy_digest=value["hierarchy_digest"],
+            generator_version=value["generator_version"],
+            generator_request_digest=value["generator_request_digest"],
             asset_pack_digest=value.get("asset_pack_digest", ""),
             version=value.get("version", CONSTRUCTION_DEMO_ASSET_PACK_VERSION),
             construction_project_state_owner=value.get("construction_project_state_owner", False),
@@ -532,10 +584,21 @@ class ConstructionDemoAssetPack:
 
 
 __all__ = [
-    "CC_BY_4_0", "CC_BY_4_0_URL", "CONSTRUCTION_DEMO_ASSET_PACK_VERSION",
-    "CONSTRUCTION_DEMO_CONTRACTS_VERSION", "CONSTRUCTION_DEMO_SOURCE_MANIFEST_VERSION",
-    "ConstructionDemoAssetBinding", "ConstructionDemoAssetPack", "ConstructionDemoRepresentation",
-    "ConstructionDemoSourceManifest", "ConstructionDemoStorey", "ConstructionDemoTruthClass",
-    "PATCH_AUTHORITY", "TU_WIEN_DOI", "TU_WIEN_PUBLISHED_MD5", "TU_WIEN_SOURCE_FILENAME",
-    "TU_WIEN_SOURCE_ID", "VSA_PATCH_AUTHORITY",
+    "CC_BY_4_0",
+    "CC_BY_4_0_URL",
+    "CONSTRUCTION_DEMO_ASSET_PACK_VERSION",
+    "CONSTRUCTION_DEMO_CONTRACTS_VERSION",
+    "CONSTRUCTION_DEMO_SOURCE_MANIFEST_VERSION",
+    "PATCH_AUTHORITY",
+    "TU_WIEN_DOI",
+    "TU_WIEN_PUBLISHED_MD5",
+    "TU_WIEN_SOURCE_FILENAME",
+    "TU_WIEN_SOURCE_ID",
+    "VSA_PATCH_AUTHORITY",
+    "ConstructionDemoAssetBinding",
+    "ConstructionDemoAssetPack",
+    "ConstructionDemoRepresentation",
+    "ConstructionDemoSourceManifest",
+    "ConstructionDemoStorey",
+    "ConstructionDemoTruthClass",
 ]

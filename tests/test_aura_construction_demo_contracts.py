@@ -7,16 +7,16 @@ import pytest
 from aura_construction_demo_contracts import (
     CC_BY_4_0,
     CC_BY_4_0_URL,
+    TU_WIEN_DOI,
+    TU_WIEN_PUBLISHED_MD5,
+    TU_WIEN_SOURCE_FILENAME,
+    TU_WIEN_SOURCE_ID,
     ConstructionDemoAssetBinding,
     ConstructionDemoAssetPack,
     ConstructionDemoRepresentation,
     ConstructionDemoSourceManifest,
     ConstructionDemoStorey,
     ConstructionDemoTruthClass,
-    TU_WIEN_DOI,
-    TU_WIEN_PUBLISHED_MD5,
-    TU_WIEN_SOURCE_FILENAME,
-    TU_WIEN_SOURCE_ID,
 )
 
 
@@ -131,7 +131,7 @@ def test_source_manifest_is_deterministic_and_round_trips() -> None:
 def test_source_manifest_rejects_wrong_license_or_runtime_fetch() -> None:
     data = _manifest().to_dict()
     data["license_id"] = "OTHER"
-    with pytest.raises(ValueError, match="CC BY 4.0"):
+    with pytest.raises(ValueError, match=r"CC BY 4\.0"):
         ConstructionDemoSourceManifest.from_dict(data)
 
     data = _manifest().to_dict()
