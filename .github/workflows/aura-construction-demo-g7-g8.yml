@@ -126,10 +126,17 @@ jobs:
               include_source=False,
           )
           assert compass.get("compass_digest")
-          assert doctor(root, None).get("ok", True) is not False
-          assert route_compass_failure_classes(
+          council = route_compass_failure_classes(
               ("INTERFACE", "INVARIANT", "AUTHORITY", "SEQUENCE", "LOCAL_TEST")
           )
+          assert council is not None
+          doctor_packet = doctor(root, None)
+          assert isinstance(doctor_packet, dict)
+          route = doctor_packet.get("github_publication_route") or {}
+          authority = route.get("authority") or {}
+          assert authority.get("production_mutation") is False
+          assert authority.get("automatic_merge") is False
+          assert authority.get("human_review_required") is True
           PY
 
       - name: Run focused and retained Python verification
