@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1365
-- **total_bytes**: 56230242
-- **text_tokens_est**: 4608716
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 50, 'knowledge_artifact': 179, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 908, 'schema_or_lexicon': 161, 'support_file': 52}
+- **file_count**: 1366
+- **total_bytes**: 56262921
+- **text_tokens_est**: 4616886
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 50, 'knowledge_artifact': 179, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 908, 'schema_or_lexicon': 162, 'support_file': 52}
 - **topology_nodes**: 10353
 - **topology_edges**: 24160
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 28675.19
+- **elapsed_ms**: 30678.73
 
 ## Coverage
 
-- **included_file_count**: 1365
+- **included_file_count**: 1366
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=25, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
@@ -46,7 +46,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!ID` -> `aura_spatial_web/bootstrap.js:33`, `aura_spatial_web/interaction_adapter.js:22`, `aura_spatial_web/renderer_adapter.js:168`
 - `!INPUTS` -> `aura_spatial_web/interaction_adapter.js:61`
 - `!METRIC_NAME` -> `aura_spatial_web/telemetry.js:30`
-- `!Number` -> `aura_spatial_web/construction_mesh_pass.js:15`, `aura_spatial_web/construction_overlay_pass.js:26`, `aura_spatial_web/construction_scene_renderer.js:29`, `aura_spatial_web/gaussian_renderer.js:34`
+- `!Number` -> `.github/workflows/aura-construction-g7-g8-review-repair.yml:87`, `aura_spatial_web/construction_mesh_pass.js:15`, `aura_spatial_web/construction_overlay_pass.js:26`, `aura_spatial_web/construction_scene_renderer.js:29`
 - `!REFERENCE_SPACES` -> `aura_spatial_web/webxr_session.js:32`
 - `!RENDERERS` -> `aura_spatial_web/renderer_adapter.js:474`, `aura_spatial_web/telemetry.js:22`
 - `!S` -> `aura_showcase/app.js:82`, `aura_showcase/attempt-archive.js:5`, `aura_showcase/civic.js:132`, `aura_showcase/crucible.js:5`
@@ -128,7 +128,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!frameIds` -> `aura_spatial_web/renderer_adapter.js:339`
 - `!fusion` -> `AURA_FINAL_REPORT.md:31`, `aura_fusion.py:384`, `aura_node.py:7590`
 - `!g` -> `aura_showcase/civic.js:88`
-- `!gl` -> `aura_spatial_web/webgl2_gaussian_pass.js:200`, `aura_spatial_web/webgl2_renderer.js:168`
+- `!gl` -> `.github/workflows/aura-construction-g7-g8-review-repair.yml:100`, `aura_spatial_web/webgl2_gaussian_pass.js:200`, `aura_spatial_web/webgl2_renderer.js:168`
 - `!globalThis` -> `aura_spatial_web/gaussian_renderer.js:212`
 - `!hasEvidence` -> `aura_showcase/gate-dialogue.js:358`, `aura_showcase/human.js:460`
 - `!hasInput` -> `aura_showcase/human.js:636`
@@ -184,7 +184,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!plan` -> `aura_affordance_directory.py:461`, `aura_node.py:5675`
 - `!present` -> `aura_spatial_web/construction_scene_renderer.js:198`
 - `!presentationRenderer` -> `aura_spatial_web/app.js:112`, `aura_spatial_web/construction_scene_renderer.js:212`, `aura_spatial_web/gaussian_renderer.js:432`
-- `!program` -> `aura_spatial_web/webgl2_gaussian_pass.js:212`
+- `!program` -> `.github/workflows/aura-construction-g7-g8-review-repair.yml:100`, `aura_spatial_web/webgl2_gaussian_pass.js:212`
 - `!push` -> `aura_node.py:5239`, `test_aura_functions.py:207`
 - `!qdkt` -> `aura_affordance_directory.py:356`
 - `!query` -> `aura_human_agent_arena/emergent.js:68`
@@ -230,10 +230,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!stage_merge` -> `AURA_FINAL_REPORT.md:150`, `aura_capability_lane_registry.py:229`, `aura_live_architect.py:2250`, `aura_node.py:6846`
 - `!stage_purge` -> `aura_capability_lane_registry.py:229`, `aura_node.py:6846`
 - `!stage_review` -> `aura_capability_lane_registry.py:229`, `aura_node.py:6781`
-- `!state` -> `aura_showcase/gate-dialogue.js:270`, `aura_spatial_web/construction_demo_app.js:195`
+- `!state` -> `.github/workflows/aura-construction-g7-g8-review-repair.yml:123`, `aura_showcase/gate-dialogue.js:270`, `aura_spatial_web/construction_demo_app.js:195`
 - `!statement` -> `aura_showcase/civic.js:303`
 - `!status` -> `AURA_FINAL_REPORT.md:136`, `SYNTAX_FIXES_APPLIED.md:107`, `aura_node.py:5239`
-- `!steps` -> `aura_spatial_web/construction_demo_app.js:311`
+- `!steps` -> `.github/workflows/aura-construction-g7-g8-review-repair.yml:123`, `aura_spatial_web/construction_demo_app.js:311`
 - `!strategy_buffer_stats` -> `aura_coordinated_solver.py:69`, `aura_node.py:7548`
 - `!synthesize` -> `aura_associative_core.py:141`, `aura_node.py:6968`, `test_aura_functions.py:913`
 - `!system_audit` -> `aura_node.py:6257`
@@ -244,7 +244,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!test_airlock` -> `aura_node.py:5687`
 - `!text` -> `aura_human_agent_arena/main.js:391`, `aura_showcase/human.js:268`, `aura_showcase/intent.js:66`
 - `!tgtPos` -> `index.html:122`
-- `!this` -> `aura_spatial_web/construction_mesh_pass.js:175`, `aura_spatial_web/construction_overlay_pass.js:118`, `aura_spatial_web/construction_scene_renderer.js:330`, `aura_spatial_web/gaussian_renderer.js:701`
+- `!this` -> `.github/workflows/aura-construction-g7-g8-review-repair.yml:73`, `aura_spatial_web/construction_mesh_pass.js:175`, `aura_spatial_web/construction_overlay_pass.js:118`, `aura_spatial_web/construction_scene_renderer.js:330`
 - `!tileTemplate` -> `aura_showcase/civic.js:174`
 - `!timeline` -> `aura_node.py:6729`
 - `!tool` -> `aura_showcase/gate-dialogue.js:173`
@@ -352,7 +352,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
-- ... 1177 more; query CODEMAP.json for exact file cards
+- ... 1178 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 

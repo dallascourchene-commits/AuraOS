@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784842127,
+  "generated_at_unix": 1784842519,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1365,
+    "included_file_count": 1366,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -78,6 +78,7 @@
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
+      ".github/workflows/aura-construction-g7-g8-review-repair.yml",
       ".github/workflows/aura-construction-g7-g8-waboose.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
@@ -1387,9 +1388,9 @@
     ]
   },
   "summary": {
-    "file_count": 1365,
-    "total_bytes": 56230242,
-    "text_tokens_est": 4608716,
+    "file_count": 1366,
+    "total_bytes": 56262921,
+    "text_tokens_est": 4616886,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 50,
@@ -1397,13 +1398,13 @@
       "native_accelerator": 8,
       "operator_script": 5,
       "python_module": 908,
-      "schema_or_lexicon": 161,
+      "schema_or_lexicon": 162,
       "support_file": 52
     },
     "topology_nodes": 10353,
     "topology_edges": 24160,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 28675.19
+    "elapsed_ms": 30678.73
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1655,6 +1656,7 @@
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
+      ".github/workflows/aura-construction-g7-g8-review-repair.yml",
       ".github/workflows/aura-construction-g7-g8-waboose.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
@@ -2996,6 +2998,7 @@
       "aura_spatial_web/telemetry.js:30"
     ],
     "!Number": [
+      ".github/workflows/aura-construction-g7-g8-review-repair.yml:87",
       "aura_spatial_web/construction_mesh_pass.js:15",
       "aura_spatial_web/construction_overlay_pass.js:26",
       "aura_spatial_web/construction_scene_renderer.js:29",
@@ -3305,6 +3308,7 @@
       "aura_showcase/civic.js:88"
     ],
     "!gl": [
+      ".github/workflows/aura-construction-g7-g8-review-repair.yml:100",
       "aura_spatial_web/webgl2_gaussian_pass.js:200",
       "aura_spatial_web/webgl2_renderer.js:168"
     ],
@@ -3511,6 +3515,7 @@
       "aura_spatial_web/gaussian_renderer.js:432"
     ],
     "!program": [
+      ".github/workflows/aura-construction-g7-g8-review-repair.yml:100",
       "aura_spatial_web/webgl2_gaussian_pass.js:212"
     ],
     "!push": [
@@ -3755,6 +3760,7 @@
       "aura_node.py:6781"
     ],
     "!state": [
+      ".github/workflows/aura-construction-g7-g8-review-repair.yml:123",
       "aura_showcase/gate-dialogue.js:270",
       "aura_spatial_web/construction_demo_app.js:195"
     ],
@@ -3767,6 +3773,7 @@
       "aura_node.py:5239"
     ],
     "!steps": [
+      ".github/workflows/aura-construction-g7-g8-review-repair.yml:123",
       "aura_spatial_web/construction_demo_app.js:311"
     ],
     "!strategy_buffer_stats": [
@@ -3813,6 +3820,7 @@
       "index.html:122"
     ],
     "!this": [
+      ".github/workflows/aura-construction-g7-g8-review-repair.yml:73",
       "aura_spatial_web/construction_mesh_pass.js:175",
       "aura_spatial_web/construction_overlay_pass.js:118",
       "aura_spatial_web/construction_scene_renderer.js:330",
@@ -185153,6 +185161,81 @@
         -0.094425,
         -0.305938,
         0.202699
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-construction-g7-g8-review-repair.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 32679,
+      "lines": 242,
+      "tokens_est": 8170,
+      "symbol_count": 0,
+      "commands": [
+        "!Number",
+        "!gl",
+        "!program",
+        "!state",
+        "!steps",
+        "!this"
+      ],
+      "command_lines": {
+        "!Number": [
+          87
+        ],
+        "!gl": [
+          100,
+          101
+        ],
+        "!program": [
+          100,
+          101
+        ],
+        "!state": [
+          123
+        ],
+        "!steps": [
+          123
+        ],
+        "!this": [
+          73,
+          80
+        ]
+      },
+      "topology": {},
+      "digest8": "8aba6d57fedb9084",
+      "vector": [
+        0.047541,
+        -0.052974,
+        -0.153488,
+        0.289319,
+        0.218687,
+        0.115456,
+        0.292035,
+        0.273019,
+        0.001358,
+        -0.110023,
+        0.036674,
+        -0.221404,
+        -0.245853,
+        0.012225,
+        0.283886,
+        0.153488,
+        0.093723,
+        0.025808,
+        0.004075,
+        -0.330068,
+        -0.017658,
+        -0.023091,
+        -0.180655,
+        0.142622,
+        -0.221404,
+        -0.069274,
+        0.205104,
+        -0.205104,
+        0.069274,
+        0.169788,
+        0.093723,
+        -0.294752
       ]
     },
     {
