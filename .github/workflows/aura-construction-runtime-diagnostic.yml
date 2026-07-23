@@ -1,0 +1,97 @@
+name: Aura Construction runtime diagnostic
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths:
+      - ".github/workflows/aura-construction-runtime-diagnostic.yml"
+      - "tests/runtime/construction_demo_browser_probe.cjs"
+      - "aura_spatial_web/**"
+      - "aura_construction_demo_*.py"
+      - "aura_spatial_cli.py"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-construction-runtime-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  browser-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build isolated Python environment
+        run: |
+          python -m venv /tmp/aura-construction-venv
+          source /tmp/aura-construction-venv/bin/activate
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Install bounded browser runtime
+        run: |
+          mkdir -p /tmp/aura-playwright
+          cd /tmp/aura-playwright
+          npm init -y >/dev/null 2>&1
+          npm install --no-audit --no-fund playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start deterministic Construction server
+        run: |
+          source /tmp/aura-construction-venv/bin/activate
+          mkdir -p /tmp/aura-construction-runtime
+          python aura_spatial_cli.py \
+            --repo-root . \
+            construction-video-demo \
+            --tour full \
+            --host 127.0.0.1 \
+            --port 8767 \
+            --serve \
+            > /tmp/aura-construction-runtime/server.log 2>&1 &
+          echo $! > /tmp/aura-construction-runtime/server.pid
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:8767/api/construction-demo >/tmp/aura-construction-runtime/packet.json; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/aura-construction-runtime/server.log
+          exit 1
+
+      - name: Run end-to-end Chromium probe
+        env:
+          NODE_PATH: /tmp/aura-playwright/node_modules
+          AURA_CONSTRUCTION_DEMO_URL: http://127.0.0.1:8767/demo/construction
+          AURA_RUNTIME_EVIDENCE_DIR: /tmp/aura-construction-runtime
+        run: node tests/runtime/construction_demo_browser_probe.cjs
+
+      - name: Stop local server
+        if: always()
+        run: |
+          if test -f /tmp/aura-construction-runtime/server.pid; then
+            kill "$(cat /tmp/aura-construction-runtime/server.pid)" || true
+          fi
+
+      - name: Upload runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-construction-runtime-evidence
+          path: /tmp/aura-construction-runtime
+          if-no-files-found: error
+          retention-days: 7
