@@ -1,0 +1,3 @@
+# Final Reviewer Prompt
+
+Verify the current exact pull-request head for the complete Construction Arena G0–G8 refactor. Focus deeply on the G7 director/UI/CLI and G8 verification/publication boundary while checking retained G4–G6 owners. Find interface, invariant, authority, privacy, sequence, resource-lifecycle, determinism, local-serving, browser, and regression defects. Confirm the fallback Gaussian payload is digest-consistent, the unsafe option remains hard-blocked, recommendations are human-review-only, and dissolve releases renderer resources. Do not propose automatic physical work, payment, access, certification, publication, or merge authority.
