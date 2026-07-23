@@ -150,13 +150,7 @@ Prohibited edges include director-to-ledger mutation, browser-control-to-work re
         check=True,
     )
     subprocess.run(
-        [
-            "git",
-            "rm",
-            "-f",
-            "sitecustomize.py",
-            ".github/workflows/aura-construction-doc-export.yml",
-        ],
+        ["git", "rm", "-f", "sitecustomize.py"],
         cwd=root,
         check=True,
     )
