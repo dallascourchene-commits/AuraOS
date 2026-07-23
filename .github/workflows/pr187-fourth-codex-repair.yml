@@ -114,15 +114,9 @@ jobs:
       - name: Format and statically validate repaired owners
         run: |
           set -euo pipefail
-          python -m ruff format \
-            aura_construction_demo_projection.py \
-            tests/test_aura_construction_demo_projection.py
-          python -m ruff check \
-            aura_construction_demo_projection.py \
-            tests/test_aura_construction_demo_projection.py
-          python -m py_compile \
-            aura_construction_demo_projection.py \
-            tests/test_aura_construction_demo_projection.py
+          python -m ruff format aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
+          python -m ruff check aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
+          python -m py_compile aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
           node --check aura_spatial_web/construction_overlay_pass.js
           node --check tests/js/spatial-construction-demo.test.mjs
           git diff --check
@@ -130,14 +124,14 @@ jobs:
       - name: Run focused Python verification
         run: |
           set -euo pipefail
-          python -m pytest -q --tb=short \
-            tests/test_aura_construction_demo_projection.py \
-            tests/test_aura_construction_demo_fixture.py
+          python -m pytest -q --tb=short tests/test_aura_construction_demo_projection.py tests/test_aura_construction_demo_fixture.py
 
       - name: Run retained Construction, Spatial, and asset-security regressions
+        id: retained
+        continue-on-error: true
         run: |
-          set -euo pipefail
-          python -m pytest -q --tb=short \
+          set +e
+          python -m pytest -q --tb=long \
             tests/test_aura_construction_state.py \
             tests/test_aura_construction_adapter.py \
             tests/test_aura_construction_fixtures.py \
@@ -145,14 +139,31 @@ jobs:
             tests/test_aura_spatial_coordinate_frames.py \
             tests/test_aura_spatial_asset_security.py \
             tests/test_aura_spatial_s6_construction.py \
-            tests/test_aura_spatial_mixed_scene.py
+            tests/test_aura_spatial_mixed_scene.py \
+            > /tmp/aura-pr187-fourth-retained.log 2>&1
+          status=$?
+          cat /tmp/aura-pr187-fourth-retained.log
+          exit "$status"
+
+      - name: Upload retained fourth repair diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-pr187-fourth-retained-diagnostic
+          path: /tmp/aura-pr187-fourth-retained.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Fail closed when retained tests fail
+        if: steps.retained.outcome != 'success'
+        run: |
+          cat /tmp/aura-pr187-fourth-retained.log
+          exit 1
 
       - name: Run focused browser verification
         run: |
           set -euo pipefail
-          node --test \
-            tests/js/spatial-construction-demo.test.mjs \
-            tests/js/spatial-construction-review-regressions.test.mjs
+          node --test tests/js/spatial-construction-demo.test.mjs tests/js/spatial-construction-review-regressions.test.mjs
 
       - name: Run retained Spatial browser suite
         run: |
