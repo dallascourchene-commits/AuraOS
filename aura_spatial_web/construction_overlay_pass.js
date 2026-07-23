@@ -9,6 +9,7 @@ export const CONSTRUCTION_OVERLAY_LAYERS = Object.freeze([
   "status",
   "trades",
   "blockers",
+  "budgets",
   "inspections",
   "dependencies",
   "syntheticRules",
@@ -224,6 +225,20 @@ export class ConstructionOverlayPass {
               source_entity_id: item.source_entity_id,
               target_entity_id: item.target_entity_id,
               relation: item.relation,
+            }))
+        : [],
+      budgets: this.layers.get("budgets")
+        ? entities
+            .filter((item) => hasOverlayKind(item, "BUDGET"))
+            .map((item) => ({
+              entity_id: item.entity_id,
+              frame_id: item.frame_id,
+              label: item.label,
+              committed_cad: item.metadata?.committed_cad ?? 0,
+              forecast_cad: item.metadata?.forecast_cad ?? 0,
+              actual_cad: item.metadata?.actual_cad ?? 0,
+              truth_class: item.metadata?.truth_class || "",
+              presentation_transform: presentationTransform(item.frame_id),
             }))
         : [],
       inspections: this.layers.get("inspections")

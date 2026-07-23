@@ -273,6 +273,7 @@ def test_g5_package_owned_overlays_use_package_storey_frames() -> None:
         matches = [item for item in entities if item["metadata"].get("budget_line_ref") == budget.budget_line_id]
         assert len(matches) == 1
         assert matches[0]["frame_id"] == package_frames[budget.work_package_id]
+        assert matches[0]["metadata"]["overlay_kind"] == "BUDGET"
     for inspection in fixture.inspections:
         matches = [item for item in entities if item["metadata"].get("inspection_ref") == inspection.inspection_id]
         assert len(matches) == 1
@@ -330,6 +331,18 @@ def test_g5_public_projection_uses_export_scoped_asset_aliases() -> None:
     assert all(item.startswith("public-asset-") for item in first_aliases)
     assert all(item["uri"] == f"aura://public/{item['asset_id']}" for item in first_assets)
 
+    for collection, identifier in (
+        ("frames", "frame_id"),
+        ("entities", "entity_id"),
+        ("links", "link_id"),
+    ):
+        first_ids = {item[identifier] for item in first_payload[collection]}
+        second_ids = {item[identifier] for item in second_payload[collection]}
+        assert first_ids
+        assert first_ids.isdisjoint(second_ids)
+    assert first_payload["scene_id"] != second_payload["scene_id"]
+    assert first_payload["root_frame_id"] != second_payload["root_frame_id"]
+
     raw_values: set[str] = set()
     for binding in fixture.asset_pack.assets:
         raw_values.update(
@@ -342,6 +355,40 @@ def test_g5_public_projection_uses_export_scoped_asset_aliases() -> None:
             }
         )
     raw_values.update(storey.name for storey in fixture.asset_pack.storeys)
+    raw_values.update(
+        {
+            fixture.asset_pack.building_id,
+            fixture.asset_pack.building_frame_id,
+            "construction-site-root",
+            "crane-window-01",
+        }
+    )
+    raw_values.update(storey.frame_id for storey in fixture.asset_pack.storeys)
+    raw_values.update(package.title for package in fixture.work_packages)
+    raw_values.update(trade.name.title() for trade in fixture.trades)
+    raw_values.update(activity.note for activity in fixture.work_history)
+    raw_values.update(budget.description for budget in fixture.budget_lines)
+    raw_values.update(rule.title for rule in fixture.rules)
+    raw_values.update(rule.requirement for rule in fixture.rules)
+    raw_values.update(inspection.title for inspection in fixture.inspections)
+    raw_values.update(hazard.title for hazard in fixture.hazards)
+    raw_values.update(alternative.title for alternative in fixture.alternatives)
+    raw_values.update(code for alternative in fixture.alternatives for code in alternative.blocker_codes)
+    raw_values.difference_update(
+        {
+            "Construction building",
+            "Zone",
+            "Evidence requirement",
+            "Work package",
+            "Trade",
+            "Work activity",
+            "Budget line",
+            "Synthetic rule",
+            "Inspection",
+            "Hazard",
+            "Review alternative",
+        }
+    )
     serialized = str(first_payload)
     assert all(value not in serialized for value in raw_values)
 

@@ -54,9 +54,15 @@ def _privacy(value: SpatialPrivacyClass | str) -> SpatialPrivacyClass:
     return value if isinstance(value, SpatialPrivacyClass) else SpatialPrivacyClass(str(value))
 
 
-def _ref(value: str, privacy: SpatialPrivacyClass) -> str:
+def _ref(
+    value: str,
+    privacy: SpatialPrivacyClass,
+    export_scope: str | None = None,
+) -> str:
     if privacy is SpatialPrivacyClass.PROJECT:
         return value
+    if export_scope is not None:
+        return _export_ref(value, export_scope)
     return stable_digest({"construction_demo_public_ref": value})[:16]
 
 
@@ -257,6 +263,25 @@ def project_construction_demo_to_scene(
         digest_size=32,
     )
 
+    def graph_id(prefix: str, payload: Any) -> str:
+        if privacy is SpatialPrivacyClass.PROJECT:
+            return _id(prefix, payload)
+        return _id(
+            f"public-{prefix}",
+            {"export_scope": public_export_scope, "payload": payload},
+        )
+
+    def graph_frame_id(kind: str, value: str) -> str:
+        if privacy is SpatialPrivacyClass.PROJECT:
+            return value
+        return _id(
+            f"public-{kind}-frame",
+            {"export_scope": public_export_scope, "value": value},
+        )
+
+    def public_text(value: str, generic: str) -> str:
+        return value if privacy is SpatialPrivacyClass.PROJECT else generic
+
     baseline = project_construction_state_to_scene(
         fixture.state,
         packet,
@@ -278,12 +303,13 @@ def project_construction_demo_to_scene(
     for binding in asset_pack.assets:
         assets_by_storey[binding.storey_id].append(binding)
 
-    root_frame_id = "construction-site-root"
-    building_frame_id = asset_pack.building_frame_id
+    root_frame_id = graph_frame_id("site-root", "construction-site-root")
+    building_frame_id = graph_frame_id("building", asset_pack.building_frame_id)
+    storey_frame_ids = {item.storey_id: graph_frame_id("storey", item.frame_id) for item in storeys}
     frames: list[CoordinateFrame] = [
         CoordinateFrame(
             frame_id=root_frame_id,
-            source_refs=(_ref(f"construction-state:{fixture.state.state_digest}", privacy),)
+            source_refs=(_ref(f"construction-state:{fixture.state.state_digest}", privacy, public_export_scope),)
             if privacy is not SpatialPrivacyClass.PROJECT
             else (f"construction-state:{fixture.state.state_digest}",),
             truth_class=SpatialTruthClass.DERIVED,
@@ -292,7 +318,7 @@ def project_construction_demo_to_scene(
             frame_id=building_frame_id,
             parent_frame_id=root_frame_id,
             source_refs=tuple(
-                _ref(ref, privacy)
+                _ref(ref, privacy, public_export_scope)
                 for ref in (
                     f"construction-demo-asset-pack:{asset_pack.asset_pack_digest}",
                     f"source-manifest:{asset_pack.source_manifest.source_manifest_digest}",
@@ -309,11 +335,11 @@ def project_construction_demo_to_scene(
     for storey in storeys:
         frames.append(
             CoordinateFrame(
-                frame_id=storey.frame_id,
+                frame_id=storey_frame_ids[storey.storey_id],
                 parent_frame_id=building_frame_id,
                 translation=(0.0, float(storey.elevation_m), 0.0),
                 source_refs=tuple(
-                    _ref(ref, privacy)
+                    _ref(ref, privacy, public_export_scope)
                     for ref in (
                         f"construction-demo-storey:{storey.storey_digest}",
                         *storey.source_refs,
@@ -331,7 +357,7 @@ def project_construction_demo_to_scene(
     spatial_assets = tuple(
         _asset_manifest(
             binding,
-            frame_id=next(item.frame_id for item in storeys if item.storey_id == binding.storey_id),
+            frame_id=storey_frame_ids[binding.storey_id],
             projected_asset_id=projected_asset_ids[binding.asset_id],
             privacy=privacy,
             export_scope=public_export_scope,
@@ -343,15 +369,15 @@ def project_construction_demo_to_scene(
 
     entities: list[SpatialEntity] = []
     links: list[SpatialLink] = []
-    building_entity_id = _id("construction-building", asset_pack.building_id)
+    building_entity_id = graph_id("construction-building", asset_pack.building_id)
     entities.append(
         _entity(
             building_entity_id,
             SpatialEntityType.REGION,
-            f"Construction building {_ref(asset_pack.building_id, privacy)}",
+            public_text(f"Construction building {asset_pack.building_id}", "Construction building"),
             building_frame_id,
             source_refs=tuple(
-                _ref(ref, privacy)
+                _ref(ref, privacy, public_export_scope)
                 for ref in (
                     f"construction-demo-asset-pack:{asset_pack.asset_pack_digest}",
                     f"construction-state:{fixture.state.state_digest}",
@@ -363,7 +389,7 @@ def project_construction_demo_to_scene(
                 f"construction-state:{fixture.state.state_digest}",
             ),
             metadata={
-                "building_ref": _ref(asset_pack.building_id, privacy),
+                "building_ref": _ref(asset_pack.building_id, privacy, public_export_scope),
                 "storey_count": len(storeys),
                 "asset_pack_digest": (
                     asset_pack.asset_pack_digest
@@ -390,7 +416,7 @@ def project_construction_demo_to_scene(
 
     storey_entities: dict[str, str] = {}
     for storey in storeys:
-        entity_id = _id("construction-storey", storey.storey_id)
+        entity_id = graph_id("construction-storey", storey.storey_id)
         storey_entities[storey.storey_id] = entity_id
         storey_asset_ids = tuple(
             sorted(projected_asset_ids[item.asset_id] for item in assets_by_storey[storey.storey_id])
@@ -400,13 +426,13 @@ def project_construction_demo_to_scene(
                 entity_id,
                 SpatialEntityType.ASSET_INSTANCE,
                 (storey.name if privacy is SpatialPrivacyClass.PROJECT else f"Storey {storey.ordinal + 1}"),
-                storey.frame_id,
+                storey_frame_ids[storey.storey_id],
                 asset_ids=storey_asset_ids,
-                source_refs=(_ref(f"construction-demo-storey:{storey.storey_digest}", privacy),)
+                source_refs=(_ref(f"construction-demo-storey:{storey.storey_digest}", privacy, public_export_scope),)
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-storey:{storey.storey_digest}",),
                 metadata={
-                    "storey_ref": _ref(storey.storey_id, privacy),
+                    "storey_ref": _ref(storey.storey_id, privacy, public_export_scope),
                     "ordinal": storey.ordinal,
                     "source_elevation_m": storey.elevation_m,
                     "asset_ids": list(storey_asset_ids),
@@ -430,7 +456,7 @@ def project_construction_demo_to_scene(
                 building_entity_id,
                 entity_id,
                 "CONTAINS_STOREY",
-                source_refs=(_ref(f"construction-demo-storey:{storey.storey_digest}", privacy),)
+                source_refs=(_ref(f"construction-demo-storey:{storey.storey_digest}", privacy, public_export_scope),)
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-storey:{storey.storey_digest}",),
             )
@@ -441,24 +467,24 @@ def project_construction_demo_to_scene(
     package_frames: dict[str, str] = {}
     for package in fixture.work_packages:
         storey_entity_id = storey_entities[package.storey_id]
-        package_frame_id = next(item.frame_id for item in storeys if item.storey_id == package.storey_id)
+        package_frame_id = storey_frame_ids[package.storey_id]
         package_frames[package.work_package_id] = package_frame_id
         zone_entity_id = zone_entities.get(package.zone_id)
         if zone_entity_id is None:
-            zone_entity_id = _id("construction-zone", package.zone_id)
+            zone_entity_id = graph_id("construction-zone", package.zone_id)
             zone_entities[package.zone_id] = zone_entity_id
             entities.append(
                 _entity(
                     zone_entity_id,
                     SpatialEntityType.REGION,
-                    f"Zone {_ref(package.zone_id, privacy)}",
+                    public_text(f"Zone {package.zone_id}", "Zone"),
                     package_frame_id,
-                    source_refs=(_ref(f"construction-scope:{package.scope.scope_key}", privacy),)
+                    source_refs=(_ref(f"construction-scope:{package.scope.scope_key}", privacy, public_export_scope),)
                     if privacy is not SpatialPrivacyClass.PROJECT
                     else (f"construction-scope:{package.scope.scope_key}",),
                     metadata={
-                        "zone_ref": _ref(package.zone_id, privacy),
-                        "storey_ref": _ref(package.storey_id, privacy),
+                        "zone_ref": _ref(package.zone_id, privacy, public_export_scope),
+                        "storey_ref": _ref(package.storey_id, privacy, public_export_scope),
                         "projection_only": True,
                     },
                 )
@@ -468,21 +494,21 @@ def project_construction_demo_to_scene(
                     storey_entity_id,
                     zone_entity_id,
                     "CONTAINS_ZONE",
-                    source_refs=(_ref(f"construction-scope:{package.scope.scope_key}", privacy),)
+                    source_refs=(_ref(f"construction-scope:{package.scope.scope_key}", privacy, public_export_scope),)
                     if privacy is not SpatialPrivacyClass.PROJECT
                     else (f"construction-scope:{package.scope.scope_key}",),
                 )
             )
-        package_entity_id = _id("construction-work-package", package.work_package_id)
+        package_entity_id = graph_id("construction-work-package", package.work_package_id)
         package_entities[package.work_package_id] = package_entity_id
         entities.append(
             _entity(
                 package_entity_id,
                 SpatialEntityType.DOMAIN_NODE,
-                package.title,
+                public_text(package.title, "Work package"),
                 package_frame_id,
                 source_refs=tuple(
-                    _ref(ref, privacy)
+                    _ref(ref, privacy, public_export_scope)
                     for ref in (
                         f"construction-scope:{package.scope.scope_key}",
                         f"construction-state:{fixture.state.state_digest}",
@@ -494,10 +520,10 @@ def project_construction_demo_to_scene(
                     f"construction-state:{fixture.state.state_digest}",
                 ),
                 metadata={
-                    "work_package_ref": _ref(package.work_package_id, privacy),
-                    "storey_ref": _ref(package.storey_id, privacy),
-                    "zone_ref": _ref(package.zone_id, privacy),
-                    "trade_ref": _ref(package.trade_id, privacy),
+                    "work_package_ref": _ref(package.work_package_id, privacy, public_export_scope),
+                    "storey_ref": _ref(package.storey_id, privacy, public_export_scope),
+                    "zone_ref": _ref(package.zone_id, privacy, public_export_scope),
+                    "trade_ref": _ref(package.trade_id, privacy, public_export_scope),
                     "status_overlay": package.status,
                     "planned_start_day": package.planned_start_day,
                     "planned_finish_day": package.planned_finish_day,
@@ -513,7 +539,7 @@ def project_construction_demo_to_scene(
                     zone_entity_id,
                     package_entity_id,
                     "HAS_WORK_PACKAGE",
-                    source_refs=(_ref(f"construction-scope:{package.scope.scope_key}", privacy),)
+                    source_refs=(_ref(f"construction-scope:{package.scope.scope_key}", privacy, public_export_scope),)
                     if privacy is not SpatialPrivacyClass.PROJECT
                     else (f"construction-scope:{package.scope.scope_key}",),
                 ),
@@ -521,7 +547,7 @@ def project_construction_demo_to_scene(
                     package_entity_id,
                     storey_entity_id,
                     "LOCATED_ON_STOREY",
-                    source_refs=(_ref(f"construction-scope:{package.scope.scope_key}", privacy),)
+                    source_refs=(_ref(f"construction-scope:{package.scope.scope_key}", privacy, public_export_scope),)
                     if privacy is not SpatialPrivacyClass.PROJECT
                     else (f"construction-scope:{package.scope.scope_key}",),
                 ),
@@ -536,7 +562,7 @@ def project_construction_demo_to_scene(
                     source_entity,
                     package_entities[dependency_id],
                     "DEPENDS_ON",
-                    source_refs=(_ref(f"construction-schedule:{fixture.fixture_digest}", privacy),)
+                    source_refs=(_ref(f"construction-schedule:{fixture.fixture_digest}", privacy, public_export_scope),)
                     if privacy is not SpatialPrivacyClass.PROJECT
                     else (f"construction-schedule:{fixture.fixture_digest}",),
                 )
@@ -547,19 +573,19 @@ def project_construction_demo_to_scene(
         for evidence_ref in package.evidence_refs:
             evidence_entity_id = evidence_entities.get(evidence_ref)
             if evidence_entity_id is None:
-                evidence_entity_id = _id("construction-evidence-requirement", evidence_ref)
+                evidence_entity_id = graph_id("construction-evidence-requirement", evidence_ref)
                 evidence_entities[evidence_ref] = evidence_entity_id
                 entities.append(
                     _entity(
                         evidence_entity_id,
                         SpatialEntityType.LABEL,
-                        f"Evidence requirement {_ref(evidence_ref, privacy)}",
+                        public_text(f"Evidence requirement {evidence_ref}", "Evidence requirement"),
                         building_frame_id,
-                        source_refs=(_ref(f"construction-evidence:{evidence_ref}", privacy),)
+                        source_refs=(_ref(f"construction-evidence:{evidence_ref}", privacy, public_export_scope),)
                         if privacy is not SpatialPrivacyClass.PROJECT
                         else (f"construction-evidence:{evidence_ref}",),
                         metadata={
-                            "evidence_ref": _ref(evidence_ref, privacy),
+                            "evidence_ref": _ref(evidence_ref, privacy, public_export_scope),
                             "payload_included": False,
                             "person_level_data_included": False,
                             "projection_only": True,
@@ -571,7 +597,7 @@ def project_construction_demo_to_scene(
                     package_entities[package.work_package_id],
                     evidence_entity_id,
                     "REQUIRES_EVIDENCE",
-                    source_refs=(_ref(f"construction-evidence:{evidence_ref}", privacy),)
+                    source_refs=(_ref(f"construction-evidence:{evidence_ref}", privacy, public_export_scope),)
                     if privacy is not SpatialPrivacyClass.PROJECT
                     else (f"construction-evidence:{evidence_ref}",),
                 )
@@ -579,40 +605,40 @@ def project_construction_demo_to_scene(
 
     trade_entities: dict[str, str] = {}
     for trade in fixture.trades:
-        entity_id = _id("construction-trade", trade.trade_id)
+        entity_id = graph_id("construction-trade", trade.trade_id)
         trade_entities[trade.trade_id] = entity_id
         entities.append(
             _entity(
                 entity_id,
                 SpatialEntityType.LABEL,
-                trade.name.title(),
+                public_text(trade.name.title(), "Trade"),
                 building_frame_id,
-                source_refs=(_ref(f"construction-demo-trade:{trade.trade_id}", privacy),)
+                source_refs=(_ref(f"construction-demo-trade:{trade.trade_id}", privacy, public_export_scope),)
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-trade:{trade.trade_id}",),
                 metadata={
                     "overlay_kind": "TRADE",
-                    "trade_ref": _ref(trade.trade_id, privacy),
-                    "subcontractor_ref": _ref(trade.subcontractor_id, privacy),
+                    "trade_ref": _ref(trade.trade_id, privacy, public_export_scope),
+                    "subcontractor_ref": _ref(trade.subcontractor_id, privacy, public_export_scope),
                     "person_level_data_included": False,
                     "projection_only": True,
                 },
             )
         )
     for activity in fixture.work_history:
-        activity_entity_id = _id("construction-activity", activity.activity_id)
+        activity_entity_id = graph_id("construction-activity", activity.activity_id)
         package_entity_id = package_entities[activity.work_package_id]
         entities.append(
             _entity(
                 activity_entity_id,
                 SpatialEntityType.DOMAIN_NODE,
-                activity.note,
+                public_text(activity.note, "Work activity"),
                 package_frames[activity.work_package_id],
-                source_refs=(_ref(f"construction-demo-activity:{activity.activity_id}", privacy),)
+                source_refs=(_ref(f"construction-demo-activity:{activity.activity_id}", privacy, public_export_scope),)
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-activity:{activity.activity_id}",),
                 metadata={
-                    "activity_ref": _ref(activity.activity_id, privacy),
+                    "activity_ref": _ref(activity.activity_id, privacy, public_export_scope),
                     "day": activity.day,
                     "status_overlay": activity.status,
                     "person_level_data_included": False,
@@ -626,7 +652,9 @@ def project_construction_demo_to_scene(
                     package_entity_id,
                     activity_entity_id,
                     "COMPLETED_IN",
-                    source_refs=(_ref(f"construction-demo-activity:{activity.activity_id}", privacy),)
+                    source_refs=(
+                        _ref(f"construction-demo-activity:{activity.activity_id}", privacy, public_export_scope),
+                    )
                     if privacy is not SpatialPrivacyClass.PROJECT
                     else (f"construction-demo-activity:{activity.activity_id}",),
                 ),
@@ -634,7 +662,9 @@ def project_construction_demo_to_scene(
                     package_entity_id,
                     trade_entities[activity.trade_id],
                     "VISITED_BY_TRADE",
-                    source_refs=(_ref(f"construction-demo-activity:{activity.activity_id}", privacy),)
+                    source_refs=(
+                        _ref(f"construction-demo-activity:{activity.activity_id}", privacy, public_export_scope),
+                    )
                     if privacy is not SpatialPrivacyClass.PROJECT
                     else (f"construction-demo-activity:{activity.activity_id}",),
                     metadata={"exact_worker_location_included": False},
@@ -643,18 +673,19 @@ def project_construction_demo_to_scene(
         )
 
     for budget in fixture.budget_lines:
-        entity_id = _id("construction-budget", budget.budget_line_id)
+        entity_id = graph_id("construction-budget", budget.budget_line_id)
         entities.append(
             _entity(
                 entity_id,
                 SpatialEntityType.DOMAIN_NODE,
-                budget.description,
+                public_text(budget.description, "Budget line"),
                 package_frames[budget.work_package_id],
-                source_refs=(_ref(f"construction-demo-budget:{budget.budget_line_id}", privacy),)
+                source_refs=(_ref(f"construction-demo-budget:{budget.budget_line_id}", privacy, public_export_scope),)
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-budget:{budget.budget_line_id}",),
                 metadata={
-                    "budget_line_ref": _ref(budget.budget_line_id, privacy),
+                    "overlay_kind": "BUDGET",
+                    "budget_line_ref": _ref(budget.budget_line_id, privacy, public_export_scope),
                     "committed_cad": budget.committed_cad,
                     "forecast_cad": budget.forecast_cad,
                     "actual_cad": budget.actual_cad,
@@ -668,7 +699,7 @@ def project_construction_demo_to_scene(
                 package_entities[budget.work_package_id],
                 entity_id,
                 "AFFECTS_BUDGET",
-                source_refs=(_ref(f"construction-demo-budget:{budget.budget_line_id}", privacy),)
+                source_refs=(_ref(f"construction-demo-budget:{budget.budget_line_id}", privacy, public_export_scope),)
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-budget:{budget.budget_line_id}",),
             )
@@ -676,7 +707,7 @@ def project_construction_demo_to_scene(
 
     for rule in fixture.rules:
         for package_id in rule.applies_to_work_package_ids:
-            entity_id = _id(
+            entity_id = graph_id(
                 "construction-rule",
                 {"rule_id": rule.rule_id, "work_package_id": package_id},
             )
@@ -684,16 +715,16 @@ def project_construction_demo_to_scene(
                 _entity(
                     entity_id,
                     SpatialEntityType.DOMAIN_NODE,
-                    rule.title,
+                    public_text(rule.title, "Synthetic rule"),
                     package_frames[package_id],
-                    source_refs=(_ref(f"construction-demo-rule:{rule.rule_id}", privacy),)
+                    source_refs=(_ref(f"construction-demo-rule:{rule.rule_id}", privacy, public_export_scope),)
                     if privacy is not SpatialPrivacyClass.PROJECT
                     else (f"construction-demo-rule:{rule.rule_id}",),
                     metadata={
                         "overlay_kind": "SYNTHETIC_RULE",
-                        "rule_ref": _ref(rule.rule_id, privacy),
-                        "work_package_ref": _ref(package_id, privacy),
-                        "requirement": rule.requirement,
+                        "rule_ref": _ref(rule.rule_id, privacy, public_export_scope),
+                        "work_package_ref": _ref(package_id, privacy, public_export_scope),
+                        "requirement": public_text(rule.requirement, ""),
                         "truth_class": rule.truth_class,
                         "legal_authority": False,
                         "regulatory_authority": False,
@@ -707,26 +738,28 @@ def project_construction_demo_to_scene(
                     package_entities[package_id],
                     entity_id,
                     "REQUIRES_SYNTHETIC_RULE",
-                    source_refs=(_ref(f"construction-demo-rule:{rule.rule_id}", privacy),)
+                    source_refs=(_ref(f"construction-demo-rule:{rule.rule_id}", privacy, public_export_scope),)
                     if privacy is not SpatialPrivacyClass.PROJECT
                     else (f"construction-demo-rule:{rule.rule_id}",),
                 )
             )
 
     for inspection in fixture.inspections:
-        entity_id = _id("construction-inspection", inspection.inspection_id)
+        entity_id = graph_id("construction-inspection", inspection.inspection_id)
         entities.append(
             _entity(
                 entity_id,
                 SpatialEntityType.DOMAIN_NODE,
-                inspection.title,
+                public_text(inspection.title, "Inspection"),
                 package_frames[inspection.work_package_id],
-                source_refs=(_ref(f"construction-demo-inspection:{inspection.inspection_id}", privacy),)
+                source_refs=(
+                    _ref(f"construction-demo-inspection:{inspection.inspection_id}", privacy, public_export_scope),
+                )
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-inspection:{inspection.inspection_id}",),
                 metadata={
                     "overlay_kind": "INSPECTION",
-                    "inspection_ref": _ref(inspection.inspection_id, privacy),
+                    "inspection_ref": _ref(inspection.inspection_id, privacy, public_export_scope),
                     "status_overlay": inspection.status,
                     "scheduled_day": inspection.scheduled_day,
                     "truth_class": inspection.truth_class,
@@ -739,25 +772,27 @@ def project_construction_demo_to_scene(
                 package_entities[inspection.work_package_id],
                 entity_id,
                 "REQUIRES_INSPECTION",
-                source_refs=(_ref(f"construction-demo-inspection:{inspection.inspection_id}", privacy),)
+                source_refs=(
+                    _ref(f"construction-demo-inspection:{inspection.inspection_id}", privacy, public_export_scope),
+                )
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-inspection:{inspection.inspection_id}",),
             )
         )
 
     for hazard in fixture.hazards:
-        entity_id = _id("construction-hazard", hazard.hazard_id)
+        entity_id = graph_id("construction-hazard", hazard.hazard_id)
         entities.append(
             _entity(
                 entity_id,
                 SpatialEntityType.DOMAIN_NODE,
-                hazard.title,
+                public_text(hazard.title, "Hazard"),
                 package_frames[hazard.work_package_id],
-                source_refs=(_ref(f"construction-demo-hazard:{hazard.hazard_id}", privacy),)
+                source_refs=(_ref(f"construction-demo-hazard:{hazard.hazard_id}", privacy, public_export_scope),)
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-hazard:{hazard.hazard_id}",),
                 metadata={
-                    "hazard_ref": _ref(hazard.hazard_id, privacy),
+                    "hazard_ref": _ref(hazard.hazard_id, privacy, public_export_scope),
                     "severity": hazard.severity,
                     "active": hazard.active,
                     "truth_class": hazard.truth_class,
@@ -770,24 +805,24 @@ def project_construction_demo_to_scene(
                 package_entities[hazard.work_package_id],
                 entity_id,
                 "BLOCKED_BY",
-                source_refs=(_ref(f"construction-demo-hazard:{hazard.hazard_id}", privacy),)
+                source_refs=(_ref(f"construction-demo-hazard:{hazard.hazard_id}", privacy, public_export_scope),)
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-hazard:{hazard.hazard_id}",),
             )
         )
 
-    crane_entity_id = _id("construction-crane-window", "crane-window-01")
+    crane_entity_id = graph_id("construction-crane-window", "crane-window-01")
     entities.append(
         _entity(
             crane_entity_id,
             SpatialEntityType.DOMAIN_NODE,
             "Synthetic crane window",
             building_frame_id,
-            source_refs=(_ref("construction-demo-logistics:crane-window-01", privacy),)
+            source_refs=(_ref("construction-demo-logistics:crane-window-01", privacy, public_export_scope),)
             if privacy is not SpatialPrivacyClass.PROJECT
             else ("construction-demo-logistics:crane-window-01",),
             metadata={
-                "crane_window_ref": "crane-window-01",
+                "crane_window_ref": _ref("crane-window-01", privacy, public_export_scope),
                 "available": True,
                 "truth_class": "SYNTHETIC_DEMO_SCHEDULE",
                 "projection_only": True,
@@ -801,27 +836,31 @@ def project_construction_demo_to_scene(
                     package_entities[package.work_package_id],
                     crane_entity_id,
                     "USES_CRANE_WINDOW",
-                    source_refs=(_ref("construction-demo-logistics:crane-window-01", privacy),)
+                    source_refs=(_ref("construction-demo-logistics:crane-window-01", privacy, public_export_scope),)
                     if privacy is not SpatialPrivacyClass.PROJECT
                     else ("construction-demo-logistics:crane-window-01",),
                 )
             )
 
     for alternative in fixture.alternatives:
-        entity_id = _id("construction-alternative", alternative.alternative_id)
+        entity_id = graph_id("construction-alternative", alternative.alternative_id)
         entities.append(
             _entity(
                 entity_id,
                 SpatialEntityType.DOMAIN_NODE,
-                alternative.title,
+                public_text(alternative.title, "Review alternative"),
                 building_frame_id,
-                source_refs=(_ref(f"construction-demo-alternative:{alternative.alternative_id}", privacy),)
+                source_refs=(
+                    _ref(f"construction-demo-alternative:{alternative.alternative_id}", privacy, public_export_scope),
+                )
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-alternative:{alternative.alternative_id}",),
                 metadata={
-                    "alternative_ref": _ref(alternative.alternative_id, privacy),
+                    "alternative_ref": _ref(alternative.alternative_id, privacy, public_export_scope),
                     "admissible": alternative.admissible,
-                    "blocker_codes": list(alternative.blocker_codes),
+                    "blocker_codes": (
+                        list(alternative.blocker_codes) if privacy is SpatialPrivacyClass.PROJECT else []
+                    ),
                     "recommended_for_human_review": alternative.recommended_for_human_review,
                     "projected_time_delta_hours": alternative.projected_time_delta_hours,
                     "projected_cost_delta_cad": alternative.projected_cost_delta_cad,
@@ -837,7 +876,9 @@ def project_construction_demo_to_scene(
                 package_entities[alternative.source_work_package_id],
                 entity_id,
                 relation,
-                source_refs=(_ref(f"construction-demo-alternative:{alternative.alternative_id}", privacy),)
+                source_refs=(
+                    _ref(f"construction-demo-alternative:{alternative.alternative_id}", privacy, public_export_scope),
+                )
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-alternative:{alternative.alternative_id}",),
             )
@@ -849,7 +890,13 @@ def project_construction_demo_to_scene(
                         entity_id,
                         package_entities[target_id],
                         "AFFECTS_SCHEDULE",
-                        source_refs=(_ref(f"construction-demo-alternative:{alternative.alternative_id}", privacy),)
+                        source_refs=(
+                            _ref(
+                                f"construction-demo-alternative:{alternative.alternative_id}",
+                                privacy,
+                                public_export_scope,
+                            ),
+                        )
                         if privacy is not SpatialPrivacyClass.PROJECT
                         else (f"construction-demo-alternative:{alternative.alternative_id}",),
                     ),
@@ -857,7 +904,13 @@ def project_construction_demo_to_scene(
                         entity_id,
                         package_entities[target_id],
                         "AFFECTS_BUDGET",
-                        source_refs=(_ref(f"construction-demo-alternative:{alternative.alternative_id}", privacy),)
+                        source_refs=(
+                            _ref(
+                                f"construction-demo-alternative:{alternative.alternative_id}",
+                                privacy,
+                                public_export_scope,
+                            ),
+                        )
                         if privacy is not SpatialPrivacyClass.PROJECT
                         else (f"construction-demo-alternative:{alternative.alternative_id}",),
                     ),
@@ -871,7 +924,7 @@ def project_construction_demo_to_scene(
                     package_entities[package.work_package_id],
                     building_entity_id,
                     "REQUIRES_PROFESSIONAL_RELEASE",
-                    source_refs=(_ref(f"construction-scope:{package.scope.scope_key}", privacy),)
+                    source_refs=(_ref(f"construction-scope:{package.scope.scope_key}", privacy, public_export_scope),)
                     if privacy is not SpatialPrivacyClass.PROJECT
                     else (f"construction-scope:{package.scope.scope_key}",),
                     metadata={"human_review_required": True},
@@ -896,10 +949,10 @@ def project_construction_demo_to_scene(
         f"construction-demo-asset-pack:{asset_pack.asset_pack_digest}",
     )
     if privacy is not SpatialPrivacyClass.PROJECT:
-        scene_source_refs = tuple(_ref(ref, privacy) for ref in scene_source_refs)
+        scene_source_refs = tuple(_ref(ref, privacy, public_export_scope) for ref in scene_source_refs)
 
     return compile_spatial_scene(
-        scene_id=_id("construction-demo-scene-v2", scene_id),
+        scene_id=graph_id("construction-demo-scene-v2", scene_id),
         purpose_digest=purpose_digest,
         root_frame_id=root_frame_id,
         frames=frames,

@@ -160,6 +160,28 @@ function constructionFixture() {
       metadata: { overlay_kind: "TRADE" },
     },
     {
+      entity_id: "entity:budget",
+      entity_type: "DOMAIN_NODE",
+      label: "Budget line",
+      frame_id: "frame:storey",
+      asset_ids: [],
+      source_refs: ["construction-demo-budget:fixture"],
+      position: [0, 0, 0],
+      rotation_xyzw: [0, 0, 0, 1],
+      scale: [1, 1, 1],
+      truth_class: "PRESENTATION",
+      selectable: true,
+      projection_only: true,
+      patch_authority: false,
+      metadata: {
+        overlay_kind: "BUDGET",
+        committed_cad: 100,
+        forecast_cad: 120,
+        actual_cad: 80,
+        truth_class: "SYNTHETIC_DEMO_BUDGET",
+      },
+    },
+    {
       entity_id: "entity:inspection",
       entity_type: "DOMAIN_NODE",
       label: "Inspection",
@@ -402,12 +424,23 @@ test("Construction overlay pass supports timeline, layers, isolation, and headle
   assert.equal(model.status.some((item) => item.entity_id === "entity:work"), false);
   assert.equal(model.floor_plans.length, 1);
   assert.equal(model.blockers.length, 1);
+  assert.equal(model.budgets.length, 1);
+  assert.deepEqual(
+    {
+      committed_cad: model.budgets[0].committed_cad,
+      forecast_cad: model.budgets[0].forecast_cad,
+      actual_cad: model.budgets[0].actual_cad,
+    },
+    { committed_cad: 100, forecast_cad: 120, actual_cad: 80 },
+  );
   pass.setTimelineDay(5);
   pass.setLayer("dependencies", false);
+  pass.setLayer("budgets", false);
   pass.setVisibleFrameIds(["frame:storey"]);
   model = pass.buildModel();
   assert.equal(model.status.some((item) => item.entity_id === "entity:work"), true);
   assert.equal(model.dependencies.length, 0);
+  assert.equal(model.budgets.length, 0);
   assert.equal(model.source_geometry_mutated, false);
   assert.equal((await pass.present()).drawn, false);
   assert.equal((await pass.dispose()).active_disposer_count, 0);
