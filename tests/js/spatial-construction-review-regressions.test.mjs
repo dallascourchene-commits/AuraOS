@@ -343,3 +343,15 @@ test("Construction demo browser refuses real-pack synthetic substitution and ser
   assert.match(source, /state\.tourIndex \+= 1/);
   assert.doesNotMatch(source, /state\.tourIndex\+\+/);
 });
+
+
+test("Construction recording UI advertises only implemented representation modes", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const source = await readFile(
+    new URL("../../aura_spatial_web/construction_demo_app.js", import.meta.url),
+    "utf8",
+  );
+  assert.match(source, /setRepresentationMode\("SPLATS"\)/);
+  assert.match(source, /button\.disabled = !supported/);
+  assert.match(source, /Browser GLB decoding and mesh drawing are not implemented/);
+});

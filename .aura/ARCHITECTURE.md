@@ -1181,16 +1181,7 @@ The canonical test for a healthy change is not merely that code runs. It is that
 <!-- AURA_CONSTRUCTION_G7_G8 -->
 ## Construction Arena G7–G8 presentation and proof layer
 
-Canonical ownership remains unchanged:
-
-- Construction truth: `ConstructionProjectState`;
-- Construction filtering/runtime packet: `ConstructionArenaAdapter`;
-- demo asset identity and provenance: `ConstructionDemoAssetPack`;
-- synthetic project fixture: the G4 fixture/builder;
-- spatial scene ownership: `project_construction_demo_to_scene` and the existing Spatial contracts;
-- renderer/disposal ownership: `ConstructionSceneRenderer` with the existing mesh, overlay, Gaussian, WebGL2, and accessible-fallback owners.
-
-`aura_construction_demo_director.py` is a presentation-sequence owner only. It composes the admitted asset pack, canonical G4 fixture/runtime packet, G5 scene, negotiated render plan, and bounded tour steps into a local browser packet:
+Canonical ownership remains singular:
 
 ```text
 ConstructionDemoAssetPack
@@ -1200,11 +1191,32 @@ ConstructionDemoAssetPack
   → negotiate_spatial_render_plan
   → compile_construction_demo_packet
   → ConstructionSceneRenderer
+  → Gaussian/graph/overlay recording surface
   → deterministic presentation tour
   → read-only Observatory / human decision packet
   → exact renderer disposal
 ```
 
-`aura_spatial_web/construction_demo.html`, `construction_demo.css`, and `construction_demo_app.js` provide the cinematic controls and guided tour without becoming truth or authority owners. Exploded transforms remain presentation-only and do not mutate source coordinates, storey elevation, Construction scope identity, schedule truth, or project state.
+`aura_construction_demo_director.py` owns presentation sequencing only. `ConstructionProjectState`, `ConstructionArenaAdapter`, `ConstructionDemoAssetPack`, the G4 fixture, the G5 projector, and the G6 renderer passes retain their existing truth and lifecycle ownership.
 
-Prohibited edges include director-to-ledger mutation, browser-control-to-work release, recommendation-to-automatic execution, renderer-to-payment/access/professional authority, fallback-pack-to-survey truth, Observatory-to-decision authority, and review-bot-to-merge authority. The local server exposes only approved Spatial Web files, generated Construction demo assets, and the deterministic `/api/construction-demo` packet; it requires no runtime external network.
+The current recording client is fail-closed: deterministic fallback Gaussian rendering is implemented; browser GLB/SPZ decoding and a real mesh draw pass are not. Mesh/hybrid controls remain disabled, and an admitted real pack is never replaced by fabricated fallback geometry.
+
+## AI-agent harness topology
+
+```text
+CODEMAP / exact source identity
+  → Architecture Harness doctor and AI-safe handoff
+  → Capability Connectome + Relational Index
+  → Relationship Atlas + Relational Synthesis
+  → Emergent Properties proposals
+  → Coding Relationship Compass
+  → Coding Waboose diagnostic breadboard
+  → Council V3 / Surgeon repair preparation
+  → Crucible verification
+  → Observatory human evidence review
+  → exact-head human-authorized publication
+```
+
+These are separate owners with bounded roles. The Architecture Harness reconstructs and supervises the environment; Waboose reviews; Compass compiles impact evidence; Council/Surgeon prepare strategies; Crucible tests; Observatory presents evidence; Agent Bridge/MCP connects replaceable agents. None of them independently author source truth, apply production mutations, approve physical Construction work, publish, or merge.
+
+Generated CODEMAP/topology is navigation evidence and must be regenerated from the final source tree. Exact source spans, hashes, tests, runtime receipts, and human authorization remain authoritative.

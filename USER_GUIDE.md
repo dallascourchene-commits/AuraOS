@@ -1189,13 +1189,13 @@ AuraOS evidence does not establish consciousness, unrestricted autonomy, univers
 <!-- AURA_CONSTRUCTION_G7_G8 -->
 ## 27. Run the cinematic Construction Arena demo
 
-Compile the deterministic browser packet without starting a server:
+Compile a deterministic packet:
 
 ```bash
 python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --output /tmp/aura-construction-demo.packet.json
 ```
 
-Launch the local interface:
+Launch the loopback-only interface:
 
 ```bash
 python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --serve
@@ -1203,23 +1203,29 @@ python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --s
 
 Open `http://127.0.0.1:8767/demo/construction?tour=full`.
 
-Supported tours are `full`, `blocked-work`, `alternatives`, and `timeline`. The full tour contains 18 bounded presentation steps: attribution; complete hybrid building; orbit; exploded storeys; floor plans; timeline replay; blocked drilling; missing dispositive evidence; the hard-blocked unsafe option; safe alternate work; trade history; dependencies; synthetic-rule and inspection gates; schedule/budget comparison; a human-review recommendation; Observatory; a human decision packet; and dissolution.
+Tours are `full`, `blocked-work`, `alternatives`, and `timeline`. Implemented controls include orbit, zoom, storey isolation, explode/collapse, splats, overlays, timeline, picking, tour playback, and dissolve. Mesh/hybrid controls remain disabled until a browser GLB decoder and real mesh pass exist.
 
-Controls include orbit, zoom, storey isolation, show all, explode/collapse, mesh/splats/hybrid, floor plans, work status, trades, blockers, budgets, inspections, dependencies, synthetic rules, timeline scrub, picking, reset, play, pause, next step, and dissolve.
+Use the deterministic fallback for recording. An admitted real asset pack can be compiled and contract-validated, but the browser refuses it until real decoders exist; fabricated substitution is prohibited.
 
-Supply `--asset-pack demo_assets/construction_tuwien/generated/asset-pack.manifest.json` when an admitted generated pack exists. Without it, the director uses a deterministic five-storey local fallback for recording and testing. The fallback is presentation-only and is not survey geometry.
+Full operating instructions: [`docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md`](docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md).
+
+## 28. Use Aura's harnesses before editing the architecture
+
+1. Read `.aura/CODEMAP.md` and `.aura/ARCHITECTURE.md`.
+2. Run `python scripts/aura_architecture_harness.py --repo-root . doctor`.
+3. For an external AI, create a bounded handoff outside the repository with `python scripts/aura_architecture_harness.py --repo-root . handoff --output-dir ../AuraOS-ai-handoff`.
+4. Use the Coding Relationship Compass and Architecture Harness to identify owners, callers, dependencies, invariants, tests, and prohibited edges.
+5. Run Coding Waboose for deterministic review: `python aura_coding_waboose_cli.py --repo-root . run --request waboose_request.json`.
+6. Use Council V3/Surgeon, Crucible, and Observatory as proposal and evidence surfaces; never treat them as automatic patch or merge authority.
+7. Regenerate CODEMAP/topology only after source and tests stabilize.
+
+The architecture harness has a 10-minute progress check-in and a 20-minute hard reassessment pause for long operations. Resume from preserved atomic artifacts rather than restarting or silently continuing a stalled run.
 
 ```yaml
-physical_work_authorized: false
-payment_released: false
-access_controlled: false
-professional_certification_claimed: false
-legal_or_regulatory_authority_claimed: false
-survey_authority_claimed: false
-renderer_authority: false
-automatic_execution: false
+harness_outputs_are_patch_authority: false
+waboose_automatic_fix: false
+council_automatic_execution: false
+observatory_is_review_only: true
 automatic_merge: false
 human_review_required: true
 ```
-
-The decision packet is a review artifact. It cannot mutate canonical Construction state or release work.

@@ -410,6 +410,15 @@ async function main() {
     meshPayloads: meshPayloads(state.packet.scene),
     gaussianPayloads: gaussianPayloads(state.packet.scene),
   });
+  state.renderer.setRepresentationMode("SPLATS");
+  document.querySelectorAll("button[data-mode]").forEach((button) => {
+    const supported = button.dataset.mode === "SPLATS";
+    button.disabled = !supported;
+    button.classList.toggle("active", supported);
+    if (!supported) {
+      button.title = "Browser GLB decoding and mesh drawing are not implemented; mode is fail-closed";
+    }
+  });
   buildControls();
   await present();
   $("#scene-state").textContent = state.packet.fallback_asset_pack ? "Fallback pack ready" : "Asset pack ready";

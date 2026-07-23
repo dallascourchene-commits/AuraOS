@@ -551,18 +551,40 @@ AuraOS evidence does not establish consciousness, unrestricted autonomy, univers
 - [`docs/AURA_SCO_PHASE5_E9_E14_COMPLETION_PLAN.md`](docs/AURA_SCO_PHASE5_E9_E14_COMPLETION_PLAN.md)
 
 <!-- AURA_CONSTRUCTION_G7_G8 -->
-## Construction Arena G0–G8 — complete refactor
+## Construction Arena G0–G8
 
-The Construction Arena implementation now covers the complete G0–G8 chain: architecture/dependency lock; open-source fictional BIM acquisition and immutable asset contracts; deterministic IFC-to-storey GLB/SVG compilation; bounded degree-0 Gaussian PLY/SPZ compilation; an asset-bound synthetic Construction project fixture; Spatial Projection V2; local WebGL2 mesh/Gaussian/overlay composition; and a deterministic cinematic director surface.
-
-Launch the local video-ready interface:
+AuraOS includes a deterministic, local Construction Arena demonstration spanning source provenance, fictional BIM compilation, synthetic project state, immutable Spatial projection, Gaussian/graph/overlay presentation, director tours, Observatory evidence, a human decision packet, and exact renderer dissolution.
 
 ```bash
 python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --serve
 ```
 
-Open `http://127.0.0.1:8767/demo/construction?tour=full`. The surface supports mesh, splats, hybrid mode, storey isolation, exploded floors, floor plans, work status, trades, blockers, budgets, inspections, dependencies, synthetic rules, timeline replay, picking, read-only Observatory evidence, a non-executing human decision packet, and exact renderer dissolution.
+Open `http://127.0.0.1:8767/demo/construction?tour=full`.
 
-The TU Wien source BIM is fictional and attributed under CC BY 4.0. All Construction activities, schedules, budgets, organizations, hazards, rules, inspections, and project status are synthetic. The Arena cannot authorize physical work, payment, access, professional certification, legal or regulatory action, survey truth, production mutation, publication, or merge. Unsafe drilling remains hard-blocked, and the admissible alternative remains human-review-only.
+The recording client currently renders the deterministic Gaussian fallback plus graph and overlay context. Browser GLB/SPZ decoding and a real mesh draw pass are not implemented, so mesh/hybrid controls are disabled. Real asset packs may be compiled and contract-validated, but the browser refuses to substitute fallback geometry for real digests.
 
-See [`docs/AURA_CONSTRUCTION_ARENA_G7_G8.md`](docs/AURA_CONSTRUCTION_ARENA_G7_G8.md) for launch commands, controls, deterministic tours, recording requirements, verification, and authority boundaries.
+See [`docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md`](docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md) for the complete operator, recording, verification, security, and troubleshooting guide.
+
+## AI-agent harnesses and Aura-native development tools
+
+AI agents should not approach AuraOS as an ordinary flat repository. Aura includes persistent harnesses and architecture organs that expose exact repository evidence, bounded relational context, review circuits, and safe handoffs:
+
+- **CODEMAP and topology** — read [`.aura/CODEMAP.md`](.aura/CODEMAP.md) first; regenerate with `python aura_codebase_navigator.py` and verify with `python -m aura_codemap_verify --compare-json .aura/CODEMAP.json` only after source stabilizes.
+- **Aura Architecture Harness** — `scripts/aura_architecture_harness.py` reconstructs a reproducible environment, runs doctor checks, exports AI-safe source handoffs, supervises long runs with 10-minute check-ins and a 20-minute reassessment pause, and invokes the Connectome, Relational Index, Relationship Atlas, Emergent Properties, and Architect Fusion Loop without granting patch authority.
+- **Coding Waboose** — `aura_coding_waboose_cli.py` performs deterministic graph-guided review, static checks, semantic rule packs, focused-test selection, evidence corroboration, and bounded Forge repair requests. Waboose reviews; it does not patch or merge.
+- **Coding Relationship Compass** — compiles objective-bounded callers, callees, shared resources, required tests, invariants, and authority risks from Aura's topology.
+- **Council V3 and Surgeon** — route failure classes and prepare bounded repair strategies while keeping execution and merge human-authorized.
+- **Capability Connectome, Relational Synthesis, Relationship Atlas, and Emergent Properties** — reveal existing capability anatomy, wired and unwired relationships, missing roles, prohibitions, and evidence-bound candidate combinations.
+- **Agent Arena MCP / Agent Bridge** — exposes Aura tools to replaceable external agents while preserving proposal-only authority and exact receipts.
+- **Crucible and Observatory** — benchmark candidate behavior and present evidence for review; neither surface is automatic patch or merge authority.
+
+Start with:
+
+```bash
+python scripts/aura_architecture_harness.py --repo-root . doctor
+python scripts/aura_architecture_harness.py --repo-root . handoff --output-dir ../AuraOS-ai-handoff
+```
+
+Then use the focused guide in [`docs/AURA_ARCHITECTURE_HARNESS.md`](docs/AURA_ARCHITECTURE_HARNESS.md) and the Waboose contract in [`docs/AURA_CODING_WABOOSE.md`](docs/AURA_CODING_WABOOSE.md).
+
+All harness outputs remain navigation, analysis, review, or proposal evidence. Exact source spans, hashes, tests, verifier receipts, and human authorization remain patch and merge authority.

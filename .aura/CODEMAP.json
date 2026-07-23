@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784847918,
+  "generated_at_unix": 1784849191,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1365,
+    "included_file_count": 1366,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,10 +13,12 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 25,
+      ".git": 129,
+      ".pytest_cache": 4,
+      ".ruff_cache": 4,
       "Aura_Memory": 6,
       "Aura_Sandbox": 1,
-      "__pycache__": 8
+      "__pycache__": 55
     },
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
@@ -78,7 +80,6 @@
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
-      ".github/workflows/aura-construction-g7-g8-integrity-final.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -833,6 +834,7 @@
       "docs/AURA_CONSTRUCTION_ARENA_G7_G8_CHANGE_GRAPH.md",
       "docs/AURA_CONSTRUCTION_ARENA_G7_G8_REVIEW_SCOPE.md",
       "docs/AURA_CONSTRUCTION_ARENA_G7_G8_SECURITY.md",
+      "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_COUNCIL_V3_EFFICIENCY_AND_SCALE_ENHANCEMENT_PROPOSAL.md",
       "docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md",
       "docs/AURA_EMERGENT_EVIDENCE_SPINE_PLAN.md",
@@ -1103,6 +1105,7 @@
       "tests/js/spatial-mixed-scene.test.mjs",
       "tests/js/spatial-renderer-adapter.test.mjs",
       "tests/js/spatial-telemetry.test.mjs",
+      "tests/js/spatial-webgl2-failure-injection.test.mjs",
       "tests/js/spatial-webgl2.test.mjs",
       "tests/js/spatial-webgpu.test.mjs",
       "tests/js/spatial-webxr.test.mjs",
@@ -1387,23 +1390,23 @@
     ]
   },
   "summary": {
-    "file_count": 1365,
-    "total_bytes": 56286698,
-    "text_tokens_est": 4622016,
+    "file_count": 1366,
+    "total_bytes": 56254574,
+    "text_tokens_est": 4612018,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 50,
-      "knowledge_artifact": 179,
+      "knowledge_artifact": 180,
       "native_accelerator": 8,
       "operator_script": 5,
       "python_module": 908,
-      "schema_or_lexicon": 161,
-      "support_file": 52
+      "schema_or_lexicon": 160,
+      "support_file": 53
     },
     "topology_nodes": 10358,
     "topology_edges": 24168,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 30673.11
+    "elapsed_ms": 29875.37
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1655,7 +1658,6 @@
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
-      ".github/workflows/aura-construction-g7-g8-integrity-final.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -2308,6 +2310,7 @@
       "docs/AURA_CONSTRUCTION_ARENA_G7_G8_AUTHORITY_RECEIPT.md",
       "docs/AURA_CONSTRUCTION_ARENA_G7_G8_CHANGE_GRAPH.md",
       "docs/AURA_CONSTRUCTION_ARENA_G7_G8_REVIEW_SCOPE.md",
+      "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_COUNCIL_V3_EFFICIENCY_AND_SCALE_ENHANCEMENT_PROPOSAL.md",
       "docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md",
       "docs/AURA_EMERGENT_EVIDENCE_SPINE_PLAN.md",
@@ -2534,6 +2537,7 @@
       "tests/js/spatial-mixed-scene.test.mjs",
       "tests/js/spatial-renderer-adapter.test.mjs",
       "tests/js/spatial-telemetry.test.mjs",
+      "tests/js/spatial-webgl2-failure-injection.test.mjs",
       "tests/js/spatial-webgl2.test.mjs",
       "tests/js/spatial-webgpu.test.mjs",
       "tests/js/spatial-webxr.test.mjs",
@@ -3005,7 +3009,7 @@
       "aura_spatial_web/scene_decoder.js:6",
       "aura_spatial_web/telemetry.js:44",
       "aura_spatial_web/webgl2_gaussian_pass.js:134",
-      "aura_spatial_web/webgl2_renderer.js:71"
+      "aura_spatial_web/webgl2_renderer.js:102"
     ],
     "!REFERENCE_SPACES": [
       "aura_spatial_web/webxr_session.js:32"
@@ -3121,9 +3125,8 @@
       "aura_human_agent_arena/jarvis.js:337"
     ],
     "!buffer": [
-      ".github/workflows/aura-construction-g7-g8-integrity-final.yml:282",
       "aura_spatial_web/webgl2_gaussian_pass.js:236",
-      "aura_spatial_web/webgl2_renderer.js:195"
+      "aura_spatial_web/webgl2_renderer.js:327"
     ],
     "!button": [
       "aura_showcase/attempt-archive.js:91",
@@ -3157,7 +3160,7 @@
       "aura_human_agent_arena/main.js:818"
     ],
     "!cleanupErrors": [
-      ".github/workflows/aura-construction-g7-g8-integrity-final.yml:202"
+      "aura_spatial_web/webgl2_renderer.js:247"
     ],
     "!codeExts": [
       "CODEMAP_TOOL_INTEGRATION_GUIDE.md:506"
@@ -3309,9 +3312,8 @@
       "aura_showcase/civic.js:88"
     ],
     "!gl": [
-      ".github/workflows/aura-construction-g7-g8-integrity-final.yml:220",
       "aura_spatial_web/webgl2_gaussian_pass.js:200",
-      "aura_spatial_web/webgl2_renderer.js:168"
+      "aura_spatial_web/webgl2_renderer.js:265"
     ],
     "!globalThis": [
       "aura_spatial_web/gaussian_renderer.js:212"
@@ -3477,9 +3479,6 @@
       "AURA_FINAL_REPORT.md:172",
       "aura_node.py:6004"
     ],
-    "!options": [
-      ".github/workflows/aura-construction-g7-g8-integrity-final.yml:370"
-    ],
     "!originalShow": [
       "aura_showcase/human.js:618"
     ],
@@ -3519,8 +3518,8 @@
       "aura_spatial_web/gaussian_renderer.js:432"
     ],
     "!program": [
-      ".github/workflows/aura-construction-g7-g8-integrity-final.yml:240",
-      "aura_spatial_web/webgl2_gaussian_pass.js:217"
+      "aura_spatial_web/webgl2_gaussian_pass.js:217",
+      "aura_spatial_web/webgl2_renderer.js:285"
     ],
     "!push": [
       "aura_node.py:5239",
@@ -3715,9 +3714,8 @@
       "aura_node.py:7740"
     ],
     "!shader": [
-      ".github/workflows/aura-construction-g7-g8-integrity-final.yml:216",
       "aura_spatial_web/webgl2_gaussian_pass.js:197",
-      "aura_spatial_web/webgl2_renderer.js:165"
+      "aura_spatial_web/webgl2_renderer.js:261"
     ],
     "!show": [
       "docs/AURA_HUMAN_AGENT_ARENA.md:267",
@@ -3784,7 +3782,7 @@
       "aura_node.py:7548"
     ],
     "!supported": [
-      ".github/workflows/aura-construction-g7-g8-integrity-final.yml:539"
+      "aura_spatial_web/construction_demo_app.js:416"
     ],
     "!synthesize": [
       "aura_associative_core.py:141",
@@ -3826,14 +3824,13 @@
       "index.html:122"
     ],
     "!this": [
-      ".github/workflows/aura-construction-g7-g8-integrity-final.yml:66",
       "aura_spatial_web/construction_mesh_pass.js:175",
       "aura_spatial_web/construction_overlay_pass.js:118",
       "aura_spatial_web/construction_scene_renderer.js:330",
       "aura_spatial_web/gaussian_renderer.js:744",
       "aura_spatial_web/headless_renderer.js:5",
       "aura_spatial_web/renderer_adapter.js:586",
-      "aura_spatial_web/webgl2_renderer.js:38",
+      "aura_spatial_web/webgl2_renderer.js:41",
       "aura_spatial_web/webgpu_renderer.js:4",
       "aura_spatial_web/webxr_session.js:14"
     ],
@@ -132885,47 +132882,47 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "bytes": 37234,
-      "lines": 569,
-      "tokens_est": 9219,
+      "bytes": 39236,
+      "lines": 591,
+      "tokens_est": 9717,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "09f19d12d522ff4f",
+      "digest8": "175126b2478932ae",
       "vector": [
-        0.085045,
-        0.223089,
-        0.033278,
-        -0.186113,
-        -0.309367,
-        -0.235415,
-        0.060394,
-        -0.181183,
-        0.151602,
-        0.013558,
-        0.065324,
-        -0.052999,
-        -0.289646,
-        0.114626,
-        -0.134347,
-        -0.102301,
-        -0.205834,
-        -0.255135,
-        -0.114626,
-        -0.134347,
-        -0.173788,
-        0.146672,
-        0.210764,
-        -0.040674,
-        0.158997,
-        -0.173788,
-        -0.080115,
-        -0.218159,
-        0.267461,
-        0.245275,
-        0.109696,
-        0.272391
+        0.082856,
+        -0.1477,
+        -0.126085,
+        0.138094,
+        -0.123684,
+        0.099668,
+        0.061241,
+        0.284593,
+        0.154905,
+        0.013209,
+        0.018012,
+        -0.217347,
+        -0.080454,
+        0.066045,
+        -0.092463,
+        -0.286994,
+        -0.190929,
+        -0.226954,
+        0.054037,
+        0.034824,
+        0.207741,
+        0.063643,
+        -0.207741,
+        -0.291798,
+        -0.277388,
+        0.16211,
+        0.116479,
+        -0.289396,
+        -0.099668,
+        0.210142,
+        -0.231757,
+        -0.277388
       ]
     },
     {
@@ -133227,9 +133224,9 @@
     {
       "path": "USER_GUIDE.md",
       "role": "knowledge_artifact",
-      "bytes": 50978,
-      "lines": 1226,
-      "tokens_est": 12692,
+      "bytes": 51396,
+      "lines": 1232,
+      "tokens_est": 12796,
       "symbol_count": 0,
       "commands": [
         "!commands"
@@ -133240,40 +133237,40 @@
         ]
       },
       "topology": {},
-      "digest8": "99a9b86d4c6860fd",
+      "digest8": "05fb9cf7f754e252",
       "vector": [
-        -0.258003,
-        -0.215626,
-        0.056088,
-        0.046116,
-        0.225597,
-        0.073537,
-        0.153306,
-        0.063566,
-        0.125885,
-        0.068551,
-        -0.153306,
-        0.195683,
-        0.21064,
-        0.248032,
-        -0.31783,
-        -0.046116,
-        -0.028667,
-        0.205654,
-        0.21064,
-        0.198176,
-        0.185712,
-        -0.290409,
-        0.160784,
-        -0.088494,
-        -0.108436,
-        0.248032,
-        0.150813,
-        -0.290409,
-        0.011218,
-        0.16577,
-        -0.07603,
-        0.115914
+        -0.102015,
+        -0.13643,
+        -0.143805,
+        -0.092182,
+        -0.119223,
+        0.185594,
+        0.215092,
+        0.28638,
+        0.239674,
+        0.084808,
+        -0.170845,
+        0.099557,
+        0.114306,
+        0.10939,
+        0.138888,
+        0.173303,
+        -0.114306,
+        -0.153637,
+        0.079891,
+        0.156096,
+        0.298671,
+        0.244591,
+        0.055309,
+        0.293755,
+        0.25934,
+        -0.256882,
+        -0.099557,
+        -0.119223,
+        -0.215092,
+        -0.065142,
+        -0.222467,
+        0.153637
       ]
     },
     {
@@ -182632,47 +182629,47 @@
     {
       "path": ".aura/ARCHITECTURE.md",
       "role": "knowledge_artifact",
-      "bytes": 57895,
-      "lines": 1211,
-      "tokens_est": 14384,
+      "bytes": 58076,
+      "lines": 1223,
+      "tokens_est": 14424,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "0be560b62aabfe61",
+      "digest8": "6de55faa23b30a2f",
       "vector": [
-        0.200516,
-        0.260787,
-        -0.256151,
-        0.165745,
-        0.170381,
-        -0.054476,
-        0.24456,
-        0.047521,
-        0.15879,
-        -0.212107,
-        -0.068384,
-        -0.082293,
-        0.121701,
-        0.181972,
-        -0.279332,
-        0.283968,
-        0.1472,
-        -0.283968,
-        0.235288,
-        0.02434,
-        -0.239924,
-        -0.040567,
-        -0.010431,
-        -0.18429,
-        0.19588,
-        0.089247,
-        0.175017,
-        -0.01275,
-        0.045203,
-        -0.251515,
-        0.149518,
-        -0.008113
+        -0.240547,
+        -0.061589,
+        0.108072,
+        -0.238223,
+        0.226602,
+        0.291678,
+        0.080182,
+        -0.128989,
+        0.249843,
+        0.145258,
+        0.294002,
+        -0.059265,
+        0.147582,
+        0.294002,
+        -0.275409,
+        0.122016,
+        0.059265,
+        -0.105748,
+        -0.163851,
+        -0.049969,
+        -0.128989,
+        -0.054617,
+        -0.196388,
+        0.235899,
+        -0.082506,
+        0.242871,
+        0.019755,
+        0.040672,
+        -0.012783,
+        0.254492,
+        -0.208009,
+        -0.063913
       ]
     },
     {
@@ -185249,90 +185246,6 @@
         -0.094425,
         -0.305938,
         0.202699
-      ]
-    },
-    {
-      "path": ".github/workflows/aura-construction-g7-g8-integrity-final.yml",
-      "role": "schema_or_lexicon",
-      "bytes": 51380,
-      "lines": 1128,
-      "tokens_est": 12809,
-      "symbol_count": 0,
-      "commands": [
-        "!buffer",
-        "!cleanupErrors",
-        "!gl",
-        "!options",
-        "!program",
-        "!shader",
-        "!supported",
-        "!this"
-      ],
-      "command_lines": {
-        "!buffer": [
-          282
-        ],
-        "!cleanupErrors": [
-          202
-        ],
-        "!gl": [
-          220,
-          244
-        ],
-        "!options": [
-          370
-        ],
-        "!program": [
-          240
-        ],
-        "!shader": [
-          216
-        ],
-        "!supported": [
-          539,
-          541,
-          561
-        ],
-        "!this": [
-          66,
-          159
-        ]
-      },
-      "topology": {},
-      "digest8": "ad8e32ac935897f0",
-      "vector": [
-        -0.013307,
-        0.064114,
-        -0.136697,
-        -0.010887,
-        -0.08105,
-        -0.228635,
-        0.301217,
-        -0.187505,
-        -0.223796,
-        -0.032662,
-        -0.073792,
-        0.194763,
-        -0.153633,
-        0.134278,
-        0.274604,
-        0.114922,
-        -0.231054,
-        0.073792,
-        -0.100406,
-        -0.218957,
-        -0.28912,
-        0.204441,
-        -0.102825,
-        0.262506,
-        -0.170569,
-        -0.146375,
-        -0.052017,
-        -0.303637,
-        0.160891,
-        0.153633,
-        -0.209279,
-        0.08347
       ]
     },
     {
@@ -190854,9 +190767,9 @@
     {
       "path": "aura_spatial_web/construction_demo_app.js",
       "role": "interface_surface",
-      "bytes": 15668,
-      "lines": 435,
-      "tokens_est": 3916,
+      "bytes": 16066,
+      "lines": 444,
+      "tokens_est": 4015,
       "symbol_count": 0,
       "commands": [
         "!button",
@@ -190864,7 +190777,8 @@
         "!input",
         "!response",
         "!state",
-        "!steps"
+        "!steps",
+        "!supported"
       ],
       "command_lines": {
         "!button": [
@@ -190891,43 +190805,47 @@
         ],
         "!steps": [
           325
+        ],
+        "!supported": [
+          416,
+          418
         ]
       },
       "topology": {},
-      "digest8": "486e16aade5047c5",
+      "digest8": "3b1fab86eba5dd5e",
       "vector": [
-        0.029182,
-        0.029182,
-        0.085009,
-        -0.036795,
-        0.257564,
-        -0.04187,
-        0.166212,
-        0.260102,
-        0.255027,
-        0.232189,
-        0.148448,
-        -0.054558,
-        0.123073,
-        0.244877,
-        0.054558,
-        0.123073,
-        0.12561,
-        0.161136,
-        0.257564,
-        0.064708,
-        -0.219501,
-        0.280403,
-        -0.049483,
-        -0.161136,
-        -0.293091,
-        -0.295628,
-        0.092622,
-        -0.008882,
-        -0.227113,
-        -0.227113,
-        -0.110385,
-        -0.156061
+        -0.117097,
+        0.271617,
+        -0.295761,
+        -0.136412,
+        0.03018,
+        0.06881,
+        -0.097782,
+        0.03018,
+        -0.08571,
+        0.249888,
+        0.266788,
+        -0.206429,
+        0.073638,
+        -0.30059,
+        0.114683,
+        0.114683,
+        0.10744,
+        -0.10744,
+        -0.189528,
+        -0.141241,
+        -0.165385,
+        0.12434,
+        -0.225744,
+        0.182285,
+        0.167799,
+        0.247473,
+        -0.177457,
+        0.220915,
+        0.175042,
+        -0.252302,
+        0.088125,
+        0.083296
       ]
     },
     {
@@ -191877,72 +191795,81 @@
     {
       "path": "aura_spatial_web/webgl2_renderer.js",
       "role": "interface_surface",
-      "bytes": 9294,
-      "lines": 271,
-      "tokens_est": 2324,
+      "bytes": 13016,
+      "lines": 409,
+      "tokens_est": 3254,
       "symbol_count": 0,
       "commands": [
         "!Number",
         "!buffer",
+        "!cleanupErrors",
         "!gl",
+        "!program",
         "!shader",
         "!this"
       ],
       "command_lines": {
         "!Number": [
-          71,
-          137,
-          146
+          102,
+          168,
+          177
         ],
         "!buffer": [
-          195
+          327
+        ],
+        "!cleanupErrors": [
+          247
         ],
         "!gl": [
-          168,
-          185
+          265,
+          289
+        ],
+        "!program": [
+          285
         ],
         "!shader": [
-          165
+          261
         ],
         "!this": [
-          38
+          41,
+          211
         ]
       },
       "topology": {},
-      "digest8": "b489b36df6da23d7",
+      "digest8": "b024b841d1917fa4",
       "vector": [
-        0.072948,
-        0.216845,
-        0.156888,
-        -0.036974,
-        0.252819,
-        -0.196859,
-        0.116916,
-        0.190863,
-        -0.170878,
-        -0.026981,
-        0.162883,
-        0.194861,
-        0.226838,
-        -0.232833,
-        0.088936,
-        -0.246823,
-        -0.242826,
-        0.170878,
-        -0.244825,
-        -0.154889,
-        0.070949,
-        -0.190863,
-        0.170878,
-        0.164882,
-        0.224839,
-        -0.134903,
-        0.166881,
-        -0.136902,
-        -0.172876,
-        0.182869,
-        0.218843,
-        -0.058958
+        0.068858,
+        0.250293,
+        0.001093,
+        -0.200015,
+        -0.033882,
+        0.027325,
+        0.261222,
+        -0.147552,
+        0.200015,
+        0.016395,
+        -0.16504,
+        0.234991,
+        -0.27871,
+        0.250293,
+        0.248107,
+        0.025139,
+        -0.103833,
+        0.245921,
+        -0.101647,
+        0.005465,
+        -0.075416,
+        -0.173784,
+        0.053556,
+        0.195643,
+        0.149738,
+        0.184714,
+        -0.182528,
+        0.081974,
+        -0.241549,
+        0.202201,
+        -0.241549,
+        0.250293
       ]
     },
     {
@@ -194453,47 +194380,47 @@
     {
       "path": "docs/AURA_CONSTRUCTION_ARENA_G7_G8.md",
       "role": "knowledge_artifact",
-      "bytes": 5647,
-      "lines": 169,
-      "tokens_est": 1399,
+      "bytes": 3044,
+      "lines": 78,
+      "tokens_est": 752,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "c0727af239f0f0bb",
+      "digest8": "cc365b0da3c58e9c",
       "vector": [
-        -0.039585,
-        -0.175596,
-        -0.076125,
-        0.086275,
-        0.252736,
-        -0.248676,
-        -0.001015,
-        -0.210106,
-        -0.163415,
-        -0.033495,
-        0.149205,
-        -0.023345,
-        0.183716,
-        -0.220256,
-        0.183716,
-        0.019285,
-        -0.181686,
-        -0.258826,
-        0.195896,
-        0.240556,
-        -0.248676,
-        -0.248676,
-        0.100485,
-        -0.199956,
-        0.201986,
-        0.126875,
-        -0.005075,
-        0.230406,
-        0.228376,
-        -0.009135,
-        -0.159355,
-        -0.244616
+        -0.266104,
+        0.276966,
+        -0.177041,
+        -0.092322,
+        -0.129251,
+        0.081461,
+        -0.03367,
+        0.027154,
+        -0.148801,
+        0.250898,
+        -0.155318,
+        -0.222659,
+        0.216142,
+        -0.15749,
+        0.205281,
+        0.087977,
+        -0.131423,
+        -0.118389,
+        0.087977,
+        0.177041,
+        -0.266104,
+        -0.035843,
+        0.029326,
+        -0.179213,
+        -0.120562,
+        -0.229176,
+        0.235693,
+        0.244382,
+        0.183558,
+        0.257415,
+        -0.111872,
+        -0.192247
       ]
     },
     {
@@ -194678,6 +194605,52 @@
         0.007793,
         0.012246,
         0.230447
+      ]
+    },
+    {
+      "path": "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
+      "role": "knowledge_artifact",
+      "bytes": 7191,
+      "lines": 225,
+      "tokens_est": 1787,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6c93faa71dca7f7e",
+      "vector": [
+        0.044206,
+        -0.302275,
+        -0.130229,
+        -0.180409,
+        -0.249706,
+        0.194747,
+        -0.056154,
+        0.103945,
+        0.187578,
+        0.142177,
+        0.275991,
+        -0.118282,
+        -0.285549,
+        -0.113503,
+        -0.17563,
+        0.060933,
+        0.118282,
+        0.223421,
+        -0.029869,
+        0.118282,
+        -0.065712,
+        0.161293,
+        -0.022701,
+        -0.261653,
+        -0.135008,
+        -0.070491,
+        -0.096776,
+        -0.304665,
+        -0.254485,
+        -0.197136,
+        0.139787,
+        -0.204305
       ]
     },
     {
@@ -213737,47 +213710,47 @@
     {
       "path": "tests/js/spatial-construction-review-regressions.test.mjs",
       "role": "support_file",
-      "bytes": 11223,
+      "bytes": 11717,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "854ab08554305e79",
+      "digest8": "995c7d4253229aef",
       "vector": [
-        -0.246478,
-        0.255564,
-        -0.228304,
-        0.15561,
-        0.230576,
-        0.017038,
-        -0.196501,
-        0.198772,
-        0.253293,
-        0.180599,
-        -0.112448,
-        0.219217,
-        0.107905,
-        -0.076101,
-        -0.103362,
-        0.001136,
-        -0.119263,
-        -0.176055,
-        -0.173784,
-        -0.228304,
-        0.228304,
-        -0.055656,
-        -0.251021,
-        0.282825,
-        0.132893,
-        -0.005679,
-        -0.180599,
-        0.139709,
-        -0.180599,
-        0.085188,
-        -0.103362,
-        -0.185142
+        0.284125,
+        -0.130166,
+        0.060184,
+        0.326114,
+        0.057385,
+        -0.012597,
+        -0.158158,
+        -0.051786,
+        -0.012597,
+        0.216943,
+        -0.110571,
+        -0.004199,
+        -0.043389,
+        -0.19175,
+        -0.30372,
+        -0.029392,
+        -0.079779,
+        -0.068582,
+        0.289724,
+        0.244936,
+        -0.132965,
+        0.160958,
+        -0.345709,
+        0.090976,
+        -0.222542,
+        -0.043389,
+        -0.146961,
+        -0.275728,
+        0.118969,
+        -0.180553,
+        -0.177753,
+        0.127367
       ]
     },
     {
@@ -214100,6 +214073,52 @@
         -0.057793,
         0.055334,
         -0.020904
+      ]
+    },
+    {
+      "path": "tests/js/spatial-webgl2-failure-injection.test.mjs",
+      "role": "support_file",
+      "bytes": 7453,
+      "lines": 0,
+      "tokens_est": 0,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5e27b97241ea3113",
+      "vector": [
+        0.131255,
+        0.235391,
+        -0.081356,
+        -0.250577,
+        -0.06617,
+        -0.270103,
+        0.087865,
+        0.014102,
+        -0.129085,
+        -0.044475,
+        -0.261425,
+        0.064,
+        0.181153,
+        0.061831,
+        -0.072678,
+        0.079187,
+        -0.083526,
+        0.265764,
+        -0.259255,
+        0.267933,
+        0.23756,
+        0.211526,
+        -0.077017,
+        -0.226713,
+        -0.23973,
+        -0.06617,
+        0.235391,
+        -0.200679,
+        -0.100882,
+        0.131255,
+        -0.270103,
+        0.02061
       ]
     },
     {

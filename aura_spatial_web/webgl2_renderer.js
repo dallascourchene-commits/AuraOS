@@ -24,23 +24,30 @@ export class WebGL2Renderer extends RendererAdapter {
     this.buffers = [];
     this.camera = { yaw: 0, pitch: 0, distance: 12, target: [0, 0, 0] };
     this.entityScreenPositions = new Map();
+    this.entityBuffer = null;
+    this.linkBuffer = null;
+    this.contextLost = false;
   }
 
   initialize(scenePayload, planPayload) {
-    super.initialize(scenePayload, planPayload);
-    this.gl =
-      this.gl ||
-      this.canvas?.getContext?.("webgl2", {
-        antialias: true,
-        alpha: false,
-        powerPreference: "high-performance",
-      });
-    if (!this.gl) {
-      this.state = RENDERER_STATES.LOST;
-      throw new Error("WebGL2 unavailable");
-    }
-    this.program = createProgram(this.gl, VERTEX, FRAGMENT);
-    this.resources.add(this.program);
+  super.initialize(scenePayload, planPayload);
+  this.gl =
+    this.gl ||
+    this.canvas?.getContext?.("webgl2", {
+      antialias: true,
+      alpha: false,
+      powerPreference: "high-performance",
+    });
+  if (!this.gl) {
+    this.scene = null;
+    this.plan = null;
+    this.state = RENDERER_STATES.LOST;
+    throw new Error("WebGL2 unavailable");
+  }
+  let program = null;
+  const buffers = [];
+  try {
+    program = createProgram(this.gl, VERTEX, FRAGMENT);
     const entityPositions = new Float32Array(
       this.scene.entities.flatMap((entity) => entity.position),
     );
@@ -53,15 +60,39 @@ export class WebGL2Renderer extends RendererAdapter {
         ...byId.get(link.target_entity_id),
       ]),
     );
-    this.entityBuffer = createBuffer(this.gl, entityPositions);
-    this.linkBuffer = createBuffer(this.gl, linkPositions);
-    this.buffers.push(this.entityBuffer, this.linkBuffer);
-    this.resources.add(this.entityBuffer);
-    this.resources.add(this.linkBuffer);
-    return this.status();
-  }
+    const entityBuffer = createBuffer(this.gl, entityPositions);
+    buffers.push(entityBuffer);
+    const linkBuffer = createBuffer(this.gl, linkPositions);
+    buffers.push(linkBuffer);
 
-  present({ width = this.canvas?.width || 800, height = this.canvas?.height || 600 } = {}) {
+    this.program = program;
+    this.entityBuffer = entityBuffer;
+    this.linkBuffer = linkBuffer;
+    this.buffers = [...buffers];
+    this.resources.add(program);
+    for (const buffer of buffers) this.resources.add(buffer);
+    return this.status();
+  } catch (error) {
+    this.program = program;
+    this.buffers = [...buffers];
+    this.entityBuffer = buffers[0] || null;
+    this.linkBuffer = buffers[1] || null;
+    if (program) this.resources.add(program);
+    for (const buffer of buffers) this.resources.add(buffer);
+    const cleanupErrors = this._releaseGpuResources({ loseContext: true });
+    this.entityScreenPositions.clear();
+    this.scene = null;
+    this.plan = null;
+    this.state = RENDERER_STATES.LOST;
+    throw combineFailure(
+      error,
+      cleanupErrors,
+      "WebGL2 initialization and cleanup failed",
+    );
+  }
+}
+
+present({ width = this.canvas?.width || 800, height = this.canvas?.height || 600 } = {}) {
     if (
       this.state !== RENDERER_STATES.INITIALIZED &&
       this.state !== RENDERER_STATES.PRESENTED
@@ -147,45 +178,146 @@ export class WebGL2Renderer extends RendererAdapter {
     this.camera.distance = Math.max(1, Math.min(200, this.camera.distance + amount));
   }
 
-  dispose() {
-    if (this.gl) {
-      for (const buffer of this.buffers) this.gl.deleteBuffer?.(buffer);
-      if (this.program) this.gl.deleteProgram?.(this.program);
-      this.gl.getExtension?.("WEBGL_lose_context")?.loseContext?.();
+  _releaseGpuResources({ loseContext = false } = {}) {
+  const errors = [];
+  const failedBuffers = [];
+  for (const buffer of [...this.buffers].reverse()) {
+    try {
+      this.gl?.deleteBuffer?.(buffer);
+      this.resources.delete(buffer);
+    } catch (error) {
+      errors.push(error);
+      failedBuffers.unshift(buffer);
     }
-    this.buffers = [];
-    this.program = null;
-    this.entityScreenPositions.clear();
-    return super.dispose();
+  }
+  this.buffers = failedBuffers;
+  this.entityBuffer = failedBuffers.includes(this.entityBuffer)
+    ? this.entityBuffer
+    : null;
+  this.linkBuffer = failedBuffers.includes(this.linkBuffer)
+    ? this.linkBuffer
+    : null;
+
+  if (this.program) {
+    try {
+      this.gl?.deleteProgram?.(this.program);
+      this.resources.delete(this.program);
+      this.program = null;
+    } catch (error) {
+      errors.push(error);
+    }
+  }
+
+  if (loseContext && !this.contextLost) {
+    try {
+      const extension = this.gl?.getExtension?.("WEBGL_lose_context");
+      if (extension?.loseContext) {
+        extension.loseContext();
+        this.contextLost = true;
+        this.buffers = [];
+        this.entityBuffer = null;
+        this.linkBuffer = null;
+        this.program = null;
+        this.resources.clear();
+      }
+    } catch (error) {
+      errors.push(error);
+    }
+  }
+  return errors;
+}
+
+dispose() {
+  if (this.state === RENDERER_STATES.DISPOSED) return this.status();
+  const errors = this._releaseGpuResources({ loseContext: true });
+  this.entityScreenPositions.clear();
+  this.scene = null;
+  this.plan = null;
+  if (errors.length) {
+    this.state = RENDERER_STATES.LOST;
+    throw errors.length === 1
+      ? errors[0]
+      : new AggregateError(errors, "WebGL2 disposal failed");
+  }
+  return super.dispose();
+}
+        }
+
+function combineFailure(primary, cleanupErrors, message) {
+  if (!cleanupErrors.length) return primary;
+  return new AggregateError([primary, ...cleanupErrors], message);
+}
+
+function attemptCleanup(errors, callback) {
+  try {
+    callback();
+  } catch (error) {
+    errors.push(error);
   }
 }
 
 function createShader(gl, type, source) {
   const shader = gl.createShader(type);
   if (!shader) throw new Error("unable to allocate shader");
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const log = gl.getShaderInfoLog(shader);
-    gl.deleteShader(shader);
-    throw new Error(`shader compile failed: ${log}`);
+  try {
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      const log = gl.getShaderInfoLog(shader);
+      throw new Error(`shader compile failed: ${log}`);
+    }
+    return shader;
+  } catch (error) {
+    const cleanupErrors = [];
+    attemptCleanup(cleanupErrors, () => gl.deleteShader(shader));
+    throw combineFailure(error, cleanupErrors, "shader creation and cleanup failed");
   }
-  return shader;
 }
 
 function createProgram(gl, vertexSource, fragmentSource) {
-  const program = gl.createProgram();
-  const vertex = createShader(gl, gl.VERTEX_SHADER, vertexSource);
-  const fragment = createShader(gl, gl.FRAGMENT_SHADER, fragmentSource);
-  gl.attachShader(program, vertex);
-  gl.attachShader(program, fragment);
-  gl.linkProgram(program);
-  gl.deleteShader(vertex);
-  gl.deleteShader(fragment);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    const log = gl.getProgramInfoLog(program);
-    gl.deleteProgram(program);
-    throw new Error(`program link failed: ${log}`);
+  const shaders = [];
+  let program = null;
+  let primaryError = null;
+  try {
+    shaders.push(createShader(gl, gl.VERTEX_SHADER, vertexSource));
+    shaders.push(createShader(gl, gl.FRAGMENT_SHADER, fragmentSource));
+    program = gl.createProgram();
+    if (!program) throw new Error("unable to allocate program");
+    gl.attachShader(program, shaders[0]);
+    gl.attachShader(program, shaders[1]);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      const log = gl.getProgramInfoLog(program);
+      throw new Error(`program link failed: ${log}`);
+    }
+  } catch (error) {
+    primaryError = error;
+  }
+
+  const cleanupErrors = [];
+  for (const shader of [...shaders].reverse()) {
+    attemptCleanup(cleanupErrors, () => gl.deleteShader(shader));
+  }
+  if (primaryError) {
+    if (program) {
+      attemptCleanup(cleanupErrors, () => gl.deleteProgram(program));
+    }
+    throw combineFailure(
+      primaryError,
+      cleanupErrors,
+      "program creation and cleanup failed",
+    );
+  }
+  if (cleanupErrors.length) {
+    const cleanupFailure = new Error("linked program shader cleanup failed");
+    if (program) {
+      attemptCleanup(cleanupErrors, () => gl.deleteProgram(program));
+    }
+    throw combineFailure(
+      cleanupFailure,
+      cleanupErrors,
+      "program creation and cleanup failed",
+    );
   }
   return program;
 }
@@ -193,9 +325,15 @@ function createProgram(gl, vertexSource, fragmentSource) {
 function createBuffer(gl, data) {
   const buffer = gl.createBuffer();
   if (!buffer) throw new Error("unable to allocate buffer");
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
-  return buffer;
+  try {
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+    return buffer;
+  } catch (error) {
+    const cleanupErrors = [];
+    attemptCleanup(cleanupErrors, () => gl.deleteBuffer(buffer));
+    throw combineFailure(error, cleanupErrors, "buffer upload and cleanup failed");
+  }
 }
 
 function setMatrix(gl, program, name, matrix) {
