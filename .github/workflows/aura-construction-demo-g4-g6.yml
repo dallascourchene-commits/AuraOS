@@ -8,28 +8,42 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: aura-construction-third-codex-repair-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  diagnose-third-codex-repair:
+  repair-third-codex-findings:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 35
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 128
 
+      - name: Verify exact head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Apply repair and capture exact assertion
-        id: repair
-        continue-on-error: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install bounded verification dependencies
+        run: python -m pip install -q --disable-pip-version-check numpy pytest ruff zstandard
+
+      - name: Apply third-round Codex owner repairs
         run: |
-          mkdir -p /tmp/aura-third-repair
           python - <<'PY'
           from pathlib import Path
           from textwrap import dedent
@@ -40,8 +54,8 @@ jobs:
           new = dedent('''\
           _SOURCE = zlib.decompress(base64.b64decode(_PAYLOAD)).decode("utf-8")
           _SOURCE = _SOURCE.replace(
-              '["git", "show", f"HEAD^:{path}"]',
-              '["git", "show", f"65d452230979671540ae8ed5e31c46ae83c3779c:{path}"]',
+              "    restore_and_expand_workflow()\\n    Path(__file__).unlink()",
+              "    Path(__file__).unlink()",
           )
           exec(compile(_SOURCE, __file__, "exec"))
           ''')
@@ -49,21 +63,185 @@ jobs:
               raise RuntimeError("repair bootstrap execution line mismatch")
           path.write_text(text.replace(old, new, 1), encoding="utf-8")
           PY
-          set +e
-          python scripts/aura_pr187_third_codex_repair.py > /tmp/aura-third-repair/repair.log 2>&1
-          status=$?
-          echo "$status" > /tmp/aura-third-repair/repair.status
-          exit "$status"
+          python scripts/aura_pr187_third_codex_repair.py
 
-      - name: Upload exact repair diagnostic
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: aura-pr187-strict-repair-diagnostic
-          path: /tmp/aura-third-repair
-          if-no-files-found: error
-          retention-days: 7
+      - name: Restore and expand permanent read-only verifier
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
 
-      - name: Fail closed
-        if: always()
-        run: test "${{ steps.repair.outcome }}" = "success"
+          workflow = ".github/workflows/aura-construction-demo-g4-g6.yml"
+          clean_head = "65d452230979671540ae8ed5e31c46ae83c3779c"
+          text = subprocess.run(
+              ["git", "show", f"{clean_head}:{workflow}"],
+              check=True,
+              capture_output=True,
+              text=True,
+          ).stdout
+          lines = text.splitlines()
+
+          def insert_before(line, additions):
+              indexes = [index for index, item in enumerate(lines) if item == line]
+              if len(indexes) != 1:
+                  raise RuntimeError(f"expected one verifier line before insertion: {line!r}; found {len(indexes)}")
+              index = indexes[0]
+              lines[index:index] = additions
+
+          def insert_after(line, additions):
+              indexes = [index for index, item in enumerate(lines) if item == line]
+              if len(indexes) != 1:
+                  raise RuntimeError(f"expected one verifier line after insertion: {line!r}; found {len(indexes)}")
+              index = indexes[0] + 1
+              lines[index:index] = additions
+
+          insert_after(
+              '      - ".github/workflows/aura-construction-demo-g4-g6.yml"',
+              [
+                  '      - "aura_construction_adapter.py"',
+                  '      - "aura_construction_runtime_binding.py"',
+                  '      - "aura_construction_state.py"',
+              ],
+          )
+          insert_after(
+              '      - "aura_spatial_construction.py"',
+              [
+                  '      - "aura_spatial_contracts.py"',
+                  '      - "aura_spatial_coordinate_frames.py"',
+              ],
+          )
+          insert_before(
+              '      - "tests/test_aura_construction_demo_fixture.py"',
+              [
+                  '      - "tests/test_aura_construction_adapter.py"',
+                  '      - "tests/test_aura_construction_state.py"',
+              ],
+          )
+          insert_after(
+              '      - "tests/test_aura_construction_demo_projection.py"',
+              [
+                  '      - "tests/test_aura_spatial_mixed_scene.py"',
+                  '      - "tests/test_aura_spatial_s6_construction.py"',
+              ],
+          )
+          insert_before(
+              '             aura_construction_demo_contracts.py \\',
+              [
+                  '             aura_construction_adapter.py \\',
+                  '             aura_construction_runtime_binding.py \\',
+                  '             aura_construction_state.py \\',
+              ],
+          )
+          insert_after(
+              '             aura_spatial_construction.py \\',
+              [
+                  '             aura_spatial_contracts.py \\',
+                  '             aura_spatial_coordinate_frames.py \\',
+              ],
+          )
+          insert_before(
+              '                      "aura_construction_demo_contracts.py",',
+              [
+                  '                      "aura_construction_adapter.py",',
+                  '                      "aura_construction_runtime_binding.py",',
+                  '                      "aura_construction_state.py",',
+              ],
+          )
+          insert_after(
+              '                      "aura_spatial_construction.py",',
+              [
+                  '                      "aura_spatial_contracts.py",',
+                  '                      "aura_spatial_coordinate_frames.py",',
+              ],
+          )
+          insert_after(
+              '                      "project_construction_state_to_scene",',
+              [
+                  '                      "require_canonical_construction_runtime_packet",',
+                  '                      "resolve_world_transform",',
+              ],
+          )
+
+          objective_index = next(
+              index
+              for index, item in enumerate(lines)
+              if "Deeply verify Construction Arena G4-G6 privacy-normalized provenance" in item
+          )
+          if "hierarchical coordinate-frame composition" not in lines[objective_index + 1]:
+              raise RuntimeError("verifier objective continuation mismatch")
+          lines[objective_index:objective_index + 2] = [
+              '              "Deeply verify Construction Arena G4-G6 export-scoped public asset aliases, "',
+              '              "privacy-safe overlay classification, canonical unit-aware coordinate-frame composition, "',
+              '              "package-owned overlay placement, full Gaussian model rotation, "',
+          ]
+
+          bounds = [index for index, item in enumerate(lines) if item.strip() == "max_target_files=16,"]
+          if len(bounds) != 1:
+              raise RuntimeError("verifier target-file bound mismatch")
+          lines[bounds[0]] = lines[bounds[0]].replace("16", "24")
+          Path(workflow).write_text("\n".join(lines) + "\n", encoding="utf-8")
+          PY
+
+      - name: Format and statically validate repaired owners
+        run: |
+          set -euo pipefail
+          ruff format \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_projection.py
+          ruff check \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_projection.py
+          node --check aura_spatial_web/construction_scene_renderer.js
+          node --check aura_spatial_web/construction_overlay_pass.js
+          node --check aura_spatial_web/webgl2_gaussian_pass.js
+          node --check tests/js/spatial-construction-demo.test.mjs
+          node --check tests/js/spatial-construction-review-regressions.test.mjs
+          git diff --check
+
+      - name: Run focused Python verification
+        run: |
+          python -m pytest -q --tb=short \
+            tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py
+
+      - name: Run retained Construction and Spatial regressions
+        run: |
+          python -m pytest -q --tb=short \
+            tests/test_aura_construction_state.py \
+            tests/test_aura_construction_adapter.py \
+            tests/test_aura_construction_fixtures.py \
+            tests/test_aura_spatial_s6_construction.py \
+            tests/test_aura_spatial_mixed_scene.py
+
+      - name: Run focused browser regressions
+        run: |
+          node --test \
+            tests/js/spatial-construction-demo.test.mjs \
+            tests/js/spatial-construction-review-regressions.test.mjs
+
+      - name: Run retained Spatial browser suite
+        run: npm run test:spatial
+
+      - name: Commit and push exact verified repair
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          git config user.name "Aura Architecture Harness"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            .github/workflows/aura-construction-demo-g4-g6.yml \
+            aura_construction_demo_projection.py \
+            aura_spatial_web/construction_scene_renderer.js \
+            aura_spatial_web/construction_overlay_pass.js \
+            aura_spatial_web/webgl2_gaussian_pass.js \
+            tests/test_aura_construction_demo_projection.py \
+            tests/js/spatial-construction-demo.test.mjs \
+            tests/js/spatial-construction-review-regressions.test.mjs \
+            scripts/aura_pr187_third_codex_repair.py
+          git diff --cached --quiet && { echo "Expected a repair diff"; exit 1; }
+          git commit -m "fix(construction): resolve third deep Codex findings"
+          git fetch --no-tags origin "$HEAD_REF"
+          test "$(git rev-parse FETCH_HEAD)" = "$EXPECTED_HEAD"
+          git push origin "HEAD:$HEAD_REF"
