@@ -135,38 +135,17 @@ jobs:
             tests/test_aura_construction_demo_fixture.py
 
       - name: Run retained Construction, Spatial, and asset-security regressions
-        id: retained
-        continue-on-error: true
         run: |
-          set +e
-          python -m pytest -q --tb=long \
+          set -euo pipefail
+          python -m pytest -q --tb=short \
             tests/test_aura_construction_state.py \
             tests/test_aura_construction_adapter.py \
             tests/test_aura_construction_fixtures.py \
-            tests/test_aura_construction_runtime_binding.py \
+            tests/test_aura_spatial_codex_repairs.py \
             tests/test_aura_spatial_coordinate_frames.py \
             tests/test_aura_spatial_asset_security.py \
             tests/test_aura_spatial_s6_construction.py \
-            tests/test_aura_spatial_mixed_scene.py \
-            > /tmp/aura-pr187-fourth-retained.log 2>&1
-          status=$?
-          cat /tmp/aura-pr187-fourth-retained.log
-          exit "$status"
-
-      - name: Upload retained fourth repair diagnostic
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: aura-pr187-fourth-retained-diagnostic
-          path: /tmp/aura-pr187-fourth-retained.log
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Fail closed when retained tests fail
-        if: steps.retained.outcome != 'success'
-        run: |
-          cat /tmp/aura-pr187-fourth-retained.log
-          exit 1
+            tests/test_aura_spatial_mixed_scene.py
 
       - name: Run focused browser verification
         run: |
