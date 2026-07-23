@@ -236,6 +236,25 @@ def test_g5_public_projection_hashes_domain_identifiers() -> None:
     assert fixture.focus_scope.zone_id not in labels
     assert fixture.focus_scope.work_package_id not in labels
 
+    all_source_refs = []
+    for frame in payload.get("frames", []):
+        all_source_refs.extend(frame.get("source_refs", []))
+    for asset in payload.get("assets", []):
+        all_source_refs.extend(asset.get("source_refs", []))
+    for entity in payload.get("entities", []):
+        all_source_refs.extend(entity.get("source_refs", []))
+    for link in payload.get("links", []):
+        all_source_refs.extend(link.get("source_refs", []))
+    all_source_refs.extend(payload.get("source_refs", []))
+
+    source_refs_str = " ".join(all_source_refs)
+    assert fixture.state.project_id not in source_refs_str
+    assert fixture.focus_scope.zone_id not in source_refs_str
+    assert fixture.focus_scope.work_package_id not in source_refs_str
+    for storey in fixture.asset_pack.storeys:
+        assert storey.storey_id not in source_refs_str
+        assert storey.ifc_global_id not in source_refs_str
+
 
 def test_g5_rejects_restricted_or_sensitive_geometry_projection() -> None:
     fixture = build_construction_demo_project_fixture(_pack())

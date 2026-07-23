@@ -202,23 +202,36 @@ export class ConstructionMeshPass {
     if (visible.length > this.limits.maxVisibleMeshes) {
       throw new RangeError("Construction visible-mesh budget exceeded");
     }
-    for (const mesh of visible) {
-      if (signal?.aborted) throw new Error("Construction mesh presentation cancelled");
-      const disposer = requireDisposer(
-        await this.drawMeshPass(
-          mesh.resource,
-          Object.freeze({
-            asset_id: mesh.asset_id,
-            frame_id: mesh.frame_id,
-            source_digest: mesh.source_digest,
-            source_transform: mesh.source_transform,
-            presentation_transform: this.presentationTransforms.get(mesh.frame_id),
-            source_transform_immutable: true,
-            ...AUTHORITY_ENVELOPE,
-          }),
-        ),
-      );
-      this.disposers.add(disposer);
+    try {
+      for (const mesh of visible) {
+        if (signal?.aborted) throw new Error("Construction mesh presentation cancelled");
+        const disposer = requireDisposer(
+          await this.drawMeshPass(
+            mesh.resource,
+            Object.freeze({
+              asset_id: mesh.asset_id,
+              frame_id: mesh.frame_id,
+              source_digest: mesh.source_digest,
+              source_transform: mesh.source_transform,
+              presentation_transform: this.presentationTransforms.get(mesh.frame_id),
+              source_transform_immutable: true,
+              ...AUTHORITY_ENVELOPE,
+            }),
+          ),
+        );
+        if (signal?.aborted) {
+          await this.releaseDrawResources();
+          this.initialized = false;
+          this.disposed = true;
+          throw new Error("Construction mesh presentation cancelled");
+        }
+        this.disposers.add(disposer);
+      }
+    } catch (error) {
+      await this.releaseDrawResources();
+      this.initialized = false;
+      this.disposed = true;
+      throw error;
     }
     return Object.freeze({
       version: CONSTRUCTION_MESH_PASS_VERSION,

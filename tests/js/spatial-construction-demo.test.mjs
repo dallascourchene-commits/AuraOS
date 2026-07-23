@@ -511,6 +511,82 @@ test("Construction renderer cancellation and device loss fail closed", async () 
   assert.equal(presentation.disposed, 1);
 });
 
+test("Construction renderer Gaussian initialization failure disposes shared presentation once", async () => {
+  const { scene, plan } = constructionFixture();
+  const sharedPresentation = new TestPresentationRenderer();
+  sharedPresentation.initialize = () => {
+    throw new Error("Gaussian initialization forced failure");
+  };
+  const failingGaussian = new GaussianRenderer({
+    presentationRenderer: sharedPresentation,
+    drawGaussianPass: async () => () => {},
+    now: () => 0,
+  });
+  const renderer = new ConstructionSceneRenderer({
+    presentationRenderer: sharedPresentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+    gaussianRenderer: failingGaussian,
+  });
+  await assert.rejects(
+    renderer.initialize(scene, plan, {
+      meshPayloads: [{
+        asset_id: "asset:mesh",
+        source_digest: "1".repeat(64),
+        decoded_byte_length: 256,
+        resource: { local: true },
+      }],
+      gaussianPayloads: [gaussianPayload()],
+    }),
+    /initialization/
+  );
+  assert.equal(sharedPresentation.disposed, 1);
+  assert.equal(renderer.status().state, "LOST");
+  await renderer.dispose();
+  assert.equal(sharedPresentation.disposed, 1);
+});
+
+test("Construction renderer mid-flight abort becomes terminal and releases resources", async () => {
+  const { scene, plan } = constructionFixture();
+  const presentation = new TestPresentationRenderer();
+  let blockingResolve = null;
+  const blockingPromise = new Promise((resolve) => { blockingResolve = resolve; });
+  let meshDisposed = 0;
+  const renderer = new ConstructionSceneRenderer({
+    presentationRenderer: presentation,
+    meshPass: new ConstructionMeshPass({
+      drawMeshPass: async () => {
+        await blockingPromise;
+        return () => { meshDisposed += 1; };
+      },
+    }),
+    overlayPass: new ConstructionOverlayPass(),
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: presentation,
+      drawGaussianPass: async () => () => {},
+      now: () => 0,
+    }),
+  });
+  await renderer.initialize(scene, plan, {
+    meshPayloads: [{
+      asset_id: "asset:mesh",
+      source_digest: "1".repeat(64),
+      decoded_byte_length: 256,
+      resource: { local: true },
+    }],
+    gaussianPayloads: [gaussianPayload()],
+  });
+  const controller = new AbortController();
+  const presentPromise = renderer.present({ signal: controller.signal });
+  controller.abort();
+  blockingResolve();
+  await assert.rejects(presentPromise, /cancelled/);
+  assert.equal(renderer.status().state, "LOST");
+  assert.equal(meshDisposed, 0);
+  await renderer.dispose();
+  await renderer.dispose();
+});
+
 
 test("Construction storey isolation filters Gaussian assets", async () => {
   const { scene, plan } = constructionFixture();

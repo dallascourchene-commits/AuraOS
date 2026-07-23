@@ -155,13 +155,13 @@ export class ConstructionSceneRenderer {
       this.meshPass.initialize(scenePayload, meshPayloads);
       this.overlayPass.initialize(scenePayload);
       if (this.hasSplats) {
+        this.gaussianOwnerActive = true;
         await this.gaussianRenderer.initialize(
           scenePayload,
           planPayload,
           gaussianPayloads,
           { signal },
         );
-        this.gaussianOwnerActive = true;
       } else {
         await this.presentationRenderer.initialize(scenePayload, planPayload);
       }
@@ -305,33 +305,53 @@ export class ConstructionSceneRenderer {
     }
     const signal = options.signal;
     if (signal?.aborted || this.cancelled) throw new Error("Construction presentation cancelled");
-    const baseReceipt =
-      this.mode === "MESH"
-        ? await this.presentationRenderer.present(options)
-        : await this.gaussianRenderer.present({
-            cameraPosition: this._cameraPosition(),
-            signal,
-          });
-    const meshReceipt =
-      this.mode === "SPLATS" ? null : await this.meshPass.present({ signal });
-    const overlayReceipt = await this.overlayPass.present({ signal });
-    if (signal?.aborted || this.cancelled) throw new Error("Construction presentation cancelled");
-    this.state = RENDERER_STATES.PRESENTED;
-    return Object.freeze({
-      version: CONSTRUCTION_SCENE_RENDERER_VERSION,
-      renderer: this.presentationRenderer.kind,
-      outcome: "PRESENTED",
-      representation_mode: this.mode,
-      scene_digest: this.scene.scene_digest,
-      render_plan_digest: this.plan.render_plan_digest,
-      selected_entity_id: this.selectedEntityId,
-      base_receipt: baseReceipt,
-      mesh_receipt: meshReceipt,
-      overlay_receipt: overlayReceipt,
-      source_asset_coordinates_immutable: true,
-      exploded_view_is_presentation_only: true,
-      ...AUTHORITY_ENVELOPE,
-    });
+    try {
+      const baseReceipt =
+        this.mode === "MESH"
+          ? await this.presentationRenderer.present(options)
+          : await this.gaussianRenderer.present({
+              cameraPosition: this._cameraPosition(),
+              signal,
+            });
+      if (signal?.aborted || this.cancelled) {
+        await this._disposeOwnedResources();
+        this.state = RENDERER_STATES.LOST;
+        throw new Error("Construction presentation cancelled");
+      }
+      const meshReceipt =
+        this.mode === "SPLATS" ? null : await this.meshPass.present({ signal });
+      if (signal?.aborted || this.cancelled) {
+        await this._disposeOwnedResources();
+        this.state = RENDERER_STATES.LOST;
+        throw new Error("Construction presentation cancelled");
+      }
+      const overlayReceipt = await this.overlayPass.present({ signal });
+      if (signal?.aborted || this.cancelled) {
+        await this._disposeOwnedResources();
+        this.state = RENDERER_STATES.LOST;
+        throw new Error("Construction presentation cancelled");
+      }
+      this.state = RENDERER_STATES.PRESENTED;
+      return Object.freeze({
+        version: CONSTRUCTION_SCENE_RENDERER_VERSION,
+        renderer: this.presentationRenderer.kind,
+        outcome: "PRESENTED",
+        representation_mode: this.mode,
+        scene_digest: this.scene.scene_digest,
+        render_plan_digest: this.plan.render_plan_digest,
+        selected_entity_id: this.selectedEntityId,
+        base_receipt: baseReceipt,
+        mesh_receipt: meshReceipt,
+        overlay_receipt: overlayReceipt,
+        source_asset_coordinates_immutable: true,
+        exploded_view_is_presentation_only: true,
+        ...AUTHORITY_ENVELOPE,
+      });
+    } catch (error) {
+      await this._disposeOwnedResources();
+      this.state = RENDERER_STATES.LOST;
+      throw error;
+    }
   }
 
   _cameraPosition() {
