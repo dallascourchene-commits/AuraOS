@@ -5,8 +5,9 @@ from __future__ import annotations
 from pathlib import Path
 
 SOURCE = Path("tools/construction_release/finalizer.yml")
+APPLY_NAME = "Apply fail-closed WebGL2 lifecycle and documentation finalization"
 MAPPING = {
-    "Apply fail-closed WebGL2 lifecycle and documentation finalization": Path("/tmp/apply.sh"),
+    APPLY_NAME: Path("/tmp/apply.sh"),
     "Verify source syntax and focused Python contracts": Path("/tmp/verify.sh"),
     "Stress WebGL2 lifecycle and retained Construction rendering": Path("/tmp/stress.sh"),
     "Run focused Coding Waboose review": Path("/tmp/waboose.sh"),
@@ -31,8 +32,6 @@ def extract(lines: list[str], name: str) -> str:
         elif not line.strip():
             body.append("")
         else:
-            # Nested block-scalar content may carry less indentation after YAML
-            # normalization. Preserve it instead of treating it as a new step.
             body.append(line)
     command = "\n".join(body).rstrip()
     if not command:
@@ -40,11 +39,51 @@ def extract(lines: list[str], name: str) -> str:
     return command
 
 
+def normalize_apply_command(command: str) -> str:
+    """Make the browser-mode insertion independent of cosmetic JS indentation."""
+
+    start_marker = 'app = Path("aura_spatial_web/construction_demo_app.js")'
+    end_marker = 'review_test = Path("tests/js/spatial-construction-review-regressions.test.mjs")'
+    start = command.find(start_marker)
+    end = command.find(end_marker, start)
+    if start < 0 or end < 0:
+        raise RuntimeError("Construction UI patch block missing from reviewed finalizer")
+
+    replacement = r'''app = Path("aura_spatial_web/construction_demo_app.js")
+app_text = app.read_text(encoding="utf-8")
+if 'state.renderer.setRepresentationMode("SPLATS");' not in app_text:
+    anchor = ''' + "'''" + r'''  await state.renderer.initialize(state.packet.scene, state.packet.render_plan, {
+    meshPayloads: meshPayloads(state.packet.scene),
+    gaussianPayloads: gaussianPayloads(state.packet.scene),
+  });
+''' + "'''" + r'''
+    insertion = anchor + ''' + "'''" + r'''  state.renderer.setRepresentationMode("SPLATS");
+  document.querySelectorAll("button[data-mode]").forEach((button) => {
+    const supported = button.dataset.mode === "SPLATS";
+    button.disabled = !supported;
+    button.classList.toggle("active", supported);
+    if (!supported) {
+      button.title = "Browser GLB decoding and mesh drawing are not implemented; mode is fail-closed";
+    }
+  });
+''' + "'''" + r'''
+    if app_text.count(anchor) != 1:
+        raise RuntimeError("Construction renderer initialization anchor changed")
+    app_text = app_text.replace(anchor, insertion, 1)
+    app.write_text(app_text, encoding="utf-8")
+
+'''
+    return command[:start] + replacement + command[end:]
+
+
 def main() -> None:
     lines = SOURCE.read_text(encoding="utf-8").splitlines()
     for name, destination in MAPPING.items():
+        command = extract(lines, name)
+        if name == APPLY_NAME:
+            command = normalize_apply_command(command)
         destination.write_text(
-            "#!/usr/bin/env bash\nset -euo pipefail\n" + extract(lines, name) + "\n",
+            "#!/usr/bin/env bash\nset -euo pipefail\n" + command + "\n",
             encoding="utf-8",
         )
         destination.chmod(0o700)
