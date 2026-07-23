@@ -41,37 +41,79 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install pytest ruff bandit pyyaml
 
-      - name: Execute the reviewed finalizer steps
+      - name: Extract reviewed finalizer commands
         run: |
           python - <<'PY'
           from pathlib import Path
-          import subprocess
           import yaml
 
           source = Path("tools/construction_release/finalizer.yml")
           payload = yaml.safe_load(source.read_text(encoding="utf-8"))
           steps = payload["jobs"]["finalize"]["steps"]
-          required = (
-              "Apply fail-closed WebGL2 lifecycle and documentation finalization",
-              "Verify source syntax and focused Python contracts",
-              "Stress WebGL2 lifecycle and retained Construction rendering",
-              "Run focused Coding Waboose review",
-          )
+          mapping = {
+              "Apply fail-closed WebGL2 lifecycle and documentation finalization": "/tmp/apply.sh",
+              "Verify source syntax and focused Python contracts": "/tmp/verify.sh",
+              "Stress WebGL2 lifecycle and retained Construction rendering": "/tmp/stress.sh",
+              "Run focused Coding Waboose review": "/tmp/waboose.sh",
+          }
           by_name = {step.get("name"): step for step in steps if isinstance(step, dict)}
-          missing = [name for name in required if name not in by_name]
+          missing = [name for name in mapping if name not in by_name]
           if missing:
               raise RuntimeError(f"finalizer steps missing: {missing}")
-          for name in required:
+          for name, destination in mapping.items():
               command = by_name[name].get("run")
               if not isinstance(command, str) or not command.strip():
                   raise RuntimeError(f"finalizer step has no command: {name}")
-              print(f"::group::{name}")
-              subprocess.run(
-                  ["bash", "-e", "-u", "-o", "pipefail", "-c", command],
-                  check=True,
-              )
-              print("::endgroup::")
+              path = Path(destination)
+              path.write_text("#!/usr/bin/env bash\nset -euo pipefail\n" + command + "\n", encoding="utf-8")
+              path.chmod(0o700)
           PY
+
+      - name: Apply WebGL2 and documentation changes
+        run: |
+          set +e
+          /tmp/apply.sh > /tmp/apply.log 2>&1
+          status=$?
+          tail -200 /tmp/apply.log
+          exit "$status"
+
+      - name: Verify Python and source contracts
+        run: |
+          set +e
+          /tmp/verify.sh > /tmp/verify.log 2>&1
+          status=$?
+          tail -200 /tmp/verify.log
+          exit "$status"
+
+      - name: Stress renderer and retained Construction contracts
+        run: |
+          set +e
+          /tmp/stress.sh > /tmp/stress.log 2>&1
+          status=$?
+          tail -240 /tmp/stress.log
+          exit "$status"
+
+      - name: Run focused Coding Waboose
+        run: |
+          set +e
+          /tmp/waboose.sh > /tmp/waboose.log 2>&1
+          status=$?
+          tail -240 /tmp/waboose.log
+          exit "$status"
+
+      - name: Upload bounded release diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: construction-release-diagnostics
+          path: |
+            /tmp/apply.log
+            /tmp/verify.log
+            /tmp/stress.log
+            /tmp/waboose.log
+            /tmp/aura-waboose-result.json
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Remove temporary release machinery
         run: |
@@ -101,13 +143,6 @@ jobs:
             tests/test_aura_construction_demo_projection.py \
             tests/test_aura_spatial_render_plan.py
           git diff --check
-
-      - name: Upload Waboose evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: construction-webgl2-waboose-evidence
-          path: /tmp/aura-waboose-result.json
-          retention-days: 7
 
       - name: Publish exact verified release tree
         env:
