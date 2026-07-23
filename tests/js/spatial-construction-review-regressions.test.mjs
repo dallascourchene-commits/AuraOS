@@ -217,6 +217,39 @@ test("Construction renderer preserves storey elevations and aligns exploded over
   );
   await renderer.dispose();
 });
+test("Construction renderer composes translated rotated and scaled parent frames", async () => {
+  const { scene, plan } = meshScene();
+  const root = scene.frames.find((item) => item.frame_id === "frame:root");
+  root.translation = [10, 0, 0];
+  root.rotation_xyzw = [0, 0, 1, 0];
+  root.scale = [2, 2, 2];
+  const presentation = new PresentationRenderer();
+  const renderer = new ConstructionSceneRenderer({
+    presentationRenderer: presentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+  });
+  await renderer.initialize(scene, plan, {
+    meshPayloads: [
+      {
+        asset_id: "asset:mesh:one",
+        source_digest: "1".repeat(64),
+        decoded_byte_length: 128,
+        resource: { local: true },
+      },
+      {
+        asset_id: "asset:mesh:two",
+        source_digest: "2".repeat(64),
+        decoded_byte_length: 128,
+        resource: { local: true },
+      },
+    ],
+  });
+  assert.deepEqual(renderer.getAssetRenderTransform("asset:mesh:one").translation, [10, -8, 0]);
+  assert.deepEqual(renderer.getAssetRenderTransform("asset:mesh:one").rotation_xyzw, [0, 0, 1, 0]);
+  assert.deepEqual(renderer.getAssetRenderTransform("asset:mesh:one").scale, [2, 2, 2]);
+  await renderer.dispose();
+});
 
 test("Construction renderer rejects higher-order splats before initializing owners", async () => {
   const { scene, plan } = gaussianScene();

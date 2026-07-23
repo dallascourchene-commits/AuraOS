@@ -355,8 +355,13 @@ def project_construction_demo_to_scene(
 
     zone_entities: dict[str, str] = {}
     package_entities: dict[str, str] = {}
+    package_frames: dict[str, str] = {}
     for package in fixture.work_packages:
         storey_entity_id = storey_entities[package.storey_id]
+        package_frame_id = next(
+            item.frame_id for item in storeys if item.storey_id == package.storey_id
+        )
+        package_frames[package.work_package_id] = package_frame_id
         zone_entity_id = zone_entities.get(package.zone_id)
         if zone_entity_id is None:
             zone_entity_id = _id("construction-zone", package.zone_id)
@@ -366,7 +371,7 @@ def project_construction_demo_to_scene(
                     zone_entity_id,
                     SpatialEntityType.REGION,
                     f"Zone {_ref(package.zone_id, privacy)}",
-                    next(item.frame_id for item in storeys if item.storey_id == package.storey_id),
+                    package_frame_id,
                     source_refs=(_ref(f"construction-scope:{package.scope.scope_key}", privacy),)
                     if privacy is not SpatialPrivacyClass.PROJECT
                     else (f"construction-scope:{package.scope.scope_key}",),
@@ -394,7 +399,7 @@ def project_construction_demo_to_scene(
                 package_entity_id,
                 SpatialEntityType.DOMAIN_NODE,
                 package.title,
-                next(item.frame_id for item in storeys if item.storey_id == package.storey_id),
+                package_frame_id,
                 source_refs=tuple(
                     _ref(ref, privacy)
                     for ref in (
@@ -520,7 +525,7 @@ def project_construction_demo_to_scene(
                 activity_entity_id,
                 SpatialEntityType.DOMAIN_NODE,
                 activity.note,
-                building_frame_id,
+                package_frames[activity.work_package_id],
                 source_refs=(_ref(f"construction-demo-activity:{activity.activity_id}", privacy),)
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-activity:{activity.activity_id}",),
@@ -562,7 +567,7 @@ def project_construction_demo_to_scene(
                 entity_id,
                 SpatialEntityType.DOMAIN_NODE,
                 budget.description,
-                building_frame_id,
+                package_frames[budget.work_package_id],
                 source_refs=(_ref(f"construction-demo-budget:{budget.budget_line_id}", privacy),)
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-budget:{budget.budget_line_id}",),
@@ -588,28 +593,32 @@ def project_construction_demo_to_scene(
         )
 
     for rule in fixture.rules:
-        entity_id = _id("construction-rule", rule.rule_id)
-        entities.append(
-            _entity(
-                entity_id,
-                SpatialEntityType.DOMAIN_NODE,
-                rule.title,
-                building_frame_id,
-                source_refs=(_ref(f"construction-demo-rule:{rule.rule_id}", privacy),)
-                if privacy is not SpatialPrivacyClass.PROJECT
-                else (f"construction-demo-rule:{rule.rule_id}",),
-                metadata={
-                    "rule_ref": _ref(rule.rule_id, privacy),
-                    "requirement": rule.requirement,
-                    "truth_class": rule.truth_class,
-                    "legal_authority": False,
-                    "regulatory_authority": False,
-                    "jurisdiction_claimed": "none",
-                    "projection_only": True,
-                },
-            )
-        )
         for package_id in rule.applies_to_work_package_ids:
+            entity_id = _id(
+                "construction-rule",
+                {"rule_id": rule.rule_id, "work_package_id": package_id},
+            )
+            entities.append(
+                _entity(
+                    entity_id,
+                    SpatialEntityType.DOMAIN_NODE,
+                    rule.title,
+                    package_frames[package_id],
+                    source_refs=(_ref(f"construction-demo-rule:{rule.rule_id}", privacy),)
+                    if privacy is not SpatialPrivacyClass.PROJECT
+                    else (f"construction-demo-rule:{rule.rule_id}",),
+                    metadata={
+                        "rule_ref": _ref(rule.rule_id, privacy),
+                        "work_package_ref": _ref(package_id, privacy),
+                        "requirement": rule.requirement,
+                        "truth_class": rule.truth_class,
+                        "legal_authority": False,
+                        "regulatory_authority": False,
+                        "jurisdiction_claimed": "none",
+                        "projection_only": True,
+                    },
+                )
+            )
             links.append(
                 _link(
                     package_entities[package_id],
@@ -628,7 +637,7 @@ def project_construction_demo_to_scene(
                 entity_id,
                 SpatialEntityType.DOMAIN_NODE,
                 inspection.title,
-                building_frame_id,
+                package_frames[inspection.work_package_id],
                 source_refs=(_ref(f"construction-demo-inspection:{inspection.inspection_id}", privacy),)
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-inspection:{inspection.inspection_id}",),
@@ -659,7 +668,7 @@ def project_construction_demo_to_scene(
                 entity_id,
                 SpatialEntityType.DOMAIN_NODE,
                 hazard.title,
-                building_frame_id,
+                package_frames[hazard.work_package_id],
                 source_refs=(_ref(f"construction-demo-hazard:{hazard.hazard_id}", privacy),)
                 if privacy is not SpatialPrivacyClass.PROJECT
                 else (f"construction-demo-hazard:{hazard.hazard_id}",),
@@ -790,6 +799,21 @@ def project_construction_demo_to_scene(
     if len(links) > MAX_DEMO_PROJECTION_LINKS:
         raise ValueError("Construction demo projection exceeds its link cap")
 
+    scene_source_refs = (
+        "owner:aura_construction_state.ConstructionProjectState",
+        "owner:aura_construction_adapter.ConstructionArenaAdapter",
+        "owner:aura_construction_demo_contracts.ConstructionDemoAssetPack",
+        "projection:aura_spatial_construction.project_construction_state_to_scene",
+        "projection:aura_construction_demo_projection.project_construction_demo_to_scene",
+        f"canonical-base-scene:{baseline.scene_digest}",
+        f"construction-state:{fixture.state.state_digest}",
+        f"construction-runtime:{packet['evaluation']['evaluation_digest']}",
+        f"construction-demo-fixture:{fixture.fixture_digest}",
+        f"construction-demo-asset-pack:{asset_pack.asset_pack_digest}",
+    )
+    if privacy is not SpatialPrivacyClass.PROJECT:
+        scene_source_refs = tuple(_ref(ref, privacy) for ref in scene_source_refs)
+
     return compile_spatial_scene(
         scene_id=_id("construction-demo-scene-v2", scene_id),
         purpose_digest=purpose_digest,
@@ -798,18 +822,7 @@ def project_construction_demo_to_scene(
         assets=spatial_assets,
         entities=entities,
         links=links,
-        source_refs=(
-            "owner:aura_construction_state.ConstructionProjectState",
-            "owner:aura_construction_adapter.ConstructionArenaAdapter",
-            "owner:aura_construction_demo_contracts.ConstructionDemoAssetPack",
-            "projection:aura_spatial_construction.project_construction_state_to_scene",
-            "projection:aura_construction_demo_projection.project_construction_demo_to_scene",
-            f"canonical-base-scene:{baseline.scene_digest}",
-            f"construction-state:{fixture.state.state_digest}",
-            f"construction-runtime:{packet['evaluation']['evaluation_digest']}",
-            f"construction-demo-fixture:{fixture.fixture_digest}",
-            f"construction-demo-asset-pack:{asset_pack.asset_pack_digest}",
-        ),
+        source_refs=scene_source_refs,
         renderer_hints={
             "version": CONSTRUCTION_DEMO_PROJECTION_VERSION,
             "preferred_representation": "HYBRID_MESH_GAUSSIAN",

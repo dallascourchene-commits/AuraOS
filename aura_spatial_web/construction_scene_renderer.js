@@ -62,6 +62,62 @@ function canonicalTransform(frame, label) {
   });
 }
 
+function quaternionMultiply(left, right) {
+  const [lx, ly, lz, lw] = left;
+  const [rx, ry, rz, rw] = right;
+  return Object.freeze([
+    lw * rx + lx * rw + ly * rz - lz * ry,
+    lw * ry - lx * rz + ly * rw + lz * rx,
+    lw * rz + lx * ry - ly * rx + lz * rw,
+    lw * rw - lx * rx - ly * ry - lz * rz,
+  ]);
+}
+
+function rotateVector(rotation, vector) {
+  const [x, y, z, w] = rotation;
+  const [vx, vy, vz] = vector;
+  const tx = 2 * (y * vz - z * vy);
+  const ty = 2 * (z * vx - x * vz);
+  const tz = 2 * (x * vy - y * vx);
+  return [
+    vx + w * tx + (y * tz - z * ty),
+    vy + w * ty + (z * tx - x * tz),
+    vz + w * tz + (x * ty - y * tx),
+  ];
+}
+
+function composeTransforms(parent, local) {
+  const scaledLocal = local.translation.map((value, index) => value * parent.scale[index]);
+  const rotatedLocal = rotateVector(parent.rotation_xyzw, scaledLocal);
+  return Object.freeze({
+    translation: Object.freeze(
+      parent.translation.map((value, index) => value + rotatedLocal[index]),
+    ),
+    rotation_xyzw: quaternionMultiply(parent.rotation_xyzw, local.rotation_xyzw),
+    scale: Object.freeze(
+      parent.scale.map((value, index) => value * local.scale[index]),
+    ),
+  });
+}
+
+function resolveWorldTransform(frames, frameId, cache, active = new Set()) {
+  if (cache.has(frameId)) return cache.get(frameId);
+  if (active.has(frameId)) throw new TypeError("Construction coordinate-frame cycle detected");
+  const frame = frames.get(frameId);
+  if (!frame) throw new TypeError(`Construction frame is missing: ${frameId}`);
+  active.add(frameId);
+  const local = canonicalTransform(frame, `frame ${frameId}`);
+  const world = frame.parent_frame_id
+    ? composeTransforms(
+        resolveWorldTransform(frames, frame.parent_frame_id, cache, active),
+        local,
+      )
+    : local;
+  active.delete(frameId);
+  cache.set(frameId, world);
+  return world;
+}
+
 function viewProjection(renderer) {
   const camera = renderer?.camera;
   const canvas = renderer?.canvas;
@@ -192,10 +248,9 @@ export class ConstructionSceneRenderer {
       this.assetFrames.set(asset.asset_id, asset.frame_id);
     }
     const rawFrames = new Map(scenePayload.frames.map((frame) => [frame.frame_id, frame]));
+    const worldTransforms = new Map();
     for (const frameId of this.storeyFrames) {
-      const frame = rawFrames.get(frameId);
-      if (!frame) throw new TypeError("Construction storey frame is missing");
-      const transform = canonicalTransform(frame, `frame ${frameId}`);
+      const transform = resolveWorldTransform(rawFrames, frameId, worldTransforms);
       this.basePresentationTransforms.set(frameId, transform);
       this.presentationTransforms.set(frameId, transform);
     }
