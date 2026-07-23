@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1301
-- **total_bytes**: 55405850
-- **text_tokens_est**: 4412681
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 43, 'knowledge_artifact': 164, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 881, 'schema_or_lexicon': 153, 'support_file': 45}
+- **file_count**: 1302
+- **total_bytes**: 55406019
+- **text_tokens_est**: 4412724
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 43, 'knowledge_artifact': 164, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 881, 'schema_or_lexicon': 153, 'support_file': 46}
 - **topology_nodes**: 10217
 - **topology_edges**: 23639
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 35239.8
+- **elapsed_ms**: 22420.31
 
 ## Coverage
 
-- **included_file_count**: 1301
+- **included_file_count**: 1302
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=28, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=25, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
 
 ## Command Index
 
@@ -329,6 +329,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/ARCHITECTURE.md`
 - `.aura/AURA.md`
 - `.aura/CONVERSE.md`
+- `.aura/HARNESS_EXPORT_REQUEST`
 - `.aura/HERMES_AURA_RULES.md`
 - `.aura/OUTPUT_FORMATS.md`
 - `.aura/RESEARCH_MANIFEST.json`
@@ -336,8 +337,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
-- `.aura/arena_routes/human_agent.v1.json`
-- ... 1123 more; query CODEMAP.json for exact file cards
+- ... 1124 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
