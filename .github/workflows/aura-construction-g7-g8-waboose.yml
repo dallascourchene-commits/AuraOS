@@ -24,15 +24,19 @@ jobs:
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 512
+          fetch-depth: 1
+          filter: blob:none
+          lfs: false
+          submodules: false
 
-      - name: Verify exact head and base availability
+      - name: Fetch exact base and verify identities
         env:
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          git fetch --no-tags --depth=1 origin "$BASE_SHA"
           git cat-file -e "$BASE_SHA^{commit}"
 
       - uses: actions/setup-python@v5
