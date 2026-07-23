@@ -153,6 +153,8 @@ jobs:
           rm -f .github/workflows/aura-construction-g7-g8-finalize.yml
           rm -f .github/workflows/aura-construction-g7-g8-repair.yml
           rm -f .github/workflows/aura-construction-g7-g8-publish.yml
+          rm -f .github/workflows/aura-construction-g7-g8-test-diagnose.yml
+          rm -f .github/workflows/aura-construction-g7-g8-combined-diagnose.yml
           rm -f docs/AURA_CONSTRUCTION_ARENA_G7_G8_{COMPLETION_ORDER,DEFINITION_OF_DONE,DOC_SYNC_REQUIREMENTS,EXACT_HEAD_POLICY,FINAL_HANDOFF,FINAL_REVIEW_PROMPT,MERGE_GATES,NO_NEW_AUTHORITY,OPERATOR_CHECKLIST,PROOF_MATRIX,RECOVERY_POINT,RELEASE_NOTES,SCOPE_LOCK,TEST_INVENTORY,VERIFICATION_COMMANDS}.md
 
       - name: Regenerate and validate navigation
@@ -170,8 +172,14 @@ jobs:
           ruff check aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
           ruff format --check aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
 
-      - name: Verify repaired Python tests
-        run: python -m pytest -q --tb=short tests/test_aura_construction_demo_director.py tests/test_aura_construction_demo_fixture.py tests/test_aura_construction_demo_projection.py
+      - name: Verify director contracts
+        run: python -m pytest -q --tb=short tests/test_aura_construction_demo_director.py
+
+      - name: Verify retained G4 fixture contracts
+        run: python -m pytest -q --tb=short tests/test_aura_construction_demo_fixture.py
+
+      - name: Verify retained G5 projection contracts
+        run: python -m pytest -q --tb=short tests/test_aura_construction_demo_projection.py
 
       - name: Verify repaired browser controller
         run: node --check aura_spatial_web/construction_demo_app.js
