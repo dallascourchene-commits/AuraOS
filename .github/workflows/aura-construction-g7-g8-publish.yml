@@ -172,8 +172,27 @@ jobs:
           ruff check aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
           ruff format --check aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
 
-      - name: Verify director contracts
-        run: python -m pytest -q --tb=short tests/test_aura_construction_demo_director.py
+      - name: Capture director contract output
+        shell: bash
+        run: |
+          set +e
+          python -m pytest -q --tb=long tests/test_aura_construction_demo_director.py > /tmp/director-pytest.txt 2>&1
+          status=$?
+          echo "$status" > /tmp/director-pytest.status
+          tail -120 /tmp/director-pytest.txt
+          exit 0
+
+      - name: Upload director contract diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: construction-g7-g8-director-pytest
+          path: |
+            /tmp/director-pytest.txt
+            /tmp/director-pytest.status
+          retention-days: 2
+
+      - name: Enforce director contracts
+        run: test "$(cat /tmp/director-pytest.status)" = "0"
 
       - name: Verify retained G4 fixture contracts
         run: python -m pytest -q --tb=short tests/test_aura_construction_demo_fixture.py
