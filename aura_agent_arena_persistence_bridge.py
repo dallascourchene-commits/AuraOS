@@ -54,7 +54,7 @@ def _bounded_interface_collection(
     max_item_bytes: int = _COMPASS_INTERFACE_ITEM_BYTES,
 ) -> tuple[list[Any], int, int]:
     source = list(values or [])
-    selected = source[:max(0, int(max_items))]
+    selected = source[: max(0, int(max_items))]
     projected: list[Any] = []
     replacements = 0
     for item in selected:
@@ -472,8 +472,6 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
             current_invariant_values=current_invariant_values,
         )
 
-
-
     def aura_compass_prepare(
         self,
         *,
@@ -524,7 +522,9 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
             "rollout": rollout,
             "counts": {
                 "targets": len(packet.get("recommended_targets", ()) or ()),
-                "emergent_candidates": len((packet.get("bounded_emergent_discovery") or {}).get("candidates", ()) or ()),
+                "emergent_candidates": len(
+                    (packet.get("bounded_emergent_discovery") or {}).get("candidates", ()) or ()
+                ),
                 "act_capsules": len((packet.get("act_capsules") or {}).get("act_capsules", ()) or ()),
             },
             "proposal_only": True,
@@ -549,8 +549,8 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
         participants = list(neighborhood.get("participants", []) or [])
         relations = list(neighborhood.get("relations", []) or [])
         truncation_reasons = list(neighborhood.get("truncation_reasons", []) or [])
-        projected_participants, participants_omitted, participants_replaced = (
-            _bounded_interface_collection(participants, max_items=64)
+        projected_participants, participants_omitted, participants_replaced = _bounded_interface_collection(
+            participants, max_items=64
         )
         projected_relations, relations_omitted, relations_replaced = _bounded_interface_collection(
             relations,

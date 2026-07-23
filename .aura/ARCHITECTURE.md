@@ -67,7 +67,19 @@ Aura keeps distinct influences distinct:
 
 These are not one language system and must not be documented as interchangeable.
 
-## 3. Constitutional invariants
+## 3. AI-safe repository handoff boundary
+
+The architecture harness treats AI review/export as an untrusted-input boundary. `scripts/aura_architecture_harness.py handoff` inventories the exact `HEAD` tree, preserves source commit and Git blob identity, streams working-tree SHA-256 values, and emits a bounded deterministic review companion outside the repository.
+
+Three dispositions are canonical:
+
+- `SOURCE_REVIEW`: tracked UTF-8 source/configuration/documentation below the configured ceiling; eligible for the lightweight Git-blob archive;
+- `DIGEST_ONLY`: binary, oversized, symlink, sensitive, or runtime content represented only by bounded metadata;
+- `REGENERATE_FROM_FINAL_TREE`: CODEMAP, topology, live topology AST, and P9 substrate outputs regenerated only after authoritative source and tests stabilize in Linux/LF.
+
+Generated maps remain navigation evidence and never become patch authority. Dirty repositories fail closed by default; unrestricted giant diffs and unbounded subprocess capture are prohibited. Long architecture runs are supervised by a proposal-only watchdog: a 10-minute check-in classifies healthy, slow-but-progressing, stalled, or unknown state, while a 20-minute hard checkpoint terminates the child safely and requires explicit `--resume`. Watchdog receipts are external run artifacts and grant no mutation authority. The full exact Git export remains a separate forensic reconstruction artifact rather than the preferred AI review input.
+
+## 4. Constitutional invariants
 
 ```yaml
 planning_proposes: true
@@ -92,7 +104,7 @@ Unknown, stale, ungrounded, malformed, expired, ambiguous, conflicting, or unaut
 
 Presentation is never authority. A UI control, ranking, route, graph, probability, model response, compact frame, or generated plan cannot create permission that was never granted.
 
-## 4. Truth and evidence order
+## 5. Truth and evidence order
 
 When sources disagree, use this order:
 
@@ -207,7 +219,7 @@ human_review_required: true
 Ambiguous publication failures return expected/observed ref evidence and do not automatically delete a ref, because GitHub ref deletion lacks an expected-OID compare-and-swap guard.
 <!-- AURA_JULY20_ARCHITECTURE_RECONCILIATION:END -->
 
-## 5. Architectural planes
+## 6. Architectural planes
 
 AuraOS is organized into twelve cooperating planes.
 
@@ -775,7 +787,7 @@ Primary owners include:
 - shadow/paired-live router modules;
 - Cognome telemetry, replay, probe, drift, federation, and policy owners.
 
-## 6. Canonical ownership matrix
+## 7. Canonical ownership matrix
 
 | Concern | Canonical owner | Projections/compatibility | Must not become a second owner |
 |---|---|---|---|
@@ -803,7 +815,7 @@ Primary owners include:
 | Civic governed state | Civic session/contracts and verified organ output | Maps, scenarios, review packets | Binding vote/funding/legal decision |
 | Temporal continuity | State Ledger and Temporal Checkpoint Registry | Arena-specific adapters and baton | Domain truth store |
 
-## 7. Human Agent, Observatory, Attempt Archive, and Crucible separation
+## 8. Human Agent, Observatory, Attempt Archive, and Crucible separation
 
 These surfaces are connected but cannot collapse.
 
@@ -839,7 +851,7 @@ Stores sanitized complete verified episodes with stable identity. Wall-clock tim
 
 TRAIN/VALIDATION/SHADOW mining and proposal-only crystallization.
 
-## 8. Council–Surgeon engineering architecture
+## 9. Council–Surgeon engineering architecture
 
 Aura separates deliberation from bounded implementation.
 
@@ -870,7 +882,7 @@ Escalation occurs when:
 
 Grounded phase capsules allow one exact evidence bundle to be shared across bounded phases without giving every phase unrestricted repository context.
 
-## 9. Civic Commons Arena
+## 10. Civic Commons Arena
 
 Civic Commons is a non-binding governed planning and coordination domain.
 
@@ -904,7 +916,7 @@ Architectural boundaries:
 - pilots are reversible/non-binding;
 - no automatic funding, voting, procurement, legal approval, surveillance, or service allocation.
 
-## 10. SCO Construction Arena
+## 11. SCO Construction Arena
 
 The completed E0–E14 Construction architecture is a narrow adapter over canonical Aura owners. It does not create duplicate Planning, governance, Experience, Crucible, persistence, Human Agent, or Observatory systems.
 
@@ -954,7 +966,7 @@ Primary owners include:
 
 Real connectors and consequential operational authority are future policy programs, not unfinished E0–E14 software.
 
-## 11. Financial Arena exact-state architecture
+## 12. Financial Arena exact-state architecture
 
 The first Financial Arena stage is a local, immutable exact-state record layer.
 
@@ -994,7 +1006,7 @@ Invariants:
 
 Purpose-limited Planning Board indicators and scenario layers are separate stages and must not transfer ledger ownership.
 
-## 12. Model Cognome architecture
+## 13. Model Cognome architecture
 
 The Model Cognome is an evidence and policy substrate for choosing optional model workers.
 
@@ -1013,7 +1025,7 @@ A Capability Connectome path can propose a model route. Model Cognome policy det
 
 `SHADOW` cannot call a provider. `PAIRED_LIVE` cannot run without a matching authorization. Promotion cannot occur solely because a shadow score is higher.
 
-## 13. Temporal persistence architecture
+## 14. Temporal persistence architecture
 
 Aura continuity is layered:
 
@@ -1039,7 +1051,7 @@ Invariants:
 - no legal immutability or court-admissibility claim is made;
 - no automatic restore, model call, code application, grammar promotion, physical action, payment, access, certification, commit, push, PR, or merge.
 
-## 14. Benchmark and claim architecture
+## 15. Benchmark and claim architecture
 
 Aura keeps unlike evidence separate.
 
@@ -1069,7 +1081,7 @@ against its explicit counterfactual. Full Codex-session provider totals were una
 This `DERIVED_COUNTERFACTUAL_WITH_CHAR4_TOKEN_PROXY` record is engineering evidence, not
 billing and not a whole-session token total.
 
-## 15. Deployment and presentation surfaces
+## 16. Deployment and presentation surfaces
 
 Aura supports several deployment/presentation layers:
 
@@ -1088,7 +1100,7 @@ Aura supports several deployment/presentation layers:
 
 Deployment does not change authority. Public demos use synthetic or explicitly public evidence and must not expose private memory, raw activations, raw Financial/Construction records, credentials, or community-restricted knowledge.
 
-## 16. Compatibility and migration policy
+## 17. Compatibility and migration policy
 
 Aura frequently introduces canonical V2/V3 contracts while preserving legacy reads.
 
@@ -1104,7 +1116,7 @@ Compatibility rules:
 
 This policy applies to guarded Arena routes, ST3GG, QDKT, JSpace continuity, Planning Board projections, Model Cognome routing, event contracts, and other consolidated surfaces.
 
-## 17. Security, privacy, and cultural governance
+## 18. Security, privacy, and cultural governance
 
 Security is structural:
 
@@ -1130,7 +1142,7 @@ Cultural and community governance adds:
 - explicit consent and purpose limitation;
 - revocation and deletion paths where the governing contract requires them.
 
-## 18. Implemented architecture versus roadmap
+## 19. Implemented architecture versus roadmap
 
 Implemented repository capabilities are described above as implemented.
 
@@ -1149,7 +1161,7 @@ These require separate implementation, privacy/security review, governance, meas
 
 AuraOS evidence does not establish consciousness, unrestricted autonomy, universal model superiority, legal certification, court admissibility, or production readiness outside exact measured gates.
 
-## 19. Architecture maintenance protocol
+## 20. Architecture maintenance protocol
 
 After an architecture-changing merge:
 
@@ -1165,3 +1177,46 @@ After an architecture-changing merge:
 10. perform post-merge verification and record intentional deferrals.
 
 The canonical test for a healthy change is not merely that code runs. It is that ownership remains singular, authority remains explicit, evidence remains inspectable, compatibility remains bounded, and the system can explain why the change is allowed.
+
+<!-- AURA_CONSTRUCTION_G7_G8 -->
+## Construction Arena G7–G8 presentation and proof layer
+
+Canonical ownership remains singular:
+
+```text
+ConstructionDemoAssetPack
+  → build_construction_demo_project_fixture
+  → build_construction_demo_runtime_packet
+  → project_construction_demo_to_scene
+  → negotiate_spatial_render_plan
+  → compile_construction_demo_packet
+  → ConstructionSceneRenderer
+  → Gaussian/graph/overlay recording surface
+  → deterministic presentation tour
+  → read-only Observatory / human decision packet
+  → exact renderer disposal
+```
+
+`aura_construction_demo_director.py` owns presentation sequencing only. `ConstructionProjectState`, `ConstructionArenaAdapter`, `ConstructionDemoAssetPack`, the G4 fixture, the G5 projector, and the G6 renderer passes retain their existing truth and lifecycle ownership.
+
+The current recording client is fail-closed: deterministic fallback Gaussian rendering is implemented; browser GLB/SPZ decoding and a real mesh draw pass are not. Mesh/hybrid controls remain disabled, and an admitted real pack is never replaced by fabricated fallback geometry.
+
+## AI-agent harness topology
+
+```text
+CODEMAP / exact source identity
+  → Architecture Harness doctor and AI-safe handoff
+  → Capability Connectome + Relational Index
+  → Relationship Atlas + Relational Synthesis
+  → Emergent Properties proposals
+  → Coding Relationship Compass
+  → Coding Waboose diagnostic breadboard
+  → Council V3 / Surgeon repair preparation
+  → Crucible verification
+  → Observatory human evidence review
+  → exact-head human-authorized publication
+```
+
+These are separate owners with bounded roles. The Architecture Harness reconstructs and supervises the environment; Waboose reviews; Compass compiles impact evidence; Council/Surgeon prepare strategies; Crucible tests; Observatory presents evidence; Agent Bridge/MCP connects replaceable agents. None of them independently author source truth, apply production mutations, approve physical Construction work, publish, or merge.
+
+Generated CODEMAP/topology is navigation evidence and must be regenerated from the final source tree. Exact source spans, hashes, tests, runtime receipts, and human authorization remain authoritative.

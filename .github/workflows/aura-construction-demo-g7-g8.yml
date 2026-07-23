@@ -1,0 +1,184 @@
+name: Aura Construction Demo G7-G8
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-construction-demo-g7-g8.yml"
+      - "aura_construction_demo_*.py"
+      - "aura_spatial_cli.py"
+      - "aura_spatial_web/construction_demo*"
+      - "aura_spatial_web/construction_*_pass.js"
+      - "aura_spatial_web/construction_scene_renderer.js"
+      - "aura_spatial_web/gaussian_renderer.js"
+      - "aura_spatial_web/webgl2_gaussian_pass.js"
+      - "tests/test_aura_construction_demo_*.py"
+      - "tests/js/spatial-construction*.mjs"
+      - "tests/js/spatial-gaussian-covariance.test.mjs"
+      - "docs/AURA_CONSTRUCTION_ARENA_G7_G8*.md"
+      - "README.md"
+      - "USER_GUIDE.md"
+      - ".aura/ARCHITECTURE.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-construction-demo-g7-g8-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-g7-g8:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      PYTHONHASHSEED: "0"
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 256
+
+      - name: Verify exact pull-request head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install bounded verification dependencies
+        run: >-
+          python -m pip install -q --disable-pip-version-check
+          jsonschema numpy pytest ruff zstandard
+
+      - name: Compile and lint focused source
+        run: |
+          python -m py_compile \
+            aura_construction_demo_director.py \
+            aura_construction_demo_contracts.py \
+            aura_construction_demo_fixture.py \
+            aura_construction_demo_fixture_builder.py \
+            aura_construction_demo_projection.py \
+            aura_spatial_cli.py
+          ruff check \
+            aura_construction_demo_director.py \
+            aura_spatial_cli.py \
+            tests/test_aura_construction_demo_director.py
+          node --check aura_spatial_web/construction_demo_app.js
+          node --check aura_spatial_web/construction_mesh_pass.js
+          node --check aura_spatial_web/construction_overlay_pass.js
+          node --check aura_spatial_web/construction_scene_renderer.js
+          node --check aura_spatial_web/gaussian_renderer.js
+          node --check aura_spatial_web/webgl2_gaussian_pass.js
+          git diff --check
+
+      - name: Compile bounded Aura-native architecture evidence
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from aura_architect_council_v3 import route_compass_failure_classes
+          from aura_coding_relationship_compass import compile_coding_relationship_compass
+          from scripts.aura_architecture_harness import doctor
+
+          root = Path.cwd()
+          compass = compile_coding_relationship_compass(
+              "Verify final Construction Arena G7-G8 director, projection, renderer, authority, and dissolution boundaries",
+              root,
+              target_files=(
+                  "aura_construction_demo_director.py",
+                  "aura_construction_demo_fixture_builder.py",
+                  "aura_construction_demo_projection.py",
+                  "aura_spatial_cli.py",
+                  "aura_spatial_web/construction_demo_app.js",
+                  "aura_spatial_web/construction_scene_renderer.js",
+                  "aura_spatial_web/construction_overlay_pass.js",
+                  "aura_spatial_web/gaussian_renderer.js",
+              ),
+              target_symbols=(
+                  "compile_construction_demo_packet",
+                  "serve_construction_demo",
+                  "build_construction_demo_project_fixture",
+                  "project_construction_demo_to_scene",
+                  "ConstructionSceneRenderer",
+                  "ConstructionOverlayPass",
+                  "GaussianRenderer",
+              ),
+              max_target_files=8,
+              max_target_symbols=12,
+              max_atomic_nodes=24,
+              max_atlas_participants=16,
+              max_atlas_assessments=40,
+              max_required_tests=20,
+              max_neighborhood_nodes=32,
+              max_neighborhood_edges=96,
+              max_neighborhood_candidate_pairs=256,
+              max_neighborhood_output_bytes=400_000,
+              max_neighborhood_elapsed_ms=30_000,
+              max_emergent_candidates=6,
+              include_source=False,
+          )
+          assert compass.get("compass_digest")
+          council = route_compass_failure_classes(
+              ("INTERFACE", "INVARIANT", "AUTHORITY", "SEQUENCE", "LOCAL_TEST")
+          )
+          assert council is not None
+          doctor_packet = doctor(root, None)
+          assert isinstance(doctor_packet, dict)
+          route = doctor_packet.get("github_publication_route") or {}
+          authority = route.get("authority") or {}
+          assert authority.get("production_mutation") is False
+          assert authority.get("automatic_merge") is False
+          assert authority.get("human_review_required") is True
+          PY
+
+      - name: Run focused and retained Python verification
+        run: |
+          python -m pytest -q --tb=short \
+            tests/test_aura_construction_demo_director.py \
+            tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py \
+            tests/test_aura_spatial_render_plan.py
+
+      - name: Run Construction browser regressions
+        run: |
+          node --test \
+            tests/js/spatial-construction-demo.test.mjs \
+            tests/js/spatial-construction-review-regressions.test.mjs \
+            tests/js/spatial-gaussian-covariance.test.mjs
+
+      - name: Verify deterministic CLI packet and authority envelope
+        run: |
+          python aura_spatial_cli.py --repo-root . construction-video-demo \
+            --tour full --output /tmp/aura-construction-demo.packet.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          packet = json.loads(Path("/tmp/aura-construction-demo.packet.json").read_text())
+          assert packet["ok"] is True
+          assert len(packet["tour_steps"]) == 18
+          assert packet["tour_steps"][-1]["action"] == "DISSOLVE"
+          for field in (
+              "physical_work_authorized",
+              "payment_released",
+              "access_controlled",
+              "professional_certification_claimed",
+              "legal_or_regulatory_authority_claimed",
+              "survey_authority_claimed",
+              "renderer_authority",
+              "automatic_execution",
+              "automatic_merge",
+          ):
+              assert packet[field] is False, field
+          assert packet["human_review_required"] is True
+          PY
+
+      - name: Verify generated navigation state
+        run: python -m aura_codemap_verify --compare-json .aura/CODEMAP.json

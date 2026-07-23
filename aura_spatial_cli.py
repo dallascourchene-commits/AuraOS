@@ -17,15 +17,41 @@ from aura_construction_adapter import (
     ConstructionArenaAdapter,
     ConstructionArenaMode,
 )
+from aura_construction_demo_director import (
+    CONSTRUCTION_DEMO_TOURS,
+    compile_construction_demo_packet,
+    serve_construction_demo,
+    write_construction_demo_packet,
+)
 from aura_construction_fixtures import build_sco_construction_demo_fixture
 from aura_spatial_agent_bridge import AuraSpatialAgentBridge
 
-SPATIAL_CLI_VERSION = "AURA_SPATIAL_CLI_V1"
+SPATIAL_CLI_VERSION = "AURA_SPATIAL_CLI_V2"
+_LOOPBACK_HOSTS = frozenset({"127.0.0.1", "localhost"})
+
+
+def _loopback_host(value: str) -> str:
+    if value not in _LOOPBACK_HOSTS:
+        raise argparse.ArgumentTypeError("Construction video demo host must be loopback-only: 127.0.0.1 or localhost")
+    return value
+
+
+def _tcp_port(value: str) -> int:
+    try:
+        port = int(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("port must be an integer") from exc
+    if port < 1 or port > 65_535:
+        raise argparse.ArgumentTypeError("port must be in [1, 65535]")
+    return port
 
 
 def _head(root: Path) -> str:
+    git_executable = shutil.which("git")
+    if not git_executable:
+        return "0" * 40
     result = subprocess.run(
-        ["git", "rev-parse", "HEAD"],
+        [git_executable, "rev-parse", "HEAD"],
         cwd=root,
         check=False,
         capture_output=True,
@@ -120,15 +146,59 @@ def _synthetic_construction_demo(root: Path) -> dict[str, Any]:
     }
 
 
+def _construction_video_demo(root: Path, args: argparse.Namespace) -> dict[str, Any]:
+    asset_pack = Path(args.asset_pack) if args.asset_pack else None
+    packet = compile_construction_demo_packet(asset_pack_path=asset_pack, tour=args.tour)
+    output_path = None
+    if args.output:
+        output_path = write_construction_demo_packet(packet, Path(args.output))
+    summary = {
+        "ok": True,
+        "version": SPATIAL_CLI_VERSION,
+        "command": "construction-video-demo",
+        "tour": args.tour,
+        "scene_digest": packet["scene"]["scene_digest"],
+        "render_plan_digest": packet["render_plan"]["render_plan_digest"],
+        "fixture_digest": packet["fixture_digest"],
+        "asset_pack_digest": packet["asset_pack_digest"],
+        "fallback_asset_pack": packet["fallback_asset_pack"],
+        "output": str(output_path) if output_path else None,
+        "url": f"http://{args.host}:{args.port}/demo/construction?tour={args.tour}",
+        "physical_work_authorized": False,
+        "payment_released": False,
+        "automatic_execution": False,
+        "automatic_merge": False,
+        "human_review_required": True,
+    }
+    if args.serve:
+        print(json.dumps(summary, sort_keys=True, separators=(",", ":"), default=str), flush=True)
+        serve_construction_demo(root, packet, host=args.host, port=args.port)
+    return summary
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", default=".")
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("validate-route")
     subparsers.add_parser("synthetic-construction-demo")
+    video = subparsers.add_parser("construction-video-demo")
+    video.add_argument("--asset-pack")
+    video.add_argument("--tour", choices=CONSTRUCTION_DEMO_TOURS, default="full")
+    video.add_argument("--host", type=_loopback_host, default="127.0.0.1")
+    video.add_argument("--port", type=_tcp_port, default=8767)
+    video.add_argument("--output")
+    video.add_argument("--serve", action="store_true")
     args = parser.parse_args(argv)
     root = Path(args.repo_root).resolve()
-    packet = _validate_route(root) if args.command == "validate-route" else _synthetic_construction_demo(root)
+    if args.command == "validate-route":
+        packet = _validate_route(root)
+    elif args.command == "synthetic-construction-demo":
+        packet = _synthetic_construction_demo(root)
+    else:
+        packet = _construction_video_demo(root, args)
+        if args.serve:
+            return 0
     print(json.dumps(packet, sort_keys=True, separators=(",", ":"), default=str))
     return 0 if packet.get("ok") else 1
 

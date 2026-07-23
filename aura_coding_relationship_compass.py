@@ -822,6 +822,12 @@ def _compatibility_neighborhood_from_raw_index(
                 and (
                     not source_ref.symbol
                     or str(participant.get("qualified_symbol") or "") == source_ref.symbol
+                    or (
+                        "." not in source_ref.symbol
+                        and str(participant.get("qualified_symbol") or "").endswith(
+                            f".{source_ref.symbol}"
+                        )
+                    )
                 )
                 and int(metadata.get("line_start") or 0) == source_ref.line_start
                 and int(metadata.get("line_end") or 0) == source_ref.line_end

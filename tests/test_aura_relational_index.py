@@ -888,6 +888,35 @@ def test_extract_relational_neighborhood_resolves_exact_source_ref() -> None:
     )
 
 
+def test_extract_relational_neighborhood_resolves_unqualified_method_source_ref() -> None:
+    index = _build()
+    alpha_run = next(
+        item for item in index.participants if item.qualified_symbol == "Alpha.run"
+    )
+    source_ref = _source_ref_for_participant(alpha_run)
+    request = RelationalNeighborhoodRequest(
+        objective_digest="objective-unqualified-method-source-ref",
+        seed_participant_ids=(),
+        seed_source_refs=(
+            SourceReference(
+                **{**source_ref.to_dict(), "symbol": "run"}
+            ),
+        ),
+        max_hops=1,
+        max_nodes=8,
+        max_edges=16,
+    )
+
+    packet = extract_relational_neighborhood(request, index)
+
+    assert packet["seed_participant_ids"] == [alpha_run.participant_id]
+    assert any(
+        reason.startswith("exact_source_ref:service.py#run")
+        for reasons in packet["inclusion_reasons"].values()
+        for reason in reasons
+    )
+
+
 def test_extract_relational_neighborhood_prefers_requested_file_before_global_symbol() -> None:
     original = _build()
     reverse_indexes = original.to_dict()["reverse_indexes"]

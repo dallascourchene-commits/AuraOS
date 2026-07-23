@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Aura Construction Arena</title>
+  <link rel="stylesheet" href="/aura_spatial_web/construction_demo.css">
+</head>
+<body>
+  <main class="arena-shell" aria-labelledby="arena-title">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">AURAOS · CONSTRUCTION ARENA</p>
+        <h1 id="arena-title">Intent-bound spatial coordination</h1>
+      </div>
+      <div class="authority-strip" aria-label="Authority boundary">
+        <span>Proposal only</span><span>Human review required</span><span>No physical authority</span>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <aside class="panel left-panel" aria-label="Scene controls">
+        <h2>Floors</h2>
+        <div id="storey-list" class="stack"></div>
+
+        <h2>Representation</h2>
+        <div class="segmented" role="group" aria-label="Representation mode">
+          <button data-mode="MESH">Mesh</button>
+          <button data-mode="SPLATS">Splats</button>
+          <button data-mode="HYBRID" class="active">Hybrid</button>
+        </div>
+
+        <h2>Layers</h2>
+        <div id="layer-list" class="checks"></div>
+
+        <h2>Timeline</h2>
+        <label class="range-label" for="timeline">Day <output id="timeline-value">30</output></label>
+        <input id="timeline" type="range" min="0" max="30" value="30" step="1">
+      </aside>
+
+      <section class="viewport-wrap" aria-label="3D Construction Arena">
+        <canvas id="construction-canvas" width="1280" height="720" aria-label="Interactive Construction Arena canvas"></canvas>
+        <div class="viewport-hud">
+          <p id="intent-line">Show the entire building.</p>
+          <p id="tour-status">Ready</p>
+        </div>
+        <div class="camera-controls" role="group" aria-label="Camera and floor controls">
+          <button id="orbit-left">Orbit left</button>
+          <button id="orbit-right">Orbit right</button>
+          <button id="zoom-in">Zoom in</button>
+          <button id="zoom-out">Zoom out</button>
+          <button id="explode">Explode floors</button>
+          <button id="collapse">Collapse</button>
+          <button id="show-all">Show all</button>
+          <button id="reset">Reset</button>
+        </div>
+      </section>
+
+      <aside class="panel right-panel" aria-label="Construction inspector">
+        <div class="panel-heading">
+          <h2>Inspector</h2>
+          <span id="scene-state" class="status-pill">Loading</span>
+        </div>
+        <section>
+          <h3>Selected</h3>
+          <div id="selected-card" class="detail-card">Nothing selected</div>
+        </section>
+        <section>
+          <h3>Work status</h3>
+          <div id="status-list" class="compact-list"></div>
+        </section>
+        <section>
+          <h3>Evidence & blockers</h3>
+          <div id="blocker-list" class="compact-list"></div>
+        </section>
+        <section>
+          <h3>Budget</h3>
+          <div id="budget-list" class="compact-list"></div>
+        </section>
+      </aside>
+    </section>
+
+    <section class="comparison" aria-label="Scenario comparison">
+      <div>
+        <p class="eyebrow">SCENARIO COMPARISON</p>
+        <h2 id="comparison-title">Awaiting director sequence</h2>
+      </div>
+      <div class="metrics">
+        <div><span>Time</span><strong id="metric-time">—</strong></div>
+        <div><span>Cost</span><strong id="metric-cost">—</strong></div>
+        <div><span>Idle</span><strong id="metric-idle">—</strong></div>
+        <div><span>Authority</span><strong id="metric-authority">Human review</strong></div>
+      </div>
+      <div class="tour-controls">
+        <button id="play-tour" class="primary">Play tour</button>
+        <button id="pause-tour">Pause</button>
+        <button id="next-step">Next</button>
+        <button id="dissolve">Dissolve Arena</button>
+      </div>
+    </section>
+
+    <dialog id="evidence-dialog">
+      <form method="dialog">
+        <button class="dialog-close" aria-label="Close">×</button>
+        <p class="eyebrow">OBSERVATORY</p>
+        <h2>Read-only evidence summary</h2>
+        <pre id="evidence-content"></pre>
+      </form>
+    </dialog>
+
+    <footer>
+      <p id="attribution">Loading attribution…</p>
+    </footer>
+  </main>
+  <script type="module" src="/aura_spatial_web/construction_demo_app.js"></script>
+</body>
+</html>

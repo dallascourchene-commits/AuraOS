@@ -258,6 +258,46 @@ def test_legacy_neighborhood_disambiguates_source_refs_by_span_and_hash() -> Non
         )
 
 
+def test_legacy_neighborhood_resolves_unqualified_method_source_ref() -> None:
+    legacy = _minimal_relational_index()
+    legacy["participants"] = [
+        {
+            "participant_id": "alpha_run",
+            "digest": "1" * 64,
+            "qualified_symbol": "Alpha.run",
+            "metadata": {
+                "file_path": "service.py",
+                "line_start": 2,
+                "line_end": 3,
+                "file_source_hash": "f" * 64,
+            },
+        }
+    ]
+    legacy["relations"] = []
+    _rebind_index_digest(legacy)
+    request = RelationalNeighborhoodRequest(
+        objective_digest="legacy-unqualified-method",
+        seed_participant_ids=(),
+        seed_source_refs=(
+            SourceReference(
+                file_path="service.py",
+                symbol="run",
+                line_start=2,
+                line_end=3,
+                source_hash="1" * 64,
+                file_source_hash="f" * 64,
+            ),
+        ),
+        max_hops=1,
+        max_nodes=8,
+        max_edges=16,
+    )
+
+    packet = compass._compatibility_neighborhood_from_raw_index(request, legacy)
+
+    assert packet["seed_participant_ids"] == ["alpha_run"]
+
+
 def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -> None:
     source_text = "def compile_coding_relationship_compass():\n    return None\n"
     (tmp_path / "aura_coding_relationship_compass.py").write_text(source_text, encoding="utf-8")
