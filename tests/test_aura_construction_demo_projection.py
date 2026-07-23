@@ -248,10 +248,7 @@ def test_g5_public_projection_hashes_domain_identifiers() -> None:
     all_source_refs.extend(payload.get("source_refs", []))
 
     assert payload["source_refs"]
-    assert all(
-        len(ref) == 16 and set(ref) <= set("0123456789abcdef")
-        for ref in payload["source_refs"]
-    )
+    assert all(len(ref) == 16 and set(ref) <= set("0123456789abcdef") for ref in payload["source_refs"])
 
     source_refs_str = " ".join(all_source_refs)
     assert fixture.state.project_id not in source_refs_str
@@ -261,14 +258,12 @@ def test_g5_public_projection_hashes_domain_identifiers() -> None:
         assert storey.storey_id not in source_refs_str
         assert storey.ifc_global_id not in source_refs_str
 
+
 def test_g5_package_owned_overlays_use_package_storey_frames() -> None:
     fixture, scene = _scene()
     entities = scene.to_dict()["entities"]
     storey_frames = {item.storey_id: item.frame_id for item in fixture.asset_pack.storeys}
-    package_frames = {
-        item.work_package_id: storey_frames[item.storey_id]
-        for item in fixture.work_packages
-    }
+    package_frames = {item.work_package_id: storey_frames[item.storey_id] for item in fixture.work_packages}
 
     for activity in fixture.work_history:
         matches = [item for item in entities if item["metadata"].get("activity_ref") == activity.activity_id]
@@ -288,15 +283,11 @@ def test_g5_package_owned_overlays_use_package_storey_frames() -> None:
         assert matches[0]["frame_id"] == package_frames[hazard.work_package_id]
     for rule in fixture.rules:
         actual_frames = sorted(
-            item["frame_id"]
-            for item in entities
-            if item["metadata"].get("rule_ref") == rule.rule_id
+            item["frame_id"] for item in entities if item["metadata"].get("rule_ref") == rule.rule_id
         )
-        expected_frames = sorted(
-            package_frames[package_id]
-            for package_id in rule.applies_to_work_package_ids
-        )
+        expected_frames = sorted(package_frames[package_id] for package_id in rule.applies_to_work_package_ids)
         assert actual_frames == expected_frames
+
 
 def test_g5_rejects_restricted_or_sensitive_geometry_projection() -> None:
     fixture = build_construction_demo_project_fixture(_pack())

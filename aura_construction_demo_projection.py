@@ -358,9 +358,7 @@ def project_construction_demo_to_scene(
     package_frames: dict[str, str] = {}
     for package in fixture.work_packages:
         storey_entity_id = storey_entities[package.storey_id]
-        package_frame_id = next(
-            item.frame_id for item in storeys if item.storey_id == package.storey_id
-        )
+        package_frame_id = next(item.frame_id for item in storeys if item.storey_id == package.storey_id)
         package_frames[package.work_package_id] = package_frame_id
         zone_entity_id = zone_entities.get(package.zone_id)
         if zone_entity_id is None:
