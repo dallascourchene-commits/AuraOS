@@ -10,10 +10,12 @@ on:
       - "aura_spatial_web/construction_mesh_pass.js"
       - "aura_spatial_web/construction_overlay_pass.js"
       - "aura_spatial_web/construction_scene_renderer.js"
+      - "aura_spatial_web/gaussian_renderer.js"
       - "aura_spatial_web/webgl2_gaussian_pass.js"
       - "tests/test_aura_construction_demo_fixture.py"
       - "tests/test_aura_construction_demo_projection.py"
       - "tests/js/spatial-construction-demo.test.mjs"
+      - "tests/js/spatial-construction-review-regressions.test.mjs"
   workflow_dispatch:
 
 permissions:
@@ -30,12 +32,12 @@ jobs:
     env:
       PYTHONHASHSEED: "0"
     steps:
-      - name: Clone bounded pull-request history
-        env:
-          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
-        run: |
-          set -euo pipefail
-          git clone --no-tags --single-branch --depth=128 --branch "$HEAD_REF" "https://github.com/${GITHUB_REPOSITORY}.git" .
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 128
 
       - name: Verify exact pull-request head
         env:
@@ -59,7 +61,7 @@ jobs:
           set -euo pipefail
           python -m pip install -q --disable-pip-version-check numpy pytest ruff zstandard
 
-      - name: Compile G4-G6 Python owners
+      - name: Compile and lint G4-G6 owners
         run: |
           set +e
           python -m py_compile \
@@ -68,10 +70,38 @@ jobs:
             aura_construction_demo_projection.py \
             tests/test_aura_construction_demo_fixture.py \
             tests/test_aura_construction_demo_projection.py \
-            > /tmp/aura_g4_g6_logs/python-compile.txt 2>&1
+            > /tmp/aura_g4_g6_logs/python-static.txt 2>&1
           status=$?
-          echo "$status" > /tmp/aura_g4_g6_status/python-compile.status
-          cat /tmp/aura_g4_g6_logs/python-compile.txt
+          if test "$status" = "0"; then
+            ruff check \
+              aura_construction_demo_fixture.py \
+              aura_construction_demo_fixture_builder.py \
+              aura_construction_demo_projection.py \
+              tests/test_aura_construction_demo_fixture.py \
+              tests/test_aura_construction_demo_projection.py \
+              >> /tmp/aura_g4_g6_logs/python-static.txt 2>&1
+            status=$?
+          fi
+          if test "$status" = "0"; then
+            ruff format --check \
+              aura_construction_demo_fixture.py \
+              aura_construction_demo_fixture_builder.py \
+              aura_construction_demo_projection.py \
+              tests/test_aura_construction_demo_fixture.py \
+              tests/test_aura_construction_demo_projection.py \
+              >> /tmp/aura_g4_g6_logs/python-static.txt 2>&1
+            status=$?
+          fi
+          node --check aura_spatial_web/construction_mesh_pass.js \
+            >> /tmp/aura_g4_g6_logs/python-static.txt 2>&1 || status=$?
+          node --check aura_spatial_web/construction_overlay_pass.js \
+            >> /tmp/aura_g4_g6_logs/python-static.txt 2>&1 || status=$?
+          node --check aura_spatial_web/construction_scene_renderer.js \
+            >> /tmp/aura_g4_g6_logs/python-static.txt 2>&1 || status=$?
+          node --check aura_spatial_web/gaussian_renderer.js \
+            >> /tmp/aura_g4_g6_logs/python-static.txt 2>&1 || status=$?
+          echo "$status" > /tmp/aura_g4_g6_status/static.status
+          cat /tmp/aura_g4_g6_logs/python-static.txt
           exit 0
 
       - name: Run Aura-native Connectome Atlas and Council scan
@@ -81,26 +111,17 @@ jobs:
           import json
           from pathlib import Path
 
-          output = Path("/tmp/aura_g4_g6_architecture.json")
-          objective = (
-              "Verify Construction Arena G4-G6 asset-bound fixture, privacy-minimized projection, "
-              "mesh Gaussian hybrid rendering, storey isolation, presentation-only exploded view, "
-              "cancellation, device-loss disposal, authority boundaries, and exact focused tests"
-          )
-          receipt = {
-              "status": "FAILED_CLOSED",
-              "objective": objective,
-              "safe_to_patch": False,
-              "production_mutation": False,
-              "automatic_merge": False,
-          }
-          try:
-              from aura_architect_council_v3 import route_compass_failure_classes
-              from aura_coding_relationship_compass import compile_coding_relationship_compass
+          from aura_architect_council_v3 import route_compass_failure_classes
+          from aura_coding_relationship_compass import compile_coding_relationship_compass
 
-              council = route_compass_failure_classes(
-                  ("INTERFACE", "INVARIANT", "AUTHORITY", "SEQUENCE", "LOCAL_TEST")
-              )
+          objective = (
+              "Deeply verify Construction Arena G4-G6 privacy-normalized provenance, "
+              "coordinate-frame elevation, mesh/Gaussian/overlay transform alignment, "
+              "degree-0 SPZ admission, cancellation, initialization failure, device-loss "
+              "disposal, authority boundaries, and exact focused and retained tests"
+          )
+          output = Path("/tmp/aura_g4_g6_architecture.json")
+          try:
               packet = compile_coding_relationship_compass(
                   objective,
                   Path.cwd(),
@@ -111,10 +132,12 @@ jobs:
                       "aura_spatial_web/construction_mesh_pass.js",
                       "aura_spatial_web/construction_overlay_pass.js",
                       "aura_spatial_web/construction_scene_renderer.js",
+                      "aura_spatial_web/gaussian_renderer.js",
                       "aura_spatial_web/webgl2_gaussian_pass.js",
                       "tests/test_aura_construction_demo_fixture.py",
                       "tests/test_aura_construction_demo_projection.py",
                       "tests/js/spatial-construction-demo.test.mjs",
+                      "tests/js/spatial-construction-review-regressions.test.mjs",
                   ),
                   target_symbols=(
                       "ConstructionDemoProjectFixture",
@@ -123,20 +146,20 @@ jobs:
                       "ConstructionMeshPass",
                       "ConstructionOverlayPass",
                       "ConstructionSceneRenderer",
+                      "GaussianRenderer",
                       "createWebGL2GaussianPass",
                   ),
-                  max_target_files=16,
-                  max_target_symbols=24,
-                  max_atomic_nodes=48,
-                  max_atlas_participants=48,
-                  max_atlas_assessments=128,
-                  max_required_tests=32,
-                  max_neighborhood_nodes=96,
-                  max_neighborhood_edges=384,
-                  max_neighborhood_candidate_pairs=4096,
+                  max_target_files=20,
+                  max_target_symbols=28,
+                  max_atomic_nodes=64,
+                  max_atlas_participants=64,
+                  max_atlas_assessments=160,
+                  max_required_tests=40,
+                  max_neighborhood_nodes=128,
+                  max_neighborhood_edges=512,
+                  max_neighborhood_candidate_pairs=8192,
                   include_source=False,
               )
-              atlas = packet.get("atlas") or {}
               receipt = {
                   "status": "COMPILED",
                   "objective": objective,
@@ -145,64 +168,34 @@ jobs:
                   "grounding_digest": packet.get("grounding_digest"),
                   "recommended_targets": packet.get("recommended_targets"),
                   "required_tests": packet.get("required_tests"),
-                  "relationships_to_preserve": atlas.get("relationships_to_preserve"),
-                  "required_adapters": atlas.get("required_adapters"),
-                  "authority_constraints": atlas.get("authority_constraints"),
-                  "missing_roles": atlas.get("missing_roles"),
-                  "missing_configurations": atlas.get("missing_configurations"),
-                  "prohibitions": atlas.get("prohibitions"),
+                  "atlas": packet.get("atlas"),
                   "emergent_candidates": packet.get("emergent_candidates"),
                   "change_graph": packet.get("change_graph"),
                   "act_capsules": packet.get("act_capsules"),
-                  "council_v3": council,
+                  "council_v3": route_compass_failure_classes(
+                      ("INTERFACE", "INVARIANT", "AUTHORITY", "SEQUENCE", "LOCAL_TEST")
+                  ),
                   "safe_to_patch": packet.get("safe_to_patch", False),
                   "production_mutation": packet.get("production_mutation", False),
                   "automatic_merge": packet.get("automatic_merge", False),
-                  "full_packet": packet,
               }
           except Exception as exc:
-              receipt.update({"error_type": type(exc).__name__, "error": str(exc)[:4096]})
+              receipt = {
+                  "status": "FAILED_CLOSED",
+                  "objective": objective,
+                  "error_type": type(exc).__name__,
+                  "error": str(exc)[:4096],
+                  "safe_to_patch": False,
+                  "production_mutation": False,
+                  "automatic_merge": False,
+              }
           output.write_text(json.dumps(receipt, sort_keys=True, indent=2, default=str), encoding="utf-8")
           print(json.dumps(receipt, sort_keys=True, default=str))
+          raise SystemExit(0 if receipt["status"] == "COMPILED" else 1)
           PY
           status=$?
           echo "$status" > /tmp/aura_g4_g6_status/aura-architecture.status
           cat /tmp/aura_g4_g6_logs/aura-architecture.txt
-          exit 0
-
-      - name: Collect Ruff diagnostics
-        run: |
-          set +e
-          for file in \
-            aura_construction_demo_fixture.py \
-            aura_construction_demo_fixture_builder.py \
-            aura_construction_demo_projection.py \
-            tests/test_aura_construction_demo_fixture.py \
-            tests/test_aura_construction_demo_projection.py
-          do
-            key="$(printf '%s' "$file" | tr '/.' '--')"
-            ruff check --output-format=concise "$file" \
-              > "/tmp/aura_g4_g6_logs/ruff-${key}.txt" 2>&1
-            status=$?
-            echo "$status" > "/tmp/aura_g4_g6_status/ruff-${key}.status"
-            echo "=== $file ==="
-            cat "/tmp/aura_g4_g6_logs/ruff-${key}.txt"
-          done
-          exit 0
-
-      - name: Collect formatting diagnostics
-        run: |
-          set +e
-          ruff format --check \
-            aura_construction_demo_fixture.py \
-            aura_construction_demo_fixture_builder.py \
-            aura_construction_demo_projection.py \
-            tests/test_aura_construction_demo_fixture.py \
-            tests/test_aura_construction_demo_projection.py \
-            > /tmp/aura_g4_g6_logs/ruff-format.txt 2>&1
-          status=$?
-          echo "$status" > /tmp/aura_g4_g6_status/ruff-format.status
-          cat /tmp/aura_g4_g6_logs/ruff-format.txt
           exit 0
 
       - name: Run focused Python verification
@@ -235,7 +228,9 @@ jobs:
       - name: Run focused browser renderer verification
         run: |
           set +e
-          node --test tests/js/spatial-construction-demo.test.mjs \
+          node --test \
+            tests/js/spatial-construction-demo.test.mjs \
+            tests/js/spatial-construction-review-regressions.test.mjs \
             > /tmp/aura_g4_g6_logs/browser-focused.txt 2>&1
           status=$?
           echo "$status" > /tmp/aura_g4_g6_status/browser-focused.status
