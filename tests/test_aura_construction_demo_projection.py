@@ -7,16 +7,16 @@ import pytest
 from aura_construction_demo_contracts import (
     CC_BY_4_0,
     CC_BY_4_0_URL,
+    TU_WIEN_DOI,
+    TU_WIEN_PUBLISHED_MD5,
+    TU_WIEN_SOURCE_FILENAME,
+    TU_WIEN_SOURCE_ID,
     ConstructionDemoAssetBinding,
     ConstructionDemoAssetPack,
     ConstructionDemoRepresentation,
     ConstructionDemoSourceManifest,
     ConstructionDemoStorey,
     ConstructionDemoTruthClass,
-    TU_WIEN_DOI,
-    TU_WIEN_PUBLISHED_MD5,
-    TU_WIEN_SOURCE_FILENAME,
-    TU_WIEN_SOURCE_ID,
 )
 from aura_construction_demo_fixture_builder import (
     build_construction_demo_project_fixture,
@@ -95,8 +95,10 @@ def _pack() -> ConstructionDemoAssetPack:
                     bounds_min=(-10.0, 0.0, -10.0),
                     bounds_max=(10.0, 4.0, 10.0),
                     source_refs=(f"ifc:storey:{storey_id}",),
-                    import_receipt_digest=stable_digest({"import": storey_id, "suffix": suffix}),
-                    representation_digest=stable_digest({"representation": storey_id, "suffix": suffix}),
+                    import_receipt_digest=stable_digest({"import": storey_id, "suffix": suffix}, digest_size=32),
+                    representation_digest=stable_digest(
+                        {"representation": storey_id, "suffix": suffix}, digest_size=32
+                    ),
                     truth_class=ConstructionDemoTruthClass.DERIVED_PRESENTATION,
                 )
             )
@@ -157,7 +159,13 @@ def test_g5_projection_is_deterministic_canonical_and_storey_complete() -> None:
         }
         assert assets_by_id[storey.mesh_asset_id].asset_type is SpatialAssetType.MESH
         assert assets_by_id[storey.floor_plan_asset_id].asset_type is SpatialAssetType.PLANE
-        assert assets_by_id[storey.gaussian_asset_id].asset_type is SpatialAssetType.GAUSSIAN_SPLAT
+        gaussian_asset = assets_by_id[storey.gaussian_asset_id]
+        assert gaussian_asset.asset_type is SpatialAssetType.GAUSSIAN_SPLAT
+        gaussian_metadata = gaussian_asset.to_dict()["metadata"]
+        assert gaussian_metadata["representation_digest_version"] == "AURA_GAUSSIAN_REPRESENTATION_V1"
+        assert gaussian_metadata["representation_bytes_per_splat"] == 60
+        assert gaussian_metadata["gaussian_sh_degree"] == 0
+        assert gaussian_metadata["gaussian_color_space"] == "SPZ_INTERNAL_WIDE_RGB"
 
 
 def test_g5_projection_contains_required_domain_links_and_separate_status_overlays() -> None:
@@ -184,17 +192,16 @@ def test_g5_projection_contains_required_domain_links_and_separate_status_overla
     }.issubset(relations)
 
     package_entities = [
-        item.to_dict() for item in scene.entities
-        if item.entity_type is SpatialEntityType.DOMAIN_NODE
-        and "status_overlay" in item.to_dict()["metadata"]
+        item.to_dict()
+        for item in scene.entities
+        if item.entity_type is SpatialEntityType.DOMAIN_NODE and "status_overlay" in item.to_dict()["metadata"]
     ]
     assert package_entities
     assert {item["metadata"]["status_overlay"] for item in package_entities}.issuperset(
         {item.status for item in fixture.work_packages}
     )
     for storey_entity in (
-        item.to_dict() for item in scene.entities
-        if item.entity_type is SpatialEntityType.ASSET_INSTANCE
+        item.to_dict() for item in scene.entities if item.entity_type is SpatialEntityType.ASSET_INSTANCE
     ):
         assert "status_overlay" not in storey_entity["metadata"]
         assert storey_entity["metadata"]["source_transform"] != {}
@@ -217,7 +224,7 @@ def test_g5_projection_excludes_raw_people_events_consent_and_sensor_payloads() 
         assert forbidden not in serialized_tokens
     assert scene.execution_authority is False
     assert scene.vsa_patch_authority is False
-    assert fixture.state.state_digest in scene.source_refs
+    assert f"construction-state:{fixture.state.state_digest}" in scene.source_refs
     assert fixture.state.state_digest == build_construction_demo_project_fixture(_pack()).state.state_digest
 
 
