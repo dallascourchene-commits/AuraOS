@@ -65,7 +65,7 @@ jobs:
           set -euo pipefail
           python -m pip install -q --disable-pip-version-check numpy pytest ruff zstandard
 
-      - name: Compile and lint G4-G6 owners
+      - name: Compile retained dependencies and lint PR owners
         run: |
           set +e
           python -m py_compile \
@@ -81,12 +81,9 @@ jobs:
           status=$?
           if test "$status" = "0"; then
             ruff check \
-              aura_construction_demo_contracts.py \
               aura_construction_demo_fixture.py \
               aura_construction_demo_fixture_builder.py \
               aura_construction_demo_projection.py \
-              aura_spatial_construction.py \
-              aura_spatial_scene.py \
               tests/test_aura_construction_demo_fixture.py \
               tests/test_aura_construction_demo_projection.py \
               >> /tmp/aura_g4_g6_logs/python-static.txt 2>&1
@@ -94,12 +91,9 @@ jobs:
           fi
           if test "$status" = "0"; then
             ruff format --check \
-              aura_construction_demo_contracts.py \
               aura_construction_demo_fixture.py \
               aura_construction_demo_fixture_builder.py \
               aura_construction_demo_projection.py \
-              aura_spatial_construction.py \
-              aura_spatial_scene.py \
               tests/test_aura_construction_demo_fixture.py \
               tests/test_aura_construction_demo_projection.py \
               >> /tmp/aura_g4_g6_logs/python-static.txt 2>&1
