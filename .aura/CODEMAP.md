@@ -14,20 +14,20 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1363
-- **total_bytes**: 56221771
-- **text_tokens_est**: 4606598
+- **total_bytes**: 56221706
+- **text_tokens_est**: 4606582
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 50, 'knowledge_artifact': 179, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 907, 'schema_or_lexicon': 160, 'support_file': 52}
 - **topology_nodes**: 10351
 - **topology_edges**: 24158
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 28763.55
+- **elapsed_ms**: 28649.31
 
 ## Coverage
 
 - **included_file_count**: 1363
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=32, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=25, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
 
 ## Command Index
 
@@ -200,7 +200,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!repair_db` -> `aura_node.py:7051`
 - `!res` -> `aura_coding_arena/main.js:48`, `aura_human_agent_arena/main.js:75`
 - `!research` -> `AURA_FINAL_REPORT.md:142`, `aura_affordance_directory.py:597`, `aura_capability_lane_registry.py:120`, `aura_coding_arena_workflow.py:743`
-- `!response` -> `aura_human_agent_arena/construction.js:18`, `aura_spatial_web/bootstrap.js:26`, `aura_spatial_web/construction_demo_app.js:349`
+- `!response` -> `aura_human_agent_arena/construction.js:18`, `aura_spatial_web/bootstrap.js:26`, `aura_spatial_web/construction_demo_app.js:348`
 - `!result` -> `aura_human_agent_arena/emergent.js:131`, `aura_human_agent_arena/jarvis.js:246`, `aura_showcase/app.js:67`, `aura_showcase/attempt-archive.js:142`
 - `!review` -> `aura_node.py:6781`, `mistral_gate.py:93`
 - `!rollback` -> `aura_node.py:6766`
@@ -233,7 +233,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!state` -> `aura_showcase/gate-dialogue.js:270`, `aura_spatial_web/construction_demo_app.js:195`
 - `!statement` -> `aura_showcase/civic.js:303`
 - `!status` -> `AURA_FINAL_REPORT.md:136`, `SYNTAX_FIXES_APPLIED.md:107`, `aura_node.py:5239`
-- `!steps` -> `aura_spatial_web/construction_demo_app.js:312`
+- `!steps` -> `aura_spatial_web/construction_demo_app.js:311`
 - `!strategy_buffer_stats` -> `aura_coordinated_solver.py:69`, `aura_node.py:7548`
 - `!synthesize` -> `aura_associative_core.py:141`, `aura_node.py:6968`, `test_aura_functions.py:913`
 - `!system_audit` -> `aura_node.py:6257`
