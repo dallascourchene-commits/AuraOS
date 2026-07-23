@@ -152,18 +152,18 @@ export class ConstructionSceneRenderer {
     }
 
     try {
-      this.meshPass.initialize(this.scene, meshPayloads);
-      this.overlayPass.initialize(this.scene);
+      this.meshPass.initialize(scenePayload, meshPayloads);
+      this.overlayPass.initialize(scenePayload);
       if (this.hasSplats) {
         await this.gaussianRenderer.initialize(
-          this.scene,
-          this.plan,
+          scenePayload,
+          planPayload,
           gaussianPayloads,
           { signal },
         );
         this.gaussianOwnerActive = true;
       } else {
-        await this.presentationRenderer.initialize(this.scene, this.plan);
+        await this.presentationRenderer.initialize(scenePayload, planPayload);
       }
     } catch (error) {
       const cleanup = await this._disposeOwnedResources();
