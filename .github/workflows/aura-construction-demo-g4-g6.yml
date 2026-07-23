@@ -46,15 +46,19 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          from textwrap import dedent
+
           path = Path("scripts/aura_pr187_third_codex_repair.py")
           text = path.read_text(encoding="utf-8")
           old = 'exec(compile(zlib.decompress(base64.b64decode(_PAYLOAD)).decode("utf-8"), __file__, "exec"))'
-          new = '''_SOURCE = zlib.decompress(base64.b64decode(_PAYLOAD)).decode("utf-8")
+          new = dedent('''\
+          _SOURCE = zlib.decompress(base64.b64decode(_PAYLOAD)).decode("utf-8")
           _SOURCE = _SOURCE.replace(
               '["git", "show", f"HEAD^:{path}"]',
               '["git", "show", f"65d452230979671540ae8ed5e31c46ae83c3779c:{path}"]',
           )
-          exec(compile(_SOURCE, __file__, "exec"))'''
+          exec(compile(_SOURCE, __file__, "exec"))
+          ''')
           if text.count(old) != 1:
               raise RuntimeError("repair bootstrap execution line mismatch")
           path.write_text(text.replace(old, new, 1), encoding="utf-8")
