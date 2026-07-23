@@ -1,0 +1,303 @@
+name: Aura Construction G4-G6 Exact Repair
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-construction-g4-g6-exact-repair.yml"
+      - ".github/workflows/aura-construction-demo-g4-g6.yml"
+      - "aura_construction_demo_fixture.py"
+      - "aura_construction_demo_fixture_builder.py"
+      - "aura_construction_demo_projection.py"
+      - "aura_spatial_web/construction_overlay_pass.js"
+      - "aura_spatial_web/construction_scene_renderer.js"
+      - "tests/test_aura_construction_demo_fixture.py"
+      - "tests/test_aura_construction_demo_projection.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-construction-g4-g6-exact-repair-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Clone exact pull-request head
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git clone --no-tags --single-branch --depth=64 --branch "$HEAD_REF" "https://github.com/${GITHUB_REPOSITORY}.git" .
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Apply exact bounded repairs
+        run: |
+          set -euo pipefail
+          python -m pip install -q --disable-pip-version-check ruff
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              target = Path(path)
+              text = target.read_text(encoding="utf-8")
+              if old in text:
+                  if text.count(old) != 1:
+                      raise SystemExit(f"{path}: expected one repair span")
+                  target.write_text(text.replace(old, new, 1), encoding="utf-8")
+                  return
+              if new not in text:
+                  raise SystemExit(f"{path}: neither old nor repaired span is present")
+
+          replace_once(
+              "aura_construction_demo_fixture_builder.py",
+              '        declared_hard_blockers=("missing_dispositive_asbestos_clearance",),\n',
+              '        hard_blockers=("missing_dispositive_asbestos_clearance",),\n',
+          )
+
+          projection = Path("aura_construction_demo_projection.py")
+          text = projection.read_text(encoding="utf-8")
+          import_line = (
+              "from aura_spatial_importers.contracts import "
+              "GAUSSIAN_REPRESENTATION_DIGEST_VERSION\n"
+          )
+          if import_line not in text:
+              anchor = "from aura_spatial_contracts import (\n"
+              if anchor not in text:
+                  raise SystemExit("G5 projection import anchor is missing")
+              text = text.replace(anchor, import_line + anchor, 1)
+          start = text.index("def _asset_manifest(")
+          end = text.index("\n\ndef _entity(", start)
+          repaired_function = '''def _asset_manifest(
+              binding: ConstructionDemoAssetBinding,
+              *,
+              frame_id: str,
+          ) -> SpatialAssetManifest:
+              metadata: dict[str, Any] = {
+                  "representation": binding.representation,
+                  "representation_digest": binding.representation_digest,
+                  "import_receipt_digest": binding.import_receipt_digest,
+                  "coordinate_system": binding.coordinate_system,
+                  "unit_scale_meters": binding.unit_scale_meters,
+                  "survey_authority": False,
+                  "person_level_data_included": False,
+                  "projection_only": True,
+                  "source_transform": {
+                      "translation": [0.0, 0.0, 0.0],
+                      "rotation_xyzw": [0.0, 0.0, 0.0, 1.0],
+                      "scale": [1.0, 1.0, 1.0],
+                  },
+                  "presentation_transform": {
+                      "translation": [0.0, 0.0, 0.0],
+                      "rotation_xyzw": [0.0, 0.0, 0.0, 1.0],
+                      "scale": [1.0, 1.0, 1.0],
+                  },
+              }
+              if binding.representation == ConstructionDemoRepresentation.GAUSSIAN_SPZ.value:
+                  metadata.update(
+                      {
+                          "representation_digest_version": GAUSSIAN_REPRESENTATION_DIGEST_VERSION,
+                          "representation_bytes_per_splat": 60,
+                          "sh_degree": 0,
+                          "gaussian_sh_degree": 0,
+                          "gaussian_color_space": "SPZ_INTERNAL_WIDE_RGB",
+                      }
+                  )
+              return SpatialAssetManifest(
+                  asset_id=binding.asset_id,
+                  asset_type=_ASSET_TYPES[binding.representation],
+                  uri=binding.uri,
+                  media_type=binding.media_type,
+                  content_digest=f"sha256:{binding.content_digest}",
+                  byte_length=binding.byte_length,
+                  frame_id=frame_id,
+                  bounds_min=binding.bounds_min,
+                  bounds_max=binding.bounds_max,
+                  source_refs=tuple(
+                      sorted(
+                          set(
+                              (
+                                  *binding.source_refs,
+                                  f"construction-demo-asset:{binding.asset_id}",
+                                  f"representation:{binding.representation_digest}",
+                                  f"import-receipt:{binding.import_receipt_digest}",
+                              )
+                          )
+                      )
+                  ),
+                  truth_class=SpatialTruthClass.PRESENTATION,
+                  metadata=metadata,
+              )
+          '''
+          if "representation_digest_version" not in text[start:end]:
+              text = text[:start] + repaired_function + text[end + 2 :]
+          projection.write_text(text, encoding="utf-8")
+
+          replace_once(
+              "tests/test_aura_construction_demo_projection.py",
+              '                    import_receipt_digest=stable_digest({"import": storey_id, "suffix": suffix}),\n',
+              '                    import_receipt_digest=stable_digest(\n'
+              '                        {"import": storey_id, "suffix": suffix}, digest_size=32\n'
+              '                    ),\n',
+          )
+          replace_once(
+              "tests/test_aura_construction_demo_projection.py",
+              '                    representation_digest=stable_digest({"representation": storey_id, "suffix": suffix}),\n',
+              '                    representation_digest=stable_digest(\n'
+              '                        {"representation": storey_id, "suffix": suffix}, digest_size=32\n'
+              '                    ),\n',
+          )
+          replace_once(
+              "tests/test_aura_construction_demo_projection.py",
+              '        assert assets_by_id[storey.gaussian_asset_id].asset_type is SpatialAssetType.GAUSSIAN_SPLAT\n',
+              '        gaussian_asset = assets_by_id[storey.gaussian_asset_id]\n'
+              '        assert gaussian_asset.asset_type is SpatialAssetType.GAUSSIAN_SPLAT\n'
+              '        gaussian_metadata = gaussian_asset.to_dict()["metadata"]\n'
+              '        assert gaussian_metadata["representation_digest_version"] == "AURA_GAUSSIAN_REPRESENTATION_V1"\n'
+              '        assert gaussian_metadata["representation_bytes_per_splat"] == 60\n'
+              '        assert gaussian_metadata["gaussian_sh_degree"] == 0\n'
+              '        assert gaussian_metadata["gaussian_color_space"] == "SPZ_INTERNAL_WIDE_RGB"\n',
+          )
+          replace_once(
+              "tests/test_aura_construction_demo_projection.py",
+              "    assert fixture.state.state_digest in scene.source_refs\n",
+              '    assert f"construction-state:{fixture.state.state_digest}" in scene.source_refs\n',
+          )
+
+          replace_once(
+              "aura_spatial_web/construction_overlay_pass.js",
+              "    this.scene = validateSceneProjection(scenePayload);\n",
+              "    validateSceneProjection(scenePayload);\n"
+              "    this.scene = deepFreeze(structuredClone(scenePayload));\n",
+          )
+
+          replace_once(
+              "aura_spatial_web/construction_scene_renderer.js",
+              "      this.meshPass.initialize(this.scene, meshPayloads);\n"
+              "      this.overlayPass.initialize(this.scene);\n"
+              "      if (this.hasSplats) {\n"
+              "        await this.gaussianRenderer.initialize(\n"
+              "          this.scene,\n"
+              "          this.plan,\n"
+              "          gaussianPayloads,\n"
+              "          { signal },\n"
+              "        );\n"
+              "        this.gaussianOwnerActive = true;\n"
+              "      } else {\n"
+              "        await this.presentationRenderer.initialize(this.scene, this.plan);\n"
+              "      }\n",
+              "      this.meshPass.initialize(scenePayload, meshPayloads);\n"
+              "      this.overlayPass.initialize(scenePayload);\n"
+              "      if (this.hasSplats) {\n"
+              "        await this.gaussianRenderer.initialize(\n"
+              "          scenePayload,\n"
+              "          planPayload,\n"
+              "          gaussianPayloads,\n"
+              "          { signal },\n"
+              "        );\n"
+              "        this.gaussianOwnerActive = true;\n"
+              "      } else {\n"
+              "        await this.presentationRenderer.initialize(scenePayload, planPayload);\n"
+              "      }\n",
+          )
+
+          replace_once(
+              ".github/workflows/aura-construction-demo-g4-g6.yml",
+              "          python -m pip install -q --disable-pip-version-check pytest ruff\n",
+              "          python -m pip install -q --disable-pip-version-check numpy pytest ruff zstandard\n",
+          )
+          PY
+
+          ruff check --fix \
+            aura_construction_demo_fixture.py \
+            aura_construction_demo_fixture_builder.py \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py
+          ruff format \
+            aura_construction_demo_fixture.py \
+            aura_construction_demo_fixture_builder.py \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py
+          ruff check \
+            aura_construction_demo_fixture.py \
+            aura_construction_demo_fixture_builder.py \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py
+          ruff format --check \
+            aura_construction_demo_fixture.py \
+            aura_construction_demo_fixture_builder.py \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py
+          python -m py_compile \
+            aura_construction_demo_fixture.py \
+            aura_construction_demo_fixture_builder.py \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py
+          node --check aura_spatial_web/construction_overlay_pass.js
+          node --check aura_spatial_web/construction_scene_renderer.js
+
+      - name: Commit each repaired owner
+        run: |
+          set -euo pipefail
+          git config user.name "Aura Architecture Harness"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          commit_owner() {
+            path="$1"
+            message="$2"
+            if ! git diff --quiet -- "$path"; then
+              git add "$path"
+              git commit -m "$message"
+            fi
+          }
+
+          commit_owner aura_construction_demo_fixture_builder.py \
+            "fix(construction): bind declared candidate blockers"
+          commit_owner aura_construction_demo_projection.py \
+            "fix(spatial): bind Gaussian Construction metadata"
+          commit_owner aura_construction_demo_fixture.py \
+            "style(construction): canonicalize G4 fixture contracts"
+          commit_owner tests/test_aura_construction_demo_fixture.py \
+            "style(construction): canonicalize G4 fixture tests"
+          commit_owner tests/test_aura_construction_demo_projection.py \
+            "test(spatial): verify G5 Gaussian metadata"
+          commit_owner aura_spatial_web/construction_overlay_pass.js \
+            "fix(web): retain validated Construction overlay metadata"
+          commit_owner aura_spatial_web/construction_scene_renderer.js \
+            "fix(web): preserve raw renderer owner contracts"
+          commit_owner .github/workflows/aura-construction-demo-g4-g6.yml \
+            "ci(construction): install focused architecture dependencies"
+
+          test -z "$(git status --short)"
+
+      - name: Push repair stack
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          EVENT_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          if test "$(git rev-parse HEAD)" = "$EVENT_HEAD"; then
+            echo "Exact repairs already present."
+            exit 0
+          fi
+          git fetch --no-tags origin "$HEAD_REF"
+          test "$(git rev-parse FETCH_HEAD)" = "$EVENT_HEAD"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin "HEAD:${HEAD_REF}"
