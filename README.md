@@ -549,3 +549,20 @@ AuraOS evidence does not establish consciousness, unrestricted autonomy, univers
 - [`docs/AURA_EMPIRICAL_COST_OBSERVATORY.md`](docs/AURA_EMPIRICAL_COST_OBSERVATORY.md)
 - [`docs/AURA_TENSOR_EVIDENCE_ARENAS.md`](docs/AURA_TENSOR_EVIDENCE_ARENAS.md)
 - [`docs/AURA_SCO_PHASE5_E9_E14_COMPLETION_PLAN.md`](docs/AURA_SCO_PHASE5_E9_E14_COMPLETION_PLAN.md)
+
+<!-- AURA_CONSTRUCTION_G7_G8 -->
+## Construction Arena G0–G8 — complete refactor
+
+The Construction Arena implementation now covers the complete G0–G8 chain: architecture/dependency lock; open-source fictional BIM acquisition and immutable asset contracts; deterministic IFC-to-storey GLB/SVG compilation; bounded degree-0 Gaussian PLY/SPZ compilation; an asset-bound synthetic Construction project fixture; Spatial Projection V2; local WebGL2 mesh/Gaussian/overlay composition; and a deterministic cinematic director surface.
+
+Launch the local video-ready interface:
+
+```bash
+python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --serve
+```
+
+Open `http://127.0.0.1:8767/demo/construction?tour=full`. The surface supports mesh, splats, hybrid mode, storey isolation, exploded floors, floor plans, work status, trades, blockers, budgets, inspections, dependencies, synthetic rules, timeline replay, picking, read-only Observatory evidence, a non-executing human decision packet, and exact renderer dissolution.
+
+The TU Wien source BIM is fictional and attributed under CC BY 4.0. All Construction activities, schedules, budgets, organizations, hazards, rules, inspections, and project status are synthetic. The Arena cannot authorize physical work, payment, access, professional certification, legal or regulatory action, survey truth, production mutation, publication, or merge. Unsafe drilling remains hard-blocked, and the admissible alternative remains human-review-only.
+
+See [`docs/AURA_CONSTRUCTION_ARENA_G7_G8.md`](docs/AURA_CONSTRUCTION_ARENA_G7_G8.md) for launch commands, controls, deterministic tours, recording requirements, verification, and authority boundaries.

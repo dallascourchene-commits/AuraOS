@@ -11,9 +11,9 @@ from dataclasses import dataclass
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 from aura_construction_demo_contracts import (
     CC_BY_4_0,
@@ -376,8 +376,39 @@ def write_construction_demo_packet(packet: Mapping[str, Any], path: Path) -> Pat
     return destination
 
 
+_ALLOWED_STATIC_PREFIXES = (
+    "/aura_spatial_web/",
+    "/demo_assets/construction_tuwien/generated/",
+)
+
+
+def _safe_construction_demo_static_path(raw_path: str) -> str | None:
+    decoded = unquote(urlparse(raw_path).path)
+    if "\\" in decoded or "\x00" in decoded:
+        return None
+    candidate = PurePosixPath(decoded)
+    if ".." in candidate.parts:
+        return None
+    normalized = "/" + str(candidate).lstrip("/")
+    if not any(normalized.startswith(prefix) for prefix in _ALLOWED_STATIC_PREFIXES):
+        return None
+    return normalized
+
+
 class _ConstructionDemoHandler(SimpleHTTPRequestHandler):
     packet: bytes = b"{}"
+
+    def end_headers(self) -> None:
+        self.send_header("Cache-Control", "no-store, max-age=0")
+        self.send_header(
+            "Content-Security-Policy",
+            "default-src 'self'; script-src 'self'; style-src 'self'; "
+            "img-src 'self' data:; connect-src 'self'; object-src 'none'; "
+            "base-uri 'none'; frame-ancestors 'none'",
+        )
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Referrer-Policy", "no-referrer")
+        super().end_headers()
 
     def do_GET(self) -> None:
         parsed = urlparse(self.path)
@@ -386,16 +417,16 @@ class _ConstructionDemoHandler(SimpleHTTPRequestHandler):
         elif parsed.path == "/api/construction-demo":
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Cache-Control", "no-store, max-age=0")
-            self.send_header(
-                "Content-Security-Policy",
-                "default-src 'none'; frame-ancestors 'none'",
-            )
-            self.send_header("X-Content-Type-Options", "nosniff")
             self.send_header("Content-Length", str(len(self.packet)))
             self.end_headers()
             self.wfile.write(self.packet)
             return
+        else:
+            safe_path = _safe_construction_demo_static_path(self.path)
+            if safe_path is None:
+                self.send_error(404)
+                return
+            self.path = safe_path
         super().do_GET()
 
     def log_message(self, format: str, *args: Any) -> None:

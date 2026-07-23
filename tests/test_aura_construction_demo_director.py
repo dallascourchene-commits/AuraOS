@@ -8,6 +8,7 @@ import pytest
 from aura_construction_demo_director import (
     CONSTRUCTION_DEMO_TOURS,
     FALLBACK_GAUSSIAN_REPRESENTATION_DIGEST,
+    _safe_construction_demo_static_path,
     build_fallback_construction_demo_asset_pack,
     compile_construction_demo_packet,
     write_construction_demo_packet,
@@ -74,3 +75,26 @@ def test_g7_packet_writer_uses_canonical_json(tmp_path: Path) -> None:
 def test_g7_rejects_unknown_tour() -> None:
     with pytest.raises(ValueError, match="unsupported Construction demo tour"):
         compile_construction_demo_packet(tour="unbounded")
+
+
+def test_g7_local_static_boundary_rejects_repository_exposure() -> None:
+    assert (
+        _safe_construction_demo_static_path(
+            "/aura_spatial_web/construction_demo.html"
+        )
+        == "/aura_spatial_web/construction_demo.html"
+    )
+    assert (
+        _safe_construction_demo_static_path(
+            "/demo_assets/construction_tuwien/generated/storeys/storey-00/storey-00.glb"
+        )
+        == "/demo_assets/construction_tuwien/generated/storeys/storey-00/storey-00.glb"
+    )
+    for rejected in (
+        "/README.md",
+        "/../README.md",
+        "/%2e%2e/README.md",
+        "/aura_spatial_web/../README.md",
+        "\\README.md",
+    ):
+        assert _safe_construction_demo_static_path(rejected) is None

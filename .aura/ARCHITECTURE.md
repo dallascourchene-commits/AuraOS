@@ -1177,3 +1177,34 @@ After an architecture-changing merge:
 10. perform post-merge verification and record intentional deferrals.
 
 The canonical test for a healthy change is not merely that code runs. It is that ownership remains singular, authority remains explicit, evidence remains inspectable, compatibility remains bounded, and the system can explain why the change is allowed.
+
+<!-- AURA_CONSTRUCTION_G7_G8 -->
+## Construction Arena G7–G8 presentation and proof layer
+
+Canonical ownership remains unchanged:
+
+- Construction truth: `ConstructionProjectState`;
+- Construction filtering/runtime packet: `ConstructionArenaAdapter`;
+- demo asset identity and provenance: `ConstructionDemoAssetPack`;
+- synthetic project fixture: the G4 fixture/builder;
+- spatial scene ownership: `project_construction_demo_to_scene` and the existing Spatial contracts;
+- renderer/disposal ownership: `ConstructionSceneRenderer` with the existing mesh, overlay, Gaussian, WebGL2, and accessible-fallback owners.
+
+`aura_construction_demo_director.py` is a presentation-sequence owner only. It composes the admitted asset pack, canonical G4 fixture/runtime packet, G5 scene, negotiated render plan, and bounded tour steps into a local browser packet:
+
+```text
+ConstructionDemoAssetPack
+  → build_construction_demo_project_fixture
+  → build_construction_demo_runtime_packet
+  → project_construction_demo_to_scene
+  → negotiate_spatial_render_plan
+  → compile_construction_demo_packet
+  → ConstructionSceneRenderer
+  → deterministic presentation tour
+  → read-only Observatory / human decision packet
+  → exact renderer disposal
+```
+
+`aura_spatial_web/construction_demo.html`, `construction_demo.css`, and `construction_demo_app.js` provide the cinematic controls and guided tour without becoming truth or authority owners. Exploded transforms remain presentation-only and do not mutate source coordinates, storey elevation, Construction scope identity, schedule truth, or project state.
+
+Prohibited edges include director-to-ledger mutation, browser-control-to-work release, recommendation-to-automatic execution, renderer-to-payment/access/professional authority, fallback-pack-to-survey truth, Observatory-to-decision authority, and review-bot-to-merge authority. The local server exposes only approved Spatial Web files, generated Construction demo assets, and the deterministic `/api/construction-demo` packet; it requires no runtime external network.

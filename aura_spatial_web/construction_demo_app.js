@@ -227,6 +227,7 @@ function updateComparison(entity) {
 
 async function applyStep(step) {
   if (state.disposed && step.action !== "DISSOLVE") return;
+  if ($("#evidence-dialog").open) $("#evidence-dialog").close();
   $("#tour-status").textContent = `${step.step_id} · ${step.title}`;
   $("#intent-line").textContent = step.title;
   switch (step.action) {
@@ -247,7 +248,8 @@ async function applyStep(step) {
       break;
     case "TOGGLE_LAYER":
       state.renderer.toggleOverlay(step.target, step.value !== "off");
-      document.querySelector(`input[data-layer="${step.target}"]`)?.toggleAttribute("checked", step.value !== "off");
+      const layerInput = document.querySelector(`input[data-layer="${step.target}"]`);
+      if (layerInput) layerInput.checked = step.value !== "off";
       break;
     case "TIMELINE": {
       const end = Number(step.value || 12);

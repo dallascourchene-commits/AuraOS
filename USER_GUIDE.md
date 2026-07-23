@@ -1185,3 +1185,41 @@ human_review_required: true
 ```
 
 AuraOS evidence does not establish consciousness, unrestricted autonomy, universal model superiority, legal certification, court admissibility, or production readiness outside the exact measured and reviewed gates.
+
+<!-- AURA_CONSTRUCTION_G7_G8 -->
+## 27. Run the cinematic Construction Arena demo
+
+Compile the deterministic browser packet without starting a server:
+
+```bash
+python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --output /tmp/aura-construction-demo.packet.json
+```
+
+Launch the local interface:
+
+```bash
+python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --serve
+```
+
+Open `http://127.0.0.1:8767/demo/construction?tour=full`.
+
+Supported tours are `full`, `blocked-work`, `alternatives`, and `timeline`. The full tour contains 18 bounded presentation steps: attribution; complete hybrid building; orbit; exploded storeys; floor plans; timeline replay; blocked drilling; missing dispositive evidence; the hard-blocked unsafe option; safe alternate work; trade history; dependencies; synthetic-rule and inspection gates; schedule/budget comparison; a human-review recommendation; Observatory; a human decision packet; and dissolution.
+
+Controls include orbit, zoom, storey isolation, show all, explode/collapse, mesh/splats/hybrid, floor plans, work status, trades, blockers, budgets, inspections, dependencies, synthetic rules, timeline scrub, picking, reset, play, pause, next step, and dissolve.
+
+Supply `--asset-pack demo_assets/construction_tuwien/generated/asset-pack.manifest.json` when an admitted generated pack exists. Without it, the director uses a deterministic five-storey local fallback for recording and testing. The fallback is presentation-only and is not survey geometry.
+
+```yaml
+physical_work_authorized: false
+payment_released: false
+access_controlled: false
+professional_certification_claimed: false
+legal_or_regulatory_authority_claimed: false
+survey_authority_claimed: false
+renderer_authority: false
+automatic_execution: false
+automatic_merge: false
+human_review_required: true
+```
+
+The decision packet is a review artifact. It cannot mutate canonical Construction state or release work.
