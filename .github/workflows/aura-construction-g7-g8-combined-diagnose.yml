@@ -11,7 +11,7 @@ permissions:
 jobs:
   diagnose-combined:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,19 +21,35 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m pip install -q -r requirements.txt jsonschema pytest
-      - name: Apply pending purpose digest repair
+      - run: python -m pip install -q -r requirements.txt jsonschema pytest ruff
+      - name: Apply pending source repairs
         run: |
           python - <<'PY'
           from pathlib import Path
           path = Path("aura_construction_demo_director.py")
-          text = path.read_text(encoding="utf-8").replace(
+          text = path.read_text(encoding="utf-8")
+          text = text.replace(
+              "from dataclasses import dataclass\n",
+              "from collections.abc import Mapping\nfrom dataclasses import dataclass\n",
+              1,
+          ).replace("from typing import Any, Mapping\n", "from typing import Any\n", 1)
+          text = text.replace(
               '            "asset_pack_digest": asset_pack.asset_pack_digest,\n        }\n    )\n',
               '            "asset_pack_digest": asset_pack.asset_pack_digest,\n        },\n        digest_size=32,\n    )\n',
+              1,
+          ).replace(
+              "    def do_GET(self) -> None:  # noqa: N802 - stdlib callback name\n",
+              "    def do_GET(self) -> None:\n",
               1,
           )
           path.write_text(text, encoding="utf-8")
           PY
+          ruff check --fix aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
+          ruff format aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
+      - name: Reproduce navigation generation
+        run: |
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
       - name: Run combined suite and capture output
         id: combined
         shell: bash
