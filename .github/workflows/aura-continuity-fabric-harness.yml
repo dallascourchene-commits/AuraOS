@@ -1,11 +1,6 @@
 name: Aura Continuity Fabric Architecture Scan
 
 on:
-  push:
-    branches:
-      - "analysis/aura-continuity-fabric-harness-*"
-    paths:
-      - ".aura/CONTINUITY_FABRIC_HARNESS_REQUEST"
   pull_request:
     branches:
       - "work/ai-safe-architecture-harness-20260722"
@@ -50,30 +45,17 @@ jobs:
             --venv "${RUNNER_TEMP}/aura-harness-venv" \
             > "${RUNNER_TEMP}/aura-harness-doctor.json"
 
-      - name: Run objective-bounded Aura architecture scan
-        run: |
-          python scripts/aura_architecture_harness.py \
-            --repo-root . \
-            run \
-            --venv "${RUNNER_TEMP}/aura-harness-venv" \
-            --output-dir "${RUNNER_TEMP}/aura-continuity-fabric-run" \
-            --objective "Determine the highest-leverage, lowest-duplication integration of purpose-conditioned sensitivity geometry, protected computational pathways, safe-update boundaries, low-interference mutation, adaptive memory admission, immutable raw-evidence retention, recurrence-gated consolidation, episodic-to-procedural-to-rule promotion and demotion, sensitivity-weighted replay, evidence-sufficiency retrieval, adaptive ST3GG fidelity, active graph reconstruction, model-endpoint sensitivity, and topology consequence mapping across Aura's DIKWP, J-Space, QDKT, ST3GG, FST routing, Capability Connectome, Relational Index, Relationship Atlas, Relational Synthesis, Emergent Properties, Crucible, Planning Board, Model Cognome, Waboose, Agent Bridge, Council V3, Architect, and Observatory while preserving canonical owners, authority boundaries, human or community decision rights, and exact-source patch authority." \
-            --combine-with "Capability Connectome" "Relational Index" "Relationship Atlas" "Relational Synthesis" "Emergent Properties" "DIKWP" "J-Space" "QDKT" "ST3GG" "FST Routing" "Crucible" "Planning Board" "Model Cognome" "Coding Waboose" "Agent Bridge" "Council V3" "Architect" "Observatory" \
-            --reference-file docs/AURA_CONTINUITY_FABRIC_RESEARCH_INPUT.md \
-            --atlas-profile MINIMAL \
-            --top 30 \
-            --watchdog-checkin-seconds 600 \
-            --watchdog-pause-seconds 1200 \
-            > "${RUNNER_TEMP}/aura-continuity-fabric-console.json"
-
       - name: Run exact-target Coding Relationship Compass
         env:
-          OUTPUT_DIR: ${{ runner.temp }}/aura-continuity-fabric-run
+          OUTPUT_DIR: ${{ runner.temp }}/aura-continuity-compass-run
           AURA_VENV: ${{ runner.temp }}/aura-harness-venv
         run: |
+          mkdir -p "${OUTPUT_DIR}"
           "${AURA_VENV}/bin/python" - <<'PY'
           import json
           import os
+          import sys
+          import traceback
           from pathlib import Path
           from aura_coding_relationship_compass import compile_coding_relationship_compass
 
@@ -84,7 +66,7 @@ jobs:
               "topology consequence mapping into Aura's existing canonical owners without duplicate truth, execution, "
               "memory, routing, continuity, or authority planes."
           )
-          target_files = (
+          full_files = (
               "aura_coding_relationship_compass.py",
               "aura_relationship_contracts.py",
               "aura_change_graph.py",
@@ -102,6 +84,19 @@ jobs:
               "aura_planning_board.py",
               "aura_coding_waboose_breadboard.py",
           )
+          focused_files = (
+              "aura_coding_relationship_compass.py",
+              "aura_relationship_contracts.py",
+              "aura_change_graph.py",
+              "aura_relationship_experience.py",
+              "aura_qdkt_observations.py",
+              "aura_qdkt.py",
+              "aura_continuity_packet.py",
+              "aura_st3gg_contracts.py",
+              "aura_crucible_store.py",
+              "aura_empirical_software_lab.py",
+              "aura_harness_evolver.py",
+          )
           target_symbols = (
               "compile_coding_relationship_compass",
               "evaluate_typed_relationship_compatibility",
@@ -110,13 +105,13 @@ jobs:
               "lesson_eligibility",
               "crucible_replay_scenarios",
               "project_relationship_experience_advisory",
-              "UnifiedQDKT._check_crystallization",
-              "UnifiedQDKT.crystallize",
+              "_check_crystallization",
+              "crystallize",
               "J2ContinuityPacket",
               "ST3GGDecision",
               "prepare_st3gg_artifact",
-              "CrucibleStore.record_run",
-              "CrucibleStore.record_proposal",
+              "record_run",
+              "record_proposal",
               "define_empirical_task",
               "record_empirical_result",
               "analyze_transaction_outcome",
@@ -127,28 +122,91 @@ jobs:
               "PlanningBoard",
               "compile_relationship_breadboard",
           )
-          packet = compile_coding_relationship_compass(
-              objective,
-              repo_root=".",
-              target_files=target_files,
-              target_symbols=target_symbols,
-              max_target_files=16,
-              max_target_symbols=32,
-              max_atomic_nodes=72,
-              max_atlas_participants=64,
-              max_atlas_assessments=192,
-              max_required_tests=48,
-              max_neighborhood_hops=2,
-              max_neighborhood_nodes=128,
-              max_neighborhood_edges=512,
-              max_neighborhood_candidate_pairs=4096,
-              max_neighborhood_output_bytes=4_000_000,
-              max_neighborhood_elapsed_ms=90_000,
-              atlas_profile="OBJECTIVE_DEEP",
-              include_source=False,
-              max_emergent_candidates=24,
+          attempts = (
+              {
+                  "name": "objective_deep_exact_targets",
+                  "target_files": full_files,
+                  "target_symbols": target_symbols,
+                  "atlas_profile": "OBJECTIVE_DEEP",
+                  "max_hops": 2,
+                  "max_nodes": 128,
+                  "max_edges": 512,
+                  "max_pairs": 4096,
+              },
+              {
+                  "name": "objective_standard_exact_targets",
+                  "target_files": full_files,
+                  "target_symbols": target_symbols,
+                  "atlas_profile": "OBJECTIVE_STANDARD",
+                  "max_hops": 1,
+                  "max_nodes": 96,
+                  "max_edges": 384,
+                  "max_pairs": 3072,
+              },
+              {
+                  "name": "objective_standard_file_grounded",
+                  "target_files": focused_files,
+                  "target_symbols": (),
+                  "atlas_profile": "OBJECTIVE_STANDARD",
+                  "max_hops": 1,
+                  "max_nodes": 64,
+                  "max_edges": 256,
+                  "max_pairs": 2016,
+              },
           )
           output = Path(os.environ["OUTPUT_DIR"])
+          errors = []
+          packet = None
+          succeeded_attempt = ""
+          for attempt in attempts:
+              try:
+                  packet = compile_coding_relationship_compass(
+                      objective,
+                      repo_root=".",
+                      target_files=attempt["target_files"],
+                      target_symbols=attempt["target_symbols"],
+                      max_target_files=16,
+                      max_target_symbols=32,
+                      max_atomic_nodes=72,
+                      max_atlas_participants=64,
+                      max_atlas_assessments=192,
+                      max_required_tests=48,
+                      max_neighborhood_hops=attempt["max_hops"],
+                      max_neighborhood_nodes=attempt["max_nodes"],
+                      max_neighborhood_edges=attempt["max_edges"],
+                      max_neighborhood_candidate_pairs=attempt["max_pairs"],
+                      max_neighborhood_output_bytes=4_000_000,
+                      max_neighborhood_elapsed_ms=90_000,
+                      atlas_profile=attempt["atlas_profile"],
+                      include_source=False,
+                      max_emergent_candidates=24,
+                  )
+                  succeeded_attempt = attempt["name"]
+                  break
+              except Exception as exc:
+                  errors.append({
+                      "attempt": attempt["name"],
+                      "exception_type": type(exc).__name__,
+                      "message": str(exc),
+                      "traceback": traceback.format_exc(),
+                  })
+
+          diagnostics = {
+              "ok": packet is not None,
+              "succeeded_attempt": succeeded_attempt,
+              "attempt_errors": errors,
+              "proposal_only": True,
+              "production_mutation": False,
+              "patch_authority": "exact_source_spans_and_hashes_only",
+          }
+          (output / "objective_relationship_compass_diagnostics.json").write_text(
+              json.dumps(diagnostics, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          if packet is None:
+              print(json.dumps(diagnostics, indent=2), file=sys.stderr)
+              sys.exit(0)
+
           (output / "objective_relationship_compass.json").write_text(
               json.dumps(packet, indent=2, sort_keys=True, default=str) + "\n",
               encoding="utf-8",
@@ -157,6 +215,7 @@ jobs:
           graph = packet.get("change_graph") or {}
           summary = {
               "version": packet.get("version"),
+              "succeeded_attempt": succeeded_attempt,
               "objective": packet.get("objective"),
               "compass_digest": packet.get("compass_digest"),
               "grounding_receipt_digest": packet.get("grounding_receipt_digest"),
@@ -191,7 +250,7 @@ jobs:
 
       - name: Record exact source identity
         env:
-          OUTPUT_DIR: ${{ runner.temp }}/aura-continuity-fabric-run
+          OUTPUT_DIR: ${{ runner.temp }}/aura-continuity-compass-run
         run: |
           python - <<'PY'
           import json, os, subprocess
@@ -209,11 +268,10 @@ jobs:
       - name: Upload Aura architecture evidence
         uses: actions/upload-artifact@v4
         with:
-          name: aura-continuity-fabric-harness-${{ github.sha }}
+          name: aura-continuity-compass-${{ github.sha }}
           path: |
-            ${{ runner.temp }}/aura-continuity-fabric-run/**
+            ${{ runner.temp }}/aura-continuity-compass-run/**
             ${{ runner.temp }}/aura-harness-doctor.json
-            ${{ runner.temp }}/aura-continuity-fabric-console.json
           if-no-files-found: error
           retention-days: 14
 
@@ -229,5 +287,5 @@ jobs:
             "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
             -f state="$STATE" \
             -f context="aura-continuity-fabric-harness" \
-            -f description="Aura-native continuity integration scan; run ${GITHUB_RUN_ID}" \
+            -f description="Aura-native continuity Compass scan; run ${GITHUB_RUN_ID}" \
             -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
