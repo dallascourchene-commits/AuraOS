@@ -27,6 +27,25 @@ from aura_construction_fixtures import build_sco_construction_demo_fixture
 from aura_spatial_agent_bridge import AuraSpatialAgentBridge
 
 SPATIAL_CLI_VERSION = "AURA_SPATIAL_CLI_V2"
+_LOOPBACK_HOSTS = frozenset({"127.0.0.1", "localhost"})
+
+
+def _loopback_host(value: str) -> str:
+    if value not in _LOOPBACK_HOSTS:
+        raise argparse.ArgumentTypeError(
+            "Construction video demo host must be loopback-only: 127.0.0.1 or localhost"
+        )
+    return value
+
+
+def _tcp_port(value: str) -> int:
+    try:
+        port = int(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("port must be an integer") from exc
+    if port < 1 or port > 65_535:
+        raise argparse.ArgumentTypeError("port must be in [1, 65535]")
+    return port
 
 
 def _head(root: Path) -> str:
@@ -165,8 +184,8 @@ def main(argv: list[str] | None = None) -> int:
     video = subparsers.add_parser("construction-video-demo")
     video.add_argument("--asset-pack")
     video.add_argument("--tour", choices=CONSTRUCTION_DEMO_TOURS, default="full")
-    video.add_argument("--host", default="127.0.0.1")
-    video.add_argument("--port", type=int, default=8767)
+    video.add_argument("--host", type=_loopback_host, default="127.0.0.1")
+    video.add_argument("--port", type=_tcp_port, default=8767)
     video.add_argument("--output")
     video.add_argument("--serve", action="store_true")
     args = parser.parse_args(argv)
