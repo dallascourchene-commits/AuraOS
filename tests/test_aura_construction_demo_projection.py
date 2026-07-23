@@ -121,7 +121,7 @@ def _scene(privacy: SpatialPrivacyClass = SpatialPrivacyClass.PROJECT):
     return fixture, project_construction_demo_to_scene(
         fixture,
         packet,
-        purpose_digest="9" * 32,
+        purpose_digest="9" * 64,
         privacy_class=privacy,
     )
 
@@ -245,6 +245,6 @@ def test_g5_rejects_restricted_or_sensitive_geometry_projection() -> None:
             project_construction_demo_to_scene(
                 fixture,
                 packet,
-                purpose_digest="9" * 32,
+                purpose_digest="9" * 64,
                 privacy_class=privacy,
             )
