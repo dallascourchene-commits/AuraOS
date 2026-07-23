@@ -192,11 +192,18 @@ export class ConstructionSceneRenderer {
     if (!this.storeyFrames.includes(frameId)) throw new RangeError("unknown Construction storey frame");
     this.meshPass.setVisibleFrameIds([frameId]);
     this.overlayPass.setVisibleFrameIds([frameId]);
+    if (this.gaussianOwnerActive) {
+      const visibleGaussianAssetIds = this.scene.assets
+        .filter((asset) => asset.asset_type === "GAUSSIAN_SPLAT" && asset.frame_id === frameId)
+        .map((asset) => asset.asset_id);
+      this.gaussianRenderer.setVisibleAssetIds(visibleGaussianAssetIds);
+    }
   }
 
   showAllStoreys() {
     this.meshPass.setVisibleFrameIds(null);
     this.overlayPass.setVisibleFrameIds(null);
+    if (this.gaussianOwnerActive) this.gaussianRenderer.setVisibleAssetIds(null);
   }
 
   explodeStoreys(spacing = 3) {
