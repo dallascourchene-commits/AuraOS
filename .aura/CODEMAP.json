@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784831002,
+  "generated_at_unix": 1784831221,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1363,
+    "included_file_count": 1364,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -1018,6 +1018,7 @@
       "scripts/update_architect_benchmark_readme.py",
       "setup.sh",
       "setup_aura.sh",
+      "sitecustomize.py",
       "spatial_mapper.py",
       "start_codemap_watcher.bat",
       "start_codemap_watcher.sh",
@@ -1385,23 +1386,23 @@
     ]
   },
   "summary": {
-    "file_count": 1363,
-    "total_bytes": 56213517,
-    "text_tokens_est": 4604541,
+    "file_count": 1364,
+    "total_bytes": 56221463,
+    "text_tokens_est": 4606521,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 50,
       "knowledge_artifact": 178,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 907,
+      "python_module": 908,
       "schema_or_lexicon": 161,
       "support_file": 52
     },
-    "topology_nodes": 10349,
-    "topology_edges": 24154,
+    "topology_nodes": 10351,
+    "topology_edges": 24155,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 29232.28
+    "elapsed_ms": 28740.71
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -2460,6 +2461,7 @@
       "scripts/update_architect_benchmark_readme.py",
       "setup.sh",
       "setup_aura.sh",
+      "sitecustomize.py",
       "start_codemap_watcher.bat",
       "start_codemap_watcher.sh",
       "systems_check.py",
@@ -50303,6 +50305,14 @@
         "end_line": 148,
         "semantic_id": "aura_refactor_patch_evaluator.py#function:_run:f0894c2157e0b9d0",
         "signature_hash": "b48c65e43b15ab6f"
+      },
+      {
+        "file": "sitecustomize.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 162,
+        "semantic_id": "sitecustomize.py#function:_run:faba650ae9d6b6c5",
+        "signature_hash": "e95127454c7f9dc5"
       },
       {
         "file": "test_aura_functions.py",
@@ -149559,7 +149569,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 599,
+        "hub_rank": 600,
         "node_count": 2,
         "edge_count": 2,
         "degree": 2,
@@ -154539,7 +154549,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 598,
+        "hub_rank": 599,
         "node_count": 2,
         "edge_count": 2,
         "degree": 2,
@@ -160739,7 +160749,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 601,
+        "hub_rank": 602,
         "node_count": 1,
         "edge_count": 1,
         "degree": 1,
@@ -173888,7 +173898,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 608,
+        "hub_rank": 609,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -174126,7 +174136,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 607,
+        "hub_rank": 608,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -174180,7 +174190,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 606,
+        "hub_rank": 607,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -174280,7 +174290,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 605,
+        "hub_rank": 606,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -174399,7 +174409,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 604,
+        "hub_rank": 605,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -176807,6 +176817,64 @@
         -0.182939,
         0.193174,
         -0.131767
+      ]
+    },
+    {
+      "path": "sitecustomize.py",
+      "role": "python_module",
+      "bytes": 7946,
+      "lines": 166,
+      "tokens_est": 1980,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {
+        "hub_rank": 598,
+        "node_count": 2,
+        "edge_count": 2,
+        "degree": 2,
+        "symbols": [
+          "_run"
+        ],
+        "neighbor_files": [],
+        "edge_kinds": {
+          "defines": 2
+        }
+      },
+      "digest8": "9af7ff7552d237f6",
+      "vector": [
+        -0.059668,
+        -0.064539,
+        -0.013395,
+        0.23015,
+        0.227714,
+        -0.254504,
+        -0.071846,
+        0.208231,
+        0.164393,
+        0.220408,
+        -0.059668,
+        0.20336,
+        -0.196054,
+        0.291036,
+        -0.179005,
+        0.14978,
+        0.098636,
+        0.25694,
+        -0.147345,
+        -0.295907,
+        0.013395,
+        0.193618,
+        0.093765,
+        0.295907,
+        -0.108377,
+        -0.193618,
+        -0.01583,
+        -0.198489,
+        -0.101071,
+        0.006089,
+        -0.135167,
+        0.198489
       ]
     },
     {
@@ -180453,7 +180521,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 600,
+        "hub_rank": 601,
         "node_count": 1,
         "edge_count": 1,
         "degree": 1,
@@ -181122,7 +181190,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 603,
+        "hub_rank": 604,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -182280,7 +182348,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 602,
+        "hub_rank": 603,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -214123,7 +214191,7 @@
     "source": "compiled_deep_topology",
     "diagnostics": {
       "isolated_node_count": 7,
-      "dead_end_count": 4572,
+      "dead_end_count": 4573,
       "dangling_edge_count": 0,
       "top_hubs": [
         {
@@ -214222,12 +214290,12 @@
     "meta": {
       "generated_by": "aura_topology_manager",
       "root": ".",
-      "module_count": 608,
-      "node_count": 10349,
-      "edge_count": 24154,
+      "module_count": 609,
+      "node_count": 10351,
+      "edge_count": 24155,
       "spectral_layout": true,
-      "spectral_sparsity": 0.054793,
-      "global_health": 0.970858
+      "spectral_sparsity": 0.054783,
+      "global_health": 0.970864
     },
     "file_index": {
       "aura_node.py": {
@@ -232596,8 +232664,21 @@
           "import_module": 3
         }
       },
-      "aura_incubator.py": {
+      "sitecustomize.py": {
         "hub_rank": 598,
+        "node_count": 2,
+        "edge_count": 2,
+        "degree": 2,
+        "symbols": [
+          "_run"
+        ],
+        "neighbor_files": [],
+        "edge_kinds": {
+          "defines": 2
+        }
+      },
+      "aura_incubator.py": {
+        "hub_rank": 599,
         "node_count": 2,
         "edge_count": 2,
         "degree": 2,
@@ -232610,7 +232691,7 @@
         }
       },
       "aura_english_compiler.py": {
-        "hub_rank": 599,
+        "hub_rank": 600,
         "node_count": 2,
         "edge_count": 2,
         "degree": 2,
@@ -232623,7 +232704,7 @@
         }
       },
       "test_fst_quick.py": {
-        "hub_rank": 600,
+        "hub_rank": 601,
         "node_count": 1,
         "edge_count": 1,
         "degree": 1,
@@ -232636,7 +232717,7 @@
         }
       },
       "aura_persistence_registry.py": {
-        "hub_rank": 601,
+        "hub_rank": 602,
         "node_count": 1,
         "edge_count": 1,
         "degree": 1,
@@ -232649,15 +232730,6 @@
         }
       },
       "verify_os.py": {
-        "hub_rank": 602,
-        "node_count": 1,
-        "edge_count": 0,
-        "degree": 0,
-        "symbols": [],
-        "neighbor_files": [],
-        "edge_kinds": {}
-      },
-      "test_syntax_fixes.py": {
         "hub_rank": 603,
         "node_count": 1,
         "edge_count": 0,
@@ -232666,7 +232738,7 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "fix_db.py": {
+      "test_syntax_fixes.py": {
         "hub_rank": 604,
         "node_count": 1,
         "edge_count": 0,
@@ -232675,7 +232747,7 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "extract_new_papers.py": {
+      "fix_db.py": {
         "hub_rank": 605,
         "node_count": 1,
         "edge_count": 0,
@@ -232684,7 +232756,7 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "download_zenodo_papers.py": {
+      "extract_new_papers.py": {
         "hub_rank": 606,
         "node_count": 1,
         "edge_count": 0,
@@ -232693,7 +232765,7 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "download_papers.py": {
+      "download_zenodo_papers.py": {
         "hub_rank": 607,
         "node_count": 1,
         "edge_count": 0,
@@ -232702,8 +232774,17 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "debug_att.py": {
+      "download_papers.py": {
         "hub_rank": 608,
+        "node_count": 1,
+        "edge_count": 0,
+        "degree": 0,
+        "symbols": [],
+        "neighbor_files": [],
+        "edge_kinds": {}
+      },
+      "debug_att.py": {
+        "hub_rank": 609,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
