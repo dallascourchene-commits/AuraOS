@@ -1,19 +1,18 @@
 """Deterministic local director for the Construction Arena G7 video surface.
 
 The director composes the existing G4 fixture, G5 projection, and G6 renderer
-packet. It owns presentation sequencing only: no Construction truth, physical
-work, payment, access, professional, legal, regulatory, publication, or merge
-authority is granted.
+packet. It owns presentation sequencing only and grants no domain authority.
 """
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any
 from urllib.parse import urlparse
 
 from aura_construction_demo_contracts import (
@@ -48,6 +47,8 @@ FALLBACK_GAUSSIAN_REPRESENTATION_DIGEST = (
 
 @dataclass(frozen=True)
 class ConstructionDemoTourStep:
+    """One bounded, presentation-only director action."""
+
     step_id: str
     title: str
     action: str
@@ -121,7 +122,7 @@ def _fallback_asset(
 
 
 def build_fallback_construction_demo_asset_pack() -> ConstructionDemoAssetPack:
-    """Build the deterministic local fallback pack used when no generated pack exists."""
+    """Build the deterministic local fallback pack used without generated assets."""
 
     storeys: list[ConstructionDemoStorey] = []
     assets: list[ConstructionDemoAssetBinding] = []
@@ -149,8 +150,16 @@ def build_fallback_construction_demo_asset_pack() -> ConstructionDemoAssetPack:
         assets.extend(
             (
                 _fallback_asset(storey_id, ConstructionDemoRepresentation.MESH_GLB, "glb"),
-                _fallback_asset(storey_id, ConstructionDemoRepresentation.FLOOR_PLAN_SVG, "svg"),
-                _fallback_asset(storey_id, ConstructionDemoRepresentation.GAUSSIAN_SPZ, "spz"),
+                _fallback_asset(
+                    storey_id,
+                    ConstructionDemoRepresentation.FLOOR_PLAN_SVG,
+                    "svg",
+                ),
+                _fallback_asset(
+                    storey_id,
+                    ConstructionDemoRepresentation.GAUSSIAN_SPZ,
+                    "spz",
+                ),
             )
         )
     return ConstructionDemoAssetPack(
@@ -166,49 +175,114 @@ def build_fallback_construction_demo_asset_pack() -> ConstructionDemoAssetPack:
     )
 
 
-def load_construction_demo_asset_pack(path: Path | None) -> tuple[ConstructionDemoAssetPack, bool]:
-    """Load an admitted asset pack, or return the deterministic local fallback."""
+def load_construction_demo_asset_pack(
+    path: Path | None,
+) -> tuple[ConstructionDemoAssetPack, bool]:
+    """Load an admitted pack or return the deterministic local fallback."""
 
     if path is None:
         return build_fallback_construction_demo_asset_pack(), True
-    resolved = path.expanduser().resolve()
-    payload = json.loads(resolved.read_text(encoding="utf-8"))
+    payload = json.loads(path.expanduser().resolve().read_text(encoding="utf-8"))
     if not isinstance(payload, Mapping):
         raise ValueError("Construction demo asset pack must be a JSON object")
     return ConstructionDemoAssetPack.from_dict(payload), False
 
 
+def _full_tour() -> tuple[ConstructionDemoTourStep, ...]:
+    return (
+        ConstructionDemoTourStep(
+            "01-attribution", "Open source attribution", "SHOW_ATTRIBUTION", 1800
+        ),
+        ConstructionDemoTourStep(
+            "02-building", "Complete hybrid building", "SHOW_ALL", 2200
+        ),
+        ConstructionDemoTourStep(
+            "03-orbit", "Orbit the building", "ORBIT", 2600, value=0.55
+        ),
+        ConstructionDemoTourStep(
+            "04-explode", "Explode storeys", "EXPLODE", 2200, value=4.0
+        ),
+        ConstructionDemoTourStep(
+            "05-plans", "Reveal floor plans", "TOGGLE_LAYER", 1600, "floorPlans", "on"
+        ),
+        ConstructionDemoTourStep(
+            "06-timeline", "Replay project progress", "TIMELINE", 3200, value=12.0
+        ),
+        ConstructionDemoTourStep(
+            "07-blocked", "Find blocked drilling", "FOCUS_STATUS", 2400, "BLOCKED"
+        ),
+        ConstructionDemoTourStep(
+            "08-evidence", "Show blocking evidence", "TOGGLE_LAYER", 1800, "blockers", "on"
+        ),
+        ConstructionDemoTourStep(
+            "09-unsafe", "Keep unsafe option blocked", "FOCUS_BLOCKED_ALTERNATIVE", 2200
+        ),
+        ConstructionDemoTourStep(
+            "10-alternate", "Show safe alternate work", "FOCUS_RECOMMENDED_ALTERNATIVE", 2400
+        ),
+        ConstructionDemoTourStep(
+            "11-trades", "Show subcontractor history", "TOGGLE_LAYER", 1800, "trades", "on"
+        ),
+        ConstructionDemoTourStep(
+            "12-dependencies", "Show dependencies", "TOGGLE_LAYER", 1800, "dependencies", "on"
+        ),
+        ConstructionDemoTourStep(
+            "13-rules", "Show synthetic rule gates", "TOGGLE_LAYER", 1800, "syntheticRules", "on"
+        ),
+        ConstructionDemoTourStep(
+            "14-budget", "Compare schedule and budget", "TOGGLE_LAYER", 2200, "budgets", "on"
+        ),
+        ConstructionDemoTourStep(
+            "15-review",
+            "Select recommendation for human review",
+            "FOCUS_RECOMMENDED_ALTERNATIVE",
+            2200,
+        ),
+        ConstructionDemoTourStep(
+            "16-observatory", "Open evidence summary", "SHOW_OBSERVATORY", 2200
+        ),
+        ConstructionDemoTourStep(
+            "17-decision", "Produce human decision packet", "SHOW_DECISION_PACKET", 2200
+        ),
+        ConstructionDemoTourStep(
+            "18-dissolve", "Dissolve Arena and release renderer", "DISSOLVE", 1800
+        ),
+    )
+
+
 def _tour_steps(name: str) -> tuple[ConstructionDemoTourStep, ...]:
     if name not in CONSTRUCTION_DEMO_TOURS:
         raise ValueError(f"unsupported Construction demo tour: {name}")
-    full = (
-        ConstructionDemoTourStep("01-attribution", "Open source attribution", "SHOW_ATTRIBUTION", 1800),
-        ConstructionDemoTourStep("02-building", "Complete hybrid building", "SHOW_ALL", 2200),
-        ConstructionDemoTourStep("03-orbit", "Orbit the building", "ORBIT", 2600, value=0.55),
-        ConstructionDemoTourStep("04-explode", "Explode storeys", "EXPLODE", 2200, value=4.0),
-        ConstructionDemoTourStep("05-plans", "Reveal floor plans", "TOGGLE_LAYER", 1600, "floorPlans", "on"),
-        ConstructionDemoTourStep("06-timeline", "Replay project progress", "TIMELINE", 3200, value=12.0),
-        ConstructionDemoTourStep("07-blocked", "Find blocked drilling", "FOCUS_STATUS", 2400, "BLOCKED"),
-        ConstructionDemoTourStep("08-evidence", "Show blocking evidence", "TOGGLE_LAYER", 1800, "blockers", "on"),
-        ConstructionDemoTourStep("09-unsafe", "Keep unsafe option blocked", "FOCUS_BLOCKED_ALTERNATIVE", 2200),
-        ConstructionDemoTourStep("10-alternate", "Show safe alternate work", "FOCUS_RECOMMENDED_ALTERNATIVE", 2400),
-        ConstructionDemoTourStep("11-trades", "Show subcontractor history", "TOGGLE_LAYER", 1800, "trades", "on"),
-        ConstructionDemoTourStep("12-dependencies", "Show dependencies", "TOGGLE_LAYER", 1800, "dependencies", "on"),
-        ConstructionDemoTourStep("13-rules", "Show synthetic rule gates", "TOGGLE_LAYER", 1800, "syntheticRules", "on"),
-        ConstructionDemoTourStep("14-budget", "Compare schedule and budget", "TOGGLE_LAYER", 2200, "budgets", "on"),
-        ConstructionDemoTourStep("15-review", "Select recommendation for human review", "FOCUS_RECOMMENDED_ALTERNATIVE", 2200),
-        ConstructionDemoTourStep("16-observatory", "Open evidence summary", "SHOW_OBSERVATORY", 2200),
-        ConstructionDemoTourStep("17-decision", "Produce human decision packet", "SHOW_DECISION_PACKET", 2200),
-        ConstructionDemoTourStep("18-dissolve", "Dissolve Arena and release renderer", "DISSOLVE", 1800),
-    )
+    full = _full_tour()
     if name == "full":
         return full
-    selectors = {
-        "blocked-work": {"02-building", "04-explode", "07-blocked", "08-evidence", "09-unsafe", "18-dissolve"},
-        "alternatives": {"02-building", "07-blocked", "09-unsafe", "10-alternate", "14-budget", "15-review", "18-dissolve"},
-        "timeline": {"02-building", "04-explode", "05-plans", "06-timeline", "11-trades", "18-dissolve"},
-    }
-    selected = selectors[name]
+    selected = {
+        "blocked-work": {
+            "02-building",
+            "04-explode",
+            "07-blocked",
+            "08-evidence",
+            "09-unsafe",
+            "18-dissolve",
+        },
+        "alternatives": {
+            "02-building",
+            "07-blocked",
+            "09-unsafe",
+            "10-alternate",
+            "14-budget",
+            "15-review",
+            "18-dissolve",
+        },
+        "timeline": {
+            "02-building",
+            "04-explode",
+            "05-plans",
+            "06-timeline",
+            "11-trades",
+            "18-dissolve",
+        },
+    }[name]
     return tuple(step for step in full if step.step_id in selected)
 
 
@@ -227,7 +301,8 @@ def compile_construction_demo_packet(
             "objective": "record the governed synthetic Construction Arena demonstration",
             "tour": tour,
             "asset_pack_digest": asset_pack.asset_pack_digest,
-        }
+        },
+        digest_size=32,
     )
     scene = project_construction_demo_to_scene(
         fixture,
@@ -264,7 +339,7 @@ def compile_construction_demo_packet(
         "ok": True,
         "version": CONSTRUCTION_DEMO_DIRECTOR_VERSION,
         "tour": tour,
-        "tour_steps": [item.to_dict() for item in _tour_steps(tour)],
+        "tour_steps": [step.to_dict() for step in _tour_steps(tour)],
         "scene": scene.to_dict(),
         "render_plan": plan.to_dict(),
         "fixture_digest": fixture.fixture_digest,
@@ -304,7 +379,7 @@ def write_construction_demo_packet(packet: Mapping[str, Any], path: Path) -> Pat
 class _ConstructionDemoHandler(SimpleHTTPRequestHandler):
     packet: bytes = b"{}"
 
-    def do_GET(self) -> None:  # noqa: N802 - stdlib callback name
+    def do_GET(self) -> None:
         parsed = urlparse(self.path)
         if parsed.path in {"/demo/construction", "/demo/construction/"}:
             self.path = "/aura_spatial_web/construction_demo.html"
@@ -312,7 +387,10 @@ class _ConstructionDemoHandler(SimpleHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.send_header("Cache-Control", "no-store, max-age=0")
-            self.send_header("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'")
+            self.send_header(
+                "Content-Security-Policy",
+                "default-src 'none'; frame-ancestors 'none'",
+            )
             self.send_header("X-Content-Type-Options", "nosniff")
             self.send_header("Content-Length", str(len(self.packet)))
             self.end_headers()
@@ -331,7 +409,7 @@ def serve_construction_demo(
     host: str = "127.0.0.1",
     port: int = 8767,
 ) -> None:
-    """Serve the local video surface and deterministic packet until interrupted."""
+    """Serve the local video surface and packet until interrupted."""
 
     root = repo_root.expanduser().resolve()
     handler_type = type(
@@ -339,8 +417,10 @@ def serve_construction_demo(
         (_ConstructionDemoHandler,),
         {"packet": (canonical_json(dict(packet)) + "\n").encode("utf-8")},
     )
-    handler = partial(handler_type, directory=str(root))
-    server = ThreadingHTTPServer((host, port), handler)
+    server = ThreadingHTTPServer(
+        (host, port),
+        partial(handler_type, directory=str(root)),
+    )
     try:
         server.serve_forever()
     finally:
@@ -350,6 +430,7 @@ def serve_construction_demo(
 __all__ = [
     "CONSTRUCTION_DEMO_DIRECTOR_VERSION",
     "CONSTRUCTION_DEMO_TOURS",
+    "FALLBACK_GAUSSIAN_REPRESENTATION_DIGEST",
     "ConstructionDemoTourStep",
     "build_fallback_construction_demo_asset_pack",
     "compile_construction_demo_packet",
