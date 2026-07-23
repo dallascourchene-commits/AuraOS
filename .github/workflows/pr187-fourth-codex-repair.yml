@@ -79,11 +79,17 @@ jobs:
           '''
           if text.count(old) != 1:
               raise SystemExit("storey frame repair bootstrap anchor mismatch")
-          text = text.replace(old, new, 1)
+          path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          PY
+          python scripts/aura_pr187_fourth_codex_repair.py
+          python - <<'PY'
+          from pathlib import Path
 
+          path = Path("tests/test_aura_construction_demo_projection.py")
+          text = path.read_text(encoding="utf-8")
           old = '''    raw_values.update(code for alternative in fixture.alternatives for code in alternative.blocker_codes)
               serialized = str(first_payload)
-          '''
+          '''.replace("              ", "    ")
           new = '''    raw_values.update(code for alternative in fixture.alternatives for code in alternative.blocker_codes)
               raw_values.difference_update(
                   {
@@ -101,12 +107,11 @@ jobs:
                   }
               )
               serialized = str(first_payload)
-          '''
+          '''.replace("              ", "    ")
           if text.count(old) != 1:
-              raise SystemExit("public label collision bootstrap anchor mismatch")
+              raise SystemExit("generated public label allowance anchor mismatch")
           path.write_text(text.replace(old, new, 1), encoding="utf-8")
           PY
-          python scripts/aura_pr187_fourth_codex_repair.py
 
       - name: Format and statically validate repaired owners
         run: |
