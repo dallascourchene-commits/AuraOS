@@ -1,0 +1,121 @@
+name: Diagnose residual Construction Waboose findings
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-construction-g7-g8-waboose-diagnose.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-construction-g7-g8-waboose-diagnose-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  diagnose:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install tools
+        run: |
+          python -m pip install -q --disable-pip-version-check -r requirements.txt
+          python -m pip install -q --disable-pip-version-check bandit defusedxml ruff
+      - name: Materialize security corrections
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          original = Path('.github/workflows/aura-construction-g7-g8-waboose-fixes.yml')
+          source = original.read_text(encoding='utf-8')
+          marker = "          python - <<'PY'\n"
+          start = source.index(marker) + len(marker)
+          end = source.index("\n          PY\n\n      - name: Apply Ruff", start)
+          exec(compile(textwrap.dedent(source[start:end]), str(original), 'exec'), {})
+
+          for relative in (
+              'scripts/aura_prepare_construction_demo_assets_core.py',
+              'scripts/aura_verify_construction_demo_assets.py',
+          ):
+              path = Path(relative)
+              text = path.read_text(encoding='utf-8')
+              text = text.replace('  # noqa: E402', '')
+              lines = text.splitlines()
+              if '# ruff: noqa: E402' not in lines[:4]:
+                  insert_at = 1 if lines and lines[0].startswith('#!') else 0
+                  lines.insert(insert_at, '# ruff: noqa: E402')
+              path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+          PY
+      - name: Apply all safe Ruff fixes without hiding residuals
+        run: |
+          FILES=(
+            aura_construction_demo_contracts.py aura_construction_demo_director.py
+            aura_construction_demo_fixture.py aura_construction_demo_fixture_builder.py
+            aura_construction_demo_projection.py aura_spatial_cli.py
+            scripts/aura_fetch_construction_demo_source.py
+            scripts/aura_prepare_construction_demo_assets_core.py
+            scripts/aura_verify_construction_demo_assets.py
+            tests/test_aura_construction_demo_contracts.py
+            tests/test_aura_construction_demo_director.py
+            tests/test_aura_construction_demo_fixture.py
+            tests/test_aura_construction_demo_projection.py
+            tests/test_aura_fetch_construction_demo_source.py
+            tests/test_aura_spatial_cli_construction_security.py
+            tests/test_aura_verify_construction_demo_assets.py
+          )
+          ruff check --fix --exit-zero "${FILES[@]}"
+          ruff format "${FILES[@]}"
+      - name: Capture exact Ruff and Bandit output
+        shell: bash
+        run: |
+          set +e
+          FILES=(
+            aura_construction_demo_contracts.py aura_construction_demo_director.py
+            aura_construction_demo_fixture.py aura_construction_demo_fixture_builder.py
+            aura_construction_demo_projection.py aura_spatial_cli.py
+            scripts/aura_fetch_construction_demo_source.py
+            scripts/aura_prepare_construction_demo_assets_core.py
+            scripts/aura_verify_construction_demo_assets.py
+            tests/test_aura_construction_demo_contracts.py
+            tests/test_aura_construction_demo_director.py
+            tests/test_aura_construction_demo_fixture.py
+            tests/test_aura_construction_demo_projection.py
+            tests/test_aura_fetch_construction_demo_source.py
+            tests/test_aura_spatial_cli_construction_security.py
+            tests/test_aura_verify_construction_demo_assets.py
+          )
+          ruff check --output-format concise "${FILES[@]}" > /tmp/ruff.txt 2>&1
+          echo $? > /tmp/ruff.status
+          bandit -q -ll \
+            aura_construction_demo_contracts.py aura_construction_demo_director.py \
+            aura_construction_demo_fixture.py aura_construction_demo_fixture_builder.py \
+            aura_construction_demo_projection.py aura_spatial_cli.py \
+            scripts/aura_fetch_construction_demo_source.py \
+            scripts/aura_prepare_construction_demo_assets_core.py \
+            scripts/aura_verify_construction_demo_assets.py \
+            > /tmp/bandit.txt 2>&1
+          echo $? > /tmp/bandit.status
+          cat /tmp/ruff.txt
+          cat /tmp/bandit.txt
+          exit 0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: construction-waboose-residual-diagnostics
+          path: |
+            /tmp/ruff.txt
+            /tmp/ruff.status
+            /tmp/bandit.txt
+            /tmp/bandit.status
+          retention-days: 2
+      - name: Complete diagnostic
+        run: echo "Residual diagnostics captured"
