@@ -4,6 +4,7 @@ The canonical Construction state and adapter remain the domain owners.  This
 module first executes Aura's existing Construction projection, then expands that
 verified projection with local asset-pack geometry and synthetic demo overlays.
 """
+
 from __future__ import annotations
 
 from collections.abc import Mapping
@@ -28,6 +29,7 @@ from aura_spatial_contracts import (
     SpatialSceneSnapshot,
     SpatialTruthClass,
 )
+from aura_spatial_importers.contracts import GAUSSIAN_REPRESENTATION_DIGEST_VERSION
 from aura_spatial_scene import compile_spatial_scene
 
 CONSTRUCTION_DEMO_PROJECTION_VERSION = "AURA_CONSTRUCTION_DEMO_PROJECTION_V2"
@@ -63,6 +65,36 @@ def _asset_manifest(
     *,
     frame_id: str,
 ) -> SpatialAssetManifest:
+    metadata: dict[str, Any] = {
+        "representation": binding.representation,
+        "representation_digest": binding.representation_digest,
+        "import_receipt_digest": binding.import_receipt_digest,
+        "coordinate_system": binding.coordinate_system,
+        "unit_scale_meters": binding.unit_scale_meters,
+        "survey_authority": False,
+        "person_level_data_included": False,
+        "projection_only": True,
+        "source_transform": {
+            "translation": [0.0, 0.0, 0.0],
+            "rotation_xyzw": [0.0, 0.0, 0.0, 1.0],
+            "scale": [1.0, 1.0, 1.0],
+        },
+        "presentation_transform": {
+            "translation": [0.0, 0.0, 0.0],
+            "rotation_xyzw": [0.0, 0.0, 0.0, 1.0],
+            "scale": [1.0, 1.0, 1.0],
+        },
+    }
+    if binding.representation == ConstructionDemoRepresentation.GAUSSIAN_SPZ.value:
+        metadata.update(
+            {
+                "representation_digest_version": GAUSSIAN_REPRESENTATION_DIGEST_VERSION,
+                "representation_bytes_per_splat": 60,
+                "sh_degree": 0,
+                "gaussian_sh_degree": 0,
+                "gaussian_color_space": "SPZ_INTERNAL_WIDE_RGB",
+            }
+        )
     return SpatialAssetManifest(
         asset_id=binding.asset_id,
         asset_type=_ASSET_TYPES[binding.representation],
@@ -76,8 +108,8 @@ def _asset_manifest(
         source_refs=tuple(
             sorted(
                 set(
-                    binding.source_refs
-                    + (
+                    (
+                        *binding.source_refs,
                         f"construction-demo-asset:{binding.asset_id}",
                         f"representation:{binding.representation_digest}",
                         f"import-receipt:{binding.import_receipt_digest}",
@@ -86,26 +118,7 @@ def _asset_manifest(
             )
         ),
         truth_class=SpatialTruthClass.PRESENTATION,
-        metadata={
-            "representation": binding.representation,
-            "representation_digest": binding.representation_digest,
-            "import_receipt_digest": binding.import_receipt_digest,
-            "coordinate_system": binding.coordinate_system,
-            "unit_scale_meters": binding.unit_scale_meters,
-            "survey_authority": False,
-            "person_level_data_included": False,
-            "projection_only": True,
-            "source_transform": {
-                "translation": [0.0, 0.0, 0.0],
-                "rotation_xyzw": [0.0, 0.0, 0.0, 1.0],
-                "scale": [1.0, 1.0, 1.0],
-            },
-            "presentation_transform": {
-                "translation": [0.0, 0.0, 0.0],
-                "rotation_xyzw": [0.0, 0.0, 0.0, 1.0],
-                "scale": [1.0, 1.0, 1.0],
-            },
-        },
+        metadata=metadata,
     )
 
 
@@ -182,9 +195,7 @@ def project_construction_demo_to_scene(
     )
     asset_pack = fixture.asset_pack
     storeys = tuple(sorted(asset_pack.storeys, key=lambda item: (item.ordinal, item.storey_id)))
-    assets_by_storey: dict[str, list[ConstructionDemoAssetBinding]] = {
-        item.storey_id: [] for item in storeys
-    }
+    assets_by_storey: dict[str, list[ConstructionDemoAssetBinding]] = {item.storey_id: [] for item in storeys}
     for binding in asset_pack.assets:
         assets_by_storey[binding.storey_id].append(binding)
 
@@ -221,9 +232,9 @@ def project_construction_demo_to_scene(
         )
 
     spatial_assets = tuple(
-        _asset_manifest(binding, frame_id=next(
-            item.frame_id for item in storeys if item.storey_id == binding.storey_id
-        ))
+        _asset_manifest(
+            binding, frame_id=next(item.frame_id for item in storeys if item.storey_id == binding.storey_id)
+        )
         for binding in asset_pack.assets
     )
     if len(spatial_assets) > MAX_DEMO_PROJECTION_ASSETS:
@@ -716,8 +727,8 @@ def project_construction_demo_to_scene(
 
 __all__ = [
     "CONSTRUCTION_DEMO_PROJECTION_VERSION",
+    "MAX_DEMO_PROJECTION_ASSETS",
     "MAX_DEMO_PROJECTION_ENTITIES",
     "MAX_DEMO_PROJECTION_LINKS",
-    "MAX_DEMO_PROJECTION_ASSETS",
     "project_construction_demo_to_scene",
 ]
