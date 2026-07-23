@@ -1,0 +1,172 @@
+name: Finalize honest Construction G7-G8 claims
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-construction-g7-g8-honesty-v2.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-construction-g7-g8-honesty-v2-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  align:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Align implemented UI and documented claims
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          app_path = Path("aura_spatial_web/construction_demo_app.js")
+          app = app_path.read_text(encoding="utf-8")
+          if 'setRepresentationMode("SPLATS")' not in app:
+              pattern = re.compile(
+                  r'''  await state\.renderer\.initialize\(scene, packet\.render_plan, \{\n    meshPayloads,\n    gaussianPayloads,\n  \}\);\n  return state\.renderer\.status\(\);'''
+              )
+              replacement = '''  await state.renderer.initialize(scene, packet.render_plan, {\n    meshPayloads,\n    gaussianPayloads,\n  });\n  state.renderer.setRepresentationMode("SPLATS");\n  document.querySelectorAll("button[data-mode]").forEach((button) => {\n    const supported = button.dataset.mode === "SPLATS";\n    button.disabled = !supported;\n    if (!supported) {\n      button.title = "Browser GLB decoding and mesh drawing are not implemented; mode is fail-closed";\n    }\n  });\n  return state.renderer.status();'''
+              app, count = pattern.subn(replacement, app, count=1)
+              if count != 1:
+                  raise RuntimeError(f"Construction demo renderer initialization count was {count}")
+              app_path.write_text(app, encoding="utf-8")
+
+          marker = "<!-- AURA_CONSTRUCTION_G7_G8 -->"
+          readme = Path("README.md")
+          prefix = readme.read_text(encoding="utf-8").split(marker, 1)[0].rstrip()
+          readme_section = '''<!-- AURA_CONSTRUCTION_G7_G8 -->
+          ## Construction Arena G0–G8 — complete refactor
+
+          The Construction Arena implementation covers architecture/dependency lock; fictional BIM acquisition and immutable asset contracts; deterministic IFC-to-storey GLB/SVG compilation; bounded degree-0 Gaussian PLY/SPZ compilation; an asset-bound synthetic Construction fixture; Spatial Projection V2; local WebGL2 Gaussian/graph/overlay composition; and a deterministic cinematic director.
+
+          Launch the local video-ready fallback:
+
+          ```bash
+          python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --serve
+          ```
+
+          Open `http://127.0.0.1:8767/demo/construction?tour=full`. The recording client renders the deterministic Gaussian fallback plus graph and overlay context, with storey isolation, exploded floors, floor plans, work status, trades, blockers, budgets, inspections, dependencies, synthetic rules, timeline replay, picking, read-only Observatory evidence, a non-executing human decision packet, and exact renderer dissolution.
+
+          Mesh contracts remain implemented, but the browser visibly disables mesh/hybrid modes until repository-owned GLB decoding and a real mesh draw pass exist. An admitted real asset pack can be compiled and validated into a packet, but the browser refuses to substitute fallback geometry for its real digests.
+
+          The TU Wien source BIM is fictional and attributed under CC BY 4.0. All Construction activities, schedules, budgets, organizations, hazards, rules, inspections, and project status are synthetic. The Arena cannot authorize physical work, payment, access, professional certification, legal or regulatory action, survey truth, production mutation, publication, or merge. Unsafe drilling remains hard-blocked, and the admissible alternative remains human-review-only.
+
+          See [`docs/AURA_CONSTRUCTION_ARENA_G7_G8.md`](docs/AURA_CONSTRUCTION_ARENA_G7_G8.md) for launch commands, controls, deterministic tours, recording requirements, verification, and authority boundaries.
+          '''
+          readme_section = "\n".join(
+              line[10:] if line.startswith("          ") else line
+              for line in readme_section.splitlines()
+          )
+          readme.write_text(prefix + "\n\n" + readme_section.strip() + "\n", encoding="utf-8")
+
+          guide = Path("USER_GUIDE.md")
+          prefix = guide.read_text(encoding="utf-8").split(marker, 1)[0].rstrip()
+          guide_section = '''<!-- AURA_CONSTRUCTION_G7_G8 -->
+          ## 27. Run the cinematic Construction Arena demo
+
+          Compile the deterministic fallback packet:
+
+          ```bash
+          python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --output /tmp/aura-construction-demo.packet.json
+          ```
+
+          Launch the loopback-only interface:
+
+          ```bash
+          python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --serve
+          ```
+
+          Open `http://127.0.0.1:8767/demo/construction?tour=full`.
+
+          Supported tours are `full`, `blocked-work`, `alternatives`, and `timeline`. The full tour contains 18 bounded steps: attribution; deterministic Gaussian building view; orbit; exploded storeys; floor plans; timeline replay; blocked drilling; missing dispositive evidence; the hard-blocked unsafe option; safe alternate work; trade history; dependencies; synthetic-rule and inspection gates; schedule/budget comparison; a human-review recommendation; Observatory; a human decision packet; and dissolution.
+
+          Controls include orbit, zoom, storey isolation, show all, explode/collapse, splats, floor plans, work status, trades, blockers, budgets, inspections, dependencies, synthetic rules, timeline scrub, picking, reset, play, pause, next step, and dissolve. Mesh and hybrid controls are disabled until a browser GLB decoder and real mesh draw pass exist.
+
+          Use `--asset-pack demo_assets/construction_tuwien/generated/asset-pack.manifest.json` for deterministic packet compilation and contract validation only. The browser recording client currently refuses admitted real packs because GLB/SPZ browser decoding is not implemented; it never substitutes fabricated geometry. Omit `--asset-pack` for the deterministic five-storey recording fallback. The fallback is presentation-only and is not survey geometry.
+
+          ```yaml
+          physical_work_authorized: false
+          payment_released: false
+          access_controlled: false
+          professional_certification_claimed: false
+          legal_or_regulatory_authority_claimed: false
+          survey_authority_claimed: false
+          renderer_authority: false
+          automatic_execution: false
+          automatic_merge: false
+          human_review_required: true
+          ```
+
+          The decision packet is a review artifact. It cannot mutate canonical Construction state or release work.
+          '''
+          guide_section = "\n".join(
+              line[10:] if line.startswith("          ") else line
+              for line in guide_section.splitlines()
+          )
+          guide.write_text(prefix + "\n\n" + guide_section.strip() + "\n", encoding="utf-8")
+
+          docs = Path("docs/AURA_CONSTRUCTION_ARENA_G7_G8.md")
+          text = docs.read_text(encoding="utf-8")
+          text = text.replace(
+              "→ G6 local WebGL2 mesh/Gaussian/overlay composition",
+              "→ G6 local WebGL2 Gaussian/graph/overlay composition with fail-closed mesh contracts",
+              1,
+          )
+          text = re.sub(
+              r'''Use an admitted generated asset pack when available:.*?## Director tours''',
+              '''Use an admitted generated asset pack for deterministic packet compilation and contract validation:\n\n```bash\npython aura_spatial_cli.py \\\n  --repo-root . \\\n  construction-video-demo \\\n  --asset-pack demo_assets/construction_tuwien/generated/asset-pack.manifest.json \\\n  --tour full \\\n  --output /tmp/aura-construction-real-pack.packet.json\n```\n\nThe browser recording client refuses a real pack until repository-owned GLB/SPZ browser decoders and a real mesh draw pass are implemented. It never replaces admitted real-pack digests with fallback geometry. Without a pack path, the director uses the deterministic five-storey Gaussian recording fallback; it is not survey geometry.\n\n## Director tours''',
+              text,
+              count=1,
+              flags=re.DOTALL,
+          )
+          text = text.replace("the hybrid building", "the deterministic Gaussian building view", 1)
+          text = re.sub(
+              r'''The local browser surface supports:\n\n```text\n.*?```\n\nExploded transforms''',
+              '''The local browser surface supports:\n\n```text\norbit · zoom · storey isolation · show all · explode · collapse\nsplats · mesh/hybrid visibly disabled until real browser decoding exists\nfloor plans · status · trades · blockers · budgets · inspections\ndependencies · synthetic rules · timeline scrub · picking · reset\nguided tour · pause · next step · dissolve\n```\n\nExploded transforms''',
+              text,
+              count=1,
+              flags=re.DOTALL,
+          )
+          docs.write_text(text, encoding="utf-8")
+
+          tests = Path("tests/js/spatial-construction-review-regressions.test.mjs")
+          text = tests.read_text(encoding="utf-8")
+          if "advertises only implemented representation modes" not in text:
+              text += '''\n\ntest("Construction recording UI advertises only implemented representation modes", async () => {\n  const { readFile } = await import("node:fs/promises");\n  const source = await readFile(\n    new URL("../../aura_spatial_web/construction_demo_app.js", import.meta.url),\n    "utf8",\n  );\n  assert.match(source, /setRepresentationMode\("SPLATS"\)/);\n  assert.match(source, /button\.disabled = !supported/);\n  assert.match(source, /Browser GLB decoding and mesh drawing are not implemented/);\n});\n'''
+              tests.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Verify aligned client and docs
+        run: |
+          node --check aura_spatial_web/construction_demo_app.js
+          node --test tests/js/spatial-construction-review-regressions.test.mjs
+          git diff --check
+
+      - name: Commit and publish aligned claims
+        env:
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS Review Repair Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add README.md USER_GUIDE.md docs/AURA_CONSTRUCTION_ARENA_G7_G8.md \
+            aura_spatial_web/construction_demo_app.js \
+            tests/js/spatial-construction-review-regressions.test.mjs
+          git commit -m "fix(g8): fail closed on unsupported browser render modes"
+          git fetch --no-tags origin "$TARGET_BRANCH"
+          git rebase "origin/$TARGET_BRANCH"
+          git push origin HEAD:"$TARGET_BRANCH"
