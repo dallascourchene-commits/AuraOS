@@ -21,15 +21,92 @@ vec3 rotateByQuaternion(vec4 rotation, vec3 vector) {
   );
 }
 
+vec2 projectAxisToNdc(vec3 worldAxis, vec4 centerClip) {
+  vec4 axisClip = u_viewProjection * vec4(worldAxis, 0.0);
+  float safeW = max(abs(centerClip.w), 0.000001);
+  return (
+    axisClip.xy * centerClip.w - centerClip.xy * axisClip.w
+  ) / (safeW * safeW);
+}
+
+vec2 principalAxis(
+  float covarianceXX,
+  float covarianceXY,
+  float covarianceYY,
+  float eigenvalue
+) {
+  vec2 candidate;
+  if (abs(covarianceXY) > 0.00000001) {
+    candidate = vec2(covarianceXY, eigenvalue - covarianceXX);
+  } else if (covarianceXX >= covarianceYY) {
+    candidate = vec2(1.0, 0.0);
+  } else {
+    candidate = vec2(0.0, 1.0);
+  }
+  float lengthSquared = dot(candidate, candidate);
+  if (lengthSquared <= 0.000000000001) return vec2(1.0, 0.0);
+  return candidate * inversesqrt(lengthSquared);
+}
+
 void main() {
   vec4 normalizedRotation = normalize(a_rotation);
-  vec3 localAxis = rotateByQuaternion(
+  vec3 positiveScale = max(a_scale, vec3(0.00001));
+  vec3 localAxisX = rotateByQuaternion(
     normalizedRotation,
-    vec3(a_corner * max(a_scale.xy, vec2(0.00001)), 0.0)
+    vec3(positiveScale.x, 0.0, 0.0)
   );
-  vec3 center = (u_model * vec4(a_position, 1.0)).xyz;
-  vec3 transformedAxis = mat3(u_model) * localAxis;
-  gl_Position = u_viewProjection * vec4(center + transformedAxis, 1.0);
+  vec3 localAxisY = rotateByQuaternion(
+    normalizedRotation,
+    vec3(0.0, positiveScale.y, 0.0)
+  );
+  vec3 localAxisZ = rotateByQuaternion(
+    normalizedRotation,
+    vec3(0.0, 0.0, positiveScale.z)
+  );
+
+  mat3 modelLinear = mat3(u_model);
+  vec3 worldAxisX = modelLinear * localAxisX;
+  vec3 worldAxisY = modelLinear * localAxisY;
+  vec3 worldAxisZ = modelLinear * localAxisZ;
+  vec4 centerClip = u_viewProjection * u_model * vec4(a_position, 1.0);
+
+  vec2 projectedAxisX = projectAxisToNdc(worldAxisX, centerClip);
+  vec2 projectedAxisY = projectAxisToNdc(worldAxisY, centerClip);
+  vec2 projectedAxisZ = projectAxisToNdc(worldAxisZ, centerClip);
+
+  float covarianceXX =
+    projectedAxisX.x * projectedAxisX.x +
+    projectedAxisY.x * projectedAxisY.x +
+    projectedAxisZ.x * projectedAxisZ.x;
+  float covarianceXY =
+    projectedAxisX.x * projectedAxisX.y +
+    projectedAxisY.x * projectedAxisY.y +
+    projectedAxisZ.x * projectedAxisZ.y;
+  float covarianceYY =
+    projectedAxisX.y * projectedAxisX.y +
+    projectedAxisY.y * projectedAxisY.y +
+    projectedAxisZ.y * projectedAxisZ.y;
+
+  float trace = covarianceXX + covarianceYY;
+  float discriminant = sqrt(max(
+    (covarianceXX - covarianceYY) * (covarianceXX - covarianceYY) +
+    4.0 * covarianceXY * covarianceXY,
+    0.0
+  ));
+  float majorEigenvalue = max(0.5 * (trace + discriminant), 0.0000000001);
+  float minorEigenvalue = max(0.5 * (trace - discriminant), 0.0000000001);
+  vec2 majorAxis = principalAxis(
+    covarianceXX,
+    covarianceXY,
+    covarianceYY,
+    majorEigenvalue
+  );
+  vec2 minorAxis = vec2(-majorAxis.y, majorAxis.x);
+  vec2 ndcOffset =
+    majorAxis * (a_corner.x * sqrt(majorEigenvalue)) +
+    minorAxis * (a_corner.y * sqrt(minorEigenvalue));
+
+  gl_Position = centerClip + vec4(ndcOffset * centerClip.w, 0.0, 0.0);
   v_corner = a_corner;
   v_color = a_color;
 }`;
