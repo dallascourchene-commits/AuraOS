@@ -57,7 +57,7 @@ jobs:
       - name: Install bounded verification dependencies
         run: |
           set -euo pipefail
-          python -m pip install -q --disable-pip-version-check pytest ruff
+          python -m pip install -q --disable-pip-version-check numpy pytest ruff zstandard
 
       - name: Compile G4-G6 Python owners
         run: |
