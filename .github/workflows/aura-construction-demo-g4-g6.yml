@@ -147,7 +147,6 @@ jobs:
       - name: Publish only fully verified repairs
         if: always()
         env:
-          GH_TOKEN: ${{ github.token }}
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
@@ -183,5 +182,4 @@ jobs:
           git commit -m "fix(construction): resolve second deep review findings"
           git fetch --no-tags origin "$HEAD_REF"
           test "$(git rev-parse FETCH_HEAD)" = "$EXPECTED_HEAD"
-          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push origin "HEAD:${HEAD_REF}"
