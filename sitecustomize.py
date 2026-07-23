@@ -111,7 +111,7 @@ ConstructionDemoAssetPack
 
 `aura_spatial_web/construction_demo.html`, `construction_demo.css`, and `construction_demo_app.js` provide the cinematic controls and guided tour without becoming truth or authority owners. Exploded transforms remain presentation-only and do not mutate source coordinates, storey elevation, Construction scope identity, schedule truth, or project state.
 
-Prohibited edges include director-to-ledger mutation, browser-control-to-work release, recommendation-to-automatic execution, renderer-to-payment/access/professional authority, fallback-pack-to-survey truth, Observatory-to-decision authority, and review-bot-to-merge authority. The local server exposes static repository assets plus the deterministic `/api/construction-demo` packet and requires no runtime external network.
+Prohibited edges include director-to-ledger mutation, browser-control-to-work release, recommendation-to-automatic execution, renderer-to-payment/access/professional authority, fallback-pack-to-survey truth, Observatory-to-decision authority, and review-bot-to-merge authority. The local server exposes only approved Spatial Web files, generated Construction demo assets, and the deterministic `/api/construction-demo` packet; it requires no runtime external network.
 """,
     }
 
@@ -137,6 +137,102 @@ Prohibited edges include director-to-ledger mutation, browser-control-to-work re
     )
     app_path.write_text(app, encoding="utf-8")
 
+    director_path = root / "aura_construction_demo_director.py"
+    director = director_path.read_text(encoding="utf-8")
+    director = director.replace(
+        "from pathlib import Path\n",
+        "from pathlib import Path, PurePosixPath\n",
+        1,
+    ).replace(
+        "from urllib.parse import urlparse\n",
+        "from urllib.parse import unquote, urlparse\n",
+        1,
+    )
+    old_handler = '''class _ConstructionDemoHandler(SimpleHTTPRequestHandler):
+    packet: bytes = b"{}"
+
+    def do_GET(self) -> None:
+        parsed = urlparse(self.path)
+        if parsed.path in {"/demo/construction", "/demo/construction/"}:
+            self.path = "/aura_spatial_web/construction_demo.html"
+        elif parsed.path == "/api/construction-demo":
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Cache-Control", "no-store, max-age=0")
+            self.send_header(
+                "Content-Security-Policy",
+                "default-src 'none'; frame-ancestors 'none'",
+            )
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("Content-Length", str(len(self.packet)))
+            self.end_headers()
+            self.wfile.write(self.packet)
+            return
+        super().do_GET()
+
+    def log_message(self, format: str, *args: Any) -> None:
+        return
+'''
+    new_handler = '''_ALLOWED_STATIC_PREFIXES = (
+    "/aura_spatial_web/",
+    "/demo_assets/construction_tuwien/generated/",
+)
+
+
+def _safe_construction_demo_static_path(raw_path: str) -> str | None:
+    decoded = unquote(urlparse(raw_path).path)
+    if "\\\\" in decoded or "\\x00" in decoded:
+        return None
+    candidate = PurePosixPath(decoded)
+    if ".." in candidate.parts:
+        return None
+    normalized = "/" + str(candidate).lstrip("/")
+    if not any(normalized.startswith(prefix) for prefix in _ALLOWED_STATIC_PREFIXES):
+        return None
+    return normalized
+
+
+class _ConstructionDemoHandler(SimpleHTTPRequestHandler):
+    packet: bytes = b"{}"
+
+    def end_headers(self) -> None:
+        self.send_header("Cache-Control", "no-store, max-age=0")
+        self.send_header(
+            "Content-Security-Policy",
+            "default-src 'self'; script-src 'self'; style-src 'self'; "
+            "img-src 'self' data:; connect-src 'self'; object-src 'none'; "
+            "base-uri 'none'; frame-ancestors 'none'",
+        )
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Referrer-Policy", "no-referrer")
+        super().end_headers()
+
+    def do_GET(self) -> None:
+        parsed = urlparse(self.path)
+        if parsed.path in {"/demo/construction", "/demo/construction/"}:
+            self.path = "/aura_spatial_web/construction_demo.html"
+        elif parsed.path == "/api/construction-demo":
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(self.packet)))
+            self.end_headers()
+            self.wfile.write(self.packet)
+            return
+        else:
+            safe_path = _safe_construction_demo_static_path(self.path)
+            if safe_path is None:
+                self.send_error(404)
+                return
+            self.path = safe_path
+        super().do_GET()
+
+    def log_message(self, format: str, *args: Any) -> None:
+        return
+'''
+    if old_handler not in director:
+        raise RuntimeError("Construction demo handler source span changed")
+    director_path.write_text(director.replace(old_handler, new_handler, 1), encoding="utf-8")
+
     subprocess.run(
         [
             "git",
@@ -144,6 +240,7 @@ Prohibited edges include director-to-ledger mutation, browser-control-to-work re
             "README.md",
             "USER_GUIDE.md",
             ".aura/ARCHITECTURE.md",
+            "aura_construction_demo_director.py",
             "aura_spatial_web/construction_demo_app.js",
         ],
         cwd=root,
