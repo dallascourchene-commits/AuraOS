@@ -42,12 +42,13 @@ jobs:
           text = path.read_text(encoding="utf-8")
           old = '        purpose_digest="9" * 32,\n'
           new = '        purpose_digest="9" * 64,\n'
-          if old in text:
-              if text.count(old) != 1:
-                  raise SystemExit("expected exactly one G5 purpose digest repair span")
-              path.write_text(text.replace(old, new, 1), encoding="utf-8")
-          elif new not in text:
-              raise SystemExit("G5 purpose digest span is missing")
+          count = text.count(old)
+          if count:
+              if count != 4:
+                  raise SystemExit(f"expected four G5 purpose digest repair spans, found {count}")
+              path.write_text(text.replace(old, new), encoding="utf-8")
+          elif text.count(new) != 4:
+              raise SystemExit("canonical G5 purpose digest spans are missing")
           PY
           ruff check tests/test_aura_construction_demo_projection.py
           ruff format --check tests/test_aura_construction_demo_projection.py
@@ -69,7 +70,7 @@ jobs:
           git config user.name "Aura Architecture Harness"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add tests/test_aura_construction_demo_projection.py
-          git commit -m "test(spatial): use canonical G5 purpose digest"
+          git commit -m "test(spatial): use canonical G5 purpose digests"
           git fetch --no-tags origin "$HEAD_REF"
           test "$(git rev-parse FETCH_HEAD)" = "$EVENT_HEAD"
           git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
