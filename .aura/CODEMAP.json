@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784843987,
+  "generated_at_unix": 1784844319,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1374,
+    "included_file_count": 1375,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -78,6 +78,7 @@
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
+      ".github/workflows/aura-construction-g7-g8-honesty.yml",
       ".github/workflows/aura-construction-g7-g8-review-diagnose.yml",
       ".github/workflows/aura-construction-g7-g8-review-publish.yml",
       ".github/workflows/aura-construction-g7-g8-review-repair-final.yml",
@@ -1396,9 +1397,9 @@
     ]
   },
   "summary": {
-    "file_count": 1374,
-    "total_bytes": 56334900,
-    "text_tokens_est": 4634884,
+    "file_count": 1375,
+    "total_bytes": 56358376,
+    "text_tokens_est": 4639967,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 50,
@@ -1406,13 +1407,13 @@
       "native_accelerator": 8,
       "operator_script": 5,
       "python_module": 908,
-      "schema_or_lexicon": 170,
+      "schema_or_lexicon": 171,
       "support_file": 52
     },
-    "topology_nodes": 10353,
-    "topology_edges": 24160,
+    "topology_nodes": 10358,
+    "topology_edges": 24168,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 29456.69
+    "elapsed_ms": 29088.0
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1664,6 +1665,7 @@
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
+      ".github/workflows/aura-construction-g7-g8-honesty.yml",
       ".github/workflows/aura-construction-g7-g8-review-diagnose.yml",
       ".github/workflows/aura-construction-g7-g8-review-publish.yml",
       ".github/workflows/aura-construction-g7-g8-review-repair-final.yml",
@@ -3140,14 +3142,14 @@
       "aura_human_agent_arena/jarvis.js:337"
     ],
     "!buffer": [
-      "aura_spatial_web/webgl2_gaussian_pass.js:232",
+      "aura_spatial_web/webgl2_gaussian_pass.js:236",
       "aura_spatial_web/webgl2_renderer.js:195"
     ],
     "!button": [
       "aura_showcase/attempt-archive.js:91",
       "aura_showcase/crucible.js:289",
       "aura_showcase/gate-dialogue.js:196",
-      "aura_spatial_web/construction_demo_app.js:126"
+      "aura_spatial_web/construction_demo_app.js:128"
     ],
     "!c": [
       "arch_reasoner_accel.rs:14"
@@ -3254,7 +3256,7 @@
       "aura_node.py:6303"
     ],
     "!entity": [
-      "aura_spatial_web/construction_demo_app.js:203",
+      "aura_spatial_web/construction_demo_app.js:205",
       "aura_spatial_web/construction_scene_renderer.js:447"
     ],
     "!entityIds": [
@@ -3371,11 +3373,11 @@
       "aura_node.py:7385"
     ],
     "!innerGaussianPass": [
-      "aura_spatial_web/construction_scene_renderer.js:625"
+      "aura_spatial_web/construction_scene_renderer.js:619"
     ],
     "!input": [
       "aura_showcase/app.js:270",
-      "aura_spatial_web/construction_demo_app.js:137"
+      "aura_spatial_web/construction_demo_app.js:139"
     ],
     "!installPanel": [
       "aura_showcase/attempt-archive.js:127",
@@ -3391,7 +3393,7 @@
       "aura_human_agent_arena/main.js:477"
     ],
     "!isVisible": [
-      "aura_spatial_web/webgl2_gaussian_pass.js:258"
+      "aura_spatial_web/webgl2_gaussian_pass.js:262"
     ],
     "!item": [
       "aura_showcase/human.js:142"
@@ -3532,7 +3534,7 @@
     ],
     "!program": [
       ".github/workflows/aura-construction-g7-g8-review-repair.yml:100",
-      "aura_spatial_web/webgl2_gaussian_pass.js:212"
+      "aura_spatial_web/webgl2_gaussian_pass.js:217"
     ],
     "!push": [
       "aura_node.py:5239",
@@ -3631,7 +3633,7 @@
     "!response": [
       "aura_human_agent_arena/construction.js:18",
       "aura_spatial_web/bootstrap.js:26",
-      "aura_spatial_web/construction_demo_app.js:348"
+      "aura_spatial_web/construction_demo_app.js:393"
     ],
     "!result": [
       "aura_human_agent_arena/emergent.js:131",
@@ -3778,7 +3780,7 @@
     "!state": [
       ".github/workflows/aura-construction-g7-g8-review-repair.yml:123",
       "aura_showcase/gate-dialogue.js:270",
-      "aura_spatial_web/construction_demo_app.js:195"
+      "aura_spatial_web/construction_demo_app.js:197"
     ],
     "!statement": [
       "aura_showcase/civic.js:303"
@@ -3790,11 +3792,14 @@
     ],
     "!steps": [
       ".github/workflows/aura-construction-g7-g8-review-repair.yml:123",
-      "aura_spatial_web/construction_demo_app.js:311"
+      "aura_spatial_web/construction_demo_app.js:325"
     ],
     "!strategy_buffer_stats": [
       "aura_coordinated_solver.py:69",
       "aura_node.py:7548"
+    ],
+    "!supported": [
+      ".github/workflows/aura-construction-g7-g8-honesty.yml:46"
     ],
     "!synthesize": [
       "aura_associative_core.py:141",
@@ -3841,7 +3846,7 @@
       "aura_spatial_web/construction_mesh_pass.js:175",
       "aura_spatial_web/construction_overlay_pass.js:118",
       "aura_spatial_web/construction_scene_renderer.js:330",
-      "aura_spatial_web/gaussian_renderer.js:701",
+      "aura_spatial_web/gaussian_renderer.js:744",
       "aura_spatial_web/headless_renderer.js:5",
       "aura_spatial_web/renderer_adapter.js:586",
       "aura_spatial_web/webgl2_renderer.js:38",
@@ -3900,7 +3905,7 @@
       "aura_spatial_web/scene_decoder.js:25"
     ],
     "!vao": [
-      "aura_spatial_web/webgl2_gaussian_pass.js:324"
+      "aura_spatial_web/webgl2_gaussian_pass.js:328"
     ],
     "!view": [
       "aura_showcase/app.js:270",
@@ -7382,8 +7387,8 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "class",
-        "line": 49,
-        "end_line": 69,
+        "line": 47,
+        "end_line": 67,
         "semantic_id": "aura_construction_demo_director.py#class:ConstructionDemoTourStep:bdb848f982049d60",
         "signature_hash": "3d409d8ab192d96a"
       }
@@ -12086,8 +12091,8 @@
       {
         "file": "scripts/aura_fetch_construction_demo_source.py",
         "kind": "class",
-        "line": 38,
-        "end_line": 42,
+        "line": 39,
+        "end_line": 43,
         "semantic_id": "scripts/aura_fetch_construction_demo_source.py#class:RedirectRefused:d2a0ac3ac1e0903d",
         "signature_hash": "1cffd90a45e150c6"
       }
@@ -17872,8 +17877,8 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "class",
-        "line": 398,
-        "end_line": 433,
+        "line": 382,
+        "end_line": 432,
         "semantic_id": "aura_construction_demo_director.py#class:_ConstructionDemoHandler:0e057fbab7521bd3",
         "signature_hash": "b051d68c871184ec"
       }
@@ -27716,8 +27721,8 @@
       {
         "file": "scripts/aura_fetch_construction_demo_source.py",
         "kind": "function",
-        "line": 45,
-        "end_line": 49,
+        "line": 46,
+        "end_line": 50,
         "semantic_id": "scripts/aura_fetch_construction_demo_source.py#function:_canonical_utc:9f93a4b664abe281",
         "signature_hash": "ee7c268ca11264d3"
       }
@@ -30040,8 +30045,8 @@
       {
         "file": "aura_spatial_cli.py",
         "kind": "function",
-        "line": 148,
-        "end_line": 175,
+        "line": 146,
+        "end_line": 173,
         "semantic_id": "aura_spatial_cli.py#function:_construction_video_demo:516f1d7ea7de9e46",
         "signature_hash": "695bc60f6a057243"
       }
@@ -34524,8 +34529,8 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "function",
-        "line": 89,
-        "end_line": 121,
+        "line": 87,
+        "end_line": 119,
         "semantic_id": "aura_construction_demo_director.py#function:_fallback_asset:badb6f2986bcb25a",
         "signature_hash": "db1a19f1d55e3401"
       }
@@ -34554,8 +34559,8 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "function",
-        "line": 72,
-        "end_line": 86,
+        "line": 70,
+        "end_line": 84,
         "semantic_id": "aura_construction_demo_director.py#function:_fallback_manifest:42d0671ec1b6397e",
         "signature_hash": "11610d90fe2766da"
       }
@@ -35584,10 +35589,20 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "function",
-        "line": 191,
-        "end_line": 250,
+        "line": 187,
+        "end_line": 212,
         "semantic_id": "aura_construction_demo_director.py#function:_full_tour:956db18ed0cf01a4",
         "signature_hash": "735eb8a5557d62de"
+      }
+    ],
+    "_fully_decode_static_path": [
+      {
+        "file": "aura_construction_demo_director.py",
+        "kind": "function",
+        "line": 345,
+        "end_line": 352,
+        "semantic_id": "aura_construction_demo_director.py#function:_fully_decode_static_path:b2b0d10f1c1b83c6",
+        "signature_hash": "e949e1f018e00ae1"
       }
     ],
     "_fully_resolved_contract": [
@@ -37690,8 +37705,8 @@
       {
         "file": "scripts/aura_fetch_construction_demo_source.py",
         "kind": "function",
-        "line": 72,
-        "end_line": 81,
+        "line": 73,
+        "end_line": 82,
         "semantic_id": "scripts/aura_fetch_construction_demo_source.py#function:_hash_file:084ea679c8a373bb",
         "signature_hash": "f62efb2cb775ab73"
       }
@@ -37996,8 +38011,8 @@
       {
         "file": "aura_spatial_cli.py",
         "kind": "function",
-        "line": 51,
-        "end_line": 61,
+        "line": 49,
+        "end_line": 59,
         "semantic_id": "aura_spatial_cli.py#function:_head:a21842d7487e50c1",
         "signature_hash": "a22d181fb69e61b6"
       }
@@ -40766,8 +40781,8 @@
       {
         "file": "scripts/aura_fetch_construction_demo_source.py",
         "kind": "function",
-        "line": 120,
-        "end_line": 126,
+        "line": 121,
+        "end_line": 127,
         "semantic_id": "scripts/aura_fetch_construction_demo_source.py#function:_load_contract:11ad78fea3c0a0d3",
         "signature_hash": "21291626226e1d26"
       }
@@ -41239,7 +41254,7 @@
         "file": "aura_spatial_cli.py",
         "kind": "function",
         "line": 33,
-        "end_line": 38,
+        "end_line": 36,
         "semantic_id": "aura_spatial_cli.py#function:_loopback_host:102f16662b84b5fe",
         "signature_hash": "f8d0a9b8cbd6d71a"
       }
@@ -41498,8 +41513,8 @@
       {
         "file": "scripts/aura_fetch_construction_demo_source.py",
         "kind": "function",
-        "line": 129,
-        "end_line": 145,
+        "line": 130,
+        "end_line": 146,
         "semantic_id": "scripts/aura_fetch_construction_demo_source.py#function:_manifest:204cebbc46783c6a",
         "signature_hash": "45e04154280d6c54"
       },
@@ -49392,8 +49407,8 @@
       {
         "file": "scripts/aura_fetch_construction_demo_source.py",
         "kind": "function",
-        "line": 52,
-        "end_line": 69,
+        "line": 53,
+        "end_line": 70,
         "semantic_id": "scripts/aura_fetch_construction_demo_source.py#function:_resolve_output:852d872d9b4b5b83",
         "signature_hash": "06f66f862ec0bbe4"
       }
@@ -50030,6 +50045,16 @@
         "end_line": 629,
         "semantic_id": "aura_arena_experience.py#function:_route_packet:209b3ee46892094f",
         "signature_hash": "9db8fd9a2c9786a9"
+      }
+    ],
+    "_route_static_request": [
+      {
+        "file": "aura_construction_demo_director.py",
+        "kind": "method",
+        "line": 397,
+        "end_line": 407,
+        "semantic_id": "aura_construction_demo_director.py#method:_ConstructionDemoHandler._route_static_request:9f89f0a87f254c4b",
+        "signature_hash": "c93907fa6f25963e"
       }
     ],
     "_route_task": [
@@ -50694,12 +50719,22 @@
         "signature_hash": "21d78046edbd8d4c"
       }
     ],
+    "_safe_construction_demo_static_file": [
+      {
+        "file": "aura_construction_demo_director.py",
+        "kind": "function",
+        "line": 370,
+        "end_line": 379,
+        "semantic_id": "aura_construction_demo_director.py#function:_safe_construction_demo_static_file:bb4077173fdae8e7",
+        "signature_hash": "2a3e7de44a9e37bb"
+      }
+    ],
     "_safe_construction_demo_static_path": [
       {
         "file": "aura_construction_demo_director.py",
         "kind": "function",
-        "line": 385,
-        "end_line": 395,
+        "line": 355,
+        "end_line": 367,
         "semantic_id": "aura_construction_demo_director.py#function:_safe_construction_demo_static_path:3c681958346e7c91",
         "signature_hash": "c393d7788b5f080b"
       }
@@ -52166,6 +52201,16 @@
         "end_line": 341,
         "semantic_id": "aura_savings_dashboard.py#method:DashboardHandler._send_json:8f6d984ec76e8527",
         "signature_hash": "961946f447bee73d"
+      }
+    ],
+    "_send_packet": [
+      {
+        "file": "aura_construction_demo_director.py",
+        "kind": "method",
+        "line": 409,
+        "end_line": 415,
+        "semantic_id": "aura_construction_demo_director.py#method:_ConstructionDemoHandler._send_packet:c8920424d267099e",
+        "signature_hash": "47c2cef3d6431e21"
       }
     ],
     "_sentence_candidates": [
@@ -53784,8 +53829,8 @@
       {
         "file": "scripts/aura_fetch_construction_demo_source.py",
         "kind": "function",
-        "line": 84,
-        "end_line": 117,
+        "line": 85,
+        "end_line": 118,
         "semantic_id": "scripts/aura_fetch_construction_demo_source.py#function:_stream_verified_response:3eb3776729ebaa84",
         "signature_hash": "c7d46b6e2ead2c0f"
       }
@@ -54724,8 +54769,8 @@
       {
         "file": "aura_spatial_cli.py",
         "kind": "function",
-        "line": 75,
-        "end_line": 145,
+        "line": 73,
+        "end_line": 143,
         "semantic_id": "aura_spatial_cli.py#function:_synthetic_construction_demo:81f07d8552e72a33",
         "signature_hash": "19ec66d22501b205"
       }
@@ -54908,8 +54953,8 @@
       {
         "file": "aura_spatial_cli.py",
         "kind": "function",
-        "line": 41,
-        "end_line": 48,
+        "line": 39,
+        "end_line": 46,
         "semantic_id": "aura_spatial_cli.py#function:_tcp_port:e887c254f69873f9",
         "signature_hash": "a3821593838a8541"
       }
@@ -56648,8 +56693,8 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "function",
-        "line": 253,
-        "end_line": 286,
+        "line": 215,
+        "end_line": 248,
         "semantic_id": "aura_construction_demo_director.py#function:_tour_steps:7cc14781b2002f32",
         "signature_hash": "f5d4c8f106a3bbba"
       }
@@ -57822,8 +57867,8 @@
       {
         "file": "scripts/aura_fetch_construction_demo_source.py",
         "kind": "function",
-        "line": 148,
-        "end_line": 163,
+        "line": 149,
+        "end_line": 172,
         "semantic_id": "scripts/aura_fetch_construction_demo_source.py#function:_validate_existing:5b914787b49285a3",
         "signature_hash": "f965af14bf5e49b9"
       }
@@ -58278,8 +58323,8 @@
       {
         "file": "aura_spatial_cli.py",
         "kind": "function",
-        "line": 64,
-        "end_line": 72,
+        "line": 62,
+        "end_line": 70,
         "semantic_id": "aura_spatial_cli.py#function:_validate_route:a9a7c72de5e1a6a6",
         "signature_hash": "cbfbd79fefa7282b"
       }
@@ -59442,8 +59487,8 @@
       {
         "file": "scripts/aura_fetch_construction_demo_source.py",
         "kind": "function",
-        "line": 166,
-        "end_line": 246,
+        "line": 175,
+        "end_line": 259,
         "semantic_id": "scripts/aura_fetch_construction_demo_source.py#function:acquire_source:99db9cc42f6aa56b",
         "signature_hash": "41db8ed6a02500a5"
       }
@@ -63070,8 +63115,8 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "function",
-        "line": 124,
-        "end_line": 175,
+        "line": 122,
+        "end_line": 171,
         "semantic_id": "aura_construction_demo_director.py#function:build_fallback_construction_demo_asset_pack:9ed796f7c2e83cec",
         "signature_hash": "0583916ff5ffdcfe"
       }
@@ -63474,8 +63519,8 @@
       {
         "file": "scripts/aura_fetch_construction_demo_source.py",
         "kind": "function",
-        "line": 249,
-        "end_line": 256,
+        "line": 262,
+        "end_line": 269,
         "semantic_id": "scripts/aura_fetch_construction_demo_source.py#function:build_parser:32526ffc855c39b4",
         "signature_hash": "0b42d711d564d255"
       },
@@ -66918,8 +66963,8 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "function",
-        "line": 289,
-        "end_line": 367,
+        "line": 251,
+        "end_line": 327,
         "semantic_id": "aura_construction_demo_director.py#function:compile_construction_demo_packet:c3191e060575ae1f",
         "signature_hash": "eb5de1da03d5fec8"
       }
@@ -70266,8 +70311,8 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "method",
-        "line": 413,
-        "end_line": 430,
+        "line": 417,
+        "end_line": 422,
         "semantic_id": "aura_construction_demo_director.py#method:_ConstructionDemoHandler.do_GET:35d997e0afcb339a",
         "signature_hash": "0f22ff7b0395d880"
       },
@@ -70289,6 +70334,14 @@
       }
     ],
     "do_HEAD": [
+      {
+        "file": "aura_construction_demo_director.py",
+        "kind": "method",
+        "line": 424,
+        "end_line": 429,
+        "semantic_id": "aura_construction_demo_director.py#method:_ConstructionDemoHandler.do_HEAD:b0d39de7d6ef33c2",
+        "signature_hash": "aa513f039dcf61ce"
+      },
       {
         "file": "aura_gate_server.py",
         "kind": "method",
@@ -70794,8 +70847,8 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "method",
-        "line": 401,
-        "end_line": 411,
+        "line": 385,
+        "end_line": 395,
         "semantic_id": "aura_construction_demo_director.py#method:_ConstructionDemoHandler.end_headers:779cf19d7406fbff",
         "signature_hash": "3032d486e35278ef"
       }
@@ -78640,8 +78693,8 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "function",
-        "line": 178,
-        "end_line": 188,
+        "line": 174,
+        "end_line": 184,
         "semantic_id": "aura_construction_demo_director.py#function:load_construction_demo_asset_pack:e9f3893f2841bffc",
         "signature_hash": "9c6b1e969ad54e17"
       }
@@ -79170,8 +79223,8 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "method",
-        "line": 432,
-        "end_line": 433,
+        "line": 431,
+        "end_line": 432,
         "semantic_id": "aura_construction_demo_director.py#method:_ConstructionDemoHandler.log_message:8fe2cdb880598f8e",
         "signature_hash": "777eb2a4e45ca325"
       },
@@ -79904,8 +79957,8 @@
       {
         "file": "aura_spatial_cli.py",
         "kind": "function",
-        "line": 178,
-        "end_line": 202,
+        "line": 176,
+        "end_line": 200,
         "semantic_id": "aura_spatial_cli.py#function:main:f66465847d847701",
         "signature_hash": "c3265d7d89056dc5"
       },
@@ -80072,8 +80125,8 @@
       {
         "file": "scripts/aura_fetch_construction_demo_source.py",
         "kind": "function",
-        "line": 259,
-        "end_line": 269,
+        "line": 272,
+        "end_line": 282,
         "semantic_id": "scripts/aura_fetch_construction_demo_source.py#function:main:f1b8808877b1304b",
         "signature_hash": "c3265d7d89056dc5"
       },
@@ -85084,8 +85137,8 @@
       {
         "file": "scripts/aura_fetch_construction_demo_source.py",
         "kind": "method",
-        "line": 41,
-        "end_line": 42,
+        "line": 42,
+        "end_line": 43,
         "semantic_id": "scripts/aura_fetch_construction_demo_source.py#method:RedirectRefused.redirect_request:0fdaaff44d26d8eb",
         "signature_hash": "8b782565eb7ca2de"
       }
@@ -88992,8 +89045,8 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "function",
-        "line": 436,
-        "end_line": 458,
+        "line": 435,
+        "end_line": 457,
         "semantic_id": "aura_construction_demo_director.py#function:serve_construction_demo:92b454ea1bd4674d",
         "signature_hash": "f26ec5e686fc46e8"
       }
@@ -91258,6 +91311,16 @@
         "end_line": 131,
         "semantic_id": "tests/test_aura_fetch_construction_demo_source.py#function:test_acquire_source_refuses_response_url_change_and_cleans_temp:843cc5df718f1d59",
         "signature_hash": "c362373d1cc4002b"
+      }
+    ],
+    "test_acquire_source_refuses_validly_redigested_false_manifest_identity": [
+      {
+        "file": "tests/test_aura_fetch_construction_demo_source.py",
+        "kind": "function",
+        "line": 192,
+        "end_line": 221,
+        "semantic_id": "tests/test_aura_fetch_construction_demo_source.py#function:test_acquire_source_refuses_validly_redigested_false_manifest_identity:8a465c5559d9928e",
+        "signature_hash": "089b8a26b451ed6a"
       }
     ],
     "test_acquire_source_requires_explicit_operator_authority": [
@@ -103174,8 +103237,8 @@
       {
         "file": "tests/test_aura_construction_demo_director.py",
         "kind": "function",
-        "line": 55,
-        "end_line": 62,
+        "line": 60,
+        "end_line": 67,
         "semantic_id": "tests/test_aura_construction_demo_director.py#function:test_g7_bounded_tours_are_subsets_of_full_tour:18f6ee65028c2172",
         "signature_hash": "4c6559f8b4a42c92"
       }
@@ -103184,8 +103247,8 @@
       {
         "file": "tests/test_aura_construction_demo_director.py",
         "kind": "function",
-        "line": 18,
-        "end_line": 27,
+        "line": 24,
+        "end_line": 33,
         "semantic_id": "tests/test_aura_construction_demo_director.py#function:test_g7_fallback_pack_is_complete_and_browser_admissible:72c4b5bd406d088a",
         "signature_hash": "d0ac82e66357313b"
       }
@@ -103194,28 +103257,48 @@
       {
         "file": "tests/test_aura_construction_demo_director.py",
         "kind": "function",
-        "line": 30,
-        "end_line": 52,
+        "line": 36,
+        "end_line": 57,
         "semantic_id": "tests/test_aura_construction_demo_director.py#function:test_g7_full_tour_packet_is_deterministic_and_review_only:729c9f487badada5",
         "signature_hash": "9d848b1d19984f4b"
+      }
+    ],
+    "test_g7_http_get_and_head_share_the_static_allowlist": [
+      {
+        "file": "tests/test_aura_construction_demo_director.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 151,
+        "semantic_id": "tests/test_aura_construction_demo_director.py#function:test_g7_http_get_and_head_share_the_static_allowlist:2ca4262bd8133fe2",
+        "signature_hash": "ae68ee0ae2c3f91c"
       }
     ],
     "test_g7_local_static_boundary_rejects_repository_exposure": [
       {
         "file": "tests/test_aura_construction_demo_director.py",
         "kind": "function",
-        "line": 80,
-        "end_line": 100,
+        "line": 85,
+        "end_line": 105,
         "semantic_id": "tests/test_aura_construction_demo_director.py#function:test_g7_local_static_boundary_rejects_repository_exposure:6f663b53b188e3cb",
         "signature_hash": "202b008f1e762142"
+      }
+    ],
+    "test_g7_local_static_boundary_rejects_symlink_escape": [
+      {
+        "file": "tests/test_aura_construction_demo_director.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 120,
+        "semantic_id": "tests/test_aura_construction_demo_director.py#function:test_g7_local_static_boundary_rejects_symlink_escape:45c0b32797a4723c",
+        "signature_hash": "86704786f9de8643"
       }
     ],
     "test_g7_packet_writer_uses_canonical_json": [
       {
         "file": "tests/test_aura_construction_demo_director.py",
         "kind": "function",
-        "line": 65,
-        "end_line": 72,
+        "line": 70,
+        "end_line": 77,
         "semantic_id": "tests/test_aura_construction_demo_director.py#function:test_g7_packet_writer_uses_canonical_json:236d76d050014a09",
         "signature_hash": "282485229206a4fb"
       }
@@ -103224,8 +103307,8 @@
       {
         "file": "tests/test_aura_construction_demo_director.py",
         "kind": "function",
-        "line": 75,
-        "end_line": 77,
+        "line": 80,
+        "end_line": 82,
         "semantic_id": "tests/test_aura_construction_demo_director.py#function:test_g7_rejects_unknown_tour:59513edf4a34ffe8",
         "signature_hash": "0d8a48e1b1f048a9"
       }
@@ -125562,8 +125645,8 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "method",
-        "line": 59,
-        "end_line": 69,
+        "line": 57,
+        "end_line": 67,
         "semantic_id": "aura_construction_demo_director.py#method:ConstructionDemoTourStep.to_dict:732779073b459ad4",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -130738,8 +130821,8 @@
       {
         "file": "aura_construction_demo_director.py",
         "kind": "function",
-        "line": 370,
-        "end_line": 376,
+        "line": 330,
+        "end_line": 336,
         "semantic_id": "aura_construction_demo_director.py#function:write_construction_demo_packet:f4caafc36ae6b363",
         "signature_hash": "dff48d5454676dda"
       }
@@ -133912,7 +133995,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 127,
+        "hub_rank": 128,
         "node_count": 36,
         "edge_count": 113,
         "degree": 113,
@@ -135602,7 +135685,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 124,
+        "hub_rank": 125,
         "node_count": 19,
         "edge_count": 115,
         "degree": 115,
@@ -137290,7 +137373,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 126,
+        "hub_rank": 127,
         "node_count": 21,
         "edge_count": 114,
         "degree": 114,
@@ -137709,7 +137792,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 134,
+        "hub_rank": 135,
         "node_count": 16,
         "edge_count": 111,
         "degree": 111,
@@ -138034,7 +138117,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 139,
+        "hub_rank": 140,
         "node_count": 21,
         "edge_count": 106,
         "degree": 106,
@@ -138196,7 +138279,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 130,
+        "hub_rank": 131,
         "node_count": 31,
         "edge_count": 111,
         "degree": 111,
@@ -139139,7 +139222,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 128,
+        "hub_rank": 129,
         "node_count": 35,
         "edge_count": 113,
         "degree": 113,
@@ -140438,7 +140521,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 119,
+        "hub_rank": 120,
         "node_count": 22,
         "edge_count": 118,
         "degree": 118,
@@ -141688,7 +141771,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 140,
+        "hub_rank": 141,
         "node_count": 31,
         "edge_count": 105,
         "degree": 105,
@@ -146176,34 +146259,38 @@
     {
       "path": "aura_construction_demo_director.py",
       "role": "python_module",
-      "bytes": 16935,
-      "lines": 472,
-      "tokens_est": 4234,
-      "symbol_count": 16,
+      "bytes": 18018,
+      "lines": 471,
+      "tokens_est": 4505,
+      "symbol_count": 21,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 145,
-        "node_count": 17,
-        "edge_count": 104,
-        "degree": 104,
+        "hub_rank": 118,
+        "node_count": 22,
+        "edge_count": 120,
+        "degree": 120,
         "symbols": [
           "ConstructionDemoTourStep",
           "_ConstructionDemoHandler",
           "_fallback_asset",
           "_fallback_manifest",
           "_full_tour",
+          "_fully_decode_static_path",
+          "_route_static_request",
+          "_safe_construction_demo_static_file",
           "_safe_construction_demo_static_path",
+          "_send_packet",
           "_tour_steps",
           "build_fallback_construction_demo_asset_pack",
           "compile_construction_demo_packet",
           "do_GET",
+          "do_HEAD",
           "end_headers",
           "load_construction_demo_asset_pack",
           "log_message",
           "serve_construction_demo",
-          "to_dict",
-          "write_construction_demo_packet"
+          "to_dict"
         ],
         "neighbor_files": [
           "aura_construction_demo_contracts.py",
@@ -146215,45 +146302,45 @@
           "aura_spatial_render_plan.py"
         ],
         "edge_kinds": {
-          "call": 65,
-          "defines": 32,
+          "call": 71,
+          "defines": 42,
           "import_module": 7
         }
       },
-      "digest8": "8ade8a12b9bac70c",
+      "digest8": "9a16950fa2d3b08f",
       "vector": [
-        -0.212395,
-        0.066289,
-        -0.082523,
-        0.120402,
-        -0.039232,
-        -0.114991,
-        -0.206984,
-        0.155576,
-        0.177221,
-        -0.022998,
-        0.179927,
-        -0.036527,
-        -0.128519,
-        0.02841,
-        -0.123108,
-        0.033821,
-        -0.158282,
-        0.285448,
-        0.336856,
-        -0.331444,
-        -0.136636,
-        0.147459,
-        -0.058172,
-        -0.269214,
-        -0.060878,
-        -0.23404,
-        -0.163693,
-        0.274625,
-        0.163693,
-        0.101463,
-        0.309799,
-        -0.09064
+        0.068441,
+        -0.032283,
+        -0.112346,
+        0.114928,
+        -0.140755,
+        0.202739,
+        0.024535,
+        0.009039,
+        -0.30088,
+        -0.233731,
+        -0.009039,
+        -0.264723,
+        0.202739,
+        -0.218235,
+        0.213069,
+        -0.138172,
+        -0.130424,
+        -0.215652,
+        0.176912,
+        -0.228565,
+        0.086519,
+        -0.037449,
+        0.295715,
+        0.156251,
+        -0.153668,
+        0.130424,
+        0.295715,
+        -0.166582,
+        -0.290549,
+        -0.021953,
+        -0.016787,
+        -0.171747
       ]
     },
     {
@@ -148769,7 +148856,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 118,
+        "hub_rank": 119,
         "node_count": 43,
         "edge_count": 119,
         "degree": 119,
@@ -151476,7 +151563,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 131,
+        "hub_rank": 132,
         "node_count": 29,
         "edge_count": 111,
         "degree": 111,
@@ -152334,7 +152421,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 125,
+        "hub_rank": 126,
         "node_count": 28,
         "edge_count": 114,
         "degree": 114,
@@ -154832,7 +154919,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 143,
+        "hub_rank": 144,
         "node_count": 19,
         "edge_count": 104,
         "degree": 104,
@@ -156279,7 +156366,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 120,
+        "hub_rank": 121,
         "node_count": 29,
         "edge_count": 117,
         "degree": 117,
@@ -157218,7 +157305,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 121,
+        "hub_rank": 122,
         "node_count": 26,
         "edge_count": 117,
         "degree": 117,
@@ -161447,7 +161534,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 142,
+        "hub_rank": 143,
         "node_count": 20,
         "edge_count": 104,
         "degree": 104,
@@ -162971,7 +163058,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 144,
+        "hub_rank": 145,
         "node_count": 18,
         "edge_count": 104,
         "degree": 104,
@@ -164406,7 +164493,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 133,
+        "hub_rank": 134,
         "node_count": 17,
         "edge_count": 111,
         "degree": 111,
@@ -168187,9 +168274,9 @@
     {
       "path": "aura_spatial_cli.py",
       "role": "python_module",
-      "bytes": 8207,
-      "lines": 207,
-      "tokens_est": 2052,
+      "bytes": 8185,
+      "lines": 205,
+      "tokens_est": 2047,
       "symbol_count": 7,
       "commands": [],
       "command_lines": {},
@@ -168221,40 +168308,40 @@
           "import_module": 5
         }
       },
-      "digest8": "b28b0b1392ca6f3c",
+      "digest8": "791b1082a1985c0c",
       "vector": [
-        0.044727,
-        0.113735,
-        -0.123959,
-        -0.17252,
-        -0.008945,
-        -0.042171,
-        0.060062,
-        0.256863,
-        -0.116291,
-        0.2952,
-        -0.313091,
-        -0.075398,
-        0.215969,
-        -0.026836,
-        0.218525,
-        0.14185,
-        0.167408,
-        -0.177631,
-        -0.042171,
-        0.057507,
-        0.231304,
-        0.103512,
-        0.320759,
-        0.108624,
-        0.305424,
-        -0.190411,
-        -0.226193,
-        -0.026836,
-        -0.106068,
-        0.20319,
-        0.215969,
-        0.157185
+        0.082427,
+        0.198039,
+        -0.003211,
+        -0.131669,
+        0.234435,
+        -0.193757,
+        0.242999,
+        0.195898,
+        0.238717,
+        0.084568,
+        0.048172,
+        -0.110259,
+        -0.153079,
+        0.272972,
+        -0.118823,
+        0.116682,
+        -0.054594,
+        -0.138092,
+        -0.264409,
+        -0.193757,
+        -0.247281,
+        0.228012,
+        0.253704,
+        0.063158,
+        0.105977,
+        -0.22373,
+        0.110259,
+        -0.161642,
+        0.120964,
+        -0.22373,
+        0.191616,
+        -0.174488
       ]
     },
     {
@@ -168988,7 +169075,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 123,
+        "hub_rank": 124,
         "node_count": 31,
         "edge_count": 116,
         "degree": 116,
@@ -169309,7 +169396,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 129,
+        "hub_rank": 130,
         "node_count": 18,
         "edge_count": 113,
         "degree": 113,
@@ -170127,7 +170214,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 132,
+        "hub_rank": 133,
         "node_count": 27,
         "edge_count": 111,
         "degree": 111,
@@ -171176,7 +171263,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 136,
+        "hub_rank": 137,
         "node_count": 24,
         "edge_count": 109,
         "degree": 109,
@@ -172364,7 +172451,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 135,
+        "hub_rank": 136,
         "node_count": 37,
         "edge_count": 110,
         "degree": 110,
@@ -179045,7 +179132,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 137,
+        "hub_rank": 138,
         "node_count": 34,
         "edge_count": 108,
         "degree": 108,
@@ -180068,7 +180155,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 122,
+        "hub_rank": 123,
         "node_count": 23,
         "edge_count": 117,
         "degree": 117,
@@ -180681,7 +180768,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 141,
+        "hub_rank": 142,
         "node_count": 27,
         "edge_count": 105,
         "degree": 105,
@@ -180989,7 +181076,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 138,
+        "hub_rank": 139,
         "node_count": 35,
         "edge_count": 106,
         "degree": 106,
@@ -185178,6 +185265,59 @@
         -0.094425,
         -0.305938,
         0.202699
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-construction-g7-g8-honesty.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 11865,
+      "lines": 114,
+      "tokens_est": 2959,
+      "symbol_count": 0,
+      "commands": [
+        "!supported"
+      ],
+      "command_lines": {
+        "!supported": [
+          46,
+          89
+        ]
+      },
+      "topology": {},
+      "digest8": "d82cc51609b09086",
+      "vector": [
+        -0.140806,
+        -0.310788,
+        0.21438,
+        0.097676,
+        -0.199158,
+        0.057083,
+        -0.031713,
+        -0.044398,
+        -0.262584,
+        -0.280343,
+        0.069769,
+        -0.07738,
+        0.315862,
+        -0.168713,
+        0.03425,
+        -0.178861,
+        0.039324,
+        0.07738,
+        0.254973,
+        -0.209306,
+        0.183936,
+        -0.039324,
+        0.079917,
+        0.308251,
+        0.03425,
+        -0.112898,
+        -0.019028,
+        -0.318399,
+        -0.03425,
+        -0.069769,
+        0.013954,
+        -0.295565
       ]
     },
     {
@@ -191195,9 +191335,9 @@
     {
       "path": "aura_spatial_web/construction_demo_app.js",
       "role": "interface_surface",
-      "bytes": 14370,
-      "lines": 385,
-      "tokens_est": 3591,
+      "bytes": 15668,
+      "lines": 435,
+      "tokens_est": 3916,
       "symbol_count": 0,
       "commands": [
         "!button",
@@ -191209,74 +191349,74 @@
       ],
       "command_lines": {
         "!button": [
-          126
+          128
         ],
         "!entity": [
-          203,
-          212,
-          219
+          205,
+          214,
+          221
         ],
         "!input": [
-          137
+          139
         ],
         "!response": [
-          348
+          393
         ],
         "!state": [
-          195,
-          256,
-          321,
-          324,
-          328,
-          335
+          197,
+          258,
+          346,
+          355,
+          364,
+          371
         ],
         "!steps": [
-          311
+          325
         ]
       },
       "topology": {},
-      "digest8": "e066b2302474ad9a",
+      "digest8": "486e16aade5047c5",
       "vector": [
-        0.014538,
-        -0.11295,
-        -0.137553,
-        0.148736,
-        0.218072,
-        0.034668,
-        -0.014538,
-        0.197942,
-        0.191233,
-        -0.036905,
-        -0.104004,
-        0.262805,
-        0.16663,
-        -0.278461,
-        -0.206889,
-        -0.247149,
-        -0.083874,
-        -0.157683,
-        -0.222546,
-        0.032431,
-        0.180049,
-        -0.021248,
-        0.218072,
-        0.128607,
-        -0.209126,
-        0.023485,
-        0.249385,
-        -0.16663,
-        -0.276225,
-        -0.12637,
-        -0.265042,
-        0.233729
+        0.029182,
+        0.029182,
+        0.085009,
+        -0.036795,
+        0.257564,
+        -0.04187,
+        0.166212,
+        0.260102,
+        0.255027,
+        0.232189,
+        0.148448,
+        -0.054558,
+        0.123073,
+        0.244877,
+        0.054558,
+        0.123073,
+        0.12561,
+        0.161136,
+        0.257564,
+        0.064708,
+        -0.219501,
+        0.280403,
+        -0.049483,
+        -0.161136,
+        -0.293091,
+        -0.295628,
+        0.092622,
+        -0.008882,
+        -0.227113,
+        -0.227113,
+        -0.110385,
+        -0.156061
       ]
     },
     {
       "path": "aura_spatial_web/construction_mesh_pass.js",
       "role": "interface_surface",
-      "bytes": 9391,
-      "lines": 289,
-      "tokens_est": 2348,
+      "bytes": 9869,
+      "lines": 305,
+      "tokens_est": 2468,
       "symbol_count": 0,
       "commands": [
         "!Array",
@@ -191314,48 +191454,48 @@
         ]
       },
       "topology": {},
-      "digest8": "dda816a72696c618",
+      "digest8": "6baf7e9ea3ddc6f3",
       "vector": [
-        0.23208,
-        0.121134,
-        0.245665,
-        -0.193589,
-        0.028302,
-        0.184532,
-        -0.241137,
-        -0.20491,
-        0.026038,
-        -0.087171,
-        0.127927,
-        -0.107549,
-        0.164154,
-        -0.136984,
-        0.281892,
-        0.132455,
-        0.148305,
-        0.164154,
-        0.277364,
-        -0.035095,
-        0.164154,
-        0.263779,
-        -0.23208,
-        0.23208,
-        -0.173211,
-        0.103021,
-        0.254722,
-        -0.198117,
-        0.087171,
-        -0.046416,
-        0.175475,
-        0.055473
+        -0.165692,
+        -0.253034,
+        0.278722,
+        0.050093,
+        0.140003,
+        0.14771,
+        -0.019267,
+        -0.196519,
+        -0.096333,
+        0.157985,
+        -0.276154,
+        -0.150279,
+        0.163123,
+        0.163123,
+        -0.229914,
+        -0.080919,
+        0.039817,
+        -0.268447,
+        -0.265878,
+        -0.265878,
+        -0.006422,
+        -0.19395,
+        -0.245327,
+        0.196519,
+        0.01156,
+        0.050093,
+        -0.183674,
+        -0.083488,
+        0.083488,
+        -0.037249,
+        0.265878,
+        0.168261
       ]
     },
     {
       "path": "aura_spatial_web/construction_overlay_pass.js",
       "role": "interface_surface",
-      "bytes": 11995,
-      "lines": 358,
-      "tokens_est": 2999,
+      "bytes": 12702,
+      "lines": 382,
+      "tokens_est": 3176,
       "symbol_count": 0,
       "commands": [
         "!Array",
@@ -191378,55 +191518,57 @@
           139,
           149,
           163,
-          325
+          302,
+          349,
+          356
         ],
         "!value": [
           71
         ]
       },
       "topology": {},
-      "digest8": "bd9df1687a992726",
+      "digest8": "cfb4137c77d5a2c4",
       "vector": [
-        -0.081896,
-        -0.003561,
-        0.19109,
-        0.221949,
-        0.067653,
-        0.136493,
-        0.205333,
-        0.198212,
-        0.269425,
-        0.022551,
-        -0.164978,
-        -0.098512,
-        -0.051036,
-        -0.221949,
-        -0.276547,
-        0.205333,
-        -0.112755,
-        -0.162605,
-        0.157857,
-        0.262304,
-        0.212454,
-        -0.150736,
-        -0.020177,
-        0.115129,
-        -0.252809,
-        -0.248061,
-        -0.001187,
-        0.281294,
-        -0.024925,
-        0.029672,
-        0.150736,
-        -0.281294
+        -0.026739,
+        -0.179531,
+        -0.24574,
+        0.204996,
+        0.039471,
+        -0.143879,
+        -0.230461,
+        -0.049657,
+        0.184624,
+        0.047111,
+        -0.18717,
+        -0.024192,
+        -0.059844,
+        0.07003,
+        -0.024192,
+        -0.042018,
+        -0.250834,
+        -0.250834,
+        -0.227915,
+        -0.06239,
+        0.276299,
+        0.202449,
+        -0.286485,
+        0.07003,
+        0.19481,
+        -0.052204,
+        -0.225368,
+        0.324683,
+        -0.233008,
+        -0.077669,
+        -0.174438,
+        -0.174438
       ]
     },
     {
       "path": "aura_spatial_web/construction_scene_renderer.js",
       "role": "interface_surface",
-      "bytes": 22877,
-      "lines": 646,
-      "tokens_est": 5720,
+      "bytes": 22750,
+      "lines": 640,
+      "tokens_est": 5688,
       "symbol_count": 0,
       "commands": [
         "!Array",
@@ -191464,7 +191606,7 @@
         "!camera": [
           162,
           435,
-          531
+          525
         ],
         "!current": [
           394
@@ -191476,14 +191618,14 @@
           145
         ],
         "!innerGaussianPass": [
-          625
+          619
         ],
         "!present": [
           198
         ],
         "!presentationRenderer": [
           212,
-          626
+          620
         ],
         "!this": [
           330,
@@ -191492,48 +191634,48 @@
         ]
       },
       "topology": {},
-      "digest8": "ec5ada94a92d72b1",
+      "digest8": "bd72f46fe68425cd",
       "vector": [
-        -0.124377,
-        0.095396,
-        -0.085736,
-        0.240302,
-        0.247547,
-        -0.283773,
-        -0.293434,
-        0.112302,
-        -0.233056,
-        0.090566,
-        -0.06883,
-        0.281358,
-        -0.204075,
-        0.184755,
-        0.107472,
-        0.061585,
-        0.281358,
-        -0.19683,
-        0.177509,
-        -0.126792,
-        -0.172679,
-        -0.18717,
-        0.163019,
-        -0.138868,
-        0.223396,
-        0.114717,
-        -0.008453,
-        0.199245,
-        -0.061585,
-        0.039849,
-        -0.148528,
-        0.160604
+        -0.03459,
+        -0.03459,
+        -0.079221,
+        -0.21758,
+        -0.126085,
+        0.275601,
+        -0.237664,
+        -0.235432,
+        -0.206422,
+        0.253285,
+        -0.235432,
+        0.150632,
+        -0.184106,
+        -0.152864,
+        0.059137,
+        0.083685,
+        0.266675,
+        -0.092611,
+        0.110464,
+        0.148401,
+        -0.237664,
+        0.16179,
+        -0.17518,
+        0.237664,
+        0.188569,
+        -0.226506,
+        -0.11939,
+        -0.054674,
+        0.248822,
+        0.001116,
+        -0.168485,
+        0.097074
       ]
     },
     {
       "path": "aura_spatial_web/gaussian_renderer.js",
       "role": "interface_surface",
-      "bytes": 28647,
-      "lines": 778,
-      "tokens_est": 7162,
+      "bytes": 29798,
+      "lines": 821,
+      "tokens_est": 7450,
       "symbol_count": 0,
       "commands": [
         "!Array",
@@ -191571,7 +191713,7 @@
           271,
           284,
           310,
-          675
+          710
         ],
         "!expected": [
           238
@@ -191595,45 +191737,45 @@
           432
         ],
         "!this": [
-          701,
-          771
+          744,
+          814
         ]
       },
       "topology": {},
-      "digest8": "01385accab6543b8",
+      "digest8": "87702d007d7a6325",
       "vector": [
-        0.261374,
-        -0.041023,
-        -0.071497,
-        -0.127757,
-        -0.223868,
-        -0.167608,
-        0.116036,
-        -0.291849,
-        0.160575,
-        0.184017,
-        -0.205114,
-        0.251998,
-        -0.026958,
-        0.298881,
-        0.209803,
-        0.031646,
-        -0.06212,
-        0.254342,
-        0.092595,
-        -0.080874,
-        -0.20277,
-        0.141822,
-        -0.165264,
-        0.055088,
-        -0.11838,
-        -0.209803,
-        -0.024614,
-        -0.277784,
-        -0.198082,
-        0.249654,
-        -0.003516,
-        -0.137134
+        -0.075776,
+        -0.058384,
+        0.001242,
+        -0.021118,
+        0.063353,
+        0.294407,
+        -0.214904,
+        0.244718,
+        0.170184,
+        0.085713,
+        -0.291922,
+        -0.127949,
+        0.1677,
+        0.209935,
+        -0.160247,
+        0.018633,
+        -0.291922,
+        -0.180122,
+        -0.031056,
+        -0.30186,
+        0.237264,
+        -0.219873,
+        -0.162731,
+        -0.199998,
+        0.175153,
+        0.021118,
+        -0.204967,
+        -0.207451,
+        -0.001242,
+        0.068322,
+        -0.113042,
+        0.207451
       ]
     },
     {
@@ -192133,9 +192275,9 @@
     {
       "path": "aura_spatial_web/webgl2_gaussian_pass.js",
       "role": "interface_surface",
-      "bytes": 12987,
-      "lines": 384,
-      "tokens_est": 3247,
+      "bytes": 13270,
+      "lines": 395,
+      "tokens_est": 3318,
       "symbol_count": 0,
       "commands": [
         "!Array",
@@ -192156,61 +192298,61 @@
           145
         ],
         "!buffer": [
-          232
+          236
         ],
         "!gl": [
           200,
-          222,
-          290
+          221,
+          294
         ],
         "!isVisible": [
-          258
+          262
         ],
         "!program": [
-          212
+          217
         ],
         "!shader": [
           197
         ],
         "!vao": [
-          324
+          328
         ]
       },
       "topology": {},
-      "digest8": "1ba9e35c1d90a1e3",
+      "digest8": "fd721f7568db32c7",
       "vector": [
-        -0.071747,
-        0.227827,
-        0.179996,
-        -0.094404,
-        -0.144752,
-        -0.152305,
-        -0.320972,
-        -0.066712,
-        -0.290763,
-        0.240415,
-        -0.011328,
-        0.220275,
-        -0.011328,
-        -0.270624,
-        0.122095,
-        -0.207688,
-        -0.013846,
-        0.154822,
-        0.03902,
-        -0.096921,
-        -0.217758,
-        0.185031,
-        0.084334,
-        0.318455,
-        0.079299,
-        0.217758,
-        0.134683,
-        0.096921,
-        0.069229,
-        0.1372,
-        -0.205171,
-        -0.23538
+        -0.249348,
+        0.206679,
+        0.100006,
+        0.065337,
+        -0.236014,
+        0.084005,
+        0.134675,
+        -0.185345,
+        -0.097339,
+        -0.078671,
+        0.124007,
+        -0.174677,
+        0.284017,
+        0.073338,
+        -0.102673,
+        -0.22268,
+        0.153343,
+        0.097339,
+        -0.108007,
+        -0.286684,
+        -0.017334,
+        0.014668,
+        -0.012001,
+        0.094672,
+        0.044003,
+        -0.284017,
+        -0.254682,
+        0.212013,
+        0.012001,
+        0.32402,
+        0.32402,
+        -0.137342
       ]
     },
     {
@@ -200834,47 +200976,47 @@
     {
       "path": "scripts/aura_fetch_construction_demo_source.py",
       "role": "python_module",
-      "bytes": 11380,
-      "lines": 274,
-      "tokens_est": 2845,
+      "bytes": 11681,
+      "lines": 287,
+      "tokens_est": 2921,
       "symbol_count": 12,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "8800a9524539607e",
+      "digest8": "5275fcd40fb89053",
       "vector": [
-        0.065895,
-        -0.210605,
-        0.03747,
-        -0.045222,
-        0.109825,
-        0.321722,
-        0.169259,
-        0.099488,
-        0.164091,
-        -0.127913,
-        -0.251951,
-        -0.189932,
-        0.058142,
-        0.140834,
-        0.192516,
-        0.078815,
-        0.202853,
-        -0.021965,
-        0.264871,
-        0.153754,
-        -0.071063,
-        0.089152,
-        0.280376,
-        -0.298465,
-        0.102072,
-        -0.166675,
-        -0.112409,
-        0.306217,
-        0.107241,
-        -0.1951,
-        -0.114993,
-        0.246782
+        0.061814,
+        0.104706,
+        -0.079476,
+        0.190489,
+        -0.059291,
+        0.298979,
+        0.288887,
+        -0.061814,
+        0.081999,
+        0.225811,
+        0.046676,
+        -0.104706,
+        0.311595,
+        -0.200581,
+        -0.102183,
+        -0.268703,
+        0.142551,
+        -0.044153,
+        0.147597,
+        0.26618,
+        -0.117321,
+        -0.076953,
+        -0.021446,
+        0.230858,
+        -0.046676,
+        -0.306549,
+        0.187966,
+        0.003785,
+        0.079476,
+        0.29141,
+        0.003785,
+        -0.245996
       ]
     },
     {
@@ -205358,47 +205500,47 @@
     {
       "path": "tests/test_aura_construction_demo_director.py",
       "role": "python_module",
-      "bytes": 3849,
-      "lines": 101,
-      "tokens_est": 963,
-      "symbol_count": 6,
+      "bytes": 6012,
+      "lines": 152,
+      "tokens_est": 1503,
+      "symbol_count": 8,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "e3cce7e690e3d1bc",
+      "digest8": "d9467f39257cbc9b",
       "vector": [
-        0.045522,
-        0.162243,
-        -0.127227,
-        -0.255621,
-        -0.297641,
-        -0.17625,
-        0.2813,
-        0.278965,
-        -0.0712,
-        -0.13423,
-        0.115555,
-        -0.09221,
-        0.115555,
-        -0.204263,
-        -0.187922,
-        -0.043187,
-        -0.103882,
-        -0.141233,
-        0.110886,
-        -0.222939,
-        0.085207,
-        -0.227608,
-        0.288303,
-        -0.211266,
-        -0.206598,
-        0.13423,
-        -0.115555,
-        -0.066531,
-        0.23928,
-        0.026846,
-        0.23928,
-        0.054859
+        -0.210869,
+        -0.043587,
+        -0.137831,
+        -0.010602,
+        0.279196,
+        -0.07186,
+        0.050656,
+        -0.095421,
+        -0.253279,
+        0.177884,
+        0.187308,
+        -0.213225,
+        0.133119,
+        0.078929,
+        0.140187,
+        0.170816,
+        0.243854,
+        -0.215581,
+        0.250923,
+        0.11427,
+        -0.210869,
+        0.130762,
+        0.137831,
+        0.262703,
+        0.116626,
+        -0.290976,
+        -0.236786,
+        -0.123694,
+        0.022383,
+        0.170816,
+        -0.210869,
+        -0.123694
       ]
     },
     {
@@ -207014,47 +207156,47 @@
     {
       "path": "tests/test_aura_fetch_construction_demo_source.py",
       "role": "python_module",
-      "bytes": 6453,
-      "lines": 190,
-      "tokens_est": 1614,
-      "symbol_count": 16,
+      "bytes": 7626,
+      "lines": 222,
+      "tokens_est": 1907,
+      "symbol_count": 17,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "06c2ac2e63744375",
+      "digest8": "133ac208681b4e57",
       "vector": [
-        0.232013,
-        -0.253213,
-        0.297966,
-        -0.135439,
-        0.220236,
-        0.224947,
-        0.170771,
-        -0.23908,
-        -0.189615,
-        0.024732,
-        -0.024732,
-        -0.048287,
-        -0.015311,
-        -0.107174,
-        0.283834,
-        -0.236724,
-        0.19197,
-        -0.257924,
-        0.19197,
-        -0.03651,
-        -0.038865,
-        -0.173127,
-        -0.196681,
-        0.21317,
-        0.220236,
-        -0.012955,
-        0.217881,
-        0.064775,
-        0.034154,
-        -0.022377,
-        0.100107,
-        -0.180193
+        0.104074,
+        -0.127999,
+        0.144747,
+        0.080149,
+        0.044261,
+        -0.209345,
+        0.235662,
+        -0.216522,
+        0.104074,
+        -0.285905,
+        -0.305045,
+        -0.015551,
+        0.235662,
+        -0.029906,
+        0.297867,
+        0.226092,
+        0.264372,
+        0.065794,
+        -0.192597,
+        -0.183027,
+        0.161494,
+        -0.053831,
+        -0.154317,
+        -0.070579,
+        0.254802,
+        -0.173457,
+        -0.273942,
+        0.020336,
+        0.058616,
+        0.173457,
+        0.056224,
+        -0.072972
       ]
     },
     {
@@ -214030,93 +214172,93 @@
     {
       "path": "tests/js/spatial-construction-demo.test.mjs",
       "role": "support_file",
-      "bytes": 25736,
+      "bytes": 28281,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "bad40b64ae964eb3",
+      "digest8": "3388b0d5c10f4a3b",
       "vector": [
-        0.167984,
-        -0.062007,
-        0.073282,
-        0.267196,
-        0.195042,
-        0.161219,
-        -0.172493,
-        -0.267196,
-        0.032695,
-        0.179258,
-        0.158965,
-        0.224354,
-        0.235628,
-        0.057498,
-        0.195042,
-        -0.02593,
-        0.231119,
-        0.27847,
-        0.237883,
-        0.181513,
-        0.143181,
-        -0.005637,
-        -0.21759,
-        0.107104,
-        0.260431,
-        -0.20857,
-        -0.001127,
-        -0.122887,
-        -0.158965,
-        -0.255922,
-        0.043969,
-        0.02593
+        -0.10895,
+        0.285834,
+        0.173038,
+        0.037171,
+        -0.298651,
+        -0.121768,
+        0.129458,
+        0.083315,
+        0.316596,
+        0.293524,
+        0.270452,
+        0.129458,
+        0.147403,
+        -0.032044,
+        -0.206364,
+        -0.111514,
+        -0.129458,
+        -0.311469,
+        0.037171,
+        -0.001282,
+        -0.062806,
+        -0.178165,
+        0.180729,
+        -0.298651,
+        -0.101259,
+        -0.139712,
+        0.106386,
+        0.042298,
+        0.042298,
+        0.144839,
+        0.106386,
+        -0.208928
       ]
     },
     {
       "path": "tests/js/spatial-construction-review-regressions.test.mjs",
       "role": "support_file",
-      "bytes": 10645,
+      "bytes": 11223,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "238ec7f440e87805",
+      "digest8": "854ab08554305e79",
       "vector": [
-        0.148293,
-        -0.205771,
-        -0.125302,
-        -0.265547,
-        0.288539,
-        -0.005748,
-        -0.221864,
-        -0.274744,
-        -0.279342,
-        -0.123002,
-        -0.047132,
-        -0.07702,
-        -0.044833,
-        -0.081618,
-        -0.047132,
-        0.033337,
-        0.127601,
-        0.086217,
-        0.086217,
-        -0.093114,
-        -0.127601,
-        -0.067824,
-        -0.240257,
-        0.143694,
-        0.249454,
-        0.290838,
-        0.288539,
-        -0.228762,
-        0.182779,
-        0.010346,
-        0.086217,
-        -0.256351
+        -0.246478,
+        0.255564,
+        -0.228304,
+        0.15561,
+        0.230576,
+        0.017038,
+        -0.196501,
+        0.198772,
+        0.253293,
+        0.180599,
+        -0.112448,
+        0.219217,
+        0.107905,
+        -0.076101,
+        -0.103362,
+        0.001136,
+        -0.119263,
+        -0.176055,
+        -0.173784,
+        -0.228304,
+        0.228304,
+        -0.055656,
+        -0.251021,
+        0.282825,
+        0.132893,
+        -0.005679,
+        -0.180599,
+        0.139709,
+        -0.180599,
+        0.085188,
+        -0.103362,
+        -0.185142
       ]
     },
     {
@@ -214768,7 +214910,7 @@
     "source": "compiled_deep_topology",
     "diagnostics": {
       "isolated_node_count": 7,
-      "dead_end_count": 4575,
+      "dead_end_count": 4576,
       "dangling_edge_count": 0,
       "top_hubs": [
         {
@@ -214868,11 +215010,11 @@
       "generated_by": "aura_topology_manager",
       "root": ".",
       "module_count": 608,
-      "node_count": 10353,
-      "edge_count": 24160,
+      "node_count": 10358,
+      "edge_count": 24168,
       "spectral_layout": true,
-      "spectral_sparsity": 0.054772,
-      "global_health": 0.97085
+      "spectral_sparsity": 0.054746,
+      "global_health": 0.970845
     },
     "file_index": {
       "aura_node.py": {
@@ -219897,8 +220039,50 @@
           "import_module": 5
         }
       },
-      "aura_efficiency_benchmark.py": {
+      "aura_construction_demo_director.py": {
         "hub_rank": 118,
+        "node_count": 22,
+        "edge_count": 120,
+        "degree": 120,
+        "symbols": [
+          "ConstructionDemoTourStep",
+          "_ConstructionDemoHandler",
+          "_fallback_asset",
+          "_fallback_manifest",
+          "_full_tour",
+          "_fully_decode_static_path",
+          "_route_static_request",
+          "_safe_construction_demo_static_file",
+          "_safe_construction_demo_static_path",
+          "_send_packet",
+          "_tour_steps",
+          "build_fallback_construction_demo_asset_pack",
+          "compile_construction_demo_packet",
+          "do_GET",
+          "do_HEAD",
+          "end_headers",
+          "load_construction_demo_asset_pack",
+          "log_message",
+          "serve_construction_demo",
+          "to_dict"
+        ],
+        "neighbor_files": [
+          "aura_construction_demo_contracts.py",
+          "aura_construction_demo_fixture_builder.py",
+          "aura_construction_demo_projection.py",
+          "aura_event_contracts.py",
+          "aura_spatial_cli.py",
+          "aura_spatial_contracts.py",
+          "aura_spatial_render_plan.py"
+        ],
+        "edge_kinds": {
+          "call": 71,
+          "defines": 42,
+          "import_module": 7
+        }
+      },
+      "aura_efficiency_benchmark.py": {
+        "hub_rank": 119,
         "node_count": 43,
         "edge_count": 119,
         "degree": 119,
@@ -219938,7 +220122,7 @@
         }
       },
       "aura_change_graph.py": {
-        "hub_rank": 119,
+        "hub_rank": 120,
         "node_count": 22,
         "edge_count": 118,
         "degree": 118,
@@ -219978,7 +220162,7 @@
         }
       },
       "aura_mcp_gateway.py": {
-        "hub_rank": 120,
+        "hub_rank": 121,
         "node_count": 29,
         "edge_count": 117,
         "degree": 117,
@@ -220019,7 +220203,7 @@
         }
       },
       "aura_model_cognome_replay.py": {
-        "hub_rank": 121,
+        "hub_rank": 122,
         "node_count": 26,
         "edge_count": 117,
         "degree": 117,
@@ -220054,7 +220238,7 @@
         }
       },
       "test_aura_workbench.py": {
-        "hub_rank": 122,
+        "hub_rank": 123,
         "node_count": 23,
         "edge_count": 117,
         "degree": 117,
@@ -220107,7 +220291,7 @@
         }
       },
       "aura_spatial_server.py": {
-        "hub_rank": 123,
+        "hub_rank": 124,
         "node_count": 31,
         "edge_count": 116,
         "degree": 116,
@@ -220151,7 +220335,7 @@
         }
       },
       "aura_ai_router.py": {
-        "hub_rank": 124,
+        "hub_rank": 125,
         "node_count": 19,
         "edge_count": 115,
         "degree": 115,
@@ -220186,7 +220370,7 @@
         }
       },
       "aura_gate_comparison.py": {
-        "hub_rank": 125,
+        "hub_rank": 126,
         "node_count": 28,
         "edge_count": 114,
         "degree": 114,
@@ -220223,7 +220407,7 @@
         }
       },
       "aura_arena_attempt_archive.py": {
-        "hub_rank": 126,
+        "hub_rank": 127,
         "node_count": 21,
         "edge_count": 114,
         "degree": 114,
@@ -220262,7 +220446,7 @@
         }
       },
       "async_palace.py": {
-        "hub_rank": 127,
+        "hub_rank": 128,
         "node_count": 36,
         "edge_count": 113,
         "degree": 113,
@@ -220305,7 +220489,7 @@
         }
       },
       "aura_background_workers.py": {
-        "hub_rank": 128,
+        "hub_rank": 129,
         "node_count": 35,
         "edge_count": 113,
         "degree": 113,
@@ -220344,7 +220528,7 @@
         }
       },
       "aura_spectral_topology.py": {
-        "hub_rank": 129,
+        "hub_rank": 130,
         "node_count": 18,
         "edge_count": 113,
         "degree": 113,
@@ -220382,7 +220566,7 @@
         }
       },
       "aura_arena_st3gg_shadow.py": {
-        "hub_rank": 130,
+        "hub_rank": 131,
         "node_count": 31,
         "edge_count": 111,
         "degree": 111,
@@ -220420,7 +220604,7 @@
         }
       },
       "aura_federation.py": {
-        "hub_rank": 131,
+        "hub_rank": 132,
         "node_count": 29,
         "edge_count": 111,
         "degree": 111,
@@ -220458,7 +220642,7 @@
         }
       },
       "aura_substrate_contracts.py": {
-        "hub_rank": 132,
+        "hub_rank": 133,
         "node_count": 27,
         "edge_count": 111,
         "degree": 111,
@@ -220495,7 +220679,7 @@
         }
       },
       "aura_repo_localizer.py": {
-        "hub_rank": 133,
+        "hub_rank": 134,
         "node_count": 17,
         "edge_count": 111,
         "degree": 111,
@@ -220534,7 +220718,7 @@
         }
       },
       "aura_arena_gate_dialogue.py": {
-        "hub_rank": 134,
+        "hub_rank": 135,
         "node_count": 16,
         "edge_count": 111,
         "degree": 111,
@@ -220570,7 +220754,7 @@
         }
       },
       "aura_topology_ws_bridge.py": {
-        "hub_rank": 135,
+        "hub_rank": 136,
         "node_count": 37,
         "edge_count": 110,
         "degree": 110,
@@ -220609,7 +220793,7 @@
         }
       },
       "aura_timestep_svd_quantizer.py": {
-        "hub_rank": 136,
+        "hub_rank": 137,
         "node_count": 24,
         "edge_count": 109,
         "degree": 109,
@@ -220645,7 +220829,7 @@
         }
       },
       "test_aura_patch_quality.py": {
-        "hub_rank": 137,
+        "hub_rank": 138,
         "node_count": 34,
         "edge_count": 108,
         "degree": 108,
@@ -220685,7 +220869,7 @@
         }
       },
       "test_resonant_oracle.py": {
-        "hub_rank": 138,
+        "hub_rank": 139,
         "node_count": 35,
         "edge_count": 106,
         "degree": 106,
@@ -220721,7 +220905,7 @@
         }
       },
       "aura_arena_st3gg_codec.py": {
-        "hub_rank": 139,
+        "hub_rank": 140,
         "node_count": 21,
         "edge_count": 106,
         "degree": 106,
@@ -220768,7 +220952,7 @@
         }
       },
       "aura_civic_planning_types.py": {
-        "hub_rank": 140,
+        "hub_rank": 141,
         "node_count": 31,
         "edge_count": 105,
         "degree": 105,
@@ -220804,7 +220988,7 @@
         }
       },
       "test_liquid_internet.py": {
-        "hub_rank": 141,
+        "hub_rank": 142,
         "node_count": 27,
         "edge_count": 105,
         "degree": 105,
@@ -220840,7 +221024,7 @@
         }
       },
       "aura_planning_regression.py": {
-        "hub_rank": 142,
+        "hub_rank": 143,
         "node_count": 20,
         "edge_count": 104,
         "degree": 104,
@@ -220876,7 +221060,7 @@
         }
       },
       "aura_intent_ingestion.py": {
-        "hub_rank": 143,
+        "hub_rank": 144,
         "node_count": 19,
         "edge_count": 104,
         "degree": 104,
@@ -220922,7 +221106,7 @@
         }
       },
       "aura_refactor_chronicle.py": {
-        "hub_rank": 144,
+        "hub_rank": 145,
         "node_count": 18,
         "edge_count": 104,
         "degree": 104,
@@ -220958,44 +221142,6 @@
           "call": 66,
           "defines": 34,
           "import_module": 4
-        }
-      },
-      "aura_construction_demo_director.py": {
-        "hub_rank": 145,
-        "node_count": 17,
-        "edge_count": 104,
-        "degree": 104,
-        "symbols": [
-          "ConstructionDemoTourStep",
-          "_ConstructionDemoHandler",
-          "_fallback_asset",
-          "_fallback_manifest",
-          "_full_tour",
-          "_safe_construction_demo_static_path",
-          "_tour_steps",
-          "build_fallback_construction_demo_asset_pack",
-          "compile_construction_demo_packet",
-          "do_GET",
-          "end_headers",
-          "load_construction_demo_asset_pack",
-          "log_message",
-          "serve_construction_demo",
-          "to_dict",
-          "write_construction_demo_packet"
-        ],
-        "neighbor_files": [
-          "aura_construction_demo_contracts.py",
-          "aura_construction_demo_fixture_builder.py",
-          "aura_construction_demo_projection.py",
-          "aura_event_contracts.py",
-          "aura_spatial_cli.py",
-          "aura_spatial_contracts.py",
-          "aura_spatial_render_plan.py"
-        ],
-        "edge_kinds": {
-          "call": 65,
-          "defines": 32,
-          "import_module": 7
         }
       },
       "aura_spatial_breadboard.py": {
