@@ -6,6 +6,13 @@ on:
       - "analysis/aura-continuity-fabric-harness-*"
     paths:
       - ".aura/CONTINUITY_FABRIC_HARNESS_REQUEST"
+  pull_request:
+    branches:
+      - "work/ai-safe-architecture-harness-20260722"
+    paths:
+      - ".aura/CONTINUITY_FABRIC_HARNESS_REQUEST"
+      - "docs/AURA_CONTINUITY_FABRIC_RESEARCH_INPUT.md"
+      - ".github/workflows/aura-continuity-fabric-harness.yml"
 
 permissions:
   contents: read
@@ -69,7 +76,7 @@ jobs:
           out = Path(os.environ["OUTPUT_DIR"])
           payload = {
               "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
-              "source_branch": os.environ.get("GITHUB_REF_NAME", ""),
+              "source_branch": os.environ.get("GITHUB_HEAD_REF") or os.environ.get("GITHUB_REF_NAME", ""),
               "workflow_run_id": os.environ.get("GITHUB_RUN_ID", ""),
               "authority": "read_only_proposal_only_architecture_analysis",
           }
