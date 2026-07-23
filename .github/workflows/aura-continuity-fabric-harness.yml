@@ -66,6 +66,129 @@ jobs:
             --watchdog-pause-seconds 1200 \
             > "${RUNNER_TEMP}/aura-continuity-fabric-console.json"
 
+      - name: Run exact-target Coding Relationship Compass
+        env:
+          OUTPUT_DIR: ${{ runner.temp }}/aura-continuity-fabric-run
+          AURA_VENV: ${{ runner.temp }}/aura-harness-venv
+        run: |
+          "${AURA_VENV}/bin/python" - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from aura_coding_relationship_compass import compile_coding_relationship_compass
+
+          objective = (
+              "Integrate purpose-conditioned consequence sensitivity, protected pathways, safe-update budgets, "
+              "adaptive memory admission, exact-evidence retention, recurrence-gated consolidation, sensitivity-weighted "
+              "Crucible replay, evidence-sufficiency retrieval, adaptive ST3GG fidelity, model-route sensitivity, and "
+              "topology consequence mapping into Aura's existing canonical owners without duplicate truth, execution, "
+              "memory, routing, continuity, or authority planes."
+          )
+          target_files = (
+              "aura_coding_relationship_compass.py",
+              "aura_relationship_contracts.py",
+              "aura_change_graph.py",
+              "aura_relationship_experience.py",
+              "aura_qdkt_observations.py",
+              "aura_qdkt.py",
+              "aura_continuity_packet.py",
+              "aura_st3gg_contracts.py",
+              "aura_crucible_store.py",
+              "aura_empirical_software_lab.py",
+              "aura_harness_evolver.py",
+              "aura_dikwp_router_pipeline.py",
+              "aura_jspace_codec.py",
+              "aura_model_cognome.py",
+              "aura_planning_board.py",
+              "aura_coding_waboose_breadboard.py",
+          )
+          target_symbols = (
+              "compile_coding_relationship_compass",
+              "evaluate_typed_relationship_compatibility",
+              "build_compass_change_graph",
+              "compile_compass_act_capsules",
+              "lesson_eligibility",
+              "crucible_replay_scenarios",
+              "project_relationship_experience_advisory",
+              "UnifiedQDKT._check_crystallization",
+              "UnifiedQDKT.crystallize",
+              "J2ContinuityPacket",
+              "ST3GGDecision",
+              "prepare_st3gg_artifact",
+              "CrucibleStore.record_run",
+              "CrucibleStore.record_proposal",
+              "define_empirical_task",
+              "record_empirical_result",
+              "analyze_transaction_outcome",
+              "record_harness_prediction",
+              "DIKWPEnvelope",
+              "TaskContext",
+              "AuraJState",
+              "PlanningBoard",
+              "compile_relationship_breadboard",
+          )
+          packet = compile_coding_relationship_compass(
+              objective,
+              repo_root=".",
+              target_files=target_files,
+              target_symbols=target_symbols,
+              max_target_files=16,
+              max_target_symbols=32,
+              max_atomic_nodes=72,
+              max_atlas_participants=64,
+              max_atlas_assessments=192,
+              max_required_tests=48,
+              max_neighborhood_hops=2,
+              max_neighborhood_nodes=128,
+              max_neighborhood_edges=512,
+              max_neighborhood_candidate_pairs=4096,
+              max_neighborhood_output_bytes=4_000_000,
+              max_neighborhood_elapsed_ms=90_000,
+              atlas_profile="OBJECTIVE_DEEP",
+              include_source=False,
+              max_emergent_candidates=24,
+          )
+          output = Path(os.environ["OUTPUT_DIR"])
+          (output / "objective_relationship_compass.json").write_text(
+              json.dumps(packet, indent=2, sort_keys=True, default=str) + "\n",
+              encoding="utf-8",
+          )
+          verification = packet.get("bounded_emergent_verification") or {}
+          graph = packet.get("change_graph") or {}
+          summary = {
+              "version": packet.get("version"),
+              "objective": packet.get("objective"),
+              "compass_digest": packet.get("compass_digest"),
+              "grounding_receipt_digest": packet.get("grounding_receipt_digest"),
+              "matched_components": packet.get("matched_components"),
+              "target_file": packet.get("target_file"),
+              "target_symbol": packet.get("target_symbol"),
+              "recommended_targets": packet.get("recommended_targets"),
+              "required_tests": packet.get("required_tests"),
+              "capability_classes": packet.get("capability_classes"),
+              "typed_compatibility": packet.get("typed_compatibility"),
+              "relationships_to_preserve": packet.get("relationships_to_preserve"),
+              "prohibitions": packet.get("prohibitions"),
+              "missing_roles": packet.get("missing_roles"),
+              "required_adapters": packet.get("required_adapters"),
+              "authority_constraints": packet.get("authority_constraints"),
+              "accepted_emergent_candidates": verification.get("accepted_candidates", []),
+              "rejected_emergent_candidates": verification.get("rejected_candidates", []),
+              "change_graph_node_count": len(graph.get("nodes", []) or []),
+              "phase_capsules": graph.get("phase_capsules", []),
+              "council_route": packet.get("council_route"),
+              "experience_projection_template": packet.get("experience_projection_template"),
+              "safe_to_patch": packet.get("safe_to_patch"),
+              "production_mutation": packet.get("production_mutation"),
+              "human_review_required": packet.get("human_review_required"),
+              "patch_authority": packet.get("patch_authority"),
+          }
+          (output / "objective_relationship_compass_summary.json").write_text(
+              json.dumps(summary, indent=2, sort_keys=True, default=str) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
       - name: Record exact source identity
         env:
           OUTPUT_DIR: ${{ runner.temp }}/aura-continuity-fabric-run
