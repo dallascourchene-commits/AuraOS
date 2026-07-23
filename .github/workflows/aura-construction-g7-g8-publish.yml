@@ -164,14 +164,20 @@ jobs:
           test -s topology_map.json
           test -s Aura_Memory/live_topology_ast.json
 
-      - name: Verify exact repaired surface
+      - name: Verify repaired static surface
         run: |
           python -m py_compile aura_construction_demo_director.py aura_spatial_cli.py
           ruff check aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
           ruff format --check aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
-          python -m pytest -q --tb=short tests/test_aura_construction_demo_director.py tests/test_aura_construction_demo_fixture.py tests/test_aura_construction_demo_projection.py
-          node --check aura_spatial_web/construction_demo_app.js
-          python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --output /tmp/aura-construction-demo.packet.json
+
+      - name: Verify repaired Python tests
+        run: python -m pytest -q --tb=short tests/test_aura_construction_demo_director.py tests/test_aura_construction_demo_fixture.py tests/test_aura_construction_demo_projection.py
+
+      - name: Verify repaired browser controller
+        run: node --check aura_spatial_web/construction_demo_app.js
+
+      - name: Verify repaired CLI packet
+        run: python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --output /tmp/aura-construction-demo.packet.json
 
       - name: Publish one verified finalization commit
         env:
