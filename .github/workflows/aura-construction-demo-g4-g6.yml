@@ -89,22 +89,10 @@ jobs:
           set +e
           ruff format aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
           status=$?
-          if test "$status" = "0"; then
-            ruff check aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
-            status=$?
-          fi
-          if test "$status" = "0"; then
-            node --check aura_spatial_web/construction_scene_renderer.js
-            status=$?
-          fi
-          if test "$status" = "0"; then
-            node --check tests/js/spatial-construction-review-regressions.test.mjs
-            status=$?
-          fi
-          if test "$status" = "0"; then
-            git diff --check
-            status=$?
-          fi
+          if test "$status" = "0"; then ruff check aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py; status=$?; fi
+          if test "$status" = "0"; then node --check aura_spatial_web/construction_scene_renderer.js; status=$?; fi
+          if test "$status" = "0"; then node --check tests/js/spatial-construction-review-regressions.test.mjs; status=$?; fi
+          if test "$status" = "0"; then git diff --check; status=$?; fi
           echo "$status" > /tmp/aura-review-repair/status/static.status
           exit "$status"
 
@@ -128,9 +116,7 @@ jobs:
         continue-on-error: true
         run: |
           set +e
-          node --test \
-            tests/js/spatial-construction-demo.test.mjs \
-            tests/js/spatial-construction-review-regressions.test.mjs
+          node --test tests/js/spatial-construction-demo.test.mjs tests/js/spatial-construction-review-regressions.test.mjs
           status=$?
           echo "$status" > /tmp/aura-review-repair/status/browser-focused.status
           exit "$status"
@@ -144,34 +130,17 @@ jobs:
           echo "$status" > /tmp/aura-review-repair/status/browser-retained.status
           exit "$status"
 
-      - name: Publish only fully verified repairs
+      - name: Verify all repair statuses and create commit
         if: always()
-        env:
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
-          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
-          failed=0
           for name in patch static python browser-focused browser-retained; do
             file="/tmp/aura-review-repair/status/${name}.status"
-            if ! test -f "$file"; then
-              echo "missing status: $name"
-              failed=1
-              continue
-            fi
+            test -f "$file"
             status="$(cat "$file")"
             echo "$name=$status"
-            if test "$status" != "0"; then failed=1; fi
+            test "$status" = "0"
           done
-          test "$failed" = "0"
-          if git diff --quiet -- \
-            aura_construction_demo_projection.py \
-            aura_spatial_web/construction_scene_renderer.js \
-            tests/test_aura_construction_demo_projection.py \
-            tests/js/spatial-construction-review-regressions.test.mjs; then
-            echo "Second deep-review repairs are already present."
-            exit 0
-          fi
           git config user.name "Aura Architecture Harness"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
@@ -179,7 +148,23 @@ jobs:
             aura_spatial_web/construction_scene_renderer.js \
             tests/test_aura_construction_demo_projection.py \
             tests/js/spatial-construction-review-regressions.test.mjs
+          git diff --cached --stat
           git commit -m "fix(construction): resolve second deep review findings"
+
+      - name: Verify branch remained unchanged
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
           git fetch --no-tags origin "$HEAD_REF"
+          echo "expected=$EXPECTED_HEAD"
+          echo "remote=$(git rev-parse FETCH_HEAD)"
           test "$(git rev-parse FETCH_HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Push verified repair commit
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
           git push origin "HEAD:${HEAD_REF}"
