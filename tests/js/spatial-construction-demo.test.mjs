@@ -506,4 +506,112 @@ test("Construction renderer cancellation and device loss fail closed", async () 
   const status = await renderer.markDeviceLost();
   assert.equal(status.state, "LOST");
   assert.equal(status.renderer_authority, false);
+  assert.equal(presentation.disposed, 1);
+  await renderer.dispose();
+  assert.equal(presentation.disposed, 1);
+});
+
+
+test("Construction storey isolation filters Gaussian assets", async () => {
+  const { scene, plan } = constructionFixture();
+  scene.frames.push({
+    frame_id: "frame:storey:second",
+    parent_frame_id: "frame:root",
+    handedness: "RIGHT_HANDED",
+    up_axis: "Y_UP",
+    unit_scale_meters: 1,
+    translation: [0, 8, 0],
+    rotation_xyzw: [0, 0, 0, 1],
+    scale: [1, 1, 1],
+    source_refs: ["fixture:storey:second"],
+    truth_class: "PRESENTATION",
+    projection_only: true,
+  });
+  scene.assets.push({
+    asset_id: "asset:splats:second",
+    asset_type: "GAUSSIAN_SPLAT",
+    uri: "aura://construction/splats-second.spz",
+    media_type: "application/vnd.aura.spz",
+    content_digest: `sha256:${"4".repeat(64)}`,
+    byte_length: 48,
+    frame_id: "frame:storey:second",
+    bounds_min: [0, 0, 0],
+    bounds_max: [1, 1, 1],
+    source_refs: ["fixture:splats:second"],
+    truth_class: "PRESENTATION",
+    immutable: true,
+    metadata: {
+      import_receipt_digest: "b".repeat(64),
+      representation_digest: REPRESENTATION_DIGEST,
+      representation_digest_version: "AURA_GAUSSIAN_REPRESENTATION_V1",
+      representation_bytes_per_splat: 60,
+      sh_degree: 0,
+      gaussian_sh_degree: 0,
+      gaussian_color_space: "SPZ_INTERNAL_WIDE_RGB",
+    },
+  });
+  scene.entities.push({
+    entity_id: "entity:storey:second",
+    entity_type: "ASSET_INSTANCE",
+    label: "Second storey",
+    frame_id: "frame:storey:second",
+    asset_ids: ["asset:splats:second"],
+    source_refs: ["construction-demo-storey:second"],
+    position: [0, 0, 0],
+    rotation_xyzw: [0, 0, 0, 1],
+    scale: [1, 1, 1],
+    truth_class: "PRESENTATION",
+    selectable: true,
+    projection_only: true,
+    patch_authority: false,
+    metadata: {
+      source_transform: { translation: [0, 8, 0], rotation_xyzw: [0, 0, 0, 1], scale: [1, 1, 1] },
+      presentation_transform: { translation: [0, 0, 0], rotation_xyzw: [0, 0, 0, 1], scale: [1, 1, 1] },
+    },
+  });
+  plan.scene_entity_count = scene.entities.length;
+  plan.scene_asset_count = scene.assets.length;
+  plan.scene_asset_bytes = scene.assets.reduce((total, item) => total + item.byte_length, 0);
+
+  const presentation = new TestPresentationRenderer();
+  const drawn = [];
+  const renderer = new ConstructionSceneRenderer({
+    presentationRenderer: presentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: presentation,
+      drawGaussianPass: async (_resources, context) => {
+        drawn.push(context.asset_id);
+        return () => {};
+      },
+      now: () => 0,
+    }),
+  });
+  const secondPayload = {
+    ...gaussianPayload(),
+    asset_id: "asset:splats:second",
+    source_digest: "4".repeat(64),
+    derived_asset_digest: "b".repeat(64),
+  };
+  await renderer.initialize(scene, plan, {
+    meshPayloads: [{
+      asset_id: "asset:mesh",
+      source_digest: "1".repeat(64),
+      decoded_byte_length: 256,
+      resource: { local: true },
+    }],
+    gaussianPayloads: [gaussianPayload(), secondPayload],
+  });
+
+  renderer.isolateStorey("frame:storey");
+  const isolated = await renderer.present();
+  assert.equal(isolated.base_receipt.splat_count, 1);
+  assert.deepEqual(drawn, ["asset:splats"]);
+
+  renderer.showAllStoreys();
+  const all = await renderer.present();
+  assert.equal(all.base_receipt.splat_count, 2);
+  assert.deepEqual(drawn.slice(-2), ["asset:splats", "asset:splats:second"]);
+  await renderer.dispose();
 });
