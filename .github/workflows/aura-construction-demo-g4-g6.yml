@@ -20,7 +20,7 @@ concurrency:
 jobs:
   repair:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - name: Checkout exact pull-request head
         uses: actions/checkout@v4
@@ -32,7 +32,10 @@ jobs:
       - name: Verify exact head
         env:
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
-        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          mkdir -p /tmp/aura-review-repair/status
 
       - uses: actions/setup-python@v5
         with:
@@ -45,13 +48,10 @@ jobs:
       - name: Install bounded verification dependencies
         run: python -m pip install -q --disable-pip-version-check numpy pytest ruff zstandard
 
-      - name: Apply, validate, test, and publish repairs
-        env:
-          GH_TOKEN: ${{ github.token }}
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
-          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+      - name: Apply review repairs
+        continue-on-error: true
         run: |
-          set -euo pipefail
+          set +e
           python - <<'PY'
           from pathlib import Path
 
@@ -79,11 +79,39 @@ jobs:
               raise SystemExit("temporary repair script frame span is missing")
           PY
           python scripts/aura_construction_second_review_repair.py
+          status=$?
+          echo "$status" > /tmp/aura-review-repair/status/patch.status
+          exit "$status"
+
+      - name: Validate formatting and syntax
+        continue-on-error: true
+        run: |
+          set +e
           ruff format aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
-          ruff check aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
-          node --check aura_spatial_web/construction_scene_renderer.js
-          node --check tests/js/spatial-construction-review-regressions.test.mjs
-          git diff --check
+          status=$?
+          if test "$status" = "0"; then
+            ruff check aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
+            status=$?
+          fi
+          if test "$status" = "0"; then
+            node --check aura_spatial_web/construction_scene_renderer.js
+            status=$?
+          fi
+          if test "$status" = "0"; then
+            node --check tests/js/spatial-construction-review-regressions.test.mjs
+            status=$?
+          fi
+          if test "$status" = "0"; then
+            git diff --check
+            status=$?
+          fi
+          echo "$status" > /tmp/aura-review-repair/status/static.status
+          exit "$status"
+
+      - name: Run focused and retained Python tests
+        continue-on-error: true
+        run: |
+          set +e
           python -m pytest -q --tb=short \
             tests/test_aura_construction_demo_fixture.py \
             tests/test_aura_construction_demo_projection.py \
@@ -92,10 +120,51 @@ jobs:
             tests/test_aura_construction_fixtures.py \
             tests/test_aura_spatial_s6_construction.py \
             tests/test_aura_spatial_mixed_scene.py
+          status=$?
+          echo "$status" > /tmp/aura-review-repair/status/python.status
+          exit "$status"
+
+      - name: Run focused browser tests
+        continue-on-error: true
+        run: |
+          set +e
           node --test \
             tests/js/spatial-construction-demo.test.mjs \
             tests/js/spatial-construction-review-regressions.test.mjs
+          status=$?
+          echo "$status" > /tmp/aura-review-repair/status/browser-focused.status
+          exit "$status"
+
+      - name: Run retained Spatial browser tests
+        continue-on-error: true
+        run: |
+          set +e
           npm run test:spatial
+          status=$?
+          echo "$status" > /tmp/aura-review-repair/status/browser-retained.status
+          exit "$status"
+
+      - name: Publish only fully verified repairs
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          failed=0
+          for name in patch static python browser-focused browser-retained; do
+            file="/tmp/aura-review-repair/status/${name}.status"
+            if ! test -f "$file"; then
+              echo "missing status: $name"
+              failed=1
+              continue
+            fi
+            status="$(cat "$file")"
+            echo "$name=$status"
+            if test "$status" != "0"; then failed=1; fi
+          done
+          test "$failed" = "0"
           if git diff --quiet -- \
             aura_construction_demo_projection.py \
             aura_spatial_web/construction_scene_renderer.js \
