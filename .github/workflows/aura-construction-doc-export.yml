@@ -1,4 +1,4 @@
-name: Export Construction canonical docs
+name: Export Construction final tree
 
 on:
   pull_request:
@@ -9,20 +9,64 @@ permissions:
   contents: read
 
 jobs:
-  export-docs:
+  export-final-tree:
     runs-on: ubuntu-latest
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install declared dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install jsonschema pytest ruff
+
+      - name: Apply the guarded one-shot finalization
+        env:
+          GITHUB_WORKFLOW: Synchronize CODEMAP on analysis and documentation branches
+          GITHUB_HEAD_REF: docs/construction-arena-g7-g8-final-20260723
+        run: python -c "import sitecustomize"
+
+      - name: Regenerate and verify complete navigation
+        run: |
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s topology_map.json
+          test -s Aura_Memory/live_topology_ast.json
+
+      - name: Verify finalized source
+        run: |
+          python -m py_compile aura_construction_demo_director.py aura_spatial_cli.py
+          ruff check aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
+          node --check aura_spatial_web/construction_demo_app.js
+          python -m pytest -q --tb=short \
+            tests/test_aura_construction_demo_director.py \
+            tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py
+
       - uses: actions/upload-artifact@v4
         with:
-          name: aura-construction-canonical-docs
+          name: aura-construction-final-tree
           path: |
             README.md
             USER_GUIDE.md
             .aura/ARCHITECTURE.md
+            aura_construction_demo_director.py
+            aura_spatial_web/construction_demo_app.js
+            .aura/CODEMAP.json
+            .aura/CODEMAP.md
+            topology_map.json
+            Aura_Memory/live_topology_ast.json
           if-no-files-found: error
           retention-days: 2
