@@ -45,11 +45,13 @@ jobs:
       - name: Install bounded verification dependencies
         run: python -m pip install -q --disable-pip-version-check numpy pytest ruff zstandard
 
-      - name: Apply repair script
-        id: patch
-        continue-on-error: true
+      - name: Apply, validate, test, and publish repairs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
-          mkdir -p /tmp/aura-review-repair
+          set -euo pipefail
           python - <<'PY'
           from pathlib import Path
 
@@ -71,88 +73,29 @@ jobs:
                   print(f"repairing: {count} remaining package frame consumers")
                   text = text.replace(frame_expression, "package_frame_id")
           '''
-          if old not in text:
+          if old in text:
+              path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          elif new not in text:
               raise SystemExit("temporary repair script frame span is missing")
-          path.write_text(text.replace(old, new, 1), encoding="utf-8")
           PY
-          set +e
-          python scripts/aura_construction_second_review_repair.py \
-            > /tmp/aura-review-repair/patch.log 2>&1
-          status=$?
-          echo "$status" > /tmp/aura-review-repair/patch.status
-          cat /tmp/aura-review-repair/patch.log
-          exit "$status"
-
-      - name: Format and statically validate repairs
-        id: static
-        if: steps.patch.outcome == 'success'
-        continue-on-error: true
-        run: |
-          set +e
-          {
-            ruff format aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
-            ruff check aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
-            node --check aura_spatial_web/construction_scene_renderer.js
-            node --check tests/js/spatial-construction-review-regressions.test.mjs
-            git diff --check
-          } > /tmp/aura-review-repair/static.log 2>&1
-          status=$?
-          echo "$status" > /tmp/aura-review-repair/static.status
-          cat /tmp/aura-review-repair/static.log
-          exit "$status"
-
-      - name: Run focused and retained verification
-        id: tests
-        if: steps.patch.outcome == 'success' && steps.static.outcome == 'success'
-        continue-on-error: true
-        run: |
-          set +e
-          {
-            python -m pytest -q --tb=short \
-              tests/test_aura_construction_demo_fixture.py \
-              tests/test_aura_construction_demo_projection.py \
-              tests/test_aura_construction_state.py \
-              tests/test_aura_construction_adapter.py \
-              tests/test_aura_construction_fixtures.py \
-              tests/test_aura_spatial_s6_construction.py \
-              tests/test_aura_spatial_mixed_scene.py
-            node --test \
-              tests/js/spatial-construction-demo.test.mjs \
-              tests/js/spatial-construction-review-regressions.test.mjs
-            npm run test:spatial
-          } > /tmp/aura-review-repair/tests.log 2>&1
-          status=$?
-          echo "$status" > /tmp/aura-review-repair/tests.status
-          cat /tmp/aura-review-repair/tests.log
-          exit "$status"
-
-      - name: Capture repair diff
-        if: always()
-        run: |
-          git diff -- \
-            aura_construction_demo_projection.py \
-            aura_spatial_web/construction_scene_renderer.js \
+          python scripts/aura_construction_second_review_repair.py
+          ruff format aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
+          ruff check aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
+          node --check aura_spatial_web/construction_scene_renderer.js
+          node --check tests/js/spatial-construction-review-regressions.test.mjs
+          git diff --check
+          python -m pytest -q --tb=short \
+            tests/test_aura_construction_demo_fixture.py \
             tests/test_aura_construction_demo_projection.py \
-            tests/js/spatial-construction-review-regressions.test.mjs \
-            > /tmp/aura-review-repair/repair.diff || true
-
-      - name: Upload repair diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: aura-construction-second-review-repair
-          path: /tmp/aura-review-repair
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Commit and push repaired owners
-        if: steps.patch.outcome == 'success' && steps.static.outcome == 'success' && steps.tests.outcome == 'success'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
-          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
-        run: |
-          set -euo pipefail
+            tests/test_aura_construction_state.py \
+            tests/test_aura_construction_adapter.py \
+            tests/test_aura_construction_fixtures.py \
+            tests/test_aura_spatial_s6_construction.py \
+            tests/test_aura_spatial_mixed_scene.py
+          node --test \
+            tests/js/spatial-construction-demo.test.mjs \
+            tests/js/spatial-construction-review-regressions.test.mjs
+          npm run test:spatial
           if git diff --quiet -- \
             aura_construction_demo_projection.py \
             aura_spatial_web/construction_scene_renderer.js \
@@ -173,11 +116,3 @@ jobs:
           test "$(git rev-parse FETCH_HEAD)" = "$EXPECTED_HEAD"
           git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push origin "HEAD:${HEAD_REF}"
-
-      - name: Evaluate repair lane
-        if: always()
-        run: |
-          set -euo pipefail
-          test "${{ steps.patch.outcome }}" = "success"
-          test "${{ steps.static.outcome }}" = "success"
-          test "${{ steps.tests.outcome }}" = "success"
