@@ -531,7 +531,6 @@ TOOL_DEFINITIONS = [
             "required": ["objective"],
         },
     },
-
     {
         "name": "aura_compass_prepare",
         "description": "Prepare an exact-head Coding Relationship Compass run in SHADOW, LIMITED, or explicitly authorized PAIRED_LIVE mode.",
@@ -563,27 +562,52 @@ TOOL_DEFINITIONS = [
     {
         "name": "aura_compass_neighborhood",
         "description": "Return the bounded relational neighborhood for a prepared Compass run.",
-        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
+        "inputSchema": {
+            "type": "object",
+            "properties": {"run_id": {"type": "string"}},
+            "required": ["run_id"],
+            "additionalProperties": False,
+        },
     },
     {
         "name": "aura_compass_classify",
         "description": "Return objective Atlas, prohibitions, adapters, and bounded emergent classifications.",
-        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
+        "inputSchema": {
+            "type": "object",
+            "properties": {"run_id": {"type": "string"}},
+            "required": ["run_id"],
+            "additionalProperties": False,
+        },
     },
     {
         "name": "aura_compass_breadboard",
         "description": "Return typed compatibility and Coding Waboose Breadboard receipts.",
-        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
+        "inputSchema": {
+            "type": "object",
+            "properties": {"run_id": {"type": "string"}},
+            "required": ["run_id"],
+            "additionalProperties": False,
+        },
     },
     {
         "name": "aura_compass_plan",
         "description": "Return the proposal-only Change Graph, phase capsules, and Council V3 route.",
-        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
+        "inputSchema": {
+            "type": "object",
+            "properties": {"run_id": {"type": "string"}},
+            "required": ["run_id"],
+            "additionalProperties": False,
+        },
     },
     {
         "name": "aura_compass_compile_capsules",
         "description": "Compile proposal-only Act Capsules and SPEC-floor Agent IR; never grants patch authority.",
-        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
+        "inputSchema": {
+            "type": "object",
+            "properties": {"run_id": {"type": "string"}},
+            "required": ["run_id"],
+            "additionalProperties": False,
+        },
     },
     {
         "name": "aura_waboose_learn_coderabbit",
@@ -980,7 +1004,6 @@ def _handle_emergent_evidence(
     return bridge.aura_emergent_evidence(request)
 
 
-
 @_register_tool("aura_compass_prepare")
 def _handle_compass_prepare(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
     allowed = {
@@ -999,12 +1022,8 @@ def _handle_compass_prepare(bridge: AuraAgentArenaBridge, args: dict[str, Any]) 
     if unknown:
         raise MCPArgumentError(f"unknown aura_compass_prepare fields: {', '.join(unknown)}")
     objective = _bounded_text_arg(args, "objective", maximum=4000, required=True)
-    target_files = _bounded_text_array_arg(
-        args, "target_files", max_items=16, max_item_length=240
-    )
-    target_symbols = _bounded_text_array_arg(
-        args, "target_symbols", max_items=32, max_item_length=240
-    )
+    target_files = _bounded_text_array_arg(args, "target_files", max_items=16, max_item_length=240)
+    target_symbols = _bounded_text_array_arg(args, "target_symbols", max_items=32, max_item_length=240)
     rollout_mode = _bounded_text_arg(args, "rollout_mode", maximum=11, default="SHADOW")
     if rollout_mode not in {"SHADOW", "LIMITED", "PAIRED_LIVE"}:
         raise MCPArgumentError("rollout_mode must be SHADOW, LIMITED, or PAIRED_LIVE")

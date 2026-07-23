@@ -408,3 +408,28 @@ def test_g5_public_projection_uses_export_scoped_asset_aliases() -> None:
         not in {binding.import_receipt_digest for binding in fixture.asset_pack.assets}
         for item in first_assets
     )
+
+    # CodeRabbit #3634849047: walk every source_refs collection in the
+    # PUBLIC payload and assert no raw domain identifiers leak through.
+    _raw_ref_values: set[str] = set()
+    _raw_ref_values.update(fixture.state.project_id)
+    _raw_ref_values.update(package.zone_id for package in fixture.work_packages)
+    _raw_ref_values.update(package.work_package_id for package in fixture.work_packages)
+    _raw_ref_values.update(storey.storey_id for storey in fixture.asset_pack.storeys)
+    _raw_ref_values.update(storey.frame_id for storey in fixture.asset_pack.storeys)
+    _raw_ref_values.update(binding.asset_id for binding in fixture.asset_pack.assets)
+    for binding in fixture.asset_pack.assets:
+        _raw_ref_values.update(binding.source_refs)
+    for collection, ref_field in (
+        ("frames", "source_refs"),
+        ("assets", "source_refs"),
+        ("entities", "source_refs"),
+        ("links", "source_refs"),
+    ):
+        for item in first_payload[collection]:
+            for ref_value in item.get(ref_field, ()):
+                if not isinstance(ref_value, str):
+                    continue
+                assert ref_value not in _raw_ref_values, (
+                    f"raw identifier leaked into PUBLIC {collection} source_refs: {ref_value}"
+                )
