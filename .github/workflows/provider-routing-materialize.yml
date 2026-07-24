@@ -69,7 +69,10 @@ jobs:
             aura_live_architect.py
 
       - name: Run bounded Council Fusion and Bridge tests
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set +e
           python -m pytest -q \
             tests/test_aura_provider_routing.py \
             test_aura_fusion.py \
@@ -77,7 +80,18 @@ jobs:
             tests/test_aura_agent_arena_cli.py \
             tests/test_aura_architect_council_v3.py \
             test_aura_live_architect.py \
-            --disable-warnings
+            --disable-warnings 2>&1 | tee /tmp/provider-routing-pytest.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            {
+              echo '```text'
+              tail -n 180 /tmp/provider-routing-pytest.log
+              echo '```'
+            } > /tmp/provider-routing-pytest-tail.md
+            gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
+              --body-file /tmp/provider-routing-pytest-tail.md
+            exit "$status"
+          fi
 
       - name: Commit verified refactor and remove transport
         env:
