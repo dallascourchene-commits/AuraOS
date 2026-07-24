@@ -44,7 +44,9 @@ function analyzePng(buffer) {
 
 async function snapshotCanvas(page, name) {
   const target = path.join(OUTPUT_DIR, `${name}.png`);
-  const buffer = await page.locator("#construction-canvas").screenshot({ path: target });
+  // Capture the complete user-visible presentation composite: WebGL canvas,
+  // SVG mesh overlay, HUD, and camera controls.
+  const buffer = await page.locator(".viewport-wrap").screenshot({ path: target });
   return { path: target, ...analyzePng(buffer) };
 }
 
