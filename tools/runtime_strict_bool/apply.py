@@ -51,7 +51,10 @@ def test_profile_rejects_non_boolean_create_venv(tmp_path: Path, value: object) 
     payload = json.loads(profile.read_text(encoding="utf-8"))
     payload["environment"]["create_venv"] = value
     profile.write_text(json.dumps(payload), encoding="utf-8")
-    with pytest.raises(RuntimeHarnessError, match="environment.create_venv must be a boolean"):
+    with pytest.raises(
+        RuntimeHarnessError,
+        match=r"environment\.create_venv must be a boolean",
+    ):
         load_runtime_profile(tmp_path, profile.name)
 
 
