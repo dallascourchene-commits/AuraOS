@@ -1,13 +1,12 @@
 name: Materialize verified provider-routing refactor
 
 on:
-  pull_request:
-    branches:
-      - main
-    types: [opened, synchronize, reopened]
+  issues:
+    types: [opened]
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: provider-routing-materialize
@@ -15,10 +14,17 @@ concurrency:
 
 jobs:
   materialize:
-    if: github.head_ref == 'trigger/provider-routing-materializer'
+    if: github.event.issue.title == 'Aura: materialize verified provider routing'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
+      - name: Report start
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
+            --body "Provider-routing materializer started against immutable base 020f514f34db106e299a8fd3e9414f9246a2873e."
+
       - name: Checkout exact refactor head
         uses: actions/checkout@v4
         with:
@@ -86,3 +92,11 @@ jobs:
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
             push origin HEAD:refactor/deepseek-first-provider-routing
+
+      - name: Report final status
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
+            --body "Provider-routing materializer finished with job status: ${{ job.status }}."
