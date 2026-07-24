@@ -1,0 +1,188 @@
++        key_names = [config["api_key_env"], *config.get("api_key_aliases", [])]
++        if not provider_key_pool(provider, secrets, key_names=key_names):
++            continue
++        return AuraFusionAgent(
++            name=f"auto_{role.lower()}_{provider}",
++            role=role,
++            provider=provider,
++            base_url=str(config["base_url"]),
++            api_key_name=str(config["api_key_env"]),
++            model=registry.resolve_model(provider, model_role),
++        )
++    return None
++
++
+ def load_fusion_config(secrets: dict[str, Any] | None = None) -> tuple[list[AuraFusionAgent], AuraFusionAgent | None]:
+-    """Load AuraFusion panel and judge from aura_secrets-style configuration."""
++    """Load explicit Fusion configuration or synthesize role-aware defaults."""
+     cfg = secrets if secrets is not None else load_secrets()
+     panel_raw = cfg.get("AURA_FUSION_PANEL") or []
+     if not isinstance(panel_raw, list):
+@@ -197,6 +242,20 @@ def load_fusion_config(secrets: dict[str, Any] | None = None) -> tuple[list[Aura
+         raise ValueError("AuraFusion supports at most 8 enabled panel agents")
+     judge_raw = cfg.get("AURA_FUSION_JUDGE")
+     judge = AuraFusionAgent.from_dict(judge_raw) if isinstance(judge_raw, dict) else None
++    if panel or judge is not None:
++        return panel, judge
++
++    registry = ProviderRegistry()
++    thinker = _auto_fusion_agent(registry, cfg, role="THINKER")
++    worker = _auto_fusion_agent(registry, cfg, role="WORKER")
++    verifier = _auto_fusion_agent(
++        registry,
++        cfg,
++        role="VERIFIER",
++        skip=(worker.provider,) if worker is not None else (),
++    )
++    panel = [agent for agent in (thinker, worker, verifier) if agent is not None]
++    judge = _auto_fusion_agent(registry, cfg, role="JUDGE")
+     return panel, judge
+ 
+ 
+@@ -500,14 +559,42 @@ class AuraFusionCoordinator:
+         self.log_path = log_path
+         self.caller = caller or generate_openai_compatible_payload
+         self.probe_ledger = probe_ledger or AuraModelProbeLedger()
++        self._route_lock = threading.Lock()
++        self._resolved_routes: dict[str, dict[str, Any]] = {}
+ 
+-    def _api_key_for(self, agent: AuraFusionAgent) -> str:
++    def _api_keys_for(self, agent: AuraFusionAgent) -> list[str]:
+         if self.mock:
+-            return "mock"
+-        value = self.secrets.get(agent.api_key_name)
+-        if not _valid_secret(value):
++            return ["mock"]
++        registry = ProviderRegistry()
++        config = registry.get_provider_config(agent.provider) or {}
++        key_names = [agent.api_key_name, *config.get("api_key_aliases", [])]
++        keys = provider_key_pool(agent.provider, self.secrets, key_names=key_names)
++        if not keys:
+             raise RuntimeError(f"missing usable API key named {agent.api_key_name} for agent {agent.name}")
+-        return str(value)
++        return keys
++
++    def _agent_routes(self, agent: AuraFusionAgent) -> list[AuraFusionAgent]:
++        registry = ProviderRegistry()
++        role_key = _fusion_role_key(agent.role)
++        names = [agent.provider, *registry.provider_order(role_key)]
++        routes: list[AuraFusionAgent] = []
++        for provider in dict.fromkeys(str(name).lower() for name in names if name):
++            config = registry.get_provider_config(provider)
++            if not config or str(config.get("api") or "openai") != "openai":
++                continue
++            model = agent.model if provider == agent.provider else registry.resolve_model(provider, role_key)
++            routes.append(AuraFusionAgent(
++                name=agent.name,
++                role=agent.role,
++                provider=provider,
++                base_url=str(config["base_url"]),
++                api_key_name=str(config["api_key_env"]),
++                model=model,
++                max_tokens=agent.max_tokens,
++                temperature=agent.temperature,
++                enabled=agent.enabled,
++            ))
++        return routes
+ 
+     def _rank_panel(self, task: str) -> list[AuraFusionAgent]:
+         return sorted(
+@@ -558,33 +645,60 @@ class AuraFusionCoordinator:
+             text, err, latency, used_schema = self._mock_judge(capsule, panel_outputs or [])
+             return text, err, latency, used_schema, estimate_tokens(json.dumps(capsule))
+ 
+-        api_key = self._api_key_for(agent)
+         role_hint = (
+             f"You are AuraFusion {agent.role}. Return only strict JSON matching the provided schema. "
+             "Do not emit markdown. Preserve Aura constraints and never fabricate file paths."
+         )
+-        payload = {
+-            "capsule": capsule,
+-            "agent": {"name": agent.name, "role": agent.role, "provider": agent.provider, "model": agent.model},
+-        }
+-        if panel_outputs is not None:
+-            payload["panel_outputs"] = panel_outputs
+-        messages = [
+-            {"role": "system", "content": role_hint},
+-            {"role": "user", "content": json.dumps(payload, sort_keys=True, default=str)},
+-        ]
+-        input_est = estimate_tokens(messages[0]["content"] + messages[1]["content"])
+-        text, err, latency, used_schema = self.caller(
+-            provider=agent.provider,
+-            base_url=agent.base_url,
+-            api_key=api_key,
+-            model=agent.model,
+-            messages=messages,
+-            max_tokens=agent.max_tokens,
+-            temperature=agent.temperature,
+-            response_format=_schema_response_format(schema_name, schema),
+-        )
+-        return text, _redact_error(err, self.secrets), latency, used_schema, input_est
++        errors: list[str] = []
++        started = time.time()
++        input_est = 0
++        for fallback_index, route in enumerate(self._agent_routes(agent)):
++            try:
++                keys = self._api_keys_for(route)
++            except RuntimeError as exc:
++                errors.append(str(exc))
++                continue
++            payload = {
++                "capsule": capsule,
++                "agent": {"name": agent.name, "role": agent.role, "provider": route.provider, "model": route.model},
++                "routing": {"preferred_provider": agent.provider, "fallback_index": fallback_index},
++            }
++            if panel_outputs is not None:
++                payload["panel_outputs"] = panel_outputs
++            messages = [
++                {"role": "system", "content": role_hint},
++                {"role": "user", "content": json.dumps(payload, sort_keys=True, default=str)},
++            ]
++            input_est = estimate_tokens(messages[0]["content"] + messages[1]["content"])
++            call_kwargs = {
++                "provider": route.provider,
++                "base_url": route.base_url,
++                "api_key": keys[0],
++                "api_keys": keys[1:],
++                "model": route.model,
++                "messages": messages,
++                "max_tokens": route.max_tokens,
++                "temperature": route.temperature,
++                "response_format": _schema_response_format(schema_name, schema),
++            }
++            try:
++                text, err, _latency, used_schema = self.caller(**call_kwargs)
++            except TypeError as exc:
++                if "api_keys" not in str(exc):
++                    raise
++                call_kwargs.pop("api_keys", None)
++                text, err, _latency, used_schema = self.caller(**call_kwargs)
++            if text and not err:
++                with self._route_lock:
++                    self._resolved_routes[agent.name] = {
++                        "provider": route.provider,
++                        "model": route.model,
++                        "fallback_index": fallback_index,
++                        "key_count": len(keys),
++                    }
++                return text, None, time.time() - started, used_schema, input_est
++            errors.append(f"{route.provider}: {err or 'empty response'}")
++        return None, _redact_error("; ".join(errors), self.secrets), time.time() - started, False, input_est
+ 
+     def _run_panel_agent(self, agent: AuraFusionAgent, capsule: dict[str, Any]) -> dict[str, Any]:
+         try:
+@@ -601,11 +715,12 @@ class AuraFusionCoordinator:
+             except Exception as exc:
+                 parse_error = str(exc)
+         ok = bool(text and not err and not parse_error and all(field in parsed for field in PANEL_SCHEMA["required"]))
++        resolved_route = self._resolved_routes.get(agent.name, {})
+         output = AuraPanelOutput(
+             agent=agent.name,
+             role=agent.role,
+-            provider=agent.provider,
+-            model=agent.model,
++            provider=str(resolved_route.get("provider") or agent.provider),
++            model=str(resolved_route.get("model") or agent.model),
+             ok=ok,
+             latency_sec=round(latency, 3),
+             input_tokens_est=input_est,
