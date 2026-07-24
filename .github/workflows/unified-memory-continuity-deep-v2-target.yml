@@ -99,6 +99,26 @@ jobs:
           start = text.index('git diff --name-only "$REVIEWED_PAYLOAD_CHECKPOINT" HEAD')
           end = text.index('test "$(sha256sum aura_unified_memory_continuity.py', start)
           text = text[:start] + text[end:]
+          source_patch = """python - <<'PY_SOURCE'
+          from pathlib import Path
+          path = Path('aura_unified_memory_continuity.py')
+          source = path.read_text(encoding='utf-8')
+          import_anchor = 'from enum import Enum\\nimport math\\n'
+          dynamic_load = 'decoded = __import__(\"json\").loads(normalized)'
+          if source.count(import_anchor) != 1 or source.count(dynamic_load) != 1:
+              raise SystemExit('namespace-injection repair anchors are ambiguous')
+          source = source.replace(import_anchor, 'from enum import Enum\\nimport json\\nimport math\\n', 1)
+          source = source.replace(dynamic_load, 'decoded = json.loads(normalized)', 1)
+          path.write_text(source, encoding='utf-8')
+          PY_SOURCE
+          test \"$(sha256sum aura_unified_memory_continuity.py | awk '{print $1}')\" = \\
+            '933b5f4962a33a0aad13bb0979de98bd86032d35ebce1245cb75a75536e12af3'
+
+          """
+          marker = 'git diff --check\n'
+          if text.count(marker) < 1:
+              raise SystemExit('materializer source-patch insertion point is missing')
+          text = text.replace(marker, source_patch + marker, 1)
           path.write_text(text, encoding='utf-8')
           PY
           bash "${RUNNER_TEMP}/umc_deep_review_v2_materialize.sh"
@@ -121,8 +141,8 @@ jobs:
         run: |
           set -euo pipefail
           if [ "$OUTCOME" = 'success' ]; then
-            body='Deep-review v2 materialization succeeded: five bounded PR files passed whole-tree compilation, Ruff, Bandit, 65 regressions, zero-finding Waboose, Architecture Harness, generated maps, and bounded publication.'
+            body='Deep-review v2 materialization succeeded: five bounded PR files plus the namespace-injection repair passed whole-tree compilation, Ruff, Bandit, 65 regressions, zero-finding Waboose, Architecture Harness, generated maps, and bounded publication.'
           else
-            body='Deep-review v2 materialization failed closed. The exact head, ancestry, source hash, transport payload, or verification gates prevented publication; inspect the workflow evidence.'
+            body='Deep-review v2 materialization failed closed. The exact head, ancestry, source hash, transport payload, namespace-injection repair, or verification gates prevented publication; inspect the workflow evidence.'
           fi
           gh api repos/${{ github.repository }}/issues/193/comments -f body="$body"
