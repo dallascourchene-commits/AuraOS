@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1385
-- **total_bytes**: 56555931
-- **text_tokens_est**: 4686710
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 184, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 913, 'schema_or_lexicon': 167, 'support_file': 55}
+- **file_count**: 1384
+- **total_bytes**: 56557352
+- **text_tokens_est**: 4687092
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 184, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 913, 'schema_or_lexicon': 167, 'support_file': 54}
 - **topology_nodes**: 10473
 - **topology_edges**: 24589
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 30660.5
+- **elapsed_ms**: 30425.41
 
 ## Coverage
 
-- **included_file_count**: 1385
+- **included_file_count**: 1384
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=139, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
@@ -354,13 +354,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
-- ... 1186 more; query CODEMAP.json for exact file cards
+- ... 1185 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
 - `aura_node.py` (python_module): 194 symbols, degree 890, ~104798 tokens
 - `aura_gate.py` (python_module): 68 symbols, degree 756, ~20345 tokens
-- `aura_unified_memory_continuity.py` (python_module): 92 symbols, degree 699, ~25802 tokens
+- `aura_unified_memory_continuity.py` (python_module): 92 symbols, degree 699, ~25839 tokens
 - `aura_agent_arena_cli.py` (python_module): 100 symbols, degree 575, ~17235 tokens
 - `aura_fst_routing.py` (python_module): 35 symbols, degree 550, ~8991 tokens
 - `test_scientific_memory.py` (python_module): 111 symbols, degree 517, ~13607 tokens
