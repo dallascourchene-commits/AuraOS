@@ -1,0 +1,194 @@
+ DEEPSEEK_V4_FLASH = "deepseek-v4-flash"
+ DEEPSEEK_V4_PRO = "deepseek-v4-pro"
++XAI_GROK_PREMIUM = "grok-4.5"
++MISTRAL_PREMIUM = "mistral-large-latest"
++MISTRAL_CHEAP = "mistral-small-latest"
+ 
+ 
+ def _config(
+@@ -30,10 +34,12 @@ def _config(
+     default_roles: dict[str, str],
+     api: str = "openai",
+     model_priority: list[str] | None = None,
++    api_key_aliases: list[str] | None = None,
+ ) -> Dict[str, Any]:
+     packet: Dict[str, Any] = {
+         "provider": provider,
+         "api_key_env": key,
++        "api_key_aliases": list(api_key_aliases or []),
+         "key": key,
+         "base_url": url,
+         "url": url,
+@@ -42,7 +48,7 @@ def _config(
+         "model": model,
+         "model_priority": list(model_priority or [model]),
+         "zero_local_ram": True,
+-        "version": AURA_PROVIDER_REGISTRY_V1,
++        "version": AURA_PROVIDER_REGISTRY_V2,
+     }
+     if api != "openai":
+         packet["api"] = api
+@@ -53,42 +59,52 @@ class ProviderRegistry:
+     """External provider and model-role registry with no plaintext secrets."""
+ 
+     def __init__(self) -> None:
+-        self.provider_priority = [
+-            "fireworks",
+-            "deepseek",
+-            "anthropic",
+-            "mistral",
+-            "sambanova",
+-            "groq",
+-            "cerebras",
+-            "openrouter",
+-            "github",
+-            "openai",
+-            "gemini",
+-        ]
++        # Premium/default work starts with the user's paid DeepSeek balance. Cheap
++        # work prefers lower-cost/free-tier providers before consuming premium lanes.
++        self.provider_priority_by_role: dict[str, list[str]] = {
++            "primary": [
++                "deepseek", "xai", "anthropic", "mistral", "openrouter",
++                "groq", "sambanova", "cerebras", "github", "gemini",
++                "fireworks", "openai",
++            ],
++            "premium": [
++                "deepseek", "xai", "anthropic", "mistral", "openrouter",
++                "groq", "sambanova", "cerebras", "github", "gemini",
++                "fireworks", "openai",
++            ],
++            "reasoner": [
++                "deepseek", "xai", "anthropic", "mistral", "openrouter",
++                "groq", "sambanova", "cerebras", "github", "gemini",
++                "fireworks", "openai",
++            ],
++            "coding": [
++                "deepseek", "xai", "mistral", "anthropic", "openrouter",
++                "groq", "sambanova", "cerebras", "github", "gemini",
++                "fireworks", "openai",
++            ],
++            "cheap_builder": [
++                "mistral", "groq", "sambanova", "cerebras", "gemini",
++                "github", "deepseek", "openrouter", "xai", "fireworks",
++                "anthropic", "openai",
++            ],
++            "shadow": [
++                "mistral", "groq", "sambanova", "cerebras", "gemini",
++                "github", "deepseek", "openrouter", "xai", "fireworks",
++                "anthropic", "openai",
++            ],
++            "summarizer": [
++                "mistral", "groq", "gemini", "sambanova", "cerebras",
++                "github", "deepseek", "openrouter", "xai", "fireworks",
++                "anthropic", "openai",
++            ],
++        }
++        self.provider_priority = list(self.provider_priority_by_role["primary"])
+         self.providers: Dict[str, Dict[str, Any]] = {
+-            "fireworks": _config(
+-                "fireworks",
+-                "FIREWORKS_API_KEY",
+-                "https://api.fireworks.ai/inference/v1/chat/completions",
+-                FIREWORKS_GLM_5P2,
+-                capabilities=["chat", "structured_outputs", "tool_calling", "vision", "batch", "embeddings"],
+-                default_roles={
+-                    "primary": FIREWORKS_GLM_5P2,
+-                    "premium": FIREWORKS_GLM_5P2,
+-                    "reasoner": FIREWORKS_GLM_5P2,
+-                    "coding": FIREWORKS_GLM_5P2,
+-                    "cheap_builder": FIREWORKS_DEEPSEEK_V4_FLASH,
+-                    "shadow": FIREWORKS_DEEPSEEK_V4_FLASH,
+-                    "summarizer": FIREWORKS_DEEPSEEK_V4_FLASH,
+-                },
+-                model_priority=[FIREWORKS_GLM_5P2, FIREWORKS_DEEPSEEK_V4_FLASH],
+-            ),
+             "deepseek": _config(
+                 "deepseek",
+                 "DEEPSEEK_API_KEY",
+                 "https://api.deepseek.com/chat/completions",
+-                DEEPSEEK_V4_FLASH,
++                DEEPSEEK_V4_PRO,
+                 capabilities=["chat", "structured_outputs", "tool_calling", "reasoning", "long_context"],
+                 default_roles={
+                     "primary": DEEPSEEK_V4_PRO,
+@@ -99,12 +115,58 @@ class ProviderRegistry:
+                     "shadow": DEEPSEEK_V4_FLASH,
+                     "summarizer": DEEPSEEK_V4_FLASH,
+                 },
+-                model_priority=[DEEPSEEK_V4_FLASH, DEEPSEEK_V4_PRO],
++                model_priority=[DEEPSEEK_V4_PRO, DEEPSEEK_V4_FLASH],
++            ),
++            "xai": _config(
++                "xai",
++                "XAI_API_KEY",
++                "https://api.x.ai/v1/chat/completions",
++                XAI_GROK_PREMIUM,
++                capabilities=["chat", "structured_outputs", "tool_calling", "reasoning"],
++                default_roles={
++                    "primary": XAI_GROK_PREMIUM,
++                    "premium": XAI_GROK_PREMIUM,
++                    "reasoner": XAI_GROK_PREMIUM,
++                    "coding": XAI_GROK_PREMIUM,
++                    "cheap_builder": XAI_GROK_PREMIUM,
++                    "shadow": XAI_GROK_PREMIUM,
++                    "summarizer": XAI_GROK_PREMIUM,
++                },
++                api_key_aliases=["GROK_API_KEY"],
+             ),
+             "mistral": _config(
+-                "mistral", "MISTRAL_API_KEY", "https://api.mistral.ai/v1/chat/completions", "mistral-small-latest",
+-                capabilities=["chat", "structured_outputs"],
+-                default_roles={"cheap_builder": "mistral-small-latest", "shadow": "mistral-small-latest", "summarizer": "mistral-small-latest"},
++                "mistral",
++                "MISTRAL_API_KEY",
++                "https://api.mistral.ai/v1/chat/completions",
++                MISTRAL_PREMIUM,
++                capabilities=["chat", "structured_outputs", "tool_calling"],
++                default_roles={
++                    "primary": MISTRAL_PREMIUM,
++                    "premium": MISTRAL_PREMIUM,
++                    "reasoner": MISTRAL_PREMIUM,
++                    "coding": MISTRAL_PREMIUM,
++                    "cheap_builder": MISTRAL_CHEAP,
++                    "shadow": MISTRAL_CHEAP,
++                    "summarizer": MISTRAL_CHEAP,
++                },
++                model_priority=[MISTRAL_PREMIUM, MISTRAL_CHEAP],
++            ),
++            "fireworks": _config(
++                "fireworks",
++                "FIREWORKS_API_KEY",
++                "https://api.fireworks.ai/inference/v1/chat/completions",
++                FIREWORKS_GLM_5P2,
++                capabilities=["chat", "structured_outputs", "tool_calling", "vision", "batch", "embeddings"],
++                default_roles={
++                    "primary": FIREWORKS_GLM_5P2,
++                    "premium": FIREWORKS_GLM_5P2,
++                    "reasoner": FIREWORKS_GLM_5P2,
++                    "coding": FIREWORKS_GLM_5P2,
++                    "cheap_builder": FIREWORKS_DEEPSEEK_V4_FLASH,
++                    "shadow": FIREWORKS_DEEPSEEK_V4_FLASH,
++                    "summarizer": FIREWORKS_DEEPSEEK_V4_FLASH,
++                },
++                model_priority=[FIREWORKS_GLM_5P2, FIREWORKS_DEEPSEEK_V4_FLASH],
+             ),
+             "sambanova": _config(
+                 "sambanova", "SAMBANOVA_API_KEY", "https://api.sambanova.ai/v1/chat/completions", "Meta-Llama-3.3-70B-Instruct",
+@@ -125,11 +187,13 @@ class ProviderRegistry:
+                 "openrouter", "OPEN_ROUTER_API_KEY", "https://openrouter.ai/api/v1/chat/completions", "meta-llama/llama-3.3-70b-instruct",
+                 capabilities=["chat"],
+                 default_roles={"cheap_builder": "meta-llama/llama-3.3-70b-instruct", "shadow": "meta-llama/llama-3.3-70b-instruct"},
++                api_key_aliases=["OPENROUTER_API_KEY"],
+             ),
+             "github": _config(
+                 "github", "GITHUB_TOKEN", "https://models.inference.ai.azure.com/chat/completions", "gpt-4o-mini",
+                 capabilities=["chat"],
+                 default_roles={"cheap_builder": "gpt-4o-mini", "shadow": "gpt-4o-mini"},
++                api_key_aliases=["GITHUB_MODELS_API_KEY"],
+             ),
+             "openai": _config(
+                 "openai", "OPENAI_API_KEY", "https://api.openai.com/v1/chat/completions", "gpt-4o-mini",
+@@ -139,7 +203,7 @@ class ProviderRegistry:
+             "anthropic": _config(
+                 "anthropic", "ANTHROPIC_API_KEY", "https://api.anthropic.com/v1/messages", "claude-sonnet-4-6",
