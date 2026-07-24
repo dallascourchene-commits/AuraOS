@@ -23,6 +23,8 @@ jobs:
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha }}
       TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+      EXPECTED_MODULE_SHA256: bb5c0c50e62b8edbb4cbdad4f9810709f67adf7866fcd8b0700eda334a030ade
+      EXPECTED_TEST_SHA256: edddf3af030fd5e4cdeb8bc0bb0c4b2751e3dc7857068ba46c28c5bd905d19ee
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,14 +36,11 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
-          before_module="$(sha256sum aura_unified_memory_continuity.py | awk '{print $1}')"
-          before_tests="$(sha256sum tests/test_aura_unified_memory_continuity.py | awk '{print $1}')"
+          test "$(sha256sum aura_unified_memory_continuity.py | awk '{print $1}')" = "$EXPECTED_MODULE_SHA256"
+          test "$(sha256sum tests/test_aura_unified_memory_continuity.py | awk '{print $1}')" = "$EXPECTED_TEST_SHA256"
           git show origin/main:.github/workflows/ci.yml > .github/workflows/ci.yml
-          rm -f .aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-*
-          after_module="$(sha256sum aura_unified_memory_continuity.py | awk '{print $1}')"
-          after_tests="$(sha256sum tests/test_aura_unified_memory_continuity.py | awk '{print $1}')"
-          test "$before_module" = "$after_module"
-          test "$before_tests" = "$after_tests"
+          test "$(sha256sum aura_unified_memory_continuity.py | awk '{print $1}')" = "$EXPECTED_MODULE_SHA256"
+          test "$(sha256sum tests/test_aura_unified_memory_continuity.py | awk '{print $1}')" = "$EXPECTED_TEST_SHA256"
           git diff --check
 
       - name: Commit cleanup-only tree
@@ -51,14 +50,10 @@ jobs:
           git config user.name 'AuraOS Review Cleanup Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add .github/workflows/ci.yml
-          git add -u -- .aura/refactor_payloads
           if git diff --cached --quiet; then
             exit 0
           fi
           changed="$(git diff --cached --name-only)"
-          test "$changed" = '.github/workflows/ci.yml' || {
-            printf 'Unexpected cleanup paths:\n%s\n' "$changed" >&2
-            exit 1
-          }
+          test "$changed" = '.github/workflows/ci.yml'
           git commit -m 'chore: restore canonical CI after unified continuity review'
           git push origin "HEAD:${TARGET_BRANCH}"
