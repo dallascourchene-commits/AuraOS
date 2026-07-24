@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1384
-- **total_bytes**: 56515212
+- **file_count**: 1391
+- **total_bytes**: 56554707
 - **text_tokens_est**: 4676558
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 184, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 913, 'schema_or_lexicon': 167, 'support_file': 54}
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 184, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 913, 'schema_or_lexicon': 167, 'support_file': 61}
 - **topology_nodes**: 10467
 - **topology_edges**: 24552
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 30715.61
+- **elapsed_ms**: 24201.44
 
 ## Coverage
 
-- **included_file_count**: 1384
+- **included_file_count**: 1391
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=137, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
@@ -283,18 +283,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ### cognition_and_memory
 - `.aura/memory_apertures/coding_localize.v1.json`
+- `.aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-01`
+- `.aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-02`
+- `.aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-03`
+- `.aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-04`
+- `.aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-05`
+- `.aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-06`
+- `.aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-07`
 - `.aura/waboose_requests/unified_memory_continuity.v1.json`
 - `.github/workflows/unified-memory-continuity-codemap-sync.yml`
 - `.github/workflows/unified-memory-continuity-verification.yml`
 - `.mempalace/aura_thought.txt`
-- `.mempalace/lexicon.json`
-- `.mempalace/nexus.json`
-- `.mempalace/temp_prompt.txt`
-- `async_palace.py`
-- `aura_attention_palace.py`
-- `aura_blockchain/memory_staking.py`
-- `aura_civic_memory.py`
-- ... 26 more; query CODEMAP.json for exact file cards
+- ... 33 more; query CODEMAP.json for exact file cards
 
 ### mesh_and_routing
 - `.aura/PROVIDER_ROUTING_MATERIALIZE_REQUEST`
