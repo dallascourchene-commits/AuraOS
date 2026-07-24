@@ -55,8 +55,46 @@ jobs:
           python -m pip install -r requirements.txt
       - name: Regenerate and validate CODEMAP
         run: |
+          cp .aura/CODEMAP.json /tmp/aura-codemap-reference.json
           python aura_codebase_navigator.py
-          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          set +e
+          python -m aura_codemap_verify \
+            --compare-json /tmp/aura-codemap-reference.json \
+            > /tmp/aura-codemap-comparison.json
+          comparison_status=$?
+          set -e
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import subprocess
+
+          result = json.loads(
+              Path('/tmp/aura-codemap-comparison.json').read_text(encoding='utf-8')
+          )
+          if result.get('stable_comparison', {}).get('ok') is True:
+              subprocess.run(
+                  [
+                      'git', 'checkout', 'HEAD', '--',
+                      '.aura/CODEMAP.json',
+                      '.aura/CODEMAP.md',
+                      'topology_map.json',
+                      'Aura_Memory/live_topology_ast.json',
+                  ],
+                  check=True,
+              )
+              Path('/tmp/aura-codemap-change-class.txt').write_text(
+                  'VOLATILE_ONLY\n', encoding='utf-8'
+              )
+          else:
+              Path('/tmp/aura-codemap-change-class.txt').write_text(
+                  'MEANINGFUL\n', encoding='utf-8'
+              )
+          PY
+          if [ "$(cat /tmp/aura-codemap-change-class.txt)" = "MEANINGFUL" ]; then
+            python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          else
+            test "$comparison_status" -eq 0
+          fi
           test -s .aura/CODEMAP.json
           test -s .aura/CODEMAP.md
           test -s topology_map.json
@@ -99,5 +137,7 @@ jobs:
             topology_map.json
             Aura_Memory/live_topology_ast.json
             codemap-push.log
+            /tmp/aura-codemap-comparison.json
+            /tmp/aura-codemap-change-class.txt
           if-no-files-found: error
           retention-days: 14
