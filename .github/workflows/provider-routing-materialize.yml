@@ -3,10 +3,9 @@ name: Materialize verified provider-routing refactor
 on:
   push:
     branches:
-      - "refactor/deepseek-first-provider-routing"
+      - main
     paths:
-      - ".aura/provider-routing-patch/**"
-      - ".github/workflows/provider-routing-materialize.yml"
+      - ".aura/PROVIDER_ROUTING_MATERIALIZE_REQUEST"
 
 permissions:
   contents: write
@@ -23,6 +22,7 @@ jobs:
       - name: Checkout exact refactor head
         uses: actions/checkout@v4
         with:
+          ref: refactor/deepseek-first-provider-routing
           fetch-depth: 0
 
       - name: Verify immutable provenance
@@ -85,4 +85,4 @@ jobs:
           git commit -m "refactor: make provider routing DeepSeek-first and resilient"
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            push origin HEAD:"${GITHUB_REF_NAME}"
+            push origin HEAD:refactor/deepseek-first-provider-routing
