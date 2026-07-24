@@ -1,4 +1,4 @@
-name: Harden Aura Runtime Refactor Harness
+name: Diagnose Aura Runtime Harness hardening
 
 on:
   pull_request:
@@ -8,122 +8,89 @@ on:
       - "tools/runtime_harness_bounded_capture/**"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: aura-runtime-harness-hardening-${{ github.event.pull_request.number }}
+  group: aura-runtime-harness-hardening-diagnostic-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
-  harden:
+  diagnose:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 20
     steps:
       - name: Checkout exact pull-request head
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
+          fetch-depth: 1
+          persist-credentials: false
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
+      - name: Install diagnostic dependencies
+        run: python -m pip install ruff
 
-      - name: Install bounded verification dependencies
+      - name: Apply prepared hardening
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
-          python -m pip install pytest ruff jsonschema
-
-      - name: Apply bounded-capture and review hardening
-        run: |
-          set -o pipefail
           mkdir -p /tmp/aura-runtime-hardening-diagnostics
+          set +e
           python tools/runtime_harness_bounded_capture/apply.py \
-            2>&1 | tee /tmp/aura-runtime-hardening-diagnostics/apply.log
+            > /tmp/aura-runtime-hardening-diagnostics/apply.log 2>&1
+          apply_status=$?
           python tools/runtime_harness_bounded_capture/apply_review_fixes.py \
-            2>&1 | tee /tmp/aura-runtime-hardening-diagnostics/review-fixes.log
+            > /tmp/aura-runtime-hardening-diagnostics/review-fixes.log 2>&1
+          review_status=$?
+          printf '%s\n' "$apply_status" > /tmp/aura-runtime-hardening-diagnostics/apply.status
+          printf '%s\n' "$review_status" > /tmp/aura-runtime-hardening-diagnostics/review-fixes.status
+          exit $((apply_status || review_status))
 
-      - name: Upload transformer diagnostics
+      - name: Capture exact Ruff residue
+        if: always()
+        run: |
+          set +e
+          ruff format \
+            scripts/aura_architecture_harness.py \
+            scripts/aura_runtime_refactor_harness.py \
+            tests/test_aura_runtime_refactor_harness.py \
+            > /tmp/aura-runtime-hardening-diagnostics/format.log 2>&1
+          format_status=$?
+          ruff check --fix \
+            scripts/aura_architecture_harness.py \
+            scripts/aura_runtime_refactor_harness.py \
+            tests/test_aura_runtime_refactor_harness.py \
+            > /tmp/aura-runtime-hardening-diagnostics/ruff-fix.log 2>&1
+          fix_status=$?
+          ruff format \
+            scripts/aura_architecture_harness.py \
+            scripts/aura_runtime_refactor_harness.py \
+            tests/test_aura_runtime_refactor_harness.py \
+            >> /tmp/aura-runtime-hardening-diagnostics/format.log 2>&1
+          second_format_status=$?
+          ruff check --output-format concise \
+            scripts/aura_architecture_harness.py \
+            scripts/aura_runtime_refactor_harness.py \
+            tests/test_aura_runtime_refactor_harness.py \
+            > /tmp/aura-runtime-hardening-diagnostics/ruff-final.log 2>&1
+          final_status=$?
+          git diff --check > /tmp/aura-runtime-hardening-diagnostics/diff-check.log 2>&1
+          diff_status=$?
+          git diff --stat > /tmp/aura-runtime-hardening-diagnostics/diff-stat.log 2>&1
+          printf '%s\n' "$format_status" > /tmp/aura-runtime-hardening-diagnostics/format.status
+          printf '%s\n' "$fix_status" > /tmp/aura-runtime-hardening-diagnostics/ruff-fix.status
+          printf '%s\n' "$second_format_status" > /tmp/aura-runtime-hardening-diagnostics/format-second.status
+          printf '%s\n' "$final_status" > /tmp/aura-runtime-hardening-diagnostics/ruff-final.status
+          printf '%s\n' "$diff_status" > /tmp/aura-runtime-hardening-diagnostics/diff-check.status
+          exit 0
+
+      - name: Upload exact diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: aura-runtime-hardening-diagnostics
           path: /tmp/aura-runtime-hardening-diagnostics
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 3
-
-      - name: Format and lint hardened harness
-        run: |
-          ruff check --fix \
-            scripts/aura_architecture_harness.py \
-            scripts/aura_runtime_refactor_harness.py \
-            tests/test_aura_runtime_refactor_harness.py
-          ruff format \
-            scripts/aura_architecture_harness.py \
-            scripts/aura_runtime_refactor_harness.py \
-            tests/test_aura_runtime_refactor_harness.py
-          ruff check \
-            scripts/aura_architecture_harness.py \
-            scripts/aura_runtime_refactor_harness.py \
-            tests/test_aura_runtime_refactor_harness.py
-          python -m py_compile \
-            scripts/aura_architecture_harness.py \
-            scripts/aura_runtime_refactor_harness.py
-
-      - name: Verify Runtime Refactor Harness contracts
-        run: python -m pytest -q --tb=short tests/test_aura_runtime_refactor_harness.py
-
-      - name: Verify retained Construction contracts
-        run: |
-          python -m pytest -q --tb=short \
-            tests/test_aura_construction_demo_director.py \
-            tests/test_aura_construction_demo_fixture.py \
-            tests/test_aura_construction_demo_projection.py \
-            tests/test_aura_spatial_render_plan.py
-          node --check tests/runtime/construction_demo_browser_probe.cjs
-          node --check aura_spatial_web/construction_demo_app.js
-          node --check aura_spatial_web/construction_scene_renderer.js
-          node --check aura_spatial_web/construction_wireframe_pass.js
-          node --test \
-            tests/js/spatial-gaussian.test.mjs \
-            tests/js/spatial-webgl2.test.mjs \
-            tests/js/spatial-webgl2-failure-injection.test.mjs \
-            tests/js/spatial-construction-demo.test.mjs \
-            tests/js/spatial-construction-review-regressions.test.mjs \
-            tests/js/spatial-gaussian-covariance.test.mjs
-          git diff --check
-
-      - name: Remove one-time hardening machinery
-        run: |
-          git rm -rf \
-            .github/workflows/aura-runtime-harness-bounded-capture.yml \
-            tools/runtime_harness_bounded_capture
-
-      - name: Regenerate final repository navigation
-        run: |
-          python aura_codebase_navigator.py
-          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
-          test -s .aura/CODEMAP.json
-          test -s .aura/CODEMAP.md
-          test -s topology_map.json
-          test -s Aura_Memory/live_topology_ast.json
-          git diff --check
-
-      - name: Publish exact verified hardening
-        env:
-          TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
-        run: |
-          set -euo pipefail
-          git config user.name "AuraOS Runtime Harness"
-          git config user.email "aura-runtime-harness@users.noreply.github.com"
-          git add -A
-          git commit -m "fix(harness): bound runtime evidence and harden browser proof"
-          git fetch --no-tags origin "$TARGET_BRANCH"
-          git rebase "origin/$TARGET_BRANCH"
-          git push origin HEAD:"$TARGET_BRANCH"
