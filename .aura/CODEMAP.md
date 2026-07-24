@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1373
-- **total_bytes**: 56336098
-- **text_tokens_est**: 4631783
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 181, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 910, 'schema_or_lexicon': 163, 'support_file': 53}
+- **file_count**: 1387
+- **total_bytes**: 56446882
+- **text_tokens_est**: 4632511
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 181, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 910, 'schema_or_lexicon': 164, 'support_file': 66}
 - **topology_nodes**: 10358
 - **topology_edges**: 24168
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 27276.7
+- **elapsed_ms**: 28646.35
 
 ## Coverage
 
-- **included_file_count**: 1373
+- **included_file_count**: 1387
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=134, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=135, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
 
 ## Command Index
 
@@ -298,18 +298,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ### mesh_and_routing
 - `.aura/civic_completion_ledger.json`
-- `.github/workflows/model-cognome-adaptive-router.yml`
-- `.github/workflows/model-cognome-governed-routing.yml`
-- `AURA_ROUTER.md`
-- `FRACTAL_LEDGER_IMPLEMENTATION.md`
-- `LIQUID_INTERNET_IMPLEMENTATION.md`
-- `aura_adaptive_model_router.py`
-- `aura_ai_router.py`
-- `aura_anthropic_router.py`
-- `aura_architecture_harness_git_tree_routing.py`
-- `aura_arena_experience_ledger.py`
-- `aura_blockchain/__init__.py`
-- ... 48 more; query CODEMAP.json for exact file cards
+- `.aura/provider-routing-patch/part-00.patch`
+- `.aura/provider-routing-patch/part-01.patch`
+- `.aura/provider-routing-patch/part-02.patch`
+- `.aura/provider-routing-patch/part-03.patch`
+- `.aura/provider-routing-patch/part-04.patch`
+- `.aura/provider-routing-patch/part-05.patch`
+- `.aura/provider-routing-patch/part-06.patch`
+- `.aura/provider-routing-patch/part-07.patch`
+- `.aura/provider-routing-patch/part-08.patch`
+- `.aura/provider-routing-patch/part-09.patch`
+- `.aura/provider-routing-patch/part-10.patch`
+- ... 62 more; query CODEMAP.json for exact file cards
 
 ### topology_and_navigation
 - `.aura/topology_baseline.json`
