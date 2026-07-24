@@ -39,6 +39,7 @@ jobs:
           git checkout --detach "$TARGET_SHA"
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          printf '%s\n' '.aura/unified_memory_continuity_evidence/' >> .git/info/exclude
 
       - uses: actions/setup-python@v5
         with:
@@ -59,11 +60,11 @@ jobs:
             echo "codemap_json=$(sha256sum .aura/CODEMAP.json | awk '{print $1}')"
             echo "module=$(sha256sum aura_unified_memory_continuity.py | awk '{print $1}')"
             echo "tests=$(sha256sum tests/test_aura_unified_memory_continuity.py | awk '{print $1}')"
-            echo "tracked_status_begin"
-            git status --porcelain=v1 --untracked-files=no
-            echo "tracked_status_end"
+            echo "status_begin"
+            git status --porcelain=v1
+            echo "status_end"
           } | tee "$EVIDENCE_DIR/repository_identity.txt"
-          test -z "$(git status --porcelain=v1 --untracked-files=no)"
+          test -z "$(git status --porcelain=v1)"
 
       - name: Install AuraOS and verification tools
         shell: bash
@@ -181,15 +182,15 @@ jobs:
           )
           PY
 
-      - name: Prove verification did not mutate tracked repository state
+      - name: Prove verification did not mutate repository state
         shell: bash
         run: |
           set -euo pipefail
           git diff --exit-code
           git diff --cached --exit-code
-          git status --porcelain=v1 --untracked-files=no \
-            | tee "$EVIDENCE_DIR/final_tracked_status.txt"
-          test ! -s "$EVIDENCE_DIR/final_tracked_status.txt"
+          git status --porcelain=v1 \
+            | tee "$EVIDENCE_DIR/final_status.txt"
+          test ! -s "$EVIDENCE_DIR/final_status.txt"
 
       - name: Upload exact-head verification evidence
         if: always()
