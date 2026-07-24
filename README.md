@@ -40,6 +40,7 @@ AuraOS now contains a connected family of operating surfaces rather than one mon
 | **Aura Forge** | Compiles a frozen Coding Arena plan and Arena Evidence Contract, then runs bounded Council–Surgeon slice sessions | Stops at verifier-backed human review; no automatic commit, PR, merge, or production mutation |
 | **Aura Gate** | Wraps an exact Forge contract with verified OIDC identity, static policy, expiring leases, governed egress, MCP/A2A adapters, comparisons, and append-only audit evidence | Private Forge-specific proof; no identity-in-body trust, automatic promotion, or release authority |
 | **Coding Waboose** | Computes exact diff/symbol/dependency impact, runs deterministic scans, and lets coding agents steer run-specific evidence review | Review only; agent findings cannot self-confirm or mutate, commit, push, open, or merge |
+| **Runtime Refactor Harness** | Boots a repository-declared loopback application in an external virtual environment, drives a real probe/browser, captures exact artifacts, and binds failing and repaired receipts | Observation and verification only; no automatic patch, commit, push, PR, or merge |
 | **Agent Arena Bridge** | Exposes bounded CLI/MCP workflows, external-agent handoffs, and exact GitHub publication contracts using server-side compare-and-swap | External agents may prepare or explicitly publish bounded changes; merge authority remains separate and human-controlled |
 | **Planning Board** | Represents proposal-only goals, actions, predicates, constraints, backward regression, forward replay, and continuity stages | Cannot execute or authorize actions |
 | **Civic Commons Arena** | Coordinates governed civic objectives, evidence, needs, resources, scenarios, consent, dissent, and reversible pilots | Non-binding; no funding, voting, legal approval, or person-level targeting |
@@ -62,7 +63,20 @@ python scripts/aura_architecture_harness.py \
   --output-dir ../AuraOS-ai-handoff
 ```
 
-The output contains a compact manifest, a sorted source-review file list, and a deterministic ZIP built from immutable `HEAD` Git blobs. Generated CODEMAP/topology/P9 artifacts, binaries, symlinks, sensitive/runtime paths, and oversized files are digest-only and never treated as ordinary source. Dirty trees fail closed by default. Long `run` operations emit a structured watchdog check-in every 10 minutes (`HEALTHY_CONTINUE`, `SLOW_BUT_PROGRESSING`, `STALLED_REASSESS`, or `UNKNOWN_REASSESS`) and pause safely at 20 minutes with completed-artifact inventory and an exact `--resume` receipt. The exact full Git archive remains available separately for forensic reconstruction. See [`docs/AURA_ARCHITECTURE_HARNESS.md`](docs/AURA_ARCHITECTURE_HARNESS.md).
+The output contains a compact manifest, a sorted source-review file list, and a deterministic ZIP built from immutable `HEAD` Git blobs. Generated CODEMAP/topology/P9 artifacts, binaries, symlinks, sensitive/runtime paths, and oversized files are digest-only and never treated as ordinary source. Dirty trees fail closed by default. Long `run` operations emit a structured watchdog check-in every 10 minutes (`HEALTHY_CONTINUE`, `SLOW_BUT_PROGRESSING`, `STALLED_REASSESS`, or `UNKNOWN_REASSESS`) and pause safely at 20 minutes with completed-artifact inventory and an exact `--resume` receipt. The exact full Git archive remains available separately for forensic reconstruction.
+
+The same entrypoint now exposes repository-owned runtime profiles. A runtime profile creates an external virtual environment, starts one loopback-only application, runs a real probe and retained verification commands, hashes the evidence, terminates the process, and confirms that the source tree did not change:
+
+```bash
+python scripts/aura_architecture_harness.py \
+  --repo-root . \
+  runtime \
+  --profile .aura/runtime_profiles/construction_demo.v1.json \
+  --output-dir ../AuraOS-runtime-evidence/construction \
+  --install-requirements
+```
+
+See [`docs/AURA_ARCHITECTURE_HARNESS.md`](docs/AURA_ARCHITECTURE_HARNESS.md) and [`docs/AURA_RUNTIME_REFACTOR_HARNESS.md`](docs/AURA_RUNTIME_REFACTOR_HARNESS.md).
 
 <!-- AURA_FORGE_V1:START -->
 ## Aura Forge — Verified Engineering OS
@@ -549,6 +563,7 @@ AuraOS evidence does not establish consciousness, unrestricted autonomy, univers
 - [`docs/AURA_EMPIRICAL_COST_OBSERVATORY.md`](docs/AURA_EMPIRICAL_COST_OBSERVATORY.md)
 - [`docs/AURA_TENSOR_EVIDENCE_ARENAS.md`](docs/AURA_TENSOR_EVIDENCE_ARENAS.md)
 - [`docs/AURA_SCO_PHASE5_E9_E14_COMPLETION_PLAN.md`](docs/AURA_SCO_PHASE5_E9_E14_COMPLETION_PLAN.md)
+- [`docs/AURA_RUNTIME_REFACTOR_HARNESS.md`](docs/AURA_RUNTIME_REFACTOR_HARNESS.md) — isolated loopback runtime reproduction, browser evidence, before/after repair binding, and authority boundaries
 
 <!-- AURA_CONSTRUCTION_G7_G8 -->
 ## Construction Arena G0–G8
@@ -561,7 +576,7 @@ python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --s
 
 Open `http://127.0.0.1:8767/demo/construction?tour=full`.
 
-The recording client currently renders the deterministic Gaussian fallback plus graph and overlay context. Browser GLB/SPZ decoding and a real mesh draw pass are not implemented, so mesh/hybrid controls are disabled. Real asset packs may be compiled and contract-validated, but the browser refuses to substitute fallback geometry for real digests.
+The recording client renders the deterministic Gaussian fallback plus a bounds-derived wireframe mesh presentation and graph/overlay context. Mesh, Splats, and Hybrid are all live for the synthetic fallback. The wireframe is explicitly presentation-derived and does not claim browser GLB decoding; real asset packs may be compiled and contract-validated, but the browser still refuses to substitute fallback geometry for real digests.
 
 See [`docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md`](docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md) for the complete operator, recording, verification, security, and troubleshooting guide.
 
@@ -571,6 +586,7 @@ AI agents should not approach AuraOS as an ordinary flat repository. Aura includ
 
 - **CODEMAP and topology** — read [`.aura/CODEMAP.md`](.aura/CODEMAP.md) first; regenerate with `python aura_codebase_navigator.py` and verify with `python -m aura_codemap_verify --compare-json .aura/CODEMAP.json` only after source stabilizes.
 - **Aura Architecture Harness** — `scripts/aura_architecture_harness.py` reconstructs a reproducible environment, runs doctor checks, exports AI-safe source handoffs, supervises long runs with 10-minute check-ins and a 20-minute reassessment pause, and invokes the Connectome, Relational Index, Relationship Atlas, Emergent Properties, and Architect Fusion Loop without granting patch authority.
+- **Runtime Refactor Harness** — the `runtime` command consumes a repository-owned profile, creates an external virtual environment, starts a loopback server, drives a real probe/browser, captures screenshots/logs/receipts, runs retained gates, dissolves the process, and binds a failing baseline to a later `REPAIRED_AND_VERIFIED` receipt. It observes and proves; it never patches or merges.
 - **Coding Waboose** — `aura_coding_waboose_cli.py` performs deterministic graph-guided review, static checks, semantic rule packs, focused-test selection, evidence corroboration, and bounded Forge repair requests. Waboose reviews; it does not patch or merge.
 - **Coding Relationship Compass** — compiles objective-bounded callers, callees, shared resources, required tests, invariants, and authority risks from Aura's topology.
 - **Council V3 and Surgeon** — route failure classes and prepare bounded repair strategies while keeping execution and merge human-authorized.
@@ -583,8 +599,9 @@ Start with:
 ```bash
 python scripts/aura_architecture_harness.py --repo-root . doctor
 python scripts/aura_architecture_harness.py --repo-root . handoff --output-dir ../AuraOS-ai-handoff
+python scripts/aura_architecture_harness.py --repo-root . runtime --profile .aura/runtime_profiles/construction_demo.v1.json --output-dir ../AuraOS-runtime-evidence/construction
 ```
 
-Then use the focused guide in [`docs/AURA_ARCHITECTURE_HARNESS.md`](docs/AURA_ARCHITECTURE_HARNESS.md) and the Waboose contract in [`docs/AURA_CODING_WABOOSE.md`](docs/AURA_CODING_WABOOSE.md).
+Then use the focused guides in [`docs/AURA_ARCHITECTURE_HARNESS.md`](docs/AURA_ARCHITECTURE_HARNESS.md), [`docs/AURA_RUNTIME_REFACTOR_HARNESS.md`](docs/AURA_RUNTIME_REFACTOR_HARNESS.md), and the Waboose contract in [`docs/AURA_CODING_WABOOSE.md`](docs/AURA_CODING_WABOOSE.md).
 
 All harness outputs remain navigation, analysis, review, or proposal evidence. Exact source spans, hashes, tests, verifier receipts, and human authorization remain patch and merge authority.

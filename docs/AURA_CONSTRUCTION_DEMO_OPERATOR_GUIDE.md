@@ -22,7 +22,7 @@ source/provenance contracts
   → exact renderer dissolution
 ```
 
-The browser recording client currently renders the deterministic Gaussian fallback plus graph and overlay context. Mesh contracts remain part of the architecture, but browser GLB decoding and a real mesh draw pass are not implemented; mesh and hybrid controls therefore remain disabled and fail closed.
+The browser recording client renders the deterministic Gaussian fallback, a deterministic bounds-derived wireframe mesh presentation, and graph/overlay context. Mesh, Splats, and Hybrid are available for the synthetic fallback. The wireframe remains presentation-derived and does not claim that browser GLB decoding exists.
 
 ## Prerequisites
 
@@ -91,12 +91,12 @@ The implemented recording surface supports:
 
 ```text
 orbit · zoom · storey isolation · show all · explode · collapse
-splats · floor plans · work status · trades · blockers · budgets
+mesh · splats · hybrid · floor plans · work status · trades · blockers · budgets
 inspections · dependencies · synthetic rules · timeline scrub
 picking · reset · play · pause · next step · dissolve
 ```
 
-Mesh and hybrid buttons are visibly disabled until repository-owned browser GLB decoding and a real mesh draw pass exist.
+Mesh uses the admitted storey bounds to draw a deterministic wireframe fallback. Hybrid combines that wireframe with the verified Gaussian fallback. These modes are recording aids, not decoded BIM truth or physical authority.
 
 For a clean recording:
 
@@ -123,7 +123,7 @@ python aura_spatial_cli.py \
   --output /tmp/aura-construction-real-pack.packet.json
 ```
 
-The browser intentionally refuses real-pack rendering until GLB/SPZ browser decoders and a real mesh draw pass are implemented. It never substitutes fabricated fallback geometry for admitted real digests.
+The browser intentionally refuses admitted real-pack rendering until repository-owned GLB/SPZ browser decoders exist. The bounds-derived wireframe applies only to the deterministic fallback and never substitutes fabricated fallback geometry for admitted real digests.
 
 ## Security boundary
 
@@ -182,6 +182,32 @@ python aura_coding_waboose_cli.py --repo-root . run --request waboose_request.js
 ```
 
 Waboose is review-only. It does not patch, commit, push, approve, or merge. Use exact findings as inputs to a separate repair and verification pass.
+
+## Runtime Refactor Harness
+
+Run the complete local server and browser path through Aura's Architecture Harness:
+
+```bash
+mkdir -p /tmp/aura-playwright
+cd /tmp/aura-playwright
+npm init -y
+npm install --no-audit --no-fund playwright@1.55.0
+npx playwright install chromium
+cd -
+
+NODE_PATH=/tmp/aura-playwright/node_modules \
+python scripts/aura_architecture_harness.py \
+  --repo-root . \
+  runtime \
+  --profile .aura/runtime_profiles/construction_demo.v1.json \
+  --output-dir /tmp/aura-construction-runtime \
+  --venv /tmp/aura-construction-venv \
+  --install-requirements
+```
+
+A healthy receipt reports `RUNTIME_VERIFIED`; a successful run bound to a failed baseline reports `REPAIRED_AND_VERIFIED`. Inspect `browser-evidence.json`, `initial.png`, `after-tour.png`, readiness and command receipts, server logs, artifact hashes, and the source-identity comparison.
+
+The runtime incident that motivated this harness was a real first-frame WebGL warm-up exceeding the normal Gaussian frame budget. Performance evidence had been misclassified as an integrity failure, causing renderer dissolution. The current renderer preserves invalid timing as fatal while reporting a valid slow frame as measured degraded performance and continuing safely.
 
 ## Troubleshooting
 

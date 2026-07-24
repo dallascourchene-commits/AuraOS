@@ -10,6 +10,7 @@ pull request, or merges.
 from __future__ import annotations
 
 import argparse
+from collections.abc import Iterable, Mapping, Sequence
 import hashlib
 import json
 import os
@@ -20,7 +21,7 @@ import signal
 import subprocess
 import sys
 import time
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any
 from urllib.error import URLError
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen

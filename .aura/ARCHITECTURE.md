@@ -2,7 +2,7 @@
 
 > Canonical architecture, ownership, data-flow, and authority anchor for humans and AI agents
 
-**Architecture audit:** reviewed through July 22, 2026 and the preceding merged development, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S5 and Construction-only S6, Coding Relationship Compass C0–C9, typed Coding Waboose review learning, source-integrity and Crucible ancestry hardening, bounded browser/interchange/Gaussian representation support, and the atomic Agent Bridge GitHub publication lane merged in PRs #162–#170.
+**Architecture audit:** reviewed through July 24, 2026 and the preceding merged development, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S6, Construction Arena G0–G8, Coding Relationship Compass C0–C9, typed Coding Waboose review learning, source-integrity and Crucible ancestry hardening, bounded browser/interchange/Gaussian representation support, the Runtime Refactor Harness, and the atomic Agent Bridge GitHub publication lane.
 
 **Navigation rule:** read this file before subsystem documents. Regenerate CODEMAP/topology from the current tree after architecture or source changes.
 
@@ -78,6 +78,45 @@ Three dispositions are canonical:
 - `REGENERATE_FROM_FINAL_TREE`: CODEMAP, topology, live topology AST, and P9 substrate outputs regenerated only after authoritative source and tests stabilize in Linux/LF.
 
 Generated maps remain navigation evidence and never become patch authority. Dirty repositories fail closed by default; unrestricted giant diffs and unbounded subprocess capture are prohibited. Long architecture runs are supervised by a proposal-only watchdog: a 10-minute check-in classifies healthy, slow-but-progressing, stalled, or unknown state, while a 20-minute hard checkpoint terminates the child safely and requires explicit `--resume`. Watchdog receipts are external run artifacts and grant no mutation authority. The full exact Git export remains a separate forensic reconstruction artifact rather than the preferred AI review input.
+
+## 3A. Runtime Refactor Harness boundary
+
+The Runtime Refactor Harness is an observation-and-proof owner attached to the stable Architecture Harness entrypoint. It does not replace Coding Arena, Forge, Waboose, Council, Crucible, Observatory, or Agent Bridge.
+
+```text
+repository-owned runtime profile + exact Git identity
+  → external virtual environment
+  → loopback-only server
+  → readiness evidence
+  → bounded real probe/browser sequence
+  → retained verification commands
+  → artifact hashes + cleanup receipt
+  → RUNTIME_FAILURE_REPRODUCED or RUNTIME_VERIFIED
+  → separately authorized repair
+  → exact-profile rerun bound to the failed baseline
+  → REPAIRED_AND_VERIFIED
+  → Waboose + human review
+```
+
+Primary owners are `scripts/aura_runtime_refactor_harness.py`, the `runtime` delegation in `scripts/aura_architecture_harness.py`, repository profiles under `.aura/runtime_profiles/`, subsystem probes under `tests/runtime/`, and `docs/AURA_RUNTIME_REFACTOR_HARNESS.md`.
+
+The harness distinguishes source truth, presentation truth, performance evidence, integrity evidence, and authority. A valid performance overrun may emit a degraded receipt without destroying a verified presentation; malformed timing, stale identity, unsafe paths, failed integrity, missing artifacts, non-loopback serving, process timeout, source mutation, or failed retained verification remain hard blockers.
+
+```yaml
+runtime_profile_authority: false
+runtime_evidence_authority: false
+production_mutation: false
+automatic_fix: false
+runtime_evidence_authority: false
+automatic_runtime_patch: false
+automatic_commit: false
+automatic_push: false
+automatic_pull_request: false
+automatic_merge: false
+human_review_required: true
+```
+
+Runtime evidence can localize defects and prove a candidate repair on one exact tree. It cannot grant patch, publication, Construction, renderer, professional, or merge authority.
 
 ## 4. Constitutional invariants
 
