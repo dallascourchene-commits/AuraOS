@@ -1,0 +1,114 @@
+name: UMC final branch deep materialize
+
+on:
+  push:
+    branches:
+      - refactor/unified-memory-continuity
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: umc-final-branch-deep-materialize
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: github.event.head_commit.message == 'chore: trigger final unified continuity deep review'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      TARGET_BRANCH: refactor/unified-memory-continuity
+      EVENT_HEAD: ${{ github.sha }}
+      TRANSPORT_COMMIT: 6c9213018c361864e722064b01ba29b804adb95a
+      EVIDENCE_DIR: ${{ runner.temp }}/umc-deep-review-evidence
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Bind trigger and settle generated-only synchronization
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVENT_HEAD"
+          test -f .aura/refactor_payloads/umc_final_deep_review.trigger
+          sleep 20
+          git fetch --no-tags origin "refs/heads/${TARGET_BRANCH}:refs/remotes/origin/${TARGET_BRANCH}"
+          latest="$(git rev-parse "origin/${TARGET_BRANCH}")"
+          git diff --name-only "$EVENT_HEAD" "$latest" | sort > "${RUNNER_TEMP}/post-trigger-paths.txt"
+          if [ -s "${RUNNER_TEMP}/post-trigger-paths.txt" ]; then
+            printf '%s\n' \
+              .aura/CODEMAP.json \
+              .aura/CODEMAP.md \
+              topology_map.json \
+              | sort > "${RUNNER_TEMP}/allowed-post-trigger-paths.txt"
+            diff -u "${RUNNER_TEMP}/allowed-post-trigger-paths.txt" "${RUNNER_TEMP}/post-trigger-paths.txt"
+          fi
+          git reset --hard "$latest"
+          test ! -e Aura_Sandbox/umc_deep_review_payload_v2
+          test "$(sha256sum aura_unified_memory_continuity.py | awk '{print $1}')" = \
+            bb5c0c50e62b8edbb4cbdad4f9810709f67adf7866fcd8b0700eda334a030ade
+          test "$(sha256sum tests/test_aura_unified_memory_continuity.py | awk '{print $1}')" = \
+            edddf3af030fd5e4cdeb8bc0bb0c4b2751e3dc7857068ba46c28c5bd905d19ee
+          git rev-parse HEAD | tee "${RUNNER_TEMP}/settled-head.txt"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install declared and review dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8,<9' jsonschema ruff bandit
+
+      - name: Run exact hash-locked deep materializer
+        id: materialize
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$TRANSPORT_COMMIT"
+          git show "$TRANSPORT_COMMIT:.aura/refactor_payloads/umc_deep_materialize.sh" \
+            > "${RUNNER_TEMP}/umc_deep_materialize.sh"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          path = Path(os.environ['RUNNER_TEMP']) / 'umc_deep_materialize.sh'
+          text = path.read_text(encoding='utf-8')
+          old = "EXPECTED_HEAD='371e794a57dd37c8d293570b505ce4666340c217'"
+          settled = (Path(os.environ['RUNNER_TEMP']) / 'settled-head.txt').read_text().strip()
+          new = f"EXPECTED_HEAD='{settled}'"
+          if text.count(old) != 1:
+              raise SystemExit('materializer expected-head binding is ambiguous')
+          path.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+          bash "${RUNNER_TEMP}/umc_deep_materialize.sh"
+
+      - name: Upload deep-review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unified-memory-continuity-final-branch-materialization-${{ github.run_id }}
+          path: ${{ runner.temp }}/umc-deep-review-evidence
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Report result to PR
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OUTCOME: ${{ steps.materialize.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$OUTCOME" = 'success' ]; then
+            body='Final branch deep-review materialization succeeded: Python 3.10/3.12 syntax, repository compileall, full Ruff, Bandit, 65 regressions, zero-finding Waboose, map regeneration, and bounded publication passed.'
+          else
+            body='Final branch deep-review materialization failed closed; no unverified source publication was accepted. Inspect the UMC final branch deep materialize workflow.'
+          fi
+          gh api repos/${{ github.repository }}/issues/193/comments -f body="$body"
