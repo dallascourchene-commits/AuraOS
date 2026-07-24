@@ -40,7 +40,11 @@ jobs:
           python -m pip install pytest ruff
 
       - name: Apply exact Waboose repair request
-        run: python tools/runtime_strict_bool/apply.py
+        run: |
+          set -o pipefail
+          mkdir -p /tmp/aura-strict-bool-diagnostics
+          python tools/runtime_strict_bool/apply.py \
+            2>&1 | tee /tmp/aura-strict-bool-diagnostics/apply.log
 
       - name: Format lint and compile repair
         run: |
