@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      PREVIOUS_HEAD: 2f5eb981095a7b72060593efdf6bd0db19dc0e74
+      SOURCE_HEAD: c4e00f09a4e58f5b60f6a630abd08444230fdbeb
       EVENT_HEAD: ${{ github.event.pull_request.head.sha }}
       TARGET_BRANCH: refactor/unified-memory-continuity
       TRIGGER_PATH: .aura/refactor_payloads/umc_greptile_qdkt_followup.trigger
@@ -36,59 +36,125 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EVENT_HEAD"
-          test "$(git rev-parse HEAD^)" = "$PREVIOUS_HEAD"
-          test "$(git diff --name-only "$PREVIOUS_HEAD" "$EVENT_HEAD")" = "$TRIGGER_PATH"
           test -z "$(git status --porcelain=v1)"
+          git diff --name-only "$SOURCE_HEAD" "$EVENT_HEAD" > "${RUNNER_TEMP}/event-paths.txt"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+
+          changed = set((Path(os.environ['RUNNER_TEMP']) / 'event-paths.txt').read_text().splitlines())
+          trigger = os.environ['TRIGGER_PATH']
+          allowed = {
+              trigger,
+              '.aura/CODEMAP.json',
+              '.aura/CODEMAP.md',
+              'Aura_Memory/live_topology_ast.json',
+              'topology_map.json',
+          }
+          if trigger not in changed:
+              raise SystemExit('expected trigger path is absent')
+          unexpected = changed - allowed
+          if unexpected:
+              raise SystemExit(f'unexpected pre-fix paths: {sorted(unexpected)}')
+          PY
+
           python - <<'PY'
           from pathlib import Path
+          from textwrap import dedent
 
           module_path = Path('aura_unified_memory_continuity.py')
           module = module_path.read_text(encoding='utf-8')
-          old = '''        required_relationship_receipts = {
-              learning_decision.continuity_receipt_ref,
-              learning_decision.crucible_proposal_ref,
-              learning_decision.current_reproof_ref,
-              learning_decision.human_disposition_ref,
-          }
-          if not required_relationship_receipts.issubset(relationship_experience.receipt_refs):
-              raise ValueError("Relationship Experience omits governed reproof receipts")
-          if (
-              learning_decision.independent_verifier_ref
-              not in relationship_experience.verifier_evidence_refs
-          ):
-              raise ValueError("Relationship Experience omits the independent verifier")
-          '''
-          new = '''        required_relationship_receipts = {
-              ref
-              for ref in (
-                  learning_decision.continuity_receipt_ref,
-                  learning_decision.crucible_proposal_ref,
-                  learning_decision.current_reproof_ref,
-                  learning_decision.human_disposition_ref,
-              )
-              if ref
-          }
-          if not required_relationship_receipts.issubset(relationship_experience.receipt_refs):
-              raise ValueError("Relationship Experience omits governed reproof receipts")
-          if (
-              learning_decision.independent_verifier_ref
-              and learning_decision.independent_verifier_ref
-              not in relationship_experience.verifier_evidence_refs
-          ):
-              raise ValueError("Relationship Experience omits the independent verifier")
-          '''
-          if module.count(old) != 1:
-              raise SystemExit('QDKT relationship receipt guard is ambiguous')
-          module_path.write_text(module.replace(old, new, 1), encoding='utf-8')
+          i8 = ' ' * 8
+          i12 = ' ' * 12
+          i16 = ' ' * 16
+
+          old_receipts = '\n'.join((
+              f'{i8}required_relationship_receipts = {{',
+              f'{i12}learning_decision.continuity_receipt_ref,',
+              f'{i12}learning_decision.crucible_proposal_ref,',
+              f'{i12}learning_decision.current_reproof_ref,',
+              f'{i12}learning_decision.human_disposition_ref,',
+              f'{i8}}}',
+          ))
+          new_receipts = '\n'.join((
+              f'{i8}required_relationship_receipts = {{',
+              f'{i12}ref',
+              f'{i12}for ref in (',
+              f'{i16}learning_decision.continuity_receipt_ref,',
+              f'{i16}learning_decision.crucible_proposal_ref,',
+              f'{i16}learning_decision.current_reproof_ref,',
+              f'{i16}learning_decision.human_disposition_ref,',
+              f'{i12})',
+              f'{i12}if ref',
+              f'{i8}}}',
+          ))
+          if module.count(old_receipts) != 1:
+              raise SystemExit('QDKT receipt-set anchor is ambiguous')
+          module = module.replace(old_receipts, new_receipts, 1)
+
+          old_verifier = '\n'.join((
+              f'{i8}if (',
+              f'{i12}learning_decision.independent_verifier_ref',
+              f'{i12}not in relationship_experience.verifier_evidence_refs',
+              f'{i8}):',
+              f'{i12}raise ValueError("Relationship Experience omits the independent verifier")',
+          ))
+          new_verifier = '\n'.join((
+              f'{i8}if (',
+              f'{i12}learning_decision.independent_verifier_ref',
+              f'{i12}and learning_decision.independent_verifier_ref',
+              f'{i12}not in relationship_experience.verifier_evidence_refs',
+              f'{i8}):',
+              f'{i12}raise ValueError("Relationship Experience omits the independent verifier")',
+          ))
+          if module.count(old_verifier) != 1:
+              raise SystemExit('QDKT verifier anchor is ambiguous')
+          module_path.write_text(module.replace(old_verifier, new_verifier, 1), encoding='utf-8')
 
           tests_path = Path('tests/test_aura_unified_memory_continuity.py')
           tests = tests_path.read_text(encoding='utf-8')
           marker = 'def test_qdkt_ineligible_decision_with_relationship_fails_closed() -> None:'
           if marker in tests:
               raise SystemExit('QDKT fail-closed regression already present')
-          tests += '''\n\ndef test_qdkt_ineligible_decision_with_relationship_fails_closed() -> None:\n    intent, _, _, _, _, _, _, _, receipt = _vertical_fixture()\n    approved = _approved_learning_decision(receipt)\n    relationship = _relationship_observation(intent, receipt, approved)\n    ineligible = evaluate_learning_to_reproof(\n        relationship_id=approved.relationship_id,\n        relationship_digest=approved.relationship_digest,\n        repository_head=HEAD,\n        current_source_digest=SOURCE_DIGEST,\n        continuity_receipt=receipt,\n        human_disposition="APPROVED",\n    )\n\n    admission = evaluate_qdkt_consequential_admission(\n        continuity_receipt=receipt,\n        learning_decision=ineligible,\n        relationship_experience=relationship,\n        raw_evidence_refs=receipt.raw_evidence_refs,\n        current_repository_head=HEAD,\n        current_source_digest=SOURCE_DIGEST,\n        purpose_compatible=True,\n        privacy_compatible=True,\n        consent_compatible=True,\n        sovereignty_compatible=True,\n    )\n\n    assert admission.admitted is False\n    assert "LEARNING_REPROOF_NOT_ELIGIBLE" in admission.blockers\n    assert "MISSING_CRUCIBLE_PROPOSAL" in admission.blockers\n    assert "MISSING_CURRENT_REPROOF" in admission.blockers\n    assert "MISSING_INDEPENDENT_VERIFIER" in admission.blockers\n    assert "MISSING_HUMAN_DISPOSITION" in admission.blockers\n'''
-          tests_path.write_text(tests, encoding='utf-8')
+          test_block = dedent(
+              '''
+              def test_qdkt_ineligible_decision_with_relationship_fails_closed() -> None:
+                  intent, _, _, _, _, _, _, _, receipt = _vertical_fixture()
+                  approved = _approved_learning_decision(receipt)
+                  relationship = _relationship_observation(intent, receipt, approved)
+                  ineligible = evaluate_learning_to_reproof(
+                      relationship_id=approved.relationship_id,
+                      relationship_digest=approved.relationship_digest,
+                      repository_head=HEAD,
+                      current_source_digest=SOURCE_DIGEST,
+                      continuity_receipt=receipt,
+                      human_disposition="APPROVED",
+                  )
+
+                  admission = evaluate_qdkt_consequential_admission(
+                      continuity_receipt=receipt,
+                      learning_decision=ineligible,
+                      relationship_experience=relationship,
+                      raw_evidence_refs=receipt.raw_evidence_refs,
+                      current_repository_head=HEAD,
+                      current_source_digest=SOURCE_DIGEST,
+                      purpose_compatible=True,
+                      privacy_compatible=True,
+                      consent_compatible=True,
+                      sovereignty_compatible=True,
+                  )
+
+                  assert admission.admitted is False
+                  assert "LEARNING_REPROOF_NOT_ELIGIBLE" in admission.blockers
+                  assert "MISSING_CRUCIBLE_PROPOSAL" in admission.blockers
+                  assert "MISSING_CURRENT_REPROOF" in admission.blockers
+                  assert "MISSING_INDEPENDENT_VERIFIER" in admission.blockers
+                  assert "MISSING_HUMAN_DISPOSITION" in admission.blockers
+              '''
+          ).strip()
+          tests_path.write_text(f'{tests.rstrip()}\n\n\n{test_block}\n', encoding='utf-8')
           PY
+
           git rm -- "$TRIGGER_PATH"
           git diff --check
 
