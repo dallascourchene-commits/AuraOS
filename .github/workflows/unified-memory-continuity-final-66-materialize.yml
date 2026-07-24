@@ -1,0 +1,116 @@
+name: UMC final namespace-safe materialize
+
+on:
+  push:
+    branches:
+      - refactor/unified-memory-continuity
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: umc-final-namespace-safe-materialize
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: github.event.head_commit.message == 'chore: trigger final namespace-safe continuity materializer'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      TARGET_BRANCH: refactor/unified-memory-continuity
+      EVENT_HEAD: ${{ github.sha }}
+      EXPECTED_PARENT: 2cdb398e05ca12c1622b20c43f98b04eaf170135
+      TRANSPORT_COMMIT: 1de0f438b330ef91bfc99cead2d288d003181e22
+      EVIDENCE_DIR: ${{ runner.temp }}/umc-deep-review-v2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Bind trigger and settle generated-only synchronization
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVENT_HEAD"
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_PARENT"
+          git diff --name-only "$EXPECTED_PARENT" "$EVENT_HEAD" | sort > "${RUNNER_TEMP}/trigger-paths.txt"
+          printf '%s\n' \
+            .aura/refactor_payloads/umc_final_66.trigger \
+            .github/workflows/unified-memory-continuity-final-66-materialize.yml \
+            | sort > "${RUNNER_TEMP}/allowed-trigger-paths.txt"
+          diff -u "${RUNNER_TEMP}/allowed-trigger-paths.txt" "${RUNNER_TEMP}/trigger-paths.txt"
+          sleep 20
+          git fetch --no-tags origin "refs/heads/${TARGET_BRANCH}:refs/remotes/origin/${TARGET_BRANCH}"
+          latest="$(git rev-parse "origin/${TARGET_BRANCH}")"
+          git diff --name-only "$EVENT_HEAD" "$latest" | sort > "${RUNNER_TEMP}/post-trigger-paths.txt"
+          if [ -s "${RUNNER_TEMP}/post-trigger-paths.txt" ]; then
+            python - <<'PY'
+          import os
+          from pathlib import Path
+          paths = set((Path(os.environ['RUNNER_TEMP']) / 'post-trigger-paths.txt').read_text().splitlines())
+          allowed = {'.aura/CODEMAP.json', '.aura/CODEMAP.md', 'topology_map.json'}
+          unexpected = paths - allowed
+          if unexpected:
+              raise SystemExit(f'unexpected post-trigger paths: {sorted(unexpected)}')
+          PY
+          fi
+          git reset --hard "$latest"
+          test "$(sha256sum aura_unified_memory_continuity.py | awk '{print $1}')" = \
+            bb5c0c50e62b8edbb4cbdad4f9810709f67adf7866fcd8b0700eda334a030ade
+          test "$(sha256sum tests/test_aura_unified_memory_continuity.py | awk '{print $1}')" = \
+            edddf3af030fd5e4cdeb8bc0bb0c4b2751e3dc7857068ba46c28c5bd905d19ee
+          git rev-parse HEAD | tee "${RUNNER_TEMP}/settled-head.txt"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Run immutable 66-test materializer
+        id: materialize
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$TRANSPORT_COMMIT"
+          git show "$TRANSPORT_COMMIT:.aura/refactor_payloads/umc_deep_review_v2_materialize.sh" \
+            > "${RUNNER_TEMP}/umc_deep_review_v2_materialize.sh"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          path = Path(os.environ['RUNNER_TEMP']) / 'umc_deep_review_v2_materialize.sh'
+          text = path.read_text(encoding='utf-8')
+          settled = (Path(os.environ['RUNNER_TEMP']) / 'settled-head.txt').read_text().strip()
+          placeholder = "EXPECTED_HEAD='__EXPECTED_HEAD__'"
+          replacement = f"EXPECTED_HEAD='{settled}'"
+          if text.count(placeholder) != 1:
+              raise SystemExit('materializer expected-head placeholder is ambiguous')
+          path.write_text(text.replace(placeholder, replacement, 1), encoding='utf-8')
+          PY
+          bash "${RUNNER_TEMP}/umc_deep_review_v2_materialize.sh"
+
+      - name: Upload final evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unified-memory-continuity-final-66-${{ github.run_id }}
+          path: ${{ runner.temp }}/umc-deep-review-v2
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Report result
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OUTCOME: ${{ steps.materialize.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$OUTCOME" = 'success' ]; then
+            body='Final namespace-safe continuity materialization succeeded: five bounded files passed compilation, Ruff, Bandit, 66 regressions, PVM hard gates, zero-finding Waboose, Architecture Harness, and bounded publication.'
+          else
+            body='Final namespace-safe continuity materialization failed closed; no unverified source publication was accepted.'
+          fi
+          gh api repos/${{ github.repository }}/issues/193/comments -f body="$body"
