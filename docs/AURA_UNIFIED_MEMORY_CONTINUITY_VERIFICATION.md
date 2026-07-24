@@ -21,5 +21,6 @@ The verification sequence must preserve these gates:
 8. Regenerate CODEMAP only after source and tests stabilize.
 9. Do not commit, publish, promote, or merge from verification evidence alone.
 10. Keep disposable logs outside tracked repository status, never weaken the Architecture Harness clean-tree check, and write Architecture Harness handoff/run outputs physically outside the repository before copying completed receipts into an ignored CI artifact directory.
+11. During an exact-head verification pass, use the navigator's query mode against the committed CODEMAP; do not invoke map-generation mode and then treat the resulting dirty tree as verification evidence.
 
 A focused failure blocks materialization. The failure must be diagnosed against the exact repository environment; the gate must not be weakened to make a local stub pass.
