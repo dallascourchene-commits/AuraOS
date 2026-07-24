@@ -1,0 +1,5 @@
++    router = ArchitectModelRouter(model_caller=legacy_callback)
++    result = asyncio.run(router.call_model("judge", "review this", intensity=4))
++
++    assert result == "canonical:DEEPSEEK:judge"
++    assert calls == []
