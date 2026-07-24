@@ -1,0 +1,113 @@
+name: Unified Memory Completion Probe
+
+on:
+  push:
+    branches:
+      - refactor/unified-memory-continuity-completion
+    paths:
+      - .github/workflows/unified-memory-completion-probe.yml
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install requirements
+        run: python -m pip install -r requirements.txt
+
+      - name: Run bounded architecture and integration probe
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p unified-memory-probe
+          OUT=unified-memory-probe/probe.txt
+          exec > >(tee "$OUT") 2>&1
+
+          echo '=== REPOSITORY IDENTITY ==='
+          git rev-parse HEAD
+          git status --short --branch
+          echo
+
+          echo '=== NAVIGATOR OBJECTIVE ==='
+          python aura_codebase_navigator.py --query "complete unified manufactured memory saturation, model-relative execution, prediction-error learning, continuity sensitivity, current reproof, bridge, council, forge, crucible, ST3GG, J-Space, State Ledger, Temporal Persistence, Attempt Archive, Observatory" || true
+          echo
+
+          echo '=== AGENT ARENA HEALTH ==='
+          python -m aura_agent_arena_cli topology-health || true
+          python -m aura_agent_arena_cli stabilization-status || true
+          python -m aura_agent_arena_cli digest || true
+          python -m aura_agent_arena_cli resolve-capabilities --objective "compile and execute minimum-sufficient model-relative Act Capsules, bind immutable P0 and independent P1, current reproof, governed QDKT admission, continuity deltas, and existing toolchain consumers without duplicate owners" || true
+          echo
+
+          echo '=== PERSISTENCE ==='
+          python -m aura_persistence_cli --repo-root . verify-registry || true
+          echo
+
+          echo '=== TARGET SYMBOL INVENTORY ==='
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          targets = [
+              'aura_unified_memory_continuity.py',
+              'aura_agent_arena_bridge.py',
+              'aura_agent_arena_cli.py',
+              'aura_agent_arena_mcp.py',
+              'aura_architect_council_v3.py',
+              'aura_forge.py',
+              'aura_controlled_refactor_session.py',
+              'aura_relationship_experience.py',
+              'aura_qdkt.py',
+              'aura_crucible.py',
+              'aura_state_ledger_v3.py',
+              'aura_temporal_persistence.py',
+              'aura_attempt_archive.py',
+              'aura_arena_st3gg_codec.py',
+              'aura_jspace.py',
+              'aura_observatory.py',
+          ]
+          terms = ('intent', 'capsule', 'model', 'prediction', 'continuity', 'reproof', 'experience', 'qdkt', 'crucible', 'state', 'attempt', 'st3gg', 'jspace', 'observ')
+          for name in targets:
+              path = Path(name)
+              if not path.exists():
+                  print(f'--- {name}: MISSING')
+                  continue
+              try:
+                  tree = ast.parse(path.read_text(encoding='utf-8'))
+              except Exception as exc:
+                  print(f'--- {name}: PARSE ERROR {exc}')
+                  continue
+              symbols=[]
+              for node in ast.walk(tree):
+                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and any(t in node.name.lower() for t in terms):
+                      symbols.append((getattr(node, 'lineno', 0), type(node).__name__, node.name))
+              print(f'--- {name}')
+              for row in sorted(set(symbols)):
+                  print(*row)
+          PY
+          echo
+
+          echo '=== UNIFIED MODULE IMPORTS/REFERENCES ==='
+          grep -RIn --exclude-dir=.git --exclude='*.json' --exclude='*.md' 'aura_unified_memory_continuity\|IntentPacket\|ModelExecutionPacket\|ContinuitySensitivityReceipt\|LearningToReproofDecision' . | head -n 500 || true
+          echo
+
+          echo '=== DEFERRED OWNER APIS ==='
+          grep -RIn --include='*.py' -E 'class .*StateLedger|class .*AttemptArchive|class .*Crucible|def .*crucible|def .*continuity|def .*st3gg|def .*jspace|def .*observatory|def .*prepare_arena|class AuraForgeRuntime' . | head -n 800 || true
+
+      - name: Upload probe
+        uses: actions/upload-artifact@v4
+        with:
+          name: unified-memory-completion-probe
+          path: unified-memory-probe/probe.txt
+          if-no-files-found: error
