@@ -5,7 +5,7 @@ on:
     types: [opened, reopened, synchronize]
     paths:
       - ".github/workflows/aura-runtime-harness-bounded-capture.yml"
-      - "tools/runtime_harness_bounded_capture/apply.py"
+      - "tools/runtime_harness_bounded_capture/**"
 
 permissions:
   contents: write
@@ -40,8 +40,10 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install pytest ruff jsonschema
 
-      - name: Apply bounded-capture hardening
-        run: python tools/runtime_harness_bounded_capture/apply.py
+      - name: Apply bounded-capture and review hardening
+        run: |
+          python tools/runtime_harness_bounded_capture/apply.py
+          python tools/runtime_harness_bounded_capture/apply_review_fixes.py
 
       - name: Format and lint hardened harness
         run: |
@@ -71,6 +73,7 @@ jobs:
             tests/test_aura_construction_demo_fixture.py \
             tests/test_aura_construction_demo_projection.py \
             tests/test_aura_spatial_render_plan.py
+          node --check tests/runtime/construction_demo_browser_probe.cjs
           node --check aura_spatial_web/construction_demo_app.js
           node --check aura_spatial_web/construction_scene_renderer.js
           node --check aura_spatial_web/construction_wireframe_pass.js
@@ -107,7 +110,7 @@ jobs:
           git config user.name "AuraOS Runtime Harness"
           git config user.email "aura-runtime-harness@users.noreply.github.com"
           git add -A
-          git commit -m "fix(harness): bound runtime output and artifact evidence"
+          git commit -m "fix(harness): bound runtime evidence and harden browser proof"
           git fetch --no-tags origin "$TARGET_BRANCH"
           git rebase "origin/$TARGET_BRANCH"
           git push origin HEAD:"$TARGET_BRANCH"
