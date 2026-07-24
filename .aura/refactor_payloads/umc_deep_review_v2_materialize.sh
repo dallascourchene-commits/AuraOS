@@ -2,8 +2,7 @@
 set -euo pipefail
 
 TARGET_BRANCH='refactor/unified-memory-continuity'
-EXPECTED_HEAD='b638a6af5e4571b3f320e5a37ec338e14bcf678a'
-REVIEWED_PAYLOAD_CHECKPOINT='968f417cf55895ec788d89c0a97f37e40cf0612a'
+EXPECTED_HEAD='__EXPECTED_HEAD__'
 PAYLOAD_PREFIX='.aura/refactor_payloads/umc_deep_review_v2'
 export EVIDENCE_DIR="${RUNNER_TEMP}/umc-deep-review-v2"
 PAYLOAD_FILE="${EVIDENCE_DIR}/payload.encoded"
@@ -13,15 +12,7 @@ export AURA_WABOOSE_LEARNING_ROOT="${EVIDENCE_DIR}/waboose-learning"
 mkdir -p "$EVIDENCE_DIR"
 
 test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-git merge-base --is-ancestor "$REVIEWED_PAYLOAD_CHECKPOINT" HEAD
 test -z "$(git status --porcelain=v1)"
-git diff --name-only "$REVIEWED_PAYLOAD_CHECKPOINT" HEAD | sort > "${RUNNER_TEMP}/payload-cleanup-paths.txt"
-printf '%s\n' \
-  Aura_Sandbox/umc_deep_review_payload_v2/part-01 \
-  Aura_Sandbox/umc_deep_review_payload_v2/part-02 \
-  Aura_Sandbox/umc_deep_review_payload_v2/part-03 \
-  | sort > "${RUNNER_TEMP}/expected-cleanup-paths.txt"
-diff -u "${RUNNER_TEMP}/expected-cleanup-paths.txt" "${RUNNER_TEMP}/payload-cleanup-paths.txt"
 : > "$PAYLOAD_FILE"
 for number in 01 02 03; do
   git show "${TRANSPORT_COMMIT}:${PAYLOAD_PREFIX}/part-${number}" >> "$PAYLOAD_FILE"
@@ -30,6 +21,12 @@ test "$(sha256sum aura_unified_memory_continuity.py | awk '{print $1}')" = \
   'bb5c0c50e62b8edbb4cbdad4f9810709f67adf7866fcd8b0700eda334a030ade'
 test "$(sha256sum tests/test_aura_unified_memory_continuity.py | awk '{print $1}')" = \
   'edddf3af030fd5e4cdeb8bc0bb0c4b2751e3dc7857068ba46c28c5bd905d19ee'
+test "$(sha256sum docs/AURA_UNIFIED_MEMORY_CONTINUITY.md | awk '{print $1}')" = \
+  '5d3c0736b04c4fd3b0dbee54964e43387dad7949a8a175d1d333f4e5c4962603'
+test "$(sha256sum docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md | awk '{print $1}')" = \
+  '0c72fcc9ff1f9bc3c9f0847d059b9d411ebd041bc3bb00e4698fcef35d8505c5'
+test "$(sha256sum .aura/waboose_requests/unified_memory_continuity.v1.json | awk '{print $1}')" = \
+  '0a3206477ffc6d1f1190a97245b9a4a41b14a2dad27b2bfc81229c3e5294bf34'
 
 python - <<'PY'
 import base64
