@@ -69,14 +69,40 @@ jobs:
           PY
 
       - name: Verify the bounded vertical slice
+        id: focused
         shell: bash
         run: |
-          set -euo pipefail
-          python -m pip install pytest
-          python -m py_compile aura_unified_memory_continuity.py
-          python -m pytest -q tests/test_aura_unified_memory_continuity.py
+          set -uo pipefail
+          mkdir -p ../AuraOS-unified-memory-continuity-materialize
+          python -m pip install pytest \
+            2>&1 | tee ../AuraOS-unified-memory-continuity-materialize/install.log
+          install_status=${PIPESTATUS[0]}
+          if [[ "${install_status}" -ne 0 ]]; then
+            exit "${install_status}"
+          fi
+          python -m py_compile aura_unified_memory_continuity.py \
+            2>&1 | tee ../AuraOS-unified-memory-continuity-materialize/py_compile.log
+          compile_status=${PIPESTATUS[0]}
+          if [[ "${compile_status}" -ne 0 ]]; then
+            exit "${compile_status}"
+          fi
+          python -m pytest -vv tests/test_aura_unified_memory_continuity.py \
+            2>&1 | tee ../AuraOS-unified-memory-continuity-materialize/focused_tests.log
+          test_status=${PIPESTATUS[0]}
+          echo "focused_test_exit=${test_status}" | tee ../AuraOS-unified-memory-continuity-materialize/status.txt
+          exit "${test_status}"
+
+      - name: Upload materialization evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unified-memory-continuity-materialize-${{ github.run_id }}
+          path: ../AuraOS-unified-memory-continuity-materialize
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Commit only canonical source and tests
+        if: success()
         shell: bash
         run: |
           set -euo pipefail
