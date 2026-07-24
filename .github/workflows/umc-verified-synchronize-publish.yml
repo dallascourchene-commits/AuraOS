@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: write
-  issues: write
   pull-requests: read
 
 jobs:
@@ -23,50 +22,19 @@ jobs:
       TARGET_BRANCH: refactor/unified-memory-continuity
       EVENT_HEAD: ${{ github.event.pull_request.head.sha }}
       TRANSPORT_COMMIT: 1de0f438b330ef91bfc99cead2d288d003181e22
-      PUBLISHER_LOG: ${{ runner.temp }}/umc-publisher.log
+      GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Prepare immutable publisher
+      - name: Clone and run immutable verified publisher
         shell: bash
         run: |
           set -euo pipefail
+          git clone --quiet --depth 1 --branch "$TARGET_BRANCH" \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" repo
+          cd repo
           test "$(git rev-parse HEAD)" = "$EVENT_HEAD"
           test -z "$(git status --porcelain=v1)"
-          git fetch --no-tags origin "$TRANSPORT_COMMIT"
+          git fetch --quiet --no-tags origin "$TRANSPORT_COMMIT"
           git show "$TRANSPORT_COMMIT:.aura/refactor_payloads/umc_deep_review_v2_materialize.sh" > "${RUNNER_TEMP}/umc_publish.sh"
           test "$(grep -c __EXPECTED_HEAD__ "${RUNNER_TEMP}/umc_publish.sh")" = 1
           sed -i "s/__EXPECTED_HEAD__/${EVENT_HEAD}/" "${RUNNER_TEMP}/umc_publish.sh"
-
-      - name: Run immutable verified publisher
-        id: publish
-        continue-on-error: true
-        shell: bash
-        run: |
-          set -o pipefail
-          bash -x "${RUNNER_TEMP}/umc_publish.sh" 2>&1 | tee "$PUBLISHER_LOG"
-
-      - name: Upload publisher evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: umc-publisher-attempt-${{ github.run_id }}
-          path: |
-            ${{ runner.temp }}/umc-publisher.log
-            ${{ runner.temp }}/umc-deep-review-v2
-          if-no-files-found: warn
-          retention-days: 30
-
-      - name: Enforce publisher result
-        if: steps.publish.outcome != 'success'
-        shell: bash
-        run: |
-          tail -n 100 "$PUBLISHER_LOG" || true
-          exit 1
+          bash -x "${RUNNER_TEMP}/umc_publish.sh"
