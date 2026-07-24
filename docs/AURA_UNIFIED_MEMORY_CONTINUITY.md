@@ -95,8 +95,10 @@ Each evidence item carries:
 
 `compile_arena_evidence_slice(...)` applies two deterministic rules:
 
-1. **Saturation:** every required reference must be present and current.
+1. **Saturation:** every required reference must be present and current. Duplicate evidence references fail closed rather than allowing a later required record to be shadowed.
 2. **Noise removal:** non-required evidence is excluded and retained only as a reference.
+
+A `ModelExecutionPacket` must carry every evidence item marked required by the active slice; a worker cannot select a smaller packet that silently drops required evidence.
 
 This compiles active memory; it does not persist a new memory store.
 
@@ -131,7 +133,7 @@ It binds:
 
 - the unchanged intent and Act Capsule digests;
 - exact repository head, working-tree digest, and current source digest;
-- exact provider/model profile and provider configuration;
+- the complete canonical `ModelEndpointIdentity`, its digest, exact provider/model profile, and provider configuration;
 - selected worker role and task slice;
 - prompt structure;
 - evidence placement and context order;
@@ -141,7 +143,7 @@ It binds:
 - cross-model disagreement references;
 - required verification depth.
 
-A stale, expired, unknown, or mismatched model profile fails closed. Evidence outside the active Arena slice, role drift, or tool-scope expansion also fails closed. Cross-model disagreement increases verification depth; it never becomes voting authority.
+A stale, expired, unknown, forged, or mismatched model profile fails closed. The profile is accepted only when its complete endpoint identity round-trips through the canonical Model Cognome owner. Evidence outside the active Arena slice, omission of required active evidence, role drift, or tool-scope expansion also fails closed. Cross-model disagreement increases verification depth; it never becomes voting authority.
 
 ### 3.6 `PredictionPacket` and `P1Observation`
 
@@ -155,10 +157,11 @@ A stale, expired, unknown, or mismatched model profile fails closed. Evidence ou
 - expected risk;
 - exact Act Capsule, ModelExecutionPacket, and model-profile digests;
 - exact repository head and source digest inherited from the active evidence slice;
+- the exact prompt/runtime identity committed before observation;
 - producer identity;
 - commit timestamp and immutable P0 digest.
 
-All canonical JSON mappings are recursively frozen. A frozen dataclass cannot be bypassed by mutating a nested cost, example, observation, or embedded Act Capsule mapping after its digest is committed. Aggregate records are also bounded by the shared canonical packet-size limit.
+All canonical JSON mappings are recursively frozen and require string object keys. Ambiguous key coercion such as integer key `1` colliding with string key `"1"` fails closed before canonicalization. A frozen dataclass cannot be bypassed by mutating a nested cost, example, observation, or embedded Act Capsule mapping after its digest is committed. Aggregate records are also bounded by the shared canonical packet-size limit.
 
 `AURA_P1_OBSERVATION_V1` may be created only when the caller supplies the unchanged P0 digest and the record still recomputes to that digest. It binds:
 
@@ -212,11 +215,11 @@ It is proposal-only, is not a truth owner, and has no patch, VSA, promotion, pub
 
 Failure returns exact blockers and a legal outcome rather than silently promoting the candidate.
 
-`relationship_experience_kwargs(...)` prepares validated arguments for the existing `RelationshipExperienceObservation.create(...)` owner. It requires the continuity receipt and independent verifier to remain in the evidence bundle, enforces the canonical owner’s privacy classes, and does not persist an observation itself.
+`relationship_experience_kwargs(...)` prepares validated arguments for the existing `RelationshipExperienceObservation.create(...)` owner. It requires the continuity receipt, Crucible proposal, current reproof, human/community disposition receipt, and independent verifier to remain in the evidence bundle, enforces the canonical owner’s privacy classes, and does not persist an observation itself.
 
 ### 3.10 QDKT consequential admission
 
-`evaluate_qdkt_consequential_admission(...)` accepts the typed continuity receipt, typed learning-to-reproof decision, and canonical `RelationshipExperienceObservation`. It keeps consequential QDKT admission closed until those records agree on repository/source/relationship identity, the current-reproof decision is eligible, raw continuity evidence remains complete, and the required human/community disposition is present.
+`evaluate_qdkt_consequential_admission(...)` accepts the typed continuity receipt, typed learning-to-reproof decision, and canonical `RelationshipExperienceObservation`. It keeps consequential QDKT admission closed until those records agree on repository, source, relationship ID, relationship digest, objective, verifier, and human disposition; every governed reproof receipt remains present; the current-reproof decision is eligible; and raw continuity evidence remains complete.
 
 The result remains proposal-only and has no crystallization, patch, policy, or promotion authority.
 

@@ -17,6 +17,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass, fields, is_dataclass
 from enum import Enum
+import json
 import math
 from pathlib import PurePosixPath
 import time
@@ -150,9 +151,24 @@ def _strings(values: Sequence[Any], name: str, *, required: bool = False) -> tup
     return normalized
 
 
+def _validate_json_object_keys(value: Any, name: str, *, path: str = "$") -> None:
+    if isinstance(value, Mapping):
+        seen: set[str] = set()
+        for key, item in value.items():
+            if type(key) is not str:
+                raise ValueError(f"{name} must use string JSON object keys at {path}")
+            if key in seen:
+                raise ValueError(f"{name} contains a duplicate JSON object key at {path}.{key}")
+            seen.add(key)
+            _validate_json_object_keys(item, name, path=f"{path}.{key}")
+    elif isinstance(value, (list, tuple)):
+        for index, item in enumerate(value):
+            _validate_json_object_keys(item, name, path=f"{path}[{index}]")
+
+
 def _freeze_json(value: Any) -> Any:
     if isinstance(value, Mapping):
-        return MappingProxyType({str(key): _freeze_json(item) for key, item in value.items()})
+        return MappingProxyType({key: _freeze_json(item) for key, item in value.items()})
     if isinstance(value, (list, tuple)):
         return tuple(_freeze_json(item) for item in value)
     return value
@@ -175,13 +191,16 @@ def _mapping(value: Any, name: str) -> Mapping[str, Any]:
         payload = asdict(value)
     else:
         raise ValueError(f"{name} must be a mapping, dataclass, or to_dict record")
+    if not isinstance(payload, Mapping):
+        raise ValueError(f"{name} must normalize to a mapping")
+    _validate_json_object_keys(payload, name)
     try:
         normalized = canonical_json(payload)
     except (TypeError, ValueError, OverflowError) as exc:
         raise ValueError(f"{name} must be canonical JSON data") from exc
     if len(normalized.encode("utf-8")) > _MAX_PACKET_BYTES:
         raise ValueError(f"{name} exceeds {_MAX_PACKET_BYTES} canonical bytes")
-    decoded = __import__("json").loads(normalized)
+    decoded = json.loads(normalized)
     if not isinstance(decoded, dict):
         raise ValueError(f"{name} must normalize to an object")
     return _freeze_json(decoded)
@@ -241,6 +260,38 @@ def _repo_paths(values: Sequence[Any], name: str) -> tuple[str, ...]:
         if path.is_absolute() or ".." in path.parts or value in {".", ".."}:
             raise ValueError(f"{name} must contain bounded repository-relative paths")
     return paths
+
+
+def _canonical_model_endpoint_payload(value: Any) -> Mapping[str, Any]:
+    from aura_model_cognome import ModelEndpointIdentity
+
+    normalized = _mapping(value, "endpoint_identity")
+    expected_fields = set(ModelEndpointIdentity.__dataclass_fields__)
+    if set(normalized) != expected_fields:
+        raise ValueError("endpoint_identity must be a complete ModelEndpointIdentity")
+    payload = _thaw_json(normalized)
+    try:
+        canonical = ModelEndpointIdentity.create(
+            provider=payload["provider"],
+            requested_model=payload["requested_model"],
+            returned_model=payload["returned_model"],
+            base_url_digest=payload["base_url_digest"],
+            access_class=payload["access_class"],
+            endpoint_fingerprint=payload["endpoint_fingerprint"],
+            fingerprint_version=payload["fingerprint_version"],
+            provider_revision=payload["provider_revision"],
+            tokenizer_family=payload["tokenizer_family"],
+            price_snapshot_digest=payload["price_snapshot_digest"],
+            first_seen_at=_timestamp(payload["first_seen_at"], "first_seen_at"),
+            last_seen_at=_timestamp(payload["last_seen_at"], "last_seen_at"),
+            status=payload["status"],
+        )
+    except (TypeError, ValueError, KeyError) as exc:
+        raise ValueError("endpoint_identity is not a valid ModelEndpointIdentity") from exc
+    canonical_payload = _mapping(canonical.to_dict(), "endpoint_identity")
+    if _thaw_json(canonical_payload) != payload:
+        raise ValueError("endpoint_identity failed canonical Model Cognome validation")
+    return canonical_payload
 
 
 def _canonical_act_capsule_payload(value: Any) -> Mapping[str, Any]:
@@ -756,6 +807,8 @@ class ModelProfileRef:
     returned_model: str
     endpoint_fingerprint: str
     provider_revision: str
+    endpoint_identity: Mapping[str, Any]
+    endpoint_identity_digest: str
     profile_digest: str
     status: str
     calibrated_at: float
@@ -766,10 +819,26 @@ class ModelProfileRef:
     def __post_init__(self) -> None:
         for name in (
             "profile_id", "provider", "requested_model", "returned_model",
-            "endpoint_fingerprint", "profile_digest", "status",
+            "endpoint_fingerprint", "endpoint_identity_digest", "profile_digest", "status",
         ):
             _required(getattr(self, name), name)
         object.__setattr__(self, "provider_revision", _optional(self.provider_revision, "provider_revision"))
+        endpoint_identity = _canonical_model_endpoint_payload(self.endpoint_identity)
+        object.__setattr__(self, "endpoint_identity", endpoint_identity)
+        if stable_digest(endpoint_identity) != self.endpoint_identity_digest:
+            raise ValueError("ModelProfileRef endpoint identity digest mismatch")
+        endpoint_payload = _thaw_json(endpoint_identity)
+        for name in (
+            "profile_id",
+            "provider",
+            "requested_model",
+            "returned_model",
+            "endpoint_fingerprint",
+            "provider_revision",
+            "status",
+        ):
+            if getattr(self, name) != endpoint_payload[name]:
+                raise ValueError(f"ModelProfileRef {name} differs from Model Cognome identity")
         calibrated = _timestamp(self.calibrated_at, "calibrated_at")
         expires = _timestamp(self.expires_at, "expires_at")
         if expires <= calibrated:
@@ -800,22 +869,38 @@ class ModelProfileRef:
         evidence_refs: Sequence[str],
         uncertainty: float,
     ) -> ModelProfileRef:
-        identity = _mapping(endpoint_identity, "endpoint_identity")
-        required = {
-            "profile_id", "provider", "requested_model", "returned_model",
-            "endpoint_fingerprint", "provider_revision", "status",
-        }
-        missing = sorted(required - set(identity))
-        if missing:
-            raise ValueError(f"endpoint identity is missing fields: {missing}")
+        from aura_model_cognome import ModelEndpointIdentity
+
+        if not isinstance(endpoint_identity, ModelEndpointIdentity):
+            raise ValueError("endpoint_identity must use canonical ModelEndpointIdentity")
+        canonical_endpoint = ModelEndpointIdentity.create(
+            provider=endpoint_identity.provider,
+            requested_model=endpoint_identity.requested_model,
+            returned_model=endpoint_identity.returned_model,
+            base_url_digest=endpoint_identity.base_url_digest,
+            access_class=endpoint_identity.access_class,
+            endpoint_fingerprint=endpoint_identity.endpoint_fingerprint,
+            fingerprint_version=endpoint_identity.fingerprint_version,
+            provider_revision=endpoint_identity.provider_revision,
+            tokenizer_family=endpoint_identity.tokenizer_family,
+            price_snapshot_digest=endpoint_identity.price_snapshot_digest,
+            first_seen_at=_timestamp(endpoint_identity.first_seen_at, "first_seen_at"),
+            last_seen_at=_timestamp(endpoint_identity.last_seen_at, "last_seen_at"),
+            status=endpoint_identity.status,
+        )
+        endpoint_payload = canonical_endpoint.to_dict()
+        if endpoint_payload != endpoint_identity.to_dict():
+            raise ValueError("endpoint_identity failed canonical Model Cognome validation")
         payload = {
-            "profile_id": identity["profile_id"],
-            "provider": identity["provider"],
-            "requested_model": identity["requested_model"],
-            "returned_model": identity["returned_model"],
-            "endpoint_fingerprint": identity["endpoint_fingerprint"],
-            "provider_revision": identity["provider_revision"],
-            "status": identity["status"],
+            "profile_id": canonical_endpoint.profile_id,
+            "provider": canonical_endpoint.provider,
+            "requested_model": canonical_endpoint.requested_model,
+            "returned_model": canonical_endpoint.returned_model,
+            "endpoint_fingerprint": canonical_endpoint.endpoint_fingerprint,
+            "provider_revision": canonical_endpoint.provider_revision,
+            "endpoint_identity": endpoint_payload,
+            "endpoint_identity_digest": stable_digest(endpoint_payload),
+            "status": canonical_endpoint.status,
             "calibrated_at": _timestamp(calibrated_at, "calibrated_at"),
             "expires_at": _timestamp(expires_at, "expires_at"),
             "evidence_refs": list(_strings(evidence_refs, "evidence_refs", required=True)),
@@ -837,6 +922,8 @@ class ModelProfileRef:
             "returned_model": self.returned_model,
             "endpoint_fingerprint": self.endpoint_fingerprint,
             "provider_revision": self.provider_revision,
+            "endpoint_identity": _thaw_json(self.endpoint_identity),
+            "endpoint_identity_digest": self.endpoint_identity_digest,
             "status": self.status,
             "calibrated_at": self.calibrated_at,
             "expires_at": self.expires_at,
@@ -958,6 +1045,7 @@ class PredictionPacket:
     model_profile_digest: str
     repository_head: str
     source_digest: str
+    prompt_runtime_digest: str
     current_state_digest: str
     proposed_transition: str
     expected_state_delta: tuple[str, ...]
@@ -974,7 +1062,7 @@ class PredictionPacket:
         for name in (
             "prediction_id", "objective_digest", "purpose_digest", "act_capsule_digest",
             "model_execution_packet_digest", "model_profile_digest", "repository_head",
-            "source_digest", "current_state_digest",
+            "source_digest", "prompt_runtime_digest", "current_state_digest",
             "proposed_transition", "producer_id", "p0_digest",
         ):
             _required(getattr(self, name), name)
@@ -1012,6 +1100,7 @@ class PredictionPacket:
             "model_profile_digest": self.model_profile_digest,
             "repository_head": self.repository_head,
             "source_digest": self.source_digest,
+            "prompt_runtime_digest": self.prompt_runtime_digest,
             "current_state_digest": self.current_state_digest,
             "proposed_transition": self.proposed_transition,
             "expected_state_delta": list(self.expected_state_delta),
@@ -1518,8 +1607,7 @@ def compile_arena_evidence_slice(
         if not isinstance(item, ArenaEvidenceItem):
             raise ValueError("candidate_items must contain ArenaEvidenceItem records")
         if item.evidence_ref in seen:
-            excluded.append(item.evidence_ref)
-            continue
+            raise ValueError(f"candidate_items contains duplicate evidence_ref: {item.evidence_ref}")
         seen.add(item.evidence_ref)
         if item.required or item.evidence_ref in required:
             selected_item = item
@@ -1679,6 +1767,13 @@ def compile_model_execution_packet(
     arena_refs = {item.evidence_ref for item in arena_slice.items}
     if not set(selected_evidence).issubset(arena_refs):
         raise ValueError("ModelExecutionPacket references evidence outside the active slice")
+    required_arena_refs = {item.evidence_ref for item in arena_slice.items if item.required}
+    missing_required_evidence = sorted(required_arena_refs - set(selected_evidence))
+    if missing_required_evidence:
+        raise ValueError(
+            "ModelExecutionPacket omitted required active evidence: "
+            f"{missing_required_evidence}"
+        )
     model_profile.assert_fresh(observed_at=observed_at)
     disagreements = _strings(disagreement_refs, "disagreement_refs")
     verification_depth = 2 if disagreements else 1
@@ -1733,6 +1828,7 @@ def commit_prediction(
     act_envelope: ActCapsuleEnvelope,
     model_execution_packet: ModelExecutionPacket,
     current_state_digest: str,
+    prompt_runtime_digest: str,
     proposed_transition: str,
     expected_state_delta: Sequence[str],
     expected_evidence: Sequence[str],
@@ -1758,6 +1854,9 @@ def commit_prediction(
         "model_profile_digest": model_execution_packet.model_profile_digest,
         "repository_head": model_execution_packet.repository_head,
         "source_digest": model_execution_packet.source_digest,
+        "prompt_runtime_digest": _required(
+            prompt_runtime_digest, "prompt_runtime_digest"
+        ),
         "current_state_digest": _required(current_state_digest, "current_state_digest"),
         "proposed_transition": _required(proposed_transition, "proposed_transition"),
         "expected_state_delta": list(
@@ -1883,6 +1982,8 @@ def derive_continuity_sensitivity_receipt(
         raise ValueError("continuity receipt model-execution packet differs from P0")
     if prediction.model_profile_digest != model_profile_digest:
         raise ValueError("continuity receipt model profile differs from P0")
+    if prediction.prompt_runtime_digest != prompt_runtime_digest:
+        raise ValueError("continuity receipt prompt runtime differs from committed P0")
     verifier = _required(independent_verifier_id, "independent_verifier_id")
     if verifier != observation.observer_id:
         raise ValueError("continuity receipt verifier differs from the independent P1 observer")
@@ -2081,8 +2182,18 @@ def relationship_experience_kwargs(
     if decision.independent_verifier_ref not in verifier_refs:
         raise ValueError("Relationship Experience evidence omits the independent verifier")
     normalized_receipt_refs = _strings(receipt_refs, "receipt_refs", required=True)
-    if decision.continuity_receipt_ref not in normalized_receipt_refs:
-        raise ValueError("Relationship Experience evidence omits the continuity receipt")
+    required_governance_refs = {
+        decision.continuity_receipt_ref,
+        decision.crucible_proposal_ref,
+        decision.current_reproof_ref,
+        decision.human_disposition_ref,
+    }
+    missing_governance_refs = sorted(required_governance_refs - set(normalized_receipt_refs))
+    if missing_governance_refs:
+        raise ValueError(
+            "Relationship Experience evidence omits governed receipt refs: "
+            f"{missing_governance_refs}"
+        )
     normalized_privacy = _required(privacy_class, "privacy_class").upper()
     if normalized_privacy not in {"PUBLIC", "PROJECT", "PRIVATE_REDACTED"}:
         raise ValueError("privacy class is unsupported by Relationship Experience")
@@ -2156,6 +2267,28 @@ def evaluate_qdkt_consequential_admission(
             raise ValueError("Relationship Experience is stale for QDKT admission")
         if relationship_experience.relationship_id != learning_decision.relationship_id:
             raise ValueError("Relationship Experience relationship differs from reproof")
+        if relationship_experience.relationship_digest != learning_decision.relationship_digest:
+            raise ValueError("Relationship Experience digest differs from reproof")
+        if relationship_experience.objective_digest != learning_decision.objective_digest:
+            raise ValueError("Relationship Experience objective differs from reproof")
+        required_relationship_receipts = {
+            learning_decision.continuity_receipt_ref,
+            learning_decision.crucible_proposal_ref,
+            learning_decision.current_reproof_ref,
+            learning_decision.human_disposition_ref,
+        }
+        if not required_relationship_receipts.issubset(relationship_experience.receipt_refs):
+            raise ValueError("Relationship Experience omits governed reproof receipts")
+        if (
+            learning_decision.independent_verifier_ref
+            not in relationship_experience.verifier_evidence_refs
+        ):
+            raise ValueError("Relationship Experience omits the independent verifier")
+        if (
+            relationship_experience.human_disposition.value
+            != learning_decision.human_disposition
+        ):
+            raise ValueError("Relationship Experience disposition differs from reproof")
         if relationship_experience.human_disposition.value != "APPROVED":
             blockers.append("HUMAN_DISPOSITION_NOT_APPROVED")
 

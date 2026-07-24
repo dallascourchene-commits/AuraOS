@@ -210,7 +210,10 @@ def _model_packet(
     *,
     disagreements=(),
     selected_role="bounded_builder",
-    evidence_refs=("source:aura_architect_loop.ActCapsule",),
+    evidence_refs=(
+        "source:aura_architect_loop.ActCapsule",
+        "source:aura_model_cognome.ModelEndpointIdentity",
+    ),
     tools_available=("pytest",),
 ):
     return compile_model_execution_packet(
@@ -244,6 +247,7 @@ def _prediction(intent, envelope, packet):
         act_envelope=envelope,
         model_execution_packet=packet,
         current_state_digest="state-before",
+        prompt_runtime_digest="prompt-runtime",
         proposed_transition="add deterministic integration contracts",
         expected_state_delta=("new adapter module", "new focused tests"),
         expected_evidence=("pytest passes", "Waboose receipt"),
@@ -333,7 +337,12 @@ def _relationship_observation(
         decision=decision,
         outcome="SUCCESS",
         verifier_evidence_refs=(decision.independent_verifier_ref, "pytest:pass"),
-        receipt_refs=(receipt.receipt_id,),
+        receipt_refs=(
+            receipt.receipt_id,
+            decision.crucible_proposal_ref,
+            decision.current_reproof_ref,
+            decision.human_disposition_ref,
+        ),
         source_refs=("source:aura_unified_memory_continuity.py",),
         working_tree_digest=WORKING_TREE_DIGEST,
         privacy_class="PROJECT",
@@ -530,7 +539,7 @@ def test_continuity_receipt_rejects_self_verification() -> None:
             current_source_digest=SOURCE_DIGEST,
             model_profile_digest=profile.profile_digest,
             model_execution_packet_digest=packet.packet_digest,
-            prompt_runtime_digest="runtime",
+            prompt_runtime_digest=prediction.prompt_runtime_digest,
             error_class="NONE",
             prediction_error=(),
             consequence_dimensions=("correctness",),
@@ -556,7 +565,7 @@ def test_continuity_receipt_cannot_be_copied_across_head_or_source() -> None:
         current_source_digest=SOURCE_DIGEST,
         model_profile_digest=profile.profile_digest,
         model_execution_packet_digest=packet.packet_digest,
-        prompt_runtime_digest="runtime",
+        prompt_runtime_digest=prediction.prompt_runtime_digest,
         error_class="NONE",
         prediction_error=(),
         consequence_dimensions=("correctness",),
@@ -592,6 +601,7 @@ def test_non_finite_costs_and_uncertainty_fail_closed() -> None:
             act_envelope=envelope,
             model_execution_packet=packet,
             current_state_digest="state",
+            prompt_runtime_digest="runtime",
             proposed_transition="change",
             expected_state_delta=("change",),
             expected_evidence=("test",),
@@ -763,6 +773,7 @@ def test_prediction_is_deeply_immutable_and_revalidates_digest() -> None:
         act_envelope=envelope,
         model_execution_packet=packet,
         current_state_digest="nested-state",
+        prompt_runtime_digest="nested-runtime",
         proposed_transition="nested cost fixture",
         expected_state_delta=("change",),
         expected_evidence=("test",),
@@ -955,3 +966,228 @@ def test_authority_boundaries_are_not_accidentally_promoted(record_type) -> None
             assert payload[key] is False
     if "patch_authority" in payload:
         assert payload["patch_authority"] == PATCH_AUTHORITY
+
+
+def test_required_evidence_cannot_be_dropped_or_duplicated() -> None:
+    intent = _intent()
+    duplicate = ArenaEvidenceItem(
+        evidence_ref="source:required",
+        causal_reason="first candidate",
+        truth_class=EvidenceTruthClass.EXACT_SOURCE,
+        canonical_owner="owner",
+        source_digest="digest-one",
+        freshness="CURRENT",
+        required=False,
+    )
+    required_duplicate = replace(
+        duplicate,
+        causal_reason="required candidate",
+        source_digest="digest-two",
+        required=True,
+    )
+    with pytest.raises(ValueError, match="duplicate evidence_ref"):
+        compile_arena_evidence_slice(
+            repository_head=HEAD,
+            working_tree_digest=WORKING_TREE_DIGEST,
+            codemap_digest=CODEMAP_DIGEST,
+            objective_digest=intent.intent_digest,
+            candidate_items=(duplicate, required_duplicate),
+            required_refs=("source:required",),
+            prohibitions=(),
+            required_verifiers=("pytest",),
+        )
+
+    envelope = _act_envelope(intent, _semantic_ledger(intent), _arena_slice(intent))
+    with pytest.raises(ValueError, match="omitted required active evidence"):
+        _model_packet(
+            intent,
+            envelope,
+            _profile(),
+            evidence_refs=("source:aura_architect_loop.ActCapsule",),
+        )
+
+
+def test_model_profile_requires_canonical_model_cognome_identity() -> None:
+    endpoint = ModelEndpointIdentity.create(
+        provider="test-provider",
+        requested_model="test-model",
+        endpoint_fingerprint="fingerprint",
+        first_seen_at=1.0,
+        last_seen_at=2.0,
+    )
+    with pytest.raises(ValueError, match="canonical ModelEndpointIdentity"):
+        ModelProfileRef.create(
+            endpoint_identity=endpoint.to_dict(),
+            calibrated_at=10.0,
+            expires_at=20.0,
+            evidence_refs=("probe",),
+            uncertainty=0.1,
+        )
+
+    forged = replace(endpoint, profile_id="profile_forged")
+    with pytest.raises(ValueError, match="canonical Model Cognome validation"):
+        ModelProfileRef.create(
+            endpoint_identity=forged,
+            calibrated_at=10.0,
+            expires_at=20.0,
+            evidence_refs=("probe",),
+            uncertainty=0.1,
+        )
+
+    profile = ModelProfileRef.create(
+        endpoint_identity=endpoint,
+        calibrated_at=10.0,
+        expires_at=20.0,
+        evidence_refs=("probe",),
+        uncertainty=0.1,
+    )
+    assert profile.endpoint_identity_digest == stable_digest(endpoint.to_dict())
+    assert profile.endpoint_identity["profile_id"] == endpoint.profile_id
+
+
+def test_prediction_binds_prompt_runtime_before_observation() -> None:
+    _, _, _, _, _, _, prediction, observation, _ = _vertical_fixture()
+    assert prediction.prompt_runtime_digest == "prompt-runtime"
+    with pytest.raises(ValueError, match="prompt runtime differs from committed P0"):
+        derive_continuity_sensitivity_receipt(
+            prediction=prediction,
+            observation=observation,
+            current_repository_head=HEAD,
+            current_source_digest=SOURCE_DIGEST,
+            model_profile_digest=prediction.model_profile_digest,
+            model_execution_packet_digest=prediction.model_execution_packet_digest,
+            prompt_runtime_digest="swapped-runtime",
+            error_class="NONE",
+            prediction_error=(),
+            consequence_dimensions=("correctness",),
+            protected_pathways=("authority",),
+            mutation_budget=("one file",),
+            replay_burden=("pytest",),
+            raw_evidence_refs=observation.observed_evidence_refs,
+            replacement_candidate_refs=(),
+            uncertainty=0.0,
+            producer_id="continuity-compiler",
+            independent_verifier_id=observation.observer_id,
+            verifier_evidence_refs=observation.observed_evidence_refs,
+            human_disposition_ref="human:pending",
+        )
+
+
+def test_relationship_experience_requires_all_governance_receipts() -> None:
+    intent, _, _, _, _, _, _, _, receipt = _vertical_fixture()
+    decision = _approved_learning_decision(receipt)
+    with pytest.raises(ValueError, match="omits governed receipt refs"):
+        relationship_experience_kwargs(
+            decision=decision,
+            outcome="SUCCESS",
+            verifier_evidence_refs=(decision.independent_verifier_ref,),
+            receipt_refs=(receipt.receipt_id,),
+            source_refs=("source:aura_unified_memory_continuity.py",),
+            working_tree_digest=WORKING_TREE_DIGEST,
+            privacy_class="PROJECT",
+            objective_digest=intent.intent_digest,
+            reason="Incomplete governance evidence.",
+        )
+
+
+def test_qdkt_rejects_relationship_digest_and_objective_mismatch() -> None:
+    intent, _, _, _, _, _, _, _, receipt = _vertical_fixture()
+    decision = _approved_learning_decision(receipt)
+    relationship = _relationship_observation(intent, receipt, decision)
+
+    forged_digest = RelationshipExperienceObservation.create(
+        transaction_time=81.0,
+        **{
+            **relationship_experience_kwargs(
+                decision=decision,
+                outcome="SUCCESS",
+                verifier_evidence_refs=(decision.independent_verifier_ref,),
+                receipt_refs=(
+                    receipt.receipt_id,
+                    decision.crucible_proposal_ref,
+                    decision.current_reproof_ref,
+                    decision.human_disposition_ref,
+                ),
+                source_refs=("source:aura_unified_memory_continuity.py",),
+                working_tree_digest=WORKING_TREE_DIGEST,
+                privacy_class="PROJECT",
+                objective_digest=intent.intent_digest,
+                reason="Digest mismatch fixture.",
+            ),
+            "relationship_digest": "forged-relationship-digest",
+        },
+    )
+    with pytest.raises(ValueError, match="digest differs from reproof"):
+        evaluate_qdkt_consequential_admission(
+            continuity_receipt=receipt,
+            learning_decision=decision,
+            relationship_experience=forged_digest,
+            raw_evidence_refs=receipt.raw_evidence_refs,
+            current_repository_head=HEAD,
+            current_source_digest=SOURCE_DIGEST,
+            purpose_compatible=True,
+            privacy_compatible=True,
+            consent_compatible=True,
+            sovereignty_compatible=True,
+        )
+
+    forged_objective = RelationshipExperienceObservation.create(
+        transaction_time=82.0,
+        **{
+            **relationship_experience_kwargs(
+                decision=decision,
+                outcome="SUCCESS",
+                verifier_evidence_refs=(decision.independent_verifier_ref,),
+                receipt_refs=(
+                    receipt.receipt_id,
+                    decision.crucible_proposal_ref,
+                    decision.current_reproof_ref,
+                    decision.human_disposition_ref,
+                ),
+                source_refs=("source:aura_unified_memory_continuity.py",),
+                working_tree_digest=WORKING_TREE_DIGEST,
+                privacy_class="PROJECT",
+                objective_digest=intent.intent_digest,
+                reason="Objective mismatch fixture.",
+            ),
+            "objective_digest": "forged-objective",
+        },
+    )
+    with pytest.raises(ValueError, match="objective differs from reproof"):
+        evaluate_qdkt_consequential_admission(
+            continuity_receipt=receipt,
+            learning_decision=decision,
+            relationship_experience=forged_objective,
+            raw_evidence_refs=receipt.raw_evidence_refs,
+            current_repository_head=HEAD,
+            current_source_digest=SOURCE_DIGEST,
+            purpose_compatible=True,
+            privacy_compatible=True,
+            consent_compatible=True,
+            sovereignty_compatible=True,
+        )
+
+
+def test_canonical_json_mappings_reject_non_string_key_collisions() -> None:
+    intent, _, _, envelope, _, packet, _, _, _ = _vertical_fixture()
+    with pytest.raises(ValueError, match="string JSON object keys"):
+        commit_prediction(
+            intent=intent,
+            act_envelope=envelope,
+            model_execution_packet=packet,
+            current_state_digest="state",
+            prompt_runtime_digest="runtime",
+            proposed_transition="reject ambiguous JSON keys",
+            expected_state_delta=("no change",),
+            expected_evidence=("validation",),
+            expected_cost={1: 10, "1": 20},
+            expected_risk=("key collision",),
+            producer_id="producer",
+            committed_at=60.0,
+        )
+
+
+def test_module_avoids_dynamic_namespace_injection() -> None:
+    with open("aura_unified_memory_continuity.py", encoding="utf-8") as source_file:
+        source = source_file.read()
+    assert "__import__(" not in source

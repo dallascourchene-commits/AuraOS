@@ -26,5 +26,10 @@ The verification sequence must preserve these gates:
 13. Run the full Ruff rule set on the integration module and focused tests, not only fatal syntax/import rules; unused imports, shadowed loop variables, stale annotations, and import ordering are review findings.
 14. Prove nested P0/P1 mappings are recursively immutable and recompute the committed P0 digest before observation.
 15. Reject canonical Act Capsule role, file, symbol, evidence, or tool expansion before model dispatch.
+16. Reject duplicate evidence references and prove every required active evidence item survives model-packet compilation.
+17. Require a complete canonical `ModelEndpointIdentity`; reject arbitrary mappings and forged profile identifiers.
+18. Bind prompt/runtime identity into P0 and reject continuity receipts that substitute a different runtime digest.
+19. Preserve the Crucible proposal, current reproof, human/community disposition, continuity receipt, and independent verifier through Relationship Experience and QDKT admission.
+20. Reject non-string canonical JSON object keys before serialization so coercion cannot collapse distinct keys.
 
 A focused failure blocks materialization. The failure must be diagnosed against the exact repository environment; the gate must not be weakened to make a local stub pass.
