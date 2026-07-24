@@ -1,4 +1,4 @@
-name: Unified memory U7 exact-head export
+name: Unified memory U7 exact-head discovery
 
 on:
   push:
@@ -6,50 +6,82 @@ on:
       - analysis/unified-memory-u7-discovery-20260724
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   PYTHONPATH: ${{ github.workspace }}
 
 jobs:
-  export:
+  discover:
+    if: github.actor != 'auraos-discovery-bot'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: analysis/unified-memory-u7-discovery-20260724
           fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Capture exact architecture evidence
+      - name: Run exact-head architecture discovery
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p u7-export/evidence
-          git rev-parse HEAD | tee u7-export/evidence/source-head.txt
-          git status --porcelain=v1 | tee u7-export/evidence/source-status.txt
-          python aura_codebase_navigator.py --query "unified manufactured memory continuity learning to reproof Crucible Relationship Experience QDKT" \
-            > u7-export/evidence/navigator.txt 2>&1 || true
-          python -m aura_agent_arena_cli topology-health \
-            > u7-export/evidence/topology-health.txt 2>&1 || true
-          python -m aura_agent_arena_cli stabilization-status \
-            > u7-export/evidence/stabilization-status.txt 2>&1 || true
-          python scripts/aura_architecture_harness.py --repo-root . doctor \
-            > u7-export/evidence/harness-doctor.txt 2>&1 || true
+          mkdir -p .aura/analysis/u7-discovery
+          {
+            echo '# Unified Memory U7 Exact-Head Discovery'
+            echo
+            echo '## Source identity'
+            echo '```text'
+            git rev-parse HEAD
+            git status --porcelain=v1
+            echo '```'
+            echo
+            echo '## Navigator objective query'
+            echo '```text'
+            python aura_codebase_navigator.py --query "unified manufactured memory continuity learning to reproof Crucible Relationship Experience QDKT" 2>&1 || true
+            echo '```'
+            echo
+            echo '## Exact symbols and owners'
+            echo '```text'
+            grep -RIn --exclude-dir=.git --exclude='CODEMAP.json' --exclude='live_topology_ast.json' \
+              -E 'evaluate_learning_to_reproof|relationship_experience_kwargs|evaluate_qdkt_consequential_admission|ContinuitySensitivityReceipt|ArenaCrucibleService|RelationshipExperienceObservation|UnifiedQDKT' \
+              aura_unified_memory_continuity.py aura_unified_memory_continuity_toolchain.py aura_agent_arena_bridge.py aura_agent_arena_mcp.py aura_arena_crucible.py aura_relationship_experience.py aura_qdkt.py tests 2>&1 || true
+            echo '```'
+            echo
+            echo '## Candidate persistence and invocation owners'
+            echo '```text'
+            find . -maxdepth 2 -type f \( -iname '*relationship*experience*' -o -iname '*crucible*' -o -iname '*qdkt*' -o -iname '*attempt*archive*' -o -iname '*state*ledger*' \) -print | sort
+            echo '```'
+            echo
+            echo '## Topology health'
+            echo '```text'
+            python -m aura_agent_arena_cli topology-health 2>&1 || true
+            echo '```'
+            echo
+            echo '## Stabilization status'
+            echo '```text'
+            python -m aura_agent_arena_cli stabilization-status 2>&1 || true
+            echo '```'
+            echo
+            echo '## Architecture harness doctor'
+            echo '```text'
+            python scripts/aura_architecture_harness.py --repo-root . doctor 2>&1 || true
+            echo '```'
+          } > .aura/analysis/u7-discovery/U7_DISCOVERY_REPORT.md
 
-      - name: Build exact Git bundle
+      - name: Commit bounded discovery report
         shell: bash
         run: |
           set -euo pipefail
-          git bundle create u7-export/AuraOS-u7-exact-head.bundle HEAD
-          sha256sum u7-export/AuraOS-u7-exact-head.bundle | tee u7-export/AuraOS-u7-exact-head.bundle.sha256
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: unified-memory-u7-exact-head
-          path: u7-export/
-          if-no-files-found: error
-          retention-days: 7
+          git config user.name 'auraos-discovery-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add .aura/analysis/u7-discovery/U7_DISCOVERY_REPORT.md
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'analysis: record U7 learning-to-reproof architecture discovery'
+          git push origin HEAD:analysis/unified-memory-u7-discovery-20260724
