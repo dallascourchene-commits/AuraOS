@@ -1,0 +1,109 @@
+name: UMC Greptile QDKT follow-up fix
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/umc-greptile-followup-fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      EXPECTED_HEAD: c4e00f09a4e58f5b60f6a630abd08444230fdbeb
+      TARGET_BRANCH: refactor/unified-memory-continuity
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Apply QDKT fail-closed fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          test -z "$(git status --porcelain=v1)"
+
+          python - <<'PY'
+          from pathlib import Path
+
+          module_path = Path('aura_unified_memory_continuity.py')
+          module = module_path.read_text(encoding='utf-8')
+          old = '''        required_relationship_receipts = {
+              learning_decision.continuity_receipt_ref,
+              learning_decision.crucible_proposal_ref,
+              learning_decision.current_reproof_ref,
+              learning_decision.human_disposition_ref,
+          }
+          if not required_relationship_receipts.issubset(relationship_experience.receipt_refs):
+              raise ValueError("Relationship Experience omits governed reproof receipts")
+          if (
+              learning_decision.independent_verifier_ref
+              not in relationship_experience.verifier_evidence_refs
+          ):
+              raise ValueError("Relationship Experience omits the independent verifier")
+          '''
+          new = '''        required_relationship_receipts = {
+              ref
+              for ref in (
+                  learning_decision.continuity_receipt_ref,
+                  learning_decision.crucible_proposal_ref,
+                  learning_decision.current_reproof_ref,
+                  learning_decision.human_disposition_ref,
+              )
+              if ref
+          }
+          if not required_relationship_receipts.issubset(relationship_experience.receipt_refs):
+              raise ValueError("Relationship Experience omits governed reproof receipts")
+          if (
+              learning_decision.independent_verifier_ref
+              and learning_decision.independent_verifier_ref
+              not in relationship_experience.verifier_evidence_refs
+          ):
+              raise ValueError("Relationship Experience omits the independent verifier")
+          '''
+          if module.count(old) != 1:
+              raise SystemExit('QDKT relationship receipt guard is ambiguous')
+          module_path.write_text(module.replace(old, new, 1), encoding='utf-8')
+
+          tests_path = Path('tests/test_aura_unified_memory_continuity.py')
+          tests = tests_path.read_text(encoding='utf-8')
+          marker = 'def test_qdkt_ineligible_decision_with_relationship_fails_closed() -> None:'
+          if marker in tests:
+              raise SystemExit('QDKT fail-closed regression already present')
+          tests += '''\n\ndef test_qdkt_ineligible_decision_with_relationship_fails_closed() -> None:\n    intent, _, _, _, _, _, _, _, receipt = _vertical_fixture()\n    approved = _approved_learning_decision(receipt)\n    relationship = _relationship_observation(intent, receipt, approved)\n    ineligible = evaluate_learning_to_reproof(\n        relationship_id=approved.relationship_id,\n        relationship_digest=approved.relationship_digest,\n        repository_head=HEAD,\n        current_source_digest=SOURCE_DIGEST,\n        continuity_receipt=receipt,\n        human_disposition="APPROVED",\n    )\n\n    admission = evaluate_qdkt_consequential_admission(\n        continuity_receipt=receipt,\n        learning_decision=ineligible,\n        relationship_experience=relationship,\n        raw_evidence_refs=receipt.raw_evidence_refs,\n        current_repository_head=HEAD,\n        current_source_digest=SOURCE_DIGEST,\n        purpose_compatible=True,\n        privacy_compatible=True,\n        consent_compatible=True,\n        sovereignty_compatible=True,\n    )\n\n    assert admission.admitted is False\n    assert "LEARNING_REPROOF_NOT_ELIGIBLE" in admission.blockers\n    assert "MISSING_CRUCIBLE_PROPOSAL" in admission.blockers\n    assert "MISSING_CURRENT_REPROOF" in admission.blockers\n    assert "MISSING_INDEPENDENT_VERIFIER" in admission.blockers\n    assert "MISSING_HUMAN_DISPOSITION" in admission.blockers\n'''
+          tests_path.write_text(tests, encoding='utf-8')
+          PY
+
+          git diff --check
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8,<9' jsonschema ruff bandit
+          python -m py_compile aura_unified_memory_continuity.py tests/test_aura_unified_memory_continuity.py
+          ruff check aura_unified_memory_continuity.py tests/test_aura_unified_memory_continuity.py
+          bandit -q -ll aura_unified_memory_continuity.py
+          python -m pytest -q \
+            tests/test_aura_unified_memory_continuity.py \
+            tests/test_aura_relationship_compass_finalization.py
+
+          git add -- \
+            aura_unified_memory_continuity.py \
+            tests/test_aura_unified_memory_continuity.py
+          test "$(git diff --cached --name-only | sort)" = $'aura_unified_memory_continuity.py\ntests/test_aura_unified_memory_continuity.py'
+
+          latest="$(git ls-remote --heads origin "refs/heads/${TARGET_BRANCH}" | awk '{print $1}')"
+          test "$latest" = "$EXPECTED_HEAD"
+
+          git config user.name 'AuraOS Greptile Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m 'fix: keep ineligible QDKT admission fail-closed'
+          git push origin "HEAD:${TARGET_BRANCH}"
