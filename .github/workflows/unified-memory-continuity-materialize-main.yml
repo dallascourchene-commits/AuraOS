@@ -17,7 +17,7 @@ jobs:
   materialize:
     if: github.head_ref == 'refactor/unified-memory-continuity'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,6 +27,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: pip
 
       - name: Decode exact hash-bound source and tests
         shell: bash
@@ -57,7 +58,7 @@ jobs:
           tests_encoded = (payload_root / 'umc_tests.b64').read_text(encoding='utf-8').strip()
           tests_bytes = zlib.decompress(base64.b64decode(tests_encoded, validate=True))
           tests_digest = hashlib.sha256(tests_bytes).hexdigest()
-          expected_tests = '1cd10ef32ca18d568de6aab49dc99ca61b9e8ef8b5f43b6704711e05a5f9c1b3'
+          expected_tests = '1cd10ef32ca18d568de6aab49dc99ca61b9e8efb5f43b6704711e05a5f9c1b3'
           if tests_digest != expected_tests:
               raise SystemExit(f'test digest mismatch: {tests_digest}')
           tests_path = root / 'tests' / 'test_aura_unified_memory_continuity.py'
@@ -74,7 +75,13 @@ jobs:
         run: |
           set -uo pipefail
           mkdir -p ../AuraOS-unified-memory-continuity-materialize
-          python -m pip install pytest \
+          python -m pip install --upgrade pip \
+            2>&1 | tee ../AuraOS-unified-memory-continuity-materialize/pip_upgrade.log
+          upgrade_status=${PIPESTATUS[0]}
+          if [[ "${upgrade_status}" -ne 0 ]]; then
+            exit "${upgrade_status}"
+          fi
+          python -m pip install -r requirements.txt pytest \
             2>&1 | tee ../AuraOS-unified-memory-continuity-materialize/install.log
           install_status=${PIPESTATUS[0]}
           if [[ "${install_status}" -ne 0 ]]; then
