@@ -345,13 +345,15 @@ test("Construction demo browser refuses real-pack synthetic substitution and ser
 });
 
 
-test("Construction recording UI advertises only implemented representation modes", async () => {
+test("Construction recording UI exposes verified fallback Mesh, Splats, and Hybrid modes", async () => {
   const { readFile } = await import("node:fs/promises");
   const source = await readFile(
     new URL("../../aura_spatial_web/construction_demo_app.js", import.meta.url),
     "utf8",
   );
-  assert.match(source, /setRepresentationMode\("SPLATS"\)/);
-  assert.match(source, /button\.disabled = !supported/);
-  assert.match(source, /Browser GLB decoding and mesh drawing are not implemented/);
+  assert.match(source, /createConstructionWireframePass/);
+  assert.match(source, /setRepresentationMode\("HYBRID"\)/);
+  assert.match(source, /button\.disabled = false/);
+  assert.match(source, /bounds-derived wireframe mesh fallback/);
+  assert.doesNotMatch(source, /button\.disabled = !supported/);
 });

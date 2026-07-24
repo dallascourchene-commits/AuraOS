@@ -478,16 +478,23 @@ export class ConstructionSceneRenderer {
     const signal = options.signal;
     if (signal?.aborted || this.cancelled) throw new Error("Construction presentation cancelled");
     try {
-      const baseReceipt =
-        this.mode === "MESH"
-          ? await this.presentationRenderer.present(options)
-          : await this.gaussianRenderer.present({
-              cameraPosition: this._cameraPosition(),
-              signal,
-            });
+      let baseReceipt;
+      if (this.mode === "MESH") {
+        if (this.gaussianOwnerActive) await this.gaussianRenderer.releaseDrawResources();
+        baseReceipt = await this.presentationRenderer.present(options);
+      } else {
+        baseReceipt = await this.gaussianRenderer.present({
+          cameraPosition: this._cameraPosition(),
+          signal,
+        });
+      }
       if (signal?.aborted || this.cancelled) throw new Error("Construction presentation cancelled");
-      const meshReceipt =
-        this.mode === "SPLATS" ? null : await this.meshPass.present({ signal });
+      let meshReceipt = null;
+      if (this.mode === "SPLATS") {
+        await this.meshPass.releaseDrawResources();
+      } else {
+        meshReceipt = await this.meshPass.present({ signal });
+      }
       if (signal?.aborted || this.cancelled) throw new Error("Construction presentation cancelled");
       const overlayReceipt = await this.overlayPass.present({ signal });
       if (signal?.aborted || this.cancelled) throw new Error("Construction presentation cancelled");
