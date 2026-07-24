@@ -13,6 +13,7 @@ on:
       - "aura_spatial_web/**"
       - "aura_construction_demo_*.py"
       - "aura_spatial_cli.py"
+      - "requirements.txt"
 
 permissions:
   contents: read
@@ -31,6 +32,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 1
+          persist-credentials: false
 
       - uses: actions/setup-python@v5
         with:
@@ -54,7 +56,7 @@ jobs:
           mkdir -p /tmp/aura-playwright
           cd /tmp/aura-playwright
           npm init -y >/dev/null 2>&1
-          npm install --no-audit --no-fund playwright@1.55.0
+          npm install --no-audit --no-fund playwright@1.55.0 pngjs@7.0.0
           npx playwright install --with-deps chromium
 
       - name: Run Construction Runtime Refactor Harness
