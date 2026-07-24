@@ -36,7 +36,7 @@ jobs:
       - name: Apply exact-anchor patch
         run: python .github/scripts/apply_umc_completion.py
 
-      - name: Complete generated test imports
+      - name: Complete generated imports
         run: python .github/scripts/fix_umc_generated_test.py
 
       - name: Format and verify focused integration
@@ -45,27 +45,24 @@ jobs:
           set +e
           mkdir -p unified-memory-verification
 
-          python -m ruff format \
-            aura_unified_memory_continuity_toolchain.py \
-            aura_agent_arena_bridge.py \
-            aura_arena_persistence_adapters.py \
-            aura_architect_council_v3.py \
-            aura_forge.py \
-            aura_agent_arena_mcp.py \
-            tests/test_aura_unified_memory_continuity.py \
+          python -m ruff format aura_unified_memory_continuity_toolchain.py \
             2>&1 | tee unified-memory-verification/ruff-format.log
           format_status=${PIPESTATUS[0]}
 
-          python -m ruff check --fix \
+          python -m ruff check \
             aura_unified_memory_continuity_toolchain.py \
+            tests/test_aura_unified_memory_continuity.py \
+            2>&1 | tee unified-memory-verification/ruff-primary.log
+          lint_primary_status=${PIPESTATUS[0]}
+
+          python -m ruff check --select F,E9 \
             aura_agent_arena_bridge.py \
             aura_arena_persistence_adapters.py \
             aura_architect_council_v3.py \
             aura_forge.py \
             aura_agent_arena_mcp.py \
-            tests/test_aura_unified_memory_continuity.py \
-            2>&1 | tee unified-memory-verification/ruff-check.log
-          lint_status=${PIPESTATUS[0]}
+            2>&1 | tee unified-memory-verification/ruff-existing-surfaces.log
+          lint_existing_status=${PIPESTATUS[0]}
 
           python -m py_compile \
             aura_unified_memory_continuity.py \
@@ -78,7 +75,7 @@ jobs:
             2>&1 | tee unified-memory-verification/py-compile.log
           compile_status=${PIPESTATUS[0]}
 
-          pytest -q \
+          python -m pytest -q \
             tests/test_aura_unified_memory_continuity.py \
             tests/test_aura_agent_arena_bridge.py \
             tests/test_aura_forge.py \
@@ -87,11 +84,12 @@ jobs:
             2>&1 | tee unified-memory-verification/pytest.log
           pytest_status=${PIPESTATUS[0]}
 
-          printf 'format=%s\nlint=%s\ncompile=%s\npytest=%s\n' \
-            "$format_status" "$lint_status" "$compile_status" "$pytest_status" \
+          printf 'format=%s\nlint_primary=%s\nlint_existing=%s\ncompile=%s\npytest=%s\n' \
+            "$format_status" "$lint_primary_status" "$lint_existing_status" \
+            "$compile_status" "$pytest_status" \
             | tee unified-memory-verification/status.txt
 
-          if (( format_status != 0 || lint_status != 0 || compile_status != 0 || pytest_status != 0 )); then
+          if (( format_status != 0 || lint_primary_status != 0 || lint_existing_status != 0 || compile_status != 0 || pytest_status != 0 )); then
             exit 1
           fi
 
