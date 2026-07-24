@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1385
-- **total_bytes**: 56537255
-- **text_tokens_est**: 4682046
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 184, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 913, 'schema_or_lexicon': 167, 'support_file': 55}
+- **file_count**: 1387
+- **total_bytes**: 56542142
+- **text_tokens_est**: 4683238
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 184, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 913, 'schema_or_lexicon': 168, 'support_file': 56}
 - **topology_nodes**: 10471
 - **topology_edges**: 24573
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 30808.75
+- **elapsed_ms**: 30556.7
 
 ## Coverage
 
-- **included_file_count**: 1385
+- **included_file_count**: 1387
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=139, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
@@ -285,6 +285,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/memory_apertures/coding_localize.v1.json`
 - `.aura/waboose_requests/unified_memory_continuity.v1.json`
 - `.github/workflows/unified-memory-continuity-codemap-sync.yml`
+- `.github/workflows/unified-memory-continuity-final-66-materialize.yml`
 - `.github/workflows/unified-memory-continuity-verification.yml`
 - `.mempalace/aura_thought.txt`
 - `.mempalace/lexicon.json`
@@ -293,8 +294,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `async_palace.py`
 - `aura_attention_palace.py`
 - `aura_blockchain/memory_staking.py`
-- `aura_civic_memory.py`
-- ... 26 more; query CODEMAP.json for exact file cards
+- ... 27 more; query CODEMAP.json for exact file cards
 
 ### mesh_and_routing
 - `.aura/PROVIDER_ROUTING_MATERIALIZE_REQUEST`
@@ -354,7 +354,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
-- ... 1186 more; query CODEMAP.json for exact file cards
+- ... 1187 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
