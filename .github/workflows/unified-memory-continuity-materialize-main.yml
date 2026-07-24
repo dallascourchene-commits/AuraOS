@@ -33,7 +33,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
+          rm -rf .aura/refactor_materialize_evidence
+          mkdir -p .aura/refactor_materialize_evidence
+          python - <<'PY' | tee .aura/refactor_materialize_evidence/materialize.log
           from __future__ import annotations
 
           import base64
@@ -58,7 +60,7 @@ jobs:
           tests_encoded = (payload_root / 'umc_tests.b64').read_text(encoding='utf-8').strip()
           tests_bytes = zlib.decompress(base64.b64decode(tests_encoded, validate=True))
           tests_digest = hashlib.sha256(tests_bytes).hexdigest()
-          expected_tests = '1cd10ef32ca18d568de6aab49dc99ca61b9e8efb5f43b6704711e05a5f9c1b3'
+          expected_tests = '1cd10ef32ca18d568de6aab49dc99ca61b9e8ef8b5f43b6704711e05a5f9c1b3'
           if tests_digest != expected_tests:
               raise SystemExit(f'test digest mismatch: {tests_digest}')
           tests_path = root / 'tests' / 'test_aura_unified_memory_continuity.py'
@@ -69,50 +71,51 @@ jobs:
           print(f'tests_sha256={tests_digest}')
           PY
 
+      - name: Install AuraOS verification environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip \
+            > .aura/refactor_materialize_evidence/pip_upgrade.log 2>&1
+          python -m pip install -r requirements.txt pytest \
+            > .aura/refactor_materialize_evidence/install.log 2>&1
+
       - name: Verify the bounded vertical slice
         id: focused
         shell: bash
         run: |
           set -uo pipefail
-          mkdir -p ../AuraOS-unified-memory-continuity-materialize
-          python -m pip install --upgrade pip \
-            2>&1 | tee ../AuraOS-unified-memory-continuity-materialize/pip_upgrade.log
-          upgrade_status=${PIPESTATUS[0]}
-          if [[ "${upgrade_status}" -ne 0 ]]; then
-            exit "${upgrade_status}"
-          fi
-          python -m pip install -r requirements.txt pytest \
-            2>&1 | tee ../AuraOS-unified-memory-continuity-materialize/install.log
-          install_status=${PIPESTATUS[0]}
-          if [[ "${install_status}" -ne 0 ]]; then
-            exit "${install_status}"
-          fi
           python -m py_compile aura_unified_memory_continuity.py \
-            2>&1 | tee ../AuraOS-unified-memory-continuity-materialize/py_compile.log
-          compile_status=${PIPESTATUS[0]}
+            > .aura/refactor_materialize_evidence/py_compile.log 2>&1
+          compile_status=$?
           if [[ "${compile_status}" -ne 0 ]]; then
+            cat .aura/refactor_materialize_evidence/py_compile.log
             exit "${compile_status}"
           fi
           python -m pytest -vv tests/test_aura_unified_memory_continuity.py \
-            2>&1 | tee ../AuraOS-unified-memory-continuity-materialize/focused_tests.log
-          test_status=${PIPESTATUS[0]}
-          echo "focused_test_exit=${test_status}" | tee ../AuraOS-unified-memory-continuity-materialize/status.txt
+            > .aura/refactor_materialize_evidence/focused_tests.log 2>&1
+          test_status=$?
+          cat .aura/refactor_materialize_evidence/focused_tests.log
+          echo "focused_test_exit=${test_status}" \
+            | tee .aura/refactor_materialize_evidence/status.txt
           exit "${test_status}"
 
       - name: Upload materialization evidence
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: unified-memory-continuity-materialize-${{ github.run_id }}
-          path: ../AuraOS-unified-memory-continuity-materialize
-          if-no-files-found: warn
+          path: .aura/refactor_materialize_evidence
+          if-no-files-found: error
           retention-days: 14
 
       - name: Commit only canonical source and tests
-        if: success()
+        if: steps.focused.outcome == 'success'
         shell: bash
         run: |
           set -euo pipefail
+          rm -rf .aura/refactor_materialize_evidence
           git config user.name 'AuraOS Refactor Materializer'
           git config user.email 'actions@users.noreply.github.com'
           git add aura_unified_memory_continuity.py tests/test_aura_unified_memory_continuity.py
