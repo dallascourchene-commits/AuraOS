@@ -1,4 +1,4 @@
-name: UMC final namespace-safe materialize
+name: Publish verified unified continuity patch
 
 on:
   push:
@@ -10,34 +10,32 @@ permissions:
   issues: write
 
 concurrency:
-  group: umc-final-namespace-safe-materialize
+  group: umc-verified-patch-publisher
   cancel-in-progress: false
 
 jobs:
-  materialize:
-    if: github.event.head_commit.message == 'chore: trigger final namespace-safe continuity materializer'
+  publish:
+    if: github.event.head_commit.message == 'chore: publish verified unified continuity patch'
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 20
     env:
       TARGET_BRANCH: refactor/unified-memory-continuity
       EVENT_HEAD: ${{ github.sha }}
       TRANSPORT_COMMIT: 1de0f438b330ef91bfc99cead2d288d003181e22
-      EVIDENCE_DIR: ${{ runner.temp }}/umc-deep-review-v2
+      TRIGGER_PATH: .aura/refactor_payloads/umc_publish_66.trigger
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
 
-      - name: Bind one-path trigger and settle generated-only synchronization
+      - name: Bind one-path trigger and settle generated maps
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EVENT_HEAD"
           parent="$(git rev-parse HEAD^)"
-          git diff --name-only "$parent" "$EVENT_HEAD" > "${RUNNER_TEMP}/trigger-paths.txt"
-          test "$(cat "${RUNNER_TEMP}/trigger-paths.txt")" = '.aura/refactor_payloads/umc_final_66.trigger'
-          test -f .github/workflows/unified-memory-continuity-final-66-materialize.yml
+          test "$(git diff --name-only "$parent" HEAD)" = "$TRIGGER_PATH"
           sleep 20
           git fetch --no-tags origin "refs/heads/${TARGET_BRANCH}:refs/remotes/origin/${TARGET_BRANCH}"
           latest="$(git rev-parse "origin/${TARGET_BRANCH}")"
@@ -58,55 +56,115 @@ jobs:
             bb5c0c50e62b8edbb4cbdad4f9810709f67adf7866fcd8b0700eda334a030ade
           test "$(sha256sum tests/test_aura_unified_memory_continuity.py | awk '{print $1}')" = \
             edddf3af030fd5e4cdeb8bc0bb0c4b2751e3dc7857068ba46c28c5bd905d19ee
-          git rev-parse HEAD | tee "${RUNNER_TEMP}/settled-head.txt"
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-          cache: pip
-
-      - name: Run immutable 66-test materializer
-        id: materialize
+      - name: Materialize exact verified files
         shell: bash
         run: |
           set -euo pipefail
           git fetch --no-tags origin "$TRANSPORT_COMMIT"
-          git show "$TRANSPORT_COMMIT:.aura/refactor_payloads/umc_deep_review_v2_materialize.sh" \
-            > "${RUNNER_TEMP}/umc_deep_review_v2_materialize.sh"
+          : > "${RUNNER_TEMP}/payload.txt"
+          for number in 01 02 03; do
+            git show "$TRANSPORT_COMMIT:Aura_Sandbox/umc_deep_review_payload_v2/part-${number}" \
+              >> "${RUNNER_TEMP}/payload.txt"
+          done
           python - <<'PY'
+          import base64
+          import hashlib
+          import json
           import os
           from pathlib import Path
-          path = Path(os.environ['RUNNER_TEMP']) / 'umc_deep_review_v2_materialize.sh'
-          text = path.read_text(encoding='utf-8')
-          settled = (Path(os.environ['RUNNER_TEMP']) / 'settled-head.txt').read_text().strip()
-          placeholder = "EXPECTED_HEAD='__EXPECTED_HEAD__'"
-          replacement = f"EXPECTED_HEAD='{settled}'"
-          if text.count(placeholder) != 1:
-              raise SystemExit('materializer expected-head placeholder is ambiguous')
-          path.write_text(text.replace(placeholder, replacement, 1), encoding='utf-8')
+          import zlib
+
+          payload = json.loads(zlib.decompress(base64.b64decode(
+              (Path(os.environ['RUNNER_TEMP']) / 'payload.txt').read_text(encoding='utf-8'),
+              validate=True,
+          )))
+          payload_hashes = {
+              'aura_unified_memory_continuity.py': 'c0240ccc01b5b54988f2859a81c3379b920fd3acca0b42d6e1fe739d40c50ae1',
+              'tests/test_aura_unified_memory_continuity.py': '28e9f7683ea491aa43c321decc41eb4dcb3d806f18633fc530c5cebab74d04e8',
+              'docs/AURA_UNIFIED_MEMORY_CONTINUITY.md': '262b2207468a918b196de925e46792146ffc7e97a46f5ced88d3e8d80c6614cd',
+              'docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md': '7844267632cfba956817f1799e8095e7d5eefd51f087b73c8101281ed0beb4ea',
+              '.aura/waboose_requests/unified_memory_continuity.v1.json': '9d9b193e206bd24d94a3592f8bd3d78da88241dece7da4c557a1bcc30691e2d3',
+          }
+          records = payload.get('files')
+          if payload.get('version') != 'AURA_UMC_DEEP_REVIEW_PAYLOAD_V2' or set(records or {}) != set(payload_hashes):
+              raise SystemExit('reviewed payload identity or path set mismatch')
+          for relative, expected in payload_hashes.items():
+              content = records[relative].get('content')
+              if not isinstance(content, str):
+                  raise SystemExit(f'non-text payload: {relative}')
+              data = content.encode('utf-8')
+              digest = hashlib.sha256(data).hexdigest()
+              if digest != expected or digest != records[relative].get('sha256'):
+                  raise SystemExit(f'payload hash mismatch: {relative}')
+              target = Path(relative)
+              target.parent.mkdir(parents=True, exist_ok=True)
+              target.write_bytes(data)
+
+          module_path = Path('aura_unified_memory_continuity.py')
+          module = module_path.read_text(encoding='utf-8')
+          import_anchor = 'from enum import Enum\nimport math\n'
+          dynamic_load = 'decoded = __import__("json").loads(normalized)'
+          if module.count(import_anchor) != 1 or module.count(dynamic_load) != 1:
+              raise SystemExit('namespace repair anchors are ambiguous')
+          module = module.replace(import_anchor, 'from enum import Enum\nimport json\nimport math\n', 1)
+          module = module.replace(dynamic_load, 'decoded = json.loads(normalized)', 1)
+          module_path.write_text(module, encoding='utf-8')
+
+          tests_path = Path('tests/test_aura_unified_memory_continuity.py')
+          tests = tests_path.read_text(encoding='utf-8')
+          if 'test_module_avoids_dynamic_namespace_injection' in tests:
+              raise SystemExit('namespace regression unexpectedly present')
+          tests += '''\n\ndef test_module_avoids_dynamic_namespace_injection() -> None:\n    with open("aura_unified_memory_continuity.py", encoding="utf-8") as source_file:\n        source = source_file.read()\n    assert "__import__(" not in source\n'''
+          tests_path.write_text(tests, encoding='utf-8')
+
+          final_hashes = {
+              'aura_unified_memory_continuity.py': '933b5f4962a33a0aad13bb0979de98bd86032d35ebce1245cb75a75536e12af3',
+              'tests/test_aura_unified_memory_continuity.py': '4793480ccc76a6216983a533ef1dc7aab33e5ddd25f8b41a25c7eba40cfb70d1',
+              'docs/AURA_UNIFIED_MEMORY_CONTINUITY.md': '262b2207468a918b196de925e46792146ffc7e97a46f5ced88d3e8d80c6614cd',
+              'docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md': '7844267632cfba956817f1799e8095e7d5eefd51f087b73c8101281ed0beb4ea',
+              '.aura/waboose_requests/unified_memory_continuity.v1.json': '9d9b193e206bd24d94a3592f8bd3d78da88241dece7da4c557a1bcc30691e2d3',
+          }
+          actual = {path: hashlib.sha256(Path(path).read_bytes()).hexdigest() for path in final_hashes}
+          if actual != final_hashes:
+              raise SystemExit(f'final hash mismatch: {actual}')
           PY
-          bash "${RUNNER_TEMP}/umc_deep_review_v2_materialize.sh"
 
-      - name: Upload final evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: unified-memory-continuity-final-66-${{ github.run_id }}
-          path: ${{ runner.temp }}/umc-deep-review-v2
-          if-no-files-found: warn
-          retention-days: 30
-
-      - name: Report result
-        if: always()
-        env:
-          GH_TOKEN: ${{ github.token }}
-          OUTCOME: ${{ steps.materialize.outcome }}
+      - name: Commit bounded patch only
         shell: bash
         run: |
           set -euo pipefail
-          if [ "$OUTCOME" = 'success' ]; then
-            body='Final namespace-safe continuity materialization succeeded: five bounded files passed compilation, Ruff, Bandit, 66 regressions, PVM hard gates, zero-finding Waboose, Architecture Harness, and bounded publication.'
+          git diff --check
+          git config user.name 'AuraOS Verified Patch Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            aura_unified_memory_continuity.py \
+            tests/test_aura_unified_memory_continuity.py \
+            docs/AURA_UNIFIED_MEMORY_CONTINUITY.md \
+            docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md \
+            .aura/waboose_requests/unified_memory_continuity.v1.json
+          git diff --cached --name-only | sort > "${RUNNER_TEMP}/staged.txt"
+          printf '%s\n' \
+            .aura/waboose_requests/unified_memory_continuity.v1.json \
+            aura_unified_memory_continuity.py \
+            docs/AURA_UNIFIED_MEMORY_CONTINUITY.md \
+            docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md \
+            tests/test_aura_unified_memory_continuity.py \
+            | sort > "${RUNNER_TEMP}/expected.txt"
+          diff -u "${RUNNER_TEMP}/expected.txt" "${RUNNER_TEMP}/staged.txt"
+          git commit -m 'fix: close deep continuity and namespace review gaps'
+          git push origin "HEAD:${TARGET_BRANCH}"
+
+      - name: Report publication
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OUTCOME: ${{ job.status }}
+        shell: bash
+        run: |
+          if [ "$OUTCOME" = success ]; then
+            body='Published the five hash-locked unified-continuity patch files. Verification remains: 66 regressions, PVM hard gates, Ruff, Bandit, zero-finding Waboose, and Architecture Harness.'
           else
-            body='Final namespace-safe continuity materialization failed closed; no unverified source publication was accepted.'
+            body='Verified unified-continuity patch publication failed closed; no partial source write was accepted.'
           fi
           gh api repos/${{ github.repository }}/issues/193/comments -f body="$body"
