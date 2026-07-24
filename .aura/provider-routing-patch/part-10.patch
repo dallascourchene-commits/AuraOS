@@ -1,0 +1,194 @@
+ Call `aura_prepare_arena` first. The bridge stores sessions by `plan_phase_hash`.
+ 
+-### Fireworks worker skipped
+-Set `FIREWORKS_API_KEY` environment variable. The worker skips safely when the key is absent.
++### External worker skipped
++Add at least one registered provider key to `aura_secrets.json` or the environment. `DEEPSEEK_API_KEY`, `MISTRAL_API_KEY`, `XAI_API_KEY`/`GROK_API_KEY`, and plural/numbered backups are supported.
+ 
+ ### Large hub file read blocked
+ Use `aura_search_code` with `search_kind=symbol` to find symbols, then use `aura_read_slice` with `--symbol` to read specific slices.
+diff --git a/tests/test_aura_agent_arena_bridge.py b/tests/test_aura_agent_arena_bridge.py
+index 47af04c..1000528 100644
+--- a/tests/test_aura_agent_arena_bridge.py
++++ b/tests/test_aura_agent_arena_bridge.py
+@@ -329,7 +329,11 @@ def test_repair_packet_returns_minimal_context(bridge: AuraAgentArenaBridge):
+ # ---------------------------------------------------------------------------
+ 
+ def test_fireworks_skipped_without_api_key(monkeypatch):
++    import aura_agent_arena_fireworks as worker_module
++
+     monkeypatch.delenv("FIREWORKS_API_KEY", raising=False)
++    monkeypatch.setattr(worker_module, "load_secrets", lambda: {})
++    monkeypatch.setattr(worker_module, "_openai_worker_providers", lambda _secrets, _role: [])
+     result = fireworks_patch_worker(
+         task_id="A1",
+         compressed_context="some context",
+diff --git a/tests/test_aura_agent_arena_cli.py b/tests/test_aura_agent_arena_cli.py
+index e5d7c9c..8598262 100644
+--- a/tests/test_aura_agent_arena_cli.py
++++ b/tests/test_aura_agent_arena_cli.py
+@@ -160,9 +160,13 @@ def test_cli_parser_has_all_subcommands():
+ # ---------------------------------------------------------------------------
+ 
+ def test_cli_fireworks_patch_no_key(capsys, monkeypatch):
++    import aura_agent_arena_fireworks as worker_module
++
+     if not _has_codemap():
+         pytest.skip("CODEMAP.json not available")
+     monkeypatch.delenv("FIREWORKS_API_KEY", raising=False)
++    monkeypatch.setattr(worker_module, "load_secrets", lambda: {})
++    monkeypatch.setattr(worker_module, "_openai_worker_providers", lambda _secrets, _role: [])
+     # Need to prepare first to get a phase hash.
+     prep_code = cli_main([
+         "prepare",
+diff --git a/tests/test_aura_showcase_observatory_crucible.py b/tests/test_aura_showcase_observatory_crucible.py
+index c591b7c..d9df8fd 100644
+--- a/tests/test_aura_showcase_observatory_crucible.py
++++ b/tests/test_aura_showcase_observatory_crucible.py
+@@ -285,7 +285,7 @@ def test_learning_arena_facade_uses_real_empty_ledgers_without_fabricating_exper
+         arena.close()
+ 
+ 
+-def test_fireworks_is_primary_and_model_roles_use_official_identifiers(monkeypatch):
++def test_deepseek_is_primary_and_model_roles_use_official_identifiers(monkeypatch):
+     import aura_llm_egress
+     from aura_provider_registry import (
+         DEEPSEEK_V4_FLASH,
+@@ -296,18 +296,19 @@ def test_fireworks_is_primary_and_model_roles_use_official_identifiers(monkeypat
+     )
+ 
+     registry = ProviderRegistry()
+-    assert registry.provider_priority[:3] == ["fireworks", "deepseek", "anthropic"]
++    assert registry.provider_priority[:3] == ["deepseek", "xai", "anthropic"]
++    assert registry.provider_order("cheap_builder")[:2] == ["mistral", "groq"]
+     assert registry.providers["fireworks"]["model_priority"] == [
+         FIREWORKS_GLM_5P2,
+         FIREWORKS_DEEPSEEK_V4_FLASH,
+     ]
+     assert registry.providers["deepseek"]["model_priority"] == [
+-        DEEPSEEK_V4_FLASH,
+         DEEPSEEK_V4_PRO,
++        DEEPSEEK_V4_FLASH,
+     ]
+     assert aura_llm_egress.provider_priority()[:3] == [
+-        "fireworks",
+         "deepseek",
++        "xai",
+         "anthropic",
+     ]
+ 
+@@ -317,18 +318,18 @@ def test_fireworks_is_primary_and_model_roles_use_official_identifiers(monkeypat
+         "ANTHROPIC_API_KEY": "ant-real-key",
+     }
+     primary = aura_llm_egress.ExternalLLM(secrets=secrets)
+-    assert primary.provider == "fireworks"
+-    assert primary.model == "accounts/fireworks/models/glm-5p2"
++    assert primary.provider == "deepseek"
++    assert primary.model == "deepseek-v4-pro"
+ 
+     budget = aura_llm_egress.ExternalLLM(model="cheap", secrets=secrets)
+-    assert budget.provider == "fireworks"
+-    assert budget.model == "accounts/fireworks/models/deepseek-v4-flash"
++    assert budget.provider == "deepseek"
++    assert budget.model == "deepseek-v4-flash"
+ 
+     direct = aura_llm_egress.ExternalLLM(
+         secrets={"DEEPSEEK_API_KEY": "ds-real-key"}
+     )
+     assert direct.provider == "deepseek"
+-    assert direct.model == "deepseek-v4-flash"
++    assert direct.model == "deepseek-v4-pro"
+ 
+     direct_premium = aura_llm_egress.ExternalLLM(
+         provider="deepseek",
+diff --git a/docs/AURA_PROVIDER_ROUTING.md b/docs/AURA_PROVIDER_ROUTING.md
+new file mode 100644
+index 0000000..9c9b872
+--- /dev/null
++++ b/docs/AURA_PROVIDER_ROUTING.md
+@@ -0,0 +1,62 @@
++# Aura Provider Routing and API-Key Rotation
++
++Aura's external-model policy is owned by:
++
++- `aura_provider_registry.py` — provider endpoints, model roles, and deterministic provider order;
++- `aura_api_rotator.py` — secret loading, provider key pools, round-robin selection, and cooldowns;
++- `aura_llm_egress.py` — guarded calls, role-aware provider fallback, logging, and Council callbacks.
++
++Council, Council V3, AuraFusion, and the legacy-named Agent Arena Fireworks worker must use these owners rather than hard-coding provider calls.
++
++## Default policy
++
++Premium, reasoner, coding, and default work starts with direct DeepSeek. The direct DeepSeek premium role uses `deepseek-v4-pro`; its cheap/Shadow role uses `deepseek-v4-flash`.
++
++Cheap, Shadow, and summarization work starts with lower-cost providers such as Mistral before consuming premium lanes. Mistral uses `mistral-large-latest` for premium work and `mistral-small-latest` for cheap work.
++
++xAI/Grok is registered through `XAI_API_KEY` or the `GROK_API_KEY` alias and participates when a usable key exists. Fireworks remains a compatibility fallback; it is no longer the primary route.
++
++An explicitly pinned `ExternalLLM(provider=...)` call rotates that provider's keys but does not cross providers. Unpinned calls and governed Council/Fusion/Agent Bridge calls fall through to the next configured provider after key exhaustion, quota errors, timeouts, or provider failures.
++
++## Secrets-file shapes
++
++For any registered provider, Aura accepts all of these forms:
++
++```json
++{
++  "DEEPSEEK_API_KEY": "primary",
++  "DEEPSEEK_API_KEYS": ["backup-1", "backup-2"],
++  "DEEPSEEK_API_KEY_2": "numbered-backup"
++}
++```
++
++Plural values may be JSON lists or comma/semicolon-separated strings. Numbered keys are discovered deterministically. Environment values supplement `aura_secrets.json`. Placeholder-looking values are rejected.
++
++Equivalent forms work for `MISTRAL`, `XAI`, `GROQ`, `SAMBANOVA`, `CEREBRAS`, `OPENAI`, `FIREWORKS`, and other registered providers. Registered aliases include:
++
++- `GROK_API_KEY` for xAI;
++- `OPENROUTER_API_KEY` for `OPEN_ROUTER_API_KEY`;
++- `GEMINI_KEY` and `GOOGLE_API_KEY` for Gemini;
++- `GITHUB_MODELS_API_KEY` for GitHub Models.
++
++Never commit `aura_secrets.json` or real keys.
++
++## Role routing
++
++```text
++premium/default/reasoner/coding
++  → DeepSeek first
++  → rotate every DeepSeek key
++  → next configured premium provider
++
++cheap/shadow/summarizer
++  → lower-cost provider order
++  → rotate every key for that provider
++  → next configured cheap provider
++```
++
++AuraFusion automatically synthesizes a role-aware panel when `AURA_FUSION_PANEL` and `AURA_FUSION_JUDGE` are absent or empty. Explicit legacy panel configuration remains supported and is treated as the preferred route, not a single point of failure.
++
++## Authority boundaries
++
++Provider routing changes transport and model selection only. They grant no patch, commit, push, pull-request, merge, grammar-promotion, or policy authority. Exact source spans, hashes, tests, verifier gates, and human authorization remain controlling.
+diff --git a/tests/test_aura_provider_routing.py b/tests/test_aura_provider_routing.py
+new file mode 100644
+index 0000000..bd471ee
+--- /dev/null
++++ b/tests/test_aura_provider_routing.py
+@@ -0,0 +1,268 @@
++from __future__ import annotations
++
++import json
++
++from aura_api_rotator import ProviderKeyRotator, provider_key_pool
++from aura_fusion import AuraFusionAgent, AuraFusionCoordinator, load_fusion_config
++from aura_provider_registry import ProviderRegistry
++
++
++def test_provider_key_pool_collects_primary_plural_numbered_and_aliases(monkeypatch):
++    monkeypatch.setenv("DEEPSEEK_API_KEY_4", "env-four")
++    secrets = {
++        "DEEPSEEK_API_KEY": "primary",
++        "DEEPSEEK_API_KEYS": ["backup-one", "backup-two", "backup-one"],
++        "DEEPSEEK_API_KEY_2": "number-two",
++        "DEEPSEEK_API_KEY_3": "paste_key_here",
++    }
