@@ -33,6 +33,9 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 1
 
+      # `persist-credentials: false` is intentionally replaced by immediate
+      # post-checkout credential scrubbing because detached exact-SHA checkout
+      # failed before repository execution on hosted runners.
       - name: Remove checkout credential before repository execution
         run: |
           git config --local --unset-all http.https://github.com/.extraheader || true
