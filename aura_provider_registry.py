@@ -4,8 +4,8 @@ ST3GG_BASE: 0xa9b5-[Q-SYS:PROVIDER_REGISTRY]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Secrets Isolation)
 DEPENDENCIES: __future__, os, typing
-FUNCTIONS: ProviderRegistry, get_provider_config, get_redacted_health_report
-SYNOPSIS: Configuration-driven registry managing external LLM endpoints and roles.
+FUNCTIONS: ProviderRegistry, get_provider_config, get_redacted_health_report, provider_order, resolve_model
+SYNOPSIS: Configuration-driven registry managing external LLM endpoints, roles, and deterministic fallback order.
 [/AURA_MASTER_KEY]
 """
 from __future__ import annotations
@@ -14,10 +14,14 @@ import os
 from typing import Any, Dict, Optional
 
 AURA_PROVIDER_REGISTRY_V1 = "AURA_PROVIDER_REGISTRY_V1"
+AURA_PROVIDER_REGISTRY_V2 = "AURA_PROVIDER_REGISTRY_V2"
 FIREWORKS_GLM_5P2 = "accounts/fireworks/models/glm-5p2"
 FIREWORKS_DEEPSEEK_V4_FLASH = "accounts/fireworks/models/deepseek-v4-flash"
 DEEPSEEK_V4_FLASH = "deepseek-v4-flash"
 DEEPSEEK_V4_PRO = "deepseek-v4-pro"
+XAI_GROK_PREMIUM = "grok-4.5"
+MISTRAL_PREMIUM = "mistral-large-latest"
+MISTRAL_CHEAP = "mistral-small-latest"
 
 
 def _config(
@@ -30,10 +34,12 @@ def _config(
     default_roles: dict[str, str],
     api: str = "openai",
     model_priority: list[str] | None = None,
+    api_key_aliases: list[str] | None = None,
 ) -> Dict[str, Any]:
     packet: Dict[str, Any] = {
         "provider": provider,
         "api_key_env": key,
+        "api_key_aliases": list(api_key_aliases or []),
         "key": key,
         "base_url": url,
         "url": url,
@@ -42,7 +48,7 @@ def _config(
         "model": model,
         "model_priority": list(model_priority or [model]),
         "zero_local_ram": True,
-        "version": AURA_PROVIDER_REGISTRY_V1,
+        "version": AURA_PROVIDER_REGISTRY_V2,
     }
     if api != "openai":
         packet["api"] = api
@@ -53,20 +59,98 @@ class ProviderRegistry:
     """External provider and model-role registry with no plaintext secrets."""
 
     def __init__(self) -> None:
-        self.provider_priority = [
-            "fireworks",
-            "deepseek",
-            "anthropic",
-            "mistral",
-            "sambanova",
-            "groq",
-            "cerebras",
-            "openrouter",
-            "github",
-            "openai",
-            "gemini",
-        ]
+        # Premium/default work starts with the user's paid DeepSeek balance. Cheap
+        # work prefers lower-cost/free-tier providers before consuming premium lanes.
+        self.provider_priority_by_role: dict[str, list[str]] = {
+            "primary": [
+                "deepseek", "xai", "anthropic", "mistral", "openrouter",
+                "groq", "sambanova", "cerebras", "github", "gemini",
+                "fireworks", "openai",
+            ],
+            "premium": [
+                "deepseek", "xai", "anthropic", "mistral", "openrouter",
+                "groq", "sambanova", "cerebras", "github", "gemini",
+                "fireworks", "openai",
+            ],
+            "reasoner": [
+                "deepseek", "xai", "anthropic", "mistral", "openrouter",
+                "groq", "sambanova", "cerebras", "github", "gemini",
+                "fireworks", "openai",
+            ],
+            "coding": [
+                "deepseek", "xai", "mistral", "anthropic", "openrouter",
+                "groq", "sambanova", "cerebras", "github", "gemini",
+                "fireworks", "openai",
+            ],
+            "cheap_builder": [
+                "mistral", "groq", "sambanova", "cerebras", "gemini",
+                "github", "deepseek", "openrouter", "xai", "fireworks",
+                "anthropic", "openai",
+            ],
+            "shadow": [
+                "mistral", "groq", "sambanova", "cerebras", "gemini",
+                "github", "deepseek", "openrouter", "xai", "fireworks",
+                "anthropic", "openai",
+            ],
+            "summarizer": [
+                "mistral", "groq", "gemini", "sambanova", "cerebras",
+                "github", "deepseek", "openrouter", "xai", "fireworks",
+                "anthropic", "openai",
+            ],
+        }
+        self.provider_priority = list(self.provider_priority_by_role["primary"])
         self.providers: Dict[str, Dict[str, Any]] = {
+            "deepseek": _config(
+                "deepseek",
+                "DEEPSEEK_API_KEY",
+                "https://api.deepseek.com/chat/completions",
+                DEEPSEEK_V4_PRO,
+                capabilities=["chat", "structured_outputs", "tool_calling", "reasoning", "long_context"],
+                default_roles={
+                    "primary": DEEPSEEK_V4_PRO,
+                    "premium": DEEPSEEK_V4_PRO,
+                    "reasoner": DEEPSEEK_V4_PRO,
+                    "coding": DEEPSEEK_V4_PRO,
+                    "cheap_builder": DEEPSEEK_V4_FLASH,
+                    "shadow": DEEPSEEK_V4_FLASH,
+                    "summarizer": DEEPSEEK_V4_FLASH,
+                },
+                model_priority=[DEEPSEEK_V4_PRO, DEEPSEEK_V4_FLASH],
+            ),
+            "xai": _config(
+                "xai",
+                "XAI_API_KEY",
+                "https://api.x.ai/v1/chat/completions",
+                XAI_GROK_PREMIUM,
+                capabilities=["chat", "structured_outputs", "tool_calling", "reasoning"],
+                default_roles={
+                    "primary": XAI_GROK_PREMIUM,
+                    "premium": XAI_GROK_PREMIUM,
+                    "reasoner": XAI_GROK_PREMIUM,
+                    "coding": XAI_GROK_PREMIUM,
+                    "cheap_builder": XAI_GROK_PREMIUM,
+                    "shadow": XAI_GROK_PREMIUM,
+                    "summarizer": XAI_GROK_PREMIUM,
+                },
+                api_key_aliases=["GROK_API_KEY"],
+            ),
+            "mistral": _config(
+                "mistral",
+                "MISTRAL_API_KEY",
+                "https://api.mistral.ai/v1/chat/completions",
+                MISTRAL_PREMIUM,
+                capabilities=["chat", "structured_outputs", "tool_calling"],
+                default_roles={
+                    "primary": MISTRAL_PREMIUM,
+                    "premium": MISTRAL_PREMIUM,
+                    "reasoner": MISTRAL_PREMIUM,
+                    "coding": MISTRAL_PREMIUM,
+                    "cheap_builder": MISTRAL_CHEAP,
+                    "shadow": MISTRAL_CHEAP,
+                    "summarizer": MISTRAL_CHEAP,
+                },
+                model_priority=[MISTRAL_PREMIUM, MISTRAL_CHEAP],
+            ),
             "fireworks": _config(
                 "fireworks",
                 "FIREWORKS_API_KEY",
@@ -83,28 +167,6 @@ class ProviderRegistry:
                     "summarizer": FIREWORKS_DEEPSEEK_V4_FLASH,
                 },
                 model_priority=[FIREWORKS_GLM_5P2, FIREWORKS_DEEPSEEK_V4_FLASH],
-            ),
-            "deepseek": _config(
-                "deepseek",
-                "DEEPSEEK_API_KEY",
-                "https://api.deepseek.com/chat/completions",
-                DEEPSEEK_V4_FLASH,
-                capabilities=["chat", "structured_outputs", "tool_calling", "reasoning", "long_context"],
-                default_roles={
-                    "primary": DEEPSEEK_V4_PRO,
-                    "premium": DEEPSEEK_V4_PRO,
-                    "reasoner": DEEPSEEK_V4_PRO,
-                    "coding": DEEPSEEK_V4_PRO,
-                    "cheap_builder": DEEPSEEK_V4_FLASH,
-                    "shadow": DEEPSEEK_V4_FLASH,
-                    "summarizer": DEEPSEEK_V4_FLASH,
-                },
-                model_priority=[DEEPSEEK_V4_FLASH, DEEPSEEK_V4_PRO],
-            ),
-            "mistral": _config(
-                "mistral", "MISTRAL_API_KEY", "https://api.mistral.ai/v1/chat/completions", "mistral-small-latest",
-                capabilities=["chat", "structured_outputs"],
-                default_roles={"cheap_builder": "mistral-small-latest", "shadow": "mistral-small-latest", "summarizer": "mistral-small-latest"},
             ),
             "sambanova": _config(
                 "sambanova", "SAMBANOVA_API_KEY", "https://api.sambanova.ai/v1/chat/completions", "Meta-Llama-3.3-70B-Instruct",
@@ -125,11 +187,13 @@ class ProviderRegistry:
                 "openrouter", "OPEN_ROUTER_API_KEY", "https://openrouter.ai/api/v1/chat/completions", "meta-llama/llama-3.3-70b-instruct",
                 capabilities=["chat"],
                 default_roles={"cheap_builder": "meta-llama/llama-3.3-70b-instruct", "shadow": "meta-llama/llama-3.3-70b-instruct"},
+                api_key_aliases=["OPENROUTER_API_KEY"],
             ),
             "github": _config(
                 "github", "GITHUB_TOKEN", "https://models.inference.ai.azure.com/chat/completions", "gpt-4o-mini",
                 capabilities=["chat"],
                 default_roles={"cheap_builder": "gpt-4o-mini", "shadow": "gpt-4o-mini"},
+                api_key_aliases=["GITHUB_MODELS_API_KEY"],
             ),
             "openai": _config(
                 "openai", "OPENAI_API_KEY", "https://api.openai.com/v1/chat/completions", "gpt-4o-mini",
@@ -139,7 +203,7 @@ class ProviderRegistry:
             "anthropic": _config(
                 "anthropic", "ANTHROPIC_API_KEY", "https://api.anthropic.com/v1/messages", "claude-sonnet-4-6",
                 capabilities=["chat"],
-                default_roles={"cheap_builder": "claude-sonnet-4-6", "shadow": "claude-sonnet-4-6"},
+                default_roles={"primary": "claude-sonnet-4-6", "premium": "claude-opus-4-8", "reasoner": "claude-opus-4-8", "coding": "claude-sonnet-4-6", "cheap_builder": "claude-sonnet-4-6", "shadow": "claude-sonnet-4-6"},
                 api="anthropic",
             ),
             "gemini": _config(
@@ -147,15 +211,34 @@ class ProviderRegistry:
                 capabilities=["chat", "vision", "structured_outputs"],
                 default_roles={"cheap_builder": "gemini-1.5-flash", "shadow": "gemini-1.5-flash", "summarizer": "gemini-1.5-flash"},
                 api="gemini",
+                api_key_aliases=["GEMINI_KEY", "GOOGLE_API_KEY"],
             ),
         }
 
     def get_provider_config(self, provider_id: str) -> Optional[Dict[str, Any]]:
-        return self.providers.get(provider_id)
+        return self.providers.get(str(provider_id or "").lower())
+
+    def provider_order(self, role: str | None = None) -> list[str]:
+        normalized = str(role or "primary").lower()
+        return list(self.provider_priority_by_role.get(normalized, self.provider_priority))
+
+    def resolve_model(self, provider_id: str, role_or_model: str | None = None) -> str:
+        config = self.get_provider_config(provider_id)
+        if not config:
+            return str(role_or_model or "")
+        roles = dict(config.get("default_roles") or {})
+        query = str(role_or_model or "primary").strip()
+        known_roles = {"primary", "premium", "reasoner", "coding", "cheap_builder", "shadow", "summarizer"}
+        if query.lower() in known_roles:
+            return str(roles.get(query.lower()) or config.get("model") or "")
+        return str(roles.get(query.lower()) or roles.get(query) or query)
 
     def get_api_key(self, provider_id: str) -> Optional[str]:
         config = self.get_provider_config(provider_id)
-        return os.environ.get(config["api_key_env"]) if config else None
+        if not config:
+            return None
+        names = [config["api_key_env"], *config.get("api_key_aliases", [])]
+        return next((os.environ.get(name) for name in names if os.environ.get(name)), None)
 
     def get_redacted_health_report(self) -> Dict[str, Any]:
         report: Dict[str, Any] = {}
