@@ -20,5 +20,6 @@ The verification sequence must preserve these gates:
 7. Run Coding Waboose against the exact current head after every repair.
 8. Regenerate CODEMAP only after source and tests stabilize.
 9. Do not commit, publish, promote, or merge from verification evidence alone.
+10. Keep disposable logs, handoffs, and receipts outside tracked repository status, such as through a run-local `.git/info/exclude` entry; never weaken the Architecture Harness clean-tree check.
 
 A focused failure blocks materialization. The failure must be diagnosed against the exact repository environment; the gate must not be weakened to make a local stub pass.
