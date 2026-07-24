@@ -1,0 +1,225 @@
+diff --git a/README.md b/README.md
+index 6f462f6..af705df 100644
+--- a/README.md
++++ b/README.md
+@@ -357,6 +357,8 @@ LEGACY | SHADOW | PAIRED_LIVE
+ 
+ Open-weight mechanistic evidence is optional and aggregate-only. Gray-box and black-box endpoints cannot be assigned unsupported mechanistic claims. Drift, quarantine, federation, and promotion remain review-gated.
+ 
++External egress is now role-aware and provider-neutral. Premium/default Council and Fusion work starts with direct DeepSeek, cheap/Shadow work starts with lower-cost routes, every valid provider key in `aura_secrets.json` is rotated, and unpinned calls fall through to the next configured provider. Fireworks remains a compatibility fallback rather than the primary route. See `docs/AURA_PROVIDER_ROUTING.md`.
++
+ ## Domain Arenas
+ 
+ ### Civic Commons
+diff --git a/aura_agent_arena_fireworks.py b/aura_agent_arena_fireworks.py
+index 753b3e1..25ded53 100644
+--- a/aura_agent_arena_fireworks.py
++++ b/aura_agent_arena_fireworks.py
+@@ -1,38 +1,34 @@
+-"""
+-Aura Agent Arena Bridge — Fireworks worker integration.
+-
+-Lets Aura call a cheap/fast Fireworks model only after Aura has compressed the
+-exact context.  Uses the user's Fireworks credits and stable prompt caching.
++"""Aura Agent Arena external patch-worker compatibility bridge.
+ 
+-The Fireworks worker may generate candidate diffs only.  It cannot apply
+-patches directly.  Every returned diff must go through ``aura_stage_patch``
+-and ``aura_verify_arena``.
++The historical MCP/tool name remains ``fireworks_patch_worker`` so existing
++clients do not break. Its implementation is provider-neutral: compressed patch
++work is routed through Aura's canonical DeepSeek-first egress, rotates every
++configured key, and falls back across providers. The worker may return candidate
++diffs only; it never applies, commits, pushes, or merges them.
+ """
+-
+ from __future__ import annotations
+ 
+ import hashlib
+-import json
+-import logging
+ import os
+ from typing import Any
+ 
+ from aura_agent_arena_errors import make_error_packet
+-
+-_LOG = logging.getLogger(__name__)
+-
+-FIREWORKS_BRIDGE_VERSION = "AURA_AGENT_ARENA_FIREWORKS_V1"
++from aura_api_rotator import load_secrets, provider_key_pool
++from aura_llm_egress import (
++    available_providers,
++    generate_routed_openai_compatible_payload,
++)
++from aura_provider_registry import ProviderRegistry
++
++FIREWORKS_BRIDGE_VERSION = "AURA_AGENT_ARENA_EXTERNAL_WORKER_V2"
+ FIREWORKS_BASE_URL = "https://api.fireworks.ai/inference/v1"
+ 
+-# Model tier defaults — can be overridden by environment variables.
+ _DEFAULT_MODELS = {
+     "fast": "accounts/fireworks/models/llama-v3-1-8b-instruct",
+     "code": "accounts/fireworks/models/llama-v3-1-70b-instruct",
+     "judge": "accounts/fireworks/models/llama-v3-1-70b-instruct",
+ }
+ 
+-# Static system prompt — kept stable for prompt caching.
+-# Do NOT include timestamps, branch names, or dynamic test logs here.
+ STATIC_SYSTEM_PROMPT = """\
+ You are an external coding agent using Aura Agent Arena Bridge.
+ 
+@@ -48,35 +44,42 @@ If tests fail twice, escalate instead of broadening scope.
+ """
+ 
+ 
+-def _get_model(tier: str) -> str:
+-    env_key = f"AURA_FIREWORKS_MODEL_{tier.upper()}"
+-    return os.environ.get(env_key, _DEFAULT_MODELS.get(tier, _DEFAULT_MODELS["fast"]))
++def _get_model(tier: str) -> str | None:
++    generic = os.environ.get(f"AURA_AGENT_ARENA_MODEL_{tier.upper()}")
++    if generic:
++        return generic
++    if os.environ.get("AURA_AGENT_ARENA_PROVIDER", "").strip().lower() == "fireworks":
++        return os.environ.get(f"AURA_FIREWORKS_MODEL_{tier.upper()}", _DEFAULT_MODELS.get(tier, _DEFAULT_MODELS["fast"]))
++    return None
+ 
+ 
+ def _get_session_id() -> str:
+-    """Build a stable session affinity key for prompt caching."""
+-    session_id = os.environ.get("AURA_FIREWORKS_SESSION_ID", "")
++    session_id = os.environ.get("AURA_FIREWORKS_SESSION_ID") or os.environ.get("AURA_AGENT_ARENA_SESSION_ID")
+     if session_id:
+         return session_id
+-    # Build from repo hash + branch if available.
+     repo_hash = hashlib.blake2b(os.getcwd().encode(), digest_size=8).hexdigest()
+-    branch = "default"
+-    try:
+-        import subprocess
++    return f"aura-arena-{repo_hash}"
+ 
+-        proc = subprocess.run(
+-            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+-            capture_output=True, text=True, timeout=5,
+-        )
+-        if proc.returncode == 0:
+-            branch = proc.stdout.strip() or "default"
+-    except Exception:  # noqa: BLE001
+-        pass
+-    return f"aura-arena-{repo_hash}-{branch}"
++
++def _model_role(tier: str) -> str:
++    return {
++        "fast": "cheap_builder",
++        "code": "coding",
++        "judge": "premium",
++    }.get(str(tier or "fast").lower(), "cheap_builder")
++
++
++def _openai_worker_providers(secrets: dict[str, Any], role: str) -> list[str]:
++    registry = ProviderRegistry()
++    return [
++        provider
++        for provider in available_providers(secrets, role=role)
++        if str((registry.get_provider_config(provider) or {}).get("api") or "openai") == "openai"
++    ]
+ 
+ 
+ def _has_api_key() -> bool:
+-    return bool(os.environ.get("FIREWORKS_API_KEY"))
++    return bool(_openai_worker_providers(load_secrets(), "cheap_builder"))
+ 
+ 
+ def fireworks_patch_worker(
+@@ -87,136 +90,97 @@ def fireworks_patch_worker(
+     model_tier: str = "fast",
+     max_output_tokens: int = 2048,
+ ) -> dict[str, Any]:
+-    """Call a Fireworks model for a compressed micro-patch.
++    """Route a compressed micro-patch through replaceable external providers.
+ 
+-    Returns a candidate diff only — never applies the patch.
+-    The caller must stage the diff via ``aura_stage_patch`` and verify
+-    via ``aura_verify_arena``.
++    The compatibility name is intentionally retained. The returned diff must be
++    staged with ``aura_stage_patch`` and verified with ``aura_verify_arena``.
+     """
+-    if not _has_api_key():
++    secrets = load_secrets()
++    if not _openai_worker_providers(secrets, _model_role(model_tier)):
+         return make_error_packet(
+             "fireworks_call_failed",
+-            "FIREWORKS_API_KEY is not set. Fireworks worker skipped safely.",
+-            repair_hint="Set FIREWORKS_API_KEY environment variable to use delegated Fireworks mode.",
++            "No external provider key is configured. Add DEEPSEEK_API_KEY, MISTRAL_API_KEY, "
++            "XAI_API_KEY/GROK_API_KEY, FIREWORKS_API_KEY, or another registered provider key.",
++            repair_hint="Add one or more provider keys to aura_secrets.json; plural and numbered backup keys are rotated automatically.",
+             next_allowed_tools=["aura_stage_patch"],
+         )
+-
+     if not compressed_context or not compressed_context.strip():
+         return make_error_packet(
+             "fireworks_call_failed",
+             "compressed_context is required and must be non-empty.",
+             repair_hint="Call aura_get_micro_context first to get compressed context.",
+         )
+-
+     if not instruction or not instruction.strip():
+         return make_error_packet(
+             "fireworks_call_failed",
+             "instruction is required and must be non-empty.",
+         )
+ 
+-    # Lazy import openai — it may not be installed.
+-    try:
+-        from openai import OpenAI
+-    except ImportError:
+-        return make_error_packet(
+-            "fireworks_call_failed",
+-            "openai package is not installed. Install with: pip install openai",
+-            repair_hint="The openai package is required for Fireworks integration.",
+-        )
+-
+-    model = _get_model(model_tier)
+-    session_id = _get_session_id()
+-
+-    # Build messages: static system prompt first (for cache), dynamic content last.
+     user_content = (
+         f"Task ID: {task_id}\n\n"
+         f"Compressed Context:\n{compressed_context}\n\n"
+         f"Instruction:\n{instruction}\n\n"
+-        f"Return a unified diff only. Do not include explanations."
++        "Return a unified diff only. Do not include explanations."
+     )
+-
+-    messages = [
+-        {"role": "system", "content": STATIC_SYSTEM_PROMPT},
+-        {"role": "user", "content": user_content},
+-    ]
+-
+-    try:
+-        client = OpenAI(
+-            api_key=os.environ["FIREWORKS_API_KEY"],
+-            base_url=FIREWORKS_BASE_URL,
+-        )
+-
+-        # Set session affinity header for prompt caching.
+-        extra_headers = {
+-            "x-session-affinity": session_id,
+-        }
+-
+-        response = client.chat.completions.create(
+-            model=model,
+-            messages=messages,
+-            max_tokens=max_output_tokens,
+-            temperature=0.2,
+-            extra_headers=extra_headers,
+-        )
+-
+-        diff_text = ""
+-        if response.choices:
+-            diff_text = response.choices[0].message.content or ""
+-
+-        # Extract usage info.
+-        usage = {}
+-        if response.usage:
+-            usage = {
