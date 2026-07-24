@@ -1,0 +1,200 @@
++) -> tuple[str | None, str | None, float, bool, dict[str, Any]]:
++    """Route structured messages across configured OpenAI-compatible providers."""
++    sec = secrets if secrets is not None else load_secrets()
++    role = _requested_role(model_role)
++    order = _REGISTRY.provider_order(role)
++    preferred = str(preferred_provider or "").lower()
++    if preferred:
++        order = [preferred, *(name for name in order if name != preferred)]
++        if not allow_provider_fallback:
++            order = order[:1]
++    errors: list[str] = []
++    started = time.time()
++    for index, provider in enumerate(order):
++        cfg = PROVIDERS.get(provider)
++        if not cfg or provider in _FORBIDDEN or str(cfg.get("api") or "openai") != "openai":
++            continue
++        keys = _provider_keys(provider, cfg, sec)
++        if not keys:
++            continue
++        model = preferred_model if index == 0 and preferred_model else _resolve_model(cfg, role)
++        text, error, _latency, used_schema = generate_openai_compatible_payload(
++            provider=provider,
++            base_url=str(cfg["url"]),
++            api_key=keys[0],
++            api_keys=keys[1:],
++            model=str(model),
++            messages=messages,
++            **kwargs,
+         )
+-        used_schema = False
+-    return text, error, time.time() - started, used_schema
++        if text and not error:
++            return text, None, time.time() - started, used_schema, {
++                "provider": provider,
++                "model": model,
++                "fallback_index": index,
++                "key_count": len(keys),
++            }
++        errors.append(f"{provider}: {error or 'empty response'}")
++    return None, "; ".join(errors) or "no configured OpenAI-compatible provider", time.time() - started, False, {}
+ 
+ 
+-def available_providers(secrets: dict[str, Any] | None = None) -> list[str]:
+-    """Return configured external providers in deterministic priority order."""
++def available_providers(secrets: dict[str, Any] | None = None, *, role: str | None = None) -> list[str]:
++    """Return configured external providers in deterministic role priority order."""
+     sec = secrets if secrets is not None else load_secrets()
+     return [
+-        name for name in DEFAULT_PROVIDER_ORDER
++        name for name in provider_priority(role)
+         if name in PROVIDERS and name not in _FORBIDDEN and _has_key(name, PROVIDERS[name], sec)
+     ]
+ 
+@@ -278,15 +358,17 @@ def classify_providers(secrets: dict[str, Any] | None = None) -> dict[str, list[
+ def usable_providers(
+     secrets: dict[str, Any] | None = None,
+     prefer_working: bool = True,
++    *,
++    role: str | None = None,
+ ) -> list[str]:
+-    buckets = classify_providers(secrets)
+-    if prefer_working and buckets["working"]:
+-        return list(buckets["working"])
+-    return buckets["working"] + buckets["configured"]
++    available = available_providers(secrets, role=role)
++    if prefer_working:
++        return [name for name in available if name in KNOWN_WORKING]
++    return available
+ 
+ 
+ class ExternalLLM:
+-    """Aura's single external-language-model egress."""
++    """Aura's single external-language-model egress with automatic failover."""
+ 
+     def __init__(
+         self,
+@@ -298,54 +380,58 @@ class ExternalLLM:
+         baseline_prompt_tokens: int | None = None,
+         baseline_output_tokens: int | None = None,
+         baseline_cost_usd: float | None = None,
++        allow_provider_fallback: bool | None = None,
+     ) -> None:
+         self.secrets = secrets if secrets is not None else load_secrets()
+-        candidates = [provider] if provider else DEFAULT_PROVIDER_ORDER
+-        chosen = None
+-        last_error = None
++        self.requested_model = model
++        self.model_role = _requested_role(model)
++        fallback_allowed = bool(allow_provider_fallback) if allow_provider_fallback is not None else provider is None
++        self._provider_pinned = provider is not None and not fallback_allowed
++        base_order = provider_priority(self.model_role)
++        preferred = str(provider or "").lower()
++        candidates = ([preferred] + [name for name in base_order if name != preferred]) if preferred else base_order
++        if self._provider_pinned:
++            candidates = candidates[:1]
+         for candidate in candidates:
+-            if candidate is None:
+-                continue
+-            name = str(candidate).lower()
+-            if name in _FORBIDDEN:
++            if candidate in _FORBIDDEN:
+                 raise ValueError(
+                     f"Provider '{candidate}' is forbidden in egress. Aura must use an external provider "
+-                    f"from {DEFAULT_PROVIDER_ORDER}."
++                    f"from {provider_priority(self.model_role)}."
+                 )
+-            if name not in PROVIDERS:
+-                last_error = f"unknown provider '{candidate}'"
+-                continue
+-            if not _has_key(name, PROVIDERS[name], self.secrets):
+-                last_error = f"no API key for '{candidate}'"
+-                continue
+-            chosen = name
+-            break
+-        if chosen is None:
+-            raise RuntimeError(f"No usable external provider. Last error: {last_error}")
+-
+-        self.provider = chosen
+-        self.cfg = PROVIDERS[chosen]
+-        if chosen == "anthropic":
+-            default_model = str(self.secrets.get("CLAUDE_DEFAULT_MODEL") or os.environ.get("CLAUDE_DEFAULT_MODEL") or "claude-sonnet-4-6")
+-            premium_model = str(self.secrets.get("CLAUDE_PREMIUM_MODEL") or os.environ.get("CLAUDE_PREMIUM_MODEL") or "claude-opus-4-8")
+-            query = str(model or "").strip().lower()
+-            if query in {"premium", "opus", "claude-opus-4-8", premium_model.lower()}:
+-                self.model = premium_model
+-            elif not query or query in {"default", "sonnet", "claude-sonnet-4-6", default_model.lower()}:
+-                self.model = default_model
+-            else:
+-                self.model = str(model)
+-        else:
+-            self.model = _resolve_model(self.cfg, model)
+-
+-        self.api = str(self.cfg.get("api") or "openai")
+-        self.is_gemini = self.api == "gemini"
+-        self.api_key = _secret_value(self.cfg, self.secrets)
++        self._routes = [
++            name for name in candidates
++            if name in PROVIDERS and _has_key(name, PROVIDERS[name], self.secrets)
++        ]
++        if not self._routes:
++            raise RuntimeError(f"No usable external provider for role '{self.model_role}'.")
+         self._task = task
+         self._aspect = aspect
+         self._baseline_prompt = baseline_prompt_tokens
+         self._baseline_output = baseline_output_tokens
+         self._baseline_cost = baseline_cost_usd
++        self._activate(self._routes[0])
++
++    def _activate(self, provider: str) -> None:
++        self.provider = provider
++        self.cfg = PROVIDERS[provider]
++        request = self.requested_model if self._provider_pinned else self.model_role
++        self.model = _resolve_model(self.cfg, request)
++        if provider == "anthropic":
++            default_model = str(
++                self.secrets.get("CLAUDE_DEFAULT_MODEL")
++                or os.environ.get("CLAUDE_DEFAULT_MODEL")
++                or "claude-sonnet-4-6"
++            )
++            premium_model = str(
++                self.secrets.get("CLAUDE_PREMIUM_MODEL")
++                or os.environ.get("CLAUDE_PREMIUM_MODEL")
++                or "claude-opus-4-8"
++            )
++            self.model = premium_model if self.model_role in {"premium", "reasoner"} else default_model
++        self.api = str(self.cfg.get("api") or "openai")
++        self.is_gemini = self.api == "gemini"
++        self.api_keys = _provider_keys(provider, self.cfg, self.secrets)
++        self.api_key = self.api_keys[0] if self.api_keys else ""
+ 
+     def _log_to_savings(
+         self,
+@@ -372,6 +458,64 @@ class ExternalLLM:
+             metadata={"source": "ExternalLLM._log_to_savings", **(metadata or {})},
+         )
+ 
++    def _call_current(
++        self,
++        prompt: str,
++        *,
++        max_tokens: int,
++        temperature: float,
++        call_type: str,
++        savings_meta: dict[str, Any],
++    ) -> tuple[str | None, str | None, bool]:
++        if self.is_gemini:
++            text, error = gemini_generate(
++                prompt,
++                secrets=self.secrets,
++                call_type=call_type,
++                task=self._task,
++                aspect=self._aspect,
++                baseline_prompt_tokens=self._baseline_prompt,
++                baseline_output_tokens=self._baseline_output,
++                baseline_cost_usd=self._baseline_cost,
++                savings_metadata=savings_meta,
++            )
++            return text, error, True
++        if self.api == "anthropic":
++            errors: list[str] = []
