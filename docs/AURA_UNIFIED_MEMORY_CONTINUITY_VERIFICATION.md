@@ -22,5 +22,6 @@ The verification sequence must preserve these gates:
 9. Do not commit, publish, promote, or merge from verification evidence alone.
 10. Keep disposable logs outside tracked repository status, never weaken the Architecture Harness clean-tree check, and write Architecture Harness handoff/run outputs physically outside the repository before copying completed receipts into an ignored CI artifact directory.
 11. During an exact-head verification pass, use the navigator's query mode against the committed CODEMAP; do not invoke map-generation mode and then treat the resulting dirty tree as verification evidence.
+12. When a selected existing owner regression has a test-only import not declared by runtime requirements, add that dependency only to the verification environment; do not alter production dependencies or drop the regression to make the gate pass.
 
 A focused failure blocks materialization. The failure must be diagnosed against the exact repository environment; the gate must not be weakened to make a local stub pass.
