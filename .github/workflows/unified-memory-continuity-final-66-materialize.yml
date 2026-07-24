@@ -21,7 +21,6 @@ jobs:
     env:
       TARGET_BRANCH: refactor/unified-memory-continuity
       EVENT_HEAD: ${{ github.sha }}
-      EXPECTED_PARENT: 2cdb398e05ca12c1622b20c43f98b04eaf170135
       TRANSPORT_COMMIT: 1de0f438b330ef91bfc99cead2d288d003181e22
       EVIDENCE_DIR: ${{ runner.temp }}/umc-deep-review-v2
     steps:
@@ -30,22 +29,19 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
 
-      - name: Bind trigger and settle generated-only synchronization
+      - name: Bind one-path trigger and settle generated-only synchronization
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EVENT_HEAD"
-          test "$(git rev-parse HEAD^)" = "$EXPECTED_PARENT"
-          git diff --name-only "$EXPECTED_PARENT" "$EVENT_HEAD" | sort > "${RUNNER_TEMP}/trigger-paths.txt"
-          printf '%s\n' \
-            .aura/refactor_payloads/umc_final_66.trigger \
-            .github/workflows/unified-memory-continuity-final-66-materialize.yml \
-            | sort > "${RUNNER_TEMP}/allowed-trigger-paths.txt"
-          diff -u "${RUNNER_TEMP}/allowed-trigger-paths.txt" "${RUNNER_TEMP}/trigger-paths.txt"
+          parent="$(git rev-parse HEAD^)"
+          git diff --name-only "$parent" "$EVENT_HEAD" > "${RUNNER_TEMP}/trigger-paths.txt"
+          test "$(cat "${RUNNER_TEMP}/trigger-paths.txt")" = '.aura/refactor_payloads/umc_final_66.trigger'
+          test -f .github/workflows/unified-memory-continuity-final-66-materialize.yml
           sleep 20
           git fetch --no-tags origin "refs/heads/${TARGET_BRANCH}:refs/remotes/origin/${TARGET_BRANCH}"
           latest="$(git rev-parse "origin/${TARGET_BRANCH}")"
-          git diff --name-only "$EVENT_HEAD" "$latest" | sort > "${RUNNER_TEMP}/post-trigger-paths.txt"
+          git diff --name-only "$EVENT_HEAD" "$latest" > "${RUNNER_TEMP}/post-trigger-paths.txt"
           if [ -s "${RUNNER_TEMP}/post-trigger-paths.txt" ]; then
             python - <<'PY'
           import os
