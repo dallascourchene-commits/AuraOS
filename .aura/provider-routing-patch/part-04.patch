@@ -1,0 +1,197 @@
+@@ -616,6 +731,7 @@ class AuraFusionCoordinator:
+         data = asdict(output)
+         data["parsed"] = parsed
+         data["used_response_schema"] = used_schema
++        data["routing"] = resolved_route
+         return data
+ 
+     def _dispatch_panel(self, task: str, capsule: dict[str, Any]) -> list[dict[str, Any]]:
+@@ -659,10 +775,11 @@ class AuraFusionCoordinator:
+             except Exception as exc:
+                 parse_error = str(exc)
+         ok = bool(text and not err and not parse_error and all(field in parsed for field in JUDGE_SCHEMA["required"]))
++        resolved_route = self._resolved_routes.get(judge.name, {})
+         return {
+             "agent": judge.name,
+-            "provider": judge.provider,
+-            "model": judge.model,
++            "provider": str(resolved_route.get("provider") or judge.provider),
++            "model": str(resolved_route.get("model") or judge.model),
+             "ok": ok,
+             "latency_sec": round(latency, 3),
+             "input_tokens_est": input_est,
+@@ -671,6 +788,7 @@ class AuraFusionCoordinator:
+             "parsed": parsed,
+             "error": err or parse_error,
+             "used_response_schema": used_schema,
++            "routing": resolved_route,
+         }
+ 
+     def _append_log(self, result: AuraFusionResult) -> None:
+@@ -764,7 +882,13 @@ class AuraFusionCoordinator:
+             judge_output = self._run_judge(capsule, panel_outputs)
+             judge_parsed = judge_output.get("parsed") or {}
+             ok = bool(panel_outputs and judge_output.get("ok"))
+-            final_answer = judge_parsed.get("final_answer") or judge_output.get("content") or "AuraFusion judge produced no final answer."
++            final_answer = (
++                judge_parsed.get("final_answer")
++                or judge_output.get("content")
++                or judge_output.get("error")
++                or next((item.get("error") for item in panel_outputs if item.get("error")), None)
++                or "AuraFusion judge produced no final answer."
++            )
+             metrics = {
+                 "gate": gate,
+                 "panel_count": len(panel_outputs),
+diff --git a/aura_live_architect.py b/aura_live_architect.py
+index 7c0a0ad..8b59c8a 100644
+--- a/aura_live_architect.py
++++ b/aura_live_architect.py
+@@ -15,6 +15,7 @@ def optimized_fallback():
+ from __future__ import annotations
+ 
+ import ast
++import asyncio
+ from collections.abc import Callable
+ from dataclasses import asdict, dataclass, field
+ import hashlib
+@@ -681,39 +682,44 @@ class ArchitectModelRouter:
+     ):
+         self.repo_root = Path(repo_root)
+         self.model_caller = model_caller
++        caller_module = str(getattr(model_caller, "__module__", ""))
++        caller_name = str(getattr(model_caller, "__name__", ""))
++        self._canonical_egress_first = (
++            caller_module == "aura_node" and caller_name == "call_architect_model"
++        )
+         self.ledger_path = Path(ledger_path)
+         self.profiles = {
+             "planner": ArchitectModelProfile(
+                 role="planner",
+-                provider=os.getenv("AURA_ARCHITECT_PLANNER_PROVIDER", "ANTHROPIC"),
++                provider=os.getenv("AURA_ARCHITECT_PLANNER_PROVIDER", "DEEPSEEK"),
+                 model_class="premium_planner",
+                 cost_tier="premium",
+                 purpose="fractal plan capsule synthesis",
+             ),
+             "planner_alt": ArchitectModelProfile(
+                 role="planner_alt",
+-                provider=os.getenv("AURA_ARCHITECT_ALT_PLANNER_PROVIDER", "KIMI"),
++                provider=os.getenv("AURA_ARCHITECT_ALT_PLANNER_PROVIDER", "MISTRAL"),
+                 model_class="premium_alternate_planner",
+                 cost_tier="premium",
+                 purpose="alternate fractal plan capsule synthesis",
+             ),
+             "worker": ArchitectModelProfile(
+                 role="worker",
+-                provider=os.getenv("AURA_ARCHITECT_WORKER_PROVIDER", "GROQ"),
++                provider=os.getenv("AURA_ARCHITECT_WORKER_PROVIDER", "MISTRAL"),
+                 model_class="cheap_act_worker",
+                 cost_tier="cheap",
+                 purpose="bounded Act Capsule patch generation",
+             ),
+             "shadow": ArchitectModelProfile(
+                 role="shadow",
+-                provider=os.getenv("AURA_ARCHITECT_SHADOW_PROVIDER", "GROQ"),
++                provider=os.getenv("AURA_ARCHITECT_SHADOW_PROVIDER", "MISTRAL"),
+                 model_class="cheap_shadow_critic",
+                 cost_tier="cheap",
+                 purpose="cheap critique before verifier",
+             ),
+             "judge": ArchitectModelProfile(
+                 role="judge",
+-                provider=os.getenv("AURA_ARCHITECT_JUDGE_PROVIDER", "ANTHROPIC"),
++                provider=os.getenv("AURA_ARCHITECT_JUDGE_PROVIDER", "DEEPSEEK"),
+                 model_class="premium_judge",
+                 cost_tier="premium",
+                 purpose="escalation and conflict decision",
+@@ -758,10 +764,24 @@ class ArchitectModelRouter:
+         return self.profiles.get(role, self.profiles["worker"])
+ 
+     async def call_model(self, role: str, prompt: str, *, intensity: int = 0, meta: dict[str, Any] | None = None) -> str | None:
+-        if self.model_caller is None:
+-            return None
+         profile = self.profile_for(role, intensity=intensity)
+         payload = {"role": role, "profile": profile.to_dict(), **(meta or {})}
++        if self._canonical_egress_first:
++            try:
++                from aura_llm_egress import generate_architect_model
++
++                result = await asyncio.to_thread(
++                    generate_architect_model,
++                    profile.provider,
++                    prompt,
++                    payload,
++                )
++                if result is not None:
++                    return str(result)
++            except Exception:
++                pass
++        if self.model_caller is None:
++            return None
+         try:
+             result = self.model_caller(profile.provider, prompt, payload)
+             if inspect.isawaitable(result):
+diff --git a/aura_llm_egress.py b/aura_llm_egress.py
+index a89b2de..d22f66f 100644
+--- a/aura_llm_egress.py
++++ b/aura_llm_egress.py
+@@ -4,27 +4,21 @@ ST3GG_BASE: 0xa8e5-[Q-SYS:2A86BBF77059E372]
+ DIKWP_TIER: PURPOSE
+ PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit / Honest Communication)
+ DEPENDENCIES: json, os, time, aura_api_rotator, aura_llm_call_logger
+-FUNCTIONS: ExternalLLM, interpret, generate, generate_openai_compatible_payload
+-SYNOPSIS: [CODE]
+-def optimized_fallback():
+-    pass
+-[/CODE]
++FUNCTIONS: ExternalLLM, interpret, generate, generate_openai_compatible_payload, generate_routed_openai_compatible_payload, generate_architect_model
++SYNOPSIS: DeepSeek-first role-aware external egress with provider and per-provider key fallback.
+ [/AURA_MASTER_KEY]
+ 
+ Aura External LLM Egress.
+ =========================
+ 
+-This is the only place Aura is permitted to touch a language model, and it is
+-always an external one. Aura's deterministic substrate stays LLM-free.
++This is the canonical place Aura is permitted to touch a language model, and it
++is always an external one. Aura's deterministic substrate stays LLM-free.
+ 
+-Default egress priority:
+-
+-    Fireworks -> direct DeepSeek -> Anthropic -> Mistral -> SambaNova ->
+-    Groq -> Cerebras -> OpenRouter -> GitHub Models -> OpenAI -> Gemini
+-
+-Fireworks defaults to GLM 5.2. The budget/cheap role uses DeepSeek-V4-Flash on
+-Fireworks. A separately configured DEEPSEEK_API_KEY may use DeepSeek directly as
+-the next provider fallback.
++Premium/default work starts with direct DeepSeek. Cheap, Shadow, and summary
++work use the registry's lower-cost order. Every provider consumes all valid keys
++from ``aura_secrets.json`` through deterministic round-robin rotation, and an
++unpinned call falls through to the next configured provider on quota, timeout,
++or provider failure.
+ """
+ from __future__ import annotations
+ 
+@@ -36,9 +30,10 @@ import urllib.request
+ 
+ from aura_api_rotator import (
+     gemini_generate,
+-    gemini_key_pool,
++    get_provider_rotator,
+     load_secrets,
+     openai_compatible_generate,
++    provider_key_pool,
+ )
+ from aura_context_crusher import apply_context_crush_to_messages, apply_context_crush_to_prompt
+ from aura_llm_call_logger import log_llm_call
+@@ -54,15 +49,12 @@ from aura_tokenizer_guard import sanitize_message_payloads, sanitize_tokenizer_c
+ 
+ _REGISTRY = ProviderRegistry()
+ PROVIDERS: dict[str, dict[str, Any]] = _REGISTRY.providers
+-DEFAULT_PROVIDER_ORDER = list(_REGISTRY.provider_priority)
+-KNOWN_WORKING = tuple(DEFAULT_PROVIDER_ORDER)
++DEFAULT_PROVIDER_ORDER = _REGISTRY.provider_order("primary")
++KNOWN_WORKING = tuple(dict.fromkeys(name for role in _REGISTRY.provider_priority_by_role.values() for name in role))
+ 
+ _FORBIDDEN = {
