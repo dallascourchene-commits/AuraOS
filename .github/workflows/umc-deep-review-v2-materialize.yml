@@ -1,0 +1,260 @@
+name: Materialize unified continuity deep review v2
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [synchronize]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: umc-deep-review-v2-${{ github.event.pull_request.head.sha }}
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: >-
+      github.actor != 'github-actions[bot]' &&
+      github.head_ref == 'refactor/unified-memory-continuity' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+      TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+      PAYLOAD_DIR: Aura_Sandbox/umc_deep_review_payload_v2
+      EVIDENCE_DIR: ${{ runner.temp }}/umc-deep-review-v2
+      WABOOSE_STATE: ${{ runner.temp }}/umc-deep-review-v2/waboose-state.json
+      AURA_WABOOSE_LEARNING_ROOT: ${{ runner.temp }}/umc-deep-review-v2/waboose-learning
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Bind exact payload commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -d "$PAYLOAD_DIR"
+          compgen -G "$PAYLOAD_DIR/part-*" > /dev/null
+          mkdir -p "$EVIDENCE_DIR"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Decode hash-locked reviewed files
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64
+          import hashlib
+          import json
+          from pathlib import Path
+          import shutil
+          import zlib
+
+          payload_dir = Path('Aura_Sandbox/umc_deep_review_payload_v2')
+          parts = sorted(payload_dir.glob('part-*'))
+          encoded = ''.join(part.read_text(encoding='utf-8') for part in parts)
+          payload = json.loads(zlib.decompress(base64.b64decode(encoded, validate=True)))
+          expected_paths = {
+              'aura_unified_memory_continuity.py',
+              'tests/test_aura_unified_memory_continuity.py',
+              'docs/AURA_UNIFIED_MEMORY_CONTINUITY.md',
+              'docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md',
+              '.aura/waboose_requests/unified_memory_continuity.v1.json',
+          }
+          if payload.get('version') != 'AURA_UMC_DEEP_REVIEW_PAYLOAD_V2':
+              raise SystemExit('unsupported payload version')
+          files = payload.get('files')
+          if not isinstance(files, dict) or set(files) != expected_paths:
+              raise SystemExit('payload path set differs from reviewed scope')
+          for relative, record in files.items():
+              if not isinstance(record, dict):
+                  raise SystemExit(f'invalid payload record for {relative}')
+              content = record.get('content')
+              if not isinstance(content, str):
+                  raise SystemExit(f'non-text payload for {relative}')
+              data = content.encode('utf-8')
+              digest = hashlib.sha256(data).hexdigest()
+              if digest != record.get('sha256'):
+                  raise SystemExit(f'hash mismatch for {relative}')
+              target = Path(relative)
+              target.parent.mkdir(parents=True, exist_ok=True)
+              temporary = target.with_name(f'.{target.name}.reviewed.tmp')
+              temporary.write_bytes(data)
+              temporary.replace(target)
+          shutil.rmtree(payload_dir)
+          PY
+          git diff --check
+
+      - name: Install verification toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8,<9' jsonschema ruff bandit
+
+      - name: Compile entire Python tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import py_compile
+
+          failures = []
+          count = 0
+          for path in Path('.').rglob('*.py'):
+              if any(part in {'.git', '.venv', 'venv', '__pycache__'} for part in path.parts):
+                  continue
+              try:
+                  py_compile.compile(str(path), doraise=True)
+                  count += 1
+              except Exception as exc:  # noqa: BLE001
+                  failures.append((str(path), str(exc)))
+          print(f'compiled={count} failures={len(failures)}')
+          if failures:
+              raise SystemExit('\n'.join(f'{path}: {exc}' for path, exc in failures))
+          PY
+
+      - name: Run full Ruff and Bandit review
+        shell: bash
+        run: |
+          set -euo pipefail
+          ruff check aura_unified_memory_continuity.py tests/test_aura_unified_memory_continuity.py \
+            | tee "$EVIDENCE_DIR/ruff.log"
+          bandit -q -ll aura_unified_memory_continuity.py \
+            | tee "$EVIDENCE_DIR/bandit.log"
+
+      - name: Run expanded focused and owner regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q \
+            tests/test_aura_unified_memory_continuity.py \
+            tests/test_aura_relationship_compass_finalization.py \
+            --junitxml="$EVIDENCE_DIR/regressions.xml" \
+            | tee "$EVIDENCE_DIR/pytest.log"
+
+      - name: Run zero-finding Coding Waboose
+        shell: bash
+        run: |
+          set -euo pipefail
+          python aura_coding_waboose_cli.py \
+            --repo-root . \
+            --state-file "$WABOOSE_STATE" \
+            run \
+            --request .aura/waboose_requests/unified_memory_continuity.v1.json \
+            > "$EVIDENCE_DIR/waboose-result.json"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('${{ runner.temp }}/umc-deep-review-v2/waboose-result.json').read_text())
+          assert result.get('ok') is True, result
+          assert not (result.get('findings') or []), result
+          assert not (result.get('deterministic_findings') or []), result
+          assert result.get('production_mutation') is False, result
+          assert result.get('automatic_fix') is False, result
+          PY
+
+      - name: Run Aura Architecture Harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/aura_architecture_harness.py \
+            --repo-root . \
+            prepare \
+            --venv "${RUNNER_TEMP}/umc-deep-review-venv" \
+            --install-requirements \
+            > "$EVIDENCE_DIR/harness-prepare.log" 2>&1
+          python scripts/aura_architecture_harness.py \
+            --repo-root . \
+            doctor \
+            --venv "${RUNNER_TEMP}/umc-deep-review-venv" \
+            > "$EVIDENCE_DIR/harness-doctor.log" 2>&1
+          python scripts/aura_architecture_harness.py \
+            --repo-root . \
+            run \
+            --venv "${RUNNER_TEMP}/umc-deep-review-venv" \
+            --objective "Verify the deep-review repairs for evidence saturation, canonical Model Cognome identity, P0 runtime binding, Relationship Experience/QDKT governance identity, and canonical JSON key safety without creating a parallel owner or mutation authority." \
+            --combine-with Connectome "Relational Synthesis" Atlas \
+            --atlas-profile MINIMAL \
+            --output-dir "$EVIDENCE_DIR/harness-run" \
+            > "$EVIDENCE_DIR/harness-run.log" 2>&1
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          summary = json.loads(Path('${{ runner.temp }}/umc-deep-review-v2/harness-run/harness_summary.json').read_text())
+          assert summary.get('ok') is True, summary
+          assert summary.get('production_mutation') is False, summary
+          assert summary.get('human_review_required') is True, summary
+          PY
+
+      - name: Regenerate architecture maps
+        shell: bash
+        run: |
+          set -euo pipefail
+          python aura_codebase_navigator.py
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s topology_map.json
+          git diff --check
+
+      - name: Commit exact reviewed tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'AuraOS Deep Review Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            aura_unified_memory_continuity.py \
+            tests/test_aura_unified_memory_continuity.py \
+            docs/AURA_UNIFIED_MEMORY_CONTINUITY.md \
+            docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md \
+            .aura/waboose_requests/unified_memory_continuity.v1.json \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json
+          if test -f Aura_Memory/live_topology_ast.json; then
+            git add -f Aura_Memory/live_topology_ast.json
+          fi
+          git add -u -- Aura_Sandbox/umc_deep_review_payload_v2
+          git diff --cached --check
+          python - <<'PY'
+          import subprocess
+          allowed = {
+              'aura_unified_memory_continuity.py',
+              'tests/test_aura_unified_memory_continuity.py',
+              'docs/AURA_UNIFIED_MEMORY_CONTINUITY.md',
+              'docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md',
+              '.aura/waboose_requests/unified_memory_continuity.v1.json',
+              '.aura/CODEMAP.json',
+              '.aura/CODEMAP.md',
+              'topology_map.json',
+              'Aura_Memory/live_topology_ast.json',
+          }
+          changed = set(subprocess.check_output(['git', 'diff', '--cached', '--name-only'], text=True).splitlines())
+          payload = {path for path in changed if path.startswith('Aura_Sandbox/umc_deep_review_payload_v2/')}
+          unexpected = changed - allowed - payload
+          if unexpected:
+              raise SystemExit(f'unexpected staged paths: {sorted(unexpected)}')
+          PY
+          git commit -m 'fix: close deep unified continuity review gaps'
+          git push origin "HEAD:${TARGET_BRANCH}"
+
+      - name: Upload deep-review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: umc-deep-review-v2-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/umc-deep-review-v2
+          if-no-files-found: warn
+          retention-days: 30
