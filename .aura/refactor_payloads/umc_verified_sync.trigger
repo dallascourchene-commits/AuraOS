@@ -1,5 +1,5 @@
 AURA_UMC_VERIFIED_SYNCHRONIZE_PUBLICATION_V1
-attempt=6
+attempt=7
 source_scope=five_bounded_files
 verification=locked_hashes_and_compile
 codemap=ignored
