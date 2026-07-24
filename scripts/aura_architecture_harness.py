@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Reproducible Aura architecture harness with GitHub publication routing guidance.
+"""Reproducible Aura architecture and runtime-refactor harness.
 
 The original PR #182 implementation is preserved byte-for-byte in
 ``scripts.aura_architecture_harness_core``. This stable entrypoint keeps every
 existing command and private compatibility surface while adding proposal-only
-GitHub workflow discovery and atomic Git-tree publication guidance to doctor,
-handoff, and run outputs. It still performs no remote mutation itself.
+GitHub workflow discovery, atomic Git-tree publication guidance, and the
+runtime profile command. Runtime profiles reproduce and verify a local
+application in an isolated environment, but never patch, commit, push, open a
+pull request, or merge.
 """
 from __future__ import annotations
 
@@ -118,7 +120,23 @@ _core.run_architecture = run_architecture
 
 
 def main(argv: Iterable[str] | None = None) -> int:
-    return _core.main(argv)
+    arguments = list(argv) if argv is not None else list(sys.argv[1:])
+    if "runtime" in arguments:
+        runtime_index = arguments.index("runtime")
+        runtime_arguments = [
+            *arguments[:runtime_index],
+            *arguments[runtime_index + 1 :],
+        ]
+        try:
+            from scripts.aura_runtime_refactor_harness import (
+                main as runtime_main,
+            )
+        except ModuleNotFoundError:  # Direct execution from scripts directory.
+            from aura_runtime_refactor_harness import (  # type: ignore[no-redef]
+                main as runtime_main,
+            )
+        return runtime_main(runtime_arguments)
+    return _core.main(arguments)
 
 
 if __name__ == "__main__":
