@@ -73,7 +73,7 @@ jobs:
           set -euo pipefail
           python -m pip install --upgrade pip \
             > "$EVIDENCE_DIR/logs/pip_upgrade.log" 2>&1
-          python -m pip install -r requirements.txt 'pytest>=8,<9' ruff bandit \
+          python -m pip install -r requirements.txt 'pytest>=8,<9' jsonschema ruff bandit \
             > "$EVIDENCE_DIR/logs/install.log" 2>&1
 
       - name: Prepare and diagnose Aura Architecture Harness
