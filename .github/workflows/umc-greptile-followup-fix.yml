@@ -1,26 +1,30 @@
 name: UMC Greptile QDKT follow-up fix
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/umc-greptile-followup-fix.yml
+  pull_request:
+    types: [synchronize]
+    branches: [main]
 
 permissions:
   contents: write
 
 jobs:
   apply:
+    if: >-
+      github.event.pull_request.number == 193 &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'refactor/unified-memory-continuity'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      EXPECTED_HEAD: c4e00f09a4e58f5b60f6a630abd08444230fdbeb
+      PREVIOUS_HEAD: c4e00f09a4e58f5b60f6a630abd08444230fdbeb
+      EVENT_HEAD: ${{ github.event.pull_request.head.sha }}
       TARGET_BRANCH: refactor/unified-memory-continuity
+      TRIGGER_PATH: .aura/refactor_payloads/umc_greptile_qdkt_followup.trigger
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ env.EXPECTED_HEAD }}
+          ref: ${{ env.EVENT_HEAD }}
           fetch-depth: 0
 
       - uses: actions/setup-python@v5
@@ -31,7 +35,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          test "$(git rev-parse HEAD)" = "$EVENT_HEAD"
+          test "$(git rev-parse HEAD^)" = "$PREVIOUS_HEAD"
+          test "$(git diff --name-only "$PREVIOUS_HEAD" "$EVENT_HEAD")" = "$TRIGGER_PATH"
           test -z "$(git status --porcelain=v1)"
 
           python - <<'PY'
@@ -85,6 +91,7 @@ jobs:
           tests_path.write_text(tests, encoding='utf-8')
           PY
 
+          git rm -- "$TRIGGER_PATH"
           git diff --check
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt 'pytest>=8,<9' jsonschema ruff bandit
@@ -95,17 +102,19 @@ jobs:
             tests/test_aura_unified_memory_continuity.py \
             tests/test_aura_relationship_compass_finalization.py
 
-          git add -- \
+          git add -- aura_unified_memory_continuity.py tests/test_aura_unified_memory_continuity.py
+          git diff --cached --name-only | sort > "${RUNNER_TEMP}/actual.txt"
+          printf '%s\n' \
+            "$TRIGGER_PATH" \
             aura_unified_memory_continuity.py \
-            tests/test_aura_unified_memory_continuity.py
-          test "$(git diff --cached --name-only | sort)" = $'aura_unified_memory_continuity.py\ntests/test_aura_unified_memory_continuity.py'
+            tests/test_aura_unified_memory_continuity.py \
+            | sort > "${RUNNER_TEMP}/expected.txt"
+          diff -u "${RUNNER_TEMP}/expected.txt" "${RUNNER_TEMP}/actual.txt"
 
           latest="$(git ls-remote --heads origin "refs/heads/${TARGET_BRANCH}" | awk '{print $1}')"
-          test "$latest" = "$EXPECTED_HEAD"
+          test "$latest" = "$EVENT_HEAD"
 
           git config user.name 'AuraOS Greptile Fix Bot'
           git config user.email 'actions@users.noreply.github.com'
           git commit -m 'fix: keep ineligible QDKT admission fail-closed'
           git push origin "HEAD:${TARGET_BRANCH}"
-
-# trigger: 2
