@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/unified-memory-completion-apply.yml
       - .github/scripts/apply_umc_completion.py
+      - .github/scripts/fix_umc_generated_test.py
   pull_request:
     branches:
       - main
@@ -34,6 +35,9 @@ jobs:
 
       - name: Apply exact-anchor patch
         run: python .github/scripts/apply_umc_completion.py
+
+      - name: Complete generated test imports
+        run: python .github/scripts/fix_umc_generated_test.py
 
       - name: Format and verify focused integration
         shell: bash
