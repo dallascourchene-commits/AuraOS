@@ -32,7 +32,11 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 1
-          persist-credentials: false
+
+      - name: Remove checkout credential before repository execution
+        run: |
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
 
       - uses: actions/setup-python@v5
         with:
