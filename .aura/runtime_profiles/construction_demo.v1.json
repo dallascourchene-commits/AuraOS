@@ -1,7 +1,7 @@
 {
   "version": "AURA_RUNTIME_PROFILE_V1",
   "profile_id": "construction-demo-browser",
-  "objective": "Boot the deterministic Construction Arena server in an isolated Python environment, drive the real browser surface, verify all controls and representation modes with user-visible composite screenshots, complete the director tour, run Coding Waboose, and capture bounded runtime evidence without mutating source.",
+  "objective": "Boot the deterministic Construction Arena server in an isolated Python environment, drive the real browser surface, verify all controls and representation modes with user-visible composite screenshots, complete the director tour, run Coding Waboose, verify generated navigation, and capture bounded runtime evidence without mutating source.",
   "environment": {
     "create_venv": true,
     "requirements": [
@@ -96,6 +96,16 @@
         ".aura/runtime_profiles/construction_demo_waboose.v1.json"
       ],
       "timeout_seconds": 300
+    },
+    {
+      "command": [
+        "{python}",
+        "-m",
+        "aura_codemap_verify",
+        "--compare-json",
+        ".aura/CODEMAP.json"
+      ],
+      "timeout_seconds": 180
     }
   ],
   "axiom_bindings": [
@@ -104,6 +114,7 @@
     "classify_performance_evidence_separately_from_integrity_evidence",
     "bind_every_repair_to_exact_runtime_artifacts_and_repository_identity",
     "run_graph_guided_waboose_review_inside_the_same_bounded_capsule",
+    "verify_generated_navigation_against_the_exact_final_tree",
     "dissolve_all_runtime_resources_after_proof",
     "keep_patch_and_merge_authority_outside_the_harness"
   ]
