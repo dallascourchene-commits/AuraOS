@@ -1192,3 +1192,37 @@ def test_module_avoids_dynamic_namespace_injection() -> None:
     with open("aura_unified_memory_continuity.py", encoding="utf-8") as source_file:
         source = source_file.read()
     assert "__import__(" not in source
+
+
+def test_qdkt_ineligible_decision_with_relationship_fails_closed() -> None:
+    intent, _, _, _, _, _, _, _, receipt = _vertical_fixture()
+    approved = _approved_learning_decision(receipt)
+    relationship = _relationship_observation(intent, receipt, approved)
+    ineligible = evaluate_learning_to_reproof(
+        relationship_id=approved.relationship_id,
+        relationship_digest=approved.relationship_digest,
+        repository_head=HEAD,
+        current_source_digest=SOURCE_DIGEST,
+        continuity_receipt=receipt,
+        human_disposition="APPROVED",
+    )
+
+    admission = evaluate_qdkt_consequential_admission(
+        continuity_receipt=receipt,
+        learning_decision=ineligible,
+        relationship_experience=relationship,
+        raw_evidence_refs=receipt.raw_evidence_refs,
+        current_repository_head=HEAD,
+        current_source_digest=SOURCE_DIGEST,
+        purpose_compatible=True,
+        privacy_compatible=True,
+        consent_compatible=True,
+        sovereignty_compatible=True,
+    )
+
+    assert admission.admitted is False
+    assert "LEARNING_REPROOF_NOT_ELIGIBLE" in admission.blockers
+    assert "MISSING_CRUCIBLE_PROPOSAL" in admission.blockers
+    assert "MISSING_CURRENT_REPROOF" in admission.blockers
+    assert "MISSING_INDEPENDENT_VERIFIER" in admission.blockers
+    assert "MISSING_HUMAN_DISPOSITION" in admission.blockers

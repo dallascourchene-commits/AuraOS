@@ -2272,15 +2272,20 @@ def evaluate_qdkt_consequential_admission(
         if relationship_experience.objective_digest != learning_decision.objective_digest:
             raise ValueError("Relationship Experience objective differs from reproof")
         required_relationship_receipts = {
-            learning_decision.continuity_receipt_ref,
-            learning_decision.crucible_proposal_ref,
-            learning_decision.current_reproof_ref,
-            learning_decision.human_disposition_ref,
+            ref
+            for ref in (
+                learning_decision.continuity_receipt_ref,
+                learning_decision.crucible_proposal_ref,
+                learning_decision.current_reproof_ref,
+                learning_decision.human_disposition_ref,
+            )
+            if ref
         }
         if not required_relationship_receipts.issubset(relationship_experience.receipt_refs):
             raise ValueError("Relationship Experience omits governed reproof receipts")
         if (
             learning_decision.independent_verifier_ref
+            and learning_decision.independent_verifier_ref
             not in relationship_experience.verifier_evidence_refs
         ):
             raise ValueError("Relationship Experience omits the independent verifier")

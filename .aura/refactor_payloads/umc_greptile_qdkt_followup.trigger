@@ -1,4 +1,0 @@
-AURA_UMC_GREPTILE_QDKT_FOLLOWUP_V1
-attempt=3
-source_scope=module_and_regression_test
-merge_authority=false
