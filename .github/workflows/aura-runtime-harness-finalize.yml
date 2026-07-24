@@ -43,20 +43,31 @@ jobs:
       - name: Apply canonical runtime-harness documentation
         run: python tools/runtime_harness_finalize/apply_docs.py
 
-      - name: Verify harness and Construction contracts
+      - name: Compile harness source
         run: |
           python -m py_compile \
             scripts/aura_architecture_harness.py \
             scripts/aura_runtime_refactor_harness.py
+
+      - name: Lint Runtime Refactor Harness
+        run: |
           ruff check \
             scripts/aura_runtime_refactor_harness.py \
             tests/test_aura_runtime_refactor_harness.py
+
+      - name: Verify Runtime Refactor Harness contracts
+        run: python -m pytest -q --tb=short tests/test_aura_runtime_refactor_harness.py
+
+      - name: Verify retained Construction Python contracts
+        run: |
           python -m pytest -q --tb=short \
-            tests/test_aura_runtime_refactor_harness.py \
             tests/test_aura_construction_demo_director.py \
             tests/test_aura_construction_demo_fixture.py \
             tests/test_aura_construction_demo_projection.py \
             tests/test_aura_spatial_render_plan.py
+
+      - name: Verify retained Construction browser contracts
+        run: |
           node --check aura_spatial_web/construction_demo_app.js
           node --check aura_spatial_web/construction_scene_renderer.js
           node --check aura_spatial_web/construction_wireframe_pass.js
