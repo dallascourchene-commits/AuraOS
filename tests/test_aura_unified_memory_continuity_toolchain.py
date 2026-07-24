@@ -3,8 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import subprocess
-from types import SimpleNamespace
 import time
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -189,7 +189,30 @@ def test_expired_model_profile_rejected(tmp_path: Path) -> None:
     observed = time.time()
     contract = _contract(head, now=observed)
     contract["model_profile"]["expires_at"] = observed - 1
-    with pytest.raises(ValueError, match="Model Cognome profile is not current"):
+    with pytest.raises(ValueError, match="model profile has expired"):
+        _compile(tmp_path, contract)
+
+
+def test_backdated_observation_cannot_reanimate_expired_profile(tmp_path: Path) -> None:
+    head = _repo(tmp_path)
+    current_time = time.time()
+    contract = _contract(head, now=current_time - 120)
+    with pytest.raises(ValueError, match="model profile has expired"):
+        _compile(tmp_path, contract)
+
+
+def test_observation_time_outside_clock_skew_is_rejected(tmp_path: Path) -> None:
+    head = _repo(tmp_path)
+    contract = _contract(head, now=time.time() - 600)
+    with pytest.raises(ValueError, match="observed_at exceeds permitted clock skew"):
+        _compile(tmp_path, contract)
+
+
+def test_returned_model_must_be_explicit(tmp_path: Path) -> None:
+    head = _repo(tmp_path)
+    contract = _contract(head)
+    contract["model_profile"]["endpoint_identity"].pop("returned_model")
+    with pytest.raises(ValueError, match="returned_model must not be empty"):
         _compile(tmp_path, contract)
 
 

@@ -12,6 +12,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass
 import hashlib
 import json
+import math
 from pathlib import Path, PurePosixPath
 import subprocess
 import time
@@ -66,6 +67,7 @@ _CONTINUITY = (
 )
 _REQUIRED_TERMS = ("memory", "continuity", "verified", "authority")
 _LEGAL_OUTCOMES = ("EXECUTE", "VERIFY", "REPAIR", "ESCALATE", "REFUSE")
+_MAX_OBSERVATION_CLOCK_SKEW_SECONDS = 300.0
 
 
 def _copy(value: Any) -> Any:
@@ -183,7 +185,7 @@ def _endpoint(value: Any) -> ModelEndpointIdentity:
     endpoint = ModelEndpointIdentity.create(
         provider=_required(value.get("provider"), "provider"),
         requested_model=_required(value.get("requested_model"), "requested_model"),
-        returned_model=str(value.get("returned_model") or value.get("requested_model") or ""),
+        returned_model=_required(value.get("returned_model"), "returned_model"),
         base_url_digest=str(value.get("base_url_digest") or ""),
         access_class=str(value.get("access_class") or "BLACK_BOX"),
         endpoint_fingerprint=str(value.get("endpoint_fingerprint") or ""),
@@ -200,17 +202,39 @@ def _endpoint(value: Any) -> ModelEndpointIdentity:
     return endpoint
 
 
-def _model_profile(value: Any, *, observed_at: float) -> ModelProfileRef:
+def _observation_time(value: Any) -> tuple[float, float]:
+    current_time = time.time()
+    observed_at = current_time if value is None else float(value)
+    if not math.isfinite(observed_at):
+        raise ValueError("observed_at must be finite")
+    if abs(observed_at - current_time) > _MAX_OBSERVATION_CLOCK_SKEW_SECONDS:
+        raise ValueError("observed_at exceeds permitted clock skew")
+    return observed_at, current_time
+
+
+def _model_profile(
+    value: Any,
+    *,
+    observed_at: float,
+    current_time: float,
+) -> ModelProfileRef:
     if not isinstance(value, Mapping):
         raise ValueError("model_profile must be an object")
+    calibrated_at = float(value.get("calibrated_at"))
+    expires_at = float(value.get("expires_at"))
+    if not math.isfinite(calibrated_at) or not math.isfinite(expires_at):
+        raise ValueError("model profile timestamps must be finite")
+    if expires_at <= current_time:
+        raise ValueError("model profile has expired")
     profile = ModelProfileRef.create(
         endpoint_identity=_endpoint(value.get("endpoint_identity")),
-        calibrated_at=float(value.get("calibrated_at")),
-        expires_at=float(value.get("expires_at")),
+        calibrated_at=calibrated_at,
+        expires_at=expires_at,
         evidence_refs=_strings(value.get("evidence_refs"), "model evidence_refs", required=True),
         uncertainty=float(value.get("uncertainty", 0.5)),
     )
     profile.assert_fresh(observed_at=observed_at)
+    profile.assert_fresh(observed_at=current_time)
     return profile
 
 
@@ -422,8 +446,12 @@ def compile_bridge_execution_binding(
             contract.get("required_semantic_terms") or _REQUIRED_TERMS, "required_semantic_terms", required=True
         ),
     )
-    observed_at = float(contract.get("observed_at", time.time()))
-    profile = _model_profile(contract.get("model_profile"), observed_at=observed_at)
+    observed_at, current_time = _observation_time(contract.get("observed_at"))
+    profile = _model_profile(
+        contract.get("model_profile"),
+        observed_at=observed_at,
+        current_time=current_time,
+    )
     source_digest = stable_digest({path: _file_digest(root, path) for path in sorted(files)})
     role = _required(getattr(capsule, "role", ""), "Act Capsule role")
     packet = compile_model_execution_packet(
