@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1373
-- **total_bytes**: 56336098
-- **text_tokens_est**: 4631783
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 181, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 910, 'schema_or_lexicon': 163, 'support_file': 53}
+- **file_count**: 1374
+- **total_bytes**: 56344208
+- **text_tokens_est**: 4633811
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 181, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 910, 'schema_or_lexicon': 164, 'support_file': 53}
 - **topology_nodes**: 10358
 - **topology_edges**: 24168
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 29104.18
+- **elapsed_ms**: 28856.19
 
 ## Coverage
 
-- **included_file_count**: 1373
+- **included_file_count**: 1374
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=135, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
@@ -283,6 +283,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ### cognition_and_memory
 - `.aura/memory_apertures/coding_localize.v1.json`
+- `.github/workflows/unified-memory-continuity-discovery.yml`
 - `.mempalace/aura_thought.txt`
 - `.mempalace/lexicon.json`
 - `.mempalace/nexus.json`
@@ -293,8 +294,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_civic_memory.py`
 - `aura_cognitive_labor_router.py`
 - `aura_cognitive_labor_router_core.py`
-- `aura_cognitive_synthesizer.py`
-- ... 19 more; query CODEMAP.json for exact file cards
+- ... 20 more; query CODEMAP.json for exact file cards
 
 ### mesh_and_routing
 - `.aura/civic_completion_ledger.json`
