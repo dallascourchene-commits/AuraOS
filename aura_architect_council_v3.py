@@ -7,6 +7,7 @@ critic tax on every candidate.
 
 V3 remains planning-only. It grants no patch, commit, merge, or promotion authority.
 """
+
 from __future__ import annotations
 
 import inspect
@@ -24,27 +25,37 @@ from aura_live_architect import ArchitectCouncilDecision, ArchitectModelRouter
 ARCHITECT_COUNCIL_V3 = "AURA_ARCHITECT_COUNCIL_V3_SELECTIVE_CRITICS"
 
 
+def _verification_depth(value: Any) -> int:
+    try:
+        depth = int(value if value is not None else 1)
+    except (TypeError, ValueError):
+        return 1
+    return max(1, depth)
+
+
 def select_critic_lanes(candidate: dict[str, Any]) -> list[str]:
     """Select only critic lanes justified by plan length, dependencies, and risk."""
     plan = dict(candidate.get("plan") or {})
     profile = profile_refactor_length(plan)
     lanes = ["scope", "tests"]
+    unified = candidate.get("unified_memory_continuity") or plan.get("unified_memory_continuity") or {}
+    if not isinstance(unified, dict):
+        unified = {}
+    disagreement_refs = list(unified.get("disagreement_refs") or [])
+    verification_depth = _verification_depth(unified.get("required_verification_depth"))
+    continuity_requirements = list(unified.get("continuity_requirements") or [])
+    if disagreement_refs or verification_depth > 1:
+        lanes.append("continuity")
+    if unified.get("p0_required") is True or continuity_requirements:
+        lanes.append("rollback")
 
     if profile.dependency_edge_count > 0 or profile.sequential_depth_estimate >= 3:
         lanes.append("sequence")
     if profile.task_count >= 8 or profile.sequential_depth_estimate >= 5:
         lanes.append("continuity")
-    if (
-        profile.task_count >= 4
-        or bool(plan.get("rollback_conditions"))
-        or bool(plan.get("risk_map"))
-    ):
+    if profile.task_count >= 4 or bool(plan.get("rollback_conditions")) or bool(plan.get("risk_map")):
         lanes.append("rollback")
-    if (
-        profile.large_task_count >= 2
-        or profile.estimated_max_model_turns >= 30
-        or profile.length_class == "PROGRAM"
-    ):
+    if profile.large_task_count >= 2 or profile.estimated_max_model_turns >= 30 or profile.length_class == "PROGRAM":
         lanes.append("cost")
 
     ordered: list[str] = []
@@ -105,8 +116,7 @@ class SelectiveArchitectFusionCouncil(LengthAwareArchitectFusionCouncil):
                         0.0,
                         min(
                             1.0,
-                            (float(candidate.get("score", 0.0)) + average) / 2
-                            - blockers * 0.12,
+                            (float(candidate.get("score", 0.0)) + average) / 2 - blockers * 0.12,
                         ),
                     ),
                     4,
@@ -189,6 +199,15 @@ def _selection_reasons(
 ) -> list[str]:
     plan = dict(candidate.get("plan") or {})
     reasons = ["scope_and_tests_are_universal"]
+    unified = candidate.get("unified_memory_continuity") or plan.get("unified_memory_continuity") or {}
+    if isinstance(unified, dict):
+        if (
+            list(unified.get("disagreement_refs") or [])
+            or _verification_depth(unified.get("required_verification_depth")) > 1
+        ):
+            reasons.append("cross_model_disagreement_requires_deeper_verification")
+        if unified.get("p0_required") is True or list(unified.get("continuity_requirements") or []):
+            reasons.append("prediction_and_continuity_require_rollback_review")
     if profile.dependency_edge_count > 0 or profile.sequential_depth_estimate >= 3:
         reasons.append("dependency_or_sequence_evidence")
     if profile.task_count >= 8 or profile.sequential_depth_estimate >= 5:
@@ -229,7 +248,6 @@ __all__ = [
     "select_critic_lanes",
     "route_compass_failure_classes",
 ]
-
 
 
 def route_compass_failure_classes(failure_classes: list[str] | tuple[str, ...]) -> dict[str, Any]:

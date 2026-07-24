@@ -184,6 +184,31 @@ TOOL_DEFINITIONS = [
         },
     },
     {
+        "name": "aura_compile_unified_execution",
+        "description": "Compile one exact prepared Act Capsule into a model-relative execution packet and reference-only continuity-owner projections.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "plan_phase_hash": {"type": "string"},
+                "task_id": {"type": "string"},
+                "contract": {"type": "object"},
+            },
+            "required": ["plan_phase_hash", "task_id", "contract"],
+        },
+    },
+    {
+        "name": "aura_unified_continuity_projection",
+        "description": "Return reference-only continuity-owner projections for a retained unified execution binding.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "plan_phase_hash": {"type": "string"},
+                "task_id": {"type": "string"},
+            },
+            "required": ["plan_phase_hash", "task_id"],
+        },
+    },
+    {
         "name": "aura_get_micro_context",
         "description": "Return the exact compressed context for one Act Capsule.",
         "inputSchema": {
@@ -735,6 +760,32 @@ def _handle_prepare_arena(bridge: AuraAgentArenaBridge, args: dict[str, Any]) ->
         emergent_max_atomic_nodes=int(args.get("emergent_max_atomic_nodes", 48)),
         emergent_include_source=_strict_bool_arg(args, "emergent_include_source", default=False),
         emergent_include_research_plan=_strict_bool_arg(args, "emergent_include_research_plan", default=True),
+    )
+
+
+@_register_tool("aura_compile_unified_execution")
+def _handle_compile_unified_execution(
+    bridge: AuraAgentArenaBridge,
+    args: dict[str, Any],
+) -> dict[str, Any]:
+    contract = args.get("contract")
+    if not isinstance(contract, Mapping):
+        raise MCPArgumentError("contract must be an object")
+    return bridge.aura_compile_unified_execution(
+        plan_phase_hash=_bounded_text_arg(args, "plan_phase_hash", maximum=256, required=True),
+        task_id=_bounded_text_arg(args, "task_id", maximum=256, required=True),
+        contract=dict(contract),
+    )
+
+
+@_register_tool("aura_unified_continuity_projection")
+def _handle_unified_continuity_projection(
+    bridge: AuraAgentArenaBridge,
+    args: dict[str, Any],
+) -> dict[str, Any]:
+    return bridge.aura_unified_continuity_projection(
+        plan_phase_hash=_bounded_text_arg(args, "plan_phase_hash", maximum=256, required=True),
+        task_id=_bounded_text_arg(args, "task_id", maximum=256, required=True),
     )
 
 

@@ -491,7 +491,7 @@ class _FrozenEvidenceBridge:
         max_lines = max(1, min(120, int(kwargs.get("max_lines") or 1)))
         line_start = matching_grant["line_start"]
         line_end = matching_grant["line_end"]
-        if symbol and (line_start is None or line_end is None):
+        if symbol:
             try:
                 tree = ast.parse("\n".join(lines))
             except SyntaxError:
@@ -719,6 +719,47 @@ class AuraForgeRuntime:
                     }
                 )
             )
+
+        unified_config = request.metadata.get("unified_memory_continuity")
+        if unified_config is not None:
+            if not isinstance(unified_config, Mapping):
+                return self._error("unified_memory_continuity_metadata_invalid", stage="GROUND")
+            compile_binding = getattr(self.bridge, "aura_compile_unified_execution", None)
+            if not callable(compile_binding):
+                return self._error("unified_memory_continuity_bridge_unavailable", stage="GROUND")
+            for capsule in act_capsules:
+                task_id = str(capsule.get("task_id") or "")
+                result = compile_binding(
+                    plan_phase_hash=str(prepared.get("plan_phase_hash") or ""),
+                    task_id=task_id,
+                    contract=dict(unified_config),
+                )
+                if not isinstance(result, Mapping) or result.get("ok") is not True:
+                    return self._error(
+                        "unified_memory_continuity_compile_failed",
+                        stage="GROUND",
+                        details={"task_id": task_id, "result": result},
+                    )
+                records = dict(result.get("records") or {})
+                summary = {
+                    "binding_id": result.get("binding_id"),
+                    "binding_digest": result.get("binding_digest"),
+                    "intent_digest": dict(records.get("intent_packet") or {}).get("intent_digest"),
+                    "model_execution_packet_digest": dict(
+                        records.get("model_execution_packet") or {}
+                    ).get("packet_digest"),
+                    "required_verification_depth": dict(records.get("council") or {}).get(
+                        "required_verification_depth"
+                    ),
+                    "p0_required": True,
+                    "human_review_required": True,
+                }
+                matching = next(
+                    (item for item in task_evidence if str(item.get("task_id") or "") == task_id),
+                    None,
+                )
+                if matching is not None:
+                    matching["unified_memory_continuity"] = _sanitize(summary)
 
         contract = self._compile_contract(request, repo_digest, prepared, act_capsules, task_evidence)
         contract_errors = validate_forge_contract(contract.to_dict())
