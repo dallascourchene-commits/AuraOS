@@ -41,7 +41,7 @@ jobs:
           source /tmp/aura-construction-venv/bin/activate
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-          python -m pip install pytest ruff
+          python -m pip install pytest ruff jsonschema
           mkdir -p /tmp/aura-playwright /tmp/aura-construction-runtime
           cd /tmp/aura-playwright
           npm init -y >/dev/null 2>&1
