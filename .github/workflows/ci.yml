@@ -40,12 +40,11 @@ jobs:
             aura_architect_council_v3.py \
             aura_agent_arena_mcp.py \
             tests/test_aura_unified_memory_continuity_toolchain.py
-          python -m ruff check \
-            aura_unified_memory_continuity_toolchain.py \
-            tests/test_aura_unified_memory_continuity_toolchain.py
+          python -m ruff check aura_unified_memory_continuity_toolchain.py
           python -m ruff check --select F821,E9 \
             aura_architect_council_v3.py \
-            aura_agent_arena_mcp.py
+            aura_agent_arena_mcp.py \
+            tests/test_aura_unified_memory_continuity_toolchain.py
 
       - name: Compile and run focused regression suite
         shell: bash
