@@ -14,30 +14,9 @@ def main() -> None:
     harness = Path("scripts/aura_runtime_refactor_harness.py")
     replace_once(
         harness,
-        '''def _positive_number(value: Any, label: str, *, maximum: float) -> float:
-    if (
-        not isinstance(value, (int, float))
-        or isinstance(value, bool)
-        or value <= 0
-        or value > maximum
-    ):
-        raise RuntimeHarnessError(f"{label} must be in (0, {maximum}]")
-    return float(value)
-
-
+        '''def _validate_loopback_url(value: Any, label: str) -> str:
 ''',
-        '''def _positive_number(value: Any, label: str, *, maximum: float) -> float:
-    if (
-        not isinstance(value, (int, float))
-        or isinstance(value, bool)
-        or value <= 0
-        or value > maximum
-    ):
-        raise RuntimeHarnessError(f"{label} must be in (0, {maximum}]")
-    return float(value)
-
-
-def _strict_bool(value: Any, label: str, *, default: bool) -> bool:
+        '''def _strict_bool(value: Any, label: str, *, default: bool) -> bool:
     if value is None:
         return default
     if type(value) is not bool:
@@ -45,6 +24,7 @@ def _strict_bool(value: Any, label: str, *, default: bool) -> bool:
     return value
 
 
+def _validate_loopback_url(value: Any, label: str) -> str:
 ''',
         "strict boolean parser",
     )
