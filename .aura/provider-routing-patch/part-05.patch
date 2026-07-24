@@ -1,0 +1,231 @@
+     "local", "llama_local", "internal", "in_process", "llamacpp", "llama_cpp", "node",
+ }
+-_PLACEHOLDER_MARKERS = (
+-    "your_", "paste_", "changeme", "_here", "xxxx", "example", "replace_me",
+-)
+ _MODEL_ROLE_ALIASES = {
+     "default": "primary",
+     "primary": "primary",
+@@ -77,44 +69,55 @@ _MODEL_ROLE_ALIASES = {
+     "budget": "cheap_builder",
+     "fast": "cheap_builder",
+     "flash": "cheap_builder",
+-    "deepseek": "cheap_builder",
++    "deepseek": "primary",
+     "deepseek-v4-flash": "cheap_builder",
+     "shadow": "shadow",
+     "summarizer": "summarizer",
+ }
+ 
+ 
+-def provider_priority() -> list[str]:
+-    """Return the deterministic external-provider priority order."""
+-    return list(DEFAULT_PROVIDER_ORDER)
++def _requested_role(requested: str | None) -> str:
++    raw = str(requested or "primary").strip().lower()
++    return _MODEL_ROLE_ALIASES.get(raw, raw if raw in _REGISTRY.provider_priority_by_role else "primary")
++
++
++def provider_priority(role: str | None = None) -> list[str]:
++    """Return deterministic external-provider priority for a model role."""
++    return _REGISTRY.provider_order(_requested_role(role))
++
++
++def _key_names(cfg: dict[str, Any]) -> list[str]:
++    return [
++        str(name)
++        for name in [cfg.get("api_key_env") or cfg.get("key"), *cfg.get("api_key_aliases", [])]
++        if name
++    ]
++
++
++def _provider_keys(name: str, cfg: dict[str, Any], secrets: dict[str, Any]) -> list[str]:
++    return provider_key_pool(name, secrets, key_names=_key_names(cfg))
+ 
+ 
+ def _secret_value(cfg: dict[str, Any], secrets: dict[str, Any]) -> str:
+-    key_name = str(cfg.get("key") or cfg.get("api_key_env") or "")
+-    value = secrets.get(key_name) if key_name else None
+-    if not value and key_name:
+-        value = os.environ.get(key_name)
+-    return str(value or "").strip()
++    provider = str(cfg.get("provider") or "")
++    keys = _provider_keys(provider, cfg, secrets)
++    return keys[0] if keys else ""
+ 
+ 
+ def _has_key(name: str, cfg: dict[str, Any], sec: dict[str, Any]) -> bool:
+-    if cfg.get("api") == "gemini":
+-        return bool(gemini_key_pool(sec))
+-    key_val = _secret_value(cfg, sec)
+-    if not key_val:
+-        return False
+-    lowered = key_val.lower()
+-    return not any(marker in lowered for marker in _PLACEHOLDER_MARKERS)
++    return bool(_provider_keys(name, cfg, sec))
+ 
+ 
+ def _resolve_model(cfg: dict[str, Any], requested: str | None) -> str:
+     roles = dict(cfg.get("default_roles") or {})
+     if requested is None or not str(requested).strip():
+-        return str(cfg.get("model") or roles.get("primary") or "")
++        return str(roles.get("primary") or cfg.get("model") or "")
+     raw = str(requested).strip()
+     role = _MODEL_ROLE_ALIASES.get(raw.lower())
+-    if role and roles.get(role):
+-        return str(roles[role])
++    if role:
++        return str(roles.get(role) or cfg.get("model") or raw)
++    if roles.get(raw.lower()):
++        return str(roles[raw.lower()])
+     if raw in roles:
+         return str(roles[raw])
+     return raw
+@@ -163,6 +166,15 @@ def _forbidden_external_url(url: str) -> bool:
+     )
+ 
+ 
++def _unique_keys(api_key: str | None, api_keys: list[str] | tuple[str, ...] | None) -> list[str]:
++    ordered: list[str] = []
++    for key in [api_key, *(api_keys or ())]:
++        value = str(key or "").strip()
++        if value and value not in ordered:
++            ordered.append(value)
++    return ordered
++
++
+ def generate_openai_compatible_payload(
+     *,
+     provider: str,
+@@ -170,10 +182,12 @@ def generate_openai_compatible_payload(
+     api_key: str,
+     model: str,
+     messages: list[dict[str, str]],
++    api_keys: list[str] | tuple[str, ...] | None = None,
+     max_tokens: int = 900,
+     temperature: float = 0.0,
+     response_format: dict[str, Any] | None = None,
+     timeout: float = 60,
++    call_type: str = "generate",
+     task: str | None = "aura_fusion",
+     aspect: str | None = "fusion",
+     baseline_prompt_tokens: int | None = None,
+@@ -182,10 +196,11 @@ def generate_openai_compatible_payload(
+     context_crush: bool = True,
+     context_crush_ledger: str | None = None,
+ ) -> tuple[str | None, str | None, float, bool]:
+-    """Call an external OpenAI-compatible provider with Aura's egress guards."""
++    """Call one OpenAI-compatible provider, rotating every configured key."""
+     if _forbidden_external_url(base_url):
+         return None, "forbidden local/internal model endpoint", 0.0, False
+-    if not api_key or not str(api_key).strip():
++    keys = _unique_keys(api_key, api_keys)
++    if not keys:
+         return None, f"missing API key for provider '{provider}'", 0.0, False
+ 
+     crush_batch = None
+@@ -197,64 +212,129 @@ def generate_openai_compatible_payload(
+         tokenizer_guard = sanitize_message_payloads(messages)
+         outbound_messages = tokenizer_guard.messages
+ 
+-    payload: dict[str, Any] = {
++    base_payload: dict[str, Any] = {
+         "model": model,
+         "messages": outbound_messages,
+         "max_tokens": max_tokens,
+         "temperature": temperature,
+     }
+     if response_format:
+-        payload["response_format"] = response_format
++        base_payload["response_format"] = response_format
+ 
+-    def _metadata(schema: bool, *, retry: bool = False) -> dict[str, Any]:
++    def _metadata(schema: bool, *, retry: bool = False, key_index: int = 0) -> dict[str, Any]:
+         return {
+             "provider": provider,
+             "response_format": schema,
+             "schema_retry": retry,
++            "key_index": key_index,
++            "key_count": len(keys),
+             "context_crush": crush_batch.to_jsonable() if crush_batch is not None else None,
+             "tokenizer_guard": tokenizer_guard.to_jsonable() if tokenizer_guard is not None else None,
+         }
+ 
+     started = time.time()
+-    text, error = openai_compatible_generate(
+-        base_url,
+-        api_key,
+-        payload,
+-        timeout=timeout,
+-        task=task,
+-        aspect=aspect,
+-        baseline_prompt_tokens=baseline_prompt_tokens,
+-        baseline_output_tokens=baseline_output_tokens,
+-        baseline_cost_usd=baseline_cost_usd,
+-        savings_metadata=_metadata(bool(response_format)),
+-    )
+-    used_schema = bool(response_format and not error)
+-    if error and response_format and any(
+-        marker in str(error).lower()
+-        for marker in ("response_format", "json_schema", "schema", "400", "unsupported")
+-    ):
+-        payload.pop("response_format", None)
++    rotator = get_provider_rotator(provider, keys=keys)
++    errors: list[str] = []
++    rotated_keys = rotator.iter_keys()
++    if not rotated_keys:
++        return None, f"all keys cooling down for provider '{provider}'", time.time() - started, False
++    for key_index, key in enumerate(rotated_keys):
++        payload = dict(base_payload)
+         text, error = openai_compatible_generate(
+             base_url,
+-            api_key,
++            key,
+             payload,
+             timeout=timeout,
++            call_type=call_type,
+             task=task,
+             aspect=aspect,
+             baseline_prompt_tokens=baseline_prompt_tokens,
+             baseline_output_tokens=baseline_output_tokens,
+             baseline_cost_usd=baseline_cost_usd,
+-            savings_metadata=_metadata(False, retry=True),
++            savings_metadata=_metadata(bool(response_format), key_index=key_index),
++        )
++        used_schema = bool(response_format and not error)
++        if error and response_format and any(
++            marker in str(error).lower()
++            for marker in ("response_format", "json_schema", "schema", "400", "unsupported")
++        ):
++            payload.pop("response_format", None)
++            text, error = openai_compatible_generate(
++                base_url,
++                key,
++                payload,
++                timeout=timeout,
++                call_type=call_type,
++                task=task,
++                aspect=aspect,
++                baseline_prompt_tokens=baseline_prompt_tokens,
++                baseline_output_tokens=baseline_output_tokens,
++                baseline_cost_usd=baseline_cost_usd,
++                savings_metadata=_metadata(False, retry=True, key_index=key_index),
++            )
++            used_schema = False
++        if text and not error:
++            rotator.record_success(key)
++            return text, None, time.time() - started, used_schema
++        rotator.record_failure(key, str(error or "empty response"))
++        errors.append(f"key[{key_index}]: {error or 'empty response'}")
++    return None, "; ".join(errors), time.time() - started, False
++
++
++def generate_routed_openai_compatible_payload(
++    *,
++    messages: list[dict[str, str]],
++    model_role: str = "premium",
++    preferred_provider: str | None = None,
++    preferred_model: str | None = None,
++    secrets: dict[str, Any] | None = None,
++    allow_provider_fallback: bool = True,
++    **kwargs: Any,
