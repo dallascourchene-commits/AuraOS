@@ -1,0 +1,171 @@
+name: Materialize unified continuity manual review
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [synchronize]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: unified-memory-continuity-materialize-${{ github.event.pull_request.head.sha }}
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: >-
+      github.actor != 'github-actions[bot]' &&
+      github.head_ref == 'refactor/unified-memory-continuity' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+      TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+      PAYLOAD: .aura/refactor_payloads/unified_memory_continuity_manual_review.v1.json
+      WABOOSE_STATE: ${{ runner.temp }}/umc-waboose-state.json
+      AURA_WABOOSE_LEARNING_ROOT: ${{ runner.temp }}/umc-waboose-learning
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Bind exact reviewed transport commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -f "$PAYLOAD"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Decode reviewed files and verify hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64
+          import hashlib
+          import json
+          from pathlib import Path
+          import zlib
+
+          payload_path = Path('.aura/refactor_payloads/unified_memory_continuity_manual_review.v1.json')
+          payload = json.loads(payload_path.read_text(encoding='utf-8'))
+          expected_paths = {
+              'aura_unified_memory_continuity.py',
+              'tests/test_aura_unified_memory_continuity.py',
+              'docs/AURA_UNIFIED_MEMORY_CONTINUITY.md',
+              'docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md',
+          }
+          if payload.get('version') != 'AURA_UMC_MANUAL_REVIEW_PAYLOAD_V1':
+              raise SystemExit('unsupported payload version')
+          files = payload.get('files')
+          if not isinstance(files, dict) or set(files) != expected_paths:
+              raise SystemExit('payload path set differs from the reviewed scope')
+          for relative, record in files.items():
+              if not isinstance(record, dict):
+                  raise SystemExit(f'invalid record for {relative}')
+              compressed = base64.b64decode(record['zlib_base64'], validate=True)
+              content = zlib.decompress(compressed)
+              digest = hashlib.sha256(content).hexdigest()
+              if digest != record['sha256']:
+                  raise SystemExit(f'hash mismatch for {relative}')
+              target = Path(relative)
+              target.parent.mkdir(parents=True, exist_ok=True)
+              temporary = target.with_name(f'.{target.name}.reviewed.tmp')
+              temporary.write_bytes(content)
+              temporary.replace(target)
+          payload_path.unlink()
+          PY
+          git diff --check
+
+      - name: Install verification tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8,<9' jsonschema ruff bandit
+
+      - name: Run full focused verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q \
+            tests/test_aura_unified_memory_continuity.py \
+            tests/test_aura_relationship_compass_finalization.py
+          ruff check \
+            aura_unified_memory_continuity.py \
+            tests/test_aura_unified_memory_continuity.py
+          bandit -q -ll aura_unified_memory_continuity.py
+          python aura_coding_waboose_cli.py \
+            --repo-root . \
+            --state-file "$WABOOSE_STATE" \
+            run \
+            --request .aura/waboose_requests/unified_memory_continuity.v1.json \
+            > "${{ runner.temp }}/umc-waboose-result.json"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('${{ runner.temp }}/umc-waboose-result.json').read_text(encoding='utf-8'))
+          assert result.get('ok') is True, result
+          assert not (result.get('findings') or []), result
+          assert not (result.get('deterministic_findings') or []), result
+          assert result.get('production_mutation') is False, result
+          assert result.get('automatic_fix') is False, result
+          PY
+
+      - name: Regenerate generated architecture maps
+        shell: bash
+        run: |
+          set -euo pipefail
+          python aura_codebase_navigator.py
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s topology_map.json
+          test -s Aura_Memory/live_topology_ast.json
+          git diff --check
+
+      - name: Commit exact reviewed tree atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'AuraOS Manual Review Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            aura_unified_memory_continuity.py \
+            tests/test_aura_unified_memory_continuity.py \
+            docs/AURA_UNIFIED_MEMORY_CONTINUITY.md \
+            docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json
+          git add -u -- "$PAYLOAD"
+          git add -f Aura_Memory/live_topology_ast.json
+          git diff --cached --check
+          git commit -m 'fix: apply deep unified continuity manual review'
+          git push origin "HEAD:${TARGET_BRANCH}"
+
+      - name: Upload materialization evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unified-memory-continuity-materialization-${{ github.event.pull_request.head.sha }}
+          path: |
+            ${{ runner.temp }}/umc-waboose-result.json
+            aura_unified_memory_continuity.py
+            tests/test_aura_unified_memory_continuity.py
+            docs/AURA_UNIFIED_MEMORY_CONTINUITY.md
+            docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md
+            .aura/CODEMAP.json
+            .aura/CODEMAP.md
+            topology_map.json
+            Aura_Memory/live_topology_ast.json
+          if-no-files-found: warn
+          retention-days: 14
