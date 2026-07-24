@@ -44,9 +44,35 @@ jobs:
 
       - name: Format lint and compile repair
         run: |
-          ruff format scripts/aura_runtime_refactor_harness.py tests/test_aura_runtime_refactor_harness.py
-          ruff check scripts/aura_runtime_refactor_harness.py tests/test_aura_runtime_refactor_harness.py
-          python -m py_compile scripts/aura_runtime_refactor_harness.py
+          set -o pipefail
+          mkdir -p /tmp/aura-strict-bool-diagnostics
+          ruff format \
+            scripts/aura_runtime_refactor_harness.py \
+            tests/test_aura_runtime_refactor_harness.py \
+            2>&1 | tee /tmp/aura-strict-bool-diagnostics/ruff-format-before.log
+          ruff check --fix \
+            scripts/aura_runtime_refactor_harness.py \
+            tests/test_aura_runtime_refactor_harness.py \
+            2>&1 | tee /tmp/aura-strict-bool-diagnostics/ruff-fix.log
+          ruff format \
+            scripts/aura_runtime_refactor_harness.py \
+            tests/test_aura_runtime_refactor_harness.py \
+            2>&1 | tee /tmp/aura-strict-bool-diagnostics/ruff-format-after.log
+          ruff check \
+            scripts/aura_runtime_refactor_harness.py \
+            tests/test_aura_runtime_refactor_harness.py \
+            2>&1 | tee /tmp/aura-strict-bool-diagnostics/ruff-final.log
+          python -m py_compile scripts/aura_runtime_refactor_harness.py \
+            2>&1 | tee /tmp/aura-strict-bool-diagnostics/py-compile.log
+
+      - name: Upload strict-boolean diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-strict-bool-diagnostics
+          path: /tmp/aura-strict-bool-diagnostics
+          if-no-files-found: warn
+          retention-days: 3
 
       - name: Run focused and retained tests
         run: |
