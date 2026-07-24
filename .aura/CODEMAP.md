@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1384
-- **total_bytes**: 56557352
-- **text_tokens_est**: 4687092
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 184, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 913, 'schema_or_lexicon': 167, 'support_file': 54}
+- **file_count**: 1413
+- **total_bytes**: 56630753
+- **text_tokens_est**: 4705406
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 184, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 913, 'schema_or_lexicon': 173, 'support_file': 76}
 - **topology_nodes**: 10473
 - **topology_edges**: 24589
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 30425.41
+- **elapsed_ms**: 29207.17
 
 ## Coverage
 
-- **included_file_count**: 1384
+- **included_file_count**: 1413
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=139, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=140, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
 
 ## Command Index
 
@@ -284,17 +284,17 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ### cognition_and_memory
 - `.aura/memory_apertures/coding_localize.v1.json`
 - `.aura/waboose_requests/unified_memory_continuity.v1.json`
-- `.github/workflows/unified-memory-continuity-codemap-sync.yml`
-- `.github/workflows/unified-memory-continuity-verification.yml`
+- `.github/workflows/unified-memory-completion-probe.yml`
+- `.github/workflows/unified-memory-continuity-deep-final-materialize.yml`
+- `.github/workflows/unified-memory-continuity-deep-v2-target.yml`
+- `.github/workflows/unified-memory-continuity-label-publish.yml`
+- `.github/workflows/unified-memory-continuity-main-publish.yml`
+- `.github/workflows/unified-memory-continuity-materialize.yml`
+- `.github/workflows/unified-memory-continuity-verified-publish-command.yml`
 - `.mempalace/aura_thought.txt`
 - `.mempalace/lexicon.json`
 - `.mempalace/nexus.json`
-- `.mempalace/temp_prompt.txt`
-- `async_palace.py`
-- `aura_attention_palace.py`
-- `aura_blockchain/memory_staking.py`
-- `aura_civic_memory.py`
-- ... 26 more; query CODEMAP.json for exact file cards
+- ... 31 more; query CODEMAP.json for exact file cards
 
 ### mesh_and_routing
 - `.aura/PROVIDER_ROUTING_MATERIALIZE_REQUEST`
@@ -354,7 +354,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
-- ... 1185 more; query CODEMAP.json for exact file cards
+- ... 1209 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
