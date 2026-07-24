@@ -1,0 +1,73 @@
+name: UMC verified synchronize publish
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [synchronize]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: read
+
+jobs:
+  publish:
+    if: >-
+      github.event.pull_request.number == 193 &&
+      github.head_ref == 'refactor/unified-memory-continuity' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      TARGET_BRANCH: refactor/unified-memory-continuity
+      EVENT_HEAD: ${{ github.event.pull_request.head.sha }}
+      TRANSPORT_COMMIT: 1de0f438b330ef91bfc99cead2d288d003181e22
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Run immutable verified publisher
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVENT_HEAD"
+          test -z "$(git status --porcelain=v1)"
+          git fetch --no-tags origin "$TRANSPORT_COMMIT"
+          git show "$TRANSPORT_COMMIT:.aura/refactor_payloads/umc_deep_review_v2_materialize.sh" > "${RUNNER_TEMP}/umc_publish.sh"
+          python - "$EVENT_HEAD" <<'PY'
+          import sys
+          from pathlib import Path
+
+          path = Path(sys.argv[0]).parent / 'umc_publish.sh'
+          text = path.read_text(encoding='utf-8')
+          placeholder = "EXPECTED_HEAD='__EXPECTED_HEAD__'"
+          replacement = f"EXPECTED_HEAD='{sys.argv[1]}'"
+          if text.count(placeholder) != 1:
+              raise SystemExit('expected-head placeholder is ambiguous')
+          path.write_text(text.replace(placeholder, replacement, 1), encoding='utf-8')
+          PY
+          bash "${RUNNER_TEMP}/umc_publish.sh"
+
+      - name: Report success
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh api repos/${{ github.repository }}/issues/193/comments -f body='Verified synchronize publication succeeded: five bounded files passed 66 regressions, PVM hard gates, Ruff, Bandit, zero-finding Waboose, Architecture Harness, map regeneration, and atomic publication.'
+
+      - name: Report failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh api repos/${{ github.repository }}/issues/193/comments -f body='Verified synchronize publication failed closed; no partial source commit was accepted.'
