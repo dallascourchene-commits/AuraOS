@@ -95,8 +95,8 @@ The harness enforces:
 
 - canonical UTF-8 JSON profiles no larger than 256 KiB;
 - repository-relative, traversal-free profile and requirements paths;
-- loopback HTTP readiness URLs with explicit ports and no credentials;
-- bounded command counts, argument counts, argument sizes, timeouts, output capture, and artifact counts;
+- literal loopback HTTP readiness URLs with explicit ports, no credentials, and redirects disabled;
+- bounded command counts, argument counts, argument sizes, timeouts, continuously drained 64 KiB stdout/stderr tails, and artifact counts/sizes;
 - no shell command execution;
 - an environment allowlist rather than blind inheritance;
 - rejection of secret-bearing environment keys declared by a profile;

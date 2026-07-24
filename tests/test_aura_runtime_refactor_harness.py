@@ -6,7 +6,9 @@ import socket
 
 import pytest
 
+from scripts.aura_architecture_harness import _runtime_command_index
 from scripts.aura_runtime_refactor_harness import (
+    MAX_OUTPUT_BYTES,
     PROFILE_VERSION,
     RuntimeHarnessError,
     load_runtime_profile,
@@ -25,6 +27,7 @@ def _write_profile(
     port: int,
     *,
     readiness_url: str | None = None,
+    verification_code: str = "print('verified')",
 ) -> Path:
     profile = {
         "version": PROFILE_VERSION,
@@ -33,8 +36,7 @@ def _write_profile(
         "environment": {"create_venv": False, "requirements": []},
         "server": {
             "command": ["{python}", "server.py", str(port)],
-            "readiness_url": readiness_url
-            or f"http://127.0.0.1:{port}/ready",
+            "readiness_url": readiness_url or f"http://127.0.0.1:{port}/ready",
             "readiness_timeout_seconds": 10,
         },
         "probe": {
@@ -45,9 +47,7 @@ def _write_profile(
             "success_json": "browser-evidence.json",
             "success_field": "ok",
         },
-        "verification_commands": [
-            ["{python}", "-c", "print('verified')"]
-        ],
+        "verification_commands": [["{python}", "-c", verification_code]],
     }
     path = root / "profile.json"
     path.write_text(json.dumps(profile), encoding="utf-8")
@@ -58,6 +58,8 @@ def _write_fixture(root: Path) -> None:
     (root / "server.py").write_text(
         """from http.server import BaseHTTPRequestHandler, HTTPServer
 import sys
+
+print("server-output-" + "s" * 70000, flush=True)
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -129,6 +131,11 @@ def test_runtime_profile_starts_probes_verifies_and_stops(
     assert result["probe"]["returncode"] == 0
     assert result["verification"][0]["returncode"] == 0
     assert result["artifacts"][0]["present"] is True
+    assert result["artifacts"][0]["within_size_limit"] is True
+    assert result["server_output"]["stdout"]["truncated"] is True
+    assert result["server_capture_complete"] is True
+    assert result["command_capture_complete"] is True
+    assert (output / "server.stdout.log").stat().st_size <= MAX_OUTPUT_BYTES
     assert result["production_mutation"] is False
     assert result["automatic_fix"] is False
     assert result["automatic_merge"] is False
@@ -166,3 +173,34 @@ def test_runtime_profile_binds_failed_baseline_to_repair(
     assert result["ok"] is True
     assert result["cycle_state"] == "REPAIRED_AND_VERIFIED"
     assert result["baseline"]["run_digest"] == "a" * 64
+
+
+def test_runtime_command_dispatch_ignores_objective_words() -> None:
+    assert _runtime_command_index(["--repo-root", ".", "runtime"]) == 2
+    assert _runtime_command_index(["--repo-root", ".", "run", "--objective", "inspect runtime"]) is None
+
+
+def test_runtime_command_output_is_streamed_and_bounded(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    root.mkdir()
+    output = tmp_path / "evidence"
+    _write_fixture(root)
+    profile = _write_profile(
+        root,
+        _free_port(),
+        verification_code=("import sys;print('x' * 70000);print('y' * 70000, file=sys.stderr)"),
+    )
+    result = run_runtime_profile(
+        root,
+        profile_path=profile.name,
+        output_dir=output,
+    )
+    receipt = result["verification"][0]
+    assert result["ok"] is True
+    assert receipt["capture_complete"] is True
+    assert receipt["stdout"]["truncated"] is True
+    assert receipt["stderr"]["truncated"] is True
+    assert receipt["stdout"]["total_bytes"] > MAX_OUTPUT_BYTES
+    assert receipt["stderr"]["total_bytes"] > MAX_OUTPUT_BYTES
+    assert (output / "verify-00.stdout.log").stat().st_size <= MAX_OUTPUT_BYTES
+    assert (output / "verify-00.stderr.log").stat().st_size <= MAX_OUTPUT_BYTES
