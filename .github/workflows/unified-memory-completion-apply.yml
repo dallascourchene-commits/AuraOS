@@ -7,12 +7,16 @@ on:
     paths:
       - .github/workflows/unified-memory-completion-apply.yml
       - .github/scripts/apply_umc_completion.py
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
   apply:
+    if: github.event_name == 'push' || github.head_ref == 'refactor/unified-memory-continuity-completion'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
