@@ -1,0 +1,111 @@
+name: Apply PR 198 Review Fixes
+
+on:
+  push:
+    branches:
+      - refactor/unified-memory-continuity-completion
+    paths:
+      - .github/workflows/pr198-review-fixes.yml
+      - .github/scripts/apply_pr198_review_fixes.py
+
+permissions:
+  contents: write
+
+jobs:
+  apply-review-fixes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/unified-memory-continuity-completion
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install verification dependencies
+        run: python -m pip install -r requirements.txt pytest
+
+      - name: Apply exact review fixes
+        run: python .github/scripts/apply_pr198_review_fixes.py
+
+      - name: Format and lint changed review surface
+        shell: bash
+        run: |
+          python -m ruff format \
+            aura_unified_memory_continuity_toolchain.py \
+            aura_architect_council_v3.py \
+            aura_agent_arena_mcp.py \
+            tests/test_aura_unified_memory_continuity_toolchain.py
+          python -m ruff check \
+            aura_unified_memory_continuity_toolchain.py \
+            tests/test_aura_unified_memory_continuity_toolchain.py
+          python -m ruff check --select F821,E9 \
+            aura_architect_council_v3.py \
+            aura_agent_arena_mcp.py
+
+      - name: Compile and run focused regression suite
+        shell: bash
+        run: |
+          python -m py_compile \
+            aura_unified_memory_continuity_toolchain.py \
+            aura_architect_council_v3.py \
+            aura_agent_arena_mcp.py \
+            tests/test_aura_unified_memory_continuity_toolchain.py
+          python -m pytest -q \
+            tests/test_aura_unified_memory_continuity_toolchain.py \
+            tests/test_aura_unified_memory_continuity.py \
+            tests/test_aura_agent_arena_bridge.py \
+            tests/test_aura_agent_arena_mcp.py \
+            tests/test_aura_forge.py \
+            tests/test_aura_arena_persistence_adapters.py
+
+      - name: Run focused Coding Waboose review
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          source = Path('.aura/waboose_requests/unified_memory_continuity.v1.json')
+          request = json.loads(source.read_text(encoding='utf-8'))
+          request['changed_files'] = [
+              'aura_unified_memory_continuity.py',
+              'aura_unified_memory_continuity_toolchain.py',
+              'aura_agent_arena_bridge.py',
+              'aura_agent_arena_mcp.py',
+              'aura_architect_council_v3.py',
+              'aura_arena_persistence_adapters.py',
+              'aura_forge.py',
+              'tests/test_aura_unified_memory_continuity.py',
+              'tests/test_aura_unified_memory_continuity_toolchain.py',
+          ]
+          Path('/tmp/pr198-waboose.json').write_text(
+              json.dumps(request, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          PY
+          python aura_coding_waboose_cli.py run --request /tmp/pr198-waboose.json
+
+      - name: Remove temporary transport and restore generated maps
+        shell: bash
+        run: |
+          git checkout HEAD -- .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
+          git rm -f \
+            .github/scripts/apply_pr198_review_fixes.py \
+            .github/workflows/pr198-review-fixes.yml
+
+      - name: Commit verified review fixes
+        shell: bash
+        run: |
+          git config user.name "AuraOS Refactor Harness"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            aura_unified_memory_continuity_toolchain.py \
+            aura_architect_council_v3.py \
+            aura_agent_arena_mcp.py \
+            tests/test_aura_unified_memory_continuity_toolchain.py
+          git commit -m "fix: resolve unified memory continuity review findings"
+          git push origin HEAD:refactor/unified-memory-continuity-completion
