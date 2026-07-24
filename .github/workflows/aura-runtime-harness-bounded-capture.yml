@@ -170,12 +170,14 @@ jobs:
       - name: Publish exact verified runtime repair
         env:
           TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
           git config user.name "AuraOS Runtime Harness"
           git config user.email "aura-runtime-harness@users.noreply.github.com"
           git add -A
           git commit -m "fix(runtime): repair Construction demo and integrate E2E harness"
-          git fetch --no-tags origin "$TARGET_BRANCH"
-          git rebase "origin/$TARGET_BRANCH"
-          git push origin HEAD:"$TARGET_BRANCH"
+          remote_head="$(git ls-remote origin "refs/heads/$TARGET_BRANCH" | awk '{print $1}')"
+          test -n "$remote_head"
+          test "$remote_head" = "$EXPECTED_HEAD"
+          git push origin "HEAD:refs/heads/$TARGET_BRANCH"
