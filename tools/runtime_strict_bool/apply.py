@@ -19,7 +19,7 @@ def main() -> None:
         '''def _strict_bool(value: Any, label: str, *, default: bool) -> bool:
     if value is None:
         return default
-    if type(value) is not bool:
+    if not isinstance(value, bool):
         raise RuntimeHarnessError(f"{label} must be a boolean")
     return value
 
