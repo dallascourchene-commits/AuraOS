@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
-"""Reproducible Aura architecture harness with GitHub publication routing guidance.
+"""Reproducible Aura architecture and runtime-refactor harness.
 
 The original PR #182 implementation is preserved byte-for-byte in
 ``scripts.aura_architecture_harness_core``. This stable entrypoint keeps every
 existing command and private compatibility surface while adding proposal-only
-GitHub workflow discovery and atomic Git-tree publication guidance to doctor,
-handoff, and run outputs. It still performs no remote mutation itself.
+GitHub workflow discovery, atomic Git-tree publication guidance, and the
+runtime profile command. Runtime profiles reproduce and verify a local
+application in an isolated environment, but never patch, commit, push, open a
+pull request, or merge.
 """
+
 from __future__ import annotations
 
+from collections.abc import Iterable
+
+# ruff: noqa: E402 -- repository bootstrap must precede root-level imports.
 import copy
 import json
 from pathlib import Path
 import sys
-from typing import Any, Iterable
+from typing import Any
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(_REPO_ROOT) not in sys.path:
@@ -26,8 +32,14 @@ except ModuleNotFoundError:  # Direct execution from the scripts directory.
 
 from aura_architecture_harness_git_tree_routing import (
     AUTHORITY_CONTRACT as GITHUB_ROUTING_AUTHORITY_CONTRACT,
+)
+from aura_architecture_harness_git_tree_routing import (
     VERSION as GITHUB_ROUTING_VERSION,
+)
+from aura_architecture_harness_git_tree_routing import (
     WORKFLOW_DISCOVERY as GITHUB_WORKFLOW_DISCOVERY,
+)
+from aura_architecture_harness_git_tree_routing import (
     pr184_atomic_publication_case_study,
 )
 
@@ -35,6 +47,10 @@ from aura_architecture_harness_git_tree_routing import (
 for _name in dir(_core):
     if not _name.startswith("__"):
         globals()[_name] = getattr(_core, _name)
+
+# Explicit aliases preserve the dynamic compatibility seam for static analysis.
+DEFAULT_INLINE_MAX_BYTES = _core.DEFAULT_INLINE_MAX_BYTES
+_read_git_blob = _core._read_git_blob
 
 _ORIGINAL_DOCTOR = _core.doctor
 _ORIGINAL_CREATE_AI_HANDOFF = _core.create_ai_handoff
@@ -117,8 +133,38 @@ _core.create_ai_handoff = create_ai_handoff
 _core.run_architecture = run_architecture
 
 
+def _runtime_command_index(arguments: list[str]) -> int | None:
+    index = 0
+    while index < len(arguments):
+        value = arguments[index]
+        if value == "--repo-root":
+            index += 2
+            continue
+        if value.startswith("-"):
+            index += 1
+            continue
+        return index if value == "runtime" else None
+    return None
+
+
 def main(argv: Iterable[str] | None = None) -> int:
-    return _core.main(argv)
+    arguments = list(argv) if argv is not None else list(sys.argv[1:])
+    runtime_index = _runtime_command_index(arguments)
+    if runtime_index is not None:
+        runtime_arguments = [
+            *arguments[:runtime_index],
+            *arguments[runtime_index + 1 :],
+        ]
+        try:
+            from scripts.aura_runtime_refactor_harness import (
+                main as runtime_main,
+            )
+        except ModuleNotFoundError:  # Direct execution from scripts directory.
+            from aura_runtime_refactor_harness import (  # type: ignore[no-redef]
+                main as runtime_main,
+            )
+        return runtime_main(runtime_arguments)
+    return _core.main(arguments)
 
 
 if __name__ == "__main__":

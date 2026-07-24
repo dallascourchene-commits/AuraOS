@@ -345,13 +345,80 @@ test("Construction demo browser refuses real-pack synthetic substitution and ser
 });
 
 
-test("Construction recording UI advertises only implemented representation modes", async () => {
+test("Construction recording UI exposes verified fallback Mesh, Splats, and Hybrid modes", async () => {
   const { readFile } = await import("node:fs/promises");
   const source = await readFile(
     new URL("../../aura_spatial_web/construction_demo_app.js", import.meta.url),
     "utf8",
   );
-  assert.match(source, /setRepresentationMode\("SPLATS"\)/);
-  assert.match(source, /button\.disabled = !supported/);
-  assert.match(source, /Browser GLB decoding and mesh drawing are not implemented/);
+  assert.match(source, /createConstructionWireframePass/);
+  assert.match(source, /setRepresentationMode\("HYBRID"\)/);
+  assert.match(source, /button\.disabled = false/);
+  assert.match(source, /bounds-derived wireframe mesh fallback/);
+  assert.doesNotMatch(source, /button\.disabled = !supported/);
+});
+
+
+
+test("Construction runtime diagnostic keeps dependency and browser-health gates wired", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const workflow = await readFile(
+    new URL("../../.github/workflows/aura-construction-runtime-diagnostic.yml", import.meta.url),
+    "utf8",
+  );
+  const probe = await readFile(
+    new URL("../runtime/construction_demo_browser_probe.cjs", import.meta.url),
+    "utf8",
+  );
+  assert.match(workflow, /requirements\.txt/);
+  assert.match(workflow, /persist-credentials: false/);
+  assert.match(probe, /consoleMessages\.some\(\(message\) => message\.type === "error"\)/);
+  assert.match(probe, /requires an intact WebGL2 context/);
+  assert.match(probe, /rendered no storey controls/);
+  assert.match(probe, /let browser = null/);
+  assert.match(probe, /if \(browser\)/);
+});
+
+
+
+test("Construction browser proof requires visible modes and intentional dissolution", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const probe = await readFile(
+    new URL("../runtime/construction_demo_browser_probe.cjs", import.meta.url),
+    "utf8",
+  );
+  assert.match(probe, /nonBackgroundSamples/);
+  assert.match(probe, /wireframeLines/);
+  assert.match(probe, /representation did not become active/);
+  assert.match(probe, /finalSceneState === "Dissolved"/);
+  assert.match(probe, /unexpectedContextLoss/);
+  assert.match(probe, /enable-unsafe-swiftshader/);
+});
+
+
+
+test("Construction visual proof reads the user-visible screenshot, not the transient default framebuffer", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const probe = await readFile(
+    new URL("../runtime/construction_demo_browser_probe.cjs", import.meta.url),
+    "utf8",
+  );
+  const profile = JSON.parse(
+    await readFile(
+      new URL("../../.aura/runtime_profiles/construction_demo.v1.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  assert.match(probe, /PNG\.sync\.read/);
+  assert.match(probe, /snapshotCanvas/);
+  assert.match(probe, /chromaticPixels/);
+  assert.doesNotMatch(probe, /nonBackgroundSamples < 1/);
+  for (const name of [
+    "initial-canvas.png",
+    "mode-MESH-canvas.png",
+    "mode-SPLATS-canvas.png",
+    "mode-HYBRID-canvas.png",
+  ]) {
+    assert.ok(profile.probe.required_artifacts.includes(name));
+  }
 });

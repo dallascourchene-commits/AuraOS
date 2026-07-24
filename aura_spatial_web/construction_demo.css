@@ -49,6 +49,9 @@ input[type="range"] { width: 100%; accent-color: var(--pink); }
 .viewport-wrap { position: relative; min-width: 0; overflow: hidden; border: 1px solid rgba(130,217,255,.26); border-radius: 1rem; background: radial-gradient(circle, rgba(86,35,143,.24), rgba(3,5,14,.92) 68%); box-shadow: 0 0 3rem rgba(90,35,180,.16), inset 0 0 3rem rgba(87,209,255,.04); }
 .viewport-wrap::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1; background-image: linear-gradient(rgba(119,221,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(119,221,255,.04) 1px, transparent 1px); background-size: 2.5rem 2.5rem; mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent); }
 canvas { display: block; width: 100%; height: 100%; min-height: 34rem; }
+#construction-mesh-overlay { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.construction-wireframe-storey line { stroke: rgba(108, 245, 255, .82); stroke-width: 2; vector-effect: non-scaling-stroke; filter: drop-shadow(0 0 4px rgba(108, 245, 255, .5)); }
+.construction-wireframe-storey text { fill: #f7f0ff; font: 600 12px Inter, ui-sans-serif, system-ui, sans-serif; paint-order: stroke; stroke: rgba(7, 5, 18, .9); stroke-width: 3px; }
 .viewport-hud { position: absolute; z-index: 2; top: .75rem; left: .75rem; right: .75rem; display: flex; justify-content: space-between; gap: 1rem; pointer-events: none; }
 .viewport-hud p { margin: 0; padding: .45rem .65rem; border: 1px solid var(--line); border-radius: .55rem; background: rgba(8,5,20,.72); font-size: .74rem; backdrop-filter: blur(12px); }
 #intent-line { color: var(--cyan); }

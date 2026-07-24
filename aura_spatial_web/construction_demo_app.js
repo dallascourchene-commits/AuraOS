@@ -1,4 +1,5 @@
 import { createConstructionWebGL2SceneRenderer } from "./construction_scene_renderer.js";
+import { createConstructionWireframePass } from "./construction_wireframe_pass.js";
 
 const GAUSSIAN_REPRESENTATION_DIGEST =
   "5e4620fc5ea92315714eaf3bfe0247f4a18f6ed51997efb9c5c389d20536d7b7";
@@ -400,9 +401,15 @@ async function main() {
   $("#attribution").textContent = state.packet.attribution;
   resizeCanvas();
   const canvas = $("#construction-canvas");
+  const meshOverlay = $("#construction-mesh-overlay");
+  const drawMeshPass = createConstructionWireframePass({
+    overlay: meshOverlay,
+    getCamera: () => state.renderer?.presentationRenderer?.camera,
+    getCanvas: () => canvas,
+  });
   state.renderer = createConstructionWebGL2SceneRenderer({
     canvas,
-    drawMeshPass: async () => () => {},
+    drawMeshPass,
     drawOverlayPass: async (model) => renderOverlayModel(model),
     maxVisibleSplats: 250_000,
   });
@@ -410,14 +417,16 @@ async function main() {
     meshPayloads: meshPayloads(state.packet.scene),
     gaussianPayloads: gaussianPayloads(state.packet.scene),
   });
-  state.renderer.setRepresentationMode("SPLATS");
+  state.renderer.setRepresentationMode("HYBRID");
   document.querySelectorAll("button[data-mode]").forEach((button) => {
-    const supported = button.dataset.mode === "SPLATS";
-    button.disabled = !supported;
-    button.classList.toggle("active", supported);
-    if (!supported) {
-      button.title = "Browser GLB decoding and mesh drawing are not implemented; mode is fail-closed";
-    }
+    button.disabled = false;
+    button.classList.toggle("active", button.dataset.mode === "HYBRID");
+    button.title =
+      button.dataset.mode === "MESH"
+        ? "Deterministic bounds-derived wireframe mesh fallback"
+        : button.dataset.mode === "HYBRID"
+          ? "Gaussian splats plus deterministic wireframe mesh fallback"
+          : "Deterministic Gaussian splat presentation";
   });
   buildControls();
   await present();

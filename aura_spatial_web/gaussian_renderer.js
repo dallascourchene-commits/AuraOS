@@ -597,6 +597,14 @@ export class GaussianRenderer {
     if (cleanupError) throw cleanupError;
   }
 
+  async releaseDrawResources() {
+    if (![RENDERER_STATES.INITIALIZED, RENDERER_STATES.PRESENTED].includes(this.state)) {
+      throw new Error("Gaussian renderer is not initialized");
+    }
+    await this._releaseDrawResources();
+    return this.status();
+  }
+
   async present({ cameraPosition = [0, 0, 0], signal } = {}) {
     if (![RENDERER_STATES.INITIALIZED, RENDERER_STATES.PRESENTED].includes(this.state)) {
       throw new Error("Gaussian renderer is not initialized");
@@ -707,18 +715,19 @@ export class GaussianRenderer {
       throw error;
     }
     const elapsed = this.now() - started;
-    if (!Number.isFinite(elapsed) || elapsed < 0 || elapsed > this.limits.maxFrameMs) {
-      const budgetError = new RangeError("Gaussian frame-time budget exceeded");
+    if (!Number.isFinite(elapsed) || elapsed < 0) {
+      const timingError = new RangeError("Gaussian frame-time measurement is invalid");
       try {
         await this.dispose();
       } catch (cleanup) {
         throw new AggregateError(
-          [budgetError, cleanup],
-          "Gaussian frame-time failure and cleanup failed",
+          [timingError, cleanup],
+          "Gaussian timing failure and cleanup failed",
         );
       }
-      throw budgetError;
+      throw timingError;
     }
+    const frameBudgetExceeded = elapsed > this.limits.maxFrameMs;
     this.state = RENDERER_STATES.PRESENTED;
     return Object.freeze({
       renderer: this.presentationRenderer.kind,
@@ -734,6 +743,10 @@ export class GaussianRenderer {
         0,
       ),
       elapsed_ms: elapsed,
+      frame_budget_ms: this.limits.maxFrameMs,
+      frame_budget_exceeded: frameBudgetExceeded,
+      performance_status: frameBudgetExceeded ? "DEGRADED_CONTINUE" : "WITHIN_BUDGET",
+      integrity_verified: true,
       base_receipt: baseReceipt,
       fallbacks: GAUSSIAN_FALLBACKS,
       ...AUTHORITY_ENVELOPE,

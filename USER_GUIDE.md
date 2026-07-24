@@ -2,7 +2,7 @@
 
 > Operator guide for the current sovereign, local-first, Arena-based AuraOS architecture
 
-**Audit window:** architecture and work reviewed through July 22, 2026, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S5 and Construction-only S6, Coding Relationship Compass C0–C9, typed Coding Waboose review learning, source-integrity/Crucible replay hardening, browser/interchange/Gaussian security, and the atomic Agent Bridge GitHub publication lane.
+**Audit window:** architecture and work reviewed through July 24, 2026, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S6, Construction Arena G0–G8, Coding Relationship Compass C0–C9, typed Coding Waboose review learning, source-integrity/Crucible replay hardening, browser/interchange/Gaussian security, the Runtime Refactor Harness, and the atomic Agent Bridge GitHub publication lane.
 
 **CODEMAP rule:** regenerate navigation after architecture or source changes. Do not trust historical line numbers when the current tree can be inspected directly.
 
@@ -105,6 +105,7 @@ The workflow continues to publish the exact full Git archive separately for fore
 | **Aura Forge API** | Frozen-plan verified engineering runs with an exact Arena Evidence Contract and bounded worker sessions | `from aura_forge import AuraForgeRuntime` |
 | **Aura Gate** | Forge-specific OIDC identity, static policy, expiring leases, governed egress, MCP/A2A translation, audit, and private serving | `python3 -m aura_gate_server` |
 | **Coding Waboose** | Graph-guided diff review, deterministic scans, coding-agent focus, exact-source corroboration, and Forge repair handoff | `python3 aura_coding_waboose_cli.py run --request review_request.json` |
+| **Runtime Refactor Harness** | Isolated loopback application boot, real browser/probe interaction, runtime artifacts, retained gates, and before/after repair binding | `python3 scripts/aura_architecture_harness.py --repo-root . runtime --profile <profile> --output-dir <external-dir>` |
 | **Coding Arena** | Visual code topology, exact source regions, route simulation, and capsule review | `python3 aura_coding_arena_server.py --demo` |
 | **Human Agent Arena** | Human/Aura/agent workflows, gate dialogue, attempts, emergent evidence, Construction profile, persistence, and tools | `python3 aura_human_agent_arena_server.py --repo-root . --demo` |
 | **Aura Showcase** | Guided four-surface Civic, Human Agent, Observatory, and Crucible demonstration | `python3 aura_showcase_server.py --demo-project winnipeg_pathways` |
@@ -192,6 +193,37 @@ Set `AURA_GITHUB_TOKEN` only in the operator environment. Never pass it through 
 
 Typed review lessons and Crucible replay help Coding Waboose look for previously observed defect classes, including authority aliases, protected metadata overrides, count-only bounds, unsafe source paths, URI aliases, schema/runtime drift, unwired regressions, and stale evidence claims. Treat detector output as a review lead until exact current source and tests corroborate it. A clean replay is evidence for the exact reviewed head, not a permanent guarantee about future commits.
 <!-- AURA_JULY20_OPERATOR_UPDATE:END -->
+
+### Reproduce and verify a real runtime before declaring a refactor complete
+
+Use a repository-owned Runtime Refactor profile when a feature includes a server, browser, renderer, process lifecycle, protocol, or multi-component integration:
+
+```bash
+python scripts/aura_architecture_harness.py \
+  --repo-root . \
+  runtime \
+  --profile .aura/runtime_profiles/construction_demo.v1.json \
+  --output-dir ../AuraOS-runtime-evidence/before \
+  --install-requirements
+```
+
+The harness must write evidence outside the checkout. It records exact Git identity, readiness, bounded stdout/stderr, probe receipts, required artifact hashes, retained verification, and process dissolution. It fails when the tree changes during observation.
+
+After an authorized repair, rerun the exact profile and bind the failed baseline:
+
+```bash
+python scripts/aura_architecture_harness.py \
+  --repo-root . \
+  runtime \
+  --profile .aura/runtime_profiles/construction_demo.v1.json \
+  --output-dir ../AuraOS-runtime-evidence/after \
+  --baseline-receipt ../AuraOS-runtime-evidence/before/runtime_harness_receipt.json \
+  --install-requirements
+```
+
+A successful after-run may report `REPAIRED_AND_VERIFIED`. That proves the declared runtime profile for one exact tree; it is not patch, publication, production, or merge authority. Run Waboose and the subsystem's retained gates before the human decision.
+
+For the Construction demo, the profile verifies the real local server, WebGL2 availability, canvas dimensions, storeys, orbit/zoom/explode/collapse, Mesh/Splats/Hybrid, the complete director tour, browser errors, screenshots, and zero-resource dissolution. See `docs/AURA_RUNTIME_REFACTOR_HARNESS.md`.
 
 ## 5. Orient yourself before changing code
 
