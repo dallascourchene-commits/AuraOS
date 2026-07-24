@@ -24,7 +24,7 @@ jobs:
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha }}
       TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
-      PAYLOAD: .aura/refactor_payloads/unified_memory_continuity_manual_review.v1.json
+      PAYLOAD_GLOB: .aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-*
       WABOOSE_STATE: ${{ runner.temp }}/umc-waboose-state.json
       AURA_WABOOSE_LEARNING_ROOT: ${{ runner.temp }}/umc-waboose-learning
     steps:
@@ -38,7 +38,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
-          test -f "$PAYLOAD"
+          compgen -G "$PAYLOAD_GLOB" > /dev/null
 
       - uses: actions/setup-python@v5
         with:
@@ -56,8 +56,12 @@ jobs:
           from pathlib import Path
           import zlib
 
-          payload_path = Path('.aura/refactor_payloads/unified_memory_continuity_manual_review.v1.json')
-          payload = json.loads(payload_path.read_text(encoding='utf-8'))
+          payload_dir = Path('.aura/refactor_payloads')
+          parts = sorted(payload_dir.glob('unified_memory_continuity_manual_review.v1.part-*'))
+          if not parts:
+              raise SystemExit('review payload parts are missing')
+          payload_text = ''.join(part.read_text(encoding='utf-8') for part in parts)
+          payload = json.loads(payload_text)
           expected_paths = {
               'aura_unified_memory_continuity.py',
               'tests/test_aura_unified_memory_continuity.py',
@@ -82,7 +86,8 @@ jobs:
               temporary = target.with_name(f'.{target.name}.reviewed.tmp')
               temporary.write_bytes(content)
               temporary.replace(target)
-          payload_path.unlink()
+          for part in parts:
+              part.unlink()
           PY
           git diff --check
 
@@ -146,7 +151,7 @@ jobs:
             .aura/CODEMAP.json \
             .aura/CODEMAP.md \
             topology_map.json
-          git add -u -- "$PAYLOAD"
+          git add -u -- .aura/refactor_payloads
           git add -f Aura_Memory/live_topology_ast.json
           git diff --cached --check
           git commit -m 'fix: apply deep unified continuity manual review'
