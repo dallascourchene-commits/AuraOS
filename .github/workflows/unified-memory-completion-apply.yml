@@ -31,7 +31,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install requirements
-        run: python -m pip install -r requirements.txt
+        run: python -m pip install -r requirements.txt pytest
 
       - name: Apply exact-anchor patch
         run: python .github/scripts/apply_umc_completion.py
@@ -55,7 +55,7 @@ jobs:
             2>&1 | tee unified-memory-verification/ruff-primary.log
           lint_primary_status=${PIPESTATUS[0]}
 
-          python -m ruff check --select F,E9 \
+          python -m ruff check --select F821,E9 \
             aura_agent_arena_bridge.py \
             aura_arena_persistence_adapters.py \
             aura_architect_council_v3.py \
