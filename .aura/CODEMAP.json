@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784929865,
+  "generated_at_unix": 1784930409,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1413,
+    "included_file_count": 1414,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -788,6 +788,7 @@
       "aura_trace_graph.py",
       "aura_understand_graph_bridge.py",
       "aura_unified_memory_continuity.py",
+      "aura_unified_memory_continuity_toolchain.py",
       "aura_unifier.sh",
       "aura_upgrade_spec.docx",
       "aura_usage_normalizer.py",
@@ -1435,23 +1436,23 @@
     ]
   },
   "summary": {
-    "file_count": 1413,
-    "total_bytes": 56630753,
-    "text_tokens_est": 4705406,
+    "file_count": 1414,
+    "total_bytes": 56630764,
+    "text_tokens_est": 4705409,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 51,
       "knowledge_artifact": 184,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 913,
+      "python_module": 914,
       "schema_or_lexicon": 173,
       "support_file": 76
     },
-    "topology_nodes": 10473,
+    "topology_nodes": 10474,
     "topology_edges": 24589,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 29207.17
+    "elapsed_ms": 29641.74
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1528,6 +1529,7 @@
       "aura_symbolic_trace_memory.py",
       "aura_topology_prior_memory.py",
       "aura_unified_memory_continuity.py",
+      "aura_unified_memory_continuity_toolchain.py",
       "cognitive_router.py",
       "cognitive_search.rs",
       "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
@@ -174739,6 +174741,60 @@
       ]
     },
     {
+      "path": "aura_unified_memory_continuity_toolchain.py",
+      "role": "python_module",
+      "bytes": 11,
+      "lines": 1,
+      "tokens_est": 3,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {
+        "hub_rank": 610,
+        "node_count": 1,
+        "edge_count": 0,
+        "degree": 0,
+        "symbols": [],
+        "neighbor_files": [],
+        "edge_kinds": {}
+      },
+      "digest8": "7cbb143c76bfaa31",
+      "vector": [
+        -0.099769,
+        -0.19306,
+        -0.143823,
+        -0.058307,
+        -0.291533,
+        0.234522,
+        0.022027,
+        -0.299307,
+        0.252662,
+        -0.001296,
+        -0.123092,
+        0.115317,
+        -0.066081,
+        -0.151597,
+        0.320038,
+        -0.200834,
+        0.001296,
+        -0.076446,
+        0.081629,
+        -0.218974,
+        0.203425,
+        0.211199,
+        -0.04535,
+        -0.309673,
+        -0.055715,
+        -0.32263,
+        0.107543,
+        -0.115317,
+        0.071264,
+        0.00907,
+        0.081629,
+        0.218974
+      ]
+    },
+    {
       "path": "aura_unifier.sh",
       "role": "operator_script",
       "bytes": 26711,
@@ -218654,8 +218710,8 @@
   "topology": {
     "source": "compiled_deep_topology",
     "diagnostics": {
-      "isolated_node_count": 7,
-      "dead_end_count": 4616,
+      "isolated_node_count": 8,
+      "dead_end_count": 4617,
       "dangling_edge_count": 0,
       "top_hubs": [
         {
@@ -218720,6 +218776,7 @@
         }
       ],
       "isolated_sample": [
+        "aura_unified_memory_continuity_toolchain.py::global_scope",
         "debug_att.py::global_scope",
         "download_papers.py::global_scope",
         "download_zenodo_papers.py::global_scope",
@@ -218754,12 +218811,12 @@
     "meta": {
       "generated_by": "aura_topology_manager",
       "root": ".",
-      "module_count": 609,
-      "node_count": 10473,
+      "module_count": 610,
+      "node_count": 10474,
       "edge_count": 24589,
       "spectral_layout": true,
-      "spectral_sparsity": 0.05424,
-      "global_health": 0.971007
+      "spectral_sparsity": 0.054235,
+      "global_health": 0.97101
     },
     "file_index": {
       "aura_node.py": {
@@ -237295,6 +237352,15 @@
       },
       "debug_att.py": {
         "hub_rank": 609,
+        "node_count": 1,
+        "edge_count": 0,
+        "degree": 0,
+        "symbols": [],
+        "neighbor_files": [],
+        "edge_kinds": {}
+      },
+      "aura_unified_memory_continuity_toolchain.py": {
+        "hub_rank": 610,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,

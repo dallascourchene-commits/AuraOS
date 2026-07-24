@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1413
-- **total_bytes**: 56630753
-- **text_tokens_est**: 4705406
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 184, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 913, 'schema_or_lexicon': 173, 'support_file': 76}
-- **topology_nodes**: 10473
+- **file_count**: 1414
+- **total_bytes**: 56630764
+- **text_tokens_est**: 4705409
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 184, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 914, 'schema_or_lexicon': 173, 'support_file': 76}
+- **topology_nodes**: 10474
 - **topology_edges**: 24589
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 29207.17
+- **elapsed_ms**: 29641.74
 
 ## Coverage
 
-- **included_file_count**: 1413
+- **included_file_count**: 1414
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=140, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
@@ -294,7 +294,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.mempalace/aura_thought.txt`
 - `.mempalace/lexicon.json`
 - `.mempalace/nexus.json`
-- ... 31 more; query CODEMAP.json for exact file cards
+- ... 32 more; query CODEMAP.json for exact file cards
 
 ### mesh_and_routing
 - `.aura/PROVIDER_ROUTING_MATERIALIZE_REQUEST`
@@ -374,7 +374,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 10473
+- **nodes**: 10474
 - **edges**: 24589
 - **top_files_by_degree**:
   - `aura_node.py` degree=890 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
