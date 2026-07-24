@@ -1,0 +1,232 @@
++    ``FOO_API_KEY_2``. Environment values supplement the secrets file.
++    """
++    sec = secrets if secrets is not None else load_secrets()
++    ordered: list[str] = []
++    roots = _provider_key_names(provider_id, key_names)
++
++    for root in roots:
++        variants = [root]
++        if root.endswith("_API_KEY"):
++            variants.append(root + "S")
++        elif root.endswith("_KEY"):
++            variants.append(root + "S")
++        for name in variants:
++            _append_key_value(ordered, sec.get(name))
++            _append_key_value(ordered, os.environ.get(name))
++
++        numbered: list[tuple[int, str]] = []
++        prefix = root + "_"
++        for name in set(sec) | set(os.environ):
++            if not str(name).startswith(prefix):
++                continue
++            suffix = str(name)[len(prefix):]
++            if suffix.isdigit():
++                numbered.append((int(suffix), str(name)))
++        for _index, name in sorted(numbered):
++            _append_key_value(ordered, sec.get(name))
++            _append_key_value(ordered, os.environ.get(name))
+ 
+     return ordered
+ 
+ 
+-class GeminiKeyRotator:
+-    """Round-robin Gemini keys with per-key cooldown after failures."""
+-
+-    def __init__(self, secrets: dict[str, Any] | None = None):
+-        self._keys = gemini_key_pool(secrets)
++def gemini_key_pool(secrets: dict[str, Any] | None = None) -> list[str]:
++    """Collect unique Gemini keys in priority order (legacy helper)."""
++    return provider_key_pool("gemini", secrets)
++
++
++class ProviderKeyRotator:
++    """Round-robin provider keys with per-key cooldown after failures."""
++
++    def __init__(
++        self,
++        provider_id: str,
++        secrets: dict[str, Any] | None = None,
++        *,
++        key_names: list[str] | tuple[str, ...] | None = None,
++        keys: list[str] | tuple[str, ...] | None = None,
++    ):
++        self.provider_id = str(provider_id or "unknown").lower()
++        if keys is None:
++            self._keys = provider_key_pool(self.provider_id, secrets, key_names=key_names)
++        else:
++            self._keys = []
++            _append_key_value(self._keys, list(keys))
+         self._index = 0
+         self._cooldown_until: dict[str, float] = {}
+         self._fail_counts: dict[str, int] = {}
++        self._lock = threading.Lock()
+ 
+     @property
+     def key_count(self) -> int:
+@@ -196,31 +253,41 @@ class GeminiKeyRotator:
+ 
+     def _available_keys(self) -> list[str]:
+         now = time.time()
+-        return [k for k in self._keys if now >= self._cooldown_until.get(k, 0.0)]
++        return [key for key in self._keys if now >= self._cooldown_until.get(key, 0.0)]
+ 
+     def record_success(self, key: str) -> None:
+-        self._fail_counts[key] = 0
+-        self._cooldown_until[key] = 0.0
++        with self._lock:
++            self._fail_counts[key] = 0
++            self._cooldown_until[key] = 0.0
+ 
+     def record_failure(self, key: str, error: str) -> None:
+-        count = self._fail_counts.get(key, 0) + 1
+-        self._fail_counts[key] = count
+-        err = error.lower()
+-        cooldown = 30.0
+-        if any(f in err for f in ("429", "rate", "quota", "resource exhausted")):
+-            cooldown = 90.0
+-        elif "timeout" in err or "timed out" in err:
+-            cooldown = 45.0
+-        self._cooldown_until[key] = time.time() + cooldown
++        with self._lock:
++            count = self._fail_counts.get(key, 0) + 1
++            self._fail_counts[key] = count
++            err = str(error or "").lower()
++            cooldown = 30.0
++            if any(fragment in err for fragment in ("429", "rate", "quota", "resource exhausted")):
++                cooldown = 90.0
++            elif "timeout" in err or "timed out" in err:
++                cooldown = 45.0
++            self._cooldown_until[key] = time.time() + cooldown
+ 
+     def iter_keys(self) -> list[str]:
+-        """Round-robin ordering starting at next available key."""
+-        available = self._available_keys()
+-        if not available:
+-            return []
+-        start = self._index % len(available)
+-        self._index = (self._index + 1) % max(len(available), 1)
+-        return available[start:] + available[:start]
++        """Return round-robin ordering starting at the next available key."""
++        with self._lock:
++            available = self._available_keys()
++            if not available:
++                return []
++            start = self._index % len(available)
++            self._index = (self._index + 1) % max(len(available), 1)
++            return available[start:] + available[:start]
++
++
++class GeminiKeyRotator(ProviderKeyRotator):
++    """Compatibility wrapper around the generic provider rotator."""
++
++    def __init__(self, secrets: dict[str, Any] | None = None):
++        super().__init__("gemini", secrets)
+ 
+ 
+ def _is_retryable(error: BaseException) -> bool:
+@@ -428,16 +495,29 @@ def openai_compatible_generate(
+     return None, error
+ 
+ 
+-# Process-wide rotator (persists cooldown state across calls in one session)
+-_GLOBAL_GEMINI_ROTATOR: GeminiKeyRotator | None = None
++# Process-wide rotators preserve cooldown state across calls in one session.
++_GLOBAL_PROVIDER_ROTATORS: dict[str, ProviderKeyRotator] = {}
+ 
+ 
+-def get_gemini_rotator(secrets: dict[str, Any] | None = None) -> GeminiKeyRotator:
+-    global _GLOBAL_GEMINI_ROTATOR
+-    if _GLOBAL_GEMINI_ROTATOR is None:
+-        _GLOBAL_GEMINI_ROTATOR = GeminiKeyRotator(secrets)
+-    elif secrets is not None:
+-        fresh = gemini_key_pool(secrets)
+-        if fresh and fresh != _GLOBAL_GEMINI_ROTATOR._keys:
+-            _GLOBAL_GEMINI_ROTATOR = GeminiKeyRotator(secrets)
+-    return _GLOBAL_GEMINI_ROTATOR
++def get_provider_rotator(
++    provider_id: str,
++    secrets: dict[str, Any] | None = None,
++    *,
++    key_names: list[str] | tuple[str, ...] | None = None,
++    keys: list[str] | tuple[str, ...] | None = None,
++) -> ProviderKeyRotator:
++    provider = str(provider_id or "unknown").lower()
++    if keys is None:
++        fresh = provider_key_pool(provider, secrets, key_names=key_names)
++    else:
++        fresh = []
++        _append_key_value(fresh, list(keys))
++    current = _GLOBAL_PROVIDER_ROTATORS.get(provider)
++    if current is None or fresh != current._keys:
++        current = ProviderKeyRotator(provider, keys=fresh)
++        _GLOBAL_PROVIDER_ROTATORS[provider] = current
++    return current
++
++
++def get_gemini_rotator(secrets: dict[str, Any] | None = None) -> ProviderKeyRotator:
++    return get_provider_rotator("gemini", secrets)
+diff --git a/aura_fusion.py b/aura_fusion.py
+index f61ed95..6af9f03 100644
+--- a/aura_fusion.py
++++ b/aura_fusion.py
+@@ -20,13 +20,15 @@ import json
+ import os
+ from pathlib import Path
+ import re
++import threading
+ import time
+ from typing import Any
+ 
+-from aura_api_rotator import load_secrets
++from aura_api_rotator import load_secrets, provider_key_pool
+ from aura_codebase_navigator import refresh_codemap_for_paths
+ from aura_llm_egress import generate_openai_compatible_payload
+ from aura_model_probe_ledger import AuraModelProbeLedger
++from aura_provider_registry import ProviderRegistry
+ from aura_single_seed_lift import compact_lift_capsule, compile_text_single_seed_lift
+ from aura_skillweaver import AuraSkillWeaver, gate_fusion_task
+ from aura_spectral_topology import build_fusion_topology_snapshot
+@@ -148,8 +150,19 @@ def _redact_error(error: str | None, secrets: dict[str, Any]) -> str | None:
+     if not error:
+         return error
+     redacted = str(error)
+-    for value in secrets.values():
+-        if isinstance(value, str) and len(value) > 6:
++
++    def values(value: Any):
++        if isinstance(value, dict):
++            for item in value.values():
++                yield from values(item)
++        elif isinstance(value, (list, tuple, set)):
++            for item in value:
++                yield from values(item)
++        elif isinstance(value, str):
++            yield value
++
++    for value in values(secrets):
++        if len(value) > 6:
+             redacted = redacted.replace(value, "***")
+     return redacted
+ 
+@@ -186,8 +199,40 @@ def parse_json_object(text: str) -> dict[str, Any]:
+     raise ValueError("model output did not contain a JSON object")
+ 
+ 
++def _fusion_role_key(role: str) -> str:
++    return "premium" if role.upper() in {"THINKER", "RESEARCHER", "JUDGE"} else "cheap_builder"
++
++
++def _auto_fusion_agent(
++    registry: ProviderRegistry,
++    secrets: dict[str, Any],
++    *,
++    role: str,
++    skip: tuple[str, ...] = (),
++) -> AuraFusionAgent | None:
++    model_role = _fusion_role_key(role)
++    base_order = registry.provider_order(model_role)
++    ordered = [name for name in base_order if name not in skip] + list(skip)
++    for provider in dict.fromkeys(ordered):
++        config = registry.get_provider_config(provider)
++        if not config or str(config.get("api") or "openai") != "openai":
++            continue
