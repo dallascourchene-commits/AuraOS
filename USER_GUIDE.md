@@ -217,7 +217,8 @@ python scripts/aura_architecture_harness.py \
   runtime \
   --profile .aura/runtime_profiles/construction_demo.v1.json \
   --output-dir ../AuraOS-runtime-evidence/after \
-  --baseline-receipt ../AuraOS-runtime-evidence/before/runtime_harness_receipt.json
+  --baseline-receipt ../AuraOS-runtime-evidence/before/runtime_harness_receipt.json \
+  --install-requirements
 ```
 
 A successful after-run may report `REPAIRED_AND_VERIFIED`. That proves the declared runtime profile for one exact tree; it is not patch, publication, production, or merge authority. Run Waboose and the subsystem's retained gates before the human decision.

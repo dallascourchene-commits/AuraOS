@@ -171,7 +171,8 @@ python scripts/aura_architecture_harness.py \
   runtime \
   --profile .aura/runtime_profiles/construction_demo.v1.json \
   --output-dir ../AuraOS-runtime-evidence/after \
-  --baseline-receipt ../AuraOS-runtime-evidence/before/runtime_harness_receipt.json
+  --baseline-receipt ../AuraOS-runtime-evidence/before/runtime_harness_receipt.json \
+  --install-requirements
 ```
 
 A failed baseline followed by a successful exact-profile run returns `REPAIRED_AND_VERIFIED`. The new receipt binds the prior receipt's path, SHA-256, run digest, profile ID, and outcome.

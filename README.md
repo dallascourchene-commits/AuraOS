@@ -599,7 +599,7 @@ Start with:
 ```bash
 python scripts/aura_architecture_harness.py --repo-root . doctor
 python scripts/aura_architecture_harness.py --repo-root . handoff --output-dir ../AuraOS-ai-handoff
-python scripts/aura_architecture_harness.py --repo-root . runtime --profile .aura/runtime_profiles/construction_demo.v1.json --output-dir ../AuraOS-runtime-evidence/construction
+python scripts/aura_architecture_harness.py --repo-root . runtime --profile .aura/runtime_profiles/construction_demo.v1.json --output-dir ../AuraOS-runtime-evidence/construction --install-requirements
 ```
 
 Then use the focused guides in [`docs/AURA_ARCHITECTURE_HARNESS.md`](docs/AURA_ARCHITECTURE_HARNESS.md), [`docs/AURA_RUNTIME_REFACTOR_HARNESS.md`](docs/AURA_RUNTIME_REFACTOR_HARNESS.md), and the Waboose contract in [`docs/AURA_CODING_WABOOSE.md`](docs/AURA_CODING_WABOOSE.md).
