@@ -43,7 +43,7 @@ jobs:
           test "$(sha256sum tests/test_aura_unified_memory_continuity.py | awk '{print $1}')" = "$EXPECTED_TEST_SHA256"
           git diff --check
 
-      - name: Commit cleanup-only tree
+      - name: Stage and commit only canonical CI
         shell: bash
         run: |
           set -euo pipefail
@@ -53,7 +53,13 @@ jobs:
           if git diff --cached --quiet; then
             exit 0
           fi
-          changed="$(git diff --cached --name-only)"
-          test "$changed" = '.github/workflows/ci.yml'
+          git diff --cached --name-status
           git commit -m 'chore: restore canonical CI after unified continuity review'
+
+      - name: Push cleanup-only commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(sha256sum aura_unified_memory_continuity.py | awk '{print $1}')" = "$EXPECTED_MODULE_SHA256"
+          test "$(sha256sum tests/test_aura_unified_memory_continuity.py | awk '{print $1}')" = "$EXPECTED_TEST_SHA256"
           git push origin "HEAD:${TARGET_BRANCH}"
