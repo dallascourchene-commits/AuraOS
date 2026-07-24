@@ -219,8 +219,11 @@ def _positive_number(value: Any, label: str, *, maximum: float) -> float:
     return float(value)
 
 
+_MISSING = object()
+
+
 def _strict_bool(value: Any, label: str, *, default: bool) -> bool:
-    if value is None:
+    if value is _MISSING:
         return default
     if not isinstance(value, bool):
         raise RuntimeHarnessError(f"{label} must be a boolean")
@@ -370,7 +373,7 @@ def load_runtime_profile(root: Path, profile_path: str | Path) -> dict[str, Any]
         "profile_sha256": _sha256(path),
         "environment": {
             "create_venv": _strict_bool(
-                environment.get("create_venv"),
+                environment.get("create_venv", _MISSING),
                 "environment.create_venv",
                 default=True,
             ),

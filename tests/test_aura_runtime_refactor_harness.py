@@ -111,7 +111,7 @@ def test_profile_rejects_repository_escape(tmp_path: Path) -> None:
         load_runtime_profile(tmp_path, "../outside-profile.json")
 
 
-@pytest.mark.parametrize("value", ["false", "true", 0, 1, [], {}])
+@pytest.mark.parametrize("value", [None, "false", "true", 0, 1, [], {}])
 def test_profile_rejects_non_boolean_create_venv(tmp_path: Path, value: object) -> None:
     _write_fixture(tmp_path)
     profile = _write_profile(tmp_path, _free_port())
