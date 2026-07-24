@@ -14,7 +14,7 @@ test -z "$(git status --porcelain=v1)"
 git fetch --no-tags origin "$TRANSPORT_COMMIT"
 : > "$PAYLOAD_FILE"
 for number in 01 02 03; do
-  git show "$TRANSPORT_COMMIT:Aura_Sandbox/umc_deep_review_payload_v2/part-${number}" >> "$PAYLOAD_FILE"
+  git show "$TRANSPORT_COMMIT:.aura/refactor_payloads/umc_deep_review_v2/part-${number}" >> "$PAYLOAD_FILE"
 done
 export PAYLOAD_FILE
 
@@ -120,7 +120,6 @@ allowed = {
     'topology_map.json',
     'Aura_Memory/live_topology_ast.json',
 }
-paths = set(Path('/tmp').joinpath('unused').parts)
 movement_file = Path(__import__('os').environ['RUNNER_TEMP']) / 'remote-movement-paths.txt'
 paths = set(movement_file.read_text(encoding='utf-8').splitlines())
 unexpected = paths - allowed
@@ -135,6 +134,5 @@ PY
   sleep 10
 done
 
-raise='unable to publish after CODEMAP-only retries'
-echo "$raise" >&2
+echo 'unable to publish after CODEMAP-only retries' >&2
 exit 1
