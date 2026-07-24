@@ -25,8 +25,9 @@ jobs:
       TARGET_SHA: ${{ github.event.pull_request.head.sha }}
       TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
       PAYLOAD_GLOB: .aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-*
-      WABOOSE_STATE: ${{ runner.temp }}/umc-waboose-state.json
-      AURA_WABOOSE_LEARNING_ROOT: ${{ runner.temp }}/umc-waboose-learning
+      WABOOSE_STATE: /tmp/umc-waboose-state.json
+      AURA_WABOOSE_LEARNING_ROOT: /tmp/umc-waboose-learning
+      WABOOSE_RESULT: /tmp/umc-waboose-result.json
     steps:
       - uses: actions/checkout@v4
         with:
@@ -114,11 +115,12 @@ jobs:
             --state-file "$WABOOSE_STATE" \
             run \
             --request .aura/waboose_requests/unified_memory_continuity.v1.json \
-            > "${{ runner.temp }}/umc-waboose-result.json"
+            > "$WABOOSE_RESULT"
           python - <<'PY'
           import json
+          import os
           from pathlib import Path
-          result = json.loads(Path('${{ runner.temp }}/umc-waboose-result.json').read_text(encoding='utf-8'))
+          result = json.loads(Path(os.environ['WABOOSE_RESULT']).read_text(encoding='utf-8'))
           assert result.get('ok') is True, result
           assert not (result.get('findings') or []), result
           assert not (result.get('deterministic_findings') or []), result
@@ -137,10 +139,11 @@ jobs:
           test -s Aura_Memory/live_topology_ast.json
           git diff --check
 
-      - name: Commit exact reviewed tree atomically
+      - name: Restore generic CI and commit exact reviewed tree atomically
         shell: bash
         run: |
           set -euo pipefail
+          git show origin/main:.github/workflows/ci.yml > .github/workflows/ci.yml
           git config user.name 'AuraOS Manual Review Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add \
@@ -148,6 +151,7 @@ jobs:
             tests/test_aura_unified_memory_continuity.py \
             docs/AURA_UNIFIED_MEMORY_CONTINUITY.md \
             docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md \
+            .github/workflows/ci.yml \
             .aura/CODEMAP.json \
             .aura/CODEMAP.md \
             topology_map.json
@@ -163,7 +167,7 @@ jobs:
         with:
           name: unified-memory-continuity-materialization-${{ github.event.pull_request.head.sha }}
           path: |
-            ${{ runner.temp }}/umc-waboose-result.json
+            /tmp/umc-waboose-result.json
             aura_unified_memory_continuity.py
             tests/test_aura_unified_memory_continuity.py
             docs/AURA_UNIFIED_MEMORY_CONTINUITY.md
