@@ -1,0 +1,96 @@
+name: Repair Runtime Harness Strict Boolean Contract
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths:
+      - ".github/workflows/aura-runtime-strict-bool-repair.yml"
+      - "tools/runtime_strict_bool/**"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-runtime-strict-bool-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install bounded verification dependencies
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip install pytest ruff
+
+      - name: Apply exact Waboose repair request
+        run: python tools/runtime_strict_bool/apply.py
+
+      - name: Format lint and compile repair
+        run: |
+          ruff format scripts/aura_runtime_refactor_harness.py tests/test_aura_runtime_refactor_harness.py
+          ruff check scripts/aura_runtime_refactor_harness.py tests/test_aura_runtime_refactor_harness.py
+          python -m py_compile scripts/aura_runtime_refactor_harness.py
+
+      - name: Run focused and retained tests
+        run: |
+          python -m pytest -q --tb=short tests/test_aura_runtime_refactor_harness.py
+          node --check tests/runtime/construction_demo_browser_probe.cjs
+          node --test \
+            tests/js/spatial-construction-demo.test.mjs \
+            tests/js/spatial-construction-review-regressions.test.mjs \
+            tests/js/spatial-gaussian-covariance.test.mjs
+          git diff --check
+
+      - name: Re-run Waboose and enforce no visible findings
+        run: |
+          python aura_coding_waboose_cli.py \
+            --repo-root . \
+            --state-file /tmp/aura-waboose-state.json \
+            run \
+            --request .aura/runtime_profiles/construction_demo_waboose.v1.json \
+            > /tmp/aura-waboose-result.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/aura-waboose-result.json').read_text(encoding='utf-8'))
+          assert result.get('ok') is True, result.get('error')
+          assert result.get('semantic_review_complete') is True
+          assert result.get('findings') == [], result.get('findings')
+          assert result.get('forge_repair_requests') == [], result.get('forge_repair_requests')
+          assert result.get('summary', {}).get('visible_findings') == 0, result.get('summary')
+          PY
+
+      - name: Remove one-time patch script
+        run: git rm -rf tools/runtime_strict_bool
+
+      - name: Publish verified source and test repair
+        env:
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS Runtime Harness"
+          git config user.email "aura-runtime-harness@users.noreply.github.com"
+          git add -A
+          git commit -m "fix(runtime): strictly parse boolean profile options"
+          remote_head="$(git ls-remote origin "refs/heads/$TARGET_BRANCH" | awk '{print $1}')"
+          test "$remote_head" = "$EXPECTED_HEAD"
+          git push origin "HEAD:refs/heads/$TARGET_BRANCH"
