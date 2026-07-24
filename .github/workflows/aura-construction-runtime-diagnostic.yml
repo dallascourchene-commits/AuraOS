@@ -5,6 +5,10 @@ on:
     types: [opened, reopened, synchronize]
     paths:
       - ".github/workflows/aura-construction-runtime-diagnostic.yml"
+      - ".aura/runtime_profiles/construction_demo.v1.json"
+      - "scripts/aura_architecture_harness.py"
+      - "scripts/aura_runtime_refactor_harness.py"
+      - "tests/test_aura_runtime_refactor_harness.py"
       - "tests/runtime/construction_demo_browser_probe.cjs"
       - "aura_spatial_web/**"
       - "aura_construction_demo_*.py"
@@ -20,7 +24,7 @@ concurrency:
 jobs:
   browser-runtime:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
     steps:
       - name: Checkout exact pull-request head
         uses: actions/checkout@v4
@@ -36,12 +40,14 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Build isolated Python environment
+      - name: Verify Runtime Refactor Harness contracts
         run: |
-          python -m venv /tmp/aura-construction-venv
-          source /tmp/aura-construction-venv/bin/activate
           python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
+          python -m pip install pytest
+          python -m pytest -q tests/test_aura_runtime_refactor_harness.py
+          python -m py_compile \
+            scripts/aura_architecture_harness.py \
+            scripts/aura_runtime_refactor_harness.py
 
       - name: Install bounded browser runtime
         run: |
@@ -51,41 +57,17 @@ jobs:
           npm install --no-audit --no-fund playwright@1.55.0
           npx playwright install --with-deps chromium
 
-      - name: Start deterministic Construction server
-        run: |
-          source /tmp/aura-construction-venv/bin/activate
-          mkdir -p /tmp/aura-construction-runtime
-          python aura_spatial_cli.py \
-            --repo-root . \
-            construction-video-demo \
-            --tour full \
-            --host 127.0.0.1 \
-            --port 8767 \
-            --serve \
-            > /tmp/aura-construction-runtime/server.log 2>&1 &
-          echo $! > /tmp/aura-construction-runtime/server.pid
-          for attempt in $(seq 1 60); do
-            if curl --fail --silent http://127.0.0.1:8767/api/construction-demo >/tmp/aura-construction-runtime/packet.json; then
-              exit 0
-            fi
-            sleep 1
-          done
-          cat /tmp/aura-construction-runtime/server.log
-          exit 1
-
-      - name: Run end-to-end Chromium probe
+      - name: Run Construction Runtime Refactor Harness
         env:
           NODE_PATH: /tmp/aura-playwright/node_modules
-          AURA_CONSTRUCTION_DEMO_URL: http://127.0.0.1:8767/demo/construction
-          AURA_RUNTIME_EVIDENCE_DIR: /tmp/aura-construction-runtime
-        run: node tests/runtime/construction_demo_browser_probe.cjs
-
-      - name: Stop local server
-        if: always()
         run: |
-          if test -f /tmp/aura-construction-runtime/server.pid; then
-            kill "$(cat /tmp/aura-construction-runtime/server.pid)" || true
-          fi
+          python scripts/aura_architecture_harness.py \
+            --repo-root . \
+            runtime \
+            --profile .aura/runtime_profiles/construction_demo.v1.json \
+            --output-dir /tmp/aura-construction-runtime \
+            --venv /tmp/aura-construction-venv \
+            --install-requirements
 
       - name: Upload runtime evidence
         if: always()
