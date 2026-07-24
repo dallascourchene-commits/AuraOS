@@ -6,31 +6,32 @@ TRANSPORT_COMMIT='1de0f438b330ef91bfc99cead2d288d003181e22'
 : "${EVENT_HEAD:?EVENT_HEAD is required}"
 : "${RUNNER_TEMP:?RUNNER_TEMP is required}"
 
-PAYLOAD_FILE="${RUNNER_TEMP}/umc-five-file-payload.txt"
+PART_DIR="${RUNNER_TEMP}/umc-five-file-parts"
+mkdir -p "$PART_DIR"
 
 test "$(git rev-parse HEAD)" = "$EVENT_HEAD"
 test -z "$(git status --porcelain=v1)"
 
 git fetch --no-tags origin "$TRANSPORT_COMMIT"
-: > "$PAYLOAD_FILE"
 for number in 01 02 03; do
-  git show "$TRANSPORT_COMMIT:.aura/refactor_payloads/umc_deep_review_v2/part-${number}" >> "$PAYLOAD_FILE"
+  git show "$TRANSPORT_COMMIT:.aura/refactor_payloads/umc_deep_review_v2/part-${number}" > "$PART_DIR/part-${number}"
 done
-export PAYLOAD_FILE
+export PART_DIR
 
 python - <<'PY'
 import base64
 import hashlib
+from itertools import permutations
 import json
 import os
 from pathlib import Path
 import zlib
 
-payload = json.loads(
-    zlib.decompress(
-        base64.b64decode(Path(os.environ['PAYLOAD_FILE']).read_text(encoding='utf-8'), validate=True)
-    )
-)
+part_dir = Path(os.environ['PART_DIR'])
+parts = {
+    name: (part_dir / name).read_text(encoding='utf-8')
+    for name in ('part-01', 'part-02', 'part-03')
+}
 payload_hashes = {
     'aura_unified_memory_continuity.py': 'c0240ccc01b5b54988f2859a81c3379b920fd3acca0b42d6e1fe739d40c50ae1',
     'tests/test_aura_unified_memory_continuity.py': '28e9f7683ea491aa43c321decc41eb4dcb3d806f18633fc530c5cebab74d04e8',
@@ -38,9 +39,21 @@ payload_hashes = {
     'docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md': '7844267632cfba956817f1799e8095e7d5eefd51f087b73c8101281ed0beb4ea',
     '.aura/waboose_requests/unified_memory_continuity.v1.json': '9d9b193e206bd24d94a3592f8bd3d78da88241dece7da4c557a1bcc30691e2d3',
 }
-records = payload.get('files')
-if payload.get('version') != 'AURA_UMC_DEEP_REVIEW_PAYLOAD_V2' or set(records or {}) != set(payload_hashes):
-    raise SystemExit('reviewed payload identity or path set mismatch')
+valid = []
+for order in permutations(parts):
+    encoded = ''.join(parts[name] for name in order)
+    try:
+        candidate = json.loads(zlib.decompress(base64.b64decode(encoded, validate=True)))
+    except (ValueError, zlib.error, json.JSONDecodeError):
+        continue
+    records = candidate.get('files')
+    if candidate.get('version') == 'AURA_UMC_DEEP_REVIEW_PAYLOAD_V2' and set(records or {}) == set(payload_hashes):
+        valid.append((order, candidate))
+if len(valid) != 1:
+    raise SystemExit(f'expected one valid immutable chunk order, found {[order for order, _ in valid]}')
+order, payload = valid[0]
+print(f'immutable_payload_order={order}')
+records = payload['files']
 for relative, expected in payload_hashes.items():
     content = records[relative].get('content')
     if not isinstance(content, str):
