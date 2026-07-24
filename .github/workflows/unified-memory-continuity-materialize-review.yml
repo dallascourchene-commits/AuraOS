@@ -28,6 +28,8 @@ jobs:
       WABOOSE_STATE: /tmp/umc-waboose-state.json
       AURA_WABOOSE_LEARNING_ROOT: /tmp/umc-waboose-learning
       WABOOSE_RESULT: /tmp/umc-waboose-result.json
+      RUFF_RESULT: /tmp/umc-ruff-result.json
+      RUFF_DIFF: /tmp/umc-ruff-fix.diff
     steps:
       - uses: actions/checkout@v4
         with:
@@ -99,21 +101,31 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt 'pytest>=8,<9' jsonschema ruff bandit
 
-      - name: Run focused and owner regressions
+      - name: Apply deterministic Ruff fixes and enforce clean result
+        shell: bash
+        run: |
+          set +e
+          ruff check --fix --output-format json \
+            aura_unified_memory_continuity.py \
+            tests/test_aura_unified_memory_continuity.py \
+            > "$RUFF_RESULT"
+          code=$?
+          set -e
+          git diff -- \
+            aura_unified_memory_continuity.py \
+            tests/test_aura_unified_memory_continuity.py \
+            > "$RUFF_DIFF"
+          cat "$RUFF_RESULT"
+          git diff --check
+          exit "$code"
+
+      - name: Run focused and owner regressions after Ruff
         shell: bash
         run: |
           set -euo pipefail
           python -m pytest -q \
             tests/test_aura_unified_memory_continuity.py \
             tests/test_aura_relationship_compass_finalization.py
-
-      - name: Run full Ruff review
-        shell: bash
-        run: |
-          set -euo pipefail
-          ruff check \
-            aura_unified_memory_continuity.py \
-            tests/test_aura_unified_memory_continuity.py
 
       - name: Run Bandit review
         shell: bash
@@ -182,6 +194,8 @@ jobs:
         with:
           name: unified-memory-continuity-materialization-${{ github.event.pull_request.head.sha }}
           path: |
+            /tmp/umc-ruff-result.json
+            /tmp/umc-ruff-fix.diff
             /tmp/umc-waboose-result.json
             aura_unified_memory_continuity.py
             tests/test_aura_unified_memory_continuity.py
