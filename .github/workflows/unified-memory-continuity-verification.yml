@@ -118,8 +118,6 @@ jobs:
         run: |
           set -o pipefail
           python aura_codebase_navigator.py \
-            2>&1 | tee "$EVIDENCE_DIR/logs/navigator.log"
-          python aura_codebase_navigator.py \
             --query "unified manufactured memory saturation model-relative execution prediction-error learning continuity sensitivity current reproof" \
             2>&1 | tee "$EVIDENCE_DIR/logs/navigator_query.log"
           python -m aura_agent_arena_cli topology-health \
