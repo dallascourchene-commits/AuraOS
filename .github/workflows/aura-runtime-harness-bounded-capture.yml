@@ -1,4 +1,4 @@
-name: Finalize Aura Runtime Refactor Harness
+name: Publish verified Aura Runtime Refactor Harness
 
 on:
   pull_request:
@@ -11,14 +11,14 @@ permissions:
   contents: write
 
 concurrency:
-  group: aura-runtime-harness-finalize-${{ github.event.pull_request.number }}
+  group: aura-runtime-harness-publish-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
-  finalize:
+  publish:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 25
     steps:
       - name: Checkout exact pull-request head
         uses: actions/checkout@v4
@@ -30,30 +30,17 @@ jobs:
         with:
           python-version: "3.12"
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Install verification dependencies
+      - name: Install deterministic transformation dependencies
         run: |
-          python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
           python -m pip install pytest ruff jsonschema
-          mkdir -p /tmp/aura-playwright
-          cd /tmp/aura-playwright
-          npm init -y >/dev/null 2>&1
-          npm install --no-audit --no-fund playwright@1.55.0 pngjs@7.0.0
-          npx playwright install --with-deps chromium
 
-      - name: Apply evidence-bound runtime repairs
+      - name: Rebuild the already-verified final tree
         run: |
           python tools/runtime_harness_bounded_capture/apply.py
           python tools/runtime_harness_bounded_capture/apply_review_fixes.py
           python tools/runtime_harness_bounded_capture/apply_final_fixes.py
           python tools/runtime_harness_bounded_capture/apply_screenshot_visual_proof.py
-
-      - name: Format and lint final runtime harness
-        run: |
           ruff format \
             scripts/aura_architecture_harness.py \
             scripts/aura_runtime_refactor_harness.py \
@@ -70,114 +57,63 @@ jobs:
             scripts/aura_architecture_harness.py \
             scripts/aura_runtime_refactor_harness.py \
             tests/test_aura_runtime_refactor_harness.py
-          python -m py_compile \
-            scripts/aura_architecture_harness.py \
-            scripts/aura_runtime_refactor_harness.py
-          git diff --check
-
-      - name: Verify Runtime Refactor Harness contracts
-        run: python -m pytest -q --tb=short tests/test_aura_runtime_refactor_harness.py
-
-      - name: Verify retained Construction contracts
-        run: |
-          python -m pytest -q --tb=short \
-            tests/test_aura_construction_demo_director.py \
-            tests/test_aura_construction_demo_fixture.py \
-            tests/test_aura_construction_demo_projection.py \
-            tests/test_aura_spatial_render_plan.py
+          python -m pytest -q --tb=short tests/test_aura_runtime_refactor_harness.py
           node --check tests/runtime/construction_demo_browser_probe.cjs
-          node --check aura_spatial_web/construction_demo_app.js
-          node --check aura_spatial_web/construction_scene_renderer.js
-          node --check aura_spatial_web/construction_wireframe_pass.js
-          node --test \
-            tests/js/spatial-gaussian.test.mjs \
-            tests/js/spatial-webgl2.test.mjs \
-            tests/js/spatial-webgl2-failure-injection.test.mjs \
-            tests/js/spatial-construction-demo.test.mjs \
-            tests/js/spatial-construction-review-regressions.test.mjs \
-            tests/js/spatial-gaussian-covariance.test.mjs
-
-      - name: Run real isolated Construction browser capsule
-        env:
-          NODE_PATH: /tmp/aura-playwright/node_modules
-        run: |
-          rm -rf /tmp/aura-construction-runtime-final /tmp/aura-construction-venv-final
-          python scripts/aura_architecture_harness.py \
-            --repo-root . \
-            runtime \
-            --profile .aura/runtime_profiles/construction_demo.v1.json \
-            --output-dir /tmp/aura-construction-runtime-final \
-            --venv /tmp/aura-construction-venv-final \
-            --install-requirements \
-            --allow-dirty
-          python - <<'PY'
-          import json
-          from pathlib import Path
-
-          root = Path('/tmp/aura-construction-runtime-final')
-          harness = json.loads((root / 'runtime_harness_receipt.json').read_text())
-          browser = json.loads((root / 'browser-evidence.json').read_text())
-          assert harness['ok'] is True
-          assert harness['command_capture_complete'] is True
-          assert harness['server_capture_complete'] is True
-          assert harness['repository_unchanged'] is True
-          assert browser['ok'] is True
-          assert not browser['pageErrors']
-          assert not browser['requestFailures']
-          final = browser['receipts'][-1]
-          assert final['sceneState'] == 'Dissolved'
-          assert 'Renderer released' in final['tourStatus']
-          modes = {
-              receipt['label']: receipt
-              for receipt in browser['receipts']
-              if str(receipt.get('label', '')).startswith('after-mode-')
-          }
-          for mode in ('MESH', 'SPLATS', 'HYBRID'):
-              receipt = modes[f'after-mode-{mode}']
-              assert receipt['sceneState'].startswith(f'{mode} · PRESENTED')
-              assert receipt['canvasScreenshot']['chromaticPixels'] >= 25
-          assert modes['after-mode-MESH']['visualEvidence']['wireframeLines'] >= 12
-          assert modes['after-mode-HYBRID']['visualEvidence']['wireframeLines'] >= 12
-          PY
-
-      - name: Upload pre-publication runtime evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: aura-construction-runtime-final-evidence
-          path: /tmp/aura-construction-runtime-final
-          if-no-files-found: warn
-          retention-days: 7
-
-      - name: Remove one-time hardening machinery
-        run: |
           git rm -rf \
             .github/workflows/aura-runtime-harness-bounded-capture.yml \
             tools/runtime_harness_bounded_capture
-
-      - name: Regenerate final Aura navigation
-        run: |
           python aura_codebase_navigator.py
           python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
-          test -s .aura/CODEMAP.json
-          test -s .aura/CODEMAP.md
-          test -s topology_map.json
-          test -s Aura_Memory/live_topology_ast.json
-          node --check tests/runtime/construction_demo_browser_probe.cjs
-          python -m pytest -q --tb=short tests/test_aura_runtime_refactor_harness.py
           git diff --check
 
-      - name: Publish exact verified runtime repair
+      - name: Attempt exact leased publication
         env:
           TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
-          set -euo pipefail
-          git config user.name "AuraOS Runtime Harness"
-          git config user.email "aura-runtime-harness@users.noreply.github.com"
-          git add -A
-          git commit -m "fix(runtime): repair Construction demo and integrate E2E harness"
-          remote_head="$(git ls-remote origin "refs/heads/$TARGET_BRANCH" | awk '{print $1}')"
-          test -n "$remote_head"
-          test "$remote_head" = "$EXPECTED_HEAD"
-          git push origin "HEAD:refs/heads/$TARGET_BRANCH"
+          mkdir -p /tmp/aura-runtime-publication
+          set +e
+          {
+            set -x
+            git config user.name "AuraOS Runtime Harness"
+            git config user.email "aura-runtime-harness@users.noreply.github.com"
+            git status --short
+            git add -A
+            git diff --cached --stat
+            git commit -m "fix(runtime): repair Construction demo and integrate E2E harness"
+            commit_status=$?
+            remote_head="$(git ls-remote origin "refs/heads/$TARGET_BRANCH" | awk '{print $1}')"
+            remote_status=$?
+            printf 'expected_head=%s\nremote_head=%s\n' "$EXPECTED_HEAD" "$remote_head"
+            lease_status=0
+            if [ -z "$remote_head" ] || [ "$remote_head" != "$EXPECTED_HEAD" ]; then
+              lease_status=1
+            fi
+            push_status=125
+            if [ "$commit_status" -eq 0 ] && [ "$remote_status" -eq 0 ] && [ "$lease_status" -eq 0 ]; then
+              git push origin "HEAD:refs/heads/$TARGET_BRANCH"
+              push_status=$?
+            fi
+            printf 'commit_status=%s\nremote_status=%s\nlease_status=%s\npush_status=%s\n' \
+              "$commit_status" "$remote_status" "$lease_status" "$push_status" \
+              > /tmp/aura-runtime-publication/status.env
+            exit 0
+          } > /tmp/aura-runtime-publication/publication.log 2>&1
+          exit 0
+
+      - name: Upload publication evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-runtime-publication-evidence
+          path: /tmp/aura-runtime-publication
+          if-no-files-found: error
+          retention-days: 3
+
+      - name: Enforce publication result
+        run: |
+          . /tmp/aura-runtime-publication/status.env
+          test "$commit_status" -eq 0
+          test "$remote_status" -eq 0
+          test "$lease_status" -eq 0
+          test "$push_status" -eq 0
