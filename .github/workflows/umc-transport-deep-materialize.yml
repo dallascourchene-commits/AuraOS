@@ -1,0 +1,74 @@
+name: UMC transport deep materialize
+
+on:
+  push:
+    branches:
+      - transport/umc-deep-review-20260724
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: umc-transport-deep-materialize
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: github.actor == 'dallascourchene-commits'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/unified-memory-continuity
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install declared and review dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8,<9' jsonschema ruff bandit
+
+      - name: Fetch and run hash-locked materializer
+        id: materialize
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin \
+            refs/heads/transport/umc-deep-review-20260724:refs/remotes/origin/transport/umc-deep-review-20260724
+          git show \
+            origin/transport/umc-deep-review-20260724:.aura/refactor_payloads/umc_deep_materialize.sh \
+            > "${RUNNER_TEMP}/umc_deep_materialize.sh"
+          bash "${RUNNER_TEMP}/umc_deep_materialize.sh"
+
+      - name: Upload deep-review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unified-memory-continuity-deep-materialization-${{ github.run_id }}
+          path: ${{ runner.temp }}/umc-deep-review-evidence
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Report result to PR
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OUTCOME: ${{ steps.materialize.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$OUTCOME" = 'success' ]; then
+            body='Deep-review materialization succeeded. The exact hash-locked files passed syntax/compatibility compilation, repository compileall, full Ruff, Bandit, 65 regressions, zero-finding Waboose, generated-map regeneration, and bounded-path commit/push.'
+          else
+            body='Deep-review materialization failed closed before publication. Inspect the UMC transport deep materialize workflow evidence; the PR source branch was not intentionally advanced unless the bounded commit step completed.'
+          fi
+          gh api repos/${{ github.repository }}/issues/193/comments -f body="$body"
