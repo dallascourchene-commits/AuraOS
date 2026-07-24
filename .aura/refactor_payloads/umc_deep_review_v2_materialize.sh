@@ -2,24 +2,30 @@
 set -euo pipefail
 
 TARGET_BRANCH='refactor/unified-memory-continuity'
-EXPECTED_HEAD='968f417cf55895ec788d89c0a97f37e40cf0612a'
-EXPECTED_PARENT='096c02fac506b669dbee9c013f9dab270cf4b973'
-PAYLOAD_DIR='Aura_Sandbox/umc_deep_review_payload_v2'
+EXPECTED_HEAD='b638a6af5e4571b3f320e5a37ec338e14bcf678a'
+REVIEWED_PAYLOAD_CHECKPOINT='968f417cf55895ec788d89c0a97f37e40cf0612a'
+PAYLOAD_PREFIX='.aura/refactor_payloads/umc_deep_review_v2'
 export EVIDENCE_DIR="${RUNNER_TEMP}/umc-deep-review-v2"
+PAYLOAD_FILE="${EVIDENCE_DIR}/payload.encoded"
+export PAYLOAD_FILE
 WABOOSE_STATE="${EVIDENCE_DIR}/waboose-state.json"
 export AURA_WABOOSE_LEARNING_ROOT="${EVIDENCE_DIR}/waboose-learning"
 mkdir -p "$EVIDENCE_DIR"
 
 test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-test "$(git rev-parse HEAD^)" = "$EXPECTED_PARENT"
+git merge-base --is-ancestor "$REVIEWED_PAYLOAD_CHECKPOINT" HEAD
 test -z "$(git status --porcelain=v1)"
-git diff --name-only HEAD^ HEAD | sort > "${RUNNER_TEMP}/payload-paths.txt"
+git diff --name-only "$REVIEWED_PAYLOAD_CHECKPOINT" HEAD | sort > "${RUNNER_TEMP}/payload-cleanup-paths.txt"
 printf '%s\n' \
   Aura_Sandbox/umc_deep_review_payload_v2/part-01 \
   Aura_Sandbox/umc_deep_review_payload_v2/part-02 \
   Aura_Sandbox/umc_deep_review_payload_v2/part-03 \
-  | sort > "${RUNNER_TEMP}/expected-payload-paths.txt"
-diff -u "${RUNNER_TEMP}/expected-payload-paths.txt" "${RUNNER_TEMP}/payload-paths.txt"
+  | sort > "${RUNNER_TEMP}/expected-cleanup-paths.txt"
+diff -u "${RUNNER_TEMP}/expected-cleanup-paths.txt" "${RUNNER_TEMP}/payload-cleanup-paths.txt"
+: > "$PAYLOAD_FILE"
+for number in 01 02 03; do
+  git show "${TRANSPORT_COMMIT}:${PAYLOAD_PREFIX}/part-${number}" >> "$PAYLOAD_FILE"
+done
 test "$(sha256sum aura_unified_memory_continuity.py | awk '{print $1}')" = \
   'bb5c0c50e62b8edbb4cbdad4f9810709f67adf7866fcd8b0700eda334a030ade'
 test "$(sha256sum tests/test_aura_unified_memory_continuity.py | awk '{print $1}')" = \
@@ -31,11 +37,8 @@ import hashlib
 import json
 from pathlib import Path
 import os
-import shutil
 import zlib
-payload_dir = Path('Aura_Sandbox/umc_deep_review_payload_v2')
-parts = sorted(payload_dir.glob('part-*'))
-encoded = ''.join(part.read_text(encoding='utf-8') for part in parts)
+encoded = (Path(os.environ['PAYLOAD_FILE'])).read_text(encoding='utf-8')
 payload = json.loads(zlib.decompress(base64.b64decode(encoded, validate=True)))
 expected = {
     'aura_unified_memory_continuity.py': 'c0240ccc01b5b54988f2859a81c3379b920fd3acca0b42d6e1fe739d40c50ae1',
@@ -67,7 +70,6 @@ for relative, record in sorted(records.items()):
 (Path(os.environ['EVIDENCE_DIR']) / 'file-hashes.json').write_text(
     json.dumps(receipt, indent=2, sort_keys=True) + '\n', encoding='utf-8'
 )
-shutil.rmtree(payload_dir)
 PY
 
 git diff --check
@@ -167,7 +169,6 @@ git add \
   .aura/CODEMAP.md \
   topology_map.json
 git add -f Aura_Memory/live_topology_ast.json
-git add -u -- Aura_Sandbox/umc_deep_review_payload_v2
 git diff --cached --check
 git diff --cached --name-only > "$EVIDENCE_DIR/staged-paths.txt"
 python - <<'PY'
@@ -185,8 +186,7 @@ allowed = required | {
     '.aura/CODEMAP.json', '.aura/CODEMAP.md', 'topology_map.json',
     'Aura_Memory/live_topology_ast.json',
 }
-payload = {p for p in changed if p.startswith('Aura_Sandbox/umc_deep_review_payload_v2/')}
-unexpected = changed - allowed - payload
+unexpected = changed - allowed
 if not required.issubset(changed):
     raise SystemExit(f'missing reviewed paths: {sorted(required - changed)}')
 if unexpected:
