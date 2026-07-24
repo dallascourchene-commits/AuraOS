@@ -1,0 +1,225 @@
+-                "prompt_tokens": response.usage.prompt_tokens,
+-                "completion_tokens": response.usage.completion_tokens,
+-                "total_tokens": response.usage.total_tokens,
+-            }
+-
+-        # Extract cache headers if available.
+-        cache_headers: dict[str, Any] = {}
+-        if hasattr(response, "headers") and response.headers:
+-            for key in ("x-session-affinity", "x-cache-hit", "x-cached-tokens"):
+-                val = response.headers.get(key)
+-                if val:
+-                    cache_headers[key] = val
+-
+-        # Validate the diff looks like a unified diff.
+-        warnings: list[str] = []
+-        if diff_text and not any(
+-            line.startswith(("diff --git", "--- ", "+++ ", "@@"))
+-            for line in diff_text.splitlines()
+-        ):
+-            warnings.append("Response does not appear to be a unified diff. Verify before staging.")
+-
+-        return {
+-            "ok": True,
+-            "model": model,
+-            "diff": diff_text,
+-            "usage": usage,
+-            "cache_headers": cache_headers,
+-            "session_id": session_id,
+-            "warnings": warnings,
+-            "patch_authority": "exact_source_spans_and_hashes_only",
+-            "vsa_patch_authority": False,
+-            "must_stage_before_apply": True,
+-        }
+-
+-    except Exception as exc:  # noqa: BLE001
++    preferred_provider = os.environ.get("AURA_AGENT_ARENA_PROVIDER", "").strip().lower() or None
++    preferred_model = _get_model(model_tier)
++    text, error, latency, _used_schema, route = generate_routed_openai_compatible_payload(
++        messages=[
++            {"role": "system", "content": STATIC_SYSTEM_PROMPT},
++            {"role": "user", "content": user_content},
++        ],
++        model_role=_model_role(model_tier),
++        preferred_provider=preferred_provider,
++        preferred_model=preferred_model,
++        secrets=secrets,
++        allow_provider_fallback=True,
++        max_tokens=max_output_tokens,
++        temperature=0.2,
++        task="agent_arena_patch_worker",
++        aspect="candidate_diff",
++        context_crush=False,
++    )
++    if error or not text:
+         return make_error_packet(
+             "fireworks_call_failed",
+-            f"Fireworks API call failed: {exc}",
+-            repair_hint="Check FIREWORKS_API_KEY, model availability, and network connectivity.",
++            f"External patch worker failed: {error or 'empty response'}",
++            repair_hint="Check configured provider keys, quotas, model availability, and network connectivity.",
+             next_allowed_tools=["aura_stage_patch"],
+         )
+ 
++    warnings: list[str] = []
++    if not any(
++        line.startswith(("diff --git", "--- ", "+++ ", "@@"))
++        for line in text.splitlines()
++    ):
++        warnings.append("Response does not appear to be a unified diff. Verify before staging.")
++
++    return {
++        "ok": True,
++        "provider": route.get("provider"),
++        "model": route.get("model"),
++        "diff": text,
++        "usage": {},
++        "cache_headers": {},
++        "session_id": _get_session_id(),
++        "latency_sec": round(latency, 3),
++        "fallback_index": route.get("fallback_index", 0),
++        "key_count": route.get("key_count", 0),
++        "warnings": warnings,
++        "patch_authority": "exact_source_spans_and_hashes_only",
++        "vsa_patch_authority": False,
++        "must_stage_before_apply": True,
++    }
++
+ 
+ def is_fireworks_available() -> bool:
+-    """Return True if Fireworks can be used (API key present and openai installed)."""
+-    if not _has_api_key():
+-        return False
+-    try:
+-        import openai  # noqa: F401
+-
+-        return True
+-    except ImportError:
+-        return False
+\ No newline at end of file
++    """Return whether the legacy Fireworks provider itself has a usable key."""
++    secrets = load_secrets()
++    config = ProviderRegistry().get_provider_config("fireworks") or {}
++    names = [config.get("api_key_env", "FIREWORKS_API_KEY"), *config.get("api_key_aliases", [])]
++    return bool(provider_key_pool("fireworks", secrets, key_names=names))
++
++
++def is_external_worker_available() -> bool:
++    """Return whether any registered OpenAI-compatible patch worker is usable."""
++    return _has_api_key()
+diff --git a/aura_api_rotator.py b/aura_api_rotator.py
+index 5c1e621..59da778 100644
+--- a/aura_api_rotator.py
++++ b/aura_api_rotator.py
+@@ -14,12 +14,10 @@ def optimized_fallback():
+ from __future__ import annotations
+ 
+ """
+-Gemini-first API key rotation with retries and provider fallback.
++Provider-neutral API key rotation with retries and provider fallback.
+ 
+-Loads keys from ~/aura_secrets.json:
+-  GEMINI_API_KEY          — primary
+-  GEMINI_API_KEYS         — list of additional keys (rotated on 429/timeout)
+-  GEMINI_API_KEY_2 … _9   — optional numbered backups
++Every provider may declare a primary key, plural key list, and numbered backups
++in ~/aura_secrets.json. Gemini keeps its historical aliases for compatibility.
+ """
+ 
+ import json
+@@ -27,6 +25,7 @@ import os
+ from pathlib import Path
+ import ssl
+ import sys
++import threading
+ import time
+ from typing import Any
+ import urllib.error
+@@ -102,9 +101,6 @@ def _load_secret_file(secrets_path: Path) -> dict[str, Any]:
+     except UnicodeDecodeError as exc:
+         _warn_secret_load(secrets_path, f"file is not valid UTF-8: {exc}")
+         return {}
+-    except UnicodeDecodeError as exc:
+-        _warn_secret_load(secrets_path, f"file is not valid UTF-8: {exc}")
+-        return {}
+ 
+ 
+ def load_secrets(path: Path | str | None = None) -> dict[str, Any]:
+@@ -138,7 +134,10 @@ _GEMINI_MODEL = os.environ.get("AURA_GEMINI_MODEL", "gemini-1.5-flash")
+ _CLOUD_TIMEOUT = float(os.environ.get("AURA_CLOUD_TIMEOUT_SEC", "30"))
+ _CLOUD_RETRIES_PER_KEY = int(os.environ.get("AURA_CLOUD_RETRIES_PER_KEY", "2"))
+ 
+-_PLACEHOLDER_MARKERS = ("your_actual_", "your_new_key", "YOUR_", "paste_", "changeme", "your_primary_")
++_PLACEHOLDER_MARKERS = (
++    "your_actual_", "your_new_key", "your_", "paste_", "changeme",
++    "your_primary_", "replace_me", "_here", "xxxx", "example",
++)
+ 
+ 
+ def _is_valid_key(key: str | None) -> bool:
+@@ -148,44 +147,102 @@ def _is_valid_key(key: str | None) -> bool:
+     return not any(m in lowered for m in _PLACEHOLDER_MARKERS)
+ 
+ 
+-def gemini_key_pool(secrets: dict[str, Any] | None = None) -> list[str]:
+-    """Collect unique Gemini keys in priority order."""
+-    sec = secrets if secrets is not None else load_secrets()
+-    ordered: list[str] = []
+-
+-    def _add(key: str | None) -> None:
+-        if _is_valid_key(key) and key not in ordered:
+-            ordered.append(str(key).strip())
++def _append_key_value(ordered: list[str], value: Any) -> None:
++    if isinstance(value, (list, tuple)):
++        for item in value:
++            _append_key_value(ordered, item)
++        return
++    if isinstance(value, str) and ("," in value or ";" in value):
++        for item in value.replace(";", ",").split(","):
++            _append_key_value(ordered, item.strip())
++        return
++    key = str(value or "").strip()
++    if _is_valid_key(key) and key not in ordered:
++        ordered.append(key)
++
++
++def _provider_key_names(provider_id: str, key_names: list[str] | tuple[str, ...] | None = None) -> list[str]:
++    provider = str(provider_id or "").strip().lower()
++    ordered = [str(name).strip() for name in (key_names or ()) if str(name).strip()]
++    defaults = {
++        "gemini": ["GEMINI_API_KEY", "GEMINI_KEY", "GOOGLE_API_KEY"],
++        "xai": ["XAI_API_KEY", "GROK_API_KEY"],
++        "openrouter": ["OPEN_ROUTER_API_KEY", "OPENROUTER_API_KEY"],
++        "github": ["GITHUB_TOKEN", "GITHUB_MODELS_API_KEY"],
++    }.get(provider, [f"{provider.upper()}_API_KEY"] if provider else [])
++    for name in defaults:
++        if name not in ordered:
++            ordered.append(name)
++    return ordered
+ 
+-    _add(sec.get("GEMINI_API_KEY"))
+-    _add(sec.get("GEMINI_KEY"))
+-    multi = sec.get("GEMINI_API_KEYS")
+-    if isinstance(multi, list):
+-        for item in multi:
+-            _add(item if isinstance(item, str) else None)
+-    elif isinstance(multi, str):
+-        for part in multi.replace(";", ",").split(","):
+-            _add(part.strip())
+ 
+-    for idx in range(2, 10):
+-        _add(sec.get(f"GEMINI_API_KEY_{idx}"))
+-        _add(sec.get(f"GEMINI_KEY_{idx}"))
++def provider_key_pool(
++    provider_id: str,
++    secrets: dict[str, Any] | None = None,
++    *,
++    key_names: list[str] | tuple[str, ...] | None = None,
++) -> list[str]:
++    """Collect every valid key for one provider in deterministic priority order.
+ 
+-    # Environment overrides / supplements
+-    for env_name in ("GEMINI_API_KEY", "GEMINI_KEY", "GOOGLE_API_KEY"):
+-        _add(os.environ.get(env_name))
++    Accepted shapes include ``FOO_API_KEY``, ``FOO_API_KEYS`` (list or
++    comma-separated string), and numbered backups such as
