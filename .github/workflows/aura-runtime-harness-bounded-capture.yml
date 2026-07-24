@@ -42,7 +42,7 @@ jobs:
           mkdir -p /tmp/aura-playwright
           cd /tmp/aura-playwright
           npm init -y >/dev/null 2>&1
-          npm install --no-audit --no-fund playwright@1.55.0
+          npm install --no-audit --no-fund playwright@1.55.0 pngjs@7.0.0
           npx playwright install --with-deps chromium
 
       - name: Apply evidence-bound runtime repairs
@@ -50,6 +50,7 @@ jobs:
           python tools/runtime_harness_bounded_capture/apply.py
           python tools/runtime_harness_bounded_capture/apply_review_fixes.py
           python tools/runtime_harness_bounded_capture/apply_final_fixes.py
+          python tools/runtime_harness_bounded_capture/apply_screenshot_visual_proof.py
 
       - name: Format and lint final runtime harness
         run: |
@@ -134,7 +135,7 @@ jobs:
           for mode in ('MESH', 'SPLATS', 'HYBRID'):
               receipt = modes[f'after-mode-{mode}']
               assert receipt['sceneState'].startswith(f'{mode} · PRESENTED')
-              assert receipt['visualEvidence']['webgl']['nonBackgroundSamples'] > 0
+              assert receipt['canvasScreenshot']['chromaticPixels'] >= 25
           assert modes['after-mode-MESH']['visualEvidence']['wireframeLines'] >= 12
           assert modes['after-mode-HYBRID']['visualEvidence']['wireframeLines'] >= 12
           PY
