@@ -1,0 +1,85 @@
+name: UMC deep review v2 target materialize
+
+on:
+  pull_request_target:
+    branches:
+      - main
+    types: [ready_for_review]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: umc-deep-review-v2-target-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: >-
+      github.event.pull_request.number == 193 &&
+      github.event.pull_request.head.ref == 'refactor/unified-memory-continuity' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.sha == '968f417cf55895ec788d89c0a97f37e40cf0612a'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      EVENT_HEAD: ${{ github.event.pull_request.head.sha }}
+      TRANSPORT_COMMIT: 9647000d89dcfc03b62e74401a581f96199c7ea2
+      EVIDENCE_DIR: ${{ runner.temp }}/umc-deep-review-v2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Bind exact reviewed payload head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$EVENT_HEAD" = '968f417cf55895ec788d89c0a97f37e40cf0612a'
+          test "$(git rev-parse HEAD)" = "$EVENT_HEAD"
+          test "$(git rev-parse HEAD^)" = '096c02fac506b669dbee9c013f9dab270cf4b973'
+          test -z "$(git status --porcelain=v1)"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Run hash-locked deep-review materializer
+        id: materialize
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$TRANSPORT_COMMIT"
+          git show "$TRANSPORT_COMMIT:.aura/refactor_payloads/umc_deep_review_v2_materialize.sh" \
+            > "${RUNNER_TEMP}/umc_deep_review_v2_materialize.sh"
+          test "$(sha256sum "${RUNNER_TEMP}/umc_deep_review_v2_materialize.sh" | awk '{print $1}')" = \
+            '1f00d9c71285411f047925ebb7e6e82f3ae5910121441edb6ef4450071fa1741'
+          bash "${RUNNER_TEMP}/umc_deep_review_v2_materialize.sh"
+
+      - name: Upload deep-review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unified-memory-continuity-deep-v2-${{ github.run_id }}
+          path: ${{ runner.temp }}/umc-deep-review-v2
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Report result to PR
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OUTCOME: ${{ steps.materialize.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$OUTCOME" = 'success' ]; then
+            body='Deep-review v2 materialization succeeded: whole-tree compilation, full Ruff, Bandit, 65 regressions, zero-finding Waboose, Architecture Harness, generated maps, and bounded publication all passed.'
+          else
+            body='Deep-review v2 materialization failed closed. The exact head, parent, payload path, source hash, or verification gates prevented publication; inspect the workflow evidence.'
+          fi
+          gh api repos/${{ github.repository }}/issues/193/comments -f body="$body"
