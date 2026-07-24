@@ -51,6 +51,9 @@ jobs:
 
       - name: Lint Runtime Refactor Harness
         run: |
+          ruff check --fix \
+            scripts/aura_runtime_refactor_harness.py \
+            tests/test_aura_runtime_refactor_harness.py
           ruff check \
             scripts/aura_runtime_refactor_harness.py \
             tests/test_aura_runtime_refactor_harness.py
