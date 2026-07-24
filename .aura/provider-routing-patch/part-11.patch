@@ -1,0 +1,246 @@
++    assert provider_key_pool("deepseek", secrets) == [
++        "primary", "backup-one", "backup-two", "number-two", "env-four",
++    ]
++    assert provider_key_pool("xai", {"GROK_API_KEY": "grok-alias"}) == ["grok-alias"]
++
++
++def test_provider_rotator_round_robins_and_cools_failed_key(monkeypatch):
++    now = [100.0]
++    monkeypatch.setattr("aura_api_rotator.time.time", lambda: now[0])
++    rotator = ProviderKeyRotator("deepseek", keys=["one", "two"])
++    assert rotator.iter_keys() == ["one", "two"]
++    assert rotator.iter_keys() == ["two", "one"]
++    rotator.record_failure("one", "429 quota")
++    assert rotator.iter_keys() == ["two"]
++    now[0] += 91
++    assert set(rotator.iter_keys()) == {"one", "two"}
++
++
++def test_registry_is_deepseek_first_and_role_aware():
++    registry = ProviderRegistry()
++    assert registry.provider_order("premium")[:3] == ["deepseek", "xai", "anthropic"]
++    assert registry.provider_order("cheap_builder")[:2] == ["mistral", "groq"]
++    assert registry.resolve_model("deepseek", "premium") == "deepseek-v4-pro"
++    assert registry.resolve_model("deepseek", "cheap_builder") == "deepseek-v4-flash"
++    assert registry.resolve_model("mistral", "premium") == "mistral-large-latest"
++    assert registry.resolve_model("mistral", "cheap_builder") == "mistral-small-latest"
++    assert registry.resolve_model("groq", "premium") == "llama-3.3-70b-versatile"
++    assert registry.get_provider_config("xai")["api_key_aliases"] == ["GROK_API_KEY"]
++
++
++def test_external_llm_rotates_keys_then_falls_back_provider(monkeypatch):
++    import aura_llm_egress
++
++    calls = []
++
++    def fake_generate(url, api_key, payload, **_kwargs):
++        calls.append((url, api_key, payload["model"]))
++        if "deepseek" in url:
++            return None, "429 quota exhausted"
++        return "mistral-ok", None
++
++    monkeypatch.setattr(aura_llm_egress, "openai_compatible_generate", fake_generate)
++    egress = aura_llm_egress.ExternalLLM(
++        secrets={
++            "DEEPSEEK_API_KEYS": ["ds-one", "ds-two"],
++            "MISTRAL_API_KEY": "mi-one",
++        }
++    )
++    text, error, _latency = egress.generate(
++        "route me",
++        pre_egress=False,
++        resonance_egress=False,
++        context_crush=False,
++    )
++    assert error is None
++    assert text == "mistral-ok"
++    assert [call[1] for call in calls] == ["ds-one", "ds-two", "mi-one"]
++    assert egress.provider == "mistral"
++    assert egress.model == "mistral-large-latest"
++
++
++def test_explicit_provider_rotates_keys_without_cross_provider_fallback(monkeypatch):
++    import aura_llm_egress
++
++    calls = []
++
++    def fake_generate(url, api_key, payload, **_kwargs):
++        calls.append((url, api_key))
++        return None, "quota"
++
++    monkeypatch.setattr(aura_llm_egress, "openai_compatible_generate", fake_generate)
++    egress = aura_llm_egress.ExternalLLM(
++        provider="deepseek",
++        secrets={
++            "DEEPSEEK_API_KEYS": ["strict-one", "strict-two"],
++            "MISTRAL_API_KEY": "strict-mi-one",
++        },
++    )
++    text, error, _latency = egress.generate(
++        "strict route",
++        pre_egress=False,
++        resonance_egress=False,
++        context_crush=False,
++    )
++    assert text is None
++    assert "deepseek" in error
++    assert [key for _url, key in calls] == ["strict-one", "strict-two"]
++
++
++def test_fusion_auto_config_uses_premium_and_cheap_roles():
++    panel, judge = load_fusion_config({
++        "DEEPSEEK_API_KEY": "ds-one",
++        "MISTRAL_API_KEYS": ["mi-one", "mi-two"],
++    })
++    assert [(agent.role, agent.provider, agent.model) for agent in panel] == [
++        ("THINKER", "deepseek", "deepseek-v4-pro"),
++        ("WORKER", "mistral", "mistral-small-latest"),
++        ("VERIFIER", "deepseek", "deepseek-v4-flash"),
++    ]
++    assert judge is not None
++    assert (judge.provider, judge.model) == ("deepseek", "deepseek-v4-pro")
++
++
++def test_fusion_agent_falls_back_and_records_actual_route(tmp_path):
++    agent = AuraFusionAgent(
++        name="thinker",
++        role="THINKER",
++        provider="deepseek",
++        base_url="https://api.deepseek.com/chat/completions",
++        api_key_name="DEEPSEEK_API_KEY",
++        model="deepseek-v4-pro",
++    )
++    judge = AuraFusionAgent(
++        name="judge",
++        role="JUDGE",
++        provider="deepseek",
++        base_url="https://api.deepseek.com/chat/completions",
++        api_key_name="DEEPSEEK_API_KEY",
++        model="deepseek-v4-pro",
++    )
++
++    def caller(**kwargs):
++        if kwargs["provider"] == "deepseek":
++            return None, "quota", 0.01, False
++        payload = json.loads(kwargs["messages"][-1]["content"])
++        content = {
++            "role": payload["agent"]["role"],
++            "answer": "fallback",
++            "claims": [],
++            "risks": [],
++            "missing_info": [],
++            "recommended_action": "review",
++            "confidence": 1.0,
++        }
++        return json.dumps(content), None, 0.01, True
++
++    coordinator = AuraFusionCoordinator(
++        secrets={"DEEPSEEK_API_KEY": "ds", "MISTRAL_API_KEY": "mi"},
++        panel=[agent],
++        judge=judge,
++        caller=caller,
++        log_path=str(tmp_path / "fusion.jsonl"),
++    )
++    output = coordinator._run_panel_agent(agent, {"task": "analyze"})
++    assert output["ok"] is True
++    assert output["provider"] == "mistral"
++    assert output["model"] == "mistral-large-latest"
++    assert output["routing"]["fallback_index"] > 0
++
++
++def test_architect_model_callback_maps_cost_tier_to_role(monkeypatch):
++    import aura_llm_egress
++
++    captured = []
++
++    class FakeExternalLLM:
++        def __init__(self, **kwargs):
++            captured.append({"init": kwargs})
++
++        def generate(self, prompt, **kwargs):
++            captured[-1]["generate"] = {"prompt": prompt, **kwargs}
++            return "ok", None, 0.01
++
++    monkeypatch.setattr(aura_llm_egress, "ExternalLLM", FakeExternalLLM)
++    assert aura_llm_egress.generate_architect_model(
++        "MISTRAL",
++        "critic",
++        {"role": "shadow", "profile": {"cost_tier": "cheap"}},
++    ) == "ok"
++    assert captured[-1]["init"]["model"] == "cheap_builder"
++    assert captured[-1]["init"]["provider"] == "mistral"
++    assert captured[-1]["init"]["allow_provider_fallback"] is True
++
++    assert aura_llm_egress.generate_architect_model(
++        "DEEPSEEK",
++        "judge",
++        {"role": "judge", "profile": {"cost_tier": "premium"}},
++    ) == "ok"
++    assert captured[-1]["init"]["model"] == "premium"
++    assert captured[-1]["init"]["provider"] == "deepseek"
++
++
++def test_architect_router_defaults_follow_canonical_provider_policy():
++    from aura_live_architect import ArchitectModelRouter
++
++    profiles = ArchitectModelRouter().profiles
++    assert profiles["planner"].provider == "DEEPSEEK"
++    assert profiles["planner_alt"].provider == "MISTRAL"
++    assert profiles["worker"].provider == "MISTRAL"
++    assert profiles["shadow"].provider == "MISTRAL"
++    assert profiles["judge"].provider == "DEEPSEEK"
++
++
++def test_legacy_fireworks_worker_name_routes_through_canonical_egress(monkeypatch):
++    import aura_agent_arena_fireworks as bridge
++
++    monkeypatch.setattr(bridge, "load_secrets", lambda: {"DEEPSEEK_API_KEY": "ds-worker"})
++    monkeypatch.setattr(
++        bridge,
++        "_openai_worker_providers",
++        lambda _secrets, _role: ["deepseek"],
++    )
++
++    def fake_route(**kwargs):
++        assert kwargs["model_role"] == "coding"
++        assert kwargs["context_crush"] is False
++        return (
++            "diff --git a/a.py b/a.py\n--- a/a.py\n+++ b/a.py\n@@ -1 +1 @@\n-old\n+new\n",
++            None,
++            0.02,
++            False,
++            {"provider": "deepseek", "model": "deepseek-v4-pro", "fallback_index": 0, "key_count": 1},
++        )
++
++    monkeypatch.setattr(bridge, "generate_routed_openai_compatible_payload", fake_route)
++    result = bridge.fireworks_patch_worker(
++        task_id="A1",
++        compressed_context="exact source slice",
++        instruction="fix the local defect",
++        model_tier="code",
++    )
++    assert result["ok"] is True
++    assert result["provider"] == "deepseek"
++    assert result["model"] == "deepseek-v4-pro"
++    assert result["must_stage_before_apply"] is True
++
++
++def test_architect_router_intercepts_legacy_aura_node_callback(monkeypatch):
++    import asyncio
++    import aura_llm_egress
++    from aura_live_architect import ArchitectModelRouter
++
++    calls = []
++
++    async def legacy_callback(provider, prompt, payload):
++        calls.append((provider, prompt, payload))
++        return "legacy"
++
++    legacy_callback.__module__ = "aura_node"
++    legacy_callback.__name__ = "call_architect_model"
++    monkeypatch.setattr(
++        aura_llm_egress,
++        "generate_architect_model",
++        lambda provider, prompt, payload: f"canonical:{provider}:{payload['role']}",
++    )
++
