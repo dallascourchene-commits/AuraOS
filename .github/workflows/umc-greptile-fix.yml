@@ -1,20 +1,17 @@
 name: UMC Greptile review fixes
 
 on:
-  issue_comment:
-    types: [created]
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/umc-greptile-fix.yml
 
 permissions:
   contents: write
 
 jobs:
   apply:
-    if: >-
-      github.event.issue.pull_request &&
-      github.event.issue.number == 193 &&
-      github.actor == 'dallascourchene-commits' &&
-      github.event.comment.author_association == 'OWNER' &&
-      github.event.comment.body == '/umc-greptile-fix-v1'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
