@@ -6,12 +6,16 @@ on:
       - refactor/unified-memory-continuity-completion
     paths:
       - .github/workflows/unified-memory-completion-cleanup.yml
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
   finalize:
+    if: github.event_name == 'push' || github.head_ref == 'refactor/unified-memory-continuity-completion'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
