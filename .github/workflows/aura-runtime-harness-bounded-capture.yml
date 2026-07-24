@@ -66,7 +66,16 @@ jobs:
           python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
           git diff --check
 
-      - name: Attempt exact leased publication
+          # The maps above bind the desired final tree. Restore workflow files only
+          # for this source publication because the Actions token lacks workflows
+          # permission; the authenticated connector applies those exact workflow
+          # changes immediately after this commit lands.
+          git restore --source="${{ github.event.pull_request.head.sha }}" -- \
+            .github/workflows/aura-construction-runtime-diagnostic.yml \
+            .github/workflows/aura-runtime-harness-bounded-capture.yml
+          git diff --check
+
+      - name: Attempt exact leased source publication
         env:
           TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
