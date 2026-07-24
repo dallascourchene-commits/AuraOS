@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 import math
+from pathlib import Path
 
 import pytest
 
@@ -1189,8 +1190,8 @@ def test_canonical_json_mappings_reject_non_string_key_collisions() -> None:
 
 
 def test_module_avoids_dynamic_namespace_injection() -> None:
-    with open("aura_unified_memory_continuity.py", encoding="utf-8") as source_file:
-        source = source_file.read()
+    source_path = Path(__file__).resolve().parents[1] / "aura_unified_memory_continuity.py"
+    source = source_path.read_text(encoding="utf-8")
     assert "__import__(" not in source
 
 

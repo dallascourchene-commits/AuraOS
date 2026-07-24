@@ -17,6 +17,7 @@ Architectural rule:
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 import ast
 import hashlib
 import json
@@ -368,6 +369,7 @@ class AuraAgentArenaBridge:
             "verification": None,
             "stage_results": [],
             "hotswap_capsule": None,
+            "unified_execution_bindings": {},
         }
 
         # Build compressed summary.
@@ -442,6 +444,79 @@ class AuraAgentArenaBridge:
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
+
+    # ------------------------------------------------------------------
+    # Unified manufactured-memory / continuity compilation
+    # ------------------------------------------------------------------
+
+    def aura_compile_unified_execution(
+        self,
+        *,
+        plan_phase_hash: str,
+        task_id: str,
+        contract: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        """Compile and retain one exact-owner model-relative execution binding."""
+        try:
+            from aura_unified_memory_continuity_toolchain import (
+                compile_bridge_execution_binding,
+                compile_continuity_owner_projections,
+            )
+
+            binding = compile_bridge_execution_binding(
+                self,
+                plan_phase_hash=plan_phase_hash,
+                task_id=task_id,
+                contract=contract,
+            )
+            session = self._require_session(plan_phase_hash)
+            session.setdefault("unified_execution_bindings", {})[str(task_id)] = binding
+            result = binding.to_dict()
+            result["owner_projections"] = compile_continuity_owner_projections(binding)
+            result.update(
+                {
+                    "ok": True,
+                    "bridge_version": BRIDGE_VERSION,
+                    "production_mutation": False,
+                    "human_review_required": True,
+                    "patch_authority": PATCH_AUTHORITY,
+                    "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+                }
+            )
+            return result
+        except (ArenaBridgeError, TypeError, ValueError) as exc:
+            return make_error_packet(
+                "unified_memory_continuity_compile_failed",
+                str(exc),
+                repair_hint="Refresh exact Bridge evidence and recompile the bounded contract.",
+            )
+
+    def aura_unified_continuity_projection(
+        self,
+        *,
+        plan_phase_hash: str,
+        task_id: str,
+    ) -> dict[str, Any]:
+        """Return current-owner projections for one retained binding without writes."""
+        try:
+            from aura_unified_memory_continuity_toolchain import compile_continuity_owner_projections
+
+            session = self._require_session(plan_phase_hash)
+            binding = dict(session.get("unified_execution_bindings") or {}).get(str(task_id))
+            if binding is None:
+                raise ValueError("unified execution binding is not retained for this task")
+            return {
+                "ok": True,
+                **compile_continuity_owner_projections(binding),
+                "production_mutation": False,
+                "human_review_required": True,
+            }
+        except (ArenaBridgeError, TypeError, ValueError) as exc:
+            return make_error_packet(
+                "unified_memory_continuity_projection_failed",
+                str(exc),
+                repair_hint="Compile the unified execution binding before requesting projections.",
+            )
 
     # ------------------------------------------------------------------
     # Tool 3: aura_get_micro_context

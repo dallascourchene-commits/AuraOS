@@ -5,6 +5,7 @@ from an already prepared Agent Bridge session. It creates no new store, truth,
 routing, verifier, policy, or authority plane. Owner projections are reference-only
 and never auto-promote learning, commit code, open a PR, merge, or mutate production.
 """
+
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
@@ -98,8 +99,8 @@ def _path(value: Any) -> str:
 
 
 def _git(root: Path, *args: str) -> str:
-    result = subprocess.run(  # noqa: S603
-        ["git", *args],  # noqa: S607
+    result = subprocess.run(
+        ["git", *args],
         cwd=root,
         check=True,
         capture_output=True,
@@ -200,10 +201,14 @@ def _endpoint(value: Any) -> ModelEndpointIdentity:
 
 
 def _canonical_capsule(bridge: Any, phase_hash: str, task_id: str) -> Any:
-    session = bridge._require_session(phase_hash)  # noqa: SLF001 - canonical Bridge lookup
+    session = bridge._require_session(phase_hash)
     plan = getattr(session.get("prepared"), "plan", None)
     match = next(
-        (item for item in list(getattr(plan, "act_capsules", []) or []) if str(getattr(item, "task_id", "")) == task_id),
+        (
+            item
+            for item in list(getattr(plan, "act_capsules", []) or [])
+            if str(getattr(item, "task_id", "")) == task_id
+        ),
         None,
     )
     if match is None:
@@ -285,7 +290,15 @@ class UnifiedExecutionBinding:
         object.__setattr__(self, "authority", _copy(dict(self.authority)))
         if self.version != BINDING_VERSION or self.authority.get("patch_authority") != PATCH_AUTHORITY:
             raise ValueError("unified binding authority or version changed")
-        forbidden = ("automatic_commit", "automatic_push", "automatic_pull_request", "automatic_merge", "automatic_promotion", "production_mutation", "model_vote_authority")
+        forbidden = (
+            "automatic_commit",
+            "automatic_push",
+            "automatic_pull_request",
+            "automatic_merge",
+            "automatic_promotion",
+            "production_mutation",
+            "model_vote_authority",
+        )
         if any(self.authority.get(name) is not False for name in forbidden):
             raise ValueError("unified binding gained forbidden authority")
         expected = stable_digest(self.identity_payload())
@@ -302,7 +315,12 @@ class UnifiedExecutionBinding:
         }
 
     def to_dict(self) -> dict[str, Any]:
-        return {"binding_id": self.binding_id, **self.identity_payload(), "binding_digest": self.binding_digest, "version": self.version}
+        return {
+            "binding_id": self.binding_id,
+            **self.identity_payload(),
+            "binding_digest": self.binding_digest,
+            "version": self.version,
+        }
 
 
 def compile_bridge_execution_binding(
@@ -323,7 +341,9 @@ def compile_bridge_execution_binding(
     if expected_head and expected_head != repo["repository_head"]:
         raise ValueError("expected_repository_head differs from exact current head")
     capsule = _canonical_capsule(bridge, phase_hash, task)
-    micro = bridge.aura_get_micro_context(plan_phase_hash=phase_hash, task_id=task, depth=1, format="both", max_tokens_est=2000)
+    micro = bridge.aura_get_micro_context(
+        plan_phase_hash=phase_hash, task_id=task, depth=1, format="both", max_tokens_est=2000
+    )
     if not isinstance(micro, Mapping) or micro.get("ok") is not True:
         raise ValueError("Bridge micro-context is unavailable")
     items, refs, files, symbols = _evidence(root, micro)
@@ -335,11 +355,17 @@ def compile_bridge_execution_binding(
         user_meaning=_required(contract.get("user_meaning"), "user_meaning"),
         mode=str(contract.get("mode") or "EXECUTE"),
         arena=str(contract.get("arena") or "Coding"),
-        constraints=tuple(dict.fromkeys([*getattr(capsule, "constraints", []), *_strings(contract.get("constraints"), "constraints")])),
+        constraints=tuple(
+            dict.fromkeys([*getattr(capsule, "constraints", []), *_strings(contract.get("constraints"), "constraints")])
+        ),
         prohibitions=tuple(dict.fromkeys([*_PROHIBITIONS, *_strings(contract.get("prohibitions"), "prohibitions")])),
         authority=_authority(contract.get("authority")),
         acceptance_criteria=acceptance,
-        required_evidence=("minimum-sufficient exact source/test evidence", "Bridge route receipt", "independent verifier evidence"),
+        required_evidence=(
+            "minimum-sufficient exact source/test evidence",
+            "Bridge route receipt",
+            "independent verifier evidence",
+        ),
         risk_class=str(contract.get("risk_class") or "architecture"),
         cost_budget=str(contract.get("cost_budget") or "bounded"),
         context_budget=str(contract.get("context_budget") or "minimum sufficient"),
@@ -347,7 +373,9 @@ def compile_bridge_execution_binding(
         freshness_requirement=str(contract.get("freshness_requirement") or "CURRENT_HEAD"),
         output_contract=str(contract.get("output_contract") or "bounded result plus evidence-backed Continuity Delta"),
     )
-    ledger = SemanticLedger.create(intent_digest=intent.intent_digest, definitions=_semantics(contract.get("semantic_definitions")))
+    ledger = SemanticLedger.create(
+        intent_digest=intent.intent_digest, definitions=_semantics(contract.get("semantic_definitions"))
+    )
     evidence_slice = compile_arena_evidence_slice(
         repository_head=repo["repository_head"],
         working_tree_digest=repo["working_tree_digest"],
@@ -356,7 +384,9 @@ def compile_bridge_execution_binding(
         candidate_items=items,
         required_refs=refs,
         prohibitions=intent.prohibitions,
-        required_verifiers=_strings(contract.get("required_verifiers") or ("pytest", "Coding Waboose"), "required_verifiers", required=True),
+        required_verifiers=_strings(
+            contract.get("required_verifiers") or ("pytest", "Coding Waboose"), "required_verifiers", required=True
+        ),
     )
     envelope = compile_act_capsule_envelope(
         legacy_act_capsule=capsule,
@@ -371,8 +401,12 @@ def compile_bridge_execution_binding(
         acceptance_bundle=acceptance,
         repair_budget=int(contract.get("repair_budget", 2)),
         legal_outcomes=_LEGAL_OUTCOMES,
-        continuity_requirements=_strings(contract.get("continuity_requirements") or _CONTINUITY, "continuity_requirements", required=True),
-        required_semantic_terms=_strings(contract.get("required_semantic_terms") or _REQUIRED_TERMS, "required_semantic_terms", required=True),
+        continuity_requirements=_strings(
+            contract.get("continuity_requirements") or _CONTINUITY, "continuity_requirements", required=True
+        ),
+        required_semantic_terms=_strings(
+            contract.get("required_semantic_terms") or _REQUIRED_TERMS, "required_semantic_terms", required=True
+        ),
     )
     model_value = contract.get("model_profile")
     if not isinstance(model_value, Mapping):
@@ -395,15 +429,33 @@ def compile_bridge_execution_binding(
         provider_config_digest=_required(contract.get("provider_config_digest"), "provider_config_digest"),
         selected_role=role,
         task_slice=f"{task}:{micro.get('target_file') or ''}::{micro.get('target_symbol') or ''}",
-        prompt_structure=_strings(contract.get("prompt_structure") or ("agent kernel", "intent", "semantics", "evidence", "acceptance"), "prompt_structure", required=True),
+        prompt_structure=_strings(
+            contract.get("prompt_structure") or ("agent kernel", "intent", "semantics", "evidence", "acceptance"),
+            "prompt_structure",
+            required=True,
+        ),
         evidence_refs=refs,
-        context_order=_strings(contract.get("context_order") or ("intent", "authority", "semantics", "evidence", "acceptance"), "context_order", required=True),
+        context_order=_strings(
+            contract.get("context_order") or ("intent", "authority", "semantics", "evidence", "acceptance"),
+            "context_order",
+            required=True,
+        ),
         examples=tuple(dict(item) for item in list(contract.get("examples") or []) if isinstance(item, Mapping)),
         tools_available=_strings(contract.get("tools_available") or ("pytest",), "tools_available"),
         reasoning_budget=str(contract.get("reasoning_budget") or "bounded"),
         output_schema=str(contract.get("output_schema") or "unified_diff_plus_continuity_delta"),
-        uncertainty_requirements=_strings(contract.get("uncertainty_requirements") or ("label unsupported claims", "separate evidence from inference"), "uncertainty_requirements", required=True),
-        stop_conditions=_strings(contract.get("stop_conditions") or ("repository identity changes", "scope expands", "invariant violation", "repair budget exhausted"), "stop_conditions", required=True),
+        uncertainty_requirements=_strings(
+            contract.get("uncertainty_requirements")
+            or ("label unsupported claims", "separate evidence from inference"),
+            "uncertainty_requirements",
+            required=True,
+        ),
+        stop_conditions=_strings(
+            contract.get("stop_conditions")
+            or ("repository identity changes", "scope expands", "invariant violation", "repair budget exhausted"),
+            "stop_conditions",
+            required=True,
+        ),
         retry_policy=str(contract.get("retry_policy") or "bounded local repair only"),
         escalation_policy=str(contract.get("escalation_policy") or "Council V3 or human review"),
         disagreement_refs=_strings(contract.get("disagreement_refs"), "disagreement_refs"),
@@ -435,9 +487,19 @@ def compile_bridge_execution_binding(
         "act_capsule_envelope": envelope.to_dict(),
         "model_profile": profile.to_dict(),
         "model_execution_packet": packet.to_dict(),
-        "jspace": {"packet": jspace.get("jspace_packet", ""), "state": jspace.get("jspace_state", {}), "advisory_only": True},
+        "jspace": {
+            "packet": jspace.get("jspace_packet", ""),
+            "state": jspace.get("jspace_state", {}),
+            "advisory_only": True,
+        },
         "st3gg": {"decision": asdict(st3gg), "recall_written": False, "advisory_only": True},
-        "council": {"required_lanes": list(dict.fromkeys(lanes)), "required_verification_depth": packet.required_verification_depth, "disagreement_refs": list(packet.disagreement_refs), "p0_required": True, "proposal_only": True},
+        "council": {
+            "required_lanes": list(dict.fromkeys(lanes)),
+            "required_verification_depth": packet.required_verification_depth,
+            "disagreement_refs": list(packet.disagreement_refs),
+            "p0_required": True,
+            "proposal_only": True,
+        },
     }
     owners = {
         "intent": "aura_unified_memory_continuity.IntentPacket",
@@ -470,7 +532,13 @@ def compile_bridge_execution_binding(
         "automatic_promotion": False,
         "production_mutation": False,
     }
-    identity = {"plan_phase_hash": phase_hash, "task_id": task, "records": records, "owner_refs": owners, "authority": authority_projection}
+    identity = {
+        "plan_phase_hash": phase_hash,
+        "task_id": task,
+        "records": records,
+        "owner_refs": owners,
+        "authority": authority_projection,
+    }
     digest = stable_digest(identity)
     return UnifiedExecutionBinding(phase_hash, task, records, owners, authority_projection, digest, f"umcbind_{digest}")
 
@@ -529,18 +597,67 @@ def compile_continuity_owner_projections(
         "projection_id": f"umcproj_{digest}",
         "projection_digest": digest,
         **refs,
-        "bridge": {"owner": binding.owner_refs["bridge"], "plan_phase_hash": binding.plan_phase_hash, "task_id": binding.task_id},
+        "bridge": {
+            "owner": binding.owner_refs["bridge"],
+            "plan_phase_hash": binding.plan_phase_hash,
+            "task_id": binding.task_id,
+        },
         "council": {"owner": binding.owner_refs["council"], **dict(binding.records["council"])},
-        "forge": {"owner": binding.owner_refs["forge"], "binding_digest": binding.binding_digest, "p0_required": True, "human_review_required": True},
-        "crucible": {"owner": binding.owner_refs["crucible"], "continuity_receipt_ref": receipt.get("receipt_id", ""), "raw_evidence_refs": list(receipt.get("raw_evidence_refs") or exact_refs), "proposal_only": True, "automatic_grammar_promotion": False},
-        "relationship_experience": {"owner": binding.owner_refs["relationship_experience"], "eligible": learning.get("eligible") is True, "automatic_record": False, "human_disposition_required": True},
-        "qdkt": {"owner": binding.owner_refs["qdkt"], "admitted": admission.get("admitted") is True, "proposal_only": True, "automatic_observe": False, "automatic_crystallization": False},
-        "state_ledger": {"owner": binding.owner_refs["state_ledger"], "execution_state_ref": f"aura://unified-memory-continuity/{binding.binding_id}", "raw_payload_retained": False},
-        "temporal_persistence": {"owner": binding.owner_refs["temporal_persistence"], "source_kind": "UNIFIED_MEMORY_CONTINUITY_BINDING", "checkpoint_state": checkpoint, "automatic_resume": False, "restore_mode": "ASSESSMENT_ONLY"},
-        "attempt_archive": {"owner": binding.owner_refs["attempt_archive"], "archive_context": {"objective": intent.get("objective", ""), **refs, "exact_evidence_refs": exact_refs}, "automatic_record": False, "learning_authority": False},
+        "forge": {
+            "owner": binding.owner_refs["forge"],
+            "binding_digest": binding.binding_digest,
+            "p0_required": True,
+            "human_review_required": True,
+        },
+        "crucible": {
+            "owner": binding.owner_refs["crucible"],
+            "continuity_receipt_ref": receipt.get("receipt_id", ""),
+            "raw_evidence_refs": list(receipt.get("raw_evidence_refs") or exact_refs),
+            "proposal_only": True,
+            "automatic_grammar_promotion": False,
+        },
+        "relationship_experience": {
+            "owner": binding.owner_refs["relationship_experience"],
+            "eligible": learning.get("eligible") is True,
+            "automatic_record": False,
+            "human_disposition_required": True,
+        },
+        "qdkt": {
+            "owner": binding.owner_refs["qdkt"],
+            "admitted": admission.get("admitted") is True,
+            "proposal_only": True,
+            "automatic_observe": False,
+            "automatic_crystallization": False,
+        },
+        "state_ledger": {
+            "owner": binding.owner_refs["state_ledger"],
+            "execution_state_ref": f"aura://unified-memory-continuity/{binding.binding_id}",
+            "raw_payload_retained": False,
+        },
+        "temporal_persistence": {
+            "owner": binding.owner_refs["temporal_persistence"],
+            "source_kind": "UNIFIED_MEMORY_CONTINUITY_BINDING",
+            "checkpoint_state": checkpoint,
+            "automatic_resume": False,
+            "restore_mode": "ASSESSMENT_ONLY",
+        },
+        "attempt_archive": {
+            "owner": binding.owner_refs["attempt_archive"],
+            "archive_context": {"objective": intent.get("objective", ""), **refs, "exact_evidence_refs": exact_refs},
+            "automatic_record": False,
+            "learning_authority": False,
+        },
         "st3gg": dict(binding.records["st3gg"]),
         "jspace": dict(binding.records["jspace"]),
-        "observatory": {"owner": binding.owner_refs["observatory"], "binding_id": binding.binding_id, "intent_digest": intent.get("intent_digest", ""), "protected_pathways": list(receipt.get("protected_pathways") or []), "prediction_error": list(receipt.get("prediction_error") or []), "missing_measurements": list(receipt.get("missing_measurements") or []), "projection_only": True},
+        "observatory": {
+            "owner": binding.owner_refs["observatory"],
+            "binding_id": binding.binding_id,
+            "intent_digest": intent.get("intent_digest", ""),
+            "protected_pathways": list(receipt.get("protected_pathways") or []),
+            "prediction_error": list(receipt.get("prediction_error") or []),
+            "missing_measurements": list(receipt.get("missing_measurements") or []),
+            "projection_only": True,
+        },
         "authority": dict(binding.authority),
     }
     return _copy(result)

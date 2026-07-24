@@ -229,6 +229,24 @@ class ArenaPersistenceCoordinator:
             "hotswap_ready": bool(getattr(verification, "hotswap_ready", False)) if verification is not None else False,
             "failure_count": len(list(getattr(verification, "failures", []) or [])) if verification is not None else 0,
         }
+        unified_bindings = []
+        for task_id, binding in dict(session.get("unified_execution_bindings") or {}).items():
+            to_dict = getattr(binding, "to_dict", None)
+            payload = to_dict() if callable(to_dict) else dict(binding or {})
+            records = dict(payload.get("records") or {})
+            unified_bindings.append(
+                {
+                    "task_id": str(task_id),
+                    "binding_id": str(payload.get("binding_id") or ""),
+                    "binding_digest": str(payload.get("binding_digest") or ""),
+                    "intent_digest": str(dict(records.get("intent_packet") or {}).get("intent_digest") or ""),
+                    "model_execution_packet_digest": str(
+                        dict(records.get("model_execution_packet") or {}).get("packet_digest") or ""
+                    ),
+                    "raw_payload_retained": False,
+                    "automatic_promotion": False,
+                }
+            )
         state = {
             "version": ARENA_PERSISTENCE_ADAPTER_VERSION,
             "plan_phase_hash": str(plan_phase_hash),
@@ -237,6 +255,7 @@ class ArenaPersistenceCoordinator:
             "routing_decisions": normalize(list(getattr(arena, "routing_decisions", []) or [])),
             "stage_results": stage_results,
             "verification": verification_summary,
+            "unified_execution_bindings": unified_bindings,
             "hotswap_capsule_present": bool(session.get("hotswap_capsule")),
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
@@ -254,6 +273,7 @@ class ArenaPersistenceCoordinator:
                 "act_capsules",
                 "affected_files",
                 "verification",
+                "unified_execution_bindings",
             ),
             parent_checkpoint_id=parent_checkpoint_id,
             branch_name=branch_name,
