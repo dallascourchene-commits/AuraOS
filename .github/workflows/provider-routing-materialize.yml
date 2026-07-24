@@ -1,11 +1,10 @@
 name: Materialize verified provider-routing refactor
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-    paths:
-      - ".aura/PROVIDER_ROUTING_MATERIALIZE_REQUEST"
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
@@ -16,6 +15,7 @@ concurrency:
 
 jobs:
   materialize:
+    if: github.head_ref == 'trigger/provider-routing-materializer'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
