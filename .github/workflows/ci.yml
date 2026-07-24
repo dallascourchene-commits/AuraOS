@@ -71,7 +71,7 @@ jobs:
             aura_dikwp_router_pipeline.py \
             aura_model_cognome_store.py \
             aura_model_cognome_store_schema.py \
-            aura_model_cogome_store_records.py \
+            aura_model_cognome_store_records.py \
             aura_model_cognome_store_io.py
       - name: Fatal lint checks
         run: |
@@ -94,9 +94,9 @@ jobs:
             aura_codemap_verify.py \
             aura_model_cognome.py \
             aura_dikwp_router_pipeline.py \
-            aura_model_cogome_store.py \
+            aura_model_cognome_store.py \
             aura_model_cognome_store_schema.py \
-            aura_model_cogome_store_records.py \
+            aura_model_cognome_store_records.py \
             aura_model_cognome_store_io.py \
             tests/test_aura_arena_experience_ledger.py \
             tests/test_aura_crucible_phase_b.py \
@@ -285,10 +285,7 @@ jobs:
 
   sync-codemap:
     name: Synchronize CODEMAP on refactor branches
-    if: >-
-      github.event_name == 'push' &&
-      startsWith(github.ref, 'refs/heads/refactor/') &&
-      github.ref_name != 'refactor/unified-memory-continuity'
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/refactor/')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
