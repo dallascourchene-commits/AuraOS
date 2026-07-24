@@ -192,20 +192,15 @@ def main() -> None:
     )
     replace_once(
         probe,
-        '''    fs.writeFileSync(path.join(OUTPUT_DIR, "browser-evidence.json"), JSON.stringify(evidence, null, 2));
-    await browser.close();
-    process.stdout.write(`${JSON.stringify(evidence, null, 2)}\n`);
-''',
-        '''    fs.writeFileSync(path.join(OUTPUT_DIR, "browser-evidence.json"), JSON.stringify(evidence, null, 2));
-    process.stdout.write(`${JSON.stringify(evidence, null, 2)}\n`);
-''',
+        "    await browser.close();\n    process.stdout.write",
+        "    process.stdout.write",
         "conditional browser cleanup",
     )
 
     regressions = Path("tests/js/spatial-construction-review-regressions.test.mjs")
     regressions.write_text(
         regressions.read_text(encoding="utf-8")
-        + '''
+        + r'''
 
 
 test("Construction runtime diagnostic keeps dependency and browser-health gates wired", async () => {
