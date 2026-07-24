@@ -510,9 +510,10 @@ def test_p0_digest_cannot_be_rewritten_after_commit() -> None:
     assert prediction.model_execution_packet_digest == packet.packet_digest
 
 
-def test_p1_cannot_precede_p0() -> None:
+@pytest.mark.parametrize("observed_at", (59.0, 60.0))
+def test_p1_must_strictly_follow_p0(observed_at: float) -> None:
     intent, _, _, _, _, _, prediction, _, _ = _vertical_fixture()
-    with pytest.raises(ValueError, match="cannot precede"):
+    with pytest.raises(ValueError, match="strictly after"):
         observe_prediction(
             prediction=prediction,
             p0_digest=prediction.p0_digest,
@@ -525,7 +526,7 @@ def test_p1_cannot_precede_p0() -> None:
             observed_cost={},
             missing_measurements=(),
             observer_id="observer",
-            observed_at=59.0,
+            observed_at=observed_at,
         )
 
 

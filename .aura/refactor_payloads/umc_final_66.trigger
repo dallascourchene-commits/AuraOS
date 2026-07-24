@@ -1,4 +1,0 @@
-AURA_UMC_FINAL_NAMESPACE_SAFE_MATERIALIZATION_V1
-source_scope=five_bounded_pr_files
-regressions=66
-merge_authority=false

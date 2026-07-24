@@ -1,4 +1,0 @@
-AURA_UMC_VERIFIED_PATCH_PUBLICATION_V1
-source_scope=five_bounded_pr_files
-verification=66_tests_pvm_ruff_bandit_waboose_harness
-merge_authority=false

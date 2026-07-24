@@ -1910,8 +1910,8 @@ def observe_prediction(
     if observer == prediction.producer_id:
         raise ValueError("P0 producer cannot independently observe its own prediction")
     timestamp = time.time() if observed_at is None else observed_at
-    if _timestamp(timestamp, "observed_at") < prediction.committed_at:
-        raise ValueError("P1 cannot precede P0")
+    if _timestamp(timestamp, "observed_at") <= prediction.committed_at:
+        raise ValueError("P1 must occur strictly after P0")
     identity = {
         "prediction_id": prediction.prediction_id,
         "p0_digest": prediction.p0_digest,
