@@ -18,7 +18,7 @@ The verification sequence must preserve these gates:
 5. Treat cross-model disagreement as additional verification depth, never voting authority.
 6. Keep Continuity Sensitivity, Relationship Experience, and QDKT records proposal-only until current reproof and required human or community disposition exist.
 7. Run Coding Waboose against the exact current head after every repair.
-8. Regenerate CODEMAP only after source and tests stabilize.
+8. Regenerate CODEMAP only after source and tests stabilize, commit the meaningful generated-map delta, and bind the final exact-head verification to that synchronized tree.
 9. Do not commit, publish, promote, or merge from verification evidence alone.
 10. Keep disposable logs outside tracked repository status, never weaken the Architecture Harness clean-tree check, and write Architecture Harness handoff/run outputs physically outside the repository before copying completed receipts into an ignored CI artifact directory.
 11. During an exact-head verification pass, use the navigator's query mode against the committed CODEMAP; do not invoke map-generation mode and then treat the resulting dirty tree as verification evidence.
