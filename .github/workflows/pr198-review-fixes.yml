@@ -1,18 +1,17 @@
 name: Apply PR 198 Review Fixes
 
 on:
-  push:
-    branches:
-      - refactor/unified-memory-continuity-completion
-    paths:
-      - .github/workflows/pr198-review-fixes.yml
-      - .github/scripts/apply_pr198_review_fixes.py
+  pull_request_target:
+    types: [synchronize]
 
 permissions:
   contents: write
 
 jobs:
   apply-review-fixes:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'refactor/unified-memory-continuity-completion'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -92,7 +91,11 @@ jobs:
       - name: Remove temporary transport and restore generated maps
         shell: bash
         run: |
-          git checkout HEAD -- .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
+          git fetch origin main
+          git checkout origin/main -- \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json
           git rm -f \
             .github/scripts/apply_pr198_review_fixes.py \
             .github/workflows/pr198-review-fixes.yml
@@ -103,11 +106,12 @@ jobs:
           git config user.name "AuraOS Refactor Harness"
           git config user.email "actions@users.noreply.github.com"
           git add \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json \
             aura_unified_memory_continuity_toolchain.py \
             aura_architect_council_v3.py \
             aura_agent_arena_mcp.py \
             tests/test_aura_unified_memory_continuity_toolchain.py
           git commit -m "fix: resolve unified memory continuity review findings"
           git push origin HEAD:refactor/unified-memory-continuity-completion
-
-# Triggered after workflow registration.
