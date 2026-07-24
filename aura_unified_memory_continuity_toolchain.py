@@ -136,7 +136,7 @@ def repository_identity(repo_root: str | Path) -> dict[str, str]:
 
 def _authority(value: Any) -> AuthorityEnvelope:
     if value is None:
-        return AuthorityEnvelope(inspect=True, edit=True, test=True)
+        return AuthorityEnvelope()
     if isinstance(value, AuthorityEnvelope):
         return value
     if not isinstance(value, Mapping):
@@ -198,6 +198,20 @@ def _endpoint(value: Any) -> ModelEndpointIdentity:
     if value.get("profile_id") and value.get("profile_id") != endpoint.profile_id:
         raise ValueError("endpoint profile_id failed canonical validation")
     return endpoint
+
+
+def _model_profile(value: Any, *, observed_at: float) -> ModelProfileRef:
+    if not isinstance(value, Mapping):
+        raise ValueError("model_profile must be an object")
+    profile = ModelProfileRef.create(
+        endpoint_identity=_endpoint(value.get("endpoint_identity")),
+        calibrated_at=float(value.get("calibrated_at")),
+        expires_at=float(value.get("expires_at")),
+        evidence_refs=_strings(value.get("evidence_refs"), "model evidence_refs", required=True),
+        uncertainty=float(value.get("uncertainty", 0.5)),
+    )
+    profile.assert_fresh(observed_at=observed_at)
+    return profile
 
 
 def _canonical_capsule(bridge: Any, phase_hash: str, task_id: str) -> Any:
@@ -337,8 +351,8 @@ def compile_bridge_execution_binding(
     task = _required(task_id, "task_id")
     root = Path(bridge.repo_root).resolve()
     repo = repository_identity(root)
-    expected_head = str(contract.get("expected_repository_head") or "")
-    if expected_head and expected_head != repo["repository_head"]:
+    expected_head = _required(contract.get("expected_repository_head"), "expected_repository_head")
+    if expected_head != repo["repository_head"]:
         raise ValueError("expected_repository_head differs from exact current head")
     capsule = _canonical_capsule(bridge, phase_hash, task)
     micro = bridge.aura_get_micro_context(
@@ -408,16 +422,8 @@ def compile_bridge_execution_binding(
             contract.get("required_semantic_terms") or _REQUIRED_TERMS, "required_semantic_terms", required=True
         ),
     )
-    model_value = contract.get("model_profile")
-    if not isinstance(model_value, Mapping):
-        raise ValueError("model_profile must be an object")
-    profile = ModelProfileRef.create(
-        endpoint_identity=_endpoint(model_value.get("endpoint_identity")),
-        calibrated_at=float(model_value.get("calibrated_at")),
-        expires_at=float(model_value.get("expires_at")),
-        evidence_refs=_strings(model_value.get("evidence_refs"), "model evidence_refs", required=True),
-        uncertainty=float(model_value.get("uncertainty", 0.5)),
-    )
+    observed_at = float(contract.get("observed_at", time.time()))
+    profile = _model_profile(contract.get("model_profile"), observed_at=observed_at)
     source_digest = stable_digest({path: _file_digest(root, path) for path in sorted(files)})
     role = _required(getattr(capsule, "role", ""), "Act Capsule role")
     packet = compile_model_execution_packet(
@@ -459,7 +465,7 @@ def compile_bridge_execution_binding(
         retry_policy=str(contract.get("retry_policy") or "bounded local repair only"),
         escalation_policy=str(contract.get("escalation_policy") or "Council V3 or human review"),
         disagreement_refs=_strings(contract.get("disagreement_refs"), "disagreement_refs"),
-        observed_at=float(contract.get("observed_at", time.time())),
+        observed_at=observed_at,
     )
 
     from aura_arena_st3gg_codec import should_st3gg_encode_arena_capsule

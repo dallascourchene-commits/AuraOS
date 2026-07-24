@@ -197,6 +197,18 @@ TOOL_DEFINITIONS = [
         },
     },
     {
+        "name": "aura_unified_continuity_projection",
+        "description": "Return reference-only continuity-owner projections for a retained unified execution binding.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "plan_phase_hash": {"type": "string"},
+                "task_id": {"type": "string"},
+            },
+            "required": ["plan_phase_hash", "task_id"],
+        },
+    },
+    {
         "name": "aura_get_micro_context",
         "description": "Return the exact compressed context for one Act Capsule.",
         "inputSchema": {
@@ -763,6 +775,17 @@ def _handle_compile_unified_execution(
         plan_phase_hash=_bounded_text_arg(args, "plan_phase_hash", maximum=256, required=True),
         task_id=_bounded_text_arg(args, "task_id", maximum=256, required=True),
         contract=dict(contract),
+    )
+
+
+@_register_tool("aura_unified_continuity_projection")
+def _handle_unified_continuity_projection(
+    bridge: AuraAgentArenaBridge,
+    args: dict[str, Any],
+) -> dict[str, Any]:
+    return bridge.aura_unified_continuity_projection(
+        plan_phase_hash=_bounded_text_arg(args, "plan_phase_hash", maximum=256, required=True),
+        task_id=_bounded_text_arg(args, "task_id", maximum=256, required=True),
     )
 
 

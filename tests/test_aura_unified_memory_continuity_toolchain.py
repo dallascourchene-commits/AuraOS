@@ -1,181 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
-
-def replace_once(path: str, old: str, new: str) -> None:
-    target = Path(path)
-    text = target.read_text(encoding="utf-8")
-    count = text.count(old)
-    if count != 1:
-        raise SystemExit(f"{path}: expected exactly one anchor, found {count}: {old[:120]!r}")
-    target.write_text(text.replace(old, new, 1), encoding="utf-8")
-
-
-replace_once(
-    "aura_unified_memory_continuity_toolchain.py",
-    '''def _authority(value: Any) -> AuthorityEnvelope:
-    if value is None:
-        return AuthorityEnvelope(inspect=True, edit=True, test=True)
-''',
-    '''def _authority(value: Any) -> AuthorityEnvelope:
-    if value is None:
-        return AuthorityEnvelope()
-''',
-)
-
-replace_once(
-    "aura_unified_memory_continuity_toolchain.py",
-    '''    expected_head = str(contract.get("expected_repository_head") or "")
-    if expected_head and expected_head != repo["repository_head"]:
-        raise ValueError("expected_repository_head differs from exact current head")
-''',
-    '''    expected_head = _required(contract.get("expected_repository_head"), "expected_repository_head")
-    if expected_head != repo["repository_head"]:
-        raise ValueError("expected_repository_head differs from exact current head")
-''',
-)
-
-replace_once(
-    "aura_unified_memory_continuity_toolchain.py",
-    '''    return endpoint
-
-
-def _canonical_capsule(bridge: Any, phase_hash: str, task_id: str) -> Any:
-''',
-    '''    return endpoint
-
-
-def _model_profile(value: Any, *, observed_at: float) -> ModelProfileRef:
-    if not isinstance(value, Mapping):
-        raise ValueError("model_profile must be an object")
-    profile = ModelProfileRef.create(
-        endpoint_identity=_endpoint(value.get("endpoint_identity")),
-        calibrated_at=float(value.get("calibrated_at")),
-        expires_at=float(value.get("expires_at")),
-        evidence_refs=_strings(value.get("evidence_refs"), "model evidence_refs", required=True),
-        uncertainty=float(value.get("uncertainty", 0.5)),
-    )
-    profile.assert_fresh(observed_at=observed_at)
-    return profile
-
-
-def _canonical_capsule(bridge: Any, phase_hash: str, task_id: str) -> Any:
-''',
-)
-
-replace_once(
-    "aura_unified_memory_continuity_toolchain.py",
-    '''    model_value = contract.get("model_profile")
-    if not isinstance(model_value, Mapping):
-        raise ValueError("model_profile must be an object")
-    profile = ModelProfileRef.create(
-        endpoint_identity=_endpoint(model_value.get("endpoint_identity")),
-        calibrated_at=float(model_value.get("calibrated_at")),
-        expires_at=float(model_value.get("expires_at")),
-        evidence_refs=_strings(model_value.get("evidence_refs"), "model evidence_refs", required=True),
-        uncertainty=float(model_value.get("uncertainty", 0.5)),
-    )
-''',
-    '''    observed_at = float(contract.get("observed_at", time.time()))
-    profile = _model_profile(contract.get("model_profile"), observed_at=observed_at)
-''',
-)
-
-replace_once(
-    "aura_unified_memory_continuity_toolchain.py",
-    '''        observed_at=float(contract.get("observed_at", time.time())),
-''',
-    '''        observed_at=observed_at,
-''',
-)
-
-replace_once(
-    "aura_architect_council_v3.py",
-    '''ARCHITECT_COUNCIL_V3 = "AURA_ARCHITECT_COUNCIL_V3_SELECTIVE_CRITICS"
-
-
-def select_critic_lanes(candidate: dict[str, Any]) -> list[str]:
-''',
-    '''ARCHITECT_COUNCIL_V3 = "AURA_ARCHITECT_COUNCIL_V3_SELECTIVE_CRITICS"
-
-
-def _verification_depth(value: Any) -> int:
-    try:
-        depth = int(value if value is not None else 1)
-    except (TypeError, ValueError):
-        return 1
-    return max(1, depth)
-
-
-def select_critic_lanes(candidate: dict[str, Any]) -> list[str]:
-''',
-)
-
-replace_once(
-    "aura_architect_council_v3.py",
-    '''    verification_depth = int(unified.get("required_verification_depth") or 1)
-''',
-    '''    verification_depth = _verification_depth(unified.get("required_verification_depth"))
-''',
-)
-
-replace_once(
-    "aura_architect_council_v3.py",
-    '''        if list(unified.get("disagreement_refs") or []) or int(unified.get("required_verification_depth") or 1) > 1:
-''',
-    '''        if list(unified.get("disagreement_refs") or []) or _verification_depth(
-            unified.get("required_verification_depth")
-        ) > 1:
-''',
-)
-
-replace_once(
-    "aura_agent_arena_mcp.py",
-    '''    {
-        "name": "aura_get_micro_context",
-''',
-    '''    {
-        "name": "aura_unified_continuity_projection",
-        "description": "Return reference-only continuity-owner projections for a retained unified execution binding.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "plan_phase_hash": {"type": "string"},
-                "task_id": {"type": "string"},
-            },
-            "required": ["plan_phase_hash", "task_id"],
-        },
-    },
-    {
-        "name": "aura_get_micro_context",
-''',
-)
-
-replace_once(
-    "aura_agent_arena_mcp.py",
-    '''@_register_tool("aura_get_micro_context")
-def _handle_get_micro_context(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
-''',
-    '''@_register_tool("aura_unified_continuity_projection")
-def _handle_unified_continuity_projection(
-    bridge: AuraAgentArenaBridge,
-    args: dict[str, Any],
-) -> dict[str, Any]:
-    return bridge.aura_unified_continuity_projection(
-        plan_phase_hash=_bounded_text_arg(args, "plan_phase_hash", maximum=256, required=True),
-        task_id=_bounded_text_arg(args, "task_id", maximum=256, required=True),
-    )
-
-
-@_register_tool("aura_get_micro_context")
-def _handle_get_micro_context(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
-''',
-)
-
-Path("tests/test_aura_unified_memory_continuity_toolchain.py").write_text(
-    '''from __future__ import annotations
-
 import json
 from pathlib import Path
 import subprocess
@@ -218,11 +42,11 @@ def _repo(root: Path) -> str:
     (root / "tests").mkdir()
     (root / ".aura" / "CODEMAP.json").write_text('{"version": 1}', encoding="utf-8")
     (root / "pkg" / "router.py").write_text(
-        "def route_failure():\\n    return 'retained'\\n",
+        "def route_failure():\n    return 'retained'\n",
         encoding="utf-8",
     )
     (root / "tests" / "test_router.py").write_text(
-        "def test_route_failure():\\n    assert True\\n",
+        "def test_route_failure():\n    assert True\n",
         encoding="utf-8",
     )
     _run(root, "git", "init")
@@ -478,8 +302,3 @@ def test_projection_is_exposed_through_mcp() -> None:
         "task_id": "A1",
         "production_mutation": False,
     }
-''',
-    encoding="utf-8",
-)
-
-print("Applied PR #198 review fixes and dedicated regression coverage.")
