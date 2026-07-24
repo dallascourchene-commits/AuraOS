@@ -1,0 +1,241 @@
+name: Materialize unified continuity deep review
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: unified-memory-continuity-deep-review-materialize
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: >-
+      github.event.issue.pull_request &&
+      github.event.issue.number == 193 &&
+      github.event.comment.body == '/aura-umc-deep-materialize' &&
+      github.actor == 'dallascourchene-commits'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      TARGET_BRANCH: refactor/unified-memory-continuity
+      EXPECTED_HEAD: 371e794a57dd37c8d293570b505ce4666340c217
+      TRANSPORT_BRANCH: transport/umc-deep-review-20260724
+      PAYLOAD_PREFIX: .aura/refactor_payloads/umc_deep_review_v2
+      WABOOSE_STATE: ${{ runner.temp }}/umc-deep-waboose-state.json
+      AURA_WABOOSE_LEARNING_ROOT: ${{ runner.temp }}/umc-deep-waboose-learning
+      EVIDENCE_DIR: ${{ runner.temp }}/umc-deep-review-evidence
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_BRANCH }}
+          fetch-depth: 0
+
+      - name: Bind exact target and reconstruct reviewed payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          test -z "$(git status --porcelain=v1)"
+          git fetch --no-tags origin \
+            "refs/heads/${TRANSPORT_BRANCH}:refs/remotes/origin/${TRANSPORT_BRANCH}"
+          : > "${RUNNER_TEMP}/umc-deep-payload.json"
+          for number in 01 02 03 04 05 06 07 08; do
+            git show \
+              "origin/${TRANSPORT_BRANCH}:${PAYLOAD_PREFIX}.part-${number}" \
+              >> "${RUNNER_TEMP}/umc-deep-payload.json"
+          done
+          mkdir -p "$EVIDENCE_DIR"
+          sha256sum "${RUNNER_TEMP}/umc-deep-payload.json" \
+            | tee "$EVIDENCE_DIR/payload.sha256"
+          test "$(cut -d' ' -f1 "$EVIDENCE_DIR/payload.sha256")" = \
+            "f880ce531b817d95ade8e1f3dd02ac377eb3fbaf5222c052a45a594c0ed33c46"
+
+      - name: Decode exact reviewed files and verify hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64
+          import hashlib
+          import json
+          from pathlib import Path
+          import zlib
+
+          payload = json.loads(
+              Path('${{ runner.temp }}/umc-deep-payload.json').read_text(encoding='utf-8')
+          )
+          expected = {
+              'aura_unified_memory_continuity.py',
+              'tests/test_aura_unified_memory_continuity.py',
+              'docs/AURA_UNIFIED_MEMORY_CONTINUITY.md',
+              'docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md',
+          }
+          if payload.get('version') != 'AURA_UMC_DEEP_REVIEW_PAYLOAD_V2':
+              raise SystemExit('unsupported deep-review payload version')
+          records = payload.get('files')
+          if not isinstance(records, dict) or set(records) != expected:
+              raise SystemExit('deep-review payload path set differs from reviewed scope')
+          receipt = {}
+          for relative, record in sorted(records.items()):
+              compressed = base64.b64decode(record['zlib_base64'], validate=True)
+              content = zlib.decompress(compressed)
+              digest = hashlib.sha256(content).hexdigest()
+              if digest != record['sha256']:
+                  raise SystemExit(f'hash mismatch for {relative}')
+              target = Path(relative)
+              target.parent.mkdir(parents=True, exist_ok=True)
+              temporary = target.with_name(f'.{target.name}.deep-review.tmp')
+              temporary.write_bytes(content)
+              temporary.replace(target)
+              receipt[relative] = digest
+          Path('${{ runner.temp }}/umc-deep-review-evidence/file_hashes.json').write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          PY
+          git diff --check
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install declared and review dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip \
+            > "$EVIDENCE_DIR/pip-upgrade.log" 2>&1
+          python -m pip install -r requirements.txt \
+            'pytest>=8,<9' jsonschema ruff bandit \
+            > "$EVIDENCE_DIR/install.log" 2>&1
+
+      - name: Run syntax and compatibility compilation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            aura_unified_memory_continuity.py \
+            tests/test_aura_unified_memory_continuity.py
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+          for path in (
+              'aura_unified_memory_continuity.py',
+              'tests/test_aura_unified_memory_continuity.py',
+          ):
+              ast.parse(Path(path).read_text(encoding='utf-8'), filename=path, feature_version=(3, 10))
+          PY
+          python -m compileall -q . \
+            2>&1 | tee "$EVIDENCE_DIR/compileall.log"
+
+      - name: Run full Ruff and Bandit review
+        shell: bash
+        run: |
+          set -o pipefail
+          ruff check \
+            aura_unified_memory_continuity.py \
+            tests/test_aura_unified_memory_continuity.py \
+            2>&1 | tee "$EVIDENCE_DIR/ruff.log"
+          bandit -q -ll aura_unified_memory_continuity.py \
+            2>&1 | tee "$EVIDENCE_DIR/bandit.log"
+
+      - name: Run hardened focused and owner regressions
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m pytest -q \
+            tests/test_aura_unified_memory_continuity.py \
+            tests/test_aura_relationship_compass_finalization.py \
+            --junitxml="$EVIDENCE_DIR/regressions.xml" \
+            2>&1 | tee "$EVIDENCE_DIR/pytest.log"
+          grep -Eq '65 passed' "$EVIDENCE_DIR/pytest.log"
+
+      - name: Run zero-finding Coding Waboose
+        shell: bash
+        run: |
+          set -euo pipefail
+          python aura_coding_waboose_cli.py \
+            --repo-root . \
+            --state-file "$WABOOSE_STATE" \
+            run \
+            --request .aura/waboose_requests/unified_memory_continuity.v1.json \
+            > "$EVIDENCE_DIR/waboose.json"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(
+              Path('${{ runner.temp }}/umc-deep-review-evidence/waboose.json').read_text(encoding='utf-8')
+          )
+          assert result.get('ok') is True, result
+          assert not (result.get('findings') or []), result
+          assert not (result.get('deterministic_findings') or []), result
+          assert result.get('production_mutation') is False, result
+          assert result.get('automatic_fix') is False, result
+          PY
+
+      - name: Regenerate architecture navigation artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python aura_codebase_navigator.py \
+            > "$EVIDENCE_DIR/codemap-generation.log" 2>&1
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s topology_map.json
+          test -s Aura_Memory/live_topology_ast.json
+          git diff --check
+
+      - name: Commit bounded reviewed tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'AuraOS Deep Review Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            aura_unified_memory_continuity.py \
+            tests/test_aura_unified_memory_continuity.py \
+            docs/AURA_UNIFIED_MEMORY_CONTINUITY.md \
+            docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json
+          git add -f Aura_Memory/live_topology_ast.json
+          git diff --cached --check
+          git diff --cached --name-only > "$EVIDENCE_DIR/staged_paths.txt"
+          python - <<'PY'
+          from pathlib import Path
+          changed = set(Path('${{ runner.temp }}/umc-deep-review-evidence/staged_paths.txt').read_text().splitlines())
+          required = {
+              'aura_unified_memory_continuity.py',
+              'tests/test_aura_unified_memory_continuity.py',
+              'docs/AURA_UNIFIED_MEMORY_CONTINUITY.md',
+              'docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md',
+          }
+          allowed = required | {
+              '.aura/CODEMAP.json',
+              '.aura/CODEMAP.md',
+              'topology_map.json',
+              'Aura_Memory/live_topology_ast.json',
+          }
+          if not required.issubset(changed):
+              raise SystemExit(f'missing reviewed paths: {sorted(required - changed)}')
+          if not changed.issubset(allowed):
+              raise SystemExit(f'unexpected staged paths: {sorted(changed - allowed)}')
+          PY
+          git commit -m 'fix: harden continuity identity and governed evidence'
+          git push origin "HEAD:${TARGET_BRANCH}"
+          git rev-parse HEAD | tee "$EVIDENCE_DIR/materialized_commit.txt"
+
+      - name: Upload deep-review materialization evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unified-memory-continuity-deep-materialization-${{ github.run_id }}
+          path: ${{ runner.temp }}/umc-deep-review-evidence
+          if-no-files-found: warn
+          retention-days: 30
