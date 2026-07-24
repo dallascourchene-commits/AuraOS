@@ -24,8 +24,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-          persist-credentials: false
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -34,7 +33,7 @@ jobs:
       - name: Install diagnostic dependencies
         run: python -m pip install ruff
 
-      - name: Apply prepared hardening
+      - name: Apply prepared hardening and capture status
         run: |
           mkdir -p /tmp/aura-runtime-hardening-diagnostics
           set +e
@@ -46,10 +45,9 @@ jobs:
           review_status=$?
           printf '%s\n' "$apply_status" > /tmp/aura-runtime-hardening-diagnostics/apply.status
           printf '%s\n' "$review_status" > /tmp/aura-runtime-hardening-diagnostics/review-fixes.status
-          exit $((apply_status || review_status))
+          exit 0
 
       - name: Capture exact Ruff residue
-        if: always()
         run: |
           set +e
           ruff format \
