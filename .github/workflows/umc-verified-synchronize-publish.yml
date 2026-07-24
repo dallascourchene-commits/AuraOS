@@ -43,10 +43,11 @@ jobs:
           git fetch --no-tags origin "$TRANSPORT_COMMIT"
           git show "$TRANSPORT_COMMIT:.aura/refactor_payloads/umc_deep_review_v2_materialize.sh" > "${RUNNER_TEMP}/umc_publish.sh"
           python - "$EVENT_HEAD" <<'PY'
+          import os
           import sys
           from pathlib import Path
 
-          path = Path(sys.argv[0]).parent / 'umc_publish.sh'
+          path = Path(os.environ['RUNNER_TEMP']) / 'umc_publish.sh'
           text = path.read_text(encoding='utf-8')
           placeholder = "EXPECTED_HEAD='__EXPECTED_HEAD__'"
           replacement = f"EXPECTED_HEAD='{sys.argv[1]}'"
