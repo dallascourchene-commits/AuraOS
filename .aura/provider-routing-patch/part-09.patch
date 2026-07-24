@@ -1,0 +1,209 @@
+                 capabilities=["chat"],
+-                default_roles={"cheap_builder": "claude-sonnet-4-6", "shadow": "claude-sonnet-4-6"},
++                default_roles={"primary": "claude-sonnet-4-6", "premium": "claude-opus-4-8", "reasoner": "claude-opus-4-8", "coding": "claude-sonnet-4-6", "cheap_builder": "claude-sonnet-4-6", "shadow": "claude-sonnet-4-6"},
+                 api="anthropic",
+             ),
+             "gemini": _config(
+@@ -147,15 +211,34 @@ class ProviderRegistry:
+                 capabilities=["chat", "vision", "structured_outputs"],
+                 default_roles={"cheap_builder": "gemini-1.5-flash", "shadow": "gemini-1.5-flash", "summarizer": "gemini-1.5-flash"},
+                 api="gemini",
++                api_key_aliases=["GEMINI_KEY", "GOOGLE_API_KEY"],
+             ),
+         }
+ 
+     def get_provider_config(self, provider_id: str) -> Optional[Dict[str, Any]]:
+-        return self.providers.get(provider_id)
++        return self.providers.get(str(provider_id or "").lower())
++
++    def provider_order(self, role: str | None = None) -> list[str]:
++        normalized = str(role or "primary").lower()
++        return list(self.provider_priority_by_role.get(normalized, self.provider_priority))
++
++    def resolve_model(self, provider_id: str, role_or_model: str | None = None) -> str:
++        config = self.get_provider_config(provider_id)
++        if not config:
++            return str(role_or_model or "")
++        roles = dict(config.get("default_roles") or {})
++        query = str(role_or_model or "primary").strip()
++        known_roles = {"primary", "premium", "reasoner", "coding", "cheap_builder", "shadow", "summarizer"}
++        if query.lower() in known_roles:
++            return str(roles.get(query.lower()) or config.get("model") or "")
++        return str(roles.get(query.lower()) or roles.get(query) or query)
+ 
+     def get_api_key(self, provider_id: str) -> Optional[str]:
+         config = self.get_provider_config(provider_id)
+-        return os.environ.get(config["api_key_env"]) if config else None
++        if not config:
++            return None
++        names = [config["api_key_env"], *config.get("api_key_aliases", [])]
++        return next((os.environ.get(name) for name in names if os.environ.get(name)), None)
+ 
+     def get_redacted_health_report(self) -> Dict[str, Any]:
+         report: Dict[str, Any] = {}
+diff --git a/aura_secrets.example.json b/aura_secrets.example.json
+index 2afa657..0525471 100644
+--- a/aura_secrets.example.json
++++ b/aura_secrets.example.json
+@@ -1,60 +1,37 @@
+ {
+-  "FIREWORKS_API_KEY": "paste_fireworks_key_here",
+-  "GEMINI_API_KEY": "your_primary_gemini_key_here",
++  "DEEPSEEK_API_KEY": "paste_primary_deepseek_key_here",
++  "DEEPSEEK_API_KEYS": [
++    "optional_deepseek_backup_1",
++    "optional_deepseek_backup_2"
++  ],
++  "DEEPSEEK_API_KEY_2": "optional_numbered_deepseek_backup",
++
++  "MISTRAL_API_KEY": "paste_primary_mistral_key_here",
++  "MISTRAL_API_KEYS": [
++    "optional_mistral_backup_1",
++    "optional_mistral_backup_2"
++  ],
++
++  "XAI_API_KEY": "paste_xai_grok_key_here",
++  "GROK_API_KEY": "optional_xai_alias_key",
++  "XAI_API_KEYS": [
++    "optional_xai_backup_1"
++  ],
++
++  "GROQ_API_KEY": "paste_groq_key_here",
++  "SAMBANOVA_API_KEY": "paste_sambanova_key_here",
++  "CEREBRAS_API_KEY": "paste_cerebras_key_here",
++  "GEMINI_API_KEY": "paste_primary_gemini_key_here",
+   "GEMINI_API_KEYS": [
+-    "backup_gemini_key_1",
+-    "backup_gemini_key_2"
++    "optional_gemini_backup_1",
++    "optional_gemini_backup_2"
+   ],
+-  "GEMINI_API_KEY_2": "optional_numbered_backup",
+   "OPEN_ROUTER_API_KEY": "paste_openrouter_key_here",
+-  "MISTRAL_API_KEY": "your_mistral_key",
+-  "GROQ_API_KEY": "your_groq_key",
+-  "SAMBANOVA_API_KEY": "your_sambanova_key",
+-  "GITHUB_TOKEN": "your_github_models_token",
+-  "AURA_FUSION_PANEL": [
+-    {
+-      "name": "thinker_openrouter",
+-      "role": "THINKER",
+-      "provider": "openrouter",
+-      "base_url": "https://openrouter.ai/api/v1/chat/completions",
+-      "api_key_name": "OPEN_ROUTER_API_KEY",
+-      "model": "anthropic/claude-sonnet-4.5",
+-      "max_tokens": 900,
+-      "temperature": 0.0,
+-      "enabled": true
+-    },
+-    {
+-      "name": "worker_groq",
+-      "role": "WORKER",
+-      "provider": "groq",
+-      "base_url": "https://api.groq.com/openai/v1/chat/completions",
+-      "api_key_name": "GROQ_API_KEY",
+-      "model": "llama-3.3-70b-versatile",
+-      "max_tokens": 900,
+-      "temperature": 0.0,
+-      "enabled": true
+-    },
+-    {
+-      "name": "verifier_mistral",
+-      "role": "VERIFIER",
+-      "provider": "mistral",
+-      "base_url": "https://api.mistral.ai/v1/chat/completions",
+-      "api_key_name": "MISTRAL_API_KEY",
+-      "model": "mistral-small-latest",
+-      "max_tokens": 900,
+-      "temperature": 0.0,
+-      "enabled": true
+-    }
+-  ],
+-  "AURA_FUSION_JUDGE": {
+-    "name": "judge_openrouter",
+-    "role": "JUDGE",
+-    "provider": "openrouter",
+-    "base_url": "https://openrouter.ai/api/v1/chat/completions",
+-    "api_key_name": "OPEN_ROUTER_API_KEY",
+-    "model": "openai/gpt-4o-mini",
+-    "max_tokens": 1200,
+-    "temperature": 0.0,
+-    "enabled": true
+-  }
++  "GITHUB_TOKEN": "paste_github_models_token_here",
++  "FIREWORKS_API_KEY": "optional_legacy_fireworks_key",
++  "ANTHROPIC_API_KEY": "optional_anthropic_key",
++  "OPENAI_API_KEY": "optional_openai_key",
++
++  "AURA_FUSION_PANEL": [],
++  "AURA_FUSION_JUDGE": null
+ }
+diff --git a/docs/AURA_AGENT_ARENA_BRIDGE.md b/docs/AURA_AGENT_ARENA_BRIDGE.md
+index 838e882..426f7d6 100644
+--- a/docs/AURA_AGENT_ARENA_BRIDGE.md
++++ b/docs/AURA_AGENT_ARENA_BRIDGE.md
+@@ -53,18 +53,24 @@ scripts/aura-agent-arena export-icm
+ 
+ When GitHub Codespaces or other cloud dev environments boot the repo, the Aura Agent Arena Bridge is ready. The devcontainer config sets `AURA_AGENT_ARENA_MODE=codespaces` and `AURA_AGENT_ARENA_PATCH_AUTHORITY=exact_source_spans_and_hashes_only`.
+ 
+-### 4. Fireworks Worker Mode (`aura_agent_arena_fireworks.py`)
++### 4. External Patch Worker Mode (`aura_agent_arena_fireworks.py`)
+ 
+-External agents can ask Aura to call a Fireworks model for a compressed micro-patch. This uses the user's Fireworks credits and stable prompt caching.
++The historical `fireworks-patch` command and MCP tool name remain for client compatibility, but the implementation is provider-neutral. Aura sends only compressed micro-context through the canonical egress router. Premium/code work starts with DeepSeek; fast work follows the cheap-provider order; every valid key is rotated; provider failure falls through automatically. Fireworks is now an optional late fallback.
+ 
+-Environment variables:
+-- `FIREWORKS_API_KEY` — required for Fireworks calls
+-- `AURA_FIREWORKS_MODEL_FAST` — model for fast tier
+-- `AURA_FIREWORKS_MODEL_CODE` — model for code tier
+-- `AURA_FIREWORKS_MODEL_JUDGE` — model for judge tier
+-- `AURA_FIREWORKS_SESSION_ID` — stable session affinity key
++Common secrets include:
++- `DEEPSEEK_API_KEY`, `DEEPSEEK_API_KEYS`, numbered DeepSeek backups;
++- `MISTRAL_API_KEY`, `MISTRAL_API_KEYS`;
++- `XAI_API_KEY` or `GROK_API_KEY`;
++- other registered provider keys, including optional `FIREWORKS_API_KEY`.
+ 
+-**Do not store API keys in the repo.** Fireworks keys must be injected as secrets/environment variables.
++Optional overrides:
++- `AURA_AGENT_ARENA_PROVIDER` — preferred provider, with fallback still enabled;
++- `AURA_AGENT_ARENA_MODEL_FAST`;
++- `AURA_AGENT_ARENA_MODEL_CODE`;
++- `AURA_AGENT_ARENA_MODEL_JUDGE`;
++- `AURA_AGENT_ARENA_SESSION_ID`.
++
++**Do not store API keys in the repo.** Put them in `aura_secrets.json` or inject them as environment secrets. See `docs/AURA_PROVIDER_ROUTING.md`.
+ 
+ ## Safety Model
+ 
+@@ -158,22 +164,23 @@ When a Codespace boots, the devcontainer automatically:
+ 
+ The agent can then use the CLI or MCP server directly.
+ 
+-## Example Fireworks Worker Workflow
++## Example External Worker Workflow
+ 
+ ```bash
+-# Set Fireworks API key as environment variable (never in repo)
+-export FIREWORKS_API_KEY="fw-..."
++# Configure one or more provider keys outside the repo
++export DEEPSEEK_API_KEY="..."
++export MISTRAL_API_KEY="..."
+ 
+ # Prepare and get context
+ scripts/aura-agent-arena prepare --objective "Fix routing bug" --target-file aura_fst_routing.py
+ scripts/aura-agent-arena context --task-id A1
+ 
+-# Call Fireworks for a candidate diff
++# Call the compatibility command for a routed candidate diff
+ scripts/aura-agent-arena fireworks-patch \
+   --task-id A1 \
+   --instruction "Return a unified diff only. Preserve patch authority and fallback behavior."
+ 
+-# Stage and verify the Fireworks output
++# Stage and verify the routed worker output
+ scripts/aura-agent-arena stage-patch --task-id A1 --diff-file /tmp/aura_patch.diff
+ scripts/aura-agent-arena verify --scope declared
+ ```
+@@ -202,8 +209,8 @@ Run CODEMAP generation first. The bridge requires `.aura/CODEMAP.json` to functi
+ ### "No prepared arena session" error
