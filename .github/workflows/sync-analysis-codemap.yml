@@ -1,4 +1,4 @@
-name: Synchronize CODEMAP on analysis and documentation branches
+name: Synchronize CODEMAP on architecture work branches
 
 on:
   pull_request:
@@ -6,16 +6,18 @@ on:
     branches:
       - "analysis/**"
       - "docs/**"
+      - "fix/construction-demo-runtime-harness-*"
     paths-ignore:
       - ".aura/CODEMAP.json"
       - ".aura/CODEMAP.md"
       - "topology_map.json"
+      - "Aura_Memory/live_topology_ast.json"
 
 permissions:
   contents: write
 
 concurrency:
-  group: sync-analysis-codemap-${{ github.event.pull_request.number || github.ref }}
+  group: sync-architecture-codemap-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -24,7 +26,8 @@ jobs:
       github.actor != 'github-actions[bot]' &&
       (github.event_name == 'push' ||
        startsWith(github.event.pull_request.head.ref, 'analysis/') ||
-       startsWith(github.event.pull_request.head.ref, 'docs/'))
+       startsWith(github.event.pull_request.head.ref, 'docs/') ||
+       startsWith(github.event.pull_request.head.ref, 'fix/construction-demo-runtime-harness-'))
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -57,6 +60,8 @@ jobs:
           test -s .aura/CODEMAP.json
           test -s .aura/CODEMAP.md
           test -s topology_map.json
+          test -s Aura_Memory/live_topology_ast.json
+          git diff --check
       - name: Commit synchronized maps
         env:
           GH_TOKEN: ${{ github.token }}
@@ -64,7 +69,11 @@ jobs:
         run: |
           git config user.name "AuraOS CODEMAP Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
+          git add \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json \
+            Aura_Memory/live_topology_ast.json
           if git diff --cached --quiet; then
             exit 0
           fi
@@ -83,6 +92,7 @@ jobs:
             .aura/CODEMAP.json
             .aura/CODEMAP.md
             topology_map.json
+            Aura_Memory/live_topology_ast.json
             codemap-push.log
           if-no-files-found: error
           retention-days: 14
