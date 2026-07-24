@@ -104,6 +104,8 @@ This compiles active memory; it does not persist a new memory store.
 
 `AURA_ACT_CAPSULE_ENVELOPE_V2` wraps—without replacing—the existing `aura_architect_loop.ActCapsule`.
 
+Before binding, the adapter requires a complete canonical `ActCapsule` round-trip, the current `AURA_ACT_CAPSULE_V1` version, an objective identical to the `IntentPacket`, and target file/symbol membership inside the declared edit scope.
+
 It binds the canonical Act Capsule to:
 
 - `IntentPacket`;
@@ -128,17 +130,18 @@ The legacy Act Capsule record and digest remain embedded for exact compatibility
 It binds:
 
 - the unchanged intent and Act Capsule digests;
+- exact repository head, working-tree digest, and current source digest;
 - exact provider/model profile and provider configuration;
 - selected worker role and task slice;
 - prompt structure;
 - evidence placement and context order;
-- examples and available tools;
+- examples and available tools, restricted to the canonical Act Capsule allowance;
 - reasoning budget and output schema;
 - uncertainty, stop, retry, and escalation rules;
 - cross-model disagreement references;
 - required verification depth.
 
-A stale, expired, unknown, or mismatched model profile fails closed. Cross-model disagreement increases verification depth; it never becomes voting authority.
+A stale, expired, unknown, or mismatched model profile fails closed. Evidence outside the active Arena slice, role drift, or tool-scope expansion also fails closed. Cross-model disagreement increases verification depth; it never becomes voting authority.
 
 ### 3.6 `PredictionPacket` and `P1Observation`
 
@@ -150,11 +153,14 @@ A stale, expired, unknown, or mismatched model profile fails closed. Cross-model
 - expected evidence;
 - expected cost;
 - expected risk;
-- exact Act Capsule and ModelExecutionPacket digests;
+- exact Act Capsule, ModelExecutionPacket, and model-profile digests;
+- exact repository head and source digest inherited from the active evidence slice;
 - producer identity;
 - commit timestamp and immutable P0 digest.
 
-`AURA_P1_OBSERVATION_V1` may be created only when the caller supplies the unchanged P0 digest. It binds:
+All canonical JSON mappings are recursively frozen. A frozen dataclass cannot be bypassed by mutating a nested cost, example, observation, or embedded Act Capsule mapping after its digest is committed. Aggregate records are also bounded by the shared canonical packet-size limit.
+
+`AURA_P1_OBSERVATION_V1` may be created only when the caller supplies the unchanged P0 digest and the record still recomputes to that digest. It binds:
 
 - exact prediction identity;
 - repository head and source digest;
@@ -165,7 +171,7 @@ A stale, expired, unknown, or mismatched model profile fails closed. Cross-model
 - verifier evidence;
 - observation timestamp.
 
-The producer cannot independently verify its own result.
+The observation must use the exact repository head and source digest committed in P0. The P0 producer cannot act as the independent P1 observer.
 
 ### 3.7 `ContinuitySensitivityReceipt`
 
@@ -198,19 +204,19 @@ It is proposal-only, is not a truth owner, and has no patch, VSA, promotion, pub
 - exact current source identity;
 - exact current repository head;
 - current continuity receipt;
-- independent verification;
-- complete verifier evidence;
+- independent verification matching the verifier bound into the continuity receipt;
+- complete verifier evidence and an explicit human/community disposition reference;
 - required Crucible replay/current reproof;
 - replacement and invalidation handling;
 - required human or community disposition.
 
 Failure returns exact blockers and a legal outcome rather than silently promoting the candidate.
 
-`relationship_experience_kwargs(...)` prepares validated arguments for the existing `RelationshipExperienceObservation.create(...)` owner. It does not persist an observation itself.
+`relationship_experience_kwargs(...)` prepares validated arguments for the existing `RelationshipExperienceObservation.create(...)` owner. It requires the continuity receipt and independent verifier to remain in the evidence bundle, enforces the canonical owner’s privacy classes, and does not persist an observation itself.
 
 ### 3.10 QDKT consequential admission
 
-`evaluate_qdkt_consequential_admission(...)` keeps consequential QDKT admission closed until the current-reproof decision is eligible and the required human/community disposition is present.
+`evaluate_qdkt_consequential_admission(...)` accepts the typed continuity receipt, typed learning-to-reproof decision, and canonical `RelationshipExperienceObservation`. It keeps consequential QDKT admission closed until those records agree on repository/source/relationship identity, the current-reproof decision is eligible, raw continuity evidence remains complete, and the required human/community disposition is present.
 
 The result remains proposal-only and has no crystallization, patch, policy, or promotion authority.
 

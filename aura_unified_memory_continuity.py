@@ -15,10 +15,12 @@ The contracts implement the smallest vertical slice shared by:
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import asdict, dataclass, field, fields, is_dataclass
+from dataclasses import asdict, dataclass, fields, is_dataclass
 from enum import Enum
 import math
+from pathlib import PurePosixPath
 import time
+from types import MappingProxyType
 from typing import Any
 
 from aura_event_contracts import (
@@ -26,7 +28,6 @@ from aura_event_contracts import (
     VSA_PATCH_AUTHORITY,
     canonical_json,
     stable_digest,
-    stable_id,
 )
 
 UNIFIED_MEMORY_CONTINUITY_VERSION = "AURA_UNIFIED_MEMORY_CONTINUITY_V1"
@@ -149,7 +150,23 @@ def _strings(values: Sequence[Any], name: str, *, required: bool = False) -> tup
     return normalized
 
 
-def _mapping(value: Any, name: str) -> dict[str, Any]:
+def _freeze_json(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return MappingProxyType({str(key): _freeze_json(item) for key, item in value.items()})
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze_json(item) for item in value)
+    return value
+
+
+def _thaw_json(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {str(key): _thaw_json(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return [_thaw_json(item) for item in value]
+    return value
+
+
+def _mapping(value: Any, name: str) -> Mapping[str, Any]:
     if isinstance(value, Mapping):
         payload = dict(value)
     elif hasattr(value, "to_dict") and callable(value.to_dict):
@@ -162,10 +179,12 @@ def _mapping(value: Any, name: str) -> dict[str, Any]:
         normalized = canonical_json(payload)
     except (TypeError, ValueError, OverflowError) as exc:
         raise ValueError(f"{name} must be canonical JSON data") from exc
+    if len(normalized.encode("utf-8")) > _MAX_PACKET_BYTES:
+        raise ValueError(f"{name} exceeds {_MAX_PACKET_BYTES} canonical bytes")
     decoded = __import__("json").loads(normalized)
     if not isinstance(decoded, dict):
         raise ValueError(f"{name} must normalize to an object")
-    return decoded
+    return _freeze_json(decoded)
 
 
 def _strict_bool(value: Any, name: str) -> bool:
@@ -205,12 +224,42 @@ def _packet_size(value: Mapping[str, Any], name: str) -> None:
         raise ValueError(f"{name} exceeds {_MAX_PACKET_BYTES} canonical bytes")
 
 
-def _canonical_tuple_records(values: Sequence[Any], name: str) -> tuple[dict[str, Any], ...]:
+def _canonical_tuple_records(values: Sequence[Any], name: str) -> tuple[Mapping[str, Any], ...]:
     if isinstance(values, (str, bytes, bytearray)) or not isinstance(values, Sequence):
         raise ValueError(f"{name} must be a sequence")
     if len(values) > _MAX_ITEMS:
         raise ValueError(f"{name} exceeds {_MAX_ITEMS} items")
     return tuple(_mapping(value, f"{name}[{index}]") for index, value in enumerate(values))
+
+
+def _repo_paths(values: Sequence[Any], name: str) -> tuple[str, ...]:
+    paths = _strings(values, name)
+    for value in paths:
+        if "\\" in value:
+            raise ValueError(f"{name} must use repository-relative POSIX paths")
+        path = PurePosixPath(value)
+        if path.is_absolute() or ".." in path.parts or value in {".", ".."}:
+            raise ValueError(f"{name} must contain bounded repository-relative paths")
+    return paths
+
+
+def _canonical_act_capsule_payload(value: Any) -> Mapping[str, Any]:
+    from aura_architect_loop import ACT_CAPSULE_VERSION, ActCapsule
+
+    normalized = _mapping(value, "legacy_act_capsule")
+    expected_fields = set(ActCapsule.__dataclass_fields__)
+    if set(normalized) != expected_fields:
+        raise ValueError("legacy_act_capsule must be a complete canonical ActCapsule")
+    try:
+        capsule = ActCapsule.from_dict(_thaw_json(normalized))
+    except (TypeError, ValueError) as exc:
+        raise ValueError("legacy_act_capsule is not a valid canonical ActCapsule") from exc
+    if capsule.capsule_version != ACT_CAPSULE_VERSION:
+        raise ValueError("legacy_act_capsule version differs from the canonical owner")
+    canonical = _mapping(capsule.to_dict(), "legacy_act_capsule")
+    if _thaw_json(canonical) != _thaw_json(normalized):
+        raise ValueError("legacy_act_capsule failed canonical round-trip validation")
+    return canonical
 
 
 @dataclass(frozen=True)
@@ -226,6 +275,14 @@ class AuthorityEnvelope:
     def __post_init__(self) -> None:
         for item in fields(self):
             _strict_bool(getattr(self, item.name), f"authority.{item.name}")
+        if self.commit and not self.edit:
+            raise ValueError("commit authority requires edit authority")
+        if self.publish_pr and not self.commit:
+            raise ValueError("publish_pr authority requires commit authority")
+        if self.merge and not self.publish_pr:
+            raise ValueError("merge authority requires publish_pr authority")
+        if self.production_mutation and not self.edit:
+            raise ValueError("production mutation authority requires edit authority")
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -306,7 +363,7 @@ class IntentPacket:
         privacy_class: str,
         freshness_requirement: str,
         output_contract: str,
-    ) -> "IntentPacket":
+    ) -> IntentPacket:
         identity = {
             "objective": _required(objective, "objective"),
             "purpose": _required(purpose, "purpose"),
@@ -417,11 +474,12 @@ class SemanticLedger:
         expected = stable_digest(self.identity_payload())
         if self.ledger_digest != expected or self.ledger_id != f"sem_{expected}":
             raise ValueError("Semantic Ledger identity mismatch")
+        _packet_size(self.to_dict(), "SemanticLedger")
 
     @classmethod
     def create(
         cls, *, intent_digest: str, definitions: Sequence[SemanticDefinition]
-    ) -> "SemanticLedger":
+    ) -> SemanticLedger:
         definitions_tuple = tuple(definitions)
         identity = {
             "intent_digest": _required(intent_digest, "intent_digest"),
@@ -545,6 +603,7 @@ class ArenaEvidenceSlice:
         expected = stable_digest(self.identity_payload())
         if self.slice_digest != expected or self.slice_id != f"slice_{expected}":
             raise ValueError("Arena Evidence Slice identity mismatch")
+        _packet_size(self.to_dict(), "ArenaEvidenceSlice")
 
     def identity_payload(self) -> dict[str, Any]:
         return {
@@ -570,7 +629,7 @@ class ArenaEvidenceSlice:
 @dataclass(frozen=True)
 class ActCapsuleEnvelope:
     envelope_id: str
-    legacy_act_capsule: dict[str, Any]
+    legacy_act_capsule: Mapping[str, Any]
     legacy_act_capsule_digest: str
     intent_digest: str
     semantic_ledger_digest: str
@@ -605,7 +664,7 @@ class ActCapsuleEnvelope:
         if stable_digest(normalized) != self.legacy_act_capsule_digest:
             raise ValueError("legacy Act Capsule digest mismatch")
         object.__setattr__(
-            self, "allowed_files", _strings(self.allowed_files, "allowed_files")
+            self, "allowed_files", _repo_paths(self.allowed_files, "allowed_files")
         )
         object.__setattr__(
             self, "allowed_symbols", _strings(self.allowed_symbols, "allowed_symbols")
@@ -654,10 +713,11 @@ class ActCapsuleEnvelope:
         expected = stable_digest(self.identity_payload())
         if self.envelope_digest != expected or self.envelope_id != f"actenv_{expected}":
             raise ValueError("Act Capsule envelope identity mismatch")
+        _packet_size(self.to_dict(), "ActCapsuleEnvelope")
 
     def identity_payload(self) -> dict[str, Any]:
         return {
-            "legacy_act_capsule": self.legacy_act_capsule,
+            "legacy_act_capsule": _thaw_json(self.legacy_act_capsule),
             "legacy_act_capsule_digest": self.legacy_act_capsule_digest,
             "intent_digest": self.intent_digest,
             "semantic_ledger_digest": self.semantic_ledger_digest,
@@ -728,6 +788,7 @@ class ModelProfileRef:
         expected = stable_digest(self.identity_payload())
         if self.profile_digest != expected:
             raise ValueError("ModelProfileRef digest mismatch")
+        _packet_size(self.to_dict(), "ModelProfileRef")
 
     @classmethod
     def create(
@@ -738,7 +799,7 @@ class ModelProfileRef:
         expires_at: float,
         evidence_refs: Sequence[str],
         uncertainty: float,
-    ) -> "ModelProfileRef":
+    ) -> ModelProfileRef:
         identity = _mapping(endpoint_identity, "endpoint_identity")
         required = {
             "profile_id", "provider", "requested_model", "returned_model",
@@ -792,6 +853,9 @@ class ModelExecutionPacket:
     packet_id: str
     intent_digest: str
     act_capsule_digest: str
+    repository_head: str
+    working_tree_digest: str
+    source_digest: str
     model_profile_digest: str
     provider_config_digest: str
     selected_role: str
@@ -799,7 +863,7 @@ class ModelExecutionPacket:
     prompt_structure: tuple[str, ...]
     evidence_refs: tuple[str, ...]
     context_order: tuple[str, ...]
-    examples: tuple[dict[str, Any], ...]
+    examples: tuple[Mapping[str, Any], ...]
     tools_available: tuple[str, ...]
     reasoning_budget: str
     output_schema: str
@@ -816,7 +880,8 @@ class ModelExecutionPacket:
 
     def __post_init__(self) -> None:
         for name in (
-            "packet_id", "intent_digest", "act_capsule_digest", "model_profile_digest",
+            "packet_id", "intent_digest", "act_capsule_digest", "repository_head",
+            "working_tree_digest", "source_digest", "model_profile_digest",
             "provider_config_digest", "selected_role", "task_slice",
             "reasoning_budget", "output_schema", "retry_policy", "escalation_policy",
             "packet_digest",
@@ -844,11 +909,15 @@ class ModelExecutionPacket:
         expected = stable_digest(self.identity_payload())
         if self.packet_digest != expected or self.packet_id != f"modelexec_{expected}":
             raise ValueError("ModelExecutionPacket identity mismatch")
+        _packet_size(self.to_dict(), "ModelExecutionPacket")
 
     def identity_payload(self) -> dict[str, Any]:
         return {
             "intent_digest": self.intent_digest,
             "act_capsule_digest": self.act_capsule_digest,
+            "repository_head": self.repository_head,
+            "working_tree_digest": self.working_tree_digest,
+            "source_digest": self.source_digest,
             "model_profile_digest": self.model_profile_digest,
             "provider_config_digest": self.provider_config_digest,
             "selected_role": self.selected_role,
@@ -856,7 +925,7 @@ class ModelExecutionPacket:
             "prompt_structure": list(self.prompt_structure),
             "evidence_refs": list(self.evidence_refs),
             "context_order": list(self.context_order),
-            "examples": list(self.examples),
+            "examples": [_thaw_json(item) for item in self.examples],
             "tools_available": list(self.tools_available),
             "reasoning_budget": self.reasoning_budget,
             "output_schema": self.output_schema,
@@ -886,11 +955,14 @@ class PredictionPacket:
     purpose_digest: str
     act_capsule_digest: str
     model_execution_packet_digest: str
+    model_profile_digest: str
+    repository_head: str
+    source_digest: str
     current_state_digest: str
     proposed_transition: str
     expected_state_delta: tuple[str, ...]
     expected_evidence: tuple[str, ...]
-    expected_cost: dict[str, Any]
+    expected_cost: Mapping[str, Any]
     expected_risk: tuple[str, ...]
     committed_at: float
     producer_id: str
@@ -901,7 +973,8 @@ class PredictionPacket:
     def __post_init__(self) -> None:
         for name in (
             "prediction_id", "objective_digest", "purpose_digest", "act_capsule_digest",
-            "model_execution_packet_digest", "current_state_digest",
+            "model_execution_packet_digest", "model_profile_digest", "repository_head",
+            "source_digest", "current_state_digest",
             "proposed_transition", "producer_id", "p0_digest",
         ):
             _required(getattr(self, name), name)
@@ -928,6 +1001,7 @@ class PredictionPacket:
         expected = stable_digest(self.identity_payload())
         if self.p0_digest != expected or self.prediction_id != f"prediction_{expected}":
             raise ValueError("PredictionPacket P0 identity mismatch")
+        _packet_size(self.to_dict(), "PredictionPacket")
 
     def identity_payload(self) -> dict[str, Any]:
         return {
@@ -935,11 +1009,14 @@ class PredictionPacket:
             "purpose_digest": self.purpose_digest,
             "act_capsule_digest": self.act_capsule_digest,
             "model_execution_packet_digest": self.model_execution_packet_digest,
+            "model_profile_digest": self.model_profile_digest,
+            "repository_head": self.repository_head,
+            "source_digest": self.source_digest,
             "current_state_digest": self.current_state_digest,
             "proposed_transition": self.proposed_transition,
             "expected_state_delta": list(self.expected_state_delta),
             "expected_evidence": list(self.expected_evidence),
-            "expected_cost": self.expected_cost,
+            "expected_cost": _thaw_json(self.expected_cost),
             "expected_risk": list(self.expected_risk),
             "committed_at": self.committed_at,
             "producer_id": self.producer_id,
@@ -966,7 +1043,7 @@ class P1Observation:
     source_digest: str
     observed_state_delta: tuple[str, ...]
     observed_evidence_refs: tuple[str, ...]
-    observed_cost: dict[str, Any]
+    observed_cost: Mapping[str, Any]
     missing_measurements: tuple[str, ...]
     observer_id: str
     observed_at: float
@@ -1005,6 +1082,7 @@ class P1Observation:
         expected = stable_digest(self.identity_payload())
         if self.observation_digest != expected or self.observation_id != f"p1_{expected}":
             raise ValueError("P1 observation identity mismatch")
+        _packet_size(self.to_dict(), "P1Observation")
 
     def identity_payload(self) -> dict[str, Any]:
         return {
@@ -1016,7 +1094,7 @@ class P1Observation:
             "source_digest": self.source_digest,
             "observed_state_delta": list(self.observed_state_delta),
             "observed_evidence_refs": list(self.observed_evidence_refs),
-            "observed_cost": self.observed_cost,
+            "observed_cost": _thaw_json(self.observed_cost),
             "missing_measurements": list(self.missing_measurements),
             "observer_id": self.observer_id,
             "observed_at": self.observed_at,
@@ -1110,6 +1188,7 @@ class ContinuitySensitivityReceipt:
         expected = stable_digest(self.identity_payload())
         if self.receipt_digest != expected or self.receipt_id != f"continuity_{expected}":
             raise ValueError("ContinuitySensitivityReceipt identity mismatch")
+        _packet_size(self.to_dict(), "ContinuitySensitivityReceipt")
 
     def identity_payload(self) -> dict[str, Any]:
         return {
@@ -1193,6 +1272,7 @@ class ContinuityDelta:
         expected = stable_digest(self.identity_payload())
         if self.delta_digest != expected or self.delta_id != f"delta_{expected}":
             raise ValueError("Continuity Delta identity mismatch")
+        _packet_size(self.to_dict(), "ContinuityDelta")
 
     def identity_payload(self) -> dict[str, Any]:
         return {
@@ -1224,6 +1304,8 @@ class LearningToReproofDecision:
     decision_id: str
     relationship_id: str
     relationship_digest: str
+    objective_digest: str
+    purpose_digest: str
     repository_head: str
     current_source_digest: str
     continuity_receipt_ref: str
@@ -1231,6 +1313,7 @@ class LearningToReproofDecision:
     current_reproof_ref: str
     independent_verifier_ref: str
     human_disposition: str
+    human_disposition_ref: str
     eligible_for_relationship_experience: bool
     blockers: tuple[str, ...]
     decision_digest: str
@@ -1241,13 +1324,13 @@ class LearningToReproofDecision:
     def __post_init__(self) -> None:
         for name in (
             "decision_id", "relationship_id", "relationship_digest",
-            "repository_head", "current_source_digest", "continuity_receipt_ref",
-            "decision_digest",
+            "objective_digest", "purpose_digest", "repository_head",
+            "current_source_digest", "continuity_receipt_ref", "decision_digest",
         ):
             _required(getattr(self, name), name)
         for name in (
             "crucible_proposal_ref", "current_reproof_ref",
-            "independent_verifier_ref",
+            "independent_verifier_ref", "human_disposition_ref",
         ):
             object.__setattr__(self, name, _optional(getattr(self, name), name))
         disposition = _required(self.human_disposition, "human_disposition").upper()
@@ -1264,6 +1347,7 @@ class LearningToReproofDecision:
                 self.crucible_proposal_ref,
                 self.current_reproof_ref,
                 self.independent_verifier_ref,
+                self.human_disposition_ref,
             )
         )
         expected_eligible = required_refs_present and disposition == "APPROVED" and not self.blockers
@@ -1278,11 +1362,14 @@ class LearningToReproofDecision:
         expected = stable_digest(self.identity_payload())
         if self.decision_digest != expected or self.decision_id != f"reproof_{expected}":
             raise ValueError("LearningToReproofDecision identity mismatch")
+        _packet_size(self.to_dict(), "LearningToReproofDecision")
 
     def identity_payload(self) -> dict[str, Any]:
         return {
             "relationship_id": self.relationship_id,
             "relationship_digest": self.relationship_digest,
+            "objective_digest": self.objective_digest,
+            "purpose_digest": self.purpose_digest,
             "repository_head": self.repository_head,
             "current_source_digest": self.current_source_digest,
             "continuity_receipt_ref": self.continuity_receipt_ref,
@@ -1290,6 +1377,7 @@ class LearningToReproofDecision:
             "current_reproof_ref": self.current_reproof_ref,
             "independent_verifier_ref": self.independent_verifier_ref,
             "human_disposition": self.human_disposition,
+            "human_disposition_ref": self.human_disposition_ref,
             "eligible_for_relationship_experience": self.eligible_for_relationship_experience,
             "blockers": list(self.blockers),
         }
@@ -1378,6 +1466,7 @@ class QDKTConsequentialAdmission:
         expected = stable_digest(self.identity_payload())
         if self.decision_digest != expected or self.decision_id != f"qdkt_admission_{expected}":
             raise ValueError("QDKT admission identity mismatch")
+        _packet_size(self.to_dict(), "QDKTConsequentialAdmission")
 
     def identity_payload(self) -> dict[str, Any]:
         return {
@@ -1433,8 +1522,9 @@ def compile_arena_evidence_slice(
             continue
         seen.add(item.evidence_ref)
         if item.required or item.evidence_ref in required:
+            selected_item = item
             if item.evidence_ref in required and not item.required:
-                item = ArenaEvidenceItem(
+                selected_item = ArenaEvidenceItem(
                     evidence_ref=item.evidence_ref,
                     causal_reason=item.causal_reason,
                     truth_class=item.truth_class,
@@ -1443,7 +1533,7 @@ def compile_arena_evidence_slice(
                     freshness=item.freshness,
                     required=True,
                 )
-            items.append(item)
+            items.append(selected_item)
         else:
             excluded.append(item.evidence_ref)
     present = {item.evidence_ref for item in items}
@@ -1494,7 +1584,17 @@ def compile_act_capsule_envelope(
     if arena_slice.objective_digest != intent.intent_digest:
         raise ValueError("Arena Evidence Slice and IntentPacket disagree")
     semantic_ledger.require_terms(required_semantic_terms)
-    legacy = _mapping(legacy_act_capsule, "legacy_act_capsule")
+    legacy = _canonical_act_capsule_payload(legacy_act_capsule)
+    if legacy["objective"] != intent.objective:
+        raise ValueError("canonical ActCapsule objective differs from IntentPacket")
+    normalized_allowed_files = _repo_paths(allowed_files, "allowed_files")
+    normalized_allowed_symbols = _strings(allowed_symbols, "allowed_symbols")
+    target_file = str(legacy.get("target_file") or "")
+    target_symbol = str(legacy.get("target_symbol") or "")
+    if target_file and target_file not in normalized_allowed_files:
+        raise ValueError("canonical ActCapsule target_file is outside allowed_files")
+    if target_symbol and target_symbol not in normalized_allowed_symbols:
+        raise ValueError("canonical ActCapsule target_symbol is outside allowed_symbols")
     legacy_digest = stable_digest(legacy)
     identity = {
         "legacy_act_capsule": legacy,
@@ -1503,8 +1603,8 @@ def compile_act_capsule_envelope(
         "semantic_ledger_digest": semantic_ledger.ledger_digest,
         "arena_slice_digest": arena_slice.slice_digest,
         "repository_head": arena_slice.repository_head,
-        "allowed_files": list(_strings(allowed_files, "allowed_files")),
-        "allowed_symbols": list(_strings(allowed_symbols, "allowed_symbols")),
+        "allowed_files": list(normalized_allowed_files),
+        "allowed_symbols": list(normalized_allowed_symbols),
         "prohibited_effects": list(
             _strings(prohibited_effects, "prohibited_effects", required=True)
         ),
@@ -1542,7 +1642,9 @@ def compile_model_execution_packet(
     *,
     intent: IntentPacket,
     act_envelope: ActCapsuleEnvelope,
+    arena_slice: ArenaEvidenceSlice,
     model_profile: ModelProfileRef,
+    current_source_digest: str,
     provider_config_digest: str,
     selected_role: str,
     task_slice: str,
@@ -1563,25 +1665,42 @@ def compile_model_execution_packet(
     """Compile a disposable model-relative packet from a canonical Act Capsule."""
     if act_envelope.intent_digest != intent.intent_digest:
         raise ValueError("Act Capsule envelope and IntentPacket disagree")
+    if act_envelope.arena_slice_digest != arena_slice.slice_digest:
+        raise ValueError("Act Capsule envelope and Arena Evidence Slice disagree")
+    if act_envelope.repository_head != arena_slice.repository_head:
+        raise ValueError("Act Capsule envelope repository head is stale")
+    role = _required(selected_role, "selected_role")
+    if role != str(act_envelope.legacy_act_capsule["role"]):
+        raise ValueError("selected_role differs from the canonical ActCapsule role")
+    available_tools = _strings(tools_available, "tools_available")
+    if not set(available_tools).issubset(act_envelope.allowed_tools):
+        raise ValueError("ModelExecutionPacket requests tools outside the Act Capsule")
+    selected_evidence = _strings(evidence_refs, "evidence_refs", required=True)
+    arena_refs = {item.evidence_ref for item in arena_slice.items}
+    if not set(selected_evidence).issubset(arena_refs):
+        raise ValueError("ModelExecutionPacket references evidence outside the active slice")
     model_profile.assert_fresh(observed_at=observed_at)
     disagreements = _strings(disagreement_refs, "disagreement_refs")
     verification_depth = 2 if disagreements else 1
     identity = {
         "intent_digest": intent.intent_digest,
         "act_capsule_digest": act_envelope.envelope_digest,
+        "repository_head": arena_slice.repository_head,
+        "working_tree_digest": arena_slice.working_tree_digest,
+        "source_digest": _required(current_source_digest, "current_source_digest"),
         "model_profile_digest": model_profile.profile_digest,
         "provider_config_digest": _required(
             provider_config_digest, "provider_config_digest"
         ),
-        "selected_role": _required(selected_role, "selected_role"),
+        "selected_role": role,
         "task_slice": _required(task_slice, "task_slice"),
         "prompt_structure": list(
             _strings(prompt_structure, "prompt_structure", required=True)
         ),
-        "evidence_refs": list(_strings(evidence_refs, "evidence_refs", required=True)),
+        "evidence_refs": list(selected_evidence),
         "context_order": list(_strings(context_order, "context_order", required=True)),
         "examples": [_mapping(item, "example") for item in examples],
-        "tools_available": list(_strings(tools_available, "tools_available")),
+        "tools_available": list(available_tools),
         "reasoning_budget": _required(reasoning_budget, "reasoning_budget"),
         "output_schema": _required(output_schema, "output_schema"),
         "uncertainty_requirements": list(
@@ -1610,10 +1729,9 @@ def compile_model_execution_packet(
 
 def commit_prediction(
     *,
-    objective_digest: str,
-    purpose_digest: str,
-    act_capsule_digest: str,
-    model_execution_packet_digest: str,
+    intent: IntentPacket,
+    act_envelope: ActCapsuleEnvelope,
+    model_execution_packet: ModelExecutionPacket,
     current_state_digest: str,
     proposed_transition: str,
     expected_state_delta: Sequence[str],
@@ -1623,14 +1741,23 @@ def commit_prediction(
     producer_id: str,
     committed_at: float | None = None,
 ) -> PredictionPacket:
+    if act_envelope.intent_digest != intent.intent_digest:
+        raise ValueError("Act Capsule envelope and IntentPacket disagree at P0")
+    if model_execution_packet.intent_digest != intent.intent_digest:
+        raise ValueError("ModelExecutionPacket and IntentPacket disagree at P0")
+    if model_execution_packet.act_capsule_digest != act_envelope.envelope_digest:
+        raise ValueError("ModelExecutionPacket and Act Capsule envelope disagree at P0")
+    if model_execution_packet.repository_head != act_envelope.repository_head:
+        raise ValueError("ModelExecutionPacket repository head differs from Act Capsule")
     timestamp = time.time() if committed_at is None else committed_at
     identity = {
-        "objective_digest": _required(objective_digest, "objective_digest"),
-        "purpose_digest": _required(purpose_digest, "purpose_digest"),
-        "act_capsule_digest": _required(act_capsule_digest, "act_capsule_digest"),
-        "model_execution_packet_digest": _required(
-            model_execution_packet_digest, "model_execution_packet_digest"
-        ),
+        "objective_digest": intent.intent_digest,
+        "purpose_digest": stable_digest(intent.purpose),
+        "act_capsule_digest": act_envelope.envelope_digest,
+        "model_execution_packet_digest": model_execution_packet.packet_digest,
+        "model_profile_digest": model_execution_packet.model_profile_digest,
+        "repository_head": model_execution_packet.repository_head,
+        "source_digest": model_execution_packet.source_digest,
         "current_state_digest": _required(current_state_digest, "current_state_digest"),
         "proposed_transition": _required(proposed_transition, "proposed_transition"),
         "expected_state_delta": list(
@@ -1668,12 +1795,21 @@ def observe_prediction(
     observed_at: float | None = None,
 ) -> P1Observation:
     """Record P1 only when the caller supplies the unchanged committed P0 digest."""
+    if stable_digest(prediction.identity_payload()) != prediction.p0_digest:
+        raise ValueError("P0 contents changed after commitment")
     if p0_digest != prediction.p0_digest:
         raise ValueError("P0 was modified or does not match the committed prediction")
     if objective_digest != prediction.objective_digest:
         raise ValueError("P1 objective differs from P0")
     if purpose_digest != prediction.purpose_digest:
         raise ValueError("P1 Purpose differs from P0")
+    if repository_head != prediction.repository_head:
+        raise ValueError("P1 repository head differs from committed P0")
+    if source_digest != prediction.source_digest:
+        raise ValueError("P1 source digest differs from committed P0")
+    observer = _required(observer_id, "observer_id")
+    if observer == prediction.producer_id:
+        raise ValueError("P0 producer cannot independently observe its own prediction")
     timestamp = time.time() if observed_at is None else observed_at
     if _timestamp(timestamp, "observed_at") < prediction.committed_at:
         raise ValueError("P1 cannot precede P0")
@@ -1696,7 +1832,7 @@ def observe_prediction(
         "missing_measurements": list(
             _strings(missing_measurements, "missing_measurements")
         ),
-        "observer_id": _required(observer_id, "observer_id"),
+        "observer_id": observer,
         "observed_at": _timestamp(timestamp, "observed_at"),
     }
     digest = stable_digest(identity)
@@ -1745,6 +1881,19 @@ def derive_continuity_sensitivity_receipt(
         raise ValueError("continuity receipt cannot be copied across source digests")
     if prediction.model_execution_packet_digest != model_execution_packet_digest:
         raise ValueError("continuity receipt model-execution packet differs from P0")
+    if prediction.model_profile_digest != model_profile_digest:
+        raise ValueError("continuity receipt model profile differs from P0")
+    verifier = _required(independent_verifier_id, "independent_verifier_id")
+    if verifier != observation.observer_id:
+        raise ValueError("continuity receipt verifier differs from the independent P1 observer")
+    verifier_refs = _strings(
+        verifier_evidence_refs, "verifier_evidence_refs", required=True
+    )
+    if not set(verifier_refs).issubset(observation.observed_evidence_refs):
+        raise ValueError("verifier evidence is not bound to the P1 observation")
+    raw_refs = _strings(raw_evidence_refs, "raw_evidence_refs", required=True)
+    if not set(observation.observed_evidence_refs).issubset(raw_refs):
+        raise ValueError("continuity receipt omitted raw P1 evidence")
     identity = {
         "prediction_id": prediction.prediction_id,
         "p0_digest": prediction.p0_digest,
@@ -1774,9 +1923,7 @@ def derive_continuity_sensitivity_receipt(
         "replay_burden": list(
             _strings(replay_burden, "replay_burden", required=True)
         ),
-        "raw_evidence_refs": list(
-            _strings(raw_evidence_refs, "raw_evidence_refs", required=True)
-        ),
+        "raw_evidence_refs": list(raw_refs),
         "missing_measurements": list(observation.missing_measurements),
         "replacement_candidate_refs": list(
             _strings(replacement_candidate_refs, "replacement_candidate_refs")
@@ -1784,14 +1931,8 @@ def derive_continuity_sensitivity_receipt(
         "uncertainty": uncertainty,
         "freshness": "CURRENT",
         "producer_id": _required(producer_id, "producer_id"),
-        "independent_verifier_id": _required(
-            independent_verifier_id, "independent_verifier_id"
-        ),
-        "verifier_evidence_refs": list(
-            _strings(
-                verifier_evidence_refs, "verifier_evidence_refs", required=True
-            )
-        ),
+        "independent_verifier_id": verifier,
+        "verifier_evidence_refs": list(verifier_refs),
         "human_disposition_ref": _required(
             human_disposition_ref, "human_disposition_ref"
         ),
@@ -1852,13 +1993,23 @@ def evaluate_learning_to_reproof(
     relationship_digest: str,
     repository_head: str,
     current_source_digest: str,
-    continuity_receipt_ref: str,
+    continuity_receipt: ContinuitySensitivityReceipt,
     crucible_proposal_ref: str = "",
     current_reproof_ref: str = "",
     independent_verifier_ref: str = "",
     human_disposition: str = "NOT_REVIEWED",
+    human_disposition_ref: str = "",
     extra_blockers: Sequence[str] = (),
 ) -> LearningToReproofDecision:
+    if repository_head != continuity_receipt.repository_head:
+        raise ValueError("learning reproof repository head differs from continuity evidence")
+    if current_source_digest != continuity_receipt.source_digest:
+        raise ValueError("learning reproof source digest differs from continuity evidence")
+    if (
+        independent_verifier_ref
+        and independent_verifier_ref != continuity_receipt.independent_verifier_id
+    ):
+        raise ValueError("learning reproof verifier differs from continuity evidence")
     blockers = list(_strings(extra_blockers, "extra_blockers"))
     if not crucible_proposal_ref:
         blockers.append("MISSING_CRUCIBLE_PROPOSAL")
@@ -1869,6 +2020,8 @@ def evaluate_learning_to_reproof(
     disposition = _required(human_disposition, "human_disposition").upper()
     if disposition != "APPROVED":
         blockers.append(f"HUMAN_DISPOSITION_{disposition}")
+    if disposition == "APPROVED" and not human_disposition_ref:
+        blockers.append("MISSING_HUMAN_DISPOSITION_REF")
     blockers = list(dict.fromkeys(blockers))
     eligible = not blockers
     identity = {
@@ -1876,13 +2029,13 @@ def evaluate_learning_to_reproof(
         "relationship_digest": _required(
             relationship_digest, "relationship_digest"
         ),
+        "objective_digest": continuity_receipt.objective_digest,
+        "purpose_digest": continuity_receipt.purpose_digest,
         "repository_head": _required(repository_head, "repository_head"),
         "current_source_digest": _required(
             current_source_digest, "current_source_digest"
         ),
-        "continuity_receipt_ref": _required(
-            continuity_receipt_ref, "continuity_receipt_ref"
-        ),
+        "continuity_receipt_ref": continuity_receipt.receipt_id,
         "crucible_proposal_ref": _optional(
             crucible_proposal_ref, "crucible_proposal_ref"
         ),
@@ -1891,6 +2044,9 @@ def evaluate_learning_to_reproof(
             independent_verifier_ref, "independent_verifier_ref"
         ),
         "human_disposition": disposition,
+        "human_disposition_ref": _optional(
+            human_disposition_ref, "human_disposition_ref"
+        ),
         "eligible_for_relationship_experience": eligible,
         "blockers": blockers,
     }
@@ -1919,6 +2075,19 @@ def relationship_experience_kwargs(
     """
     if not decision.eligible_for_relationship_experience:
         raise ValueError("learning-to-reproof decision is not eligible")
+    verifier_refs = _strings(
+        verifier_evidence_refs, "verifier_evidence_refs", required=True
+    )
+    if decision.independent_verifier_ref not in verifier_refs:
+        raise ValueError("Relationship Experience evidence omits the independent verifier")
+    normalized_receipt_refs = _strings(receipt_refs, "receipt_refs", required=True)
+    if decision.continuity_receipt_ref not in normalized_receipt_refs:
+        raise ValueError("Relationship Experience evidence omits the continuity receipt")
+    normalized_privacy = _required(privacy_class, "privacy_class").upper()
+    if normalized_privacy not in {"PUBLIC", "PROJECT", "PRIVATE_REDACTED"}:
+        raise ValueError("privacy class is unsupported by Relationship Experience")
+    if objective_digest != decision.objective_digest:
+        raise ValueError("Relationship Experience objective differs from reproof evidence")
     return {
         "relationship_id": decision.relationship_id,
         "relationship_digest": decision.relationship_digest,
@@ -1928,16 +2097,12 @@ def relationship_experience_kwargs(
         ),
         "valid_from_head": decision.repository_head,
         "outcome": _required(outcome, "outcome"),
-        "verifier_evidence_refs": list(
-            _strings(
-                verifier_evidence_refs, "verifier_evidence_refs", required=True
-            )
-        ),
-        "receipt_refs": list(_strings(receipt_refs, "receipt_refs", required=True)),
+        "verifier_evidence_refs": list(verifier_refs),
+        "receipt_refs": list(normalized_receipt_refs),
         "source_refs": list(_strings(source_refs, "source_refs", required=True)),
         "current_source_digest": decision.current_source_digest,
         "human_disposition": decision.human_disposition,
-        "privacy_class": _required(privacy_class, "privacy_class"),
+        "privacy_class": normalized_privacy,
         "objective_digest": _required(objective_digest, "objective_digest"),
         "reason": _optional(reason, "reason"),
     }
@@ -1945,12 +2110,9 @@ def relationship_experience_kwargs(
 
 def evaluate_qdkt_consequential_admission(
     *,
-    continuity_receipt_ref: str,
-    relationship_experience_ref: str = "",
-    crucible_proposal_ref: str = "",
-    current_reproof_ref: str = "",
-    independent_verifier_ref: str = "",
-    human_disposition_ref: str = "",
+    continuity_receipt: ContinuitySensitivityReceipt,
+    learning_decision: LearningToReproofDecision,
+    relationship_experience: Any | None,
     raw_evidence_refs: Sequence[str],
     current_repository_head: str,
     current_source_digest: str,
@@ -1960,16 +2122,56 @@ def evaluate_qdkt_consequential_admission(
     sovereignty_compatible: bool,
     extra_blockers: Sequence[str] = (),
 ) -> QDKTConsequentialAdmission:
-    blockers = list(_strings(extra_blockers, "extra_blockers"))
-    for name, value in (
-        ("MISSING_RELATIONSHIP_EXPERIENCE", relationship_experience_ref),
-        ("MISSING_CRUCIBLE_PROPOSAL", crucible_proposal_ref),
-        ("MISSING_CURRENT_REPROOF", current_reproof_ref),
-        ("MISSING_INDEPENDENT_VERIFIER", independent_verifier_ref),
-        ("MISSING_HUMAN_DISPOSITION", human_disposition_ref),
+    from aura_relationship_experience import RelationshipExperienceObservation
+
+    if learning_decision.continuity_receipt_ref != continuity_receipt.receipt_id:
+        raise ValueError("QDKT learning decision differs from continuity evidence")
+    if current_repository_head != continuity_receipt.repository_head:
+        raise ValueError("QDKT repository head differs from continuity evidence")
+    if current_source_digest != continuity_receipt.source_digest:
+        raise ValueError("QDKT source digest differs from continuity evidence")
+    if (
+        learning_decision.repository_head != current_repository_head
+        or learning_decision.current_source_digest != current_source_digest
     ):
-        if not value:
-            blockers.append(name)
+        raise ValueError("QDKT learning decision is stale")
+
+    blockers = list(_strings(extra_blockers, "extra_blockers"))
+    if not learning_decision.eligible_for_relationship_experience:
+        blockers.append("LEARNING_REPROOF_NOT_ELIGIBLE")
+
+    relationship_ref = ""
+    if relationship_experience is None:
+        blockers.append("MISSING_RELATIONSHIP_EXPERIENCE")
+    elif not isinstance(relationship_experience, RelationshipExperienceObservation):
+        raise ValueError("relationship_experience must use the canonical owner")
+    else:
+        relationship_ref = relationship_experience.observation_id
+        if continuity_receipt.receipt_id not in relationship_experience.receipt_refs:
+            raise ValueError("Relationship Experience omits the continuity receipt")
+        if (
+            relationship_experience.repository_head != current_repository_head
+            or relationship_experience.current_source_digest != current_source_digest
+        ):
+            raise ValueError("Relationship Experience is stale for QDKT admission")
+        if relationship_experience.relationship_id != learning_decision.relationship_id:
+            raise ValueError("Relationship Experience relationship differs from reproof")
+        if relationship_experience.human_disposition.value != "APPROVED":
+            blockers.append("HUMAN_DISPOSITION_NOT_APPROVED")
+
+    if not learning_decision.crucible_proposal_ref:
+        blockers.append("MISSING_CRUCIBLE_PROPOSAL")
+    if not learning_decision.current_reproof_ref:
+        blockers.append("MISSING_CURRENT_REPROOF")
+    if not learning_decision.independent_verifier_ref:
+        blockers.append("MISSING_INDEPENDENT_VERIFIER")
+    if not learning_decision.human_disposition_ref:
+        blockers.append("MISSING_HUMAN_DISPOSITION")
+
+    raw_refs = _strings(raw_evidence_refs, "raw_evidence_refs", required=True)
+    if not set(continuity_receipt.raw_evidence_refs).issubset(raw_refs):
+        raise ValueError("QDKT admission omitted continuity raw evidence")
+
     for name, value in (
         ("PURPOSE_INCOMPATIBLE", purpose_compatible),
         ("PRIVACY_INCOMPATIBLE", privacy_compatible),
@@ -1982,25 +2184,13 @@ def evaluate_qdkt_consequential_admission(
     blockers = list(dict.fromkeys(blockers))
     admitted = not blockers
     identity = {
-        "continuity_receipt_ref": _required(
-            continuity_receipt_ref, "continuity_receipt_ref"
-        ),
-        "relationship_experience_ref": _optional(
-            relationship_experience_ref, "relationship_experience_ref"
-        ),
-        "crucible_proposal_ref": _optional(
-            crucible_proposal_ref, "crucible_proposal_ref"
-        ),
-        "current_reproof_ref": _optional(current_reproof_ref, "current_reproof_ref"),
-        "independent_verifier_ref": _optional(
-            independent_verifier_ref, "independent_verifier_ref"
-        ),
-        "human_disposition_ref": _optional(
-            human_disposition_ref, "human_disposition_ref"
-        ),
-        "raw_evidence_refs": list(
-            _strings(raw_evidence_refs, "raw_evidence_refs", required=True)
-        ),
+        "continuity_receipt_ref": continuity_receipt.receipt_id,
+        "relationship_experience_ref": relationship_ref,
+        "crucible_proposal_ref": learning_decision.crucible_proposal_ref,
+        "current_reproof_ref": learning_decision.current_reproof_ref,
+        "independent_verifier_ref": learning_decision.independent_verifier_ref,
+        "human_disposition_ref": learning_decision.human_disposition_ref,
+        "raw_evidence_refs": list(raw_refs),
         "current_repository_head": _required(
             current_repository_head, "current_repository_head"
         ),

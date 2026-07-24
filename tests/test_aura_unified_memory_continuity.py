@@ -37,7 +37,6 @@ from aura_unified_memory_continuity import (
     relationship_experience_kwargs,
 )
 
-
 HEAD = "a" * 40
 SOURCE_DIGEST = "b" * 64
 WORKING_TREE_DIGEST = "c" * 64
@@ -204,19 +203,30 @@ def _profile(*, profile_suffix: str = "one", expires_at: float = 200.0) -> Model
     )
 
 
-def _model_packet(intent, envelope, profile, *, disagreements=()):
+def _model_packet(
+    intent,
+    envelope,
+    profile,
+    *,
+    disagreements=(),
+    selected_role="bounded_builder",
+    evidence_refs=("source:aura_architect_loop.ActCapsule",),
+    tools_available=("pytest",),
+):
     return compile_model_execution_packet(
         intent=intent,
         act_envelope=envelope,
+        arena_slice=_arena_slice(intent),
         model_profile=profile,
+        current_source_digest=SOURCE_DIGEST,
         provider_config_digest="provider-config",
-        selected_role="bounded_builder",
+        selected_role=selected_role,
         task_slice="one exact module and focused tests",
         prompt_structure=("universal kernel", "canonical task", "exact evidence"),
-        evidence_refs=("source:aura_architect_loop.ActCapsule",),
+        evidence_refs=evidence_refs,
         context_order=("intent", "authority", "evidence", "acceptance"),
         examples=({"input": "bounded", "output": "verified diff"},),
-        tools_available=("pytest",),
+        tools_available=tools_available,
         reasoning_budget="bounded",
         output_schema="unified_diff_plus_continuity_delta",
         uncertainty_requirements=("label unsupported claims",),
@@ -230,10 +240,9 @@ def _model_packet(intent, envelope, profile, *, disagreements=()):
 
 def _prediction(intent, envelope, packet):
     return commit_prediction(
-        objective_digest=intent.intent_digest,
-        purpose_digest=stable_digest(intent.purpose),
-        act_capsule_digest=envelope.envelope_digest,
-        model_execution_packet_digest=packet.packet_digest,
+        intent=intent,
+        act_envelope=envelope,
+        model_execution_packet=packet,
         current_state_digest="state-before",
         proposed_transition="add deterministic integration contracts",
         expected_state_delta=("new adapter module", "new focused tests"),
@@ -300,6 +309,40 @@ def _vertical_fixture():
     return intent, ledger, arena_slice, envelope, profile, packet, prediction, observation, receipt
 
 
+def _approved_learning_decision(receipt: ContinuitySensitivityReceipt) -> LearningToReproofDecision:
+    return evaluate_learning_to_reproof(
+        relationship_id="rel-memory-continuity",
+        relationship_digest="relationship-digest",
+        repository_head=HEAD,
+        current_source_digest=SOURCE_DIGEST,
+        continuity_receipt=receipt,
+        crucible_proposal_ref="crucible:proposal",
+        current_reproof_ref="reproof:current",
+        independent_verifier_ref=receipt.independent_verifier_id,
+        human_disposition="APPROVED",
+        human_disposition_ref="human:approved:fixture",
+    )
+
+
+def _relationship_observation(
+    intent: IntentPacket,
+    receipt: ContinuitySensitivityReceipt,
+    decision: LearningToReproofDecision,
+) -> RelationshipExperienceObservation:
+    kwargs = relationship_experience_kwargs(
+        decision=decision,
+        outcome="SUCCESS",
+        verifier_evidence_refs=(decision.independent_verifier_ref, "pytest:pass"),
+        receipt_refs=(receipt.receipt_id,),
+        source_refs=("source:aura_unified_memory_continuity.py",),
+        working_tree_digest=WORKING_TREE_DIGEST,
+        privacy_class="PROJECT",
+        objective_digest=intent.intent_digest,
+        reason="Verified bounded fixture.",
+    )
+    return RelationshipExperienceObservation.create(transaction_time=80.0, **kwargs)
+
+
 def test_vertical_context_to_consequence_loop_preserves_existing_owners() -> None:
     (
         intent,
@@ -327,32 +370,8 @@ def test_vertical_context_to_consequence_loop_preserves_existing_owners() -> Non
 
 def test_relationship_experience_adapter_uses_existing_canonical_owner() -> None:
     intent, _, _, _, _, _, _, _, receipt = _vertical_fixture()
-    decision = evaluate_learning_to_reproof(
-        relationship_id="rel-memory-continuity",
-        relationship_digest="relationship-digest",
-        repository_head=HEAD,
-        current_source_digest=SOURCE_DIGEST,
-        continuity_receipt_ref=receipt.receipt_id,
-        crucible_proposal_ref="crucible:proposal",
-        current_reproof_ref="reproof:current",
-        independent_verifier_ref="verifier:independent",
-        human_disposition="APPROVED",
-    )
-    kwargs = relationship_experience_kwargs(
-        decision=decision,
-        outcome="SUCCESS",
-        verifier_evidence_refs=("pytest:pass",),
-        receipt_refs=(receipt.receipt_id,),
-        source_refs=("source:aura_unified_memory_continuity.py",),
-        working_tree_digest=WORKING_TREE_DIGEST,
-        privacy_class="PROJECT",
-        objective_digest=intent.intent_digest,
-        reason="Verified bounded fixture.",
-    )
-    observation = RelationshipExperienceObservation.create(
-        transaction_time=80.0,
-        **kwargs,
-    )
+    decision = _approved_learning_decision(receipt)
+    observation = _relationship_observation(intent, receipt, decision)
     assert observation.relationship_id == decision.relationship_id
     assert observation.promotion_authority is False
     assert observation.canonical_truth_owner is False
@@ -503,7 +522,7 @@ def test_p1_cannot_precede_p0() -> None:
 
 def test_continuity_receipt_rejects_self_verification() -> None:
     intent, _, _, _, profile, packet, prediction, observation, _ = _vertical_fixture()
-    with pytest.raises(ValueError, match="independently verify"):
+    with pytest.raises(ValueError, match="independent P1 observer"):
         derive_continuity_sensitivity_receipt(
             prediction=prediction,
             observation=observation,
@@ -569,10 +588,9 @@ def test_non_finite_costs_and_uncertainty_fail_closed() -> None:
     intent, _, _, envelope, _, packet, _, _, _ = _vertical_fixture()
     with pytest.raises(ValueError):
         commit_prediction(
-            objective_digest=intent.intent_digest,
-            purpose_digest=stable_digest(intent.purpose),
-            act_capsule_digest=envelope.envelope_digest,
-            model_execution_packet_digest=packet.packet_digest,
+            intent=intent,
+            act_envelope=envelope,
+            model_execution_packet=packet,
             current_state_digest="state",
             proposed_transition="change",
             expected_state_delta=("change",),
@@ -604,33 +622,32 @@ def test_learning_to_reproof_remains_closed_until_all_gates_exist() -> None:
         relationship_digest="digest",
         repository_head=HEAD,
         current_source_digest=SOURCE_DIGEST,
-        continuity_receipt_ref=receipt.receipt_id,
+        continuity_receipt=receipt,
     )
     assert closed.eligible_for_relationship_experience is False
     assert "MISSING_CURRENT_REPROOF" in closed.blockers
     assert closed.promotion_authority is False
 
-    open_decision = evaluate_learning_to_reproof(
-        relationship_id="relationship",
-        relationship_digest="digest",
-        repository_head=HEAD,
-        current_source_digest=SOURCE_DIGEST,
-        continuity_receipt_ref=receipt.receipt_id,
-        crucible_proposal_ref="crucible:proposal",
-        current_reproof_ref="reproof:current",
-        independent_verifier_ref="verifier:independent",
-        human_disposition="APPROVED",
-    )
+    open_decision = _approved_learning_decision(receipt)
     assert open_decision.eligible_for_relationship_experience is True
     assert open_decision.blockers == ()
     assert open_decision.proposal_only is True
 
 
 def test_qdkt_consequential_admission_requires_every_governed_gate() -> None:
-    _, _, _, _, _, _, _, _, receipt = _vertical_fixture()
+    intent, _, _, _, _, _, _, _, receipt = _vertical_fixture()
+    closed_decision = evaluate_learning_to_reproof(
+        relationship_id="relationship",
+        relationship_digest="digest",
+        repository_head=HEAD,
+        current_source_digest=SOURCE_DIGEST,
+        continuity_receipt=receipt,
+    )
     closed = evaluate_qdkt_consequential_admission(
-        continuity_receipt_ref=receipt.receipt_id,
-        raw_evidence_refs=("pytest:pass",),
+        continuity_receipt=receipt,
+        learning_decision=closed_decision,
+        relationship_experience=None,
+        raw_evidence_refs=receipt.raw_evidence_refs,
         current_repository_head=HEAD,
         current_source_digest=SOURCE_DIGEST,
         purpose_compatible=True,
@@ -639,17 +656,16 @@ def test_qdkt_consequential_admission_requires_every_governed_gate() -> None:
         sovereignty_compatible=True,
     )
     assert closed.admitted is False
-    assert "MISSING_CURRENT_REPROOF" in closed.blockers
+    assert "LEARNING_REPROOF_NOT_ELIGIBLE" in closed.blockers
     assert closed.crystallization_authority is False
 
+    decision = _approved_learning_decision(receipt)
+    relationship_observation = _relationship_observation(intent, receipt, decision)
     admitted = evaluate_qdkt_consequential_admission(
-        continuity_receipt_ref=receipt.receipt_id,
-        relationship_experience_ref="relationship-experience:one",
-        crucible_proposal_ref="crucible:proposal",
-        current_reproof_ref="reproof:current",
-        independent_verifier_ref="verifier:independent",
-        human_disposition_ref="human:approved",
-        raw_evidence_refs=("pytest:pass",),
+        continuity_receipt=receipt,
+        learning_decision=decision,
+        relationship_experience=relationship_observation,
+        raw_evidence_refs=receipt.raw_evidence_refs,
         current_repository_head=HEAD,
         current_source_digest=SOURCE_DIGEST,
         purpose_compatible=True,
@@ -658,8 +674,195 @@ def test_qdkt_consequential_admission_requires_every_governed_gate() -> None:
         sovereignty_compatible=True,
     )
     assert admitted.admitted is True
+    assert admitted.relationship_experience_ref == relationship_observation.observation_id
     assert admitted.proposal_only is True
     assert admitted.crystallization_authority is False
+
+
+def test_authority_envelope_requires_monotonic_grants() -> None:
+    with pytest.raises(ValueError, match="commit authority requires edit"):
+        AuthorityEnvelope(commit=True)
+    with pytest.raises(ValueError, match="publish_pr authority requires commit"):
+        AuthorityEnvelope(edit=True, publish_pr=True)
+    with pytest.raises(ValueError, match="merge authority requires publish_pr"):
+        AuthorityEnvelope(edit=True, commit=True, merge=True)
+    with pytest.raises(ValueError, match="production mutation authority requires edit"):
+        AuthorityEnvelope(production_mutation=True)
+
+
+def test_act_capsule_envelope_rejects_noncanonical_and_out_of_scope_capsules() -> None:
+    intent = _intent()
+    ledger = _semantic_ledger(intent)
+    arena_slice = _arena_slice(intent)
+    with pytest.raises(ValueError, match="complete canonical ActCapsule"):
+        compile_act_capsule_envelope(
+            legacy_act_capsule={"task_id": "incomplete"},
+            intent=intent,
+            semantic_ledger=ledger,
+            arena_slice=arena_slice,
+            allowed_files=(),
+            allowed_symbols=(),
+            prohibited_effects=("automatic merge",),
+            invariants=("intent stable",),
+            allowed_tools=(),
+            acceptance_bundle=("tests pass",),
+            repair_budget=0,
+            legal_outcomes=("REFUSE",),
+            continuity_requirements=("return delta",),
+            required_semantic_terms=("memory",),
+        )
+
+    capsule = ActCapsule(
+        capsule_version=ACT_CAPSULE_VERSION,
+        task_id="outside-scope",
+        role="bounded_builder",
+        objective=intent.objective,
+        target_file="outside.py",
+        target_symbol="Outside",
+    )
+    with pytest.raises(ValueError, match="target_file is outside allowed_files"):
+        compile_act_capsule_envelope(
+            legacy_act_capsule=capsule,
+            intent=intent,
+            semantic_ledger=ledger,
+            arena_slice=arena_slice,
+            allowed_files=("inside.py",),
+            allowed_symbols=("Outside",),
+            prohibited_effects=("automatic merge",),
+            invariants=("intent stable",),
+            allowed_tools=(),
+            acceptance_bundle=("tests pass",),
+            repair_budget=0,
+            legal_outcomes=("REFUSE",),
+            continuity_requirements=("return delta",),
+            required_semantic_terms=("memory",),
+        )
+
+
+def test_model_packet_rejects_role_tool_and_evidence_scope_expansion() -> None:
+    intent = _intent()
+    envelope = _act_envelope(intent, _semantic_ledger(intent), _arena_slice(intent))
+    profile = _profile()
+    with pytest.raises(ValueError, match="selected_role differs"):
+        _model_packet(intent, envelope, profile, selected_role="unauthorized-role")
+    with pytest.raises(ValueError, match="tools outside"):
+        _model_packet(intent, envelope, profile, tools_available=("pytest", "shell"))
+    with pytest.raises(ValueError, match="evidence outside"):
+        _model_packet(intent, envelope, profile, evidence_refs=("source:unscoped",))
+
+
+def test_prediction_is_deeply_immutable_and_revalidates_digest() -> None:
+    intent, _, _, envelope, _, packet, prediction, _, _ = _vertical_fixture()
+    with pytest.raises(TypeError):
+        prediction.expected_cost["tokens"] = 999
+    with pytest.raises(ValueError, match="P0 identity mismatch"):
+        replace(prediction, proposed_transition="tampered after commitment")
+
+    nested = commit_prediction(
+        intent=intent,
+        act_envelope=envelope,
+        model_execution_packet=packet,
+        current_state_digest="nested-state",
+        proposed_transition="nested cost fixture",
+        expected_state_delta=("change",),
+        expected_evidence=("test",),
+        expected_cost={"usage": {"tokens": 10}, "steps": [1, 2]},
+        expected_risk=("risk",),
+        producer_id="producer",
+        committed_at=60.0,
+    )
+    with pytest.raises(TypeError):
+        nested.expected_cost["usage"]["tokens"] = 11
+    assert nested.expected_cost["steps"] == (1, 2)
+
+
+def test_p1_requires_exact_committed_source_and_independent_observer() -> None:
+    intent, _, _, _, _, _, prediction, _, _ = _vertical_fixture()
+    common = dict(
+        prediction=prediction,
+        p0_digest=prediction.p0_digest,
+        objective_digest=intent.intent_digest,
+        purpose_digest=stable_digest(intent.purpose),
+        observed_state_delta=("changed",),
+        observed_evidence_refs=("pytest:pass",),
+        observed_cost={},
+        missing_measurements=(),
+        observed_at=70.0,
+    )
+    with pytest.raises(ValueError, match="repository head differs"):
+        observe_prediction(
+            repository_head="different-head",
+            source_digest=SOURCE_DIGEST,
+            observer_id="independent",
+            **common,
+        )
+    with pytest.raises(ValueError, match="source digest differs"):
+        observe_prediction(
+            repository_head=HEAD,
+            source_digest="different-source",
+            observer_id="independent",
+            **common,
+        )
+    with pytest.raises(ValueError, match="cannot independently observe"):
+        observe_prediction(
+            repository_head=HEAD,
+            source_digest=SOURCE_DIGEST,
+            observer_id=prediction.producer_id,
+            **common,
+        )
+
+
+def test_learning_reproof_rejects_stale_evidence_and_spoofed_verifier() -> None:
+    _, _, _, _, _, _, _, _, receipt = _vertical_fixture()
+    with pytest.raises(ValueError, match="repository head differs"):
+        evaluate_learning_to_reproof(
+            relationship_id="relationship",
+            relationship_digest="digest",
+            repository_head="stale-head",
+            current_source_digest=SOURCE_DIGEST,
+            continuity_receipt=receipt,
+        )
+    with pytest.raises(ValueError, match="verifier differs"):
+        evaluate_learning_to_reproof(
+            relationship_id="relationship",
+            relationship_digest="digest",
+            repository_head=HEAD,
+            current_source_digest=SOURCE_DIGEST,
+            continuity_receipt=receipt,
+            independent_verifier_ref="spoofed-verifier",
+        )
+
+
+def test_qdkt_requires_canonical_relationship_and_complete_raw_evidence() -> None:
+    intent, _, _, _, _, _, _, _, receipt = _vertical_fixture()
+    decision = _approved_learning_decision(receipt)
+    with pytest.raises(ValueError, match="canonical owner"):
+        evaluate_qdkt_consequential_admission(
+            continuity_receipt=receipt,
+            learning_decision=decision,
+            relationship_experience={"observation_id": "forged"},
+            raw_evidence_refs=receipt.raw_evidence_refs,
+            current_repository_head=HEAD,
+            current_source_digest=SOURCE_DIGEST,
+            purpose_compatible=True,
+            privacy_compatible=True,
+            consent_compatible=True,
+            sovereignty_compatible=True,
+        )
+    relationship = _relationship_observation(intent, receipt, decision)
+    with pytest.raises(ValueError, match="omitted continuity raw evidence"):
+        evaluate_qdkt_consequential_admission(
+            continuity_receipt=receipt,
+            learning_decision=decision,
+            relationship_experience=relationship,
+            raw_evidence_refs=("unrelated:evidence",),
+            current_repository_head=HEAD,
+            current_source_digest=SOURCE_DIGEST,
+            purpose_compatible=True,
+            privacy_compatible=True,
+            consent_compatible=True,
+            sovereignty_compatible=True,
+        )
 
 
 def test_continuity_delta_updates_navigation_not_durable_memory() -> None:
@@ -694,7 +897,7 @@ def test_continuity_delta_updates_navigation_not_durable_memory() -> None:
     ),
 )
 def test_authority_boundaries_are_not_accidentally_promoted(record_type) -> None:
-    intent, ledger, arena_slice, envelope, profile, packet, prediction, observation, receipt = (
+    intent, _ledger, _arena_slice, envelope, _profile, packet, prediction, _observation, receipt = (
         _vertical_fixture()
     )
     records = {
@@ -719,11 +922,19 @@ def test_authority_boundaries_are_not_accidentally_promoted(record_type) -> None
             relationship_digest="d",
             repository_head=HEAD,
             current_source_digest=SOURCE_DIGEST,
-            continuity_receipt_ref=receipt.receipt_id,
+            continuity_receipt=receipt,
         ),
         QDKTConsequentialAdmission: evaluate_qdkt_consequential_admission(
-            continuity_receipt_ref=receipt.receipt_id,
-            raw_evidence_refs=("test",),
+            continuity_receipt=receipt,
+            learning_decision=evaluate_learning_to_reproof(
+                relationship_id="r",
+                relationship_digest="d",
+                repository_head=HEAD,
+                current_source_digest=SOURCE_DIGEST,
+                continuity_receipt=receipt,
+            ),
+            relationship_experience=None,
+            raw_evidence_refs=receipt.raw_evidence_refs,
             current_repository_head=HEAD,
             current_source_digest=SOURCE_DIGEST,
             purpose_compatible=False,

@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784900655,
+  "generated_at_unix": 1784902268,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1391,
+    "included_file_count": 1384,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -14,9 +14,11 @@
     ],
     "skipped_dir_file_counts": {
       ".git": 137,
+      ".pytest_cache": 4,
+      ".ruff_cache": 4,
       "Aura_Memory": 6,
       "Aura_Sandbox": 1,
-      "__pycache__": 8
+      "__pycache__": 89
     },
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
@@ -54,13 +56,6 @@
       ".aura/model_policies/local_first.v1.json",
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
-      ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-01",
-      ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-02",
-      ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-03",
-      ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-04",
-      ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-05",
-      ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-06",
-      ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-07",
       ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
       ".aura/research/AURA_SPATIAL_BREADBOARD_RECEIPT.json",
       ".aura/research/AURA_SPATIAL_COUNCIL_V3_BREADBOARD_2026-07-19.md",
@@ -1413,9 +1408,9 @@
     ]
   },
   "summary": {
-    "file_count": 1391,
-    "total_bytes": 56554707,
-    "text_tokens_est": 4676558,
+    "file_count": 1384,
+    "total_bytes": 56537245,
+    "text_tokens_est": 4682066,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 51,
@@ -1424,12 +1419,12 @@
       "operator_script": 5,
       "python_module": 913,
       "schema_or_lexicon": 167,
-      "support_file": 61
+      "support_file": 54
     },
-    "topology_nodes": 10467,
-    "topology_edges": 24552,
+    "topology_nodes": 10471,
+    "topology_edges": 24573,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 24201.44
+    "elapsed_ms": 30888.92
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1476,13 +1471,6 @@
     ],
     "cognition_and_memory": [
       ".aura/memory_apertures/coding_localize.v1.json",
-      ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-01",
-      ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-02",
-      ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-03",
-      ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-04",
-      ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-05",
-      ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-06",
-      ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-07",
       ".aura/waboose_requests/unified_memory_continuity.v1.json",
       ".github/workflows/unified-memory-continuity-codemap-sync.yml",
       ".github/workflows/unified-memory-continuity-verification.yml",
@@ -2861,9 +2849,9 @@
     {
       "path": "aura_unified_memory_continuity.py",
       "role": "python_module",
-      "symbols": 86,
-      "tokens_est": 21140,
-      "topology_degree": 625
+      "symbols": 90,
+      "tokens_est": 24038,
+      "topology_degree": 667
     },
     {
       "path": "aura_agent_arena_cli.py",
@@ -4008,8 +3996,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 571,
-        "end_line": 688,
+        "line": 630,
+        "end_line": 748,
         "semantic_id": "aura_unified_memory_continuity.py#class:ActCapsuleEnvelope:5f3f4e0948e8505a",
         "signature_hash": "f348a2e5f806340b"
       }
@@ -4346,8 +4334,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 461,
-        "end_line": 487,
+        "line": 519,
+        "end_line": 545,
         "semantic_id": "aura_unified_memory_continuity.py#class:ArenaEvidenceItem:fdb4b86fefb62bf6",
         "signature_hash": "01a1c55b9be6336c"
       }
@@ -4356,8 +4344,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 491,
-        "end_line": 567,
+        "line": 549,
+        "end_line": 626,
         "semantic_id": "aura_unified_memory_continuity.py#class:ArenaEvidenceSlice:321cad7a7af55172",
         "signature_hash": "4072bd748bf395ff"
       }
@@ -5738,8 +5726,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 217,
-        "end_line": 231,
+        "line": 266,
+        "end_line": 288,
         "semantic_id": "aura_unified_memory_continuity.py#class:AuthorityEnvelope:37631edeb25cee50",
         "signature_hash": "956ee99fbb63c105"
       }
@@ -7718,8 +7706,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 1158,
-        "end_line": 1219,
+        "line": 1237,
+        "end_line": 1299,
         "semantic_id": "aura_unified_memory_continuity.py#class:ContinuityDelta:717acfee1eae4ccb",
         "signature_hash": "c1c5f33b82c612c7"
       }
@@ -7738,8 +7726,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 1035,
-        "end_line": 1154,
+        "line": 1113,
+        "end_line": 1233,
         "semantic_id": "aura_unified_memory_continuity.py#class:ContinuitySensitivityReceipt:6ad22fd9f3c65bec",
         "signature_hash": "68b64593a7d43a3f"
       }
@@ -8636,8 +8624,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 81,
-        "end_line": 93,
+        "line": 82,
+        "end_line": 94,
         "semantic_id": "aura_unified_memory_continuity.py#class:EvidenceTruthClass:557cded942cdbd7a",
         "signature_hash": "dee815a2e04f0a05"
       }
@@ -10068,8 +10056,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 71,
-        "end_line": 78,
+        "line": 72,
+        "end_line": 79,
         "semantic_id": "aura_unified_memory_continuity.py#class:IntentMode:622212dd3c535935",
         "signature_hash": "8dde211558f57b8d"
       }
@@ -10078,8 +10066,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 235,
-        "end_line": 366,
+        "line": 292,
+        "end_line": 423,
         "semantic_id": "aura_unified_memory_continuity.py#class:IntentPacket:52ffcabf2b024450",
         "signature_hash": "821bb9cb4a0ceb75"
       }
@@ -10298,8 +10286,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 1223,
-        "end_line": 1305,
+        "line": 1303,
+        "end_line": 1393,
         "semantic_id": "aura_unified_memory_continuity.py#class:LearningToReproofDecision:c7952d533f9df983",
         "signature_hash": "2407ed508d5d94a1"
       }
@@ -10368,8 +10356,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 96,
-        "end_line": 102,
+        "line": 97,
+        "end_line": 103,
         "semantic_id": "aura_unified_memory_continuity.py#class:LegalOutcome:62614c29d6f0fb4a",
         "signature_hash": "868ab0f358cb4189"
       }
@@ -10948,8 +10936,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 791,
-        "end_line": 879,
+        "line": 852,
+        "end_line": 948,
         "semantic_id": "aura_unified_memory_continuity.py#class:ModelExecutionPacket:bd75719639c959d3",
         "signature_hash": "0441e54223b4cdaa"
       }
@@ -10978,8 +10966,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 692,
-        "end_line": 787,
+        "line": 752,
+        "end_line": 848,
         "semantic_id": "aura_unified_memory_continuity.py#class:ModelProfileRef:358ff2358b45503e",
         "signature_hash": "1f630550263af145"
       }
@@ -11388,8 +11376,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 959,
-        "end_line": 1031,
+        "line": 1036,
+        "end_line": 1109,
         "semantic_id": "aura_unified_memory_continuity.py#class:P1Observation:230efae461e1a947",
         "signature_hash": "00554cdeb33ef8ec"
       }
@@ -11746,8 +11734,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 105,
-        "end_line": 116,
+        "line": 106,
+        "end_line": 117,
         "semantic_id": "aura_unified_memory_continuity.py#class:PredictionErrorClass:5035aacf5f689dbf",
         "signature_hash": "0c188243fcd9d1f5"
       }
@@ -11756,8 +11744,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 883,
-        "end_line": 955,
+        "line": 952,
+        "end_line": 1032,
         "semantic_id": "aura_unified_memory_continuity.py#class:PredictionPacket:e238a542c6d4ccff",
         "signature_hash": "df678fef30f068d8"
       }
@@ -12032,8 +12020,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 1309,
-        "end_line": 1409,
+        "line": 1397,
+        "end_line": 1498,
         "semantic_id": "aura_unified_memory_continuity.py#class:QDKTConsequentialAdmission:f9f14b5e4de23b47",
         "signature_hash": "afe3ec755f803c2d"
       }
@@ -13578,8 +13566,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 370,
-        "end_line": 392,
+        "line": 427,
+        "end_line": 449,
         "semantic_id": "aura_unified_memory_continuity.py#class:SemanticDefinition:0a88bf0bf36ac9b4",
         "signature_hash": "b25752f385777263"
       }
@@ -13588,8 +13576,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "class",
-        "line": 396,
-        "end_line": 457,
+        "line": 453,
+        "end_line": 515,
         "semantic_id": "aura_unified_memory_continuity.py#class:SemanticLedger:505cc7b29b13b4ea",
         "signature_hash": "c1fd420a8b43683c"
       }
@@ -23500,120 +23488,120 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 226,
-        "end_line": 228,
+        "line": 275,
+        "end_line": 285,
         "semantic_id": "aura_unified_memory_continuity.py#method:AuthorityEnvelope.__post_init__:b0061c0c16572725",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 256,
-        "end_line": 287,
+        "line": 313,
+        "end_line": 344,
         "semantic_id": "aura_unified_memory_continuity.py#method:IntentPacket.__post_init__:7ce077b17da6b909",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 377,
-        "end_line": 389,
+        "line": 434,
+        "end_line": 446,
         "semantic_id": "aura_unified_memory_continuity.py#method:SemanticDefinition.__post_init__:f6714150f57a7f55",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 403,
-        "end_line": 419,
+        "line": 460,
+        "end_line": 477,
         "semantic_id": "aura_unified_memory_continuity.py#method:SemanticLedger.__post_init__:5b687f52bc333ad1",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 470,
-        "end_line": 482,
+        "line": 528,
+        "end_line": 540,
         "semantic_id": "aura_unified_memory_continuity.py#method:ArenaEvidenceItem.__post_init__:a062fadfc33f91df",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 504,
-        "end_line": 547,
+        "line": 562,
+        "end_line": 606,
         "semantic_id": "aura_unified_memory_continuity.py#method:ArenaEvidenceSlice.__post_init__:55314a769676c02b",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 596,
-        "end_line": 656,
+        "line": 655,
+        "end_line": 716,
         "semantic_id": "aura_unified_memory_continuity.py#method:ActCapsuleEnvelope.__post_init__:48aa36e1adcd5b13",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 706,
-        "end_line": 730,
+        "line": 766,
+        "end_line": 791,
         "semantic_id": "aura_unified_memory_continuity.py#method:ModelProfileRef.__post_init__:17d61d50e5fcd0fc",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 817,
-        "end_line": 846,
+        "line": 881,
+        "end_line": 912,
         "semantic_id": "aura_unified_memory_continuity.py#method:ModelExecutionPacket.__post_init__:f7294bf9d4a38658",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 901,
-        "end_line": 930,
+        "line": 973,
+        "end_line": 1004,
         "semantic_id": "aura_unified_memory_continuity.py#method:PredictionPacket.__post_init__:c7b98f0e40eff23c",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 976,
-        "end_line": 1007,
+        "line": 1053,
+        "end_line": 1085,
         "semantic_id": "aura_unified_memory_continuity.py#method:P1Observation.__post_init__:93afd64308200a4b",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 1070,
-        "end_line": 1112,
+        "line": 1148,
+        "end_line": 1191,
         "semantic_id": "aura_unified_memory_continuity.py#method:ContinuitySensitivityReceipt.__post_init__:d182722ab358b789",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 1175,
-        "end_line": 1195,
+        "line": 1254,
+        "end_line": 1275,
         "semantic_id": "aura_unified_memory_continuity.py#method:ContinuityDelta.__post_init__:fe49e5e9c66b0f9a",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 1241,
-        "end_line": 1280,
+        "line": 1324,
+        "end_line": 1365,
         "semantic_id": "aura_unified_memory_continuity.py#method:LearningToReproofDecision.__post_init__:c84626adf0d1bcb0",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 1331,
-        "end_line": 1380,
+        "line": 1419,
+        "end_line": 1469,
         "semantic_id": "aura_unified_memory_continuity.py#method:QDKTConsequentialAdmission.__post_init__:511e31fbb4e462d9",
         "signature_hash": "175e4972e4d2d582"
       },
@@ -23882,8 +23870,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 142,
-        "end_line": 185,
+        "line": 141,
+        "end_line": 184,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_act_envelope:f7c4a054d880ff8f",
         "signature_hash": "ecec2da190896d9a"
       }
@@ -24792,6 +24780,16 @@
         "signature_hash": "e9950f332613316c"
       }
     ],
+    "_approved_learning_decision": [
+      {
+        "file": "tests/test_aura_unified_memory_continuity.py",
+        "kind": "function",
+        "line": 312,
+        "end_line": 324,
+        "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_approved_learning_decision:66ad2319296ab122",
+        "signature_hash": "d62ea2accae64675"
+      }
+    ],
     "_architect_kwargs": [
       {
         "file": "aura_arena_connector_server.py",
@@ -24846,8 +24844,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 98,
-        "end_line": 139,
+        "line": 97,
+        "end_line": 138,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_arena_slice:8e7b98f72d56f1ce",
         "signature_hash": "497ed8f65541b697"
       }
@@ -27858,6 +27856,16 @@
         "signature_hash": "711cdedc61c63424"
       }
     ],
+    "_canonical_act_capsule_payload": [
+      {
+        "file": "aura_unified_memory_continuity.py",
+        "kind": "function",
+        "line": 246,
+        "end_line": 262,
+        "semantic_id": "aura_unified_memory_continuity.py#function:_canonical_act_capsule_payload:89077900bac77bc7",
+        "signature_hash": "e7c36c05840a7ba9"
+      }
+    ],
     "_canonical_bytes": [
       {
         "file": "aura_review_lessons_contracts.py",
@@ -28184,8 +28192,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 208,
-        "end_line": 213,
+        "line": 227,
+        "end_line": 232,
         "semantic_id": "aura_unified_memory_continuity.py#function:_canonical_tuple_records:3074203cb1872b3f",
         "signature_hash": "63a4f561d006d23f"
       }
@@ -33472,8 +33480,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 195,
-        "end_line": 200,
+        "line": 214,
+        "end_line": 219,
         "semantic_id": "aura_unified_memory_continuity.py#function:_enum:509e86581fac3df1",
         "signature_hash": "114c3a1d7b56df0a"
       }
@@ -35644,8 +35652,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 177,
-        "end_line": 185,
+        "line": 196,
+        "end_line": 204,
         "semantic_id": "aura_unified_memory_continuity.py#function:_finite:d8cad0603cadf168",
         "signature_hash": "57002fda218f44f7"
       },
@@ -36062,6 +36070,14 @@
         "end_line": 437,
         "semantic_id": "aura_spatial_contracts.py#function:_freeze_json:cfafca5df1842ede",
         "signature_hash": "0a46702035edf448"
+      },
+      {
+        "file": "aura_unified_memory_continuity.py",
+        "kind": "function",
+        "line": 153,
+        "end_line": 158,
+        "semantic_id": "aura_unified_memory_continuity.py#function:_freeze_json:c7efc4c123536389",
+        "signature_hash": "76833a68abea600c"
       }
     ],
     "_freeze_sources": [
@@ -39516,8 +39532,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 47,
-        "end_line": 69,
+        "line": 46,
+        "end_line": 68,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_intent:57d769d9158a86a5",
         "signature_hash": "81b45553310427ef"
       }
@@ -42234,8 +42250,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 152,
-        "end_line": 168,
+        "line": 169,
+        "end_line": 187,
         "semantic_id": "aura_unified_memory_continuity.py#function:_mapping:9bd0a5a069baf1b5",
         "signature_hash": "4bd45af63723081c"
       }
@@ -43000,10 +43016,10 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 207,
-        "end_line": 228,
-        "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_model_packet:25626a6bf2e11f1a",
-        "signature_hash": "40014c49608aebca"
+        "line": 206,
+        "end_line": 238,
+        "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_model_packet:0ec01e8b48b1a26a",
+        "signature_hash": "ba759b458dc7350b"
       }
     ],
     "_model_path": [
@@ -44476,8 +44492,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 248,
-        "end_line": 262,
+        "line": 257,
+        "end_line": 271,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_observation:101e95d398d2ee63",
         "signature_hash": "35eb5a179f1e3fac"
       }
@@ -44648,8 +44664,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 128,
-        "end_line": 136,
+        "line": 129,
+        "end_line": 137,
         "semantic_id": "aura_unified_memory_continuity.py#function:_optional:43fe22072056fd2e",
         "signature_hash": "944ff60f7feee4a6"
       }
@@ -44950,8 +44966,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 203,
-        "end_line": 205,
+        "line": 222,
+        "end_line": 224,
         "semantic_id": "aura_unified_memory_continuity.py#function:_packet_size:b9b2118d15e2772e",
         "signature_hash": "b8660eb7acc447e8"
       }
@@ -46126,8 +46142,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 231,
-        "end_line": 245,
+        "line": 241,
+        "end_line": 254,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_prediction:ed16a6d8a474ac32",
         "signature_hash": "9840a6672882bfbd"
       }
@@ -46550,8 +46566,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 188,
-        "end_line": 204,
+        "line": 187,
+        "end_line": 203,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_profile:77902f1acf287a7c",
         "signature_hash": "514618c3dfb52d87"
       }
@@ -47772,8 +47788,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 265,
-        "end_line": 287,
+        "line": 274,
+        "end_line": 296,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_receipt:d3ae73715f72c220",
         "signature_hash": "e3dc9e7f8b7c4d5c"
       }
@@ -48768,6 +48784,16 @@
         "signature_hash": "5793503f603bfb6d"
       }
     ],
+    "_relationship_observation": [
+      {
+        "file": "tests/test_aura_unified_memory_continuity.py",
+        "kind": "function",
+        "line": 327,
+        "end_line": 343,
+        "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_relationship_observation:a0e6d8c495c3b11a",
+        "signature_hash": "abc0b907d6149da1"
+      }
+    ],
     "_relative": [
       {
         "file": "aura_qdkt_inventory.py",
@@ -49116,6 +49142,14 @@
         "end_line": 1071,
         "semantic_id": "aura_emergent_evidence_spine.py#function:_repo_paths:d421ba0e91936b72",
         "signature_hash": "d59f96da1b548fd7"
+      },
+      {
+        "file": "aura_unified_memory_continuity.py",
+        "kind": "function",
+        "line": 235,
+        "end_line": 243,
+        "semantic_id": "aura_unified_memory_continuity.py#function:_repo_paths:72cc0da44dbdb3ce",
+        "signature_hash": "3232a5eda927476c"
       }
     ],
     "_repo_py_files": [
@@ -49776,8 +49810,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 119,
-        "end_line": 125,
+        "line": 120,
+        "end_line": 126,
         "semantic_id": "aura_unified_memory_continuity.py#function:_required:a9066554170efd89",
         "signature_hash": "8b28cfce6f68b96b"
       }
@@ -52938,8 +52972,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 72,
-        "end_line": 95,
+        "line": 71,
+        "end_line": 94,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_semantic_ledger:448220b3931b3f98",
         "signature_hash": "dcd182f81c117ff9"
       }
@@ -54784,8 +54818,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 171,
-        "end_line": 174,
+        "line": 190,
+        "end_line": 193,
         "semantic_id": "aura_unified_memory_continuity.py#function:_strict_bool:717af751dca2117c",
         "signature_hash": "45d92c6c16d80cd3"
       },
@@ -55122,8 +55156,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 139,
-        "end_line": 149,
+        "line": 140,
+        "end_line": 150,
         "semantic_id": "aura_unified_memory_continuity.py#function:_strings:efc8d63ba969eac5",
         "signature_hash": "9f910afd705b461e"
       }
@@ -57016,6 +57050,14 @@
         "end_line": 451,
         "semantic_id": "aura_spatial_contracts.py#function:_thaw_json:1a36d1fc9e668fd1",
         "signature_hash": "3cb83b23b1f15e6b"
+      },
+      {
+        "file": "aura_unified_memory_continuity.py",
+        "kind": "function",
+        "line": 161,
+        "end_line": 166,
+        "semantic_id": "aura_unified_memory_continuity.py#function:_thaw_json:86c83062b7322968",
+        "signature_hash": "3cb83b23b1f15e6b"
       }
     ],
     "_thread_lock_for": [
@@ -57106,8 +57148,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 188,
-        "end_line": 192,
+        "line": 207,
+        "end_line": 211,
         "semantic_id": "aura_unified_memory_continuity.py#function:_timestamp:aeb53569b02cefad",
         "signature_hash": "7be91c9284b0d195"
       }
@@ -59626,8 +59668,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 290,
-        "end_line": 300,
+        "line": 299,
+        "end_line": 309,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_vertical_fixture:cde3136e814cc744",
         "signature_hash": "42838a882aa56103"
       }
@@ -61728,8 +61770,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 766,
-        "end_line": 769,
+        "line": 827,
+        "end_line": 830,
         "semantic_id": "aura_unified_memory_continuity.py#method:ModelProfileRef.assert_fresh:2f9ea5ce6e2dceb3",
         "signature_hash": "5b05c018fe9229e1"
       }
@@ -67530,16 +67572,6 @@
         "signature_hash": "6a1c9abe88240b2d"
       }
     ],
-    "commit_prediction": [
-      {
-        "file": "aura_unified_memory_continuity.py",
-        "kind": "function",
-        "line": 1611,
-        "end_line": 1652,
-        "semantic_id": "aura_unified_memory_continuity.py#function:commit_prediction:321ea7f505b3f86e",
-        "signature_hash": "003c595716c631ee"
-      }
-    ],
     "commit_to_dkt": [
       {
         "file": "aura_heal.py",
@@ -67826,16 +67858,6 @@
         "signature_hash": "139895ccdd30ade5"
       }
     ],
-    "compile_act_capsule_envelope": [
-      {
-        "file": "aura_unified_memory_continuity.py",
-        "kind": "function",
-        "line": 1474,
-        "end_line": 1538,
-        "semantic_id": "aura_unified_memory_continuity.py#function:compile_act_capsule_envelope:f12a4bc4cf9522be",
-        "signature_hash": "d44145a2e75f7d96"
-      }
-    ],
     "compile_action_capsule": [
       {
         "file": "aura_coding_arena_3d.py",
@@ -67854,16 +67876,6 @@
         "end_line": 139,
         "semantic_id": "aura_spatial_ws_guard.py#function:compile_ar_hotswap_handoff:1a58165e11b4868f",
         "signature_hash": "5f6ec49d87358864"
-      }
-    ],
-    "compile_arena_evidence_slice": [
-      {
-        "file": "aura_unified_memory_continuity.py",
-        "kind": "function",
-        "line": 1412,
-        "end_line": 1471,
-        "semantic_id": "aura_unified_memory_continuity.py#function:compile_arena_evidence_slice:5c29b8e78fa64279",
-        "signature_hash": "d0264411e54b8c36"
       }
     ],
     "compile_arena_grammar": [
@@ -68118,16 +68130,6 @@
         "end_line": 755,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:compile_mesh:eb1ccbb0a6b358cb",
         "signature_hash": "b6b84e91658e6986"
-      }
-    ],
-    "compile_model_execution_packet": [
-      {
-        "file": "aura_unified_memory_continuity.py",
-        "kind": "function",
-        "line": 1541,
-        "end_line": 1608,
-        "semantic_id": "aura_unified_memory_continuity.py#function:compile_model_execution_packet:ac66566a867285c4",
-        "signature_hash": "190ad3051795c40f"
       }
     ],
     "compile_paper_memory_record": [
@@ -69700,24 +69702,24 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 290,
-        "end_line": 341,
+        "line": 347,
+        "end_line": 398,
         "semantic_id": "aura_unified_memory_continuity.py#method:IntentPacket.create:11371c0c1263b249",
         "signature_hash": "e5cc267a87f79e86"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 422,
-        "end_line": 436,
+        "line": 480,
+        "end_line": 494,
         "semantic_id": "aura_unified_memory_continuity.py#method:SemanticLedger.create:2e9586e7c5835e06",
         "signature_hash": "fbce31fffaa51b41"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 733,
-        "end_line": 764,
+        "line": 794,
+        "end_line": 825,
         "semantic_id": "aura_unified_memory_continuity.py#method:ModelProfileRef.create:8ba0943266c5a098",
         "signature_hash": "155bab14995c5017"
       }
@@ -77630,96 +77632,96 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 343,
-        "end_line": 361,
+        "line": 400,
+        "end_line": 418,
         "semantic_id": "aura_unified_memory_continuity.py#method:IntentPacket.identity_payload:7e0a3d98336566c3",
         "signature_hash": "6d1e263cf6d17eaa"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 444,
-        "end_line": 448,
+        "line": 502,
+        "end_line": 506,
         "semantic_id": "aura_unified_memory_continuity.py#method:SemanticLedger.identity_payload:dd14360d7ee4c986",
         "signature_hash": "6d1e263cf6d17eaa"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 549,
-        "end_line": 559,
+        "line": 608,
+        "end_line": 618,
         "semantic_id": "aura_unified_memory_continuity.py#method:ArenaEvidenceSlice.identity_payload:176481cf0bf2a4ff",
         "signature_hash": "6d1e263cf6d17eaa"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 658,
-        "end_line": 676,
+        "line": 718,
+        "end_line": 736,
         "semantic_id": "aura_unified_memory_continuity.py#method:ActCapsuleEnvelope.identity_payload:be46c78b5426a860",
         "signature_hash": "6d1e263cf6d17eaa"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 771,
-        "end_line": 784,
+        "line": 832,
+        "end_line": 845,
         "semantic_id": "aura_unified_memory_continuity.py#method:ModelProfileRef.identity_payload:6877abc1cadd6a21",
         "signature_hash": "6d1e263cf6d17eaa"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 848,
-        "end_line": 869,
+        "line": 914,
+        "end_line": 938,
         "semantic_id": "aura_unified_memory_continuity.py#method:ModelExecutionPacket.identity_payload:a20df6be2ed1721d",
         "signature_hash": "6d1e263cf6d17eaa"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 932,
-        "end_line": 946,
+        "line": 1006,
+        "end_line": 1023,
         "semantic_id": "aura_unified_memory_continuity.py#method:PredictionPacket.identity_payload:5e817273cc7d679a",
         "signature_hash": "6d1e263cf6d17eaa"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 1009,
-        "end_line": 1023,
+        "line": 1087,
+        "end_line": 1101,
         "semantic_id": "aura_unified_memory_continuity.py#method:P1Observation.identity_payload:099f5948c9d5a4af",
         "signature_hash": "6d1e263cf6d17eaa"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 1114,
-        "end_line": 1141,
+        "line": 1193,
+        "end_line": 1220,
         "semantic_id": "aura_unified_memory_continuity.py#method:ContinuitySensitivityReceipt.identity_payload:2f9265b5017119a8",
         "signature_hash": "6d1e263cf6d17eaa"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 1197,
-        "end_line": 1209,
+        "line": 1277,
+        "end_line": 1289,
         "semantic_id": "aura_unified_memory_continuity.py#method:ContinuityDelta.identity_payload:5345d0f0958e574c",
         "signature_hash": "6d1e263cf6d17eaa"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 1282,
-        "end_line": 1295,
+        "line": 1367,
+        "end_line": 1383,
         "semantic_id": "aura_unified_memory_continuity.py#method:LearningToReproofDecision.identity_payload:dad88490628ffecf",
         "signature_hash": "6d1e263cf6d17eaa"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 1382,
-        "end_line": 1399,
+        "line": 1471,
+        "end_line": 1488,
         "semantic_id": "aura_unified_memory_continuity.py#method:QDKTConsequentialAdmission.identity_payload:ef27f95512938c2a",
         "signature_hash": "6d1e263cf6d17eaa"
       }
@@ -87358,8 +87360,8 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 438,
-        "end_line": 442,
+        "line": 496,
+        "end_line": 500,
         "semantic_id": "aura_unified_memory_continuity.py#method:SemanticLedger.require_terms:3ec706ced06e23b9",
         "signature_hash": "f3dd5358690cb794"
       }
@@ -92598,6 +92600,16 @@
         "signature_hash": "517e049db2252c11"
       }
     ],
+    "test_act_capsule_envelope_rejects_noncanonical_and_out_of_scope_capsules": [
+      {
+        "file": "tests/test_aura_unified_memory_continuity.py",
+        "kind": "function",
+        "line": 693,
+        "end_line": 739,
+        "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_act_capsule_envelope_rejects_noncanonical_and_out_of_scope_capsules:cc1fd0aa691a9244",
+        "signature_hash": "0a58eea47c7c39d7"
+      }
+    ],
     "test_act_tasks_topological_grounding_overrides_stale_task_data": [
       {
         "file": "tests/test_aura_coding_arena_grounding.py",
@@ -94364,8 +94376,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 696,
-        "end_line": 746,
+        "line": 899,
+        "end_line": 957,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_authority_boundaries_are_not_accidentally_promoted:53a45979497dd001",
         "signature_hash": "870d658eb474ea24"
       }
@@ -94398,6 +94410,16 @@
         "end_line": 155,
         "semantic_id": "tests/test_aura_gate_egress.py#function:test_authority_dimensions_fail_closed:b1b4b341bf9d40a6",
         "signature_hash": "d9f80d4cead98a4d"
+      }
+    ],
+    "test_authority_envelope_requires_monotonic_grants": [
+      {
+        "file": "tests/test_aura_unified_memory_continuity.py",
+        "kind": "function",
+        "line": 682,
+        "end_line": 690,
+        "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_authority_envelope_requires_monotonic_grants:a4f1172b2b8c320e",
+        "signature_hash": "28bd4cf81142336d"
       }
     ],
     "test_authority_evaluation_rejects_boolean_and_string_time_aliases": [
@@ -98870,8 +98892,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 665,
-        "end_line": 681,
+        "line": 868,
+        "end_line": 884,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_continuity_delta_updates_navigation_not_durable_memory:a249b6f76c9d1f58",
         "signature_hash": "62d20d4b6b1b5e75"
       }
@@ -98890,8 +98912,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 532,
-        "end_line": 565,
+        "line": 551,
+        "end_line": 584,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_continuity_receipt_cannot_be_copied_across_head_or_source:a4a140227bd897d3",
         "signature_hash": "e0d989d7377171d3"
       }
@@ -98900,8 +98922,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 504,
-        "end_line": 529,
+        "line": 523,
+        "end_line": 548,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_continuity_receipt_rejects_self_verification:947a12f0eae8c5cd",
         "signature_hash": "a7b85a01b8561381"
       }
@@ -99654,8 +99676,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 376,
-        "end_line": 391,
+        "line": 395,
+        "end_line": 410,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_cross_model_disagreement_increases_verification_not_vote_authority:b7c60f37969614b8",
         "signature_hash": "69dbc3e896a7d9b1"
       }
@@ -102988,8 +103010,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 394,
-        "end_line": 400,
+        "line": 413,
+        "end_line": 419,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_expired_model_profile_fails_closed:7fef8b7b429adb32",
         "signature_hash": "ee4c826975752b58"
       }
@@ -108366,6 +108388,16 @@
         "signature_hash": "c7e45bb1438667f5"
       }
     ],
+    "test_learning_reproof_rejects_stale_evidence_and_spoofed_verifier": [
+      {
+        "file": "tests/test_aura_unified_memory_continuity.py",
+        "kind": "function",
+        "line": 815,
+        "end_line": 833,
+        "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_learning_reproof_rejects_stale_evidence_and_spoofed_verifier:0d203b78e037c7cf",
+        "signature_hash": "d99c0cb737f67f3b"
+      }
+    ],
     "test_learning_summary_dispatches": [
       {
         "file": "tests/test_aura_waboose_learning_mcp.py",
@@ -108380,8 +108412,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 600,
-        "end_line": 626,
+        "line": 618,
+        "end_line": 634,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_learning_to_reproof_remains_closed_until_all_gates_exist:6cc917587139fc5d",
         "signature_hash": "a8e36780ce8e1a60"
       }
@@ -110230,8 +110262,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 443,
-        "end_line": 461,
+        "line": 462,
+        "end_line": 480,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_missing_semantic_term_blocks_act_capsule_compilation:a0c3f829c8d6f1b7",
         "signature_hash": "26aa6384a068e8f5"
       }
@@ -110514,6 +110546,16 @@
         "end_line": 332,
         "semantic_id": "tests/test_aura_civic_commons_arena.py#method:TestSystemicContext.test_model_hypothesis_labelled:538470a60ff558e8",
         "signature_hash": "88959afcbc4c9c2b"
+      }
+    ],
+    "test_model_packet_rejects_role_tool_and_evidence_scope_expansion": [
+      {
+        "file": "tests/test_aura_unified_memory_continuity.py",
+        "kind": "function",
+        "line": 742,
+        "end_line": 751,
+        "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_model_packet_rejects_role_tool_and_evidence_scope_expansion:c0f992e543bfb5d8",
+        "signature_hash": "98863ffde2223d72"
       }
     ],
     "test_model_probe_score_uses_weighted_equation": [
@@ -111514,8 +111556,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 568,
-        "end_line": 597,
+        "line": 587,
+        "end_line": 615,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_non_finite_costs_and_uncertainty_fail_closed:c0783ba36d9b1ca7",
         "signature_hash": "b132f36bd0833ed8"
       }
@@ -112490,8 +112532,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 464,
-        "end_line": 482,
+        "line": 483,
+        "end_line": 501,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_p0_digest_cannot_be_rewritten_after_commit:ea232746a93f85c8",
         "signature_hash": "ea8936df3209bd74"
       }
@@ -112500,10 +112542,20 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 485,
-        "end_line": 501,
+        "line": 504,
+        "end_line": 520,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_p1_cannot_precede_p0:14bc0cfc517fc86e",
         "signature_hash": "e8e52ef20f2192a8"
+      }
+    ],
+    "test_p1_requires_exact_committed_source_and_independent_observer": [
+      {
+        "file": "tests/test_aura_unified_memory_continuity.py",
+        "kind": "function",
+        "line": 779,
+        "end_line": 812,
+        "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_p1_requires_exact_committed_source_and_independent_observer:a1b5deb5b388b3a5",
+        "signature_hash": "ed1fbb5d45ad7f31"
       }
     ],
     "test_p5_3_explicitly_retains_v1": [
@@ -113756,6 +113808,16 @@
         "signature_hash": "07bc57ea2bc1c0be"
       }
     ],
+    "test_prediction_is_deeply_immutable_and_revalidates_digest": [
+      {
+        "file": "tests/test_aura_unified_memory_continuity.py",
+        "kind": "function",
+        "line": 754,
+        "end_line": 776,
+        "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_prediction_is_deeply_immutable_and_revalidates_digest:f1b47a8f2f879bac",
+        "signature_hash": "544da5f7444de031"
+      }
+    ],
     "test_prediction_is_written_to_jsonl_without_qdkt": [
       {
         "file": "test_aura_harness_evolver.py",
@@ -114970,8 +115032,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 629,
-        "end_line": 662,
+        "line": 637,
+        "end_line": 679,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_qdkt_consequential_admission_requires_every_governed_gate:dca5214835100974",
         "signature_hash": "104ab18a9bc2f7ec"
       }
@@ -115024,6 +115086,16 @@
         "end_line": 124,
         "semantic_id": "test_aura_dream_retrieval.py#function:test_qdkt_records_retrieval_usefulness:9b372599c74c4fc1",
         "signature_hash": "b16dec2d815ed8b6"
+      }
+    ],
+    "test_qdkt_requires_canonical_relationship_and_complete_raw_evidence": [
+      {
+        "file": "tests/test_aura_unified_memory_continuity.py",
+        "kind": "function",
+        "line": 836,
+        "end_line": 865,
+        "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_qdkt_requires_canonical_relationship_and_complete_raw_evidence:7db9bbfc0207477f",
+        "signature_hash": "7752d12d615134bd"
       }
     ],
     "test_qdkt_summary_excludes_learner_id": [
@@ -116370,8 +116442,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 328,
-        "end_line": 358,
+        "line": 371,
+        "end_line": 377,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_relationship_experience_adapter_uses_existing_canonical_owner:2dca1b4f167468af",
         "signature_hash": "9a2863dc861f085a"
       }
@@ -118776,8 +118848,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 361,
-        "end_line": 373,
+        "line": 380,
+        "end_line": 392,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_same_canonical_intent_compiles_to_distinct_model_packets:5d79ce5d4f649e4d",
         "signature_hash": "27b70722225132f0"
       }
@@ -118996,8 +119068,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 403,
-        "end_line": 415,
+        "line": 422,
+        "end_line": 434,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_saturation_fails_when_required_context_is_missing:f695f8d3d63b4288",
         "signature_hash": "925c1b7c95da968b"
       }
@@ -121734,8 +121806,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 418,
-        "end_line": 440,
+        "line": 437,
+        "end_line": 459,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_stale_required_evidence_fails_closed:d7ae67e4bb8eb670",
         "signature_hash": "4c84eb4511ec31e3"
       }
@@ -125388,8 +125460,8 @@
       {
         "file": "tests/test_aura_unified_memory_continuity.py",
         "kind": "function",
-        "line": 303,
-        "end_line": 325,
+        "line": 346,
+        "end_line": 368,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:test_vertical_context_to_consequence_loop_preserves_existing_owners:4e6deaf13831d7d0",
         "signature_hash": "d587c606691198af"
       }
@@ -129502,120 +129574,120 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 230,
-        "end_line": 231,
+        "line": 287,
+        "end_line": 288,
         "semantic_id": "aura_unified_memory_continuity.py#method:AuthorityEnvelope.to_dict:1a879b4403f6b557",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 363,
-        "end_line": 366,
+        "line": 420,
+        "end_line": 423,
         "semantic_id": "aura_unified_memory_continuity.py#method:IntentPacket.to_dict:27c700a078981b26",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 391,
-        "end_line": 392,
+        "line": 448,
+        "end_line": 449,
         "semantic_id": "aura_unified_memory_continuity.py#method:SemanticDefinition.to_dict:542c267ef408d3ae",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 450,
-        "end_line": 457,
+        "line": 508,
+        "end_line": 515,
         "semantic_id": "aura_unified_memory_continuity.py#method:SemanticLedger.to_dict:5834261688136711",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 484,
-        "end_line": 487,
+        "line": 542,
+        "end_line": 545,
         "semantic_id": "aura_unified_memory_continuity.py#method:ArenaEvidenceItem.to_dict:3420bd21a7ab1a6c",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 561,
-        "end_line": 567,
+        "line": 620,
+        "end_line": 626,
         "semantic_id": "aura_unified_memory_continuity.py#method:ArenaEvidenceSlice.to_dict:0a3bbaf885105a20",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 678,
-        "end_line": 688,
+        "line": 738,
+        "end_line": 748,
         "semantic_id": "aura_unified_memory_continuity.py#method:ActCapsuleEnvelope.to_dict:873e4472c442fefb",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 786,
-        "end_line": 787,
+        "line": 847,
+        "end_line": 848,
         "semantic_id": "aura_unified_memory_continuity.py#method:ModelProfileRef.to_dict:2472a57fb4b80cbf",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 871,
-        "end_line": 879,
+        "line": 940,
+        "end_line": 948,
         "semantic_id": "aura_unified_memory_continuity.py#method:ModelExecutionPacket.to_dict:288e50cb0b19e38e",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 948,
-        "end_line": 955,
+        "line": 1025,
+        "end_line": 1032,
         "semantic_id": "aura_unified_memory_continuity.py#method:PredictionPacket.to_dict:210ca2a6ff403d51",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 1025,
-        "end_line": 1031,
+        "line": 1103,
+        "end_line": 1109,
         "semantic_id": "aura_unified_memory_continuity.py#method:P1Observation.to_dict:82224bdd233aadac",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 1143,
-        "end_line": 1154,
+        "line": 1222,
+        "end_line": 1233,
         "semantic_id": "aura_unified_memory_continuity.py#method:ContinuitySensitivityReceipt.to_dict:b039342e7fd4055e",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 1211,
-        "end_line": 1219,
+        "line": 1291,
+        "end_line": 1299,
         "semantic_id": "aura_unified_memory_continuity.py#method:ContinuityDelta.to_dict:8a424014531cea25",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 1297,
-        "end_line": 1305,
+        "line": 1385,
+        "end_line": 1393,
         "semantic_id": "aura_unified_memory_continuity.py#method:LearningToReproofDecision.to_dict:5cfb803cdb147c01",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_unified_memory_continuity.py",
         "kind": "method",
-        "line": 1401,
-        "end_line": 1409,
+        "line": 1490,
+        "end_line": 1498,
         "semantic_id": "aura_unified_memory_continuity.py#method:QDKTConsequentialAdmission.to_dict:1d4409bd0544add9",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -174448,17 +174520,17 @@
     {
       "path": "aura_unified_memory_continuity.py",
       "role": "python_module",
-      "bytes": 84560,
-      "lines": 2069,
-      "tokens_est": 21140,
-      "symbol_count": 86,
+      "bytes": 96151,
+      "lines": 2259,
+      "tokens_est": 24038,
+      "symbol_count": 90,
       "commands": [],
       "command_lines": {},
       "topology": {
         "hub_rank": 3,
-        "node_count": 87,
-        "edge_count": 625,
-        "degree": 625,
+        "node_count": 91,
+        "edge_count": 667,
+        "degree": 667,
         "symbols": [
           "ActCapsuleEnvelope",
           "ArenaEvidenceItem",
@@ -174485,45 +174557,45 @@
           "aura_event_contracts.py"
         ],
         "edge_kinds": {
-          "call": 452,
-          "defines": 172,
+          "call": 486,
+          "defines": 180,
           "import_module": 1
         }
       },
-      "digest8": "6dda83295d922550",
+      "digest8": "f0a69fe5fe9cdc11",
       "vector": [
-        -0.256871,
-        -0.251602,
-        -0.011856,
-        -0.183103,
-        -0.191007,
-        0.051374,
-        -0.040836,
-        0.191007,
-        0.241063,
-        -0.285851,
-        -0.243698,
-        0.151488,
-        -0.117238,
-        -0.032932,
-        -0.061912,
-        -0.109335,
-        0.127777,
-        0.219987,
-        -0.069816,
-        0.299024,
-        0.038201,
-        -0.059278,
-        0.227891,
-        0.23316,
-        0.114604,
-        0.235794,
-        -0.230525,
-        0.01449,
-        0.035567,
-        -0.275313,
-        0.032932,
-        -0.191007
+        0.279368,
+        0.159467,
+        0.205029,
+        0.238602,
+        0.140283,
+        0.226612,
+        -0.075537,
+        0.257786,
+        -0.046761,
+        -0.248194,
+        0.051557,
+        0.202631,
+        0.161865,
+        -0.099517,
+        -0.161865,
+        -0.214622,
+        -0.130691,
+        -0.157069,
+        -0.001199,
+        0.013189,
+        0.080333,
+        0.080333,
+        0.284164,
+        0.087527,
+        0.044363,
+        -0.173855,
+        0.231408,
+        0.005995,
+        0.207427,
+        -0.157069,
+        0.272174,
+        -0.260184
       ]
     },
     {
@@ -186337,328 +186409,6 @@
       ]
     },
     {
-      "path": ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-01",
-      "role": "support_file",
-      "bytes": 6500,
-      "lines": 0,
-      "tokens_est": 0,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "a3ee706e660c7b99",
-      "vector": [
-        -0.254981,
-        0.124221,
-        0.257596,
-        -0.213138,
-        0.273287,
-        -0.168679,
-        -0.082378,
-        -0.040535,
-        -0.184371,
-        0.171295,
-        -0.333436,
-        -0.268057,
-        -0.210522,
-        -0.100685,
-        0.001308,
-        -0.150373,
-        -0.132067,
-        -0.087609,
-        0.236674,
-        -0.003923,
-        -0.213138,
-        -0.192216,
-        -0.077148,
-        -0.043151,
-        0.139912,
-        -0.168679,
-        -0.262826,
-        -0.079763,
-        -0.200062,
-        -0.001308,
-        0.105915,
-        -0.163449
-      ]
-    },
-    {
-      "path": ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-02",
-      "role": "support_file",
-      "bytes": 6500,
-      "lines": 0,
-      "tokens_est": 0,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "dd171028b2f4f24d",
-      "vector": [
-        -0.089109,
-        -0.086668,
-        0.201411,
-        0.130612,
-        -0.279534,
-        0.003662,
-        0.262445,
-        0.052489,
-        0.006103,
-        -0.308831,
-        0.101316,
-        0.006103,
-        -0.257562,
-        -0.267328,
-        0.179439,
-        -0.152584,
-        0.042724,
-        -0.240473,
-        0.279534,
-        0.079344,
-        0.294183,
-        0.155026,
-        -0.250238,
-        0.025634,
-        -0.147702,
-        -0.025634,
-        0.172115,
-        -0.264886,
-        -0.086668,
-        0.069578,
-        0.159908,
-        0.003662
-      ]
-    },
-    {
-      "path": ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-03",
-      "role": "support_file",
-      "bytes": 6500,
-      "lines": 0,
-      "tokens_est": 0,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "e85136f99ebc194c",
-      "vector": [
-        -0.165964,
-        -0.161322,
-        0.082402,
-        0.022051,
-        -0.277381,
-        0.121862,
-        -0.017409,
-        -0.080081,
-        -0.237921,
-        0.073117,
-        -0.052227,
-        0.084723,
-        -0.121862,
-        -0.291308,
-        0.15668,
-        0.282023,
-        0.147395,
-        -0.047584,
-        0.022051,
-        0.186855,
-        -0.258811,
-        -0.045263,
-        0.240242,
-        0.288987,
-        -0.212388,
-        -0.182213,
-        0.07776,
-        -0.272739,
-        0.237921,
-        -0.205424,
-        0.015088,
-        -0.193818
-      ]
-    },
-    {
-      "path": ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-04",
-      "role": "support_file",
-      "bytes": 6500,
-      "lines": 0,
-      "tokens_est": 0,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "77cdbe31e8b384a6",
-      "vector": [
-        -0.158294,
-        -0.127349,
-        -0.082122,
-        0.105926,
-        -0.13211,
-        0.258269,
-        0.146392,
-        0.110687,
-        0.022613,
-        -0.079742,
-        0.053558,
-        -0.027374,
-        -0.291594,
-        -0.160674,
-        0.248747,
-        0.051178,
-        -0.270171,
-        -0.053558,
-        0.277312,
-        -0.189239,
-        0.274931,
-        -0.148772,
-        -0.108306,
-        -0.022613,
-        -0.005951,
-        0.163055,
-        -0.286833,
-        0.136871,
-        0.284453,
-        -0.101165,
-        -0.224944,
-        -0.26303
-      ]
-    },
-    {
-      "path": ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-05",
-      "role": "support_file",
-      "bytes": 6500,
-      "lines": 0,
-      "tokens_est": 0,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "223780f4b872ef05",
-      "vector": [
-        -0.04664,
-        -0.244576,
-        -0.269602,
-        -0.162672,
-        0.189973,
-        -0.017063,
-        0.269602,
-        0.028439,
-        -0.183148,
-        -0.003413,
-        -0.160396,
-        -0.210449,
-        -0.001138,
-        -0.290079,
-        -0.178597,
-        0.110344,
-        -0.176322,
-        0.128545,
-        0.032989,
-        0.071666,
-        -0.180873,
-        -0.119444,
-        -0.183148,
-        -0.185423,
-        -0.153571,
-        0.137645,
-        0.142195,
-        0.267327,
-        -0.269602,
-        0.149021,
-        -0.174047,
-        0.262777
-      ]
-    },
-    {
-      "path": ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-06",
-      "role": "support_file",
-      "bytes": 6500,
-      "lines": 0,
-      "tokens_est": 0,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "d04c45bd48a7db27",
-      "vector": [
-        -0.131545,
-        0.190293,
-        -0.256704,
-        -0.203064,
-        0.098339,
-        -0.054917,
-        -0.106002,
-        -0.177521,
-        -0.021711,
-        -0.241378,
-        -0.054917,
-        0.00894,
-        0.00894,
-        -0.312897,
-        -0.070242,
-        0.2848,
-        -0.00894,
-        0.003831,
-        0.113665,
-        0.003831,
-        -0.144316,
-        0.180076,
-        -0.264366,
-        0.0447,
-        -0.016603,
-        0.065134,
-        -0.001277,
-        0.254149,
-        -0.2848,
-        0.289909,
-        0.272029,
-        -0.30268
-      ]
-    },
-    {
-      "path": ".aura/refactor_payloads/unified_memory_continuity_manual_review.v1.part-07",
-      "role": "support_file",
-      "bytes": 495,
-      "lines": 0,
-      "tokens_est": 0,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "205c1d5000a407d9",
-      "vector": [
-        0.240108,
-        -0.246687,
-        -0.055916,
-        -0.158976,
-        -0.172133,
-        0.110735,
-        0.106349,
-        0.229145,
-        0.101964,
-        -0.108542,
-        0.275193,
-        0.080036,
-        -0.226952,
-        0.128277,
-        0.020831,
-        -0.240108,
-        -0.053723,
-        -0.231337,
-        0.220374,
-        0.24888,
-        0.244494,
-        0.01206,
-        -0.23353,
-        0.174325,
-        -0.038374,
-        -0.044952,
-        -0.218181,
-        -0.20941,
-        -0.266422,
-        0.167747,
-        -0.104157,
-        -0.018639
-      ]
-    },
-    {
       "path": ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
       "role": "knowledge_artifact",
       "bytes": 13096,
@@ -187955,47 +187705,47 @@
     {
       "path": ".github/workflows/ci.yml",
       "role": "schema_or_lexicon",
-      "bytes": 11764,
-      "lines": 330,
-      "tokens_est": 2941,
+      "bytes": 11841,
+      "lines": 333,
+      "tokens_est": 2961,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "fbd23825d498d513",
+      "digest8": "a82bf06d00eb503e",
       "vector": [
-        -0.105911,
-        0.014493,
-        -0.279829,
-        -0.186181,
-        0.219627,
-        -0.059087,
-        0.282058,
-        0.188411,
-        -0.023412,
-        -0.063547,
-        -0.159424,
-        0.175032,
-        -0.199559,
-        0.275369,
-        0.047939,
-        -0.11483,
-        0.018953,
-        -0.177262,
-        -0.284288,
-        0.210708,
-        -0.134898,
-        0.04125,
-        0.054628,
-        0.27314,
-        -0.025642,
-        0.001115,
-        0.228545,
-        0.018953,
-        -0.279829,
-        0.152735,
-        0.163884,
-        -0.284288
+        -0.086978,
+        -0.146694,
+        0.094767,
+        0.232374,
+        -0.2142,
+        -0.310265,
+        0.240163,
+        0.011684,
+        -0.003895,
+        0.022069,
+        -0.003895,
+        -0.302476,
+        0.294687,
+        -0.253145,
+        -0.24276,
+        0.138905,
+        -0.253145,
+        -0.016876,
+        -0.268723,
+        -0.050629,
+        0.079189,
+        0.221989,
+        0.009087,
+        -0.112942,
+        -0.050629,
+        -0.245356,
+        -0.18564,
+        -0.190833,
+        -0.001298,
+        0.061014,
+        -0.203814,
+        -0.019473
       ]
     },
     {
@@ -200451,93 +200201,93 @@
     {
       "path": "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
       "role": "knowledge_artifact",
-      "bytes": 10755,
-      "lines": 325,
-      "tokens_est": 2683,
+      "bytes": 12220,
+      "lines": 331,
+      "tokens_est": 3048,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "6f563f859ab3047f",
+      "digest8": "dd53d88b4357649d",
       "vector": [
-        -0.111516,
-        -0.306348,
-        -0.25764,
-        0.083316,
-        -0.180732,
-        0.052553,
-        0.088444,
-        -0.047426,
-        0.003845,
-        0.106389,
-        0.114079,
-        0.144842,
-        -0.19355,
-        -0.190987,
-        -0.139715,
-        0.12177,
-        -0.162787,
-        -0.311475,
-        -0.075626,
-        -0.091007,
-        0.211495,
-        0.062808,
-        0.278148,
-        0.12177,
-        0.170478,
-        -0.008973,
-        0.326856,
-        -0.288403,
-        -0.242258,
-        -0.239695,
-        -0.065371,
-        -0.057681
+        -0.205644,
+        0.030914,
+        -0.090053,
+        0.133064,
+        -0.151881,
+        -0.25403,
+        -0.103494,
+        0.178762,
+        0.221773,
+        -0.047043,
+        -0.149192,
+        0.049731,
+        0.16801,
+        -0.216396,
+        0.154569,
+        -0.243278,
+        -0.052419,
+        -0.18145,
+        0.297041,
+        -0.151881,
+        0.047043,
+        0.103494,
+        0.326611,
+        -0.133064,
+        -0.307793,
+        0.170698,
+        -0.087365,
+        0.076612,
+        0.291665,
+        0.213708,
+        0.106182,
+        -0.052419
       ]
     },
     {
       "path": "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
       "role": "knowledge_artifact",
-      "bytes": 2164,
-      "lines": 28,
-      "tokens_est": 541,
+      "bytes": 2750,
+      "lines": 31,
+      "tokens_est": 688,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "7ef973c83e38d736",
+      "digest8": "80e6e4ab0f79dda2",
       "vector": [
-        0.037058,
-        0.108784,
-        0.190073,
-        -0.300052,
-        0.233108,
-        -0.168555,
-        -0.249844,
-        0.249844,
-        -0.077703,
-        -0.068139,
-        0.273753,
-        0.223545,
-        0.139865,
-        -0.249844,
-        -0.29527,
-        0.23789,
-        -0.07053,
-        0.118347,
-        0.075312,
-        -0.123129,
-        0.1829,
-        0.202027,
-        -0.01315,
-        -0.084875,
-        -0.127911,
-        -0.168555,
-        0.297661,
-        0.015541,
-        -0.139865,
-        -0.07053,
-        -0.015541,
-        0.108784
+        0.01009,
+        -0.108747,
+        -0.146864,
+        0.025785,
+        0.182739,
+        0.097536,
+        -0.167044,
+        0.274669,
+        -0.281396,
+        -0.218614,
+        -0.207403,
+        -0.144622,
+        -0.063903,
+        -0.256732,
+        0.039238,
+        -0.162559,
+        -0.256732,
+        -0.057176,
+        -0.039238,
+        0.117715,
+        -0.180497,
+        -0.021301,
+        -0.267943,
+        0.202919,
+        0.245521,
+        0.155833,
+        -0.124442,
+        -0.263458,
+        0.28588,
+        0.171528,
+        0.104262,
+        0.093051
       ]
     },
     {
@@ -215533,47 +215283,47 @@
     {
       "path": "tests/test_aura_unified_memory_continuity.py",
       "role": "python_module",
-      "bytes": 28886,
-      "lines": 747,
-      "tokens_est": 7222,
-      "symbol_count": 27,
+      "bytes": 37200,
+      "lines": 958,
+      "tokens_est": 9300,
+      "symbol_count": 36,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "3247f884eb7d8aa9",
+      "digest8": "94cfb6975e7985d5",
       "vector": [
-        0.112129,
-        0.197801,
-        -0.066774,
-        0.129768,
-        -0.034017,
-        -0.031497,
-        0.089452,
-        -0.018898,
-        0.258276,
-        0.197801,
-        -0.263315,
-        0.127248,
-        0.117169,
-        0.154965,
-        -0.32127,
-        0.190242,
-        0.149926,
-        0.056695,
-        0.268355,
-        -0.273394,
-        -0.127248,
-        0.137327,
-        0.122209,
-        0.177643,
-        0.250716,
-        0.011339,
-        -0.165044,
-        0.270875,
-        0.044096,
-        0.094491,
-        -0.268355,
-        0.21796
+        0.287211,
+        -0.289595,
+        -0.041711,
+        -0.117983,
+        -0.230007,
+        -0.106065,
+        0.008342,
+        -0.17757,
+        0.21809,
+        0.296745,
+        0.165653,
+        0.210939,
+        -0.115599,
+        -0.001192,
+        -0.144201,
+        0.160886,
+        -0.294362,
+        -0.02026,
+        0.301512,
+        -0.203789,
+        0.280061,
+        -0.070313,
+        -0.022643,
+        0.196638,
+        -0.02741,
+        0.199022,
+        -0.036944,
+        -0.001192,
+        0.041711,
+        0.07508,
+        0.191871,
+        -0.163269
       ]
     },
     {
@@ -217431,7 +217181,7 @@
     "source": "compiled_deep_topology",
     "diagnostics": {
       "isolated_node_count": 7,
-      "dead_end_count": 4622,
+      "dead_end_count": 4617,
       "dangling_edge_count": 0,
       "top_hubs": [
         {
@@ -217488,11 +217238,11 @@
         },
         {
           "id": "aura_unified_memory_continuity.py::_strings",
-          "degree": 80
+          "degree": 79
         },
         {
-          "id": "aura_unified_memory_continuity.py::_required",
-          "degree": 78
+          "id": "aura_coding_arena_planning_integrity.py::validate_legacy_coding_arena_integrity",
+          "degree": 74
         }
       ],
       "isolated_sample": [
@@ -217531,11 +217281,11 @@
       "generated_by": "aura_topology_manager",
       "root": ".",
       "module_count": 609,
-      "node_count": 10467,
-      "edge_count": 24552,
+      "node_count": 10471,
+      "edge_count": 24573,
       "spectral_layout": true,
-      "spectral_sparsity": 0.054271,
-      "global_health": 0.971048
+      "spectral_sparsity": 0.05425,
+      "global_health": 0.97102
     },
     "file_index": {
       "aura_node.py": {
@@ -217640,9 +217390,9 @@
       },
       "aura_unified_memory_continuity.py": {
         "hub_rank": 3,
-        "node_count": 87,
-        "edge_count": 625,
-        "degree": 625,
+        "node_count": 91,
+        "edge_count": 667,
+        "degree": 667,
         "symbols": [
           "ActCapsuleEnvelope",
           "ArenaEvidenceItem",
@@ -217669,8 +217419,8 @@
           "aura_event_contracts.py"
         ],
         "edge_kinds": {
-          "call": 452,
-          "defines": 172,
+          "call": 486,
+          "defines": 180,
           "import_module": 1
         }
       },
@@ -236185,9 +235935,9 @@
       {
         "file": "aura_unified_memory_continuity.py",
         "hub_rank": 3,
-        "node_count": 87,
-        "edge_count": 625,
-        "degree": 625,
+        "node_count": 91,
+        "edge_count": 667,
+        "degree": 667,
         "symbols": [
           "ActCapsuleEnvelope",
           "ArenaEvidenceItem",
@@ -236214,8 +235964,8 @@
           "aura_event_contracts.py"
         ],
         "edge_kinds": {
-          "call": 452,
-          "defines": 172,
+          "call": 486,
+          "defines": 180,
           "import_module": 1
         }
       },
