@@ -102,10 +102,39 @@ printf '%s\n' \
   | sort > "${RUNNER_TEMP}/expected-paths.txt"
 diff -u "${RUNNER_TEMP}/expected-paths.txt" "${RUNNER_TEMP}/actual-paths.txt"
 
-latest="$(git ls-remote --heads origin "refs/heads/${TARGET_BRANCH}" | awk '{print $1}')"
-test "$latest" = "$EVENT_HEAD"
-
 git config user.name 'AuraOS Verified Patch Bot'
 git config user.email 'actions@users.noreply.github.com'
 git commit -m 'fix: apply verified five-file continuity patch'
-git push origin "HEAD:${TARGET_BRANCH}"
+
+for attempt in $(seq 1 12); do
+  git fetch --no-tags origin "refs/heads/${TARGET_BRANCH}:refs/remotes/origin/${TARGET_BRANCH}"
+  latest="$(git rev-parse "origin/${TARGET_BRANCH}")"
+  if [ "$latest" != "$EVENT_HEAD" ]; then
+    git merge-base --is-ancestor "$EVENT_HEAD" "$latest"
+    git diff --name-only "$EVENT_HEAD" "$latest" > "${RUNNER_TEMP}/remote-movement-paths.txt"
+    python - <<'PY'
+from pathlib import Path
+allowed = {
+    '.aura/CODEMAP.json',
+    '.aura/CODEMAP.md',
+    'topology_map.json',
+    'Aura_Memory/live_topology_ast.json',
+}
+paths = set(Path('/tmp').joinpath('unused').parts)
+movement_file = Path(__import__('os').environ['RUNNER_TEMP']) / 'remote-movement-paths.txt'
+paths = set(movement_file.read_text(encoding='utf-8').splitlines())
+unexpected = paths - allowed
+if unexpected:
+    raise SystemExit(f'non-CODEMAP branch movement detected: {sorted(unexpected)}')
+PY
+    git rebase "$latest"
+  fi
+  if git push origin "HEAD:${TARGET_BRANCH}"; then
+    exit 0
+  fi
+  sleep 10
+done
+
+raise='unable to publish after CODEMAP-only retries'
+echo "$raise" >&2
+exit 1
