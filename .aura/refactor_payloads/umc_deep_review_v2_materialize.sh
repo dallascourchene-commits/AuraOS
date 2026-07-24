@@ -64,8 +64,53 @@ for relative, record in sorted(records.items()):
     temporary.write_bytes(data)
     temporary.replace(target)
     receipt[relative] = digest
-(Path(os.environ['EVIDENCE_DIR']) / 'file-hashes.json').write_text(
+(Path(os.environ['EVIDENCE_DIR']) / 'payload-file-hashes.json').write_text(
     json.dumps(receipt, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+)
+PY
+
+python - <<'PY'
+import hashlib
+import json
+import os
+from pathlib import Path
+
+module_path = Path('aura_unified_memory_continuity.py')
+module = module_path.read_text(encoding='utf-8')
+old_import = 'from enum import Enum\nimport math\n'
+new_import = 'from enum import Enum\nimport json\nimport math\n'
+if module.count(old_import) != 1:
+    raise SystemExit('module import insertion point is ambiguous')
+module = module.replace(old_import, new_import, 1)
+old_dynamic = 'decoded = __import__("json").loads(normalized)'
+if module.count(old_dynamic) != 1:
+    raise SystemExit('dynamic JSON import repair point is ambiguous')
+module = module.replace(old_dynamic, 'decoded = json.loads(normalized)', 1)
+module_path.write_text(module, encoding='utf-8')
+
+tests_path = Path('tests/test_aura_unified_memory_continuity.py')
+tests = tests_path.read_text(encoding='utf-8')
+test_name = 'test_module_avoids_dynamic_namespace_injection'
+if test_name in tests:
+    raise SystemExit('namespace-injection regression already exists unexpectedly')
+tests += '''\n\ndef test_module_avoids_dynamic_namespace_injection() -> None:\n    with open("aura_unified_memory_continuity.py", encoding="utf-8") as source_file:\n        source = source_file.read()\n    assert "__import__(" not in source\n'''
+tests_path.write_text(tests, encoding='utf-8')
+
+expected = {
+    'aura_unified_memory_continuity.py': '933b5f4962a33a0aad13bb0979de98bd86032d35ebce1245cb75a75536e12af3',
+    'tests/test_aura_unified_memory_continuity.py': '4793480ccc76a6216983a533ef1dc7aab33e5ddd25f8b41a25c7eba40cfb70d1',
+    'docs/AURA_UNIFIED_MEMORY_CONTINUITY.md': '262b2207468a918b196de925e46792146ffc7e97a46f5ced88d3e8d80c6614cd',
+    'docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md': '7844267632cfba956817f1799e8095e7d5eefd51f087b73c8101281ed0beb4ea',
+    '.aura/waboose_requests/unified_memory_continuity.v1.json': '9d9b193e206bd24d94a3592f8bd3d78da88241dece7da4c557a1bcc30691e2d3',
+}
+actual = {
+    path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    for path in expected
+}
+if actual != expected:
+    raise SystemExit(f'final bounded file hashes differ: {actual}')
+(Path(os.environ['EVIDENCE_DIR']) / 'final-file-hashes.json').write_text(
+    json.dumps(actual, indent=2, sort_keys=True) + '\n', encoding='utf-8'
 )
 PY
 
@@ -101,7 +146,21 @@ python -m pytest -q \
   tests/test_aura_relationship_compass_finalization.py \
   --junitxml="$EVIDENCE_DIR/regressions.xml" \
   2>&1 | tee "$EVIDENCE_DIR/pytest.log"
-grep -Eq '65 passed' "$EVIDENCE_DIR/pytest.log"
+grep -Eq '66 passed' "$EVIDENCE_DIR/pytest.log"
+
+python - <<'PY' 2>&1 | tee "$EVIDENCE_DIR/pvm-hard-gate.log"
+from pathlib import Path
+from pvm_arch_checker import PVMArchChecker
+violations = PVMArchChecker(Path('.')).run()
+hard = [
+    violation
+    for violation in violations
+    if violation.rule in {'SYNTAX_ERROR', 'WILDCARD_IMPORT', 'CIRCULAR_IMPORT', 'NAMESPACE_INJECTION'}
+]
+print(f'hard_violations={hard}')
+if hard:
+    raise SystemExit('Aura PVM hard architecture gate failed')
+PY
 
 python aura_coding_waboose_cli.py \
   --repo-root . \
@@ -132,7 +191,7 @@ python scripts/aura_architecture_harness.py \
 python scripts/aura_architecture_harness.py \
   --repo-root . run \
   --venv "${RUNNER_TEMP}/umc-deep-review-venv" \
-  --objective "Verify deep-review repairs for evidence saturation, canonical Model Cognome identity, P0 runtime binding, Relationship Experience/QDKT governance identity, and canonical JSON key safety without a parallel owner or mutation authority." \
+  --objective "Verify bounded deep-review repairs for evidence saturation, canonical Model Cognome identity, P0 runtime binding, Relationship Experience/QDKT governance identity, canonical JSON key safety, and explicit namespace-safe imports without a parallel owner or mutation authority." \
   --combine-with Connectome "Relational Synthesis" Atlas \
   --atlas-profile MINIMAL \
   --output-dir "$EVIDENCE_DIR/harness-run" \
@@ -190,6 +249,6 @@ if unexpected:
     raise SystemExit(f'unexpected staged paths: {sorted(unexpected)}')
 PY
 
-git commit -m 'fix: close deep unified continuity review gaps'
+git commit -m 'fix: close deep continuity and namespace review gaps'
 git push origin "HEAD:${TARGET_BRANCH}"
 git rev-parse HEAD | tee "$EVIDENCE_DIR/materialized-commit.txt"
