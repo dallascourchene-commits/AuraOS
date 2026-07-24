@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784856414,
+  "generated_at_unix": 1784859956,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1372,
+    "included_file_count": 1373,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,12 +13,10 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 130,
-      ".pytest_cache": 4,
-      ".ruff_cache": 4,
+      ".git": 25,
       "Aura_Memory": 6,
       "Aura_Sandbox": 1,
-      "__pycache__": 9
+      "__pycache__": 8
     },
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
@@ -63,6 +61,7 @@
       ".aura/run-construction-spz-diagnostics",
       ".aura/run-construction-toolchain-diagnostics",
       ".aura/runtime_profiles/construction_demo.v1.json",
+      ".aura/runtime_profiles/construction_demo_waboose.v1.json",
       ".aura/tool_bundles/coding_localize.v1.json",
       ".aura/topology_baseline.json",
       ".aura/understand_graph.json",
@@ -1396,9 +1395,9 @@
     ]
   },
   "summary": {
-    "file_count": 1372,
-    "total_bytes": 56329318,
-    "text_tokens_est": 4630089,
+    "file_count": 1373,
+    "total_bytes": 56334470,
+    "text_tokens_est": 4631377,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 51,
@@ -1406,13 +1405,13 @@
       "native_accelerator": 8,
       "operator_script": 5,
       "python_module": 910,
-      "schema_or_lexicon": 162,
+      "schema_or_lexicon": 163,
       "support_file": 53
     },
     "topology_nodes": 10358,
     "topology_edges": 24168,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 29928.8
+    "elapsed_ms": 29282.38
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1648,6 +1647,7 @@
       ".aura/run-construction-spz-diagnostics",
       ".aura/run-construction-toolchain-diagnostics",
       ".aura/runtime_profiles/construction_demo.v1.json",
+      ".aura/runtime_profiles/construction_demo_waboose.v1.json",
       ".aura/tool_bundles/coding_localize.v1.json",
       ".aura/understand_graph.json",
       ".aura/understand_graph_diff.json",
@@ -18098,8 +18098,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "class",
-        "line": 503,
-        "end_line": 505,
+        "line": 518,
+        "end_line": 520,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#class:_NoRedirectHandler:065a5fc87ef3fb0f",
         "signature_hash": "421b8116ba039f9c"
       }
@@ -24530,8 +24530,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 596,
-        "end_line": 618,
+        "line": 611,
+        "end_line": 633,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_artifact_inventory:e59c2ab7e74a8e89",
         "signature_hash": "cb8c7c6136149bde"
       }
@@ -36500,8 +36500,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 389,
-        "end_line": 417,
+        "line": 404,
+        "end_line": 432,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_git_identity:b58b776cf5695b58",
         "signature_hash": "9f4b9f07dbfa2817"
       }
@@ -40682,8 +40682,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 621,
-        "end_line": 638,
+        "line": 636,
+        "end_line": 653,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_load_baseline:8611775a925e3082",
         "signature_hash": "824e9501f65dde68"
       }
@@ -44716,8 +44716,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 868,
-        "end_line": 877,
+        "line": 883,
+        "end_line": 892,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_parser:46109e577bc29fc0",
         "signature_hash": "cee2a7bb613f105d"
       },
@@ -46984,8 +46984,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 581,
-        "end_line": 593,
+        "line": 596,
+        "end_line": 608,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_read_success_field:fbc2c797c108aa5d",
         "signature_hash": "690b6c5bb73bd183"
       }
@@ -47034,8 +47034,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 508,
-        "end_line": 543,
+        "line": 523,
+        "end_line": 558,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_readiness:413527475ff4b3e2",
         "signature_hash": "6db3f7c0f959d4b1"
       }
@@ -49418,8 +49418,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 432,
-        "end_line": 452,
+        "line": 447,
+        "end_line": 467,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_resolve_command:cc2f47b75fd2883b",
         "signature_hash": "8817de8a00466c05"
       }
@@ -50616,8 +50616,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 455,
-        "end_line": 500,
+        "line": 470,
+        "end_line": 515,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_run_command:89ace0aa502d8d74",
         "signature_hash": "30196aa00befd026"
       }
@@ -50946,8 +50946,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 420,
-        "end_line": 425,
+        "line": 435,
+        "end_line": 440,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_safe_environment:e74d73afdfb73b75",
         "signature_hash": "bdc66390014f4b8f"
       }
@@ -54174,6 +54174,14 @@
         "end_line": 192,
         "semantic_id": "aura_spatial_contracts.py#function:_strict_bool:de9bb97a644e2151",
         "signature_hash": "0f43c6459e368e58"
+      },
+      {
+        "file": "scripts/aura_runtime_refactor_harness.py",
+        "kind": "function",
+        "line": 225,
+        "end_line": 230,
+        "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_strict_bool:067556175e0ce7cf",
+        "signature_hash": "5783a317e3383652"
       }
     ],
     "_strict_bool_arg": [
@@ -54600,8 +54608,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 428,
-        "end_line": 429,
+        "line": 443,
+        "end_line": 444,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_substitute:23a7b26b8957bc63",
         "signature_hash": "80d76c518c2b82ad"
       }
@@ -55204,8 +55212,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 546,
-        "end_line": 578,
+        "line": 561,
+        "end_line": 593,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_terminate_process:a3306842b6789628",
         "signature_hash": "d04f387b6df5a2c0"
       }
@@ -57948,8 +57956,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 236,
-        "end_line": 246,
+        "line": 247,
+        "end_line": 257,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_validate_command:48bfd82ab9c6017e",
         "signature_hash": "8c4b1b7a13626d70"
       }
@@ -58058,8 +58066,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 249,
-        "end_line": 263,
+        "line": 260,
+        "end_line": 274,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_validate_env:e68f2e20983dcf55",
         "signature_hash": "5217c6f6884f5ea8"
       }
@@ -58304,8 +58312,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 222,
-        "end_line": 233,
+        "line": 233,
+        "end_line": 244,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_validate_loopback_url:1f72419520a2c4ed",
         "signature_hash": "c45b655672f896fa"
       }
@@ -58762,8 +58770,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 385,
-        "end_line": 386,
+        "line": 400,
+        "end_line": 401,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_venv_python:086aeab17e1d194b",
         "signature_hash": "9cd5330030aa00e1"
       }
@@ -79308,8 +79316,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 266,
-        "end_line": 382,
+        "line": 277,
+        "end_line": 397,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:load_runtime_profile:8f14712275ced2f5",
         "signature_hash": "7435c0fc92812035"
       }
@@ -80476,8 +80484,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 880,
-        "end_line": 908,
+        "line": 895,
+        "end_line": 923,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:main:957bc05c7d82a5a8",
         "signature_hash": "d5857061120d68cd"
       },
@@ -85466,8 +85474,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "method",
-        "line": 504,
-        "end_line": 505,
+        "line": 519,
+        "end_line": 520,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#method:_NoRedirectHandler.redirect_request:2a9fd22c0e89157d",
         "signature_hash": "8b782565eb7ca2de"
       }
@@ -88140,8 +88148,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 641,
-        "end_line": 865,
+        "line": 656,
+        "end_line": 880,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:run_runtime_profile:57c0c3add09b77dd",
         "signature_hash": "291b451194cc4a46"
       }
@@ -113200,6 +113208,16 @@
         "signature_hash": "13bf39125582a0dc"
       }
     ],
+    "test_profile_defaults_create_venv_only_when_absent": [
+      {
+        "file": "tests/test_aura_runtime_refactor_harness.py",
+        "kind": "function",
+        "line": 128,
+        "end_line": 134,
+        "semantic_id": "tests/test_aura_runtime_refactor_harness.py#function:test_profile_defaults_create_venv_only_when_absent:2f08d42f8a805022",
+        "signature_hash": "417667cecdc4877e"
+      }
+    ],
     "test_profile_digest_and_required_record_substitution_fail_closed": [
       {
         "file": "tests/test_aura_civic_planning_projection.py",
@@ -113278,6 +113296,16 @@
         "end_line": 109,
         "semantic_id": "tests/test_aura_construction_human_agent.py#function:test_profile_rejects_missing_or_duplicate_candidate_identity:60e4a374eb59a711",
         "signature_hash": "200c08175521176e"
+      }
+    ],
+    "test_profile_rejects_non_boolean_create_venv": [
+      {
+        "file": "tests/test_aura_runtime_refactor_harness.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 125,
+        "semantic_id": "tests/test_aura_runtime_refactor_harness.py#function:test_profile_rejects_non_boolean_create_venv:ebd01f037a40ca8a",
+        "signature_hash": "5a3699c5d9c70133"
       }
     ],
     "test_profile_rejects_non_loopback_readiness": [
@@ -117290,8 +117318,8 @@
       {
         "file": "tests/test_aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 178,
-        "end_line": 180,
+        "line": 201,
+        "end_line": 203,
         "semantic_id": "tests/test_aura_runtime_refactor_harness.py#function:test_runtime_command_dispatch_ignores_objective_words:807c5e0edbb08571",
         "signature_hash": "ffe500a3d3470b32"
       }
@@ -117300,8 +117328,8 @@
       {
         "file": "tests/test_aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 183,
-        "end_line": 206,
+        "line": 206,
+        "end_line": 229,
         "semantic_id": "tests/test_aura_runtime_refactor_harness.py#function:test_runtime_command_output_is_streamed_and_bounded:62fd35e8b49cf2e9",
         "signature_hash": "de706d016aa5115a"
       }
@@ -117360,8 +117388,8 @@
       {
         "file": "tests/test_aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 147,
-        "end_line": 175,
+        "line": 170,
+        "end_line": 198,
         "semantic_id": "tests/test_aura_runtime_refactor_harness.py#function:test_runtime_profile_binds_failed_baseline_to_repair:44e4769cd01977a7",
         "signature_hash": "be7eeb91b26106db"
       }
@@ -117370,8 +117398,8 @@
       {
         "file": "tests/test_aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 114,
-        "end_line": 144,
+        "line": 137,
+        "end_line": 167,
         "semantic_id": "tests/test_aura_runtime_refactor_harness.py#function:test_runtime_profile_starts_probes_verifies_and_stops:9199041cf35a4c9b",
         "signature_hash": "57166191c2684ad6"
       }
@@ -185081,47 +185109,93 @@
     {
       "path": ".aura/runtime_profiles/construction_demo.v1.json",
       "role": "schema_or_lexicon",
-      "bytes": 2605,
-      "lines": 96,
-      "tokens_est": 652,
+      "bytes": 3354,
+      "lines": 122,
+      "tokens_est": 839,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "ac0327dde3fdc3c7",
+      "digest8": "7da1283052b38332",
       "vector": [
-        -0.02693,
-        -0.083356,
-        -0.02693,
-        0.078226,
-        0.311622,
-        -0.055143,
-        -0.250067,
-        -0.303928,
-        0.062837,
-        -0.280845,
-        0.034625,
-        -0.039754,
-        -0.211596,
-        0.137216,
-        0.055143,
-        0.178253,
-        -0.193642,
-        -0.183383,
-        0.021801,
-        0.078226,
-        -0.116698,
-        -0.257762,
-        -0.280845,
-        -0.203901,
-        0.224419,
-        0.114133,
-        0.011542,
-        -0.137216,
-        -0.309058,
-        -0.03206,
-        -0.001282,
-        0.298799
+        -0.277864,
+        -0.039695,
+        0.261024,
+        -0.304328,
+        0.092621,
+        -0.054129,
+        -0.26343,
+        -0.135925,
+        -0.135925,
+        -0.224938,
+        0.032478,
+        0.099839,
+        -0.203286,
+        0.147954,
+        0.159982,
+        0.232155,
+        -0.010826,
+        -0.20088,
+        -0.102244,
+        -0.172011,
+        -0.285082,
+        0.020449,
+        0.299516,
+        0.063752,
+        0.20088,
+        0.191257,
+        0.078187,
+        -0.193663,
+        0.217721,
+        0.111867,
+        0.00842,
+        0.042101
+      ]
+    },
+    {
+      "path": ".aura/runtime_profiles/construction_demo_waboose.v1.json",
+      "role": "schema_or_lexicon",
+      "bytes": 2004,
+      "lines": 46,
+      "tokens_est": 501,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3917506b1146ad1d",
+      "vector": [
+        0.068522,
+        0.082002,
+        -0.214552,
+        0.048302,
+        0.014603,
+        0.117947,
+        0.241511,
+        -0.219045,
+        -0.187593,
+        -0.207812,
+        -0.019096,
+        -0.055042,
+        -0.066275,
+        0.120194,
+        0.261731,
+        0.041562,
+        0.126934,
+        0.144907,
+        -0.196579,
+        -0.277457,
+        0.099975,
+        -0.279704,
+        0.270717,
+        -0.263978,
+        0.160633,
+        -0.115701,
+        0.093235,
+        0.259484,
+        -0.272964,
+        -0.131427,
+        -0.228032,
+        -0.077508
       ]
     },
     {
@@ -185725,47 +185799,47 @@
     {
       "path": ".github/workflows/aura-construction-runtime-diagnostic.yml",
       "role": "schema_or_lexicon",
-      "bytes": 2604,
-      "lines": 82,
-      "tokens_est": 651,
+      "bytes": 3052,
+      "lines": 89,
+      "tokens_est": 763,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "bf966ced7262e03c",
+      "digest8": "8676922f20e5fe63",
       "vector": [
-        -0.074557,
-        0.159438,
-        0.161732,
-        0.161732,
-        -0.287906,
-        0.232848,
-        -0.212202,
-        0.177791,
-        0.182379,
-        -0.269554,
-        0.053911,
-        0.060793,
-        0.010323,
-        0.244319,
-        -0.131909,
-        0.086028,
-        0.242025,
-        0.246613,
-        0.051617,
-        -0.012617,
-        -0.271848,
-        0.10438,
-        -0.088322,
-        -0.191555,
-        0.060793,
-        0.225966,
-        -0.198437,
-        -0.251201,
-        0.173202,
-        0.003441,
-        -0.251201,
-        -0.063087
+        -0.001262,
+        -0.09715,
+        0.167805,
+        0.228366,
+        0.06687,
+        -0.187992,
+        -0.031542,
+        -0.23089,
+        0.084533,
+        -0.119861,
+        0.314162,
+        -0.034066,
+        0.119861,
+        0.124908,
+        0.003785,
+        0.180422,
+        0.220796,
+        -0.309115,
+        -0.306591,
+        0.046683,
+        0.071917,
+        -0.046683,
+        0.08958,
+        0.102197,
+        0.07444,
+        -0.137525,
+        -0.286404,
+        -0.306591,
+        0.162758,
+        0.200609,
+        -0.185469,
+        0.2536
       ]
     },
     {
@@ -187847,47 +187921,47 @@
     {
       "path": ".github/workflows/sync-analysis-codemap.yml",
       "role": "schema_or_lexicon",
-      "bytes": 3294,
-      "lines": 89,
-      "tokens_est": 824,
+      "bytes": 3849,
+      "lines": 104,
+      "tokens_est": 963,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "c3327f332b450cf7",
+      "digest8": "cdd028e07fc9ced2",
       "vector": [
-        0.298807,
-        0.179284,
-        0.25631,
-        0.00664,
-        -0.033201,
-        0.035857,
-        0.027889,
-        0.078354,
-        -0.229749,
-        -0.131475,
-        -0.099602,
-        -0.104915,
-        0.213813,
-        0.078354,
-        0.054449,
-        0.221781,
-        -0.205845,
-        -0.203189,
-        -0.054449,
-        -0.179284,
-        -0.285527,
-        -0.3174,
-        -0.195221,
-        0.248342,
-        0.248342,
-        -0.335992,
-        0.070386,
-        0.027889,
-        0.017264,
-        -0.152724,
-        -0.059761,
-        0.014608
+        -0.157654,
+        0.249532,
+        0.228651,
+        -0.015661,
+        0.239091,
+        0.115891,
+        -0.214034,
+        -0.172271,
+        0.107539,
+        -0.188976,
+        -0.253708,
+        -0.19524,
+        0.176447,
+        0.147213,
+        -0.214034,
+        -0.143037,
+        0.132596,
+        0.049071,
+        -0.203593,
+        -0.228651,
+        -0.030278,
+        -0.180624,
+        -0.257884,
+        0.186888,
+        -0.16183,
+        0.247444,
+        0.00522,
+        0.234915,
+        -0.11798,
+        -0.007308,
+        0.086658,
+        0.180624
       ]
     },
     {
@@ -201365,47 +201439,47 @@
     {
       "path": "scripts/aura_runtime_refactor_harness.py",
       "role": "python_module",
-      "bytes": 34364,
-      "lines": 913,
-      "tokens_est": 8591,
-      "symbol_count": 34,
+      "bytes": 34738,
+      "lines": 928,
+      "tokens_est": 8685,
+      "symbol_count": 35,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "2ad22ce560fc0716",
+      "digest8": "c2924a09174e8352",
       "vector": [
-        -0.056098,
-        -0.09062,
-        -0.329396,
-        -0.151033,
-        -0.15391,
-        -0.116511,
-        -0.228707,
-        0.139526,
-        0.061852,
-        0.260352,
-        0.047468,
-        -0.107881,
-        -0.260352,
-        0.064728,
-        -0.185555,
-        0.038837,
-        0.007192,
-        0.2172,
-        0.240214,
-        -0.222954,
-        0.096373,
-        -0.208569,
-        0.105004,
-        -0.194185,
-        0.110758,
-        0.274736,
-        0.214323,
-        -0.050344,
-        0.125142,
-        -0.34378,
-        0.110758,
-        -0.128018
+        -0.312235,
+        -0.147626,
+        -0.092756,
+        -0.113659,
+        -0.205108,
+        0.278268,
+        0.226011,
+        -0.158077,
+        -0.165916,
+        0.048338,
+        -0.066628,
+        0.320074,
+        0.192044,
+        -0.100595,
+        -0.173754,
+        0.116272,
+        0.116272,
+        0.077079,
+        0.074466,
+        0.045725,
+        0.121497,
+        0.265204,
+        -0.1424,
+        -0.165916,
+        -0.223398,
+        0.296558,
+        -0.113659,
+        -0.257365,
+        0.158077,
+        0.139787,
+        -0.053563,
+        -0.108433
       ]
     },
     {
@@ -210733,47 +210807,47 @@
     {
       "path": "tests/test_aura_runtime_refactor_harness.py",
       "role": "python_module",
-      "bytes": 6633,
-      "lines": 207,
-      "tokens_est": 1659,
-      "symbol_count": 9,
+      "bytes": 7655,
+      "lines": 230,
+      "tokens_est": 1914,
+      "symbol_count": 11,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "dadf1d81e0d0be07",
+      "digest8": "a6154801e53baa50",
       "vector": [
-        0.144678,
-        -0.246803,
-        -0.173856,
-        0.278413,
-        0.044984,
-        0.159267,
-        0.181151,
-        0.103341,
-        0.059573,
-        0.224919,
-        -0.159267,
-        0.130088,
-        -0.044984,
-        0.190877,
-        -0.212761,
-        0.239508,
-        0.093615,
-        0.16413,
-        -0.263824,
-        0.151972,
-        -0.042552,
-        -0.032826,
-        0.207898,
-        0.081457,
-        0.224919,
-        -0.307592,
-        -0.025531,
-        -0.205467,
-        -0.125225,
-        0.297866,
-        0.134951,
-        0.10091
+        0.296447,
+        -0.327516,
+        0.314571,
+        -0.286091,
+        0.006473,
+        -0.053076,
+        0.001295,
+        0.078966,
+        0.099679,
+        -0.172172,
+        -0.239488,
+        -0.265378,
+        0.058254,
+        0.086733,
+        -0.099679,
+        0.104857,
+        0.216186,
+        0.120391,
+        0.034952,
+        -0.042719,
+        0.001295,
+        -0.148871,
+        -0.301625,
+        -0.034952,
+        0.037541,
+        -0.273146,
+        0.213597,
+        -0.04013,
+        0.208419,
+        -0.011651,
+        -0.229132,
+        -0.133336
       ]
     },
     {
