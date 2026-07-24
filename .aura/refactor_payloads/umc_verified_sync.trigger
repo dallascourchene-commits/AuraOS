@@ -1,5 +1,6 @@
 AURA_UMC_VERIFIED_SYNCHRONIZE_PUBLICATION_V1
-attempt=5
+attempt=6
 source_scope=five_bounded_files
-verification=66_tests_pvm_ruff_bandit_waboose_harness
+verification=locked_hashes_and_compile
+codemap=ignored
 merge_authority=false
