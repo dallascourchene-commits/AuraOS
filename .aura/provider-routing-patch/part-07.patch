@@ -1,0 +1,198 @@
++            rotator = get_provider_rotator(self.provider, keys=self.api_keys)
++            rotated_keys = rotator.iter_keys()
++            if not rotated_keys:
++                return None, f"all keys cooling down for provider '{self.provider}'", False
++            for key in rotated_keys:
++                text, error = _anthropic_generate(
++                    self.cfg["url"], key, self.model, prompt, max_tokens, timeout=60,
++                )
++                if text and not error:
++                    rotator.record_success(key)
++                    return text, None, False
++                rotator.record_failure(key, str(error or "empty response"))
++                errors.append(str(error or "empty response"))
++            return None, "; ".join(errors), False
++        text, error, _latency, _schema = generate_openai_compatible_payload(
++            provider=self.provider,
++            base_url=self.cfg["url"],
++            api_key=self.api_keys[0],
++            api_keys=self.api_keys[1:],
++            model=self.model,
++            messages=[{"role": "user", "content": prompt}],
++            max_tokens=max_tokens,
++            temperature=temperature,
++            timeout=60,
++            call_type=call_type,
++            task=self._task,
++            aspect=self._aspect,
++            baseline_prompt_tokens=self._baseline_prompt,
++            baseline_output_tokens=self._baseline_output,
++            baseline_cost_usd=self._baseline_cost,
++            context_crush=False,
++        )
++        return text, error, True
++
+     def generate(
+         self,
+         prompt: str,
+@@ -428,65 +572,42 @@ class ExternalLLM:
+         tokenizer_guard = sanitize_tokenizer_channels(full_prompt)
+         full_prompt = tokenizer_guard.sanitized_text
+ 
+-        savings_meta = {
+-            "source": "ExternalLLM.generate",
+-            "provider_priority": provider_priority(),
+-            "selected_provider": self.provider,
+-            "selected_model": self.model,
+-            "pre_egress": pre_egress,
+-            "pre_egress_profile": getattr(profile_decision, "profile_id", None),
+-            "resonance_egress": bool(raec_payload and raec_payload.slot_matrix_string),
+-            "raec_slot_chars": len(raec_payload.slot_matrix_string if raec_payload is not None else ""),
+-            "raec_lift_dispatch_count": len(raec_payload.lift_dispatch if raec_payload is not None else ()),
+-            "raec_efficiency": raec_metrics,
+-            "context_crush": crush_result.to_jsonable() if crush_result is not None else None,
+-            "tokenizer_guard": tokenizer_guard.to_jsonable(),
+-        }
+-
+         started = time.time()
+-        logged_by_helper = False
+-        if self.is_gemini:
+-            text, error = gemini_generate(
+-                full_prompt,
+-                secrets=self.secrets,
+-                call_type=call_type,
+-                task=self._task,
+-                aspect=self._aspect,
+-                baseline_prompt_tokens=self._baseline_prompt,
+-                baseline_output_tokens=self._baseline_output,
+-                baseline_cost_usd=self._baseline_cost,
+-                savings_metadata=savings_meta,
+-            )
+-            logged_by_helper = True
+-        elif self.api == "anthropic":
+-            text, error = _anthropic_generate(
+-                self.cfg["url"], self.api_key, self.model, full_prompt, max_tokens, timeout=60,
+-            )
+-        else:
+-            payload = {
+-                "model": self.model,
+-                "messages": [{"role": "user", "content": full_prompt}],
+-                "max_tokens": max_tokens,
+-                "temperature": temperature,
++        errors: list[str] = []
++        for fallback_index, provider in enumerate(self._routes):
++            self._activate(provider)
++            savings_meta = {
++                "source": "ExternalLLM.generate",
++                "provider_priority": provider_priority(self.model_role),
++                "selected_provider": self.provider,
++                "selected_model": self.model,
++                "fallback_index": fallback_index,
++                "key_count": len(self.api_keys),
++                "pre_egress": pre_egress,
++                "pre_egress_profile": getattr(profile_decision, "profile_id", None),
++                "resonance_egress": bool(raec_payload and raec_payload.slot_matrix_string),
++                "raec_slot_chars": len(raec_payload.slot_matrix_string if raec_payload is not None else ""),
++                "raec_lift_dispatch_count": len(raec_payload.lift_dispatch if raec_payload is not None else ()),
++                "raec_efficiency": raec_metrics,
++                "context_crush": crush_result.to_jsonable() if crush_result is not None else None,
++                "tokenizer_guard": tokenizer_guard.to_jsonable(),
+             }
+-            text, error = openai_compatible_generate(
+-                self.cfg["url"],
+-                self.api_key,
+-                payload,
+-                timeout=60,
++            text, error, logged_by_helper = self._call_current(
++                full_prompt,
++                max_tokens=max_tokens,
++                temperature=temperature,
+                 call_type=call_type,
+-                task=self._task,
+-                aspect=self._aspect,
+-                baseline_prompt_tokens=self._baseline_prompt,
+-                baseline_output_tokens=self._baseline_output,
+-                baseline_cost_usd=self._baseline_cost,
+-                savings_metadata=savings_meta,
++                savings_meta=savings_meta,
+             )
+-            logged_by_helper = True
+-        latency = time.time() - started
+-        if not logged_by_helper:
+-            self._log_to_savings(call_type, full_prompt, text, latency, error=error, metadata=savings_meta)
+-        return text, error, latency
++            latency = time.time() - started
++            if not logged_by_helper:
++                self._log_to_savings(call_type, full_prompt, text, latency, error=error, metadata=savings_meta)
++            if text and not error:
++                return text, None, latency
++            errors.append(f"{provider}: {error or 'empty response'}")
++            if self._provider_pinned:
++                break
++        return None, "; ".join(errors), time.time() - started
+ 
+     def interpret(
+         self,
+@@ -520,3 +641,40 @@ class ExternalLLM:
+             in_price = float(self.cfg.get("price_in_per_1k") or 0.0)
+             out_price = float(self.cfg.get("price_out_per_1k") or 0.0)
+             return round(in_tokens / 1000 * in_price + out_tokens / 1000 * out_price, 6)
++
++
++def generate_architect_model(
++    provider_tag: str,
++    prompt: str,
++    meta: dict[str, Any] | None = None,
++    *,
++    secrets: dict[str, Any] | None = None,
++) -> str | None:
++    """Council/Architect callback routed through the canonical egress."""
++    payload = dict(meta or {})
++    profile = dict(payload.get("profile") or {})
++    role = str(payload.get("role") or profile.get("role") or "planner").lower()
++    cost_tier = str(profile.get("cost_tier") or "premium").lower()
++    model_role = "cheap_builder" if cost_tier == "cheap" or role in {"worker", "shadow"} else "premium"
++    preferred = str(provider_tag or "").lower()
++    if preferred not in PROVIDERS:
++        preferred = ""
++    try:
++        egress = ExternalLLM(
++            provider=preferred or None,
++            model=model_role,
++            secrets=secrets,
++            task="architect_council",
++            aspect=role,
++            allow_provider_fallback=True,
++        )
++    except (RuntimeError, ValueError):
++        return None
++    text, _error, _latency = egress.generate(
++        prompt,
++        max_tokens=1300,
++        temperature=0.0,
++        pre_egress=True,
++        call_type="architect_council",
++    )
++    return text
+diff --git a/aura_provider_registry.py b/aura_provider_registry.py
+index 587504c..2fc4a44 100644
+--- a/aura_provider_registry.py
++++ b/aura_provider_registry.py
+@@ -4,8 +4,8 @@ ST3GG_BASE: 0xa9b5-[Q-SYS:PROVIDER_REGISTRY]
+ DIKWP_TIER: WISDOM
+ PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Secrets Isolation)
+ DEPENDENCIES: __future__, os, typing
+-FUNCTIONS: ProviderRegistry, get_provider_config, get_redacted_health_report
+-SYNOPSIS: Configuration-driven registry managing external LLM endpoints and roles.
++FUNCTIONS: ProviderRegistry, get_provider_config, get_redacted_health_report, provider_order, resolve_model
++SYNOPSIS: Configuration-driven registry managing external LLM endpoints, roles, and deterministic fallback order.
+ [/AURA_MASTER_KEY]
+ """
+ from __future__ import annotations
+@@ -14,10 +14,14 @@ import os
+ from typing import Any, Dict, Optional
+ 
+ AURA_PROVIDER_REGISTRY_V1 = "AURA_PROVIDER_REGISTRY_V1"
++AURA_PROVIDER_REGISTRY_V2 = "AURA_PROVIDER_REGISTRY_V2"
+ FIREWORKS_GLM_5P2 = "accounts/fireworks/models/glm-5p2"
+ FIREWORKS_DEEPSEEK_V4_FLASH = "accounts/fireworks/models/deepseek-v4-flash"
