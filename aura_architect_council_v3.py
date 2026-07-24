@@ -9,7 +9,9 @@ V3 remains planning-only. It grants no patch, commit, merge, or promotion author
 """
 from __future__ import annotations
 
+import inspect
 import json
+import os
 from typing import Any
 
 from aura_architect_council_v2 import (
@@ -119,7 +121,52 @@ class SelectiveArchitectFusionCouncil(LengthAwareArchitectFusionCouncil):
 
 
 class SelectiveArchitectModelRouter(ArchitectModelRouter):
-    """Route planning through selective Council V3."""
+    """Route Council V3 through the canonical DeepSeek-first egress."""
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        defaults = {
+            "planner": ("AURA_ARCHITECT_PLANNER_PROVIDER", "DEEPSEEK"),
+            "planner_alt": ("AURA_ARCHITECT_ALT_PLANNER_PROVIDER", "MISTRAL"),
+            "worker": ("AURA_ARCHITECT_WORKER_PROVIDER", "MISTRAL"),
+            "shadow": ("AURA_ARCHITECT_SHADOW_PROVIDER", "MISTRAL"),
+            "judge": ("AURA_ARCHITECT_JUDGE_PROVIDER", "DEEPSEEK"),
+        }
+        for role, (env_name, fallback) in defaults.items():
+            if role in self.profiles:
+                self.profiles[role].provider = os.getenv(env_name, fallback)
+
+    async def call_model(
+        self,
+        role: str,
+        prompt: str,
+        *,
+        intensity: int = 0,
+        meta: dict[str, Any] | None = None,
+    ) -> str | None:
+        profile = self.profile_for(role, intensity=intensity)
+        callback = self.model_caller
+        is_legacy_node_callback = bool(
+            callback is not None
+            and getattr(callback, "__module__", "") == "aura_node"
+            and getattr(callback, "__name__", "") == "call_architect_model"
+        )
+        if callback is None or is_legacy_node_callback:
+            from aura_llm_egress import generate_architect_model
+
+            return generate_architect_model(
+                profile.provider,
+                prompt,
+                {"role": role, "profile": profile.to_dict(), **(meta or {})},
+            )
+        result = callback(
+            profile.provider,
+            prompt,
+            {"role": role, "profile": profile.to_dict(), **(meta or {})},
+        )
+        if inspect.isawaitable(result):
+            result = await result
+        return str(result) if result is not None else None
 
     async def plan_with_council(
         self,
