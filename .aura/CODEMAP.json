@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784932505,
+  "generated_at_unix": 1784933988,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1413,
+    "included_file_count": 1415,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -74,6 +74,7 @@
       ".aura/waboose_requests/unified_memory_continuity.v1.json",
       ".devcontainer/devcontainer.json",
       ".dockerignore",
+      ".github/scripts/apply_pr198_review_fixes.py",
       ".github/scripts/umc_publish_five_files.sh",
       ".github/umc_final5_payload/part-01",
       ".github/umc_final5_payload/part-02",
@@ -144,6 +145,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/pr198-review-fixes.yml",
       ".github/workflows/provider-routing-materialize.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
@@ -1435,23 +1437,23 @@
     ]
   },
   "summary": {
-    "file_count": 1413,
-    "total_bytes": 56663643,
-    "text_tokens_est": 4713630,
+    "file_count": 1415,
+    "total_bytes": 56683948,
+    "text_tokens_est": 4718707,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 51,
       "knowledge_artifact": 184,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 914,
-      "schema_or_lexicon": 172,
+      "python_module": 915,
+      "schema_or_lexicon": 173,
       "support_file": 76
     },
     "topology_nodes": 10497,
     "topology_edges": 24692,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 30947.79
+    "elapsed_ms": 30211.54
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1713,6 +1715,7 @@
       ".aura/waboose_requests/construction_demo.v1.json",
       ".devcontainer/devcontainer.json",
       ".dockerignore",
+      ".github/scripts/apply_pr198_review_fixes.py",
       ".github/scripts/umc_publish_five_files.sh",
       ".github/umc_final5_payload/part-01",
       ".github/umc_final5_payload/part-02",
@@ -1780,6 +1783,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/pr198-review-fixes.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -3632,6 +3636,7 @@
       "aura_human_agent_arena/emergent.js:139"
     ],
     "!r": [
+      ".github/scripts/apply_pr198_review_fixes.py:11",
       "aura_agent_arena_github_bridge.py:180",
       "aura_architect_consolidation_benchmark.py:193",
       "aura_architect_consolidation_benchmark_v2.py:55",
@@ -87336,6 +87341,16 @@
         "end_line": 210,
         "semantic_id": "aura_patch_repair.py#async_function:repair_patch_format:e0e21d2d5c1bdf7d",
         "signature_hash": "77304a68cda00ca8"
+      }
+    ],
+    "replace_once": [
+      {
+        "file": ".github/scripts/apply_pr198_review_fixes.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 12,
+        "semantic_id": ".github/scripts/apply_pr198_review_fixes.py#function:replace_once:6970fdb847a8592c",
+        "signature_hash": "84542ee41d8a4689"
       }
     ],
     "replace_or_insert": [
@@ -187437,6 +187452,58 @@
       ]
     },
     {
+      "path": ".github/scripts/apply_pr198_review_fixes.py",
+      "role": "python_module",
+      "bytes": 16002,
+      "lines": 486,
+      "tokens_est": 4001,
+      "symbol_count": 1,
+      "commands": [
+        "!r"
+      ],
+      "command_lines": {
+        "!r": [
+          11
+        ]
+      },
+      "topology": {},
+      "digest8": "18fe3eb089af0edd",
+      "vector": [
+        -0.019005,
+        0.029141,
+        -0.001267,
+        0.150776,
+        -0.160912,
+        -0.277478,
+        -0.171048,
+        -0.290148,
+        0.127969,
+        0.095027,
+        0.20399,
+        -0.019005,
+        -0.008869,
+        0.181184,
+        0.036744,
+        0.244535,
+        -0.049414,
+        -0.145707,
+        -0.267341,
+        0.089959,
+        -0.181184,
+        -0.211593,
+        -0.264807,
+        0.302818,
+        0.120367,
+        -0.006335,
+        -0.290148,
+        0.171048,
+        -0.209058,
+        -0.067152,
+        -0.115299,
+        0.257205
+      ]
+    },
+    {
       "path": ".github/scripts/umc_publish_five_files.sh",
       "role": "operator_script",
       "bytes": 4552,
@@ -190660,6 +190727,52 @@
         0.106887,
         -0.031437,
         -0.225092
+      ]
+    },
+    {
+      "path": ".github/workflows/pr198-review-fixes.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 4303,
+      "lines": 118,
+      "tokens_est": 1076,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b8bb7ca44749a516",
+      "vector": [
+        0.081478,
+        0.271976,
+        -0.292633,
+        0.148038,
+        0.053936,
+        -0.203122,
+        0.120496,
+        0.019509,
+        0.262796,
+        -0.223778,
+        0.260501,
+        0.099839,
+        -0.003443,
+        -0.058527,
+        0.200827,
+        -0.18476,
+        0.012623,
+        0.242139,
+        -0.189351,
+        -0.063117,
+        0.210007,
+        0.072298,
+        -0.008033,
+        -0.095249,
+        0.230664,
+        0.193941,
+        -0.228368,
+        0.18476,
+        -0.072298,
+        0.283452,
+        -0.095249,
+        -0.221483
       ]
     },
     {
