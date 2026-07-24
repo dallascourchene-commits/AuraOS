@@ -219,6 +219,14 @@ def _positive_number(value: Any, label: str, *, maximum: float) -> float:
     return float(value)
 
 
+def _strict_bool(value: Any, label: str, *, default: bool) -> bool:
+    if value is None:
+        return default
+    if not isinstance(value, bool):
+        raise RuntimeHarnessError(f"{label} must be a boolean")
+    return value
+
+
 def _validate_loopback_url(value: Any, label: str) -> str:
     if not isinstance(value, str):
         raise RuntimeHarnessError(f"{label} must be a URL string")
@@ -361,7 +369,11 @@ def load_runtime_profile(root: Path, profile_path: str | Path) -> dict[str, Any]
         "profile_path": str(path.relative_to(root).as_posix()),
         "profile_sha256": _sha256(path),
         "environment": {
-            "create_venv": bool(environment.get("create_venv", True)),
+            "create_venv": _strict_bool(
+                environment.get("create_venv"),
+                "environment.create_venv",
+                default=True,
+            ),
             "requirements": tuple(requirement_paths),
         },
         "server": {

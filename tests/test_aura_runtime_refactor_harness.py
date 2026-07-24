@@ -111,6 +111,29 @@ def test_profile_rejects_repository_escape(tmp_path: Path) -> None:
         load_runtime_profile(tmp_path, "../outside-profile.json")
 
 
+@pytest.mark.parametrize("value", ["false", "true", 0, 1, [], {}])
+def test_profile_rejects_non_boolean_create_venv(tmp_path: Path, value: object) -> None:
+    _write_fixture(tmp_path)
+    profile = _write_profile(tmp_path, _free_port())
+    payload = json.loads(profile.read_text(encoding="utf-8"))
+    payload["environment"]["create_venv"] = value
+    profile.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(
+        RuntimeHarnessError,
+        match=r"environment\.create_venv must be a boolean",
+    ):
+        load_runtime_profile(tmp_path, profile.name)
+
+
+def test_profile_defaults_create_venv_only_when_absent(tmp_path: Path) -> None:
+    _write_fixture(tmp_path)
+    profile = _write_profile(tmp_path, _free_port())
+    payload = json.loads(profile.read_text(encoding="utf-8"))
+    del payload["environment"]["create_venv"]
+    profile.write_text(json.dumps(payload), encoding="utf-8")
+    assert load_runtime_profile(tmp_path, profile.name)["environment"]["create_venv"] is True
+
+
 def test_runtime_profile_starts_probes_verifies_and_stops(
     tmp_path: Path,
 ) -> None:
