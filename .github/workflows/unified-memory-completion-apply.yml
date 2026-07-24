@@ -84,3 +84,6 @@ jobs:
           fi
           git commit -m "refactor: wire unified memory continuity through Aura toolchain"
           git push origin HEAD:refactor/unified-memory-continuity-completion
+
+      - name: Completion marker
+        run: echo "Unified memory completion apply workflow finished."
