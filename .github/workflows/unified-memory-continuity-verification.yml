@@ -23,6 +23,7 @@ jobs:
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
       TARGET_SHA: ${{ github.event.pull_request.head.sha }}
       EVIDENCE_DIR: .aura/unified_memory_continuity_evidence
+      EXTERNAL_EVIDENCE_DIR: ../AuraOS-unified-memory-continuity-evidence
     steps:
       - name: Fetch exact pull-request head without persisted credentials
         env:
@@ -50,8 +51,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          rm -rf "$EVIDENCE_DIR"
-          mkdir -p "$EVIDENCE_DIR/logs"
+          rm -rf "$EVIDENCE_DIR" "$EXTERNAL_EVIDENCE_DIR"
+          mkdir -p "$EVIDENCE_DIR/logs" "$EXTERNAL_EVIDENCE_DIR"
           {
             echo "target_sha=$TARGET_SHA"
             echo "head=$(git rev-parse HEAD)"
@@ -93,8 +94,9 @@ jobs:
           python scripts/aura_architecture_harness.py \
             --repo-root . \
             handoff \
-            --output-dir "$EVIDENCE_DIR/handoff" \
+            --output-dir "$EXTERNAL_EVIDENCE_DIR/handoff" \
             2>&1 | tee "$EVIDENCE_DIR/logs/harness_handoff.log"
+          cp -a "$EXTERNAL_EVIDENCE_DIR/handoff" "$EVIDENCE_DIR/handoff"
 
       - name: Run Aura-native architecture discovery on exact head
         shell: bash
@@ -107,8 +109,9 @@ jobs:
             --objective "Verify the exact unified manufactured-memory and continuity integration: minimum-sufficient active memory, model-relative execution, immutable P0, independently observed P1, prediction-error sensitivity, current reproof, and human-governed Relationship Experience/QDKT admission without duplicate truth, memory, routing, verification, policy, publication, or authority owners." \
             --combine-with Connectome "Relational Synthesis" Atlas \
             --atlas-profile MINIMAL \
-            --output-dir "$EVIDENCE_DIR/architecture-run" \
+            --output-dir "$EXTERNAL_EVIDENCE_DIR/architecture-run" \
             2>&1 | tee "$EVIDENCE_DIR/logs/harness_run.log"
+          cp -a "$EXTERNAL_EVIDENCE_DIR/architecture-run" "$EVIDENCE_DIR/architecture-run"
 
       - name: Run Aura navigation, topology, capability, and persistence checks
         shell: bash
