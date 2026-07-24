@@ -21,7 +21,7 @@ jobs:
       github.event.pull_request.number == 193 &&
       github.event.pull_request.head.ref == 'refactor/unified-memory-continuity' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event.pull_request.head.sha == '91daf9aafeb4b4b7dedb54b8aeb678a12e5fc3cb'
+      github.event.pull_request.head.sha == '2cdb398e05ca12c1622b20c43f98b04eaf170135'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
@@ -40,7 +40,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$EVENT_HEAD" = '91daf9aafeb4b4b7dedb54b8aeb678a12e5fc3cb'
+          test "$EVENT_HEAD" = '2cdb398e05ca12c1622b20c43f98b04eaf170135'
           test "$(git rev-parse HEAD)" = "$EVENT_HEAD"
           test -z "$(git status --porcelain=v1)"
           git merge-base --is-ancestor "$REVIEWED_CHECKPOINT" HEAD
@@ -90,7 +90,7 @@ jobs:
           text = path.read_text(encoding='utf-8')
           text, count = re.subn(
               r"EXPECTED_HEAD='[^']+'",
-              "EXPECTED_HEAD='91daf9aafeb4b4b7dedb54b8aeb678a12e5fc3cb'",
+              "EXPECTED_HEAD='2cdb398e05ca12c1622b20c43f98b04eaf170135'",
               text,
               count=1,
           )
