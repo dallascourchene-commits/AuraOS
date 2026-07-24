@@ -48,5 +48,10 @@ replace_exact(
     "session = bridge._require_session(phase_hash)  # noqa: SLF001 - canonical Bridge lookup",
     "session = bridge._require_session(phase_hash)",
 )
+replace_exact(
+    "aura_forge.py",
+    "if symbol and (line_start is None or line_end is None):",
+    "if symbol:",
+)
 
-print("Unified memory generated imports and lint cleanup are complete.")
+print("Unified memory generated imports, lint cleanup, and frozen symbol grounding are complete.")
