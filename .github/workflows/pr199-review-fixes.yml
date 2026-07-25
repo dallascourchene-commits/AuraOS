@@ -46,12 +46,16 @@ jobs:
           gzip -d -c /tmp/review.patch.gz > /tmp/review.patch
           test "$(sha256sum /tmp/review.patch | awk '{print $1}')" = "817aedb212d29cf20c48f42e26632785b470ca6caea424e950bff1018c519bd7"
 
-      - name: Apply bounded review patch
+      - name: Apply bounded review patch with drift tolerance
         shell: bash
         run: |
           set -euo pipefail
-          git apply --check /tmp/review.patch
-          git apply /tmp/review.patch
+          patch --dry-run --batch --forward -p1 --fuzz=3 < /tmp/review.patch
+          patch --batch --forward -p1 --fuzz=3 < /tmp/review.patch
+          if find . -name '*.rej' -print -quit | grep -q .; then
+            find . -name '*.rej' -print
+            exit 1
+          fi
 
       - name: Install focused verification tooling
         run: python -m pip install --upgrade pytest ruff
