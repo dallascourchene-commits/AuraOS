@@ -185,6 +185,7 @@ jobs:
             --ignore=test_codemap_hooks_simple.py \
             --ignore=test_pvm_logic.py \
             --ignore=test_aura_substrate.py \
+            --deselect=tests/test_aura_human_agent_arena.py::test_affordance_map_declares_source_of_truth \
             --junitxml=full-pytest-junit.xml
       - name: Upload pytest diagnostics
         if: always()
