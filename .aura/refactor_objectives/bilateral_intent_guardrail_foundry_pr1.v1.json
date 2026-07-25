@@ -1,11 +1,12 @@
 {
-  "version": "AURA_BILATERAL_INTENT_PR1_OBJECTIVE_V1",
+  "version": "AURA_BILATERAL_INTENT_PR1_OBJECTIVE_V2",
   "status": "PROPOSAL_ONLY",
   "repository": "dallascourchene-commits/AuraOS",
   "base_repository_head": "598804b3dce8d39480d8494cf0144f872b01d9ca",
   "candidate_branch": "refactor/bilateral-intent-pr1-v2",
-  "objective": "Implement the bilateral intent contract substrate, deterministic negative-intent parser, guardrail compiler, confirmation and revision receipts, and exact-head evidence boundaries without creating a competing Aura owner or granting mutation authority.",
+  "objective": "Implement the bilateral intent contract substrate, deterministic negative-intent parser, guardrail compiler, confirmation and revision receipts, and a bounded negation-preserving ingestion companion without replacing or monkeypatching Aura's canonical ingestion owner.",
   "canonical_owners": {
+    "intent_ingestion": "aura_intent_ingestion.py",
     "intent_packet": "aura_unified_memory_continuity.IntentPacket",
     "semantic_ledger": "aura_unified_memory_continuity.SemanticLedger",
     "exact_head_transport": "scripts/aura_exact_head_transport.py",
@@ -20,15 +21,20 @@
     "aura_coding_waboose_cli.py": "24538b4d4835bfe30d21727c4e9273ceee69a90a"
   },
   "candidate_source_blobs": {
-    "aura_intent_refinement.py": "85419f0c2f49678e8df078cce95c770386b7dbc3",
+    "aura_bilateral_intent_ingestion.py": "13d4dd521a7a963d25a12f3f38e0114a29f67147",
+    "aura_intent_refinement.py": "87a5ac6bd07f2a66d386ad576ec4d889d1f7540a",
     "schemas/aura_intent_refinement.v1.schema.json": "d606dc5bc5e08923bd9c7ba1a22e1c05e6694bb2",
+    "tests/test_aura_intent_ingestion_bilateral.py": "7f5c49a99f7e566183cef3240d75d29b558e82b9",
     "tests/test_aura_intent_refinement.py": "4c0c2af4bc06a3528bab389b745d80a4e7df75a6"
   },
   "allowed_source_and_evidence_paths": [
+    "aura_bilateral_intent_ingestion.py",
     "aura_intent_refinement.py",
     "schemas/aura_intent_refinement.v1.schema.json",
+    "tests/test_aura_intent_ingestion_bilateral.py",
     "tests/test_aura_intent_refinement.py",
     ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
+    ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
     ".aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json",
     "tests/test_bilateral_intent_pr1_evidence.py"
   ],
@@ -38,6 +44,14 @@
     "topology_map.json"
   ],
   "generated_artifact_disposition": "REGENERATE_FROM_FINAL_SOURCE_TREE_ONLY",
+  "structural_decision": {
+    "canonical_ingestion_file_changed": false,
+    "canonical_ingestion_blob_preserved": "84bd861cb36b12c07708d3de1b91cd7beccd1399",
+    "duplicate_legacy_core_allowed": false,
+    "monkeypatching_allowed": false,
+    "companion_is_authority_owner": false,
+    "reason": "The initial facade/core split duplicated the full legacy parser and surfaced inherited CodeQL attack paths as newly introduced code. The corrected design restores the canonical owner exactly and uses a narrow proposal-only companion."
+  },
   "prohibited_effects": [
     "production mutation",
     "commit or branch publication outside the named feature branch",
@@ -46,17 +60,21 @@
     "deployment",
     "professional or physical-work authorization",
     "durable learning promotion",
-    "new intent, memory, truth, policy, verification, continuity, publication, or authority owner",
+    "new intent, memory, truth, policy, verification, continuity, publication, routing, or authority owner",
+    "monkeypatching the canonical ingestion module",
+    "duplicating the canonical ingestion implementation",
     "out-of-scope source modification",
     "partial candidate publication"
   ],
   "proof_plan": [
     "Python compilation",
     "focused bilateral contract and parser tests",
+    "negation-preserving compression and handoff tests",
     "Draft 2020-12 schema checks",
     "deep immutability and stale-confirmation tests",
-    "exact blob identity checks",
+    "exact canonical-owner blob identity check",
     "Waboose invariant and risk-profile validation",
+    "CodeQL review-thread obsolescence or clearance",
     "repository CI fatal lint and focused contracts",
     "final generated navigation verification"
   ],
