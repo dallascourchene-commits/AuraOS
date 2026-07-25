@@ -34,8 +34,8 @@ jobs:
           REQUEST_SHA="$(git rev-parse refs/remotes/origin/harness-request)"
           test "$REQUEST_SHA" = "$GITHUB_SHA"
           git show "$REQUEST_SHA:scripts/aura_architecture_harness.py" \
-            > "${RUNNER_TEMP}/aura_architecture_harness.py"
-          python -m py_compile "${RUNNER_TEMP}/aura_architecture_harness.py"
+            > "${RUNNER_TEMP}/AuraOS-request-harness.py"
+          python -m py_compile "${RUNNER_TEMP}/AuraOS-request-harness.py"
 
           git checkout --detach refs/remotes/origin/main
           SOURCE_SHA="$(git rev-parse HEAD)"
@@ -43,27 +43,24 @@ jobs:
           echo "REQUEST_HARNESS_SHA=$REQUEST_SHA" >> "$GITHUB_ENV"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
-      - name: Archive all Git-tracked files and provenance outside checkout
+      - name: Archive exact clean main outside checkout
         run: |
           FULL_EXPORT_DIR="${RUNNER_TEMP}/AuraOS-full-export"
-          mkdir -p "$FULL_EXPORT_DIR"
-          git archive \
-            --format=zip \
-            --prefix=AuraOS/ \
-            --output="$FULL_EXPORT_DIR/AuraOS-full-repository.zip" \
-            HEAD
-          (
-            cd "$FULL_EXPORT_DIR"
-            sha256sum AuraOS-full-repository.zip > AuraOS-full-repository.zip.sha256
-          )
-          git ls-files -z | tr -cd '\0' | wc -c \
-            > "$FULL_EXPORT_DIR/AuraOS-full-repository.tracked-file-count.txt"
-          cp "${RUNNER_TEMP}/aura_architecture_harness.py" \
+          DIAGNOSTICS_DIR="${RUNNER_TEMP}/AuraOS-export-diagnostics"
+          python scripts/aura_exact_head_transport.py \
+            --repo-root . \
+            export \
+            --expected-head "$SOURCE_SHA" \
+            --output-dir "$FULL_EXPORT_DIR" \
+            --diagnostics-dir "$DIAGNOSTICS_DIR"
+          cp "${RUNNER_TEMP}/AuraOS-request-harness.py" \
             "$FULL_EXPORT_DIR/AuraOS-request-harness.py"
           (
             cd "$FULL_EXPORT_DIR"
             sha256sum AuraOS-request-harness.py > AuraOS-request-harness.py.sha256
           )
+          git ls-files -z | tr -cd '\0' | wc -c \
+            > "$FULL_EXPORT_DIR/AuraOS-full-repository.tracked-file-count.txt"
           FULL_EXPORT_DIR="$FULL_EXPORT_DIR" python - <<'PY'
           import json
           import os
@@ -103,7 +100,7 @@ jobs:
           PYTHONDONTWRITEBYTECODE: "1"
         run: |
           AI_HANDOFF_DIR="${RUNNER_TEMP}/AuraOS-ai-handoff"
-          python "${RUNNER_TEMP}/aura_architecture_harness.py" \
+          python scripts/aura_architecture_harness.py \
             --repo-root . \
             handoff \
             --output-dir "$AI_HANDOFF_DIR"
@@ -120,6 +117,14 @@ jobs:
             ${{ runner.temp }}/AuraOS-ai-handoff/ai_review_files.txt
             ${{ runner.temp }}/AuraOS-ai-handoff/ai_source_review.zip
           if-no-files-found: error
+          retention-days: 7
+      - name: Upload failure diagnostics outside checkout
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AuraOS-harness-failure-${{ github.sha }}
+          path: ${{ runner.temp }}/AuraOS-export-diagnostics
+          if-no-files-found: ignore
           retention-days: 7
       - name: Publish discoverable run status
         if: always()
