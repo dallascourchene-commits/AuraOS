@@ -14,20 +14,20 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1437
-- **total_bytes**: 57044506
-- **text_tokens_est**: 4808844
+- **total_bytes**: 57045591
+- **text_tokens_est**: 4809115
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 926, 'schema_or_lexicon': 182, 'support_file': 77}
 - **topology_nodes**: 10662
-- **topology_edges**: 25327
+- **topology_edges**: 25329
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 31705.85
+- **elapsed_ms**: 30647.69
 
 ## Coverage
 
 - **included_file_count**: 1437
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=178, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=26, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
 
 ## Command Index
 
@@ -378,7 +378,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 - **source**: compiled_deep_topology
 - **nodes**: 10662
-- **edges**: 25327
+- **edges**: 25329
 - **top_files_by_degree**:
   - `aura_node.py` degree=890 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=756 nodes=69 neighbors=`aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`, `aura_gate_adapters.py`
@@ -438,7 +438,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `ArenaEvidenceSlice` -> `aura_unified_memory_continuity.py:600`
 - `ArenaExperience` -> `aura_arena_experience.py:143`
 - `ArenaExperienceLedger` -> `aura_arena_experience_ledger.py:88`
-- `ArenaGateDialogueService` -> `aura_arena_gate_dialogue.py:483`
+- `ArenaGateDialogueService` -> `aura_arena_gate_dialogue.py:488`
 - `ArenaGrammarCompileResult` -> `aura_arena_wfst_compiler.py:64`
 - `ArenaGrammarRegistry` -> `aura_arena_wfst_registry.py:17`
 - `ArenaLease` -> `aura_liquid_planning_arena.py:170`

@@ -94,8 +94,13 @@ def _bounded_list(value: Any, *, limit: int = 12) -> list[Any]:
 
 
 def _json_copy(value: Any) -> Any:
+    """Return a mutable JSON copy without stringifying frozen mappings."""
     if hasattr(value, "to_dict"):
         value = value.to_dict()
+    if isinstance(value, Mapping):
+        return {str(key): _json_copy(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_copy(item) for item in value]
     return json.loads(json.dumps(value, sort_keys=True, default=str))
 
 
