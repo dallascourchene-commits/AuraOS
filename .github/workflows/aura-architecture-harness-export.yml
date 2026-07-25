@@ -49,14 +49,35 @@ jobs:
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
       - name: Archive exact clean main outside checkout
         run: |
+          REQUEST_EXPORT_DIR="${RUNNER_TEMP}/AuraOS-request-export"
           FULL_EXPORT_DIR="${RUNNER_TEMP}/AuraOS-full-export"
           DIAGNOSTICS_DIR="${RUNNER_TEMP}/AuraOS-export-diagnostics"
           python "$REQUEST_TOOLS_DIR/scripts/aura_exact_head_transport.py" \
             --repo-root . \
             export \
             --expected-head "$SOURCE_SHA" \
-            --output-dir "$FULL_EXPORT_DIR" \
+            --output-dir "$REQUEST_EXPORT_DIR" \
             --diagnostics-dir "$DIAGNOSTICS_DIR"
+
+          mkdir -p "$FULL_EXPORT_DIR"
+          git archive \
+            --format=zip \
+            --prefix=AuraOS/ \
+            --output="$FULL_EXPORT_DIR/AuraOS-full-repository.zip.tmp" \
+            "$SOURCE_SHA"
+          mv \
+            "$FULL_EXPORT_DIR/AuraOS-full-repository.zip.tmp" \
+            "$FULL_EXPORT_DIR/AuraOS-full-repository.zip"
+          cmp \
+            "$REQUEST_EXPORT_DIR/AuraOS-full-repository.zip" \
+            "$FULL_EXPORT_DIR/AuraOS-full-repository.zip"
+          (
+            cd "$FULL_EXPORT_DIR"
+            sha256sum AuraOS-full-repository.zip \
+              > AuraOS-full-repository.zip.sha256
+          )
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
           cp "$REQUEST_TOOLS_DIR/scripts/aura_architecture_harness.py" \
             "$FULL_EXPORT_DIR/AuraOS-request-harness.py"
           (
