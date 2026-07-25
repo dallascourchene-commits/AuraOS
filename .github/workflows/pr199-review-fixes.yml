@@ -1,0 +1,118 @@
+name: PR199 bounded review fixes
+
+on:
+  push:
+    branches:
+      - analysis/pr199-review-fixes-20260725
+
+permissions:
+  contents: write
+  statuses: write
+
+env:
+  PYTHONPATH: ${{ github.workspace }}
+
+jobs:
+  verify-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: analysis/pr199-review-fixes-20260725
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Apply checksum-bound review patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp .aura/analysis/pr199_review_fixes_payload.txt /tmp/review.b64
+          test "$(sha256sum /tmp/review.b64 | awk '{print $1}')" = "554867f7ebf3e04b9d28414aae650f118a33936a3dafa47555ccf07bcce1f600"
+          git reset --hard HEAD^^
+          test "$(git rev-parse HEAD)" = "e361c62209bf8b93a36d80c74288657c057f7408"
+          base64 -d /tmp/review.b64 | gzip -d > /tmp/review.patch
+          test "$(sha256sum /tmp/review.patch | awk '{print $1}')" = "817aedb212d29cf20c48f42e26632785b470ca6caea424e950bff1018c519bd7"
+          git apply --check /tmp/review.patch
+          git apply /tmp/review.patch
+
+      - name: Install focused verification tooling
+        run: python -m pip install --upgrade pytest ruff
+
+      - name: Format and lint exact changed surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            aura_agent_arena_bridge.py
+            aura_agent_arena_mcp.py
+            aura_arena_persistence_adapters.py
+            aura_qdkt_observations.py
+            aura_unified_memory_continuity_learning.py
+            tests/test_aura_unified_memory_continuity_learning.py
+          )
+          ruff format "${files[@]}"
+          ruff check --select E9,F63,F7,F82 "${files[@]}"
+          python -m py_compile "${files[@]}"
+          git diff --check
+
+      - name: Run focused regression ring
+        run: |
+          python -m pytest -q \
+            tests/test_aura_unified_memory_continuity_learning.py \
+            tests/test_aura_unified_memory_continuity.py \
+            tests/test_aura_unified_memory_continuity_toolchain.py \
+            tests/test_aura_agent_arena_bridge.py \
+            tests/test_aura_agent_arena_mcp.py \
+            tests/test_aura_arena_persistence_adapters.py \
+            tests/test_aura_qdkt_observations.py
+
+      - name: Enforce exact six-file scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout -- .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json 2>/dev/null || true
+          actual="$(git diff --name-only | sort)"
+          expected="$(printf '%s\n' \
+            aura_agent_arena_bridge.py \
+            aura_agent_arena_mcp.py \
+            aura_arena_persistence_adapters.py \
+            aura_qdkt_observations.py \
+            aura_unified_memory_continuity_learning.py \
+            tests/test_aura_unified_memory_continuity_learning.py | sort)"
+          test "$actual" = "$expected"
+          git diff --check
+
+      - name: Publish clean review-fix commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS Review Fix Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            aura_agent_arena_bridge.py \
+            aura_agent_arena_mcp.py \
+            aura_arena_persistence_adapters.py \
+            aura_qdkt_observations.py \
+            aura_unified_memory_continuity_learning.py \
+            tests/test_aura_unified_memory_continuity_learning.py
+          git commit -m "fix: resolve learning-to-reproof scan findings"
+          git push origin HEAD:feature/unified-memory-learning-to-reproof
+
+      - name: Publish discoverable status
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          state=success
+          if [ "${{ job.status }}" != "success" ]; then state=failure; fi
+          gh api --method POST \
+            "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+            -f state="$state" \
+            -f context="pr199-review-fixes" \
+            -f description="Run ${GITHUB_RUN_ID}: ${{ job.status }}" \
+            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
