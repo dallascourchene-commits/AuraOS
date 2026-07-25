@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1431
-- **total_bytes**: 56939804
-- **text_tokens_est**: 4782669
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 925, 'schema_or_lexicon': 177, 'support_file': 77}
-- **topology_nodes**: 10634
-- **topology_edges**: 25216
+- **total_bytes**: 56935080
+- **text_tokens_est**: 4781493
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 924, 'schema_or_lexicon': 178, 'support_file': 77}
+- **topology_nodes**: 10625
+- **topology_edges**: 25198
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 30867.8
+- **elapsed_ms**: 30207.38
 
 ## Coverage
 
@@ -329,6 +329,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ### security_and_validation
 - `.aura/SECURITY.md`
 - `.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json`
+- `.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json`
 - `.aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json`
 - `DEEP_AUDIT_REPORT.md`
 - `aura_background_auditor.py`
@@ -338,8 +339,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_emergent_capability_auditor.py`
 - `aura_gate_audit.py`
 - `aura_heal.py`
-- `aura_metaharness_audit.py`
-- ... 21 more; query CODEMAP.json for exact file cards
+- ... 22 more; query CODEMAP.json for exact file cards
 
 ### interfaces_and_docs
 - `.aura/AFFORDANCE_MAP.json`
@@ -354,7 +354,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
-- ... 1221 more; query CODEMAP.json for exact file cards
+- ... 1220 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
@@ -374,8 +374,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 10634
-- **edges**: 25216
+- **nodes**: 10625
+- **edges**: 25198
 - **top_files_by_degree**:
   - `aura_node.py` degree=890 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=756 nodes=69 neighbors=`aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`, `aura_gate_adapters.py`
@@ -409,7 +409,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AdaptiveModelRouter` -> `aura_adaptive_model_router.py:151`
 - `AgentIRCompiler` -> `aura_agent_ir_compiler.py:19`
 - `AgentIRNode` -> `aura_agent_ir.py:37`
-- `AmbiguityClass` -> `aura_intent_refinement.py:51`
+- `AmbiguityClass` -> `aura_intent_refinement.py:52`
 - `AnimacyClass` -> `aura_ojibwe_morph_bridge.py:84`
 - `AnthropicRouter` -> `aura_anthropic_router.py:268`
 - `AppendOnlyEventStore` -> `aura_event_contracts.py:634`
