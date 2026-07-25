@@ -201,6 +201,16 @@ jobs:
             tests/test_aura_arena_persistence_adapters.py \
             tests/test_aura_qdkt_observations.py
 
+      - name: Restore generated architecture artifacts
+        shell: bash
+        run: |
+          git checkout -- \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            Aura_Memory/live_topology_ast.json \
+            topology_map.json \
+            2>/dev/null || true
+
       - name: Enforce exact two-file scope
         shell: bash
         run: |
