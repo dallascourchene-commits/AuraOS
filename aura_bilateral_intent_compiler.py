@@ -236,10 +236,27 @@ def apply_clarification(
     elif question.ambiguity_class == AmbiguityClass.DESIRED_OUTCOME.value:
         positives.append(value)
     elif question.ambiguity_class == AmbiguityClass.CONTRADICTION.value:
-        positives = [item for item in positives if item != value]
-        negatives = [item for item in negatives if item.statement != value and item.target != value]
-        if not positives:
-            positives = [analysis.source_request]
+        candidates = tuple(question.candidate_answers)
+        if len(candidates) != 2 or value not in candidates:
+            raise ValueError(
+                "contradiction clarification must select one declared requirement"
+            )
+        positive_candidate, negative_candidate = candidates
+        if value == positive_candidate:
+            negatives = [
+                item
+                for item in negatives
+                if item.statement != negative_candidate
+                and item.target != negative_candidate
+            ]
+        else:
+            positives = [
+                item for item in positives if item != positive_candidate
+            ]
+            if not positives:
+                positives = [
+                    "Preserve the confirmed prohibition and locked guardrails."
+                ]
     remaining = tuple(item for item in analysis.questions if item.question_id != question.question_id)
     teach_back = None if remaining else _teach_back(positives, negatives, analysis.guardrails)
     return BilateralAnalysis(

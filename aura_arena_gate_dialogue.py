@@ -154,7 +154,7 @@ def _intent_summary(trace: dict[str, Any]) -> dict[str, Any]:
 
 
 def _repository_identity(root: Path) -> dict[str, Any]:
-    def git(*args: str) -> str:
+    def git_text(*args: str) -> str:
         result = subprocess.run(
             ["git", *args],
             cwd=root,
@@ -165,20 +165,78 @@ def _repository_identity(root: Path) -> dict[str, Any]:
         )
         return result.stdout.strip()
 
-    head = git("rev-parse", "HEAD")
-    status = git("status", "--porcelain=v1", "--untracked-files=all")
+    def git_bytes(*args: str) -> bytes:
+        result = subprocess.run(
+            ["git", *args],
+            cwd=root,
+            check=True,
+            capture_output=True,
+            timeout=20,
+        )
+        return bytes(result.stdout)
+
+    def content_digest(path: Path) -> tuple[str, str]:
+        digest = hashlib.blake2b(digest_size=32)
+        if path.is_symlink():
+            target = str(path.readlink()).encode(
+                "utf-8", errors="surrogateescape"
+            )
+            digest.update(target)
+            return "symlink", digest.hexdigest()
+        with path.open("rb") as handle:
+            while True:
+                chunk = handle.read(1024 * 1024)
+                if not chunk:
+                    break
+                digest.update(chunk)
+        return "file", digest.hexdigest()
+
+    head = git_text("rev-parse", "HEAD")
+    status = git_text("status", "--porcelain=v1", "--untracked-files=all")
     clean = not bool(status.strip())
-    tree_digest = stable_digest({"head": head, "status": status.splitlines()})
+    tracked_diff = git_bytes("diff", "--binary", "--full-index", "HEAD", "--")
+    untracked_paths = git_bytes(
+        "ls-files", "--others", "--exclude-standard", "-z"
+    ).split(b"\0")
+    untracked: list[dict[str, str]] = []
+    for raw_path in untracked_paths:
+        if not raw_path:
+            continue
+        relative = raw_path.decode("utf-8", errors="surrogateescape")
+        candidate = root / relative
+        if not candidate.is_symlink() and not candidate.is_file():
+            continue
+        kind, digest = content_digest(candidate)
+        untracked.append(
+            {
+                "path": relative.replace("\\", "/"),
+                "kind": kind,
+                "digest": digest,
+            }
+        )
+    untracked.sort(key=lambda item: item["path"])
+    tree_digest = stable_digest(
+        {
+            "head": head,
+            "tracked_diff_digest": hashlib.blake2b(
+                tracked_diff, digest_size=32
+            ).hexdigest(),
+            "untracked": untracked,
+        }
+    )
     return {
         "repository_head": head,
         "source_tree_digest": tree_digest,
         "working_tree_clean": clean,
         "working_tree_clean_receipt": stable_digest(
-            {"head": head, "clean": clean, "status": status.splitlines()}
+            {
+                "head": head,
+                "clean": clean,
+                "source_tree_digest": tree_digest,
+                "status": status.splitlines(),
+            }
         ),
     }
-
-
 def _fallback_response(
     *,
     stage_hint: str,
@@ -331,7 +389,11 @@ class ArenaGateDialogueService:
                 if question.ambiguity_class == "PROHIBITED_OUTCOME":
                     answer = "Only the locked hard defaults apply."
                 elif question.candidate_answers:
-                    answer = question.candidate_answers[0]
+                    answer = (
+                        question.candidate_answers[-1]
+                        if question.ambiguity_class == "CONTRADICTION"
+                        else question.candidate_answers[0]
+                    )
                 else:
                     break
                 analysis = apply_clarification(analysis, question=question, answer=answer)
@@ -641,6 +703,7 @@ class ArenaGateDialogueService:
         except (OSError, subprocess.SubprocessError, ValueError):
             repo = {"repository_head": "", "source_tree_digest": ""}
         confirmed: list[dict[str, Any]] = []
+        observed_at = time.time()
         for row in list(self.confirmed.values())[-10:]:
             proposal = dict(row["proposal"])
             stale_reasons: list[str] = []
@@ -650,6 +713,15 @@ class ArenaGateDialogueService:
                 stale_reasons.append("source_tree_digest_changed")
             if row["phase_hash"] != current_phase_hash:
                 stale_reasons.append("workflow_phase_or_evidence_changed")
+            receipt = dict(
+                (proposal.get("canonical_compilation") or {}).get(
+                    "confirmation_receipt"
+                )
+                or {}
+            )
+            expires_at = float(receipt.get("expires_at") or 0.0)
+            if expires_at and observed_at >= expires_at:
+                stale_reasons.append("confirmation_expired")
             proposal["confirmation_currency"] = "STALE" if stale_reasons else "CURRENT"
             proposal["stale_reasons"] = stale_reasons
             confirmed.append(proposal)
