@@ -1,0 +1,110 @@
+diff --git a/aura_coding_relationship_compass.py b/aura_coding_relationship_compass.py
+index e1c56f4..2508f96 100644
+--- a/aura_coding_relationship_compass.py
++++ b/aura_coding_relationship_compass.py
+@@ -439,6 +439,33 @@ def _component_targets(
+     return matched, files, _ordered_unique(symbols)
+ 
+ 
++def _partition_explicit_test_targets(
++    repo_root: Path,
++    target_files: Sequence[str],
++    target_tests: Sequence[str],
++) -> tuple[list[str], list[str]]:
++    """Separate exact source targets from first-class explicit test targets.
++
++    Older callers sometimes supplied test paths through ``target_files``. Preserve
++    that intent while giving new callers a dedicated lane whose ordering cannot be
++    displaced by topology-only regression suggestions.
++    """
++
++    source_files: list[str] = []
++    explicit_tests: list[str] = []
++    for raw in [*target_files, *target_tests]:
++        path = str(raw or "").strip().replace("\\", "/")
++        if not path or not (repo_root / path).is_file():
++            continue
++        basename = Path(path).name
++        is_test = path.startswith("tests/") or basename.startswith("test_")
++        if is_test:
++            explicit_tests.append(path)
++        elif raw in target_files:
++            source_files.append(path)
++    return _ordered_unique(source_files), _ordered_unique(explicit_tests)
++
++
+ def _connectome_targets(path_packet: Mapping[str, Any], repo_root: Path) -> tuple[list[str], list[str], list[str]]:
+     files = [
+         path
+@@ -982,6 +1009,7 @@ def compile_coding_relationship_compass(
+     *,
+     target_files: Sequence[str] = (),
+     target_symbols: Sequence[str] = (),
++    target_tests: Sequence[str] = (),
+     max_target_files: int = 16,
+     max_target_symbols: int = 32,
+     max_atomic_nodes: int = 36,
+@@ -1033,10 +1061,13 @@ def compile_coding_relationship_compass(
+ 
+     graph = enrich_connectome(build_capability_connectome(root))
+     capability_path = enrich_path(find_capability_path(normalized_objective, root), graph)
++    explicit_source_files, explicit_test_targets = _partition_explicit_test_targets(
++        root, target_files, target_tests
++    )
+     matched_components, component_files, component_symbols = _component_targets(
+         normalized_objective,
+         root,
+-        explicit_files=target_files,
++        explicit_files=explicit_source_files,
+         explicit_symbols=target_symbols,
+     )
+     path_files, path_symbols, path_tests = _connectome_targets(capability_path, root)
+@@ -1314,6 +1345,7 @@ def compile_coding_relationship_compass(
+ 
+     required_tests = _ordered_unique(
+         [
++            *explicit_test_targets,
+             *[str(item) for item in evidence.get("tests", []) or []],
+             *[str(item) for item in evidence.get("required_tests", []) or []],
+             *path_tests,
+@@ -1343,6 +1375,7 @@ def compile_coding_relationship_compass(
+         "target_file": primary["file_path"],
+         "target_symbol": primary["symbol"],
+         "recommended_targets": targets[:16],
++        "explicit_test_targets": explicit_test_targets,
+         "required_tests": required_tests,
+         "action_capsule_hints": action_capsule_hints,
+         "connectome": {
+diff --git a/docs/AURA_ARCHITECTURE_HARNESS.md b/docs/AURA_ARCHITECTURE_HARNESS.md
+index 24bed1f..c506daa 100644
+--- a/docs/AURA_ARCHITECTURE_HARNESS.md
++++ b/docs/AURA_ARCHITECTURE_HARNESS.md
+@@ -64,7 +64,7 @@ python scripts/aura_architecture_harness.py \
+   --venv ./.AuraOS-architecture-harness-venv
+ ```
+ 
+-The doctor checks repository completeness, Git identity, CODEMAP presence, and imports for the Connectome, Relational Index, Atlas, Relational Synthesis, Emergent Properties, and Architect Loop.
++The doctor checks repository completeness, Git identity, CODEMAP presence, and imports for the Connectome, Relational Index, Atlas, Relational Synthesis, Emergent Properties, and Architect Loop. The current CODEMAP schema derives `symbol_count` from the direct members of `symbol_index`; any obsolete integer found elsewhere is retained only as `legacy_symbol_count` diagnostic evidence.
+ 
+ ## Create an AI-safe handoff locally
+ 
+@@ -104,7 +104,7 @@ Outputs are written beside the repository under `AuraOS-architecture-harness-run
+ 
+ `--reference-file` may be repeated for bounded external specifications or evidence. The harness records each file's resolved path, basename, byte size, and SHA-256 in the request and summary. It does not copy the content into AuraOS or treat the reference as source or patch authority. At most eight files of two megabytes each are accepted.
+ 
+-The Atlas compile uses an in-memory Relational Index and `persist=False`. Architect grounding uses the checked-in CODEMAP with refresh disabled. A successful clean run therefore leaves tracked repository content unchanged; any mutation fails the final clean-tree gate.
++The Atlas compile uses an in-memory Relational Index and `persist=False`. Architect grounding uses the checked-in CODEMAP with refresh disabled. Exact repository paths, `path::symbol` bindings, and code-shaped symbol names in the current objective are resolved before capability similarity. Objective-grounded targets exclusively define Act tasks; bounded reference files are used as a fallback only when the objective itself names no current owner. Explicit test paths remain verification scope and are never silently converted into patch tasks. A successful clean run therefore leaves tracked repository content unchanged; any mutation fails the final clean-tree gate.
+ 
+ For execution surfaces that impose a short command window, reuse one explicit output directory. If a run is interrupted after the Connectome, Relational Index, or Atlas completes, rerun the same command with `--resume`; the harness validates the request digest and continues from the retained artifacts instead of rebuilding them.
+ 
+diff --git a/docs/AURA_CODING_RELATIONSHIP_COMPASS.md b/docs/AURA_CODING_RELATIONSHIP_COMPASS.md
+index 3a0261d..fab81af 100644
+--- a/docs/AURA_CODING_RELATIONSHIP_COMPASS.md
++++ b/docs/AURA_CODING_RELATIONSHIP_COMPASS.md
+@@ -63,6 +63,7 @@ grounding = relationship_compass_grounding(packet)
+ The packet includes:
+ 
+ - exact recommended files, symbols, line ranges, and source hashes;
++- first-class `target_tests` plus backward-compatible test paths supplied through `target_files`, preserved ahead of topology-only regression suggestions;
+ - required tests and bounded action-capsule hints;
+ - Connectome graph/path d
