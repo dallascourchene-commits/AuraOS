@@ -1,13 +1,14 @@
-"""Proposal-only bilateral intent refinement contracts for AuraOS.
+"""Bilateral intent refinement contracts for AuraOS.
 
-The module compiles positive and negative requirements, guardrail proposals,
+This module compiles positive and negative requirements, guardrail proposals,
 paired teach-back, confirmation receipts, and evidence-bound plan revisions.
-It is not a memory, truth, policy, routing, verification, patch, publication,
-production, or learning-promotion authority.
+It is proposal-only and owns no memory, truth, policy, routing, verification,
+patch, publication, production, or learning-promotion authority.
 """
 from __future__ import annotations
 
 import json
+import math
 import re
 import time
 from dataclasses import dataclass, fields, replace
@@ -148,10 +149,10 @@ TRANSITIONS = {
 def _required(value: Any, name: str) -> str:
     if type(value) is not str or not value.strip():
         raise ValueError(f"{name} must be a non-empty string")
-    value = value.strip()
-    if len(value.encode()) > MAX_TEXT_BYTES:
+    result = value.strip()
+    if len(result.encode()) > MAX_TEXT_BYTES:
         raise ValueError(f"{name} exceeds {MAX_TEXT_BYTES} UTF-8 bytes")
-    return value
+    return result
 
 
 def _optional(value: Any, name: str) -> str:
@@ -159,10 +160,10 @@ def _optional(value: Any, name: str) -> str:
         return ""
     if type(value) is not str:
         raise ValueError(f"{name} must be a string")
-    value = value.strip()
-    if len(value.encode()) > MAX_TEXT_BYTES:
+    result = value.strip()
+    if len(result.encode()) > MAX_TEXT_BYTES:
         raise ValueError(f"{name} exceeds {MAX_TEXT_BYTES} UTF-8 bytes")
-    return value
+    return result
 
 
 def _enum(value: str | Enum, enum_type: type[Enum], name: str) -> str:
@@ -188,7 +189,8 @@ def _strings(values: Sequence[Any], name: str, required: bool = False) -> tuple[
 def _paths(values: Sequence[Any], name: str) -> tuple[str, ...]:
     result = _strings(values, name)
     for value in result:
-        if value.startswith("/") or "\\" in value or ".." in value.split("/") or value in {".", ".."}:
+        parts = value.split("/")
+        if value.startswith("/") or "\\" in value or ".." in parts or value in {".", ".."}:
             raise ValueError(f"{name} must contain bounded repository-relative POSIX paths")
     return result
 
@@ -196,10 +198,10 @@ def _paths(values: Sequence[Any], name: str) -> tuple[str, ...]:
 def _timestamp(value: Any, name: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"{name} must be a finite timestamp")
-    value = float(value)
-    if value != value or value in {float("inf"), float("-inf")}:
+    result = float(value)
+    if not math.isfinite(result):
         raise ValueError(f"{name} must be a finite timestamp")
-    return value
+    return result
 
 
 def _strict_bool(value: Any, name: str) -> bool:
@@ -208,24 +210,20 @@ def _strict_bool(value: Any, name: str) -> bool:
     return value
 
 
-def _validate_json_keys(value: Any, name: str, path: str = "$") -> None:
+def _validate_json(value: Any, name: str, path: str = "$") -> None:
     if isinstance(value, Mapping):
-        seen: set[str] = set()
         for key, item in value.items():
             if type(key) is not str:
                 raise ValueError(f"{name} must use string keys at {path}")
-            if key in seen:
-                raise ValueError(f"{name} contains a duplicate key at {path}.{key}")
-            seen.add(key)
-            _validate_json_keys(item, name, f"{path}.{key}")
+            _validate_json(item, name, f"{path}.{key}")
     elif isinstance(value, (list, tuple)):
         for index, item in enumerate(value):
-            _validate_json_keys(item, name, f"{path}[{index}]")
+            _validate_json(item, name, f"{path}[{index}]")
 
 
 def _freeze_json(value: Any) -> Any:
     if isinstance(value, Mapping):
-        return MappingProxyType({key: _freeze_json(item) for key, item in value.items()})
+        return MappingProxyType({str(key): _freeze_json(item) for key, item in value.items()})
     if isinstance(value, (list, tuple)):
         return tuple(_freeze_json(item) for item in value)
     return value
@@ -240,16 +238,18 @@ def _thaw_json(value: Any) -> Any:
 
 
 def _packet(payload: Any, name: str) -> None:
-    encoded = canonical_json(payload).encode("utf-8")
-    if len(encoded) > MAX_PACKET_BYTES:
+    if len(canonical_json(payload).encode()) > MAX_PACKET_BYTES:
         raise ValueError(f"{name} exceeds {MAX_PACKET_BYTES} canonical bytes")
 
 
 def _record(value: Any, name: str) -> Mapping[str, Any]:
-    payload = value.to_dict() if hasattr(value, "to_dict") else dict(value) if isinstance(value, Mapping) else None
-    if payload is None:
+    if hasattr(value, "to_dict"):
+        payload = value.to_dict()
+    elif isinstance(value, Mapping):
+        payload = dict(value)
+    else:
         raise ValueError(f"{name} must be a mapping or to_dict record")
-    _validate_json_keys(payload, name)
+    _validate_json(payload, name)
     normalized = json.loads(canonical_json(payload))
     if not isinstance(normalized, dict):
         raise ValueError(f"{name} must normalize to an object")
@@ -289,13 +289,14 @@ class NegativeRequirement:
     def create(cls, *, statement: str, classification: str | NegativeRequirementClass,
                source_span: str, source_start: int, source_end: int, operator: str,
                target: str, scope: str = "", ambiguous: bool = False) -> "NegativeRequirement":
-        statement, span = _required(statement, "statement"), _required(source_span, "source_span")
+        statement_value = _required(statement, "statement")
+        span = _required(source_span, "source_span")
         if not isinstance(source_start, int) or not isinstance(source_end, int):
             raise ValueError("source offsets must be integers")
         if source_start < 0 or source_end <= source_start or source_end - source_start != len(span):
             raise ValueError("source offsets must exactly bind source_span")
         payload = {
-            "statement": statement,
+            "statement": statement_value,
             "classification": _enum(classification, NegativeRequirementClass, "classification"),
             "source_span": span,
             "source_start": source_start,
@@ -397,12 +398,12 @@ class GuardrailProposal:
 
     def with_human_disposition(self, disposition: str | HumanGuardrailDisposition,
                                note: str = "") -> "GuardrailProposal":
-        disposition = _enum(disposition, HumanGuardrailDisposition, "human_disposition")
-        if self.hardness in {"HARD_ARCHITECTURAL", "HARD_AUTHORITY"} and disposition not in {"ACKNOWLEDGED_HARD", "DEFERRED"}:
+        disposition_value = _enum(disposition, HumanGuardrailDisposition, "human_disposition")
+        if self.hardness in {"HARD_ARCHITECTURAL", "HARD_AUTHORITY"} and disposition_value not in {"ACKNOWLEDGED_HARD", "DEFERRED"}:
             raise ValueError("hard architectural or authority guardrails are acknowledgement-only")
-        if self.hardness == "DOMAIN_REQUIRED" and disposition in {"REJECTED_SOFT", "MODIFIED"}:
+        if self.hardness == "DOMAIN_REQUIRED" and disposition_value in {"REJECTED_SOFT", "MODIFIED"}:
             raise ValueError("domain-required guardrails need separate authority to change")
-        return replace(self, human_disposition=disposition, human_note=_optional(note, "human_note"))
+        return replace(self, human_disposition=disposition_value, human_note=_optional(note, "human_note"))
 
     def to_dict(self) -> dict[str, Any]:
         payload = _dataclass_dict(self)
@@ -444,9 +445,9 @@ class PairedTeachBack:
 
     def to_dict(self) -> dict[str, Any]:
         payload = _dataclass_dict(self)
-        for key in payload:
-            if isinstance(payload[key], tuple):
-                payload[key] = list(payload[key])
+        for key, value in tuple(payload.items()):
+            if isinstance(value, tuple):
+                payload[key] = list(value)
         return payload
 
 
@@ -494,7 +495,7 @@ class IntentRefinementSession:
         return cls(
             stable_id("intent-session", base), base["repository_head"], base["working_tree_digest"],
             base["arena"], request, base["source_request_digest"], "DRAFT", (), (), (), (), (), (),
-            (), {}, "PENDING", "", created, expires,
+            (), MappingProxyType({}), "PENDING", "", created, expires,
         )
 
     def transition(self, next_stage: str | RefinementStage, *,
@@ -536,7 +537,9 @@ class IntentRefinementSession:
         elif target == "EXPIRED":
             status = "EXPIRED"
         return replace(
-            self, current_stage=target, candidate_positive_requirements=positive,
+            self,
+            current_stage=target,
+            candidate_positive_requirements=positive,
             candidate_negative_requirements=negative,
             candidate_definitions=self.candidate_definitions if definitions is None else _records(definitions, "definitions"),
             candidate_guardrails=self.candidate_guardrails if guardrails is None else _records(guardrails, "guardrails"),
@@ -544,7 +547,8 @@ class IntentRefinementSession:
             questions_asked=self.questions_asked if questions_asked is None else _records(questions_asked, "questions_asked"),
             answers_received=self.answers_received if answers_received is None else _records(answers_received, "answers_received"),
             teach_back=teach_payload,
-            confirmation_status=status, confirmation_receipt_id=receipt_id,
+            confirmation_status=status,
+            confirmation_receipt_id=receipt_id,
         )
 
     def is_current(self, *, repository_head: str, working_tree_digest: str,
@@ -606,8 +610,11 @@ class IntentConfirmationReceipt:
         expires = _timestamp(expires_at, "expires_at")
         if expires <= confirmed:
             raise ValueError("expires_at must be later than confirmed_at")
-        positive, negative = _strings(positive_requirements, "positive_requirements", True), _strings(negative_requirements, "negative_requirements", True)
-        guardrail_payloads, authority_payload, paths = _records(guardrails, "guardrails"), _record(authority, "authority"), _paths(allowed_paths, "allowed_paths")
+        positive = _strings(positive_requirements, "positive_requirements", True)
+        negative = _strings(negative_requirements, "negative_requirements", True)
+        guardrail_payloads = _records(guardrails, "guardrails")
+        authority_payload = _record(authority, "authority")
+        paths = _paths(allowed_paths, "allowed_paths")
         if not paths:
             raise ValueError("allowed_paths must not be empty")
         if any(item.get("human_disposition") == "DEFERRED" for item in guardrail_payloads):
@@ -736,14 +743,16 @@ class IntentRevisionDelta:
             "negative_requirements_removed": _strings(negative_requirements_removed, "negative_requirements_removed"),
             "definitions_changed": _strings(definitions_changed, "definitions_changed"),
             "guardrails_changed": _strings(guardrails_changed, "guardrails_changed"),
-            "scope_changed": _strict_bool(scope_changed, "scope_changed"), "authority_changed": _strict_bool(authority_changed, "authority_changed"),
+            "scope_changed": _strict_bool(scope_changed, "scope_changed"),
+            "authority_changed": _strict_bool(authority_changed, "authority_changed"),
             "affected_plan_tasks": _strings(affected_plan_tasks, "affected_plan_tasks"),
             "required_new_verifiers": _strings(required_new_verifiers, "required_new_verifiers"),
             "current_reproof_required": _strict_bool(current_reproof_required, "current_reproof_required"),
             "prior_confirmation_staled": _strict_bool(prior_confirmation_staled, "prior_confirmation_staled"),
             "requires_human_reconfirmation": _strict_bool(requires_human_reconfirmation, "requires_human_reconfirmation"),
             "requires_council_replan": _strict_bool(requires_council_replan, "requires_council_replan"),
-            "revision_class": revision, "status": _required(status, "status"),
+            "revision_class": revision,
+            "status": _required(status, "status"),
         }
         return cls(stable_id("intent-revision", payload), **payload)
 
@@ -755,28 +764,77 @@ class IntentRevisionDelta:
         return payload
 
 
-NEGATION = re.compile(
-    r"(?ix)\b(leave(?=[^.!?\n]{0,120}\bunchanged\b)|must\s+not|do\s+not|does\s+not|did\s+not|should\s+not|"
-    r"would\s+not|could\s+not|cannot|can['’]t|don['’]t|doesn['’]t|didn['’]t|"
-    r"mustn['’]t|shouldn['’]t|wouldn['’]t|couldn['’]t|never|without|avoid|"
-    r"exclude|except|only|no|not)\b"
-)
-SENTENCE = re.compile(r"[^.!?\n]+(?:[.!?]+|$)")
+_OPERATORS = tuple(sorted((
+    "leave", "must not", "do not", "does not", "did not", "should not",
+    "would not", "could not", "cannot", "can't", "don't", "doesn't",
+    "didn't", "mustn't", "shouldn't", "wouldn't", "couldn't", "never",
+    "without", "avoid", "exclude", "except", "only", "no", "not",
+), key=len, reverse=True))
+_BOUNDARY = frozenset(" \t\r\n,.:;!?()[]{}\"'`-/")
+
+
+def _is_boundary(text: str, index: int) -> bool:
+    return index < 0 or index >= len(text) or text[index] in _BOUNDARY
+
+
+def _operator_at(lower: str, index: int, operator: str) -> bool:
+    if not lower.startswith(operator, index):
+        return False
+    if not _is_boundary(lower, index - 1) or not _is_boundary(lower, index + len(operator)):
+        return False
+    if operator == "leave":
+        sentence_end = index
+        while sentence_end < len(lower) and lower[sentence_end] not in ".!?\n":
+            sentence_end += 1
+        return "unchanged" in lower[index:sentence_end]
+    return True
+
+
+def _sentence_ranges(text: str) -> list[tuple[int, int]]:
+    ranges: list[tuple[int, int]] = []
+    start = 0
+    for index, char in enumerate(text):
+        if char in ".!?\n":
+            end = index + 1
+            if text[start:end].strip():
+                ranges.append((start, end))
+            start = end
+    if start < len(text) and text[start:].strip():
+        ranges.append((start, len(text)))
+    return ranges
+
+
+def _operator_matches(sentence: str) -> list[tuple[int, int, str]]:
+    lower = sentence.lower().replace("’", "'")
+    matches: list[tuple[int, int, str]] = []
+    index = 0
+    while index < len(lower):
+        match = None
+        for operator in _OPERATORS:
+            if _operator_at(lower, index, operator):
+                match = (index, index + len(operator), operator)
+                break
+        if match is None:
+            index += 1
+            continue
+        matches.append(match)
+        index = match[1]
+    return matches
 
 
 def _negative_class(statement: str, operator: str, target: str) -> str:
     text = f" {operator} {target} {statement} ".lower()
     checks = (
         ("SOFT_PREFERENCE", operator == "avoid" or " prefer not " in text),
-        ("EXCLUSION_NON_GOAL", any(x in text for x in (" not yet ", " out of scope ", " non-goal ", " later phase "))),
-        ("AUTHORITY_DENIAL", any(x in text for x in (" approve", " authorize", " certify", " professional release", " inspection", " payment release", " grant access"))),
-        ("PRESERVATION_INVARIANT", any(x in text for x in (" unchanged", " preserve", " canonical geometry", " source truth", " mutate canonical", " modify canonical"))),
-        ("FAILURE_BEHAVIOR", any(x in text for x in (" silently", " hide failure", " suppress", " fallback", " digest fails", " error", " fail closed"))),
-        ("PRIVACY_RESTRICTION", any(x in text for x in (" private", " secret", " personal data", " project data", " credentials", " logs"))),
-        ("RESOURCE_RESTRICTION", any(x in text for x in (" paid provider", " external network", " network access", " dependency", " provider", " service"))),
-        ("QUALITY_PROHIBITION", any(x in text for x in (" weaken tests", " delete tests", " bypass tests", " rewrite tests", " self-verify", " only verifier"))),
-        ("SCOPE_BOUNDARY", any(x in text for x in (" outside", " unrelated files", " scope", " other subsystem", " only these files", " except"))),
-        ("TEMPORAL_RESTRICTION", any(x in text for x in (" until ", " before ", " after ", " unless canary"))),
+        ("EXCLUSION_NON_GOAL", any(value in text for value in (" not yet ", " out of scope ", " non-goal ", " later phase "))),
+        ("AUTHORITY_DENIAL", any(value in text for value in (" approve", " authorize", " certify", " professional release", " inspection", " payment release", " grant access"))),
+        ("PRESERVATION_INVARIANT", any(value in text for value in (" unchanged", " preserve", " canonical geometry", " source truth", " mutate canonical", " modify canonical"))),
+        ("FAILURE_BEHAVIOR", any(value in text for value in (" silently", " hide failure", " suppress", " fallback", " digest fails", " error", " fail closed"))),
+        ("PRIVACY_RESTRICTION", any(value in text for value in (" private", " secret", " personal data", " project data", " credentials", " logs"))),
+        ("RESOURCE_RESTRICTION", any(value in text for value in (" paid provider", " external network", " network access", " dependency", " provider", " service"))),
+        ("QUALITY_PROHIBITION", any(value in text for value in (" weaken tests", " delete tests", " bypass tests", " rewrite tests", " self-verify", " only verifier"))),
+        ("SCOPE_BOUNDARY", any(value in text for value in (" outside", " unrelated files", " scope", " other subsystem", " only these files", " except"))),
+        ("TEMPORAL_RESTRICTION", any(value in text for value in (" until ", " before ", " after ", " unless canary"))),
     )
     return next((name for name, matched in checks if matched), "PROHIBITION")
 
@@ -784,41 +842,56 @@ def _negative_class(statement: str, operator: str, target: str) -> str:
 def extract_negative_requirements(text: str) -> tuple[NegativeRequirement, ...]:
     source = _required(text, "text")
     results: list[NegativeRequirement] = []
-    for sentence_match in SENTENCE.finditer(source):
-        sentence, base = sentence_match.group(0), sentence_match.start()
-        matches = list(NEGATION.finditer(sentence))
-        for index, match in enumerate(matches):
-            end_local = matches[index + 1].start() if index + 1 < len(matches) else len(sentence)
-            raw = sentence[match.start():end_local]
+    for sentence_start, sentence_end in _sentence_ranges(source):
+        sentence = source[sentence_start:sentence_end]
+        matches = _operator_matches(sentence)
+        for match_index, (start_local, operator_end, operator) in enumerate(matches):
+            end_local = matches[match_index + 1][0] if match_index + 1 < len(matches) else len(sentence)
+            raw = sentence[start_local:end_local]
+            left_trim = len(raw) - len(raw.lstrip())
             span = raw.strip()
-            start = base + match.start() + len(raw) - len(raw.lstrip())
+            if not span:
+                continue
+            start = sentence_start + start_local + left_trim
             end = start + len(span)
-            target = sentence[match.end():end_local].strip(" \t,:;-.!?")
-            operator = match.group(1).lower().replace("’", "'")
+            target = sentence[operator_end:end_local].strip(" \t,:;-.!?\r\n")
             results.append(NegativeRequirement.create(
-                statement=span, classification=_negative_class(span, operator, target),
-                source_span=span, source_start=start, source_end=end, operator=operator,
-                target=target, scope=target, ambiguous=not target or target.lower() in {"it", "that", "this", "so"},
+                statement=span,
+                classification=_negative_class(span, operator, target),
+                source_span=span,
+                source_start=start,
+                source_end=end,
+                operator=operator,
+                target=target,
+                scope=target,
+                ambiguous=not target or target.lower() in {"it", "that", "this", "so"},
             ))
     return tuple(results)
+
+
+def _tokens(value: str) -> set[str]:
+    stop = {"the", "a", "an", "to", "and", "or", "of", "in", "on", "for", "with",
+            "do", "does", "did", "not", "never", "no", "must", "should", "would",
+            "could", "can", "without", "avoid", "only", "except"}
+    return {token for token in re.findall(r"[a-z0-9_]+", value.lower()) if token not in stop and len(token) > 2}
 
 
 def detect_requirement_contradictions(positive_requirements: Sequence[str],
                                       negative_requirements: Sequence[str | NegativeRequirement]) -> tuple[dict[str, str], ...]:
     positives = _strings(positive_requirements, "positive_requirements")
     negatives = [item.target or item.statement if isinstance(item, NegativeRequirement) else _required(item, "negative_requirements") for item in negative_requirements]
-    stop = {"the", "a", "an", "to", "and", "or", "of", "in", "on", "for", "with",
-            "do", "does", "did", "not", "never", "no", "must", "should", "would",
-            "could", "can", "without", "avoid", "only", "except"}
-    conflicts = []
+    conflicts: list[dict[str, str]] = []
     for positive in positives:
-        p = {x for x in re.findall(r"[a-z0-9_]+", positive.lower()) if x not in stop and len(x) > 2}
+        positive_tokens = _tokens(positive)
         for negative in negatives:
-            n = {x for x in re.findall(r"[a-z0-9_]+", negative.lower()) if x not in stop and len(x) > 2}
-            overlap = p & n
-            if len(overlap) >= 2 or (overlap and min(len(p), len(n)) <= 2):
-                conflicts.append({"positive_requirement": positive, "negative_requirement": negative,
-                                  "shared_terms": ",".join(sorted(overlap))})
+            negative_tokens = _tokens(negative)
+            overlap = positive_tokens & negative_tokens
+            if len(overlap) >= 2 or (overlap and min(len(positive_tokens), len(negative_tokens)) <= 2):
+                conflicts.append({
+                    "positive_requirement": positive,
+                    "negative_requirement": negative,
+                    "shared_terms": ",".join(sorted(overlap)),
+                })
     return tuple(conflicts)
 
 
@@ -859,28 +932,52 @@ CONSTRUCTION = (
 
 def compile_default_guardrails(*, arena: str = "CODING", affected_files: Sequence[str] = (),
                                affected_symbols: Sequence[str] = ()) -> tuple[GuardrailProposal, ...]:
-    arena, files, symbols = _required(arena, "arena").upper(), _paths(affected_files, "affected_files"), _strings(affected_symbols, "affected_symbols")
+    arena_value = _required(arena, "arena").upper()
+    files = _paths(affected_files, "affected_files")
+    symbols = _strings(affected_symbols, "affected_symbols")
     result = [
-        GuardrailProposal.create(statement=statement, source_class="ATLAS_PROHIBITION",
-            source_refs=(source,), hardness="HARD_ARCHITECTURAL", enforcement_class=enforcement,
-            affected_arenas=(arena,), affected_files=files, affected_symbols=symbols,
-            rationale="Mandatory Atlas architectural prohibition.", human_disposition="ACKNOWLEDGED_HARD")
+        GuardrailProposal.create(
+            statement=statement,
+            source_class="ATLAS_PROHIBITION",
+            source_refs=(source,),
+            hardness="HARD_ARCHITECTURAL",
+            enforcement_class=enforcement,
+            affected_arenas=(arena_value,),
+            affected_files=files,
+            affected_symbols=symbols,
+            rationale="Mandatory Atlas architectural prohibition.",
+            human_disposition="ACKNOWLEDGED_HARD",
+        )
         for statement, source, enforcement in ATLAS
     ]
     result.extend(
-        GuardrailProposal.create(statement=statement, source_class="SYSTEM_BASELINE",
-            source_refs=(f"UNIVERSAL_CODING_BASELINE_{index:02d}",), hardness="PROPOSED_DEFAULT",
-            enforcement_class=enforcement, affected_arenas=(arena,), affected_files=files,
-            affected_symbols=symbols, rationale="Editable default for bounded coding work.")
+        GuardrailProposal.create(
+            statement=statement,
+            source_class="SYSTEM_BASELINE",
+            source_refs=(f"UNIVERSAL_CODING_BASELINE_{index:02d}",),
+            hardness="PROPOSED_DEFAULT",
+            enforcement_class=enforcement,
+            affected_arenas=(arena_value,),
+            affected_files=files,
+            affected_symbols=symbols,
+            rationale="Editable default for bounded coding work.",
+        )
         for index, (statement, enforcement) in enumerate(CODING, 1)
     )
-    if arena == "CONSTRUCTION":
+    if arena_value == "CONSTRUCTION":
         result.extend(
-            GuardrailProposal.create(statement=statement, source_class="DOMAIN_CONTRACT",
-                source_refs=(f"CONSTRUCTION_DOMAIN_GUARDRAIL_{index:02d}",), hardness=hardness,
-                enforcement_class=enforcement, affected_arenas=(arena,), affected_files=files,
-                affected_symbols=symbols, rationale="Construction authority and truth-boundary default.",
-                human_disposition="ACKNOWLEDGED_HARD" if hardness == "HARD_AUTHORITY" else "DEFERRED")
+            GuardrailProposal.create(
+                statement=statement,
+                source_class="DOMAIN_CONTRACT",
+                source_refs=(f"CONSTRUCTION_DOMAIN_GUARDRAIL_{index:02d}",),
+                hardness=hardness,
+                enforcement_class=enforcement,
+                affected_arenas=(arena_value,),
+                affected_files=files,
+                affected_symbols=symbols,
+                rationale="Construction authority and truth-boundary default.",
+                human_disposition="ACKNOWLEDGED_HARD" if hardness == "HARD_AUTHORITY" else "DEFERRED",
+            )
             for index, (statement, hardness, enforcement) in enumerate(CONSTRUCTION, 1)
         )
     return tuple(result)
