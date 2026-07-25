@@ -70,7 +70,10 @@ jobs:
       - name: Validate Gate Dialogue JavaScript syntax
         run: node --check aura_showcase/gate-dialogue.js
       - name: Fatal lint checks
+        id: fatal_lint
+        continue-on-error: true
         run: |
+          set +e
           ruff check --select E9,F63,F7,F82 \
             aura_arena_experience.py \
             aura_arena_experience_ledger.py \
@@ -109,8 +112,26 @@ jobs:
             tests/test_aura_intent_refinement.py \
             tests/test_bilateral_intent_pr1_evidence.py \
             tests/test_aura_arena_gate_dialogue.py \
-            tests/test_aura_bilateral_gate_dialogue.py
+            tests/test_aura_bilateral_gate_dialogue.py \
+            > fatal-ruff-output.txt 2>&1
+          code=$?
+          set -e
+          cat fatal-ruff-output.txt
+          printf '%s\n' "${code}" > fatal-ruff-exit-code.txt
+          exit "${code}"
+      - name: Upload fatal lint diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fatal-ruff-${{ matrix.python-version }}-${{ github.run_id }}
+          path: |
+            fatal-ruff-output.txt
+            fatal-ruff-exit-code.txt
+          if-no-files-found: error
+          retention-days: 14
       - name: Run focused governed contract tests
+        id: focused_tests
+        continue-on-error: true
         run: |
           python -m pytest -q \
             tests/test_aura_arena_experience_ledger.py \
@@ -128,6 +149,11 @@ jobs:
             tests/test_bilateral_intent_pr1_evidence.py \
             tests/test_aura_arena_gate_dialogue.py \
             tests/test_aura_bilateral_gate_dialogue.py
+      - name: Enforce focused verification
+        if: steps.fatal_lint.outcome != 'success' || steps.focused_tests.outcome != 'success'
+        run: |
+          echo "Fatal lint or focused governed tests failed. Inspect the preserved diagnostics and step output."
+          exit 1
 
   full-pytest-suite:
     name: Full pytest-native suite
