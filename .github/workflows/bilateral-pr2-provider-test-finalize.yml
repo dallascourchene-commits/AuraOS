@@ -6,6 +6,9 @@ on:
       - refactor/bilateral-intent-pr2
     paths:
       - .github/workflows/bilateral-pr2-provider-test-finalize.yml
+  pull_request:
+    paths:
+      - .github/workflows/bilateral-pr2-provider-test-finalize.yml
 
 permissions:
   contents: write
@@ -49,62 +52,70 @@ jobs:
 
           test_path = Path("tests/test_aura_showcase_observatory_crucible.py")
           text = test_path.read_text(encoding="utf-8")
-          start = text.index("def test_fireworks_is_primary_and_model_roles_use_official_identifiers")
-          end = text.index("\ndef test_browser_assets_distinguish_observatory_from_real_learning_arena", start)
-          replacement = '''def test_deepseek_is_primary_and_model_roles_use_official_identifiers(monkeypatch):
-              import aura_llm_egress
-              from aura_provider_registry import (
-                  DEEPSEEK_V4_FLASH,
-                  DEEPSEEK_V4_PRO,
-                  XAI_GROK_PREMIUM,
-                  ProviderRegistry,
-              )
+          old_marker = "def test_fireworks_is_primary_and_model_roles_use_official_identifiers"
+          new_marker = "def test_deepseek_is_primary_and_model_roles_use_official_identifiers"
+          if old_marker in text:
+              start = text.index(old_marker)
+              end = text.index("\ndef test_browser_assets_distinguish_observatory_from_real_learning_arena", start)
+              replacement = '''def test_deepseek_is_primary_and_model_roles_use_official_identifiers(monkeypatch):
+                  import aura_llm_egress
+                  from aura_provider_registry import (
+                      DEEPSEEK_V4_FLASH,
+                      DEEPSEEK_V4_PRO,
+                      XAI_GROK_PREMIUM,
+                      ProviderRegistry,
+                  )
 
-              registry = ProviderRegistry()
-              assert registry.provider_priority[:3] == ["deepseek", "xai", "anthropic"]
-              assert registry.providers["deepseek"]["model_priority"] == [
-                  DEEPSEEK_V4_PRO,
-                  DEEPSEEK_V4_FLASH,
-              ]
-              assert registry.providers["xai"]["model_priority"] == [XAI_GROK_PREMIUM]
-              assert aura_llm_egress.provider_priority()[:3] == [
-                  "deepseek",
-                  "xai",
-                  "anthropic",
-              ]
+                  registry = ProviderRegistry()
+                  assert registry.provider_priority[:3] == ["deepseek", "xai", "anthropic"]
+                  assert registry.providers["deepseek"]["model_priority"] == [
+                      DEEPSEEK_V4_PRO,
+                      DEEPSEEK_V4_FLASH,
+                  ]
+                  assert registry.providers["xai"]["model_priority"] == [XAI_GROK_PREMIUM]
+                  assert aura_llm_egress.provider_priority()[:3] == [
+                      "deepseek",
+                      "xai",
+                      "anthropic",
+                  ]
 
-              secrets = {
-                  "DEEPSEEK_API_KEY": "ds-real-key",
-                  "XAI_API_KEY": "xai-real-key",
-                  "ANTHROPIC_API_KEY": "ant-real-key",
-              }
-              primary = aura_llm_egress.ExternalLLM(secrets=secrets)
-              assert primary.provider == "deepseek"
-              assert primary.model == DEEPSEEK_V4_PRO
+                  secrets = {
+                      "DEEPSEEK_API_KEY": "ds-real-key",
+                      "XAI_API_KEY": "xai-real-key",
+                      "ANTHROPIC_API_KEY": "ant-real-key",
+                  }
+                  primary = aura_llm_egress.ExternalLLM(secrets=secrets)
+                  assert primary.provider == "deepseek"
+                  assert primary.model == DEEPSEEK_V4_PRO
 
-              budget = aura_llm_egress.ExternalLLM(model="cheap", secrets=secrets)
-              assert budget.provider == "deepseek"
-              assert budget.model == DEEPSEEK_V4_FLASH
+                  budget = aura_llm_egress.ExternalLLM(model="cheap", secrets=secrets)
+                  assert budget.provider == "deepseek"
+                  assert budget.model == DEEPSEEK_V4_FLASH
 
-              direct = aura_llm_egress.ExternalLLM(
-                  secrets={"DEEPSEEK_API_KEY": "ds-real-key"}
-              )
-              assert direct.provider == "deepseek"
-              assert direct.model == DEEPSEEK_V4_PRO
+                  direct = aura_llm_egress.ExternalLLM(
+                      secrets={"DEEPSEEK_API_KEY": "ds-real-key"}
+                  )
+                  assert direct.provider == "deepseek"
+                  assert direct.model == DEEPSEEK_V4_PRO
 
-              direct_premium = aura_llm_egress.ExternalLLM(
-                  provider="deepseek",
-                  model="premium",
-                  secrets={"DEEPSEEK_API_KEY": "ds-real-key"},
-              )
-              assert direct_premium.model == DEEPSEEK_V4_PRO
+                  direct_premium = aura_llm_egress.ExternalLLM(
+                      provider="deepseek",
+                      model="premium",
+                      secrets={"DEEPSEEK_API_KEY": "ds-real-key"},
+                  )
+                  assert direct_premium.model == DEEPSEEK_V4_PRO
 
-              monkeypatch.setenv("DEEPSEEK_API_KEY", "ds-env-key")
-              env_primary = aura_llm_egress.ExternalLLM(secrets={})
-              assert env_primary.provider == "deepseek"
-          '''
-          replacement = "\n".join(line[10:] if line.startswith("          ") else line for line in replacement.splitlines()) + "\n"
-          test_path.write_text(text[:start] + replacement + text[end + 1 :], encoding="utf-8")
+                  monkeypatch.setenv("DEEPSEEK_API_KEY", "ds-env-key")
+                  env_primary = aura_llm_egress.ExternalLLM(secrets={})
+                  assert env_primary.provider == "deepseek"
+              '''
+              replacement = "\n".join(
+                  line[14:] if line.startswith("              ") else line
+                  for line in replacement.splitlines()
+              ) + "\n"
+              test_path.write_text(text[:start] + replacement + text[end + 1 :], encoding="utf-8")
+          elif new_marker not in text:
+              raise SystemExit("neither stale nor corrected provider regression contract was found")
 
           objective_path = Path(".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json")
           objective = json.loads(objective_path.read_text(encoding="utf-8"))
@@ -122,8 +133,8 @@ jobs:
           PY
       - name: Remove temporary diagnostic and finalizer workflows
         run: |
-          rm .github/workflows/bilateral-pr2-showcase-diagnostics.yml
-          rm .github/workflows/bilateral-pr2-provider-test-finalize.yml
+          rm -f .github/workflows/bilateral-pr2-showcase-diagnostics.yml
+          rm -f .github/workflows/bilateral-pr2-provider-test-finalize.yml
       - name: Run complete Showcase proof
         run: |
           python -m py_compile \
@@ -155,15 +166,18 @@ jobs:
         run: |
           git config user.name "AuraOS PR2 Provider Regression Finalizer"
           git config user.email "actions@users.noreply.github.com"
-          git add \
+          git add -A \
             tests/test_aura_showcase_observatory_crucible.py \
-            .aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json \
-            .aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2.v1.json \
+            .aura/refactor_objectives \
+            .aura/waboose_requests \
             .aura/CODEMAP.json \
             .aura/CODEMAP.md \
             topology_map.json \
-            .github/workflows/bilateral-pr2-showcase-diagnostics.yml \
-            .github/workflows/bilateral-pr2-provider-test-finalize.yml
+            .github/workflows
+          if git diff --cached --quiet; then
+            echo "Verified provider regression repair is already published."
+            exit 0
+          fi
           git commit -m "test(egress): align showcase with DeepSeek-first routing"
           git pull --rebase origin refactor/bilateral-intent-pr2
           python aura_codebase_navigator.py
