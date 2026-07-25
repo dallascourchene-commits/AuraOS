@@ -171,7 +171,7 @@ def test_hard_guardrail_cannot_be_rejected():
         rationale="Independent verification is mandatory.",
         human_disposition=HumanGuardrailDisposition.ACKNOWLEDGED_HARD,
     )
-    with pytest.raises(ValueError, match="cannot be rejected"):
+    with pytest.raises(ValueError, match="acknowledgement-only"):
         guardrail.with_human_disposition(HumanGuardrailDisposition.REJECTED_SOFT)
 
 
@@ -249,15 +249,21 @@ def test_confirmation_receipt_binds_digests_and_stales_on_change():
     kwargs = dict(
         repository_head=HEAD,
         source_tree_digest=TREE,
+        source_request_digest=stable_digest("request"),
+        positive_requirements=("Compile bilateral intent.",),
+        negative_requirements=("Do not publish or merge.",),
         semantic_ledger_digest="semantic-digest",
         guardrail_set_digest=receipt.guardrail_set_digest,
         authority_digest=receipt.authority_digest,
+        teach_back_digest=teach_back().teach_back_digest,
         allowed_paths=ALLOWED,
         runtime_profile_digest="runtime-profile",
         now=150.0,
     )
     assert receipt.is_current(**kwargs)
     assert not receipt.is_current(**{**kwargs, "repository_head": "moved"})
+    assert not receipt.is_current(**{**kwargs, "negative_requirements": ("Do not merge.",)})
+    assert not receipt.is_current(**{**kwargs, "teach_back_digest": "changed"})
 
 
 def test_revision_classes_enforce_reconfirmation_and_council_replan():
@@ -291,3 +297,91 @@ def test_revision_classes_enforce_reconfirmation_and_council_replan():
     )
     assert delta.prior_confirmation_staled is True
     assert delta.requires_human_reconfirmation is True
+
+
+def test_leave_without_unchanged_is_not_misclassified_as_negative():
+    assert extract_negative_requirements("Leave a review comment for the author.") == ()
+    requirement = extract_negative_requirements("Leave canonical geometry unchanged.")[0]
+    assert requirement.classification == NegativeRequirementClass.PRESERVATION_INVARIANT.value
+
+
+def test_confirmation_requires_teach_back_and_no_pending_decisions():
+    session = IntentRefinementSession.create(
+        repository_head=HEAD, working_tree_digest=TREE, arena="CODING",
+        source_request="Compile bilateral intent.", created_at=1.0, expires_at=20.0,
+    ).transition(
+        RefinementStage.ANALYZED,
+        positive_requirements=("Compile intent.",),
+        negative_requirements=("Do not publish.",),
+        now=2.0,
+    )
+    with pytest.raises(ValueError, match="teach-back"):
+        session.transition(RefinementStage.TEACH_BACK_PENDING, now=3.0)
+    pending = session.transition(
+        RefinementStage.TEACH_BACK_PENDING,
+        teach_back=PairedTeachBack.create(
+            will_do=("Compile intent.",),
+            will_not_do=("Do not publish.",),
+            required_human_decisions=("Choose failure behavior.",),
+        ),
+        now=3.0,
+    )
+    with pytest.raises(ValueError, match="ambiguities resolved"):
+        pending.transition(
+            RefinementStage.HUMAN_CONFIRMED,
+            confirmation_status=ConfirmationStatus.CONFIRMED,
+            now=4.0,
+        )
+
+
+def test_nested_session_records_are_deeply_immutable():
+    session = IntentRefinementSession.create(
+        repository_head=HEAD, working_tree_digest=TREE, arena="CODING",
+        source_request="Compile bilateral intent.", created_at=1.0, expires_at=20.0,
+    ).transition(
+        RefinementStage.ANALYZED,
+        positive_requirements=("Compile intent.",),
+        negative_requirements=("Do not publish.",),
+        definitions=({"term": "complete", "means": ["evidence verified"]},),
+        now=2.0,
+    )
+    with pytest.raises(TypeError):
+        session.candidate_definitions[0]["term"] = "mutated"
+    with pytest.raises(TypeError):
+        session.candidate_definitions[0]["means"][0] = "mutated"
+
+
+def test_revision_classes_reject_silent_intent_drift():
+    common = dict(
+        parent_confirmation_id="confirmation-1", trigger_evidence=("evidence",),
+        base_repository_head=HEAD, base_source_tree_digest=TREE,
+        candidate_tree_digest="candidate", allowed_paths=ALLOWED,
+        generated_artifact_disposition="REGENERATE_FROM_FINAL_TREE",
+    )
+    with pytest.raises(ValueError, match="local evidence refinement"):
+        IntentRevisionDelta.create(
+            **common, revision_class=PlanRevisionClass.LOCAL_EVIDENCE_REFINEMENT,
+            negative_requirements_added=("Do not publish.",),
+        )
+    with pytest.raises(ValueError, match="cannot change intent"):
+        IntentRevisionDelta.create(
+            **common, revision_class=PlanRevisionClass.BOUNDED_PLAN_RESTRUCTURING,
+            requires_council_replan=True, scope_changed=True,
+        )
+
+
+def test_receipt_rejects_deferred_guardrails_and_empty_path_scope():
+    deferred = compile_default_guardrails(arena="CODING")[-1]
+    common = dict(
+        session_id="session", repository_head=HEAD, source_tree_digest=TREE,
+        working_tree_clean_receipt="clean", source_request_digest="request",
+        positive_requirements=("Compile intent.",), negative_requirements=("Do not publish.",),
+        semantic_ledger_digest="semantic", authority={"merge": False},
+        teach_back=teach_back(), runtime_profile_digest="runtime",
+        human_reviewer="Dallas", human_disposition="CONFIRMED",
+        confirmed_at=1.0, expires_at=10.0, expires_or_stales_on=("head changes",),
+    )
+    with pytest.raises(ValueError, match="deferred guardrails"):
+        IntentConfirmationReceipt.create(**common, guardrails=(deferred,), allowed_paths=ALLOWED)
+    with pytest.raises(ValueError, match="allowed_paths"):
+        IntentConfirmationReceipt.create(**common, guardrails=confirmed_guardrails(), allowed_paths=())
