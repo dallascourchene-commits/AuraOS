@@ -9,6 +9,7 @@ from typing import Any
 
 import pytest
 
+import aura_unified_memory_continuity_learning as learning_runtime
 from aura_agent_arena_bridge import AuraAgentArenaBridge
 from aura_agent_arena_mcp import TOOL_DEFINITIONS, handle_request
 from aura_architect_loop import ACT_CAPSULE_VERSION, ActCapsule
@@ -341,6 +342,38 @@ def test_p0_and_p1_are_first_write_only(tmp_path: Path) -> None:
     assert retained_observation == observation
 
 
+def test_finalize_is_first_write_only(tmp_path: Path) -> None:
+    bridge, now = _prepared(tmp_path)
+    commit_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        contract=_prediction_contract(now, tmp_path),
+    )
+    observe_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        observation=_observation_contract(now),
+    )
+    result = finalize_bridge_learning(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        contract=_final_contract(tmp_path, now),
+    )
+    retained_result = bridge._session["unified_learning_results"]["A1"]
+    with pytest.raises(ValueError, match="governed learning result is already retained"):
+        finalize_bridge_learning(
+            bridge,
+            plan_phase_hash="phase-1",
+            task_id="A1",
+            contract=_final_contract(tmp_path, now),
+        )
+    assert retained_result is result
+    assert bridge._session["unified_learning_results"]["A1"] is retained_result
+
+
 @pytest.mark.parametrize("missing_field", ["human_disposition", "disposition_actor_type"])
 def test_mandatory_disposition_fields_fail_closed(tmp_path: Path, missing_field: str) -> None:
     bridge, now = _prepared(tmp_path)
@@ -427,6 +460,43 @@ def test_governed_qdkt_receipt_rejects_sidecar_coherence_forgery(tmp_path: Path)
         replace(receipt, payload_ref=replace(payload_ref, byte_count=payload_ref.byte_count + 1))
     with pytest.raises(ValueError, match="timestamps disagree"):
         replace(receipt, payload_ref=replace(payload_ref, created_at=payload_ref.created_at + 1))
+
+
+def test_finalize_rejects_unappended_qdkt_event(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bridge, now = _prepared(tmp_path)
+    commit_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        contract=_prediction_contract(now, tmp_path),
+    )
+    observe_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        observation=_observation_contract(now),
+    )
+    record_advisory = learning_runtime.record_relationship_experience_advisory
+
+    def _report_unappended(*args: Any, **kwargs: Any) -> GovernedRelationshipQDKTEventReceipt:
+        return replace(record_advisory(*args, **kwargs), appended=False)
+
+    monkeypatch.setattr(
+        learning_runtime,
+        "record_relationship_experience_advisory",
+        _report_unappended,
+    )
+    with pytest.raises(ValueError, match="governed QDKT event was not appended"):
+        finalize_bridge_learning(
+            bridge,
+            plan_phase_hash="phase-1",
+            task_id="A1",
+            contract=_final_contract(tmp_path, now),
+        )
+    assert "A1" not in bridge._session["unified_learning_results"]
 
 
 def test_denial_is_archived_without_relationship_or_qdkt_admission(tmp_path: Path) -> None:

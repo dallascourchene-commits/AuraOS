@@ -679,6 +679,9 @@ def finalize_bridge_learning(
     binding = _binding(session, task)
     prediction = _prediction(dict(session.get("unified_prediction_packets") or {}).get(task))
     observation = _observation(dict(session.get("unified_p1_observations") or {}).get(task))
+    learning_results = session.setdefault("unified_learning_results", {})
+    if task in learning_results:
+        raise ValueError("governed learning result is already retained for this task")
     root = Path(bridge.repo_root).resolve()
     head = _required(_git(root, "rev-parse", "HEAD"), "repository_head")
     source_digest = _source_digest(root, _envelope(binding).allowed_files)
@@ -872,6 +875,8 @@ def finalize_bridge_learning(
             objective_id=receipt.objective_digest,
             created_at=qdkt_created_at,
         )
+        if event_receipt.appended is not True:
+            raise ValueError("governed QDKT event was not appended to the event store")
         qdkt_receipt = {
             "appended": event_receipt.appended,
             "event": event_receipt.event.to_dict(),
@@ -949,7 +954,7 @@ def finalize_bridge_learning(
     session.setdefault("unified_learning_decisions", {})[task] = learning
     session.setdefault("unified_relationship_experiences", {})[task] = relationship
     session.setdefault("unified_qdkt_admissions", {})[task] = admission
-    session.setdefault("unified_learning_results", {})[task] = result
+    learning_results[task] = result
     return result
 
 
