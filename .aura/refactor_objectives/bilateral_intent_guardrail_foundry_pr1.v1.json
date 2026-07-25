@@ -9,6 +9,7 @@
     "intent_ingestion": "aura_intent_ingestion.py",
     "intent_packet": "aura_unified_memory_continuity.IntentPacket",
     "semantic_ledger": "aura_unified_memory_continuity.SemanticLedger",
+    "dependency_declaration": "requirements.txt",
     "exact_head_transport": "scripts/aura_exact_head_transport.py",
     "architecture_harness": "scripts/aura_architecture_harness.py",
     "waboose": "aura_coding_waboose_cli.py"
@@ -16,11 +17,13 @@
   "base_owner_blobs": {
     "aura_intent_ingestion.py": "84bd861cb36b12c07708d3de1b91cd7beccd1399",
     "tests/test_aura_intent_ingestion.py": "b7342261e63d74a5686d31d587591da3cf534ebc",
+    "requirements.txt": "37dc4cbd2dabeaae6578df3147e7fe2eec6d3be9",
     "scripts/aura_exact_head_transport.py": "5d17aedf68971cf76d6ea86d16a61a54b26f79d4",
     "scripts/aura_architecture_harness.py": "fd66b1aca764fcfddbc06dd02bfa1bff3ec3e840",
     "aura_coding_waboose_cli.py": "24538b4d4835bfe30d21727c4e9273ceee69a90a"
   },
   "candidate_source_blobs": {
+    ".github/workflows/ci.yml": "ec723312280650724c791084b5f51b92aa943af2",
     "aura_bilateral_intent_ingestion.py": "fee8d5b3d2b01f4c13bb93a385c75a3e5c7bab42",
     "aura_intent_refinement.py": "87a5ac6bd07f2a66d386ad576ec4d889d1f7540a",
     "schemas/aura_intent_refinement.v1.schema.json": "d606dc5bc5e08923bd9c7ba1a22e1c05e6694bb2",
@@ -28,6 +31,7 @@
     "tests/test_aura_intent_refinement.py": "4c0c2af4bc06a3528bab389b745d80a4e7df75a6"
   },
   "allowed_source_and_evidence_paths": [
+    ".github/workflows/ci.yml",
     "aura_bilateral_intent_ingestion.py",
     "aura_intent_refinement.py",
     "schemas/aura_intent_refinement.v1.schema.json",
@@ -53,6 +57,15 @@
     "canonical_route_recomputed_by_companion": false,
     "reason": "The initial facade/core split duplicated the full legacy parser and surfaced inherited CodeQL attack paths as newly introduced code. The corrected design restores the canonical owner exactly and uses a narrow proposal-only companion that decorates, but does not recompute, canonical routing."
   },
+  "harness_repair": {
+    "issue_ref": "#225",
+    "workflow": ".github/workflows/ci.yml",
+    "dependency_source": "requirements.txt",
+    "partial_dependency_copies_removed": true,
+    "bilateral_modules_added_to_compile_and_fatal_lint": true,
+    "bilateral_tests_added_to_python_310_and_312_focused_gates": true,
+    "tests_weakened_or_skipped": false
+  },
   "prohibited_effects": [
     "production mutation",
     "commit or branch publication outside the named feature branch",
@@ -65,20 +78,22 @@
     "monkeypatching the canonical ingestion module",
     "duplicating the canonical ingestion implementation",
     "recomputing or overriding canonical route semantics",
+    "weakening or skipping a failing test to obtain green CI",
     "out-of-scope source modification",
     "partial candidate publication"
   ],
   "proof_plan": [
-    "Python compilation",
+    "Python 3.10 and 3.12 compilation",
+    "fatal Ruff E9/F63/F7/F82 checks",
     "focused bilateral contract and parser tests",
     "canonical route preservation test",
     "negation-preserving compression and handoff tests",
     "Draft 2020-12 schema checks",
     "deep immutability and stale-confirmation tests",
-    "exact canonical-owner blob identity check",
+    "exact canonical-owner and candidate blob identity checks",
     "Waboose invariant and risk-profile validation",
     "CodeQL review-thread obsolescence or clearance",
-    "repository CI fatal lint and focused contracts",
+    "repository full pytest suite using requirements.txt",
     "final generated navigation verification"
   ],
   "transport_boundary": {
