@@ -1,0 +1,136 @@
+name: Unified memory U7 verified materialization
+
+on:
+  push:
+    branches:
+      - refactor/unified-memory-learning-reproof
+    paths:
+      - .github/workflows/unified-memory-u7-materialize.yml
+
+permissions:
+  contents: write
+
+env:
+  PYTHONPATH: ${{ github.workspace }}
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/unified-memory-learning-reproof
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify exact base and apply digest-locked patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --no-tags
+          test "$(git merge-base HEAD origin/main)" = "de573d16ebf145c1b52487903d4a3d24a977ffc0"
+          cat .aura/u7-materializer/part00 .aura/u7-materializer/part01 .aura/u7-materializer/part02 \
+            | base64 --decode | gzip --decompress > /tmp/u7-learning-to-reproof.patch
+          echo "95cab55c912361f007e93f67710c8123f738e5e61629be86159eabf9f4d5f519  /tmp/u7-learning-to-reproof.patch" | sha256sum --check
+          git apply --check /tmp/u7-learning-to-reproof.patch
+          git apply /tmp/u7-learning-to-reproof.patch
+
+      - name: Install focused verification dependencies
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements.txt pytest ruff
+
+      - name: Format, lint, and compile exact surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILES=(
+            aura_agent_arena_bridge.py
+            aura_agent_arena_mcp.py
+            aura_arena_persistence_adapters.py
+            aura_qdkt_observations.py
+            aura_relationship_experience.py
+            aura_unified_memory_continuity_learning.py
+            aura_unified_memory_continuity_toolchain.py
+            tests/test_aura_unified_memory_continuity_learning.py
+          )
+          python -m ruff format "${FILES[@]}"
+          python -m ruff check --fix "${FILES[@]}"
+          python -m ruff check "${FILES[@]}"
+          python -m py_compile "${FILES[@]}"
+          git diff --check
+
+      - name: Run U6 to U7 regression ring
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q \
+            tests/test_aura_unified_memory_continuity_learning.py \
+            tests/test_aura_unified_memory_continuity.py \
+            tests/test_aura_unified_memory_continuity_toolchain.py \
+            tests/test_aura_agent_arena_bridge.py \
+            tests/test_aura_agent_arena_mcp.py \
+            tests/test_aura_arena_persistence_adapters.py \
+            tests/test_aura_relationship_compass_finalization.py \
+            tests/test_aura_qdkt_event_recording.py \
+            tests/test_aura_qdkt_projection_core.py \
+            tests/test_aura_qdkt_projection_hardening.py \
+            tests/test_aura_crucible_phase_b.py \
+            tests/test_aura_showcase_attempt_archive.py
+
+      - name: Run Coding Waboose
+        shell: bash
+        run: |
+          set -euo pipefail
+          python aura_coding_waboose_cli.py \
+            --repo-root . \
+            --state-file /tmp/u7-waboose-state.json \
+            run \
+            --request .aura/waboose_requests/unified_memory_continuity_learning.v1.json \
+            | tee /tmp/u7-waboose-result.json
+          python - <<'PY'
+          import json
+          result = json.load(open('/tmp/u7-waboose-result.json', encoding='utf-8'))
+          if result.get('status') != 'READY_FOR_HUMAN_REVIEW':
+              raise SystemExit('Coding Waboose did not reach READY_FOR_HUMAN_REVIEW')
+          if result.get('findings') or result.get('repair_requests'):
+              raise SystemExit('Coding Waboose returned unresolved findings or repairs')
+          PY
+
+      - name: Remove transport and generated noise
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout origin/main -- .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json Aura_Memory/live_topology_ast.json 2>/dev/null || true
+          rm -rf .aura/u7-materializer
+          rm -f .github/workflows/unified-memory-u7-materialize.yml
+          git add -A
+          git diff --cached --check
+          git config user.name 'auraos-u7-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m 'refactor: complete U6 to U7 learning-to-reproof runtime'
+
+      - name: Run exact clean-tree architecture harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/aura_architecture_harness.py --repo-root . prepare \
+            --venv /tmp/aura-u7-architecture-venv --system-site-packages
+          python scripts/aura_architecture_harness.py --repo-root . doctor \
+            --venv /tmp/aura-u7-architecture-venv
+          python scripts/aura_architecture_harness.py --repo-root . run \
+            --venv /tmp/aura-u7-architecture-venv \
+            --output-dir /tmp/aura-u7-architecture-run \
+            --objective 'Complete U6 PredictionPacket and U7 learning-to-reproof through existing Crucible, Relationship Experience, QDKT, Bridge, MCP, persistence, and attempt-archive owners without duplicate authority or automatic promotion' \
+            --combine-with 'Unified Memory Continuity' 'Arena Crucible' 'Relationship Experience' 'QDKT' \
+            --atlas-profile MINIMAL
+          test -z "$(git status --porcelain=v1)"
+
+      - name: Push verified clean source commit
+        shell: bash
+        run: git push origin HEAD:refactor/unified-memory-learning-reproof
