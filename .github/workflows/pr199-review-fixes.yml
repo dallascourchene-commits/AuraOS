@@ -54,7 +54,7 @@ jobs:
           git apply /tmp/review.patch
 
       - name: Install focused verification tooling
-        run: python -m pip install --upgrade pytest ruff
+        run: python -m pip install --upgrade pytest ruff numpy
 
       - name: Format and lint exact changed surface
         shell: bash
