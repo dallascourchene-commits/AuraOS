@@ -21,10 +21,10 @@
     "aura_coding_waboose_cli.py": "24538b4d4835bfe30d21727c4e9273ceee69a90a"
   },
   "candidate_source_blobs": {
-    "aura_bilateral_intent_ingestion.py": "13d4dd521a7a963d25a12f3f38e0114a29f67147",
+    "aura_bilateral_intent_ingestion.py": "fee8d5b3d2b01f4c13bb93a385c75a3e5c7bab42",
     "aura_intent_refinement.py": "87a5ac6bd07f2a66d386ad576ec4d889d1f7540a",
     "schemas/aura_intent_refinement.v1.schema.json": "d606dc5bc5e08923bd9c7ba1a22e1c05e6694bb2",
-    "tests/test_aura_intent_ingestion_bilateral.py": "7f5c49a99f7e566183cef3240d75d29b558e82b9",
+    "tests/test_aura_intent_ingestion_bilateral.py": "4ea27087cbd2e0f7c2aa4c5628e9d16d17363c86",
     "tests/test_aura_intent_refinement.py": "4c0c2af4bc06a3528bab389b745d80a4e7df75a6"
   },
   "allowed_source_and_evidence_paths": [
@@ -50,7 +50,8 @@
     "duplicate_legacy_core_allowed": false,
     "monkeypatching_allowed": false,
     "companion_is_authority_owner": false,
-    "reason": "The initial facade/core split duplicated the full legacy parser and surfaced inherited CodeQL attack paths as newly introduced code. The corrected design restores the canonical owner exactly and uses a narrow proposal-only companion."
+    "canonical_route_recomputed_by_companion": false,
+    "reason": "The initial facade/core split duplicated the full legacy parser and surfaced inherited CodeQL attack paths as newly introduced code. The corrected design restores the canonical owner exactly and uses a narrow proposal-only companion that decorates, but does not recompute, canonical routing."
   },
   "prohibited_effects": [
     "production mutation",
@@ -63,12 +64,14 @@
     "new intent, memory, truth, policy, verification, continuity, publication, routing, or authority owner",
     "monkeypatching the canonical ingestion module",
     "duplicating the canonical ingestion implementation",
+    "recomputing or overriding canonical route semantics",
     "out-of-scope source modification",
     "partial candidate publication"
   ],
   "proof_plan": [
     "Python compilation",
     "focused bilateral contract and parser tests",
+    "canonical route preservation test",
     "negation-preserving compression and handoff tests",
     "Draft 2020-12 schema checks",
     "deep immutability and stale-confirmation tests",
