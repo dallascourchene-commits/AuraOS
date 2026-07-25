@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784977688,
+  "generated_at_unix": 1784990712,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1422,
+    "included_file_count": 1423,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,10 +13,11 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 30,
+      ".git": 166,
+      ".pytest_cache": 4,
       "Aura_Memory": 6,
       "Aura_Sandbox": 1,
-      "__pycache__": 8
+      "__pycache__": 89
     },
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
@@ -120,6 +121,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/harness-repair-202-204-materialize.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -1444,9 +1446,9 @@
     ]
   },
   "summary": {
-    "file_count": 1422,
-    "total_bytes": 56804383,
-    "text_tokens_est": 4748816,
+    "file_count": 1423,
+    "total_bytes": 56829550,
+    "text_tokens_est": 4755108,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 51,
@@ -1454,13 +1456,13 @@
       "native_accelerator": 8,
       "operator_script": 6,
       "python_module": 919,
-      "schema_or_lexicon": 174,
+      "schema_or_lexicon": 175,
       "support_file": 77
     },
-    "topology_nodes": 10549,
-    "topology_edges": 24936,
+    "topology_nodes": 10550,
+    "topology_edges": 24940,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 30062.51
+    "elapsed_ms": 31210.14
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1771,6 +1773,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/harness-repair-202-204-materialize.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -3317,6 +3320,9 @@
     "!current": [
       "aura_spatial_web/construction_scene_renderer.js:394"
     ],
+    "!current_parts": [
+      ".github/workflows/harness-repair-202-204-materialize.yml:48"
+    ],
     "!db_repair": [
       "aura_node.py:3064"
     ],
@@ -3686,7 +3692,7 @@
       "aura_waboose_semantic_rules.py:189",
       "aura_workflow_gates.py:676",
       "debug_att.py:15",
-      "scripts/aura_architecture_harness_core.py:696",
+      "scripts/aura_architecture_harness_core.py:697",
       "scripts/aura_exact_head_transport.py:34",
       "tests/test_aura_qdkt_inventory.py:124",
       "tests/test_aura_verify_construction_demo_assets.py:255",
@@ -18153,8 +18159,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "class",
-        "line": 169,
-        "end_line": 175,
+        "line": 170,
+        "end_line": 176,
         "semantic_id": "scripts/aura_architecture_harness_core.py#class:_BoundedExcerpt:c609fd418b5c910b",
         "signature_hash": "9f8937bf59488032"
       }
@@ -18247,8 +18253,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "class",
-        "line": 179,
-        "end_line": 185,
+        "line": 180,
+        "end_line": 186,
         "semantic_id": "scripts/aura_architecture_harness_core.py#class:_CommandResult:735a89dac3521797",
         "signature_hash": "99f470e708dedbf6"
       }
@@ -18743,8 +18749,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "class",
-        "line": 189,
-        "end_line": 193,
+        "line": 190,
+        "end_line": 194,
         "semantic_id": "scripts/aura_architecture_harness_core.py#class:_WatchdogCommandResult:aa48fe623e133edb",
         "signature_hash": "ccbfc1677dadfce7"
       }
@@ -24509,8 +24515,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 922,
-        "end_line": 937,
+        "line": 923,
+        "end_line": 938,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_ai_handoff_summary:d092e0ac104d0402",
         "signature_hash": "e575b31ff8ae3dbc"
       }
@@ -24759,8 +24765,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 200,
-        "end_line": 205,
+        "line": 201,
+        "end_line": 206,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_append_json_line:5b69de7a84c5a904",
         "signature_hash": "e83ea7aa973ccfc2"
       }
@@ -24873,8 +24879,8 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 966,
-        "end_line": 977,
+        "line": 993,
+        "end_line": 1004,
         "semantic_id": "aura_coding_relationship_compass.py#function:_applicable_prohibition_ids:8dffa4efe3b61058",
         "signature_hash": "778486579b1c611c"
       }
@@ -25413,8 +25419,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 309,
-        "end_line": 348,
+        "line": 310,
+        "end_line": 349,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_assess_watchdog_progress:8819aed349c4f938",
         "signature_hash": "4eece3a9084c9ba7"
       }
@@ -26163,8 +26169,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 759,
-        "end_line": 766,
+        "line": 760,
+        "end_line": 767,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_binary_bytes:b9fbd56a5f2b6bcb",
         "signature_hash": "914ded9ed37a4f59"
       }
@@ -26173,8 +26179,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 769,
-        "end_line": 772,
+        "line": 770,
+        "end_line": 773,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_binary_probe:565ac3dcff1547e4",
         "signature_hash": "d94adf3e81830cad"
       }
@@ -26683,8 +26689,8 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 648,
-        "end_line": 745,
+        "line": 675,
+        "end_line": 772,
         "semantic_id": "aura_coding_relationship_compass.py#function:_bounded_atlas_intelligence:722d2b84aabfafaa",
         "signature_hash": "81e7018e620c754c"
       }
@@ -26761,8 +26767,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 508,
-        "end_line": 549,
+        "line": 509,
+        "end_line": 550,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_bounded_excerpt:00618f6dc73f0592",
         "signature_hash": "e5ed34f06f4e13dd"
       }
@@ -28383,8 +28389,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 940,
-        "end_line": 950,
+        "line": 941,
+        "end_line": 951,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_canonical_source_commit:cacce4a1675c7a4a",
         "signature_hash": "5e9494e40ac521d0"
       }
@@ -29149,8 +29155,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 819,
-        "end_line": 838,
+        "line": 820,
+        "end_line": 839,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_classify_tracked_file:3692ab79f1f16d2f",
         "signature_hash": "6a5fef52f4b7fe0c"
       }
@@ -30171,8 +30177,8 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 789,
-        "end_line": 929,
+        "line": 816,
+        "end_line": 956,
         "semantic_id": "aura_coding_relationship_compass.py#function:_compatibility_neighborhood_from_raw_index:411689a397d8a8a9",
         "signature_hash": "e0b9c00a15297f89"
       }
@@ -30751,8 +30757,8 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 442,
-        "end_line": 454,
+        "line": 469,
+        "end_line": 481,
         "semantic_id": "aura_coding_relationship_compass.py#function:_connectome_targets:bb9983ec8b0404e6",
         "signature_hash": "43552b9a5d372731"
       }
@@ -31889,8 +31895,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1522,
-        "end_line": 1523,
+        "line": 1831,
+        "end_line": 1832,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_default_venv:70fa9a34abdd9815",
         "signature_hash": "d4081661d5a94351"
       }
@@ -32767,8 +32773,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 116,
-        "end_line": 118,
+        "line": 117,
+        "end_line": 119,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_digest:647bcbd2be052a98",
         "signature_hash": "514f786724465716"
       },
@@ -37229,8 +37235,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 775,
-        "end_line": 798,
+        "line": 776,
+        "end_line": 799,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_git_blob_sha256:49202408482d2e72",
         "signature_hash": "8ce20eafe41c380b"
       }
@@ -37351,8 +37357,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1141,
-        "end_line": 1156,
+        "line": 1142,
+        "end_line": 1157,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_git_info:4886eee02412f2b0",
         "signature_hash": "a6586ad9c0c5ebd3"
       }
@@ -37361,8 +37367,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 641,
-        "end_line": 675,
+        "line": 642,
+        "end_line": 676,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_git_nul_records:48b2e9c6f8fdf51a",
         "signature_hash": "d1720a0a8c44eab3"
       }
@@ -37409,8 +37415,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 678,
-        "end_line": 687,
+        "line": 679,
+        "end_line": 688,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_git_status:f61808135cb759fa",
         "signature_hash": "9231b5868e3cbb96"
       }
@@ -37419,8 +37425,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 708,
-        "end_line": 733,
+        "line": 709,
+        "end_line": 734,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_git_tree_entries:8c60e9d5407f2706",
         "signature_hash": "15dba035b616cddb"
       }
@@ -37445,8 +37451,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 690,
-        "end_line": 691,
+        "line": 691,
+        "end_line": 692,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_git_value:7fb6d3978055f973",
         "signature_hash": "6b08571da1ef0afb"
       }
@@ -39785,8 +39791,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1159,
-        "end_line": 1177,
+        "line": 1160,
+        "end_line": 1178,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_init_git:3a0df48b52e55001",
         "signature_hash": "7a065baa5d7b24c9"
       }
@@ -40185,8 +40191,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 801,
-        "end_line": 805,
+        "line": 802,
+        "end_line": 806,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_is_generated_reproducible:1ebcaed6d9436244",
         "signature_hash": "d240996f66930330"
       }
@@ -40325,8 +40331,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 808,
-        "end_line": 816,
+        "line": 809,
+        "end_line": 817,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_is_sensitive_or_runtime:86b57608f59b600f",
         "signature_hash": "44162117ad0d9059"
       }
@@ -40531,8 +40537,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 620,
-        "end_line": 638,
+        "line": 621,
+        "end_line": 639,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_iter_nul_records:43c3d262a1727bec",
         "signature_hash": "e0ffe493c4f23b2b"
       }
@@ -44933,6 +44939,16 @@
         "signature_hash": "c9602e6ee57b1051"
       }
     ],
+    "_objective_grounded_architect_tasks": [
+      {
+        "file": "scripts/aura_architecture_harness_core.py",
+        "kind": "function",
+        "line": 1384,
+        "end_line": 1585,
+        "semantic_id": "scripts/aura_architecture_harness_core.py#function:_objective_grounded_architect_tasks:35ada86725377c28",
+        "signature_hash": "f7d38f481f537b92"
+      }
+    ],
     "_objective_hash": [
       {
         "file": "aura_capability_resolver.py",
@@ -45387,6 +45403,16 @@
         "signature_hash": "7024d2239fb409e9"
       }
     ],
+    "_ordered_unique_text": [
+      {
+        "file": "scripts/aura_architecture_harness_core.py",
+        "kind": "function",
+        "line": 1373,
+        "end_line": 1381,
+        "semantic_id": "scripts/aura_architecture_harness_core.py#function:_ordered_unique_text:7664b3123dad0893",
+        "signature_hash": "7e3f0f69b5603a6c"
+      }
+    ],
     "_ordered_view": [
       {
         "file": "async_palace.py",
@@ -45789,8 +45815,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1567,
-        "end_line": 1615,
+        "line": 1876,
+        "end_line": 1924,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_parser:a1f424774a700327",
         "signature_hash": "cee2a7bb613f105d"
       },
@@ -45847,6 +45873,16 @@
         "end_line": 57,
         "semantic_id": "tests/test_aura_relationship_compass_finalization.py#function:_participant:c39311bf07ad4b26",
         "signature_hash": "c613ca374b9ca4d9"
+      }
+    ],
+    "_partition_explicit_test_targets": [
+      {
+        "file": "aura_coding_relationship_compass.py",
+        "kind": "function",
+        "line": 442,
+        "end_line": 466,
+        "semantic_id": "aura_coding_relationship_compass.py#function:_partition_explicit_test_targets:880fa14774973d91",
+        "signature_hash": "c6298485790bf672"
       }
     ],
     "_parts": [
@@ -47067,8 +47103,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1179,
-        "end_line": 1195,
+        "line": 1180,
+        "end_line": 1196,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_probe:375ca6a5766359b0",
         "signature_hash": "76587fe44e85b1d6"
       }
@@ -48045,8 +48081,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 736,
-        "end_line": 756,
+        "line": 737,
+        "end_line": 757,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_read_git_blob:818a72db7af36146",
         "signature_hash": "ccff70e9870a2958"
       }
@@ -48201,8 +48237,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 262,
-        "end_line": 272,
+        "line": 263,
+        "end_line": 273,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_read_watchdog_progress:1dacf0b4fcc50913",
         "signature_hash": "49484e1f05ae509d"
       }
@@ -48411,8 +48447,8 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 748,
-        "end_line": 784,
+        "line": 775,
+        "end_line": 811,
         "semantic_id": "aura_coding_relationship_compass.py#function:_recommended_targets:4ce980e52881ecb0",
         "signature_hash": "d9a2ceface7b153a"
       }
@@ -49015,8 +49051,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 144,
-        "end_line": 165,
+        "line": 145,
+        "end_line": 166,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_reference_manifest:6d3bfac64faf994e",
         "signature_hash": "04f2df6732fe9a23"
       }
@@ -49113,8 +49149,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 891,
-        "end_line": 919,
+        "line": 892,
+        "end_line": 920,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_regeneration_policy:c98627200d2a62ae",
         "signature_hash": "0b8c889a6f740afa"
       }
@@ -49903,8 +49939,8 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 464,
-        "end_line": 477,
+        "line": 491,
+        "end_line": 504,
         "semantic_id": "aura_coding_relationship_compass.py#function:_repository_head:1a8b7df1bba9717f",
         "signature_hash": "7bc0cb143c4c2e40"
       }
@@ -51291,8 +51327,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 612,
-        "end_line": 617,
+        "line": 613,
+        "end_line": 618,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_root:953ced6073ce4465",
         "signature_hash": "359c484fcebcc325"
       }
@@ -51821,8 +51857,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 562,
-        "end_line": 609,
+        "line": 563,
+        "end_line": 610,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_run:30f08cc6da0f27e5",
         "signature_hash": "5a84d35cf57e548d"
       },
@@ -51997,8 +52033,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1526,
-        "end_line": 1564,
+        "line": 1835,
+        "end_line": 1873,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_run_resume_command:a74fbdac2b660283",
         "signature_hash": "b5b14c371d34ec5c"
       }
@@ -52063,8 +52099,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 367,
-        "end_line": 505,
+        "line": 368,
+        "end_line": 506,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_run_with_watchdog:45947136116a1c67",
         "signature_hash": "d07152a7a2570bca"
       }
@@ -52385,8 +52421,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 866,
-        "end_line": 879,
+        "line": 867,
+        "end_line": 880,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_safe_output_dir:18a1a03399f0de94",
         "signature_hash": "d58933523026abff"
       }
@@ -53457,8 +53493,8 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 601,
-        "end_line": 645,
+        "line": 628,
+        "end_line": 672,
         "semantic_id": "aura_coding_relationship_compass.py#function:_select_focal_participants:fbed574f279fa726",
         "signature_hash": "c0118c9eee932516"
       }
@@ -53537,8 +53573,8 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 457,
-        "end_line": 461,
+        "line": 484,
+        "end_line": 488,
         "semantic_id": "aura_coding_relationship_compass.py#function:_selected_atomic_functions:fa9d117f011fd1a8",
         "signature_hash": "b267457adfe0203e"
       },
@@ -54645,8 +54681,8 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 931,
-        "end_line": 963,
+        "line": 958,
+        "end_line": 990,
         "semantic_id": "aura_coding_relationship_compass.py#function:_source_references_from_evidence:5719220424467752",
         "signature_hash": "a001aa78bb7ddaeb"
       }
@@ -54733,8 +54769,8 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 480,
-        "end_line": 485,
+        "line": 507,
+        "end_line": 512,
         "semantic_id": "aura_coding_relationship_compass.py#function:_source_text:7ecad89a1d3f2d35",
         "signature_hash": "03a0670155d8f608"
       }
@@ -55357,18 +55393,28 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1234,
-        "end_line": 1263,
+        "line": 1304,
+        "end_line": 1333,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_stream_json_integer_metadata:3fe389c25f663927",
         "signature_hash": "13e1da259ba547fc"
+      }
+    ],
+    "_stream_json_object_member_count": [
+      {
+        "file": "scripts/aura_architecture_harness_core.py",
+        "kind": "function",
+        "line": 1235,
+        "end_line": 1301,
+        "semantic_id": "scripts/aura_architecture_harness_core.py#function:_stream_json_object_member_count:62eb799613d4a815",
+        "signature_hash": "49214906d3c7a6c0"
       }
     ],
     "_stream_sha256": [
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 128,
-        "end_line": 137,
+        "line": 129,
+        "end_line": 138,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_stream_sha256:646fd7c2914dedbe",
         "signature_hash": "8de1c06f2a921385"
       }
@@ -56335,8 +56381,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 140,
-        "end_line": 141,
+        "line": 141,
+        "end_line": 142,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_symlink_sha256:6216463e4b926ecd",
         "signature_hash": "7e72ee53171dbbc2"
       }
@@ -56539,8 +56585,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 208,
-        "end_line": 237,
+        "line": 209,
+        "end_line": 238,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_task_watchdog_policy:93f74431b031fa70",
         "signature_hash": "c4b3cad3c8e27fd3"
       }
@@ -58483,8 +58529,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 552,
-        "end_line": 559,
+        "line": 553,
+        "end_line": 560,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_truncation_dict:bcdf31d4926f3930",
         "signature_hash": "8fc2939ee4389443"
       }
@@ -59209,8 +59255,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 196,
-        "end_line": 197,
+        "line": 197,
+        "end_line": 198,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_utc_timestamp:a4f8e14ea0613fd3",
         "signature_hash": "d3a3c071ab5fe2dd"
       }
@@ -59703,8 +59749,8 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 488,
-        "end_line": 539,
+        "line": 515,
+        "end_line": 566,
         "semantic_id": "aura_coding_relationship_compass.py#function:_validate_injected_evidence_packet:e2a961db38abb623",
         "signature_hash": "738f9adfedd79357"
       }
@@ -59963,8 +60009,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 694,
-        "end_line": 705,
+        "line": 695,
+        "end_line": 706,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_validate_repo_path:2d64e310c6232025",
         "signature_hash": "702dd27bb7148850"
       }
@@ -60083,8 +60129,8 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 558,
-        "end_line": 598,
+        "line": 585,
+        "end_line": 625,
         "semantic_id": "aura_coding_relationship_compass.py#function:_validate_supplied_atlas_snapshot:5b98cff289b2ef07",
         "signature_hash": "8af9acc97d388ea2"
       }
@@ -60193,8 +60239,8 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 542,
-        "end_line": 555,
+        "line": 569,
+        "end_line": 582,
         "semantic_id": "aura_coding_relationship_compass.py#function:_validated_relational_index_digest:144527cc43592b47",
         "signature_hash": "ea0e623ef4324009"
       }
@@ -60223,8 +60269,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1137,
-        "end_line": 1138,
+        "line": 1138,
+        "end_line": 1139,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_venv_python:75833c592e8eaef6",
         "signature_hash": "ac31786ed5f342d3"
       },
@@ -60617,8 +60663,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 250,
-        "end_line": 259,
+        "line": 251,
+        "end_line": 260,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_watchdog_artifact_inventory:40a2e8a6c6df73fe",
         "signature_hash": "86aaf91f4af44fce"
       }
@@ -60627,8 +60673,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 351,
-        "end_line": 364,
+        "line": 352,
+        "end_line": 365,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_watchdog_progress_token:6c92d6b4243624b0",
         "signature_hash": "a0c3d98558902810"
       }
@@ -60637,8 +60683,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 240,
-        "end_line": 247,
+        "line": 241,
+        "end_line": 248,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_watchdog_resume_command:ea3d15de0dd285b1",
         "signature_hash": "8bc16b2bd50c7ce2"
       }
@@ -60793,8 +60839,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 841,
-        "end_line": 863,
+        "line": 842,
+        "end_line": 864,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_working_tree_metadata:926643537bcb1f78",
         "signature_hash": "294e3744b2065770"
       }
@@ -60823,8 +60869,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 121,
-        "end_line": 125,
+        "line": 122,
+        "end_line": 126,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_write:82cc99425ee757db",
         "signature_hash": "bf504f9b32628871"
       },
@@ -61181,8 +61227,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 275,
-        "end_line": 306,
+        "line": 276,
+        "end_line": 307,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_write_watchdog_progress:fd1e220ece0b5cac",
         "signature_hash": "444b23ef4f31d418"
       }
@@ -61211,8 +61257,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 882,
-        "end_line": 888,
+        "line": 883,
+        "end_line": 889,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_zip_info:d790ba64a83d70e1",
         "signature_hash": "ba146d5bdae6f543"
       }
@@ -68871,10 +68917,10 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 979,
-        "end_line": 1469,
-        "semantic_id": "aura_coding_relationship_compass.py#function:compile_coding_relationship_compass:d41c27c35406439f",
-        "signature_hash": "60fb422b2348938b"
+        "line": 1006,
+        "end_line": 1502,
+        "semantic_id": "aura_coding_relationship_compass.py#function:compile_coding_relationship_compass:06e980fc7d9e54de",
+        "signature_hash": "5f41e9d41a5f34f8"
       }
     ],
     "compile_compass_act_capsules": [
@@ -70699,8 +70745,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 953,
-        "end_line": 1135,
+        "line": 954,
+        "end_line": 1136,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:create_ai_handoff:7304bcb45d68cc59",
         "signature_hash": "16e4e32af1eb917a"
       }
@@ -72401,8 +72447,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1266,
-        "end_line": 1282,
+        "line": 1336,
+        "end_line": 1360,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:doctor:2d008f53fb87d888",
         "signature_hash": "e9cf9efccf8e31d2"
       }
@@ -82305,8 +82351,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1618,
-        "end_line": 1717,
+        "line": 1927,
+        "end_line": 2026,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:main:2fe0d9fc046b2f33",
         "signature_hash": "d5857061120d68cd"
       },
@@ -84901,8 +84947,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1198,
-        "end_line": 1231,
+        "line": 1199,
+        "end_line": 1232,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:prepare:fb9eb26c6137ab57",
         "signature_hash": "593033c248b07c9e"
       },
@@ -87881,8 +87927,8 @@
       {
         "file": "aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 1472,
-        "end_line": 1525,
+        "line": 1505,
+        "end_line": 1558,
         "semantic_id": "aura_coding_relationship_compass.py#function:relationship_compass_grounding:8e62a75064892e4a",
         "signature_hash": "4dcfa6e518d23f2b"
       }
@@ -89621,8 +89667,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1284,
-        "end_line": 1519,
+        "line": 1588,
+        "end_line": 1828,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:run_architecture:0b02f6821d2daefc",
         "signature_hash": "92ae9e4f675d829a"
       }
@@ -94691,8 +94737,8 @@
       {
         "file": "tests/test_aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 519,
-        "end_line": 548,
+        "line": 532,
+        "end_line": 561,
         "semantic_id": "tests/test_aura_coding_relationship_compass.py#function:test_architect_refuses_when_admitted_compass_grounding_fails:8b7e3fe32a95288d",
         "signature_hash": "53add42e19c43b31"
       }
@@ -94701,8 +94747,8 @@
       {
         "file": "tests/test_aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 620,
-        "end_line": 664,
+        "line": 633,
+        "end_line": 677,
         "semantic_id": "tests/test_aura_coding_relationship_compass.py#function:test_architect_uses_compass_before_filename_fallback:7c03b29790c295f4",
         "signature_hash": "265bd4eda5452a86"
       }
@@ -99118,7 +99164,7 @@
         "file": "tests/test_aura_coding_relationship_compass.py",
         "kind": "function",
         "line": 301,
-        "end_line": 430,
+        "end_line": 443,
         "semantic_id": "tests/test_aura_coding_relationship_compass.py#function:test_compile_compass_combines_all_four_planes:ac3f91e853a4c389",
         "signature_hash": "819a0807cd64e217"
       }
@@ -102349,6 +102395,16 @@
         "end_line": 47,
         "semantic_id": "tests/test_aura_capability_resolver.py#method:TestCapabilityResolver.test_do_not_reinvent:452ec0d81c2a0e1a",
         "signature_hash": "81d78d8caf803ea1"
+      }
+    ],
+    "test_doctor_counts_current_codemap_symbol_index": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 721,
+        "end_line": 746,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_doctor_counts_current_codemap_symbol_index:0762b85ade240564",
+        "signature_hash": "d0aa000716915f79"
       }
     ],
     "test_doctor_metadata_is_streamed_without_deserializing_body": [
@@ -108257,8 +108313,8 @@
       {
         "file": "tests/test_aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 573,
-        "end_line": 608,
+        "line": 586,
+        "end_line": 621,
         "semantic_id": "tests/test_aura_coding_relationship_compass.py#function:test_injected_evidence_accepts_approximate_inventory_with_exact_source_slice:faf9e62088ea4b12",
         "signature_hash": "f923055359816833"
       }
@@ -108267,8 +108323,8 @@
       {
         "file": "tests/test_aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 551,
-        "end_line": 569,
+        "line": 564,
+        "end_line": 582,
         "semantic_id": "tests/test_aura_coding_relationship_compass.py#function:test_injected_evidence_rejects_forged_file_hash:be1a145fa613fd20",
         "signature_hash": "7334e6b0019fab54"
       }
@@ -108277,8 +108333,8 @@
       {
         "file": "tests/test_aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 610,
-        "end_line": 617,
+        "line": 623,
+        "end_line": 630,
         "semantic_id": "tests/test_aura_coding_relationship_compass.py#function:test_injected_evidence_rejects_stale_head:fa6ab975ab2b1dc5",
         "signature_hash": "a764d76563b422a1"
       }
@@ -108677,8 +108733,8 @@
       {
         "file": "tests/test_aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 433,
-        "end_line": 447,
+        "line": 446,
+        "end_line": 460,
         "semantic_id": "tests/test_aura_coding_relationship_compass.py#function:test_invalid_paired_live_rollout_fails_before_grounding:3ec4f83877b6fc61",
         "signature_hash": "f0b21ffd06bb21d3"
       }
@@ -113415,6 +113471,26 @@
         "end_line": 170,
         "semantic_id": "tests/test_aura_relationship_contracts.py#function:test_objective_contract_rejects_unknown_keys_tamper_and_boolean_aliases:6c23575c9b3086f4",
         "signature_hash": "b5631e5342bbe377"
+      }
+    ],
+    "test_objective_grounding_fails_closed_when_explicit_targets_are_missing": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 800,
+        "end_line": 812,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_objective_grounding_fails_closed_when_explicit_targets_are_missing:159cc52bdfd1ae65",
+        "signature_hash": "9d35198def18b835"
+      }
+    ],
+    "test_objective_grounding_prioritizes_named_current_source": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 749,
+        "end_line": 797,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_objective_grounding_prioritizes_named_current_source:83c9a5411d83535d",
+        "signature_hash": "942995cb41756b49"
       }
     ],
     "test_objective_mismatch_rejects_unrelated_intent": [
@@ -124147,8 +124223,8 @@
       {
         "file": "tests/test_aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 497,
-        "end_line": 516,
+        "line": 510,
+        "end_line": 529,
         "semantic_id": "tests/test_aura_coding_relationship_compass.py#function:test_supplied_atlas_rejects_post_construction_tampering:2f7895b1833dd968",
         "signature_hash": "a3db40ddec237540"
       }
@@ -124157,8 +124233,8 @@
       {
         "file": "tests/test_aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 450,
-        "end_line": 471,
+        "line": 463,
+        "end_line": 484,
         "semantic_id": "tests/test_aura_coding_relationship_compass.py#function:test_supplied_atlas_rejects_stale_source_identity:c56c288b45821d77",
         "signature_hash": "470d759c8c382f12"
       }
@@ -124167,8 +124243,8 @@
       {
         "file": "tests/test_aura_coding_relationship_compass.py",
         "kind": "function",
-        "line": 474,
-        "end_line": 494,
+        "line": 487,
+        "end_line": 507,
         "semantic_id": "tests/test_aura_coding_relationship_compass.py#function:test_supplied_atlas_rejects_tampered_relational_index_content:8f5a6cba3c90e20b",
         "signature_hash": "082eeaed24f1adb0"
       }
@@ -148023,17 +148099,17 @@
     {
       "path": "aura_coding_relationship_compass.py",
       "role": "python_module",
-      "bytes": 65736,
-      "lines": 1537,
-      "tokens_est": 16434,
-      "symbol_count": 29,
+      "bytes": 67043,
+      "lines": 1570,
+      "tokens_est": 16761,
+      "symbol_count": 30,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 75,
-        "node_count": 30,
-        "edge_count": 175,
-        "degree": 175,
+        "hub_rank": 72,
+        "node_count": 31,
+        "edge_count": 183,
+        "degree": 183,
         "symbols": [
           "ArchitectureComponent",
           "CompassRolloutMode",
@@ -148048,13 +148124,13 @@
           "_live_repository_identity",
           "_normalize_compass_rollout_budget",
           "_ordered_unique",
+          "_partition_explicit_test_targets",
           "_recommended_targets",
           "_relational_cache_entry_is_current",
           "_repository_head",
           "_select_focal_participants",
           "_selected_atomic_functions",
-          "_source_references_from_evidence",
-          "_source_text"
+          "_source_references_from_evidence"
         ],
         "neighbor_files": [
           "aura_agent_ir_compiler.py",
@@ -148076,45 +148152,45 @@
           "aura_relationship_contracts.py"
         ],
         "edge_kinds": {
-          "call": 102,
-          "defines": 58,
+          "call": 108,
+          "defines": 60,
           "import_module": 15
         }
       },
-      "digest8": "1def2397ee89da43",
+      "digest8": "f00d1774fa59bee6",
       "vector": [
-        0.213108,
-        -0.1417,
-        0.070292,
-        0.072524,
-        0.056903,
-        0.065829,
-        0.282285,
-        0.103765,
-        0.152858,
-        -0.262201,
-        -0.268896,
-        -0.235423,
-        0.132774,
-        -0.210877,
-        0.00781,
-        0.242118,
-        -0.257738,
-        -0.188562,
-        -0.121617,
-        0.199719,
-        0.224266,
-        0.21534,
-        0.010042,
-        0.195256,
-        -0.021199,
-        -0.072524,
-        0.246581,
-        -0.050209,
-        0.217571,
-        -0.157321,
-        0.179636,
-        0.143932
+        0.166503,
+        0.008897,
+        0.280895,
+        -0.22497,
+        -0.006355,
+        -0.10041,
+        -0.252933,
+        -0.158877,
+        0.298689,
+        0.047028,
+        -0.016523,
+        0.321568,
+        -0.280895,
+        -0.054654,
+        -0.184298,
+        0.008897,
+        -0.04957,
+        -0.0877,
+        0.029233,
+        0.209718,
+        -0.19955,
+        -0.008897,
+        -0.041944,
+        -0.242765,
+        0.303773,
+        -0.110579,
+        -0.019065,
+        0.001271,
+        0.151251,
+        0.255475,
+        0.258017,
+        -0.130915
       ]
     },
     {
@@ -174122,7 +174198,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 72,
+        "hub_rank": 73,
         "node_count": 58,
         "edge_count": 179,
         "degree": 179,
@@ -183585,7 +183661,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 74,
+        "hub_rank": 75,
         "node_count": 26,
         "edge_count": 176,
         "degree": 176,
@@ -185701,7 +185777,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 73,
+        "hub_rank": 74,
         "node_count": 36,
         "edge_count": 177,
         "degree": 177,
@@ -190929,6 +191005,58 @@
         -0.11671,
         -0.148652,
         -0.126538
+      ]
+    },
+    {
+      "path": ".github/workflows/harness-repair-202-204-materialize.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 6724,
+      "lines": 166,
+      "tokens_est": 1681,
+      "symbol_count": 0,
+      "commands": [
+        "!current_parts"
+      ],
+      "command_lines": {
+        "!current_parts": [
+          48
+        ]
+      },
+      "topology": {},
+      "digest8": "cfce6cc1364cb69f",
+      "vector": [
+        -0.261084,
+        -0.180574,
+        -0.012652,
+        0.15297,
+        -0.118466,
+        -0.129967,
+        0.116165,
+        0.201277,
+        0.097763,
+        -0.198976,
+        0.192075,
+        0.261084,
+        -0.258784,
+        0.024153,
+        0.051757,
+        0.024153,
+        0.116165,
+        0.290988,
+        0.042556,
+        -0.116165,
+        -0.180574,
+        -0.254184,
+        -0.189775,
+        -0.031054,
+        0.008051,
+        -0.192075,
+        0.256484,
+        -0.217379,
+        0.279487,
+        0.021853,
+        -0.086261,
+        -0.286388
       ]
     },
     {
@@ -198456,47 +198584,47 @@
     {
       "path": "docs/AURA_ARCHITECTURE_HARNESS.md",
       "role": "knowledge_artifact",
-      "bytes": 12495,
+      "bytes": 13090,
       "lines": 229,
-      "tokens_est": 3117,
+      "tokens_est": 3266,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "2148f0b2dfdee93d",
+      "digest8": "b3c447e2565bcaf9",
       "vector": [
-        -0.229653,
-        0.21834,
-        -0.057696,
-        0.093898,
-        0.27038,
-        -0.154988,
-        0.055434,
-        -0.003394,
-        0.02602,
-        0.240966,
-        0.259067,
-        0.229653,
-        -0.21834,
-        -0.243229,
-        -0.256804,
-        0.123311,
-        0.021495,
-        0.073534,
-        -0.238704,
-        0.023757,
-        0.150463,
-        -0.159513,
-        0.229653,
-        -0.177614,
-        0.204765,
-        0.001131,
-        0.032808,
-        -0.055434,
-        -0.274905,
-        0.21834,
-        -0.127837,
-        0.197977
+        -0.220053,
+        0.217772,
+        0.174446,
+        -0.153923,
+        -0.245136,
+        0.265659,
+        -0.112877,
+        -0.140241,
+        0.012542,
+        -0.265659,
+        0.049027,
+        0.119718,
+        -0.236015,
+        0.00114,
+        0.279341,
+        -0.144801,
+        0.044467,
+        -0.131119,
+        0.224613,
+        0.220053,
+        0.112877,
+        0.026224,
+        -0.240576,
+        -0.2725,
+        -0.028504,
+        0.283902,
+        0.012542,
+        -0.156203,
+        -0.119718,
+        -0.076391,
+        -0.179006,
+        -0.151642
       ]
     },
     {
@@ -199468,47 +199596,47 @@
     {
       "path": "docs/AURA_CODING_RELATIONSHIP_COMPASS.md",
       "role": "knowledge_artifact",
-      "bytes": 7868,
-      "lines": 143,
-      "tokens_est": 1959,
+      "bytes": 8023,
+      "lines": 144,
+      "tokens_est": 1998,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "e26aac6ac7108f97",
+      "digest8": "8cbf560526d7c50e",
       "vector": [
-        0.225422,
-        0.008176,
-        -0.022192,
-        -0.089935,
-        -0.092271,
-        0.082927,
-        0.218414,
-        0.274477,
-        0.010512,
-        0.227758,
-        0.258125,
-        0.17403,
-        -0.033872,
-        0.115631,
-        -0.010512,
-        0.054895,
-        0.061903,
-        0.211406,
-        0.241774,
-        -0.024528,
-        -0.272141,
-        -0.150671,
-        -0.157678,
-        0.237102,
-        0.283821,
-        0.036208,
-        -0.012848,
-        -0.297837,
-        -0.094607,
-        -0.192718,
-        -0.290829,
-        -0.22075
+        0.102186,
+        -0.11826,
+        -0.274409,
+        -0.256039,
+        -0.285891,
+        0.01263,
+        0.083815,
+        -0.292779,
+        0.228483,
+        0.072334,
+        -0.01263,
+        0.18026,
+        0.111371,
+        -0.024111,
+        -0.200927,
+        0.221594,
+        -0.143519,
+        0.235372,
+        -0.07463,
+        -0.104482,
+        -0.191742,
+        0.13663,
+        -0.053963,
+        -0.212409,
+        0.274409,
+        -0.102186,
+        -0.079223,
+        -0.285891,
+        -0.076926,
+        -0.141223,
+        -0.072334,
+        -0.258335
       ]
     },
     {
@@ -206236,57 +206364,57 @@
     {
       "path": "scripts/aura_architecture_harness_core.py",
       "role": "python_module",
-      "bytes": 66624,
-      "lines": 1722,
-      "tokens_est": 16656,
-      "symbol_count": 54,
+      "bytes": 79112,
+      "lines": 2031,
+      "tokens_est": 19778,
+      "symbol_count": 57,
       "commands": [
         "!r"
       ],
       "command_lines": {
         "!r": [
-          696,
-          698,
-          701,
-          704,
-          1182
+          697,
+          699,
+          702,
+          705,
+          1183
         ]
       },
       "topology": {},
-      "digest8": "357ecf67c1d7268c",
+      "digest8": "13bcaf16442c7fcd",
       "vector": [
-        -0.204279,
-        0.039422,
-        -0.223393,
-        -0.268788,
-        0.125435,
-        -0.072871,
-        0.285513,
-        0.194722,
-        -0.252064,
-        0.249674,
-        0.118267,
-        -0.003584,
-        0.113488,
-        0.149327,
-        -0.261621,
-        0.051368,
-        -0.194722,
-        0.185165,
-        -0.261621,
-        0.199501,
-        0.029865,
-        -0.209058,
-        -0.091985,
-        -0.120656,
-        -0.278345,
-        -0.01553,
-        -0.247285,
-        0.04659,
-        0.132602,
-        0.113488,
-        0.154105,
-        0.068093
+        -0.091791,
+        -0.275374,
+        -0.252709,
+        -0.241377,
+        0.227778,
+        -0.162051,
+        0.177916,
+        0.118989,
+        0.114456,
+        -0.06686,
+        0.236844,
+        0.14392,
+        0.261775,
+        -0.116722,
+        0.039663,
+        -0.261775,
+        -0.164318,
+        -0.157518,
+        0.06686,
+        0.06686,
+        -0.205114,
+        -0.266308,
+        -0.234578,
+        -0.191515,
+        -0.06686,
+        0.273107,
+        -0.089525,
+        0.071393,
+        0.007933,
+        0.193781,
+        -0.075926,
+        -0.148452
       ]
     },
     {
@@ -207828,47 +207956,47 @@
     {
       "path": "tests/test_aura_architecture_harness.py",
       "role": "python_module",
-      "bytes": 26429,
-      "lines": 719,
-      "tokens_est": 6608,
-      "symbol_count": 39,
+      "bytes": 29708,
+      "lines": 813,
+      "tokens_est": 7427,
+      "symbol_count": 42,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "d6b88e912f8557c6",
+      "digest8": "b15d25b20affdc16",
       "vector": [
-        -0.017241,
-        0.210875,
-        0.197612,
-        0.025199,
-        0.240052,
-        -0.107427,
-        -0.176392,
-        0.078249,
-        0.120689,
-        0.271882,
-        -0.046419,
-        -0.29045,
-        -0.046419,
-        0.062334,
-        -0.001326,
-        -0.30106,
-        0.171087,
-        0.078249,
-        -0.213527,
-        0.27984,
-        -0.240052,
-        -0.266577,
-        0.035809,
-        0.176392,
-        -0.144562,
-        -0.102122,
-        0.160477,
-        -0.051724,
-        0.25862,
-        -0.287797,
-        -0.070292,
-        -0.051724
+        -0.177282,
+        -0.226188,
+        0.103924,
+        0.169946,
+        -0.01834,
+        0.057464,
+        -0.255531,
+        -0.155275,
+        0.081917,
+        0.106369,
+        0.301991,
+        0.001223,
+        -0.103924,
+        -0.162611,
+        0.045238,
+        -0.133267,
+        0.294655,
+        0.24575,
+        -0.147939,
+        -0.072136,
+        -0.270203,
+        -0.011004,
+        -0.25064,
+        -0.299546,
+        -0.233524,
+        0.169946,
+        -0.079471,
+        -0.020785,
+        0.123486,
+        0.265312,
+        0.20418,
+        -0.030566
       ]
     },
     {
@@ -210042,47 +210170,47 @@
     {
       "path": "tests/test_aura_coding_relationship_compass.py",
       "role": "python_module",
-      "bytes": 25302,
-      "lines": 665,
-      "tokens_est": 6326,
+      "bytes": 25921,
+      "lines": 678,
+      "tokens_est": 6481,
       "symbol_count": 18,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "92c2ce6bbea7cd84",
+      "digest8": "9e3e1130f947899d",
       "vector": [
-        -0.018371,
-        0.206976,
-        0.06246,
-        -0.206976,
-        -0.128595,
-        0.219223,
-        -0.180032,
-        -0.221673,
-        -0.094303,
-        -0.108999,
-        0.295155,
-        0.067359,
-        -0.099202,
-        -0.06491,
-        0.27311,
-        -0.011022,
-        0.300054,
-        0.084505,
-        0.042865,
-        0.045314,
-        -0.052663,
-        0.108999,
-        0.167785,
-        0.278009,
-        -0.101651,
-        -0.145741,
-        -0.312301,
-        0.248616,
-        0.187381,
-        -0.18983,
-        -0.094303,
-        0.265762
+        0.242071,
+        -0.153354,
+        -0.057032,
+        -0.008872,
+        0.031685,
+        -0.02408,
+        -0.084915,
+        0.226862,
+        -0.112797,
+        0.041824,
+        0.097589,
+        0.021546,
+        0.072241,
+        0.011406,
+        -0.14575,
+        0.155889,
+        0.181236,
+        0.242071,
+        0.287697,
+        -0.186306,
+        -0.041824,
+        -0.191376,
+        -0.249675,
+        0.264884,
+        -0.14068,
+        0.254745,
+        0.209119,
+        0.143215,
+        0.25221,
+        0.307975,
+        -0.001267,
+        0.302906
       ]
     },
     {
@@ -220748,11 +220876,11 @@
       "generated_by": "aura_topology_manager",
       "root": ".",
       "module_count": 611,
-      "node_count": 10549,
-      "edge_count": 24936,
+      "node_count": 10550,
+      "edge_count": 24940,
       "spectral_layout": true,
-      "spectral_sparsity": 0.054039,
-      "global_health": 0.97113
+      "spectral_sparsity": 0.054034,
+      "global_health": 0.971133
     },
     "file_index": {
       "aura_node.py": {
@@ -223856,8 +223984,60 @@
           "import_module": 2
         }
       },
-      "aura_symbolic_trace_memory.py": {
+      "aura_coding_relationship_compass.py": {
         "hub_rank": 72,
+        "node_count": 31,
+        "edge_count": 183,
+        "degree": 183,
+        "symbols": [
+          "ArchitectureComponent",
+          "CompassRolloutMode",
+          "_applicable_prohibition_ids",
+          "_bounded_atlas_intelligence",
+          "_build_compass_grounding_receipt",
+          "_canonical_grounding_binding",
+          "_compass_digest_payload",
+          "_compatibility_neighborhood_from_raw_index",
+          "_component_targets",
+          "_connectome_targets",
+          "_live_repository_identity",
+          "_normalize_compass_rollout_budget",
+          "_ordered_unique",
+          "_partition_explicit_test_targets",
+          "_recommended_targets",
+          "_relational_cache_entry_is_current",
+          "_repository_head",
+          "_select_focal_participants",
+          "_selected_atomic_functions",
+          "_source_references_from_evidence"
+        ],
+        "neighbor_files": [
+          "aura_agent_ir_compiler.py",
+          "aura_architect_council_calling_benchmark.py",
+          "aura_architect_council_v3.py",
+          "aura_capability_connectome.py",
+          "aura_capability_connectome_v2.py",
+          "aura_change_graph.py",
+          "aura_coding_waboose_breadboard.py",
+          "aura_emergent_evidence_spine.py",
+          "aura_emergent_potential_repl.py",
+          "aura_emergent_result_verifier.py",
+          "aura_event_contracts.py",
+          "aura_live_architect.py",
+          "aura_polysynthetic_intent.py",
+          "aura_relational_index.py",
+          "aura_relational_synthesis.py",
+          "aura_relationship_atlas.py",
+          "aura_relationship_contracts.py"
+        ],
+        "edge_kinds": {
+          "call": 108,
+          "defines": 60,
+          "import_module": 15
+        }
+      },
+      "aura_symbolic_trace_memory.py": {
+        "hub_rank": 73,
         "node_count": 58,
         "edge_count": 179,
         "degree": 179,
@@ -223896,7 +224076,7 @@
         }
       },
       "travel_price_sidecar.py": {
-        "hub_rank": 73,
+        "hub_rank": 74,
         "node_count": 36,
         "edge_count": 177,
         "degree": 177,
@@ -223939,7 +224119,7 @@
         }
       },
       "test_aura_substrate.py": {
-        "hub_rank": 74,
+        "hub_rank": 75,
         "node_count": 26,
         "edge_count": 176,
         "degree": 176,
@@ -223982,58 +224162,6 @@
           "call": 125,
           "defines": 50,
           "import_module": 1
-        }
-      },
-      "aura_coding_relationship_compass.py": {
-        "hub_rank": 75,
-        "node_count": 30,
-        "edge_count": 175,
-        "degree": 175,
-        "symbols": [
-          "ArchitectureComponent",
-          "CompassRolloutMode",
-          "_applicable_prohibition_ids",
-          "_bounded_atlas_intelligence",
-          "_build_compass_grounding_receipt",
-          "_canonical_grounding_binding",
-          "_compass_digest_payload",
-          "_compatibility_neighborhood_from_raw_index",
-          "_component_targets",
-          "_connectome_targets",
-          "_live_repository_identity",
-          "_normalize_compass_rollout_budget",
-          "_ordered_unique",
-          "_recommended_targets",
-          "_relational_cache_entry_is_current",
-          "_repository_head",
-          "_select_focal_participants",
-          "_selected_atomic_functions",
-          "_source_references_from_evidence",
-          "_source_text"
-        ],
-        "neighbor_files": [
-          "aura_agent_ir_compiler.py",
-          "aura_architect_council_calling_benchmark.py",
-          "aura_architect_council_v3.py",
-          "aura_capability_connectome.py",
-          "aura_capability_connectome_v2.py",
-          "aura_change_graph.py",
-          "aura_coding_waboose_breadboard.py",
-          "aura_emergent_evidence_spine.py",
-          "aura_emergent_potential_repl.py",
-          "aura_emergent_result_verifier.py",
-          "aura_event_contracts.py",
-          "aura_live_architect.py",
-          "aura_polysynthetic_intent.py",
-          "aura_relational_index.py",
-          "aura_relational_synthesis.py",
-          "aura_relationship_atlas.py",
-          "aura_relationship_contracts.py"
-        ],
-        "edge_kinds": {
-          "call": 102,
-          "defines": 58,
-          "import_module": 15
         }
       },
       "aura_construction_demo_contracts.py": {

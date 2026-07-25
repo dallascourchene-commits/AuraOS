@@ -12,6 +12,7 @@ from dataclasses import dataclass
 import fnmatch
 import hashlib
 import json
+import mmap
 import os
 from pathlib import Path, PurePosixPath
 import re
@@ -1231,6 +1232,75 @@ def prepare(root: Path, venv_path: Path, *, system_packages: bool,
     return output
 
 
+def _stream_json_object_member_count(path: Path, field: str) -> int | None:
+    """Count direct members of one top-level JSON object without loading the file.
+
+    CODEMAP is intentionally large.  Doctor therefore uses a memory-mapped lexical
+    scan instead of ``json.load`` while still supporting schema fields such as the
+    current ``symbol_index`` mapping, whose count is not stored as an integer.
+    """
+
+    marker = json.dumps(str(field), ensure_ascii=True).encode("ascii")
+    with path.open("rb") as handle:
+        with mmap.mmap(handle.fileno(), 0, access=mmap.ACCESS_READ) as mapped:
+            marker_at = mapped.find(marker)
+            if marker_at < 0:
+                return None
+            cursor = marker_at + len(marker)
+            size = len(mapped)
+            while cursor < size and mapped[cursor] in b" \t\r\n":
+                cursor += 1
+            if cursor >= size or mapped[cursor] != ord(":"):
+                return None
+            cursor += 1
+            while cursor < size and mapped[cursor] in b" \t\r\n":
+                cursor += 1
+            if cursor >= size or mapped[cursor] != ord("{"):
+                return None
+            cursor += 1
+
+            depth = 1
+            in_string = False
+            escaped = False
+            string_is_key = False
+            expecting_key = True
+            count = 0
+            while cursor < size:
+                value = mapped[cursor]
+                cursor += 1
+                if in_string:
+                    if escaped:
+                        escaped = False
+                    elif value == ord("\\"):
+                        escaped = True
+                    elif value == ord('\"'):
+                        in_string = False
+                        if string_is_key:
+                            count += 1
+                            string_is_key = False
+                    continue
+
+                if value in b" \t\r\n":
+                    continue
+                if value == ord('\"'):
+                    in_string = True
+                    string_is_key = depth == 1 and expecting_key
+                    continue
+                if value in (ord("{"), ord("[")):
+                    depth += 1
+                    continue
+                if value in (ord("}"), ord("]")):
+                    depth -= 1
+                    if depth == 0:
+                        return count
+                    continue
+                if depth == 1 and value == ord(","):
+                    expecting_key = True
+                elif depth == 1 and value == ord(":"):
+                    expecting_key = False
+            return None
+
+
 def _stream_json_integer_metadata(
     path: Path,
     fields: Iterable[str],
@@ -1264,9 +1334,17 @@ def _stream_json_integer_metadata(
 
 
 def doctor(root: Path, python: Path | None) -> dict[str, Any]:
+    codemap_path = root / ".aura/CODEMAP.json"
     codemap = _stream_json_integer_metadata(
-        root / ".aura/CODEMAP.json", ("file_count", "symbol_count")
+        codemap_path, ("file_count", "symbol_count")
     )
+    symbol_count = _stream_json_object_member_count(codemap_path, "symbol_index")
+    if symbol_count is not None:
+        prior_symbol_count = codemap.get("symbol_count")
+        if prior_symbol_count is not None and prior_symbol_count != symbol_count:
+            codemap["legacy_symbol_count"] = prior_symbol_count
+        codemap["symbol_count"] = symbol_count
+        codemap["symbol_count_source"] = "symbol_index_member_count"
     output = {
         "ok": True, "version": VERSION, "repo_root": str(root),
         "git_identity": _git_info(root),
@@ -1280,6 +1358,232 @@ def doctor(root: Path, python: Path | None) -> dict[str, Any]:
         output["target_imports"] = _probe(python, root)
         output["ok"] = output["target_imports"]["ok"]
     return output
+
+
+_OBJECTIVE_FILE_RE = re.compile(
+    r"(?<![A-Za-z0-9_./-])"
+    r"(?P<path>(?:[A-Za-z0-9_.-]+/)*[A-Za-z0-9_.-]+\."
+    r"(?:py|js|ts|json|md|yml|yaml|toml|lexc|css|html))"
+    r"(?:(?:::|#(?:function|class|method):)(?P<symbol>[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*))?"
+)
+_MODULE_TOKEN_RE = re.compile(r"(?<![A-Za-z0-9_])(?P<module>aura_[A-Za-z0-9_]+)(?![A-Za-z0-9_])")
+_BACKTICK_SYMBOL_RE = re.compile(r"`(?P<symbol>[A-Za-z_][A-Za-z0-9_.]*)`")
+
+
+def _ordered_unique_text(values: Iterable[str]) -> list[str]:
+    output: list[str] = []
+    seen: set[str] = set()
+    for value in values:
+        text = str(value).strip()
+        if text and text not in seen:
+            seen.add(text)
+            output.append(text)
+    return output
+
+
+def _objective_grounded_architect_tasks(
+    root: Path,
+    objective: str,
+    reference_files: Iterable[str | Path],
+    *,
+    max_tasks: int = 8,
+) -> dict[str, Any]:
+    """Resolve exact objective/reference file and symbol mentions into Act tasks.
+
+    Exact source mentions in the current objective are authoritative for task
+    localization. Reference documents are a fallback only when the objective
+    itself does not ground a current owner. Test paths remain verification scope
+    and are never silently converted into patch tasks.
+    """
+
+    codemap_path = root / ".aura" / "CODEMAP.json"
+    try:
+        codemap = json.loads(codemap_path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        codemap = {}
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeError(f"cannot load current CODEMAP for objective grounding: {exc}") from exc
+    symbol_index = codemap.get("symbol_index") or {}
+    if not isinstance(symbol_index, dict):
+        raise RuntimeError("current CODEMAP symbol_index is unavailable")
+    casefold_symbols = {str(name).casefold(): str(name) for name in symbol_index}
+
+    def collect(text: str, *, include_plain_symbols: bool) -> dict[str, Any]:
+        paths: list[str] = []
+        tests: list[str] = []
+        bound_pairs: list[tuple[str, str]] = []
+        symbols: list[str] = []
+        unresolved: list[str] = []
+        explicit = False
+        for match in _OBJECTIVE_FILE_RE.finditer(text):
+            explicit = True
+            candidate = PurePosixPath(match.group("path")).as_posix()
+            if not (root / candidate).is_file():
+                unresolved.append(candidate)
+                continue
+            if candidate.startswith("tests/") or Path(candidate).name.startswith("test_"):
+                tests.append(candidate)
+                continue
+            paths.append(candidate)
+            if match.group("symbol"):
+                bound_pairs.append((candidate, match.group("symbol")))
+        for match in _MODULE_TOKEN_RE.finditer(text):
+            explicit = True
+            candidate = f"{match.group('module')}.py"
+            if (root / candidate).is_file():
+                paths.append(candidate)
+            else:
+                unresolved.append(candidate)
+        for match in _BACKTICK_SYMBOL_RE.finditer(text):
+            canonical = casefold_symbols.get(match.group("symbol").casefold())
+            if canonical:
+                explicit = True
+                symbols.append(canonical)
+        if include_plain_symbols:
+            for token in re.findall(r"[A-Za-z_][A-Za-z0-9_.]*", text):
+                code_shaped = (
+                    token.startswith("_")
+                    or "_" in token
+                    or any(character.isupper() for character in token[1:])
+                )
+                if not code_shaped:
+                    continue
+                canonical = casefold_symbols.get(token.casefold())
+                if canonical:
+                    explicit = True
+                    symbols.append(canonical)
+        return {
+            "paths": _ordered_unique_text(paths),
+            "tests": _ordered_unique_text(tests),
+            "bound_pairs": list(dict.fromkeys(bound_pairs)),
+            "symbols": _ordered_unique_text(symbols),
+            "unresolved": _ordered_unique_text(unresolved),
+            "explicit": explicit,
+        }
+
+    objective_data = collect(str(objective or ""), include_plain_symbols=True)
+    reference_data = {
+        "paths": [],
+        "tests": [],
+        "bound_pairs": [],
+        "symbols": [],
+        "unresolved": [],
+        "explicit": False,
+    }
+    for value in reference_files:
+        path = Path(value).expanduser().resolve()
+        if not path.is_file():
+            continue
+        if path.stat().st_size > MAX_REFERENCE_BYTES:
+            raise ValueError(f"reference file exceeds {MAX_REFERENCE_BYTES} bytes: {path}")
+        collected = collect(
+            path.read_text(encoding="utf-8", errors="replace"),
+            include_plain_symbols=False,
+        )
+        for key in ("paths", "tests", "bound_pairs", "symbols", "unresolved"):
+            reference_data[key].extend(collected[key])
+        reference_data["explicit"] = bool(reference_data["explicit"] or collected["explicit"])
+    for key in ("paths", "tests", "symbols", "unresolved"):
+        reference_data[key] = _ordered_unique_text(reference_data[key])
+    reference_data["bound_pairs"] = list(dict.fromkeys(reference_data["bound_pairs"]))
+
+    def build_tasks(
+        data: dict[str, Any], *, allow_unmentioned_symbol_files: bool
+    ) -> list[dict[str, str]]:
+        paths = list(data["paths"])
+        path_rank = {path: index for index, path in enumerate(paths)}
+        tasks: list[dict[str, str]] = []
+        seen_bindings: set[tuple[str, str]] = set()
+
+        def add_task(file_path: str, symbol: str = "") -> None:
+            key = (file_path, symbol)
+            if key in seen_bindings or len(tasks) >= max(1, int(max_tasks)):
+                return
+            seen_bindings.add(key)
+            task = {
+                "objective": f"Implement the exact objective-scoped change in {file_path}"
+                + (f"::{symbol}" if symbol else ""),
+                "target_file": file_path,
+            }
+            if symbol:
+                task["target_symbol"] = symbol
+            tasks.append(task)
+
+        for file_path, raw_symbol in data["bound_pairs"]:
+            canonical = casefold_symbols.get(str(raw_symbol).casefold(), str(raw_symbol))
+            entries = [item for item in symbol_index.get(canonical, []) if isinstance(item, dict)]
+            if any(str(item.get("file") or "") == file_path for item in entries):
+                add_task(file_path, canonical)
+
+        for symbol in data["symbols"]:
+            entries = [item for item in symbol_index.get(symbol, []) if isinstance(item, dict)]
+            entries.sort(
+                key=lambda item: (
+                    path_rank.get(str(item.get("file") or ""), 10**9),
+                    str(item.get("file") or ""),
+                )
+            )
+            for item in entries:
+                file_path = str(item.get("file") or "")
+                if not file_path or not (root / file_path).is_file():
+                    continue
+                if (
+                    paths
+                    and file_path not in path_rank
+                    and not allow_unmentioned_symbol_files
+                ):
+                    continue
+                add_task(
+                    file_path,
+                    str(item.get("qualified_symbol") or item.get("name") or symbol),
+                )
+                break
+
+        for file_path in paths:
+            if not any(task["target_file"] == file_path for task in tasks):
+                add_task(file_path)
+        return tasks
+
+    objective_tasks = build_tasks(
+        objective_data, allow_unmentioned_symbol_files=True
+    )
+    reference_tasks = (
+        []
+        if objective_tasks
+        else build_tasks(reference_data, allow_unmentioned_symbol_files=False)
+    )
+    tasks = objective_tasks or reference_tasks
+    explicit_signals = bool(objective_data["explicit"] or reference_data["explicit"])
+    unresolved_paths = _ordered_unique_text(
+        [*objective_data["unresolved"], *reference_data["unresolved"]]
+    )
+    if explicit_signals and not tasks:
+        detail = ", ".join(unresolved_paths[:8]) or "named symbols were absent from current CODEMAP"
+        raise RuntimeError(f"explicit objective targets did not ground to current source: {detail}")
+
+    return {
+        "grounding_ok": bool(tasks),
+        "explicit_signals": explicit_signals,
+        "act_tasks": tasks,
+        "explicit_test_targets": _ordered_unique_text(
+            [*objective_data["tests"], *reference_data["tests"]]
+        ),
+        "mentioned_paths": _ordered_unique_text(
+            [*objective_data["paths"], *reference_data["paths"]]
+        ),
+        "mentioned_symbols": _ordered_unique_text(
+            [*objective_data["symbols"], *reference_data["symbols"]]
+        ),
+        "unresolved_paths": unresolved_paths,
+        "grounding_source": (
+            "exact_objective_mentions"
+            if objective_tasks
+            else "exact_reference_mentions"
+            if reference_tasks
+            else "legacy_default"
+        ),
+    }
+
 
 def run_architecture(root: Path, *, objective: str, combine_with: list[str],
                      profile: str, top: int, pair_limit: int,
@@ -1424,6 +1728,10 @@ def run_architecture(root: Path, *, objective: str, combine_with: list[str],
         started_monotonic=started_monotonic,
     )
 
+    objective_grounding = _objective_grounded_architect_tasks(
+        root, objective, reference_files or []
+    )
+
     _write_watchdog_progress(
         output_dir, phase="architect_preparation", state="starting",
         started_monotonic=started_monotonic,
@@ -1439,7 +1747,7 @@ def run_architecture(root: Path, *, objective: str, combine_with: list[str],
                 "capsule from Connectome anatomy, Atlas meaning, and Relational "
                 "Synthesis composition; remain proposal-only."
             ),
-            act_tasks=[
+            act_tasks=objective_grounding["act_tasks"] or [
                 {"objective": "Resolve the smallest capability path.",
                  "target_file": "aura_capability_connectome.py",
                  "target_symbol": "build_capability_connectome"},
@@ -1474,6 +1782,7 @@ def run_architecture(root: Path, *, objective: str, combine_with: list[str],
         "ok": True, "version": VERSION, "objective": objective,
         "repo_identity": _git_info(root), "request_digest": request["digest"],
         "reference_files": reference_manifest,
+        "objective_grounding": objective_grounding,
         "resumed": resume,
         "ai_handoff": _ai_handoff_summary(root),
         "task_watchdog": watchdog_policy,

@@ -64,7 +64,7 @@ python scripts/aura_architecture_harness.py \
   --venv ./.AuraOS-architecture-harness-venv
 ```
 
-The doctor checks repository completeness, Git identity, CODEMAP presence, and imports for the Connectome, Relational Index, Atlas, Relational Synthesis, Emergent Properties, and Architect Loop.
+The doctor checks repository completeness, Git identity, CODEMAP presence, and imports for the Connectome, Relational Index, Atlas, Relational Synthesis, Emergent Properties, and Architect Loop. The current CODEMAP schema derives `symbol_count` from the direct members of `symbol_index`; any obsolete integer found elsewhere is retained only as `legacy_symbol_count` diagnostic evidence.
 
 ## Create an AI-safe handoff locally
 
@@ -104,7 +104,7 @@ Outputs are written beside the repository under `AuraOS-architecture-harness-run
 
 `--reference-file` may be repeated for bounded external specifications or evidence. The harness records each file's resolved path, basename, byte size, and SHA-256 in the request and summary. It does not copy the content into AuraOS or treat the reference as source or patch authority. At most eight files of two megabytes each are accepted.
 
-The Atlas compile uses an in-memory Relational Index and `persist=False`. Architect grounding uses the checked-in CODEMAP with refresh disabled. A successful clean run therefore leaves tracked repository content unchanged; any mutation fails the final clean-tree gate.
+The Atlas compile uses an in-memory Relational Index and `persist=False`. Architect grounding uses the checked-in CODEMAP with refresh disabled. Exact repository paths, `path::symbol` bindings, and code-shaped symbol names in the current objective are resolved before capability similarity. Objective-grounded targets exclusively define Act tasks; bounded reference files are used as a fallback only when the objective itself names no current owner. Explicit test paths remain verification scope and are never silently converted into patch tasks. A successful clean run therefore leaves tracked repository content unchanged; any mutation fails the final clean-tree gate.
 
 For execution surfaces that impose a short command window, reuse one explicit output directory. If a run is interrupted after the Connectome, Relational Index, or Atlas completes, rerun the same command with `--resume`; the harness validates the request digest and continues from the retained artifacts instead of rebuilding them.
 
