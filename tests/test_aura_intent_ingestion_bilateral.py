@@ -7,6 +7,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
+import aura_intent_ingestion as canonical_ingestion  # noqa: E402
 from aura_bilateral_intent_ingestion import (  # noqa: E402
     bilateral_intent_to_agent_handoff,
     companion_capabilities,
@@ -82,6 +83,28 @@ def test_negative_requirements_survive_compression_and_handoff_verbatim():
     assert handoff["negative_requirements"] == packet["negative_requirements"]
     assert handoff["negative_requirements_digest"] == digest
     assert "Do not merge automatically." in handoff["compressed_context"]
+
+
+def test_compile_decorates_without_recomputing_canonical_route():
+    text = "Build the renderer. Do not merge automatically."
+    canonical = canonical_ingestion.compile_intent_packet(
+        text,
+        repo_root=REPO_ROOT,
+        skip_grounding=True,
+    )
+    bilateral = compile_bilateral_intent_packet(
+        text,
+        repo_root=REPO_ROOT,
+        skip_grounding=True,
+    )
+
+    bilateral_frame = dict(bilateral["routing_frame"])
+    bilateral_frame.pop("bilateral_intent_refs")
+    assert bilateral_frame == canonical["routing_frame"]
+
+    bilateral_decision = dict(bilateral["route_decision"])
+    bilateral_decision.pop("bilateral_intent_status")
+    assert bilateral_decision == canonical["route_decision"]
 
 
 def test_contradiction_routes_with_clarification_evidence_not_authority():
