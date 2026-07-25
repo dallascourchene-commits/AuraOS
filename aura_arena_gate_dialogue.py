@@ -322,13 +322,35 @@ def _allowed_paths(node_context: dict[str, Any], state: dict[str, Any]) -> tuple
 class ArenaGateDialogueService:
     """Runtime-local bilateral proposal and confirmation ledger for one workflow."""
 
-    def __init__(self, repo_root: str | Path, workflow: Any) -> None:
+    def __init__(
+        self,
+        repo_root: str | Path,
+        workflow: Any,
+        *,
+        operator_identity: str | None = None,
+    ) -> None:
         self.repo_root = Path(repo_root).resolve()
         self.workflow = workflow
+        self.operator_identity = (
+            _bounded_text(operator_identity, 180) if operator_identity else None
+        )
         self.pending: dict[str, dict[str, Any]] = {}
         self.confirmed: dict[str, dict[str, Any]] = {}
         self.history: list[dict[str, Any]] = []
         self._runtime: dict[str, dict[str, Any]] = {}
+
+    def _resolve_reviewer_identity(self, requested_reviewer: str) -> str:
+        if self.operator_identity:
+            return self.operator_identity
+        env_operator = _bounded_text(subprocess.os.environ.get("AURA_OPERATOR_IDENTITY"), 180)
+        if env_operator:
+            return env_operator
+        requested = _bounded_text(requested_reviewer, 180)
+        if not requested or requested in {"human_operator", "showcase_human"}:
+            return requested or "human_operator"
+        if not re.match(r"^[A-Za-z0-9_\-\.@]+$", requested):
+            return "human_operator"
+        return requested
 
     def address(
         self,
@@ -586,8 +608,9 @@ class ArenaGateDialogueService:
         if approved and not proposal.get("can_confirm_intent"):
             return self._denial("clarification_required", proposal=proposal)
 
+        authenticated_reviewer = self._resolve_reviewer_identity(reviewer)
         if not approved:
-            return self._finalize_rejection(proposal, reviewer=reviewer, note=note)
+            return self._finalize_rejection(proposal, reviewer=authenticated_reviewer, note=note)
 
         state = self.workflow.get_state()
         normalized_node = normalize_node_context(current_node_context)
@@ -623,7 +646,7 @@ class ArenaGateDialogueService:
                 working_tree_clean_receipt=repo["working_tree_clean_receipt"],
                 allowed_paths=paths,
                 runtime_profile_digest=runtime_profile_digest,
-                human_reviewer=_bounded_text(reviewer, 180) or "human_operator",
+                human_reviewer=authenticated_reviewer,
                 confirmed_at=confirmed_at,
                 expires_at=min(
                     confirmed_at + SESSION_TTL_SECONDS,
@@ -636,7 +659,7 @@ class ArenaGateDialogueService:
         decision = self._decision(
             proposal,
             approved=True,
-            reviewer=reviewer,
+            reviewer=authenticated_reviewer,
             note=note,
             reviewed_at=confirmed_at,
         )

@@ -296,3 +296,32 @@ def test_affordance_map_declares_current_review_learning_extension():
     )
     assert "advisory-only" in data["note"]
     assert any(item.get("id") == "aura.coding_waboose.review_lessons" for item in data["affordances"])
+
+
+def test_reviewer_identity_bound_to_authenticated_operator(workflow):
+    import aura_arena_gate_dialogue as gate_module
+
+    service = gate_module.ArenaGateDialogueService(
+        REPO_ROOT, workflow, operator_identity="authenticated_operator_alice"
+    )
+    proposal = service.address(
+        comment=(
+            f"{gate_module.BILATERAL_MARKER} "
+            "Frame this selected renderer. Do not widen its scope."
+        ),
+        node_context=NODE_CONTEXT,
+        stage_hint="FRAME",
+        prefer_model=False,
+    )
+    # Caller attempts to forge a different reviewer name
+    approved = service.approve(
+        proposal_id=proposal["proposal_id"],
+        approved=True,
+        current_node_context=NODE_CONTEXT,
+        stage_hint="FRAME",
+        reviewer="forged_attacker_identity",
+    )
+    assert approved["ok"] is True
+    assert approved["decision"]["reviewer"] == "authenticated_operator_alice"
+    assert approved["canonical_compilation"]["confirmation_receipt"]["human_reviewer"] == "authenticated_operator_alice"
+

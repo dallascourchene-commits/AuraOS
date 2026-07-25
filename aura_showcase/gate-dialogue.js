@@ -404,6 +404,17 @@
       if (!result.ok) throw new Error(result.reason || result.error || 'Gate confirmation was denied');
       state.decision = result.decision;
       state.compilation = result.canonical_compilation || null;
+      const receipt = result.canonical_compilation?.confirmation_receipt || null;
+      state.confirmationSnapshot = {
+        confirmation_id: result.decision?.confirmation_id || receipt?.confirmation_id || '',
+        intent_digest: result.decision?.intent_digest || receipt?.intent_digest || '',
+        semantic_ledger_digest: result.decision?.semantic_ledger_digest || receipt?.semantic_ledger_digest || '',
+        repository_head: receipt?.repository_head || '',
+        source_tree_digest: receipt?.source_tree_digest || '',
+        phase_hash: result.decision?.phase_hash || '',
+        node_digest: result.decision?.node_digest || '',
+        confirmed_at: result.decision?.reviewed_at || Date.now() / 1000,
+      };
       state.pending = null;
       state.notice = result.note || '';
       if (approved) {
@@ -418,12 +429,52 @@
     }
   }
 
+  function validateConfirmationCurrency(index, state) {
+    const snapshot = state?.confirmationSnapshot;
+    if (!snapshot || !snapshot.confirmation_id) {
+      throw new Error('missing_confirmation_snapshot: no confirmed intent receipt recorded for this stage');
+    }
+    if (state.decision?.status !== 'APPROVED_FOR_NEXT_GUARDED_GATE') {
+      throw new Error('stale_confirmation_snapshot: intent decision is not approved for execution');
+    }
+    const currentPhase = String(S.workflow?.current_phase || STAGES[index] || '').toUpperCase();
+    const confirmedPhase = String(state.decision?.current_phase || '').toUpperCase();
+    if (confirmedPhase && currentPhase && confirmedPhase !== currentPhase) {
+      throw new Error(`stale_confirmation_snapshot: workflow phase changed from ${confirmedPhase} to ${currentPhase}`);
+    }
+    return snapshot;
+  }
+
   async function action(actionId, payload = {}) {
-    const result = await S.runHumanAction?.(actionId, payload);
+    const index = stageIndex();
+    const state = stageState(index);
+    let snapshot;
+    try {
+      snapshot = validateConfirmationCurrency(index, state);
+    } catch (err) {
+      return {ok: false, error: err.message || 'stale_confirmation_snapshot'};
+    }
+    const guardedPayload = {
+      ...payload,
+      confirmation_id: snapshot.confirmation_id,
+      intent_digest: snapshot.intent_digest,
+      semantic_ledger_digest: snapshot.semantic_ledger_digest,
+      repository_head: snapshot.repository_head,
+      source_tree_digest: snapshot.source_tree_digest,
+      confirmation_receipt_id: snapshot.confirmation_id,
+    };
+    const result = await S.runHumanAction?.(actionId, guardedPayload);
     return result || {ok: false, error: 'guarded_workflow_unavailable'};
   }
 
   async function executeApprovedStage(index, state) {
+    try {
+      validateConfirmationCurrency(index, state);
+    } catch (err) {
+      state.execution = {ok: false, error: err.message};
+      state.notice = `Execution blocked: ${err.message}`;
+      return;
+    }
     const task = activeTask();
     let result = {ok: true};
     if (index === 0) {
@@ -454,16 +505,37 @@
       state.gateCompleted = Boolean(result.ok && hasEvidence('staged_patch'));
     } else if (index === 5) {
       if (!hasEvidence('test_evidence')) result = await action('run_tests', {test_targets: S.workflow?.evidence?.test_targets || []});
-      if (result.ok && !hasEvidence('verification_packet')) result = await action('verify_patch');
+      if (result.ok && !hasEvidence('verification_packet')) {
+        try {
+          validateConfirmationCurrency(index, state);
+          result = await action('verify_patch');
+        } catch (err) {
+          result = {ok: false, error: err.message};
+        }
+      }
       state.gateCompleted = Boolean(result.ok && hasEvidence('test_evidence') && hasEvidence('verification_packet'));
     } else if (index === 6) {
       if (!hasEvidence('hotswap_status')) result = await action('check_hotswap');
-      if (result.ok && !hasEvidence('human_review')) result = await action('human_review', {
-        approved: false,
-        reviewer: 'showcase_human',
-        note: 'Gate Dialogue confirmed continuation to a review packet only. No production approval or merge was granted.',
-      });
-      if (result.ok && !hasEvidence('review_packet')) result = await action('export_handoff');
+      if (result.ok && !hasEvidence('human_review')) {
+        try {
+          validateConfirmationCurrency(index, state);
+          result = await action('human_review', {
+            approved: false,
+            reviewer: 'showcase_human',
+            note: 'Gate Dialogue confirmed continuation to a review packet only. No production approval or merge was granted.',
+          });
+        } catch (err) {
+          result = {ok: false, error: err.message};
+        }
+      }
+      if (result.ok && !hasEvidence('review_packet')) {
+        try {
+          validateConfirmationCurrency(index, state);
+          result = await action('export_handoff');
+        } catch (err) {
+          result = {ok: false, error: err.message};
+        }
+      }
       state.gateCompleted = Boolean(result.ok && (hasEvidence('human_review') || hasEvidence('review_packet')));
     }
     state.execution = result;
