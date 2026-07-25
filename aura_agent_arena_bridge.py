@@ -43,15 +43,17 @@ PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 
 # Files that are too large for direct reads — agents must use symbol search.
-_BLOCKED_HUB_FILES = frozenset({
-    "aura_node.py",
-    "aura_live_architect.py",
-    "aura_coding_arena_3d.py",
-    "aura_music_coding_arena.py",
-    "aura_emergent_result_verifier.py",
-    "aura_empirical_software_lab.py",
-    "aura_efficiency_benchmark.py",
-})
+_BLOCKED_HUB_FILES = frozenset(
+    {
+        "aura_node.py",
+        "aura_live_architect.py",
+        "aura_coding_arena_3d.py",
+        "aura_music_coding_arena.py",
+        "aura_emergent_result_verifier.py",
+        "aura_empirical_software_lab.py",
+        "aura_efficiency_benchmark.py",
+    }
+)
 
 DEFAULT_MAX_LINES = 120
 DEFAULT_MAX_TOKENS_EST = 2000
@@ -73,16 +75,18 @@ _SOURCE_OF_TRUTH = [
 ]
 
 # Secret-like field names that must never appear in tool output.
-_FORBIDDEN_OUTPUT_KEYS = frozenset({
-    "raw_snapshot_bytes",
-    "raw_sidecar_bytes",
-    "raw_private_memory",
-    "api_key",
-    "secret",
-    "password",
-    "token",
-    "private_key",
-})
+_FORBIDDEN_OUTPUT_KEYS = frozenset(
+    {
+        "raw_snapshot_bytes",
+        "raw_sidecar_bytes",
+        "raw_private_memory",
+        "api_key",
+        "secret",
+        "password",
+        "token",
+        "private_key",
+    }
+)
 
 
 def _short_hash(text: str, *, size: int = 12) -> str:
@@ -211,8 +215,7 @@ class AuraAgentArenaBridge:
         if session is None:
             raise ArenaBridgeError(
                 "missing_grounding",
-                f"No prepared arena session for plan_phase_hash={plan_phase_hash}. "
-                "Call aura_prepare_arena first.",
+                f"No prepared arena session for plan_phase_hash={plan_phase_hash}. Call aura_prepare_arena first.",
             )
         return session
 
@@ -280,13 +283,15 @@ class AuraAgentArenaBridge:
             raw_hubs = codemap.get("hubs", []) or []
             for hub in raw_hubs[:12]:
                 if isinstance(hub, dict):
-                    hubs.append({
-                        "path": str(hub.get("path", "")),
-                        "role": str(hub.get("role", "")),
-                        "symbols": int(hub.get("symbols", 0)),
-                        "tokens_est": int(hub.get("tokens_est", 0)),
-                        "topology_degree": int(hub.get("topology_degree", 0)),
-                    })
+                    hubs.append(
+                        {
+                            "path": str(hub.get("path", "")),
+                            "role": str(hub.get("role", "")),
+                            "symbols": int(hub.get("symbols", 0)),
+                            "tokens_est": int(hub.get("tokens_est", 0)),
+                            "topology_degree": int(hub.get("topology_degree", 0)),
+                        }
+                    )
 
         return {
             "version": BRIDGE_VERSION,
@@ -370,6 +375,18 @@ class AuraAgentArenaBridge:
             "stage_results": [],
             "hotswap_capsule": None,
             "unified_execution_bindings": {},
+            "unified_crucible_proposals": {},
+            "unified_crucible_bindings": {},
+            "unified_crucible_proposal_storage": {},
+            "unified_prediction_packets": {},
+            "unified_p1_observations": {},
+            "unified_continuity_receipts": {},
+            "unified_current_reproofs": {},
+            "unified_human_dispositions": {},
+            "unified_learning_decisions": {},
+            "unified_relationship_experiences": {},
+            "unified_qdkt_admissions": {},
+            "unified_learning_results": {},
         }
 
         # Build compressed summary.
@@ -505,9 +522,17 @@ class AuraAgentArenaBridge:
             binding = dict(session.get("unified_execution_bindings") or {}).get(str(task_id))
             if binding is None:
                 raise ValueError("unified execution binding is not retained for this task")
+            receipt = dict(session.get("unified_continuity_receipts") or {}).get(str(task_id))
+            learning = dict(session.get("unified_learning_decisions") or {}).get(str(task_id))
+            admission = dict(session.get("unified_qdkt_admissions") or {}).get(str(task_id))
             return {
                 "ok": True,
-                **compile_continuity_owner_projections(binding),
+                **compile_continuity_owner_projections(
+                    binding,
+                    continuity_receipt=receipt,
+                    learning_decision=learning,
+                    qdkt_admission=admission,
+                ),
                 "production_mutation": False,
                 "human_review_required": True,
             }
@@ -516,6 +541,99 @@ class AuraAgentArenaBridge:
                 "unified_memory_continuity_projection_failed",
                 str(exc),
                 repair_hint="Compile the unified execution binding before requesting projections.",
+            )
+
+    def aura_commit_unified_prediction(
+        self,
+        *,
+        plan_phase_hash: str,
+        task_id: str,
+        contract: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        """Commit immutable P0 for one retained unified execution binding."""
+        try:
+            from aura_unified_memory_continuity_learning import commit_bridge_prediction
+
+            prediction = commit_bridge_prediction(
+                self,
+                plan_phase_hash=plan_phase_hash,
+                task_id=task_id,
+                contract=contract,
+            )
+            return {
+                "ok": True,
+                "prediction": prediction.to_dict(),
+                "p0_committed": True,
+                "production_mutation": False,
+                "human_review_required": True,
+                "patch_authority": PATCH_AUTHORITY,
+                "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+            }
+        except (ArenaBridgeError, KeyError, TypeError, ValueError) as exc:
+            return make_error_packet(
+                "unified_prediction_commit_failed",
+                str(exc),
+                repair_hint="Compile an exact unified binding and provide a bounded P0 contract.",
+            )
+
+    def aura_observe_unified_prediction(
+        self,
+        *,
+        plan_phase_hash: str,
+        task_id: str,
+        observation: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        """Record independently observed P1 strictly after retained P0."""
+        try:
+            from aura_unified_memory_continuity_learning import observe_bridge_prediction
+
+            record = observe_bridge_prediction(
+                self,
+                plan_phase_hash=plan_phase_hash,
+                task_id=task_id,
+                observation=observation,
+            )
+            return {
+                "ok": True,
+                "observation": record.to_dict(),
+                "independent_observation": True,
+                "production_mutation": False,
+                "human_review_required": True,
+                "patch_authority": PATCH_AUTHORITY,
+                "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+            }
+        except (ArenaBridgeError, KeyError, TypeError, ValueError) as exc:
+            return make_error_packet(
+                "unified_prediction_observation_failed",
+                str(exc),
+                repair_hint="Commit P0 first, preserve exact HEAD/source, and use an independent observer.",
+            )
+
+    def aura_finalize_unified_learning(
+        self,
+        *,
+        plan_phase_hash: str,
+        task_id: str,
+        contract: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        """Complete governed continuity, reproof, experience, and QDKT admission."""
+        try:
+            from aura_unified_memory_continuity_learning import finalize_bridge_learning
+
+            return finalize_bridge_learning(
+                self,
+                plan_phase_hash=plan_phase_hash,
+                task_id=task_id,
+                contract=contract,
+            )
+        except (ArenaBridgeError, KeyError, TypeError, ValueError) as exc:
+            return make_error_packet(
+                "unified_learning_finalize_failed",
+                str(exc),
+                repair_hint=(
+                    "Retain exact P0/P1, bind a canonical proposal-only Crucible record, "
+                    "reprove current HEAD/source, and obtain explicit human/community disposition."
+                ),
             )
 
     # ------------------------------------------------------------------
@@ -556,11 +674,13 @@ class AuraAgentArenaBridge:
         if grounding:
             for hit in grounding.get("codemap_symbol_hits", []) or []:
                 if isinstance(hit, dict):
-                    line_ranges.append({
-                        "file": hit.get("file", target_file),
-                        "symbol": hit.get("name", target_symbol),
-                        "line_range": [hit.get("line", 0), hit.get("end_line", 0)],
-                    })
+                    line_ranges.append(
+                        {
+                            "file": hit.get("file", target_file),
+                            "symbol": hit.get("name", target_symbol),
+                            "line_range": [hit.get("line", 0), hit.get("end_line", 0)],
+                        }
+                    )
 
         # If no CODEMAP hits, try AST.
         if not line_ranges and target_file and target_symbol:
@@ -568,11 +688,13 @@ class AuraAgentArenaBridge:
             if resolved and resolved.exists():
                 rng = _find_symbol_line_range(resolved, target_symbol)
                 if rng:
-                    line_ranges.append({
-                        "file": target_file,
-                        "symbol": target_symbol,
-                        "line_range": [rng[0], rng[1]],
-                    })
+                    line_ranges.append(
+                        {
+                            "file": target_file,
+                            "symbol": target_symbol,
+                            "line_range": [rng[0], rng[1]],
+                        }
+                    )
 
         # Gather dependencies, tests, neighbors from grounding.
         dependencies: list[str] = []
@@ -604,12 +726,19 @@ class AuraAgentArenaBridge:
         # Try to get JSpace packet and ST3GG egress from the arena.
         jspace_packet = ""
         st3gg_egress: dict[str, Any] = {}
+        enrichment_warnings: list[dict[str, str]] = []
         try:
             liquid_arena = session.get("arena").liquid_arena if session.get("arena") else {}
             if isinstance(liquid_arena, dict):
                 jspace_packet = str(liquid_arena.get("jspace_packet", "") or "")
-        except Exception:  # noqa: BLE001
-            pass
+        except Exception as exc:  # noqa: BLE001
+            enrichment_warnings.append(
+                {
+                    "stage": "jspace_lookup",
+                    "error_type": type(exc).__name__,
+                    "message": str(exc)[:500],
+                }
+            )
 
         # Try compile_action_capsule if topology is available.
         capsule_context: dict[str, Any] = {}
@@ -648,8 +777,14 @@ class AuraAgentArenaBridge:
                             jspace_packet = str(compiled["jspace_packet"])
                         if compiled.get("st3gg_egress"):
                             st3gg_egress = compiled["st3gg_egress"]
-        except Exception:  # noqa: BLE001
-            pass
+        except Exception as exc:  # noqa: BLE001
+            enrichment_warnings.append(
+                {
+                    "stage": "action_capsule_enrichment",
+                    "error_type": type(exc).__name__,
+                    "message": str(exc)[:500],
+                }
+            )
 
         # Merge capsule_context if we got it.
         if capsule_context:
@@ -672,6 +807,7 @@ class AuraAgentArenaBridge:
             "jspace_packet": jspace_packet[:500] if jspace_packet else "",
             "st3gg_egress": st3gg_egress,
             "compressed_context": compressed_context,
+            "enrichment_warnings": enrichment_warnings,
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
@@ -731,39 +867,45 @@ class AuraAgentArenaBridge:
                                         and e.get("id") in (node.get("dependencies", []) or [])
                                     ][:3]
                                     break
-                    results.append({
-                        "file": file_path or "",
-                        "symbol": str(hit.get("name", query)),
-                        "line_range": [int(hit.get("line", 0)), int(hit.get("end_line", 0))],
-                        "reason": "symbol hit",
-                        "neighbors": neighbors,
-                    })
+                    results.append(
+                        {
+                            "file": file_path or "",
+                            "symbol": str(hit.get("name", query)),
+                            "line_range": [int(hit.get("line", 0)), int(hit.get("end_line", 0))],
+                            "reason": "symbol hit",
+                            "neighbors": neighbors,
+                        }
+                    )
 
         elif search_kind == "file":
             files = codemap.get("files", {})
             if isinstance(files, dict):
                 for path_key in files:
                     if query_lower in str(path_key).lower():
-                        results.append({
-                            "file": str(path_key),
-                            "symbol": "",
-                            "line_range": [],
-                            "reason": "file hit",
-                            "neighbors": [],
-                        })
+                        results.append(
+                            {
+                                "file": str(path_key),
+                                "symbol": "",
+                                "line_range": [],
+                                "reason": "file hit",
+                                "neighbors": [],
+                            }
+                        )
                         if len(results) >= max_results:
                             break
             elif isinstance(files, list):
                 for item in files:
                     path_str = str(item.get("path", item) if isinstance(item, dict) else item)
                     if query_lower in path_str.lower():
-                        results.append({
-                            "file": path_str,
-                            "symbol": "",
-                            "line_range": [],
-                            "reason": "file hit",
-                            "neighbors": [],
-                        })
+                        results.append(
+                            {
+                                "file": path_str,
+                                "symbol": "",
+                                "line_range": [],
+                                "reason": "file hit",
+                                "neighbors": [],
+                            }
+                        )
                         if len(results) >= max_results:
                             break
 
@@ -777,13 +919,15 @@ class AuraAgentArenaBridge:
                 for cmd, info in command_index.items():
                     if query_lower in str(cmd).lower():
                         if isinstance(info, dict):
-                            results.append({
-                                "file": str(info.get("file", "")),
-                                "symbol": str(info.get("symbol", cmd)),
-                                "line_range": [int(info.get("line", 0)), int(info.get("end_line", 0))],
-                                "reason": "command hit",
-                                "neighbors": [],
-                            })
+                            results.append(
+                                {
+                                    "file": str(info.get("file", "")),
+                                    "symbol": str(info.get("symbol", cmd)),
+                                    "line_range": [int(info.get("line", 0)), int(info.get("end_line", 0))],
+                                    "reason": "command hit",
+                                    "neighbors": [],
+                                }
+                            )
                         if len(results) >= max_results:
                             break
 
@@ -803,22 +947,26 @@ class AuraAgentArenaBridge:
         results: list[dict[str, Any]] = []
         try:
             cmd = [
-                "grep", "-rn", "--include=*.py", "-l",
+                "grep",
+                "-rlF",
+                "--include=*.py",
                 query,
                 str(self.repo_root),
             ]
             proc = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
             for line in proc.stdout.strip().splitlines()[:max_results]:
                 rel = line.replace(str(self.repo_root) + "/", "").strip()
-                results.append({
-                    "file": rel,
-                    "symbol": "",
-                    "line_range": [],
-                    "reason": "text hit",
-                    "neighbors": [],
-                })
-        except Exception:  # noqa: BLE001
-            pass
+                results.append(
+                    {
+                        "file": rel,
+                        "symbol": "",
+                        "line_range": [],
+                        "reason": "text hit",
+                        "neighbors": [],
+                    }
+                )
+        except (OSError, subprocess.SubprocessError) as exc:
+            _LOG.warning("Bridge fallback text search failed: %s", type(exc).__name__)
         return results
 
     # ------------------------------------------------------------------
@@ -1049,7 +1197,9 @@ class AuraAgentArenaBridge:
         # Determine next action.
         if verification.hotswap_ready:
             next_action = "promote_hotswap"
-        elif any(f.get("stage") in {"patch_boundary", "patch_task_boundary", "patch_conflict"} for f in verification.failures):
+        elif any(
+            f.get("stage") in {"patch_boundary", "patch_task_boundary", "patch_conflict"} for f in verification.failures
+        ):
             next_action = "escalate_to_judge"
         elif any(f.get("stage") == "tests" for f in verification.failures):
             next_action = "repair_with_builder"
@@ -1059,6 +1209,7 @@ class AuraAgentArenaBridge:
             next_action = "escalate_to_judge"
 
         # Try CODEMAP refresh for touched files.
+        codemap_refresh_warning: dict[str, str] | None = None
         try:
             from aura_codebase_navigator import refresh_codemap_for_paths
 
@@ -1067,8 +1218,11 @@ class AuraAgentArenaBridge:
                 root=self.repo_root,
                 include_topology=True,
             )
-        except Exception:  # noqa: BLE001
-            pass
+        except Exception as exc:  # noqa: BLE001
+            codemap_refresh_warning = {
+                "error_type": type(exc).__name__,
+                "message": str(exc)[:500],
+            }
 
         return {
             "ok": verification.ok,
@@ -1078,6 +1232,7 @@ class AuraAgentArenaBridge:
             "compressed_log": compressed_log,
             "next_action": next_action,
             "hotswap_ready": verification.hotswap_ready,
+            "codemap_refresh_warning": codemap_refresh_warning,
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
@@ -1097,9 +1252,13 @@ class AuraAgentArenaBridge:
                 return {"status": "failed", "reason": f"test file not found: {test_path}"}
             try:
                 cmd = [
-                    "python", "-m", "pytest",
+                    "python",
+                    "-m",
+                    "pytest",
                     str(resolved),
-                    "-q", "--tb=short", "--no-header",
+                    "-q",
+                    "--tb=short",
+                    "--no-header",
                 ]
                 if test_scope == "focused":
                     cmd.extend(["-x", "--lf"])
@@ -1191,11 +1350,13 @@ class AuraAgentArenaBridge:
         if grounding:
             for hit in grounding.get("codemap_symbol_hits", []) or []:
                 if isinstance(hit, dict):
-                    line_ranges.append({
-                        "file": hit.get("file", ""),
-                        "symbol": hit.get("name", ""),
-                        "line_range": [hit.get("line", 0), hit.get("end_line", 0)],
-                    })
+                    line_ranges.append(
+                        {
+                            "file": hit.get("file", ""),
+                            "symbol": hit.get("name", ""),
+                            "line_range": [hit.get("line", 0), hit.get("end_line", 0)],
+                        }
+                    )
 
         # Original patch summary.
         original_patch_summary = ""

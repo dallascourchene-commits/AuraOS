@@ -652,7 +652,7 @@ def compile_continuity_owner_projections(
         },
         "relationship_experience": {
             "owner": binding.owner_refs["relationship_experience"],
-            "eligible": learning.get("eligible") is True,
+            "eligible": learning.get("eligible_for_relationship_experience") is True,
             "automatic_record": False,
             "human_disposition_required": True,
         },
