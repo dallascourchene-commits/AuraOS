@@ -28,6 +28,7 @@ jobs:
       (github.event_name == 'push' ||
        startsWith(github.event.pull_request.head.ref, 'analysis/') ||
        startsWith(github.event.pull_request.head.ref, 'docs/') ||
+       startsWith(github.event.pull_request.head.ref, 'fix/issue-200-') ||
        startsWith(github.event.pull_request.head.ref, 'fix/construction-demo-runtime-harness-'))
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -159,7 +160,7 @@ jobs:
       - name: Commit synchronized final tree
         env:
           GH_TOKEN: ${{ github.token }}
-          TARGET_BRANCH: ${{ github.ref_name }}
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
         run: |
           set -o pipefail
           {
@@ -190,7 +191,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: synchronized-codemap-${{ github.sha }}
+          name: synchronized-codemap-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
             .aura/CODEMAP.json
             .aura/CODEMAP.md
