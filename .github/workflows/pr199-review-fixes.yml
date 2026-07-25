@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Preserve encoded review patch
+      - name: Preserve encoded exact-head review patch
         run: cp .aura/analysis/pr199_review_fixes_payload.txt /tmp/review.b64
 
       - name: Reset to exact PR head
@@ -37,25 +37,21 @@ jobs:
           git reset --hard e361c62209bf8b93a36d80c74288657c057f7408
           test "$(git rev-parse HEAD)" = "e361c62209bf8b93a36d80c74288657c057f7408"
 
-      - name: Decode and verify review patch
+      - name: Decode and verify exact-head review patch
         shell: bash
         run: |
           set -euo pipefail
           base64 -d /tmp/review.b64 > /tmp/review.patch.gz
           gzip -t /tmp/review.patch.gz
           gzip -d -c /tmp/review.patch.gz > /tmp/review.patch
-          test "$(sha256sum /tmp/review.patch | awk '{print $1}')" = "817aedb212d29cf20c48f42e26632785b470ca6caea424e950bff1018c519bd7"
+          test "$(sha256sum /tmp/review.patch | awk '{print $1}')" = "dfdd281ebb7769086a1078350456881366a4361d8ca85b4931ad1bfa297e402d"
 
-      - name: Apply bounded review patch with drift tolerance
+      - name: Apply exact bounded review patch
         shell: bash
         run: |
           set -euo pipefail
-          patch --dry-run --batch --forward -p1 --fuzz=3 < /tmp/review.patch
-          patch --batch --forward -p1 --fuzz=3 < /tmp/review.patch
-          if find . -name '*.rej' -print -quit | grep -q .; then
-            find . -name '*.rej' -print
-            exit 1
-          fi
+          git apply --check /tmp/review.patch
+          git apply /tmp/review.patch
 
       - name: Install focused verification tooling
         run: python -m pip install --upgrade pytest ruff
@@ -66,8 +62,6 @@ jobs:
           set -euo pipefail
           files=(
             aura_agent_arena_bridge.py
-            aura_agent_arena_mcp.py
-            aura_arena_persistence_adapters.py
             aura_qdkt_observations.py
             aura_unified_memory_continuity_learning.py
             tests/test_aura_unified_memory_continuity_learning.py
@@ -88,7 +82,7 @@ jobs:
             tests/test_aura_arena_persistence_adapters.py \
             tests/test_aura_qdkt_observations.py
 
-      - name: Enforce exact six-file scope
+      - name: Enforce exact four-file scope
         shell: bash
         run: |
           set -euo pipefail
@@ -96,8 +90,6 @@ jobs:
           actual="$(git diff --name-only | sort)"
           expected="$(printf '%s\n' \
             aura_agent_arena_bridge.py \
-            aura_agent_arena_mcp.py \
-            aura_arena_persistence_adapters.py \
             aura_qdkt_observations.py \
             aura_unified_memory_continuity_learning.py \
             tests/test_aura_unified_memory_continuity_learning.py | sort)"
@@ -112,8 +104,6 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add \
             aura_agent_arena_bridge.py \
-            aura_agent_arena_mcp.py \
-            aura_arena_persistence_adapters.py \
             aura_qdkt_observations.py \
             aura_unified_memory_continuity_learning.py \
             tests/test_aura_unified_memory_continuity_learning.py
