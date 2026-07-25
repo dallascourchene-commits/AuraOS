@@ -14,7 +14,7 @@ on:
       - ".github/workflows/bilateral-intent-pr2.yml"
   push:
     branches:
-      - "refactor/bilateral-intent-pr2-canonical-gate"
+      - "refactor/bilateral-intent-pr2-canonical-gate-dialogue"
 
 permissions:
   contents: read
@@ -70,10 +70,30 @@ jobs:
       - name: Validate browser syntax
         run: node --check aura_showcase/gate-dialogue.js
       - name: Run PR1 and PR2 focused proof
+        id: focused_proof
+        continue-on-error: true
         run: |
+          set -o pipefail
           python -m pytest -q \
             tests/test_aura_intent_refinement.py \
             tests/test_aura_intent_ingestion_bilateral.py \
             tests/test_bilateral_intent_pr1_evidence.py \
             tests/test_aura_showcase_gate_dialogue.py \
-            tests/test_bilateral_intent_pr2_evidence.py
+            tests/test_bilateral_intent_pr2_evidence.py \
+            --junitxml=bilateral-intent-pr2-junit.xml \
+            2>&1 | tee bilateral-intent-pr2-pytest.log
+      - name: Upload focused proof diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bilateral-intent-pr2-${{ matrix.python-version }}-${{ github.run_id }}
+          path: |
+            bilateral-intent-pr2-junit.xml
+            bilateral-intent-pr2-pytest.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce focused proof result
+        if: steps.focused_proof.outcome != 'success'
+        run: |
+          echo "The focused bilateral-intent proof failed. Inspect the uploaded diagnostics."
+          exit 1
