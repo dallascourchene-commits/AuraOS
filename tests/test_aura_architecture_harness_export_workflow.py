@@ -14,9 +14,9 @@ def test_export_uses_request_harness_against_exact_main() -> None:
     assert "refs/remotes/origin/main" in workflow
     assert "refs/remotes/origin/harness-request" in workflow
     assert 'test "$REQUEST_SHA" = "$GITHUB_SHA"' in workflow
-    assert 'git show "$REQUEST_SHA:scripts/aura_architecture_harness.py"' in workflow
-    assert 'python scripts/aura_architecture_harness.py' in workflow
-    assert 'python "${RUNNER_TEMP}/aura_architecture_harness.py"' not in workflow
+    assert 'git archive "$REQUEST_SHA" | tar -x -C "$REQUEST_TOOLS_DIR"' in workflow
+    assert 'python "$REQUEST_TOOLS_DIR/scripts/aura_architecture_harness.py"' in workflow
+    assert 'python scripts/aura_architecture_harness.py' not in workflow
     assert '"source_main_sha": os.environ["SOURCE_SHA"]' in workflow
     assert '"request_harness_sha": os.environ["REQUEST_HARNESS_SHA"]' in workflow
 
@@ -25,7 +25,7 @@ def test_export_keeps_generated_artifacts_outside_checkout() -> None:
     workflow = _workflow_text()
 
     assert 'FULL_EXPORT_DIR="${RUNNER_TEMP}/AuraOS-full-export"' in workflow
-    assert 'python scripts/aura_exact_head_transport.py' in workflow
+    assert 'python "$REQUEST_TOOLS_DIR/scripts/aura_exact_head_transport.py"' in workflow
     assert '--output-dir "$FULL_EXPORT_DIR"' in workflow
     assert '${{ runner.temp }}/AuraOS-full-export/AuraOS-full-repository.zip' in workflow
     assert 'test -z "$(git status --porcelain=v1 --untracked-files=all)"' in workflow
@@ -50,8 +50,8 @@ def test_forensic_snapshot_upload_precedes_ai_handoff() -> None:
 
 def test_export_workflow_uses_exact_head_transport_and_external_diagnostics() -> None:
     workflow = Path(".github/workflows/aura-architecture-harness-export.yml").read_text(encoding="utf-8")
-    assert "scripts/aura_exact_head_transport.py" in workflow
+    assert 'python "$REQUEST_TOOLS_DIR/scripts/aura_exact_head_transport.py"' in workflow
     assert "${RUNNER_TEMP}/AuraOS-export-diagnostics" in workflow
-    assert "python scripts/aura_architecture_harness.py" in workflow
-    assert 'python "${RUNNER_TEMP}/aura_architecture_harness.py"' not in workflow
+    assert 'python "$REQUEST_TOOLS_DIR/scripts/aura_architecture_harness.py"' in workflow
+    assert "python scripts/aura_architecture_harness.py" not in workflow
     assert "Upload failure diagnostics outside checkout" in workflow
