@@ -37,17 +37,7 @@ jobs:
       - name: Install declared dependencies and test tooling
         run: |
           python -m pip install --upgrade pip
-          python -m pip install \
-            "numpy>=1.26.4,<3.0" \
-            "websockets>=12.0,<17.0" \
-            "aiosqlite>=0.20.0,<1.0" \
-            "ddgs>=6.0,<10.0" \
-            "wasmtime>=20.0,<46.0" \
-            "aiohttp>=3.9.0,<4.0" \
-            "beautifulsoup4>=4.12.0,<5.0" \
-            "httpx>=0.27.0,<1.0" \
-            "cryptography>=41.0.0,<45.0" \
-            pytest pytest-asyncio ruff
+          python -m pip install -r requirements.txt pytest pytest-asyncio
       - name: Compile governed contract modules
         run: |
           python -m py_compile \
@@ -72,7 +62,9 @@ jobs:
             aura_model_cognome_store.py \
             aura_model_cognome_store_schema.py \
             aura_model_cognome_store_records.py \
-            aura_model_cognome_store_io.py
+            aura_model_cognome_store_io.py \
+            aura_bilateral_intent_ingestion.py \
+            aura_intent_refinement.py
       - name: Fatal lint checks
         run: |
           ruff check --select E9,F63,F7,F82 \
@@ -98,13 +90,18 @@ jobs:
             aura_model_cognome_store_schema.py \
             aura_model_cognome_store_records.py \
             aura_model_cognome_store_io.py \
+            aura_bilateral_intent_ingestion.py \
+            aura_intent_refinement.py \
             tests/test_aura_arena_experience_ledger.py \
             tests/test_aura_crucible_phase_b.py \
             tests/test_aura_phase_c1_route_capsules.py \
             tests/test_aura_codemap_verify.py \
             tests/test_aura_model_cognome.py \
             tests/test_aura_dikwp_router_pipeline.py \
-            tests/test_aura_model_cognome_store.py
+            tests/test_aura_model_cognome_store.py \
+            tests/test_aura_intent_ingestion_bilateral.py \
+            tests/test_aura_intent_refinement.py \
+            tests/test_bilateral_intent_pr1_evidence.py
       - name: Run focused governed contract tests
         run: |
           python -m pytest -q \
@@ -117,7 +114,10 @@ jobs:
             tests/test_aura_human_agent_wfst_live_integration.py \
             tests/test_aura_model_cognome.py \
             tests/test_aura_dikwp_router_pipeline.py \
-            tests/test_aura_model_cognome_store.py
+            tests/test_aura_model_cognome_store.py \
+            tests/test_aura_intent_ingestion_bilateral.py \
+            tests/test_aura_intent_refinement.py \
+            tests/test_bilateral_intent_pr1_evidence.py
 
   full-pytest-suite:
     name: Full pytest-native suite
@@ -132,16 +132,7 @@ jobs:
       - name: Install declared dependencies and test tooling
         run: |
           python -m pip install --upgrade pip
-          python -m pip install \
-            "numpy>=1.26.4,<3.0" \
-            "websockets>=12.0,<17.0" \
-            "aiosqlite>=0.20.0,<1.0" \
-            "ddgs>=6.0,<10.0" \
-            "wasmtime>=20.0,<46.0" \
-            "aiohttp>=3.9.0,<4.0" \
-            "beautifulsoup4>=4.12.0,<5.0" \
-            "httpx>=0.27.0,<1.0" \
-            "cryptography>=41.0.0,<45.0" \
+          python -m pip install -r requirements.txt \
             "jsonschema>=4.23,<5.0" \
             "pytest>=8.2,<9.0" \
             "pytest-asyncio>=0.23,<1.0" \
@@ -198,16 +189,7 @@ jobs:
       - name: Install declared dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install \
-            "numpy>=1.26.4,<3.0" \
-            "websockets>=12.0,<17.0" \
-            "aiosqlite>=0.20.0,<1.0" \
-            "ddgs>=6.0,<10.0" \
-            "wasmtime>=20.0,<46.0" \
-            "aiohttp>=3.9.0,<4.0" \
-            "beautifulsoup4>=4.12.0,<5.0" \
-            "httpx>=0.27.0,<1.0" \
-            "cryptography>=41.0.0,<45.0"
+          python -m pip install -r requirements.txt
       - name: Run validator through its intended entry point
         id: validator
         continue-on-error: true
@@ -255,16 +237,7 @@ jobs:
       - name: Install declared dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install \
-            "numpy>=1.26.4,<3.0" \
-            "websockets>=12.0,<17.0" \
-            "aiosqlite>=0.20.0,<1.0" \
-            "ddgs>=6.0,<10.0" \
-            "wasmtime>=20.0,<46.0" \
-            "aiohttp>=3.9.0,<4.0" \
-            "beautifulsoup4>=4.12.0,<5.0" \
-            "httpx>=0.27.0,<1.0" \
-            "cryptography>=41.0.0,<45.0"
+          python -m pip install -r requirements.txt
       - name: Preserve committed CODEMAP snapshot
         run: cp .aura/CODEMAP.json "${RUNNER_TEMP}/CODEMAP.committed.json"
       - name: Regenerate deep CODEMAP
@@ -302,16 +275,7 @@ jobs:
       - name: Install declared dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install \
-            "numpy>=1.26.4,<3.0" \
-            "websockets>=12.0,<17.0" \
-            "aiosqlite>=0.20.0,<1.0" \
-            "ddgs>=6.0,<10.0" \
-            "wasmtime>=20.0,<46.0" \
-            "aiohttp>=3.9.0,<4.0" \
-            "beautifulsoup4>=4.12.0,<5.0" \
-            "httpx>=0.27.0,<1.0" \
-            "cryptography>=41.0.0,<45.0"
+          python -m pip install -r requirements.txt
       - name: Regenerate and validate CODEMAP
         run: |
           python aura_codebase_navigator.py
