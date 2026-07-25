@@ -1,0 +1,101 @@
+{
+  "version": "AURA_CODING_WABOOSE_REQUEST_V2",
+  "request_id": "bilateral_intent_guardrail_foundry_v2",
+  "status": "PROPOSAL_ONLY",
+  "objective_receipt": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
+  "base_repository_head": "598804b3dce8d39480d8494cf0144f872b01d9ca",
+  "review_scope": {
+    "source_and_evidence_paths": [
+      "aura_intent_refinement.py",
+      "schemas/aura_intent_refinement.v1.schema.json",
+      "tests/test_aura_intent_refinement.py",
+      ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
+      ".aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json",
+      "tests/test_bilateral_intent_pr1_evidence.py"
+    ],
+    "generated_navigation_paths": [
+      ".aura/CODEMAP.json",
+      ".aura/CODEMAP.md",
+      "topology_map.json"
+    ],
+    "generated_artifact_disposition": "REGENERATE_FROM_FINAL_SOURCE_TREE_ONLY"
+  },
+  "invariants": [
+    "canonical human meaning is confirmed before execution",
+    "negative requirements are never discarded by compression",
+    "hard guardrails cannot be weakened by models or normal human dialogue",
+    "human-added guardrails cannot disappear through replanning",
+    "no new intent, memory, truth, policy, verification, publication, continuity, or authority plane is created",
+    "legacy ActCapsule remains canonical",
+    "merged PR #193 and PR #198 contracts and owners are reused",
+    "merged PR #199 U7 learning-to-reproof remains the canonical learning lifecycle",
+    "merged Issue #200 transport remains the canonical exact-head candidate and publication transport",
+    "all plan revisions are explicit, exact-head-bound, and digest-bound",
+    "no self-verification",
+    "no production mutation",
+    "no hidden failure",
+    "no tests are weakened to obtain a pass",
+    "all temporary resources and descendant processes dissolve",
+    "runtime proof binds exact source, confirmation, revision, candidate, and verifier identity",
+    "current reproof and human or community disposition are required before durable learning",
+    "no partial candidate bundle is published",
+    "no out-of-scope addition, modification, deletion, symlink, or special file is accepted",
+    "trusted forensic upload files cannot remain mutable by request-controlled processes after comparison"
+  ],
+  "risk_map": [
+    "negation lost in compression",
+    "false clarification confidence",
+    "excessive questioning",
+    "guardrail overload",
+    "model-proposed guardrail treated as law",
+    "hard guardrail accidentally editable",
+    "human-added guardrail lost",
+    "stale confirmation replay",
+    "stale source or model evidence replay",
+    "silent plan drift",
+    "duplicate intent owner",
+    "duplicate policy, continuity, learning, or publication owner",
+    "scope expansion",
+    "authority escalation",
+    "diagnostic privacy leak",
+    "repair loop repetition",
+    "patch that hides symptom",
+    "cross-Arena coupling",
+    "formatter-drift patch failure",
+    "partial publication",
+    "request-controlled post-comparison artifact replacement",
+    "generated CODEMAP drift"
+  ],
+  "required_evidence": [
+    "exact base SHA and source blob identities",
+    "explicit source and generated-path allowlists",
+    "positive and negative focused tests",
+    "confirmation staleness proof",
+    "deep immutability proof",
+    "hard-guardrail disposition proof",
+    "candidate blob identity proof",
+    "fatal lint and Python compilation",
+    "final-tree CODEMAP and topology regeneration proof"
+  ],
+  "blocker_classes": [
+    "AUTHORITY",
+    "PROHIBITION",
+    "SCOPE",
+    "INVARIANT",
+    "INTERFACE",
+    "DEPENDENCY",
+    "SEQUENCE",
+    "STALE_CONFIRMATION",
+    "NEGATION_LOSS",
+    "PARTIAL_PUBLICATION",
+    "GENERATED_NAVIGATION_DRIFT"
+  ],
+  "authority": {
+    "review_only": true,
+    "patch_authority": false,
+    "commit_authority": false,
+    "publication_authority": false,
+    "merge_authority": false,
+    "production_mutation": false
+  }
+}
