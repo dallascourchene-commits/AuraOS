@@ -2,7 +2,7 @@
 
 > Canonical architecture, ownership, data-flow, and authority anchor for humans and AI agents
 
-**Architecture audit:** reviewed through July 24, 2026 and the preceding merged development, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S6, Construction Arena G0–G8, Coding Relationship Compass C0–C9, typed Coding Waboose review learning, source-integrity and Crucible ancestry hardening, bounded browser/interchange/Gaussian representation support, the Runtime Refactor Harness, and the atomic Agent Bridge GitHub publication lane.
+**Architecture audit:** reviewed through July 25, 2026 and the preceding merged development, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S6, Construction Arena G0–G8, Coding Relationship Compass C0–C9, typed Coding Waboose review learning, source-integrity and Crucible ancestry hardening, bounded browser/interchange/Gaussian representation support, the Runtime Refactor Harness, and the atomic Agent Bridge GitHub publication lane.
 
 **Navigation rule:** read this file before subsystem documents. Regenerate CODEMAP/topology from the current tree after architecture or source changes.
 
@@ -79,7 +79,13 @@ Three dispositions are canonical:
 
 Generated maps remain navigation evidence and never become patch authority. Dirty repositories fail closed by default; unrestricted giant diffs and unbounded subprocess capture are prohibited. Long architecture runs are supervised by a proposal-only watchdog: a 10-minute check-in classifies healthy, slow-but-progressing, stalled, or unknown state, while a 20-minute hard checkpoint terminates the child safely and requires explicit `--resume`. Watchdog receipts are external run artifacts and grant no mutation authority. The full exact Git export remains a separate forensic reconstruction artifact rather than the preferred AI review input.
 
-## 3A. Runtime Refactor Harness boundary
+## 3A. Exact-head transport and atomic bundle boundary
+
+`scripts/aura_exact_head_transport.py` is the reusable exact-head transport owner introduced by Issue #200. It binds every operation to a lowercase 40-character expected commit, verifies the observed `HEAD`, and requires a clean working tree before and after export, materialization, or bundle construction. Failure receipts, archives, temporary materializations, and final bundle files must remain outside the source checkout.
+
+The publication-bundle path is all-or-nothing. It emits canonical whole-file add/replace/delete operations only after validating the complete candidate tree against an explicit allowlist. Out-of-scope additions, modifications, deletions, symlinks, and special files fail closed, including formatter-induced whole-file changes. The architecture export workflow extracts the exact request revision into an external tools directory, compiles that request harness and transport helper, detaches to exact `main`, runs the request transport into a non-authoritative comparison directory, independently generates the authoritative native `git archive`, and requires byte-for-byte equality before upload. The helper prepares evidence only: `production_mutation=false`, `automatic_publication=false`, and `merge_authority=false`.
+
+## 3B. Runtime Refactor Harness boundary
 
 The Runtime Refactor Harness is an observation-and-proof owner attached to the stable Architecture Harness entrypoint. It does not replace Coding Arena, Forge, Waboose, Council, Crucible, Observatory, or Agent Bridge.
 
