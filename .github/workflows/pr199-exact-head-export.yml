@@ -25,19 +25,19 @@ jobs:
           set -euo pipefail
           HEAD_SHA="$(git rev-parse HEAD)"
           test "$HEAD_SHA" = "e361c62209bf8b93a36d80c74288657c057f7408"
-          git status --porcelain=v1 | tee pr199-status.txt
-          test ! -s pr199-status.txt
-          git bundle create PR199-exact-head.bundle HEAD
-          sha256sum PR199-exact-head.bundle > PR199-exact-head.bundle.sha256
-          printf '%s\n' "$HEAD_SHA" > PR199-exact-head.sha
+          git status --porcelain=v1 > "${RUNNER_TEMP}/pr199-status.txt"
+          test ! -s "${RUNNER_TEMP}/pr199-status.txt"
+          git bundle create "${RUNNER_TEMP}/PR199-exact-head.bundle" HEAD
+          sha256sum "${RUNNER_TEMP}/PR199-exact-head.bundle" > "${RUNNER_TEMP}/PR199-exact-head.bundle.sha256"
+          printf '%s\n' "$HEAD_SHA" > "${RUNNER_TEMP}/PR199-exact-head.sha"
 
       - uses: actions/upload-artifact@v4
         with:
           name: PR199-exact-head-e361c622
           path: |
-            PR199-exact-head.bundle
-            PR199-exact-head.bundle.sha256
-            PR199-exact-head.sha
+            ${{ runner.temp }}/PR199-exact-head.bundle
+            ${{ runner.temp }}/PR199-exact-head.bundle.sha256
+            ${{ runner.temp }}/PR199-exact-head.sha
           if-no-files-found: error
           retention-days: 7
 
