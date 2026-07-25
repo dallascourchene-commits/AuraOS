@@ -12,6 +12,11 @@
     "allowed_test_paths": [
       "tests/test_aura_bilateral_gate_dialogue.py"
     ],
+    "allowed_governance_paths": [
+      ".github/workflows/ci.yml",
+      ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json",
+      ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2.v1.json"
+    ],
     "generated_paths": [
       ".aura/CODEMAP.json",
       ".aura/CODEMAP.md",
@@ -33,6 +38,7 @@
   ],
   "verification": [
     "Python compilation",
+    "JavaScript syntax validation",
     "fatal Ruff classes E9 F63 F7 F82",
     "focused bilateral Gate Dialogue tests",
     "existing Gate Dialogue regression tests",
