@@ -1,0 +1,240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://auraos.local/schemas/aura_intent_refinement.v1.schema.json",
+  "title": "AuraOS Bilateral Intent Refinement Contracts",
+  "type": "object",
+  "required": ["record_type", "payload"],
+  "properties": {
+    "record_type": {
+      "enum": [
+        "IntentRefinementSession",
+        "ClarificationQuestion",
+        "GuardrailProposal",
+        "PairedTeachBack",
+        "IntentConfirmationReceipt",
+        "IntentRevisionDelta",
+        "NegativeRequirement"
+      ]
+    },
+    "payload": {"type": "object"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"record_type": {"const": "IntentRefinementSession"}}},
+      "then": {"properties": {"payload": {"$ref": "#/$defs/IntentRefinementSession"}}}
+    },
+    {
+      "if": {"properties": {"record_type": {"const": "ClarificationQuestion"}}},
+      "then": {"properties": {"payload": {"$ref": "#/$defs/ClarificationQuestion"}}}
+    },
+    {
+      "if": {"properties": {"record_type": {"const": "GuardrailProposal"}}},
+      "then": {"properties": {"payload": {"$ref": "#/$defs/GuardrailProposal"}}}
+    },
+    {
+      "if": {"properties": {"record_type": {"const": "PairedTeachBack"}}},
+      "then": {"properties": {"payload": {"$ref": "#/$defs/PairedTeachBack"}}}
+    },
+    {
+      "if": {"properties": {"record_type": {"const": "IntentConfirmationReceipt"}}},
+      "then": {"properties": {"payload": {"$ref": "#/$defs/IntentConfirmationReceipt"}}}
+    },
+    {
+      "if": {"properties": {"record_type": {"const": "IntentRevisionDelta"}}},
+      "then": {"properties": {"payload": {"$ref": "#/$defs/IntentRevisionDelta"}}}
+    },
+    {
+      "if": {"properties": {"record_type": {"const": "NegativeRequirement"}}},
+      "then": {"properties": {"payload": {"$ref": "#/$defs/NegativeRequirement"}}}
+    }
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "NonEmptyString": {"type": "string", "minLength": 1, "maxLength": 16384},
+    "StringArray": {
+      "type": "array",
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/NonEmptyString"}
+    },
+    "RecordArray": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {"type": "object"}
+    },
+    "Stage": {
+      "enum": ["DRAFT", "ANALYZED", "CLARIFICATION_REQUIRED", "TEACH_BACK_PENDING", "HUMAN_CONFIRMED", "COMPILED", "STALE", "REJECTED", "EXPIRED"]
+    },
+    "AmbiguityClass": {
+      "enum": ["TERM_MEANING", "DESIRED_OUTCOME", "PROHIBITED_OUTCOME", "SCOPE", "AUTHORITY", "FAILURE_BEHAVIOR", "FALLBACK_BEHAVIOR", "DATA_PRIVACY", "EXTERNAL_EFFECT", "EVIDENCE_REQUIRED", "CONTRADICTION", "PRIORITY", "REVERSIBILITY"]
+    },
+    "NegativeRequirementClass": {
+      "enum": ["PROHIBITION", "EXCLUSION_NON_GOAL", "PRESERVATION_INVARIANT", "AUTHORITY_DENIAL", "FAILURE_BEHAVIOR", "PRIVACY_RESTRICTION", "RESOURCE_RESTRICTION", "QUALITY_PROHIBITION", "SCOPE_BOUNDARY", "TEMPORAL_RESTRICTION", "SOFT_PREFERENCE"]
+    },
+    "NegativeRequirement": {
+      "type": "object",
+      "required": ["requirement_id", "statement", "classification", "source_span", "source_start", "source_end", "operator", "target", "scope", "ambiguous", "version"],
+      "properties": {
+        "requirement_id": {"$ref": "#/$defs/NonEmptyString"},
+        "statement": {"$ref": "#/$defs/NonEmptyString"},
+        "classification": {"$ref": "#/$defs/NegativeRequirementClass"},
+        "source_span": {"$ref": "#/$defs/NonEmptyString"},
+        "source_start": {"type": "integer", "minimum": 0},
+        "source_end": {"type": "integer", "minimum": 1},
+        "operator": {"$ref": "#/$defs/NonEmptyString"},
+        "target": {"type": "string"},
+        "scope": {"type": "string"},
+        "ambiguous": {"type": "boolean"},
+        "version": {"const": "AURA_INTENT_REFINEMENT_V1"}
+      },
+      "additionalProperties": false
+    },
+    "ClarificationQuestion": {
+      "type": "object",
+      "required": ["question_id", "ambiguity_class", "question", "why_it_changes_execution", "candidate_answers", "affected_requirements", "affected_guardrails", "required_human_answer", "version"],
+      "properties": {
+        "question_id": {"$ref": "#/$defs/NonEmptyString"},
+        "ambiguity_class": {"$ref": "#/$defs/AmbiguityClass"},
+        "question": {"$ref": "#/$defs/NonEmptyString"},
+        "why_it_changes_execution": {"$ref": "#/$defs/NonEmptyString"},
+        "candidate_answers": {"$ref": "#/$defs/StringArray"},
+        "affected_requirements": {"$ref": "#/$defs/StringArray"},
+        "affected_guardrails": {"$ref": "#/$defs/StringArray"},
+        "required_human_answer": {"type": "boolean"},
+        "version": {"const": "AURA_INTENT_REFINEMENT_V1"}
+      },
+      "additionalProperties": false
+    },
+    "GuardrailProposal": {
+      "type": "object",
+      "required": ["guardrail_id", "statement", "source_class", "source_refs", "hardness", "enforcement_class", "affected_arenas", "affected_files", "affected_symbols", "rationale", "human_disposition", "human_note", "version"],
+      "properties": {
+        "guardrail_id": {"$ref": "#/$defs/NonEmptyString"},
+        "statement": {"$ref": "#/$defs/NonEmptyString"},
+        "source_class": {"enum": ["ATLAS_PROHIBITION", "AUTHORITY_OWNER", "AURA_AXIOM", "DOMAIN_CONTRACT", "REPOSITORY_EVIDENCE", "SYSTEM_BASELINE", "AI_INFERRED", "HUMAN_ADDED"]},
+        "source_refs": {"$ref": "#/$defs/StringArray"},
+        "hardness": {"enum": ["HARD_ARCHITECTURAL", "HARD_AUTHORITY", "DOMAIN_REQUIRED", "PROPOSED_DEFAULT", "SOFT_PREFERENCE"]},
+        "enforcement_class": {"enum": ["STATIC_SOURCE", "SCHEMA", "AUTHORITY", "TEST", "RUNTIME", "LIFECYCLE", "PRIVACY", "HUMAN_REVIEW"]},
+        "affected_arenas": {"$ref": "#/$defs/StringArray"},
+        "affected_files": {"$ref": "#/$defs/StringArray"},
+        "affected_symbols": {"$ref": "#/$defs/StringArray"},
+        "rationale": {"$ref": "#/$defs/NonEmptyString"},
+        "human_disposition": {"enum": ["CONFIRMED", "STRENGTHENED", "MODIFIED", "ADDED", "REJECTED_SOFT", "ACKNOWLEDGED_HARD", "DEFERRED"]},
+        "human_note": {"type": "string"},
+        "version": {"const": "AURA_INTENT_REFINEMENT_V1"}
+      },
+      "additionalProperties": false
+    },
+    "PairedTeachBack": {
+      "type": "object",
+      "required": ["will_do", "will_not_do", "will_preserve", "will_stop_or_escalate_if", "positive_examples", "negative_examples", "unresolved_assumptions", "required_human_decisions", "teach_back_digest", "version"],
+      "properties": {
+        "will_do": {"$ref": "#/$defs/StringArray"},
+        "will_not_do": {"$ref": "#/$defs/StringArray"},
+        "will_preserve": {"$ref": "#/$defs/StringArray"},
+        "will_stop_or_escalate_if": {"$ref": "#/$defs/StringArray"},
+        "positive_examples": {"$ref": "#/$defs/StringArray"},
+        "negative_examples": {"$ref": "#/$defs/StringArray"},
+        "unresolved_assumptions": {"$ref": "#/$defs/StringArray"},
+        "required_human_decisions": {"$ref": "#/$defs/StringArray"},
+        "teach_back_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "version": {"const": "AURA_INTENT_REFINEMENT_V1"}
+      },
+      "additionalProperties": false
+    },
+    "IntentRefinementSession": {
+      "type": "object",
+      "required": ["session_id", "repository_head", "working_tree_digest", "arena", "source_request", "source_request_digest", "current_stage", "candidate_positive_requirements", "candidate_negative_requirements", "candidate_definitions", "candidate_guardrails", "unresolved_ambiguities", "questions_asked", "answers_received", "teach_back", "confirmation_status", "confirmation_receipt_id", "created_at", "expires_at", "patch_authority", "vsa_patch_authority", "version"],
+      "properties": {
+        "session_id": {"$ref": "#/$defs/NonEmptyString"},
+        "repository_head": {"$ref": "#/$defs/NonEmptyString"},
+        "working_tree_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "arena": {"$ref": "#/$defs/NonEmptyString"},
+        "source_request": {"$ref": "#/$defs/NonEmptyString"},
+        "source_request_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "current_stage": {"$ref": "#/$defs/Stage"},
+        "candidate_positive_requirements": {"$ref": "#/$defs/StringArray"},
+        "candidate_negative_requirements": {"$ref": "#/$defs/StringArray"},
+        "candidate_definitions": {"$ref": "#/$defs/RecordArray"},
+        "candidate_guardrails": {"$ref": "#/$defs/RecordArray"},
+        "unresolved_ambiguities": {"$ref": "#/$defs/RecordArray"},
+        "questions_asked": {"$ref": "#/$defs/RecordArray"},
+        "answers_received": {"$ref": "#/$defs/RecordArray"},
+        "teach_back": {"type": "object"},
+        "confirmation_status": {"enum": ["PENDING", "CONFIRMED", "REJECTED", "STALE", "EXPIRED"]},
+        "confirmation_receipt_id": {"type": "string"},
+        "created_at": {"type": "number"},
+        "expires_at": {"type": "number"},
+        "patch_authority": {"const": "exact_source_spans_and_hashes_only"},
+        "vsa_patch_authority": {"const": false},
+        "version": {"const": "AURA_INTENT_REFINEMENT_V1"}
+      },
+      "additionalProperties": false
+    },
+    "IntentConfirmationReceipt": {
+      "type": "object",
+      "required": ["confirmation_id", "session_id", "repository_head", "source_tree_digest", "working_tree_clean_receipt", "source_request_digest", "positive_requirements_digest", "negative_requirements_digest", "semantic_ledger_digest", "guardrail_set_digest", "authority_digest", "teach_back_digest", "allowed_path_set_digest", "runtime_profile_digest", "unified_execution_binding_ref", "human_reviewer", "human_disposition", "confirmed_at", "expires_at", "expires_or_stales_on", "confirmation_status", "patch_authority", "vsa_patch_authority", "version"],
+      "properties": {
+        "confirmation_id": {"$ref": "#/$defs/NonEmptyString"},
+        "session_id": {"$ref": "#/$defs/NonEmptyString"},
+        "repository_head": {"$ref": "#/$defs/NonEmptyString"},
+        "source_tree_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "working_tree_clean_receipt": {"$ref": "#/$defs/NonEmptyString"},
+        "source_request_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "positive_requirements_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "negative_requirements_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "semantic_ledger_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "guardrail_set_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "authority_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "teach_back_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "allowed_path_set_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "runtime_profile_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "unified_execution_binding_ref": {"type": "string"},
+        "human_reviewer": {"$ref": "#/$defs/NonEmptyString"},
+        "human_disposition": {"$ref": "#/$defs/NonEmptyString"},
+        "confirmed_at": {"type": "number"},
+        "expires_at": {"type": "number"},
+        "expires_or_stales_on": {"$ref": "#/$defs/StringArray"},
+        "confirmation_status": {"const": "CONFIRMED"},
+        "patch_authority": {"const": "exact_source_spans_and_hashes_only"},
+        "vsa_patch_authority": {"const": false},
+        "version": {"const": "AURA_INTENT_REFINEMENT_V1"}
+      },
+      "additionalProperties": false
+    },
+    "IntentRevisionDelta": {
+      "type": "object",
+      "required": ["revision_id", "parent_confirmation_id", "trigger_evidence", "base_repository_head", "base_source_tree_digest", "candidate_tree_digest", "allowed_path_set_digest", "publication_bundle_digest", "generated_artifact_disposition", "changed_assumptions", "positive_requirements_added", "positive_requirements_removed", "negative_requirements_added", "negative_requirements_removed", "definitions_changed", "guardrails_changed", "scope_changed", "authority_changed", "affected_plan_tasks", "required_new_verifiers", "current_reproof_required", "prior_confirmation_staled", "requires_human_reconfirmation", "requires_council_replan", "revision_class", "status", "version"],
+      "properties": {
+        "revision_id": {"$ref": "#/$defs/NonEmptyString"},
+        "parent_confirmation_id": {"$ref": "#/$defs/NonEmptyString"},
+        "trigger_evidence": {"$ref": "#/$defs/StringArray"},
+        "base_repository_head": {"$ref": "#/$defs/NonEmptyString"},
+        "base_source_tree_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "candidate_tree_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "allowed_path_set_digest": {"$ref": "#/$defs/NonEmptyString"},
+        "publication_bundle_digest": {"type": "string"},
+        "generated_artifact_disposition": {"$ref": "#/$defs/NonEmptyString"},
+        "changed_assumptions": {"$ref": "#/$defs/StringArray"},
+        "positive_requirements_added": {"$ref": "#/$defs/StringArray"},
+        "positive_requirements_removed": {"$ref": "#/$defs/StringArray"},
+        "negative_requirements_added": {"$ref": "#/$defs/StringArray"},
+        "negative_requirements_removed": {"$ref": "#/$defs/StringArray"},
+        "definitions_changed": {"$ref": "#/$defs/StringArray"},
+        "guardrails_changed": {"$ref": "#/$defs/StringArray"},
+        "scope_changed": {"type": "boolean"},
+        "authority_changed": {"type": "boolean"},
+        "affected_plan_tasks": {"$ref": "#/$defs/StringArray"},
+        "required_new_verifiers": {"$ref": "#/$defs/StringArray"},
+        "current_reproof_required": {"type": "boolean"},
+        "prior_confirmation_staled": {"type": "boolean"},
+        "requires_human_reconfirmation": {"type": "boolean"},
+        "requires_council_replan": {"type": "boolean"},
+        "revision_class": {"enum": ["LOCAL_EVIDENCE_REFINEMENT", "BOUNDED_PLAN_RESTRUCTURING", "INTENT_AUTHORITY_SCOPE_CHANGE"]},
+        "status": {"$ref": "#/$defs/NonEmptyString"},
+        "version": {"const": "AURA_INTENT_REFINEMENT_V1"}
+      },
+      "additionalProperties": false
+    }
+  }
+}
