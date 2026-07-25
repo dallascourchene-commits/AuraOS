@@ -5,7 +5,7 @@ on:
     types: [opened]
   push:
     branches:
-      - analysis/harness-grounding-202-204
+      - harness/repair-202-204
     paths:
       - .aura/HARNESS_REPAIR_202_204_REQUEST
 
@@ -31,18 +31,18 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
-            --body "Harness repair materializer started. Target branch: analysis/harness-grounding-202-204."
+            --body "Harness repair materializer started. Target branch: harness/repair-202-204."
 
       - name: Checkout exact repair branch
         uses: actions/checkout@v4
         with:
-          ref: analysis/harness-grounding-202-204
+          ref: harness/repair-202-204
           fetch-depth: 0
 
-      - name: Verify immutable repair base
+      - name: Verify repair branch is based on current main
         run: |
           git fetch --no-tags origin main
-          test "$(git merge-base HEAD origin/main)" = "65f3e2e5005e26e998bff38d5fdee51fbbc08e60"
+          test "$(git merge-base HEAD origin/main)" = "$(git rev-parse origin/main)"
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
 
       - uses: actions/setup-python@v5
@@ -132,7 +132,7 @@ jobs:
           git commit -m 'fix(harness): ground exact targets and preserve focal tests'
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            push origin HEAD:analysis/harness-grounding-202-204
+            push origin HEAD:harness/repair-202-204
           unset AUTH_HEADER
 
       - name: Report final status
