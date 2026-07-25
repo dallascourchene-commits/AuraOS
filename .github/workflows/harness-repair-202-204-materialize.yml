@@ -3,6 +3,11 @@ name: Materialize verified harness repair 202-204
 on:
   issues:
     types: [opened]
+  push:
+    branches:
+      - analysis/harness-grounding-202-204
+    paths:
+      - .aura/HARNESS_REPAIR_202_204_REQUEST
 
 permissions:
   contents: write
@@ -14,11 +19,14 @@ concurrency:
 
 jobs:
   materialize:
-    if: github.event.issue.title == 'Aura: materialize verified harness repair 202-204'
+    if: >-
+      github.event_name == 'push' ||
+      github.event.issue.title == 'Aura: materialize verified harness repair 202-204'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
       - name: Report start
+        if: github.event_name == 'issues'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -31,10 +39,10 @@ jobs:
           ref: analysis/harness-grounding-202-204
           fetch-depth: 0
 
-      - name: Verify branch is based on current main
+      - name: Verify immutable repair base
         run: |
           git fetch --no-tags origin main
-          test "$(git merge-base HEAD origin/main)" = "$(git rev-parse origin/main)"
+          test "$(git merge-base HEAD origin/main)" = "65f3e2e5005e26e998bff38d5fdee51fbbc08e60"
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
 
       - uses: actions/setup-python@v5
@@ -54,6 +62,7 @@ jobs:
           git apply --check /tmp/harness-repair-202-204.patch
           git apply /tmp/harness-repair-202-204.patch
           git rm -r .aura/harness-repair-202-204
+          git rm .aura/HARNESS_REPAIR_202_204_REQUEST
           git rm .github/workflows/harness-repair-202-204-materialize.yml
           git diff --check
 
@@ -127,7 +136,7 @@ jobs:
           unset AUTH_HEADER
 
       - name: Report final status
-        if: always()
+        if: always() && github.event_name == 'issues'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
