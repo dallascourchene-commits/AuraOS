@@ -38,6 +38,12 @@ def test_objective_receipt_binds_exact_base_and_denies_authority():
     ))
 
 
+def test_recorded_candidate_source_blobs_match_checkout():
+    receipt = _load(OBJECTIVE)
+    for relative_path, expected_blob in receipt["candidate_source_blobs"].items():
+        assert _git_blob_sha(ROOT / relative_path) == expected_blob
+
+
 def test_objective_scope_separates_source_from_generated_navigation():
     receipt = _load(OBJECTIVE)
     source = set(receipt["allowed_source_and_evidence_paths"])
@@ -60,6 +66,7 @@ def test_canonical_ingestion_is_exact_and_duplicate_core_is_absent():
     assert decision["duplicate_legacy_core_allowed"] is False
     assert decision["monkeypatching_allowed"] is False
     assert decision["companion_is_authority_owner"] is False
+    assert decision["canonical_route_recomputed_by_companion"] is False
 
 
 def test_revision_receipt_records_bounded_restructure_without_drift():
