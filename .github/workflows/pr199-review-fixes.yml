@@ -72,7 +72,11 @@ jobs:
           git diff --check
 
       - name: Run focused regression ring
+        id: focused_tests
+        continue-on-error: true
+        shell: bash
         run: |
+          set -o pipefail
           python -m pytest -q \
             tests/test_aura_unified_memory_continuity_learning.py \
             tests/test_aura_unified_memory_continuity.py \
@@ -80,7 +84,32 @@ jobs:
             tests/test_aura_agent_arena_bridge.py \
             tests/test_aura_agent_arena_mcp.py \
             tests/test_aura_arena_persistence_adapters.py \
-            tests/test_aura_qdkt_observations.py
+            tests/test_aura_qdkt_observations.py \
+            2>&1 | tee "${RUNNER_TEMP}/pytest.log"
+
+      - name: Preserve formatted diagnostic surface
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p "${RUNNER_TEMP}/pr199-diagnostics"
+          cp "${RUNNER_TEMP}/pytest.log" "${RUNNER_TEMP}/pr199-diagnostics/pytest.log" 2>/dev/null || true
+          cp aura_agent_arena_bridge.py "${RUNNER_TEMP}/pr199-diagnostics/"
+          cp aura_qdkt_observations.py "${RUNNER_TEMP}/pr199-diagnostics/"
+          cp aura_unified_memory_continuity_learning.py "${RUNNER_TEMP}/pr199-diagnostics/"
+          cp tests/test_aura_unified_memory_continuity_learning.py "${RUNNER_TEMP}/pr199-diagnostics/"
+          git diff --stat > "${RUNNER_TEMP}/pr199-diagnostics/diff-stat.txt"
+          git diff --check > "${RUNNER_TEMP}/pr199-diagnostics/diff-check.txt" 2>&1 || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr199-review-fix-diagnostics-${{ github.run_id }}
+          path: ${{ runner.temp }}/pr199-diagnostics/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Enforce focused regression result
+        run: test "${{ steps.focused_tests.outcome }}" = "success"
 
       - name: Enforce exact four-file scope
         shell: bash
