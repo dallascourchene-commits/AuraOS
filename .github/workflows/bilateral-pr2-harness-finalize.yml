@@ -2,9 +2,10 @@ name: Bilateral PR2 harness finalizer
 
 on:
   pull_request:
-    types: [edited]
+    types: [synchronize]
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -15,15 +16,37 @@ jobs:
   finalize:
     if: >-
       github.event.pull_request.number == 231 &&
-      github.event.pull_request.head.ref == 'refactor/bilateral-intent-pr2' &&
-      contains(github.event.pull_request.body, '<!-- aura-pr2-harness-finalize -->')
+      github.event.pull_request.head.ref == 'refactor/bilateral-intent-pr2'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
+      - name: Cancel competing branch workflows
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          gh api --paginate \
+            "repos/${REPOSITORY}/actions/runs?head_sha=${HEAD_SHA}&per_page=100" \
+            --jq ".workflow_runs[] | select(.id != ${CURRENT_RUN_ID} and (.status == \"queued\" or .status == \"in_progress\" or .status == \"pending\")) | .id" \
+          | while read -r run_id; do
+              if [ -n "${run_id}" ]; then
+                gh api -X POST "repos/${REPOSITORY}/actions/runs/${run_id}/cancel" || true
+              fi
+            done
+
       - uses: actions/checkout@v4
         with:
           ref: refactor/bilateral-intent-pr2
           fetch-depth: 0
+
+      - name: Preserve committed CODEMAP without regenerating it
+        run: |
+          mkdir -p "${RUNNER_TEMP}/committed-codemap/.aura"
+          cp .aura/CODEMAP.json "${RUNNER_TEMP}/committed-codemap/.aura/CODEMAP.json"
+          cp .aura/CODEMAP.md "${RUNNER_TEMP}/committed-codemap/.aura/CODEMAP.md"
+          cp topology_map.json "${RUNNER_TEMP}/committed-codemap/topology_map.json"
 
       - uses: actions/setup-python@v5
         with:
@@ -41,6 +64,7 @@ jobs:
       - name: Remove one-use harness files before verification
         run: |
           rm Aura_Sandbox/pr2_harness_finalize.py
+          rm Aura_Sandbox/pr2_harness_trigger.txt
           rm .github/workflows/bilateral-pr2-harness-finalize.yml
 
       - name: Prepare Aura architecture harness
@@ -98,6 +122,13 @@ jobs:
             tests/test_aura_showcase_gate_dialogue.py \
             tests/test_aura_intent_refinement.py
 
+      - name: Restore and verify untouched CODEMAP
+        run: |
+          cp "${RUNNER_TEMP}/committed-codemap/.aura/CODEMAP.json" .aura/CODEMAP.json
+          cp "${RUNNER_TEMP}/committed-codemap/.aura/CODEMAP.md" .aura/CODEMAP.md
+          cp "${RUNNER_TEMP}/committed-codemap/topology_map.json" topology_map.json
+          git diff --exit-code -- .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
+
       - name: Publish verified source only
         run: |
           git config user.name "AuraOS PR2 Harness Finalizer"
@@ -107,6 +138,7 @@ jobs:
             aura_arena_gate_dialogue.py \
             tests/test_aura_bilateral_gate_dialogue.py \
             Aura_Sandbox/pr2_harness_finalize.py \
+            Aura_Sandbox/pr2_harness_trigger.txt \
             .github/workflows/bilateral-pr2-harness-finalize.yml
           git commit -m "[skip ci] fix(intent): harden bilateral clarification lifecycle"
           git push origin HEAD:refactor/bilateral-intent-pr2
