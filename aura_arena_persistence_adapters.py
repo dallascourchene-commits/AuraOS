@@ -230,20 +230,51 @@ class ArenaPersistenceCoordinator:
             "failure_count": len(list(getattr(verification, "failures", []) or [])) if verification is not None else 0,
         }
         unified_bindings = []
+        lifecycle_maps = {
+            "crucible": dict(session.get("unified_crucible_proposals") or {}),
+            "crucible_binding": dict(session.get("unified_crucible_bindings") or {}),
+            "prediction": dict(session.get("unified_prediction_packets") or {}),
+            "observation": dict(session.get("unified_p1_observations") or {}),
+            "receipt": dict(session.get("unified_continuity_receipts") or {}),
+            "reproof": dict(session.get("unified_current_reproofs") or {}),
+            "disposition": dict(session.get("unified_human_dispositions") or {}),
+            "learning": dict(session.get("unified_learning_decisions") or {}),
+            "relationship": dict(session.get("unified_relationship_experiences") or {}),
+            "admission": dict(session.get("unified_qdkt_admissions") or {}),
+        }
+
+        def lifecycle_ref(kind: str, task_id: str, field: str) -> str:
+            item = lifecycle_maps[kind].get(task_id)
+            return str(getattr(item, field, "") or "") if item is not None else ""
+
         for task_id, binding in dict(session.get("unified_execution_bindings") or {}).items():
+            task_key = str(task_id)
             to_dict = getattr(binding, "to_dict", None)
             payload = to_dict() if callable(to_dict) else dict(binding or {})
             records = dict(payload.get("records") or {})
+            admission = lifecycle_maps["admission"].get(task_key)
             unified_bindings.append(
                 {
-                    "task_id": str(task_id),
+                    "task_id": task_key,
                     "binding_id": str(payload.get("binding_id") or ""),
                     "binding_digest": str(payload.get("binding_digest") or ""),
                     "intent_digest": str(dict(records.get("intent_packet") or {}).get("intent_digest") or ""),
                     "model_execution_packet_digest": str(
                         dict(records.get("model_execution_packet") or {}).get("packet_digest") or ""
                     ),
+                    "crucible_proposal_ref": lifecycle_ref("crucible", task_key, "proposal_id"),
+                    "crucible_binding_ref": lifecycle_ref("crucible_binding", task_key, "binding_receipt_id"),
+                    "prediction_ref": lifecycle_ref("prediction", task_key, "prediction_id"),
+                    "p1_observation_ref": lifecycle_ref("observation", task_key, "observation_id"),
+                    "continuity_receipt_ref": lifecycle_ref("receipt", task_key, "receipt_id"),
+                    "current_reproof_ref": lifecycle_ref("reproof", task_key, "reproof_id"),
+                    "human_disposition_ref": lifecycle_ref("disposition", task_key, "disposition_id"),
+                    "learning_decision_ref": lifecycle_ref("learning", task_key, "decision_id"),
+                    "relationship_experience_ref": lifecycle_ref("relationship", task_key, "observation_id"),
+                    "qdkt_admission_ref": lifecycle_ref("admission", task_key, "decision_id"),
+                    "qdkt_admitted": bool(getattr(admission, "admitted", False)),
                     "raw_payload_retained": False,
+                    "automatic_crystallization": False,
                     "automatic_promotion": False,
                 }
             )

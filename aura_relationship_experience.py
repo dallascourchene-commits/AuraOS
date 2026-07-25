@@ -4,6 +4,7 @@ Relationship experience is derived from canonical receipts. It never replaces th
 Relational Index or Relationship Atlas and never carries patch, promotion, or merge
 authority. Historical observations are append-only; decay affects retrieval rank only.
 """
+
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
@@ -30,6 +31,9 @@ class RelationshipOutcome(str, Enum):
     DENIAL = "DENIAL"
     ABANDONMENT = "ABANDONMENT"
     ROLLBACK = "ROLLBACK"
+    SUPERSEDED = "SUPERSEDED"
+    EXPIRED = "EXPIRED"
+    CONTRADICTED = "CONTRADICTED"
 
 
 class RelationshipHumanDisposition(str, Enum):
@@ -211,7 +215,11 @@ class RelationshipExperienceObservation:
                 required=True,
             )
         try:
-            outcome = self.outcome if isinstance(self.outcome, RelationshipOutcome) else RelationshipOutcome(str(self.outcome))
+            outcome = (
+                self.outcome
+                if isinstance(self.outcome, RelationshipOutcome)
+                else RelationshipOutcome(str(self.outcome))
+            )
             disposition = (
                 self.human_disposition
                 if isinstance(self.human_disposition, RelationshipHumanDisposition)
@@ -221,7 +229,9 @@ class RelationshipExperienceObservation:
             raise ValueError("unsupported relationship experience enum") from exc
         object.__setattr__(self, "outcome", outcome)
         object.__setattr__(self, "human_disposition", disposition)
-        object.__setattr__(self, "verifier_evidence_refs", _strings(self.verifier_evidence_refs, "verifier_evidence_refs"))
+        object.__setattr__(
+            self, "verifier_evidence_refs", _strings(self.verifier_evidence_refs, "verifier_evidence_refs")
+        )
         object.__setattr__(self, "receipt_refs", _strings(self.receipt_refs, "receipt_refs"))
         object.__setattr__(self, "source_refs", _strings(self.source_refs, "source_refs"))
         if not isinstance(self.privacy_class, str):
@@ -456,7 +466,11 @@ def project_relationship_timeline(
 ) -> dict[str, Any]:
     items: list[dict[str, Any]] = []
     for raw in observations:
-        observation = raw if isinstance(raw, RelationshipExperienceObservation) else RelationshipExperienceObservation.from_dict(raw)
+        observation = (
+            raw
+            if isinstance(raw, RelationshipExperienceObservation)
+            else RelationshipExperienceObservation.from_dict(raw)
+        )
         data = observation.to_dict()
         data["stale"] = observation.repository_head != str(current_repository_head or "")
         data["advisory_decay_score"] = advisory_decay_score(observation.transaction_time, now=now)
@@ -484,7 +498,11 @@ def crucible_replay_scenarios(
     scenarios: list[dict[str, Any]] = []
     rejected: list[dict[str, Any]] = []
     for raw in observations:
-        observation = raw if isinstance(raw, RelationshipExperienceObservation) else RelationshipExperienceObservation.from_dict(raw)
+        observation = (
+            raw
+            if isinstance(raw, RelationshipExperienceObservation)
+            else RelationshipExperienceObservation.from_dict(raw)
+        )
         gate = observation.lesson_eligibility(
             current_repository_head=current_repository_head,
             current_source_digest=str(current_source_digests.get(observation.relationship_id) or ""),

@@ -209,6 +209,45 @@ TOOL_DEFINITIONS = [
         },
     },
     {
+        "name": "aura_commit_unified_prediction",
+        "description": "Commit immutable P0 for one retained unified execution binding before observation.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "plan_phase_hash": {"type": "string"},
+                "task_id": {"type": "string"},
+                "contract": {"type": "object"},
+            },
+            "required": ["plan_phase_hash", "task_id", "contract"],
+        },
+    },
+    {
+        "name": "aura_observe_unified_prediction",
+        "description": "Record independently observed P1 strictly after retained P0.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "plan_phase_hash": {"type": "string"},
+                "task_id": {"type": "string"},
+                "observation": {"type": "object"},
+            },
+            "required": ["plan_phase_hash", "task_id", "observation"],
+        },
+    },
+    {
+        "name": "aura_finalize_unified_learning",
+        "description": "Finalize continuity receipt, current reproof, human/community disposition, Relationship Experience, and governed QDKT admission.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "plan_phase_hash": {"type": "string"},
+                "task_id": {"type": "string"},
+                "contract": {"type": "object"},
+            },
+            "required": ["plan_phase_hash", "task_id", "contract"],
+        },
+    },
+    {
         "name": "aura_get_micro_context",
         "description": "Return the exact compressed context for one Act Capsule.",
         "inputSchema": {
@@ -786,6 +825,51 @@ def _handle_unified_continuity_projection(
     return bridge.aura_unified_continuity_projection(
         plan_phase_hash=_bounded_text_arg(args, "plan_phase_hash", maximum=256, required=True),
         task_id=_bounded_text_arg(args, "task_id", maximum=256, required=True),
+    )
+
+
+@_register_tool("aura_commit_unified_prediction")
+def _handle_commit_unified_prediction(
+    bridge: AuraAgentArenaBridge,
+    args: dict[str, Any],
+) -> dict[str, Any]:
+    contract = args.get("contract")
+    if not isinstance(contract, Mapping):
+        raise MCPArgumentError("contract must be an object")
+    return bridge.aura_commit_unified_prediction(
+        plan_phase_hash=_bounded_text_arg(args, "plan_phase_hash", maximum=256, required=True),
+        task_id=_bounded_text_arg(args, "task_id", maximum=256, required=True),
+        contract=dict(contract),
+    )
+
+
+@_register_tool("aura_observe_unified_prediction")
+def _handle_observe_unified_prediction(
+    bridge: AuraAgentArenaBridge,
+    args: dict[str, Any],
+) -> dict[str, Any]:
+    observation = args.get("observation")
+    if not isinstance(observation, Mapping):
+        raise MCPArgumentError("observation must be an object")
+    return bridge.aura_observe_unified_prediction(
+        plan_phase_hash=_bounded_text_arg(args, "plan_phase_hash", maximum=256, required=True),
+        task_id=_bounded_text_arg(args, "task_id", maximum=256, required=True),
+        observation=dict(observation),
+    )
+
+
+@_register_tool("aura_finalize_unified_learning")
+def _handle_finalize_unified_learning(
+    bridge: AuraAgentArenaBridge,
+    args: dict[str, Any],
+) -> dict[str, Any]:
+    contract = args.get("contract")
+    if not isinstance(contract, Mapping):
+        raise MCPArgumentError("contract must be an object")
+    return bridge.aura_finalize_unified_learning(
+        plan_phase_hash=_bounded_text_arg(args, "plan_phase_hash", maximum=256, required=True),
+        task_id=_bounded_text_arg(args, "task_id", maximum=256, required=True),
+        contract=dict(contract),
     )
 
 

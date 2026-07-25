@@ -1,4 +1,5 @@
 """Proposal-only observations for the unchanged legacy QuantumMerkleDAG."""
+
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
@@ -97,11 +98,7 @@ def _belief(value: Any, name: str) -> int:
 def _timestamp(value: Any) -> float:
     if value is None:
         return time.time()
-    if (
-        isinstance(value, bool)
-        or not isinstance(value, (int, float))
-        or not math.isfinite(float(value))
-    ):
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(float(value)):
         raise ValueError("created_at must be a finite number")
     return float(value)
 
@@ -170,9 +167,7 @@ class QDKTObservation:
         if type(self.legacy_root) is not str or not _ROOT_RE.fullmatch(self.legacy_root):
             raise ValueError("legacy_root must be 16 uppercase hexadecimal characters")
         _belief(self.legacy_belief, "legacy_belief")
-        if type(self.source_snapshot_digest) is not str or not _DIGEST_RE.fullmatch(
-            self.source_snapshot_digest
-        ):
+        if type(self.source_snapshot_digest) is not str or not _DIGEST_RE.fullmatch(self.source_snapshot_digest):
             raise ValueError("source_snapshot_digest must be a canonical digest")
         if type(self.source_count) is not int or self.source_count < 0:
             raise ValueError("source_count must be a non-negative integer")
@@ -267,9 +262,7 @@ class QDKTObservation:
             "source_count": self.source_count,
             "generator_version": self.generator_version,
             "truth_class": (
-                self.truth_class.value
-                if isinstance(self.truth_class, QDKTTruthClass)
-                else str(self.truth_class)
+                self.truth_class.value if isinstance(self.truth_class, QDKTTruthClass) else str(self.truth_class)
             ),
             "nondeterministic_inputs": tuple(self.nondeterministic_inputs),
             "planning_board_ref": self.planning_board_ref,
@@ -329,8 +322,7 @@ class QDKTEventReceipt:
         if (
             self.event.dikwp_stage != DIKWPStage.KNOWLEDGE.value
             or self.event.policy_scope != QDKT_POLICY_SCOPE
-            or self.event.measurement_classes
-            != {"legacy_belief": MeasurementClass.DERIVED.value}
+            or self.event.measurement_classes != {"legacy_belief": MeasurementClass.DERIVED.value}
         ):
             raise ValueError("event metadata does not match the QDKT contract")
         if (
@@ -558,3 +550,167 @@ def project_relationship_experience_advisory(observation: Any) -> dict[str, Any]
     }
     payload["projection_digest"] = stable_digest(payload)
     return payload
+
+
+# ---------------------------------------------------------------------------
+# U7 — governed consequential Relationship Experience advisory recording
+# ---------------------------------------------------------------------------
+
+GOVERNED_RELATIONSHIP_QDKT_EVENT_TYPE = "qdkt.relationship_experience.advisory_recorded"
+GOVERNED_RELATIONSHIP_QDKT_POLICY_SCOPE = "qdkt.relationship_experience.governed_advisory"
+GOVERNED_RELATIONSHIP_QDKT_SIDECAR_KIND = "qdkt-relationship-experience-u7"
+
+
+@dataclass(frozen=True)
+class GovernedRelationshipQDKTEventReceipt:
+    projection: dict[str, Any]
+    payload_ref: ExactPayloadRef
+    event: AuraEventEnvelope
+    appended: bool
+    version: str = RELATIONSHIP_EXPERIENCE_QDKT_VERSION
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.projection, dict):
+            raise ValueError("projection must be a dictionary")
+        if not isinstance(self.payload_ref, ExactPayloadRef):
+            raise ValueError("payload_ref must be an ExactPayloadRef")
+        if not isinstance(self.event, AuraEventEnvelope):
+            raise ValueError("event must be an AuraEventEnvelope")
+        if type(self.appended) is not bool:
+            raise ValueError("appended must be a boolean")
+        if self.payload_ref.kind != GOVERNED_RELATIONSHIP_QDKT_SIDECAR_KIND:
+            raise ValueError("governed QDKT sidecar kind mismatch")
+        if self.payload_ref.redacted is not False:
+            raise ValueError("governed QDKT projection was unexpectedly redacted")
+        if self.event.event_type != GOVERNED_RELATIONSHIP_QDKT_EVENT_TYPE:
+            raise ValueError("governed QDKT event type mismatch")
+        if self.event.policy_scope != GOVERNED_RELATIONSHIP_QDKT_POLICY_SCOPE:
+            raise ValueError("governed QDKT policy scope mismatch")
+        if self.event.payload_ref != self.payload_ref.ref_id:
+            raise ValueError("governed QDKT event payload reference mismatch")
+        if self.event.payload_digest != self.payload_ref.payload_digest:
+            raise ValueError("governed QDKT event payload digest mismatch")
+        if self.event.node_id != str(self.projection.get("observation_id") or ""):
+            raise ValueError("governed QDKT event node differs from Relationship Experience")
+        if self.event.proposal_only is not True:
+            raise ValueError("governed QDKT event must remain proposal-only")
+        if self.projection.get("automatic_crystallization") is not False:
+            raise ValueError("governed QDKT projection gained crystallization authority")
+        if self.projection.get("qdkt_admitted") is not True:
+            raise ValueError("governed QDKT projection requires admitted consequential evidence")
+        if self.version != RELATIONSHIP_EXPERIENCE_QDKT_VERSION:
+            raise ValueError("unsupported governed Relationship Experience QDKT version")
+
+
+def record_relationship_experience_advisory(
+    store: AppendOnlyEventStore,
+    observation: Any,
+    admission: Any,
+    *,
+    trace_id: str,
+    actor_id: str,
+    purpose_digest: str,
+    actor_type: ActorType | str = ActorType.AURA,
+    parent_event_ids: Sequence[str] = (),
+    evidence_refs: Sequence[str] = (),
+    arena_id: str = "",
+    board_id: str = "",
+    objective_id: str = "",
+    created_at: float | None = None,
+) -> GovernedRelationshipQDKTEventReceipt:
+    """Append an admitted Relationship Experience advisory without crystallizing it."""
+    from aura_relationship_experience import RelationshipExperienceObservation
+    from aura_unified_memory_continuity import QDKTConsequentialAdmission
+
+    if not isinstance(store, AppendOnlyEventStore):
+        raise ValueError("store must be an AppendOnlyEventStore")
+    item = (
+        observation
+        if isinstance(observation, RelationshipExperienceObservation)
+        else RelationshipExperienceObservation.from_dict(observation)
+    )
+    if not isinstance(admission, QDKTConsequentialAdmission):
+        raise ValueError("admission must use QDKTConsequentialAdmission")
+    if admission.admitted is not True:
+        raise ValueError("only admitted consequential evidence may enter governed QDKT")
+    if admission.relationship_experience_ref != item.observation_id:
+        raise ValueError("QDKT admission refers to a different Relationship Experience")
+    required_refs = {
+        *admission.raw_evidence_refs,
+        admission.continuity_receipt_ref,
+        admission.crucible_proposal_ref,
+        admission.current_reproof_ref,
+        admission.human_disposition_ref,
+    }
+    normalized_refs = _strings(evidence_refs, "evidence_refs")
+    if not required_refs.issubset(normalized_refs):
+        raise ValueError("governed QDKT event omits required consequential evidence refs")
+    projection = {
+        **project_relationship_experience_advisory(item),
+        "qdkt_admission_ref": admission.decision_id,
+        "qdkt_admission_digest": admission.decision_digest,
+        "qdkt_admitted": True,
+        "raw_evidence_refs": list(admission.raw_evidence_refs),
+        "current_reproof_ref": admission.current_reproof_ref,
+        "human_disposition_ref": admission.human_disposition_ref,
+        "crucible_proposal_ref": admission.crucible_proposal_ref,
+        "automatic_observe": False,
+        "automatic_crystallization": False,
+        "crystallization_authority": False,
+    }
+    projection["projection_digest"] = stable_digest(
+        {key: value for key, value in projection.items() if key != "projection_digest"}
+    )
+    timestamp = _timestamp(created_at)
+    payload_ref = store.store_payload(
+        projection,
+        kind=GOVERNED_RELATIONSHIP_QDKT_SIDECAR_KIND,
+        created_at=timestamp,
+    )
+    event = AuraEventEnvelope.create(
+        trace_id=_required(trace_id, "trace_id"),
+        parent_event_ids=_strings(parent_event_ids, "parent_event_ids"),
+        event_type=GOVERNED_RELATIONSHIP_QDKT_EVENT_TYPE,
+        actor_id=_required(actor_id, "actor_id"),
+        actor_type=actor_type,
+        arena_id=_optional(arena_id, "arena_id"),
+        board_id=_optional(board_id, "board_id"),
+        node_id=item.observation_id,
+        objective_id=_optional(objective_id, "objective_id"),
+        purpose_digest=_required(purpose_digest, "purpose_digest"),
+        dikwp_stage=DIKWPStage.KNOWLEDGE,
+        payload_ref=payload_ref.ref_id,
+        payload_digest=payload_ref.payload_digest,
+        evidence_refs=normalized_refs,
+        policy_scope=GOVERNED_RELATIONSHIP_QDKT_POLICY_SCOPE,
+        proposal_only=True,
+        measurement_classes={"admission": MeasurementClass.VERIFIER_BACKED},
+        created_at=timestamp,
+    )
+    return GovernedRelationshipQDKTEventReceipt(
+        projection=projection,
+        payload_ref=payload_ref,
+        event=event,
+        appended=store.append(event),
+    )
+
+
+__all__ = [
+    "GOVERNED_RELATIONSHIP_QDKT_EVENT_TYPE",
+    "GOVERNED_RELATIONSHIP_QDKT_POLICY_SCOPE",
+    "GOVERNED_RELATIONSHIP_QDKT_SIDECAR_KIND",
+    "QDKT_EVENT_TYPE",
+    "QDKT_EVENT_VERSION",
+    "QDKT_GENERATOR_VERSION",
+    "QDKT_POLICY_SCOPE",
+    "QDKT_SIDECAR_KIND",
+    "RELATIONSHIP_EXPERIENCE_QDKT_VERSION",
+    "GovernedRelationshipQDKTEventReceipt",
+    "QDKTEventReceipt",
+    "QDKTObservation",
+    "QDKTTruthClass",
+    "capture_legacy_qdkt_observation",
+    "project_relationship_experience_advisory",
+    "record_qdkt_observation",
+    "record_relationship_experience_advisory",
+]
