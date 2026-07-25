@@ -4,26 +4,35 @@
   "revision_class": "BOUNDED_PLAN_RESTRUCTURING",
   "base_repository_head": "598804b3dce8d39480d8494cf0144f872b01d9ca",
   "parent_objective_receipt": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
+  "harness_issue_ref": "#225",
   "trigger_evidence": [
     "CodeQL alerts 57-61 were raised against the newly copied aura_intent_ingestion_core.py",
     "The copied core reproduced the full legacy parser and expanded PR attack surface without adding canonical ownership value",
-    "The canonical ingestion blob was already stable at 84bd861cb36b12c07708d3de1b91cd7beccd1399"
+    "The canonical ingestion blob was already stable at 84bd861cb36b12c07708d3de1b91cd7beccd1399",
+    "AuraOS CI full pytest collection failed because its copied dependency list omitted defusedxml even though requirements.txt declares defusedxml>=0.7.1,<1.0"
   ],
   "prior_structure": {
     "public_facade": "aura_intent_ingestion.py",
     "duplicated_legacy_core": "aura_intent_ingestion_core.py",
-    "monkeypatching": true
+    "monkeypatching": true,
+    "ci_dependency_source": "partial inline workflow copies",
+    "bilateral_focused_ci": false
   },
   "revised_structure": {
     "canonical_owner": "aura_intent_ingestion.py",
     "canonical_owner_blob": "84bd861cb36b12c07708d3de1b91cd7beccd1399",
     "proposal_only_companion": "aura_bilateral_intent_ingestion.py",
     "duplicated_legacy_core": null,
-    "monkeypatching": false
+    "monkeypatching": false,
+    "canonical_route_recomputed": false,
+    "ci_dependency_source": "requirements.txt",
+    "bilateral_focused_ci": true
   },
   "changed_assumptions": [
     "A full facade/core split is not required to prove PR1 bilateral contracts",
-    "Canonical ingestion integration should remain explicit and bounded rather than replacing the owner during the substrate PR"
+    "Canonical ingestion integration should remain explicit and bounded rather than replacing the owner during the substrate PR",
+    "The CI harness must consume the repository dependency declaration instead of maintaining partial copies",
+    "New governed contract surfaces require direct compile, fatal-lint, and focused-test gates"
   ],
   "intent_changed": false,
   "negative_requirements_changed": false,
@@ -35,13 +44,27 @@
   "requires_council_replan": true,
   "current_reproof_required": true,
   "generated_artifact_disposition": "REGENERATE_FROM_FINAL_SOURCE_TREE_ONLY",
+  "harness_repair": {
+    "path": ".github/workflows/ci.yml",
+    "dependency_declaration": "requirements.txt",
+    "tests_weakened": false,
+    "tests_skipped": false,
+    "full_suite_collection_blocker_removed": true,
+    "bilateral_python_versions": [
+      "3.10",
+      "3.12"
+    ]
+  },
   "required_reproof": [
+    "Python 3.10 and 3.12 governed compilation",
+    "fatal Ruff E9/F63/F7/F82 checks",
     "16 focused refinement contract tests",
-    "bilateral companion exact-span, contradiction, compression, and handoff tests",
-    "canonical ingestion blob identity",
-    "CodeQL findings against deleted core become outdated",
+    "bilateral companion exact-span, contradiction, route-preservation, compression, and handoff tests",
+    "objective, revision, Waboose, canonical-owner, and candidate-blob evidence tests",
+    "CodeQL findings against deleted core remain outdated",
     "deterministic scanner clears the refinement regex finding",
-    "repository fatal lint and final-tree navigation regeneration"
+    "repository full pytest suite installs requirements.txt",
+    "final-tree CODEMAP and topology verification"
   ],
   "authority": {
     "patch_authority": false,
