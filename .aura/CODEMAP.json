@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784995166,
+  "generated_at_unix": 1784995440,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1423,
+    "included_file_count": 1425,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -1025,6 +1025,7 @@
       "schemas/aura_compass_act_capsule.schema.json",
       "schemas/aura_forge_arena_evidence_contract.schema.json",
       "schemas/aura_gate_authority_envelope.schema.json",
+      "schemas/aura_intent_refinement.v1.schema.json",
       "schemas/aura_missing_relational_configuration.schema.json",
       "schemas/aura_refactor_output_record.schema.json",
       "schemas/aura_relational_group.schema.json",
@@ -1301,6 +1302,7 @@
       "tests/test_aura_human_agent_workflow.py",
       "tests/test_aura_ifc_storey_index.py",
       "tests/test_aura_intent_ingestion.py",
+      "tests/test_aura_intent_refinement.py",
       "tests/test_aura_jspace_codec.py",
       "tests/test_aura_mesh_to_gaussian.py",
       "tests/test_aura_model_cognome.py",
@@ -1445,23 +1447,23 @@
     ]
   },
   "summary": {
-    "file_count": 1423,
-    "total_bytes": 56865285,
-    "text_tokens_est": 4764038,
+    "file_count": 1425,
+    "total_bytes": 56890712,
+    "text_tokens_est": 4770396,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 51,
       "knowledge_artifact": 185,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 920,
-      "schema_or_lexicon": 174,
+      "python_module": 921,
+      "schema_or_lexicon": 175,
       "support_file": 77
     },
     "topology_nodes": 10601,
     "topology_edges": 25121,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 31866.2
+    "elapsed_ms": 31375.24
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -2533,6 +2535,7 @@
       "schemas/aura_compass_act_capsule.schema.json",
       "schemas/aura_forge_arena_evidence_contract.schema.json",
       "schemas/aura_gate_authority_envelope.schema.json",
+      "schemas/aura_intent_refinement.v1.schema.json",
       "schemas/aura_missing_relational_configuration.schema.json",
       "schemas/aura_refactor_output_record.schema.json",
       "schemas/aura_relational_group.schema.json",
@@ -2782,6 +2785,7 @@
       "tests/test_aura_human_agent_workflow.py",
       "tests/test_aura_ifc_storey_index.py",
       "tests/test_aura_intent_ingestion.py",
+      "tests/test_aura_intent_refinement.py",
       "tests/test_aura_jspace_codec.py",
       "tests/test_aura_model_cognome.py",
       "tests/test_aura_model_cognome_call_logger.py",
@@ -70099,6 +70103,16 @@
         "signature_hash": "ba334d2e2ae014e0"
       }
     ],
+    "confirmed_guardrails": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 67,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:confirmed_guardrails:a57ad14baa42a325",
+        "signature_hash": "e7d64868a85d296f"
+      }
+    ],
     "consent_arc_organ": [
       {
         "file": "aura_civic_organs.py",
@@ -93849,6 +93863,16 @@
         "signature_hash": "1f35e422f33f8c3a"
       }
     ],
+    "teach_back": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 56,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:teach_back:f99b1035ce089a1d",
+        "signature_hash": "0b7468509f938390"
+      }
+    ],
     "tearDown": [
       {
         "file": "test_obsidian_graph_bridge.py",
@@ -100073,6 +100097,16 @@
         "signature_hash": "cd7c81fc7a0d7123"
       }
     ],
+    "test_confirmation_receipt_binds_digests_and_stales_on_change": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 224,
+        "end_line": 260,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:test_confirmation_receipt_binds_digests_and_stales_on_change:81be08e33f913bfa",
+        "signature_hash": "ebc022ddfd87589d"
+      }
+    ],
     "test_conflict_is_preserved": [
       {
         "file": "tests/test_aura_construction_state.py",
@@ -101595,6 +101629,16 @@
         "signature_hash": "91b76d1ea4a280d2"
       }
     ],
+    "test_declares_no_parallel_owner_or_mutation_authority": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 106,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:test_declares_no_parallel_owner_or_mutation_authority:e5f38b4fe64db122",
+        "signature_hash": "c322eb7ce32f466d"
+      }
+    ],
     "test_decompose_produces_subtasks": [
       {
         "file": "test_aura_skillweaver.py",
@@ -101663,6 +101707,16 @@
         "end_line": 105,
         "semantic_id": "test_aura_metaharness.py#method:TestAuraMCPGateway.test_default_gateway_registers_nine_aura_safe_tools:a96d1a7141aab17c",
         "signature_hash": "9b908d0a3a50fea3"
+      }
+    ],
+    "test_default_guardrails_lock_atlas_and_add_construction_boundaries": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 154,
+        "end_line": 161,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:test_default_guardrails_lock_atlas_and_add_construction_boundaries:c69aa83282a4888a",
+        "signature_hash": "eca79d59708e5d5b"
       }
     ],
     "test_default_lanes_included": [
@@ -107493,6 +107547,16 @@
         "signature_hash": "9cd0c4148b74f188"
       }
     ],
+    "test_hard_guardrail_cannot_be_rejected": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 164,
+        "end_line": 175,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:test_hard_guardrail_cannot_be_rejected:1850baf9f85ce8be",
+        "signature_hash": "dd09cba61511ea95"
+      }
+    ],
     "test_hard_guards_precede_advisory_ranking_and_roundtrip": [
       {
         "file": "tests/test_aura_relationship_contracts.py",
@@ -112693,6 +112757,16 @@
         "signature_hash": "7c798ebd1e6de376"
       }
     ],
+    "test_negation_variants_and_dangling_scope": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 136,
+        "end_line": 142,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:test_negation_variants_and_dangling_scope:5869294d9077487a",
+        "signature_hash": "18609e7d9c173749"
+      }
+    ],
     "test_negative_endpoint_guard_proves_bounded_edge_consistency": [
       {
         "file": "tests/test_aura_waboose_semantic_rule_false_positives.py",
@@ -112701,6 +112775,16 @@
         "end_line": 34,
         "semantic_id": "tests/test_aura_waboose_semantic_rule_false_positives.py#function:test_negative_endpoint_guard_proves_bounded_edge_consistency:db9e4b26cbebd351",
         "signature_hash": "a0f5beab1d7f522d"
+      }
+    ],
+    "test_negative_extraction_preserves_spans_and_classes": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 133,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:test_negative_extraction_preserves_spans_and_classes:ee504b5ed2125d51",
+        "signature_hash": "c5710279e336aebb"
       }
     ],
     "test_negotiation_is_deterministic_and_requires_accessible_fallback": [
@@ -115663,6 +115747,16 @@
         "signature_hash": "2cf298409e47d28c"
       }
     ],
+    "test_positive_negative_contradiction_detection": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 145,
+        "end_line": 151,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:test_positive_negative_contradiction_detection:224f70377841ec56",
+        "signature_hash": "7c72be2221f79654"
+      }
+    ],
     "test_post_filtered_bounded_edges_are_not_flagged": [
       {
         "file": "tests/test_aura_waboose_semantic_rules.py",
@@ -117221,6 +117315,16 @@
         "end_line": 76,
         "semantic_id": "tests/test_aura_ai_router_dynamic.py#function:test_query_router_uses_exact_topology_and_bounds_context:c299bc82796350b2",
         "signature_hash": "fa622281d371f392"
+      }
+    ],
+    "test_question_and_teach_back_are_stable_and_immutable": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 178,
+        "end_line": 193,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:test_question_and_teach_back_are_stable_and_immutable:9e24ae868d22be0b",
+        "signature_hash": "f28ec6030da00da5"
       }
     ],
     "test_quorum_policy_boolean_parameters_are_strict": [
@@ -120069,6 +120173,16 @@
         "signature_hash": "642f5d6cb586baab"
       }
     ],
+    "test_revision_classes_enforce_reconfirmation_and_council_replan": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 263,
+        "end_line": 293,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:test_revision_classes_enforce_reconfirmation_and_council_replan:9abddb4e634c6818",
+        "signature_hash": "2bdee0abeea4226b"
+      }
+    ],
     "test_revision_gap_is_rejected": [
       {
         "file": "tests/test_aura_refactor_skeleton.py",
@@ -121289,6 +121403,16 @@
         "signature_hash": "72cce7c52c71f162"
       }
     ],
+    "test_schema_lists_all_public_contracts": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 85,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:test_schema_lists_all_public_contracts:9edeec7e709c3579",
+        "signature_hash": "4179c4d49a5407f5"
+      }
+    ],
     "test_schema_rejects_noncanonical_profile_budget": [
       {
         "file": "tests/test_aura_relational_index.py",
@@ -121935,6 +122059,16 @@
         "end_line": 222,
         "semantic_id": "tests/test_aura_external_llm_session.py#function:test_session_export_rejects_absolute_and_parent_paths:4a10285f4d3f51b6",
         "signature_hash": "6589271597b7d6e0"
+      }
+    ],
+    "test_session_lifecycle_requires_bilateral_confirmation_and_current_head": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 196,
+        "end_line": 221,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:test_session_lifecycle_requires_bilateral_confirmation_and_current_head:f847bf980e2aa88a",
+        "signature_hash": "6f0e4ec259bfaaef"
       }
     ],
     "test_session_scopes_free_form_objective_and_only_generates_pr_command": [
@@ -205643,6 +205777,52 @@
       ]
     },
     {
+      "path": "schemas/aura_intent_refinement.v1.schema.json",
+      "role": "schema_or_lexicon",
+      "bytes": 13941,
+      "lines": 241,
+      "tokens_est": 3486,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f733862192af0d0b",
+      "vector": [
+        0.024506,
+        0.201886,
+        -0.080521,
+        -0.288242,
+        0.131868,
+        0.213556,
+        -0.012837,
+        0.166877,
+        0.173879,
+        -0.040844,
+        0.094525,
+        -0.260234,
+        0.260234,
+        0.05018,
+        0.075853,
+        0.2579,
+        -0.255566,
+        0.045512,
+        -0.120198,
+        -0.234561,
+        0.208888,
+        0.073519,
+        0.260234,
+        0.11553,
+        -0.11553,
+        -0.260234,
+        -0.092191,
+        -0.206554,
+        -0.243897,
+        -0.10386,
+        -0.05018,
+        -0.234561
+      ]
+    },
+    {
       "path": "schemas/aura_missing_relational_configuration.schema.json",
       "role": "schema_or_lexicon",
       "bytes": 2486,
@@ -214284,6 +214464,52 @@
         -0.262127,
         -0.084376,
         0.039375
+      ]
+    },
+    {
+      "path": "tests/test_aura_intent_refinement.py",
+      "role": "python_module",
+      "bytes": 11486,
+      "lines": 294,
+      "tokens_est": 2872,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "dc463bb3eab4c4a0",
+      "vector": [
+        0.248376,
+        0.235905,
+        -0.063393,
+        0.237984,
+        0.25669,
+        -0.125747,
+        -0.098727,
+        0.129904,
+        0.217199,
+        0.115354,
+        -0.181865,
+        -0.134061,
+        0.144453,
+        0.01351,
+        -0.246297,
+        0.131982,
+        0.223434,
+        -0.071707,
+        0.188101,
+        -0.028059,
+        0.265003,
+        0.055079,
+        0.104962,
+        -0.24214,
+        -0.221356,
+        0.096648,
+        0.210964,
+        0.173551,
+        -0.181865,
+        0.258768,
+        0.117433,
+        0.14861
       ]
     },
     {
