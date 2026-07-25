@@ -1,0 +1,100 @@
+ting human disposition cannot create a confirmed receipt"
+   ],
+   "transport_boundary": {
+     "source_checkout_mutation_by_harness": false,
+diff --git a/.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json b/.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json
+--- a/.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json
++++ b/.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json
+@@ -9,7 +9,10 @@
+     "CodeQL alerts 57-61 were raised against the newly copied aura_intent_ingestion_core.py",
+     "The copied core reproduced the full legacy parser and expanded PR attack surface without adding canonical ownership value",
+     "The canonical ingestion blob was already stable at 84bd861cb36b12c07708d3de1b91cd7beccd1399",
+-    "AuraOS CI full pytest collection failed because its copied dependency list omitted defusedxml even though requirements.txt declares defusedxml>=0.7.1,<1.0"
++    "AuraOS CI full pytest collection failed because its copied dependency list omitted defusedxml even though requirements.txt declares defusedxml>=0.7.1,<1.0",
++    "Greptile P1 found compound negative statements could be fragmented at nested operators",
++    "Greptile P1 found rejecting human dispositions could be recorded inside confirmed receipts",
++    "Greptile P1 found COMPILED sessions accepted invented nonempty confirmation receipt IDs"
+   ],
+   "prior_structure": {
+     "public_facade": "aura_intent_ingestion.py",
+@@ -32,7 +35,10 @@
+     "A full facade/core split is not required to prove PR1 bilateral contracts",
+     "Canonical ingestion integration should remain explicit and bounded rather than replacing the owner during the substrate PR",
+     "The CI harness must consume the repository dependency declaration instead of maintaining partial copies",
+-    "New governed contract surfaces require direct compile, fatal-lint, and focused-test gates"
++    "New governed contract surfaces require direct compile, fatal-lint, and focused-test gates",
++    "A negative requirement span must preserve nested operators as part of one complete human prohibition",
++    "Compilation must validate an identity-bound current receipt object against exact session evidence rather than trust a receipt identifier",
++    "A confirmed receipt may only encode a confirming human disposition"
+   ],
+   "intent_changed": false,
+   "negative_requirements_changed": false,
+@@ -58,13 +64,16 @@
+   "required_reproof": [
+     "Python 3.10 and 3.12 governed compilation",
+     "fatal Ruff E9/F63/F7/F82 checks",
+-    "16 focused refinement contract tests",
++    "18 focused refinement contract tests",
+     "bilateral companion exact-span, contradiction, route-preservation, compression, and handoff tests",
+     "objective, revision, Waboose, canonical-owner, and candidate-blob evidence tests",
+     "CodeQL findings against deleted core remain outdated",
+     "deterministic scanner clears the refinement regex finding",
+     "repository full pytest suite installs requirements.txt",
+-    "final-tree CODEMAP and topology verification"
++    "final-tree CODEMAP and topology verification",
++    "compound negation remains one exact source-bound requirement",
++    "rejecting dispositions and forged receipt identities fail closed",
++    "COMPILED transition requires a current receipt object bound to exact session evidence"
+   ],
+   "authority": {
+     "patch_authority": false,
+diff --git a/.aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json b/.aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json
+--- a/.aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json
++++ b/.aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json
+@@ -51,7 +51,10 @@
+     "no production mutation",
+     "no hidden failure",
+     "no tests are weakened to obtain a pass",
+-    "no partial candidate bundle is published"
++    "no partial candidate bundle is published",
++    "compound negative statements remain whole through extraction and handoff",
++    "COMPILED lifecycle state requires a current identity-valid confirmation receipt bound to exact session evidence",
++    "rejecting human dispositions cannot produce confirmed receipts"
+   ],
+   "risk_map": [
+     "negation lost in compression",
+@@ -71,7 +74,10 @@
+     "authority escalation",
+     "hidden failure",
+     "partial publication",
+-    "generated CODEMAP drift"
++    "generated CODEMAP drift",
++    "compound negation fragmentation",
++    "invented confirmation receipt id",
++    "contradictory human disposition in confirmed receipt"
+   ],
+   "required_evidence": [
+     "exact base SHA and source blob identities",
+@@ -85,7 +91,10 @@
+     "CodeQL clearance",
+     "Python 3.10 and 3.12 compilation and fatal lint",
+     "full pytest consumes requirements.txt",
+-    "final CODEMAP and topology verification"
++    "final CODEMAP and topology verification",
++    "compound negation exact-span preservation proof",
++    "rejecting disposition and forged receipt identity replay proof",
++    "verified receipt object and exact current-evidence compilation proof"
+   ],
+   "blocker_classes": [
+     "AUTHORITY",
+@@ -100,7 +109,9 @@
+     "CANONICAL_ROUTE_DRIFT",
+     "CI_DEPENDENCY_DRIFT",
+     "PARTIAL_PUBLICATION",
+-    "GENERATED_NAVIGATION_DRIFT"
++    "GENERATED_NAVIGATION_DRIFT",
++    "RECEIPT_IDENTITY",
++    "COMPOUND_NEGATION"
+   ],
+   "authority": {
+     "review_only": true,
