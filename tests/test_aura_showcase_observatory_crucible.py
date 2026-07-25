@@ -285,61 +285,57 @@ def test_learning_arena_facade_uses_real_empty_ledgers_without_fabricating_exper
         arena.close()
 
 
-def test_fireworks_is_primary_and_model_roles_use_official_identifiers(monkeypatch):
+def test_deepseek_is_primary_and_model_roles_use_official_identifiers(monkeypatch):
     import aura_llm_egress
     from aura_provider_registry import (
         DEEPSEEK_V4_FLASH,
         DEEPSEEK_V4_PRO,
-        FIREWORKS_DEEPSEEK_V4_FLASH,
-        FIREWORKS_GLM_5P2,
+        XAI_GROK_PREMIUM,
         ProviderRegistry,
     )
 
     registry = ProviderRegistry()
-    assert registry.provider_priority[:3] == ["fireworks", "deepseek", "anthropic"]
-    assert registry.providers["fireworks"]["model_priority"] == [
-        FIREWORKS_GLM_5P2,
-        FIREWORKS_DEEPSEEK_V4_FLASH,
-    ]
+    assert registry.provider_priority[:3] == ["deepseek", "xai", "anthropic"]
     assert registry.providers["deepseek"]["model_priority"] == [
-        DEEPSEEK_V4_FLASH,
         DEEPSEEK_V4_PRO,
+        DEEPSEEK_V4_FLASH,
     ]
+    assert registry.providers["xai"]["model_priority"] == [XAI_GROK_PREMIUM]
     assert aura_llm_egress.provider_priority()[:3] == [
-        "fireworks",
         "deepseek",
+        "xai",
         "anthropic",
     ]
 
     secrets = {
-        "FIREWORKS_API_KEY": "fw-real-key",
         "DEEPSEEK_API_KEY": "ds-real-key",
+        "XAI_API_KEY": "xai-real-key",
         "ANTHROPIC_API_KEY": "ant-real-key",
     }
     primary = aura_llm_egress.ExternalLLM(secrets=secrets)
-    assert primary.provider == "fireworks"
-    assert primary.model == "accounts/fireworks/models/glm-5p2"
+    assert primary.provider == "deepseek"
+    assert primary.model == DEEPSEEK_V4_PRO
 
     budget = aura_llm_egress.ExternalLLM(model="cheap", secrets=secrets)
-    assert budget.provider == "fireworks"
-    assert budget.model == "accounts/fireworks/models/deepseek-v4-flash"
+    assert budget.provider == "deepseek"
+    assert budget.model == DEEPSEEK_V4_FLASH
 
     direct = aura_llm_egress.ExternalLLM(
         secrets={"DEEPSEEK_API_KEY": "ds-real-key"}
     )
     assert direct.provider == "deepseek"
-    assert direct.model == "deepseek-v4-flash"
+    assert direct.model == DEEPSEEK_V4_PRO
 
     direct_premium = aura_llm_egress.ExternalLLM(
         provider="deepseek",
         model="premium",
         secrets={"DEEPSEEK_API_KEY": "ds-real-key"},
     )
-    assert direct_premium.model == "deepseek-v4-pro"
+    assert direct_premium.model == DEEPSEEK_V4_PRO
 
-    monkeypatch.setenv("FIREWORKS_API_KEY", "fw-env-key")
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "ds-env-key")
     env_primary = aura_llm_egress.ExternalLLM(secrets={})
-    assert env_primary.provider == "fireworks"
+    assert env_primary.provider == "deepseek"
 
 
 def test_browser_assets_distinguish_observatory_from_real_learning_arena():
