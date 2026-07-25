@@ -1,0 +1,52 @@
+{
+  "version": "AURA_BILATERAL_INTENT_PR1_REVISION_V1",
+  "status": "IMPLEMENTED_PENDING_REPROOF",
+  "revision_class": "BOUNDED_PLAN_RESTRUCTURING",
+  "base_repository_head": "598804b3dce8d39480d8494cf0144f872b01d9ca",
+  "parent_objective_receipt": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
+  "trigger_evidence": [
+    "CodeQL alerts 57-61 were raised against the newly copied aura_intent_ingestion_core.py",
+    "The copied core reproduced the full legacy parser and expanded PR attack surface without adding canonical ownership value",
+    "The canonical ingestion blob was already stable at 84bd861cb36b12c07708d3de1b91cd7beccd1399"
+  ],
+  "prior_structure": {
+    "public_facade": "aura_intent_ingestion.py",
+    "duplicated_legacy_core": "aura_intent_ingestion_core.py",
+    "monkeypatching": true
+  },
+  "revised_structure": {
+    "canonical_owner": "aura_intent_ingestion.py",
+    "canonical_owner_blob": "84bd861cb36b12c07708d3de1b91cd7beccd1399",
+    "proposal_only_companion": "aura_bilateral_intent_ingestion.py",
+    "duplicated_legacy_core": null,
+    "monkeypatching": false
+  },
+  "changed_assumptions": [
+    "A full facade/core split is not required to prove PR1 bilateral contracts",
+    "Canonical ingestion integration should remain explicit and bounded rather than replacing the owner during the substrate PR"
+  ],
+  "intent_changed": false,
+  "negative_requirements_changed": false,
+  "guardrails_changed": false,
+  "scope_changed": false,
+  "authority_changed": false,
+  "prior_confirmation_staled": false,
+  "requires_human_reconfirmation": false,
+  "requires_council_replan": true,
+  "current_reproof_required": true,
+  "generated_artifact_disposition": "REGENERATE_FROM_FINAL_SOURCE_TREE_ONLY",
+  "required_reproof": [
+    "16 focused refinement contract tests",
+    "bilateral companion exact-span, contradiction, compression, and handoff tests",
+    "canonical ingestion blob identity",
+    "CodeQL findings against deleted core become outdated",
+    "deterministic scanner clears the refinement regex finding",
+    "repository fatal lint and final-tree navigation regeneration"
+  ],
+  "authority": {
+    "patch_authority": false,
+    "publication_authority": false,
+    "merge_authority": false,
+    "production_mutation": false
+  }
+}
