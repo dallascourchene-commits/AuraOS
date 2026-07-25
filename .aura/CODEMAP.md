@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1431
-- **total_bytes**: 56947160
-- **text_tokens_est**: 4784515
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 924, 'schema_or_lexicon': 178, 'support_file': 77}
+- **file_count**: 1437
+- **total_bytes**: 57006160
+- **text_tokens_est**: 4786968
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 924, 'schema_or_lexicon': 179, 'support_file': 82}
 - **topology_nodes**: 10628
 - **topology_edges**: 25212
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 31344.97
+- **elapsed_ms**: 29985.25
 
 ## Coverage
 
-- **included_file_count**: 1431
+- **included_file_count**: 1437
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=174, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=176, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
 
 ## Command Index
 
@@ -191,7 +191,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!qdkt` -> `aura_affordance_directory.py:356`
 - `!query` -> `aura_human_agent_arena/emergent.js:68`
 - `!queryInput` -> `aura_human_agent_arena/emergent.js:139`
-- `!r` -> `aura_agent_arena_github_bridge.py:180`, `aura_architect_consolidation_benchmark.py:193`, `aura_architect_consolidation_benchmark_v2.py:55`, `aura_architecture_harness_git_tree_routing.py:66`
+- `!r` -> `.github/workflows/aura-pr2-materialize.yml:71`, `aura_agent_arena_github_bridge.py:180`, `aura_architect_consolidation_benchmark.py:193`, `aura_architect_consolidation_benchmark_v2.py:55`
 - `!rail` -> `aura_showcase/app.js:270`
 - `!reason` -> `AURA_FINAL_REPORT.md:154`, `aura_node.py:7564`
 - `!receipt` -> `aura_spatial_web/app.js:112`
@@ -354,7 +354,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
-- ... 1220 more; query CODEMAP.json for exact file cards
+- ... 1226 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
