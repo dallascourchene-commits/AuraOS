@@ -1,0 +1,84 @@
+{
+  "version": "AURA_BILATERAL_INTENT_PR1_REVISION_V1",
+  "status": "IMPLEMENTED_PENDING_REPROOF",
+  "revision_class": "BOUNDED_PLAN_RESTRUCTURING",
+  "base_repository_head": "598804b3dce8d39480d8494cf0144f872b01d9ca",
+  "parent_objective_receipt": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
+  "harness_issue_ref": "#225",
+  "trigger_evidence": [
+    "CodeQL alerts 57-61 were raised against the newly copied aura_intent_ingestion_core.py",
+    "The copied core reproduced the full legacy parser and expanded PR attack surface without adding canonical ownership value",
+    "The canonical ingestion blob was already stable at 84bd861cb36b12c07708d3de1b91cd7beccd1399",
+    "AuraOS CI full pytest collection failed because its copied dependency list omitted defusedxml even though requirements.txt declares defusedxml>=0.7.1,<1.0",
+    "Greptile P1 found compound negative statements could be fragmented at nested operators",
+    "Greptile P1 found rejecting human dispositions could be recorded inside confirmed receipts",
+    "Greptile P1 found COMPILED sessions accepted invented nonempty confirmation receipt IDs"
+  ],
+  "prior_structure": {
+    "public_facade": "aura_intent_ingestion.py",
+    "duplicated_legacy_core": "aura_intent_ingestion_core.py",
+    "monkeypatching": true,
+    "ci_dependency_source": "partial inline workflow copies",
+    "bilateral_focused_ci": false
+  },
+  "revised_structure": {
+    "canonical_owner": "aura_intent_ingestion.py",
+    "canonical_owner_blob": "84bd861cb36b12c07708d3de1b91cd7beccd1399",
+    "proposal_only_companion": "aura_bilateral_intent_ingestion.py",
+    "duplicated_legacy_core": null,
+    "monkeypatching": false,
+    "canonical_route_recomputed": false,
+    "ci_dependency_source": "requirements.txt",
+    "bilateral_focused_ci": true
+  },
+  "changed_assumptions": [
+    "A full facade/core split is not required to prove PR1 bilateral contracts",
+    "Canonical ingestion integration should remain explicit and bounded rather than replacing the owner during the substrate PR",
+    "The CI harness must consume the repository dependency declaration instead of maintaining partial copies",
+    "New governed contract surfaces require direct compile, fatal-lint, and focused-test gates",
+    "A negative requirement span must preserve nested operators as part of one complete human prohibition",
+    "Compilation must validate an identity-bound current receipt object against exact session evidence rather than trust a receipt identifier",
+    "A confirmed receipt may only encode a confirming human disposition"
+  ],
+  "intent_changed": false,
+  "negative_requirements_changed": false,
+  "guardrails_changed": false,
+  "scope_changed": false,
+  "authority_changed": false,
+  "prior_confirmation_staled": false,
+  "requires_human_reconfirmation": false,
+  "requires_council_replan": true,
+  "current_reproof_required": true,
+  "generated_artifact_disposition": "REGENERATE_FROM_FINAL_SOURCE_TREE_ONLY",
+  "harness_repair": {
+    "path": ".github/workflows/ci.yml",
+    "dependency_declaration": "requirements.txt",
+    "tests_weakened": false,
+    "tests_skipped": false,
+    "full_suite_collection_blocker_removed": true,
+    "bilateral_python_versions": [
+      "3.10",
+      "3.12"
+    ]
+  },
+  "required_reproof": [
+    "Python 3.10 and 3.12 governed compilation",
+    "fatal Ruff E9/F63/F7/F82 checks",
+    "18 focused refinement contract tests",
+    "bilateral companion exact-span, contradiction, route-preservation, compression, and handoff tests",
+    "objective, revision, Waboose, canonical-owner, and candidate-blob evidence tests",
+    "CodeQL findings against deleted core remain outdated",
+    "deterministic scanner clears the refinement regex finding",
+    "repository full pytest suite installs requirements.txt",
+    "final-tree CODEMAP and topology verification",
+    "compound negation remains one exact source-bound requirement",
+    "rejecting dispositions and forged receipt identities fail closed",
+    "COMPILED transition requires a current receipt object bound to exact session evidence"
+  ],
+  "authority": {
+    "patch_authority": false,
+    "publication_authority": false,
+    "merge_authority": false,
+    "production_mutation": false
+  }
+}

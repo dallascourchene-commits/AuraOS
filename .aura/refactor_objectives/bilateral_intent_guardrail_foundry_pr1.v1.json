@@ -1,0 +1,123 @@
+{
+  "version": "AURA_BILATERAL_INTENT_PR1_OBJECTIVE_V2",
+  "status": "PROPOSAL_ONLY",
+  "repository": "dallascourchene-commits/AuraOS",
+  "base_repository_head": "598804b3dce8d39480d8494cf0144f872b01d9ca",
+  "candidate_branch": "refactor/bilateral-intent-pr1-v2",
+  "objective": "Implement the bilateral intent contract substrate, deterministic negative-intent parser, guardrail compiler, confirmation and revision receipts, and a bounded negation-preserving ingestion companion without replacing or monkeypatching Aura's canonical ingestion owner.",
+  "canonical_owners": {
+    "intent_ingestion": "aura_intent_ingestion.py",
+    "intent_packet": "aura_unified_memory_continuity.IntentPacket",
+    "semantic_ledger": "aura_unified_memory_continuity.SemanticLedger",
+    "dependency_declaration": "requirements.txt",
+    "exact_head_transport": "scripts/aura_exact_head_transport.py",
+    "architecture_harness": "scripts/aura_architecture_harness.py",
+    "waboose": "aura_coding_waboose_cli.py"
+  },
+  "base_owner_blobs": {
+    "aura_intent_ingestion.py": "84bd861cb36b12c07708d3de1b91cd7beccd1399",
+    "tests/test_aura_intent_ingestion.py": "b7342261e63d74a5686d31d587591da3cf534ebc",
+    "requirements.txt": "37dc4cbd2dabeaae6578df3147e7fe2eec6d3be9",
+    "scripts/aura_exact_head_transport.py": "5d17aedf68971cf76d6ea86d16a61a54b26f79d4",
+    "scripts/aura_architecture_harness.py": "fd66b1aca764fcfddbc06dd02bfa1bff3ec3e840",
+    "aura_coding_waboose_cli.py": "24538b4d4835bfe30d21727c4e9273ceee69a90a"
+  },
+  "candidate_source_blobs": {
+    ".github/workflows/ci.yml": "ec723312280650724c791084b5f51b92aa943af2",
+    "aura_bilateral_intent_ingestion.py": "fee8d5b3d2b01f4c13bb93a385c75a3e5c7bab42",
+    "aura_intent_refinement.py": "aad49ff004d642cab8107178ca60149917f56525",
+    "schemas/aura_intent_refinement.v1.schema.json": "1940609bbb121134a8224549173c5597efdc4de4",
+    "tests/test_aura_intent_ingestion_bilateral.py": "4ea27087cbd2e0f7c2aa4c5628e9d16d17363c86",
+    "tests/test_aura_intent_refinement.py": "13a38e0af81203ee6521e9c8d0b98de9d2da20bb"
+  },
+  "allowed_source_and_evidence_paths": [
+    ".github/workflows/ci.yml",
+    "aura_bilateral_intent_ingestion.py",
+    "aura_intent_refinement.py",
+    "schemas/aura_intent_refinement.v1.schema.json",
+    "tests/test_aura_intent_ingestion_bilateral.py",
+    "tests/test_aura_intent_refinement.py",
+    ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
+    ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
+    ".aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json",
+    "tests/test_bilateral_intent_pr1_evidence.py"
+  ],
+  "generated_navigation_paths": [
+    ".aura/CODEMAP.json",
+    ".aura/CODEMAP.md",
+    "topology_map.json"
+  ],
+  "generated_artifact_disposition": "REGENERATE_FROM_FINAL_SOURCE_TREE_ONLY",
+  "structural_decision": {
+    "canonical_ingestion_file_changed": false,
+    "canonical_ingestion_blob_preserved": "84bd861cb36b12c07708d3de1b91cd7beccd1399",
+    "duplicate_legacy_core_allowed": false,
+    "monkeypatching_allowed": false,
+    "companion_is_authority_owner": false,
+    "canonical_route_recomputed_by_companion": false,
+    "reason": "The initial facade/core split duplicated the full legacy parser and surfaced inherited CodeQL attack paths as newly introduced code. The corrected design restores the canonical owner exactly and uses a narrow proposal-only companion that decorates, but does not recompute, canonical routing."
+  },
+  "harness_repair": {
+    "issue_ref": "#225",
+    "workflow": ".github/workflows/ci.yml",
+    "dependency_source": "requirements.txt",
+    "partial_dependency_copies_removed": true,
+    "bilateral_modules_added_to_compile_and_fatal_lint": true,
+    "bilateral_tests_added_to_python_310_and_312_focused_gates": true,
+    "tests_weakened_or_skipped": false
+  },
+  "prohibited_effects": [
+    "production mutation",
+    "commit or branch publication outside the named feature branch",
+    "automatic pull request readiness",
+    "merge",
+    "deployment",
+    "professional or physical-work authorization",
+    "durable learning promotion",
+    "new intent, memory, truth, policy, verification, continuity, publication, routing, or authority owner",
+    "monkeypatching the canonical ingestion module",
+    "duplicating the canonical ingestion implementation",
+    "recomputing or overriding canonical route semantics",
+    "weakening or skipping a failing test to obtain green CI",
+    "out-of-scope source modification",
+    "partial candidate publication"
+  ],
+  "proof_plan": [
+    "Python 3.10 and 3.12 compilation",
+    "fatal Ruff E9/F63/F7/F82 checks",
+    "focused bilateral contract and parser tests",
+    "canonical route preservation test",
+    "negation-preserving compression and handoff tests",
+    "Draft 2020-12 schema checks",
+    "deep immutability and stale-confirmation tests",
+    "exact canonical-owner and candidate blob identity checks",
+    "Waboose invariant and risk-profile validation",
+    "CodeQL review-thread obsolescence or clearance",
+    "repository full pytest suite using requirements.txt",
+    "final generated navigation verification",
+    "compound negation exact-span preservation",
+    "confirmation receipt identity and current-evidence validation before compilation",
+    "rejecting human disposition cannot create a confirmed receipt"
+  ],
+  "transport_boundary": {
+    "source_checkout_mutation_by_harness": false,
+    "diagnostics_outside_checkout_required": true,
+    "candidate_materialization_outside_checkout_required": true,
+    "atomic_whole_file_publication_required": true,
+    "request_triggered_export_is_authoritative_forensic_evidence": false,
+    "residual_hardening": "Before forensic authority, terminate request-controlled descendants, finalize in a private trusted location, and rehash the exact upload immediately before upload."
+  },
+  "authority": {
+    "memory_owner": false,
+    "truth_owner": false,
+    "policy_owner": false,
+    "routing_owner": false,
+    "verification_owner": false,
+    "patch_authority": false,
+    "production_mutation": false,
+    "merge_authority": false,
+    "human_confirmation_required": true
+  },
+  "candidate_head_bound_at_final_verification": true,
+  "human_merge_decision_required": true
+}
