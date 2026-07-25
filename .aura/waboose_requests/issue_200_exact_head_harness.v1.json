@@ -1,0 +1,23 @@
+{
+  "objective": "Review the Issue #200 exact-head export and materialization harness repair for checkout cleanliness, external temporary artifacts, dirty-path fail-closed diagnostics, exact-head identity, whole-file publication under formatter drift, bounded changed-file scope, and zero automatic merge or production authority.",
+  "mode": "files",
+  "profile": "precision",
+  "changed_files": [
+    "scripts/aura_exact_head_transport.py",
+    ".github/workflows/aura-architecture-harness-export.yml",
+    "tests/test_aura_exact_head_transport.py",
+    "tests/test_aura_architecture_harness_export_workflow.py",
+    "docs/AURA_ARCHITECTURE_HARNESS_ISSUE_200.md"
+  ],
+  "risk_map": [
+    "self_dirtying_checkout",
+    "temporary_artifact_escape",
+    "dirty_branch_false_pass",
+    "stale_head_export",
+    "partial_patch_publication",
+    "formatter_context_drift",
+    "out_of_scope_candidate_drift",
+    "publication_authority_expansion"
+  ],
+  "run_tests": true
+}
