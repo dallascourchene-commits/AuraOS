@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1384
-- **total_bytes**: 56557352
-- **text_tokens_est**: 4687092
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 184, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 913, 'schema_or_lexicon': 167, 'support_file': 54}
-- **topology_nodes**: 10473
-- **topology_edges**: 24589
+- **file_count**: 1422
+- **total_bytes**: 56804383
+- **text_tokens_est**: 4748816
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 919, 'schema_or_lexicon': 174, 'support_file': 77}
+- **topology_nodes**: 10549
+- **topology_edges**: 24936
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 30425.41
+- **elapsed_ms**: 30062.51
 
 ## Coverage
 
-- **included_file_count**: 1384
+- **included_file_count**: 1422
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=139, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=30, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
 
 ## Command Index
 
@@ -284,17 +284,17 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ### cognition_and_memory
 - `.aura/memory_apertures/coding_localize.v1.json`
 - `.aura/waboose_requests/unified_memory_continuity.v1.json`
-- `.github/workflows/unified-memory-continuity-codemap-sync.yml`
-- `.github/workflows/unified-memory-continuity-verification.yml`
+- `.aura/waboose_requests/unified_memory_continuity_learning.v1.json`
+- `.github/workflows/unified-memory-continuity-deep-final-materialize.yml`
+- `.github/workflows/unified-memory-continuity-deep-v2-target.yml`
+- `.github/workflows/unified-memory-continuity-label-publish.yml`
+- `.github/workflows/unified-memory-continuity-main-publish.yml`
+- `.github/workflows/unified-memory-continuity-materialize.yml`
+- `.github/workflows/unified-memory-continuity-verified-publish-command.yml`
 - `.mempalace/aura_thought.txt`
 - `.mempalace/lexicon.json`
 - `.mempalace/nexus.json`
-- `.mempalace/temp_prompt.txt`
-- `async_palace.py`
-- `aura_attention_palace.py`
-- `aura_blockchain/memory_staking.py`
-- `aura_civic_memory.py`
-- ... 26 more; query CODEMAP.json for exact file cards
+- ... 35 more; query CODEMAP.json for exact file cards
 
 ### mesh_and_routing
 - `.aura/PROVIDER_ROUTING_MATERIALIZE_REQUEST`
@@ -347,22 +347,22 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/AURA.md`
 - `.aura/CONVERSE.md`
 - `.aura/HERMES_AURA_RULES.md`
+- `.aura/ISSUE_200_PR_SCOPE`
 - `.aura/OUTPUT_FORMATS.md`
 - `.aura/RESEARCH_MANIFEST.json`
 - `.aura/ROLES.md`
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
-- `.aura/arena_routes/human_agent.v1.json`
-- ... 1185 more; query CODEMAP.json for exact file cards
+- ... 1214 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
 - `aura_node.py` (python_module): 194 symbols, degree 890, ~104798 tokens
 - `aura_gate.py` (python_module): 68 symbols, degree 756, ~20345 tokens
-- `aura_unified_memory_continuity.py` (python_module): 92 symbols, degree 699, ~25839 tokens
+- `aura_unified_memory_continuity.py` (python_module): 92 symbols, degree 724, ~25839 tokens
 - `aura_agent_arena_cli.py` (python_module): 100 symbols, degree 575, ~17235 tokens
-- `aura_fst_routing.py` (python_module): 35 symbols, degree 550, ~8991 tokens
+- `aura_fst_routing.py` (python_module): 35 symbols, degree 558, ~8991 tokens
 - `test_scientific_memory.py` (python_module): 111 symbols, degree 517, ~13607 tokens
 - `aura_live_architect.py` (python_module): 74 symbols, degree 516, ~31372 tokens
 - `aura_spatial_contracts.py` (python_module): 74 symbols, degree 510, ~16200 tokens
@@ -374,14 +374,14 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 10473
-- **edges**: 24589
+- **nodes**: 10549
+- **edges**: 24936
 - **top_files_by_degree**:
   - `aura_node.py` degree=890 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=756 nodes=69 neighbors=`aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`, `aura_gate_adapters.py`
-  - `aura_unified_memory_continuity.py` degree=699 nodes=93 neighbors=`aura_event_contracts.py`
+  - `aura_unified_memory_continuity.py` degree=724 nodes=93 neighbors=`aura_event_contracts.py`, `aura_unified_memory_continuity_learning.py`, `aura_unified_memory_continuity_toolchain.py`
   - `aura_agent_arena_cli.py` degree=575 nodes=101 neighbors=`aura_agent_arena_bridge.py`, `aura_agent_arena_fireworks.py`
-  - `aura_fst_routing.py` degree=550 nodes=36 neighbors=`aura_architect_loop.py`, `aura_architecture_harness_git_tree_routing.py`, `aura_external_llm_session.py`, `aura_fusion.py`
+  - `aura_fst_routing.py` degree=558 nodes=36 neighbors=`aura_architect_loop.py`, `aura_architecture_harness_git_tree_routing.py`, `aura_external_llm_session.py`, `aura_fusion.py`
   - `test_scientific_memory.py` degree=517 nodes=120 neighbors=`arxiv_forager.py`, `aura_paper_memory.py`, `aura_scientific_memory.py`, `travel_price_sidecar.py`
   - `aura_live_architect.py` degree=516 nodes=85 neighbors=`aura_architect_council_calling_benchmark.py`, `aura_architect_council_v2.py`, `aura_architect_council_v3.py`, `aura_architect_loop.py`
   - `aura_spatial_contracts.py` degree=510 nodes=75 neighbors=`aura_construction_demo_director.py`, `aura_construction_demo_projection.py`, `aura_event_contracts.py`, `aura_llm_egress.py`
