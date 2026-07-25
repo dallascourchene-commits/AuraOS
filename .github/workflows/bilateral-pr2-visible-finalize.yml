@@ -1,0 +1,83 @@
+name: Bilateral PR2 visible lifecycle finalizer
+
+on:
+  push:
+    branches:
+      - refactor/bilateral-intent-pr2
+    paths:
+      - Aura_Sandbox/pr2_lifecycle_finalizer.py
+      - .github/workflows/bilateral-pr2-visible-finalize.yml
+  pull_request:
+    paths:
+      - Aura_Sandbox/pr2_lifecycle_finalizer.py
+      - .github/workflows/bilateral-pr2-visible-finalize.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bilateral-pr2-contradiction-finalizer
+  cancel-in-progress: false
+
+jobs:
+  patch-prove-sync-and-dissolve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/bilateral-intent-pr2
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install declared dependencies and test tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pytest pytest-asyncio
+      - name: Apply idempotent lifecycle hardening
+        run: python Aura_Sandbox/pr2_lifecycle_finalizer.py
+      - name: Remove all one-use repair material
+        run: |
+          rm -f Aura_Sandbox/pr2_lifecycle_finalizer.py
+          rm -f .github/workflows/bilateral-pr2-contradiction-finalize.yml
+          rm -f .github/workflows/bilateral-pr2-visible-finalize.yml
+      - name: Run lifecycle, contradiction, expiration, and compatibility proof
+        run: |
+          python -m py_compile \
+            aura_bilateral_intent_compiler.py \
+            aura_arena_gate_dialogue.py \
+            tests/test_aura_bilateral_gate_dialogue.py
+          ruff check --select E9,F63,F7,F82 \
+            aura_bilateral_intent_compiler.py \
+            aura_arena_gate_dialogue.py \
+            tests/test_aura_bilateral_gate_dialogue.py
+          python -m pytest -q \
+            tests/test_aura_bilateral_gate_dialogue.py \
+            tests/test_aura_showcase_gate_dialogue.py \
+            tests/test_aura_intent_refinement.py
+      - name: Publish verified clean tree
+        run: |
+          git config user.name "AuraOS PR2 Visible Finalizer"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A \
+            aura_bilateral_intent_compiler.py \
+            aura_arena_gate_dialogue.py \
+            tests/test_aura_bilateral_gate_dialogue.py \
+            Aura_Sandbox/pr2_lifecycle_finalizer.py \
+            .github/workflows/bilateral-pr2-contradiction-finalize.yml \
+            .github/workflows/bilateral-pr2-visible-finalize.yml
+          if git diff --cached --quiet; then
+            echo "Lifecycle hardening is already published."
+            exit 0
+          fi
+          git commit -m "fix(intent): harden bilateral lifecycle currency"
+          git pull --rebase origin refactor/bilateral-intent-pr2
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          git add .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
+          if ! git diff --cached --quiet; then
+            git commit --amend --no-edit
+          fi
+          git push origin HEAD:refactor/bilateral-intent-pr2
