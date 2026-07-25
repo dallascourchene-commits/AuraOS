@@ -1,41 +1,54 @@
 name: Materialize bilateral intent PR2
 
 on:
-  push:
+  pull_request:
     branches:
-      - aura-materialize-pr2-20260725
-    paths:
-      - '.aura/materialize/pr2.payload.part*'
-      - '.github/workflows/aura-pr2-materialize.yml'
+      - main
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
+  pull-requests: read
 
 concurrency:
-  group: aura-pr2-materialize
+  group: aura-pr2-materialize-${{ github.event.pull_request.number }}
   cancel-in-progress: false
 
 jobs:
   materialize:
+    if: >-
+      github.head_ref == 'refactor/bilateral-intent-pr2-canonical-gate-dialogue' &&
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     env:
-      FINAL_BRANCH: refactor/bilateral-intent-pr2-canonical-gate-dialogue
+      TARGET_BRANCH: refactor/bilateral-intent-pr2-canonical-gate-dialogue
+      EVENT_HEAD: ${{ github.event.pull_request.head.sha }}
+      EVIDENCE_DIR: ${{ runner.temp }}/aura-pr2-materialize
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: aura-materialize-pr2-20260725
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
+
+      - name: Bind exact draft head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVENT_HEAD"
+          test -n "$(find .aura/materialize -maxdepth 1 -name 'pr2.payload.part*' -print -quit)"
+          mkdir -p "$EVIDENCE_DIR"
+          git rev-parse HEAD | tee "$EVIDENCE_DIR/transport-head.txt"
 
       - name: Decode and safely apply staged publication payload
         shell: bash
         run: |
+          set -euo pipefail
           python - <<'PY'
           from __future__ import annotations
 
           import base64
           import gzip
-          import io
           import json
           from pathlib import Path, PurePosixPath
           import shutil
@@ -61,6 +74,7 @@ jobs:
               return Path(*posix.parts)
 
           applied = False
+          applied_paths: list[str] = []
           with tempfile.TemporaryDirectory(prefix='aura-pr2-') as temporary:
               temp = Path(temporary)
               archive = temp / 'payload.bin'
@@ -76,7 +90,6 @@ jobs:
                       bundle.extractall(extracted, members=members, filter='data')
                       roots = [item for item in extracted.iterdir()]
                       source = roots[0] if len(roots) == 1 and roots[0].is_dir() else extracted
-                      copied = []
                       for item in source.rglob('*'):
                           if not item.is_file():
                               continue
@@ -85,10 +98,8 @@ jobs:
                           destination = root / relative
                           destination.parent.mkdir(parents=True, exist_ok=True)
                           shutil.copy2(item, destination)
-                          copied.append(relative.as_posix())
-                      print('applied tar payload files:')
-                      print('\n'.join(f'  {item}' for item in copied))
-                      applied = bool(copied)
+                          applied_paths.append(relative.as_posix())
+                      applied = bool(applied_paths)
               except tarfile.ReadError:
                   pass
 
@@ -97,8 +108,9 @@ jobs:
                       payload = json.loads(raw.decode('utf-8'))
                   except (UnicodeDecodeError, json.JSONDecodeError):
                       payload = None
-                  if isinstance(payload, dict) and isinstance(payload.get('files'), dict):
-                      for name, value in payload['files'].items():
+                  records = payload.get('files') if isinstance(payload, dict) else None
+                  if isinstance(records, dict):
+                      for name, value in records.items():
                           relative = safe_relative(str(name))
                           destination = root / relative
                           destination.parent.mkdir(parents=True, exist_ok=True)
@@ -106,32 +118,102 @@ jobs:
                               destination.write_bytes(base64.b64decode(str(value.get('content') or '')))
                           else:
                               content = value.get('content') if isinstance(value, dict) else value
-                              destination.write_text(str(content), encoding='utf-8')
-                      applied = True
+                              if not isinstance(content, str):
+                                  raise ValueError(f'payload content must be text: {name}')
+                              destination.write_text(content, encoding='utf-8')
+                          applied_paths.append(relative.as_posix())
+                      applied = bool(applied_paths)
 
               if not applied and raw.lstrip().startswith((b'diff --git ', b'--- ')):
                   patch = temp / 'payload.patch'
                   patch.write_bytes(raw)
                   subprocess.run(['git', 'apply', '--whitespace=error', str(patch)], cwd=root, check=True)
-                  applied = True
+                  applied_paths = subprocess.run(
+                      ['git', 'diff', '--name-only'], cwd=root, check=True,
+                      capture_output=True, text=True,
+                  ).stdout.splitlines()
+                  applied = bool(applied_paths)
 
           if not applied:
-              raise SystemExit('unsupported PR2 publication payload format')
+              raise SystemExit('unsupported or empty PR2 publication payload')
+          evidence = Path(__import__('os').environ['EVIDENCE_DIR'])
+          evidence.mkdir(parents=True, exist_ok=True)
+          evidence.joinpath('payload-paths.txt').write_text(
+              '\n'.join(sorted(dict.fromkeys(applied_paths))) + '\n', encoding='utf-8'
+          )
+          print('applied payload files:')
+          print('\n'.join(f'  {item}' for item in sorted(dict.fromkeys(applied_paths))))
           PY
 
-      - name: Remove transport-only staging files
+      - name: Remove transport-only files and inspect bounded diff
+        shell: bash
         run: |
+          set -euo pipefail
           rm -f .aura/materialize/pr2.payload.part*
           rm -f .github/workflows/aura-pr2-materialize.yml
           rmdir .aura/materialize 2>/dev/null || true
+          git diff --check
+          git diff --name-only origin/main | tee "$EVIDENCE_DIR/pre-map-paths.txt"
 
-      - name: Publish exact source branch
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install declared verification dependencies
         shell: bash
         run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8,<9' 'pytest-asyncio>=0.23,<1.0' ruff
+
+      - name: Run bounded syntax, lint, and focused tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t py_files < <(git diff --name-only origin/main -- '*.py' | grep -E '^[A-Za-z0-9_./-]+\.py$' || true)
+          if ((${#py_files[@]})); then
+            python -m py_compile "${py_files[@]}"
+            ruff check --select E9,F63,F7,F82 "${py_files[@]}"
+          fi
+          mapfile -t js_files < <(git diff --name-only origin/main -- '*.js' | grep -E '^[A-Za-z0-9_./-]+\.js$' || true)
+          for path in "${js_files[@]}"; do node --check "$path"; done
+          mapfile -t tests < <(git diff --name-only origin/main -- 'tests/test_*.py' | grep -E '^tests/test_[A-Za-z0-9_./-]+\.py$' || true)
+          for existing in \
+            tests/test_aura_showcase_gate_dialogue.py \
+            tests/test_aura_intent_refinement.py \
+            tests/test_aura_unified_memory_continuity.py; do
+            if [[ -f "$existing" ]] && [[ ! " ${tests[*]} " =~ " ${existing} " ]]; then tests+=("$existing"); fi
+          done
+          if ((${#tests[@]})); then python -m pytest -q "${tests[@]}" | tee "$EVIDENCE_DIR/pytest.log"; fi
+
+      - name: Regenerate canonical topology artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python aura_codebase_navigator.py | tee "$EVIDENCE_DIR/codemap.log"
+          git diff --check
+
+      - name: Publish verified PR head
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "refs/heads/${TARGET_BRANCH}:refs/remotes/origin/${TARGET_BRANCH}"
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/${TARGET_BRANCH})"
           git config user.name 'AuraOS Materializer'
           git config user.email 'actions@users.noreply.github.com'
-          git switch -C "${FINAL_BRANCH}"
           git add -A
-          git diff --cached --stat
+          git diff --cached --name-only | tee "$EVIDENCE_DIR/final-paths.txt"
+          git diff --cached --check
           git commit -m 'feat(intent): integrate canonical packets with multi-turn gate dialogue'
-          git push --set-upstream origin "HEAD:${FINAL_BRANCH}"
+          git push origin "HEAD:${TARGET_BRANCH}"
+          git rev-parse HEAD | tee "$EVIDENCE_DIR/published-head.txt"
+
+      - name: Upload materialization evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bilateral-intent-pr2-materialize-${{ github.run_id }}
+          path: ${{ runner.temp }}/aura-pr2-materialize
+          if-no-files-found: warn
+          retention-days: 30
