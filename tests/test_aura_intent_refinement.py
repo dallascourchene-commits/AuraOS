@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import json
 import sys
-from dataclasses import FrozenInstanceError
+from dataclasses import FrozenInstanceError, replace
 from pathlib import Path
 
 import pytest
@@ -83,6 +83,9 @@ def test_schema_lists_all_public_contracts():
         "IntentRevisionDelta",
         "NegativeRequirement",
     }.issubset(schema["$defs"])
+    assert schema["$defs"]["IntentConfirmationReceipt"]["properties"][
+        "human_disposition"
+    ] == {"const": "CONFIRMED"}
 
 
 def test_declares_no_parallel_owner_or_mutation_authority():
@@ -140,6 +143,17 @@ def test_negation_variants_and_dangling_scope():
     assert [item.operator for item in requirements] == ["don't", "never", "without", "do not"]
     assert requirements[2].classification == "PRIVACY_RESTRICTION"
     assert requirements[3].ambiguous is True
+
+
+def test_compound_negation_remains_one_exact_requirement():
+    text = "Build the release, but do not deploy without human approval."
+    requirements = extract_negative_requirements(text)
+    assert len(requirements) == 1
+    requirement = requirements[0]
+    assert requirement.operator == "do not"
+    assert requirement.statement == "do not deploy without human approval."
+    assert requirement.target == "deploy without human approval"
+    assert text[requirement.source_start:requirement.source_end] == requirement.source_span
 
 
 def test_positive_negative_contradiction_detection():
@@ -217,8 +231,55 @@ def test_session_lifecycle_requires_bilateral_confirmation_and_current_head():
     )
     assert confirmed.is_current(repository_head=HEAD, working_tree_digest=TREE, now=150.0)
     assert not confirmed.is_current(repository_head="moved", working_tree_digest=TREE, now=150.0)
-    with pytest.raises(ValueError, match="confirmation receipt"):
-        confirmed.transition(RefinementStage.COMPILED, now=140.0)
+    with pytest.raises(ValueError, match="verified confirmation receipt object"):
+        confirmed.transition(
+            RefinementStage.COMPILED,
+            confirmation_receipt_id="invented-receipt",
+            now=140.0,
+        )
+    authority = {"merge": False}
+    receipt = IntentConfirmationReceipt.create(
+        session_id=confirmed.session_id,
+        repository_head=HEAD,
+        source_tree_digest=TREE,
+        working_tree_clean_receipt="clean-receipt",
+        source_request_digest=confirmed.source_request_digest,
+        positive_requirements=confirmed.candidate_positive_requirements,
+        negative_requirements=confirmed.candidate_negative_requirements,
+        semantic_ledger_digest="semantic-digest",
+        guardrails=confirmed.candidate_guardrails,
+        authority=authority,
+        teach_back=teach_back(),
+        allowed_paths=ALLOWED,
+        runtime_profile_digest="runtime-profile",
+        human_reviewer="Dallas",
+        human_disposition=ConfirmationStatus.CONFIRMED,
+        confirmed_at=131.0,
+        expires_at=190.0,
+        expires_or_stales_on=("repository head changes", "requirements change"),
+    )
+    evidence = {
+        "source_tree_digest": TREE,
+        "semantic_ledger_digest": "semantic-digest",
+        "authority": authority,
+        "allowed_paths": ALLOWED,
+        "runtime_profile_digest": "runtime-profile",
+    }
+    with pytest.raises(ValueError, match="does not match"):
+        confirmed.transition(
+            RefinementStage.COMPILED,
+            confirmation_receipt_id="invented-receipt",
+            confirmation_receipt=receipt,
+            confirmation_evidence=evidence,
+            now=140.0,
+        )
+    compiled = confirmed.transition(
+        RefinementStage.COMPILED,
+        confirmation_receipt=receipt,
+        confirmation_evidence=evidence,
+        now=140.0,
+    )
+    assert compiled.confirmation_receipt_id == receipt.confirmation_id
 
 
 def test_confirmation_receipt_binds_digests_and_stales_on_change():
@@ -264,6 +325,52 @@ def test_confirmation_receipt_binds_digests_and_stales_on_change():
     assert not receipt.is_current(**{**kwargs, "repository_head": "moved"})
     assert not receipt.is_current(**{**kwargs, "negative_requirements": ("Do not merge.",)})
     assert not receipt.is_current(**{**kwargs, "teach_back_digest": "changed"})
+
+
+def test_receipt_rejects_nonconfirming_disposition_and_forged_identity():
+    guardrails = confirmed_guardrails()
+    common = dict(
+        session_id="session-1",
+        repository_head=HEAD,
+        source_tree_digest=TREE,
+        working_tree_clean_receipt="clean-receipt",
+        source_request_digest=stable_digest("request"),
+        positive_requirements=("Compile bilateral intent.",),
+        negative_requirements=("Do not publish or merge.",),
+        semantic_ledger_digest="semantic-digest",
+        guardrails=guardrails,
+        authority={"commit": False, "push": False, "merge": False},
+        teach_back=teach_back(),
+        allowed_paths=ALLOWED,
+        runtime_profile_digest="runtime-profile",
+        human_reviewer="Dallas",
+        confirmed_at=100.0,
+        expires_at=200.0,
+        expires_or_stales_on=("repository head changes", "guardrails change"),
+    )
+    with pytest.raises(ValueError, match="confirming human disposition"):
+        IntentConfirmationReceipt.create(
+            **common, human_disposition=ConfirmationStatus.REJECTED
+        )
+    receipt = IntentConfirmationReceipt.create(
+        **common, human_disposition=ConfirmationStatus.CONFIRMED
+    )
+    current = dict(
+        repository_head=HEAD,
+        source_tree_digest=TREE,
+        source_request_digest=stable_digest("request"),
+        positive_requirements=("Compile bilateral intent.",),
+        negative_requirements=("Do not publish or merge.",),
+        semantic_ledger_digest="semantic-digest",
+        guardrail_set_digest=receipt.guardrail_set_digest,
+        authority_digest=receipt.authority_digest,
+        teach_back_digest=teach_back().teach_back_digest,
+        allowed_paths=ALLOWED,
+        runtime_profile_digest="runtime-profile",
+        now=150.0,
+    )
+    assert not replace(receipt, confirmation_id="invented-receipt").is_current(**current)
+    assert not replace(receipt, human_disposition="REJECTED").is_current(**current)
 
 
 def test_revision_classes_enforce_reconfirmation_and_council_replan():

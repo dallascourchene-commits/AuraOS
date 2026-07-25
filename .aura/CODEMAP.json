@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1785006609,
+  "generated_at_unix": 1785006720,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1433,
+    "included_file_count": 1431,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,10 +13,12 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 174,
-      "Aura_Memory": 6,
+      ".git": 25,
+      ".pytest_cache": 4,
+      ".ruff_cache": 4,
+      "Aura_Memory": 8,
       "Aura_Sandbox": 1,
-      "__pycache__": 8
+      "__pycache__": 23
     },
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
@@ -55,7 +57,6 @@
       ".aura/model_policies/local_first.v1.json",
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
-      ".aura/pr224-greptile-repair.patch.xz.b64",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
       ".aura/refactor_payloads/umc_main_publish.trigger",
@@ -151,7 +152,6 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
-      ".github/workflows/pr224-greptile-repair.yml",
       ".github/workflows/provider-routing-materialize.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
@@ -1455,9 +1455,9 @@
     ]
   },
   "summary": {
-    "file_count": 1433,
-    "total_bytes": 56948336,
-    "text_tokens_est": 4782813,
+    "file_count": 1431,
+    "total_bytes": 56947160,
+    "text_tokens_est": 4784515,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 51,
@@ -1465,13 +1465,13 @@
       "native_accelerator": 8,
       "operator_script": 6,
       "python_module": 924,
-      "schema_or_lexicon": 179,
-      "support_file": 78
+      "schema_or_lexicon": 178,
+      "support_file": 77
     },
-    "topology_nodes": 10626,
-    "topology_edges": 25200,
+    "topology_nodes": 10628,
+    "topology_edges": 25212,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 38019.68
+    "elapsed_ms": 29661.15
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1723,7 +1723,6 @@
       ".aura/model_policies/local_first.v1.json",
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
-      ".aura/pr224-greptile-repair.patch.xz.b64",
       ".aura/refactor_payloads/umc_main_publish.trigger",
       ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
       ".aura/research/AURA_SPATIAL_BREADBOARD_RECEIPT.json",
@@ -1810,7 +1809,6 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
-      ".github/workflows/pr224-greptile-repair.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -2999,6 +2997,13 @@
       "topology_degree": 481
     },
     {
+      "path": "aura_intent_refinement.py",
+      "role": "python_module",
+      "symbols": 63,
+      "tokens_est": 13598,
+      "topology_degree": 464
+    },
+    {
       "path": "aura_relational_index.py",
       "role": "python_module",
       "symbols": 75,
@@ -3020,13 +3025,6 @@
       "topology_degree": 455
     },
     {
-      "path": "aura_intent_refinement.py",
-      "role": "python_module",
-      "symbols": 61,
-      "tokens_est": 12468,
-      "topology_degree": 443
-    },
-    {
       "path": "aura_gate_adapters.py",
       "role": "python_module",
       "symbols": 40,
@@ -3041,18 +3039,18 @@
       "topology_degree": 383
     },
     {
+      "path": "aura_event_contracts.py",
+      "role": "python_module",
+      "symbols": 40,
+      "tokens_est": 6370,
+      "topology_degree": 367
+    },
+    {
       "path": "aura_agent_arena_mcp.py",
       "role": "python_module",
       "symbols": 57,
       "tokens_est": 13955,
       "topology_degree": 366
-    },
-    {
-      "path": "aura_event_contracts.py",
-      "role": "python_module",
-      "symbols": 40,
-      "tokens_est": 6370,
-      "topology_degree": 364
     },
     {
       "path": "test_aura_functions.py",
@@ -10273,8 +10271,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "class",
-        "line": 574,
-        "end_line": 670,
+        "line": 616,
+        "end_line": 749,
         "semantic_id": "aura_intent_refinement.py#class:IntentConfirmationReceipt:5f6fe3e7d12bf22f",
         "signature_hash": "10499d9b1441f188"
       }
@@ -10304,7 +10302,7 @@
         "file": "aura_intent_refinement.py",
         "kind": "class",
         "line": 455,
-        "end_line": 570,
+        "end_line": 612,
         "semantic_id": "aura_intent_refinement.py#class:IntentRefinementSession:d2fecc19ee56e53c",
         "signature_hash": "602eabcfb76b8006"
       }
@@ -10313,8 +10311,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "class",
-        "line": 674,
-        "end_line": 764,
+        "line": 753,
+        "end_line": 843,
         "semantic_id": "aura_intent_refinement.py#class:IntentRevisionDelta:615028d272303db6",
         "signature_hash": "d91b92a5dfbb4082"
       }
@@ -39591,6 +39589,14 @@
         "end_line": 296,
         "semantic_id": "aura_construction_state.py#method:ConstructionProjectState._identity_payload:3e04476d6d882e74",
         "signature_hash": "3c76ba05abb60bb6"
+      },
+      {
+        "file": "aura_intent_refinement.py",
+        "kind": "method",
+        "line": 690,
+        "end_line": 711,
+        "semantic_id": "aura_intent_refinement.py#method:IntentConfirmationReceipt._identity_payload:53fa82f1ab761aa1",
+        "signature_hash": "3c76ba05abb60bb6"
       }
     ],
     "_identity_ref": [
@@ -40373,8 +40379,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 776,
-        "end_line": 777,
+        "line": 855,
+        "end_line": 856,
         "semantic_id": "aura_intent_refinement.py#function:_is_boundary:9f26b52a94e12382",
         "signature_hash": "2497dbeb9ddb1351"
       }
@@ -43981,8 +43987,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 825,
-        "end_line": 839,
+        "line": 904,
+        "end_line": 918,
         "semantic_id": "aura_intent_refinement.py#function:_negative_class:490f21a76206ccb7",
         "signature_hash": "a708d750014450c7"
       }
@@ -45453,8 +45459,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 780,
-        "end_line": 790,
+        "line": 859,
+        "end_line": 869,
         "semantic_id": "aura_intent_refinement.py#function:_operator_at:2407b0c135dde596",
         "signature_hash": "2d6e5e69f363c6e4"
       }
@@ -45463,8 +45469,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 807,
-        "end_line": 822,
+        "line": 886,
+        "end_line": 901,
         "semantic_id": "aura_intent_refinement.py#function:_operator_matches:4d181092977d3d90",
         "signature_hash": "cd18d8efbd8649ec"
       }
@@ -54135,8 +54141,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 793,
-        "end_line": 804,
+        "line": 872,
+        "end_line": 883,
         "semantic_id": "aura_intent_refinement.py#function:_sentence_ranges:0ac96249cca58d7b",
         "signature_hash": "0cd4ffeb452a4b4e"
       }
@@ -58605,8 +58611,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 872,
-        "end_line": 876,
+        "line": 952,
+        "end_line": 956,
         "semantic_id": "aura_intent_refinement.py#function:_tokens:08968a4757c97fd3",
         "signature_hash": "9a39f8f360cb83b4"
       },
@@ -64573,8 +64579,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 990,
-        "end_line": 991,
+        "line": 1070,
+        "end_line": 1071,
         "semantic_id": "aura_intent_refinement.py#function:authority_digest:de62e652702e2ca6",
         "signature_hash": "9a5a1f01a65c3fca"
       }
@@ -69461,8 +69467,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 933,
-        "end_line": 983,
+        "line": 1013,
+        "end_line": 1063,
         "semantic_id": "aura_intent_refinement.py#function:compile_default_guardrails:490e3c83e6577a1b",
         "signature_hash": "20b9f62e7f2bf121"
       }
@@ -70967,16 +70973,16 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "method",
-        "line": 601,
-        "end_line": 643,
-        "semantic_id": "aura_intent_refinement.py#method:IntentConfirmationReceipt.create:ef6b1588e4f2c4be",
-        "signature_hash": "075f6eeed5ea66f5"
+        "line": 643,
+        "end_line": 688,
+        "semantic_id": "aura_intent_refinement.py#method:IntentConfirmationReceipt.create:7263e12cebd90a4e",
+        "signature_hash": "d1e6fd32bb2ea0ef"
       },
       {
         "file": "aura_intent_refinement.py",
         "kind": "method",
-        "line": 704,
-        "end_line": 757,
+        "line": 783,
+        "end_line": 836,
         "semantic_id": "aura_intent_refinement.py#method:IntentRevisionDelta.create:30a06feda58891c1",
         "signature_hash": "14b769d755506828"
       },
@@ -72273,8 +72279,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 879,
-        "end_line": 895,
+        "line": 959,
+        "end_line": 975,
         "semantic_id": "aura_intent_refinement.py#function:detect_requirement_contradictions:e8b9e665a69be872",
         "signature_hash": "2d1bba36027e7f72"
       }
@@ -74959,8 +74965,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 842,
-        "end_line": 869,
+        "line": 921,
+        "end_line": 949,
         "semantic_id": "aura_intent_refinement.py#function:extract_negative_requirements:1c70434e80e769ee",
         "signature_hash": "d769a857c9d87e56"
       }
@@ -78655,8 +78661,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 986,
-        "end_line": 987,
+        "line": 1066,
+        "end_line": 1067,
         "semantic_id": "aura_intent_refinement.py#function:guardrail_set_digest:25a8f79ec2ebafbf",
         "signature_hash": "8ee72c2fc41c708c"
       }
@@ -78849,6 +78855,16 @@
         "end_line": 157,
         "semantic_id": "aura_mcp_gateway.py#method:AuraMCPGateway.has_tool:2fa850462c872fd8",
         "signature_hash": "6336ad8d128d5fe0"
+      }
+    ],
+    "has_valid_identity": [
+      {
+        "file": "aura_intent_refinement.py",
+        "kind": "method",
+        "line": 713,
+        "end_line": 721,
+        "semantic_id": "aura_intent_refinement.py#method:IntentConfirmationReceipt.has_valid_identity:908de5ce7c613c35",
+        "signature_hash": "80ca866221c84637"
       }
     ],
     "hash": [
@@ -80393,16 +80409,16 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "method",
-        "line": 554,
-        "end_line": 562,
+        "line": 596,
+        "end_line": 604,
         "semantic_id": "aura_intent_refinement.py#method:IntentRefinementSession.is_current:92121596b77106eb",
         "signature_hash": "c74999933a6babe9"
       },
       {
         "file": "aura_intent_refinement.py",
         "kind": "method",
-        "line": 645,
-        "end_line": 665,
+        "line": 723,
+        "end_line": 744,
         "semantic_id": "aura_intent_refinement.py#method:IntentConfirmationReceipt.is_current:b12deec5d0d63e24",
         "signature_hash": "e632ecbc4086405f"
       }
@@ -88115,8 +88131,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 994,
-        "end_line": 1008,
+        "line": 1074,
+        "end_line": 1088,
         "semantic_id": "aura_intent_refinement.py#function:refinement_capabilities:3b5a72f2a0f55a10",
         "signature_hash": "08b9f65d8b61ad0f"
       }
@@ -100219,6 +100235,16 @@
         "signature_hash": "bcc71183f896128e"
       }
     ],
+    "test_compound_negation_remains_one_exact_requirement": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 148,
+        "end_line": 156,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:test_compound_negation_remains_one_exact_requirement:3e61e9a261c49959",
+        "signature_hash": "fb3f181954f2f5df"
+      }
+    ],
     "test_comprehensive_snapshot_is_deterministic_and_non_authorizing": [
       {
         "file": "tests/test_aura_financial_contracts.py",
@@ -100393,8 +100419,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 224,
-        "end_line": 266,
+        "line": 285,
+        "end_line": 327,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_confirmation_receipt_binds_digests_and_stales_on_change:81be08e33f913bfa",
         "signature_hash": "ebc022ddfd87589d"
       }
@@ -100403,8 +100429,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 308,
-        "end_line": 334,
+        "line": 415,
+        "end_line": 441,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_confirmation_requires_teach_back_and_no_pending_decisions:d1972a7b5b53cde2",
         "signature_hash": "09d8c95b26cc1547"
       }
@@ -101945,8 +101971,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 88,
-        "end_line": 106,
+        "line": 91,
+        "end_line": 109,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_declares_no_parallel_owner_or_mutation_authority:e5f38b4fe64db122",
         "signature_hash": "c322eb7ce32f466d"
       }
@@ -102025,8 +102051,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 154,
-        "end_line": 161,
+        "line": 168,
+        "end_line": 175,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_default_guardrails_lock_atlas_and_add_construction_boundaries:c69aa83282a4888a",
         "signature_hash": "eca79d59708e5d5b"
       }
@@ -107863,8 +107889,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 164,
-        "end_line": 175,
+        "line": 178,
+        "end_line": 189,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_hard_guardrail_cannot_be_rejected:1850baf9f85ce8be",
         "signature_hash": "dd09cba61511ea95"
       }
@@ -110643,8 +110669,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 302,
-        "end_line": 305,
+        "line": 409,
+        "end_line": 412,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_leave_without_unchanged_is_not_misclassified_as_negative:de9236360c568ad6",
         "signature_hash": "54c56aac85ce8db3"
       }
@@ -113083,8 +113109,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 136,
-        "end_line": 142,
+        "line": 139,
+        "end_line": 145,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_negation_variants_and_dangling_scope:5869294d9077487a",
         "signature_hash": "18609e7d9c173749"
       }
@@ -113103,8 +113129,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 109,
-        "end_line": 133,
+        "line": 112,
+        "end_line": 136,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_negative_extraction_preserves_spans_and_classes:ee504b5ed2125d51",
         "signature_hash": "c5710279e336aebb"
       }
@@ -113213,8 +113239,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 337,
-        "end_line": 351,
+        "line": 444,
+        "end_line": 458,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_nested_session_records_are_deeply_immutable:6aeb149540b370be",
         "signature_hash": "ea3e808cfbabd637"
       }
@@ -116123,8 +116149,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 145,
-        "end_line": 151,
+        "line": 159,
+        "end_line": 165,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_positive_negative_contradiction_detection:224f70377841ec56",
         "signature_hash": "7c72be2221f79654"
       }
@@ -117693,8 +117719,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 178,
-        "end_line": 193,
+        "line": 192,
+        "end_line": 207,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_question_and_teach_back_are_stable_and_immutable:9e24ae868d22be0b",
         "signature_hash": "f28ec6030da00da5"
       }
@@ -118113,8 +118139,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 373,
-        "end_line": 387,
+        "line": 480,
+        "end_line": 494,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_receipt_rejects_deferred_guardrails_and_empty_path_scope:966c0f3e28d90e20",
         "signature_hash": "d66b13d32d975060"
       }
@@ -118127,6 +118153,16 @@
         "end_line": 470,
         "semantic_id": "tests/test_aura_construction_authority.py#function:test_receipt_rejects_mismatched_request:58c6354e040fb67a",
         "signature_hash": "f4ffe172f481a72f"
+      }
+    ],
+    "test_receipt_rejects_nonconfirming_disposition_and_forged_identity": [
+      {
+        "file": "tests/test_aura_intent_refinement.py",
+        "kind": "function",
+        "line": 330,
+        "end_line": 373,
+        "semantic_id": "tests/test_aura_intent_refinement.py#function:test_receipt_rejects_nonconfirming_disposition_and_forged_identity:49bfea391b089f7a",
+        "signature_hash": "4465ac42b7582f82"
       }
     ],
     "test_receipt_replays_governance_lineage_and_rejects_missing_attestations": [
@@ -120569,8 +120605,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 269,
-        "end_line": 299,
+        "line": 376,
+        "end_line": 406,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_revision_classes_enforce_reconfirmation_and_council_replan:9abddb4e634c6818",
         "signature_hash": "2bdee0abeea4226b"
       }
@@ -120579,8 +120615,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 354,
-        "end_line": 370,
+        "line": 461,
+        "end_line": 477,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_revision_classes_reject_silent_intent_drift:9b310102474855c4",
         "signature_hash": "686c67feb5a261d2"
       }
@@ -121820,7 +121856,7 @@
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
         "line": 70,
-        "end_line": 85,
+        "end_line": 88,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_schema_lists_all_public_contracts:9edeec7e709c3579",
         "signature_hash": "4179c4d49a5407f5"
       }
@@ -122477,8 +122513,8 @@
       {
         "file": "tests/test_aura_intent_refinement.py",
         "kind": "function",
-        "line": 196,
-        "end_line": 221,
+        "line": 210,
+        "end_line": 282,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_session_lifecycle_requires_bilateral_confirmation_and_current_head:f847bf980e2aa88a",
         "signature_hash": "6f0e4ec259bfaaef"
       }
@@ -130775,24 +130811,24 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "method",
-        "line": 564,
-        "end_line": 570,
+        "line": 606,
+        "end_line": 612,
         "semantic_id": "aura_intent_refinement.py#method:IntentRefinementSession.to_dict:dc4066626572ffec",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_intent_refinement.py",
         "kind": "method",
-        "line": 667,
-        "end_line": 670,
+        "line": 746,
+        "end_line": 749,
         "semantic_id": "aura_intent_refinement.py#method:IntentConfirmationReceipt.to_dict:bc5b1e97ee15e324",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_intent_refinement.py",
         "kind": "method",
-        "line": 759,
-        "end_line": 764,
+        "line": 838,
+        "end_line": 843,
         "semantic_id": "aura_intent_refinement.py#method:IntentRevisionDelta.to_dict:6fc95b71b793329f",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -132932,9 +132968,9 @@
         "file": "aura_intent_refinement.py",
         "kind": "method",
         "line": 501,
-        "end_line": 552,
-        "semantic_id": "aura_intent_refinement.py#method:IntentRefinementSession.transition:cc970bcd91c5f90e",
-        "signature_hash": "6aa8138be2c66f29"
+        "end_line": 594,
+        "semantic_id": "aura_intent_refinement.py#method:IntentRefinementSession.transition:b2689ff96d871eae",
+        "signature_hash": "095690a8e01bdbb4"
       }
     ],
     "transition_by_id": [
@@ -139485,7 +139521,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 17,
+        "hub_rank": 18,
         "node_count": 59,
         "edge_count": 366,
         "degree": 366,
@@ -141541,7 +141577,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 12,
+        "hub_rank": 13,
         "node_count": 73,
         "edge_count": 458,
         "degree": 458,
@@ -155396,10 +155432,10 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 18,
+        "hub_rank": 17,
         "node_count": 41,
-        "edge_count": 364,
-        "degree": 364,
+        "edge_count": 367,
+        "degree": 367,
         "symbols": [
           "ActorType",
           "AppendOnlyEventStore",
@@ -155445,7 +155481,7 @@
           "aura_construction_demo_fixture_builder.py"
         ],
         "edge_kinds": {
-          "call": 211,
+          "call": 214,
           "defines": 80,
           "import_module": 73
         }
@@ -159623,17 +159659,17 @@
     {
       "path": "aura_intent_refinement.py",
       "role": "python_module",
-      "bytes": 49872,
-      "lines": 1009,
-      "tokens_est": 12468,
-      "symbol_count": 61,
+      "bytes": 54391,
+      "lines": 1089,
+      "tokens_est": 13598,
+      "symbol_count": 63,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 14,
-        "node_count": 62,
-        "edge_count": 443,
-        "degree": 443,
+        "hub_rank": 11,
+        "node_count": 64,
+        "edge_count": 464,
+        "degree": 464,
         "symbols": [
           "AmbiguityClass",
           "ClarificationQuestion",
@@ -159654,52 +159690,52 @@
           "_dataclass_dict",
           "_enum",
           "_freeze_json",
-          "_is_boundary"
+          "_identity_payload"
         ],
         "neighbor_files": [
           "aura_bilateral_intent_ingestion.py",
           "aura_event_contracts.py"
         ],
         "edge_kinds": {
-          "call": 319,
-          "defines": 122,
+          "call": 336,
+          "defines": 126,
           "import_module": 2
         }
       },
-      "digest8": "d09c2432dcce9c76",
+      "digest8": "5eb83a792ee7ebb9",
       "vector": [
-        -0.246772,
-        -0.075837,
-        0.179361,
-        0.237142,
-        -0.306961,
-        -0.263625,
-        0.186584,
-        -0.215474,
-        -0.174546,
-        -0.042132,
-        -0.046947,
-        -0.133618,
-        -0.099913,
-        -0.285293,
-        0.196214,
-        -0.282885,
-        -0.080652,
-        -0.215474,
-        -0.201029,
-        -0.075837,
-        0.107135,
-        0.085468,
-        -0.256403,
-        -0.11195,
-        -0.107135,
-        0.251587,
-        0.042132,
-        -0.09269,
-        0.155286,
-        0.11195,
-        0.085468,
-        -0.11195
+        0.001262,
+        0.04417,
+        0.162799,
+        0.309192,
+        0.147655,
+        -0.205707,
+        0.182991,
+        0.193087,
+        -0.013882,
+        0.094651,
+        -0.064362,
+        0.046694,
+        0.04417,
+        -0.175419,
+        0.31424,
+        -0.258711,
+        -0.124939,
+        0.190563,
+        -0.097175,
+        0.03155,
+        0.177943,
+        -0.266283,
+        0.304144,
+        -0.099699,
+        0.089602,
+        -0.271331,
+        0.167847,
+        -0.256187,
+        -0.195611,
+        0.155227,
+        0.099699,
+        -0.109795
       ]
     },
     {
@@ -168690,7 +168726,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 11,
+        "hub_rank": 12,
         "node_count": 81,
         "edge_count": 461,
         "degree": 461,
@@ -168782,7 +168818,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 13,
+        "hub_rank": 14,
         "node_count": 70,
         "edge_count": 455,
         "degree": 455,
@@ -188265,52 +188301,6 @@
       ]
     },
     {
-      "path": ".aura/pr224-greptile-repair.patch.xz.b64",
-      "role": "support_file",
-      "bytes": 7984,
-      "lines": 0,
-      "tokens_est": 0,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "aad78a354e699b4c",
-      "vector": [
-        -0.160446,
-        0.117492,
-        0.120018,
-        -0.013897,
-        0.322155,
-        -0.276674,
-        -0.01137,
-        0.074538,
-        -0.251407,
-        0.183186,
-        0.135179,
-        0.2413,
-        0.175606,
-        0.097278,
-        -0.317101,
-        0.079591,
-        -0.109912,
-        0.046744,
-        0.319628,
-        0.099805,
-        -0.145285,
-        0.21098,
-        -0.137705,
-        0.049271,
-        0.21098,
-        -0.114965,
-        0.122545,
-        -0.178133,
-        -0.213506,
-        0.175606,
-        -0.21098,
-        0.024004
-      ]
-    },
-    {
       "path": ".aura/run-construction-spz-diagnostics",
       "role": "support_file",
       "bytes": 43,
@@ -189555,93 +189545,93 @@
     {
       "path": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
       "role": "schema_or_lexicon",
-      "bytes": 6093,
-      "lines": 121,
-      "tokens_est": 1524,
+      "bytes": 6299,
+      "lines": 124,
+      "tokens_est": 1575,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "6719e50553f442f3",
+      "digest8": "b522ab7c08a382ac",
       "vector": [
-        -0.021789,
-        0.122705,
-        0.264905,
-        -0.147934,
-        -0.102063,
-        -0.287841,
-        0.175457,
-        0.269493,
-        0.239676,
-        0.026376,
-        -0.051605,
-        0.063073,
-        0.207567,
-        -0.260318,
-        0.001147,
-        0.069953,
-        0.001147,
-        0.200686,
-        0.17775,
-        -0.212154,
-        0.005734,
-        0.191512,
-        0.269493,
-        0.090595,
-        0.026376,
-        -0.13876,
-        -0.030963,
-        0.292428,
-        0.264905,
-        -0.141054,
-        0.267199,
-        0.113531
+        -0.208475,
+        0.273035,
+        -0.041695,
+        -0.213855,
+        0.098185,
+        0.273035,
+        -0.076665,
+        -0.173505,
+        0.114325,
+        0.092805,
+        0.200405,
+        -0.154675,
+        0.044385,
+        0.065905,
+        0.256895,
+        0.133155,
+        0.157365,
+        0.227305,
+        0.329525,
+        0.138535,
+        -0.275725,
+        0.176195,
+        0.049765,
+        -0.001345,
+        -0.001345,
+        0.281105,
+        0.065905,
+        -0.014795,
+        -0.151985,
+        -0.009415,
+        -0.332215,
+        -0.087425
       ]
     },
     {
       "path": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
       "role": "schema_or_lexicon",
-      "bytes": 3413,
-      "lines": 76,
-      "tokens_est": 854,
+      "bytes": 4259,
+      "lines": 85,
+      "tokens_est": 1065,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "dd03a2c95528b72d",
+      "digest8": "730a6357fb443949",
       "vector": [
-        -0.042838,
-        0.031854,
-        0.269111,
-        0.045035,
-        0.163663,
-        -0.198812,
-        0.049428,
-        -0.036248,
-        -0.001098,
-        0.187828,
-        0.132908,
-        -0.216387,
-        -0.260323,
-        0.2076,
-        -0.253733,
-        0.146089,
-        -0.275701,
-        0.225174,
-        -0.271307,
-        -0.150482,
-        -0.053822,
-        -0.02087,
-        0.231765,
-        -0.0692,
-        -0.02087,
-        0.17245,
-        -0.21419,
-        0.25593,
-        0.161466,
-        -0.091168,
-        -0.280095,
-        0.130711
+        -0.018546,
+        0.212739,
+        0.125462,
+        0.062185,
+        -0.256378,
+        0.256378,
+        0.256378,
+        -0.116734,
+        0.276015,
+        0.204011,
+        0.252014,
+        0.151645,
+        0.221467,
+        0.051276,
+        0.134189,
+        0.051276,
+        0.262924,
+        -0.129825,
+        -0.186556,
+        0.175646,
+        0.23674,
+        0.060003,
+        -0.11237,
+        -0.153827,
+        -0.24765,
+        0.147281,
+        0.182192,
+        0.060003,
+        -0.162555,
+        0.195284,
+        -0.12328,
+        -0.014183
       ]
     },
     {
@@ -190107,47 +190097,47 @@
     {
       "path": ".aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json",
       "role": "schema_or_lexicon",
-      "bytes": 4447,
-      "lines": 114,
-      "tokens_est": 1112,
+      "bytes": 5105,
+      "lines": 125,
+      "tokens_est": 1277,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "8f1c2f432a2ba17f",
+      "digest8": "3fe40cca8c3c6c0d",
       "vector": [
-        0.133457,
-        0.157503,
-        -0.287353,
-        -0.121434,
-        0.131052,
-        -0.044486,
-        -0.210405,
-        -0.203191,
-        -0.263306,
-        0.205595,
-        0.102197,
-        0.234451,
-        -0.116624,
-        -0.164717,
-        0.234451,
-        -0.171931,
-        -0.135861,
-        0.020439,
-        -0.013225,
-        -0.039676,
-        0.191168,
-        0.140671,
-        -0.179145,
-        -0.099792,
-        -0.159908,
-        -0.246474,
-        0.227237,
-        0.280139,
-        0.133457,
-        0.17674,
-        -0.260902,
-        -0.022844
+        -0.263014,
+        0.128135,
+        -0.149716,
+        0.03372,
+        0.263014,
+        0.176692,
+        -0.101159,
+        0.287293,
+        0.341244,
+        -0.068788,
+        0.025627,
+        -0.0553,
+        0.125438,
+        -0.006744,
+        -0.009442,
+        -0.125438,
+        -0.025627,
+        0.179389,
+        -0.225248,
+        -0.230643,
+        -0.120043,
+        -0.206365,
+        -0.036417,
+        0.306176,
+        0.117345,
+        -0.049905,
+        0.025627,
+        -0.338547,
+        -0.036417,
+        0.182087,
+        0.265712,
+        0.125438
       ]
     },
     {
@@ -193604,52 +193594,6 @@
         0.106887,
         -0.031437,
         -0.225092
-      ]
-    },
-    {
-      "path": ".github/workflows/pr224-greptile-repair.yml",
-      "role": "schema_or_lexicon",
-      "bytes": 3860,
-      "lines": 89,
-      "tokens_est": 965,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "ac12c1e22add2f89",
-      "vector": [
-        0.088135,
-        -0.15711,
-        -0.067698,
-        -0.037042,
-        0.241413,
-        0.026824,
-        -0.11879,
-        -0.126454,
-        -0.318052,
-        -0.282287,
-        0.272068,
-        0.141782,
-        -0.203093,
-        -0.264404,
-        0.310388,
-        -0.006387,
-        0.15711,
-        -0.026824,
-        -0.1239,
-        -0.215866,
-        0.065143,
-        -0.282287,
-        0.220976,
-        -0.08558,
-        -0.067698,
-        0.037042,
-        -0.203093,
-        -0.072807,
-        0.243967,
-        0.180101,
-        -0.1239,
-        -0.05237
       ]
     },
     {
@@ -206519,47 +206463,47 @@
     {
       "path": "schemas/aura_intent_refinement.v1.schema.json",
       "role": "schema_or_lexicon",
-      "bytes": 13941,
+      "bytes": 13929,
       "lines": 241,
-      "tokens_est": 3486,
+      "tokens_est": 3483,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "f733862192af0d0b",
+      "digest8": "a180daf530a849b5",
       "vector": [
-        0.024506,
-        0.201886,
-        -0.080521,
-        -0.288242,
-        0.131868,
-        0.213556,
-        -0.012837,
-        0.166877,
-        0.173879,
-        -0.040844,
-        0.094525,
-        -0.260234,
-        0.260234,
-        0.05018,
-        0.075853,
-        0.2579,
-        -0.255566,
-        0.045512,
-        -0.120198,
-        -0.234561,
-        0.208888,
-        0.073519,
-        0.260234,
-        0.11553,
-        -0.11553,
-        -0.260234,
-        -0.092191,
-        -0.206554,
-        -0.243897,
-        -0.10386,
-        -0.05018,
-        -0.234561
+        0.055542,
+        -0.001355,
+        -0.098892,
+        0.025739,
+        0.096183,
+        0.323771,
+        0.201849,
+        -0.277711,
+        -0.302096,
+        0.169336,
+        -0.19643,
+        -0.123277,
+        0.237071,
+        -0.090764,
+        0.147661,
+        0.104311,
+        0.055542,
+        -0.047414,
+        -0.23978,
+        -0.120567,
+        0.223524,
+        0.331899,
+        -0.296677,
+        -0.101602,
+        0.093474,
+        0.028448,
+        -0.258746,
+        0.101602,
+        0.207268,
+        0.044705,
+        -0.039286,
+        0.120567
       ]
     },
     {
@@ -215255,47 +215199,47 @@
     {
       "path": "tests/test_aura_intent_refinement.py",
       "role": "python_module",
-      "bytes": 15982,
-      "lines": 388,
-      "tokens_est": 3996,
-      "symbol_count": 18,
+      "bytes": 20433,
+      "lines": 495,
+      "tokens_est": 5109,
+      "symbol_count": 20,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "1aba0b6bbea3feb6",
+      "digest8": "fbddd5f48bbb24fc",
       "vector": [
-        0.111832,
-        -0.016335,
-        -0.106805,
-        -0.051518,
-        0.204815,
-        0.300312,
-        0.119371,
-        0.167119,
-        -0.084188,
-        0.00377,
-        -0.141988,
-        0.033926,
-        0.116858,
-        -0.270155,
-        0.202302,
-        0.131936,
-        -0.267642,
-        -0.111832,
-        -0.164606,
-        -0.317903,
-        -0.026387,
-        0.295286,
-        -0.109319,
-        -0.023874,
-        0.0289,
-        -0.172145,
-        -0.209841,
-        0.154554,
-        0.242511,
-        0.136962,
-        -0.212354,
-        0.302825
+        -0.266812,
+        0.061572,
+        -0.008451,
+        0.061572,
+        0.281299,
+        0.175057,
+        -0.290958,
+        -0.182301,
+        0.04467,
+        0.12918,
+        -0.206447,
+        -0.13401,
+        -0.056743,
+        0.121937,
+        -0.051914,
+        -0.092962,
+        0.204032,
+        -0.264397,
+        0.281299,
+        0.153326,
+        0.225764,
+        -0.208862,
+        0.228178,
+        0.049499,
+        -0.138839,
+        -0.165399,
+        -0.100205,
+        0.037426,
+        0.126766,
+        0.04467,
+        0.283714,
+        0.254739
       ]
     },
     {
@@ -222311,7 +222255,7 @@
     "source": "compiled_deep_topology",
     "diagnostics": {
       "isolated_node_count": 7,
-      "dead_end_count": 4670,
+      "dead_end_count": 4671,
       "dangling_edge_count": 0,
       "top_hubs": [
         {
@@ -222411,11 +222355,11 @@
       "generated_by": "aura_topology_manager",
       "root": ".",
       "module_count": 613,
-      "node_count": 10626,
-      "edge_count": 25200,
+      "node_count": 10628,
+      "edge_count": 25212,
       "spectral_layout": true,
-      "spectral_sparsity": 0.053835,
-      "global_health": 0.971198
+      "spectral_sparsity": 0.053825,
+      "global_health": 0.971203
     },
     "file_index": {
       "aura_node.py": {
@@ -222877,8 +222821,45 @@
           "import_module": 2
         }
       },
-      "aura_relational_index.py": {
+      "aura_intent_refinement.py": {
         "hub_rank": 11,
+        "node_count": 64,
+        "edge_count": 464,
+        "degree": 464,
+        "symbols": [
+          "AmbiguityClass",
+          "ClarificationQuestion",
+          "ConfirmationStatus",
+          "GuardrailEnforcementClass",
+          "GuardrailHardness",
+          "GuardrailProposal",
+          "GuardrailSourceClass",
+          "HumanGuardrailDisposition",
+          "IntentConfirmationReceipt",
+          "IntentRefinementSession",
+          "IntentRevisionDelta",
+          "NegativeRequirement",
+          "NegativeRequirementClass",
+          "PairedTeachBack",
+          "PlanRevisionClass",
+          "RefinementStage",
+          "_dataclass_dict",
+          "_enum",
+          "_freeze_json",
+          "_identity_payload"
+        ],
+        "neighbor_files": [
+          "aura_bilateral_intent_ingestion.py",
+          "aura_event_contracts.py"
+        ],
+        "edge_kinds": {
+          "call": 336,
+          "defines": 126,
+          "import_module": 2
+        }
+      },
+      "aura_relational_index.py": {
+        "hub_rank": 12,
         "node_count": 81,
         "edge_count": 461,
         "degree": 461,
@@ -222925,7 +222906,7 @@
         }
       },
       "aura_architect_loop.py": {
-        "hub_rank": 12,
+        "hub_rank": 13,
         "node_count": 73,
         "edge_count": 458,
         "degree": 458,
@@ -222973,7 +222954,7 @@
         }
       },
       "aura_relational_synthesis.py": {
-        "hub_rank": 13,
+        "hub_rank": 14,
         "node_count": 70,
         "edge_count": 455,
         "degree": 455,
@@ -223010,43 +222991,6 @@
           "call": 312,
           "defines": 138,
           "import_module": 5
-        }
-      },
-      "aura_intent_refinement.py": {
-        "hub_rank": 14,
-        "node_count": 62,
-        "edge_count": 443,
-        "degree": 443,
-        "symbols": [
-          "AmbiguityClass",
-          "ClarificationQuestion",
-          "ConfirmationStatus",
-          "GuardrailEnforcementClass",
-          "GuardrailHardness",
-          "GuardrailProposal",
-          "GuardrailSourceClass",
-          "HumanGuardrailDisposition",
-          "IntentConfirmationReceipt",
-          "IntentRefinementSession",
-          "IntentRevisionDelta",
-          "NegativeRequirement",
-          "NegativeRequirementClass",
-          "PairedTeachBack",
-          "PlanRevisionClass",
-          "RefinementStage",
-          "_dataclass_dict",
-          "_enum",
-          "_freeze_json",
-          "_is_boundary"
-        ],
-        "neighbor_files": [
-          "aura_bilateral_intent_ingestion.py",
-          "aura_event_contracts.py"
-        ],
-        "edge_kinds": {
-          "call": 319,
-          "defines": 122,
-          "import_module": 2
         }
       },
       "aura_gate_adapters.py": {
@@ -223126,53 +223070,11 @@
           "import_module": 3
         }
       },
-      "aura_agent_arena_mcp.py": {
-        "hub_rank": 17,
-        "node_count": 59,
-        "edge_count": 366,
-        "degree": 366,
-        "symbols": [
-          "MCPArgumentError",
-          "_bounded_text_arg",
-          "_bounded_text_array_arg",
-          "_compass_rollout_budget_arg",
-          "_handle_atomic_function_inventory",
-          "_handle_checkpoint_session",
-          "_handle_commit_unified_prediction",
-          "_handle_compass_breadboard",
-          "_handle_compass_classify",
-          "_handle_compass_compile_capsules",
-          "_handle_compass_neighborhood",
-          "_handle_compass_plan",
-          "_handle_compass_prepare",
-          "_handle_compile_unified_execution",
-          "_handle_emergent_evidence",
-          "_handle_export_icm",
-          "_handle_finalize_unified_learning",
-          "_handle_find_affordances",
-          "_handle_fireworks_patch",
-          "_handle_fork_checkpoint"
-        ],
-        "neighbor_files": [
-          "aura_agent_arena_bridge.py",
-          "aura_agent_arena_errors.py",
-          "aura_agent_arena_fireworks.py",
-          "aura_agent_arena_github_mcp.py",
-          "aura_agent_arena_mcp_external_llm.py",
-          "aura_agent_arena_persistence_bridge.py",
-          "aura_agent_arena_review_learning_mcp.py"
-        ],
-        "edge_kinds": {
-          "call": 241,
-          "defines": 116,
-          "import_module": 9
-        }
-      },
       "aura_event_contracts.py": {
-        "hub_rank": 18,
+        "hub_rank": 17,
         "node_count": 41,
-        "edge_count": 364,
-        "degree": 364,
+        "edge_count": 367,
+        "degree": 367,
         "symbols": [
           "ActorType",
           "AppendOnlyEventStore",
@@ -223218,9 +223120,51 @@
           "aura_construction_demo_fixture_builder.py"
         ],
         "edge_kinds": {
-          "call": 211,
+          "call": 214,
           "defines": 80,
           "import_module": 73
+        }
+      },
+      "aura_agent_arena_mcp.py": {
+        "hub_rank": 18,
+        "node_count": 59,
+        "edge_count": 366,
+        "degree": 366,
+        "symbols": [
+          "MCPArgumentError",
+          "_bounded_text_arg",
+          "_bounded_text_array_arg",
+          "_compass_rollout_budget_arg",
+          "_handle_atomic_function_inventory",
+          "_handle_checkpoint_session",
+          "_handle_commit_unified_prediction",
+          "_handle_compass_breadboard",
+          "_handle_compass_classify",
+          "_handle_compass_compile_capsules",
+          "_handle_compass_neighborhood",
+          "_handle_compass_plan",
+          "_handle_compass_prepare",
+          "_handle_compile_unified_execution",
+          "_handle_emergent_evidence",
+          "_handle_export_icm",
+          "_handle_finalize_unified_learning",
+          "_handle_find_affordances",
+          "_handle_fireworks_patch",
+          "_handle_fork_checkpoint"
+        ],
+        "neighbor_files": [
+          "aura_agent_arena_bridge.py",
+          "aura_agent_arena_errors.py",
+          "aura_agent_arena_fireworks.py",
+          "aura_agent_arena_github_mcp.py",
+          "aura_agent_arena_mcp_external_llm.py",
+          "aura_agent_arena_persistence_bridge.py",
+          "aura_agent_arena_review_learning_mcp.py"
+        ],
+        "edge_kinds": {
+          "call": 241,
+          "defines": 116,
+          "import_module": 9
         }
       },
       "test_aura_functions.py": {
@@ -241603,8 +241547,46 @@
         }
       },
       {
-        "file": "aura_relational_index.py",
+        "file": "aura_intent_refinement.py",
         "hub_rank": 11,
+        "node_count": 64,
+        "edge_count": 464,
+        "degree": 464,
+        "symbols": [
+          "AmbiguityClass",
+          "ClarificationQuestion",
+          "ConfirmationStatus",
+          "GuardrailEnforcementClass",
+          "GuardrailHardness",
+          "GuardrailProposal",
+          "GuardrailSourceClass",
+          "HumanGuardrailDisposition",
+          "IntentConfirmationReceipt",
+          "IntentRefinementSession",
+          "IntentRevisionDelta",
+          "NegativeRequirement",
+          "NegativeRequirementClass",
+          "PairedTeachBack",
+          "PlanRevisionClass",
+          "RefinementStage",
+          "_dataclass_dict",
+          "_enum",
+          "_freeze_json",
+          "_identity_payload"
+        ],
+        "neighbor_files": [
+          "aura_bilateral_intent_ingestion.py",
+          "aura_event_contracts.py"
+        ],
+        "edge_kinds": {
+          "call": 336,
+          "defines": 126,
+          "import_module": 2
+        }
+      },
+      {
+        "file": "aura_relational_index.py",
+        "hub_rank": 12,
         "node_count": 81,
         "edge_count": 461,
         "degree": 461,
@@ -241652,7 +241634,7 @@
       },
       {
         "file": "aura_architect_loop.py",
-        "hub_rank": 12,
+        "hub_rank": 13,
         "node_count": 73,
         "edge_count": 458,
         "degree": 458,
@@ -241701,7 +241683,7 @@
       },
       {
         "file": "aura_relational_synthesis.py",
-        "hub_rank": 13,
+        "hub_rank": 14,
         "node_count": 70,
         "edge_count": 455,
         "degree": 455,
@@ -241738,44 +241720,6 @@
           "call": 312,
           "defines": 138,
           "import_module": 5
-        }
-      },
-      {
-        "file": "aura_intent_refinement.py",
-        "hub_rank": 14,
-        "node_count": 62,
-        "edge_count": 443,
-        "degree": 443,
-        "symbols": [
-          "AmbiguityClass",
-          "ClarificationQuestion",
-          "ConfirmationStatus",
-          "GuardrailEnforcementClass",
-          "GuardrailHardness",
-          "GuardrailProposal",
-          "GuardrailSourceClass",
-          "HumanGuardrailDisposition",
-          "IntentConfirmationReceipt",
-          "IntentRefinementSession",
-          "IntentRevisionDelta",
-          "NegativeRequirement",
-          "NegativeRequirementClass",
-          "PairedTeachBack",
-          "PlanRevisionClass",
-          "RefinementStage",
-          "_dataclass_dict",
-          "_enum",
-          "_freeze_json",
-          "_is_boundary"
-        ],
-        "neighbor_files": [
-          "aura_bilateral_intent_ingestion.py",
-          "aura_event_contracts.py"
-        ],
-        "edge_kinds": {
-          "call": 319,
-          "defines": 122,
-          "import_module": 2
         }
       },
       {
@@ -241858,54 +241802,11 @@
         }
       },
       {
-        "file": "aura_agent_arena_mcp.py",
-        "hub_rank": 17,
-        "node_count": 59,
-        "edge_count": 366,
-        "degree": 366,
-        "symbols": [
-          "MCPArgumentError",
-          "_bounded_text_arg",
-          "_bounded_text_array_arg",
-          "_compass_rollout_budget_arg",
-          "_handle_atomic_function_inventory",
-          "_handle_checkpoint_session",
-          "_handle_commit_unified_prediction",
-          "_handle_compass_breadboard",
-          "_handle_compass_classify",
-          "_handle_compass_compile_capsules",
-          "_handle_compass_neighborhood",
-          "_handle_compass_plan",
-          "_handle_compass_prepare",
-          "_handle_compile_unified_execution",
-          "_handle_emergent_evidence",
-          "_handle_export_icm",
-          "_handle_finalize_unified_learning",
-          "_handle_find_affordances",
-          "_handle_fireworks_patch",
-          "_handle_fork_checkpoint"
-        ],
-        "neighbor_files": [
-          "aura_agent_arena_bridge.py",
-          "aura_agent_arena_errors.py",
-          "aura_agent_arena_fireworks.py",
-          "aura_agent_arena_github_mcp.py",
-          "aura_agent_arena_mcp_external_llm.py",
-          "aura_agent_arena_persistence_bridge.py",
-          "aura_agent_arena_review_learning_mcp.py"
-        ],
-        "edge_kinds": {
-          "call": 241,
-          "defines": 116,
-          "import_module": 9
-        }
-      },
-      {
         "file": "aura_event_contracts.py",
-        "hub_rank": 18,
+        "hub_rank": 17,
         "node_count": 41,
-        "edge_count": 364,
-        "degree": 364,
+        "edge_count": 367,
+        "degree": 367,
         "symbols": [
           "ActorType",
           "AppendOnlyEventStore",
@@ -241951,9 +241852,52 @@
           "aura_construction_demo_fixture_builder.py"
         ],
         "edge_kinds": {
-          "call": 211,
+          "call": 214,
           "defines": 80,
           "import_module": 73
+        }
+      },
+      {
+        "file": "aura_agent_arena_mcp.py",
+        "hub_rank": 18,
+        "node_count": 59,
+        "edge_count": 366,
+        "degree": 366,
+        "symbols": [
+          "MCPArgumentError",
+          "_bounded_text_arg",
+          "_bounded_text_array_arg",
+          "_compass_rollout_budget_arg",
+          "_handle_atomic_function_inventory",
+          "_handle_checkpoint_session",
+          "_handle_commit_unified_prediction",
+          "_handle_compass_breadboard",
+          "_handle_compass_classify",
+          "_handle_compass_compile_capsules",
+          "_handle_compass_neighborhood",
+          "_handle_compass_plan",
+          "_handle_compass_prepare",
+          "_handle_compile_unified_execution",
+          "_handle_emergent_evidence",
+          "_handle_export_icm",
+          "_handle_finalize_unified_learning",
+          "_handle_find_affordances",
+          "_handle_fireworks_patch",
+          "_handle_fork_checkpoint"
+        ],
+        "neighbor_files": [
+          "aura_agent_arena_bridge.py",
+          "aura_agent_arena_errors.py",
+          "aura_agent_arena_fireworks.py",
+          "aura_agent_arena_github_mcp.py",
+          "aura_agent_arena_mcp_external_llm.py",
+          "aura_agent_arena_persistence_bridge.py",
+          "aura_agent_arena_review_learning_mcp.py"
+        ],
+        "edge_kinds": {
+          "call": 241,
+          "defines": 116,
+          "import_module": 9
         }
       },
       {

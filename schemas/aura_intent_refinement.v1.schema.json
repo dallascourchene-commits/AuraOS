@@ -191,7 +191,7 @@
         "runtime_profile_digest": {"$ref": "#/$defs/NonEmptyString"},
         "unified_execution_binding_ref": {"type": "string"},
         "human_reviewer": {"$ref": "#/$defs/NonEmptyString"},
-        "human_disposition": {"$ref": "#/$defs/NonEmptyString"},
+        "human_disposition": {"const": "CONFIRMED"},
         "confirmed_at": {"type": "number"},
         "expires_at": {"type": "number"},
         "expires_or_stales_on": {"$ref": "#/$defs/StringArray"},

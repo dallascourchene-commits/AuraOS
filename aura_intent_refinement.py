@@ -509,6 +509,8 @@ class IntentRefinementSession:
                    teach_back: PairedTeachBack | Mapping[str, Any] | None = None,
                    confirmation_status: str | ConfirmationStatus | None = None,
                    confirmation_receipt_id: str | None = None,
+                   confirmation_receipt: IntentConfirmationReceipt | None = None,
+                   confirmation_evidence: Mapping[str, Any] | None = None,
                    now: float | None = None) -> "IntentRefinementSession":
         observed = time.time() if now is None else _timestamp(now, "now")
         target = _enum(next_stage, RefinementStage, "next_stage")
@@ -528,8 +530,48 @@ class IntentRefinementSession:
             required_decisions = teach_payload.get("required_human_decisions", ()) if teach_payload else ()
             if status != "CONFIRMED" or not positive or not negative or ambiguities or not teach_payload or required_decisions:
                 raise ValueError("human confirmation requires teach-back, confirmed status, both polarities, and ambiguities resolved")
-        if target == "COMPILED" and not receipt_id:
-            raise ValueError("COMPILED requires a confirmation receipt")
+        if target == "COMPILED":
+            if not isinstance(confirmation_receipt, IntentConfirmationReceipt):
+                raise ValueError("COMPILED requires a verified confirmation receipt object")
+            if confirmation_evidence is None:
+                raise ValueError("COMPILED requires current confirmation evidence")
+            evidence = _record(confirmation_evidence, "confirmation_evidence")
+            expected_evidence = {
+                "source_tree_digest", "semantic_ledger_digest", "authority",
+                "allowed_paths", "runtime_profile_digest",
+            }
+            if set(evidence) != expected_evidence:
+                raise ValueError("confirmation_evidence must contain the exact current evidence fields")
+            source_tree_digest = _required(evidence["source_tree_digest"], "source_tree_digest")
+            if source_tree_digest != self.working_tree_digest:
+                raise ValueError("confirmation receipt source tree does not match the session working tree")
+            authority_payload = _record(evidence["authority"], "confirmation_evidence.authority")
+            allowed_paths = _paths(evidence["allowed_paths"], "confirmation_evidence.allowed_paths")
+            teach_back_digest = _required(teach_payload.get("teach_back_digest"), "teach_back_digest")
+            if confirmation_receipt.session_id != self.session_id:
+                raise ValueError("confirmation receipt does not belong to this session")
+            if receipt_id and receipt_id != confirmation_receipt.confirmation_id:
+                raise ValueError("confirmation receipt id does not match the verified receipt")
+            if not confirmation_receipt.is_current(
+                repository_head=self.repository_head,
+                source_tree_digest=source_tree_digest,
+                source_request_digest=self.source_request_digest,
+                positive_requirements=positive,
+                negative_requirements=negative,
+                semantic_ledger_digest=_required(
+                    evidence["semantic_ledger_digest"], "semantic_ledger_digest"
+                ),
+                guardrail_set_digest=stable_digest(self.candidate_guardrails),
+                authority_digest=stable_digest(authority_payload),
+                teach_back_digest=teach_back_digest,
+                allowed_paths=allowed_paths,
+                runtime_profile_digest=_required(
+                    evidence["runtime_profile_digest"], "runtime_profile_digest"
+                ),
+                now=observed,
+            ):
+                raise ValueError("confirmation receipt is stale, contradictory, or not identity-valid")
+            receipt_id = confirmation_receipt.confirmation_id
         if target == "STALE":
             status = "STALE"
         elif target == "REJECTED":
@@ -603,7 +645,7 @@ class IntentConfirmationReceipt:
                positive_requirements: Sequence[str], negative_requirements: Sequence[str],
                semantic_ledger_digest: str, guardrails: Sequence[Any], authority: Mapping[str, Any],
                teach_back: PairedTeachBack, allowed_paths: Sequence[str], runtime_profile_digest: str,
-               human_reviewer: str, human_disposition: str, expires_at: float,
+               human_reviewer: str, human_disposition: str | ConfirmationStatus, expires_at: float,
                expires_or_stales_on: Sequence[str], confirmed_at: float | None = None,
                unified_execution_binding_ref: str = "") -> "IntentConfirmationReceipt":
         confirmed = time.time() if confirmed_at is None else _timestamp(confirmed_at, "confirmed_at")
@@ -619,6 +661,9 @@ class IntentConfirmationReceipt:
             raise ValueError("allowed_paths must not be empty")
         if any(item.get("human_disposition") == "DEFERRED" for item in guardrail_payloads):
             raise ValueError("confirmation receipt cannot contain deferred guardrails")
+        disposition = _enum(human_disposition, ConfirmationStatus, "human_disposition")
+        if disposition != "CONFIRMED":
+            raise ValueError("confirmation receipt requires a confirming human disposition")
         payload = {
             "session_id": _required(session_id, "session_id"),
             "repository_head": _required(repository_head, "repository_head"),
@@ -635,12 +680,45 @@ class IntentConfirmationReceipt:
             "runtime_profile_digest": _required(runtime_profile_digest, "runtime_profile_digest"),
             "unified_execution_binding_ref": _optional(unified_execution_binding_ref, "unified_execution_binding_ref"),
             "human_reviewer": _required(human_reviewer, "human_reviewer"),
-            "human_disposition": _required(human_disposition, "human_disposition"),
+            "human_disposition": disposition,
             "confirmed_at": confirmed,
             "expires_at": expires,
             "expires_or_stales_on": _strings(expires_or_stales_on, "expires_or_stales_on", True),
         }
         return cls(stable_id("intent-confirmation", payload), **payload)
+
+    def _identity_payload(self) -> dict[str, Any]:
+        return {
+            "session_id": self.session_id,
+            "repository_head": self.repository_head,
+            "source_tree_digest": self.source_tree_digest,
+            "working_tree_clean_receipt": self.working_tree_clean_receipt,
+            "source_request_digest": self.source_request_digest,
+            "positive_requirements_digest": self.positive_requirements_digest,
+            "negative_requirements_digest": self.negative_requirements_digest,
+            "semantic_ledger_digest": self.semantic_ledger_digest,
+            "guardrail_set_digest": self.guardrail_set_digest,
+            "authority_digest": self.authority_digest,
+            "teach_back_digest": self.teach_back_digest,
+            "allowed_path_set_digest": self.allowed_path_set_digest,
+            "runtime_profile_digest": self.runtime_profile_digest,
+            "unified_execution_binding_ref": self.unified_execution_binding_ref,
+            "human_reviewer": self.human_reviewer,
+            "human_disposition": self.human_disposition,
+            "confirmed_at": self.confirmed_at,
+            "expires_at": self.expires_at,
+            "expires_or_stales_on": self.expires_or_stales_on,
+        }
+
+    def has_valid_identity(self) -> bool:
+        return (
+            self.confirmation_status == "CONFIRMED"
+            and self.human_disposition == "CONFIRMED"
+            and self.patch_authority == PATCH_AUTHORITY
+            and self.vsa_patch_authority == VSA_PATCH_AUTHORITY
+            and self.version == VERSION
+            and self.confirmation_id == stable_id("intent-confirmation", self._identity_payload())
+        )
 
     def is_current(self, *, repository_head: str, source_tree_digest: str,
                    source_request_digest: str, positive_requirements: Sequence[str],
@@ -650,7 +728,8 @@ class IntentConfirmationReceipt:
                    runtime_profile_digest: str, now: float | None = None) -> bool:
         observed = time.time() if now is None else _timestamp(now, "now")
         return (
-            observed < self.expires_at
+            self.has_valid_identity()
+            and observed < self.expires_at
             and _required(repository_head, "repository_head") == self.repository_head
             and _required(source_tree_digest, "source_tree_digest") == self.source_tree_digest
             and _required(source_request_digest, "source_request_digest") == self.source_request_digest
@@ -845,27 +924,28 @@ def extract_negative_requirements(text: str) -> tuple[NegativeRequirement, ...]:
     for sentence_start, sentence_end in _sentence_ranges(source):
         sentence = source[sentence_start:sentence_end]
         matches = _operator_matches(sentence)
-        for match_index, (start_local, operator_end, operator) in enumerate(matches):
-            end_local = matches[match_index + 1][0] if match_index + 1 < len(matches) else len(sentence)
-            raw = sentence[start_local:end_local]
-            left_trim = len(raw) - len(raw.lstrip())
-            span = raw.strip()
-            if not span:
-                continue
-            start = sentence_start + start_local + left_trim
-            end = start + len(span)
-            target = sentence[operator_end:end_local].strip(" \t,:;-.!?\r\n")
-            results.append(NegativeRequirement.create(
-                statement=span,
-                classification=_negative_class(span, operator, target),
-                source_span=span,
-                source_start=start,
-                source_end=end,
-                operator=operator,
-                target=target,
-                scope=target,
-                ambiguous=not target or target.lower() in {"it", "that", "this", "so"},
-            ))
+        if not matches:
+            continue
+        start_local, operator_end, operator = matches[0]
+        raw = sentence[start_local:]
+        left_trim = len(raw) - len(raw.lstrip())
+        span = raw.strip()
+        if not span:
+            continue
+        start = sentence_start + start_local + left_trim
+        end = start + len(span)
+        target = sentence[operator_end:].strip(" \t,:;-.!?\r\n")
+        results.append(NegativeRequirement.create(
+            statement=span,
+            classification=_negative_class(span, operator, target),
+            source_span=span,
+            source_start=start,
+            source_end=end,
+            operator=operator,
+            target=target,
+            scope=target,
+            ambiguous=not target or target.lower() in {"it", "that", "this", "so"},
+        ))
     return tuple(results)
 
 
