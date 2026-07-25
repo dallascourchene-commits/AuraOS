@@ -136,6 +136,28 @@ def test_legacy_one_turn_api_remains_compatible(workflow):
     assert approved["next_action"]["action_id"] == "set_objective"
 
 
+def test_confirmation_audit_record_does_not_stale_itself(workflow):
+    from aura_arena_gate_dialogue import ArenaGateDialogueService
+
+    service = ArenaGateDialogueService(REPO_ROOT, workflow)
+    proposal = service.address(
+        comment="Address this node. Do not widen scope.",
+        node_context=NODE_CONTEXT,
+        stage_hint="FRAME",
+        prefer_model=False,
+    )
+    approved = service.approve(
+        proposal_id=proposal["proposal_id"],
+        approved=True,
+        current_node_context=NODE_CONTEXT,
+        stage_hint="FRAME",
+    )
+    assert approved["ok"] is True
+    status = service.status()
+    assert status["confirmed"][-1]["confirmation_currency"] == "CURRENT"
+    assert status["confirmed"][-1]["stale_reasons"] == []
+
+
 def test_affordance_map_declares_current_review_learning_extension():
     """Replace the stale pre-extension baseline assertion with the committed contract."""
     data = json.loads((REPO_ROOT / ".aura" / "AFFORDANCE_MAP.json").read_text(encoding="utf-8"))
