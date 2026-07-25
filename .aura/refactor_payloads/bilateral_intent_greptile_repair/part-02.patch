@@ -1,0 +1,136 @@
+tConfirmationReceipt.create(
++        session_id=confirmed.session_id,
++        repository_head=HEAD,
++        source_tree_digest=TREE,
++        working_tree_clean_receipt="clean-receipt",
++        source_request_digest=confirmed.source_request_digest,
++        positive_requirements=confirmed.candidate_positive_requirements,
++        negative_requirements=confirmed.candidate_negative_requirements,
++        semantic_ledger_digest="semantic-digest",
++        guardrails=confirmed.candidate_guardrails,
++        authority=authority,
++        teach_back=teach_back(),
++        allowed_paths=ALLOWED,
++        runtime_profile_digest="runtime-profile",
++        human_reviewer="Dallas",
++        human_disposition=ConfirmationStatus.CONFIRMED,
++        confirmed_at=131.0,
++        expires_at=190.0,
++        expires_or_stales_on=("repository head changes", "requirements change"),
++    )
++    evidence = {
++        "source_tree_digest": TREE,
++        "semantic_ledger_digest": "semantic-digest",
++        "authority": authority,
++        "allowed_paths": ALLOWED,
++        "runtime_profile_digest": "runtime-profile",
++    }
++    with pytest.raises(ValueError, match="does not match"):
++        confirmed.transition(
++            RefinementStage.COMPILED,
++            confirmation_receipt_id="invented-receipt",
++            confirmation_receipt=receipt,
++            confirmation_evidence=evidence,
++            now=140.0,
++        )
++    compiled = confirmed.transition(
++        RefinementStage.COMPILED,
++        confirmation_receipt=receipt,
++        confirmation_evidence=evidence,
++        now=140.0,
++    )
++    assert compiled.confirmation_receipt_id == receipt.confirmation_id
+ 
+ 
+ def test_confirmation_receipt_binds_digests_and_stales_on_change():
+@@ -264,6 +325,52 @@
+     assert not receipt.is_current(**{**kwargs, "repository_head": "moved"})
+     assert not receipt.is_current(**{**kwargs, "negative_requirements": ("Do not merge.",)})
+     assert not receipt.is_current(**{**kwargs, "teach_back_digest": "changed"})
++
++
++def test_receipt_rejects_nonconfirming_disposition_and_forged_identity():
++    guardrails = confirmed_guardrails()
++    common = dict(
++        session_id="session-1",
++        repository_head=HEAD,
++        source_tree_digest=TREE,
++        working_tree_clean_receipt="clean-receipt",
++        source_request_digest=stable_digest("request"),
++        positive_requirements=("Compile bilateral intent.",),
++        negative_requirements=("Do not publish or merge.",),
++        semantic_ledger_digest="semantic-digest",
++        guardrails=guardrails,
++        authority={"commit": False, "push": False, "merge": False},
++        teach_back=teach_back(),
++        allowed_paths=ALLOWED,
++        runtime_profile_digest="runtime-profile",
++        human_reviewer="Dallas",
++        confirmed_at=100.0,
++        expires_at=200.0,
++        expires_or_stales_on=("repository head changes", "guardrails change"),
++    )
++    with pytest.raises(ValueError, match="confirming human disposition"):
++        IntentConfirmationReceipt.create(
++            **common, human_disposition=ConfirmationStatus.REJECTED
++        )
++    receipt = IntentConfirmationReceipt.create(
++        **common, human_disposition=ConfirmationStatus.CONFIRMED
++    )
++    current = dict(
++        repository_head=HEAD,
++        source_tree_digest=TREE,
++        source_request_digest=stable_digest("request"),
++        positive_requirements=("Compile bilateral intent.",),
++        negative_requirements=("Do not publish or merge.",),
++        semantic_ledger_digest="semantic-digest",
++        guardrail_set_digest=receipt.guardrail_set_digest,
++        authority_digest=receipt.authority_digest,
++        teach_back_digest=teach_back().teach_back_digest,
++        allowed_paths=ALLOWED,
++        runtime_profile_digest="runtime-profile",
++        now=150.0,
++    )
++    assert not replace(receipt, confirmation_id="invented-receipt").is_current(**current)
++    assert not replace(receipt, human_disposition="REJECTED").is_current(**current)
+ 
+ 
+ def test_revision_classes_enforce_reconfirmation_and_council_replan():
+diff --git a/schemas/aura_intent_refinement.v1.schema.json b/schemas/aura_intent_refinement.v1.schema.json
+--- a/schemas/aura_intent_refinement.v1.schema.json
++++ b/schemas/aura_intent_refinement.v1.schema.json
+@@ -191,7 +191,7 @@
+         "runtime_profile_digest": {"$ref": "#/$defs/NonEmptyString"},
+         "unified_execution_binding_ref": {"type": "string"},
+         "human_reviewer": {"$ref": "#/$defs/NonEmptyString"},
+-        "human_disposition": {"$ref": "#/$defs/NonEmptyString"},
++        "human_disposition": {"const": "CONFIRMED"},
+         "confirmed_at": {"type": "number"},
+         "expires_at": {"type": "number"},
+         "expires_or_stales_on": {"$ref": "#/$defs/StringArray"},
+diff --git a/.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json b/.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json
+--- a/.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json
++++ b/.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json
+@@ -25,10 +25,10 @@
+   "candidate_source_blobs": {
+     ".github/workflows/ci.yml": "ec723312280650724c791084b5f51b92aa943af2",
+     "aura_bilateral_intent_ingestion.py": "fee8d5b3d2b01f4c13bb93a385c75a3e5c7bab42",
+-    "aura_intent_refinement.py": "87a5ac6bd07f2a66d386ad576ec4d889d1f7540a",
+-    "schemas/aura_intent_refinement.v1.schema.json": "d606dc5bc5e08923bd9c7ba1a22e1c05e6694bb2",
++    "aura_intent_refinement.py": "aad49ff004d642cab8107178ca60149917f56525",
++    "schemas/aura_intent_refinement.v1.schema.json": "1940609bbb121134a8224549173c5597efdc4de4",
+     "tests/test_aura_intent_ingestion_bilateral.py": "4ea27087cbd2e0f7c2aa4c5628e9d16d17363c86",
+-    "tests/test_aura_intent_refinement.py": "4c0c2af4bc06a3528bab389b745d80a4e7df75a6"
++    "tests/test_aura_intent_refinement.py": "13a38e0af81203ee6521e9c8d0b98de9d2da20bb"
+   },
+   "allowed_source_and_evidence_paths": [
+     ".github/workflows/ci.yml",
+@@ -94,7 +94,10 @@
+     "Waboose invariant and risk-profile validation",
+     "CodeQL review-thread obsolescence or clearance",
+     "repository full pytest suite using requirements.txt",
+-    "final generated navigation verification"
++    "final generated navigation verification",
++    "compound negation exact-span preservation",
++    "confirmation receipt identity and current-evidence validation before compilation",
++    "rejec
