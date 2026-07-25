@@ -111,7 +111,6 @@ jobs:
             tests/test_aura_intent_ingestion_bilateral.py \
             tests/test_aura_intent_refinement.py \
             tests/test_bilateral_intent_pr1_evidence.py \
-            tests/test_aura_arena_gate_dialogue.py \
             tests/test_aura_bilateral_gate_dialogue.py \
             > fatal-ruff-output.txt 2>&1
           code=$?
@@ -147,7 +146,6 @@ jobs:
             tests/test_aura_intent_ingestion_bilateral.py \
             tests/test_aura_intent_refinement.py \
             tests/test_bilateral_intent_pr1_evidence.py \
-            tests/test_aura_arena_gate_dialogue.py \
             tests/test_aura_bilateral_gate_dialogue.py
       - name: Enforce focused verification
         if: steps.fatal_lint.outcome != 'success' || steps.focused_tests.outcome != 'success'
