@@ -24,7 +24,7 @@ jobs:
   materialize:
     if: github.actor != 'auraos-u7-materializer'
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 50
     steps:
       - uses: actions/checkout@v4
         with:
@@ -36,14 +36,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
-            -f state=pending \
-            -f context=u7-learning-materializer \
+            -f state=pending -f context=u7-learning-materializer \
             -f description="Run ${GITHUB_RUN_ID} is verifying U6-U7" \
             -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: pip
 
       - name: Reconstruct and verify exact patch
         shell: bash
@@ -63,69 +63,73 @@ jobs:
           git checkout "$BASE_SHA" -- .github/workflows/ci.yml
           rm -f .aura/analysis/u7_patch.part{0,1,2,3,4}
           git apply /tmp/u7.patch
-          git checkout "$BASE_SHA" -- \
-            .aura/CODEMAP.json \
-            .aura/CODEMAP.md \
-            topology_map.json \
-            Aura_Memory/live_topology_ast.json
+          git checkout "$BASE_SHA" -- .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json Aura_Memory/live_topology_ast.json
 
-      - name: Install verification tools
+      - name: Install declared dependencies and verification tools
         run: |
           python -m pip install --upgrade pip
-          python -m pip install pytest ruff
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "websockets>=12.0,<17.0" \
+            "aiosqlite>=0.20.0,<1.0" \
+            "ddgs>=6.0,<10.0" \
+            "wasmtime>=20.0,<46.0" \
+            "aiohttp>=3.9.0,<4.0" \
+            "beautifulsoup4>=4.12.0,<5.0" \
+            "httpx>=0.27.0,<1.0" \
+            "cryptography>=41.0.0,<45.0" \
+            pytest pytest-asyncio ruff
 
       - name: Format and lint exact review surface
         shell: bash
         run: |
           set -euo pipefail
-          ruff format \
-            aura_agent_arena_bridge.py \
-            aura_agent_arena_mcp.py \
-            aura_arena_persistence_adapters.py \
-            aura_qdkt_observations.py \
-            aura_relationship_experience.py \
-            aura_unified_memory_continuity_learning.py \
-            aura_unified_memory_continuity_toolchain.py \
+          files=(
+            aura_agent_arena_bridge.py
+            aura_agent_arena_mcp.py
+            aura_arena_persistence_adapters.py
+            aura_qdkt_observations.py
+            aura_relationship_experience.py
+            aura_unified_memory_continuity_learning.py
+            aura_unified_memory_continuity_toolchain.py
             tests/test_aura_unified_memory_continuity_learning.py
-          ruff format --check \
-            aura_agent_arena_bridge.py \
-            aura_agent_arena_mcp.py \
-            aura_arena_persistence_adapters.py \
-            aura_qdkt_observations.py \
-            aura_relationship_experience.py \
-            aura_unified_memory_continuity_learning.py \
-            aura_unified_memory_continuity_toolchain.py \
-            tests/test_aura_unified_memory_continuity_learning.py
-          ruff check --select E9,F63,F7,F82 \
-            aura_agent_arena_bridge.py \
-            aura_agent_arena_mcp.py \
-            aura_arena_persistence_adapters.py \
-            aura_qdkt_observations.py \
-            aura_relationship_experience.py \
-            aura_unified_memory_continuity_learning.py \
+          )
+          ruff format "${files[@]}"
+          ruff format --check "${files[@]}"
+          ruff check --select E9,F63,F7,F82 "${files[@]}"
+
+      - name: Compile exact review surface
+        shell: bash
+        run: |
+          python -m py_compile \
+            aura_agent_arena_bridge.py aura_agent_arena_mcp.py \
+            aura_arena_persistence_adapters.py aura_qdkt_observations.py \
+            aura_relationship_experience.py aura_unified_memory_continuity_learning.py \
             aura_unified_memory_continuity_toolchain.py \
             tests/test_aura_unified_memory_continuity_learning.py
 
-      - name: Compile and run focused regression ring
+      - name: Run focused regression ring
+        id: pytest
         shell: bash
         run: |
-          set -euo pipefail
-          python -m py_compile \
-            aura_agent_arena_bridge.py \
-            aura_agent_arena_mcp.py \
-            aura_arena_persistence_adapters.py \
-            aura_qdkt_observations.py \
-            aura_relationship_experience.py \
-            aura_unified_memory_continuity_learning.py \
-            aura_unified_memory_continuity_toolchain.py \
-            tests/test_aura_unified_memory_continuity_learning.py
+          set -o pipefail
           python -m pytest -q \
             tests/test_aura_unified_memory_continuity_learning.py \
             tests/test_aura_unified_memory_continuity.py \
             tests/test_aura_unified_memory_continuity_toolchain.py \
             tests/test_aura_agent_arena_bridge.py \
             tests/test_aura_agent_arena_mcp.py \
-            tests/test_aura_arena_persistence_adapters.py
+            tests/test_aura_arena_persistence_adapters.py \
+            2>&1 | tee /tmp/u7-pytest.log
+
+      - name: Upload regression diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: u7-regression-${{ github.run_id }}
+          path: /tmp/u7-pytest.log
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Create exact candidate commit
         shell: bash
@@ -140,11 +144,9 @@ jobs:
       - name: Run Coding Waboose exact-head review
         shell: bash
         run: |
-          set -euo pipefail
           python - <<'PY'
           import json
           from aura_coding_waboose import CodingWaboose
-
           request = json.load(open('.aura/waboose_requests/unified_memory_continuity_learning.v1.json', encoding='utf-8'))
           runtime = CodingWaboose('.')
           prepared = runtime.prepare({
@@ -156,19 +158,13 @@ jobs:
               'run_optional_tools': False,
           })
           assert prepared.get('ok') is True, prepared
-          scanned = runtime.scan(prepared['review_id'])
-          assert scanned.get('ok') is True, scanned
+          assert runtime.scan(prepared['review_id']).get('ok') is True
           final = runtime.finalize(prepared['review_id'])
           assert final.get('ok') is True, final
           assert final.get('status') == 'READY_FOR_HUMAN_REVIEW', final
           assert not final.get('findings'), final
           assert final.get('automatic_merge') is False, final
-          print(json.dumps({
-              'review_id': final.get('review_id'),
-              'status': final.get('status'),
-              'finding_count': len(final.get('findings') or []),
-              'automatic_merge': final.get('automatic_merge'),
-          }, sort_keys=True))
+          print(json.dumps({'review_id': final.get('review_id'), 'status': final.get('status'), 'findings': 0}, sort_keys=True))
           PY
 
       - name: Enforce exact final diff and publish
@@ -204,7 +200,6 @@ jobs:
             description="Run ${GITHUB_RUN_ID} failed closed"
           fi
           gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
-            -f state="$state" \
-            -f context=u7-learning-materializer \
+            -f state="$state" -f context=u7-learning-materializer \
             -f description="$description" \
             -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
