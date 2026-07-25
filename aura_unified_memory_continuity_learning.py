@@ -156,6 +156,46 @@ def _source_digest(root: Path, paths: Sequence[str]) -> str:
     return stable_digest(hashes)
 
 
+def _validate_storage_path(
+    repo_root: Path,
+    path_value: Any,
+    name: str,
+) -> Path | None:
+    """Validate storage path is relative, contains no traversal, and resolves within repo_root.
+
+    Returns None if path_value is None, otherwise returns the validated absolute Path.
+    Raises ValueError if path is absolute, contains .., or resolves outside repo_root.
+    """
+    if path_value is None:
+        return None
+    if not isinstance(path_value, (str, Path)):
+        raise ValueError(f"{name} must be a string or Path")
+
+    path_str = str(path_value).strip()
+    if not path_str:
+        return None
+
+    # Reject absolute paths
+    if Path(path_str).is_absolute():
+        raise ValueError(f"{name} must not be an absolute path")
+
+    # Reject paths containing .. traversal
+    parts = Path(path_str).parts
+    if ".." in parts:
+        raise ValueError(f"{name} must not contain '..' path traversal")
+
+    # Construct the full path and resolve it
+    full_path = (repo_root / path_str).resolve()
+
+    # Verify the resolved path is still within repo_root
+    try:
+        full_path.relative_to(repo_root)
+    except ValueError as exc:
+        raise ValueError(f"{name} resolves outside repository root") from exc
+
+    return full_path
+
+
 def _binding(session: Mapping[str, Any], task_id: str) -> UnifiedExecutionBinding:
     item = dict(session.get("unified_execution_bindings") or {}).get(task_id)
     if not isinstance(item, UnifiedExecutionBinding):
@@ -589,9 +629,10 @@ def commit_bridge_prediction(
     predictions = session.setdefault("unified_prediction_packets", {})
     if task in predictions:
         raise ValueError("immutable P0 is already retained for this task")
+    repo_root = Path(bridge.repo_root).resolve()
     storage = _mapping(contract.get("storage") or {}, "storage")
-    crucible_path = storage.get("crucible_db_path")
-    with CrucibleStore(Path(bridge.repo_root).resolve(), db_path=crucible_path) as crucible_store:
+    crucible_path = _validate_storage_path(repo_root, storage.get("crucible_db_path"), "crucible_db_path")
+    with CrucibleStore(repo_root, db_path=crucible_path) as crucible_store:
         proposal, proposal_binding, proposal_storage = record_bound_crucible_proposal(
             crucible_store,
             contract.get("crucible_proposal"),
@@ -718,6 +759,14 @@ def finalize_bridge_learning(
     )
 
     storage = _mapping(contract.get("storage") or {}, "storage")
+    experience_path = _validate_storage_path(root, storage.get("experience_db_path"), "experience_db_path")
+    qdkt_event_root_raw = storage.get("qdkt_event_root")
+    qdkt_event_root = (
+        _validate_storage_path(root, qdkt_event_root_raw, "qdkt_event_root")
+        if qdkt_event_root_raw is not None
+        else root / "Aura_Memory" / "qdkt_governed_events"
+    )
+    attempt_archive_path = _validate_storage_path(root, storage.get("attempt_archive_db_path"), "attempt_archive_db_path")
     proposal = dict(session.get("unified_crucible_proposals") or {}).get(task)
     if not isinstance(proposal, CrystallizationProposal):
         raise ValueError("bounded Crucible proposal was not staged before P0")
@@ -821,7 +870,6 @@ def finalize_bridge_learning(
             ),
             transaction_time=relationship_recorded_at,
         )
-        experience_path = storage.get("experience_db_path")
         with ArenaExperienceLedger(root, db_path=experience_path) as ledger:
             relationship_storage = ledger.record_relationship_observation(relationship)
         if relationship_storage.get("ok") is not True:
@@ -850,8 +898,7 @@ def finalize_bridge_learning(
         qdkt_created_at = _current_timestamp(contract.get("qdkt_created_at"), "qdkt_created_at")
         if qdkt_created_at <= relationship.transaction_time:
             raise ValueError("governed QDKT observation must occur after Relationship Experience")
-        event_root = Path(storage.get("qdkt_event_root") or root / "Aura_Memory" / "qdkt_governed_events")
-        event_store = AppendOnlyEventStore(event_root)
+        event_store = AppendOnlyEventStore(qdkt_event_root)
         event_receipt = record_relationship_experience_advisory(
             event_store,
             relationship,
@@ -910,8 +957,7 @@ def finalize_bridge_learning(
         "vsa_patch_authority": False,
     }
 
-    archive_path = storage.get("attempt_archive_db_path")
-    archive = ArenaAttemptArchive(root, db_path=archive_path)
+    archive = ArenaAttemptArchive(root, db_path=attempt_archive_path)
     try:
         archive_result = archive.record(
             arena_id=str(contract.get("arena_id") or "coding"),

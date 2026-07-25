@@ -185,7 +185,7 @@ def _prediction_contract(now: float, tmp_path: Path) -> dict[str, Any]:
         "crucible_bound_at": now,
         "committed_at": now + 0.5,
         "crucible_proposal": _proposal(now),
-        "storage": {"crucible_db_path": str(tmp_path / "crucible.db")},
+        "storage": {"crucible_db_path": "crucible.db"},
     }
 
 
@@ -267,10 +267,10 @@ def _final_contract(tmp_path: Path, now: float, *, disposition: str = "APPROVED"
         "arena_id": "coding",
         "qdkt_created_at": now + 5,
         "storage": {
-            "crucible_db_path": str(tmp_path / "crucible.db"),
-            "experience_db_path": str(tmp_path / "experience.db"),
-            "qdkt_event_root": str(tmp_path / "qdkt-events"),
-            "attempt_archive_db_path": str(tmp_path / "attempts.db"),
+            "crucible_db_path": "crucible.db",
+            "experience_db_path": "experience.db",
+            "qdkt_event_root": "qdkt-events",
+            "attempt_archive_db_path": "attempts.db",
         },
     }
 
@@ -592,7 +592,7 @@ def test_existing_canonical_crucible_proposal_is_reused_without_mutation(
 
     bridge, now = _prepared(tmp_path)
     proposal = _proposal(now)
-    with CrucibleStore(tmp_path, db_path=tmp_path / "crucible.db") as store:
+    with CrucibleStore(tmp_path, db_path="crucible.db") as store:
         stored = store.record_proposal(proposal)
         assert stored["ok"] is True
         before = store.get_proposal(proposal["proposal_id"])
@@ -602,7 +602,7 @@ def test_existing_canonical_crucible_proposal_is_reused_without_mutation(
         task_id="A1",
         contract=_prediction_contract(now, tmp_path),
     )
-    with CrucibleStore(tmp_path, db_path=tmp_path / "crucible.db") as store:
+    with CrucibleStore(tmp_path, db_path="crucible.db") as store:
         after = store.get_proposal(proposal["proposal_id"])
     assert before == after
     binding = bridge._session["unified_crucible_bindings"]["A1"]
@@ -698,3 +698,146 @@ def test_receipt_contracts_are_proposal_only() -> None:
     )
     assert reproof.promotion_authority is False
     assert disposition.promotion_authority is False
+
+
+def test_finalize_extended_replay_verifies_no_duplicate_governed_records(tmp_path: Path) -> None:
+    """Verify finalization replay with valid input does not duplicate Relationship Experience, QDKT, or archive entries."""
+    bridge, now = _prepared(tmp_path)
+    commit_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        contract=_prediction_contract(now, tmp_path),
+    )
+    observe_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        observation=_observation_contract(now),
+    )
+    result = finalize_bridge_learning(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        contract=_final_contract(tmp_path, now),
+    )
+
+    # Record initial state
+    assert result["relationship_experience"] is not None
+    initial_relationship = result["relationship_experience"]
+    initial_qdkt = result["qdkt_event_receipt"]
+    assert initial_qdkt is not None
+    assert result["attempt_archive"]["ok"] is True
+
+    # Verify session state is populated
+    assert "A1" in bridge._session["unified_relationship_experiences"]
+    assert "A1" in bridge._session["unified_qdkt_admissions"]
+    assert "A1" in bridge._session["unified_learning_results"]
+
+    # Second finalization attempt with valid input should raise ValueError
+    with pytest.raises(ValueError, match="governed learning result is already retained"):
+        finalize_bridge_learning(
+            bridge,
+            plan_phase_hash="phase-1",
+            task_id="A1",
+            contract=_final_contract(tmp_path, now),
+        )
+
+    # Verify no records were duplicated in session state
+    assert bridge._session["unified_relationship_experiences"]["A1"] is not None
+    assert bridge._session["unified_qdkt_admissions"]["A1"] is not None
+    assert bridge._session["unified_learning_results"]["A1"] is result
+
+
+def test_commit_rejects_absolute_storage_path(tmp_path: Path) -> None:
+    """Verify commit_bridge_prediction rejects absolute storage paths."""
+    bridge, now = _prepared(tmp_path)
+    contract = _prediction_contract(now, tmp_path)
+    contract["storage"]["crucible_db_path"] = "/etc/passwd"
+
+    with pytest.raises(ValueError, match="crucible_db_path must not be an absolute path"):
+        commit_bridge_prediction(
+            bridge,
+            plan_phase_hash="phase-1",
+            task_id="A1",
+            contract=contract,
+        )
+
+
+def test_commit_rejects_traversal_storage_path(tmp_path: Path) -> None:
+    """Verify commit_bridge_prediction rejects .. traversal in storage paths."""
+    bridge, now = _prepared(tmp_path)
+    contract = _prediction_contract(now, tmp_path)
+    contract["storage"]["crucible_db_path"] = "../../../etc/passwd"
+
+    with pytest.raises(ValueError, match="crucible_db_path must not contain"):
+        commit_bridge_prediction(
+            bridge,
+            plan_phase_hash="phase-1",
+            task_id="A1",
+            contract=contract,
+        )
+
+
+def test_finalize_rejects_symlink_outside_repo(tmp_path: Path) -> None:
+    """Verify finalize_bridge_learning rejects symlinks pointing outside repo_root."""
+    bridge, now = _prepared(tmp_path)
+    commit_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        contract=_prediction_contract(now, tmp_path),
+    )
+    observe_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        observation=_observation_contract(now),
+    )
+
+    # Create a directory outside tmp_path
+    external_dir = tmp_path.parent / "external_target"
+    external_dir.mkdir(exist_ok=True)
+
+    # Create a symlink inside tmp_path that points outside
+    symlink_path = tmp_path / "malicious_link"
+    symlink_path.symlink_to(external_dir)
+
+    contract = _final_contract(tmp_path, now)
+    contract["storage"]["experience_db_path"] = "malicious_link/experience.db"
+
+    with pytest.raises(ValueError, match="experience_db_path resolves outside repository root"):
+        finalize_bridge_learning(
+            bridge,
+            plan_phase_hash="phase-1",
+            task_id="A1",
+            contract=contract,
+        )
+
+
+def test_finalize_rejects_absolute_qdkt_event_root(tmp_path: Path) -> None:
+    """Verify finalize_bridge_learning rejects absolute qdkt_event_root path."""
+    bridge, now = _prepared(tmp_path)
+    commit_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        contract=_prediction_contract(now, tmp_path),
+    )
+    observe_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        observation=_observation_contract(now),
+    )
+
+    contract = _final_contract(tmp_path, now)
+    contract["storage"]["qdkt_event_root"] = "/tmp/malicious"
+
+    with pytest.raises(ValueError, match="qdkt_event_root must not be an absolute path"):
+        finalize_bridge_learning(
+            bridge,
+            plan_phase_hash="phase-1",
+            task_id="A1",
+            contract=contract,
+        )
