@@ -11,20 +11,20 @@ permissions:
   issues: write
 
 concurrency:
-  group: harness-repair-202-204-v3-materialize
+  group: harness-repair-202-204-v4-materialize
   cancel-in-progress: false
 
 jobs:
   materialize:
     if: >-
-      github.event.pull_request.head.ref == 'harness/repair-202-204-v3'
+      github.event.pull_request.head.ref == 'harness/repair-202-204-v4'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
       - name: Checkout exact repair branch
         uses: actions/checkout@v4
         with:
-          ref: harness/repair-202-204-v3
+          ref: harness/repair-202-204-v4
           fetch-depth: 0
 
       - name: Verify exact base and transport identity
@@ -71,7 +71,6 @@ jobs:
           git apply /tmp/harness-repair-202-204.patch
           git rm -r .aura/harness-repair-202-204
           git rm .aura/HARNESS_REPAIR_202_204_REQUEST
-          git rm .github/workflows/harness-repair-202-204-materialize.yml
           git diff --check
 
       - name: Compile changed Python
@@ -155,9 +154,7 @@ jobs:
           python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
           git diff --check
 
-      - name: Commit verified repair and remove one-use workflow
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Commit and publish verified repair
         run: |
           git config user.name 'AuraOS Harness Repair'
           git config user.email 'actions@users.noreply.github.com'
@@ -165,7 +162,4 @@ jobs:
           git diff --cached --check
           git diff --cached --stat
           git commit -m 'fix(harness): ground exact targets and preserve focal tests'
-          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            push origin HEAD:harness/repair-202-204-v3
-          unset AUTH_HEADER
+          git push origin HEAD:harness/repair-202-204-v4
