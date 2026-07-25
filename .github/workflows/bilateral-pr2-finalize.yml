@@ -1,0 +1,79 @@
+name: Bilateral PR2 exact finalizer
+
+on:
+  push:
+    branches:
+      - refactor/bilateral-intent-pr2
+    paths:
+      - .github/workflows/bilateral-pr2-finalize.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bilateral-pr2-exact-finalizer
+  cancel-in-progress: false
+
+jobs:
+  patch-prove-sync-and-dissolve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/bilateral-intent-pr2
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install bounded verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pytest pytest-asyncio
+      - name: Restore legacy scope field and add bilateral scope
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("aura_arena_gate_dialogue.py")
+          text = path.read_text(encoding="utf-8")
+          old = '            "approval_scope": "confirm_intent_then_advance_existing_guarded_workflow_only",\n'
+          new = (
+              '            "approval_scope": "advance_existing_guarded_workflow_only",\n'
+              '            "confirmation_scope": '
+              '"confirm_canonical_bilateral_intent_for_existing_guarded_workflow_only",\n'
+          )
+          if text.count(old) != 1:
+              raise SystemExit("expected exact approval_scope source span was not found once")
+          path.write_text(text.replace(old, new), encoding="utf-8")
+          PY
+      - name: Run focused source and compatibility proof
+        run: |
+          python -m py_compile aura_bilateral_intent_compiler.py aura_arena_gate_dialogue.py
+          node --check aura_showcase/gate-dialogue.js
+          ruff check --select E9,F63,F7,F82 \
+            aura_bilateral_intent_compiler.py \
+            aura_arena_gate_dialogue.py \
+            tests/test_aura_bilateral_gate_dialogue.py \
+            tests/test_aura_showcase_gate_dialogue.py
+          python -m pytest -q \
+            tests/test_aura_bilateral_gate_dialogue.py \
+            tests/test_aura_showcase_gate_dialogue.py
+      - name: Regenerate and verify exact navigation artifacts
+        run: |
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+      - name: Dissolve finalizer and publish verified result
+        run: |
+          rm .github/workflows/bilateral-pr2-finalize.yml
+          git config user.name "AuraOS PR2 Finalizer"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            aura_arena_gate_dialogue.py \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json \
+            .github/workflows/bilateral-pr2-finalize.yml
+          git commit -m "fix(intent): preserve legacy approval scope and sync topology"
+          git push origin HEAD:refactor/bilateral-intent-pr2
