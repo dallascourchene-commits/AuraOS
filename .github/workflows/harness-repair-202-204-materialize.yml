@@ -11,20 +11,20 @@ permissions:
   issues: write
 
 concurrency:
-  group: harness-repair-202-204-v2-materialize
+  group: harness-repair-202-204-v3-materialize
   cancel-in-progress: false
 
 jobs:
   materialize:
     if: >-
-      github.event.pull_request.head.ref == 'harness/repair-202-204-v2'
+      github.event.pull_request.head.ref == 'harness/repair-202-204-v3'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
       - name: Checkout exact repair branch
         uses: actions/checkout@v4
         with:
-          ref: harness/repair-202-204-v2
+          ref: harness/repair-202-204-v3
           fetch-depth: 0
 
       - name: Verify exact base and transport identity
@@ -63,7 +63,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-          python -m pip install pytest numpy
+          python -m pip install pytest jsonschema
 
       - name: Apply exact reviewed patch and remove transport
         run: |
@@ -167,5 +167,5 @@ jobs:
           git commit -m 'fix(harness): ground exact targets and preserve focal tests'
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            push origin HEAD:harness/repair-202-204-v2
+            push origin HEAD:harness/repair-202-204-v3
           unset AUTH_HEADER
