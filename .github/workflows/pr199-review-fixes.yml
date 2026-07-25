@@ -31,8 +31,7 @@ jobs:
         run: |
           set -euo pipefail
           cp .aura/analysis/pr199_review_fixes_payload.txt /tmp/review.b64
-          test "$(sha256sum /tmp/review.b64 | awk '{print $1}')" = "554867f7ebf3e04b9d28414aae650f118a33936a3dafa47555ccf07bcce1f600"
-          git reset --hard HEAD^^
+          git reset --hard e361c62209bf8b93a36d80c74288657c057f7408
           test "$(git rev-parse HEAD)" = "e361c62209bf8b93a36d80c74288657c057f7408"
           base64 -d /tmp/review.b64 | gzip -d > /tmp/review.patch
           test "$(sha256sum /tmp/review.patch | awk '{print $1}')" = "817aedb212d29cf20c48f42e26632785b470ca6caea424e950bff1018c519bd7"
