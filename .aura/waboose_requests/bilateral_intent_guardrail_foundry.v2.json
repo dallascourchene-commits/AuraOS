@@ -3,15 +3,25 @@
   "request_id": "bilateral_intent_guardrail_foundry_v2",
   "status": "PROPOSAL_ONLY",
   "objective_receipt": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
+  "revision_receipt": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
   "base_repository_head": "598804b3dce8d39480d8494cf0144f872b01d9ca",
   "review_scope": {
     "source_and_evidence_paths": [
+      "aura_bilateral_intent_ingestion.py",
       "aura_intent_refinement.py",
       "schemas/aura_intent_refinement.v1.schema.json",
+      "tests/test_aura_intent_ingestion_bilateral.py",
       "tests/test_aura_intent_refinement.py",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
+      ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
       ".aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json",
       "tests/test_bilateral_intent_pr1_evidence.py"
+    ],
+    "canonical_unchanged_paths": {
+      "aura_intent_ingestion.py": "84bd861cb36b12c07708d3de1b91cd7beccd1399"
+    },
+    "forbidden_paths": [
+      "aura_intent_ingestion_core.py"
     ],
     "generated_navigation_paths": [
       ".aura/CODEMAP.json",
@@ -25,7 +35,10 @@
     "negative requirements are never discarded by compression",
     "hard guardrails cannot be weakened by models or normal human dialogue",
     "human-added guardrails cannot disappear through replanning",
-    "no new intent, memory, truth, policy, verification, publication, continuity, or authority plane is created",
+    "no new intent, memory, truth, policy, verification, publication, continuity, routing, or authority plane is created",
+    "aura_intent_ingestion remains the canonical ingestion owner",
+    "the bilateral companion does not monkeypatch the canonical owner",
+    "the canonical ingestion implementation is not duplicated",
     "legacy ActCapsule remains canonical",
     "merged PR #193 and PR #198 contracts and owners are reused",
     "merged PR #199 U7 learning-to-reproof remains the canonical learning lifecycle",
@@ -54,6 +67,8 @@
     "stale source or model evidence replay",
     "silent plan drift",
     "duplicate intent owner",
+    "duplicate ingestion implementation",
+    "monkeypatch coupling",
     "duplicate policy, continuity, learning, or publication owner",
     "scope expansion",
     "authority escalation",
@@ -68,12 +83,14 @@
   ],
   "required_evidence": [
     "exact base SHA and source blob identities",
-    "explicit source and generated-path allowlists",
+    "explicit source, unchanged-owner, forbidden, and generated-path sets",
     "positive and negative focused tests",
     "confirmation staleness proof",
     "deep immutability proof",
     "hard-guardrail disposition proof",
-    "candidate blob identity proof",
+    "negation-preserving compression and handoff proof",
+    "canonical ingestion blob identity proof",
+    "CodeQL thread obsolescence or clearance",
     "fatal lint and Python compilation",
     "final-tree CODEMAP and topology regeneration proof"
   ],
@@ -87,6 +104,8 @@
     "SEQUENCE",
     "STALE_CONFIRMATION",
     "NEGATION_LOSS",
+    "DUPLICATE_OWNER",
+    "MONKEYPATCH_COUPLING",
     "PARTIAL_PUBLICATION",
     "GENERATED_NAVIGATION_DRIFT"
   ],
