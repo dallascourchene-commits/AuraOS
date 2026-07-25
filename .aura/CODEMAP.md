@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1422
-- **total_bytes**: 56822826
-- **text_tokens_est**: 4753427
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 919, 'schema_or_lexicon': 174, 'support_file': 77}
-- **topology_nodes**: 10550
-- **topology_edges**: 24940
+- **file_count**: 1423
+- **total_bytes**: 56865285
+- **text_tokens_est**: 4764038
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 920, 'schema_or_lexicon': 174, 'support_file': 77}
+- **topology_nodes**: 10601
+- **topology_edges**: 25121
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 31602.68
+- **elapsed_ms**: 31866.2
 
 ## Coverage
 
-- **included_file_count**: 1422
+- **included_file_count**: 1423
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=171, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
@@ -354,7 +354,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
-- ... 1214 more; query CODEMAP.json for exact file cards
+- ... 1215 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
@@ -374,8 +374,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 10550
-- **edges**: 24940
+- **nodes**: 10601
+- **edges**: 25121
 - **top_files_by_degree**:
   - `aura_node.py` degree=890 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=756 nodes=69 neighbors=`aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`, `aura_gate_adapters.py`
@@ -409,6 +409,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AdaptiveModelRouter` -> `aura_adaptive_model_router.py:151`
 - `AgentIRCompiler` -> `aura_agent_ir_compiler.py:19`
 - `AgentIRNode` -> `aura_agent_ir.py:37`
+- `AmbiguityClass` -> `aura_intent_refinement.py:48`
 - `AnimacyClass` -> `aura_ojibwe_morph_bridge.py:84`
 - `AnthropicRouter` -> `aura_anthropic_router.py:268`
 - `AppendOnlyEventStore` -> `aura_event_contracts.py:634`
@@ -471,4 +472,3 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AudioAccessDecision` -> `aura_ojibwe_audio_consent_registry.py:78`
 - `AudioConsentRecord` -> `aura_ojibwe_audio_consent_registry.py:48`
 - `AudioConsentRegistry` -> `aura_ojibwe_audio_consent_registry.py:87`
-- `AudioLevel` -> `aura_ojibwe_audio_consent_registry.py:35`
