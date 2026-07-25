@@ -1,0 +1,102 @@
+name: Finalize Issue 200 architecture and CODEMAP
+
+on:
+  push:
+    branches:
+      - fix/issue-200-exact-head-harness
+    paths:
+      - .github/workflows/issue-200-finalize.yml
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/issue-200-exact-head-harness
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+      - name: Update canonical documentation and remove one-time workflow
+        run: |
+          rm .github/workflows/issue-200-finalize.yml
+          python - <<'PY'
+          from pathlib import Path
+
+          readme = Path("README.md")
+          text = readme.read_text(encoding="utf-8")
+          anchor = "The output contains a compact manifest, a sorted source-review file list, and a deterministic ZIP built from immutable `HEAD` Git blobs. Generated CODEMAP/topology/P9 artifacts, binaries, symlinks, sensitive/runtime paths, and oversized files are digest-only and never treated as ordinary source. Dirty trees fail closed by default. Long `run` operations emit a structured watchdog check-in every 10 minutes (`HEALTHY_CONTINUE`, `SLOW_BUT_PROGRESSING`, `STALLED_REASSESS`, or `UNKNOWN_REASSESS`) and pause safely at 20 minutes with completed-artifact inventory and an exact `--resume` receipt. The exact full Git archive remains available separately for forensic reconstruction.\n"
+          paragraph = "\nIssue #200 hardens that boundary with `scripts/aura_exact_head_transport.py`. Exact-main exports, diagnostics, materialized review trees, and publication bundles are written outside the checkout; dirty or mismatched heads fail closed with explicit path evidence. Formatter drift is transported as verified whole-file bytes, while allowlisted scope validation rejects out-of-scope additions, modifications, deletions, symlinks, and special files before any bundle is emitted. The workflow executes the exact request-revision harness and transport helper from an external tools directory against a clean detached `main` checkout. These bundles remain proposal evidence for the existing Agent Bridge compare-and-swap lane and grant no automatic publication or merge authority.\n"
+          if paragraph.strip() not in text:
+              if anchor not in text:
+                  raise SystemExit("README insertion anchor missing")
+              text = text.replace(anchor, anchor + paragraph, 1)
+          readme.write_text(text, encoding="utf-8", newline="\n")
+
+          architecture = Path(".aura/ARCHITECTURE.md")
+          text = architecture.read_text(encoding="utf-8")
+          text = text.replace(
+              "**Architecture audit:** reviewed through July 24, 2026",
+              "**Architecture audit:** reviewed through July 25, 2026",
+              1,
+          )
+          anchor = "Generated maps remain navigation evidence and never become patch authority. Dirty repositories fail closed by default; unrestricted giant diffs and unbounded subprocess capture are prohibited. Long architecture runs are supervised by a proposal-only watchdog: a 10-minute check-in classifies healthy, slow-but-progressing, stalled, or unknown state, while a 20-minute hard checkpoint terminates the child safely and requires explicit `--resume`. Watchdog receipts are external run artifacts and grant no mutation authority. The full exact Git export remains a separate forensic reconstruction artifact rather than the preferred AI review input.\n"
+          section = "\n## 3A. Exact-head transport and atomic bundle boundary\n\n`scripts/aura_exact_head_transport.py` is the reusable exact-head transport owner introduced by Issue #200. It binds every operation to a lowercase 40-character expected commit, verifies the observed `HEAD`, and requires a clean working tree before and after export, materialization, or bundle construction. Failure receipts, archives, temporary materializations, and final bundle files must remain outside the source checkout.\n\nThe publication-bundle path is all-or-nothing. It emits canonical whole-file add/replace/delete operations only after validating the complete candidate tree against an explicit allowlist. Out-of-scope additions, modifications, deletions, symlinks, and special files fail closed, including formatter-induced whole-file changes. The architecture export workflow extracts the exact request revision into an external tools directory, compiles that request harness and transport helper, detaches to exact `main`, and then runs the request tools against the clean main tree. The helper prepares evidence only: `production_mutation=false`, `automatic_publication=false`, and `merge_authority=false`.\n"
+          if section.strip() not in text:
+              if anchor not in text:
+                  raise SystemExit("ARCHITECTURE insertion anchor missing")
+              text = text.replace(anchor, anchor + section, 1)
+          text = text.replace(
+              "## 3A. Runtime Refactor Harness boundary",
+              "## 3B. Runtime Refactor Harness boundary",
+              1,
+          )
+          architecture.write_text(text, encoding="utf-8", newline="\n")
+          PY
+      - name: Run focused verification
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python -m py_compile scripts/aura_exact_head_transport.py scripts/aura_architecture_harness.py
+          PYTHONPATH=. pytest -q \
+            tests/test_aura_exact_head_transport.py \
+            tests/test_aura_architecture_harness_export_workflow.py \
+            tests/test_aura_architecture_harness.py
+          git diff --check
+      - name: Regenerate and verify CODEMAP and topology
+        run: |
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s topology_map.json
+          test -s Aura_Memory/live_topology_ast.json
+          git diff --check
+      - name: Commit exact final tree
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "AuraOS Finalization Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            README.md \
+            .aura/ARCHITECTURE.md \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json \
+            .github/workflows/issue-200-finalize.yml
+          git add -f Aura_Memory/live_topology_ast.json
+          git diff --cached --stat
+          test ! -e .github/workflows/issue-200-finalize.yml
+          git commit -m "docs: regenerate architecture and CODEMAP"
+          git push origin HEAD:fix/issue-200-exact-head-harness
