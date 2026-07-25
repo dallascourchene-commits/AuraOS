@@ -4,36 +4,22 @@ on:
   pull_request:
   push:
     branches:
-      - "analysis/**"
-      - "docs/**"
-      - "fix/construction-demo-runtime-harness-*"
       - "fix/issue-200-exact-head-harness"
-    paths-ignore:
-      - ".aura/CODEMAP.json"
-      - ".aura/CODEMAP.md"
-      - "topology_map.json"
-      - "Aura_Memory/live_topology_ast.json"
 
 permissions:
   contents: write
 
 concurrency:
-  group: sync-architecture-codemap-${{ github.event.pull_request.number || github.ref }}
+  group: sync-issue-200-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
   sync-codemap:
-    if: >-
-      github.actor != 'github-actions[bot]' &&
-      (github.event_name == 'push' ||
-       startsWith(github.event.pull_request.head.ref, 'analysis/') ||
-       startsWith(github.event.pull_request.head.ref, 'docs/') ||
-       startsWith(github.event.pull_request.head.ref, 'fix/issue-200-') ||
-       startsWith(github.event.pull_request.head.ref, 'fix/construction-demo-runtime-harness-'))
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Fetch exact head without persisted credentials
+      - name: Fetch exact PR head
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -46,16 +32,13 @@ jobs:
           unset AUTH_HEADER
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
-          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
       - name: Install declared dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
-      - name: Finalize Issue 200 canonical docs and restore workflow tree
+        run: python -m pip install -q -r requirements.txt
+      - name: Update canonical documentation and restore workflow tree
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -100,105 +83,37 @@ jobs:
           PY
           git show refs/remotes/origin/main:.github/workflows/sync-analysis-codemap.yml \
             > .github/workflows/sync-analysis-codemap.yml
-      - name: Run Issue 200 focused verification
-        env:
-          PYTHONDONTWRITEBYTECODE: "1"
+      - name: Verify and regenerate exact codebase maps
         run: |
-          python -m py_compile scripts/aura_exact_head_transport.py scripts/aura_architecture_harness.py
-          PYTHONPATH=. pytest -q \
-            tests/test_aura_exact_head_transport.py \
-            tests/test_aura_architecture_harness_export_workflow.py \
-            tests/test_aura_architecture_harness.py
-          git diff --check
-      - name: Regenerate and validate CODEMAP
-        run: |
-          cp .aura/CODEMAP.json /tmp/aura-codemap-reference.json
+          python -m py_compile \
+            scripts/aura_exact_head_transport.py \
+            scripts/aura_architecture_harness.py
           python aura_codebase_navigator.py
-          set +e
-          python -m aura_codemap_verify \
-            --compare-json /tmp/aura-codemap-reference.json \
-            > /tmp/aura-codemap-comparison.json
-          comparison_status=$?
-          set -e
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          import subprocess
-
-          result = json.loads(
-              Path('/tmp/aura-codemap-comparison.json').read_text(encoding='utf-8')
-          )
-          if result.get('stable_comparison', {}).get('ok') is True:
-              subprocess.run(
-                  [
-                      'git', 'checkout', 'HEAD', '--',
-                      '.aura/CODEMAP.json',
-                      '.aura/CODEMAP.md',
-                      'topology_map.json',
-                      'Aura_Memory/live_topology_ast.json',
-                  ],
-                  check=True,
-              )
-              Path('/tmp/aura-codemap-change-class.txt').write_text(
-                  'VOLATILE_ONLY\n', encoding='utf-8'
-              )
-          else:
-              Path('/tmp/aura-codemap-change-class.txt').write_text(
-                  'MEANINGFUL\n', encoding='utf-8'
-              )
-          PY
-          if [ "$(cat /tmp/aura-codemap-change-class.txt)" = "MEANINGFUL" ]; then
-            python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
-          else
-            test "$comparison_status" -eq 0
-          fi
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
           test -s .aura/CODEMAP.json
           test -s .aura/CODEMAP.md
           test -s topology_map.json
           test -s Aura_Memory/live_topology_ast.json
           git diff --check
-      - name: Commit synchronized final tree
+      - name: Commit finalized architecture tree
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
         run: |
-          set -o pipefail
-          {
-            set -x
-            git config user.name "AuraOS CODEMAP Bot"
-            git config user.email "actions@users.noreply.github.com"
-            git status --short
-            git add \
-              README.md \
-              .aura/ARCHITECTURE.md \
-              .aura/CODEMAP.json \
-              .aura/CODEMAP.md \
-              topology_map.json \
-              .github/workflows/sync-analysis-codemap.yml
-            git add -A .github/workflows/issue-200-finalize.yml
-            git add -f Aura_Memory/live_topology_ast.json
-            git diff --cached --stat
-            if git diff --cached --quiet; then
-              exit 0
-            fi
-            git commit -m "docs: finalize architecture and synchronize CODEMAP"
-            AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-            git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-              push origin HEAD:"${TARGET_BRANCH}"
-            unset AUTH_HEADER
-          } 2>&1 | tee codemap-push.log
-      - name: Upload synchronized maps and push diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: synchronized-codemap-${{ github.event.pull_request.head.sha || github.sha }}
-          path: |
-            .aura/CODEMAP.json
-            .aura/CODEMAP.md
-            topology_map.json
-            Aura_Memory/live_topology_ast.json
-            codemap-push.log
-            /tmp/aura-codemap-comparison.json
-            /tmp/aura-codemap-change-class.txt
-          if-no-files-found: error
-          retention-days: 14
+          git config user.name "AuraOS CODEMAP Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            README.md \
+            .aura/ARCHITECTURE.md \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json \
+            .github/workflows/sync-analysis-codemap.yml
+          git add -A .github/workflows/issue-200-finalize.yml
+          git add -f Aura_Memory/live_topology_ast.json
+          git diff --cached --stat
+          git commit -m "docs: finalize architecture and synchronize CODEMAP"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            push origin HEAD:"${TARGET_BRANCH}"
+          unset AUTH_HEADER
