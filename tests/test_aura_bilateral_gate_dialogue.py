@@ -1,6 +1,7 @@
 """Focused PR2 proof for bilateral Gate Dialogue compilation."""
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -133,3 +134,14 @@ def test_legacy_one_turn_api_remains_compatible(workflow):
     )
     assert approved["ok"] is True
     assert approved["next_action"]["action_id"] == "set_objective"
+
+
+def test_affordance_map_declares_current_review_learning_extension():
+    """Replace the stale pre-extension baseline assertion with the committed contract."""
+    data = json.loads((REPO_ROOT / ".aura" / "AFFORDANCE_MAP.json").read_text(encoding="utf-8"))
+    assert data["mode"] == "generated_placeholder_with_review_learning_extension"
+    assert data["source_of_truth"] == (
+        "aura_affordance_directory.SEED_AFFORDANCES plus bounded extension entries"
+    )
+    assert "advisory-only" in data["note"]
+    assert any(item.get("id") == "aura.coding_waboose.review_lessons" for item in data["affordances"])
