@@ -1,0 +1,43 @@
+{
+  "schema_version": "AURA_WABOOSE_REQUEST_V1",
+  "request_id": "bilateral_intent_guardrail_foundry_pr2",
+  "objective_ref": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json",
+  "risk_class": "cross_boundary_contract_and_browser",
+  "required_checks": [
+    "source_scope",
+    "canonical_owner_reuse",
+    "authority_non_escalation",
+    "positive_negative_requirement_preservation",
+    "clarification_lifecycle",
+    "confirmation_identity_and_staleness",
+    "legacy_gate_dialogue_compatibility",
+    "browser_surface_contract",
+    "focused_tests",
+    "regression_tests",
+    "codemap_sync"
+  ],
+  "required_invariants": [
+    "No duplicate IntentPacket or SemanticLedger owner.",
+    "No model-generated requirement gains authority over deterministic extraction.",
+    "No confirmation is current after repository, phase, topology, definition, requirement, guardrail, or authority drift.",
+    "No patch, commit, push, merge, production, or durable-learning authority is granted.",
+    "Legacy one-turn Gate Dialogue clients remain compatible while the Showcase uses strict multi-turn refinement."
+  ],
+  "allowed_paths": [
+    "aura_bilateral_intent_compiler.py",
+    "aura_arena_gate_dialogue.py",
+    "aura_showcase/gate-dialogue.js",
+    "tests/test_aura_bilateral_gate_dialogue.py",
+    ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json",
+    ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2.v1.json",
+    ".aura/CODEMAP.json",
+    ".aura/CODEMAP.md",
+    "topology_map.json"
+  ],
+  "external_review_policy": {
+    "trigger_only_after_implementation_and_verification": true,
+    "greptile_authorized": false,
+    "codex_authorized": false,
+    "coderabbit_authorized_at_final_gate_only": true
+  }
+}
