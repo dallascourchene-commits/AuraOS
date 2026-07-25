@@ -94,7 +94,10 @@ class ShowcaseState:
     def gate_dialogue(self) -> ArenaGateDialogueService:
         """Bind the approval ledger to the same real Human Agent workflow."""
         if self._gate_dialogue is None:
-            self._gate_dialogue = ArenaGateDialogueService(self.repo_root, self.human_agent.workflow)
+            operator_id = getattr(self, "operator_identity", None) or "showcase_human"
+            self._gate_dialogue = ArenaGateDialogueService(
+                self.repo_root, self.human_agent.workflow, operator_identity=operator_id
+            )
         return self._gate_dialogue
 
     @property

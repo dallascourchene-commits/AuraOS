@@ -1,0 +1,63 @@
+{
+  "schema_version": "AURA_REFACTOR_OBJECTIVE_V1",
+  "objective_id": "bilateral_intent_guardrail_foundry_pr2",
+  "title": "Canonical bilateral intent integration and Gate Dialogue",
+  "base_commit": "2cf38f12e42848f6b3ce3bd8b24cee86a9cde02d",
+  "scope": {
+    "allowed_source_paths": [
+      "aura_bilateral_intent_compiler.py",
+      "aura_arena_gate_dialogue.py",
+      "aura_showcase/gate-dialogue.js"
+    ],
+    "allowed_test_paths": [
+      "tests/test_aura_bilateral_gate_dialogue.py",
+      "tests/test_aura_showcase_observatory_crucible.py"
+    ],
+    "allowed_governance_paths": [
+      ".github/workflows/ci.yml",
+      ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
+      ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json",
+      ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2.v1.json"
+    ],
+    "generated_paths": [
+      ".aura/CODEMAP.json",
+      ".aura/CODEMAP.md",
+      "topology_map.json"
+    ]
+  },
+  "requirements": [
+    "Compile confirmed bilateral intent into the existing canonical IntentPacket and SemanticLedger owners.",
+    "Preserve topology anchoring, stale-context rejection, deterministic route authority, and human confirmation.",
+    "Support bounded multi-turn clarification without breaking legacy one-turn clients.",
+    "Carry confirmation, negative-requirement, guardrail, execution-owner, and U7 current-reproof references.",
+    "Render positive intent, negative intent, hard guardrails, editable guardrails, teach-back, correction, and confirmation in the Gate Dialogue UI."
+  ],
+  "prohibitions": [
+    "Do not create a parallel intent, semantic, memory, policy, verification, or learning owner.",
+    "Do not grant patch, commit, push, pull request, merge, deployment, production, or learning-promotion authority.",
+    "Do not trigger external reviewers before implementation and verification are complete.",
+    "Do not include PR3 planning, Council, Surgeon, Bridge/MCP enforcement, Runtime Harness, Construction, incident, canary, or Foundry execution work."
+  ],
+  "verification": [
+    "Python compilation",
+    "JavaScript syntax validation",
+    "fatal Ruff classes E9 F63 F7 F82",
+    "focused bilateral Gate Dialogue tests",
+    "existing Gate Dialogue regression tests",
+    "full pytest-native suite",
+    "generated CODEMAP/topology verification"
+  ],
+  "authority": {
+    "planning_proposes": true,
+    "verification_proves": true,
+    "human_disposes": true,
+    "patch_authority": "exact_source_spans_and_hashes_only",
+    "vsa_patch_authority": false,
+    "production_mutation": false,
+    "automatic_commit": false,
+    "automatic_push": false,
+    "automatic_pull_request": false,
+    "automatic_merge": false,
+    "automatic_learning_promotion": false
+  }
+}
