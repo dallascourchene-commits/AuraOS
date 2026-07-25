@@ -439,6 +439,33 @@ def _component_targets(
     return matched, files, _ordered_unique(symbols)
 
 
+def _partition_explicit_test_targets(
+    repo_root: Path,
+    target_files: Sequence[str],
+    target_tests: Sequence[str],
+) -> tuple[list[str], list[str]]:
+    """Separate exact source targets from first-class explicit test targets.
+
+    Older callers sometimes supplied test paths through ``target_files``. Preserve
+    that intent while giving new callers a dedicated lane whose ordering cannot be
+    displaced by topology-only regression suggestions.
+    """
+
+    source_files: list[str] = []
+    explicit_tests: list[str] = []
+    for raw in [*target_files, *target_tests]:
+        path = str(raw or "").strip().replace("\\", "/")
+        if not path or not (repo_root / path).is_file():
+            continue
+        basename = Path(path).name
+        is_test = path.startswith("tests/") or basename.startswith("test_")
+        if is_test:
+            explicit_tests.append(path)
+        elif raw in target_files:
+            source_files.append(path)
+    return _ordered_unique(source_files), _ordered_unique(explicit_tests)
+
+
 def _connectome_targets(path_packet: Mapping[str, Any], repo_root: Path) -> tuple[list[str], list[str], list[str]]:
     files = [
         path
@@ -982,6 +1009,7 @@ def compile_coding_relationship_compass(
     *,
     target_files: Sequence[str] = (),
     target_symbols: Sequence[str] = (),
+    target_tests: Sequence[str] = (),
     max_target_files: int = 16,
     max_target_symbols: int = 32,
     max_atomic_nodes: int = 36,
@@ -1033,10 +1061,13 @@ def compile_coding_relationship_compass(
 
     graph = enrich_connectome(build_capability_connectome(root))
     capability_path = enrich_path(find_capability_path(normalized_objective, root), graph)
+    explicit_source_files, explicit_test_targets = _partition_explicit_test_targets(
+        root, target_files, target_tests
+    )
     matched_components, component_files, component_symbols = _component_targets(
         normalized_objective,
         root,
-        explicit_files=target_files,
+        explicit_files=explicit_source_files,
         explicit_symbols=target_symbols,
     )
     path_files, path_symbols, path_tests = _connectome_targets(capability_path, root)
@@ -1314,6 +1345,7 @@ def compile_coding_relationship_compass(
 
     required_tests = _ordered_unique(
         [
+            *explicit_test_targets,
             *[str(item) for item in evidence.get("tests", []) or []],
             *[str(item) for item in evidence.get("required_tests", []) or []],
             *path_tests,
@@ -1343,6 +1375,7 @@ def compile_coding_relationship_compass(
         "target_file": primary["file_path"],
         "target_symbol": primary["symbol"],
         "recommended_targets": targets[:16],
+        "explicit_test_targets": explicit_test_targets,
         "required_tests": required_tests,
         "action_capsule_hints": action_capsule_hints,
         "connectome": {

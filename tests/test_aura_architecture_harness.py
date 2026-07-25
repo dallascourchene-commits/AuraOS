@@ -716,3 +716,97 @@ def test_run_resume_command_preserves_runtime_contract(tmp_path: Path) -> None:
     assert "--watchdog-pause-seconds 1200.0" in command
     assert command.endswith("--reference-file evidence.txt") or "--reference-file evidence.txt" in command
     assert "--resume" in command
+
+
+def test_doctor_counts_current_codemap_symbol_index(tmp_path: Path) -> None:
+    root = _init_repo(
+        tmp_path,
+        {
+            ".aura/CODEMAP.json": json.dumps(
+                {
+                    "summary": {"file_count": 2},
+                    "symbol_count": 0,
+                    "symbol_index": {
+                        "alpha": [{"file": "alpha.py"}],
+                        "beta": [{"file": "beta.py"}],
+                    },
+                },
+                indent=2,
+            ),
+            "alpha.py": "def alpha():\n    return 1\n",
+            "beta.py": "def beta():\n    return 2\n",
+        },
+    )
+
+    result = harness.doctor(root, None)
+
+    assert result["codemap"]["file_count"] == 2
+    assert result["codemap"]["symbol_count"] == 2
+    assert result["codemap"]["legacy_symbol_count"] == 0
+    assert result["codemap"]["symbol_count_source"] == "symbol_index_member_count"
+
+
+def test_objective_grounding_prioritizes_named_current_source(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    (root / ".aura").mkdir(parents=True)
+    (root / "aura_intent_ingestion.py").write_text(
+        "def _extract_keywords(text):\n    return []\n", encoding="utf-8"
+    )
+    (root / "aura_event_contracts.py").write_text(
+        "def stable_digest(value):\n    return 'digest'\n", encoding="utf-8"
+    )
+    (root / ".aura/CODEMAP.json").write_text(
+        json.dumps(
+            {
+                "symbol_index": {
+                    "_extract_keywords": [
+                        {
+                            "file": "aura_intent_ingestion.py",
+                            "qualified_symbol": "_extract_keywords",
+                        }
+                    ],
+                    "stable_digest": [
+                        {
+                            "file": "aura_event_contracts.py",
+                            "qualified_symbol": "stable_digest",
+                        }
+                    ],
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    grounding = harness._objective_grounded_architect_tasks(
+        root,
+        "Fix aura_intent_ingestion.py::_extract_keywords and reuse "
+        "aura_event_contracts.py::stable_digest.",
+        [],
+    )
+
+    assert grounding["grounding_ok"] is True
+    assert grounding["grounding_source"] == "exact_objective_mentions"
+    assert [task["target_file"] for task in grounding["act_tasks"]] == [
+        "aura_intent_ingestion.py",
+        "aura_event_contracts.py",
+    ]
+    assert [task["target_symbol"] for task in grounding["act_tasks"]] == [
+        "_extract_keywords",
+        "stable_digest",
+    ]
+    assert all("capability_connectome" not in task["target_file"] for task in grounding["act_tasks"])
+
+
+def test_objective_grounding_fails_closed_when_explicit_targets_are_missing(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    (root / ".aura").mkdir(parents=True)
+    (root / ".aura/CODEMAP.json").write_text(
+        json.dumps({"symbol_index": {}}), encoding="utf-8"
+    )
+
+    with pytest.raises(RuntimeError, match="explicit objective targets did not ground"):
+        harness._objective_grounded_architect_tasks(
+            root,
+            "Patch aura_missing_owner.py::missing_symbol.",
+            [],
+        )

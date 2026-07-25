@@ -63,6 +63,7 @@ grounding = relationship_compass_grounding(packet)
 The packet includes:
 
 - exact recommended files, symbols, line ranges, and source hashes;
+- first-class `target_tests` plus backward-compatible test paths supplied through `target_files`, preserved ahead of topology-only regression suggestions;
 - required tests and bounded action-capsule hints;
 - Connectome graph/path digests and execution classes;
 - exact Emergent Evidence Spine packet and atomic inventory identity;
