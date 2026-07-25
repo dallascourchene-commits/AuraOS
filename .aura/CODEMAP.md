@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1425
-- **total_bytes**: 56900357
-- **text_tokens_est**: 4772807
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 921, 'schema_or_lexicon': 175, 'support_file': 77}
+- **file_count**: 1428
+- **total_bytes**: 56910969
+- **text_tokens_est**: 4775461
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 922, 'schema_or_lexicon': 177, 'support_file': 77}
 - **topology_nodes**: 10607
 - **topology_edges**: 25161
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 24204.86
+- **elapsed_ms**: 25957.44
 
 ## Coverage
 
-- **included_file_count**: 1425
+- **included_file_count**: 1428
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=172, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
@@ -328,6 +328,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ### security_and_validation
 - `.aura/SECURITY.md`
+- `.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json`
+- `.aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json`
 - `DEEP_AUDIT_REPORT.md`
 - `aura_background_auditor.py`
 - `aura_cockpit_audit_trail.py`
@@ -337,9 +339,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_gate_audit.py`
 - `aura_heal.py`
 - `aura_metaharness_audit.py`
-- `aura_ojibwe_translation_guard.py`
-- `aura_review_lessons_security.py`
-- ... 19 more; query CODEMAP.json for exact file cards
+- ... 21 more; query CODEMAP.json for exact file cards
 
 ### interfaces_and_docs
 - `.aura/AFFORDANCE_MAP.json`
@@ -354,7 +354,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
-- ... 1217 more; query CODEMAP.json for exact file cards
+- ... 1218 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 

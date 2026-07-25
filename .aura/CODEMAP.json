@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784996867,
+  "generated_at_unix": 1784997238,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1425,
+    "included_file_count": 1428,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -55,6 +55,7 @@
       ".aura/model_policies/local_first.v1.json",
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
+      ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
       ".aura/refactor_payloads/umc_main_publish.trigger",
       ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
       ".aura/research/AURA_SPATIAL_BREADBOARD_RECEIPT.json",
@@ -71,6 +72,7 @@
       ".aura/understand_graph_tour.json",
       ".aura/verifier_contracts/coding_localize.v1.json",
       ".aura/vsa_profiles/complex_phasor.v1.json",
+      ".aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json",
       ".aura/waboose_requests/construction_demo.v1.json",
       ".aura/waboose_requests/issue_200_exact_head_harness.v1.json",
       ".aura/waboose_requests/unified_memory_continuity.v1.json",
@@ -1426,6 +1428,7 @@
       "tests/test_aura_work_splitter.py",
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
+      "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -1447,23 +1450,23 @@
     ]
   },
   "summary": {
-    "file_count": 1425,
-    "total_bytes": 56900357,
-    "text_tokens_est": 4772807,
+    "file_count": 1428,
+    "total_bytes": 56910969,
+    "text_tokens_est": 4775461,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 51,
       "knowledge_artifact": 185,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 921,
-      "schema_or_lexicon": 175,
+      "python_module": 922,
+      "schema_or_lexicon": 177,
       "support_file": 77
     },
     "topology_nodes": 10607,
     "topology_edges": 25161,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 24204.86
+    "elapsed_ms": 25957.44
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1648,6 +1651,8 @@
     ],
     "security_and_validation": [
       ".aura/SECURITY.md",
+      ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
+      ".aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json",
       "DEEP_AUDIT_REPORT.md",
       "aura_background_auditor.py",
       "aura_cockpit_audit_trail.py",
@@ -2891,6 +2896,7 @@
       "tests/test_aura_work_splitter.py",
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
+      "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -41785,6 +41791,14 @@
         "end_line": 206,
         "semantic_id": "scripts/update_architect_benchmark_readme.py#function:_load:c1c403cb81d8593a",
         "signature_hash": "1e5d894f1f71ee4a"
+      },
+      {
+        "file": "tests/test_bilateral_intent_pr1_evidence.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tests/test_bilateral_intent_pr1_evidence.py#function:_load:e69cccc566d4080f",
+        "signature_hash": "14c822894a4346b1"
       }
     ],
     "_load_atoms": [
@@ -114043,6 +114057,26 @@
         "signature_hash": "a798da347d55dadd"
       }
     ],
+    "test_objective_receipt_binds_exact_base_and_denies_authority": [
+      {
+        "file": "tests/test_bilateral_intent_pr1_evidence.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 29,
+        "semantic_id": "tests/test_bilateral_intent_pr1_evidence.py#function:test_objective_receipt_binds_exact_base_and_denies_authority:b34a654f547196a4",
+        "signature_hash": "cce63e3002d083ae"
+      }
+    ],
+    "test_objective_scope_separates_source_from_generated_navigation": [
+      {
+        "file": "tests/test_bilateral_intent_pr1_evidence.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 38,
+        "semantic_id": "tests/test_bilateral_intent_pr1_evidence.py#function:test_objective_scope_separates_source_from_generated_navigation:b237a166f61bbbef",
+        "signature_hash": "dfbb0cc3bec415c7"
+      }
+    ],
     "test_observability_failure_does_not_replace_original_tool_exception": [
       {
         "file": "tests/test_aura_shadow_tool_observability.py",
@@ -127875,6 +127909,16 @@
         "end_line": 86,
         "semantic_id": "tests/test_aura_review_arena_mcp.py#function:test_waboose_prepare_dispatches_complete_request:a67953054bbae146",
         "signature_hash": "7f5e463ddd8d9793"
+      }
+    ],
+    "test_waboose_profile_preserves_required_invariants_and_risks": [
+      {
+        "file": "tests/test_bilateral_intent_pr1_evidence.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 62,
+        "semantic_id": "tests/test_bilateral_intent_pr1_evidence.py#function:test_waboose_profile_preserves_required_invariants_and_risks:0f456c2ba8962b0b",
+        "signature_hash": "ca26359c48873c55"
       }
     ],
     "test_waboose_tools_are_advertised": [
@@ -189100,6 +189144,52 @@
       ]
     },
     {
+      "path": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
+      "role": "schema_or_lexicon",
+      "bytes": 3937,
+      "lines": 85,
+      "tokens_est": 985,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "92730aae7bd63b90",
+      "vector": [
+        -0.207227,
+        0.280366,
+        0.094194,
+        0.22939,
+        0.147386,
+        -0.134088,
+        0.032137,
+        -0.173982,
+        -0.02992,
+        -0.007757,
+        -0.255986,
+        -0.244905,
+        -0.0543,
+        -0.056516,
+        -0.242688,
+        -0.22939,
+        -0.14517,
+        -0.131872,
+        -0.085329,
+        -0.09641,
+        -0.233823,
+        -0.198362,
+        0.207227,
+        -0.267068,
+        -0.07868,
+        -0.14517,
+        0.074247,
+        0.238256,
+        -0.180631,
+        0.220525,
+        0.032137,
+        -0.258203
+      ]
+    },
+    {
       "path": ".aura/refactor_payloads/umc_main_publish.trigger",
       "role": "support_file",
       "bytes": 153,
@@ -189557,6 +189647,52 @@
         0.233564,
         -0.050775,
         -0.109448
+      ]
+    },
+    {
+      "path": ".aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json",
+      "role": "schema_or_lexicon",
+      "bytes": 4015,
+      "lines": 102,
+      "tokens_est": 1004,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b512477e79e4fa4f",
+      "vector": [
+        -0.252264,
+        -0.181416,
+        -0.074069,
+        -0.117008,
+        -0.011808,
+        0.21362,
+        0.166387,
+        0.254411,
+        0.172828,
+        0.226501,
+        0.237236,
+        -0.162093,
+        -0.142771,
+        -0.056894,
+        0.24153,
+        0.129889,
+        0.056894,
+        -0.209326,
+        -0.106273,
+        -0.226501,
+        -0.222207,
+        -0.037571,
+        0.273734,
+        0.076216,
+        0.258705,
+        -0.050453,
+        -0.037571,
+        0.196444,
+        -0.247971,
+        0.142771,
+        -0.084804,
+        -0.209326
       ]
     },
     {
@@ -220287,6 +220423,52 @@
         -0.278662,
         -0.114899,
         -0.154519
+      ]
+    },
+    {
+      "path": "tests/test_bilateral_intent_pr1_evidence.py",
+      "role": "python_module",
+      "bytes": 2660,
+      "lines": 63,
+      "tokens_est": 665,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "299d4384a26ecf93",
+      "vector": [
+        0.230845,
+        -0.125547,
+        0.044549,
+        0.309143,
+        0.298344,
+        -0.198446,
+        0.028349,
+        0.066149,
+        0.276744,
+        -0.112048,
+        -0.128247,
+        0.085048,
+        0.220045,
+        -0.033749,
+        0.101248,
+        -0.02025,
+        -0.033749,
+        0.122847,
+        -0.152547,
+        -0.112048,
+        -0.333443,
+        -0.247045,
+        0.112048,
+        0.211946,
+        -0.117448,
+        0.136347,
+        0.060749,
+        -0.130947,
+        -0.255145,
+        -0.120147,
+        0.090448,
+        -0.322643
       ]
     },
     {
