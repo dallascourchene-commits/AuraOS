@@ -1,19 +1,35 @@
-"""Bilateral intent ingestion, compression, and routing proofs."""
+"""Bilateral companion ingestion, compression, and routing proofs."""
 from __future__ import annotations
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
-import aura_intent_ingestion as ingestion  # noqa: E402
-from aura_intent_ingestion import (  # noqa: E402
-    compile_intent_packet,
-    compress_intent_for_agent,
-    intent_to_agent_handoff,
-    parse_intent_document,
+from aura_bilateral_intent_ingestion import (  # noqa: E402
+    bilateral_intent_to_agent_handoff,
+    companion_capabilities,
+    compile_bilateral_intent_packet,
+    compress_bilateral_intent_for_agent,
+    parse_bilateral_intent_document,
 )
+
+
+def test_companion_denies_owner_and_authority():
+    capabilities = companion_capabilities()
+    assert capabilities["canonical_ingestion_owner"] == "aura_intent_ingestion"
+    assert capabilities["bilateral_intent_owner"] is False
+    for key in (
+        "memory_owner",
+        "truth_owner",
+        "policy_owner",
+        "routing_owner",
+        "verification_owner",
+        "patch_authority",
+        "production_mutation",
+    ):
+        assert capabilities[key] is False
 
 
 def test_structured_bilateral_sections_preserve_exact_negative_spans():
@@ -27,21 +43,17 @@ OBJECTIVE: Preserve overlays. Do not merge automatically.
 - Do not mutate canonical geometry.
 - Do not infer professional approval.
 """
-    parsed = parse_intent_document(text)
-    assert "AURA_PROHIBITED_BEHAVIOR" in parsed["sections"]
+    parsed = parse_bilateral_intent_document(text)
     assert parsed["positive_requirements"] == [
         "Preserve overlays across representation changes."
     ]
     assert len(parsed["negative_requirements"]) == 3
-    assert all(
-        text[item["source_start"]:item["source_end"]] == item["source_span"]
-        for item in parsed["negative_requirements"]
-    )
-    assert "not" in ingestion._extract_keywords("do not merge")
+    for item in parsed["negative_requirements"]:
+        assert text[item["source_start"]:item["source_end"]] == item["source_span"]
 
 
 def test_negative_requirements_survive_compression_and_handoff_verbatim():
-    packet = compile_intent_packet(
+    packet = compile_bilateral_intent_packet(
         "Build the renderer. Do not merge automatically.",
         repo_root=REPO_ROOT,
         skip_grounding=True,
@@ -54,14 +66,18 @@ def test_negative_requirements_survive_compression_and_handoff_verbatim():
         == digest
     )
 
-    compressed = compress_intent_for_agent(packet, repo_root=REPO_ROOT)
+    compressed = compress_bilateral_intent_for_agent(packet, repo_root=REPO_ROOT)
     assert compressed["negation_preserved"] is True
     assert "NEGATIVE REQUIREMENTS — FULL TEXT, NOT COMPRESSED" in compressed[
         "compressed_payload"
     ]
     assert "Do not merge automatically." in compressed["compressed_payload"]
 
-    handoff = intent_to_agent_handoff(packet, repo_root=REPO_ROOT)
+    handoff = bilateral_intent_to_agent_handoff(
+        packet,
+        agent="hermes",
+        repo_root=REPO_ROOT,
+    )
     assert handoff["negation_preserved"] is True
     assert handoff["negative_requirements"] == packet["negative_requirements"]
     assert handoff["negative_requirements_digest"] == digest
@@ -78,7 +94,11 @@ Automatically merge the pull request.
 [AURA_PROHIBITED_BEHAVIOR]
 Do not merge the pull request automatically.
 """
-    packet = compile_intent_packet(text, repo_root=REPO_ROOT, skip_grounding=True)
+    packet = compile_bilateral_intent_packet(
+        text,
+        repo_root=REPO_ROOT,
+        skip_grounding=True,
+    )
     assert packet["requires_clarification"] is True
     assert packet["requirement_contradictions"]
     assert packet["route_decision"]["bilateral_intent_status"] == (
@@ -90,5 +110,7 @@ Do not merge the pull request automatically.
 
 
 def test_positive_leave_command_is_not_false_negative():
-    parsed = parse_intent_document("Leave a review comment for the author.")
+    parsed = parse_bilateral_intent_document(
+        "Leave a review comment for the author."
+    )
     assert parsed["negative_requirements"] == []
