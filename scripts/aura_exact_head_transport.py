@@ -33,7 +33,9 @@ def _canonical_path(value: str) -> str:
     if not value or "\\" in value or "\x00" in value or re.match(r"^[A-Za-z]:", value):
         raise ValueError(f"unsafe repository path: {value!r}")
     path = PurePosixPath(value)
-    if path.is_absolute() or any(part in {"", ".", ".."} for part in path.parts):
+    if path.is_absolute() or not path.parts or any(
+        part in {"", ".", ".."} for part in path.parts
+    ):
         raise ValueError(f"unsafe repository path: {value!r}")
     if path.as_posix() != value:
         raise ValueError(f"non-canonical repository path: {value!r}")
@@ -78,6 +80,28 @@ def _blob_at(root: Path, revision: str, path: str) -> bytes | None:
         check=True,
         capture_output=True,
     ).stdout
+
+
+def _tracked_blob_paths_at(root: Path, revision: str) -> list[str]:
+    result = subprocess.run(
+        ["git", "ls-tree", "-r", "-z", "--full-tree", revision],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    paths: list[str] = []
+    for entry in result.stdout.split(b"\0"):
+        if not entry:
+            continue
+        metadata, raw_path = entry.split(b"\t", 1)
+        _mode, object_type, _object_sha = metadata.split(b" ", 2)
+        if object_type == b"blob":
+            paths.append(raw_path.decode("utf-8", errors="surrogateescape"))
+    return sorted(paths)
+
+
+def _lexists(path: Path) -> bool:
+    return os.path.lexists(path)
 
 
 def _sha256_file(path: Path) -> str:
@@ -244,14 +268,16 @@ def build_atomic_publication_bundle(
         raise ValueError("at least one allowed path is required")
     operations: list[dict[str, Any]] = []
     changed: list[str] = []
+    allowed_set = set(allowed)
     for path in allowed:
         base_bytes = _blob_at(root, expected_head, path)
         target = candidate / Path(*PurePosixPath(path).parts)
-        if base_bytes is None and not target.exists():
+        target_present = _lexists(target)
+        if base_bytes is None and not target_present:
             continue
-        if target.exists() and (not target.is_file() or target.is_symlink()):
+        if target_present and (target.is_symlink() or not target.is_file()):
             raise ValueError(f"candidate path must be a regular file: {path}")
-        if not target.exists():
+        if not target_present:
             operations.append({"path": path, "operation": "delete"})
             changed.append(path)
             continue
@@ -268,19 +294,38 @@ def build_atomic_publication_bundle(
             }
         )
         changed.append(path)
-    candidate_files = sorted(
+
+    # Compare every tracked base blob outside the allowlist so deletions cannot hide.
+    for path in _tracked_blob_paths_at(root, expected_head):
+        if path in allowed_set:
+            continue
+        target = candidate / Path(*PurePosixPath(path).parts)
+        if not _lexists(target):
+            raise RuntimeError(f"candidate contains out-of-scope deletion: {path}")
+        if target.is_symlink() or not target.is_file():
+            raise RuntimeError(
+                f"candidate contains out-of-scope symlink or special file: {path}"
+            )
+        base_bytes = _blob_at(root, expected_head, path)
+        if base_bytes != target.read_bytes():
+            raise RuntimeError(f"candidate contains out-of-scope modification: {path}")
+
+    # Reject additions and special entries that are not represented in the base tree.
+    candidate_entries = sorted(
         p.relative_to(candidate).as_posix()
         for p in candidate.rglob("*")
-        if p.is_file() and not p.is_symlink()
+        if p.is_symlink() or not p.is_dir()
     )
-    for path in candidate_files:
-        if path in allowed:
+    for path in candidate_entries:
+        if path in allowed_set:
             continue
-        base_bytes = _blob_at(root, expected_head, path)
-        if base_bytes is None:
+        entry = candidate / Path(*PurePosixPath(path).parts)
+        if entry.is_symlink() or not entry.is_file():
+            raise RuntimeError(
+                f"candidate contains out-of-scope symlink or special file: {path}"
+            )
+        if _blob_at(root, expected_head, path) is None:
             raise RuntimeError(f"candidate contains out-of-scope addition: {path}")
-        if base_bytes != (candidate / path).read_bytes():
-            raise RuntimeError(f"candidate contains out-of-scope modification: {path}")
     if not operations:
         raise RuntimeError("candidate produced no bounded publication operations")
     bundle = {
