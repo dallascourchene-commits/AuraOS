@@ -7,10 +7,12 @@ production, or learning-promotion authority.
 """
 from __future__ import annotations
 
+import json
 import re
 import time
-from dataclasses import asdict, dataclass, replace
+from dataclasses import dataclass, fields, replace
 from enum import Enum
+from types import MappingProxyType
 from typing import Any, Mapping, Sequence
 
 from aura_event_contracts import (
@@ -31,6 +33,7 @@ CANONICAL_OUTPUTS = (
 )
 MAX_ITEMS = 256
 MAX_TEXT_BYTES = 16 * 1024
+MAX_PACKET_BYTES = 512 * 1024
 
 
 class RefinementStage(str, Enum):
@@ -199,20 +202,73 @@ def _timestamp(value: Any, name: str) -> float:
     return value
 
 
-def _record(value: Any, name: str) -> dict[str, Any]:
+def _strict_bool(value: Any, name: str) -> bool:
+    if type(value) is not bool:
+        raise ValueError(f"{name} must be a boolean")
+    return value
+
+
+def _validate_json_keys(value: Any, name: str, path: str = "$") -> None:
+    if isinstance(value, Mapping):
+        seen: set[str] = set()
+        for key, item in value.items():
+            if type(key) is not str:
+                raise ValueError(f"{name} must use string keys at {path}")
+            if key in seen:
+                raise ValueError(f"{name} contains a duplicate key at {path}.{key}")
+            seen.add(key)
+            _validate_json_keys(item, name, f"{path}.{key}")
+    elif isinstance(value, (list, tuple)):
+        for index, item in enumerate(value):
+            _validate_json_keys(item, name, f"{path}[{index}]")
+
+
+def _freeze_json(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return MappingProxyType({key: _freeze_json(item) for key, item in value.items()})
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze_json(item) for item in value)
+    return value
+
+
+def _thaw_json(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {str(key): _thaw_json(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return [_thaw_json(item) for item in value]
+    return value
+
+
+def _packet(payload: Any, name: str) -> None:
+    encoded = canonical_json(payload).encode("utf-8")
+    if len(encoded) > MAX_PACKET_BYTES:
+        raise ValueError(f"{name} exceeds {MAX_PACKET_BYTES} canonical bytes")
+
+
+def _record(value: Any, name: str) -> Mapping[str, Any]:
     payload = value.to_dict() if hasattr(value, "to_dict") else dict(value) if isinstance(value, Mapping) else None
     if payload is None:
         raise ValueError(f"{name} must be a mapping or to_dict record")
-    canonical_json(payload)
-    return payload
+    _validate_json_keys(payload, name)
+    normalized = json.loads(canonical_json(payload))
+    if not isinstance(normalized, dict):
+        raise ValueError(f"{name} must normalize to an object")
+    _packet(normalized, name)
+    return _freeze_json(normalized)
 
 
-def _records(values: Sequence[Any], name: str) -> tuple[dict[str, Any], ...]:
+def _records(values: Sequence[Any], name: str) -> tuple[Mapping[str, Any], ...]:
     if isinstance(values, (str, bytes)) or not isinstance(values, Sequence):
         raise ValueError(f"{name} must be a sequence")
     if len(values) > MAX_ITEMS:
         raise ValueError(f"{name} exceeds {MAX_ITEMS} items")
     return tuple(_record(value, f"{name}[{index}]") for index, value in enumerate(values))
+
+
+def _dataclass_dict(value: Any) -> dict[str, Any]:
+    payload = {field.name: _thaw_json(getattr(value, field.name)) for field in fields(value)}
+    _packet(payload, type(value).__name__)
+    return payload
 
 
 @dataclass(frozen=True)
@@ -247,12 +303,12 @@ class NegativeRequirement:
             "operator": _required(operator, "operator").lower(),
             "target": _optional(target, "target"),
             "scope": _optional(scope, "scope"),
-            "ambiguous": bool(ambiguous),
+            "ambiguous": _strict_bool(ambiguous, "ambiguous"),
         }
         return cls(stable_id("neg", payload), **payload)
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        return _dataclass_dict(self)
 
 
 @dataclass(frozen=True)
@@ -279,12 +335,12 @@ class ClarificationQuestion:
             "candidate_answers": _strings(candidate_answers, "candidate_answers"),
             "affected_requirements": _strings(affected_requirements, "affected_requirements"),
             "affected_guardrails": _strings(affected_guardrails, "affected_guardrails"),
-            "required_human_answer": bool(required_human_answer),
+            "required_human_answer": _strict_bool(required_human_answer, "required_human_answer"),
         }
         return cls(stable_id("clarify", payload), **payload)
 
     def to_dict(self) -> dict[str, Any]:
-        payload = asdict(self)
+        payload = _dataclass_dict(self)
         for key in ("candidate_answers", "affected_requirements", "affected_guardrails"):
             payload[key] = list(payload[key])
         return payload
@@ -316,8 +372,10 @@ class GuardrailProposal:
                human_note: str = "") -> "GuardrailProposal":
         hardness_value = _enum(hardness, GuardrailHardness, "hardness")
         disposition = _enum(human_disposition, HumanGuardrailDisposition, "human_disposition")
-        if hardness_value in {"HARD_ARCHITECTURAL", "HARD_AUTHORITY", "DOMAIN_REQUIRED"} and disposition == "REJECTED_SOFT":
-            raise ValueError("hard or domain-required guardrails cannot be rejected as soft")
+        if hardness_value in {"HARD_ARCHITECTURAL", "HARD_AUTHORITY"} and disposition not in {"ACKNOWLEDGED_HARD", "DEFERRED"}:
+            raise ValueError("hard architectural or authority guardrails are acknowledgement-only")
+        if hardness_value == "DOMAIN_REQUIRED" and disposition in {"REJECTED_SOFT", "MODIFIED"}:
+            raise ValueError("domain-required guardrails need separate authority to change")
         payload = {
             "statement": _required(statement, "statement"),
             "source_class": _enum(source_class, GuardrailSourceClass, "source_class"),
@@ -340,12 +398,14 @@ class GuardrailProposal:
     def with_human_disposition(self, disposition: str | HumanGuardrailDisposition,
                                note: str = "") -> "GuardrailProposal":
         disposition = _enum(disposition, HumanGuardrailDisposition, "human_disposition")
-        if self.is_hard and disposition == "REJECTED_SOFT":
-            raise ValueError("hard or domain-required guardrails cannot be rejected as soft")
+        if self.hardness in {"HARD_ARCHITECTURAL", "HARD_AUTHORITY"} and disposition not in {"ACKNOWLEDGED_HARD", "DEFERRED"}:
+            raise ValueError("hard architectural or authority guardrails are acknowledgement-only")
+        if self.hardness == "DOMAIN_REQUIRED" and disposition in {"REJECTED_SOFT", "MODIFIED"}:
+            raise ValueError("domain-required guardrails need separate authority to change")
         return replace(self, human_disposition=disposition, human_note=_optional(note, "human_note"))
 
     def to_dict(self) -> dict[str, Any]:
-        payload = asdict(self)
+        payload = _dataclass_dict(self)
         for key in ("source_refs", "affected_arenas", "affected_files", "affected_symbols"):
             payload[key] = list(payload[key])
         return payload
@@ -383,7 +443,7 @@ class PairedTeachBack:
         return cls(**payload, teach_back_digest=stable_digest(payload))
 
     def to_dict(self) -> dict[str, Any]:
-        payload = asdict(self)
+        payload = _dataclass_dict(self)
         for key in payload:
             if isinstance(payload[key], tuple):
                 payload[key] = list(payload[key])
@@ -401,12 +461,12 @@ class IntentRefinementSession:
     current_stage: str
     candidate_positive_requirements: tuple[str, ...]
     candidate_negative_requirements: tuple[str, ...]
-    candidate_definitions: tuple[dict[str, Any], ...]
-    candidate_guardrails: tuple[dict[str, Any], ...]
-    unresolved_ambiguities: tuple[dict[str, Any], ...]
-    questions_asked: tuple[dict[str, Any], ...]
-    answers_received: tuple[dict[str, Any], ...]
-    teach_back: dict[str, Any]
+    candidate_definitions: tuple[Mapping[str, Any], ...]
+    candidate_guardrails: tuple[Mapping[str, Any], ...]
+    unresolved_ambiguities: tuple[Mapping[str, Any], ...]
+    questions_asked: tuple[Mapping[str, Any], ...]
+    answers_received: tuple[Mapping[str, Any], ...]
+    teach_back: Mapping[str, Any]
     confirmation_status: str
     confirmation_receipt_id: str
     created_at: float
@@ -458,11 +518,15 @@ class IntentRefinementSession:
         positive = self.candidate_positive_requirements if positive_requirements is None else _strings(positive_requirements, "positive_requirements")
         negative = self.candidate_negative_requirements if negative_requirements is None else _strings(negative_requirements, "negative_requirements")
         ambiguities = self.unresolved_ambiguities if unresolved_ambiguities is None else _records(unresolved_ambiguities, "unresolved_ambiguities")
+        teach_payload = self.teach_back if teach_back is None else _record(teach_back, "teach_back")
         status = self.confirmation_status if confirmation_status is None else _enum(confirmation_status, ConfirmationStatus, "confirmation_status")
         receipt_id = self.confirmation_receipt_id if confirmation_receipt_id is None else _optional(confirmation_receipt_id, "confirmation_receipt_id")
+        if target == "TEACH_BACK_PENDING" and (not positive or not negative or not teach_payload):
+            raise ValueError("teach-back requires explicit positive and negative requirements")
         if target == "HUMAN_CONFIRMED":
-            if status != "CONFIRMED" or not positive or not negative or ambiguities:
-                raise ValueError("human confirmation requires confirmed status, both polarities, and ambiguities resolved")
+            required_decisions = teach_payload.get("required_human_decisions", ()) if teach_payload else ()
+            if status != "CONFIRMED" or not positive or not negative or ambiguities or not teach_payload or required_decisions:
+                raise ValueError("human confirmation requires teach-back, confirmed status, both polarities, and ambiguities resolved")
         if target == "COMPILED" and not receipt_id:
             raise ValueError("COMPILED requires a confirmation receipt")
         if target == "STALE":
@@ -479,7 +543,7 @@ class IntentRefinementSession:
             unresolved_ambiguities=ambiguities,
             questions_asked=self.questions_asked if questions_asked is None else _records(questions_asked, "questions_asked"),
             answers_received=self.answers_received if answers_received is None else _records(answers_received, "answers_received"),
-            teach_back=self.teach_back if teach_back is None else _record(teach_back, "teach_back"),
+            teach_back=teach_payload,
             confirmation_status=status, confirmation_receipt_id=receipt_id,
         )
 
@@ -494,7 +558,7 @@ class IntentRefinementSession:
         )
 
     def to_dict(self) -> dict[str, Any]:
-        payload = asdict(self)
+        payload = _dataclass_dict(self)
         for key in ("candidate_positive_requirements", "candidate_negative_requirements",
                     "candidate_definitions", "candidate_guardrails", "unresolved_ambiguities",
                     "questions_asked", "answers_received"):
@@ -544,6 +608,10 @@ class IntentConfirmationReceipt:
             raise ValueError("expires_at must be later than confirmed_at")
         positive, negative = _strings(positive_requirements, "positive_requirements", True), _strings(negative_requirements, "negative_requirements", True)
         guardrail_payloads, authority_payload, paths = _records(guardrails, "guardrails"), _record(authority, "authority"), _paths(allowed_paths, "allowed_paths")
+        if not paths:
+            raise ValueError("allowed_paths must not be empty")
+        if any(item.get("human_disposition") == "DEFERRED" for item in guardrail_payloads):
+            raise ValueError("confirmation receipt cannot contain deferred guardrails")
         payload = {
             "session_id": _required(session_id, "session_id"),
             "repository_head": _required(repository_head, "repository_head"),
@@ -568,23 +636,29 @@ class IntentConfirmationReceipt:
         return cls(stable_id("intent-confirmation", payload), **payload)
 
     def is_current(self, *, repository_head: str, source_tree_digest: str,
-                   semantic_ledger_digest: str, guardrail_set_digest: str,
-                   authority_digest: str, allowed_paths: Sequence[str],
+                   source_request_digest: str, positive_requirements: Sequence[str],
+                   negative_requirements: Sequence[str], semantic_ledger_digest: str,
+                   guardrail_set_digest: str, authority_digest: str,
+                   teach_back_digest: str, allowed_paths: Sequence[str],
                    runtime_profile_digest: str, now: float | None = None) -> bool:
         observed = time.time() if now is None else _timestamp(now, "now")
         return (
             observed < self.expires_at
             and _required(repository_head, "repository_head") == self.repository_head
             and _required(source_tree_digest, "source_tree_digest") == self.source_tree_digest
+            and _required(source_request_digest, "source_request_digest") == self.source_request_digest
+            and stable_digest(list(_strings(positive_requirements, "positive_requirements", True))) == self.positive_requirements_digest
+            and stable_digest(list(_strings(negative_requirements, "negative_requirements", True))) == self.negative_requirements_digest
             and _required(semantic_ledger_digest, "semantic_ledger_digest") == self.semantic_ledger_digest
             and _required(guardrail_set_digest, "guardrail_set_digest") == self.guardrail_set_digest
             and _required(authority_digest, "authority_digest") == self.authority_digest
+            and _required(teach_back_digest, "teach_back_digest") == self.teach_back_digest
             and stable_digest(list(_paths(allowed_paths, "allowed_paths"))) == self.allowed_path_set_digest
             and _required(runtime_profile_digest, "runtime_profile_digest") == self.runtime_profile_digest
         )
 
     def to_dict(self) -> dict[str, Any]:
-        payload = asdict(self)
+        payload = _dataclass_dict(self)
         payload["expires_or_stales_on"] = list(payload["expires_or_stales_on"])
         return payload
 
@@ -637,6 +711,15 @@ class IntentRevisionDelta:
             raise ValueError("intent/authority/scope changes must stale prior confirmation and require human reconfirmation")
         if revision == "BOUNDED_PLAN_RESTRUCTURING" and not requires_council_replan:
             raise ValueError("bounded plan restructuring must require Council re-evaluation")
+        intent_changes = any((positive_requirements_added, positive_requirements_removed,
+                              negative_requirements_added, negative_requirements_removed,
+                              definitions_changed, guardrails_changed))
+        if revision == "LOCAL_EVIDENCE_REFINEMENT" and (scope_changed or authority_changed or intent_changes or requires_human_reconfirmation or requires_council_replan):
+            raise ValueError("local evidence refinement cannot change intent, guardrails, scope, authority, or plan structure")
+        if revision == "BOUNDED_PLAN_RESTRUCTURING" and (scope_changed or authority_changed or intent_changes):
+            raise ValueError("bounded plan restructuring cannot change intent, guardrails, scope, or authority")
+        if revision == "INTENT_AUTHORITY_SCOPE_CHANGE" and not requires_council_replan:
+            raise ValueError("intent/authority/scope changes must require Council re-evaluation")
         payload = {
             "parent_confirmation_id": _required(parent_confirmation_id, "parent_confirmation_id"),
             "trigger_evidence": _strings(trigger_evidence, "trigger_evidence", True),
@@ -653,19 +736,19 @@ class IntentRevisionDelta:
             "negative_requirements_removed": _strings(negative_requirements_removed, "negative_requirements_removed"),
             "definitions_changed": _strings(definitions_changed, "definitions_changed"),
             "guardrails_changed": _strings(guardrails_changed, "guardrails_changed"),
-            "scope_changed": bool(scope_changed), "authority_changed": bool(authority_changed),
+            "scope_changed": _strict_bool(scope_changed, "scope_changed"), "authority_changed": _strict_bool(authority_changed, "authority_changed"),
             "affected_plan_tasks": _strings(affected_plan_tasks, "affected_plan_tasks"),
             "required_new_verifiers": _strings(required_new_verifiers, "required_new_verifiers"),
-            "current_reproof_required": bool(current_reproof_required),
-            "prior_confirmation_staled": bool(prior_confirmation_staled),
-            "requires_human_reconfirmation": bool(requires_human_reconfirmation),
-            "requires_council_replan": bool(requires_council_replan),
+            "current_reproof_required": _strict_bool(current_reproof_required, "current_reproof_required"),
+            "prior_confirmation_staled": _strict_bool(prior_confirmation_staled, "prior_confirmation_staled"),
+            "requires_human_reconfirmation": _strict_bool(requires_human_reconfirmation, "requires_human_reconfirmation"),
+            "requires_council_replan": _strict_bool(requires_council_replan, "requires_council_replan"),
             "revision_class": revision, "status": _required(status, "status"),
         }
         return cls(stable_id("intent-revision", payload), **payload)
 
     def to_dict(self) -> dict[str, Any]:
-        payload = asdict(self)
+        payload = _dataclass_dict(self)
         for key, value in tuple(payload.items()):
             if isinstance(value, tuple):
                 payload[key] = list(value)
@@ -673,7 +756,7 @@ class IntentRevisionDelta:
 
 
 NEGATION = re.compile(
-    r"(?ix)\b(leave|must\s+not|do\s+not|does\s+not|did\s+not|should\s+not|"
+    r"(?ix)\b(leave(?=[^.!?\n]{0,120}\bunchanged\b)|must\s+not|do\s+not|does\s+not|did\s+not|should\s+not|"
     r"would\s+not|could\s+not|cannot|can['’]t|don['’]t|doesn['’]t|didn['’]t|"
     r"mustn['’]t|shouldn['’]t|wouldn['’]t|couldn['’]t|never|without|avoid|"
     r"exclude|except|only|no|not)\b"
