@@ -1,0 +1,157 @@
+name: Bilateral PR2 contradiction resolution finalizer
+
+on:
+  push:
+    branches:
+      - refactor/bilateral-intent-pr2
+    paths:
+      - .github/workflows/bilateral-pr2-contradiction-finalize.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bilateral-pr2-contradiction-finalizer
+  cancel-in-progress: false
+
+jobs:
+  patch-prove-sync-and-dissolve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/bilateral-intent-pr2
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install declared dependencies and test tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pytest pytest-asyncio
+      - name: Preserve the human-selected side of a contradiction
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          compiler_path = Path("aura_bilateral_intent_compiler.py")
+          text = compiler_path.read_text(encoding="utf-8")
+          old = '''    elif question.ambiguity_class == AmbiguityClass.CONTRADICTION.value:
+              positives = [item for item in positives if item != value]
+              negatives = [item for item in negatives if item.statement != value and item.target != value]
+              if not positives:
+                  positives = [analysis.source_request]
+          '''.replace("          ", "")
+          new = '''    elif question.ambiguity_class == AmbiguityClass.CONTRADICTION.value:
+              candidates = tuple(question.candidate_answers)
+              if len(candidates) != 2 or value not in candidates:
+                  raise ValueError("contradiction clarification must select one declared requirement")
+              positive_candidate, negative_candidate = candidates
+              if value == positive_candidate:
+                  negatives = [
+                      item
+                      for item in negatives
+                      if item.statement != negative_candidate and item.target != negative_candidate
+                  ]
+              else:
+                  positives = [item for item in positives if item != positive_candidate]
+                  if not positives:
+                      positives = ["Preserve the confirmed prohibition and locked guardrails."]
+          '''.replace("          ", "")
+          if text.count(old) != 1:
+              raise SystemExit("expected contradiction-resolution source span was not found exactly once")
+          compiler_path.write_text(text.replace(old, new), encoding="utf-8")
+
+          test_path = Path("tests/test_aura_bilateral_gate_dialogue.py")
+          tests = test_path.read_text(encoding="utf-8")
+          marker = "\ndef test_affordance_map_declares_current_review_learning_extension():\n"
+          addition = '''
+
+          def test_contradiction_clarification_preserves_the_selected_side():
+              from aura_bilateral_intent_compiler import (
+                  analyze_bilateral_request,
+                  apply_clarification,
+              )
+              from aura_intent_refinement import AmbiguityClass
+
+              request = (
+                  "Widen the selected file scope. "
+                  "Do not widen the selected file scope."
+              )
+              positive_analysis = analyze_bilateral_request(request)
+              positive_question = next(
+                  item
+                  for item in positive_analysis.questions
+                  if item.ambiguity_class == AmbiguityClass.CONTRADICTION.value
+              )
+              positive_choice, negative_choice = positive_question.candidate_answers
+              positive_resolved = apply_clarification(
+                  positive_analysis,
+                  question=positive_question,
+                  answer=positive_choice,
+              )
+              assert positive_choice in positive_resolved.positive_requirements
+              assert all(
+                  item.statement != negative_choice and item.target != negative_choice
+                  for item in positive_resolved.negative_requirements
+              )
+
+              negative_analysis = analyze_bilateral_request(request)
+              negative_question = next(
+                  item
+                  for item in negative_analysis.questions
+                  if item.ambiguity_class == AmbiguityClass.CONTRADICTION.value
+              )
+              positive_choice, negative_choice = negative_question.candidate_answers
+              negative_resolved = apply_clarification(
+                  negative_analysis,
+                  question=negative_question,
+                  answer=negative_choice,
+              )
+              assert positive_choice not in negative_resolved.positive_requirements
+              assert any(
+                  item.statement == negative_choice or item.target == negative_choice
+                  for item in negative_resolved.negative_requirements
+              )
+              assert negative_resolved.teach_back is not None
+          '''
+          addition = "\n".join(
+              line[10:] if line.startswith("          ") else line
+              for line in addition.splitlines()
+          )
+          if "def test_contradiction_clarification_preserves_the_selected_side" not in tests:
+              if tests.count(marker) != 1:
+                  raise SystemExit("test insertion marker was not found exactly once")
+              tests = tests.replace(marker, addition + marker)
+              test_path.write_text(tests, encoding="utf-8")
+          PY
+      - name: Remove one-use workflow before topology generation
+        run: rm .github/workflows/bilateral-pr2-contradiction-finalize.yml
+      - name: Run contradiction and bilateral proof
+        run: |
+          python -m py_compile \
+            aura_bilateral_intent_compiler.py \
+            tests/test_aura_bilateral_gate_dialogue.py
+          ruff check --select E9,F63,F7,F82 \
+            aura_bilateral_intent_compiler.py \
+            tests/test_aura_bilateral_gate_dialogue.py
+          python -m pytest -q \
+            tests/test_aura_bilateral_gate_dialogue.py \
+            tests/test_aura_intent_refinement.py
+      - name: Publish verified source and test correction
+        run: |
+          git config user.name "AuraOS PR2 Contradiction Finalizer"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            aura_bilateral_intent_compiler.py \
+            tests/test_aura_bilateral_gate_dialogue.py \
+            .github/workflows/bilateral-pr2-contradiction-finalize.yml
+          git commit -m "fix(intent): preserve selected contradiction side"
+          git pull --rebase origin refactor/bilateral-intent-pr2
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          git add .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
+          git commit --amend --no-edit
+          git push origin HEAD:refactor/bilateral-intent-pr2
