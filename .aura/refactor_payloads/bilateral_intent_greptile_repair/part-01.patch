@@ -1,0 +1,145 @@
+st": self.source_tree_digest,
++            "working_tree_clean_receipt": self.working_tree_clean_receipt,
++            "source_request_digest": self.source_request_digest,
++            "positive_requirements_digest": self.positive_requirements_digest,
++            "negative_requirements_digest": self.negative_requirements_digest,
++            "semantic_ledger_digest": self.semantic_ledger_digest,
++            "guardrail_set_digest": self.guardrail_set_digest,
++            "authority_digest": self.authority_digest,
++            "teach_back_digest": self.teach_back_digest,
++            "allowed_path_set_digest": self.allowed_path_set_digest,
++            "runtime_profile_digest": self.runtime_profile_digest,
++            "unified_execution_binding_ref": self.unified_execution_binding_ref,
++            "human_reviewer": self.human_reviewer,
++            "human_disposition": self.human_disposition,
++            "confirmed_at": self.confirmed_at,
++            "expires_at": self.expires_at,
++            "expires_or_stales_on": self.expires_or_stales_on,
++        }
++
++    def has_valid_identity(self) -> bool:
++        return (
++            self.confirmation_status == "CONFIRMED"
++            and self.human_disposition == "CONFIRMED"
++            and self.patch_authority == PATCH_AUTHORITY
++            and self.vsa_patch_authority == VSA_PATCH_AUTHORITY
++            and self.version == VERSION
++            and self.confirmation_id == stable_id("intent-confirmation", self._identity_payload())
++        )
+ 
+     def is_current(self, *, repository_head: str, source_tree_digest: str,
+                    source_request_digest: str, positive_requirements: Sequence[str],
+@@ -650,7 +728,8 @@
+                    runtime_profile_digest: str, now: float | None = None) -> bool:
+         observed = time.time() if now is None else _timestamp(now, "now")
+         return (
+-            observed < self.expires_at
++            self.has_valid_identity()
++            and observed < self.expires_at
+             and _required(repository_head, "repository_head") == self.repository_head
+             and _required(source_tree_digest, "source_tree_digest") == self.source_tree_digest
+             and _required(source_request_digest, "source_request_digest") == self.source_request_digest
+@@ -845,27 +924,28 @@
+     for sentence_start, sentence_end in _sentence_ranges(source):
+         sentence = source[sentence_start:sentence_end]
+         matches = _operator_matches(sentence)
+-        for match_index, (start_local, operator_end, operator) in enumerate(matches):
+-            end_local = matches[match_index + 1][0] if match_index + 1 < len(matches) else len(sentence)
+-            raw = sentence[start_local:end_local]
+-            left_trim = len(raw) - len(raw.lstrip())
+-            span = raw.strip()
+-            if not span:
+-                continue
+-            start = sentence_start + start_local + left_trim
+-            end = start + len(span)
+-            target = sentence[operator_end:end_local].strip(" \t,:;-.!?\r\n")
+-            results.append(NegativeRequirement.create(
+-                statement=span,
+-                classification=_negative_class(span, operator, target),
+-                source_span=span,
+-                source_start=start,
+-                source_end=end,
+-                operator=operator,
+-                target=target,
+-                scope=target,
+-                ambiguous=not target or target.lower() in {"it", "that", "this", "so"},
+-            ))
++        if not matches:
++            continue
++        start_local, operator_end, operator = matches[0]
++        raw = sentence[start_local:]
++        left_trim = len(raw) - len(raw.lstrip())
++        span = raw.strip()
++        if not span:
++            continue
++        start = sentence_start + start_local + left_trim
++        end = start + len(span)
++        target = sentence[operator_end:].strip(" \t,:;-.!?\r\n")
++        results.append(NegativeRequirement.create(
++            statement=span,
++            classification=_negative_class(span, operator, target),
++            source_span=span,
++            source_start=start,
++            source_end=end,
++            operator=operator,
++            target=target,
++            scope=target,
++            ambiguous=not target or target.lower() in {"it", "that", "this", "so"},
++        ))
+     return tuple(results)
+ 
+ 
+diff --git a/tests/test_aura_intent_refinement.py b/tests/test_aura_intent_refinement.py
+--- a/tests/test_aura_intent_refinement.py
++++ b/tests/test_aura_intent_refinement.py
+@@ -3,7 +3,7 @@
+ 
+ import json
+ import sys
+-from dataclasses import FrozenInstanceError
++from dataclasses import FrozenInstanceError, replace
+ from pathlib import Path
+ 
+ import pytest
+@@ -83,6 +83,9 @@
+         "IntentRevisionDelta",
+         "NegativeRequirement",
+     }.issubset(schema["$defs"])
++    assert schema["$defs"]["IntentConfirmationReceipt"]["properties"][
++        "human_disposition"
++    ] == {"const": "CONFIRMED"}
+ 
+ 
+ def test_declares_no_parallel_owner_or_mutation_authority():
+@@ -142,6 +145,17 @@
+     assert requirements[3].ambiguous is True
+ 
+ 
++def test_compound_negation_remains_one_exact_requirement():
++    text = "Build the release, but do not deploy without human approval."
++    requirements = extract_negative_requirements(text)
++    assert len(requirements) == 1
++    requirement = requirements[0]
++    assert requirement.operator == "do not"
++    assert requirement.statement == "do not deploy without human approval."
++    assert requirement.target == "deploy without human approval"
++    assert text[requirement.source_start:requirement.source_end] == requirement.source_span
++
++
+ def test_positive_negative_contradiction_detection():
+     conflicts = detect_requirement_contradictions(
+         ("Automatically merge the pull request.",),
+@@ -217,8 +231,55 @@
+     )
+     assert confirmed.is_current(repository_head=HEAD, working_tree_digest=TREE, now=150.0)
+     assert not confirmed.is_current(repository_head="moved", working_tree_digest=TREE, now=150.0)
+-    with pytest.raises(ValueError, match="confirmation receipt"):
+-        confirmed.transition(RefinementStage.COMPILED, now=140.0)
++    with pytest.raises(ValueError, match="verified confirmation receipt object"):
++        confirmed.transition(
++            RefinementStage.COMPILED,
++            confirmation_receipt_id="invented-receipt",
++            now=140.0,
++        )
++    authority = {"merge": False}
++    receipt = Inten
