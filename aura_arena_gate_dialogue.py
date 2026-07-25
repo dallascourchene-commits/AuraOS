@@ -120,16 +120,20 @@ def normalize_node_context(raw: dict[str, Any] | None) -> dict[str, Any]:
 
 
 def _phase_hash(state: dict[str, Any]) -> str:
+    evidence = {
+        str(key): value
+        for key, value in dict(state.get("evidence") or {}).items()
+        if key != "approved_gate_intents"
+    }
     routed = dict(state.get("state_packet") or {})
-    existing = str(routed.get("phase_hash") or "").strip()
-    if existing:
-        return existing
     return _digest(
         {
-            "workflow_id": state.get("workflow_id"),
-            "phase": state.get("current_phase"),
-            "objective": state.get("objective"),
-            "evidence_keys": state.get("evidence_keys", []),
+  "workflow_id": state.get("workflow_id"),
+  "phase": state.get("current_phase"),
+  "objective": state.get("objective"),
+  "evidence": evidence,
+  "grammar_version": state.get("grammar_version"),
+  "routed_state": routed.get("state") or routed.get("current_state") or "",
         }
     )
 
