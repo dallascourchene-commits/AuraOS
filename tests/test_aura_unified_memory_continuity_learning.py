@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 import subprocess
 import time
@@ -11,8 +12,9 @@ import pytest
 from aura_agent_arena_bridge import AuraAgentArenaBridge
 from aura_agent_arena_mcp import TOOL_DEFINITIONS, handle_request
 from aura_architect_loop import ACT_CAPSULE_VERSION, ActCapsule
-from aura_event_contracts import stable_digest
+from aura_event_contracts import AuraEventEnvelope, ExactPayloadRef, stable_digest
 from aura_model_cognome import ModelEndpointIdentity
+from aura_qdkt_observations import GovernedRelationshipQDKTEventReceipt
 from aura_unified_memory_continuity_learning import (
     CurrentReproofReceipt,
     HumanDispositionReceipt,
@@ -302,6 +304,131 @@ def test_three_stage_lifecycle_reaches_governed_qdkt_without_crystallization(tmp
     assert result["automatic_promotion"] is False
 
 
+def test_p0_and_p1_are_first_write_only(tmp_path: Path) -> None:
+    bridge, now = _prepared(tmp_path)
+    prediction = commit_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        contract=_prediction_contract(now, tmp_path),
+    )
+    retained_prediction = bridge._session["unified_prediction_packets"]["A1"]
+    with pytest.raises(ValueError, match="immutable P0 is already retained"):
+        commit_bridge_prediction(
+            bridge,
+            plan_phase_hash="phase-1",
+            task_id="A1",
+            contract=_prediction_contract(now, tmp_path),
+        )
+    assert bridge._session["unified_prediction_packets"]["A1"] is retained_prediction
+    assert retained_prediction == prediction
+
+    observation = observe_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        observation=_observation_contract(now),
+    )
+    retained_observation = bridge._session["unified_p1_observations"]["A1"]
+    with pytest.raises(ValueError, match="independent P1 observation is already retained"):
+        observe_bridge_prediction(
+            bridge,
+            plan_phase_hash="phase-1",
+            task_id="A1",
+            observation=_observation_contract(now),
+        )
+    assert bridge._session["unified_p1_observations"]["A1"] is retained_observation
+    assert retained_observation == observation
+
+
+@pytest.mark.parametrize("missing_field", ["human_disposition", "disposition_actor_type"])
+def test_mandatory_disposition_fields_fail_closed(tmp_path: Path, missing_field: str) -> None:
+    bridge, now = _prepared(tmp_path)
+    commit_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        contract=_prediction_contract(now, tmp_path),
+    )
+    observe_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        observation=_observation_contract(now),
+    )
+    contract = _final_contract(tmp_path, now)
+    contract.pop(missing_field)
+    with pytest.raises(ValueError, match=missing_field):
+        finalize_bridge_learning(
+            bridge,
+            plan_phase_hash="phase-1",
+            task_id="A1",
+            contract=contract,
+        )
+
+
+def test_missing_crucible_storage_fails_with_governed_error(tmp_path: Path) -> None:
+    bridge, now = _prepared(tmp_path)
+    commit_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        contract=_prediction_contract(now, tmp_path),
+    )
+    observe_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        observation=_observation_contract(now),
+    )
+    bridge._session["unified_crucible_proposal_storage"].pop("A1")
+    with pytest.raises(ValueError, match="lacks successful canonical storage"):
+        finalize_bridge_learning(
+            bridge,
+            plan_phase_hash="phase-1",
+            task_id="A1",
+            contract=_final_contract(tmp_path, now),
+        )
+
+
+def test_governed_qdkt_receipt_rejects_sidecar_coherence_forgery(tmp_path: Path) -> None:
+    bridge, now = _prepared(tmp_path)
+    commit_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        contract=_prediction_contract(now, tmp_path),
+    )
+    observe_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        observation=_observation_contract(now),
+    )
+    result = finalize_bridge_learning(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        contract=_final_contract(tmp_path, now),
+    )
+    raw = result["qdkt_event_receipt"]
+    payload_ref = ExactPayloadRef(**raw["payload_ref"])
+    event_raw = dict(raw["event"])
+    event_raw["parent_event_ids"] = tuple(event_raw["parent_event_ids"])
+    event_raw["evidence_refs"] = tuple(event_raw["evidence_refs"])
+    event = AuraEventEnvelope(**event_raw)
+    receipt = GovernedRelationshipQDKTEventReceipt(
+        projection=raw["projection"],
+        payload_ref=payload_ref,
+        event=event,
+        appended=raw["appended"],
+    )
+    with pytest.raises(ValueError, match="byte count"):
+        replace(receipt, payload_ref=replace(payload_ref, byte_count=payload_ref.byte_count + 1))
+    with pytest.raises(ValueError, match="timestamps disagree"):
+        replace(receipt, payload_ref=replace(payload_ref, created_at=payload_ref.created_at + 1))
+
+
 def test_denial_is_archived_without_relationship_or_qdkt_admission(tmp_path: Path) -> None:
     bridge, now = _prepared(tmp_path)
     commit_bridge_prediction(
@@ -362,7 +489,10 @@ def test_current_reproof_rejects_source_drift(tmp_path: Path) -> None:
         observation=_observation_contract(now),
     )
     contract = _final_contract(tmp_path, now)
-    (tmp_path / "pkg" / "router.py").write_text("def route_failure():\n    return 'changed'\n")
+    (tmp_path / "pkg" / "router.py").write_text(
+        "def route_failure():\n    return 'changed'\n",
+        encoding="utf-8",
+    )
     with pytest.raises(ValueError, match="source digest"):
         finalize_bridge_learning(
             bridge,

@@ -563,6 +563,8 @@ GOVERNED_RELATIONSHIP_QDKT_SIDECAR_KIND = "qdkt-relationship-experience-u7"
 
 @dataclass(frozen=True)
 class GovernedRelationshipQDKTEventReceipt:
+    """Receipt for an admitted advisory event that cannot auto-crystallize."""
+
     projection: dict[str, Any]
     payload_ref: ExactPayloadRef
     event: AuraEventEnvelope
@@ -582,6 +584,13 @@ class GovernedRelationshipQDKTEventReceipt:
             raise ValueError("governed QDKT sidecar kind mismatch")
         if self.payload_ref.redacted is not False:
             raise ValueError("governed QDKT projection was unexpectedly redacted")
+        expected_bytes = len(canonical_json(self.projection).encode("utf-8"))
+        if self.payload_ref.byte_count != expected_bytes:
+            raise ValueError("governed QDKT sidecar byte count does not match the projection")
+        if self.payload_ref.created_at != self.event.created_at:
+            raise ValueError("governed QDKT sidecar and event timestamps disagree")
+        if self.payload_ref.payload_digest != stable_digest(self.projection):
+            raise ValueError("governed QDKT sidecar digest does not match the projection")
         if self.event.event_type != GOVERNED_RELATIONSHIP_QDKT_EVENT_TYPE:
             raise ValueError("governed QDKT event type mismatch")
         if self.event.policy_scope != GOVERNED_RELATIONSHIP_QDKT_POLICY_SCOPE:

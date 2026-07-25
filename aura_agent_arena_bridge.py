@@ -948,9 +948,8 @@ class AuraAgentArenaBridge:
         try:
             cmd = [
                 "grep",
-                "-rn",
+                "-rlF",
                 "--include=*.py",
-                "-l",
                 query,
                 str(self.repo_root),
             ]

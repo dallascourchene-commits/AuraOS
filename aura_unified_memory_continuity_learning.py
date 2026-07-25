@@ -206,6 +206,8 @@ def _model_packet(binding: UnifiedExecutionBinding) -> ModelExecutionPacket:
 def _prediction(value: Any) -> PredictionPacket:
     if isinstance(value, PredictionPacket):
         return value
+    if value is None:
+        raise ValueError("immutable P0 prediction is not retained for this task")
     raw = _mapping(value, "prediction")
     for name in ("expected_state_delta", "expected_evidence", "expected_risk"):
         raw[name] = tuple(raw[name])
@@ -215,6 +217,8 @@ def _prediction(value: Any) -> PredictionPacket:
 def _observation(value: Any) -> P1Observation:
     if isinstance(value, P1Observation):
         return value
+    if value is None:
+        raise ValueError("independent P1 observation is not retained for this task")
     raw = _mapping(value, "observation")
     for name in ("observed_state_delta", "observed_evidence_refs", "missing_measurements"):
         raw[name] = tuple(raw[name])
@@ -223,6 +227,8 @@ def _observation(value: Any) -> P1Observation:
 
 @dataclass(frozen=True)
 class CurrentReproofReceipt:
+    """Immutable proof that continuity evidence still matches the current source."""
+
     reproof_id: str
     continuity_receipt_ref: str
     repository_head: str
@@ -266,6 +272,7 @@ class CurrentReproofReceipt:
             raise ValueError("current reproof identity mismatch")
 
     def identity_payload(self) -> dict[str, Any]:
+        """Return the canonical fields that determine this reproof receipt identity."""
         return {
             "continuity_receipt_ref": self.continuity_receipt_ref,
             "repository_head": self.repository_head,
@@ -276,11 +283,14 @@ class CurrentReproofReceipt:
         }
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the reproof receipt without changing its authority boundary."""
         return asdict(self)
 
 
 @dataclass(frozen=True)
 class HumanDispositionReceipt:
+    """Immutable human or community decision over one current reproof receipt."""
+
     disposition_id: str
     continuity_receipt_ref: str
     current_reproof_ref: str
@@ -330,6 +340,7 @@ class HumanDispositionReceipt:
             raise ValueError("human disposition identity mismatch")
 
     def identity_payload(self) -> dict[str, Any]:
+        """Return the canonical fields that determine this disposition identity."""
         return {
             "continuity_receipt_ref": self.continuity_receipt_ref,
             "current_reproof_ref": self.current_reproof_ref,
@@ -341,6 +352,7 @@ class HumanDispositionReceipt:
         }
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the disposition receipt without granting promotion authority."""
         return asdict(self)
 
 
@@ -353,6 +365,7 @@ def compile_current_reproof(
     verifier_evidence_refs: Sequence[str],
     verified_at: float | None = None,
 ) -> CurrentReproofReceipt:
+    """Compile exact-head reproof after independent P1 observation."""
     root = Path(repo_root).resolve()
     if not isinstance(binding, UnifiedExecutionBinding):
         raise ValueError("binding must use canonical UnifiedExecutionBinding")
@@ -396,6 +409,7 @@ def compile_human_disposition(
     reason_ref: str = "",
     created_at: float | None = None,
 ) -> HumanDispositionReceipt:
+    """Compile a mandatory human or community disposition after current reproof."""
     if current_reproof.continuity_receipt_ref != continuity_receipt.receipt_id:
         raise ValueError("human disposition reproof differs from continuity evidence")
     actor_value = actor_type.value if isinstance(actor_type, ActorType) else str(actor_type).upper()
@@ -431,6 +445,8 @@ def _proposal(value: Any) -> CrystallizationProposal:
 
 @dataclass(frozen=True)
 class CrucibleProposalBindingReceipt:
+    """Immutable reference-only binding between a Crucible proposal and execution."""
+
     binding_receipt_id: str
     proposal_id: str
     proposal_digest: str
@@ -474,6 +490,7 @@ class CrucibleProposalBindingReceipt:
             raise ValueError("Crucible binding receipt identity mismatch")
 
     def identity_payload(self) -> dict[str, Any]:
+        """Return the canonical fields that determine this binding identity."""
         return {
             "proposal_id": self.proposal_id,
             "proposal_digest": self.proposal_digest,
@@ -486,6 +503,7 @@ class CrucibleProposalBindingReceipt:
         }
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the proposal binding without mutating the canonical proposal."""
         return asdict(self)
 
 
@@ -561,12 +579,16 @@ def commit_bridge_prediction(
     task_id: str,
     contract: Mapping[str, Any],
 ) -> PredictionPacket:
+    """Commit one immutable P0 after canonical proposal storage and binding."""
     if not isinstance(contract, Mapping):
         raise ValueError("prediction contract must be an object")
     phase = _required(plan_phase_hash, "plan_phase_hash")
     task = _required(task_id, "task_id")
     session = bridge._require_session(phase)
     binding = _binding(session, task)
+    predictions = session.setdefault("unified_prediction_packets", {})
+    if task in predictions:
+        raise ValueError("immutable P0 is already retained for this task")
     storage = _mapping(contract.get("storage") or {}, "storage")
     crucible_path = storage.get("crucible_db_path")
     with CrucibleStore(Path(bridge.repo_root).resolve(), db_path=crucible_path) as crucible_store:
@@ -596,7 +618,7 @@ def commit_bridge_prediction(
     session.setdefault("unified_crucible_proposals", {})[task] = proposal
     session.setdefault("unified_crucible_bindings", {})[task] = proposal_binding
     session.setdefault("unified_crucible_proposal_storage", {})[task] = proposal_storage
-    session.setdefault("unified_prediction_packets", {})[task] = prediction
+    predictions[task] = prediction
     return prediction
 
 
@@ -607,12 +629,16 @@ def observe_bridge_prediction(
     task_id: str,
     observation: Mapping[str, Any],
 ) -> P1Observation:
+    """Record one immutable independent P1 observation for a retained P0."""
     if not isinstance(observation, Mapping):
         raise ValueError("observation must be an object")
     phase = _required(plan_phase_hash, "plan_phase_hash")
     task = _required(task_id, "task_id")
     session = bridge._require_session(phase)
     binding = _binding(session, task)
+    observations = session.setdefault("unified_p1_observations", {})
+    if task in observations:
+        raise ValueError("independent P1 observation is already retained for this task")
     prediction = _prediction(dict(session.get("unified_prediction_packets") or {}).get(task))
     root = Path(bridge.repo_root).resolve()
     head = _required(_git(root, "rev-parse", "HEAD"), "repository_head")
@@ -633,7 +659,7 @@ def observe_bridge_prediction(
         observer_id=_required(observation.get("observer_id"), "observer_id"),
         observed_at=observation.get("observed_at"),
     )
-    session.setdefault("unified_p1_observations", {})[task] = result
+    observations[task] = result
     return result
 
 
@@ -644,6 +670,7 @@ def finalize_bridge_learning(
     task_id: str,
     contract: Mapping[str, Any],
 ) -> dict[str, Any]:
+    """Finalize governed learning only after P0, P1, reproof, and disposition."""
     if not isinstance(contract, Mapping):
         raise ValueError("learning contract must be an object")
     phase = _required(plan_phase_hash, "plan_phase_hash")
@@ -695,7 +722,7 @@ def finalize_bridge_learning(
     if not isinstance(proposal_binding, CrucibleProposalBindingReceipt):
         raise ValueError("Crucible proposal lacks an exact execution binding receipt")
     proposal_storage = dict(session.get("unified_crucible_proposal_storage") or {}).get(task)
-    if proposal_storage.get("ok") is not True:
+    if not isinstance(proposal_storage, Mapping) or proposal_storage.get("ok") is not True:
         raise ValueError("bounded Crucible proposal lacks successful canonical storage")
     packet_binding = dict(binding.records["model_execution_packet"])
     expected_proposal_bindings = {
@@ -727,8 +754,8 @@ def finalize_bridge_learning(
         continuity_receipt=receipt,
         current_reproof=reproof,
         actor_id=_required(contract.get("disposition_actor_id"), "disposition_actor_id"),
-        actor_type=str(contract.get("disposition_actor_type") or ActorType.HUMAN.value),
-        disposition=str(contract.get("human_disposition") or "NOT_REVIEWED"),
+        actor_type=_required(contract.get("disposition_actor_type"), "disposition_actor_type"),
+        disposition=_required(contract.get("human_disposition"), "human_disposition"),
         reason_ref=str(contract.get("disposition_reason_ref") or ""),
         created_at=contract.get("disposition_created_at"),
     )
