@@ -66,6 +66,7 @@ def test_bundle_uses_verified_final_whole_file_bytes(tmp_path: Path) -> None:
     root, head = _repo(tmp_path)
     candidate = tmp_path / "candidate"
     materialize_exact_head(root, expected_head=head, destination=candidate, diagnostics_dir=tmp_path / "diag")
+    # Simulates formatter drift: final formatted bytes, not a brittle old hunk, become canonical.
     (candidate / "source.py").write_text("value = (\n    2\n)\n", encoding="utf-8")
     output = tmp_path / "bundle.json"
     bundle = build_atomic_publication_bundle(root, expected_head=head, candidate_root=candidate, allowed_paths=["source.py"], output_path=output, diagnostics_dir=tmp_path / "diag")
@@ -92,3 +93,71 @@ def test_output_inside_checkout_is_rejected_before_creation(tmp_path: Path) -> N
     with pytest.raises(ValueError, match="outside repository"):
         export_exact_head(root, expected_head=head, output_dir=root / "export", diagnostics_dir=tmp_path / "diag")
     assert not (root / "export").exists()
+
+
+def test_bare_dot_allowed_path_is_rejected(tmp_path: Path) -> None:
+    root, head = _repo(tmp_path)
+    candidate = tmp_path / "candidate"
+    materialize_exact_head(
+        root,
+        expected_head=head,
+        destination=candidate,
+        diagnostics_dir=tmp_path / "diag",
+    )
+    with pytest.raises(ValueError, match="unsafe repository path"):
+        build_atomic_publication_bundle(
+            root,
+            expected_head=head,
+            candidate_root=candidate,
+            allowed_paths=["."],
+            output_path=tmp_path / "bundle.json",
+            diagnostics_dir=tmp_path / "diag",
+        )
+
+
+def test_out_of_scope_deletion_publishes_nothing(tmp_path: Path) -> None:
+    root, head = _repo(tmp_path)
+    candidate = tmp_path / "candidate"
+    materialize_exact_head(
+        root,
+        expected_head=head,
+        destination=candidate,
+        diagnostics_dir=tmp_path / "diag",
+    )
+    (candidate / "source.py").write_text("value = 2\n", encoding="utf-8")
+    (candidate / "untouched.txt").unlink()
+    output = tmp_path / "bundle.json"
+    with pytest.raises(RuntimeError, match="out-of-scope deletion"):
+        build_atomic_publication_bundle(
+            root,
+            expected_head=head,
+            candidate_root=candidate,
+            allowed_paths=["source.py"],
+            output_path=output,
+            diagnostics_dir=tmp_path / "diag",
+        )
+    assert not output.exists()
+
+
+def test_out_of_scope_symlink_publishes_nothing(tmp_path: Path) -> None:
+    root, head = _repo(tmp_path)
+    candidate = tmp_path / "candidate"
+    materialize_exact_head(
+        root,
+        expected_head=head,
+        destination=candidate,
+        diagnostics_dir=tmp_path / "diag",
+    )
+    (candidate / "source.py").write_text("value = 2\n", encoding="utf-8")
+    (candidate / "unexpected-link").symlink_to("source.py")
+    output = tmp_path / "bundle.json"
+    with pytest.raises(RuntimeError, match="symlink or special file"):
+        build_atomic_publication_bundle(
+            root,
+            expected_head=head,
+            candidate_root=candidate,
+            allowed_paths=["source.py"],
+            output_path=output,
+            diagnostics_dir=tmp_path / "diag",
+        )
+    assert not output.exists()
