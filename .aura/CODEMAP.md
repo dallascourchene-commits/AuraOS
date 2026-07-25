@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1428
-- **total_bytes**: 56910969
-- **text_tokens_est**: 4775461
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 922, 'schema_or_lexicon': 177, 'support_file': 77}
-- **topology_nodes**: 10607
-- **topology_edges**: 25161
+- **file_count**: 1430
+- **total_bytes**: 56928707
+- **text_tokens_est**: 4779895
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 924, 'schema_or_lexicon': 177, 'support_file': 77}
+- **topology_nodes**: 10621
+- **topology_edges**: 25190
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 25957.44
+- **elapsed_ms**: 32067.72
 
 ## Coverage
 
-- **included_file_count**: 1428
+- **included_file_count**: 1430
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=172, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
@@ -354,7 +354,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
-- ... 1218 more; query CODEMAP.json for exact file cards
+- ... 1220 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
@@ -374,8 +374,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 10607
-- **edges**: 25161
+- **nodes**: 10621
+- **edges**: 25190
 - **top_files_by_degree**:
   - `aura_node.py` degree=890 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=756 nodes=69 neighbors=`aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`, `aura_gate_adapters.py`
