@@ -1,0 +1,36 @@
+{
+  "version": "AURA_EVIDENCE_BOUND_PLAN_REVISION_DELTA_V1",
+  "revision_id": "bilateral_intent_guardrail_foundry_pr2_server_route_reuse",
+  "base_repository_head": "2cf38f12e42848f6b3ce3bd8b24cee86a9cde02d",
+  "discovery": "existing_gate_address_and_approval_routes_are_canonical",
+  "evidence": [
+    "aura_showcase_server.dispatch_showcase_request already owns /api/showcase/human/gate/address",
+    "aura_showcase_server.dispatch_showcase_request already owns /api/showcase/human/gate/approve",
+    "ArenaGateDialogueService is already the runtime-local owner bound to the real Human Agent workflow"
+  ],
+  "invalidated_assumption": "new_server_route_owner_required",
+  "replacement": "separate_service_actions_over_existing_routes",
+  "implementation": [
+    "ArenaGateDialogueService.clarify is a separate typed service action.",
+    "ArenaGateDialogueService.confirm_intent is a separate typed service action.",
+    "The existing approval route carries explicit CLARIFY_INTENT and CONFIRM_INTENT compatibility action markers before the final independent gate approval.",
+    "No new HTTP router, server state, persistence plane, or authority owner is introduced."
+  ],
+  "changed_targets": [
+    "aura_arena_gate_dialogue.py",
+    "aura_showcase/gate-dialogue.js",
+    "tests/test_aura_showcase_gate_dialogue.py"
+  ],
+  "proof_requirements": [
+    "clarification and confirmation remain separate from gate approval",
+    "direct gate approval before confirmation fails closed",
+    "stale topology and workflow phase fail closed",
+    "browser renders all bilateral sections"
+  ],
+  "new_authority": false,
+  "authority_impact": "none",
+  "rollback_impact": "remove PR2 companion and restore Gate Dialogue V1 files",
+  "current_reproof_impact": "initial reference-only confirmation and guardrail identities added; no learning eligibility changed",
+  "human_reconfirmation_required": false,
+  "merge_authority": false
+}

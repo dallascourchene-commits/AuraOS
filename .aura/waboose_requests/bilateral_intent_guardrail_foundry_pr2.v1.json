@@ -1,0 +1,42 @@
+{
+  "version": "AURA_WABOOSE_REQUEST_V1",
+  "request_id": "bilateral_intent_guardrail_foundry_pr2",
+  "base_repository_head": "2cf38f12e42848f6b3ce3bd8b24cee86a9cde02d",
+  "objective_ref": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json",
+  "changed_files": [
+    ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json",
+    ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2_revision.v1.json",
+    ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2.v1.json",
+    ".github/workflows/bilateral-intent-pr2.yml",
+    "aura_bilateral_intent_canonical.py",
+    "aura_arena_gate_dialogue.py",
+    "aura_human_agent_guidance.py",
+    "aura_showcase/gate-dialogue.js",
+    "tests/test_aura_showcase_gate_dialogue.py",
+    "tests/test_bilateral_intent_pr2_evidence.py"
+  ],
+  "required_checks": [
+    "canonical_owner_reuse",
+    "positive_requirement_proof",
+    "negative_requirement_proof",
+    "hard_guardrail_non_removability",
+    "editable_guardrail_human_disposition",
+    "targeted_clarification",
+    "paired_teach_back",
+    "separate_confirmation_and_gate_approval",
+    "confirmation_staleness",
+    "topology_anchor_staleness",
+    "authority_non_escalation",
+    "U7_reference_only_binding",
+    "browser_contract",
+    "PR1_regression"
+  ],
+  "external_reviewers_authorized": [
+    "CodeRabbit_after_all_internal_proof"
+  ],
+  "forbidden_reviewers_without_new_user_authority": [
+    "Greptile",
+    "Codex"
+  ],
+  "merge_authority": false
+}

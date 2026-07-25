@@ -1,4 +1,4 @@
-"""Contracts for topology-anchored, human-approved Arena gate dialogue."""
+"""PR 2 proof for canonical bilateral integration and Gate Dialogue."""
 from __future__ import annotations
 
 import json
@@ -45,24 +45,55 @@ def workflow():
         item.close()
 
 
-def test_gate_dialogue_is_node_anchored_and_proposal_only(workflow):
+@pytest.fixture
+def service(workflow):
     from aura_arena_gate_dialogue import ArenaGateDialogueService
 
-    service = ArenaGateDialogueService(REPO_ROOT, workflow)
-    proposal = service.address(
-        comment="Check whether this renderer can use a stale response and tell me the safest next step.",
+    return ArenaGateDialogueService(REPO_ROOT, workflow)
+
+
+def _address(service, comment: str = ""):
+    return service.address(
+        comment=comment
+        or (
+            "Keep the selected renderer visible while changing representation modes. "
+            "Do not modify canonical geometry, infer approval, hide missing assets, "
+            "or touch files outside the selected renderer and its focused tests."
+        ),
         node_context=NODE_CONTEXT,
         stage_hint="FRAME",
         prefer_model=False,
     )
 
+
+def _confirm(service, proposal):
+    return service.approve(
+        proposal_id=proposal["proposal_id"],
+        approved=True,
+        current_node_context=NODE_CONTEXT,
+        stage_hint="FRAME",
+        reviewer="test_human",
+        note="CONFIRM_INTENT:Confirmed after reviewing both polarities and guardrails.",
+    )
+
+
+def test_address_compiles_bilateral_refinement_without_action_authority(service, workflow):
+    proposal = _address(service)
+
     assert proposal["ok"] is True
-    assert proposal["status"] == "PENDING_HUMAN_APPROVAL"
+    assert proposal["status"] == "PENDING_INTENT_CONFIRMATION"
     assert proposal["node_context"]["selected_node"]["file_path"] == "aura_showcase/civic.js"
-    assert proposal["node_context"]["dependencies"] == ["project_map_manifest", "drawMap"]
     assert set(proposal["intent_trace"]["slots"]) == SLOT_KEYS
     assert proposal["intent_trace"]["model_calls_made"] == 0
     assert proposal["response_provenance"]["model_used"] is False
+    refinement = proposal["refinement"]
+    assert refinement["positive_requirements"]
+    assert any("Do not" in item for item in refinement["negative_requirements"])
+    assert len(refinement["hard_guardrails"]) >= 7
+    assert refinement["editable_guardrails"]
+    assert refinement["paired_teach_back"]["will_do"]
+    assert refinement["paired_teach_back"]["will_not_do"]
+    assert refinement["paired_teach_back"]["will_stop_or_escalate_if"]
     assert proposal["recommended_action"]["action_id"] == "set_objective"
     assert proposal["approval_scope"] == "advance_existing_guarded_workflow_only"
     assert proposal["production_mutation"] is False
@@ -72,79 +103,206 @@ def test_gate_dialogue_is_node_anchored_and_proposal_only(workflow):
     assert workflow.objective == ""
 
 
-def test_approval_records_exact_gate_but_does_not_execute_action(workflow):
-    from aura_arena_gate_dialogue import ArenaGateDialogueService
+def test_gate_approval_requires_separate_intent_confirmation(service, workflow):
+    proposal = _address(service)
 
-    service = ArenaGateDialogueService(REPO_ROOT, workflow)
-    proposal = service.address(
-        comment="Frame this selected renderer as the bounded objective.",
-        node_context=NODE_CONTEXT,
+    denied = service.approve(
+        proposal_id=proposal["proposal_id"],
+        approved=True,
+        current_node_context=NODE_CONTEXT,
         stage_hint="FRAME",
-        prefer_model=False,
+        reviewer="test_human",
+        note="Proceed.",
     )
+    assert denied["ok"] is False
+    assert denied["reason"] == "intent_confirmation_required"
+    assert workflow.objective == ""
+
+    confirmed = _confirm(service, proposal)
+    assert confirmed["ok"] is True
+    assert confirmed["status"] == "INTENT_CONFIRMED_PENDING_GATE_APPROVAL"
+    receipt = confirmed["confirmation_receipt"]
+    assert receipt["human_disposition"] == "CONFIRMED"
+    assert receipt["confirmation_status"] == "CONFIRMED"
+    assert receipt["repository_head"] == confirmed["repository_head"]
+    assert confirmed["canonical_bundle"]["confirmation_id"] == receipt["confirmation_id"]
+
     approved = service.approve(
         proposal_id=proposal["proposal_id"],
         approved=True,
         current_node_context=NODE_CONTEXT,
         stage_hint="FRAME",
         reviewer="test_human",
-        note="Proceed to the existing guarded action only.",
+        note="Approved to attempt the existing guarded gate only.",
     )
-
     assert approved["ok"] is True
     assert approved["status"] == "APPROVED_FOR_NEXT_GUARDED_GATE"
     assert approved["next_action"]["action_id"] == "set_objective"
     assert approved["decision"]["advance_authority"] == "existing_guarded_workflow_only"
+    assert approved["decision"]["confirmation_id"] == receipt["confirmation_id"]
     assert workflow.objective == ""
     ledger = workflow.evidence["approved_gate_intents"]
     assert ledger[-1]["proposal_id"] == proposal["proposal_id"]
-    assert ledger[-1]["approved"] is True
     assert ledger[-1]["production_mutation"] is False
 
 
-def test_gate_approval_fails_closed_when_phase_or_node_changes(workflow):
-    from aura_arena_gate_dialogue import ArenaGateDialogueService
+def test_confirmed_bundle_uses_canonical_owners_and_reference_only_u7(service):
+    proposal = _address(service)
+    confirmed = _confirm(service, proposal)
+    bundle = confirmed["canonical_bundle"]
 
-    service = ArenaGateDialogueService(REPO_ROOT, workflow)
+    from aura_unified_memory_continuity import (
+        ArenaEvidenceSlice,
+        IntentPacket,
+        SemanticLedger,
+    )
+
+    intent = bundle["intent_packet"]
+    ledger = bundle["semantic_ledger"]
+    evidence = bundle["arena_evidence_slice"]
+    assert intent["version"] == IntentPacket.__dataclass_fields__["version"].default
+    assert ledger["version"] == SemanticLedger.__dataclass_fields__["version"].default
+    assert evidence["version"] == ArenaEvidenceSlice.__dataclass_fields__["version"].default
+    assert ledger["intent_digest"] == intent["intent_digest"]
+    assert evidence["objective_digest"] == intent["intent_digest"]
+    assert any(item["truth_class"] == "EXACT_RECEIPT" for item in evidence["items"])
+    assert any(
+        "Do not modify canonical geometry" in item
+        for item in intent["prohibitions"]
+    )
+    assert bundle["owner_refs"]["intent_packet"].endswith(".IntentPacket")
+    assert bundle["owner_refs"]["semantic_ledger"].endswith(".SemanticLedger")
+    assert bundle["act_capsule_envelope"] == {}
+    assert bundle["u7_references"]["proposal_only"] is True
+    assert bundle["u7_references"]["learning_promotion_authority"] is False
+    assert bundle["u7_references"]["p0_prediction_ref"] == ""
+    assert bundle["authority"]["automatic_merge"] is False
+    assert bundle["authority"]["production_mutation"] is False
+
+
+def test_targeted_clarification_precedes_teach_back_without_anchor(service):
     proposal = service.address(
-        comment="Explain this selected node before the next gate.",
-        node_context=NODE_CONTEXT,
+        comment="Fix it, but do not let it do that again.",
+        node_context={},
         stage_hint="FRAME",
         prefer_model=False,
     )
+    assert proposal["status"] == "PENDING_CLARIFICATION"
+    question = proposal["next_clarification_question"]
+    assert question["question"]
+    assert question["why_it_changes_execution"]
+
+    clarified = service.approve(
+        proposal_id=proposal["proposal_id"],
+        approved=True,
+        current_node_context={},
+        stage_hint="FRAME",
+        reviewer="test_human",
+        note="CLARIFY_INTENT:The exact current guarded FRAME gate and its declared objective.",
+    )
+    # More than one high-information question may remain; each call resolves one.
+    while clarified["status"] == "PENDING_CLARIFICATION":
+        clarified = service.approve(
+            proposal_id=proposal["proposal_id"],
+            approved=True,
+            current_node_context={},
+            stage_hint="FRAME",
+            reviewer="test_human",
+            note="CLARIFY_INTENT:The current guarded FRAME gate only.",
+        )
+    assert clarified["status"] == "PENDING_INTENT_CONFIRMATION"
+    assert clarified["refinement"]["paired_teach_back"]["will_do"]
+    assert clarified["refinement"]["paired_teach_back"]["will_not_do"]
+    assert clarified["refinement"]["definitions"]
+
+
+def test_correction_can_add_guardrail_but_cannot_remove_hard_guardrail(service):
+    proposal = _address(service)
+    hard_id = proposal["refinement"]["hard_guardrails"][0]["guardrail_id"]
+
+    denied = service.correct_intent(
+        proposal_id=proposal["proposal_id"],
+        rejected_soft_guardrail_ids=[hard_id],
+        current_node_context=NODE_CONTEXT,
+        stage_hint="FRAME",
+        reviewer="test_human",
+    )
+    assert denied["ok"] is False
+    assert denied["reason"] == "hard_guardrail_removal_forbidden"
+
+    corrected = service.correct_intent(
+        proposal_id=proposal["proposal_id"],
+        added_guardrails=[
+            "Do not add a fallback image unless it is visibly labelled and human-confirmed."
+        ],
+        current_node_context=NODE_CONTEXT,
+        stage_hint="FRAME",
+        reviewer="test_human",
+    )
+    assert corrected["ok"] is True
+    assert corrected["status"] == "PENDING_INTENT_CONFIRMATION"
+    assert any(
+        item["source_class"] == "HUMAN_ADDED"
+        for item in corrected["refinement"]["human_added_guardrails"]
+    )
+
+
+def test_confirmation_and_approval_fail_closed_when_context_changes(service, workflow):
+    proposal = _address(service)
     changed_node = {
         **NODE_CONTEXT,
-        "selected_node": {**NODE_CONTEXT["selected_node"], "id": "other-node", "symbol": "drawMap"},
+        "selected_node": {
+            **NODE_CONTEXT["selected_node"],
+            "id": "other-node",
+            "symbol": "drawMap",
+        },
     }
-    stale_node = service.approve(
+    stale = service.approve(
         proposal_id=proposal["proposal_id"],
         approved=True,
         current_node_context=changed_node,
         stage_hint="FRAME",
+        note="CONFIRM_INTENT:Confirm.",
     )
-    assert stale_node["ok"] is False
-    assert stale_node["reason"] == "stale_topology_selection"
-    assert stale_node["fail_closed"] is True
+    assert stale["ok"] is False
+    assert stale["reason"] == "stale_topology_selection"
+    assert stale["fail_closed"] is True
 
-    second = service.address(
-        comment="Explain this node again.",
-        node_context=NODE_CONTEXT,
-        stage_hint="FRAME",
-        prefer_model=False,
+    second = _address(service)
+    framed = workflow.execute_guarded(
+        "set_objective", {"objective": "Investigate the selected renderer."}
     )
-    framed = workflow.execute_guarded("set_objective", {"objective": "Investigate the selected renderer."})
     assert framed["ok"] is True
     stale_phase = service.approve(
         proposal_id=second["proposal_id"],
         approved=True,
         current_node_context=NODE_CONTEXT,
         stage_hint="FRAME",
+        note="CONFIRM_INTENT:Confirm.",
     )
     assert stale_phase["ok"] is False
-    assert stale_phase["reason"] in {"stale_workflow_phase", "stale_workflow_evidence"}
+    assert stale_phase["reason"] in {
+        "stale_workflow_phase",
+        "stale_workflow_evidence",
+    }
 
 
-def test_showcase_routes_expose_address_and_approval(workflow):
+def test_guidance_projects_guardrail_reasons_and_missing_decisions(service, workflow):
+    from aura_human_agent_guidance import (
+        answer_guidance_question,
+        build_guidance_packet,
+    )
+
+    proposal = _address(service)
+    packet = build_guidance_packet(workflow.get_state(), proposal["refinement"])
+    assert packet["hard_guardrails"]
+    assert packet["hard_guardrails"][0]["removal_possible"] is False
+    answer = answer_guidance_question(packet, "Can this hard guardrail be removed?")
+    assert answer["kind"] == "guardrail_removability"
+    assert "cannot be removed" in answer["answer"]
+
+
+def test_showcase_routes_preserve_two_separate_human_actions(workflow):
     from aura_arena_gate_dialogue import ArenaGateDialogueService
     from aura_showcase_server import dispatch_showcase_request
 
@@ -156,7 +314,10 @@ def test_showcase_routes_expose_address_and_approval(workflow):
         "POST",
         "/api/showcase/human/gate/address",
         {
-            "comment": "Address this file and its tests before proceeding.",
+            "comment": (
+                "Address this file and its tests. Do not change geometry or "
+                "grant merge authority."
+            ),
             "node_context": NODE_CONTEXT,
             "stage_hint": "FRAME",
             "prefer_model": False,
@@ -164,7 +325,7 @@ def test_showcase_routes_expose_address_and_approval(workflow):
     )
     proposal = json.loads(raw)
     assert status == 200
-    assert proposal["status"] == "PENDING_HUMAN_APPROVAL"
+    assert proposal["status"] == "PENDING_INTENT_CONFIRMATION"
 
     status, _, raw = dispatch_showcase_request(
         state,
@@ -176,29 +337,65 @@ def test_showcase_routes_expose_address_and_approval(workflow):
             "current_node_context": NODE_CONTEXT,
             "stage_hint": "FRAME",
             "reviewer": "test_human",
+            "note": "CONFIRM_INTENT:Confirmed bilateral intent only.",
+        },
+    )
+    confirmation = json.loads(raw)
+    assert status == 200
+    assert confirmation["status"] == "INTENT_CONFIRMED_PENDING_GATE_APPROVAL"
+
+    status, _, raw = dispatch_showcase_request(
+        state,
+        "POST",
+        "/api/showcase/human/gate/approve",
+        {
+            "proposal_id": proposal["proposal_id"],
+            "approved": True,
+            "current_node_context": NODE_CONTEXT,
+            "stage_hint": "FRAME",
+            "reviewer": "test_human",
+            "note": "Approve existing guarded gate only.",
         },
     )
     decision = json.loads(raw)
     assert status == 200
     assert decision["approved"] is True
+    assert decision["decision"]["confirmation_id"] == confirmation["confirmation_receipt"]["confirmation_id"]
     assert decision["automatic_merge"] is False
 
 
-def test_browser_gate_dialogue_is_injected_and_uses_real_guarded_actions():
+def test_browser_gate_dialogue_renders_required_bilateral_sections():
     from aura_showcase_server import _static_response
 
-    javascript = (REPO_ROOT / "aura_showcase" / "gate-dialogue.js").read_text(encoding="utf-8")
-    assert "human-gate-comment" in javascript
-    assert "human-gate-address" in javascript
-    assert "human-gate-approve" in javascript
-    assert "/api/showcase/human/gate/address" in javascript
-    assert "/api/showcase/human/gate/approve" in javascript
-    assert "current_node_context" in javascript
-    assert "S.runHumanAction" in javascript
-    assert "run_tests" in javascript
-    assert "verify_patch" in javascript
-    assert "approved: false" in javascript
-    assert "No production approval or merge was granted." in javascript
+    javascript = (
+        REPO_ROOT / "aura_showcase" / "gate-dialogue.js"
+    ).read_text(encoding="utf-8")
+    for text in (
+        "Your request",
+        "What Aura thinks you want",
+        "What Aura thinks you do not want",
+        "Terms needing definition",
+        "Proposed hard guardrails",
+        "Proposed editable guardrails",
+        "Human-added guardrails",
+        "Positive example",
+        "Negative example",
+        "Aura’s paired teach-back",
+        "Confirm bilateral intent",
+        "Correct",
+        "Add Guardrail",
+        "Defer",
+        "CLARIFY_INTENT:",
+        "CONFIRM_INTENT:",
+        "/api/showcase/human/gate/address",
+        "/api/showcase/human/gate/approve",
+        "S.runHumanAction",
+        "run_tests",
+        "verify_patch",
+        "approved: false",
+        "No production approval or merge was granted.",
+    ):
+        assert text in javascript
 
     status, content_type, body = _static_response("/")
     assert status == 200
@@ -208,4 +405,5 @@ def test_browser_gate_dialogue_is_injected_and_uses_real_guarded_actions():
     status, content_type, body = _static_response("/gate-dialogue.js")
     assert status == 200
     assert "javascript" in content_type
-    assert b"PENDING_HUMAN_APPROVAL" in body
+    assert b"PENDING_INTENT_CONFIRMATION" in body
+    assert b"INTENT_CONFIRMED_PENDING_GATE_APPROVAL" in body

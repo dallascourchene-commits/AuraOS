@@ -1,0 +1,65 @@
+{
+  "version": "AURA_REFACTOR_OBJECTIVE_V1",
+  "objective_id": "bilateral_intent_guardrail_foundry_pr2",
+  "slice": "PR2_CANONICAL_INTEGRATION_AND_GATE_DIALOGUE",
+  "base_repository_head": "2cf38f12e42848f6b3ce3bd8b24cee86a9cde02d",
+  "objective": "Compile current human-confirmed bilateral intent into canonical IntentPacket, SemanticLedger, and ArenaEvidenceSlice records and expose bounded multi-turn clarification, correction, paired teach-back, confirmation, staleness, and separate gate approval in the existing Gate Dialogue.",
+  "positive_requirements": [
+    "Reuse aura_unified_memory_continuity.IntentPacket and SemanticLedger without schema replacement.",
+    "Compile receipt-bound ArenaEvidenceSlice evidence from the confirmed refinement session.",
+    "Carry reference-only ActCapsuleEnvelope, UnifiedExecutionBinding, and U7 learning-to-reproof identities until their existing owners have enough downstream evidence.",
+    "Preserve topology anchoring, stale-context protection, deterministic action routing, proposal-only model voice, and separate human gate approval.",
+    "Expose positive requirements, negative requirements, definitions, hard and editable guardrails, human-added guardrails, targeted clarification, paired teach-back, correction, confirmation, and deferral."
+  ],
+  "negative_requirements": [
+    "Do not modify aura_unified_memory_continuity.py or aura_unified_memory_continuity_toolchain.py in this slice.",
+    "Do not create a parallel intent, semantic, truth, policy, routing, verification, memory, learning, publication, or authority owner.",
+    "Do not allow direct gate approval before a current bilateral confirmation receipt exists.",
+    "Do not permit hard architectural or authority guardrails to be removed through Gate Dialogue.",
+    "Do not grant patch, commit, push, pull-request, merge, deployment, production, professional, physical-work, or learning-promotion authority.",
+    "Do not trigger Greptile, Codex, or CodeRabbit before internal implementation and proof are complete."
+  ],
+  "allowed_files": [
+    ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json",
+    ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2_revision.v1.json",
+    ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2.v1.json",
+    ".github/workflows/bilateral-intent-pr2.yml",
+    "aura_bilateral_intent_canonical.py",
+    "aura_arena_gate_dialogue.py",
+    "aura_human_agent_guidance.py",
+    "aura_showcase/gate-dialogue.js",
+    "tests/test_aura_showcase_gate_dialogue.py",
+    "tests/test_bilateral_intent_pr2_evidence.py"
+  ],
+  "preserved_canonical_owners": [
+    "aura_intent_refinement.py",
+    "aura_bilateral_intent_ingestion.py",
+    "aura_unified_memory_continuity.py",
+    "aura_unified_memory_continuity_toolchain.py",
+    "aura_unified_memory_continuity_learning.py",
+    "aura_showcase_server.py"
+  ],
+  "required_proof": [
+    "Python compilation",
+    "fatal Ruff E9,F63,F7,F82",
+    "focused PR1 and PR2 tests",
+    "full pytest-native regression",
+    "legacy validators",
+    "CODEMAP regeneration and topology verification",
+    "positive and negative browser contract assertions",
+    "CodeRabbit deep review only after internal proof completes"
+  ],
+  "operator_authorization_ref": "current_user_instruction_2026-07-25",
+  "authority": {
+    "patch": false,
+    "commit": false,
+    "push": false,
+    "pull_request": false,
+    "merge": false,
+    "deployment": false,
+    "production_mutation": false,
+    "professional_action": false,
+    "physical_work": false,
+    "learning_promotion": false
+  }
+}
