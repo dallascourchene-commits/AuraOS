@@ -1,0 +1,84 @@
+{
+  "version": "AURA_BILATERAL_INTENT_PR1_OBJECTIVE_V1",
+  "status": "PROPOSAL_ONLY",
+  "repository": "dallascourchene-commits/AuraOS",
+  "base_repository_head": "598804b3dce8d39480d8494cf0144f872b01d9ca",
+  "candidate_branch": "refactor/bilateral-intent-pr1-v2",
+  "objective": "Implement the bilateral intent contract substrate, deterministic negative-intent parser, guardrail compiler, confirmation and revision receipts, and exact-head evidence boundaries without creating a competing Aura owner or granting mutation authority.",
+  "canonical_owners": {
+    "intent_packet": "aura_unified_memory_continuity.IntentPacket",
+    "semantic_ledger": "aura_unified_memory_continuity.SemanticLedger",
+    "exact_head_transport": "scripts/aura_exact_head_transport.py",
+    "architecture_harness": "scripts/aura_architecture_harness.py",
+    "waboose": "aura_coding_waboose_cli.py"
+  },
+  "base_owner_blobs": {
+    "aura_intent_ingestion.py": "84bd861cb36b12c07708d3de1b91cd7beccd1399",
+    "tests/test_aura_intent_ingestion.py": "b7342261e63d74a5686d31d587591da3cf534ebc",
+    "scripts/aura_exact_head_transport.py": "5d17aedf68971cf76d6ea86d16a61a54b26f79d4",
+    "scripts/aura_architecture_harness.py": "fd66b1aca764fcfddbc06dd02bfa1bff3ec3e840",
+    "aura_coding_waboose_cli.py": "24538b4d4835bfe30d21727c4e9273ceee69a90a"
+  },
+  "candidate_source_blobs": {
+    "aura_intent_refinement.py": "85419f0c2f49678e8df078cce95c770386b7dbc3",
+    "schemas/aura_intent_refinement.v1.schema.json": "d606dc5bc5e08923bd9c7ba1a22e1c05e6694bb2",
+    "tests/test_aura_intent_refinement.py": "4c0c2af4bc06a3528bab389b745d80a4e7df75a6"
+  },
+  "allowed_source_and_evidence_paths": [
+    "aura_intent_refinement.py",
+    "schemas/aura_intent_refinement.v1.schema.json",
+    "tests/test_aura_intent_refinement.py",
+    ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
+    ".aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json",
+    "tests/test_bilateral_intent_pr1_evidence.py"
+  ],
+  "generated_navigation_paths": [
+    ".aura/CODEMAP.json",
+    ".aura/CODEMAP.md",
+    "topology_map.json"
+  ],
+  "generated_artifact_disposition": "REGENERATE_FROM_FINAL_SOURCE_TREE_ONLY",
+  "prohibited_effects": [
+    "production mutation",
+    "commit or branch publication outside the named feature branch",
+    "automatic pull request readiness",
+    "merge",
+    "deployment",
+    "professional or physical-work authorization",
+    "durable learning promotion",
+    "new intent, memory, truth, policy, verification, continuity, publication, or authority owner",
+    "out-of-scope source modification",
+    "partial candidate publication"
+  ],
+  "proof_plan": [
+    "Python compilation",
+    "focused bilateral contract and parser tests",
+    "Draft 2020-12 schema checks",
+    "deep immutability and stale-confirmation tests",
+    "exact blob identity checks",
+    "Waboose invariant and risk-profile validation",
+    "repository CI fatal lint and focused contracts",
+    "final generated navigation verification"
+  ],
+  "transport_boundary": {
+    "source_checkout_mutation_by_harness": false,
+    "diagnostics_outside_checkout_required": true,
+    "candidate_materialization_outside_checkout_required": true,
+    "atomic_whole_file_publication_required": true,
+    "request_triggered_export_is_authoritative_forensic_evidence": false,
+    "residual_hardening": "Before forensic authority, terminate request-controlled descendants, finalize in a private trusted location, and rehash the exact upload immediately before upload."
+  },
+  "authority": {
+    "memory_owner": false,
+    "truth_owner": false,
+    "policy_owner": false,
+    "routing_owner": false,
+    "verification_owner": false,
+    "patch_authority": false,
+    "production_mutation": false,
+    "merge_authority": false,
+    "human_confirmation_required": true
+  },
+  "candidate_head_bound_at_final_verification": true,
+  "human_merge_decision_required": true
+}
