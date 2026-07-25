@@ -9,7 +9,9 @@ on:
     paths:
       - .aura/HARNESS_REPAIR_202_204_REQUEST
   pull_request:
-    types: [opened]
+    types: [opened, synchronize]
+    paths:
+      - .aura/HARNESS_REPAIR_202_204_REQUEST
 
 permissions:
   contents: write
@@ -25,7 +27,7 @@ jobs:
       github.event_name == 'push' ||
       github.event.issue.title == 'Aura: materialize verified harness repair 202-204' ||
       (github.event_name == 'pull_request' &&
-       github.event.action == 'opened' &&
+       (github.event.action == 'opened' || github.event.action == 'synchronize') &&
        github.event.pull_request.head.ref == 'harness/repair-202-204')
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -81,15 +83,44 @@ jobs:
 
       - name: Run focused and adjacent regressions
         env:
-          PYTHONPATH: .
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -o pipefail
+          set +e
           python -m pytest -q \
             tests/test_aura_architecture_harness.py \
             tests/test_aura_architecture_harness_original_github_routing.py \
             tests/test_aura_architecture_harness_git_tree_routing.py \
             tests/test_aura_architecture_harness_export_workflow.py \
             tests/test_aura_coding_relationship_compass.py \
-            tests/test_aura_relationship_compass_finalization.py
+            tests/test_aura_relationship_compass_finalization.py \
+            2>&1 | tee /tmp/harness-repair-pytest.log
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+              {
+                echo '### Harness repair pytest failure'
+                echo
+                echo '```text'
+                tail -n 220 /tmp/harness-repair-pytest.log
+                echo '```'
+              } > /tmp/harness-repair-pytest-tail.md
+              gh pr comment "${{ github.event.pull_request.number }}" \
+                --repo "${{ github.repository }}" \
+                --body-file /tmp/harness-repair-pytest-tail.md
+            fi
+            exit "$status"
+          fi
+
+      - name: Upload pytest diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: harness-repair-pytest-${{ github.event.pull_request.head.sha || github.sha }}
+          path: /tmp/harness-repair-pytest.log
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Verify repaired doctor and objective grounding
         env:
