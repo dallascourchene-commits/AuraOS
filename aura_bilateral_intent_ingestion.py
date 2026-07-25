@@ -159,6 +159,26 @@ def _refs(packet: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _decorate_canonical_route(
+    result: dict[str, Any],
+    packet: dict[str, Any],
+) -> dict[str, Any]:
+    frame = dict(result.get("routing_frame", {}))
+    frame["bilateral_intent_refs"] = _refs(packet)
+    decision = dict(result.get("route_decision", {}))
+    decision["bilateral_intent_status"] = (
+        "CLARIFICATION_REQUIRED"
+        if packet.get("requires_clarification")
+        else "POLARITY_PRESERVED"
+    )
+    result["routing_frame"] = frame
+    result["route_decision"] = decision
+    result["negative_requirements_digest"] = packet.get(
+        "negative_requirements_digest", ""
+    )
+    return result
+
+
 def route_bilateral_intent_to_fst(
     parsed_doc: dict | str,
     repo_root: str | Path = ".",
@@ -177,20 +197,7 @@ def route_bilateral_intent_to_fst(
         route_hints=route_hints,
         grounding_result=grounding_result,
     )
-    frame = dict(result.get("routing_frame", {}))
-    frame["bilateral_intent_refs"] = _refs(packet)
-    decision = dict(result.get("route_decision", {}))
-    decision["bilateral_intent_status"] = (
-        "CLARIFICATION_REQUIRED"
-        if packet.get("requires_clarification")
-        else "POLARITY_PRESERVED"
-    )
-    result["routing_frame"] = frame
-    result["route_decision"] = decision
-    result["negative_requirements_digest"] = packet.get(
-        "negative_requirements_digest", ""
-    )
-    return result
+    return _decorate_canonical_route(result, packet)
 
 
 def compile_bilateral_intent_packet(
@@ -224,13 +231,7 @@ def compile_bilateral_intent_packet(
         "polarity_trace_digest",
     ):
         result[key] = packet.get(key)
-    route = route_bilateral_intent_to_fst(
-        packet,
-        repo_root=repo_root,
-        grounding_result=result.get("grounding", {}),
-    )
-    result["routing_frame"] = route.get("routing_frame", result.get("routing_frame", {}))
-    result["route_decision"] = route.get("route_decision", result.get("route_decision", {}))
+    _decorate_canonical_route(result, packet)
     result["bilateral_intent_refs"] = _refs(packet)
     result["version"] = VERSION
     return result
