@@ -1,13 +1,6 @@
 name: Materialize verified harness repair 202-204
 
 on:
-  issues:
-    types: [opened]
-  push:
-    branches:
-      - harness/repair-202-204
-    paths:
-      - .aura/HARNESS_REPAIR_202_204_REQUEST
   pull_request:
     types: [opened, synchronize]
     paths:
@@ -18,38 +11,47 @@ permissions:
   issues: write
 
 concurrency:
-  group: harness-repair-202-204-materialize
+  group: harness-repair-202-204-v2-materialize
   cancel-in-progress: false
 
 jobs:
   materialize:
     if: >-
-      github.event_name == 'push' ||
-      github.event.issue.title == 'Aura: materialize verified harness repair 202-204' ||
-      (github.event_name == 'pull_request' &&
-       (github.event.action == 'opened' || github.event.action == 'synchronize') &&
-       github.event.pull_request.head.ref == 'harness/repair-202-204')
+      github.event.pull_request.head.ref == 'harness/repair-202-204-v2'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Report start
-        if: github.event_name == 'issues'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
-            --body "Harness repair materializer started. Target branch: harness/repair-202-204."
-
       - name: Checkout exact repair branch
         uses: actions/checkout@v4
         with:
-          ref: harness/repair-202-204
+          ref: harness/repair-202-204-v2
           fetch-depth: 0
 
-      - name: Verify immutable repair base
+      - name: Verify exact base and transport identity
+        shell: bash
         run: |
+          set -euo pipefail
           git fetch --no-tags origin main
-          test "$(git merge-base HEAD origin/main)" = "248165fbec841caaf3ae254c5871b4358da4e6f7"
+          request=.aura/HARNESS_REPAIR_202_204_REQUEST
+          source_main_sha="$(awk -F= '$1 == "source_main_sha" {print $2}' "$request")"
+          patch_transport_commit="$(awk -F= '$1 == "patch_transport_commit" {print $2}' "$request")"
+          patch_sha256="$(awk -F= '$1 == "patch_sha256" {print $2}' "$request")"
+          test "$source_main_sha" = "$(git merge-base HEAD origin/main)"
+          test "$source_main_sha" = "$(git rev-parse origin/main)"
+          git cat-file -e "${patch_transport_commit}^{commit}"
+          git merge-base --is-ancestor "$patch_transport_commit" HEAD
+
+          mapfile -t current_parts < <(find .aura/harness-repair-202-204 -maxdepth 1 -type f -name 'part-*.patch' -printf '%p\n' | sort)
+          mapfile -t recorded_parts < <(git ls-tree -r --name-only "$patch_transport_commit" -- .aura/harness-repair-202-204 | sort)
+          test "${#current_parts[@]}" -gt 0
+          test "${#current_parts[@]}" -eq "${#recorded_parts[@]}"
+          for index in "${!current_parts[@]}"; do
+            test "${current_parts[$index]}" = "${recorded_parts[$index]}"
+            git show "$patch_transport_commit:${recorded_parts[$index]}" > "/tmp/recorded-part-$index.patch"
+            cmp "/tmp/recorded-part-$index.patch" "${current_parts[$index]}"
+          done
+          cat "${current_parts[@]}" > /tmp/harness-repair-202-204.patch
+          test "$(sha256sum /tmp/harness-repair-202-204.patch | awk '{print $1}')" = "$patch_sha256"
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
 
       - uses: actions/setup-python@v5
@@ -57,15 +59,14 @@ jobs:
           python-version: '3.12'
           cache: pip
 
-      - name: Install declared dependencies
+      - name: Install declared dependencies and test tooling
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
+          python -m pip install pytest numpy
 
-      - name: Reconstruct and apply exact reviewed patch
+      - name: Apply exact reviewed patch and remove transport
         run: |
-          cat .aura/harness-repair-202-204/part-*.patch > /tmp/harness-repair-202-204.patch
-          test -s /tmp/harness-repair-202-204.patch
           git apply --check /tmp/harness-repair-202-204.patch
           git apply /tmp/harness-repair-202-204.patch
           git rm -r .aura/harness-repair-202-204
@@ -98,18 +99,16 @@ jobs:
           status=${PIPESTATUS[0]}
           set -e
           if [ "$status" -ne 0 ]; then
-            if [ "${{ github.event_name }}" = "pull_request" ]; then
-              {
-                echo '### Harness repair pytest failure'
-                echo
-                echo '```text'
-                tail -n 220 /tmp/harness-repair-pytest.log
-                echo '```'
-              } > /tmp/harness-repair-pytest-tail.md
-              gh pr comment "${{ github.event.pull_request.number }}" \
-                --repo "${{ github.repository }}" \
-                --body-file /tmp/harness-repair-pytest-tail.md
-            fi
+            {
+              echo '### Harness repair pytest failure'
+              echo
+              echo '```text'
+              tail -n 220 /tmp/harness-repair-pytest.log
+              echo '```'
+            } > /tmp/harness-repair-pytest-tail.md
+            gh pr comment "${{ github.event.pull_request.number }}" \
+              --repo "${{ github.repository }}" \
+              --body-file /tmp/harness-repair-pytest-tail.md
             exit "$status"
           fi
 
@@ -117,12 +116,12 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: harness-repair-pytest-${{ github.event.pull_request.head.sha || github.sha }}
+          name: harness-repair-pytest-${{ github.event.pull_request.head.sha }}
           path: /tmp/harness-repair-pytest.log
           if-no-files-found: ignore
           retention-days: 7
 
-      - name: Verify repaired doctor and objective grounding
+      - name: Verify repaired doctor and exact objective grounding
         env:
           PYTHONPATH: .
         run: |
@@ -156,7 +155,7 @@ jobs:
           python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
           git diff --check
 
-      - name: Commit verified repair and remove transport
+      - name: Commit verified repair and remove one-use workflow
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -168,13 +167,5 @@ jobs:
           git commit -m 'fix(harness): ground exact targets and preserve focal tests'
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            push origin HEAD:harness/repair-202-204
+            push origin HEAD:harness/repair-202-204-v2
           unset AUTH_HEADER
-
-      - name: Report final status
-        if: always() && github.event_name == 'issues'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
-            --body "Harness repair materializer finished with job status: ${{ job.status }}."
