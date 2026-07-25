@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import hashlib
 from pathlib import Path
 import subprocess
 import time
@@ -38,6 +39,19 @@ def _run(root: Path, *args: str) -> str:
         timeout=20,
     )
     return result.stdout.strip()
+
+
+def _governance_storage_snapshot(root: Path) -> dict[str, str]:
+    paths = [
+        *root.glob("experience.db*"),
+        *root.glob("attempts.db*"),
+        *((root / "qdkt-events").rglob("*") if (root / "qdkt-events").exists() else ()),
+    ]
+    return {
+        str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in sorted(paths)
+        if path.is_file()
+    }
 
 
 def _repo(root: Path) -> str:
@@ -722,19 +736,14 @@ def test_finalize_extended_replay_verifies_no_duplicate_governed_records(tmp_pat
         contract=_final_contract(tmp_path, now),
     )
 
-    # Record initial state
     assert result["relationship_experience"] is not None
-    initial_relationship = result["relationship_experience"]
-    initial_qdkt = result["qdkt_event_receipt"]
-    assert initial_qdkt is not None
+    assert result["qdkt_event_receipt"] is not None
     assert result["attempt_archive"]["ok"] is True
-
-    # Verify session state is populated
     assert "A1" in bridge._session["unified_relationship_experiences"]
     assert "A1" in bridge._session["unified_qdkt_admissions"]
     assert "A1" in bridge._session["unified_learning_results"]
+    before_retry = _governance_storage_snapshot(tmp_path)
 
-    # Second finalization attempt with valid input should raise ValueError
     with pytest.raises(ValueError, match="governed learning result is already retained"):
         finalize_bridge_learning(
             bridge,
@@ -743,10 +752,59 @@ def test_finalize_extended_replay_verifies_no_duplicate_governed_records(tmp_pat
             contract=_final_contract(tmp_path, now),
         )
 
-    # Verify no records were duplicated in session state
+    assert _governance_storage_snapshot(tmp_path) == before_retry
     assert bridge._session["unified_relationship_experiences"]["A1"] is not None
     assert bridge._session["unified_qdkt_admissions"]["A1"] is not None
     assert bridge._session["unified_learning_results"]["A1"] is result
+
+
+def test_archive_failure_retains_claim_and_blocks_duplicate_retry(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bridge, now = _prepared(tmp_path)
+    commit_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        contract=_prediction_contract(now, tmp_path),
+    )
+    observe_bridge_prediction(
+        bridge,
+        plan_phase_hash="phase-1",
+        task_id="A1",
+        observation=_observation_contract(now),
+    )
+    original_record = learning_runtime.ArenaAttemptArchive.record
+
+    def _fail_archive(*_args: Any, **_kwargs: Any) -> dict[str, Any]:
+        raise ValueError("forced attempt archive failure")
+
+    monkeypatch.setattr(learning_runtime.ArenaAttemptArchive, "record", _fail_archive)
+    with pytest.raises(ValueError, match="forced attempt archive failure"):
+        finalize_bridge_learning(
+            bridge,
+            plan_phase_hash="phase-1",
+            task_id="A1",
+            contract=_final_contract(tmp_path, now),
+        )
+
+    assert "A1" in bridge._session["unified_learning_finalization_claims"]
+    assert "A1" not in bridge._session["unified_learning_results"]
+    before_retry = _governance_storage_snapshot(tmp_path)
+    assert any(name.startswith("experience.db") for name in before_retry)
+    assert any(name.startswith("qdkt-events/") for name in before_retry)
+
+    monkeypatch.setattr(learning_runtime.ArenaAttemptArchive, "record", original_record)
+    with pytest.raises(ValueError, match="finalization is already claimed"):
+        finalize_bridge_learning(
+            bridge,
+            plan_phase_hash="phase-1",
+            task_id="A1",
+            contract=_final_contract(tmp_path, now),
+        )
+
+    assert _governance_storage_snapshot(tmp_path) == before_retry
 
 
 def test_commit_rejects_absolute_storage_path(tmp_path: Path) -> None:

@@ -721,8 +721,26 @@ def finalize_bridge_learning(
     prediction = _prediction(dict(session.get("unified_prediction_packets") or {}).get(task))
     observation = _observation(dict(session.get("unified_p1_observations") or {}).get(task))
     learning_results = session.setdefault("unified_learning_results", {})
-    if task in learning_results:
-        raise ValueError("governed learning result is already retained for this task")
+    finalization_claims = session.setdefault("unified_learning_finalization_claims", {})
+    if task in learning_results or task in finalization_claims:
+        raise ValueError(
+            "governed learning result is already retained or finalization is already claimed for this task"
+        )
+
+    def _claim_finalization() -> None:
+        finalization_claims.setdefault(
+            task,
+            {
+                "version": LEARNING_RUNTIME_VERSION,
+                "status": "FINALIZATION_CLAIMED",
+                "plan_phase_hash": phase,
+                "task_id": task,
+                "automatic_crystallization": False,
+                "automatic_promotion": False,
+                "production_mutation": False,
+            },
+        )
+
     root = Path(bridge.repo_root).resolve()
     head = _required(_git(root, "rev-parse", "HEAD"), "repository_head")
     source_digest = _source_digest(root, _envelope(binding).allowed_files)
@@ -766,7 +784,9 @@ def finalize_bridge_learning(
         if qdkt_event_root_raw is not None
         else root / "Aura_Memory" / "qdkt_governed_events"
     )
-    attempt_archive_path = _validate_storage_path(root, storage.get("attempt_archive_db_path"), "attempt_archive_db_path")
+    attempt_archive_path = _validate_storage_path(
+        root, storage.get("attempt_archive_db_path"), "attempt_archive_db_path"
+    )
     proposal = dict(session.get("unified_crucible_proposals") or {}).get(task)
     if not isinstance(proposal, CrystallizationProposal):
         raise ValueError("bounded Crucible proposal was not staged before P0")
@@ -870,6 +890,7 @@ def finalize_bridge_learning(
             ),
             transaction_time=relationship_recorded_at,
         )
+        _claim_finalization()
         with ArenaExperienceLedger(root, db_path=experience_path) as ledger:
             relationship_storage = ledger.record_relationship_observation(relationship)
         if relationship_storage.get("ok") is not True:
@@ -957,6 +978,7 @@ def finalize_bridge_learning(
         "vsa_patch_authority": False,
     }
 
+    _claim_finalization()
     archive = ArenaAttemptArchive(root, db_path=attempt_archive_path)
     try:
         archive_result = archive.record(
@@ -1001,6 +1023,7 @@ def finalize_bridge_learning(
     session.setdefault("unified_relationship_experiences", {})[task] = relationship
     session.setdefault("unified_qdkt_admissions", {})[task] = admission
     learning_results[task] = result
+    finalization_claims.pop(task, None)
     return result
 
 
