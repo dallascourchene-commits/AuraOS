@@ -1,0 +1,133 @@
+name: Materialize Bilateral Intent Greptile repair
+
+on:
+  push:
+    branches:
+      - repair/bilateral-intent-greptile-materialize
+    paths:
+      - .github/workflows/bilateral-intent-greptile-repair-materialize.yml
+
+permissions:
+  contents: write
+  statuses: write
+
+concurrency:
+  group: bilateral-intent-greptile-repair-materialize
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact transport head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify bounded transport and apply patch
+        env:
+          EXPECTED_PARENT_SHA: 890876a6ec4a1bf4607279377cdf0b8abeacbe95
+          EXPECTED_PATCH_SHA256: 880610c810793332bfebaf58f6342b9acc9bdaed812db2b87dedaf03040c24fc
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_PARENT_SHA"
+          test "$(git diff --name-only "$EXPECTED_PARENT_SHA" HEAD)" = ".github/workflows/bilateral-intent-greptile-repair-materialize.yml"
+          cat .aura/refactor_payloads/bilateral_intent_greptile_repair/part-*.patch > /tmp/greptile-repair.patch
+          echo "$EXPECTED_PATCH_SHA256  /tmp/greptile-repair.patch" | sha256sum --check -
+          git apply --check /tmp/greptile-repair.patch
+          git apply /tmp/greptile-repair.patch
+          git rm -r .aura/refactor_payloads/bilateral_intent_greptile_repair
+          git rm .github/workflows/bilateral-intent-greptile-repair-materialize.yml
+          git diff --check
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install declared proof dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install pytest ruff
+
+      - name: Prove Greptile repairs and governed contracts
+        run: |
+          set -euo pipefail
+          python -m py_compile aura_intent_refinement.py aura_bilateral_intent_ingestion.py
+          ruff check --select E9,F63,F7,F82 aura_intent_refinement.py tests/test_aura_intent_refinement.py
+          python -m pytest -q \
+            tests/test_aura_intent_refinement.py \
+            tests/test_aura_intent_ingestion_bilateral.py \
+            tests/test_bilateral_intent_pr1_evidence.py
+          python -m json.tool schemas/aura_intent_refinement.v1.schema.json >/dev/null
+          python -m json.tool .aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json >/dev/null
+          python -m json.tool .aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json >/dev/null
+          python -m json.tool .aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json >/dev/null
+          test "$(git hash-object aura_intent_refinement.py)" = aad49ff004d642cab8107178ca60149917f56525
+          test "$(git hash-object schemas/aura_intent_refinement.v1.schema.json)" = 1940609bbb121134a8224549173c5597efdc4de4
+          test "$(git hash-object tests/test_aura_intent_refinement.py)" = 13a38e0af81203ee6521e9c8d0b98de9d2da20bb
+
+      - name: Regenerate governed navigation
+        run: |
+          set -euo pipefail
+          cp .aura/CODEMAP.json /tmp/aura-codemap-reference.json
+          python aura_codebase_navigator.py
+          set +e
+          python -m aura_codemap_verify --compare-json /tmp/aura-codemap-reference.json > /tmp/aura-codemap-comparison.json
+          comparison_status=$?
+          set -e
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import subprocess
+
+          result = json.loads(Path('/tmp/aura-codemap-comparison.json').read_text(encoding='utf-8'))
+          if result.get('stable_comparison', {}).get('ok') is True:
+              subprocess.run(
+                  ['git', 'checkout', 'HEAD', '--', '.aura/CODEMAP.json', '.aura/CODEMAP.md', 'topology_map.json', 'Aura_Memory/live_topology_ast.json'],
+                  check=True,
+              )
+          else:
+              subprocess.run(['git', 'checkout', 'HEAD', '--', 'Aura_Memory/live_topology_ast.json'], check=True)
+          PY
+          if ! git diff --quiet -- .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json; then
+            python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          else
+            test "$comparison_status" -eq 0
+          fi
+          git diff --check
+
+      - name: Commit verified repair and publish exact status
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS Greptile Repair Harness"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            aura_intent_refinement.py \
+            tests/test_aura_intent_refinement.py \
+            schemas/aura_intent_refinement.v1.schema.json \
+            .aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json \
+            .aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json \
+            .aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json
+          git add -u .aura/refactor_payloads/bilateral_intent_greptile_repair .github/workflows/bilateral-intent-greptile-repair-materialize.yml
+          git diff --cached --check
+          git commit -m "fix: bind bilateral intent compilation to verified confirmation"
+          FINAL_SHA="$(git rev-parse HEAD)"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            push origin HEAD:repair/bilateral-intent-greptile-materialize
+          unset AUTH_HEADER
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${FINAL_SHA}" \
+            -f state=success \
+            -f context=bilateral-intent-greptile-repair \
+            -f description="Greptile P1 repair tests and navigation passed" \
+            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          echo "FINAL_SHA=${FINAL_SHA}" >> "$GITHUB_STEP_SUMMARY"
