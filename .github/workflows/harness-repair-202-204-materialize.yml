@@ -1,0 +1,135 @@
+name: Materialize verified harness repair 202-204
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: harness-repair-202-204-materialize
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: github.event.issue.title == 'Aura: materialize verified harness repair 202-204'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Report start
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
+            --body "Harness repair materializer started. Target branch: analysis/harness-grounding-202-204."
+
+      - name: Checkout exact repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: analysis/harness-grounding-202-204
+          fetch-depth: 0
+
+      - name: Verify branch is based on current main
+        run: |
+          git fetch --no-tags origin main
+          test "$(git merge-base HEAD origin/main)" = "$(git rev-parse origin/main)"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install declared dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Reconstruct and apply exact reviewed patch
+        run: |
+          cat .aura/harness-repair-202-204/part-*.patch > /tmp/harness-repair-202-204.patch
+          test -s /tmp/harness-repair-202-204.patch
+          git apply --check /tmp/harness-repair-202-204.patch
+          git apply /tmp/harness-repair-202-204.patch
+          git rm -r .aura/harness-repair-202-204
+          git rm .github/workflows/harness-repair-202-204-materialize.yml
+          git diff --check
+
+      - name: Compile changed Python
+        run: |
+          python -m py_compile \
+            scripts/aura_architecture_harness_core.py \
+            aura_coding_relationship_compass.py \
+            tests/test_aura_architecture_harness.py \
+            tests/test_aura_coding_relationship_compass.py
+
+      - name: Run focused and adjacent regressions
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m pytest -q \
+            tests/test_aura_architecture_harness.py \
+            tests/test_aura_architecture_harness_original_github_routing.py \
+            tests/test_aura_architecture_harness_git_tree_routing.py \
+            tests/test_aura_architecture_harness_export_workflow.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relationship_compass_finalization.py
+
+      - name: Verify repaired doctor and objective grounding
+        env:
+          PYTHONPATH: .
+        run: |
+          python scripts/aura_architecture_harness.py --repo-root . doctor > /tmp/harness-doctor.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from scripts import aura_architecture_harness as harness
+
+          doctor = json.loads(Path('/tmp/harness-doctor.json').read_text())
+          assert doctor['codemap']['symbol_count'] > 10000
+          assert doctor['codemap']['symbol_count_source'] == 'symbol_index_member_count'
+          grounded = harness._objective_grounded_architect_tasks(
+              Path('.').resolve(),
+              'Implement aura_intent_ingestion.py::_extract_keywords, '
+              'aura_event_contracts.py::stable_digest, IntentPacket, and SemanticLedger; '
+              'preserve tests/test_aura_intent_ingestion.py.',
+              [],
+          )
+          assert [item['target_symbol'] for item in grounded['act_tasks']] == [
+              '_extract_keywords', 'stable_digest', 'IntentPacket', 'SemanticLedger'
+          ]
+          assert grounded['explicit_test_targets'] == ['tests/test_aura_intent_ingestion.py']
+          PY
+
+      - name: Regenerate and verify navigation
+        env:
+          PYTHONPATH: .
+        run: |
+          python aura_codebase_navigator.py --root .
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          git diff --check
+
+      - name: Commit verified repair and remove transport
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name 'AuraOS Harness Repair'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git diff --cached --stat
+          git commit -m 'fix(harness): ground exact targets and preserve focal tests'
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            push origin HEAD:analysis/harness-grounding-202-204
+          unset AUTH_HEADER
+
+      - name: Report final status
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
+            --body "Harness repair materializer finished with job status: ${{ job.status }}."
