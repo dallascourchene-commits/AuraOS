@@ -1,0 +1,137 @@
+name: Materialize bilateral intent PR2
+
+on:
+  push:
+    branches:
+      - aura-materialize-pr2-20260725
+    paths:
+      - '.aura/materialize/pr2.payload.part*'
+      - '.github/workflows/aura-pr2-materialize.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-pr2-materialize
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      FINAL_BRANCH: refactor/bilateral-intent-pr2-canonical-gate-dialogue
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: aura-materialize-pr2-20260725
+          fetch-depth: 0
+
+      - name: Decode and safely apply staged publication payload
+        shell: bash
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import gzip
+          import io
+          import json
+          from pathlib import Path, PurePosixPath
+          import shutil
+          import subprocess
+          import tarfile
+          import tempfile
+
+          root = Path.cwd().resolve()
+          parts = sorted((root / '.aura' / 'materialize').glob('pr2.payload.part*'))
+          if not parts:
+              raise SystemExit('no staged PR2 payload parts found')
+          encoded = ''.join(part.read_text(encoding='utf-8').strip() for part in parts)
+          compressed = base64.b64decode(encoded, validate=True)
+          raw = gzip.decompress(compressed)
+          print(f'decoded {len(parts)} parts: gzip={len(compressed)} bytes raw={len(raw)} bytes')
+
+          def safe_relative(value: str) -> Path:
+              posix = PurePosixPath(value)
+              if posix.is_absolute() or '..' in posix.parts or not posix.parts:
+                  raise ValueError(f'unsafe payload path: {value!r}')
+              if posix.parts[0] == '.git':
+                  raise ValueError('payload may not write .git')
+              return Path(*posix.parts)
+
+          applied = False
+          with tempfile.TemporaryDirectory(prefix='aura-pr2-') as temporary:
+              temp = Path(temporary)
+              archive = temp / 'payload.bin'
+              archive.write_bytes(raw)
+              try:
+                  with tarfile.open(archive, mode='r:*') as bundle:
+                      members = bundle.getmembers()
+                      for member in members:
+                          safe_relative(member.name)
+                          if member.issym() or member.islnk() or member.isdev():
+                              raise ValueError(f'unsupported archive member: {member.name}')
+                      extracted = temp / 'extracted'
+                      bundle.extractall(extracted, members=members, filter='data')
+                      roots = [item for item in extracted.iterdir()]
+                      source = roots[0] if len(roots) == 1 and roots[0].is_dir() else extracted
+                      copied = []
+                      for item in source.rglob('*'):
+                          if not item.is_file():
+                              continue
+                          relative = item.relative_to(source)
+                          safe_relative(relative.as_posix())
+                          destination = root / relative
+                          destination.parent.mkdir(parents=True, exist_ok=True)
+                          shutil.copy2(item, destination)
+                          copied.append(relative.as_posix())
+                      print('applied tar payload files:')
+                      print('\n'.join(f'  {item}' for item in copied))
+                      applied = bool(copied)
+              except tarfile.ReadError:
+                  pass
+
+              if not applied:
+                  try:
+                      payload = json.loads(raw.decode('utf-8'))
+                  except (UnicodeDecodeError, json.JSONDecodeError):
+                      payload = None
+                  if isinstance(payload, dict) and isinstance(payload.get('files'), dict):
+                      for name, value in payload['files'].items():
+                          relative = safe_relative(str(name))
+                          destination = root / relative
+                          destination.parent.mkdir(parents=True, exist_ok=True)
+                          if isinstance(value, dict) and value.get('encoding') == 'base64':
+                              destination.write_bytes(base64.b64decode(str(value.get('content') or '')))
+                          else:
+                              content = value.get('content') if isinstance(value, dict) else value
+                              destination.write_text(str(content), encoding='utf-8')
+                      applied = True
+
+              if not applied and raw.lstrip().startswith((b'diff --git ', b'--- ')):
+                  patch = temp / 'payload.patch'
+                  patch.write_bytes(raw)
+                  subprocess.run(['git', 'apply', '--whitespace=error', str(patch)], cwd=root, check=True)
+                  applied = True
+
+          if not applied:
+              raise SystemExit('unsupported PR2 publication payload format')
+          PY
+
+      - name: Remove transport-only staging files
+        run: |
+          rm -f .aura/materialize/pr2.payload.part*
+          rm -f .github/workflows/aura-pr2-materialize.yml
+          rmdir .aura/materialize 2>/dev/null || true
+
+      - name: Publish exact source branch
+        shell: bash
+        run: |
+          git config user.name 'AuraOS Materializer'
+          git config user.email 'actions@users.noreply.github.com'
+          git switch -C "${FINAL_BRANCH}"
+          git add -A
+          git diff --cached --stat
+          git commit -m 'feat(intent): integrate canonical packets with multi-turn gate dialogue'
+          git push --set-upstream origin "HEAD:${FINAL_BRANCH}"
