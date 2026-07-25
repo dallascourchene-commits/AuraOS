@@ -64,7 +64,11 @@ jobs:
             aura_model_cognome_store_records.py \
             aura_model_cognome_store_io.py \
             aura_bilateral_intent_ingestion.py \
-            aura_intent_refinement.py
+            aura_intent_refinement.py \
+            aura_bilateral_intent_compiler.py \
+            aura_arena_gate_dialogue.py
+      - name: Validate Gate Dialogue JavaScript syntax
+        run: node --check aura_showcase/gate-dialogue.js
       - name: Fatal lint checks
         run: |
           ruff check --select E9,F63,F7,F82 \
@@ -92,6 +96,8 @@ jobs:
             aura_model_cognome_store_io.py \
             aura_bilateral_intent_ingestion.py \
             aura_intent_refinement.py \
+            aura_bilateral_intent_compiler.py \
+            aura_arena_gate_dialogue.py \
             tests/test_aura_arena_experience_ledger.py \
             tests/test_aura_crucible_phase_b.py \
             tests/test_aura_phase_c1_route_capsules.py \
@@ -101,7 +107,9 @@ jobs:
             tests/test_aura_model_cognome_store.py \
             tests/test_aura_intent_ingestion_bilateral.py \
             tests/test_aura_intent_refinement.py \
-            tests/test_bilateral_intent_pr1_evidence.py
+            tests/test_bilateral_intent_pr1_evidence.py \
+            tests/test_aura_arena_gate_dialogue.py \
+            tests/test_aura_bilateral_gate_dialogue.py
       - name: Run focused governed contract tests
         run: |
           python -m pytest -q \
@@ -117,7 +125,9 @@ jobs:
             tests/test_aura_model_cognome_store.py \
             tests/test_aura_intent_ingestion_bilateral.py \
             tests/test_aura_intent_refinement.py \
-            tests/test_bilateral_intent_pr1_evidence.py
+            tests/test_bilateral_intent_pr1_evidence.py \
+            tests/test_aura_arena_gate_dialogue.py \
+            tests/test_aura_bilateral_gate_dialogue.py
 
   full-pytest-suite:
     name: Full pytest-native suite
