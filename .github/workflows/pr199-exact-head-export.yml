@@ -1,0 +1,57 @@
+name: PR199 exact-head export
+
+on:
+  push:
+    branches:
+      - analysis/pr199-review-fixes-20260725
+
+permissions:
+  contents: read
+  statuses: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/unified-memory-learning-to-reproof
+          fetch-depth: 0
+
+      - name: Verify and bundle exact PR head
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEAD_SHA="$(git rev-parse HEAD)"
+          test "$HEAD_SHA" = "e361c62209bf8b93a36d80c74288657c057f7408"
+          git status --porcelain=v1 | tee pr199-status.txt
+          test ! -s pr199-status.txt
+          git bundle create PR199-exact-head.bundle HEAD
+          sha256sum PR199-exact-head.bundle > PR199-exact-head.bundle.sha256
+          printf '%s\n' "$HEAD_SHA" > PR199-exact-head.sha
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PR199-exact-head-e361c622
+          path: |
+            PR199-exact-head.bundle
+            PR199-exact-head.bundle.sha256
+            PR199-exact-head.sha
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Publish discoverable status
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          state=success
+          if [ "${{ job.status }}" != "success" ]; then state=failure; fi
+          gh api --method POST \
+            "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+            -f state="$state" \
+            -f context="pr199-exact-head-export" \
+            -f description="Run ${GITHUB_RUN_ID}: ${{ job.status }}" \
+            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
