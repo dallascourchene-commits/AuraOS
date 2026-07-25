@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1785012793,
+  "generated_at_unix": 1785015262,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1432,
+    "included_file_count": 1436,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,10 +13,12 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 177,
-      "Aura_Memory": 6,
+      ".git": 178,
+      ".pytest_cache": 4,
+      ".ruff_cache": 4,
+      "Aura_Memory": 9,
       "Aura_Sandbox": 1,
-      "__pycache__": 8
+      "__pycache__": 68
     },
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
@@ -57,6 +59,7 @@
       ".aura/output_schemas/localization_packet.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
+      ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json",
       ".aura/refactor_payloads/umc_main_publish.trigger",
       ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
       ".aura/research/AURA_SPATIAL_BREADBOARD_RECEIPT.json",
@@ -74,6 +77,7 @@
       ".aura/verifier_contracts/coding_localize.v1.json",
       ".aura/vsa_profiles/complex_phasor.v1.json",
       ".aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json",
+      ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2.v1.json",
       ".aura/waboose_requests/construction_demo.v1.json",
       ".aura/waboose_requests/issue_200_exact_head_harness.v1.json",
       ".aura/waboose_requests/unified_memory_continuity.v1.json",
@@ -118,6 +122,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/bilateral-pr2-finalize.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1193,6 +1198,7 @@
       "tests/test_aura_arena_wfst_phase_a.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
+      "tests/test_aura_bilateral_gate_dialogue.py",
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
       "tests/test_aura_capability_lane_registry.py",
@@ -1454,23 +1460,23 @@
     ]
   },
   "summary": {
-    "file_count": 1432,
-    "total_bytes": 56984396,
-    "text_tokens_est": 4793824,
+    "file_count": 1436,
+    "total_bytes": 57004880,
+    "text_tokens_est": 4798943,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 51,
       "knowledge_artifact": 185,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 925,
-      "schema_or_lexicon": 178,
+      "python_module": 926,
+      "schema_or_lexicon": 181,
       "support_file": 77
     },
     "topology_nodes": 10655,
     "topology_edges": 25286,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 25779.69
+    "elapsed_ms": 32047.33
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1657,7 +1663,9 @@
       ".aura/SECURITY.md",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
+      ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json",
       ".aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json",
+      ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2.v1.json",
       "DEEP_AUDIT_REPORT.md",
       "aura_background_auditor.py",
       "aura_cockpit_audit_trail.py",
@@ -1779,6 +1787,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/bilateral-pr2-finalize.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -2690,6 +2699,7 @@
       "tests/test_aura_arena_wfst_phase_a.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
+      "tests/test_aura_bilateral_gate_dialogue.py",
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
       "tests/test_aura_capability_lane_registry.py",
@@ -3169,7 +3179,7 @@
     ],
     "!String": [
       "aura_showcase/attempt-archive.js:187",
-      "aura_showcase/gate-dialogue.js:269",
+      "aura_showcase/gate-dialogue.js:304",
       "aura_showcase/human.js:657"
     ],
     "!TRUTH_CLASSES": [
@@ -3263,7 +3273,7 @@
     "!button": [
       "aura_showcase/attempt-archive.js:91",
       "aura_showcase/crucible.js:289",
-      "aura_showcase/gate-dialogue.js:196",
+      "aura_showcase/gate-dialogue.js:199",
       "aura_spatial_web/construction_demo_app.js:129"
     ],
     "!c": [
@@ -3308,7 +3318,7 @@
       "USER_GUIDE.md:115"
     ],
     "!comment": [
-      "aura_showcase/gate-dialogue.js:291"
+      "aura_showcase/gate-dialogue.js:337"
     ],
     "!container": [
       "aura_spatial_web/accessibility.js:40"
@@ -3341,13 +3351,13 @@
       "aura_node.py:3064"
     ],
     "!decision": [
-      "aura_showcase/gate-dialogue.js:232"
+      "aura_showcase/gate-dialogue.js:263"
     ],
     "!dialogue": [
-      "aura_showcase/gate-dialogue.js:37"
+      "aura_showcase/gate-dialogue.js:38"
     ],
     "!diff": [
-      "aura_showcase/gate-dialogue.js:368"
+      "aura_showcase/gate-dialogue.js:444"
     ],
     "!doc": [
       "aura_spatial_web/accessibility.js:45"
@@ -3450,8 +3460,11 @@
     "!globalThis": [
       "aura_spatial_web/gaussian_renderer.js:212"
     ],
+    "!hard": [
+      "aura_showcase/gate-dialogue.js:239"
+    ],
     "!hasEvidence": [
-      "aura_showcase/gate-dialogue.js:358",
+      "aura_showcase/gate-dialogue.js:434",
       "aura_showcase/human.js:460"
     ],
     "!hasInput": [
@@ -3498,7 +3511,7 @@
     ],
     "!installPanel": [
       "aura_showcase/attempt-archive.js:127",
-      "aura_showcase/gate-dialogue.js:248"
+      "aura_showcase/gate-dialogue.js:282"
     ],
     "!intentInput": [
       "aura_showcase/app.js:375"
@@ -3518,7 +3531,8 @@
     "!items": [
       "aura_coding_arena/main.js:116",
       "aura_human_agent_arena/main.js:869",
-      "aura_showcase/civic.js:6"
+      "aura_showcase/civic.js:6",
+      "aura_showcase/gate-dialogue.js:231"
     ],
     "!keepSet": [
       "aura_human_agent_arena/main.js:587"
@@ -3591,7 +3605,7 @@
     ],
     "!node": [
       "aura_human_agent_arena/emergent.js:37",
-      "aura_showcase/gate-dialogue.js:217",
+      "aura_showcase/gate-dialogue.js:218",
       "aura_showcase/intent.js:346",
       "aura_showcase/topology.js:128"
     ],
@@ -3619,7 +3633,7 @@
     ],
     "!packet": [
       "aura_showcase/crucible.js:233",
-      "aura_showcase/gate-dialogue.js:136",
+      "aura_showcase/gate-dialogue.js:141",
       "aura_showcase/intent.js:254"
     ],
     "!pairs": [
@@ -3763,7 +3777,7 @@
       "aura_showcase/attempt-archive.js:142",
       "aura_showcase/civic.js:140",
       "aura_showcase/crucible.js:161",
-      "aura_showcase/gate-dialogue.js:300",
+      "aura_showcase/gate-dialogue.js:346",
       "aura_showcase/human.js:230",
       "aura_showcase/intent.js:81",
       "aura_showcase/topology.js:58"
@@ -3825,7 +3839,7 @@
     ],
     "!selected": [
       "aura_coding_arena/main.js:91",
-      "aura_showcase/gate-dialogue.js:83"
+      "aura_showcase/gate-dialogue.js:86"
     ],
     "!selectedNodeId": [
       "aura_coding_arena/main.js:244"
@@ -3899,11 +3913,12 @@
       "aura_node.py:6781"
     ],
     "!state": [
-      "aura_showcase/gate-dialogue.js:270",
+      "aura_showcase/gate-dialogue.js:306",
       "aura_spatial_web/construction_demo_app.js:198"
     ],
     "!statement": [
-      "aura_showcase/civic.js:303"
+      "aura_showcase/civic.js:303",
+      "aura_showcase/gate-dialogue.js:326"
     ],
     "!status": [
       "AURA_FINAL_REPORT.md:136",
@@ -3928,7 +3943,7 @@
     "!target": [
       "aura_coding_arena/main.js:143",
       "aura_human_agent_arena/main.js:441",
-      "aura_showcase/gate-dialogue.js:406",
+      "aura_showcase/gate-dialogue.js:482",
       "aura_showcase/human.js:672",
       "aura_showcase/intent.js:301",
       "aura_showcase/topology.js:196"
@@ -3937,7 +3952,7 @@
       "cognitive_search.rs:72"
     ],
     "!task": [
-      "aura_showcase/gate-dialogue.js:56",
+      "aura_showcase/gate-dialogue.js:59",
       "aura_showcase/human.js:282",
       "aura_showcase/topology.js:101"
     ],
@@ -3974,7 +3989,7 @@
       "aura_node.py:6729"
     ],
     "!tool": [
-      "aura_showcase/gate-dialogue.js:173"
+      "aura_showcase/gate-dialogue.js:181"
     ],
     "!toolbar": [
       "aura_showcase/crucible.js:143"
@@ -4480,7 +4495,7 @@
         "file": "aura_arena_gate_dialogue.py",
         "kind": "class",
         "line": 260,
-        "end_line": 855,
+        "end_line": 856,
         "semantic_id": "aura_arena_gate_dialogue.py#class:ArenaGateDialogueService:d33ba4203c0ef4b3",
         "signature_hash": "86eef0b72670720f"
       }
@@ -24869,8 +24884,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 425,
-        "end_line": 496,
+        "line": 426,
+        "end_line": 497,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._answer_clarification:7b0633fffe544a1e",
         "signature_hash": "cc8d80a91368ded6"
       }
@@ -26091,8 +26106,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 825,
-        "end_line": 834,
+        "line": 826,
+        "end_line": 835,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._authority:6049a2db322775c3",
         "signature_hash": "af21dd6cd080fab9"
       },
@@ -31575,8 +31590,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 731,
-        "end_line": 757,
+        "line": 732,
+        "end_line": 758,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._current_context_denial:1adc86d0d152a561",
         "signature_hash": "45308d2b68dac7a4"
       }
@@ -31705,8 +31720,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 792,
-        "end_line": 822,
+        "line": 793,
+        "end_line": 823,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._decision:fd54518456151bd3",
         "signature_hash": "a38f5a48e63a3f9f"
       },
@@ -32283,8 +32298,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 841,
-        "end_line": 855,
+        "line": 842,
+        "end_line": 856,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._denial:94b833609537c91c",
         "signature_hash": "6e5a9beca3c8aff3"
       },
@@ -36009,8 +36024,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 759,
-        "end_line": 789,
+        "line": 760,
+        "end_line": 790,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._finalize_rejection:3640911f6f3e0d07",
         "signature_hash": "b7bb15edade95563"
       }
@@ -48921,8 +48936,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 836,
-        "end_line": 838,
+        "line": 837,
+        "end_line": 839,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._record:fdc0b0dfdddc70ed",
         "signature_hash": "5aa3989971abf88b"
       },
@@ -55887,8 +55902,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 712,
-        "end_line": 729,
+        "line": 713,
+        "end_line": 730,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._store_pending:c41ac1e480365f05",
         "signature_hash": "2ab5103cc0bc7763"
       }
@@ -61175,8 +61190,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 663,
-        "end_line": 710,
+        "line": 664,
+        "end_line": 711,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._voice:2907a793413d1589",
         "signature_hash": "6080f5de2b85c66d"
       }
@@ -62408,7 +62423,7 @@
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
         "line": 271,
-        "end_line": 423,
+        "end_line": 424,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService.address:3f252d2c8c7d8320",
         "signature_hash": "4d934b3aa0f657a0"
       }
@@ -63157,8 +63172,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 498,
-        "end_line": 629,
+        "line": 499,
+        "end_line": 630,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService.approve:19071791a10e63b7",
         "signature_hash": "e8e43999ea579d85"
       }
@@ -93377,8 +93392,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 631,
-        "end_line": 661,
+        "line": 632,
+        "end_line": 662,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService.status:17335a4a26fcc04d",
         "signature_hash": "5669d9fd37503ce9"
       },
@@ -94989,6 +95004,16 @@
         "end_line": 562,
         "semantic_id": "tests/test_aura_relational_index.py#function:test_affordance_directory_exposes_relational_index:008aaf740ae3827e",
         "signature_hash": "b9ccb8439751eec1"
+      }
+    ],
+    "test_affordance_map_declares_current_review_learning_extension": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 139,
+        "end_line": 147,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_affordance_map_declares_current_review_learning_extension:a941916efef5400e",
+        "signature_hash": "92ec78e1cab637cb"
       }
     ],
     "test_affordance_map_declares_source_of_truth": [
@@ -111035,6 +111060,16 @@
         "signature_hash": "3bc6030ae6728747"
       }
     ],
+    "test_legacy_one_turn_api_remains_compatible": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 117,
+        "end_line": 136,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_legacy_one_turn_api_remains_compatible:ea2a195ddae5fb12",
+        "signature_hash": "9d513b3aa60e47dd"
+      }
+    ],
     "test_legacy_paper_memory_rows_still_load_without_lift_profile": [
       {
         "file": "test_aura_paper_memory.py",
@@ -118855,6 +118890,16 @@
         "signature_hash": "3d1b15723ce6de68"
       }
     ],
+    "test_refinement_fails_closed_for_missing_answer_or_stale_node": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 114,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_refinement_fails_closed_for_missing_answer_or_stale_node:337d8a089a8121f5",
+        "signature_hash": "752e8e2f35dc9b14"
+      }
+    ],
     "test_refuse_has_reason": [
       {
         "file": "test_aura_skillweaver.py",
@@ -125093,6 +125138,16 @@
         "end_line": 258,
         "semantic_id": "tests/test_aura_coding_arena_planning_hardening.py#function:test_strict_projection_raises_stable_error_for_mismatch:927e3aebdffdf051",
         "signature_hash": "c1d07df42b913cc4"
+      }
+    ],
+    "test_strict_refinement_requires_clarification_and_compiles": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 82,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_strict_refinement_requires_clarification_and_compiles:e567710b86631e44",
+        "signature_hash": "27c7fbbc2481eeb7"
       }
     ],
     "test_string_boolean_and_container_coercions_are_rejected": [
@@ -135529,6 +135584,14 @@
     ],
     "workflow": [
       {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 35,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:workflow:7e0d6b27800ecb44",
+        "signature_hash": "4f43baaeb4bcfb5c"
+      },
+      {
         "file": "tests/test_aura_showcase_gate_dialogue.py",
         "kind": "function",
         "line": 38,
@@ -142599,9 +142662,9 @@
     {
       "path": "aura_arena_gate_dialogue.py",
       "role": "python_module",
-      "bytes": 35697,
-      "lines": 864,
-      "tokens_est": 8924,
+      "bytes": 35784,
+      "lines": 865,
+      "tokens_est": 8946,
       "symbol_count": 25,
       "commands": [],
       "command_lines": {},
@@ -142650,40 +142713,40 @@
           "import_module": 7
         }
       },
-      "digest8": "730cd63b76f4b5d3",
+      "digest8": "d0c77f0da0aad0f2",
       "vector": [
-        -0.374176,
-        0.274395,
-        -0.07777,
-        -0.042553,
-        -0.016141,
-        -0.045488,
-        -0.063096,
-        0.118856,
-        -0.148203,
-        -0.174615,
-        -0.089509,
-        0.189289,
-        -0.139399,
-        0.068966,
-        0.068966,
-        0.312547,
-        -0.092443,
-        -0.239179,
-        0.068966,
-        -0.151138,
-        -0.256787,
-        0.256787,
-        0.154072,
-        -0.048423,
-        0.039619,
-        0.195158,
-        -0.209832,
-        0.198093,
-        -0.268526,
-        -0.054292,
-        0.024945,
-        -0.289069
+        0.058556,
+        -0.003738,
+        -0.090949,
+        0.260387,
+        -0.090949,
+        0.051081,
+        -0.113374,
+        -0.143275,
+        0.180651,
+        0.03613,
+        0.260387,
+        -0.153242,
+        -0.09344,
+        -0.305239,
+        0.257896,
+        0.053573,
+        -0.153242,
+        0.013705,
+        -0.195602,
+        -0.148259,
+        -0.145767,
+        -0.170684,
+        -0.255404,
+        -0.160718,
+        0.026163,
+        0.17816,
+        0.220519,
+        0.242945,
+        0.225503,
+        0.175668,
+        0.295272,
+        0.213044
       ]
     },
     {
@@ -189965,6 +190028,52 @@
       ]
     },
     {
+      "path": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json",
+      "role": "schema_or_lexicon",
+      "bytes": 2654,
+      "lines": 62,
+      "tokens_est": 664,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "13a0e15ed8b94c43",
+      "vector": [
+        0.250902,
+        0.099704,
+        -0.014243,
+        -0.275006,
+        -0.228989,
+        -0.220224,
+        0.049304,
+        -0.248711,
+        0.180781,
+        0.073408,
+        -0.277198,
+        0.031774,
+        0.099704,
+        -0.051495,
+        -0.255285,
+        0.191738,
+        -0.233372,
+        0.275006,
+        -0.097512,
+        0.003287,
+        -0.261859,
+        0.132573,
+        -0.023009,
+        -0.145721,
+        -0.020817,
+        -0.082173,
+        0.09313,
+        -0.185164,
+        -0.266241,
+        0.101895,
+        0.257476,
+        -0.101895
+      ]
+    },
+    {
       "path": ".aura/refactor_payloads/umc_main_publish.trigger",
       "role": "support_file",
       "bytes": 153,
@@ -190468,6 +190577,52 @@
         0.182087,
         0.265712,
         0.125438
+      ]
+    },
+    {
+      "path": ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2.v1.json",
+      "role": "schema_or_lexicon",
+      "bytes": 1807,
+      "lines": 45,
+      "tokens_est": 452,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1ed92abe989c4d68",
+      "vector": [
+        -0.238314,
+        -0.012307,
+        0.043635,
+        0.168946,
+        0.271879,
+        0.032447,
+        0.045873,
+        0.240552,
+        -0.063774,
+        -0.211462,
+        0.204749,
+        0.171183,
+        -0.224888,
+        0.079438,
+        -0.218175,
+        -0.124192,
+        -0.180134,
+        -0.231601,
+        -0.173421,
+        0.229363,
+        0.256216,
+        -0.012307,
+        -0.15552,
+        0.267404,
+        -0.079438,
+        0.249503,
+        -0.15552,
+        0.25174,
+        -0.108528,
+        0.104053,
+        -0.16447,
+        -0.041397
       ]
     },
     {
@@ -192455,49 +192610,95 @@
       ]
     },
     {
-      "path": ".github/workflows/ci.yml",
+      "path": ".github/workflows/bilateral-pr2-finalize.yml",
       "role": "schema_or_lexicon",
-      "bytes": 10661,
-      "lines": 294,
-      "tokens_est": 2666,
+      "bytes": 3049,
+      "lines": 80,
+      "tokens_est": 763,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "f124dd37924f4e1d",
+      "digest8": "c313a6849fb46918",
       "vector": [
-        -0.211501,
-        0.171454,
-        -0.143921,
-        0.016269,
-        0.289094,
-        -0.00876,
-        0.08385,
-        0.011263,
-        -0.208998,
-        0.226519,
-        0.136412,
-        0.081347,
-        0.018772,
-        -0.158939,
-        -0.028784,
-        0.121394,
-        0.319129,
-        0.316626,
-        0.098867,
-        -0.08385,
-        0.153933,
-        -0.113885,
-        0.281585,
-        -0.118891,
-        0.266567,
-        -0.236531,
-        -0.106376,
-        -0.133909,
-        -0.006257,
-        0.281585,
-        -0.224016,
-        0.133909
+        -0.112833,
+        0.29071,
+        0.102213,
+        0.110178,
+        0.155311,
+        0.264161,
+        -0.306639,
+        0.065045,
+        0.16062,
+        0.211063,
+        -0.157966,
+        -0.017257,
+        -0.219028,
+        0.211063,
+        0.009292,
+        0.134072,
+        -0.29602,
+        -0.266816,
+        0.096903,
+        -0.195134,
+        0.104868,
+        0.240267,
+        0.014602,
+        -0.205754,
+        -0.168585,
+        0.06239,
+        -0.219028,
+        0.043806,
+        -0.120797,
+        -0.242922,
+        -0.065045,
+        0.065045
+      ]
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 12137,
+      "lines": 329,
+      "tokens_est": 3035,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e895d721359f58c8",
+      "vector": [
+        -0.040662,
+        0.242808,
+        -0.275337,
+        0.017426,
+        -0.168455,
+        -0.194014,
+        0.117338,
+        0.128955,
+        -0.242808,
+        -0.194014,
+        0.10572,
+        0.252102,
+        -0.126632,
+        0.266043,
+        0.012779,
+        -0.117338,
+        0.049956,
+        0.096426,
+        -0.047632,
+        0.286955,
+        -0.207955,
+        0.245132,
+        -0.10572,
+        -0.22422,
+        0.212602,
+        -0.073191,
+        -0.003485,
+        -0.23119,
+        0.156838,
+        -0.205632,
+        -0.163808,
+        -0.189367
       ]
     },
     {
@@ -196796,9 +196997,9 @@
     {
       "path": "aura_showcase/gate-dialogue.js",
       "role": "interface_surface",
-      "bytes": 22558,
-      "lines": 432,
-      "tokens_est": 5634,
+      "bytes": 28568,
+      "lines": 508,
+      "tokens_est": 7132,
       "symbol_count": 0,
       "commands": [
         "!S",
@@ -196808,13 +197009,16 @@
         "!decision",
         "!dialogue",
         "!diff",
+        "!hard",
         "!hasEvidence",
         "!installPanel",
+        "!items",
         "!node",
         "!packet",
         "!result",
         "!selected",
         "!state",
+        "!statement",
         "!target",
         "!task",
         "!tool"
@@ -196824,106 +197028,120 @@
           5
         ],
         "!String": [
-          269
+          304,
+          305,
+          367
         ],
         "!button": [
-          196
+          199
         ],
         "!comment": [
-          291
+          337
         ],
         "!decision": [
-          232
+          263
         ],
         "!dialogue": [
-          37
+          38
         ],
         "!diff": [
-          368
+          444
+        ],
+        "!hard": [
+          239
         ],
         "!hasEvidence": [
-          358,
-          361,
-          364,
-          372,
-          380,
-          381,
-          384,
-          385,
-          390
+          434,
+          437,
+          440,
+          448,
+          456,
+          457,
+          460,
+          461,
+          466
         ],
         "!installPanel": [
-          248
+          282
+        ],
+        "!items": [
+          231
         ],
         "!node": [
-          217
+          218
         ],
         "!packet": [
-          136,
-          232
+          141,
+          236,
+          263
         ],
         "!result": [
-          300,
-          329
+          346,
+          376,
+          404
         ],
         "!selected": [
-          83
+          86
         ],
         "!state": [
-          270,
-          271,
-          274,
-          318,
-          356,
-          394,
-          409
+          306,
+          307,
+          310,
+          367,
+          393,
+          432,
+          470,
+          485
+        ],
+        "!statement": [
+          326
         ],
         "!target": [
-          406
+          482
         ],
         "!task": [
-          56,
-          354
+          59,
+          430
         ],
         "!tool": [
-          173
+          181
         ]
       },
       "topology": {},
-      "digest8": "84ec3b6506db46ca",
+      "digest8": "466f045a55bb59b3",
       "vector": [
-        0.147005,
-        0.236298,
-        -0.188385,
-        0.26461,
-        -0.177495,
-        -0.127405,
-        -0.04029,
-        0.031579,
-        -0.170962,
-        -0.057713,
-        -0.184029,
-        -0.207985,
-        -0.223231,
-        0.116515,
-        0.105626,
-        -0.10127,
-        -0.066425,
-        -0.210163,
-        0.125227,
-        -0.251543,
-        0.046824,
-        0.23412,
-        0.035935,
-        -0.147005,
-        -0.053358,
-        -0.275499,
-        -0.260254,
-        0.245009,
-        -0.223231,
-        0.268966,
-        0.184029,
-        0.046824
+        -0.080875,
+        -0.212672,
+        0.188709,
+        -0.240629,
+        -0.000998,
+        0.230644,
+        0.144777,
+        0.110829,
+        0.124807,
+        -0.052918,
+        -0.208678,
+        -0.134792,
+        0.054915,
+        0.218663,
+        0.040937,
+        -0.250613,
+        0.132795,
+        -0.244623,
+        0.212672,
+        -0.25261,
+        0.222656,
+        0.202687,
+        -0.202687,
+        0.218663,
+        -0.140783,
+        0.192703,
+        0.172734,
+        0.24662,
+        0.076881,
+        0.178724,
+        0.128801,
+        0.068894
       ]
     },
     {
@@ -210220,6 +210438,52 @@
         -0.270139,
         -0.234121,
         -0.056429
+      ]
+    },
+    {
+      "path": "tests/test_aura_bilateral_gate_dialogue.py",
+      "role": "python_module",
+      "bytes": 5401,
+      "lines": 148,
+      "tokens_est": 1351,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fbd603f6799e5285",
+      "vector": [
+        0.253506,
+        0.172678,
+        0.126141,
+        0.194722,
+        0.106546,
+        -0.116343,
+        -0.219215,
+        0.192273,
+        0.140837,
+        -0.133489,
+        0.104097,
+        0.265753,
+        -0.028167,
+        0.258405,
+        0.121242,
+        -0.033066,
+        -0.047762,
+        -0.263303,
+        -0.023269,
+        -0.182475,
+        0.216766,
+        -0.187374,
+        -0.265753,
+        -0.045313,
+        0.199621,
+        -0.09185,
+        -0.160431,
+        -0.040414,
+        0.290246,
+        -0.197171,
+        0.197171,
+        0.204519
       ]
     },
     {
