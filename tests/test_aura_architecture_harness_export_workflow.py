@@ -24,12 +24,26 @@ def test_export_uses_request_harness_against_exact_main() -> None:
 def test_export_keeps_generated_artifacts_outside_checkout() -> None:
     workflow = _workflow_text()
 
+    assert 'REQUEST_EXPORT_DIR="${RUNNER_TEMP}/AuraOS-request-export"' in workflow
     assert 'FULL_EXPORT_DIR="${RUNNER_TEMP}/AuraOS-full-export"' in workflow
     assert 'python "$REQUEST_TOOLS_DIR/scripts/aura_exact_head_transport.py"' in workflow
-    assert '--output-dir "$FULL_EXPORT_DIR"' in workflow
+    assert '--output-dir "$REQUEST_EXPORT_DIR"' in workflow
+    assert '--output-dir "$FULL_EXPORT_DIR"' not in workflow
     assert '${{ runner.temp }}/AuraOS-full-export/AuraOS-full-repository.zip' in workflow
     assert 'test -z "$(git status --porcelain=v1 --untracked-files=all)"' in workflow
     assert "--output=AuraOS-full-repository.zip" not in workflow
+
+
+def test_export_independently_binds_request_output_to_trusted_git_archive() -> None:
+    workflow = _workflow_text()
+
+    assert "git archive \\" in workflow
+    assert "--prefix=AuraOS/" in workflow
+    assert '"$SOURCE_SHA"' in workflow
+    assert "cmp \\" in workflow
+    assert '"$REQUEST_EXPORT_DIR/AuraOS-full-repository.zip"' in workflow
+    assert '"$FULL_EXPORT_DIR/AuraOS-full-repository.zip"' in workflow
+    assert "sha256sum AuraOS-full-repository.zip" in workflow
 
 
 def test_export_includes_exact_request_harness_and_digest() -> None:
