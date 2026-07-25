@@ -29,10 +29,11 @@ jobs:
           python-version: '3.12'
       - name: Install focused test tooling
         run: python -m pip install pytest numpy
-      - name: Apply exact reviewed patch
+      - name: Reassemble and apply exact reviewed patch
         run: |
-          git apply --check .aura/HARNESS_FIX_202_204.patch
-          git apply .aura/HARNESS_FIX_202_204.patch
+          cat .aura/HARNESS_FIX_202_204.patch.0* > /tmp/HARNESS_FIX_202_204.patch
+          git apply --check /tmp/HARNESS_FIX_202_204.patch
+          git apply /tmp/HARNESS_FIX_202_204.patch
       - name: Compile changed Python
         run: |
           python -m py_compile \
@@ -85,7 +86,11 @@ jobs:
       - name: Remove one-time materializer and commit
         run: |
           rm -f \
-            .aura/HARNESS_FIX_202_204.patch \
+            .aura/HARNESS_FIX_202_204.patch.00 \
+            .aura/HARNESS_FIX_202_204.patch.01 \
+            .aura/HARNESS_FIX_202_204.patch.02 \
+            .aura/HARNESS_FIX_202_204.patch.03 \
+            .aura/HARNESS_FIX_202_204.patch.04 \
             .aura/HARNESS_FIX_202_204_REQUEST \
             .github/workflows/harness-fix-202-204-materialize.yml
           git diff --check
