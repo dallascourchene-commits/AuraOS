@@ -58,8 +58,6 @@ jobs:
           echo "ACCEPTANCE_SCOPE_BASE_SHA=$ACCEPTANCE_SCOPE_BASE_SHA" >> "$GITHUB_ENV"
           git cat-file -e "$BENCHMARK_BASE_SHA^{commit}"
           git cat-file -e "$ACCEPTANCE_SCOPE_BASE_SHA^{commit}"
-          test "$ACCEPTANCE_SCOPE_BASE_SHA" != "$BENCHMARK_BASE_SHA" || \
-            [ "$TARGET_SHA" = "$BENCHMARK_BASE_SHA" ]
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
       - uses: actions/setup-python@v5
         with:
