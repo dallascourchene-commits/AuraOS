@@ -135,7 +135,12 @@ def load_module_manifest(
     *,
     persist_if_missing: bool = True,
 ) -> dict[str, Any] | None:
-    """Load the manifest, optionally generating a missing manifest in memory only."""
+    """Load the manifest, optionally generating a missing manifest in memory only.
+
+    Read-only callers fail closed when an existing manifest is unreadable or invalid
+    so they cannot report malformed evidence as a successful empty manifest. Legacy
+    persistence callers retain the prior graceful ``None`` behavior.
+    """
     root = Path(repo_root).resolve()
     manifest_path = root / ".aura" / "MODULE_MANIFEST.json"
     if not manifest_path.exists():
@@ -145,8 +150,13 @@ def load_module_manifest(
             manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
         return manifest
     try:
-        return json.loads(manifest_path.read_text(encoding="utf-8"))
-    except Exception:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if not isinstance(manifest, dict):
+            raise ValueError("module manifest must be a JSON object")
+        return manifest
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError):
+        if not persist_if_missing:
+            raise
         return None
 
 
