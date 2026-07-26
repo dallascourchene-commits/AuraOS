@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1785025669,
+  "generated_at_unix": 1785025887,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1424,
+    "included_file_count": 1426,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -1128,6 +1128,8 @@
       "test_resonant_oracle.py",
       "test_scientific_memory.py",
       "test_self_repair.py",
+      "test_support/__init__.py",
+      "test_support/aura_human_agent_arena_suite.py",
       "test_syntax_fixes.py",
       "test_synthesis_upgrades.py",
       "test_timestep_svd_quantizer.py",
@@ -1446,23 +1448,23 @@
     ]
   },
   "summary": {
-    "file_count": 1424,
-    "total_bytes": 56813168,
-    "text_tokens_est": 4751012,
+    "file_count": 1426,
+    "total_bytes": 56815039,
+    "text_tokens_est": 4751481,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 51,
       "knowledge_artifact": 185,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 921,
+      "python_module": 923,
       "schema_or_lexicon": 174,
       "support_file": 77
     },
     "topology_nodes": 10551,
     "topology_edges": 24945,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 31602.32
+    "elapsed_ms": 30039.81
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -2623,6 +2625,8 @@
       "test_pvm_logic.py",
       "test_resonant_oracle.py",
       "test_self_repair.py",
+      "test_support/__init__.py",
+      "test_support/aura_human_agent_arena_suite.py",
       "test_syntax_fixes.py",
       "test_synthesis_upgrades.py",
       "test_timestep_svd_quantizer.py",
@@ -94085,10 +94089,18 @@
     ],
     "test_affordance_map_declares_source_of_truth": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 723,
         "end_line": 732,
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_affordance_map_declares_source_of_truth:684e12538fcf6b21",
+        "signature_hash": "8b3c6a73a66c9253"
+      },
+      {
+        "file": "tests/test_aura_human_agent_arena.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 45,
         "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_affordance_map_declares_source_of_truth:536687ffbeaccb86",
         "signature_hash": "8b3c6a73a66c9253"
       }
@@ -94215,11 +94227,11 @@
     ],
     "test_all_commands_include_required_fields": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 537,
         "end_line": 548,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_all_commands_include_required_fields:2348ed031f2b8128",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_all_commands_include_required_fields:ccc54929a9042665",
         "signature_hash": "e7dec34f1b8c834d"
       }
     ],
@@ -101879,11 +101891,11 @@
     ],
     "test_diagnose_selection_with_selection": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 444,
         "end_line": 453,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_diagnose_selection_with_selection:d9b4027819b685db",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_diagnose_selection_with_selection:090ee7883038c92d",
         "signature_hash": "ab4a402de0406905"
       }
     ],
@@ -104087,61 +104099,61 @@
     ],
     "test_existing_coding_arena_compile_capsule_route_still_works": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 62,
         "end_line": 75,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_existing_coding_arena_compile_capsule_route_still_works:92939865a2157210",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_existing_coding_arena_compile_capsule_route_still_works:6a27853ae8fcf502",
         "signature_hash": "6b96e5cbb91552fb"
       }
     ],
     "test_existing_coding_arena_mark_edge_route_still_works": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 99,
         "end_line": 111,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_existing_coding_arena_mark_edge_route_still_works:639767cb46e44593",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_existing_coding_arena_mark_edge_route_still_works:32b69d47dd039fdf",
         "signature_hash": "783567cb959a622c"
       }
     ],
     "test_existing_coding_arena_select_route_still_works": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 47,
         "end_line": 59,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_existing_coding_arena_select_route_still_works:9f2d98b0c5bb1b1f",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_existing_coding_arena_select_route_still_works:e50c9a9380518d35",
         "signature_hash": "0a8f3d7ff86b1e1e"
       }
     ],
     "test_existing_coding_arena_simulate_route_still_works": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 78,
         "end_line": 96,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_existing_coding_arena_simulate_route_still_works:7d5c705a10310d0a",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_existing_coding_arena_simulate_route_still_works:a4a19bda24728fc8",
         "signature_hash": "03b1c621e98b7f50"
       }
     ],
     "test_existing_coding_arena_topology_route_still_works": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 37,
         "end_line": 44,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_existing_coding_arena_topology_route_still_works:473df7c6020d08ab",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_existing_coding_arena_topology_route_still_works:a9e5767ea54dc02d",
         "signature_hash": "b06d1f9a0358af31"
       }
     ],
     "test_existing_coding_arena_voice_intent_route_still_works": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 114,
         "end_line": 126,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_existing_coding_arena_voice_intent_route_still_works:7c6c34890e894ea7",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_existing_coding_arena_voice_intent_route_still_works:0ee6d3a43fc90fdd",
         "signature_hash": "7245a50ecadca3bb"
       }
     ],
@@ -104187,11 +104199,11 @@
     ],
     "test_expand_depth_2_works_with_selection": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 421,
         "end_line": 429,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_expand_depth_2_works_with_selection:7cebd88cb446a84c",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_expand_depth_2_works_with_selection:e1098cdcc9780ff9",
         "signature_hash": "a0b2682f423f785f"
       }
     ],
@@ -104217,11 +104229,11 @@
     ],
     "test_expand_selected_routes_before_expand_depth": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 669,
         "end_line": 673,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_expand_selected_routes_before_expand_depth:ad826368daa62e91",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_expand_selected_routes_before_expand_depth:bda418ccf3c30cd0",
         "signature_hash": "506ad4dd38bfdc93"
       }
     ],
@@ -104403,11 +104415,11 @@
     ],
     "test_explain_selected_routes_correctly": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 711,
         "end_line": 715,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_explain_selected_routes_correctly:166a6b21ccc060dc",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_explain_selected_routes_correctly:ea116ff32e034f65",
         "signature_hash": "01864a3474e8b445"
       }
     ],
@@ -105671,11 +105683,11 @@
     ],
     "test_frontend_files_exist_and_contain_expected_elements": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 591,
         "end_line": 619,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_frontend_files_exist_and_contain_expected_elements:85349e0ef7b891f8",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_frontend_files_exist_and_contain_expected_elements:5933016da459226e",
         "signature_hash": "90c113aaae8f403b"
       }
     ],
@@ -105691,11 +105703,11 @@
     ],
     "test_frontend_remerges_projected_nodes_after_loadstate": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 793,
         "end_line": 804,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_frontend_remerges_projected_nodes_after_loadstate:6b6dc328319ccd7b",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_frontend_remerges_projected_nodes_after_loadstate:688664162a82b9db",
         "signature_hash": "c85968b09b5128e3"
       }
     ],
@@ -106491,21 +106503,21 @@
     ],
     "test_ghost_edge_dataclass_is_serializable": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 499,
         "end_line": 511,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_ghost_edge_dataclass_is_serializable:cce4152202be690c",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_ghost_edge_dataclass_is_serializable:63fbd4e6e6acb19e",
         "signature_hash": "e477c9e6b1e521c6"
       }
     ],
     "test_ghost_edges_never_treated_as_patch_authority": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 320,
         "end_line": 340,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_ghost_edges_never_treated_as_patch_authority:649adea7cbf12386",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_ghost_edges_never_treated_as_patch_authority:90a942f29e38770b",
         "signature_hash": "dc273cfefa330f54"
       }
     ],
@@ -107501,41 +107513,41 @@
     ],
     "test_human_agent_arena_command_endpoint": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 188,
         "end_line": 202,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_human_agent_arena_command_endpoint:29f4c2d4d0bf3b5d",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_human_agent_arena_command_endpoint:56799061307f478c",
         "signature_hash": "f1bf2f658c795ad9"
       }
     ],
     "test_human_agent_arena_command_endpoint_rejects_empty": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 205,
         "end_line": 215,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_human_agent_arena_command_endpoint_rejects_empty:fd77c9fdf90921a2",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_human_agent_arena_command_endpoint_rejects_empty:930684307e611b81",
         "signature_hash": "d08973207b99079c"
       }
     ],
     "test_human_agent_arena_events_endpoint": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 178,
         "end_line": 185,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_human_agent_arena_events_endpoint:e29ef37cfe2909d3",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_human_agent_arena_events_endpoint:867dbe8762e4ee7b",
         "signature_hash": "205f1d0da519db1d"
       }
     ],
     "test_human_agent_arena_events_keep_absolute_offsets_after_trim": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 153,
         "end_line": 163,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_human_agent_arena_events_keep_absolute_offsets_after_trim:24a517b6fb4d5715",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_human_agent_arena_events_keep_absolute_offsets_after_trim:89a4086feee2cb38",
         "signature_hash": "fb17e2314c78460e"
       }
     ],
@@ -107551,21 +107563,21 @@
     ],
     "test_human_agent_arena_server_state_endpoint": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 166,
         "end_line": 175,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_human_agent_arena_server_state_endpoint:82f1c9a92392c783",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_human_agent_arena_server_state_endpoint:eb7fa4d01cea35d8",
         "signature_hash": "e7116aa59d200278"
       }
     ],
     "test_human_agent_arena_state_is_serializable": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 134,
         "end_line": 150,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_human_agent_arena_state_is_serializable:4cd718403466bbd2",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_human_agent_arena_state_is_serializable:ce7f7ce7ba63a0ef",
         "signature_hash": "b85c3a8061236073"
       }
     ],
@@ -107711,11 +107723,11 @@
     ],
     "test_hypothesize_connection_creates_ghost_edge_only": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 291,
         "end_line": 317,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_hypothesize_connection_creates_ghost_edge_only:79cb26d8f4726525",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_hypothesize_connection_creates_ghost_edge_only:7f2fec3e33e67952",
         "signature_hash": "0d0b934126f080c5"
       }
     ],
@@ -108409,11 +108421,11 @@
     ],
     "test_inspect_selected_routes_before_concept_commands": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 655,
         "end_line": 659,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_inspect_selected_routes_before_concept_commands:4dbc7796d30d85c7",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_inspect_selected_routes_before_concept_commands:6a8af02c471d40ba",
         "signature_hash": "4f0ebd9ee374a449"
       }
     ],
@@ -109249,11 +109261,11 @@
     ],
     "test_isolate_selected_requires_selection": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 413,
         "end_line": 418,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_isolate_selected_requires_selection:a05ffef14fc42a15",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_isolate_selected_requires_selection:f02fc847aed526a8",
         "signature_hash": "1b86cadbb8cc9448"
       }
     ],
@@ -112489,11 +112501,11 @@
     ],
     "test_no_broad_hub_file_reads_in_human_agent_arena": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 471,
         "end_line": 481,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_no_broad_hub_file_reads_in_human_agent_arena:e9fd984c4e32efc4",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_no_broad_hub_file_reads_in_human_agent_arena:1747c07bb73b7279",
         "signature_hash": "c83b395ae057ddbd"
       }
     ],
@@ -112725,11 +112737,11 @@
     ],
     "test_no_new_dependencies_required": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 484,
         "end_line": 491,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_no_new_dependencies_required:8b1b00a00684d32f",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_no_new_dependencies_required:613681d38ce73e44",
         "signature_hash": "c4a7dd0aafde6e6a"
       }
     ],
@@ -112775,11 +112787,11 @@
     ],
     "test_no_production_mutation_from_commands": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 556,
         "end_line": 583,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_no_production_mutation_from_commands:f6327c3760858f6e",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_no_production_mutation_from_commands:d679b3815bc940d3",
         "signature_hash": "0662fda7eaa5003e"
       }
     ],
@@ -115539,21 +115551,21 @@
     ],
     "test_prepare_agent_task_does_not_mutate_production_files": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 348,
         "end_line": 369,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_prepare_agent_task_does_not_mutate_production_files:e18789111603622d",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_prepare_agent_task_does_not_mutate_production_files:2c43bd8335476433",
         "signature_hash": "f541d84bb10db70a"
       }
     ],
     "test_prepare_agent_task_with_selection_stores_task_in_state": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 372,
         "end_line": 385,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_prepare_agent_task_with_selection_stores_task_in_state:75a4cec04749e555",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_prepare_agent_task_with_selection_stores_task_in_state:5b8813d93fd9830d",
         "signature_hash": "9b2d9b62680c6a4d"
       }
     ],
@@ -116219,21 +116231,21 @@
     ],
     "test_projected_nodes_labeled_codemap_projected": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 740,
         "end_line": 753,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_projected_nodes_labeled_codemap_projected:6c28a9255c32a8f1",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_projected_nodes_labeled_codemap_projected:285b56cbd47b7ed4",
         "signature_hash": "1c1234358eb792a7"
       }
     ],
     "test_projected_nodes_survive_state_refresh": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 761,
         "end_line": 781,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_projected_nodes_survive_state_refresh:f2ac114502d886bc",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_projected_nodes_survive_state_refresh:f081f842df560712",
         "signature_hash": "7d912e470eda74a1"
       }
     ],
@@ -121713,21 +121725,21 @@
     ],
     "test_show_affordances_for_selected_routes_correctly": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 648,
         "end_line": 652,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_affordances_for_selected_routes_correctly:786fbc022c53fc69",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_affordances_for_selected_routes_correctly:0d209e4907c6ffbe",
         "signature_hash": "83af8545f909fe8d"
       }
     ],
     "test_show_agent_arena_bridge_filters_agent_arena_nodes": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 274,
         "end_line": 283,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_agent_arena_bridge_filters_agent_arena_nodes:fc78da3a67a54ddb",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_agent_arena_bridge_filters_agent_arena_nodes:a18f42671aceb1ce",
         "signature_hash": "55e227932a97bf61"
       }
     ],
@@ -121753,21 +121765,21 @@
     ],
     "test_show_callees_routes_correctly": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 683,
         "end_line": 687,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_callees_routes_correctly:223fd1a7026b3124",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_callees_routes_correctly:cebc3d694786431c",
         "signature_hash": "03d07b585f63bea3"
       }
     ],
     "test_show_callers_routes_correctly": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 676,
         "end_line": 680,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_callers_routes_correctly:eb4b8bbf6ceec62e",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_callers_routes_correctly:afce2a27f014f254",
         "signature_hash": "0771bd1b06ec1d24"
       }
     ],
@@ -121803,61 +121815,61 @@
     ],
     "test_show_dependencies_requires_selection": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 405,
         "end_line": 410,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_dependencies_requires_selection:9d2989c990a20e9d",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_dependencies_requires_selection:bd8d3c0def58547a",
         "signature_hash": "3beae2a485ae74ca"
       }
     ],
     "test_show_docs_for_selected_routes_to_selected_handler": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 641,
         "end_line": 645,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_docs_for_selected_routes_to_selected_handler:71c3f1361f2103d2",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_docs_for_selected_routes_to_selected_handler:2c455cffc0bf76cc",
         "signature_hash": "0fa77f2f7f01d2bd"
       }
     ],
     "test_show_exact_source_for_selected_routes_correctly": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 662,
         "end_line": 666,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_exact_source_for_selected_routes_correctly:d4621dcc1650ae69",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_exact_source_for_selected_routes_correctly:ed1336f046d44854",
         "signature_hash": "9f93b49762f18e90"
       }
     ],
     "test_show_jspace_filters_jspace_nodes": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 257,
         "end_line": 266,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_jspace_filters_jspace_nodes:8808db45a025b620",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_jspace_filters_jspace_nodes:34485ac34c367c4a",
         "signature_hash": "9811c810d02ed78d"
       }
     ],
     "test_show_risks_routes_correctly": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 690,
         "end_line": 694,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_risks_routes_correctly:47b8fd3acbd57349",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_risks_routes_correctly:511220acc7564154",
         "signature_hash": "7bec2e218afd9a8d"
       }
     ],
     "test_show_st3gg_filters_st3gg_nodes": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 223,
         "end_line": 238,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_st3gg_filters_st3gg_nodes:ce02effce662b2da",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_st3gg_filters_st3gg_nodes:c93ffa9c5113909d",
         "signature_hash": "52763c61f024d39e"
       }
     ],
@@ -121873,51 +121885,51 @@
     ],
     "test_show_st3gg_response_has_required_fields": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 241,
         "end_line": 249,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_st3gg_response_has_required_fields:f8f791b6beb799c5",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_st3gg_response_has_required_fields:43279f62073d1e0c",
         "signature_hash": "e513d240fe4dbf05"
       }
     ],
     "test_show_tests_for_selected_routes_to_selected_handler": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 627,
         "end_line": 631,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_tests_for_selected_routes_to_selected_handler:2b8683f887e505bd",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_tests_for_selected_routes_to_selected_handler:60ba98c6e2454b30",
         "signature_hash": "66889616aa22fa91"
       }
     ],
     "test_show_tests_generic_routes_to_generic_handler": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 634,
         "end_line": 638,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_tests_generic_routes_to_generic_handler:fb72d05696c170c1",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_tests_generic_routes_to_generic_handler:55bbe1119bb5bd35",
         "signature_hash": "4fd568293b633cfd"
       }
     ],
     "test_show_tests_highlights_test_nodes": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 393,
         "end_line": 402,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_tests_highlights_test_nodes:30a84b7bf16c2c6b",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_tests_highlights_test_nodes:9d88bd6432f080c3",
         "signature_hash": "c0c210ca3990fb58"
       }
     ],
     "test_show_unwired_connections_returns_result_or_fallback": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 432,
         "end_line": 441,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_show_unwired_connections_returns_result_or_fallback:95e2dee3d50dd562",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_show_unwired_connections_returns_result_or_fallback:2421def1732f3817",
         "signature_hash": "eb73363a15f7b920"
       }
     ],
@@ -125927,11 +125939,11 @@
     ],
     "test_unknown_command_returns_help": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 456,
         "end_line": 463,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_unknown_command_returns_help:d32ab10438d817cc",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_unknown_command_returns_help:09d95280b3f9aa0a",
         "signature_hash": "6c72c0a6c6ba0007"
       }
     ],
@@ -127417,11 +127429,11 @@
     ],
     "test_what_would_break_routes_correctly": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 697,
         "end_line": 701,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_what_would_break_routes_correctly:38205763e556b29e",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_what_would_break_routes_correctly:57ef1ddbbfe8139e",
         "signature_hash": "6a2360c2392434b7"
       }
     ],
@@ -127447,11 +127459,11 @@
     ],
     "test_why_is_this_node_here_routes_correctly": [
       {
-        "file": "tests/test_aura_human_agent_arena.py",
+        "file": "test_support/aura_human_agent_arena_suite.py",
         "kind": "function",
         "line": 704,
         "end_line": 708,
-        "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_why_is_this_node_here_routes_correctly:9c81edc65c915e0e",
+        "semantic_id": "test_support/aura_human_agent_arena_suite.py#function:test_why_is_this_node_here_routes_correctly:8e7b590aee18eb41",
         "signature_hash": "145a4c638687926c"
       }
     ],
@@ -207139,6 +207151,98 @@
       ]
     },
     {
+      "path": "test_support/__init__.py",
+      "role": "python_module",
+      "bytes": 81,
+      "lines": 2,
+      "tokens_est": 21,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "589f66db5fedf166",
+      "vector": [
+        -0.149572,
+        0.145329,
+        0.242922,
+        -0.077438,
+        0.064708,
+        0.003182,
+        -0.234436,
+        0.268381,
+        0.113505,
+        -0.155937,
+        0.2408,
+        -0.113505,
+        -0.2408,
+        -0.009547,
+        0.247165,
+        0.015912,
+        0.115627,
+        -0.238679,
+        -0.153815,
+        -0.262016,
+        0.228071,
+        -0.009547,
+        -0.164423,
+        0.143207,
+        -0.270503,
+        0.083803,
+        -0.126235,
+        -0.268381,
+        -0.001061,
+        0.128356,
+        0.268381,
+        -0.117748
+      ]
+    },
+    {
+      "path": "test_support/aura_human_agent_arena_suite.py",
+      "role": "python_module",
+      "bytes": 34041,
+      "lines": 805,
+      "tokens_est": 8503,
+      "symbol_count": 50,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c15ffc2ed04481cf",
+      "vector": [
+        -0.103908,
+        0.314289,
+        0.280936,
+        0.060292,
+        -0.134695,
+        -0.057726,
+        -0.180876,
+        0.00898,
+        -0.160351,
+        -0.07312,
+        0.193704,
+        -0.304026,
+        -0.134695,
+        -0.106473,
+        -0.157786,
+        -0.05003,
+        -0.242451,
+        -0.067989,
+        -0.191139,
+        0.006414,
+        0.239886,
+        0.203967,
+        -0.311723,
+        0.07312,
+        -0.067989,
+        0.024373,
+        -0.211664,
+        0.211664,
+        -0.293764,
+        -0.078251,
+        0.09108,
+        0.19627
+      ]
+    },
+    {
       "path": "tests/conftest.py",
       "role": "python_module",
       "bytes": 748,
@@ -213495,47 +213599,47 @@
     {
       "path": "tests/test_aura_human_agent_arena.py",
       "role": "python_module",
-      "bytes": 34041,
-      "lines": 805,
-      "tokens_est": 8503,
-      "symbol_count": 50,
+      "bytes": 1790,
+      "lines": 46,
+      "tokens_est": 448,
+      "symbol_count": 1,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "c15ffc2ed04481cf",
+      "digest8": "cee587ad1dea3918",
       "vector": [
-        0.18051,
-        0.178087,
-        -0.248352,
-        -0.044825,
-        -0.207162,
-        -0.245929,
-        0.00848,
-        -0.107821,
-        -0.078746,
-        0.23866,
-        0.253198,
-        0.187779,
-        0.076323,
-        0.044825,
-        -0.059362,
-        0.260467,
-        -0.132051,
-        -0.192624,
-        0.260467,
-        0.035133,
-        -0.146588,
-        -0.127205,
-        -0.037556,
-        0.161126,
-        -0.003634,
-        -0.15628,
-        0.258044,
-        0.275005,
-        0.236238,
-        -0.233815,
-        -0.2217,
-        0.015749
+        -0.291985,
+        0.250824,
+        -0.129914,
+        -0.325428,
+        -0.024439,
+        0.081036,
+        -0.093898,
+        -0.119624,
+        -0.04502,
+        0.253397,
+        -0.289413,
+        0.019294,
+        0.037302,
+        0.003859,
+        0.011577,
+        -0.137632,
+        -0.171075,
+        0.117051,
+        -0.006431,
+        0.119624,
+        0.258542,
+        -0.227671,
+        -0.093898,
+        0.245679,
+        -0.217381,
+        0.132487,
+        0.096471,
+        0.003859,
+        0.289413,
+        -0.317711,
+        -0.124769,
+        0.091326
       ]
     },
     {
