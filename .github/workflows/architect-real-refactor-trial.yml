@@ -215,9 +215,24 @@ jobs:
               "tests/test_aura_codemap_verify.py",
               "tests/test_aura_emergent_refactor_workspace.py",
           }
+          harness_repair_files = {
+              "Aura_Memory/live_topology_ast.json",
+              "aura_capability_resolver.py",
+              "aura_capability_resolver_v2.py",
+              "aura_module_manifest.py",
+              "aura_waboose_semantic_rules.py",
+              "test_support/__init__.py",
+              "test_support/aura_human_agent_arena_suite.py",
+              "tests/test_aura_architect_benchmark_report_warning.py",
+              "tests/test_aura_harness_issue_capsules.py",
+              "tests/test_aura_human_agent_arena.py",
+          }
           allowed = set(payload.get("allowed_support_files") or [])
           payload["allowed_support_files"] = sorted(
-              allowed | permanent_review_files | human_agent_emergent_files
+              allowed
+              | permanent_review_files
+              | human_agent_emergent_files
+              | harness_repair_files
           )
           benchmark_base_sha = str(
               payload.get("trial_base_sha") or os.environ["BENCHMARK_BASE_SHA"]
