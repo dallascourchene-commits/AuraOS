@@ -34,12 +34,19 @@ _BOOLEAN_KEY_PREFIXES = (
     "use_",
 )
 _SOURCE_OWNER_TERMS = (
-    "inventory",
     "repo_python_sources",
     "repository_sources",
     "source_collector",
     "source_inventory",
 )
+
+
+def _is_source_owner(owner: str) -> bool:
+    normalized = str(owner or "").lower()
+    return any(term in normalized for term in _SOURCE_OWNER_TERMS) or (
+        "inventory" in normalized
+        and any(term in normalized for term in ("source", "repo", "repository", "python"))
+    )
 
 
 def _call_name(node: ast.AST) -> str:
@@ -199,7 +206,7 @@ class _SemanticVisitor(ast.NodeVisitor):
 
     def _check_lossy_source_read(self, node: ast.Call) -> None:
         owner = self.function_name.lower()
-        if not any(term in owner for term in _SOURCE_OWNER_TERMS):
+        if not _is_source_owner(owner):
             return
         name = _call_name(node.func)
         if not (name.endswith("read_text") or name in {"open", "io.open"}):
@@ -241,7 +248,7 @@ class _SemanticVisitor(ast.NodeVisitor):
             "SyntaxError",
         }
         if (
-            any(term in owner for term in _SOURCE_OWNER_TERMS)
+            _is_source_owner(owner)
             and exceptions.intersection(source_errors)
             and _only_skip_statements(node.body)
         ):

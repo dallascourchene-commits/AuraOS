@@ -89,6 +89,16 @@ def _codemap_digest(codemap: dict) -> str:
     return hashlib.blake2b(payload.encode(), digest_size=8).hexdigest()
 
 
+def _dependency_failure(owner: str, exc: Exception) -> dict[str, str]:
+    """Return bounded failure evidence without copying exception payloads."""
+
+    return {
+        "owner": str(owner),
+        "error_type": type(exc).__name__,
+        "status": "UNAVAILABLE",
+    }
+
+
 def resolve_capabilities(
     objective: str,
     *,
@@ -98,6 +108,7 @@ def resolve_capabilities(
     repo_root: str | Path = ".",
     top_k: int = 12,
     token_budget: int = 2400,
+    persist_module_manifest: bool = False,
 ) -> dict[str, Any]:
     """Resolve capabilities for an objective from Aura's shared substrate.
 
@@ -108,6 +119,7 @@ def resolve_capabilities(
     codemap = _load_codemap(root)
     keywords = _extract_keywords(objective)
     obj_hash = _objective_hash(objective)
+    dependency_failures: list[dict[str, str]] = []
 
     # --- Topology health ---
     from aura_topology_health import topology_health_packet
@@ -197,8 +209,8 @@ def resolve_capabilities(
         from aura_affordance_directory import find_affordances
         aff_result = find_affordances(objective, repo_root=root, top_k=7)
         existing_affordances = aff_result.get("recommended_affordances", [])
-    except Exception:
-        pass
+    except Exception as exc:
+        dependency_failures.append(_dependency_failure("affordance_directory", exc))
 
     # --- Capability lanes ---
     capability_lanes: list[dict[str, Any]] = []
@@ -212,8 +224,8 @@ def resolve_capabilities(
                     "purpose": lane.purpose[:100],
                     "advisory_only": lane.advisory_only,
                 })
-    except Exception:
-        pass
+    except Exception as exc:
+        dependency_failures.append(_dependency_failure("capability_lane_registry", exc))
 
     # --- Plugin organs ---
     plugin_organs: list[dict[str, Any]] = []
@@ -221,16 +233,16 @@ def resolve_capabilities(
         from aura_cockpit_plugin_registration import list_registered_plugins
         plugin_result = list_registered_plugins(repo_root=root)
         plugin_organs = plugin_result.get("plugins", [])
-    except Exception:
-        pass
+    except Exception as exc:
+        dependency_failures.append(_dependency_failure("cockpit_plugin_registry", exc))
 
     # --- Agent tools ---
     agent_tools: list[dict[str, Any]] = []
     try:
         from aura_agent_workbench_interface import list_agent_actions
         agent_tools = list_agent_actions()
-    except Exception:
-        pass
+    except Exception as exc:
+        dependency_failures.append(_dependency_failure("agent_workbench_interface", exc))
 
     # --- Read-slice commands ---
     read_slice_commands: list[str] = []
@@ -303,12 +315,15 @@ def resolve_capabilities(
     module_manifest_hash = ""
     try:
         from aura_module_manifest import load_module_manifest
-        manifest = load_module_manifest(root)
+        manifest = load_module_manifest(
+            root,
+            persist_if_missing=persist_module_manifest,
+        )
         module_manifest_hash = hashlib.blake2b(
             json.dumps(manifest, sort_keys=True, default=str).encode(), digest_size=8
         ).hexdigest()
-    except Exception:
-        pass
+    except Exception as exc:
+        dependency_failures.append(_dependency_failure("module_manifest", exc))
 
     return {
         "version": RESOLVER_VERSION,
@@ -316,6 +331,11 @@ def resolve_capabilities(
         "objective_hash": obj_hash,
         "codemap_digest": _codemap_digest(codemap),
         "module_manifest_hash": module_manifest_hash,
+        "evidence_complete": not dependency_failures,
+        "evidence_status": (
+            "COMPLETE" if not dependency_failures else "PARTIAL_DEPENDENCY_FAILURE"
+        ),
+        "dependency_failures": dependency_failures,
         "topology_health": {
             "topology_nodes": topo_health.get("topology_nodes", 0),
             "topology_edges": topo_health.get("topology_edges", 0),

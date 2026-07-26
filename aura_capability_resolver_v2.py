@@ -27,6 +27,7 @@ def resolve_capabilities(
     repo_root: str | Path = ".",
     top_k: int = 12,
     token_budget: int = 2400,
+    persist_module_manifest: bool = False,
 ) -> dict[str, Any]:
     """Resolve existing Aura capabilities and bind an exact Connectome path."""
     result = resolve_capabilities_v1(
@@ -37,6 +38,7 @@ def resolve_capabilities(
         repo_root=repo_root,
         top_k=top_k,
         token_budget=token_budget,
+        persist_module_manifest=persist_module_manifest,
     )
     source_version = result.get("version", "")
     graph = enrich_connectome(build_capability_connectome(repo_root))

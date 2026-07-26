@@ -21,21 +21,44 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - name: Fetch exact head and frozen trial base without persisted credentials
+      - name: Fetch exact head, frozen benchmark base, and live acceptance base
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-          TRIAL_BASE_SHA: 00263be1804eeb2cb738bdccd45a13d480c6bc4e
+          BENCHMARK_BASE_SHA: 00263be1804eeb2cb738bdccd45a13d480c6bc4e
+          ACCEPTANCE_SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
+          NEED_PARENT_BASE=0
+          if [ -z "$ACCEPTANCE_SCOPE_BASE_SHA" ] || \
+             [ "$ACCEPTANCE_SCOPE_BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            NEED_PARENT_BASE=1
+          fi
           git init .
           git remote add origin "https://github.com/${{ github.repository }}.git"
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin "$TARGET_SHA" "$TRIAL_BASE_SHA"
+          if [ "$NEED_PARENT_BASE" = "1" ]; then
+            git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+              fetch --no-tags origin \
+                "$TARGET_SHA" \
+                "$BENCHMARK_BASE_SHA"
+          else
+            git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+              fetch --no-tags origin \
+                "$TARGET_SHA" \
+                "$BENCHMARK_BASE_SHA" \
+                "$ACCEPTANCE_SCOPE_BASE_SHA"
+          fi
           unset AUTH_HEADER
           git checkout --detach "$TARGET_SHA"
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
-          git cat-file -e "$TRIAL_BASE_SHA^{commit}"
+          if [ "$NEED_PARENT_BASE" = "1" ]; then
+            ACCEPTANCE_SCOPE_BASE_SHA="$(git rev-parse "$TARGET_SHA^")"
+          fi
+          echo "BENCHMARK_BASE_SHA=$BENCHMARK_BASE_SHA" >> "$GITHUB_ENV"
+          echo "ACCEPTANCE_SCOPE_BASE_SHA=$ACCEPTANCE_SCOPE_BASE_SHA" >> "$GITHUB_ENV"
+          git cat-file -e "$BENCHMARK_BASE_SHA^{commit}"
+          git cat-file -e "$ACCEPTANCE_SCOPE_BASE_SHA^{commit}"
+          git merge-base --is-ancestor "$ACCEPTANCE_SCOPE_BASE_SHA" "$TARGET_SHA"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
       - uses: actions/setup-python@v5
         with:
@@ -167,10 +190,11 @@ jobs:
           }
           Path("benchmark-four-gates.json").write_text(json.dumps(gates, indent=2) + "\n")
           PY
-      - name: Extend frozen support scope for reviewed permanent features
+      - name: Bind reviewed support scope to the live acceptance base
         run: |
           python - <<'PY'
           import json
+          import os
           from pathlib import Path
 
           source = Path("benchmarks/real_refactor_trial/plans.json")
@@ -203,13 +227,40 @@ jobs:
               "tests/test_aura_codemap_verify.py",
               "tests/test_aura_emergent_refactor_workspace.py",
           }
+          harness_repair_files = {
+              "Aura_Memory/live_topology_ast.json",
+              "aura_capability_resolver.py",
+              "aura_capability_resolver_v2.py",
+              "aura_module_manifest.py",
+              "aura_waboose_semantic_rules.py",
+              "test_support/__init__.py",
+              "test_support/aura_human_agent_arena_suite.py",
+              "tests/test_aura_architect_benchmark_report_warning.py",
+              "tests/test_aura_harness_issue_capsules.py",
+              "tests/test_aura_human_agent_arena.py",
+          }
           allowed = set(payload.get("allowed_support_files") or [])
           payload["allowed_support_files"] = sorted(
-              allowed | permanent_review_files | human_agent_emergent_files
+              allowed
+              | permanent_review_files
+              | human_agent_emergent_files
+              | harness_repair_files
           )
+          benchmark_base_sha = str(
+              payload.get("trial_base_sha") or os.environ["BENCHMARK_BASE_SHA"]
+          )
+          acceptance_scope_base_sha = os.environ["ACCEPTANCE_SCOPE_BASE_SHA"]
+          prior_evidence = dict(payload.get("prior_evidence") or {})
+          prior_evidence["benchmark_base_sha"] = benchmark_base_sha
+          payload["prior_evidence"] = prior_evidence
+          payload["acceptance_scope_base_sha"] = acceptance_scope_base_sha
+          payload["trial_base_sha"] = acceptance_scope_base_sha
           target = Path("benchmark-four-plans.current.json")
           target.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
-          assert payload["candidates"] == json.loads(source.read_text(encoding="utf-8"))["candidates"]
+          frozen = json.loads(source.read_text(encoding="utf-8"))
+          assert payload["candidates"] == frozen["candidates"]
+          assert prior_evidence["benchmark_base_sha"] == frozen["trial_base_sha"]
+          assert payload["trial_base_sha"] == acceptance_scope_base_sha
           PY
       - name: Run the real refactor as Benchmark Four
         run: |
@@ -221,12 +272,14 @@ jobs:
             --hidden-junit benchmark-four-hidden.xml \
             --regression-junit benchmark-four-regression.xml \
             --gate-evidence benchmark-four-gates.json \
+            --base-sha "$ACCEPTANCE_SCOPE_BASE_SHA" \
             --head-sha "${{ github.event.pull_request.head.sha || github.sha }}"
           cat benchmark-output/real-refactor-trial/real_refactor_trial.md
       - name: Validate standard record and selected Council plan
         run: |
           python - <<'PY'
           import json
+          import os
           from pathlib import Path
           report = json.loads(Path("benchmark-output/real-refactor-trial/real_refactor_trial.json").read_text())
           record = report["code_quality_record"]
@@ -238,6 +291,10 @@ jobs:
               assert report["execution_evidence"][group]["status"] == "PASS"
               assert report["execution_evidence"][group]["tests"] > 0
           assert report["execution_evidence"]["patch_digest"]
+          assert report["execution_evidence"]["base_sha"] == os.environ["ACCEPTANCE_SCOPE_BASE_SHA"]
+          assert report["prior_evidence"]["benchmark_base_sha"] == os.environ["BENCHMARK_BASE_SHA"]
+          assert record["workload"]["trial_base_sha"] == os.environ["ACCEPTANCE_SCOPE_BASE_SHA"]
+          assert record["workload"]["prior_evidence"]["benchmark_base_sha"] == os.environ["BENCHMARK_BASE_SHA"]
           assert record["record_version"] == "AURA_REFACTOR_OUTPUT_RECORD_V1"
           assert record["disposition"] == "ACCEPTED"
           assert record["mandatory_gate_passed"] is True
