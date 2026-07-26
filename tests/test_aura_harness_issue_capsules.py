@@ -121,3 +121,15 @@ def test_waboose_source_owner_detection_excludes_diagnostic_inventories() -> Non
     assert _is_source_owner("_repo_python_sources") is True
     assert _is_source_owner("_repository_sources") is True
     assert _is_source_owner("_source_inventory") is True
+
+
+def test_real_refactor_trial_uses_live_parent_when_push_before_is_zero() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    workflow = (repo_root / ".github" / "workflows" / "architect-real-refactor-trial.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert "NEED_PARENT_BASE=1" in workflow
+    assert "fetch --no-tags --depth=2 origin" in workflow
+    assert 'ACCEPTANCE_SCOPE_BASE_SHA="$(git rev-parse "$TARGET_SHA^")"' in workflow
+    assert 'ACCEPTANCE_SCOPE_BASE_SHA="$BENCHMARK_BASE_SHA"' not in workflow
