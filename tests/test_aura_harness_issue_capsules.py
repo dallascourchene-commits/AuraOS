@@ -103,6 +103,31 @@ def test_resolver_default_does_not_persist_missing_module_manifest(tmp_path: Pat
     assert not (tmp_path / ".aura" / "MODULE_MANIFEST.json").exists()
 
 
+def test_invalid_existing_manifest_is_reported_as_bounded_dependency_failure(
+    tmp_path: Path,
+) -> None:
+    _write_minimal_codemap(tmp_path)
+    manifest_path = tmp_path / ".aura" / "MODULE_MANIFEST.json"
+    manifest_path.write_text('{"secret": "MUST_NOT_ESCAPE",', encoding="utf-8")
+
+    packet = resolve_capabilities(
+        "Use target_symbol from target.py",
+        target_files=["target.py"],
+        target_symbols=["target_symbol"],
+        repo_root=tmp_path,
+    )
+
+    assert packet["exact_matches"][0]["file"] == "target.py"
+    assert packet["module_manifest_hash"] == ""
+    assert packet["evidence_complete"] is False
+    assert packet["evidence_status"] == "PARTIAL_DEPENDENCY_FAILURE"
+    assert {"owner": "module_manifest", "error_type": "JSONDecodeError", "status": "UNAVAILABLE"} in packet[
+        "dependency_failures"
+    ]
+    assert "MUST_NOT_ESCAPE" not in json.dumps(packet, sort_keys=True)
+    assert load_module_manifest(tmp_path, persist_if_missing=True) is None
+
+
 def test_module_manifest_persistence_remains_explicit(tmp_path: Path) -> None:
     (tmp_path / "sample.py").write_text("def sample():\n    return 1\n", encoding="utf-8")
 
