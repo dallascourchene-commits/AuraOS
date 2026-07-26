@@ -38,12 +38,12 @@ jobs:
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           if [ "$NEED_PARENT_BASE" = "1" ]; then
             git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-              fetch --no-tags --depth=2 origin \
+              fetch --no-tags origin \
                 "$TARGET_SHA" \
                 "$BENCHMARK_BASE_SHA"
           else
             git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-              fetch --no-tags --depth=1 origin \
+              fetch --no-tags origin \
                 "$TARGET_SHA" \
                 "$BENCHMARK_BASE_SHA" \
                 "$ACCEPTANCE_SCOPE_BASE_SHA"
@@ -58,6 +58,7 @@ jobs:
           echo "ACCEPTANCE_SCOPE_BASE_SHA=$ACCEPTANCE_SCOPE_BASE_SHA" >> "$GITHUB_ENV"
           git cat-file -e "$BENCHMARK_BASE_SHA^{commit}"
           git cat-file -e "$ACCEPTANCE_SCOPE_BASE_SHA^{commit}"
+          git merge-base --is-ancestor "$ACCEPTANCE_SCOPE_BASE_SHA" "$TARGET_SHA"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
       - uses: actions/setup-python@v5
         with:
