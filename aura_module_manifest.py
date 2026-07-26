@@ -130,14 +130,19 @@ def generate_module_manifest(repo_root: str | Path) -> dict[str, Any]:
     return manifest
 
 
-def load_module_manifest(repo_root: str | Path) -> dict[str, Any] | None:
-    """Load the manifest, generating it if it does not exist."""
+def load_module_manifest(
+    repo_root: str | Path,
+    *,
+    persist_if_missing: bool = True,
+) -> dict[str, Any] | None:
+    """Load the manifest, optionally generating a missing manifest in memory only."""
     root = Path(repo_root).resolve()
     manifest_path = root / ".aura" / "MODULE_MANIFEST.json"
     if not manifest_path.exists():
         manifest = generate_module_manifest(root)
-        manifest_path.parent.mkdir(parents=True, exist_ok=True)
-        manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+        if persist_if_missing:
+            manifest_path.parent.mkdir(parents=True, exist_ok=True)
+            manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
         return manifest
     try:
         return json.loads(manifest_path.read_text(encoding="utf-8"))

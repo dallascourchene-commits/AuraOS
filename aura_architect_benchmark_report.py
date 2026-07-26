@@ -235,7 +235,7 @@ The benchmark uses the same repository commit, objective, output contract, and d
 | Aura-slice single planner | {sliced['model_calls']} | {sliced['input_tokens']:,} | {sliced['output_tokens']:,} | {sliced['total_tokens']:,} | {sliced['quality']['quality_score']:.4f} | ${sliced['normalized_cost_usd']:.6f} |
 | Aura Architect Council | {council['model_calls']} | {council['input_tokens']:,} | {council['output_tokens']:,} | {council['total_tokens']:,} | {council['quality']['quality_score']:.4f} | ${council['normalized_cost_usd']:.6f} |
 
-\*Normalized cost uses a declared $1/M input and $3/M output rate card; it is **not** a provider invoice.
+\\*Normalized cost uses a declared $1/M input and $3/M output rate card; it is **not** a provider invoice.
 
 ### What the first run supports
 
