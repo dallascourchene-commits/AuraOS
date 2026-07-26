@@ -28,25 +28,38 @@ jobs:
           BENCHMARK_BASE_SHA: 00263be1804eeb2cb738bdccd45a13d480c6bc4e
           ACCEPTANCE_SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
+          NEED_PARENT_BASE=0
           if [ -z "$ACCEPTANCE_SCOPE_BASE_SHA" ] || \
              [ "$ACCEPTANCE_SCOPE_BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
-            ACCEPTANCE_SCOPE_BASE_SHA="$BENCHMARK_BASE_SHA"
+            NEED_PARENT_BASE=1
           fi
-          echo "BENCHMARK_BASE_SHA=$BENCHMARK_BASE_SHA" >> "$GITHUB_ENV"
-          echo "ACCEPTANCE_SCOPE_BASE_SHA=$ACCEPTANCE_SCOPE_BASE_SHA" >> "$GITHUB_ENV"
           git init .
           git remote add origin "https://github.com/${{ github.repository }}.git"
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin \
-              "$TARGET_SHA" \
-              "$BENCHMARK_BASE_SHA" \
-              "$ACCEPTANCE_SCOPE_BASE_SHA"
+          if [ "$NEED_PARENT_BASE" = "1" ]; then
+            git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+              fetch --no-tags --depth=2 origin \
+                "$TARGET_SHA" \
+                "$BENCHMARK_BASE_SHA"
+          else
+            git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+              fetch --no-tags --depth=1 origin \
+                "$TARGET_SHA" \
+                "$BENCHMARK_BASE_SHA" \
+                "$ACCEPTANCE_SCOPE_BASE_SHA"
+          fi
           unset AUTH_HEADER
           git checkout --detach "$TARGET_SHA"
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          if [ "$NEED_PARENT_BASE" = "1" ]; then
+            ACCEPTANCE_SCOPE_BASE_SHA="$(git rev-parse "$TARGET_SHA^")"
+          fi
+          echo "BENCHMARK_BASE_SHA=$BENCHMARK_BASE_SHA" >> "$GITHUB_ENV"
+          echo "ACCEPTANCE_SCOPE_BASE_SHA=$ACCEPTANCE_SCOPE_BASE_SHA" >> "$GITHUB_ENV"
           git cat-file -e "$BENCHMARK_BASE_SHA^{commit}"
           git cat-file -e "$ACCEPTANCE_SCOPE_BASE_SHA^{commit}"
+          test "$ACCEPTANCE_SCOPE_BASE_SHA" != "$BENCHMARK_BASE_SHA" || \
+            [ "$TARGET_SHA" = "$BENCHMARK_BASE_SHA" ]
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
       - uses: actions/setup-python@v5
         with:
