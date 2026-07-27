@@ -16,17 +16,19 @@ jobs:
       - name: Checkout exact branch head
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           ref: refactor/bilateral-intent-pr3-enforcement
 
       - name: Apply manually authored repairs
         run: python .github/pr236_manual_repairs.py
 
-      - name: Run focused verification
+      - name: Run bilateral enforcement tests
+        run: python -m pytest -q tests/test_aura_bilateral_planning_enforcement.py
+
+      - name: Run focused static checks
         shell: bash
         run: |
           set -euo pipefail
-          python -m pytest -q tests/test_aura_bilateral_planning_enforcement.py
           python -m ruff check \
             aura_coding_relationship_compass.py \
             aura_external_llm_session.py \
