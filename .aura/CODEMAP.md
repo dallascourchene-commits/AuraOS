@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1446
-- **total_bytes**: 57197721
-- **text_tokens_est**: 4847155
+- **total_bytes**: 57197831
+- **text_tokens_est**: 4847183
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 932, 'schema_or_lexicon': 185, 'support_file': 77}
 - **topology_nodes**: 10710
 - **topology_edges**: 25526
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 32293.84
+- **elapsed_ms**: 30902.37
 
 ## Coverage
 
@@ -368,7 +368,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 - `aura_node.py` (python_module): 194 symbols, degree 890, ~104798 tokens
 - `aura_gate.py` (python_module): 68 symbols, degree 756, ~20345 tokens
-- `aura_relationship_contracts.py` (python_module): 89 symbols, degree 729, ~21820 tokens
+- `aura_relationship_contracts.py` (python_module): 89 symbols, degree 729, ~21848 tokens
 - `aura_unified_memory_continuity.py` (python_module): 92 symbols, degree 725, ~25839 tokens
 - `aura_agent_arena_cli.py` (python_module): 100 symbols, degree 575, ~17235 tokens
 - `aura_fst_routing.py` (python_module): 35 symbols, degree 561, ~8991 tokens
