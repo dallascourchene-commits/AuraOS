@@ -19,8 +19,8 @@ jobs:
           fetch-depth: 1
           ref: refactor/bilateral-intent-pr3-enforcement
 
-      - name: Install focused verification tools
-        run: python -m pip install --disable-pip-version-check pytest ruff
+      - name: Install repository test requirements
+        run: python -m pip install --disable-pip-version-check -r requirements.txt
 
       - name: Apply manually authored repairs
         run: python .github/pr236_manual_repairs.py
