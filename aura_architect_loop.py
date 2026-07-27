@@ -1983,11 +1983,12 @@ def route_intensity(plan: FractalPlanCapsule, shadow_report: ShadowReport) -> in
 class _TrustedBilateralHandoff:
     """Private, non-serializable carrier for an already-authorized bilateral handoff.
 
-    This is a behaviorally-inert substrate: it is not registered, persisted,
-    exported, or given a ``to_dict``/serializer of any kind. It exists only so a
-    future trusted caller can pass a single opaque, tamper-evident object instead
-    of raw bilateral kwargs. Nothing in this module currently validates or
-    enforces it.
+    This carrier is actively validated and enforced: ``_validate_trusted_bilateral_handoff``
+    recomputes its binding digest against the live repository state and exact preparation
+    context, and ``prepare()`` fails closed when bilateral artifacts are supplied without
+    a genuine handoff. It is not registered, persisted, exported, or given a
+    ``to_dict``/serializer of any kind—it exists only so a trusted caller can pass a
+    single opaque, tamper-evident object instead of raw bilateral kwargs.
     """
 
     bilateral_contract: Any

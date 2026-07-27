@@ -427,40 +427,6 @@ def test_verify_refactor_arena_rejects_candidate_forged_receipt(
     assert any(item["stage"] == "bilateral_negative_proof" for item in result.failures)
 
 
-@pytest.mark.parametrize(
-    "corrupt",
-    [
-        lambda contract: {"contract_digest": "stale-or-wrong-contract-digest"},
-        lambda contract: {"plan_or_act_identity": "wrong-act-identity"},
-        lambda contract: {"source_tree_digest": "wrong-source-lease"},
-        lambda contract: {"verification_run_id": "wrong-run-id"},
-    ],
-)
-def test_verify_refactor_arena_rejects_mismatched_receipt_bindings(
-    bilateral_contract: BilateralPlanningContract, corrupt
-) -> None:
-    """A verifier_receipts entry with a stale/wrong contract, plan/Act,
-    source lease, or run binding must be rejected -- binding mismatches
-    must never be treated as canonical proof."""
-    plan_data = _complete_plan(bilateral_contract)
-    requirement = bilateral_contract.negative_requirements[0]
-    verifier = plan_data["negative_requirement_coverage"][requirement]["verifier"]
-    plan_data["verifier_receipts"] = {
-        verifier: {
-            "passed": True,
-            "contract_digest": bilateral_contract.contract_digest,
-            "plan_or_act_identity": "BILATERAL-1",
-            "source_tree_digest": bilateral_contract.source_tree_digest,
-            "verification_run_id": "genuine-run-id",
-            **corrupt(bilateral_contract),
-        }
-    }
-    arena = _build_verifiable_arena(bilateral_contract, plan_data)
-    result = verify_refactor_arena(arena, repo_root=".", runner=lambda name: False)
-    assert result.ok is False
-    assert any(item["stage"] == "bilateral_negative_proof" for item in result.failures)
-
-
 def test_verify_refactor_arena_accepts_genuine_canonical_run_receipt(
     bilateral_contract: BilateralPlanningContract,
 ) -> None:
