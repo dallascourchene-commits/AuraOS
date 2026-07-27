@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import subprocess
 import time
 
 import pytest
 
 from aura_agent_arena_bridge import AuraAgentArenaBridge
 from aura_agent_arena_mcp import TOOL_DEFINITIONS, handle_request
-from aura_arena_architect_connector import AuraArenaArchitectConnector
 from aura_architect_council_v3 import route_compass_failure_classes
 from aura_architect_loop import (
     GroundingEvidence,
@@ -16,6 +16,7 @@ from aura_architect_loop import (
     shadow_plan_capsule,
     stage_arena_patch,
 )
+from aura_arena_architect_connector import AuraArenaArchitectConnector
 from aura_relationship_contracts import (
     BilateralPlanningContract,
     evaluate_bilateral_plan,
@@ -379,6 +380,51 @@ def test_prepare_forces_gate_to_exact_prepared_task(
     )
     assert result["ok"] is False
     assert result["error_category"] == "scope_too_broad"
+
+
+@pytest.mark.parametrize("raised", [OSError("git worktree unreadable"),
+                                     subprocess.SubprocessError("git call failed")])
+def test_intent_refinement_confirm_returns_protocol_error_on_repository_lookup_failure(
+    monkeypatch: pytest.MonkeyPatch,
+    raised: Exception,
+) -> None:
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    started = bridge.intent_refinement_start(
+        source_request=(
+            "Add deterministic bilateral plan enforcement. "
+            "Do not allow a plan without negative requirement verification."
+        ),
+        affected_files=["aura_arena_architect_connector.py"],
+        affected_symbols=["assess_plan"],
+    )
+    assert started["status"] == "TEACH_BACK_PENDING"
+
+    def _boom(*args: object, **kwargs: object) -> None:
+        raise raised
+
+    monkeypatch.setattr("aura_arena_gate_dialogue._repository_identity", _boom)
+
+    result = bridge.intent_refinement_confirm(
+        session_id=started["session_id"],
+        allowed_paths=["aura_arena_architect_connector.py"],
+        human_reviewer="pytest-human",
+    )
+    assert result["ok"] is False
+    assert result["error_category"] == "mcp_protocol_error"
+
+    state = bridge._intent_refinements[str(started["session_id"])]
+    assert state["confirmation_in_progress"] is False
+    assert state.get("confirmed") is None
+
+    # The session must not be bricked: a retry without the induced failure
+    # can still confirm successfully.
+    monkeypatch.undo()
+    confirmed = bridge.intent_refinement_confirm(
+        session_id=started["session_id"],
+        allowed_paths=["aura_arena_architect_connector.py"],
+        human_reviewer="pytest-human",
+    )
+    assert confirmed["ok"] is True
 
 
 def test_prepare_deterministic_denial_is_fail_closed(
