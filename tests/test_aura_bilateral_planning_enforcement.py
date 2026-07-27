@@ -226,6 +226,64 @@ def test_connector_cannot_select_higher_scoring_ineligible_plan(
     assert by_id["incomplete"]["score"] == 0.0
 
 
+def test_compare_plans_session_id_only_all_ineligible_denies_without_selection(
+    bilateral_session: tuple[AuraAgentArenaBridge, str, BilateralPlanningContract],
+) -> None:
+    """Calling compare_plans with only confirmation_session_id (no
+    bilateral_contract object) must still gate on the resolved bilateral
+    contract. If every candidate is bilaterally ineligible, the call must
+    deny deterministically and never select a candidate -- it must not fail
+    open just because the raw bilateral_contract argument was never
+    supplied."""
+    bridge, session_id, bilateral_contract = bilateral_session
+    incomplete_one = _complete_plan(bilateral_contract)
+    incomplete_one["negative_requirement_coverage"] = {}
+    incomplete_two = _complete_plan(bilateral_contract)
+    incomplete_two["positive_requirement_coverage"] = {}
+    connector = AuraArenaArchitectConnector(repo_root=".", bridge=bridge)
+    result = connector.compare_plans(
+        objective="Session-id-only call must not fail open.",
+        candidates=[
+            {"candidate_id": "one", "plan": incomplete_one},
+            {"candidate_id": "two", "plan": incomplete_two},
+        ],
+        required_capabilities=["bilateral"],
+        confirmation_session_id=session_id,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+        record=False,
+    )
+    assert result["ok"] is False
+    assert result["reason"] == "NO_BILATERAL_ELIGIBLE_PLAN"
+    assert "selected_candidate_id" not in result
+    assert "selected_plan" not in result
+
+
+def test_compare_plans_session_id_only_success_requires_bilateral_gate(
+    bilateral_session: tuple[AuraAgentArenaBridge, str, BilateralPlanningContract],
+) -> None:
+    """A successful compare_plans call using only confirmation_session_id
+    (no bilateral_contract object) must still report bilateral_gate_required
+    as True, keyed off the resolved contract rather than the raw argument."""
+    bridge, session_id, bilateral_contract = bilateral_session
+    complete = _complete_plan(bilateral_contract)
+    connector = AuraArenaArchitectConnector(repo_root=".", bridge=bridge)
+    result = connector.compare_plans(
+        objective="Session-id-only call must still require the bilateral gate.",
+        candidates=[{"candidate_id": "complete", "plan": complete}],
+        required_capabilities=["bilateral"],
+        confirmation_session_id=session_id,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+        record=False,
+    )
+    assert result["ok"] is True
+    assert result["selected_candidate_id"] == "complete"
+    assert result["bilateral_gate_required"] is True
+
+
 def test_shadow_and_patch_stage_retain_bilateral_scope(
     bilateral_contract: BilateralPlanningContract,
 ) -> None:
