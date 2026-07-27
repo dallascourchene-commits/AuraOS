@@ -487,19 +487,18 @@ class AuraAgentArenaBridge:
                     "mcp_protocol_error", "intent refinement is already confirmed"
                 )
             state["confirmation_in_progress"] = True
-        identity = _repository_identity(self.repo_root)
-        expected = state["repository"]
-        if (
-            identity["repository_head"] != expected["repository_head"]
-            or identity["source_tree_digest"] != expected["source_tree_digest"]
-        ):
-            with self._intent_lock:
-                state["confirmation_in_progress"] = False
-            return make_error_packet(
-                "mcp_protocol_error",
-                "repository identity changed during bilateral refinement",
-            )
+        confirmed = None
         try:
+            identity = _repository_identity(self.repo_root)
+            expected = state["repository"]
+            if (
+                identity["repository_head"] != expected["repository_head"]
+                or identity["source_tree_digest"] != expected["source_tree_digest"]
+            ):
+                return make_error_packet(
+                    "mcp_protocol_error",
+                    "repository identity changed during bilateral refinement",
+                )
             normalized_paths = tuple(
                 dict.fromkeys(
                     path
@@ -565,14 +564,14 @@ class AuraAgentArenaBridge:
                 "bilateral_contract": contract.to_dict(),
             }
         except (TypeError, ValueError) as exc:
-            with self._intent_lock:
-                state["confirmation_in_progress"] = False
             return make_error_packet(
                 "mcp_protocol_error", f"invalid bilateral confirmation: {exc}"
             )
-        with self._intent_lock:
-            state["confirmed"] = confirmed
-            state["confirmation_in_progress"] = False
+        finally:
+            with self._intent_lock:
+                if confirmed is not None:
+                    state["confirmed"] = confirmed
+                state["confirmation_in_progress"] = False
         return {
             "ok": True,
             "session_id": session_id,
