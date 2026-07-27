@@ -51,4 +51,6 @@ jobs:
             aura_architect_loop.py \
             tests/test_aura_bilateral_planning_enforcement.py
           git commit -m "fix(pr236): fail closed on repository identity errors"
+          git fetch origin refactor/bilateral-intent-pr3-enforcement
+          git rebase origin/refactor/bilateral-intent-pr3-enforcement
           git push origin HEAD:refactor/bilateral-intent-pr3-enforcement
