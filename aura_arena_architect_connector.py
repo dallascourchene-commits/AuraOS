@@ -12,6 +12,7 @@ from dataclasses import asdict, dataclass
 import hashlib
 import json
 from pathlib import Path
+import subprocess
 import threading
 import time
 from typing import Any, Callable, Mapping, Sequence
@@ -630,7 +631,31 @@ class AuraArenaArchitectConnector:
         if bilateral_contract is not None and bilateral_gate is not None:
             from aura_arena_gate_dialogue import _repository_identity
 
-            identity = _repository_identity(self.repo_root)
+            try:
+                identity = _repository_identity(self.repo_root)
+            except (OSError, subprocess.SubprocessError, ValueError) as exc:
+                return {
+                    "ok": False,
+                    "error": "repository_identity_unavailable",
+                    "error_category": "mcp_protocol_error",
+                    "message": (
+                        "Bilateral preparation was denied because the exact "
+                        "repository identity could not be observed."
+                    ),
+                    "repair_hint": (
+                        "REPOSITORY_IDENTITY: restore exact-head/source-tree "
+                        "observation and reconfirm before preparation."
+                    ),
+                    "deterministic_denial": True,
+                    "council_override_allowed": False,
+                    "human_reconfirmation_required": True,
+                    "exception_type": type(exc).__name__,
+                    "proposal_only": True,
+                    "human_review_required": True,
+                    "production_mutation": False,
+                    "patch_authority": PATCH_AUTHORITY,
+                    "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+                }
             _trusted_bilateral_handoff = _mint_trusted_bilateral_handoff(
                 bilateral_contract=bilateral_contract,
                 bilateral_plan_gate=bilateral_gate,

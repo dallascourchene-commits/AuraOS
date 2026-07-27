@@ -17,6 +17,7 @@ import hashlib
 import json
 import logging
 from pathlib import Path
+import subprocess
 import time
 from typing import Any
 
@@ -2120,7 +2121,12 @@ def _validate_trusted_bilateral_handoff(
         )
     from aura_arena_gate_dialogue import _repository_identity
 
-    identity = _repository_identity(repo_root)
+    try:
+        identity = _repository_identity(repo_root)
+    except (OSError, subprocess.SubprocessError, ValueError) as exc:
+        raise ValueError(
+            "repository identity unavailable for bilateral handoff"
+        ) from exc
     expected_binding_digest = _bind_trusted_bilateral_handoff(
         bilateral_contract=_trusted_bilateral_handoff.bilateral_contract,
         bilateral_plan_gate=_trusted_bilateral_handoff.bilateral_plan_gate,

@@ -9,9 +9,12 @@ import pytest
 import aura_coding_relationship_compass as compass
 from aura_agent_arena_bridge import AuraAgentArenaBridge
 from aura_agent_arena_mcp import TOOL_DEFINITIONS, handle_request
+from aura_architect_control import normalize_control_profile
 from aura_architect_council_v3 import route_compass_failure_classes
 from aura_architect_loop import (
+    ArchitectFusionLoop,
     GroundingEvidence,
+    _mint_trusted_bilateral_handoff,
     build_fractal_plan_capsule,
     build_refactor_arena,
     shadow_plan_capsule,
@@ -853,3 +856,92 @@ def test_compass_fully_projected_obligations_preserve_eligible_path(
     unprojected = packet["atlas"]["unprojected_bilateral_obligations"]
     assert not any(unprojected.values())
     assert "INTENT_FIDELITY" not in packet["council_route"]["failure_classes"]
+
+
+@pytest.mark.parametrize(
+    "raised",
+    [
+        OSError("repository unreadable"),
+        subprocess.SubprocessError("git identity failed"),
+        ValueError("trusted packaged source identity is unavailable"),
+    ],
+)
+def test_connector_identity_failure_returns_deterministic_denial(
+    bilateral_contract: BilateralPlanningContract,
+    monkeypatch: pytest.MonkeyPatch,
+    raised: Exception,
+) -> None:
+    connector = AuraArenaArchitectConnector(
+        repo_root=".",
+        bridge=AuraAgentArenaBridge(repo_root="."),
+    )
+
+    def _boom(*_: object, **__: object) -> None:
+        raise raised
+
+    monkeypatch.setattr("aura_arena_gate_dialogue._repository_identity", _boom)
+    result = connector._prepare_selected_plan(
+        objective="Fail closed when repository identity is unavailable.",
+        selected_plan=_complete_plan(bilateral_contract),
+        profile=normalize_control_profile(None, surface="native"),
+        bilateral_contract=bilateral_contract,
+        bilateral_gate={"passed": True},
+    )
+
+    assert result["ok"] is False
+    assert result["error"] == "repository_identity_unavailable"
+    assert result["error_category"] == "mcp_protocol_error"
+    assert result["deterministic_denial"] is True
+    assert result["council_override_allowed"] is False
+    assert result["human_reconfirmation_required"] is True
+    assert result["production_mutation"] is False
+
+
+@pytest.mark.parametrize(
+    "raised",
+    [
+        OSError("repository unreadable"),
+        subprocess.SubprocessError("git identity failed"),
+        ValueError("trusted packaged source identity is unavailable"),
+    ],
+)
+def test_loop_identity_failure_is_stable_fail_closed_error(
+    bilateral_contract: BilateralPlanningContract,
+    monkeypatch: pytest.MonkeyPatch,
+    raised: Exception,
+) -> None:
+    plan = _complete_plan(bilateral_contract)
+    gate = {"passed": True, "gate_digest": "test-gate"}
+    handoff = _mint_trusted_bilateral_handoff(
+        bilateral_contract=bilateral_contract,
+        bilateral_plan_gate=gate,
+        bilateral_proof_plan=plan,
+        selected_plan_digest="",
+        objective="Fail closed before plan construction.",
+        architecture_decision=plan["architecture_decision"],
+        act_tasks=plan["act_tasks"],
+        target_file="aura_arena_architect_connector.py",
+        target_symbol="assess_plan",
+        repository_head=bilateral_contract.repository_head,
+        source_tree_digest=bilateral_contract.source_tree_digest,
+    )
+
+    def _boom(*_: object, **__: object) -> None:
+        raise raised
+
+    monkeypatch.setattr("aura_arena_gate_dialogue._repository_identity", _boom)
+    with pytest.raises(
+        ValueError,
+        match="repository identity unavailable for bilateral handoff",
+    ):
+        ArchitectFusionLoop(repo_root=".").prepare(
+            "Fail closed before plan construction.",
+            architecture_decision=plan["architecture_decision"],
+            act_tasks=plan["act_tasks"],
+            target_file="aura_arena_architect_connector.py",
+            target_symbol="assess_plan",
+            bilateral_contract=bilateral_contract,
+            bilateral_plan_gate=gate,
+            bilateral_proof_plan=plan,
+            _trusted_bilateral_handoff=handoff,
+        )
