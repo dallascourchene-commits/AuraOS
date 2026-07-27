@@ -1978,6 +1978,118 @@ def route_intensity(plan: FractalPlanCapsule, shadow_report: ShadowReport) -> in
     return 0
 
 
+@dataclass(frozen=True)
+class _TrustedBilateralHandoff:
+    """Private, non-serializable carrier for an already-authorized bilateral handoff.
+
+    This is a behaviorally-inert substrate: it is not registered, persisted,
+    exported, or given a ``to_dict``/serializer of any kind. It exists only so a
+    future trusted caller can pass a single opaque, tamper-evident object instead
+    of raw bilateral kwargs. Nothing in this module currently validates or
+    enforces it.
+    """
+
+    bilateral_contract: Any
+    bilateral_plan_gate: Any
+    bilateral_proof_plan: Any
+    selected_plan_digest: str
+    binding_digest: str
+
+
+def _project_exact_act_tasks(act_tasks: list[str | dict[str, Any]]) -> tuple[Any, ...]:
+    """Deterministically project act_tasks into an immutable, hashable form.
+
+    Strings are kept as-is; mapping tasks are projected into sorted-key tuples so
+    the projection is stable regardless of dict key ordering.
+    """
+    projected: list[Any] = []
+    for task in act_tasks:
+        if isinstance(task, Mapping):
+            projected.append(tuple(sorted((str(k), task[k]) for k in task)))
+        else:
+            projected.append(task)
+    return tuple(projected)
+
+
+def _bind_trusted_bilateral_handoff(
+    *,
+    bilateral_contract: Mapping[str, Any] | Any | None,
+    bilateral_plan_gate: Mapping[str, Any] | None,
+    bilateral_proof_plan: Mapping[str, Any] | None,
+    selected_plan_digest: str,
+    objective: str,
+    architecture_decision: str,
+    act_tasks: list[str | dict[str, Any]],
+    target_file: str | None,
+    target_symbol: str | None,
+    repository_head: str,
+    source_tree_digest: str,
+) -> str:
+    """Compute a deterministic binding digest over the full authorized context."""
+    contract_data = (
+        bilateral_contract.to_dict()
+        if hasattr(bilateral_contract, "to_dict")
+        else dict(bilateral_contract or {})
+    )
+    gate_data = dict(bilateral_plan_gate or {})
+    proof_data = dict(bilateral_proof_plan or {})
+    binding_payload = {
+        "bilateral_contract": contract_data,
+        "bilateral_plan_gate": gate_data,
+        "bilateral_proof_plan_digest": _hash_payload(proof_data),
+        "objective": objective,
+        "architecture_decision": architecture_decision,
+        "act_tasks": _project_exact_act_tasks(act_tasks),
+        "target_file": _normalize_path(target_file),
+        "target_symbol": target_symbol,
+        "repository_head": repository_head,
+        "source_tree_digest": source_tree_digest,
+        "selected_plan_digest": selected_plan_digest,
+    }
+    return _hash_payload(binding_payload)
+
+
+def _mint_trusted_bilateral_handoff(
+    *,
+    bilateral_contract: Mapping[str, Any] | Any | None,
+    bilateral_plan_gate: Mapping[str, Any] | None,
+    bilateral_proof_plan: Mapping[str, Any] | None,
+    selected_plan_digest: str,
+    objective: str,
+    architecture_decision: str,
+    act_tasks: list[str | dict[str, Any]],
+    target_file: str | None,
+    target_symbol: str | None,
+    repository_head: str,
+    source_tree_digest: str,
+) -> _TrustedBilateralHandoff:
+    """Mint a `_TrustedBilateralHandoff` from already-authorized artifacts.
+
+    This factory only computes a deterministic binding; it performs no
+    authorization decisions itself and does not consult any external state.
+    """
+    binding_digest = _bind_trusted_bilateral_handoff(
+        bilateral_contract=bilateral_contract,
+        bilateral_plan_gate=bilateral_plan_gate,
+        bilateral_proof_plan=bilateral_proof_plan,
+        selected_plan_digest=selected_plan_digest,
+        objective=objective,
+        architecture_decision=architecture_decision,
+        act_tasks=act_tasks,
+        target_file=target_file,
+        target_symbol=target_symbol,
+        repository_head=repository_head,
+        source_tree_digest=source_tree_digest,
+    )
+    return _TrustedBilateralHandoff(
+        bilateral_contract=bilateral_contract,
+        bilateral_plan_gate=bilateral_plan_gate,
+        bilateral_proof_plan=bilateral_proof_plan,
+        selected_plan_digest=selected_plan_digest,
+        binding_digest=binding_digest,
+    )
+
+
 class ArchitectFusionLoop:
     """Plan/Act/Shadow/Arena coordinator for Architect-driven refactor work."""
 
@@ -2002,7 +2114,11 @@ class ArchitectFusionLoop:
         bilateral_contract: Mapping[str, Any] | Any | None = None,
         bilateral_plan_gate: Mapping[str, Any] | None = None,
         bilateral_proof_plan: Mapping[str, Any] | None = None,
+        _trusted_bilateral_handoff: Any = None,
     ) -> ArchitectLoopResult:
+        # `_trusted_bilateral_handoff` is accepted but intentionally not yet
+        # consulted or enforced here; this parameter is a behaviorally-neutral
+        # substrate addition only. Existing callers are unaffected.
         bilateral_data = (
             bilateral_contract.to_dict()
             if hasattr(bilateral_contract, "to_dict")
