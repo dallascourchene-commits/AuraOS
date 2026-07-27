@@ -563,7 +563,7 @@ class AuraAgentArenaBridge:
                 "canonical_compilation": compilation,
                 "bilateral_contract": contract.to_dict(),
             }
-        except (TypeError, ValueError) as exc:
+        except (TypeError, ValueError, OSError, subprocess.SubprocessError) as exc:
             return make_error_packet(
                 "mcp_protocol_error", f"invalid bilateral confirmation: {exc}"
             )
@@ -703,7 +703,12 @@ class AuraAgentArenaBridge:
             act_task["target_file"] = _normalize_path(target_file)
         if target_symbol:
             act_task["target_symbol"] = target_symbol
-        if bilateral_contract or confirmation_session_id:
+        if (
+            bilateral_contract
+            or confirmation_session_id
+            or bilateral_plan_gate
+            or bilateral_proof_plan
+        ):
             try:
                 from aura_arena_gate_dialogue import _repository_identity
                 from aura_relationship_contracts import (
@@ -727,9 +732,11 @@ class AuraAgentArenaBridge:
                 contract = BilateralPlanningContract.from_dict(retained_contract)
                 identity = _repository_identity(self.repo_root)
                 proof_plan = dict(bilateral_proof_plan or {})
-                proof_plan["act_tasks"] = list(
-                    proof_plan.get("act_tasks") or [act_task]
-                )
+                # The gate must cover exactly the task being prepared; a
+                # caller-supplied act_tasks list is never authoritative for
+                # scope checking, otherwise a benign task list could smuggle
+                # an out-of-scope target_file past the gate.
+                proof_plan["act_tasks"] = [act_task]
                 computed_gate = evaluate_bilateral_plan(
                     proof_plan,
                     contract,

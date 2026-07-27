@@ -300,6 +300,123 @@ def test_prepare_rejects_forged_unretained_contract(
     assert "confirmation_session_id is required" in result["message"]
 
 
+def test_prepare_rejects_gate_only_input_without_retained_confirmation(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    plan = _complete_plan(bilateral_contract)
+    gate = evaluate_bilateral_plan(
+        plan,
+        bilateral_contract,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+    )
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    result = bridge.aura_prepare_arena(
+        objective="A gate-only request must not bypass retained confirmation.",
+        target_file="aura_arena_architect_connector.py",
+        bilateral_plan_gate=gate.to_dict(),
+    )
+    assert result["ok"] is False
+    assert "confirmation_session_id is required" in result["message"]
+
+
+def test_prepare_rejects_proof_plan_only_input_without_retained_confirmation(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    result = bridge.aura_prepare_arena(
+        objective="A proof-plan-only request must not bypass retained confirmation.",
+        target_file="aura_arena_architect_connector.py",
+        bilateral_proof_plan=_complete_plan(bilateral_contract),
+    )
+    assert result["ok"] is False
+    assert "confirmation_session_id is required" in result["message"]
+
+
+def test_prepare_forces_gate_to_exact_prepared_task(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    started = bridge.intent_refinement_start(
+        source_request=(
+            "Add deterministic bilateral plan enforcement. "
+            "Do not allow a plan without negative requirement verification."
+        ),
+        affected_files=["aura_arena_architect_connector.py"],
+        affected_symbols=["assess_plan"],
+    )
+    assert started["status"] == "TEACH_BACK_PENDING"
+    confirmed = bridge.intent_refinement_confirm(
+        session_id=started["session_id"],
+        allowed_paths=["aura_arena_architect_connector.py"],
+        human_reviewer="pytest-human",
+    )
+    assert confirmed["ok"] is True
+    contract = BilateralPlanningContract.from_dict(confirmed["bilateral_contract"])
+
+    plan = _complete_plan(contract)
+    # A benign-looking act_tasks list that (mis)declares an in-scope file while
+    # the request actually targets an out-of-scope file must never authorize
+    # that out-of-scope target_file for the task actually being prepared.
+    plan["act_tasks"] = [
+        {
+            "task_id": "BILATERAL-1",
+            "objective": "Claim scope over the allowed file only.",
+            "target_file": "aura_arena_architect_connector.py",
+            "target_symbol": "assess_plan",
+            "acceptance": "The deterministic gate passes before scoring.",
+            "expected_output": "UNIFIED_DIFF",
+            "tests": ["tests/test_aura_bilateral_planning_enforcement.py"],
+        }
+    ]
+
+    result = bridge.aura_prepare_arena(
+        objective="Attempt to smuggle an out-of-scope target via act_tasks.",
+        target_file="out_of_scope_file.py",
+        confirmation_session_id=started["session_id"],
+        bilateral_proof_plan=plan,
+    )
+    assert result["ok"] is False
+    assert result["error_category"] == "scope_too_broad"
+
+
+def test_prepare_deterministic_denial_is_fail_closed(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    started = bridge.intent_refinement_start(
+        source_request=(
+            "Add deterministic bilateral plan enforcement. "
+            "Do not allow a plan without negative requirement verification."
+        ),
+        affected_files=["aura_arena_architect_connector.py"],
+        affected_symbols=["assess_plan"],
+    )
+    assert started["status"] == "TEACH_BACK_PENDING"
+    confirmed = bridge.intent_refinement_confirm(
+        session_id=started["session_id"],
+        allowed_paths=["aura_arena_architect_connector.py"],
+        human_reviewer="pytest-human",
+    )
+    assert confirmed["ok"] is True
+    contract = BilateralPlanningContract.from_dict(confirmed["bilateral_contract"])
+
+    plan = _complete_plan(contract)
+    plan["negative_requirement_coverage"] = {}
+
+    result = bridge.aura_prepare_arena(
+        objective="A plan missing negative coverage must be denied, not proposed.",
+        target_file="aura_arena_architect_connector.py",
+        target_symbol="assess_plan",
+        confirmation_session_id=started["session_id"],
+        bilateral_proof_plan=plan,
+    )
+    assert result["ok"] is False
+    assert result["error_category"] == "scope_too_broad"
+    assert "NEGATIVE_REQUIREMENT" in result["repair_hint"]
+
+
 def test_mcp_rejects_non_object_bilateral_arguments() -> None:
     response = handle_request(
         AuraAgentArenaBridge(repo_root="."),
