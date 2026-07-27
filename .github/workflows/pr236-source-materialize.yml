@@ -1,0 +1,44 @@
+name: PR236 source materialization
+
+on:
+  push:
+    branches:
+      - refactor/bilateral-intent-pr3-enforcement
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify branch and package source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "refactor/bilateral-intent-pr3-enforcement"
+          printf '%s\n' "$(git rev-parse HEAD)" > /tmp/PR236_HEAD_SHA.txt
+          tar \
+            --exclude=.git \
+            --exclude=Aura_Memory \
+            --exclude=Aura_Sandbox \
+            --exclude=Aura_Staging \
+            --exclude='**/__pycache__' \
+            --exclude='*.pyc' \
+            -czf /tmp/aura-pr236-source.tar.gz .
+
+      - name: Upload exact-head source snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-pr236-source-${{ github.sha }}
+          path: |
+            /tmp/aura-pr236-source.tar.gz
+            /tmp/PR236_HEAD_SHA.txt
+          if-no-files-found: error
+          retention-days: 1
