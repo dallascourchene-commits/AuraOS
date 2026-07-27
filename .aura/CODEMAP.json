@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1785031515,
+  "generated_at_unix": 1785161100,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1439,
+    "included_file_count": 1441,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,7 +13,7 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 25,
+      ".git": 180,
       "Aura_Memory": 6,
       "Aura_Sandbox": 1,
       "__pycache__": 8
@@ -58,6 +58,7 @@
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json",
+      ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2_hardening_revision.v1.json",
       ".aura/refactor_payloads/umc_main_publish.trigger",
       ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
       ".aura/research/AURA_SPATIAL_BREADBOARD_RECEIPT.json",
@@ -76,6 +77,7 @@
       ".aura/vsa_profiles/complex_phasor.v1.json",
       ".aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json",
       ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2.v1.json",
+      ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2_hardening.v1.json",
       ".aura/waboose_requests/construction_demo.v1.json",
       ".aura/waboose_requests/issue_200_exact_head_harness.v1.json",
       ".aura/waboose_requests/unified_memory_continuity.v1.json",
@@ -1461,9 +1463,9 @@
     ]
   },
   "summary": {
-    "file_count": 1439,
-    "total_bytes": 57030309,
-    "text_tokens_est": 4805298,
+    "file_count": 1441,
+    "total_bytes": 57076265,
+    "text_tokens_est": 4816789,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 51,
@@ -1471,13 +1473,13 @@
       "native_accelerator": 8,
       "operator_script": 6,
       "python_module": 930,
-      "schema_or_lexicon": 180,
+      "schema_or_lexicon": 182,
       "support_file": 77
     },
-    "topology_nodes": 10660,
-    "topology_edges": 25298,
+    "topology_nodes": 10666,
+    "topology_edges": 25320,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 31767.16
+    "elapsed_ms": 30602.83
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1665,8 +1667,10 @@
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json",
+      ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2_hardening_revision.v1.json",
       ".aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json",
       ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2.v1.json",
+      ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2_hardening.v1.json",
       "DEEP_AUDIT_REPORT.md",
       "aura_background_auditor.py",
       "aura_cockpit_audit_trail.py",
@@ -3014,7 +3018,7 @@
       "path": "aura_intent_refinement.py",
       "role": "python_module",
       "symbols": 63,
-      "tokens_est": 13598,
+      "tokens_est": 13815,
       "topology_degree": 465
     },
     {
@@ -3361,7 +3365,7 @@
       "aura_showcase/gate-dialogue.js:38"
     ],
     "!diff": [
-      "aura_showcase/gate-dialogue.js:495"
+      "aura_showcase/gate-dialogue.js:498"
     ],
     "!doc": [
       "aura_spatial_web/accessibility.js:45"
@@ -3468,8 +3472,9 @@
       "aura_showcase/gate-dialogue.js:239"
     ],
     "!hasEvidence": [
-      "aura_showcase/gate-dialogue.js:485",
-      "aura_showcase/human.js:460"
+      "aura_showcase/gate-dialogue.js:488",
+      "aura_showcase/human.js:460",
+      "tests/test_aura_bilateral_gate_dialogue.py:721"
     ],
     "!hasInput": [
       "aura_showcase/human.js:636"
@@ -3950,7 +3955,7 @@
     "!target": [
       "aura_coding_arena/main.js:143",
       "aura_human_agent_arena/main.js:441",
-      "aura_showcase/gate-dialogue.js:554",
+      "aura_showcase/gate-dialogue.js:536",
       "aura_showcase/human.js:672",
       "aura_showcase/intent.js:301",
       "aura_showcase/topology.js:196"
@@ -4501,8 +4506,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "class",
-        "line": 322,
-        "end_line": 955,
+        "line": 386,
+        "end_line": 1167,
         "semantic_id": "aura_arena_gate_dialogue.py#class:ArenaGateDialogueService:d33ba4203c0ef4b3",
         "signature_hash": "86eef0b72670720f"
       }
@@ -5673,8 +5678,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "class",
-        "line": 47,
-        "end_line": 51,
+        "line": 48,
+        "end_line": 52,
         "semantic_id": "aura_human_agent_arena_server.py#class:AuraThreadingHTTPServer:ae17ca8786765082",
         "signature_hash": "3c49920d55927562"
       }
@@ -6041,8 +6046,8 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "class",
-        "line": 40,
-        "end_line": 58,
+        "line": 44,
+        "end_line": 62,
         "semantic_id": "aura_bilateral_intent_compiler.py#class:BilateralAnalysis:6bc031ed8206b7ba",
         "signature_hash": "a695401bb781af53"
       }
@@ -10103,8 +10108,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "class",
-        "line": 54,
-        "end_line": 73,
+        "line": 55,
+        "end_line": 85,
         "semantic_id": "aura_human_agent_arena_server.py#class:HumanAgentArenaServerState:737bd27a1cf796ea",
         "signature_hash": "8870e0e9a3388613"
       }
@@ -10124,7 +10129,7 @@
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "class",
         "line": 24,
-        "end_line": 362,
+        "end_line": 453,
         "semantic_id": "aura_human_agent_wfst_adapter.py#class:HumanAgentWFSTController:922755026b5abeb4",
         "signature_hash": "6e3ca2b64ef1c962"
       }
@@ -10134,7 +10139,7 @@
         "file": "aura_human_agent_workflow.py",
         "kind": "class",
         "line": 141,
-        "end_line": 431,
+        "end_line": 439,
         "semantic_id": "aura_human_agent_workflow.py#class:HumanAgentWorkflow:7a71e77e330521eb",
         "signature_hash": "19fe9995cf269885"
       }
@@ -19499,8 +19504,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 325,
-        "end_line": 340,
+        "line": 389,
+        "end_line": 405,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService.__init__:d3d36998eb47b9e2",
         "signature_hash": "c379be5ff39c9fb9"
       },
@@ -20339,10 +20344,10 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "method",
-        "line": 57,
-        "end_line": 69,
-        "semantic_id": "aura_human_agent_arena_server.py#method:HumanAgentArenaServerState.__init__:d38ade0613adee71",
-        "signature_hash": "63e76e542bef0beb"
+        "line": 58,
+        "end_line": 81,
+        "semantic_id": "aura_human_agent_arena_server.py#method:HumanAgentArenaServerState.__init__:996c9d32b12a2da1",
+        "signature_hash": "52be009335fcc570"
       },
       {
         "file": "aura_human_agent_wfst_adapter.py",
@@ -20364,7 +20369,7 @@
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
         "line": 142,
-        "end_line": 154,
+        "end_line": 155,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow.__init__:6609b49c43d19d9d",
         "signature_hash": "3206b5d06ecf4fa7"
       },
@@ -24373,8 +24378,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 198,
-        "end_line": 212,
+        "line": 199,
+        "end_line": 213,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._action_states:a6e97178283615f4",
         "signature_hash": "4bd6bb391e221f7c"
       }
@@ -24851,10 +24856,10 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "function",
-        "line": 306,
-        "end_line": 319,
-        "semantic_id": "aura_arena_gate_dialogue.py#function:_allowed_paths:aac3e8dc794e87ff",
-        "signature_hash": "daf2ecfa6cda4e7a"
+        "line": 347,
+        "end_line": 383,
+        "semantic_id": "aura_arena_gate_dialogue.py#function:_allowed_paths:6034ab3a8757bae5",
+        "signature_hash": "f9a6537f23b59134"
       }
     ],
     "_analyse_file": [
@@ -24871,8 +24876,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "function",
-        "line": 294,
-        "end_line": 303,
+        "line": 328,
+        "end_line": 337,
         "semantic_id": "aura_arena_gate_dialogue.py#function:_analysis_fields:668a8b81efd10bbd",
         "signature_hash": "8221500dc2e57643"
       }
@@ -24891,8 +24896,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 514,
-        "end_line": 585,
+        "line": 592,
+        "end_line": 664,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._answer_clarification:7b0633fffe544a1e",
         "signature_hash": "cc8d80a91368ded6"
       }
@@ -25957,8 +25962,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 262,
-        "end_line": 293,
+        "line": 274,
+        "end_line": 305,
         "semantic_id": "aura_human_agent_arena_server.py#function:_attach_emergent_refactor_context:2af23ef1badbbfbf",
         "signature_hash": "8781667b91eba467"
       }
@@ -26113,8 +26118,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 925,
-        "end_line": 934,
+        "line": 1128,
+        "end_line": 1137,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._authority:6049a2db322775c3",
         "signature_hash": "af21dd6cd080fab9"
       },
@@ -26179,8 +26184,8 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "function",
-        "line": 489,
-        "end_line": 505,
+        "line": 642,
+        "end_line": 658,
         "semantic_id": "aura_bilateral_intent_compiler.py#function:_authority_projection:ea6bfdf3e52590ff",
         "signature_hash": "f35a0653910fdfba"
       }
@@ -26647,8 +26652,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "function",
-        "line": 365,
-        "end_line": 370,
+        "line": 456,
+        "end_line": 461,
         "semantic_id": "aura_human_agent_wfst_adapter.py#function:_blocked_message:f4aa96c9edb55953",
         "signature_hash": "41777dc9256397f1"
       }
@@ -27157,8 +27162,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "function",
-        "line": 59,
-        "end_line": 85,
+        "line": 61,
+        "end_line": 87,
         "semantic_id": "aura_arena_gate_dialogue.py#function:_bounded_list:6d43e8f7ec8b1d3b",
         "signature_hash": "cd9082b37fdd6299"
       }
@@ -27235,8 +27240,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "function",
-        "line": 373,
-        "end_line": 381,
+        "line": 464,
+        "end_line": 472,
         "semantic_id": "aura_human_agent_wfst_adapter.py#function:_bounded_result:3a35f665cb155c6f",
         "signature_hash": "a247335c50a71635"
       }
@@ -27263,8 +27268,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "function",
-        "line": 54,
-        "end_line": 56,
+        "line": 56,
+        "end_line": 58,
         "semantic_id": "aura_arena_gate_dialogue.py#function:_bounded_text:669f629bb21eaf4e",
         "signature_hash": "790617a12b54a740"
       },
@@ -27357,8 +27362,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 156,
-        "end_line": 160,
+        "line": 157,
+        "end_line": 161,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._bridge_instance:f9584c5071b37f2b",
         "signature_hash": "5303aa6fa7a0dd8b"
       }
@@ -29305,6 +29310,16 @@
         "signature_hash": "619967b5305e6923"
       }
     ],
+    "_clarification_questions": [
+      {
+        "file": "aura_bilateral_intent_compiler.py",
+        "kind": "function",
+        "line": 130,
+        "end_line": 178,
+        "semantic_id": "aura_bilateral_intent_compiler.py#function:_clarification_questions:03b1a66de0bc2541",
+        "signature_hash": "c15bd912de75f0e0"
+      }
+    ],
     "_class": [
       {
         "file": "aura_runtime_intent_packet.py",
@@ -30263,8 +30278,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 250,
-        "end_line": 259,
+        "line": 262,
+        "end_line": 271,
         "semantic_id": "aura_human_agent_arena_server.py#function:_commit_emergent_packet:47cee87dc69c2429",
         "signature_hash": "d5d53ee5c9998d57"
       }
@@ -31165,8 +31180,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "method",
-        "line": 264,
-        "end_line": 271,
+        "line": 355,
+        "end_line": 362,
         "semantic_id": "aura_human_agent_wfst_adapter.py#method:HumanAgentWFSTController._context:b275ef9844212bda",
         "signature_hash": "920659713f05751e"
       }
@@ -31597,8 +31612,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 831,
-        "end_line": 857,
+        "line": 1034,
+        "end_line": 1060,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._current_context_denial:1adc86d0d152a561",
         "signature_hash": "45308d2b68dac7a4"
       }
@@ -31627,8 +31642,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 76,
-        "end_line": 92,
+        "line": 88,
+        "end_line": 104,
         "semantic_id": "aura_human_agent_arena_server.py#function:_current_repo_head:fd6ec600d6e12151",
         "signature_hash": "f1df96e1e3d5c3fc"
       }
@@ -31727,8 +31742,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 892,
-        "end_line": 922,
+        "line": 1095,
+        "end_line": 1125,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._decision:fd54518456151bd3",
         "signature_hash": "a38f5a48e63a3f9f"
       },
@@ -32305,8 +32320,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 941,
-        "end_line": 955,
+        "line": 1153,
+        "end_line": 1167,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._denial:94b833609537c91c",
         "signature_hash": "6e5a9beca3c8aff3"
       },
@@ -32789,8 +32804,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "function",
-        "line": 49,
-        "end_line": 51,
+        "line": 51,
+        "end_line": 53,
         "semantic_id": "aura_arena_gate_dialogue.py#function:_digest:3e91147678285ab4",
         "signature_hash": "6a2769a8ecbe738e"
       },
@@ -33351,8 +33366,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 384,
-        "end_line": 395,
+        "line": 392,
+        "end_line": 403,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._do_check_hotswap:b9a9a305dcab21b6",
         "signature_hash": "a416d2f494922f72"
       }
@@ -33391,8 +33406,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 410,
-        "end_line": 415,
+        "line": 418,
+        "end_line": 423,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._do_export_handoff:f10bc1eb5e942168",
         "signature_hash": "c2b712e1c89ae4de"
       }
@@ -33421,8 +33436,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 304,
-        "end_line": 321,
+        "line": 312,
+        "end_line": 329,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._do_ground_context:c6b7b69262429fc4",
         "signature_hash": "9747ecbb7f454e31"
       }
@@ -33441,8 +33456,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 397,
-        "end_line": 408,
+        "line": 405,
+        "end_line": 416,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._do_human_review:8f2f05bfb7b1b678",
         "signature_hash": "11fa2028e50a0876"
       }
@@ -33489,8 +33504,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 323,
-        "end_line": 341,
+        "line": 331,
+        "end_line": 349,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._do_prepare_capsule:20e5cd2f75d729a4",
         "signature_hash": "95ebbb2d20e6d84d"
       }
@@ -33559,8 +33574,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 364,
-        "end_line": 371,
+        "line": 372,
+        "end_line": 379,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._do_run_tests:31cb5bff17b0c14c",
         "signature_hash": "3d68f70f0bac9c2c"
       }
@@ -33589,8 +33604,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 295,
-        "end_line": 302,
+        "line": 303,
+        "end_line": 310,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._do_set_objective:3c2ace450ec85dd9",
         "signature_hash": "af7349e32024a6a5"
       }
@@ -33619,8 +33634,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 343,
-        "end_line": 362,
+        "line": 351,
+        "end_line": 370,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._do_stage_patch:9182c931b57b7829",
         "signature_hash": "e0ab5854422c2ecf"
       }
@@ -33639,8 +33654,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 373,
-        "end_line": 382,
+        "line": 381,
+        "end_line": 390,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._do_verify_patch:0d381a91f56104ee",
         "signature_hash": "9cf24ec97550b141"
       }
@@ -34269,8 +34284,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 95,
-        "end_line": 101,
+        "line": 107,
+        "end_line": 113,
         "semantic_id": "aura_human_agent_arena_server.py#function:_error:be9fb6756203c455",
         "signature_hash": "b972b62ff19e8db0"
       },
@@ -34543,8 +34558,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 179,
-        "end_line": 181,
+        "line": 180,
+        "end_line": 182,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._event:cfd4fc1aeee0551e",
         "signature_hash": "385da513d1402f4a"
       },
@@ -35739,8 +35754,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "function",
-        "line": 240,
-        "end_line": 277,
+        "line": 274,
+        "end_line": 311,
         "semantic_id": "aura_arena_gate_dialogue.py#function:_fallback_response:6a4e6b0e5a299652",
         "signature_hash": "743b1f58e531c87b"
       }
@@ -36041,8 +36056,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 859,
-        "end_line": 889,
+        "line": 1062,
+        "end_line": 1092,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._finalize_rejection:3640911f6f3e0d07",
         "signature_hash": "b7bb15edade95563"
       }
@@ -37791,8 +37806,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "function",
-        "line": 400,
-        "end_line": 406,
+        "line": 491,
+        "end_line": 497,
         "semantic_id": "aura_human_agent_wfst_adapter.py#function:_git_value:0e22b5fe34ad82ba",
         "signature_hash": "f993307cccd51516"
       },
@@ -38255,8 +38270,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 104,
-        "end_line": 247,
+        "line": 116,
+        "end_line": 259,
         "semantic_id": "aura_human_agent_arena_server.py#function:_handle_civic_api:31afaad4b638f3e8",
         "signature_hash": "9c3fa6ad1a233c97"
       }
@@ -38355,8 +38370,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 361,
-        "end_line": 530,
+        "line": 373,
+        "end_line": 542,
         "semantic_id": "aura_human_agent_arena_server.py#function:_handle_emergent_and_research_api:a8416c7c6c7a37c0",
         "signature_hash": "0c29c491f0d72aca"
       }
@@ -38871,8 +38886,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 183,
-        "end_line": 185,
+        "line": 184,
+        "end_line": 186,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._has:e83b4509bb37ad41",
         "signature_hash": "8b4687db315c9c7a"
       }
@@ -40213,8 +40228,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "method",
-        "line": 351,
-        "end_line": 362,
+        "line": 442,
+        "end_line": 453,
         "semantic_id": "aura_human_agent_wfst_adapter.py#method:HumanAgentWFSTController._initialization_denial:7b6297134a72e8b7",
         "signature_hash": "e784e133d057e711"
       }
@@ -40367,8 +40382,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "function",
-        "line": 141,
-        "end_line": 153,
+        "line": 143,
+        "end_line": 155,
         "semantic_id": "aura_arena_gate_dialogue.py#function:_intent_summary:4436c95507bab0c6",
         "signature_hash": "4eabd1ee27cfc546"
       }
@@ -40501,6 +40516,16 @@
         "end_line": 856,
         "semantic_id": "aura_intent_refinement.py#function:_is_boundary:9f26b52a94e12382",
         "signature_hash": "2497dbeb9ddb1351"
+      }
+    ],
+    "_is_bounded_repository_path": [
+      {
+        "file": "aura_arena_gate_dialogue.py",
+        "kind": "function",
+        "line": 340,
+        "end_line": 344,
+        "semantic_id": "aura_arena_gate_dialogue.py#function:_is_bounded_repository_path:32afe4a539f8be75",
+        "signature_hash": "c0928d7a3fbeeabe"
       }
     ],
     "_is_constructor_reference": [
@@ -41611,8 +41636,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "method",
-        "line": 283,
-        "end_line": 293,
+        "line": 374,
+        "end_line": 384,
         "semantic_id": "aura_human_agent_wfst_adapter.py#method:HumanAgentWFSTController._ledger_instance:92f3da9205058bf1",
         "signature_hash": "2a6beda30dd92828"
       }
@@ -43597,8 +43622,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "method",
-        "line": 336,
-        "end_line": 349,
+        "line": 427,
+        "end_line": 440,
         "semantic_id": "aura_human_agent_wfst_adapter.py#method:HumanAgentWFSTController._meta_response:9660bb269c63e4e3",
         "signature_hash": "aea4db42bb539add"
       }
@@ -43925,8 +43950,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "function",
-        "line": 280,
-        "end_line": 291,
+        "line": 314,
+        "end_line": 325,
         "semantic_id": "aura_arena_gate_dialogue.py#function:_model_prompt:502b4a69ce0894ec",
         "signature_hash": "09bc966919263557"
       }
@@ -44375,8 +44400,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 996,
-        "end_line": 1002,
+        "line": 1049,
+        "end_line": 1055,
         "semantic_id": "aura_human_agent_arena_server.py#function:_node_ids:88554b6bb3a49384",
         "signature_hash": "3535a2186281566c"
       }
@@ -46741,8 +46766,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "function",
-        "line": 122,
-        "end_line": 138,
+        "line": 124,
+        "end_line": 140,
         "semantic_id": "aura_arena_gate_dialogue.py#function:_phase_hash:52d716fcc9869e48",
         "signature_hash": "33df66fb67d844af"
       },
@@ -46997,8 +47022,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "method",
-        "line": 274,
-        "end_line": 281,
+        "line": 365,
+        "end_line": 372,
         "semantic_id": "aura_human_agent_wfst_adapter.py#method:HumanAgentWFSTController._policy:804944e29fdac289",
         "signature_hash": "6cd2b146e0fe940f"
       },
@@ -47147,8 +47172,8 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "function",
-        "line": 93,
-        "end_line": 100,
+        "line": 97,
+        "end_line": 127,
         "semantic_id": "aura_bilateral_intent_compiler.py#function:_positive_requirements:9c75a0dfb8bfedfb",
         "signature_hash": "405878b27e9bbda9"
       }
@@ -47313,8 +47338,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 296,
-        "end_line": 323,
+        "line": 308,
+        "end_line": 335,
         "semantic_id": "aura_human_agent_arena_server.py#function:_prepare_payload_with_emergent_context:49b249fed546b0e0",
         "signature_hash": "0c3cc18368302cc3"
       }
@@ -48245,8 +48270,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 1014,
-        "end_line": 1020,
+        "line": 1067,
+        "end_line": 1073,
         "semantic_id": "aura_human_agent_arena_server.py#function:_query_float:273adb0f9bc953d4",
         "signature_hash": "a53ec423a74fa2d9"
       }
@@ -48255,8 +48280,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 1005,
-        "end_line": 1011,
+        "line": 1058,
+        "end_line": 1064,
         "semantic_id": "aura_human_agent_arena_server.py#function:_query_int:571b528ce5353dc2",
         "signature_hash": "7c965559ad7d93a1"
       }
@@ -48761,8 +48786,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "method",
-        "line": 248,
-        "end_line": 249,
+        "line": 339,
+        "end_line": 340,
         "semantic_id": "aura_human_agent_wfst_adapter.py#method:HumanAgentWFSTController._ready:7e5b5ea03af4b7c9",
         "signature_hash": "8b46cc781005de8d"
       }
@@ -48973,8 +48998,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 936,
-        "end_line": 938,
+        "line": 1139,
+        "end_line": 1150,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._record:fdc0b0dfdddc70ed",
         "signature_hash": "5aa3989971abf88b"
       },
@@ -49153,8 +49178,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "method",
-        "line": 295,
-        "end_line": 333,
+        "line": 386,
+        "end_line": 424,
         "semantic_id": "aura_human_agent_wfst_adapter.py#method:HumanAgentWFSTController._record_experience:eaabeed7b2a64671",
         "signature_hash": "7809af604246758f"
       }
@@ -49283,8 +49308,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 326,
-        "end_line": 358,
+        "line": 338,
+        "end_line": 370,
         "semantic_id": "aura_human_agent_arena_server.py#function:_record_special_tool_run:40dbca992720c856",
         "signature_hash": "cccf01f6ea7bb237"
       }
@@ -49995,8 +50020,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 188,
-        "end_line": 196,
+        "line": 189,
+        "end_line": 197,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._remediation:8506d4756d3e35b6",
         "signature_hash": "ef11a585025291be"
       }
@@ -50451,8 +50476,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "function",
-        "line": 156,
-        "end_line": 239,
+        "line": 158,
+        "end_line": 273,
         "semantic_id": "aura_arena_gate_dialogue.py#function:_repository_identity:4e2fb51022819187",
         "signature_hash": "48223ec87fe23bbb"
       },
@@ -50893,8 +50918,8 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "function",
-        "line": 61,
-        "end_line": 65,
+        "line": 65,
+        "end_line": 69,
         "semantic_id": "aura_bilateral_intent_compiler.py#function:_required:f4899dc5aff5602e",
         "signature_hash": "8b28cfce6f68b96b"
       },
@@ -51445,8 +51470,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 342,
-        "end_line": 353,
+        "line": 407,
+        "end_line": 418,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._resolve_reviewer_identity:f5b65708b8505567",
         "signature_hash": "2c8fed0566b68f98"
       }
@@ -51493,8 +51518,8 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "function",
-        "line": 103,
-        "end_line": 111,
+        "line": 181,
+        "end_line": 189,
         "semantic_id": "aura_bilateral_intent_compiler.py#function:_resolved_guardrails:2d32e247a5b4ee03",
         "signature_hash": "2655d8123deedf91"
       }
@@ -51589,8 +51614,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 417,
-        "end_line": 431,
+        "line": 425,
+        "end_line": 439,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._result:aedbfb14abf0df92",
         "signature_hash": "c92d68395bd24216"
       },
@@ -54335,8 +54360,8 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "function",
-        "line": 77,
-        "end_line": 90,
+        "line": 81,
+        "end_line": 94,
         "semantic_id": "aura_bilateral_intent_compiler.py#function:_sentences:7626ccf8a6827c10",
         "signature_hash": "b226d95c0016892a"
       }
@@ -55187,8 +55212,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "function",
-        "line": 384,
-        "end_line": 397,
+        "line": 475,
+        "end_line": 488,
         "semantic_id": "aura_human_agent_wfst_adapter.py#function:_source_hashes_from_evidence:0a1f67a20a39f2c7",
         "signature_hash": "51873ffb45f0dd5b"
       }
@@ -55871,8 +55896,8 @@
       {
         "file": "aura_showcase_server.py",
         "kind": "function",
-        "line": 449,
-        "end_line": 477,
+        "line": 472,
+        "end_line": 500,
         "semantic_id": "aura_showcase_server.py#function:_static_response:79f9cde50a0fde82",
         "signature_hash": "be007e33ade22ddd"
       }
@@ -55949,8 +55974,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 812,
-        "end_line": 829,
+        "line": 1015,
+        "end_line": 1032,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._store_pending:c41ac1e480365f05",
         "signature_hash": "2ab5103cc0bc7763"
       }
@@ -56393,8 +56418,8 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "function",
-        "line": 68,
-        "end_line": 74,
+        "line": 72,
+        "end_line": 78,
         "semantic_id": "aura_bilateral_intent_compiler.py#function:_strings:7901c8bd2887d1dc",
         "signature_hash": "9f910afd705b461e"
       },
@@ -57235,8 +57260,8 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "function",
-        "line": 114,
-        "end_line": 135,
+        "line": 192,
+        "end_line": 213,
         "semantic_id": "aura_bilateral_intent_compiler.py#function:_teach_back:10e527bcb494dcce",
         "signature_hash": "c76cdd588602b805"
       }
@@ -58833,8 +58858,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 952,
-        "end_line": 956,
+        "line": 966,
+        "end_line": 970,
         "semantic_id": "aura_intent_refinement.py#function:_tokens:08968a4757c97fd3",
         "signature_hash": "9a39f8f360cb83b4"
       },
@@ -59589,8 +59614,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 1023,
-        "end_line": 1032,
+        "line": 1076,
+        "end_line": 1085,
         "semantic_id": "aura_human_agent_arena_server.py#function:_unique:2700783d0922cbcd",
         "signature_hash": "4738df2275dc190c"
       },
@@ -61237,8 +61262,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 763,
-        "end_line": 810,
+        "line": 966,
+        "end_line": 1013,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService._voice:2907a793413d1589",
         "signature_hash": "6080f5de2b85c66d"
       }
@@ -61367,8 +61392,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 162,
-        "end_line": 173,
+        "line": 163,
+        "end_line": 174,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow._wfst_instance:ba8cffb44c59b2ae",
         "signature_hash": "80fa27b9e3beb827"
       }
@@ -61437,8 +61462,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "method",
-        "line": 258,
-        "end_line": 262,
+        "line": 349,
+        "end_line": 353,
         "semantic_id": "aura_human_agent_wfst_adapter.py#method:HumanAgentWFSTController._workflow_snapshot:1fe2a1428902a93e",
         "signature_hash": "0e583a534934b53e"
       }
@@ -61467,8 +61492,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "method",
-        "line": 251,
-        "end_line": 256,
+        "line": 342,
+        "end_line": 347,
         "semantic_id": "aura_human_agent_wfst_adapter.py#method:HumanAgentWFSTController._workflow_state:b49c76c95bd39491",
         "signature_hash": "c40f3940f1ccb5e7"
       }
@@ -61495,8 +61520,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "function",
-        "line": 409,
-        "end_line": 411,
+        "line": 500,
+        "end_line": 502,
         "semantic_id": "aura_human_agent_wfst_adapter.py#function:_working_tree_digest:45a61958f075a215",
         "signature_hash": "cf0645ca105db62d"
       },
@@ -62479,8 +62504,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 355,
-        "end_line": 512,
+        "line": 420,
+        "end_line": 590,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService.address:3f252d2c8c7d8320",
         "signature_hash": "4d934b3aa0f657a0"
       }
@@ -62757,8 +62782,8 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "function",
-        "line": 138,
-        "end_line": 215,
+        "line": 216,
+        "end_line": 252,
         "semantic_id": "aura_bilateral_intent_compiler.py#function:analyze_bilateral_request:1ad994f67313fe49",
         "signature_hash": "a29724afcf1b83c4"
       }
@@ -63045,8 +63070,8 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "function",
-        "line": 218,
-        "end_line": 269,
+        "line": 255,
+        "end_line": 321,
         "semantic_id": "aura_bilateral_intent_compiler.py#function:apply_clarification:ab8d101143cbb82e",
         "signature_hash": "0962fe73916a6cbc"
       }
@@ -63229,8 +63254,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 587,
-        "end_line": 719,
+        "line": 666,
+        "end_line": 813,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService.approve:19071791a10e63b7",
         "signature_hash": "e8e43999ea579d85"
       }
@@ -64841,8 +64866,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 1070,
-        "end_line": 1071,
+        "line": 1084,
+        "end_line": 1085,
         "semantic_id": "aura_intent_refinement.py#function:authority_digest:de62e652702e2ca6",
         "signature_hash": "9a5a1f01a65c3fca"
       }
@@ -64883,6 +64908,16 @@
         "end_line": 116,
         "semantic_id": "tests/test_aura_gate_comparison.py#function:authorization:ee008ea22024b1fc",
         "signature_hash": "c7068c9861008909"
+      }
+    ],
+    "authorize_workflow_action": [
+      {
+        "file": "aura_arena_gate_dialogue.py",
+        "kind": "method",
+        "line": 815,
+        "end_line": 904,
+        "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService.authorize_workflow_action:9e9abd7731a786af",
+        "signature_hash": "066540fb54d7cbd7"
       }
     ],
     "authorized_decision": [
@@ -65047,8 +65082,8 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "function",
-        "line": 508,
-        "end_line": 509,
+        "line": 661,
+        "end_line": 662,
         "semantic_id": "aura_bilateral_intent_compiler.py#function:bilateral_compiler_capabilities:6d3ccd7565db58ce",
         "signature_hash": "2bffbf93e634163d"
       }
@@ -66199,8 +66234,8 @@
       {
         "file": "aura_showcase_server.py",
         "kind": "function",
-        "line": 529,
-        "end_line": 536,
+        "line": 552,
+        "end_line": 559,
         "semantic_id": "aura_showcase_server.py#function:build_parser:d24fb935a80772cd",
         "signature_hash": "0b42d711d564d255"
       },
@@ -68301,24 +68336,24 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "method",
-        "line": 71,
-        "end_line": 73,
+        "line": 83,
+        "end_line": 85,
         "semantic_id": "aura_human_agent_arena_server.py#method:HumanAgentArenaServerState.close:71de7906ac49d678",
         "signature_hash": "818fdb66f3084fa5"
       },
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "method",
-        "line": 243,
-        "end_line": 246,
+        "line": 334,
+        "end_line": 337,
         "semantic_id": "aura_human_agent_wfst_adapter.py#method:HumanAgentWFSTController.close:f7da551dab4da5c7",
         "signature_hash": "818fdb66f3084fa5"
       },
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 175,
-        "end_line": 177,
+        "line": 176,
+        "end_line": 178,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow.close:4a82b0b27745b376",
         "signature_hash": "818fdb66f3084fa5"
       },
@@ -69699,10 +69734,10 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "function",
-        "line": 331,
-        "end_line": 486,
-        "semantic_id": "aura_bilateral_intent_compiler.py#function:compile_confirmed_bilateral_intent:5f76fbecdbf99cef",
-        "signature_hash": "143fe213d0d760b5"
+        "line": 406,
+        "end_line": 639,
+        "semantic_id": "aura_bilateral_intent_compiler.py#function:compile_confirmed_bilateral_intent:ce959c2a1a25bead",
+        "signature_hash": "efcc6f2954a08d61"
       }
     ],
     "compile_construction_demo_packet": [
@@ -69749,8 +69784,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 1013,
-        "end_line": 1063,
+        "line": 1027,
+        "end_line": 1077,
         "semantic_id": "aura_intent_refinement.py#function:compile_default_guardrails:490e3c83e6577a1b",
         "signature_hash": "20b9f62e7f2bf121"
       }
@@ -71773,8 +71808,8 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "function",
-        "line": 272,
-        "end_line": 303,
+        "line": 324,
+        "end_line": 355,
         "semantic_id": "aura_bilateral_intent_compiler.py#function:create_refinement_session:c4a5c87376a5b68e",
         "signature_hash": "7a31d87507615221"
       }
@@ -71925,8 +71960,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 214,
-        "end_line": 216,
+        "line": 215,
+        "end_line": 217,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow.current_phase:38f8b1571c28d3c1",
         "signature_hash": "3d15aa542670fd37"
       }
@@ -72571,8 +72606,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 959,
-        "end_line": 975,
+        "line": 973,
+        "end_line": 989,
         "semantic_id": "aura_intent_refinement.py#function:detect_requirement_contradictions:e8b9e665a69be872",
         "signature_hash": "2d1bba36027e7f72"
       }
@@ -73079,8 +73114,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 533,
-        "end_line": 895,
+        "line": 545,
+        "end_line": 948,
         "semantic_id": "aura_human_agent_arena_server.py#function:dispatch_api_request:ced18c4d793b200d",
         "signature_hash": "cec96f45bae5ecd8"
       }
@@ -73100,7 +73135,7 @@
         "file": "aura_showcase_server.py",
         "kind": "function",
         "line": 181,
-        "end_line": 446,
+        "end_line": 469,
         "semantic_id": "aura_showcase_server.py#function:dispatch_showcase_request:188786ab57efefd6",
         "signature_hash": "14cba27d3e2f15a0"
       }
@@ -74405,8 +74440,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 258,
-        "end_line": 281,
+        "line": 260,
+        "end_line": 283,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow.execute:c97be009e6717381",
         "signature_hash": "ac47b3af9205ef86"
       },
@@ -74523,8 +74558,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 283,
-        "end_line": 287,
+        "line": 285,
+        "end_line": 289,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow.execute_guarded:6dbee735676c1d89",
         "signature_hash": "c13a95a3144a35fe"
       },
@@ -75258,7 +75293,7 @@
         "file": "aura_intent_refinement.py",
         "kind": "function",
         "line": 921,
-        "end_line": 949,
+        "end_line": 963,
         "semantic_id": "aura_intent_refinement.py#function:extract_negative_requirements:1c70434e80e769ee",
         "signature_hash": "d769a857c9d87e56"
       }
@@ -76985,7 +77020,7 @@
       {
         "file": "aura_showcase_server.py",
         "kind": "method",
-        "line": 94,
+        "line": 99,
         "end_line": 101,
         "semantic_id": "aura_showcase_server.py#method:ShowcaseState.gate_dialogue:d78484e19c272078",
         "signature_hash": "e007f3e20132435d"
@@ -78467,8 +78502,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 235,
-        "end_line": 256,
+        "line": 237,
+        "end_line": 258,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow.get_state:8f1a6dde78cc8511",
         "signature_hash": "49f58cd3c476b07a"
       },
@@ -78537,8 +78572,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 218,
-        "end_line": 233,
+        "line": 219,
+        "end_line": 235,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow.get_state_without_routing:c91c3e5ab2657227",
         "signature_hash": "b3cab4f074e8d3c7"
       },
@@ -78953,8 +78988,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 1066,
-        "end_line": 1067,
+        "line": 1080,
+        "end_line": 1081,
         "semantic_id": "aura_intent_refinement.py#function:guardrail_set_digest:25a8f79ec2ebafbf",
         "signature_hash": "8ee72c2fc41c708c"
       }
@@ -79416,7 +79451,7 @@
         "file": "aura_showcase_server.py",
         "kind": "method",
         "line": 86,
-        "end_line": 91,
+        "end_line": 96,
         "semantic_id": "aura_showcase_server.py#method:ShowcaseState.human_agent:335162adf5ccf9c8",
         "signature_hash": "37f7190d95b7a4d8"
       }
@@ -80051,8 +80086,8 @@
       {
         "file": "aura_human_agent_workflow.py",
         "kind": "method",
-        "line": 289,
-        "end_line": 293,
+        "line": 297,
+        "end_line": 301,
         "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow.ingest_command:d1da6abc391c0497",
         "signature_hash": "3c1278344bfc9ea2"
       }
@@ -82903,8 +82938,8 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 985,
-        "end_line": 993,
+        "line": 1038,
+        "end_line": 1046,
         "semantic_id": "aura_human_agent_arena_server.py#function:main:0f3be2ee51f6efa9",
         "signature_hash": "c3265d7d89056dc5"
       },
@@ -83111,8 +83146,8 @@
       {
         "file": "aura_showcase_server.py",
         "kind": "function",
-        "line": 539,
-        "end_line": 548,
+        "line": 562,
+        "end_line": 571,
         "semantic_id": "aura_showcase_server.py#function:main:93f1119c5c9dd81b",
         "signature_hash": "c3265d7d89056dc5"
       },
@@ -83481,16 +83516,16 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 898,
-        "end_line": 961,
+        "line": 951,
+        "end_line": 1014,
         "semantic_id": "aura_human_agent_arena_server.py#function:make_handler:fd6bcca6362f9a33",
         "signature_hash": "094e845cbe5b2aff"
       },
       {
         "file": "aura_showcase_server.py",
         "kind": "function",
-        "line": 480,
-        "end_line": 515,
+        "line": 503,
+        "end_line": 538,
         "semantic_id": "aura_showcase_server.py#function:make_handler:c5006d8f62d188de",
         "signature_hash": "bc40a002369a2a09"
       }
@@ -84257,8 +84292,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "function",
-        "line": 88,
-        "end_line": 119,
+        "line": 90,
+        "end_line": 121,
         "semantic_id": "aura_arena_gate_dialogue.py#function:normalize_node_context:80dda78c3eaaf46d",
         "signature_hash": "2564efa5ef69cf2e"
       }
@@ -86069,6 +86104,26 @@
         "end_line": 518,
         "semantic_id": "aura_spatial_arena.py#method:SpatialArena.present:8758a05b1bd4ee94",
         "signature_hash": "c16181e7da08afb5"
+      }
+    ],
+    "preview_command": [
+      {
+        "file": "aura_human_agent_wfst_adapter.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 189,
+        "semantic_id": "aura_human_agent_wfst_adapter.py#method:HumanAgentWFSTController.preview_command:444c20e2497ffc93",
+        "signature_hash": "c8772f6ab97266a0"
+      }
+    ],
+    "preview_guarded_command": [
+      {
+        "file": "aura_human_agent_workflow.py",
+        "kind": "method",
+        "line": 291,
+        "end_line": 295,
+        "semantic_id": "aura_human_agent_workflow.py#method:HumanAgentWorkflow.preview_guarded_command:b17d2f296dd48f13",
+        "signature_hash": "e5be3cc6f88ee55e"
       }
     ],
     "price": [
@@ -88355,6 +88410,16 @@
         "signature_hash": "5e1972876e52cd4f"
       }
     ],
+    "record_workflow_action_result": [
+      {
+        "file": "aura_arena_gate_dialogue.py",
+        "kind": "method",
+        "line": 906,
+        "end_line": 922,
+        "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService.record_workflow_action_result:56b2621f89dd848b",
+        "signature_hash": "cd57a2ddd1b5e433"
+      }
+    ],
     "records_to_fractures": [
       {
         "file": "aura_nesy_unit_interval.py",
@@ -88423,8 +88488,8 @@
       {
         "file": "aura_intent_refinement.py",
         "kind": "function",
-        "line": 1074,
-        "end_line": 1088,
+        "line": 1088,
+        "end_line": 1102,
         "semantic_id": "aura_intent_refinement.py#function:refinement_capabilities:3b5a72f2a0f55a10",
         "signature_hash": "08b9f65d8b61ad0f"
       }
@@ -88473,10 +88538,10 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "function",
-        "line": 306,
-        "end_line": 328,
-        "semantic_id": "aura_bilateral_intent_compiler.py#function:refresh_refinement_session:076df8e30538e7ff",
-        "signature_hash": "141c5c650129ff38"
+        "line": 358,
+        "end_line": 403,
+        "semantic_id": "aura_bilateral_intent_compiler.py#function:refresh_refinement_session:a9fd45c3984e3d3d",
+        "signature_hash": "d06481c79f770db1"
       }
     ],
     "refresh_relational_index": [
@@ -90195,8 +90260,8 @@
       {
         "file": "aura_human_agent_wfst_adapter.py",
         "kind": "method",
-        "line": 100,
-        "end_line": 241,
+        "line": 191,
+        "end_line": 332,
         "semantic_id": "aura_human_agent_wfst_adapter.py#method:HumanAgentWFSTController.route_command:8728025621d7d431",
         "signature_hash": "2da054a4767de253"
       },
@@ -92353,16 +92418,16 @@
       {
         "file": "aura_human_agent_arena_server.py",
         "kind": "function",
-        "line": 964,
-        "end_line": 982,
+        "line": 1017,
+        "end_line": 1035,
         "semantic_id": "aura_human_agent_arena_server.py#function:serve:9400645da4be1ee0",
         "signature_hash": "6144aae341e8e608"
       },
       {
         "file": "aura_showcase_server.py",
         "kind": "function",
-        "line": 518,
-        "end_line": 526,
+        "line": 541,
+        "end_line": 549,
         "semantic_id": "aura_showcase_server.py#function:serve:f58d2e2bab68e673",
         "signature_hash": "986007412e5bd08f"
       }
@@ -93449,8 +93514,8 @@
       {
         "file": "aura_arena_gate_dialogue.py",
         "kind": "method",
-        "line": 721,
-        "end_line": 761,
+        "line": 924,
+        "end_line": 964,
         "semantic_id": "aura_arena_gate_dialogue.py#method:ArenaGateDialogueService.status:17335a4a26fcc04d",
         "signature_hash": "5669d9fd37503ce9"
       },
@@ -95067,8 +95132,8 @@
       {
         "file": "tests/test_aura_bilateral_gate_dialogue.py",
         "kind": "function",
-        "line": 290,
-        "end_line": 298,
+        "line": 292,
+        "end_line": 300,
         "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_affordance_map_declares_current_review_learning_extension:a941916efef5400e",
         "signature_hash": "92ec78e1cab637cb"
       }
@@ -96699,6 +96764,26 @@
         "signature_hash": "6c1fe33ac2218853"
       }
     ],
+    "test_backend_command_requires_current_confirmation_but_meta_does_not": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 589,
+        "end_line": 656,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_backend_command_requires_current_confirmation_but_meta_does_not:b312bf49c9aa65b1",
+        "signature_hash": "e2b887edc1efbb09"
+      }
+    ],
+    "test_backend_requires_and_single_uses_current_confirmation": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 496,
+        "end_line": 565,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_backend_requires_and_single_uses_current_confirmation:7e111381a22764da",
+        "signature_hash": "f93f2f7236f1cedc"
+      }
+    ],
     "test_backward_chain_converges_under_forward_replay": [
       {
         "file": "tests/test_aura_planning_frontier.py",
@@ -97685,6 +97770,16 @@
         "end_line": 319,
         "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_broken_prior_digest_chain_is_rejected_on_load:3ee520098df41a4f",
         "signature_hash": "408ad4a710348752"
+      }
+    ],
+    "test_browser_and_container_bind_confirmation_and_packaged_identity": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 707,
+        "end_line": 735,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_browser_and_container_bind_confirmation_and_packaged_identity:3c57d5f8bc7b392c",
+        "signature_hash": "d6a4f0801747b64e"
       }
     ],
     "test_browser_archive_exposes_inspect_and_copy_controls": [
@@ -99105,6 +99200,26 @@
         "end_line": 32,
         "semantic_id": "tests/test_aura_construction_contracts.py#function:test_claim_tampering_is_rejected:03d0590165606d69",
         "signature_hash": "ca3856afde97d91b"
+      }
+    ],
+    "test_clarification_audit_retains_question_and_answer_link": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 389,
+        "end_line": 417,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_clarification_audit_retains_question_and_answer_link:14a24233875d4cce",
+        "signature_hash": "95ee46a832e26afb"
+      }
+    ],
+    "test_clarification_recomputes_contradictions_before_confirmation": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 355,
+        "end_line": 372,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_clarification_recomputes_contradictions_before_confirmation:0b91e3fbd45c3481",
+        "signature_hash": "04bd901cfb82166c"
       }
     ],
     "test_class_base_change_requires_refactor": [
@@ -100749,10 +100864,20 @@
       {
         "file": "tests/test_aura_bilateral_gate_dialogue.py",
         "kind": "function",
-        "line": 140,
-        "end_line": 159,
+        "line": 142,
+        "end_line": 161,
         "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_confirmation_audit_record_does_not_stale_itself:df3a6ecf577e19cc",
         "signature_hash": "aa5960c837a918b1"
+      }
+    ],
+    "test_confirmation_consumption_is_atomic_under_race": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 659,
+        "end_line": 704,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_confirmation_consumption_is_atomic_under_race:f3ba419356f593fb",
+        "signature_hash": "f75a6aaee4b39179"
       }
     ],
     "test_confirmation_receipt_binds_digests_and_stales_on_change": [
@@ -100779,8 +100904,8 @@
       {
         "file": "tests/test_aura_bilateral_gate_dialogue.py",
         "kind": "function",
-        "line": 257,
-        "end_line": 287,
+        "line": 259,
+        "end_line": 289,
         "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_confirmation_status_reports_expired_receipt:33a1483c839fa1d4",
         "signature_hash": "dbdaea1799eb64c5"
       }
@@ -101429,8 +101554,8 @@
       {
         "file": "tests/test_aura_bilateral_gate_dialogue.py",
         "kind": "function",
-        "line": 162,
-        "end_line": 205,
+        "line": 164,
+        "end_line": 207,
         "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_contradiction_clarification_preserves_the_selected_side:5e443c21c43a1f01",
         "signature_hash": "35503bb971a0a28a"
       }
@@ -109955,6 +110080,16 @@
         "signature_hash": "f1666be5ee3af5ce"
       }
     ],
+    "test_invalid_topology_path_fails_closed_without_exception": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 420,
+        "end_line": 439,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_invalid_topology_path_fails_closed_without_exception:00cb7267c72afe59",
+        "signature_hash": "d944fc9c04228a7e"
+      }
+    ],
     "test_invariants": [
       {
         "file": "tests/test_aura_agent_workbench_interface.py",
@@ -111179,8 +111314,8 @@
       {
         "file": "tests/test_aura_bilateral_gate_dialogue.py",
         "kind": "function",
-        "line": 118,
-        "end_line": 137,
+        "line": 120,
+        "end_line": 139,
         "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_legacy_one_turn_api_remains_compatible:ea2a195ddae5fb12",
         "signature_hash": "9d513b3aa60e47dd"
       }
@@ -111189,8 +111324,8 @@
       {
         "file": "tests/test_aura_bilateral_gate_dialogue.py",
         "kind": "function",
-        "line": 240,
-        "end_line": 255,
+        "line": 242,
+        "end_line": 257,
         "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_legacy_one_turn_contradiction_preserves_prohibition:9a6073317edfb278",
         "signature_hash": "470560f3251646f4"
       }
@@ -111203,6 +111338,16 @@
         "end_line": 85,
         "semantic_id": "test_aura_paper_memory.py#function:test_legacy_paper_memory_rows_still_load_without_lift_profile:183a06d52142b6e9",
         "signature_hash": "9b9c3ac2a222d605"
+      }
+    ],
+    "test_legacy_pathless_objective_confirmation_uses_existing_owner": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 442,
+        "end_line": 476,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_legacy_pathless_objective_confirmation_uses_existing_owner:b1cca0b9d6c6d583",
+        "signature_hash": "3f7352e70981a028"
       }
     ],
     "test_legacy_probe_import_is_idempotent_and_behavioral": [
@@ -113035,6 +113180,16 @@
         "signature_hash": "00385ced89a6b621"
       }
     ],
+    "test_mixed_positive_and_negative_clauses_do_not_self_contradict": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 331,
+        "end_line": 352,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_mixed_positive_and_negative_clauses_do_not_self_contradict:5fb13045aad4e24a",
+        "signature_hash": "872710a6feebfc39"
+      }
+    ],
     "test_mixed_scene_digest_is_input_order_independent_and_json_stable": [
       {
         "file": "tests/test_aura_spatial_mixed_scene.py",
@@ -113533,6 +113688,16 @@
         "end_line": 136,
         "semantic_id": "tests/test_aura_intent_refinement.py#function:test_negative_extraction_preserves_spans_and_classes:ee504b5ed2125d51",
         "signature_hash": "c5710279e336aebb"
+      }
+    ],
+    "test_negative_only_request_uses_bounded_positive_fallback": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 375,
+        "end_line": 386,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_negative_only_request_uses_bounded_positive_fallback:19e81ddf51798e95",
+        "signature_hash": "735c972b61cf31ea"
       }
     ],
     "test_negative_requirements_survive_compression_and_handoff_verbatim": [
@@ -114197,6 +114362,16 @@
         "end_line": 58,
         "semantic_id": "tests/test_aura_civic_tensor_adapter.py#method:TestCivicTensorAdapter.test_non_binding:61569ba7912742f3",
         "signature_hash": "14405bb81b820827"
+      }
+    ],
+    "test_non_boolean_gate_approval_fails_closed": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 568,
+        "end_line": 586,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_non_boolean_gate_approval_fails_closed:c437e40144c887b5",
+        "signature_hash": "74c922dccb3d8932"
       }
     ],
     "test_non_builder_patch_route_remains_blocked_with_exact_route_preserved": [
@@ -115403,6 +115578,16 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_command_risk_gate.py#method:TestRiskGate.test_package_install_flagged:52d74ba43b480557",
         "signature_hash": "78d01405a8942b8f"
+      }
+    ],
+    "test_packaged_repository_identity_uses_trusted_build_commit": [
+      {
+        "file": "tests/test_aura_bilateral_gate_dialogue.py",
+        "kind": "function",
+        "line": 479,
+        "end_line": 493,
+        "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_packaged_repository_identity_uses_trusted_build_commit:975fa240e0ef5ef4",
+        "signature_hash": "129c64f8e44f5639"
       }
     ],
     "test_packet_captures_repair_fallback_and_throughput": [
@@ -119039,8 +119224,8 @@
       {
         "file": "tests/test_aura_bilateral_gate_dialogue.py",
         "kind": "function",
-        "line": 86,
-        "end_line": 115,
+        "line": 88,
+        "end_line": 117,
         "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_refinement_fails_closed_for_missing_answer_or_stale_node:337d8a089a8121f5",
         "signature_hash": "752e8e2f35dc9b14"
       }
@@ -120079,8 +120264,8 @@
       {
         "file": "tests/test_aura_bilateral_gate_dialogue.py",
         "kind": "function",
-        "line": 207,
-        "end_line": 238,
+        "line": 209,
+        "end_line": 240,
         "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_repository_identity_detects_same_path_content_drift:e8d5ed481a9b67c4",
         "signature_hash": "139383207aca501c"
       }
@@ -121045,8 +121230,8 @@
       {
         "file": "tests/test_aura_bilateral_gate_dialogue.py",
         "kind": "function",
-        "line": 301,
-        "end_line": 326,
+        "line": 303,
+        "end_line": 328,
         "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_reviewer_identity_bound_to_authenticated_operator:064c7af78f846635",
         "signature_hash": "def6a8b2d8871e03"
       }
@@ -125329,8 +125514,8 @@
       {
         "file": "tests/test_aura_bilateral_gate_dialogue.py",
         "kind": "function",
-        "line": 39,
-        "end_line": 83,
+        "line": 41,
+        "end_line": 85,
         "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_strict_refinement_requires_clarification_and_compiles:e567710b86631e44",
         "signature_hash": "27c7fbbc2481eeb7"
       }
@@ -129803,8 +129988,8 @@
       {
         "file": "aura_bilateral_intent_compiler.py",
         "kind": "method",
-        "line": 48,
-        "end_line": 58,
+        "line": 52,
+        "end_line": 62,
         "semantic_id": "aura_bilateral_intent_compiler.py#method:BilateralAnalysis.to_dict:9919f651c8998eba",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -135781,8 +135966,8 @@
       {
         "file": "tests/test_aura_bilateral_gate_dialogue.py",
         "kind": "function",
-        "line": 29,
-        "end_line": 36,
+        "line": 31,
+        "end_line": 38,
         "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:workflow:7e0d6b27800ecb44",
         "signature_hash": "4f43baaeb4bcfb5c"
       },
@@ -137171,47 +137356,47 @@
     {
       "path": "Dockerfile",
       "role": "support_file",
-      "bytes": 690,
-      "lines": 29,
-      "tokens_est": 173,
+      "bytes": 761,
+      "lines": 32,
+      "tokens_est": 191,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "d602ec422980e9ae",
+      "digest8": "75ee9dc367fff22d",
       "vector": [
-        -0.279259,
-        -0.194702,
-        -0.136848,
-        -0.110146,
-        -0.234755,
-        0.014464,
-        -0.03894,
-        -0.221404,
-        -0.223629,
-        0.265908,
-        -0.281484,
-        -0.061192,
-        0.110146,
-        -0.272583,
-        0.23253,
-        -0.025589,
-        -0.03004,
-        0.230305,
-        -0.005563,
-        -0.136848,
-        0.092345,
-        -0.154649,
-        -0.032265,
-        -0.110146,
-        -0.114596,
-        -0.241431,
-        -0.154649,
-        -0.283709,
-        -0.156874,
-        -0.141298,
-        -0.081219,
-        -0.239206
+        -0.10567,
+        0.159062,
+        0.030033,
+        -0.16796,
+        -0.239149,
+        0.190207,
+        0.270294,
+        0.154613,
+        0.261395,
+        -0.090098,
+        -0.174634,
+        0.023359,
+        0.203555,
+        0.219127,
+        -0.223576,
+        -0.050054,
+        -0.150163,
+        0.045605,
+        -0.205779,
+        0.276968,
+        0.016685,
+        -0.170185,
+        -0.010011,
+        0.248047,
+        -0.087873,
+        -0.214678,
+        0.156837,
+        -0.276968,
+        0.187982,
+        -0.016685,
+        0.032257,
+        -0.261395
       ]
     },
     {
@@ -138957,7 +139142,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 71,
+        "hub_rank": 72,
         "node_count": 40,
         "edge_count": 185,
         "degree": 185,
@@ -139339,7 +139524,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 188,
+        "hub_rank": 190,
         "node_count": 22,
         "edge_count": 83,
         "degree": 83,
@@ -139537,7 +139722,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 66,
+        "hub_rank": 67,
         "node_count": 36,
         "edge_count": 188,
         "degree": 188,
@@ -142528,7 +142713,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 189,
+        "hub_rank": 191,
         "node_count": 15,
         "edge_count": 82,
         "degree": 82,
@@ -142684,7 +142869,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 207,
+        "hub_rank": 208,
         "node_count": 20,
         "edge_count": 74,
         "degree": 74,
@@ -142857,17 +143042,17 @@
     {
       "path": "aura_arena_gate_dialogue.py",
       "role": "python_module",
-      "bytes": 39305,
-      "lines": 964,
-      "tokens_est": 9826,
-      "symbol_count": 26,
+      "bytes": 48311,
+      "lines": 1176,
+      "tokens_est": 12077,
+      "symbol_count": 29,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 77,
-        "node_count": 30,
-        "edge_count": 175,
-        "degree": 175,
+        "hub_rank": 63,
+        "node_count": 33,
+        "edge_count": 194,
+        "degree": 194,
         "symbols": [
           "ArenaGateDialogueService",
           "__init__",
@@ -142884,11 +143069,11 @@
           "_fallback_response",
           "_finalize_rejection",
           "_intent_summary",
+          "_is_bounded_repository_path",
           "_model_prompt",
           "_phase_hash",
           "_record",
-          "_repository_identity",
-          "_resolve_reviewer_identity"
+          "_repository_identity"
         ],
         "neighbor_files": [
           "aura_anthropic_router.py",
@@ -142896,6 +143081,7 @@
           "aura_bilateral_intent_compiler.py",
           "aura_coding_relationship_compass.py",
           "aura_event_contracts.py",
+          "aura_human_agent_arena_server.py",
           "aura_human_agent_guidance.py",
           "aura_llm_egress.py",
           "aura_showcase_intent.py",
@@ -142903,45 +143089,45 @@
           "aura_tokenizer_guard.py"
         ],
         "edge_kinds": {
-          "call": 110,
-          "defines": 58,
-          "import_module": 7
+          "call": 122,
+          "defines": 64,
+          "import_module": 8
         }
       },
-      "digest8": "cb71bda5ff79ba35",
+      "digest8": "43707b267b4c08c7",
       "vector": [
-        0.079303,
-        -0.225708,
-        0.069542,
-        -0.142745,
-        -0.145185,
-        0.0061,
-        -0.29647,
-        0.147625,
-        0.274509,
-        -0.235468,
-        -0.167146,
-        0.274509,
-        0.108584,
-        -0.023181,
-        -0.023181,
-        -0.071982,
-        0.237908,
-        0.259869,
-        -0.28671,
-        0.128104,
-        -0.193987,
-        -0.172026,
-        -0.198867,
-        0.067102,
-        -0.032941,
-        -0.30379,
-        0.269629,
-        0.162266,
-        -0.030501,
-        -0.015861,
-        0.067102,
-        -0.050022
+        -0.039761,
+        -0.055152,
+        -0.057717,
+        -0.024369,
+        0.22189,
+        -0.03463,
+        0.316802,
+        0.042326,
+        -0.314237,
+        -0.168021,
+        0.196238,
+        0.188542,
+        -0.237281,
+        0.014109,
+        0.214194,
+        -0.234716,
+        -0.050021,
+        0.078239,
+        0.175716,
+        0.303976,
+        0.257803,
+        0.311672,
+        0.275759,
+        0.160325,
+        -0.039761,
+        0.080804,
+        0.101325,
+        0.101325,
+        -0.026935,
+        0.085934,
+        0.021804,
+        0.214194
       ]
     },
     {
@@ -144594,20 +144780,21 @@
     {
       "path": "aura_bilateral_intent_compiler.py",
       "role": "python_module",
-      "bytes": 21364,
-      "lines": 522,
-      "tokens_est": 5341,
-      "symbol_count": 15,
+      "bytes": 27057,
+      "lines": 675,
+      "tokens_est": 6765,
+      "symbol_count": 16,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 194,
-        "node_count": 16,
-        "edge_count": 80,
-        "degree": 80,
+        "hub_rank": 183,
+        "node_count": 17,
+        "edge_count": 86,
+        "degree": 86,
         "symbols": [
           "BilateralAnalysis",
           "_authority_projection",
+          "_clarification_questions",
           "_positive_requirements",
           "_required",
           "_resolved_guardrails",
@@ -144629,45 +144816,45 @@
           "aura_unified_memory_continuity.py"
         ],
         "edge_kinds": {
-          "call": 46,
-          "defines": 30,
+          "call": 50,
+          "defines": 32,
           "import_module": 4
         }
       },
-      "digest8": "850cc16fa9a43d3e",
+      "digest8": "9210c783ed347cfa",
       "vector": [
-        -0.313016,
-        0.179818,
-        0.235761,
-        -0.203794,
-        0.238425,
-        -0.081251,
-        -0.166498,
-        -0.20113,
-        0.115883,
-        -0.038628,
-        0.153178,
-        -0.025308,
-        0.051947,
-        -0.046619,
-        -0.251745,
-        -0.073259,
-        -0.257073,
-        0.209122,
-        -0.331664,
-        -0.283713,
-        -0.193138,
-        0.035964,
-        -0.169162,
-        0.110555,
-        -0.30236,
-        0.030636,
-        0.110555,
-        0.009324,
-        0.011988,
-        0.129202,
-        -0.043955,
-        -0.158506
+        0.254761,
+        -0.075352,
+        0.29782,
+        0.271506,
+        -0.1519,
+        0.070568,
+        -0.015549,
+        -0.154292,
+        -0.037078,
+        -0.135155,
+        -0.03947,
+        0.053823,
+        0.166253,
+        0.261938,
+        -0.261938,
+        -0.211703,
+        -0.159076,
+        0.206919,
+        -0.11841,
+        -0.03947,
+        -0.214095,
+        -0.218879,
+        0.144724,
+        0.199742,
+        0.077744,
+        -0.037078,
+        -0.257153,
+        -0.08492,
+        -0.171037,
+        0.147116,
+        -0.190174,
+        -0.273898
       ]
     },
     {
@@ -144980,7 +145167,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 204,
+        "hub_rank": 205,
         "node_count": 15,
         "edge_count": 75,
         "degree": 75,
@@ -149818,7 +150005,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 72,
+        "hub_rank": 73,
         "node_count": 31,
         "edge_count": 185,
         "degree": 185,
@@ -150499,7 +150686,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 208,
+        "hub_rank": 209,
         "node_count": 18,
         "edge_count": 74,
         "degree": 74,
@@ -150649,7 +150836,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 45,
+        "hub_rank": 46,
         "node_count": 60,
         "edge_count": 220,
         "degree": 220,
@@ -151593,7 +151780,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 46,
+        "hub_rank": 47,
         "node_count": 40,
         "edge_count": 218,
         "degree": 218,
@@ -151839,7 +152026,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 205,
+        "hub_rank": 206,
         "node_count": 10,
         "edge_count": 75,
         "degree": 75,
@@ -152618,7 +152805,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 187,
+        "hub_rank": 188,
         "node_count": 22,
         "edge_count": 84,
         "degree": 84,
@@ -157036,7 +157223,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 48,
+        "hub_rank": 49,
         "node_count": 42,
         "edge_count": 216,
         "degree": 216,
@@ -157121,7 +157308,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 193,
+        "hub_rank": 194,
         "node_count": 19,
         "edge_count": 80,
         "degree": 80,
@@ -157308,7 +157495,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 49,
+        "hub_rank": 50,
         "node_count": 39,
         "edge_count": 216,
         "degree": 216,
@@ -157827,7 +158014,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 47,
+        "hub_rank": 48,
         "node_count": 28,
         "edge_count": 217,
         "degree": 217,
@@ -158599,7 +158786,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 67,
+        "hub_rank": 68,
         "node_count": 19,
         "edge_count": 187,
         "degree": 187,
@@ -159073,17 +159260,17 @@
     {
       "path": "aura_human_agent_arena_server.py",
       "role": "python_module",
-      "bytes": 43846,
-      "lines": 1037,
-      "tokens_est": 10962,
+      "bytes": 46103,
+      "lines": 1090,
+      "tokens_est": 11526,
       "symbol_count": 20,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 50,
+        "hub_rank": 45,
         "node_count": 27,
-        "edge_count": 216,
-        "degree": 216,
+        "edge_count": 222,
+        "degree": 222,
         "symbols": [
           "AuraThreadingHTTPServer",
           "HumanAgentArenaHandler",
@@ -159107,6 +159294,7 @@
           "dispatch_api_request"
         ],
         "neighbor_files": [
+          "aura_arena_gate_dialogue.py",
           "aura_arena_persistence_adapters.py",
           "aura_arena_research_bridge.py",
           "aura_arena_tool_runtime.py",
@@ -159128,45 +159316,45 @@
           "aura_showcase_server.py"
         ],
         "edge_kinds": {
-          "call": 157,
+          "call": 162,
           "defines": 52,
-          "import_module": 7
+          "import_module": 8
         }
       },
-      "digest8": "a3c01df3bb6c03fb",
+      "digest8": "e135ecf48038e7c1",
       "vector": [
-        0.275685,
-        -0.085557,
-        0.023087,
-        0.063829,
-        0.115435,
-        -0.183337,
-        -0.191486,
-        0.123583,
-        0.305562,
-        0.101854,
-        0.210498,
-        0.158892,
-        -0.036667,
-        0.101854,
-        -0.25124,
-        0.275685,
-        -0.142596,
-        0.137163,
-        0.036667,
-        0.232227,
-        -0.25124,
-        0.194202,
-        -0.137163,
-        -0.069261,
-        -0.020371,
-        0.088274,
-        -0.31371,
-        -0.131731,
-        0.264821,
-        0.004074,
-        -0.093706,
-        0.259388
+        0.106056,
+        -0.272885,
+        -0.017875,
+        -0.299101,
+        0.103673,
+        0.122739,
+        -0.237136,
+        -0.003575,
+        -0.039324,
+        0.115589,
+        0.120356,
+        0.19662,
+        -0.160871,
+        0.041707,
+        -0.048857,
+        -0.294335,
+        0.19662,
+        -0.299101,
+        -0.048857,
+        -0.291951,
+        0.158488,
+        0.20377,
+        0.053624,
+        -0.046474,
+        -0.089373,
+        0.182321,
+        0.294335,
+        0.141805,
+        -0.015491,
+        0.156105,
+        0.237136,
+        0.20377
       ]
     },
     {
@@ -159322,17 +159510,17 @@
     {
       "path": "aura_human_agent_wfst_adapter.py",
       "role": "python_module",
-      "bytes": 16723,
-      "lines": 412,
-      "tokens_est": 4181,
-      "symbol_count": 20,
+      "bytes": 20158,
+      "lines": 503,
+      "tokens_est": 5040,
+      "symbol_count": 21,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 214,
-        "node_count": 21,
-        "edge_count": 70,
-        "degree": 70,
+        "hub_rank": 203,
+        "node_count": 22,
+        "edge_count": 75,
+        "degree": 75,
         "symbols": [
           "HumanAgentWFSTController",
           "__init__",
@@ -159351,9 +159539,9 @@
           "_workflow_state",
           "_working_tree_digest",
           "close",
+          "preview_command",
           "project_state",
-          "route_action",
-          "route_command"
+          "route_action"
         ],
         "neighbor_files": [
           "aura_api_rotator.py",
@@ -159365,61 +159553,61 @@
           "aura_human_agent_workflow.py"
         ],
         "edge_kinds": {
-          "defines": 40,
-          "call": 26,
+          "defines": 42,
+          "call": 29,
           "import_module": 4
         }
       },
-      "digest8": "8e2053b573560073",
+      "digest8": "405e3256e5488baf",
       "vector": [
-        0.233783,
-        0.019773,
-        0.080254,
-        -0.066297,
-        0.129104,
-        -0.070949,
-        0.005815,
-        -0.070949,
-        0.294264,
-        0.091885,
-        0.257045,
-        -0.264023,
-        -0.080254,
-        0.159345,
-        -0.29659,
-        0.050013,
-        0.273328,
-        -0.129104,
-        0.052339,
-        0.261697,
-        0.26635,
-        0.112821,
-        -0.059318,
-        0.19889,
-        -0.238435,
-        0.282633,
-        0.010468,
-        0.252392,
-        -0.112821,
-        0.073275,
-        0.196564,
-        0.087232
+        0.180609,
+        -0.189365,
+        0.09523,
+        -0.160906,
+        0.25723,
+        0.270366,
+        -0.029554,
+        0.248474,
+        0.047068,
+        0.033933,
+        0.213447,
+        0.027365,
+        0.088662,
+        -0.250663,
+        -0.252852,
+        -0.200311,
+        0.215636,
+        -0.132446,
+        0.213447,
+        -0.213447,
+        -0.132446,
+        0.217825,
+        0.235339,
+        -0.079906,
+        0.073338,
+        -0.112744,
+        -0.0405,
+        0.263798,
+        0.012041,
+        0.279122,
+        0.112744,
+        0.090852
       ]
     },
     {
       "path": "aura_human_agent_workflow.py",
       "role": "python_module",
-      "bytes": 24344,
-      "lines": 432,
-      "tokens_est": 6086,
-      "symbol_count": 31,
+      "bytes": 24877,
+      "lines": 440,
+      "tokens_est": 6220,
+      "symbol_count": 32,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 191,
-        "node_count": 32,
-        "edge_count": 80,
-        "degree": 80,
+        "hub_rank": 189,
+        "node_count": 33,
+        "edge_count": 83,
+        "degree": 83,
         "symbols": [
           "HumanAgentWorkflow",
           "ToolRuntimeFacade",
@@ -159453,45 +159641,45 @@
           "aura_showcase_observatory_handoff.py"
         ],
         "edge_kinds": {
-          "defines": 62,
-          "call": 16,
+          "defines": 64,
+          "call": 17,
           "import_module": 2
         }
       },
-      "digest8": "dead011eb6021ec7",
+      "digest8": "148d02d40bf3adc4",
       "vector": [
-        0.28714,
-        -0.157996,
-        0.015113,
-        0.185473,
-        -0.155248,
-        0.064572,
-        0.251419,
-        -0.207455,
-        -0.226689,
-        0.086554,
-        -0.039842,
-        -0.342095,
-        -0.245924,
-        -0.179978,
-        -0.295383,
-        -0.06732,
-        -0.064572,
-        -0.223942,
-        -0.061824,
-        0.108536,
-        -0.273401,
-        -0.328356,
-        0.026104,
-        -0.039842,
-        -0.026104,
-        -0.133266,
-        -0.050833,
-        -0.031599,
-        0.144257,
-        -0.232185,
-        0.04259,
-        0.089302
+        0.083428,
+        -0.085995,
+        -0.219481,
+        -0.091129,
+        0.160439,
+        0.293924,
+        0.175841,
+        0.257986,
+        -0.085995,
+        -0.119367,
+        0.211779,
+        0.037222,
+        0.186109,
+        0.265687,
+        -0.029521,
+        -0.085995,
+        0.23745,
+        0.173274,
+        -0.111666,
+        -0.245151,
+        0.019253,
+        -0.180975,
+        0.204078,
+        0.14247,
+        0.299058,
+        -0.245151,
+        -0.175841,
+        0.127068,
+        -0.281089,
+        0.080861,
+        0.014119,
+        0.042356
       ]
     },
     {
@@ -160246,9 +160434,9 @@
     {
       "path": "aura_intent_refinement.py",
       "role": "python_module",
-      "bytes": 54391,
-      "lines": 1089,
-      "tokens_est": 13598,
+      "bytes": 55260,
+      "lines": 1103,
+      "tokens_est": 13815,
       "symbol_count": 63,
       "commands": [],
       "command_lines": {},
@@ -160290,40 +160478,40 @@
           "import_module": 3
         }
       },
-      "digest8": "5eb83a792ee7ebb9",
+      "digest8": "003f72e3f6ffe4ac",
       "vector": [
-        0.001262,
-        0.04417,
-        0.162799,
-        0.309192,
-        0.147655,
-        -0.205707,
-        0.182991,
-        0.193087,
-        -0.013882,
-        0.094651,
-        -0.064362,
-        0.046694,
-        0.04417,
-        -0.175419,
-        0.31424,
-        -0.258711,
-        -0.124939,
-        0.190563,
-        -0.097175,
-        0.03155,
-        0.177943,
-        -0.266283,
-        0.304144,
-        -0.099699,
-        0.089602,
-        -0.271331,
-        0.167847,
-        -0.256187,
-        -0.195611,
-        0.155227,
-        0.099699,
-        -0.109795
+        -0.224703,
+        0.273407,
+        0.038742,
+        0.18264,
+        -0.142791,
+        0.271193,
+        0.111798,
+        0.240199,
+        -0.149433,
+        0.125081,
+        -0.012176,
+        0.240199,
+        -0.074163,
+        -0.231344,
+        -0.087446,
+        0.067522,
+        -0.109584,
+        0.213634,
+        0.007748,
+        -0.147219,
+        0.189282,
+        0.003321,
+        0.275621,
+        0.142791,
+        -0.275621,
+        0.235772,
+        0.21142,
+        -0.209206,
+        -0.036528,
+        0.202565,
+        0.173785,
+        -0.067522
       ]
     },
     {
@@ -163486,7 +163674,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 192,
+        "hub_rank": 193,
         "node_count": 20,
         "edge_count": 80,
         "degree": 80,
@@ -165035,7 +165223,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 183,
+        "hub_rank": 184,
         "node_count": 9,
         "edge_count": 86,
         "degree": 86,
@@ -165281,7 +165469,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 203,
+        "hub_rank": 204,
         "node_count": 19,
         "edge_count": 75,
         "degree": 75,
@@ -165584,7 +165772,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 211,
+        "hub_rank": 212,
         "node_count": 12,
         "edge_count": 72,
         "degree": 72,
@@ -166624,7 +166812,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 209,
+        "hub_rank": 210,
         "node_count": 15,
         "edge_count": 74,
         "degree": 74,
@@ -166703,7 +166891,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 210,
+        "hub_rank": 211,
         "node_count": 19,
         "edge_count": 73,
         "degree": 73,
@@ -166947,7 +167135,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 186,
+        "hub_rank": 187,
         "node_count": 20,
         "edge_count": 85,
         "degree": 85,
@@ -167722,7 +167910,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 212,
+        "hub_rank": 213,
         "node_count": 10,
         "edge_count": 72,
         "degree": 72,
@@ -168867,7 +169055,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 56,
+        "hub_rank": 57,
         "node_count": 46,
         "edge_count": 207,
         "degree": 207,
@@ -169491,7 +169679,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 63,
+        "hub_rank": 64,
         "node_count": 49,
         "edge_count": 192,
         "degree": 192,
@@ -172291,7 +172479,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 57,
+        "hub_rank": 58,
         "node_count": 27,
         "edge_count": 204,
         "degree": 204,
@@ -172792,17 +172980,17 @@
     {
       "path": "aura_showcase_server.py",
       "role": "python_module",
-      "bytes": 23234,
-      "lines": 553,
-      "tokens_est": 5809,
+      "bytes": 24142,
+      "lines": 576,
+      "tokens_est": 6036,
       "symbol_count": 22,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 58,
+        "hub_rank": 56,
         "node_count": 29,
-        "edge_count": 203,
-        "degree": 203,
+        "edge_count": 208,
+        "degree": 208,
         "symbols": [
           "Handler",
           "ShowcaseState",
@@ -172841,45 +173029,45 @@
           "aura_showcase_spatial.py"
         ],
         "edge_kinds": {
-          "call": 137,
+          "call": 142,
           "defines": 56,
           "import_module": 10
         }
       },
-      "digest8": "b01f2c636bfc880f",
+      "digest8": "bf61cb80456da3be",
       "vector": [
-        -0.047189,
-        -0.233748,
-        -0.031825,
-        -0.200826,
-        -0.113033,
-        0.27106,
-        -0.238138,
-        0.115228,
-        0.174488,
-        -0.253502,
-        0.222774,
-        -0.113033,
-        0.014266,
-        0.159124,
-        0.260086,
-        -0.253502,
-        0.220579,
-        0.14815,
-        -0.264476,
-        0.198631,
-        -0.229359,
-        0.014266,
-        0.268865,
-        -0.086695,
-        -0.178878,
-        -0.071332,
-        -0.036215,
-        0.143761,
-        -0.001097,
-        0.060358,
-        -0.235943,
-        -0.003292
+        -0.074946,
+        0.038238,
+        0.313551,
+        -0.053533,
+        -0.133068,
+        -0.145304,
+        -0.289079,
+        -0.029061,
+        -0.160599,
+        0.279902,
+        -0.292138,
+        0.007648,
+        0.130009,
+        -0.071887,
+        -0.31661,
+        0.084123,
+        0.06271,
+        -0.065769,
+        -0.078005,
+        -0.185072,
+        0.273784,
+        -0.246252,
+        -0.074946,
+        -0.03212,
+        0.3472,
+        0.185072,
+        -0.050474,
+        -0.099419,
+        -0.035179,
+        -0.224839,
+        0.188131,
+        0.065769
       ]
     },
     {
@@ -175023,7 +175211,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 206,
+        "hub_rank": 207,
         "node_count": 24,
         "edge_count": 74,
         "degree": 74,
@@ -175264,7 +175452,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 64,
+        "hub_rank": 65,
         "node_count": 32,
         "edge_count": 191,
         "degree": 191,
@@ -175995,7 +176183,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 74,
+        "hub_rank": 75,
         "node_count": 58,
         "edge_count": 179,
         "degree": 179,
@@ -177692,7 +177880,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 73,
+        "hub_rank": 74,
         "node_count": 44,
         "edge_count": 183,
         "degree": 183,
@@ -178197,7 +178385,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 68,
+        "hub_rank": 69,
         "node_count": 23,
         "edge_count": 186,
         "degree": 186,
@@ -180830,7 +181018,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 184,
+        "hub_rank": 185,
         "node_count": 31,
         "edge_count": 85,
         "degree": 85,
@@ -181873,7 +182061,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 185,
+        "hub_rank": 186,
         "node_count": 26,
         "edge_count": 85,
         "degree": 85,
@@ -182464,47 +182652,47 @@
     {
       "path": "requirements.txt",
       "role": "support_file",
-      "bytes": 407,
-      "lines": 19,
-      "tokens_est": 102,
+      "bytes": 424,
+      "lines": 20,
+      "tokens_est": 106,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "2531604c0d42ac4e",
+      "digest8": "4a52f6ba36d65599",
       "vector": [
-        0.061255,
-        -0.061255,
-        0.290096,
-        -0.287785,
-        -0.264669,
-        -0.225373,
-        0.09824,
-        0.229996,
-        0.273915,
-        -0.236931,
-        0.260046,
-        0.181455,
-        0.052009,
-        -0.017336,
-        0.169897,
-        0.105174,
-        0.077436,
-        0.010402,
-        0.264669,
-        0.278538,
-        0.169897,
-        0.061255,
-        -0.241554,
-        0.003467,
-        0.026583,
-        -0.045075,
-        -0.142159,
-        -0.142159,
-        0.005779,
-        -0.012713,
-        0.248489,
-        0.132913
+        0.226811,
+        -0.15307,
+        -0.264799,
+        -0.09497,
+        -0.222342,
+        -0.09497,
+        -0.193292,
+        -0.204465,
+        0.137428,
+        0.204465,
+        0.048044,
+        0.186589,
+        0.144131,
+        -0.132958,
+        0.222342,
+        0.09497,
+        -0.244688,
+        0.083797,
+        -0.208935,
+        0.188823,
+        -0.2067,
+        -0.182119,
+        0.229046,
+        -0.141897,
+        0.001117,
+        0.110612,
+        -0.072624,
+        0.193292,
+        -0.224577,
+        -0.213404,
+        -0.061451,
+        -0.253626
       ]
     },
     {
@@ -182865,7 +183053,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 213,
+        "hub_rank": 214,
         "node_count": 20,
         "edge_count": 71,
         "degree": 71,
@@ -183801,7 +183989,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 190,
+        "hub_rank": 192,
         "node_count": 16,
         "edge_count": 81,
         "degree": 81,
@@ -184155,7 +184343,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 70,
+        "hub_rank": 71,
         "node_count": 48,
         "edge_count": 185,
         "degree": 185,
@@ -185459,7 +185647,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 76,
+        "hub_rank": 77,
         "node_count": 26,
         "edge_count": 176,
         "degree": 176,
@@ -186516,7 +186704,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 69,
+        "hub_rank": 70,
         "node_count": 59,
         "edge_count": 185,
         "degree": 185,
@@ -186966,7 +187154,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 65,
+        "hub_rank": 66,
         "node_count": 52,
         "edge_count": 190,
         "degree": 190,
@@ -187575,7 +187763,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 75,
+        "hub_rank": 76,
         "node_count": 36,
         "edge_count": 177,
         "degree": 177,
@@ -190141,40 +190329,40 @@
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "2502ae5b68b12d51",
+      "digest8": "f6f2b7d7bb9b675e",
       "vector": [
-        0.036626,
-        -0.248244,
-        0.077322,
-        0.177705,
-        -0.291653,
-        0.109878,
-        0.126157,
-        0.063757,
-        0.017635,
-        -0.055617,
-        0.044765,
-        0.269948,
-        0.0936,
-        0.077322,
-        -0.318783,
-        0.014922,
-        0.310644,
-        -0.174992,
-        -0.017635,
-        -0.248244,
-        0.006783,
-        -0.150574,
-        -0.071896,
-        -0.055617,
-        -0.294366,
-        0.109878,
-        -0.324209,
-        0.096313,
-        -0.321496,
-        -0.023061,
-        0.185844,
-        0.126157
+        -0.089295,
+        0.256583,
+        0.136769,
+        -0.118684,
+        -0.204588,
+        -0.204588,
+        -0.055386,
+        -0.274668,
+        -0.116423,
+        0.243019,
+        -0.204588,
+        -0.093817,
+        0.195545,
+        -0.111902,
+        -0.037301,
+        -0.170678,
+        -0.048604,
+        -0.091556,
+        0.181981,
+        0.249801,
+        -0.233976,
+        -0.003391,
+        -0.270146,
+        -0.191024,
+        -0.075731,
+        -0.229455,
+        0.168418,
+        -0.218152,
+        -0.276928,
+        0.206848,
+        0.037301,
+        -0.030519
       ]
     },
     {
@@ -190267,6 +190455,52 @@
         0.249024,
         0.030075,
         -0.282709
+      ]
+    },
+    {
+      "path": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2_hardening_revision.v1.json",
+      "role": "schema_or_lexicon",
+      "bytes": 4030,
+      "lines": 82,
+      "tokens_est": 1008,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e11c8fff4ec6c065",
+      "vector": [
+        -0.080858,
+        -0.067192,
+        -0.224352,
+        0.215241,
+        -0.240296,
+        0.208408,
+        -0.290405,
+        -0.062636,
+        -0.244851,
+        -0.007972,
+        0.064914,
+        -0.253962,
+        0.192464,
+        0.260795,
+        -0.101357,
+        0.288127,
+        -0.212964,
+        0.140078,
+        0.094524,
+        -0.269906,
+        -0.119578,
+        0.244851,
+        0.238018,
+        0.101357,
+        -0.087691,
+        -0.160577,
+        0.096802,
+        -0.060359,
+        -0.128689,
+        0.023916,
+        0.096802,
+        -0.121856
       ]
     },
     {
@@ -190819,6 +191053,52 @@
         -0.082945,
         -0.172472,
         0.127709
+      ]
+    },
+    {
+      "path": ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2_hardening.v1.json",
+      "role": "schema_or_lexicon",
+      "bytes": 5157,
+      "lines": 99,
+      "tokens_est": 1290,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3daf13061cc11e1f",
+      "vector": [
+        0.224634,
+        -0.139955,
+        -0.04822,
+        -0.283439,
+        0.231691,
+        -0.092912,
+        0.161125,
+        0.250509,
+        0.236395,
+        -0.201112,
+        0.128194,
+        -0.238748,
+        -0.04822,
+        0.003528,
+        -0.076446,
+        -0.132899,
+        0.097616,
+        -0.222282,
+        -0.168182,
+        0.132899,
+        -0.252861,
+        -0.008233,
+        0.161125,
+        -0.043516,
+        -0.128194,
+        -0.142308,
+        -0.283439,
+        0.099968,
+        -0.078798,
+        -0.043516,
+        -0.288144,
+        -0.292848
       ]
     },
     {
@@ -194372,47 +194652,47 @@
     {
       "path": ".github/workflows/publish-ghcr-showcase.yml",
       "role": "schema_or_lexicon",
-      "bytes": 2187,
-      "lines": 76,
-      "tokens_est": 547,
+      "bytes": 2260,
+      "lines": 78,
+      "tokens_est": 565,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "e1b9d8475d090ccd",
+      "digest8": "7499c2076674c29f",
       "vector": [
-        -0.101188,
-        0.212844,
-        -0.040708,
-        -0.203539,
-        0.198887,
-        0.261693,
-        0.068622,
-        -0.040708,
-        0.24541,
-        -0.131428,
-        0.029077,
-        -0.18493,
-        0.059317,
-        0.152363,
-        -0.210517,
-        -0.212844,
-        0.257041,
-        -0.189582,
-        0.277976,
-        0.04536,
-        -0.0756,
-        -0.194234,
-        -0.208191,
-        0.012794,
-        0.257041,
-        0.12445,
-        -0.145385,
-        0.182604,
-        -0.210517,
-        0.024425,
-        -0.250062,
-        0.21517
+        -0.229405,
+        0.08169,
+        0.218214,
+        0.08169,
+        0.115262,
+        -0.2585,
+        -0.193595,
+        -0.077214,
+        -0.130929,
+        -0.045881,
+        -0.262976,
+        -0.2585,
+        0.048119,
+        0.177929,
+        0.229405,
+        0.26969,
+        -0.202548,
+        -0.274167,
+        -0.039167,
+        0.204786,
+        -0.204786,
+        0.151071,
+        -0.095119,
+        -0.010071,
+        -0.184643,
+        0.092881,
+        -0.198071,
+        0.26969,
+        -0.144357,
+        0.139881,
+        -0.133167,
+        0.043643
       ]
     },
     {
@@ -197147,9 +197427,9 @@
     {
       "path": "aura_showcase/gate-dialogue.js",
       "role": "interface_surface",
-      "bytes": 31551,
-      "lines": 580,
-      "tokens_est": 7878,
+      "bytes": 31127,
+      "lines": 562,
+      "tokens_est": 7772,
       "symbol_count": 0,
       "commands": [
         "!S",
@@ -197196,21 +197476,21 @@
           38
         ],
         "!diff": [
-          495
+          498
         ],
         "!hard": [
           239
         ],
         "!hasEvidence": [
-          485,
           488,
           491,
-          499,
-          507,
-          508,
-          518,
-          519,
-          531
+          494,
+          502,
+          510,
+          511,
+          514,
+          515,
+          520
         ],
         "!installPanel": [
           282
@@ -197243,59 +197523,59 @@
           310,
           367,
           393,
-          483,
-          542,
-          557
+          486,
+          524,
+          539
         ],
         "!statement": [
           326
         ],
         "!target": [
-          554
+          536
         ],
         "!task": [
           59,
-          481
+          484
         ],
         "!tool": [
           181
         ]
       },
       "topology": {},
-      "digest8": "29b3c1eb2728f11d",
+      "digest8": "ec83177f51a0c71a",
       "vector": [
-        -0.240901,
-        0.191948,
-        -0.220289,
-        0.150724,
-        0.222866,
-        -0.158454,
-        -0.099195,
-        -0.132689,
-        -0.076006,
-        0.02963,
-        0.171336,
-        -0.02963,
-        -0.217713,
-        -0.284701,
-        -0.0657,
-        -0.011594,
-        -0.166183,
-        0.055394,
-        -0.037359,
-        -0.215136,
-        -0.163607,
-        -0.184218,
-        0.220289,
-        -0.189371,
-        -0.240901,
-        0.135265,
-        -0.24863,
-        0.276972,
-        -0.199677,
-        -0.266666,
-        -0.088889,
-        0.068277
+        -0.247923,
+        -0.282841,
+        -0.240939,
+        -0.096608,
+        0.173429,
+        0.068673,
+        0.129199,
+        -0.282841,
+        0.015131,
+        -0.126871,
+        0.022115,
+        0.033755,
+        0.075657,
+        -0.10592,
+        -0.010476,
+        0.282841,
+        0.192053,
+        0.238611,
+        -0.012804,
+        0.199036,
+        -0.20602,
+        0.015131,
+        0.185069,
+        -0.024443,
+        -0.289825,
+        0.175757,
+        -0.236283,
+        -0.091953,
+        -0.215332,
+        0.168774,
+        0.164118,
+        0.229299
       ]
     },
     {
@@ -210735,47 +211015,54 @@
     {
       "path": "tests/test_aura_bilateral_gate_dialogue.py",
       "role": "python_module",
-      "bytes": 11940,
-      "lines": 328,
-      "tokens_est": 2985,
-      "symbol_count": 11,
-      "commands": [],
-      "command_lines": {},
+      "bytes": 26271,
+      "lines": 736,
+      "tokens_est": 6568,
+      "symbol_count": 23,
+      "commands": [
+        "!hasEvidence"
+      ],
+      "command_lines": {
+        "!hasEvidence": [
+          721,
+          725
+        ]
+      },
       "topology": {},
-      "digest8": "3f251622481acd65",
+      "digest8": "328f66f2dc2d6c6a",
       "vector": [
-        -0.069916,
-        -0.176454,
-        -0.203089,
-        0.194211,
-        -0.056599,
-        0.234162,
-        0.176454,
-        0.276334,
-        -0.187552,
-        0.205308,
-        0.278553,
-        0.269675,
-        -0.14538,
-        0.083233,
-        -0.087672,
-        0.114307,
-        0.214187,
-        -0.231943,
-        0.134283,
-        -0.109868,
-        0.043281,
-        -0.172015,
-        -0.129844,
-        0.109868,
-        -0.19643,
-        -0.260797,
-        0.14538,
-        0.280773,
-        0.183113,
-        0.056599,
-        0.025525,
-        -0.094331
+        -0.189323,
+        0.153602,
+        0.260766,
+        0.139313,
+        0.146458,
+        0.253622,
+        0.020242,
+        0.220282,
+        -0.108355,
+        -0.265529,
+        -0.003572,
+        -0.25124,
+        0.182179,
+        -0.30125,
+        -0.289343,
+        -0.048819,
+        -0.025005,
+        0.222663,
+        -0.082159,
+        -0.067871,
+        0.175035,
+        -0.103592,
+        0.041675,
+        -0.020242,
+        -0.115499,
+        0.148839,
+        0.23457,
+        -0.136932,
+        0.258385,
+        0.086922,
+        0.220282,
+        0.160746
       ]
     },
     {
@@ -223187,7 +223474,7 @@
     "source": "compiled_deep_topology",
     "diagnostics": {
       "isolated_node_count": 7,
-      "dead_end_count": 4681,
+      "dead_end_count": 4684,
       "dangling_edge_count": 0,
       "top_hubs": [
         {
@@ -223287,11 +223574,11 @@
       "generated_by": "aura_topology_manager",
       "root": ".",
       "module_count": 614,
-      "node_count": 10660,
-      "edge_count": 25298,
+      "node_count": 10666,
+      "edge_count": 25320,
       "spectral_layout": true,
-      "spectral_sparsity": 0.053757,
-      "global_health": 0.971228
+      "spectral_sparsity": 0.053727,
+      "global_health": 0.971245
     },
     "file_index": {
       "aura_node.py": {
@@ -225209,8 +225496,63 @@
           "import_module": 5
         }
       },
-      "aura_coding_workbench_wfst_adapter.py": {
+      "aura_human_agent_arena_server.py": {
         "hub_rank": 45,
+        "node_count": 27,
+        "edge_count": 222,
+        "degree": 222,
+        "symbols": [
+          "AuraThreadingHTTPServer",
+          "HumanAgentArenaHandler",
+          "HumanAgentArenaServerState",
+          "__init__",
+          "_attach_emergent_refactor_context",
+          "_commit_emergent_packet",
+          "_current_repo_head",
+          "_error",
+          "_handle_civic_api",
+          "_handle_emergent_and_research_api",
+          "_node_ids",
+          "_prepare_payload_with_emergent_context",
+          "_query_float",
+          "_query_int",
+          "_record_special_tool_run",
+          "_send_json",
+          "_serve_static",
+          "_unique",
+          "close",
+          "dispatch_api_request"
+        ],
+        "neighbor_files": [
+          "aura_arena_gate_dialogue.py",
+          "aura_arena_persistence_adapters.py",
+          "aura_arena_research_bridge.py",
+          "aura_arena_tool_runtime.py",
+          "aura_civic_map.py",
+          "aura_civic_organs.py",
+          "aura_civic_runtime.py",
+          "aura_civic_snapshots.py",
+          "aura_civic_tensor_adapter.py",
+          "aura_coding_arena_server.py",
+          "aura_coding_workbench_wfst_adapter.py",
+          "aura_construction_human_agent.py",
+          "aura_cost_telemetry_events.py",
+          "aura_emergent_refactor_workspace.py",
+          "aura_empirical_cost_ledger.py",
+          "aura_external_llm_session.py",
+          "aura_fst_routing.py",
+          "aura_human_agent_arena.py",
+          "aura_human_agent_workflow.py",
+          "aura_showcase_server.py"
+        ],
+        "edge_kinds": {
+          "call": 162,
+          "defines": 52,
+          "import_module": 8
+        }
+      },
+      "aura_coding_workbench_wfst_adapter.py": {
+        "hub_rank": 46,
         "node_count": 60,
         "edge_count": 220,
         "degree": 220,
@@ -225256,7 +225598,7 @@
         }
       },
       "aura_construction_demo_fixture.py": {
-        "hub_rank": 46,
+        "hub_rank": 47,
         "node_count": 40,
         "edge_count": 218,
         "degree": 218,
@@ -225298,7 +225640,7 @@
         }
       },
       "aura_gate_oidc.py": {
-        "hub_rank": 47,
+        "hub_rank": 48,
         "node_count": 28,
         "edge_count": 217,
         "degree": 217,
@@ -225337,7 +225679,7 @@
         }
       },
       "aura_forge.py": {
-        "hub_rank": 48,
+        "hub_rank": 49,
         "node_count": 42,
         "edge_count": 216,
         "degree": 216,
@@ -225377,7 +225719,7 @@
         }
       },
       "aura_fusion.py": {
-        "hub_rank": 49,
+        "hub_rank": 50,
         "node_count": 39,
         "edge_count": 216,
         "degree": 216,
@@ -225425,60 +225767,6 @@
           "call": 129,
           "defines": 76,
           "import_module": 11
-        }
-      },
-      "aura_human_agent_arena_server.py": {
-        "hub_rank": 50,
-        "node_count": 27,
-        "edge_count": 216,
-        "degree": 216,
-        "symbols": [
-          "AuraThreadingHTTPServer",
-          "HumanAgentArenaHandler",
-          "HumanAgentArenaServerState",
-          "__init__",
-          "_attach_emergent_refactor_context",
-          "_commit_emergent_packet",
-          "_current_repo_head",
-          "_error",
-          "_handle_civic_api",
-          "_handle_emergent_and_research_api",
-          "_node_ids",
-          "_prepare_payload_with_emergent_context",
-          "_query_float",
-          "_query_int",
-          "_record_special_tool_run",
-          "_send_json",
-          "_serve_static",
-          "_unique",
-          "close",
-          "dispatch_api_request"
-        ],
-        "neighbor_files": [
-          "aura_arena_persistence_adapters.py",
-          "aura_arena_research_bridge.py",
-          "aura_arena_tool_runtime.py",
-          "aura_civic_map.py",
-          "aura_civic_organs.py",
-          "aura_civic_runtime.py",
-          "aura_civic_snapshots.py",
-          "aura_civic_tensor_adapter.py",
-          "aura_coding_arena_server.py",
-          "aura_coding_workbench_wfst_adapter.py",
-          "aura_construction_human_agent.py",
-          "aura_cost_telemetry_events.py",
-          "aura_emergent_refactor_workspace.py",
-          "aura_empirical_cost_ledger.py",
-          "aura_external_llm_session.py",
-          "aura_fst_routing.py",
-          "aura_human_agent_arena.py",
-          "aura_human_agent_workflow.py",
-          "aura_showcase_server.py"
-        ],
-        "edge_kinds": {
-          "call": 157,
-          "defines": 52,
-          "import_module": 7
         }
       },
       "_aura_architect_consolidation_benchmark_legacy.py": {
@@ -225715,88 +226003,11 @@
           "import_module": 6
         }
       },
-      "aura_refactor_skeleton.py": {
-        "hub_rank": 56,
-        "node_count": 46,
-        "edge_count": 207,
-        "degree": 207,
-        "symbols": [
-          "IntegrationDisposition",
-          "RefactorSkeleton",
-          "RefactorSkeletonNode",
-          "RefactorSkeletonStore",
-          "SourceSpan",
-          "__init__",
-          "__post_init__",
-          "_canonical_json",
-          "_digest",
-          "_envelope_digest",
-          "_freeze",
-          "_immutable_mapping",
-          "_load_chain",
-          "_node_payload",
-          "_normalize_repo_path",
-          "_read_path",
-          "_require_tuple",
-          "_resolve_repo_file",
-          "_result",
-          "_skeleton_identity"
-        ],
-        "neighbor_files": [
-          "aura_construction_refactor_plan.py",
-          "aura_fst_routing.py",
-          "aura_ojibwe_dialect_conflict_resolver.py"
-        ],
-        "edge_kinds": {
-          "call": 116,
-          "defines": 90,
-          "import_module": 1
-        }
-      },
-      "aura_shadow_model_router.py": {
-        "hub_rank": 57,
-        "node_count": 27,
-        "edge_count": 204,
-        "degree": 204,
-        "symbols": [
-          "CandidateAssessment",
-          "CandidateEvidence",
-          "PolicyOption",
-          "ShadowRouteResult",
-          "ShadowRoutingPolicy",
-          "__post_init__",
-          "_assess_candidate",
-          "_baselines",
-          "_cascade_option",
-          "_context_value",
-          "_direct_option",
-          "_finite_nonnegative",
-          "_first",
-          "_fits_budgets",
-          "_panel_option",
-          "_probability",
-          "_risk_class",
-          "_tuple_strings",
-          "_utility",
-          "compare_shadow_to_baselines"
-        ],
-        "neighbor_files": [
-          "aura_adaptive_fusion.py",
-          "aura_adaptive_model_executor.py",
-          "aura_adaptive_model_router.py",
-          "aura_model_cognome.py"
-        ],
-        "edge_kinds": {
-          "call": 148,
-          "defines": 52,
-          "import_module": 4
-        }
-      },
       "aura_showcase_server.py": {
-        "hub_rank": 58,
+        "hub_rank": 56,
         "node_count": 29,
-        "edge_count": 203,
-        "degree": 203,
+        "edge_count": 208,
+        "degree": 208,
         "symbols": [
           "Handler",
           "ShowcaseState",
@@ -225835,9 +226046,86 @@
           "aura_showcase_spatial.py"
         ],
         "edge_kinds": {
-          "call": 137,
+          "call": 142,
           "defines": 56,
           "import_module": 10
+        }
+      },
+      "aura_refactor_skeleton.py": {
+        "hub_rank": 57,
+        "node_count": 46,
+        "edge_count": 207,
+        "degree": 207,
+        "symbols": [
+          "IntegrationDisposition",
+          "RefactorSkeleton",
+          "RefactorSkeletonNode",
+          "RefactorSkeletonStore",
+          "SourceSpan",
+          "__init__",
+          "__post_init__",
+          "_canonical_json",
+          "_digest",
+          "_envelope_digest",
+          "_freeze",
+          "_immutable_mapping",
+          "_load_chain",
+          "_node_payload",
+          "_normalize_repo_path",
+          "_read_path",
+          "_require_tuple",
+          "_resolve_repo_file",
+          "_result",
+          "_skeleton_identity"
+        ],
+        "neighbor_files": [
+          "aura_construction_refactor_plan.py",
+          "aura_fst_routing.py",
+          "aura_ojibwe_dialect_conflict_resolver.py"
+        ],
+        "edge_kinds": {
+          "call": 116,
+          "defines": 90,
+          "import_module": 1
+        }
+      },
+      "aura_shadow_model_router.py": {
+        "hub_rank": 58,
+        "node_count": 27,
+        "edge_count": 204,
+        "degree": 204,
+        "symbols": [
+          "CandidateAssessment",
+          "CandidateEvidence",
+          "PolicyOption",
+          "ShadowRouteResult",
+          "ShadowRoutingPolicy",
+          "__post_init__",
+          "_assess_candidate",
+          "_baselines",
+          "_cascade_option",
+          "_context_value",
+          "_direct_option",
+          "_finite_nonnegative",
+          "_first",
+          "_fits_budgets",
+          "_panel_option",
+          "_probability",
+          "_risk_class",
+          "_tuple_strings",
+          "_utility",
+          "compare_shadow_to_baselines"
+        ],
+        "neighbor_files": [
+          "aura_adaptive_fusion.py",
+          "aura_adaptive_model_executor.py",
+          "aura_adaptive_model_router.py",
+          "aura_model_cognome.py"
+        ],
+        "edge_kinds": {
+          "call": 148,
+          "defines": 52,
+          "import_module": 4
         }
       },
       "aura_codebase_navigator.py": {
@@ -226012,8 +226300,54 @@
           "import_module": 6
         }
       },
-      "aura_relationship_atlas.py": {
+      "aura_arena_gate_dialogue.py": {
         "hub_rank": 63,
+        "node_count": 33,
+        "edge_count": 194,
+        "degree": 194,
+        "symbols": [
+          "ArenaGateDialogueService",
+          "__init__",
+          "_allowed_paths",
+          "_analysis_fields",
+          "_answer_clarification",
+          "_authority",
+          "_bounded_list",
+          "_bounded_text",
+          "_current_context_denial",
+          "_decision",
+          "_denial",
+          "_digest",
+          "_fallback_response",
+          "_finalize_rejection",
+          "_intent_summary",
+          "_is_bounded_repository_path",
+          "_model_prompt",
+          "_phase_hash",
+          "_record",
+          "_repository_identity"
+        ],
+        "neighbor_files": [
+          "aura_anthropic_router.py",
+          "aura_architect_council_calling_benchmark.py",
+          "aura_bilateral_intent_compiler.py",
+          "aura_coding_relationship_compass.py",
+          "aura_event_contracts.py",
+          "aura_human_agent_arena_server.py",
+          "aura_human_agent_guidance.py",
+          "aura_llm_egress.py",
+          "aura_showcase_intent.py",
+          "aura_showcase_server.py",
+          "aura_tokenizer_guard.py"
+        ],
+        "edge_kinds": {
+          "call": 122,
+          "defines": 64,
+          "import_module": 8
+        }
+      },
+      "aura_relationship_atlas.py": {
+        "hub_rank": 64,
         "node_count": 49,
         "edge_count": 192,
         "degree": 192,
@@ -226057,7 +226391,7 @@
         }
       },
       "aura_st3gg_contracts.py": {
-        "hub_rank": 64,
+        "hub_rank": 65,
         "node_count": 32,
         "edge_count": 191,
         "degree": 191,
@@ -226097,7 +226431,7 @@
         }
       },
       "test_synthesis_upgrades.py": {
-        "hub_rank": 65,
+        "hub_rank": 66,
         "node_count": 52,
         "edge_count": 190,
         "degree": 190,
@@ -226141,7 +226475,7 @@
         }
       },
       "aura_agent_arena_bridge.py": {
-        "hub_rank": 66,
+        "hub_rank": 67,
         "node_count": 36,
         "edge_count": 188,
         "degree": 188,
@@ -226188,7 +226522,7 @@
         }
       },
       "aura_hermes_arena_mode.py": {
-        "hub_rank": 67,
+        "hub_rank": 68,
         "node_count": 19,
         "edge_count": 187,
         "degree": 187,
@@ -226224,7 +226558,7 @@
         }
       },
       "aura_unified_memory_continuity_toolchain.py": {
-        "hub_rank": 68,
+        "hub_rank": 69,
         "node_count": 23,
         "edge_count": 186,
         "degree": 186,
@@ -226267,7 +226601,7 @@
         }
       },
       "test_obsidian_graph_bridge.py": {
-        "hub_rank": 69,
+        "hub_rank": 70,
         "node_count": 59,
         "edge_count": 185,
         "degree": 185,
@@ -226306,7 +226640,7 @@
         }
       },
       "test_aura_metaharness.py": {
-        "hub_rank": 70,
+        "hub_rank": 71,
         "node_count": 48,
         "edge_count": 185,
         "degree": 185,
@@ -226349,7 +226683,7 @@
         }
       },
       "arxiv_forager.py": {
-        "hub_rank": 71,
+        "hub_rank": 72,
         "node_count": 40,
         "edge_count": 185,
         "degree": 185,
@@ -226394,7 +226728,7 @@
         }
       },
       "aura_coding_relationship_compass.py": {
-        "hub_rank": 72,
+        "hub_rank": 73,
         "node_count": 31,
         "edge_count": 185,
         "degree": 185,
@@ -226447,7 +226781,7 @@
         }
       },
       "aura_topology_sync.py": {
-        "hub_rank": 73,
+        "hub_rank": 74,
         "node_count": 44,
         "edge_count": 183,
         "degree": 183,
@@ -226488,7 +226822,7 @@
         }
       },
       "aura_symbolic_trace_memory.py": {
-        "hub_rank": 74,
+        "hub_rank": 75,
         "node_count": 58,
         "edge_count": 179,
         "degree": 179,
@@ -226527,7 +226861,7 @@
         }
       },
       "travel_price_sidecar.py": {
-        "hub_rank": 75,
+        "hub_rank": 76,
         "node_count": 36,
         "edge_count": 177,
         "degree": 177,
@@ -226570,7 +226904,7 @@
         }
       },
       "test_aura_substrate.py": {
-        "hub_rank": 76,
+        "hub_rank": 77,
         "node_count": 26,
         "edge_count": 176,
         "degree": 176,
@@ -226613,51 +226947,6 @@
           "call": 125,
           "defines": 50,
           "import_module": 1
-        }
-      },
-      "aura_arena_gate_dialogue.py": {
-        "hub_rank": 77,
-        "node_count": 30,
-        "edge_count": 175,
-        "degree": 175,
-        "symbols": [
-          "ArenaGateDialogueService",
-          "__init__",
-          "_allowed_paths",
-          "_analysis_fields",
-          "_answer_clarification",
-          "_authority",
-          "_bounded_list",
-          "_bounded_text",
-          "_current_context_denial",
-          "_decision",
-          "_denial",
-          "_digest",
-          "_fallback_response",
-          "_finalize_rejection",
-          "_intent_summary",
-          "_model_prompt",
-          "_phase_hash",
-          "_record",
-          "_repository_identity",
-          "_resolve_reviewer_identity"
-        ],
-        "neighbor_files": [
-          "aura_anthropic_router.py",
-          "aura_architect_council_calling_benchmark.py",
-          "aura_bilateral_intent_compiler.py",
-          "aura_coding_relationship_compass.py",
-          "aura_event_contracts.py",
-          "aura_human_agent_guidance.py",
-          "aura_llm_egress.py",
-          "aura_showcase_intent.py",
-          "aura_showcase_server.py",
-          "aura_tokenizer_guard.py"
-        ],
-        "edge_kinds": {
-          "call": 110,
-          "defines": 58,
-          "import_module": 7
         }
       },
       "aura_construction_demo_contracts.py": {
@@ -230858,8 +231147,43 @@
           "import_module": 1
         }
       },
-      "aura_ojibwe_dialect_conflict_resolver.py": {
+      "aura_bilateral_intent_compiler.py": {
         "hub_rank": 183,
+        "node_count": 17,
+        "edge_count": 86,
+        "degree": 86,
+        "symbols": [
+          "BilateralAnalysis",
+          "_authority_projection",
+          "_clarification_questions",
+          "_positive_requirements",
+          "_required",
+          "_resolved_guardrails",
+          "_sentences",
+          "_strings",
+          "_teach_back",
+          "analyze_bilateral_request",
+          "apply_clarification",
+          "bilateral_compiler_capabilities",
+          "compile_confirmed_bilateral_intent",
+          "create_refinement_session",
+          "refresh_refinement_session",
+          "to_dict"
+        ],
+        "neighbor_files": [
+          "aura_arena_gate_dialogue.py",
+          "aura_event_contracts.py",
+          "aura_intent_refinement.py",
+          "aura_unified_memory_continuity.py"
+        ],
+        "edge_kinds": {
+          "call": 50,
+          "defines": 32,
+          "import_module": 4
+        }
+      },
+      "aura_ojibwe_dialect_conflict_resolver.py": {
+        "hub_rank": 184,
         "node_count": 9,
         "edge_count": 86,
         "degree": 86,
@@ -230902,7 +231226,7 @@
         }
       },
       "liquid_math_reference.py": {
-        "hub_rank": 184,
+        "hub_rank": 185,
         "node_count": 31,
         "edge_count": 85,
         "degree": 85,
@@ -230939,7 +231263,7 @@
         }
       },
       "pvm_arch_checker.py": {
-        "hub_rank": 185,
+        "hub_rank": 186,
         "node_count": 26,
         "edge_count": 85,
         "degree": 85,
@@ -230977,7 +231301,7 @@
         }
       },
       "aura_plugin_registry.py": {
-        "hub_rank": 186,
+        "hub_rank": 187,
         "node_count": 20,
         "edge_count": 85,
         "degree": 85,
@@ -231013,7 +231337,7 @@
         }
       },
       "aura_converse.py": {
-        "hub_rank": 187,
+        "hub_rank": 188,
         "node_count": 22,
         "edge_count": 84,
         "degree": 84,
@@ -231052,8 +231376,51 @@
           "import_module": 2
         }
       },
+      "aura_human_agent_workflow.py": {
+        "hub_rank": 189,
+        "node_count": 33,
+        "edge_count": 83,
+        "degree": 83,
+        "symbols": [
+          "HumanAgentWorkflow",
+          "ToolRuntimeFacade",
+          "__init__",
+          "_action_states",
+          "_bridge_instance",
+          "_do_check_hotswap",
+          "_do_export_handoff",
+          "_do_ground_context",
+          "_do_human_review",
+          "_do_prepare_capsule",
+          "_do_run_tests",
+          "_do_set_objective",
+          "_do_stage_patch",
+          "_do_verify_patch",
+          "_event",
+          "_has",
+          "_normalize_outputs",
+          "_remediation",
+          "_result",
+          "_wfst_instance"
+        ],
+        "neighbor_files": [
+          "aura_agent_arena_bridge.py",
+          "aura_arena_tool_runtime.py",
+          "aura_cost_telemetry_events.py",
+          "aura_fst_routing.py",
+          "aura_human_agent_arena_server.py",
+          "aura_human_agent_wfst_adapter.py",
+          "aura_showcase_handoff.py",
+          "aura_showcase_observatory_handoff.py"
+        ],
+        "edge_kinds": {
+          "defines": 64,
+          "call": 17,
+          "import_module": 2
+        }
+      },
       "aura_adaptive_model_router.py": {
-        "hub_rank": 188,
+        "hub_rank": 190,
         "node_count": 22,
         "edge_count": 83,
         "degree": 83,
@@ -231096,7 +231463,7 @@
         }
       },
       "aura_arena_connector_server.py": {
-        "hub_rank": 189,
+        "hub_rank": 191,
         "node_count": 15,
         "edge_count": 82,
         "degree": 82,
@@ -231127,7 +231494,7 @@
         }
       },
       "test_aura_icm_workspace.py": {
-        "hub_rank": 190,
+        "hub_rank": 192,
         "node_count": 16,
         "edge_count": 81,
         "degree": 81,
@@ -231161,51 +231528,8 @@
           "import_module": 5
         }
       },
-      "aura_human_agent_workflow.py": {
-        "hub_rank": 191,
-        "node_count": 32,
-        "edge_count": 80,
-        "degree": 80,
-        "symbols": [
-          "HumanAgentWorkflow",
-          "ToolRuntimeFacade",
-          "__init__",
-          "_action_states",
-          "_bridge_instance",
-          "_do_check_hotswap",
-          "_do_export_handoff",
-          "_do_ground_context",
-          "_do_human_review",
-          "_do_prepare_capsule",
-          "_do_run_tests",
-          "_do_set_objective",
-          "_do_stage_patch",
-          "_do_verify_patch",
-          "_event",
-          "_has",
-          "_normalize_outputs",
-          "_remediation",
-          "_result",
-          "_wfst_instance"
-        ],
-        "neighbor_files": [
-          "aura_agent_arena_bridge.py",
-          "aura_arena_tool_runtime.py",
-          "aura_cost_telemetry_events.py",
-          "aura_fst_routing.py",
-          "aura_human_agent_arena_server.py",
-          "aura_human_agent_wfst_adapter.py",
-          "aura_showcase_handoff.py",
-          "aura_showcase_observatory_handoff.py"
-        ],
-        "edge_kinds": {
-          "defines": 62,
-          "call": 16,
-          "import_module": 2
-        }
-      },
       "aura_music_inversion.py": {
-        "hub_rank": 192,
+        "hub_rank": 193,
         "node_count": 20,
         "edge_count": 80,
         "degree": 80,
@@ -231240,7 +231564,7 @@
         }
       },
       "aura_fractal_ledger.py": {
-        "hub_rank": 193,
+        "hub_rank": 194,
         "node_count": 19,
         "edge_count": 80,
         "degree": 80,
@@ -231272,40 +231596,6 @@
           "call": 43,
           "defines": 36,
           "import_module": 1
-        }
-      },
-      "aura_bilateral_intent_compiler.py": {
-        "hub_rank": 194,
-        "node_count": 16,
-        "edge_count": 80,
-        "degree": 80,
-        "symbols": [
-          "BilateralAnalysis",
-          "_authority_projection",
-          "_positive_requirements",
-          "_required",
-          "_resolved_guardrails",
-          "_sentences",
-          "_strings",
-          "_teach_back",
-          "analyze_bilateral_request",
-          "apply_clarification",
-          "bilateral_compiler_capabilities",
-          "compile_confirmed_bilateral_intent",
-          "create_refinement_session",
-          "refresh_refinement_session",
-          "to_dict"
-        ],
-        "neighbor_files": [
-          "aura_arena_gate_dialogue.py",
-          "aura_event_contracts.py",
-          "aura_intent_refinement.py",
-          "aura_unified_memory_continuity.py"
-        ],
-        "edge_kinds": {
-          "call": 46,
-          "defines": 30,
-          "import_module": 4
         }
       },
       "aura_crucible_store.py": {
@@ -231607,8 +231897,50 @@
           "import_module": 6
         }
       },
-      "aura_ojibwe_morph_bridge.py": {
+      "aura_human_agent_wfst_adapter.py": {
         "hub_rank": 203,
+        "node_count": 22,
+        "edge_count": 75,
+        "degree": 75,
+        "symbols": [
+          "HumanAgentWFSTController",
+          "__init__",
+          "_blocked_message",
+          "_bounded_result",
+          "_context",
+          "_git_value",
+          "_initialization_denial",
+          "_ledger_instance",
+          "_meta_response",
+          "_policy",
+          "_ready",
+          "_record_experience",
+          "_source_hashes_from_evidence",
+          "_workflow_snapshot",
+          "_workflow_state",
+          "_working_tree_digest",
+          "close",
+          "preview_command",
+          "project_state",
+          "route_action"
+        ],
+        "neighbor_files": [
+          "aura_api_rotator.py",
+          "aura_arena_experience.py",
+          "aura_arena_experience_ledger.py",
+          "aura_arena_wfst_compiler.py",
+          "aura_arena_wfst_runtime.py",
+          "aura_fst_routing.py",
+          "aura_human_agent_workflow.py"
+        ],
+        "edge_kinds": {
+          "defines": 42,
+          "call": 29,
+          "import_module": 4
+        }
+      },
+      "aura_ojibwe_morph_bridge.py": {
+        "hub_rank": 204,
         "node_count": 19,
         "edge_count": 75,
         "degree": 75,
@@ -231645,7 +231977,7 @@
         }
       },
       "aura_capability_connectome.py": {
-        "hub_rank": 204,
+        "hub_rank": 205,
         "node_count": 15,
         "edge_count": 75,
         "degree": 75,
@@ -231684,7 +232016,7 @@
         }
       },
       "aura_construction_fixtures.py": {
-        "hub_rank": 205,
+        "hub_rank": 206,
         "node_count": 10,
         "edge_count": 75,
         "degree": 75,
@@ -231716,7 +232048,7 @@
         }
       },
       "aura_st3gg_compatibility.py": {
-        "hub_rank": 206,
+        "hub_rank": 207,
         "node_count": 24,
         "edge_count": 74,
         "degree": 74,
@@ -231758,7 +232090,7 @@
         }
       },
       "aura_arena_experience.py": {
-        "hub_rank": 207,
+        "hub_rank": 208,
         "node_count": 20,
         "edge_count": 74,
         "degree": 74,
@@ -231804,7 +232136,7 @@
         }
       },
       "aura_coding_workbench_capsule_adapter.py": {
-        "hub_rank": 208,
+        "hub_rank": 209,
         "node_count": 18,
         "edge_count": 74,
         "degree": 74,
@@ -231842,7 +232174,7 @@
         }
       },
       "aura_planning_events.py": {
-        "hub_rank": 209,
+        "hub_rank": 210,
         "node_count": 15,
         "edge_count": 74,
         "degree": 74,
@@ -231876,7 +232208,7 @@
         }
       },
       "aura_planning_frontier.py": {
-        "hub_rank": 210,
+        "hub_rank": 211,
         "node_count": 19,
         "edge_count": 73,
         "degree": 73,
@@ -231911,7 +232243,7 @@
         }
       },
       "aura_ojibwe_tutor_engine.py": {
-        "hub_rank": 211,
+        "hub_rank": 212,
         "node_count": 12,
         "edge_count": 72,
         "degree": 72,
@@ -231951,7 +232283,7 @@
         }
       },
       "aura_qdkt_compatibility.py": {
-        "hub_rank": 212,
+        "hub_rank": 213,
         "node_count": 10,
         "edge_count": 72,
         "degree": 72,
@@ -231981,7 +232313,7 @@
         }
       },
       "systems_check.py": {
-        "hub_rank": 213,
+        "hub_rank": 214,
         "node_count": 20,
         "edge_count": 71,
         "degree": 71,
@@ -232012,48 +232344,6 @@
         "edge_kinds": {
           "defines": 38,
           "call": 33
-        }
-      },
-      "aura_human_agent_wfst_adapter.py": {
-        "hub_rank": 214,
-        "node_count": 21,
-        "edge_count": 70,
-        "degree": 70,
-        "symbols": [
-          "HumanAgentWFSTController",
-          "__init__",
-          "_blocked_message",
-          "_bounded_result",
-          "_context",
-          "_git_value",
-          "_initialization_denial",
-          "_ledger_instance",
-          "_meta_response",
-          "_policy",
-          "_ready",
-          "_record_experience",
-          "_source_hashes_from_evidence",
-          "_workflow_snapshot",
-          "_workflow_state",
-          "_working_tree_digest",
-          "close",
-          "project_state",
-          "route_action",
-          "route_command"
-        ],
-        "neighbor_files": [
-          "aura_api_rotator.py",
-          "aura_arena_experience.py",
-          "aura_arena_experience_ledger.py",
-          "aura_arena_wfst_compiler.py",
-          "aura_arena_wfst_runtime.py",
-          "aura_fst_routing.py",
-          "aura_human_agent_workflow.py"
-        ],
-        "edge_kinds": {
-          "defines": 40,
-          "call": 26,
-          "import_module": 4
         }
       },
       "aura_civic_organs.py": {
