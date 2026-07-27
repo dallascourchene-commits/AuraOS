@@ -703,6 +703,7 @@ class AuraAgentArenaBridge:
             act_task["target_file"] = _normalize_path(target_file)
         if target_symbol:
             act_task["target_symbol"] = target_symbol
+        _trusted_bilateral_handoff: Any = None
         if (
             bilateral_contract
             or confirmation_session_id
@@ -765,6 +766,21 @@ class AuraAgentArenaBridge:
                 bilateral_contract = contract.to_dict()
                 bilateral_plan_gate = computed_gate.to_dict()
                 bilateral_proof_plan = proof_plan
+                from aura_architect_loop import _mint_trusted_bilateral_handoff
+
+                _trusted_bilateral_handoff = _mint_trusted_bilateral_handoff(
+                    bilateral_contract=bilateral_contract,
+                    bilateral_plan_gate=bilateral_plan_gate,
+                    bilateral_proof_plan=bilateral_proof_plan,
+                    selected_plan_digest="",
+                    objective=objective,
+                    architecture_decision=f"External agent bridge: {objective[:80]}",
+                    act_tasks=[act_task],
+                    target_file=_normalize_path(target_file),
+                    target_symbol=target_symbol,
+                    repository_head=identity["repository_head"],
+                    source_tree_digest=identity["source_tree_digest"],
+                )
             except (TypeError, ValueError) as exc:
                 return make_error_packet(
                     "mcp_protocol_error",
@@ -785,6 +801,7 @@ class AuraAgentArenaBridge:
                 bilateral_contract=bilateral_contract,
                 bilateral_plan_gate=bilateral_plan_gate,
                 bilateral_proof_plan=bilateral_proof_plan,
+                _trusted_bilateral_handoff=_trusted_bilateral_handoff,
             )
         except Exception as exc:  # noqa: BLE001
             return make_error_packet(
