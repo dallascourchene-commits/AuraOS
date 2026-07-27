@@ -1,0 +1,211 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def replace_once(path: str, old: str, new: str, *, marker: str = "") -> None:
+    target = Path(path)
+    text = target.read_text(encoding="utf-8")
+    if marker and marker in text:
+        return
+    count = text.count(old)
+    if count != 1:
+        raise SystemExit(f"expected exactly one match in {path}, found {count}")
+    target.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+
+def patch_connector() -> None:
+    path = Path("aura_arena_architect_connector.py")
+    text = path.read_text(encoding="utf-8")
+    if "import subprocess\n" not in text:
+        text = text.replace("from pathlib import Path\n", "from pathlib import Path\nimport subprocess\n", 1)
+
+    old = '''            identity = _repository_identity(self.repo_root)
+            _trusted_bilateral_handoff = _mint_trusted_bilateral_handoff(
+'''
+    new = '''            try:
+                identity = _repository_identity(self.repo_root)
+            except (OSError, subprocess.SubprocessError, ValueError) as exc:
+                return {
+                    "ok": False,
+                    "error": "repository_identity_unavailable",
+                    "error_category": "mcp_protocol_error",
+                    "message": (
+                        "Bilateral preparation was denied because the exact "
+                        "repository identity could not be observed."
+                    ),
+                    "repair_hint": (
+                        "REPOSITORY_IDENTITY: restore exact-head/source-tree "
+                        "observation and reconfirm before preparation."
+                    ),
+                    "deterministic_denial": True,
+                    "council_override_allowed": False,
+                    "human_reconfirmation_required": True,
+                    "exception_type": type(exc).__name__,
+                    "proposal_only": True,
+                    "human_review_required": True,
+                    "production_mutation": False,
+                    "patch_authority": PATCH_AUTHORITY,
+                    "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+                }
+            _trusted_bilateral_handoff = _mint_trusted_bilateral_handoff(
+'''
+    if '"error": "repository_identity_unavailable"' not in text:
+        if text.count(old) != 1:
+            raise SystemExit("connector repository identity block did not match")
+        text = text.replace(old, new, 1)
+    path.write_text(text, encoding="utf-8")
+
+
+def patch_loop() -> None:
+    path = Path("aura_architect_loop.py")
+    text = path.read_text(encoding="utf-8")
+    if "import subprocess\n" not in text:
+        text = text.replace("from pathlib import Path\n", "from pathlib import Path\nimport subprocess\n", 1)
+
+    old = '''    identity = _repository_identity(repo_root)
+    expected_binding_digest = _bind_trusted_bilateral_handoff(
+'''
+    new = '''    try:
+        identity = _repository_identity(repo_root)
+    except (OSError, subprocess.SubprocessError, ValueError) as exc:
+        raise ValueError(
+            "repository identity unavailable for bilateral handoff"
+        ) from exc
+    expected_binding_digest = _bind_trusted_bilateral_handoff(
+'''
+    if "repository identity unavailable for bilateral handoff" not in text:
+        if text.count(old) != 1:
+            raise SystemExit("loop repository identity block did not match")
+        text = text.replace(old, new, 1)
+    path.write_text(text, encoding="utf-8")
+
+
+def patch_tests() -> None:
+    path = Path("tests/test_aura_bilateral_planning_enforcement.py")
+    text = path.read_text(encoding="utf-8")
+    if "from aura_architect_control import normalize_control_profile\n" not in text:
+        text = text.replace(
+            "from aura_architect_council_v3 import route_compass_failure_classes\n",
+            "from aura_architect_control import normalize_control_profile\n"
+            "from aura_architect_council_v3 import route_compass_failure_classes\n",
+            1,
+        )
+    if "    ArchitectFusionLoop,\n" not in text:
+        text = text.replace(
+            "from aura_architect_loop import (\n",
+            "from aura_architect_loop import (\n"
+            "    ArchitectFusionLoop,\n",
+            1,
+        )
+    if "    _mint_trusted_bilateral_handoff,\n" not in text:
+        text = text.replace(
+            "    GroundingEvidence,\n",
+            "    GroundingEvidence,\n"
+            "    _mint_trusted_bilateral_handoff,\n",
+            1,
+        )
+
+    marker = "def test_connector_identity_failure_returns_deterministic_denial"
+    if marker not in text:
+        text += '''
+
+@pytest.mark.parametrize(
+    "raised",
+    [
+        OSError("repository unreadable"),
+        subprocess.SubprocessError("git identity failed"),
+        ValueError("trusted packaged source identity is unavailable"),
+    ],
+)
+def test_connector_identity_failure_returns_deterministic_denial(
+    bilateral_contract: BilateralPlanningContract,
+    monkeypatch: pytest.MonkeyPatch,
+    raised: Exception,
+) -> None:
+    connector = AuraArenaArchitectConnector(
+        repo_root=".",
+        bridge=AuraAgentArenaBridge(repo_root="."),
+    )
+
+    def _boom(*_: object, **__: object) -> None:
+        raise raised
+
+    monkeypatch.setattr("aura_arena_gate_dialogue._repository_identity", _boom)
+    result = connector._prepare_selected_plan(
+        objective="Fail closed when repository identity is unavailable.",
+        selected_plan=_complete_plan(bilateral_contract),
+        profile=normalize_control_profile(None, surface="native"),
+        bilateral_contract=bilateral_contract,
+        bilateral_gate={"passed": True},
+    )
+
+    assert result["ok"] is False
+    assert result["error"] == "repository_identity_unavailable"
+    assert result["error_category"] == "mcp_protocol_error"
+    assert result["deterministic_denial"] is True
+    assert result["council_override_allowed"] is False
+    assert result["human_reconfirmation_required"] is True
+    assert result["production_mutation"] is False
+
+
+@pytest.mark.parametrize(
+    "raised",
+    [
+        OSError("repository unreadable"),
+        subprocess.SubprocessError("git identity failed"),
+        ValueError("trusted packaged source identity is unavailable"),
+    ],
+)
+def test_loop_identity_failure_is_stable_fail_closed_error(
+    bilateral_contract: BilateralPlanningContract,
+    monkeypatch: pytest.MonkeyPatch,
+    raised: Exception,
+) -> None:
+    plan = _complete_plan(bilateral_contract)
+    gate = {"passed": True, "gate_digest": "test-gate"}
+    handoff = _mint_trusted_bilateral_handoff(
+        bilateral_contract=bilateral_contract,
+        bilateral_plan_gate=gate,
+        bilateral_proof_plan=plan,
+        selected_plan_digest="",
+        objective="Fail closed before plan construction.",
+        architecture_decision=plan["architecture_decision"],
+        act_tasks=plan["act_tasks"],
+        target_file="aura_arena_architect_connector.py",
+        target_symbol="assess_plan",
+        repository_head=bilateral_contract.repository_head,
+        source_tree_digest=bilateral_contract.source_tree_digest,
+    )
+
+    def _boom(*_: object, **__: object) -> None:
+        raise raised
+
+    monkeypatch.setattr("aura_arena_gate_dialogue._repository_identity", _boom)
+    with pytest.raises(
+        ValueError,
+        match="repository identity unavailable for bilateral handoff",
+    ):
+        ArchitectFusionLoop(repo_root=".").prepare(
+            "Fail closed before plan construction.",
+            architecture_decision=plan["architecture_decision"],
+            act_tasks=plan["act_tasks"],
+            target_file="aura_arena_architect_connector.py",
+            target_symbol="assess_plan",
+            bilateral_contract=bilateral_contract,
+            bilateral_plan_gate=gate,
+            bilateral_proof_plan=plan,
+            _trusted_bilateral_handoff=handoff,
+        )
+'''
+    path.write_text(text, encoding="utf-8")
+
+
+def main() -> None:
+    patch_connector()
+    patch_loop()
+    patch_tests()
+
+
+if __name__ == "__main__":
+    main()
