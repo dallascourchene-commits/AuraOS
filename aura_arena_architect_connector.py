@@ -466,7 +466,7 @@ class AuraArenaArchitectConnector:
             )
         )
         eligible_assessments = [item for item in assessments if item.eligible]
-        if bilateral_contract is not None and not eligible_assessments:
+        if bilateral is not None and not eligible_assessments:
             failure_classes = list(
                 dict.fromkeys(
                     failure_class
@@ -542,7 +542,7 @@ class AuraArenaArchitectConnector:
             ),
             "selection_method": "CONTROLLED_DETERMINISTIC_COUNCIL_PROFILE_RUBRIC",
             "actual_model_calls": 0,
-            "bilateral_gate_required": bilateral_contract is not None,
+            "bilateral_gate_required": bilateral is not None,
             "proposal_only": True,
             "production_mutation": False,
             "human_review_required": True,
