@@ -38,6 +38,8 @@ def select_critic_lanes(candidate: dict[str, Any]) -> list[str]:
     plan = dict(candidate.get("plan") or {})
     profile = profile_refactor_length(plan)
     lanes = ["scope", "tests"]
+    if plan.get("bilateral_contract") or plan.get("confirmation_digest"):
+        lanes.extend(["continuity", "rollback"])
     unified = candidate.get("unified_memory_continuity") or plan.get("unified_memory_continuity") or {}
     if not isinstance(unified, dict):
         unified = {}
@@ -199,6 +201,8 @@ def _selection_reasons(
 ) -> list[str]:
     plan = dict(candidate.get("plan") or {})
     reasons = ["scope_and_tests_are_universal"]
+    if plan.get("bilateral_contract") or plan.get("confirmation_digest"):
+        reasons.append("bilateral_intent_requires_continuity_and_rollback_review")
     unified = candidate.get("unified_memory_continuity") or plan.get("unified_memory_continuity") or {}
     if isinstance(unified, dict):
         if (
@@ -251,16 +255,51 @@ __all__ = [
 
 
 def route_compass_failure_classes(failure_classes: list[str] | tuple[str, ...]) -> dict[str, Any]:
-    """Route exact local assertion failures to Surgeon and structural failures to Council."""
+    """Route failures without allowing Council to override bilateral denials."""
     normalized = list(dict.fromkeys(str(item).strip().upper() for item in failure_classes if str(item).strip()))
-    local = {"LOCAL_ASSERTION", "LOCAL_TEST", "EXACT_SPAN_PATCH", "SOURCE_ASSERTION"}
-    structural = {"INTERFACE", "DEPENDENCY", "INVARIANT", "SCOPE", "AUTHORITY", "PROHIBITION", "SEQUENCE"}
+    local = {
+        "LOCAL_ASSERTION",
+        "LOCAL_TEST",
+        "LOCAL_NEGATIVE_TEST",
+        "EXACT_SPAN_PATCH",
+        "SOURCE_ASSERTION",
+    }
+    human = {
+        "SEMANTIC_AMBIGUITY",
+        "CONFIRMATION_STALE",
+        "AUTHORITY_DENIAL",
+        "GUARDRAIL_CONFLICT",
+    }
+    structural = {
+        "INTERFACE",
+        "DEPENDENCY",
+        "INVARIANT",
+        "SCOPE",
+        "AUTHORITY",
+        "PROHIBITION",
+        "SEQUENCE",
+        "INTENT_FIDELITY",
+        "NEGATIVE_REQUIREMENT",
+        "PLAN_ASSUMPTION_INVALIDATED",
+    }
+    if any(item in human for item in normalized):
+        return {
+            "route": "HUMAN_RECONFIRMATION_REQUIRED",
+            "critic_lanes": [],
+            "reason": "deterministic_bilateral_denial",
+            "failure_classes": normalized,
+            "deterministic_denial": True,
+            "council_override_allowed": False,
+            "proposal_only": True,
+        }
     if normalized and set(normalized).issubset(local):
         return {
             "route": "SURGEON",
             "critic_lanes": ["tests", "scope"],
             "reason": "local_assertion_failure",
             "failure_classes": normalized,
+            "deterministic_denial": False,
+            "council_override_allowed": False,
             "proposal_only": True,
         }
     lanes = ["scope", "tests"]
@@ -273,5 +312,7 @@ def route_compass_failure_classes(failure_classes: list[str] | tuple[str, ...]) 
         "critic_lanes": list(dict.fromkeys(lanes)),
         "reason": "structural_or_cross_boundary_failure" if normalized else "preflight_review",
         "failure_classes": normalized,
+        "deterministic_denial": False,
+        "council_override_allowed": True,
         "proposal_only": True,
     }

@@ -45,6 +45,7 @@ from aura_relational_index import (
 from aura_relational_synthesis import compile_relational_shadow_capsule
 from aura_relationship_contracts import (
     AuthorityPosture,
+    BilateralPlanningContract,
     CompassObjectiveContract,
     InterfaceActor,
     InterfaceBoundary,
@@ -1033,6 +1034,7 @@ def compile_coding_relationship_compass(
     rollout_nonce: str = "",
     rollout_verifier_ref: str = "",
     max_emergent_candidates: int = 12,
+    bilateral_contract: BilateralPlanningContract | Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Compile a bounded coding relationship packet for Architect/Surgeon review.
 
@@ -1096,6 +1098,33 @@ def compile_coding_relationship_compass(
         evidence = _validate_injected_evidence_packet(root, evidence_packet)
     if not evidence.get("ok") or not evidence.get("grounding_ok"):
         raise ValueError("Emergent Evidence Spine did not produce an exact grounded packet")
+    bilateral = (
+        bilateral_contract
+        if isinstance(bilateral_contract, BilateralPlanningContract)
+        else (
+            BilateralPlanningContract.from_dict(bilateral_contract)
+            if bilateral_contract is not None
+            else None
+        )
+    )
+    if bilateral is not None:
+        from aura_arena_gate_dialogue import _repository_identity
+
+        current_identity = _repository_identity(root)
+        if (
+            bilateral.repository_head != str(evidence.get("repo_head") or "")
+            or bilateral.repository_head != current_identity["repository_head"]
+            or bilateral.source_tree_digest
+            != current_identity["source_tree_digest"]
+        ):
+            raise ValueError(
+                "bilateral confirmation does not match Compass repository/source identity"
+            )
+        outside_scope = sorted(set(selected_files) - set(bilateral.allowed_paths))
+        if outside_scope:
+            raise ValueError(
+                f"Compass targets exceed the confirmed allowed paths: {outside_scope}"
+            )
 
     intent_packet = PolysyntheticIntentPacket.from_slots(
         {
@@ -1127,6 +1156,7 @@ def compile_coding_relationship_compass(
             *[f"matched_component:{item}" for item in matched_components],
             f"connectome_path:{capability_path.get('path_digest') or 'unresolved'}",
         ),
+        bilateral_contract=bilateral,
     )
     inventory = evidence.get("atomic_inventory") or {}
     relational_capsule = compile_relational_shadow_capsule(
@@ -1257,6 +1287,39 @@ def compile_coding_relationship_compass(
         neighborhood_focal_ids,
         max_assessments=max(1, max_atlas_assessments),
     )
+    if bilateral is not None:
+        adapters = list(atlas_intelligence.get("required_adapters") or ())
+        verifiers = list(bilateral.required_verifiers)
+        guardrail_ids = list(
+            _ordered_unique(
+                [
+                    *bilateral.hard_guardrail_ids,
+                    *bilateral.human_guardrail_ids,
+                    *bilateral.editable_guardrail_ids,
+                ]
+            )
+        )
+        assessments = list(atlas_intelligence.get("assessments") or ())
+        annotated_assessments: list[dict[str, Any]] = []
+        for index, assessment in enumerate(assessments):
+            annotated = dict(assessment)
+            annotated["bilateral_obligation"] = {
+                "positive_requirement": bilateral.positive_requirements[
+                    index % len(bilateral.positive_requirements)
+                ],
+                "negative_requirement_at_risk": bilateral.negative_requirements[
+                    index % len(bilateral.negative_requirements)
+                ],
+                "guardrail_id": guardrail_ids[index % len(guardrail_ids)],
+                "required_adapter": (
+                    adapters[index % len(adapters)] if adapters else "NO_ADAPTER_REQUIRED"
+                ),
+                "required_verifier": verifiers[index % len(verifiers)],
+                "repository_head": bilateral.repository_head,
+                "allowed_path_set_digest": bilateral.allowed_path_set_digest,
+            }
+            annotated_assessments.append(annotated)
+        atlas_intelligence["assessments"] = annotated_assessments
 
     targets = _recommended_targets(evidence, selected_files, selected_symbols)
     if not targets:
@@ -1362,6 +1425,27 @@ def compile_coding_relationship_compass(
             "allowed_scope": "exact grounded source span plus declared tests",
             "expected_output": "PROPOSAL_OR_UNIFIED_DIFF",
             "human_review_required": True,
+            **(
+                {
+                    "intent_digest": bilateral.intent_digest,
+                    "semantic_ledger_digest": bilateral.semantic_ledger_digest,
+                    "confirmation_digest": bilateral.confirmation_digest,
+                    "positive_requirement": bilateral.positive_requirements[
+                        (index - 1) % len(bilateral.positive_requirements)
+                    ],
+                    "negative_requirement_at_risk": bilateral.negative_requirements[
+                        (index - 1) % len(bilateral.negative_requirements)
+                    ],
+                    "guardrail_id": bilateral.hard_guardrail_ids[
+                        (index - 1) % len(bilateral.hard_guardrail_ids)
+                    ],
+                    "required_verifier": bilateral.required_verifiers[
+                        (index - 1) % len(bilateral.required_verifiers)
+                    ],
+                }
+                if bilateral is not None
+                else {}
+            ),
         }
         for index, item in enumerate(targets[:8], start=1)
     ]
@@ -1429,6 +1513,16 @@ def compile_coding_relationship_compass(
         "patch_authority": PATCH_AUTHORITY,
         "vsa_patch_authority": VSA_PATCH_AUTHORITY,
     }
+    if bilateral is not None:
+        packet["bilateral_contract"] = bilateral.to_dict()
+        packet["bilateral_scope"] = {
+            "repository_head": bilateral.repository_head,
+            "source_tree_digest": bilateral.source_tree_digest,
+            "allowed_path_set_digest": bilateral.allowed_path_set_digest,
+            "allowed_paths": list(bilateral.allowed_paths),
+            "prohibition_ids": list(bilateral.hard_guardrail_ids),
+            "human_guardrail_ids": list(bilateral.human_guardrail_ids),
+        }
     packet["rollout"] = rollout
     packet["grounding_digest"] = _stable_digest(_compass_digest_payload(packet))
     grounding_receipt = _build_compass_grounding_receipt(
@@ -1480,6 +1574,8 @@ def compile_coding_relationship_compass(
         failure_classes.append("INTERFACE")
     if packet.get("prohibitions"):
         failure_classes.append("PROHIBITION")
+    if bilateral is not None and not atlas_intelligence.get("assessments"):
+        failure_classes.append("INTENT_FIDELITY")
     packet["change_graph"] = change_graph
     packet["phase_capsules"] = list(change_graph.get("phase_capsules", []) or [])
     packet["act_capsules"] = capsule_packet
@@ -1550,6 +1646,7 @@ def relationship_compass_grounding(packet: Mapping[str, Any]) -> dict[str, Any]:
         "agent_ir": dict(packet.get("agent_ir") or {}),
         "council_route": dict(packet.get("council_route") or {}),
         "rollout": dict(packet.get("rollout") or {}),
+        "bilateral_contract": dict(packet.get("bilateral_contract") or {}),
         "grounding_ok": bool(packet.get("grounding_ok")),
         "safe_to_patch": False,
         "human_review_required": True,

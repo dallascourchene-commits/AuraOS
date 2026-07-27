@@ -313,6 +313,9 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
         emergent_max_atomic_nodes: int = 48,
         emergent_include_source: bool = False,
         emergent_include_research_plan: bool = True,
+        bilateral_contract: Mapping[str, Any] | None = None,
+        bilateral_plan_gate: Mapping[str, Any] | None = None,
+        bilateral_proof_plan: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
         if not use_emergent_evidence:
             return super().aura_prepare_arena(
@@ -322,6 +325,9 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
                 acceptance_criteria=acceptance_criteria,
                 risk_map=risk_map,
                 constraints=constraints,
+                bilateral_contract=bilateral_contract,
+                bilateral_plan_gate=bilateral_plan_gate,
+                bilateral_proof_plan=bilateral_proof_plan,
             )
 
         packet = self.emergent_spine.run(
@@ -370,6 +376,9 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
                 constraints,
                 list(projection.get("constraints") or []),
             ),
+            bilateral_contract=bilateral_contract,
+            bilateral_plan_gate=bilateral_plan_gate,
+            bilateral_proof_plan=bilateral_proof_plan,
         )
         if not result.get("ok"):
             return result

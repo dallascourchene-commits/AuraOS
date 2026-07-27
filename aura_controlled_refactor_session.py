@@ -9,11 +9,13 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import time
 from typing import Any, Mapping
 
 from aura_architect_control import ArchitectControlProfile, normalize_control_profile
 from aura_external_llm_session_safe import AuraExternalLLMSessionManager
 from aura_refactor_output_vault import RefactorOutputVault
+from aura_event_contracts import stable_digest
 
 CONTROLLED_SESSION_VERSION = "AURA_CONTROLLED_REFACTOR_SESSION_V1"
 
@@ -55,6 +57,7 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
             self.repo_root, root=self.control.output_root
         )
         self._vault_runs: dict[str, str] = {}
+        self._bilateral_bindings: dict[str, dict[str, Any]] = {}
 
     def open_prepared_session(
         self,
@@ -83,6 +86,26 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
                 "session_created": False,
                 "control_profile": self.control.to_dict(),
             }
+        bilateral = dict(prepared.get("bilateral_contract") or {})
+        bilateral_gate = dict(prepared.get("bilateral_plan_gate") or {})
+        if bilateral:
+            if bilateral_gate.get("passed") is not True:
+                return {
+                    "ok": False,
+                    "error": "bilateral_plan_gate_not_passed",
+                    "session_created": False,
+                    "failure_classes": list(
+                        bilateral_gate.get("failure_classes") or ()
+                    ),
+                    "production_mutation": False,
+                }
+            if time.time() >= float(bilateral.get("expires_at") or 0.0):
+                return {
+                    "ok": False,
+                    "error": "bilateral_confirmation_expired",
+                    "session_created": False,
+                    "production_mutation": False,
+                }
 
         original_bridge = self.bridge
         self.bridge = _PreparedBridgeProxy(original_bridge, prepared)
@@ -116,6 +139,43 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
         parent_run = str(run_id or "").strip()
         vault_run = f"{parent_run}-surgeon" if parent_run else session_id
         self._vault_runs[session_id] = vault_run
+        if bilateral:
+            binding = {
+                "temporary_agent_identity": stable_digest(
+                    {
+                        "session_id": session_id,
+                        "provider": str(provider or "external"),
+                        "model": str(model or ""),
+                    }
+                ),
+                "session_id": session_id,
+                "confirmation_digest": bilateral.get("confirmation_digest"),
+                "contract_digest": bilateral.get("contract_digest"),
+                "guardrail_set_digest": bilateral.get("guardrail_set_digest"),
+                "hard_guardrail_ids": list(
+                    bilateral.get("hard_guardrail_ids") or ()
+                ),
+                "human_guardrail_ids": list(
+                    bilateral.get("human_guardrail_ids") or ()
+                ),
+                "allowed_effects": list(bilateral.get("allowed_effects") or ()),
+                "prohibited_effects": list(
+                    bilateral.get("prohibited_effects") or ()
+                ),
+                "allowed_path_set_digest": bilateral.get(
+                    "allowed_path_set_digest"
+                ),
+                "repair_budget": self.control.surgeon_max_local_repairs,
+                "plan_revision": dict(
+                    prepared.get("bilateral_proof_plan") or {}
+                ).get("plan_revision"),
+                "intent_revision_id": bilateral.get("intent_revision_id"),
+                "expires_at": bilateral.get("expires_at"),
+                "lease_status": "ACTIVE",
+            }
+            binding["binding_digest"] = stable_digest(binding)
+            self._bilateral_bindings[session_id] = binding
+            result["bilateral_session_binding"] = dict(binding)
         if self.control.record_outputs:
             self.output_vault.start_run(
                 run_id=vault_run,
@@ -150,6 +210,16 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
         response: str,
         provider_usage: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
+        bilateral = self._bilateral_bindings.get(str(session_id))
+        if bilateral and time.time() >= float(bilateral.get("expires_at") or 0.0):
+            session = self._sessions.get(str(session_id))
+            if session is not None:
+                bilateral["lease_status"] = "EXPIRED"
+                return self._block_replan(
+                    session,
+                    status="BLOCKED_CONFIRMATION_EXPIRED",
+                    error="bilateral_confirmation_expired",
+                )
         session = self._sessions.get(str(session_id))
         turn = session.pending_turn if session is not None else None
         prompt = json.dumps(turn.to_dict(), sort_keys=True, default=str) if turn is not None else ""
@@ -223,6 +293,48 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
                 "control_profile": self.control.to_dict(),
                 "production_mutation": False,
             }
+        bilateral = self._bilateral_bindings.get(session_id)
+        if bilateral:
+            delta = kwargs.get("plan_revision")
+            if not isinstance(delta, Mapping):
+                return self._block_replan(
+                    session,
+                    status="BLOCKED_HUMAN_RECONFIRMATION_REQUIRED",
+                    error="bilateral_replan_requires_explicit_revision_delta",
+                )
+            changed_fields = [
+                field
+                for field in (
+                    "meaning_changed",
+                    "scope_changed",
+                    "authority_changed",
+                    "guardrails_changed",
+                    "new_owner_or_dependency",
+                )
+                if bool(delta.get(field))
+            ]
+            identity_changed = any(
+                field in delta and str(delta.get(field) or "") != str(expected or "")
+                for field, expected in (
+                    ("confirmation_digest", bilateral.get("confirmation_digest")),
+                    ("intent_revision_id", bilateral.get("intent_revision_id")),
+                    (
+                        "allowed_path_set_digest",
+                        bilateral.get("allowed_path_set_digest"),
+                    ),
+                    ("guardrail_set_digest", bilateral.get("guardrail_set_digest")),
+                )
+            )
+            if changed_fields or identity_changed:
+                bilateral["lease_status"] = "RECONFIRMATION_REQUIRED"
+                return self._block_replan(
+                    session,
+                    status="BLOCKED_HUMAN_RECONFIRMATION_REQUIRED",
+                    error=(
+                        "council_replan_changes_confirmed_bilateral_contract:"
+                        + ",".join(changed_fields or ["identity"])
+                    ),
+                )
         used = int(self._council_replans.get(session_id, 0))
         if used >= self.control.council_call_budget:
             return {
@@ -244,7 +356,9 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
         prompt = str(kwargs.get("prompt") or "")
         response = str(kwargs.get("response") or "")
         provider_usage = dict(kwargs.get("provider_usage") or {})
-        result = super().apply_council_replan(**kwargs)
+        forwarded_kwargs = dict(kwargs)
+        forwarded_kwargs.pop("plan_revision", None)
+        result = super().apply_council_replan(**forwarded_kwargs)
         if result.get("status") == "WAITING_FOR_MODEL" and not result.get("turn"):
             result = self._block_replan(
                 session,
