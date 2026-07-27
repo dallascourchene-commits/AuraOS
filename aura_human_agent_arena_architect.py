@@ -83,6 +83,18 @@ class HumanAgentArchitectCockpit:
             bilateral_contract=bilateral_contract,
             confirmation_session_id=confirmation_session_id,
         )
+        if result.get("ok") is not True:
+            denial = str(
+                result.get("error")
+                or result.get("reason")
+                or result.get("status")
+                or "UNKNOWN"
+            )
+            self._record_event(
+                "architect_plan_denied",
+                f"Plan comparison denied: {denial}.",
+            )
+            return result
         self._record_event(
             "architect_plan_selected",
             f"Selected {result['selected_candidate_id']} ({result['selection_digest']}).",
