@@ -202,6 +202,28 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
         }
         return result
 
+    def next_turn(self, session_id: str) -> dict[str, Any]:
+        bilateral = self._bilateral_bindings.get(str(session_id))
+        if bilateral and time.time() >= float(bilateral.get("expires_at") or 0.0):
+            bilateral["lease_status"] = "EXPIRED"
+            session = self._sessions.get(str(session_id))
+            if session is not None:
+                return self._block_replan(
+                    session,
+                    status="BLOCKED_CONFIRMATION_EXPIRED",
+                    error="bilateral_confirmation_expired",
+                )
+            return {
+                "ok": False,
+                "status": "BLOCKED_CONFIRMATION_EXPIRED",
+                "error": "bilateral_confirmation_expired",
+                "session": None,
+                "turn": None,
+                "production_mutation": False,
+                "control_profile": self.control.to_dict(),
+            }
+        return super().next_turn(session_id)
+
     def submit_response(
         self,
         *,
@@ -212,14 +234,23 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
     ) -> dict[str, Any]:
         bilateral = self._bilateral_bindings.get(str(session_id))
         if bilateral and time.time() >= float(bilateral.get("expires_at") or 0.0):
+            bilateral["lease_status"] = "EXPIRED"
             session = self._sessions.get(str(session_id))
             if session is not None:
-                bilateral["lease_status"] = "EXPIRED"
                 return self._block_replan(
                     session,
                     status="BLOCKED_CONFIRMATION_EXPIRED",
                     error="bilateral_confirmation_expired",
                 )
+            return {
+                "ok": False,
+                "status": "BLOCKED_CONFIRMATION_EXPIRED",
+                "error": "bilateral_confirmation_expired",
+                "session": None,
+                "turn": None,
+                "production_mutation": False,
+                "control_profile": self.control.to_dict(),
+            }
         session = self._sessions.get(str(session_id))
         turn = session.pending_turn if session is not None else None
         prompt = json.dumps(turn.to_dict(), sort_keys=True, default=str) if turn is not None else ""

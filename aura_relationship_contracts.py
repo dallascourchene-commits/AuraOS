@@ -77,6 +77,7 @@ class HardGuardCode(str, Enum):
 class BilateralGuardCode(str, Enum):
     INTENT_CONFIRMATION = "INTENT_CONFIRMATION"
     SEMANTIC_DEFINITION = "SEMANTIC_DEFINITION"
+    POSITIVE_REQUIREMENT = "POSITIVE_REQUIREMENT"
     NEGATIVE_REQUIREMENT = "NEGATIVE_REQUIREMENT"
     AUTHORITY_DENIAL = "AUTHORITY_DENIAL"
     SCOPE_PRESERVATION = "SCOPE_PRESERVATION"
@@ -1092,16 +1093,24 @@ def evaluate_bilateral_plan(
         candidate.get("positive_requirement_coverage"),
         bilateral.positive_requirements,
     )
-    negative_ok = positive_ok and _complete_coverage(
+    add(
+        BilateralGuardCode.POSITIVE_REQUIREMENT,
+        positive_ok,
+        "all confirmed positive requirements have enforcement and verifier coverage"
+        if positive_ok
+        else "positive requirement coverage is incomplete",
+    )
+
+    negative_ok = _complete_coverage(
         candidate.get("negative_requirement_coverage"),
         bilateral.negative_requirements,
     )
     add(
         BilateralGuardCode.NEGATIVE_REQUIREMENT,
         negative_ok,
-        "positive and negative requirements have enforcement and verifier coverage"
+        "all confirmed negative requirements have enforcement and verifier coverage"
         if negative_ok
-        else "positive or negative requirement coverage is incomplete",
+        else "negative requirement coverage is incomplete",
     )
 
     authority_conflicts = candidate.get("authority_conflicts")
