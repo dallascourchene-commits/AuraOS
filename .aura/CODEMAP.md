@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1451
-- **total_bytes**: 57269779
-- **text_tokens_est**: 4862522
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 933, 'schema_or_lexicon': 186, 'support_file': 80}
+- **file_count**: 1448
+- **total_bytes**: 57280514
+- **text_tokens_est**: 4864016
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 932, 'schema_or_lexicon': 186, 'support_file': 78}
 - **topology_nodes**: 10720
 - **topology_edges**: 25565
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 31053.8
+- **elapsed_ms**: 29698.33
 
 ## Coverage
 
-- **included_file_count**: 1451
+- **included_file_count**: 1448
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=181, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
@@ -362,7 +362,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
-- ... 1234 more; query CODEMAP.json for exact file cards
+- ... 1231 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
@@ -375,7 +375,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `test_scientific_memory.py` (python_module): 111 symbols, degree 517, ~13607 tokens
 - `aura_live_architect.py` (python_module): 74 symbols, degree 516, ~31372 tokens
 - `aura_spatial_contracts.py` (python_module): 74 symbols, degree 510, ~16200 tokens
-- `aura_architect_loop.py` (python_module): 75 symbols, degree 503, ~22954 tokens
+- `aura_architect_loop.py` (python_module): 75 symbols, degree 503, ~23007 tokens
 - `aura_relational_authority.py` (python_module): 58 symbols, degree 481, ~19006 tokens
 - `aura_intent_refinement.py` (python_module): 63 symbols, degree 465, ~13815 tokens
 
@@ -404,7 +404,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `ATTTransducer` -> `aura_att_fst_runtime.py:41`
 - `AbilityAtom` -> `aura_emergent_potential_repl.py:180`
 - `AccountState` -> `aura_blockchain/node.py:27`
-- `ActCapsule` -> `aura_architect_loop.py:85`
+- `ActCapsule` -> `aura_architect_loop.py:86`
 - `ActCapsuleEnvelope` -> `aura_unified_memory_continuity.py:681`
 - `ActionCapsule` -> `aura_liquid_planning_arena.py:112`
 - `ActionContinuityEvidence` -> `aura_planning_board.py:441`
@@ -426,11 +426,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `ArchitectBuilderBridge` -> `aura_live_architect.py:1460`
 - `ArchitectControlProfile` -> `aura_architect_control.py:87`
 - `ArchitectCouncilDecision` -> `aura_live_architect.py:140`
-- `ArchitectExecutionResult` -> `aura_architect_loop.py:309`
+- `ArchitectExecutionResult` -> `aura_architect_loop.py:310`
 - `ArchitectFusionCouncil` -> `aura_live_architect.py:996`
-- `ArchitectFusionLoop` -> `aura_architect_loop.py:2168`
-- `ArchitectLedgerRecord` -> `aura_architect_loop.py:276`
-- `ArchitectLoopResult` -> `aura_architect_loop.py:291`
+- `ArchitectFusionLoop` -> `aura_architect_loop.py:2174`
+- `ArchitectLedgerRecord` -> `aura_architect_loop.py:277`
+- `ArchitectLoopResult` -> `aura_architect_loop.py:292`
 - `ArchitectModelProfile` -> `aura_live_architect.py:115`
 - `ArchitectModelRouter` -> `aura_live_architect.py:672`
 - `ArchitectureComponent` -> `aura_coding_relationship_compass.py:161`
@@ -449,7 +449,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `ArenaLease` -> `aura_liquid_planning_arena.py:170`
 - `ArenaLink` -> `aura_coding_arena_3d.py:83`
 - `ArenaNode` -> `aura_coding_arena_3d.py:62`
-- `ArenaPatch` -> `aura_architect_loop.py:229`
+- `ArenaPatch` -> `aura_architect_loop.py:230`
 - `ArenaPersistenceCoordinator` -> `aura_arena_persistence_adapters.py:61`
 - `ArenaResearchBridge` -> `aura_arena_research_bridge.py:45`
 - `ArenaResearchIdea` -> `aura_music_coding_arena.py:81`

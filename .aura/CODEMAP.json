@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1785194176,
+  "generated_at_unix": 1785195214,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1451,
+    "included_file_count": 1448,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -55,7 +55,6 @@
       ".aura/model_policies/local_first.v1.json",
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
-      ".aura/pr236_source_materialization.trigger",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json",
@@ -88,9 +87,7 @@
       ".coderabbit.yaml",
       ".devcontainer/devcontainer.json",
       ".dockerignore",
-      ".github/pr236_identity_fix.py.tmp",
-      ".github/pr236_identity_fix_workflow.yml.tmp",
-      ".github/pr236_manual_repairs.py",
+      ".github/pr236_compass_context_fix.py.tmp",
       ".github/scripts/umc_publish_five_files.sh",
       ".github/umc_final5_payload/part-01",
       ".github/umc_final5_payload/part-02",
@@ -1473,23 +1470,23 @@
     ]
   },
   "summary": {
-    "file_count": 1451,
-    "total_bytes": 57269779,
-    "text_tokens_est": 4862522,
+    "file_count": 1448,
+    "total_bytes": 57280514,
+    "text_tokens_est": 4864016,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 51,
       "knowledge_artifact": 185,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 933,
+      "python_module": 932,
       "schema_or_lexicon": 186,
-      "support_file": 80
+      "support_file": 78
     },
     "topology_nodes": 10720,
     "topology_edges": 25565,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 31053.8
+    "elapsed_ms": 29698.33
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1747,7 +1744,6 @@
       ".aura/model_policies/local_first.v1.json",
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
-      ".aura/pr236_source_materialization.trigger",
       ".aura/refactor_payloads/umc_main_publish.trigger",
       ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
       ".aura/research/AURA_SPATIAL_BREADBOARD_RECEIPT.json",
@@ -1768,9 +1764,7 @@
       ".coderabbit.yaml",
       ".devcontainer/devcontainer.json",
       ".dockerignore",
-      ".github/pr236_identity_fix.py.tmp",
-      ".github/pr236_identity_fix_workflow.yml.tmp",
-      ".github/pr236_manual_repairs.py",
+      ".github/pr236_compass_context_fix.py.tmp",
       ".github/scripts/umc_publish_five_files.sh",
       ".github/umc_final5_payload/part-01",
       ".github/umc_final5_payload/part-02",
@@ -3031,7 +3025,7 @@
       "path": "aura_architect_loop.py",
       "role": "python_module",
       "symbols": 75,
-      "tokens_est": 22954,
+      "tokens_est": 23007,
       "topology_degree": 503
     },
     {
@@ -4144,8 +4138,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 85,
-        "end_line": 107,
+        "line": 86,
+        "end_line": 108,
         "semantic_id": "aura_architect_loop.py#class:ActCapsule:f27d4e840d50a195",
         "signature_hash": "a4cbb32ea5a81b1d"
       }
@@ -4372,8 +4366,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 309,
-        "end_line": 323,
+        "line": 310,
+        "end_line": 324,
         "semantic_id": "aura_architect_loop.py#class:ArchitectExecutionResult:2768c6d2e43f0263",
         "signature_hash": "3500277f8375006d"
       }
@@ -4392,8 +4386,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 2168,
-        "end_line": 2299,
+        "line": 2174,
+        "end_line": 2305,
         "semantic_id": "aura_architect_loop.py#class:ArchitectFusionLoop:0687f5175b609bfa",
         "signature_hash": "79667254361edcda"
       }
@@ -4402,8 +4396,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 276,
-        "end_line": 287,
+        "line": 277,
+        "end_line": 288,
         "semantic_id": "aura_architect_loop.py#class:ArchitectLedgerRecord:9d0b614d48dd067b",
         "signature_hash": "b70a4856b3f11275"
       }
@@ -4412,8 +4406,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 291,
-        "end_line": 305,
+        "line": 292,
+        "end_line": 306,
         "semantic_id": "aura_architect_loop.py#class:ArchitectLoopResult:2584e747ebeccb80",
         "signature_hash": "cfd12476a5c1231f"
       }
@@ -4602,8 +4596,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 229,
-        "end_line": 242,
+        "line": 230,
+        "end_line": 243,
         "semantic_id": "aura_architect_loop.py#class:ArenaPatch:05a1d28cf57a3c22",
         "signature_hash": "7cd9dff990f43841"
       }
@@ -4970,8 +4964,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "class",
-        "line": 165,
-        "end_line": 954,
+        "line": 166,
+        "end_line": 979,
         "semantic_id": "aura_arena_architect_connector.py#class:AuraArenaArchitectConnector:256a4922ef4a8f02",
         "signature_hash": "baca194ee0f06b73"
       }
@@ -6924,8 +6918,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 80,
-        "end_line": 81,
+        "line": 81,
+        "end_line": 82,
         "semantic_id": "aura_architect_loop.py#class:CodemapLoadError:eebe0e479afcff44",
         "signature_hash": "88ce37134ee789f5"
       }
@@ -9466,8 +9460,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 111,
-        "end_line": 149,
+        "line": 112,
+        "end_line": 150,
         "semantic_id": "aura_architect_loop.py#class:FractalPlanCapsule:84d453d842c4254b",
         "signature_hash": "69a1f9b83bbc1ccb"
       }
@@ -9954,8 +9948,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 153,
-        "end_line": 174,
+        "line": 154,
+        "end_line": 175,
         "semantic_id": "aura_architect_loop.py#class:GroundingEvidence:11232ccf20124c65",
         "signature_hash": "47858686db8364cf"
       }
@@ -11864,8 +11858,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 246,
-        "end_line": 258,
+        "line": 247,
+        "end_line": 259,
         "semantic_id": "aura_architect_loop.py#class:PatchStageResult:0e1126ac0ba3195f",
         "signature_hash": "b934513f3dd1b1c0"
       }
@@ -11952,8 +11946,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "class",
-        "line": 138,
-        "end_line": 162,
+        "line": 139,
+        "end_line": 163,
         "semantic_id": "aura_arena_architect_connector.py#class:PlanAssessment:1c2623e711ac682f",
         "signature_hash": "12738a9fa4f18a9d"
       }
@@ -12698,8 +12692,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 205,
-        "end_line": 225,
+        "line": 206,
+        "end_line": 226,
         "semantic_id": "aura_architect_loop.py#class:RefactorArenaTransaction:ae1e22490cf13d53",
         "signature_hash": "7abe6435b7b75fdf"
       }
@@ -13994,8 +13988,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 178,
-        "end_line": 187,
+        "line": 179,
+        "end_line": 188,
         "semantic_id": "aura_architect_loop.py#class:ShadowFinding:5db63975da6166c6",
         "signature_hash": "b59565d695bc3678"
       }
@@ -14004,8 +13998,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 191,
-        "end_line": 201,
+        "line": 192,
+        "end_line": 202,
         "semantic_id": "aura_architect_loop.py#class:ShadowReport:e0ca30a68531b0e9",
         "signature_hash": "9e8c0bea4de1b63f"
       }
@@ -18098,8 +18092,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 262,
-        "end_line": 272,
+        "line": 263,
+        "end_line": 273,
         "semantic_id": "aura_architect_loop.py#class:VerificationResult:10a55e3658720c06",
         "signature_hash": "41e187fcde609427"
       }
@@ -18996,8 +18990,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 1982,
-        "end_line": 1996,
+        "line": 1983,
+        "end_line": 1997,
         "semantic_id": "aura_architect_loop.py#class:_TrustedBilateralHandoff:8142b392cde12e2a",
         "signature_hash": "3b718ca9d6c8dbad"
       }
@@ -19500,16 +19494,16 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 2171,
-        "end_line": 2172,
+        "line": 2177,
+        "end_line": 2178,
         "semantic_id": "aura_architect_loop.py#method:ArchitectFusionLoop.__init__:b0e56aba3bf9ab88",
         "signature_hash": "57000b96e39880e0"
       },
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 168,
-        "end_line": 194,
+        "line": 169,
+        "end_line": 195,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.__init__:34b4a6d556b77619",
         "signature_hash": "d4bfc086df8dba33"
       },
@@ -24360,8 +24354,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 736,
-        "end_line": 747,
+        "line": 737,
+        "end_line": 748,
         "semantic_id": "aura_architect_loop.py#function:_act_context_ref:7c2540d76630425a",
         "signature_hash": "b1591d478ebf690f"
       }
@@ -24574,8 +24568,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 399,
-        "end_line": 403,
+        "line": 400,
+        "end_line": 404,
         "semantic_id": "aura_architect_loop.py#function:_add_diff_file:6760d40d4d38782a",
         "signature_hash": "0c59e4dd1bf8ca3f"
       }
@@ -24716,8 +24710,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 434,
-        "end_line": 438,
+        "line": 435,
+        "end_line": 439,
         "semantic_id": "aura_architect_loop.py#function:_agent_capsule_for_task:ca2fcddf703393c5",
         "signature_hash": "13ad2cb09b35b4b4"
       }
@@ -25354,8 +25348,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 441,
-        "end_line": 451,
+        "line": 442,
+        "end_line": 452,
         "semantic_id": "aura_architect_loop.py#function:_arena_files_for_task:b8afb7317b895ce7",
         "signature_hash": "637e991c09a11c73"
       }
@@ -25442,8 +25436,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 796,
-        "end_line": 806,
+        "line": 797,
+        "end_line": 807,
         "semantic_id": "aura_architect_loop.py#function:_artifact_for_target:01b4820b3db0c8ff",
         "signature_hash": "7f84dae837ce2eea"
       },
@@ -26582,8 +26576,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 2014,
-        "end_line": 2049,
+        "line": 2015,
+        "end_line": 2050,
         "semantic_id": "aura_architect_loop.py#function:_bind_trusted_bilateral_handoff:ef0d8793fd4b3b92",
         "signature_hash": "2e065aac98338fc6"
       }
@@ -27554,8 +27548,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 750,
-        "end_line": 793,
+        "line": 751,
+        "end_line": 794,
         "semantic_id": "aura_architect_loop.py#function:_build_act_capsule:f0de29fb0c2ae4eb",
         "signature_hash": "b5396d1916b38f40"
       }
@@ -27918,8 +27912,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 344,
-        "end_line": 400,
+        "line": 347,
+        "end_line": 403,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:_build_verifiable_arena:971fd4ca02f254f5",
         "signature_hash": "5d90803018c26bcf"
       }
@@ -28208,8 +28202,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "function",
-        "line": 84,
-        "end_line": 96,
+        "line": 85,
+        "end_line": 97,
         "semantic_id": "aura_arena_architect_connector.py#function:_candidate:576e799ac9478cb3",
         "signature_hash": "710e6be7eef60d1c"
       },
@@ -28386,8 +28380,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "function",
-        "line": 65,
-        "end_line": 66,
+        "line": 66,
+        "end_line": 67,
         "semantic_id": "aura_arena_architect_connector.py#function:_canonical:ccd84e854659064e",
         "signature_hash": "8d5bf5695239b859"
       },
@@ -29470,8 +29464,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 714,
-        "end_line": 733,
+        "line": 715,
+        "end_line": 734,
         "semantic_id": "aura_architect_loop.py#function:_classify_act_size:79c59ff16e625844",
         "signature_hash": "5ddf303212f1b7dc"
       }
@@ -30134,8 +30128,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 600,
-        "end_line": 611,
+        "line": 601,
+        "end_line": 612,
         "semantic_id": "aura_architect_loop.py#function:_codemap_paths:37df2b231d7cbb28",
         "signature_hash": "efceaef3c98750b9"
       },
@@ -30616,8 +30610,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 772,
-        "end_line": 795,
+        "line": 775,
+        "end_line": 798,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:_compile_compass_with_forced_assessments:7fcc5ea9a9c20dea",
         "signature_hash": "23b4919b589a6555"
       }
@@ -30726,8 +30720,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 75,
-        "end_line": 120,
+        "line": 78,
+        "end_line": 123,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:_complete_plan:ccfd76db2c61e5d3",
         "signature_hash": "f05f54036fbebd82"
       }
@@ -32848,8 +32842,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 386,
-        "end_line": 396,
+        "line": 387,
+        "end_line": 397,
         "semantic_id": "aura_architect_loop.py#function:_diff_path_token:aa506b9ed3b5a0c4",
         "signature_hash": "7fe5fb3838828a93"
       },
@@ -32866,8 +32860,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 406,
-        "end_line": 431,
+        "line": 407,
+        "end_line": 432,
         "semantic_id": "aura_architect_loop.py#function:_diff_touched_files:9b96cff3e78456fe",
         "signature_hash": "40dd8d6eda453863"
       },
@@ -32924,8 +32918,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "function",
-        "line": 69,
-        "end_line": 70,
+        "line": 70,
+        "end_line": 71,
         "semantic_id": "aura_arena_architect_connector.py#function:_digest:5c79aeada2381ec4",
         "signature_hash": "5eed934bd8e243d0"
       },
@@ -33828,8 +33822,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 652,
-        "end_line": 711,
+        "line": 653,
+        "end_line": 712,
         "semantic_id": "aura_architect_loop.py#function:_dream_candidates_for_grounding:9bf89370aa071ef9",
         "signature_hash": "df43838585a15366"
       }
@@ -33928,8 +33922,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "function",
-        "line": 99,
-        "end_line": 112,
+        "line": 100,
+        "end_line": 113,
         "semantic_id": "aura_arena_architect_connector.py#function:_effective_lanes:7943ccb0d1e6c940",
         "signature_hash": "6ada0983bbf2df18"
       }
@@ -36056,8 +36050,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 614,
-        "end_line": 621,
+        "line": 615,
+        "end_line": 622,
         "semantic_id": "aura_architect_loop.py#function:_file_card:2f80bfb9bddbcf02",
         "signature_hash": "1457ca9e71d9bde8"
       },
@@ -36092,8 +36086,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 474,
-        "end_line": 481,
+        "line": 475,
+        "end_line": 482,
         "semantic_id": "aura_architect_loop.py#function:_file_digest:98d7620cd2b3313e",
         "signature_hash": "1827bcb03d26d0c0"
       },
@@ -39346,8 +39340,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 326,
-        "end_line": 328,
+        "line": 327,
+        "end_line": 329,
         "semantic_id": "aura_architect_loop.py#function:_hash_payload:d0727239132a17ae",
         "signature_hash": "3403c8182515448e"
       },
@@ -41822,8 +41816,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 454,
-        "end_line": 464,
+        "line": 455,
+        "end_line": 465,
         "semantic_id": "aura_architect_loop.py#function:_lease_files_for_task:86b7602cd6715205",
         "signature_hash": "54faeb707629374f"
       }
@@ -42370,8 +42364,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 340,
-        "end_line": 351,
+        "line": 341,
+        "end_line": 352,
         "semantic_id": "aura_architect_loop.py#function:_load_codemap:e5100e01978cff95",
         "signature_hash": "d569c6a71d75a415"
       },
@@ -44034,8 +44028,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 2052,
-        "end_line": 2090,
+        "line": 2053,
+        "end_line": 2091,
         "semantic_id": "aura_architect_loop.py#function:_mint_trusted_bilateral_handoff:51b3345e66ddd4d3",
         "signature_hash": "b31afbb6af99eb8e"
       }
@@ -45182,8 +45176,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 331,
-        "end_line": 337,
+        "line": 332,
+        "end_line": 338,
         "semantic_id": "aura_architect_loop.py#function:_normalize_path:6abcd98cabd32a71",
         "signature_hash": "101e6257a60158f0"
       },
@@ -45232,8 +45226,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "function",
-        "line": 77,
-        "end_line": 81,
+        "line": 78,
+        "end_line": 82,
         "semantic_id": "aura_arena_architect_connector.py#function:_normalize_plan_path:6d87084c9deaf1d5",
         "signature_hash": "ceb286e09ac9a4ec"
       }
@@ -45422,8 +45416,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 369,
-        "end_line": 383,
+        "line": 370,
+        "end_line": 384,
         "semantic_id": "aura_architect_loop.py#function:_normalized_path_list:5900e25658996884",
         "signature_hash": "ae30c24846e7b1be"
       }
@@ -47640,8 +47634,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 588,
-        "end_line": 741,
+        "line": 589,
+        "end_line": 766,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector._prepare_selected_plan:8d09364039e54fd9",
         "signature_hash": "61bf0b845ef92f85"
       }
@@ -47688,8 +47682,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "function",
-        "line": 133,
-        "end_line": 134,
+        "line": 134,
+        "end_line": 135,
         "semantic_id": "aura_arena_architect_connector.py#function:_prepared_projection:c3c0d614153a8c57",
         "signature_hash": "4c918ad24021d96c"
       }
@@ -47974,8 +47968,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1999,
-        "end_line": 2011,
+        "line": 2000,
+        "end_line": 2012,
         "semantic_id": "aura_architect_loop.py#function:_project_exact_act_tasks:56fa343fb831a983",
         "signature_hash": "6e90d418ac4da44e"
       }
@@ -49272,8 +49266,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 924,
-        "end_line": 954,
+        "line": 949,
+        "end_line": 979,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector._record:b0663ad45b2cceaa",
         "signature_hash": "9ab8d34ad3092037"
       },
@@ -49912,8 +49906,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 354,
-        "end_line": 366,
+        "line": 355,
+        "end_line": 367,
         "semantic_id": "aura_architect_loop.py#function:_refresh_plan_codemap_targets:d7d380c306f89687",
         "signature_hash": "1621ef1c4c77e35c"
       }
@@ -51546,8 +51540,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 207,
-        "end_line": 247,
+        "line": 208,
+        "end_line": 248,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector._resolve_bilateral_contract:4dc3413141b95b42",
         "signature_hash": "368a2b3ad76dfdd5"
       }
@@ -52124,8 +52118,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 820,
-        "end_line": 831,
+        "line": 821,
+        "end_line": 832,
         "semantic_id": "aura_architect_loop.py#function:_risk_for_act:6932b6561bf5f8ca",
         "signature_hash": "0e25b1da67263ce9"
       }
@@ -52476,8 +52470,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 467,
-        "end_line": 471,
+        "line": 468,
+        "end_line": 472,
         "semantic_id": "aura_architect_loop.py#function:_routing_decision_for_task:c31e0c5b46e09a0d",
         "signature_hash": "2aa7f4d3b50aee62"
       }
@@ -52504,8 +52498,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 834,
-        "end_line": 862,
+        "line": 835,
+        "end_line": 863,
         "semantic_id": "aura_architect_loop.py#function:_routing_frame_for_act:ed29f49c068358ef",
         "signature_hash": "01af1d51b16c225a"
       }
@@ -52992,8 +52986,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 484,
-        "end_line": 514,
+        "line": 485,
+        "end_line": 515,
         "semantic_id": "aura_architect_loop.py#function:_runner_status:088317da986fe0f2",
         "signature_hash": "a26b38f7b68a390e"
       }
@@ -54098,8 +54092,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 809,
-        "end_line": 817,
+        "line": 810,
+        "end_line": 818,
         "semantic_id": "aura_architect_loop.py#function:_scope_for_act:afce453a83d60abe",
         "signature_hash": "3dc1dd8dd16e122e"
       }
@@ -54812,8 +54806,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 918,
-        "end_line": 922,
+        "line": 943,
+        "end_line": 947,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector._session_manager:dc240b9f67c3372c",
         "signature_hash": "795654749c126f74"
       }
@@ -57268,8 +57262,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 624,
-        "end_line": 636,
+        "line": 625,
+        "end_line": 637,
         "semantic_id": "aura_architect_loop.py#function:_symbol_hits:b7aad92f05b16a17",
         "signature_hash": "0a83d01cc9456329"
       }
@@ -57524,8 +57518,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "function",
-        "line": 115,
-        "end_line": 130,
+        "line": 116,
+        "end_line": 131,
         "semantic_id": "aura_arena_architect_connector.py#function:_task_projection:c1d383aa231eaf15",
         "signature_hash": "c22aff14776d2c9b"
       },
@@ -57780,8 +57774,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 639,
-        "end_line": 649,
+        "line": 640,
+        "end_line": 650,
         "semantic_id": "aura_architect_loop.py#function:_test_candidates:f77af9c57446e8ec",
         "signature_hash": "b6cf49005cabfe4e"
       }
@@ -59092,8 +59086,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "function",
-        "line": 73,
-        "end_line": 74,
+        "line": 74,
+        "end_line": 75,
         "semantic_id": "aura_arena_architect_connector.py#function:_tokens:f653bf36ec258a28",
         "signature_hash": "b60568262887231a"
       },
@@ -61160,8 +61154,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 2093,
-        "end_line": 2165,
+        "line": 2094,
+        "end_line": 2171,
         "semantic_id": "aura_architect_loop.py#function:_validate_trusted_bilateral_handoff:913b198d982b4441",
         "signature_hash": "7e70b27556500ee9"
       }
@@ -63268,8 +63262,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1949,
-        "end_line": 1961,
+        "line": 1950,
+        "end_line": 1962,
         "semantic_id": "aura_architect_loop.py#function:append_architect_ledger:35b8c1ec072fe07e",
         "signature_hash": "4e50d6e060b66de9"
       }
@@ -63596,8 +63590,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 517,
-        "end_line": 597,
+        "line": 518,
+        "end_line": 598,
         "semantic_id": "aura_architect_loop.py#function:architect_capability_cards:f20cfd97d0701d1c",
         "signature_hash": "49ea256ac34e9b0e"
       }
@@ -63804,8 +63798,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 263,
-        "end_line": 394,
+        "line": 264,
+        "end_line": 395,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.assess_plan:c6d0142cb5f71826",
         "signature_hash": "b186de7e1ad32a1c"
       }
@@ -65424,8 +65418,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 29,
-        "end_line": 46,
+        "line": 32,
+        "end_line": 49,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:bilateral_contract:d5e37751632d855e",
         "signature_hash": "841e6824772dd3e2"
       }
@@ -65444,8 +65438,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 50,
-        "end_line": 72,
+        "line": 53,
+        "end_line": 75,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:bilateral_session:8d9bbca4f16059a8",
         "signature_hash": "0fe2d31f2076d100"
       }
@@ -65682,8 +65676,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 197,
-        "end_line": 205,
+        "line": 198,
+        "end_line": 206,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.bridge:b30f9e1fa62fda06",
         "signature_hash": "4d7716f4130c91ce"
       },
@@ -65872,8 +65866,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1912,
-        "end_line": 1946,
+        "line": 1913,
+        "end_line": 1947,
         "semantic_id": "aura_architect_loop.py#function:build_architect_ledger_record:25bbd465a0809da2",
         "signature_hash": "8f900ac7bdf0d08f"
       }
@@ -66210,8 +66204,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 865,
-        "end_line": 993,
+        "line": 866,
+        "end_line": 994,
         "semantic_id": "aura_architect_loop.py#function:build_fractal_plan_capsule:be832c0d992c8c3b",
         "signature_hash": "1a9ad06b7d7130b0"
       }
@@ -66308,8 +66302,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1872,
-        "end_line": 1909,
+        "line": 1873,
+        "end_line": 1910,
         "semantic_id": "aura_architect_loop.py#function:build_hotswap_capsule:158883b3e9cd7955",
         "signature_hash": "bc3cbee7bb4d6556"
       }
@@ -66668,8 +66662,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1231,
-        "end_line": 1329,
+        "line": 1232,
+        "end_line": 1330,
         "semantic_id": "aura_architect_loop.py#function:build_refactor_arena:19f91999032e08d8",
         "signature_hash": "f06f5e11ba3fa614"
       }
@@ -66768,8 +66762,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1837,
-        "end_line": 1869,
+        "line": 1838,
+        "end_line": 1870,
         "semantic_id": "aura_architect_loop.py#function:build_rollback_capsule:d69e1214e1233a4b",
         "signature_hash": "10f0a3a6e5e606e2"
       }
@@ -69824,8 +69818,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 396,
-        "end_line": 586,
+        "line": 397,
+        "end_line": 587,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.compare_plans:e9783a045abb2412",
         "signature_hash": "bf61012596d87966"
       },
@@ -74770,8 +74764,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 2243,
-        "end_line": 2299,
+        "line": 2249,
+        "end_line": 2305,
         "semantic_id": "aura_architect_loop.py#method:ArchitectFusionLoop.execute:6e542c2f7edfe938",
         "signature_hash": "3eeb3026a2329288"
       },
@@ -75008,8 +75002,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 915,
-        "end_line": 916,
+        "line": 940,
+        "end_line": 941,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.execute_native_model:9a50bc4aef6ccfaf",
         "signature_hash": "391c86ba59bbe3a4"
       },
@@ -76486,16 +76480,16 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 106,
-        "end_line": 107,
+        "line": 107,
+        "end_line": 108,
         "semantic_id": "aura_architect_loop.py#method:ActCapsule.from_dict:cb244cd2a0754cd1",
         "signature_hash": "a8a6f67afd3f5bf2"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 144,
-        "end_line": 149,
+        "line": 145,
+        "end_line": 150,
         "semantic_id": "aura_architect_loop.py#method:FractalPlanCapsule.from_dict:64974a3de0eec438",
         "signature_hash": "a8a6f67afd3f5bf2"
       },
@@ -79302,8 +79296,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 996,
-        "end_line": 1069,
+        "line": 997,
+        "end_line": 1070,
         "semantic_id": "aura_architect_loop.py#function:ground_plan_capsule:ed13b6bf47d2e3d0",
         "signature_hash": "fca0a962f27b16aa"
       }
@@ -81474,8 +81468,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1812,
-        "end_line": 1834,
+        "line": 1813,
+        "end_line": 1835,
         "semantic_id": "aura_architect_loop.py#function:judge_refactor_arena:e2412220b42a3c2b",
         "signature_hash": "312bad6a9c49ac22"
       }
@@ -81980,8 +81974,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 899,
-        "end_line": 901,
+        "line": 924,
+        "end_line": 926,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.list_refactor_outputs:40a3a77b9b574a23",
         "signature_hash": "fffff520671e652e"
       },
@@ -82552,8 +82546,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 903,
-        "end_line": 910,
+        "line": 928,
+        "end_line": 935,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.load_refactor_output:9212aec31f80f5ce",
         "signature_hash": "4f7d2c1d1b2cd8c9"
       },
@@ -85218,8 +85212,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 807,
-        "end_line": 868,
+        "line": 832,
+        "end_line": 893,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.open_surgeon_session:9c87eb6a5ebbd6d5",
         "signature_hash": "99c76eebcd940ec5"
       },
@@ -86340,8 +86334,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 2174,
-        "end_line": 2241,
+        "line": 2180,
+        "end_line": 2247,
         "semantic_id": "aura_architect_loop.py#method:ArchitectFusionLoop.prepare:4996ac33922ee233",
         "signature_hash": "54d1824095a35ab8"
       },
@@ -86514,8 +86508,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 743,
-        "end_line": 805,
+        "line": 768,
+        "end_line": 830,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.prepare_refactor:3b0d298419d8587c",
         "signature_hash": "5c3565df2684a627"
       },
@@ -90802,8 +90796,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1964,
-        "end_line": 1978,
+        "line": 1965,
+        "end_line": 1979,
         "semantic_id": "aura_architect_loop.py#function:route_intensity:81d1d18807c5b571",
         "signature_hash": "1de4d5146fba7abd"
       }
@@ -90852,8 +90846,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 912,
-        "end_line": 913,
+        "line": 937,
+        "end_line": 938,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.route_native_model:0424350297ce68af",
         "signature_hash": "30d8c89fb596cd4f"
       },
@@ -93118,8 +93112,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1072,
-        "end_line": 1228,
+        "line": 1073,
+        "end_line": 1229,
         "semantic_id": "aura_architect_loop.py#function:shadow_plan_capsule:42584dd610c1164c",
         "signature_hash": "867c20def80bfe1c"
       }
@@ -93674,8 +93668,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1332,
-        "end_line": 1563,
+        "line": 1333,
+        "end_line": 1564,
         "semantic_id": "aura_architect_loop.py#function:stage_arena_patch:8ca0c88995514c53",
         "signature_hash": "aadceb2617cdda82"
       }
@@ -94760,8 +94754,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 870,
-        "end_line": 872,
+        "line": 895,
+        "end_line": 897,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.surgeon_next:83eec2f260ecb798",
         "signature_hash": "f115d80075d7b76f"
       },
@@ -94778,8 +94772,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 894,
-        "end_line": 897,
+        "line": 919,
+        "end_line": 922,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.surgeon_replan:a7518cf131487bd9",
         "signature_hash": "cbb90d4bd8845afd"
       },
@@ -94796,8 +94790,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 890,
-        "end_line": 892,
+        "line": 915,
+        "end_line": 917,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.surgeon_status:622a8e80d2c43ba3",
         "signature_hash": "f2c83ea9d23cfa16"
       },
@@ -94830,8 +94824,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 874,
-        "end_line": 888,
+        "line": 899,
+        "end_line": 913,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.surgeon_submit:2c78f3b53747ede1",
         "signature_hash": "d9714095d9c5f380"
       },
@@ -97574,8 +97568,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 123,
-        "end_line": 134,
+        "line": 126,
+        "end_line": 137,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_bilateral_plan_gate_passes_complete_exact_plan:e1489fb85cf9af41",
         "signature_hash": "9075a06454eeda0f"
       }
@@ -97584,8 +97578,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 137,
-        "end_line": 150,
+        "line": 140,
+        "end_line": 153,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_bilateral_plan_gate_rejects_missing_negative_verifier:b46bb35285f0d6eb",
         "signature_hash": "d56a02458c8f6f05"
       }
@@ -97594,8 +97588,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 512,
-        "end_line": 524,
+        "line": 515,
+        "end_line": 527,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_bilateral_plan_rejects_changed_semantic_definition:fe45ea44b74478f3",
         "signature_hash": "67c66c733d26bcd8"
       }
@@ -97604,8 +97598,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 527,
-        "end_line": 540,
+        "line": 530,
+        "end_line": 543,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_bilateral_plan_rejects_unadmitted_verifier:5f7a37b3c0721ca1",
         "signature_hash": "bc12f4993a45e0b4"
       }
@@ -100670,8 +100664,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 231,
-        "end_line": 262,
+        "line": 234,
+        "end_line": 265,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_compare_plans_session_id_only_all_ineligible_denies_without_selection:5d5fb9efa3c184b2",
         "signature_hash": "0bccfc0932dc5fa5"
       }
@@ -100680,8 +100674,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 265,
-        "end_line": 286,
+        "line": 268,
+        "end_line": 289,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_compare_plans_session_id_only_success_requires_bilateral_gate:6432e57a697b756d",
         "signature_hash": "022003cb70e25be5"
       }
@@ -100750,8 +100744,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 798,
-        "end_line": 827,
+        "line": 801,
+        "end_line": 830,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected:7f46308cf655689f",
         "signature_hash": "e728f8d41685f786"
       }
@@ -100770,8 +100764,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 830,
-        "end_line": 855,
+        "line": 833,
+        "end_line": 858,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_compass_fully_projected_obligations_preserve_eligible_path:9707b6f0a97212de",
         "signature_hash": "24be3bb60d2e31fa"
       }
@@ -101540,10 +101534,20 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 195,
-        "end_line": 228,
+        "line": 198,
+        "end_line": 231,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_connector_cannot_select_higher_scoring_ineligible_plan:1c1c6a57bfda8b47",
         "signature_hash": "0884ebce853b7cbd"
+      }
+    ],
+    "test_connector_identity_failure_returns_deterministic_denial": [
+      {
+        "file": "tests/test_aura_bilateral_planning_enforcement.py",
+        "kind": "function",
+        "line": 869,
+        "end_line": 897,
+        "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_connector_identity_failure_returns_deterministic_denial:7b512eeb678c6d00",
+        "signature_hash": "920cdd709336201d"
       }
     ],
     "test_connector_record_is_redacted_and_digest_bound": [
@@ -102424,8 +102428,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 504,
-        "end_line": 509,
+        "line": 507,
+        "end_line": 512,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_council_never_overrides_deterministic_bilateral_denials:416b2b0e7f486b13",
         "signature_hash": "29e86f1668673060"
       }
@@ -102464,8 +102468,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 486,
-        "end_line": 492,
+        "line": 489,
+        "end_line": 495,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_council_routes_bilateral_meaning_back_to_human:0a78273f4efb631f",
         "signature_hash": "f70ec719c0b3e75b"
       }
@@ -110430,8 +110434,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 659,
-        "end_line": 699,
+        "line": 662,
+        "end_line": 702,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_intent_refinement_confirm_returns_protocol_error_on_repository_lookup_failure:4e7c76e2da3d3031",
         "signature_hash": "9a0ffb09cabe6d65"
       }
@@ -112666,6 +112670,16 @@
         "signature_hash": "c4240ddf93e87fd0"
       }
     ],
+    "test_loop_identity_failure_is_stable_fail_closed_error": [
+      {
+        "file": "tests/test_aura_bilateral_planning_enforcement.py",
+        "kind": "function",
+        "line": 908,
+        "end_line": 947,
+        "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_loop_identity_failure_is_stable_fail_closed_error:5b5a8c5dadd67ed5",
+        "signature_hash": "2ef8bd63f4e03d44"
+      }
+    ],
     "test_loopy_graph_convergence": [
       {
         "file": "tests/test_aura_tensor_evidence.py",
@@ -113100,8 +113114,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 759,
-        "end_line": 769,
+        "line": 762,
+        "end_line": 772,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_mcp_exposes_bounded_refinement_and_revision_tools:a79f077836c087bf",
         "signature_hash": "eac1a2666936d1cf"
       }
@@ -113160,8 +113174,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 738,
-        "end_line": 756,
+        "line": 741,
+        "end_line": 759,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_mcp_rejects_non_object_bilateral_arguments:1f689391958f49e6",
         "signature_hash": "5c65b9540eb5ab1d"
       }
@@ -113240,8 +113254,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 543,
-        "end_line": 559,
+        "line": 546,
+        "end_line": 562,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_meaning_change_cannot_echo_old_confirmation:9d41a1a85f64ab9c",
         "signature_hash": "2a8b7d7d8016778b"
       }
@@ -117710,8 +117724,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 702,
-        "end_line": 735,
+        "line": 705,
+        "end_line": 738,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_prepare_deterministic_denial_is_fail_closed:b437f807684e14e9",
         "signature_hash": "4f82acf381280eaa"
       }
@@ -117730,8 +117744,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 610,
-        "end_line": 654,
+        "line": 613,
+        "end_line": 657,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_prepare_forces_gate_to_exact_prepared_task:ea423f232bda167e",
         "signature_hash": "dfad2d0f8ddd0a03"
       }
@@ -117820,8 +117834,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 562,
-        "end_line": 573,
+        "line": 565,
+        "end_line": 576,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_prepare_rejects_forged_unretained_contract:7e56c7e07ec56fb0",
         "signature_hash": "d9656815485d7744"
       }
@@ -117830,8 +117844,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 576,
-        "end_line": 594,
+        "line": 579,
+        "end_line": 597,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_prepare_rejects_gate_only_input_without_retained_confirmation:ead976d1d3d12dea",
         "signature_hash": "254fb1bc4388c939"
       }
@@ -117850,8 +117864,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 597,
-        "end_line": 607,
+        "line": 600,
+        "end_line": 610,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_prepare_rejects_proof_plan_only_input_without_retained_confirmation:04c160d57ddb0c86",
         "signature_hash": "d2bb7739fbdda04b"
       }
@@ -121228,8 +121242,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 177,
-        "end_line": 192,
+        "line": 180,
+        "end_line": 195,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_resolve_bilateral_contract_accepts_object_only_via_matching_session_id:a677094cc8fcd0f3",
         "signature_hash": "9bf20a79319b85af"
       }
@@ -121238,8 +121252,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 153,
-        "end_line": 174,
+        "line": 156,
+        "end_line": 177,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_resolve_bilateral_contract_rejects_unretained_in_memory_object:504f17247d282029",
         "signature_hash": "b20f661998134835"
       }
@@ -123904,8 +123918,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 289,
-        "end_line": 341,
+        "line": 292,
+        "end_line": 344,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_shadow_and_patch_stage_retain_bilateral_scope:6b0224499a7a6ab4",
         "signature_hash": "7cbb65a33e772075"
       }
@@ -129478,8 +129492,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 457,
-        "end_line": 483,
+        "line": 460,
+        "end_line": 486,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_verify_refactor_arena_accepts_genuine_canonical_run_receipt:0a054795ab37c25d",
         "signature_hash": "6f1afabbf5869c36"
       }
@@ -129488,8 +129502,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 403,
-        "end_line": 420,
+        "line": 406,
+        "end_line": 423,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_verify_refactor_arena_rejects_candidate_forged_receipt:c5a6b69cc4aa4afc",
         "signature_hash": "b6e575f795b2b932"
       }
@@ -129498,8 +129512,8 @@
       {
         "file": "tests/test_aura_bilateral_planning_enforcement.py",
         "kind": "function",
-        "line": 432,
-        "end_line": 454,
+        "line": 435,
+        "end_line": 457,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_verify_refactor_arena_rejects_mismatched_receipt_bindings:c8321d90ff7f7e66",
         "signature_hash": "1f9e6fdfaae8e59f"
       }
@@ -130524,96 +130538,96 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 102,
-        "end_line": 103,
+        "line": 103,
+        "end_line": 104,
         "semantic_id": "aura_architect_loop.py#method:ActCapsule.to_dict:8441a603430f3e28",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 130,
-        "end_line": 141,
+        "line": 131,
+        "end_line": 142,
         "semantic_id": "aura_architect_loop.py#method:FractalPlanCapsule.to_dict:5d85e4107562de22",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 165,
-        "end_line": 174,
+        "line": 166,
+        "end_line": 175,
         "semantic_id": "aura_architect_loop.py#method:GroundingEvidence.to_dict:d47689027331771a",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 186,
-        "end_line": 187,
+        "line": 187,
+        "end_line": 188,
         "semantic_id": "aura_architect_loop.py#method:ShadowFinding.to_dict:904b514a6d6d1b86",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 198,
-        "end_line": 201,
+        "line": 199,
+        "end_line": 202,
         "semantic_id": "aura_architect_loop.py#method:ShadowReport.to_dict:8202217c83c5f7d4",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 224,
-        "end_line": 225,
+        "line": 225,
+        "end_line": 226,
         "semantic_id": "aura_architect_loop.py#method:RefactorArenaTransaction.to_dict:afa879ef9f48efd5",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 241,
-        "end_line": 242,
+        "line": 242,
+        "end_line": 243,
         "semantic_id": "aura_architect_loop.py#method:ArenaPatch.to_dict:8bf052e84f62b0c0",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 252,
-        "end_line": 258,
+        "line": 253,
+        "end_line": 259,
         "semantic_id": "aura_architect_loop.py#method:PatchStageResult.to_dict:a38638158ff63df7",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 271,
-        "end_line": 272,
+        "line": 272,
+        "end_line": 273,
         "semantic_id": "aura_architect_loop.py#method:VerificationResult.to_dict:2bf2275c211ed251",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 286,
-        "end_line": 287,
+        "line": 287,
+        "end_line": 288,
         "semantic_id": "aura_architect_loop.py#method:ArchitectLedgerRecord.to_dict:87aee60048f451a7",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 298,
-        "end_line": 305,
+        "line": 299,
+        "end_line": 306,
         "semantic_id": "aura_architect_loop.py#method:ArchitectLoopResult.to_dict:4b781cd131cfa718",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "method",
-        "line": 316,
-        "end_line": 323,
+        "line": 317,
+        "end_line": 324,
         "semantic_id": "aura_architect_loop.py#method:ArchitectExecutionResult.to_dict:690e525112441b7a",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -130636,8 +130650,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 156,
-        "end_line": 162,
+        "line": 157,
+        "end_line": 163,
         "semantic_id": "aura_arena_architect_connector.py#method:PlanAssessment.to_dict:86a463fdede9ecea",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -135026,8 +135040,8 @@
       {
         "file": "aura_arena_architect_connector.py",
         "kind": "method",
-        "line": 249,
-        "end_line": 261,
+        "line": 250,
+        "end_line": 262,
         "semantic_id": "aura_arena_architect_connector.py#method:AuraArenaArchitectConnector.validate_control:f76eeef18764219d",
         "signature_hash": "5a6a8ec900b3b53b"
       },
@@ -135956,8 +135970,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1566,
-        "end_line": 1809,
+        "line": 1567,
+        "end_line": 1810,
         "semantic_id": "aura_architect_loop.py#function:verify_refactor_arena:501c50b241005280",
         "signature_hash": "d40d51b7daa552b4"
       }
@@ -143103,9 +143117,9 @@
     {
       "path": "aura_architect_loop.py",
       "role": "python_module",
-      "bytes": 91813,
-      "lines": 2300,
-      "tokens_est": 22954,
+      "bytes": 92026,
+      "lines": 2306,
+      "tokens_est": 23007,
       "symbol_count": 75,
       "commands": [],
       "command_lines": {},
@@ -143157,40 +143171,40 @@
           "import_module": 12
         }
       },
-      "digest8": "bd4f90e217aa4e6e",
+      "digest8": "53421a261e4bfee2",
       "vector": [
-        0.152042,
-        -0.099913,
-        0.241819,
-        0.178106,
-        -0.209962,
-        0.094121,
-        0.076745,
-        0.125977,
-        -0.259195,
-        -0.209962,
-        -0.149146,
-        0.082537,
-        0.111497,
-        0.015928,
-        -0.320012,
-        -0.102809,
-        -0.024616,
-        0.001448,
-        -0.053577,
-        -0.128873,
-        0.236027,
-        -0.172314,
-        0.273675,
-        -0.053577,
-        -0.238923,
-        -0.128873,
-        0.062265,
-        -0.293947,
-        0.123081,
-        0.227339,
-        0.14625,
-        0.317116
+        -0.319178,
+        0.287969,
+        -0.151787,
+        0.239738,
+        -0.117741,
+        -0.256761,
+        -0.123415,
+        -0.012767,
+        0.106393,
+        -0.026953,
+        0.083695,
+        0.072347,
+        0.117741,
+        -0.072347,
+        0.205692,
+        -0.018441,
+        0.075184,
+        0.007093,
+        0.012767,
+        0.066673,
+        -0.015604,
+        0.208529,
+        0.137601,
+        0.228389,
+        0.313503,
+        -0.35606,
+        -0.157461,
+        -0.004256,
+        -0.268109,
+        -0.273783,
+        0.165972,
+        -0.063836
       ]
     },
     {
@@ -143300,9 +143314,9 @@
     {
       "path": "aura_arena_architect_connector.py",
       "role": "python_module",
-      "bytes": 40292,
-      "lines": 962,
-      "tokens_est": 10073,
+      "bytes": 41508,
+      "lines": 987,
+      "tokens_est": 10377,
       "symbol_count": 30,
       "commands": [],
       "command_lines": {},
@@ -143357,40 +143371,40 @@
           "import_module": 13
         }
       },
-      "digest8": "356ec0492362b8ad",
+      "digest8": "0af5b16003a07884",
       "vector": [
-        -0.03994,
-        0.204853,
-        0.024479,
-        -0.099206,
-        -0.114666,
-        -0.186816,
-        0.310501,
-        0.240928,
-        0.034786,
-        -0.271849,
-        0.297617,
-        -0.045094,
-        0.021903,
-        0.106936,
-        0.143011,
-        -0.269273,
-        0.104359,
-        -0.11209,
-        -0.021903,
-        -0.122397,
-        -0.114666,
-        -0.073438,
-        0.155895,
-        -0.256389,
-        -0.253812,
-        0.271849,
-        0.03994,
-        0.068284,
-        0.297617,
-        -0.179086,
-        0.155895,
-        -0.189393
+        0.144484,
+        0.148895,
+        0.188601,
+        -0.234924,
+        -0.00772,
+        0.120219,
+        0.276835,
+        0.186395,
+        0.250365,
+        0.054043,
+        -0.197424,
+        0.265806,
+        -0.186395,
+        -0.179777,
+        -0.076102,
+        0.04522,
+        0.234924,
+        0.272423,
+        -0.16213,
+        -0.23713,
+        -0.252571,
+        -0.049632,
+        0.056249,
+        0.031985,
+        0.126837,
+        -0.113602,
+        0.215071,
+        -0.08272,
+        0.164336,
+        -0.177571,
+        -0.001103,
+        0.259188
       ]
     },
     {
@@ -190006,52 +190020,6 @@
       ]
     },
     {
-      "path": ".aura/pr236_source_materialization.trigger",
-      "role": "support_file",
-      "bytes": 97,
-      "lines": 0,
-      "tokens_est": 0,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "b310293c1e1aae03",
-      "vector": [
-        0.185802,
-        0.215333,
-        0.092286,
-        0.038145,
-        -0.274396,
-        0.00123,
-        0.116895,
-        -0.013535,
-        -0.146427,
-        -0.097208,
-        -0.267013,
-        0.099668,
-        0.116895,
-        0.23256,
-        -0.015996,
-        -0.301466,
-        -0.257169,
-        -0.210411,
-        0.045528,
-        0.02584,
-        -0.097208,
-        0.003691,
-        -0.1292,
-        0.23256,
-        0.257169,
-        0.306388,
-        0.235021,
-        -0.308849,
-        0.02584,
-        0.028301,
-        0.015996,
-        -0.20795
-      ]
-    },
-    {
       "path": ".aura/run-construction-spz-diagnostics",
       "role": "support_file",
       "bytes": 43,
@@ -192398,141 +192366,49 @@
       ]
     },
     {
-      "path": ".github/pr236_identity_fix.py.tmp",
+      "path": ".github/pr236_compass_context_fix.py.tmp",
       "role": "support_file",
-      "bytes": 8078,
+      "bytes": 15354,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "38c6a731d730ce9a",
+      "digest8": "68c252799a462a6e",
       "vector": [
-        -0.214299,
-        0.284561,
-        0.279877,
-        0.282219,
-        -0.005855,
-        0.277535,
-        0.1698,
-        -0.1698,
-        0.167458,
-        -0.216641,
-        -0.066749,
-        0.120617,
-        -0.193221,
-        -0.09017,
-        -0.029276,
-        0.118274,
-        0.097196,
-        -0.23772,
-        -0.153405,
-        0.228352,
-        0.258799,
-        -0.188536,
-        0.167458,
-        -0.129985,
-        -0.155748,
-        0.176826,
-        0.18151,
-        0.144037,
-        -0.012881,
-        -0.062065,
-        0.144037,
-        0.055039
-      ]
-    },
-    {
-      "path": ".github/pr236_identity_fix_workflow.yml.tmp",
-      "role": "support_file",
-      "bytes": 2426,
-      "lines": 0,
-      "tokens_est": 0,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "3de8b61eb00a26a0",
-      "vector": [
-        -0.051057,
-        -0.207965,
-        -0.205475,
-        -0.225399,
-        0.031133,
-        0.255287,
-        -0.153172,
-        -0.173097,
-        0.100869,
-        -0.115813,
-        -0.210456,
-        0.008717,
-        0.026151,
-        0.095888,
-        0.048567,
-        -0.140719,
-        0.260268,
-        0.255287,
-        -0.006227,
-        0.006227,
-        0.033623,
-        0.033623,
-        0.215437,
-        0.130757,
-        0.222909,
-        -0.300117,
-        0.232871,
-        0.128266,
-        -0.272721,
-        0.053548,
-        -0.242834,
-        -0.31008
-      ]
-    },
-    {
-      "path": ".github/pr236_manual_repairs.py",
-      "role": "python_module",
-      "bytes": 70,
-      "lines": 2,
-      "tokens_est": 18,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "26300804ad7121e8",
-      "vector": [
-        0.264521,
-        -0.027282,
-        -0.219446,
-        0.096082,
-        -0.029655,
-        -0.18386,
-        0.027282,
-        -0.155391,
-        0.015421,
-        -0.043889,
-        0.252659,
-        0.013048,
-        0.058123,
-        0.257404,
-        -0.100826,
-        0.297735,
-        -0.190977,
-        0.051006,
-        -0.098454,
-        -0.122178,
-        -0.288245,
-        -0.271638,
-        -0.148274,
-        -0.255032,
-        0.285873,
-        -0.207584,
-        -0.0344,
-        -0.043889,
-        -0.238425,
-        0.250287,
-        -0.091337,
-        -0.119806
+        -0.30398,
+        -0.227667,
+        0.260736,
+        0.26328,
+        0.097935,
+        0.082672,
+        -0.082672,
+        0.153898,
+        -0.080129,
+        -0.309067,
+        -0.131004,
+        0.306524,
+        0.082672,
+        -0.003816,
+        -0.011447,
+        0.136091,
+        0.113197,
+        -0.227667,
+        -0.092847,
+        0.039428,
+        -0.16916,
+        -0.003816,
+        -0.072497,
+        -0.090304,
+        -0.136091,
+        0.270911,
+        0.14881,
+        0.286173,
+        -0.232754,
+        0.161529,
+        0.158985,
+        -0.120829
       ]
     },
     {
@@ -195764,47 +195640,47 @@
     {
       "path": ".github/workflows/pr236-source-materialize.yml",
       "role": "schema_or_lexicon",
-      "bytes": 1850,
-      "lines": 55,
-      "tokens_est": 463,
+      "bytes": 3078,
+      "lines": 86,
+      "tokens_est": 770,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "13b56814cfcc892b",
+      "digest8": "f1c486556e972df3",
       "vector": [
-        -0.224997,
-        0.159969,
-        -0.110547,
-        0.066328,
-        0.105345,
-        -0.16257,
-        0.261412,
-        -0.245806,
-        -0.126154,
-        -0.219794,
-        -0.277019,
-        -0.04552,
-        0.089739,
-        -0.323839,
-        -0.042918,
-        0.042918,
-        -0.238002,
-        0.110547,
-        -0.282221,
-        -0.214592,
-        -0.066328,
-        0.110547,
-        -0.024711,
-        -0.292626,
-        -0.175575,
-        0.120952,
-        -0.282221,
-        -0.076733,
-        0.094941,
-        -0.032514,
-        0.204188,
-        0.032514
+        -0.146831,
+        -0.259945,
+        0.277347,
+        -0.13813,
+        0.166408,
+        -0.272996,
+        -0.227316,
+        0.236017,
+        -0.18381,
+        -0.027191,
+        -0.216439,
+        0.140305,
+        -0.135954,
+        -0.177285,
+        0.251244,
+        -0.05982,
+        0.196862,
+        -0.040243,
+        0.253419,
+        0.020665,
+        0.129429,
+        -0.13813,
+        0.218615,
+        0.153357,
+        0.22079,
+        -0.044593,
+        -0.116377,
+        0.051119,
+        -0.005438,
+        0.005438,
+        0.255594,
+        -0.207738
       ]
     },
     {
@@ -212316,47 +212192,47 @@
     {
       "path": "tests/test_aura_bilateral_planning_enforcement.py",
       "role": "python_module",
-      "bytes": 34933,
-      "lines": 856,
-      "tokens_est": 8734,
-      "symbol_count": 31,
+      "bytes": 38328,
+      "lines": 948,
+      "tokens_est": 9582,
+      "symbol_count": 33,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "8dfacd6fa2df9035",
+      "digest8": "8d1326b986687672",
       "vector": [
-        -0.103007,
-        -0.120382,
-        -0.286683,
-        0.060811,
-        0.080668,
-        0.140239,
-        0.03599,
-        0.219666,
-        -0.316468,
-        -0.157613,
-        0.016134,
-        -0.122864,
-        -0.2842,
-        0.078186,
-        -0.309021,
-        -0.060811,
-        0.013652,
-        -0.073222,
-        -0.038473,
-        0.043437,
-        0.132792,
-        0.045919,
-        0.189881,
-        0.085632,
-        -0.103007,
-        0.294129,
-        0.135274,
-        0.239523,
-        -0.125346,
-        -0.269308,
-        0.294129,
-        0.259379
+        0.276448,
+        -0.205866,
+        0.017646,
+        0.099992,
+        0.219982,
+        0.184691,
+        -0.227041,
+        -0.019998,
+        0.069406,
+        0.029409,
+        -0.262332,
+        -0.142342,
+        -0.24351,
+        0.111756,
+        0.191749,
+        -0.092934,
+        0.267037,
+        0.104697,
+        0.219982,
+        -0.231746,
+        -0.163516,
+        -0.08117,
+        0.125872,
+        -0.029409,
+        0.257626,
+        0.182338,
+        0.114108,
+        0.212924,
+        -0.292918,
+        0.184691,
+        0.027057,
+        -0.10705
       ]
     },
     {
