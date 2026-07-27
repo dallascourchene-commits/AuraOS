@@ -10,6 +10,8 @@ ENV PYTHONUNBUFFERED=1 \
 WORKDIR /app
 COPY . .
 
+RUN python -m aura_packaged_source_identity build /app
+
 RUN python -m pip install --no-cache-dir \
     "numpy>=1.26.4,<3.0" \
     "websockets>=12.0,<17.0" \

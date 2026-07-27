@@ -30,6 +30,7 @@ from aura_bilateral_intent_compiler import (
 from aura_event_contracts import stable_digest
 from aura_human_agent_guidance import build_guidance_packet
 from aura_llm_egress import ExternalLLM, available_providers
+from aura_packaged_source_identity import verify_packaged_source_manifest
 from aura_showcase_intent import compile_bulk_intent_trace
 from aura_tokenizer_guard import sanitize_tokenizer_channels
 
@@ -45,6 +46,19 @@ BILATERAL_MARKER = "[AURA_BILATERAL_REFINE]"
 _CLARIFICATION = re.compile(
     r"^\[AURA_CLARIFICATION_ANSWER:(GDP-[A-Za-z0-9]+)\]\s*(.+)$",
     flags=re.DOTALL,
+)
+_CONFIRMATION_PAYLOAD_FIELDS = frozenset(
+    {
+        "confirmation_id",
+        "confirmation_receipt_id",
+        "intent_digest",
+        "semantic_ledger_digest",
+        "repository_head",
+        "source_tree_digest",
+        "workflow_id",
+        "phase_hash",
+        "node_digest",
+    }
 )
 
 
@@ -85,6 +99,18 @@ def _bounded_list(value: Any, *, limit: int = 12) -> list[Any]:
         else:
             result.append(_bounded_text(item, 300))
     return result
+
+
+def _execution_payload_digest(payload: dict[str, Any] | None) -> str:
+    """Bind only action inputs; confirmation transport fields are separate authority."""
+    source = dict(payload or {})
+    return stable_digest(
+        {
+            str(key): value
+            for key, value in source.items()
+            if key not in _CONFIRMATION_PAYLOAD_FIELDS
+        }
+    )
 
 
 def normalize_node_context(raw: dict[str, Any] | None) -> dict[str, Any]:
@@ -231,24 +257,29 @@ def _repository_identity(root: Path) -> dict[str, Any]:
     except (FileNotFoundError, OSError, subprocess.SubprocessError, ValueError):
         # Packaged deployments intentionally omit .git.  The image build binds
         # the immutable source commit through a trusted server environment value.
-        head = str(os.environ.get("AURA_SOURCE_COMMIT") or "").strip().lower()
+        head = str(
+            os.environ.get("AURA_SOURCE_COMMIT")
+            or os.environ.get("RENDER_GIT_COMMIT")
+            or ""
+        ).strip().lower()
         if (
             len(head) not in {40, 64}
             or any(char not in "0123456789abcdef" for char in head)
         ):
             raise ValueError("trusted packaged source identity is unavailable")
+        packaged_manifest = verify_packaged_source_manifest(root)
         status = ""
         clean = True
         tree_digest = stable_digest(
             {
                 "head": head,
-                "tracked_diff_digest": hashlib.blake2b(
-                    b"", digest_size=32
-                ).hexdigest(),
-                "untracked": [],
+                "packaged_source_manifest_digest": packaged_manifest[
+                    "manifest_digest"
+                ],
+                "packaged_source_digest": packaged_manifest["source_digest"],
             }
         )
-        identity_source = "trusted_build_environment"
+        identity_source = "trusted_packaged_source_manifest"
     return {
         "repository_head": head,
         "source_tree_digest": tree_digest,
@@ -402,7 +433,8 @@ class ArenaGateDialogueService:
         self.confirmed: dict[str, dict[str, Any]] = {}
         self.history: list[dict[str, Any]] = []
         self._runtime: dict[str, dict[str, Any]] = {}
-        self._confirmation_lock = threading.Lock()
+        self._confirmation_lock = threading.RLock()
+        self._latest_confirmation_by_gate: dict[str, str] = {}
 
     def _resolve_reviewer_identity(self, requested_reviewer: str) -> str:
         if self.operator_identity:
@@ -672,6 +704,7 @@ class ArenaGateDialogueService:
         stage_hint: str = "",
         reviewer: str = "human_operator",
         note: str = "",
+        action_payload: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         if type(approved) is not bool:
             return self._denial("approved_must_be_boolean")
@@ -691,7 +724,14 @@ class ArenaGateDialogueService:
 
         authenticated_reviewer = self._resolve_reviewer_identity(reviewer)
         if not approved:
-            return self._finalize_rejection(proposal, reviewer=authenticated_reviewer, note=note)
+            with self._confirmation_lock:
+                if self.pending.get(proposal["proposal_id"]) is not proposal:
+                    return self._denial("gate_dialogue_proposal_not_found")
+                return self._finalize_rejection(
+                    proposal,
+                    reviewer=authenticated_reviewer,
+                    note=note,
+                )
 
         state = self.workflow.get_state()
         normalized_node = normalize_node_context(current_node_context)
@@ -717,6 +757,10 @@ class ArenaGateDialogueService:
         ):
             return self._denial("stale_repository_identity", proposal=proposal)
         confirmed_at = time.time()
+        recommended_action_id = str(
+            (proposal.get("recommended_action") or {}).get("action_id") or ""
+        )
+        action_payload_digest = _execution_payload_digest(action_payload)
         runtime_profile_digest = stable_digest(
             {
                 "workflow_id": proposal["workflow_id"],
@@ -724,6 +768,8 @@ class ArenaGateDialogueService:
                 "phase_hash": proposal["phase_hash"],
                 "node_digest": proposal["node_digest"],
                 "stage_hint": proposal["stage_hint"],
+                "recommended_action_id": recommended_action_id,
+                "action_payload_digest": action_payload_digest,
             }
         )
         try:
@@ -737,6 +783,7 @@ class ArenaGateDialogueService:
                 runtime_profile_digest=runtime_profile_digest,
                 workflow_phase_hash=proposal["phase_hash"],
                 topology_evidence_digest=proposal["node_digest"],
+                topology_selected=bool(normalized_node.get("selected_node")),
                 codemap_digest=repo["codemap_digest"],
                 human_reviewer=authenticated_reviewer,
                 confirmed_at=confirmed_at,
@@ -758,43 +805,54 @@ class ArenaGateDialogueService:
         decision["confirmation_id"] = compilation["confirmation_receipt"]["confirmation_id"]
         decision["intent_digest"] = compilation["intent_packet"]["intent_digest"]
         decision["semantic_ledger_digest"] = compilation["semantic_ledger"]["ledger_digest"]
+        decision["action_payload_digest"] = action_payload_digest
         proposal["status"] = "APPROVED_FOR_NEXT_GUARDED_GATE"
         proposal["decision"] = decision
         proposal["canonical_compilation"] = compilation
-        self.confirmed[proposal["proposal_id"]] = {
-            "proposal": dict(proposal),
-            "repository_head": repo["repository_head"],
-            "source_tree_digest": repo["source_tree_digest"],
-            "phase_hash": proposal["phase_hash"],
-            "node_digest": proposal["node_digest"],
-            "confirmed_at": confirmed_at,
-            "consumed_at": 0.0,
-            "consumed_action_id": "",
-        }
-        self.pending.pop(proposal["proposal_id"], None)
-        self._runtime.pop(proposal["proposal_id"], None)
-        self._record(decision)
-
-        ledger = list(self.workflow.evidence.get("approved_gate_intents") or [])
-        ledger.append(
-            {
-                **decision,
-                "confirmation_ref": decision["confirmation_id"],
-                "guardrail_set_digest": compilation["confirmation_receipt"][
-                    "guardrail_set_digest"
-                ],
-                "negative_requirements_digest": compilation["confirmation_receipt"][
-                    "negative_requirements_digest"
-                ],
-                "u7_references": compilation["u7_references"],
+        gate_key = f"{proposal['workflow_id']}:{proposal['current_phase']}"
+        with self._confirmation_lock:
+            if (
+                self.pending.get(proposal["proposal_id"]) is not proposal
+                or self._runtime.get(proposal["proposal_id"]) is not runtime
+            ):
+                return self._denial("gate_dialogue_proposal_not_found")
+            self.confirmed[proposal["proposal_id"]] = {
+                "proposal": dict(proposal),
+                "repository_head": repo["repository_head"],
+                "source_tree_digest": repo["source_tree_digest"],
+                "phase_hash": proposal["phase_hash"],
+                "node_digest": proposal["node_digest"],
+                "gate_key": gate_key,
+                "action_payload_digest": action_payload_digest,
+                "confirmed_at": confirmed_at,
+                "consumed_at": 0.0,
+                "consumed_action_id": "",
             }
-        )
-        self.workflow.evidence["approved_gate_intents"] = ledger
-        if hasattr(self.workflow, "_event"):
-            self.workflow._event(
-                "gate_dialogue_intent_confirmation",
-                f"{proposal['stage_hint']}:{proposal['proposal_id']}:{decision['recommended_action_id']}",
+            self._latest_confirmation_by_gate[gate_key] = decision["confirmation_id"]
+            self.pending.pop(proposal["proposal_id"], None)
+            self._runtime.pop(proposal["proposal_id"], None)
+            self._record(decision)
+
+            ledger = list(self.workflow.evidence.get("approved_gate_intents") or [])
+            ledger.append(
+                {
+                    **decision,
+                    "confirmation_ref": decision["confirmation_id"],
+                    "guardrail_set_digest": compilation["confirmation_receipt"][
+                        "guardrail_set_digest"
+                    ],
+                    "negative_requirements_digest": compilation["confirmation_receipt"][
+                        "negative_requirements_digest"
+                    ],
+                    "u7_references": compilation["u7_references"],
+                }
             )
+            self.workflow.evidence["approved_gate_intents"] = ledger
+            if hasattr(self.workflow, "_event"):
+                self.workflow._event(
+                    "gate_dialogue_intent_confirmation",
+                    f"{proposal['stage_hint']}:{proposal['proposal_id']}:{decision['recommended_action_id']}",
+                )
         return {
             "ok": True,
             "version": GATE_DIALOGUE_VERSION,
@@ -817,6 +875,7 @@ class ArenaGateDialogueService:
         *,
         action_id: str,
         action_payload: dict[str, Any],
+        execution_payload: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Consume one current confirmation before one guarded action dispatch."""
         confirmation_id = str(action_payload.get("confirmation_id") or "").strip()
@@ -848,6 +907,13 @@ class ArenaGateDialogueService:
             compilation = dict(proposal.get("canonical_compilation") or {})
             receipt = dict(compilation.get("confirmation_receipt") or {})
             decision = dict(proposal.get("decision") or {})
+            gate_key = str(row.get("gate_key") or "")
+            if (
+                not gate_key
+                or self._latest_confirmation_by_gate.get(gate_key)
+                != confirmation_id
+            ):
+                return self._denial("confirmation_receipt_superseded")
             state = self.workflow.get_state()
             expected = {
                 "workflow_id": str(proposal.get("workflow_id") or ""),
@@ -873,6 +939,13 @@ class ArenaGateDialogueService:
                 return self._denial("stale_workflow_phase_or_evidence")
             if str(decision.get("recommended_action_id") or "") != action_id:
                 return self._denial("confirmation_action_mismatch")
+            actual_payload_digest = _execution_payload_digest(
+                execution_payload
+                if execution_payload is not None
+                else action_payload
+            )
+            if actual_payload_digest != str(row.get("action_payload_digest") or ""):
+                return self._denial("confirmation_action_payload_mismatch")
             if time.time() >= float(receipt.get("expires_at") or 0.0):
                 return self._denial("confirmation_expired")
             try:
@@ -892,6 +965,7 @@ class ArenaGateDialogueService:
                 "proposal_id": proposal["proposal_id"],
                 "confirmation_id": confirmation_id,
                 "action_id": action_id,
+                "action_payload_digest": actual_payload_digest,
                 "consumed_at": consumed_at,
                 "single_use": True,
             }
@@ -930,7 +1004,16 @@ class ArenaGateDialogueService:
             repo = {"repository_head": "", "source_tree_digest": ""}
         confirmed: list[dict[str, Any]] = []
         observed_at = time.time()
-        for row in list(self.confirmed.values())[-10:]:
+        with self._confirmation_lock:
+            confirmed_rows = [
+                {
+                    **row,
+                    "proposal": dict(row["proposal"]),
+                }
+                for row in list(self.confirmed.values())[-10:]
+            ]
+            latest_by_gate = dict(self._latest_confirmation_by_gate)
+        for row in confirmed_rows:
             proposal = dict(row["proposal"])
             stale_reasons: list[str] = []
             if row["repository_head"] != repo.get("repository_head"):
@@ -948,8 +1031,17 @@ class ArenaGateDialogueService:
             expires_at = float(receipt.get("expires_at") or 0.0)
             if expires_at and observed_at >= expires_at:
                 stale_reasons.append("confirmation_expired")
+            confirmation_id = str(receipt.get("confirmation_id") or "")
+            if latest_by_gate.get(str(row.get("gate_key") or "")) != confirmation_id:
+                stale_reasons.append("confirmation_superseded")
+            if float(row.get("consumed_at") or 0.0):
+                stale_reasons.append("confirmation_consumed")
             proposal["confirmation_currency"] = "STALE" if stale_reasons else "CURRENT"
             proposal["stale_reasons"] = stale_reasons
+            proposal["consumed_at"] = float(row.get("consumed_at") or 0.0)
+            proposal["consumed_action_id"] = str(
+                row.get("consumed_action_id") or ""
+            )
             confirmed.append(proposal)
         return {
             "ok": True,

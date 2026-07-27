@@ -670,6 +670,57 @@ def dispatch_api_request(
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
 
+    if method == "GET" and route == "/api/human-agent/gate/status":
+        return 200, state.gate_dialogue.status()
+
+    if method == "POST" and route == "/api/human-agent/gate/address":
+        result = state.gate_dialogue.address(
+            comment=str(body.get("comment") or ""),
+            node_context=(
+                body.get("node_context")
+                if isinstance(body.get("node_context"), dict)
+                else {}
+            ),
+            stage_hint=str(body.get("stage_hint") or ""),
+            prefer_model=body.get("prefer_model", True) is not False,
+        )
+        return (200 if result.get("ok") else 409), result
+
+    if method == "POST" and route == "/api/human-agent/gate/approve":
+        approved = body.get("approved")
+        if type(approved) is not bool:
+            return _error("approved must be a boolean")
+        result = state.gate_dialogue.approve(
+            proposal_id=str(body.get("proposal_id") or ""),
+            approved=approved,
+            current_node_context=(
+                body.get("current_node_context")
+                if isinstance(body.get("current_node_context"), dict)
+                else {}
+            ),
+            stage_hint=str(body.get("stage_hint") or ""),
+            reviewer=str(body.get("reviewer") or "human_operator"),
+            note=str(body.get("note") or ""),
+            action_payload=(
+                body.get("action_payload")
+                if isinstance(body.get("action_payload"), dict)
+                else {}
+            ),
+        )
+        return (200 if result.get("ok") else 409), result
+
+    if (
+        method == "POST"
+        and route == "/api/human-agent/workflow/command/preview"
+    ):
+        command = str(body.get("command") or "")
+        if not command.strip():
+            return _error("command is required")
+        return 200, state.workflow.preview_guarded_command(
+            command,
+            dict(body.get("payload") or {}),
+        )
+
     if method == "POST" and route == "/api/human-agent/workflow/action":
         action_id = str(body.get("action_id") or "")
         if not action_id:
@@ -730,6 +781,9 @@ def dispatch_api_request(
                 authorization = gate_dialogue.authorize_workflow_action(
                     action_id=action_id,
                     action_payload=command_payload,
+                    execution_payload=dict(
+                        preview.get("execution_payload") or {}
+                    ),
                 )
                 if authorization.get("ok") is not True:
                     return 409, authorization

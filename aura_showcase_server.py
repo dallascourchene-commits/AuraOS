@@ -305,6 +305,11 @@ def dispatch_showcase_request(
             stage_hint=str(body.get("stage_hint") or ""),
             reviewer=str(body.get("reviewer") or "human_operator"),
             note=str(body.get("note") or ""),
+            action_payload=(
+                body.get("action_payload")
+                if isinstance(body.get("action_payload"), dict)
+                else {}
+            ),
         )
         archive = getattr(state, "attempt_archive", None)
         if archive is not None:

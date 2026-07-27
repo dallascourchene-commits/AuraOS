@@ -351,6 +351,17 @@ def test_mixed_positive_and_negative_clauses_do_not_self_contradict():
         "change the API"
     ]
 
+    repeated_boundary = analyze_bilateral_request(
+        "Add logging, but never change API, but preserve tests."
+    )
+    assert repeated_boundary.positive_requirements == (
+        "Add logging",
+        "preserve tests.",
+    )
+    assert [item.target for item in repeated_boundary.negative_requirements] == [
+        "change API"
+    ]
+
 
 def test_clarification_recomputes_contradictions_before_confirmation():
     from aura_bilateral_intent_compiler import (
@@ -462,6 +473,14 @@ def test_legacy_pathless_objective_confirmation_uses_existing_owner(workflow):
         "arena_evidence_slice"
     ]
     assert evidence_slice["items"]
+    assert not any(
+        item["evidence_ref"].startswith("aura://codemap/selection/")
+        for item in evidence_slice["items"]
+    )
+    assert any(
+        item["canonical_owner"] == "aura_arena_gate_dialogue._allowed_paths"
+        for item in evidence_slice["items"]
+    )
     assert receipt["unified_execution_binding_ref"].startswith(
         "aura://unified-memory-continuity/execution-binding-request/"
     )
@@ -480,17 +499,25 @@ def test_packaged_repository_identity_uses_trusted_build_commit(
     tmp_path, monkeypatch
 ):
     import aura_arena_gate_dialogue as gate_module
+    from aura_packaged_source_identity import build_packaged_source_manifest
 
     def unavailable(*args, **kwargs):
         raise FileNotFoundError("git metadata omitted")
 
     commit = "a" * 40
+    source = tmp_path / "runtime.py"
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+    build_packaged_source_manifest(tmp_path)
     monkeypatch.setattr(gate_module.subprocess, "run", unavailable)
     monkeypatch.setenv("AURA_SOURCE_COMMIT", commit)
     identity = gate_module._repository_identity(tmp_path)
     assert identity["repository_head"] == commit
     assert identity["working_tree_clean"] is True
-    assert identity["identity_source"] == "trusted_build_environment"
+    assert identity["identity_source"] == "trusted_packaged_source_manifest"
+
+    source.write_text("VALUE = 2\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="packaged source drift detected"):
+        gate_module._repository_identity(tmp_path)
 
 
 def test_backend_requires_and_single_uses_current_confirmation(workflow):
@@ -509,6 +536,7 @@ def test_backend_requires_and_single_uses_current_confirmation(workflow):
         approved=True,
         current_node_context={},
         stage_hint="FRAME",
+        action_payload={"objective": "Guarded objective"},
     )
     compilation = approved["canonical_compilation"]
     receipt = compilation["confirmation_receipt"]
@@ -545,6 +573,19 @@ def test_backend_requires_and_single_uses_current_confirmation(workflow):
         "phase_hash": decision["phase_hash"],
         "node_digest": decision["node_digest"],
     }
+    mismatched_payload = {
+        **guarded_payload,
+        "objective": "Substituted objective",
+    }
+    mismatch_status, mismatch = dispatch_api_request(
+        state,
+        "POST",
+        "/api/human-agent/workflow/action",
+        {"action_id": "set_objective", "payload": mismatched_payload},
+    )
+    assert mismatch_status == 409
+    assert mismatch["reason"] == "confirmation_action_payload_mismatch"
+
     status, result = dispatch_api_request(
         state,
         "POST",
@@ -554,6 +595,9 @@ def test_backend_requires_and_single_uses_current_confirmation(workflow):
     assert status == 200
     assert result["ok"] is True
     assert result["bilateral_confirmation_authorization"]["single_use"] is True
+    consumed = service.status()["confirmed"][-1]
+    assert consumed["confirmation_currency"] == "STALE"
+    assert "confirmation_consumed" in consumed["stale_reasons"]
 
     replay_status, replay = dispatch_api_request(
         state,
@@ -620,6 +664,7 @@ def test_backend_command_requires_current_confirmation_but_meta_does_not(
         approved=True,
         current_node_context={},
         stage_hint="FRAME",
+        action_payload={"objective": "Command objective"},
     )
     denied_status, denied = dispatch_api_request(
         state,
@@ -671,11 +716,13 @@ def test_confirmation_consumption_is_atomic_under_race(workflow):
         approved=True,
         current_node_context={},
         stage_hint="FRAME",
+        action_payload={"objective": "Frame an atomic objective"},
     )
     compilation = approved["canonical_compilation"]
     receipt = compilation["confirmation_receipt"]
     decision = approved["decision"]
     payload = {
+        "objective": "Frame an atomic objective",
         "confirmation_id": receipt["confirmation_id"],
         "confirmation_receipt_id": receipt["confirmation_id"],
         "intent_digest": compilation["intent_packet"]["intent_digest"],
@@ -717,19 +764,179 @@ def test_browser_and_container_bind_confirmation_and_packaged_identity():
         "source_tree_digest",
     ):
         assert field in javascript
-    assert (
-        "else if (!hasEvidence('verification_packet')) "
-        "result = await action('verify_patch');"
-    ) in javascript
-    assert (
-        "if (result.ok && !hasEvidence('verification_packet'))"
-        not in javascript
-    )
+    assert "state.decision?.recommended_action_id" in javascript
+    assert "action_payload: approvedActionPayload" in javascript
+    assert "hasEvidence('human_review') && hasEvidence('review_packet')" in javascript
 
     dockerfile = (REPO_ROOT / "Dockerfile").read_text(encoding="utf-8")
+    render_workflow = (
+        REPO_ROOT / ".github" / "workflows" / "render-four-tab-demo.yml"
+    ).read_text(encoding="utf-8")
     workflow_text = (
         REPO_ROOT / ".github" / "workflows" / "publish-ghcr-showcase.yml"
     ).read_text(encoding="utf-8")
     assert "ARG AURA_SOURCE_COMMIT" in dockerfile
     assert "AURA_SOURCE_COMMIT=${AURA_SOURCE_COMMIT}" in dockerfile
+    assert "aura_packaged_source_identity build /app" in dockerfile
+    assert "--build-arg AURA_SOURCE_COMMIT=${{ github.sha }}" in render_workflow
     assert "AURA_SOURCE_COMMIT=${{ github.sha }}" in workflow_text
+
+
+def test_new_confirmation_supersedes_older_receipt_at_same_gate(workflow):
+    from aura_arena_gate_dialogue import ArenaGateDialogueService
+
+    service = ArenaGateDialogueService(REPO_ROOT, workflow)
+    first = service.address(
+        comment="Frame objective one. Do not widen its scope.",
+        node_context={},
+        stage_hint="FRAME",
+        prefer_model=False,
+    )
+    first_approved = service.approve(
+        proposal_id=first["proposal_id"],
+        approved=True,
+        current_node_context={},
+        stage_hint="FRAME",
+        action_payload={"objective": "Objective one"},
+    )
+    second = service.address(
+        comment="Frame objective two. Do not widen its scope.",
+        node_context={},
+        stage_hint="FRAME",
+        prefer_model=False,
+    )
+    service.approve(
+        proposal_id=second["proposal_id"],
+        approved=True,
+        current_node_context={},
+        stage_hint="FRAME",
+        action_payload={"objective": "Objective two"},
+    )
+    compilation = first_approved["canonical_compilation"]
+    receipt = compilation["confirmation_receipt"]
+    decision = first_approved["decision"]
+    denied = service.authorize_workflow_action(
+        action_id="set_objective",
+        action_payload={
+            "objective": "Objective one",
+            "confirmation_id": receipt["confirmation_id"],
+            "confirmation_receipt_id": receipt["confirmation_id"],
+            "intent_digest": compilation["intent_packet"]["intent_digest"],
+            "semantic_ledger_digest": compilation["semantic_ledger"]["ledger_digest"],
+            "repository_head": receipt["repository_head"],
+            "source_tree_digest": receipt["source_tree_digest"],
+            "workflow_id": decision["workflow_id"],
+            "phase_hash": decision["phase_hash"],
+            "node_digest": decision["node_digest"],
+        },
+    )
+    assert denied["reason"] == "confirmation_receipt_superseded"
+    first_status = service.status()["confirmed"][0]
+    assert "confirmation_superseded" in first_status["stale_reasons"]
+
+
+def test_concurrent_approval_finalizes_proposal_once(workflow):
+    from aura_arena_gate_dialogue import ArenaGateDialogueService
+
+    service = ArenaGateDialogueService(REPO_ROOT, workflow)
+    proposal = service.address(
+        comment="Frame one concurrent objective. Do not widen its scope.",
+        node_context={},
+        stage_hint="FRAME",
+        prefer_model=False,
+    )
+
+    def approve_once(_):
+        return service.approve(
+            proposal_id=proposal["proposal_id"],
+            approved=True,
+            current_node_context={},
+            stage_hint="FRAME",
+            action_payload={"objective": "Concurrent objective"},
+        )
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        results = list(executor.map(approve_once, range(2)))
+    assert sum(result.get("ok") is True for result in results) == 1
+    assert sum(
+        result.get("reason") == "gate_dialogue_proposal_not_found"
+        for result in results
+    ) == 1
+
+
+def test_guidance_skips_already_produced_actions():
+    from aura_human_agent_guidance import build_guidance_packet
+
+    route = {
+        "ok": True,
+        "available": [
+            {
+                "transition_id": "prove.run-tests",
+                "provenance": {"action_id": "run_tests"},
+                "produced_evidence": ["test_evidence"],
+            },
+            {
+                "transition_id": "prove.verify",
+                "provenance": {"action_id": "verify_patch"},
+                "produced_evidence": ["verification_packet"],
+            },
+        ],
+        "blocked": [],
+    }
+    packet = build_guidance_packet(
+        {
+            "current_phase": "PROVE",
+            "routing": route,
+            "evidence": {"test_evidence": {"ok": True}},
+            "evidence_keys": ["test_evidence"],
+        }
+    )
+    assert packet["recommended_actions"][0]["action_id"] == "verify_patch"
+
+
+def test_standalone_arena_exposes_confirmation_routes(workflow):
+    from aura_arena_gate_dialogue import ArenaGateDialogueService
+    from aura_human_agent_arena_server import dispatch_api_request
+
+    service = ArenaGateDialogueService(REPO_ROOT, workflow)
+    state = SimpleNamespace(
+        repo_root=REPO_ROOT,
+        workflow=workflow,
+        gate_dialogue=service,
+    )
+    status, proposal = dispatch_api_request(
+        state,
+        "POST",
+        "/api/human-agent/gate/address",
+        {
+            "comment": "Frame the standalone objective. Do not widen its scope.",
+            "node_context": {},
+            "stage_hint": "FRAME",
+            "prefer_model": False,
+        },
+    )
+    assert status == 200
+    assert proposal["can_confirm_intent"] is True
+
+    status, approved = dispatch_api_request(
+        state,
+        "POST",
+        "/api/human-agent/gate/approve",
+        {
+            "proposal_id": proposal["proposal_id"],
+            "approved": True,
+            "current_node_context": {},
+            "stage_hint": "FRAME",
+            "action_payload": {"objective": "Standalone objective"},
+        },
+    )
+    assert status == 200
+    assert approved["decision"]["action_payload_digest"]
+
+    status, gate_status = dispatch_api_request(
+        state,
+        "GET",
+        "/api/human-agent/gate/status",
+    )
+    assert status == 200
+    assert gate_status["confirmed"][-1]["confirmation_currency"] == "CURRENT"

@@ -108,20 +108,15 @@ def _positive_requirements(source_request: str, negatives: Sequence[NegativeRequ
         return ("Preserve the confirmed prohibition and locked guardrails.",)
     positives: list[str] = []
     for sentence in _sentences(candidate):
-        cleaned = re.sub(
-            r"^(?:[,;:\-]\s*)?(?:(?:but|however)\b[\s,;:]*)+",
-            "",
+        clauses = re.split(
+            r"(?:[\s,;:]*\b(?:but|however)\b[\s,;:]*)+",
             sentence,
             flags=re.IGNORECASE,
         )
-        cleaned = re.sub(
-            r"(?:[\s,;:]*\b(?:but|however)\b[\s,;:]*)+$",
-            "",
-            cleaned,
-            flags=re.IGNORECASE,
-        ).strip(" \t,;:-")
-        if cleaned and not extract_negative_requirements(cleaned):
-            positives.append(cleaned)
+        for clause in clauses:
+            cleaned = clause.strip(" \t,;:-")
+            if cleaned and not extract_negative_requirements(cleaned):
+                positives.append(cleaned)
     return tuple(dict.fromkeys(positives)) or (
         "Preserve the confirmed prohibition and locked guardrails.",
     )
@@ -414,6 +409,7 @@ def compile_confirmed_bilateral_intent(
     runtime_profile_digest: str,
     workflow_phase_hash: str,
     topology_evidence_digest: str,
+    topology_selected: bool,
     codemap_digest: str,
     human_reviewer: str,
     confirmed_at: float,
@@ -445,7 +441,11 @@ def compile_confirmed_bilateral_intent(
         acceptance_criteria=analysis.positive_requirements,
         required_evidence=(
             "current human confirmation receipt",
-            "current selected topology identity",
+            (
+                "current selected topology identity"
+                if topology_selected
+                else "current workflow-owner fallback path receipt"
+            ),
             "independent verification before consequential execution",
         ),
         risk_class="BOUNDED_GATE_DIALOGUE",
@@ -464,8 +464,14 @@ def compile_confirmed_bilateral_intent(
             source_refs=(source_ref,),
         ),
         SemanticDefinition(
-            term="topology evidence",
-            means=("bounded navigation evidence tied to the selected node and current repository identity",),
+            term="topology evidence" if topology_selected else "workflow-owner fallback",
+            means=(
+                (
+                    "bounded navigation evidence tied to the selected node and current repository identity"
+                    if topology_selected
+                    else "the exact existing workflow owner admitted for a legacy pathless objective"
+                ),
+            ),
             does_not_mean=("visual patch authority or permission to widen scope",),
             source_refs=(source_ref,),
         ),
@@ -477,6 +483,27 @@ def compile_confirmed_bilateral_intent(
         ),
     )
     ledger = SemanticLedger.create(intent_digest=intent.intent_digest, definitions=definitions)
+    route_evidence = (
+        ArenaEvidenceItem(
+            evidence_ref=f"aura://codemap/selection/{topology_evidence_digest}",
+            causal_reason="Binds allowed paths to the selected exact topology evidence.",
+            truth_class=EvidenceTruthClass.EXACT_RECEIPT,
+            canonical_owner="aura_codemap_facade",
+            source_digest=topology_evidence_digest,
+            freshness="CURRENT",
+        )
+        if topology_selected
+        else ArenaEvidenceItem(
+            evidence_ref=f"aura://human-agent/workflow-owner/{stable_digest(paths)}",
+            causal_reason=(
+                "Binds the legacy pathless objective to the exact existing workflow-owner fallback."
+            ),
+            truth_class=EvidenceTruthClass.EXACT_RECEIPT,
+            canonical_owner="aura_arena_gate_dialogue._allowed_paths",
+            source_digest=stable_digest(paths),
+            freshness="CURRENT",
+        )
+    )
     evidence_items = (
         ArenaEvidenceItem(
             evidence_ref=f"aura://repository/{repository_head}",
@@ -494,14 +521,7 @@ def compile_confirmed_bilateral_intent(
             source_digest=runtime_profile_digest,
             freshness="CURRENT",
         ),
-        ArenaEvidenceItem(
-            evidence_ref=f"aura://codemap/selection/{topology_evidence_digest}",
-            causal_reason="Binds allowed paths to the selected exact topology evidence.",
-            truth_class=EvidenceTruthClass.EXACT_RECEIPT,
-            canonical_owner="aura_codemap_facade",
-            source_digest=topology_evidence_digest,
-            freshness="CURRENT",
-        ),
+        route_evidence,
     )
     evidence_slice = compile_arena_evidence_slice(
         repository_head=repository_head,
