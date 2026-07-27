@@ -23,7 +23,22 @@ jobs:
         run: python -m pip install --disable-pip-version-check -r requirements.txt
 
       - name: Apply manually authored Compass and context repairs
-        run: python .github/pr236_compass_context_fix.py.tmp
+        shell: bash
+        run: |
+          set +e
+          python .github/pr236_compass_context_fix.py.tmp > /tmp/pr236-patch.log 2>&1
+          status=$?
+          cat /tmp/pr236-patch.log
+          exit "$status"
+
+      - name: Upload manual patch failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr236-manual-patch-failure-${{ github.sha }}
+          path: /tmp/pr236-patch.log
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Verify focused bilateral behavior
         shell: bash
