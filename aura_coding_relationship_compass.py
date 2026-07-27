@@ -267,45 +267,110 @@ def _ordered_unique(values: Sequence[str]) -> list[str]:
     return list(dict.fromkeys(str(value) for value in values if str(value)))
 
 
+_STRUCTURED_ATLAS_REFERENCE_KEYS = frozenset(
+    {
+        "participant_refs",
+        "participant_ref",
+        "participant_id",
+        "canonical_ref",
+        "evidence_refs",
+        "evidence_ref",
+        "file_path",
+        "file",
+        "path",
+        "qualified_symbol",
+        "symbol",
+    }
+)
+
+
+def _structured_atlas_references(payload: Mapping[str, Any]) -> set[str]:
+    """Collect only explicitly typed Atlas references, never prose tokens."""
+    references: set[str] = set()
+
+    def add(raw: Any) -> None:
+        value = str(raw or "").replace("\\", "/").strip().lower()
+        if not value:
+            return
+        references.add(value)
+        for prefix in ("file:", "path:", "symbol:", "participant:", "participant_id:"):
+            if value.startswith(prefix):
+                references.add(value[len(prefix):].strip())
+        for separator in ("::", "#", "@"):
+            if separator in value:
+                references.update(
+                    part.strip() for part in value.split(separator) if part.strip()
+                )
+
+    def visit(value: Any, *, typed: bool = False) -> None:
+        if isinstance(value, Mapping):
+            for key, item in value.items():
+                key_is_typed = str(key).lower() in _STRUCTURED_ATLAS_REFERENCE_KEYS
+                visit(item, typed=typed or key_is_typed)
+        elif isinstance(value, (list, tuple, set)):
+            for item in value:
+                visit(item, typed=typed)
+        elif typed and isinstance(value, (str, int)):
+            add(value)
+
+    visit(payload)
+    return references
+
+
+def _reference_targets_path(reference: str, path: str) -> bool:
+    reference = reference.replace("\\", "/").strip().lower()
+    path = path.replace("\\", "/").strip().lower().lstrip("./")
+    if not reference or not path:
+        return False
+    candidates = {reference}
+    for prefix in ("file:", "path:", "participant:", "participant_id:"):
+        if reference.startswith(prefix):
+            candidates.add(reference[len(prefix):].strip())
+    return any(
+        candidate == path
+        or candidate.endswith("/" + path)
+        or candidate.startswith(path + "#")
+        or candidate.startswith(path + "::")
+        or candidate.startswith(path + ":")
+        or ("/" + path + "#") in candidate
+        or ("/" + path + "::") in candidate
+        for candidate in candidates
+    )
+
+
 def _semantic_obligations(
     payload: Mapping[str, Any],
     bilateral: BilateralPlanningContract,
 ) -> dict[str, Any]:
-    """Project only obligations grounded in the exact Atlas payload."""
-    text = json.dumps(payload, sort_keys=True, default=str).lower()
+    """Project obligations only from structured Atlas scope references.
 
-    def matched(values: Sequence[str]) -> list[str]:
-        return [
-            value
-            for value in values
-            if value.lower() in text
-            or any(
-                len(token) >= 5 and token in text
-                for token in re.findall(r"[a-z0-9_./-]+", value.lower())
-            )
-        ]
-
-    obligation = {
-        "positive_requirements": matched(bilateral.positive_requirements),
-        "negative_requirements_at_risk": matched(bilateral.negative_requirements),
-        "guardrail_ids": matched(
-            (
-                *bilateral.hard_guardrail_ids,
-                *bilateral.human_guardrail_ids,
-                *bilateral.editable_guardrail_ids,
+    Free-form notes, risks, effects, and other prose are intentionally ignored
+    so coincidental words can never become semantic evidence.
+    """
+    references = _structured_atlas_references(payload)
+    scope_grounded = any(
+        _reference_targets_path(reference, allowed_path)
+        for reference in references
+        for allowed_path in bilateral.allowed_paths
+    )
+    if not scope_grounded:
+        return {}
+    return {
+        "positive_requirements": list(bilateral.positive_requirements),
+        "negative_requirements_at_risk": list(bilateral.negative_requirements),
+        "guardrail_ids": list(
+            dict.fromkeys(
+                (
+                    *bilateral.hard_guardrail_ids,
+                    *bilateral.human_guardrail_ids,
+                    *bilateral.editable_guardrail_ids,
+                )
             )
         ),
-        "required_verifiers": matched(bilateral.required_verifiers),
+        "required_verifiers": list(bilateral.required_verifiers),
         "repository_head": bilateral.repository_head,
         "allowed_path_set_digest": bilateral.allowed_path_set_digest,
     }
-    grounded_keys = (
-        "positive_requirements",
-        "negative_requirements_at_risk",
-        "guardrail_ids",
-        "required_verifiers",
-    )
-    return obligation if any(obligation[key] for key in grounded_keys) else {}
 
 
 def _compass_digest_payload(value: Mapping[str, Any]) -> dict[str, Any]:

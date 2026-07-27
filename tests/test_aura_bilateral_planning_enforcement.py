@@ -22,6 +22,10 @@ from aura_architect_loop import (
     verify_refactor_arena,
 )
 from aura_arena_architect_connector import AuraArenaArchitectConnector
+from aura_external_llm_session import (
+    AuraExternalLLMSessionManager,
+    ExternalLLMSession,
+)
 from aura_relationship_contracts import (
     BilateralPlanningContract,
     evaluate_bilateral_plan,
@@ -655,6 +659,7 @@ def test_prepare_forces_gate_to_exact_prepared_task(
     )
     assert result["ok"] is False
     assert result["error_category"] == "scope_too_broad"
+    assert "SCOPE_PRESERVATION" in result["repair_hint"]
 
 
 @pytest.mark.parametrize("raised", [OSError("git worktree unreadable"),
@@ -820,6 +825,7 @@ def test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected
         monkeypatch,
     )
     unprojected = packet["atlas"]["unprojected_bilateral_obligations"]
+    assert unprojected["positive_requirements"]
     assert unprojected["negative_requirements"]
     assert unprojected["guardrail_ids"]
     assert unprojected["required_verifiers"]
@@ -838,19 +844,16 @@ def test_compass_fully_projected_obligations_preserve_eligible_path(
     grounded in the Atlas assessments, the deterministic INTENT_FIDELITY
     denial must not fire and the packet remains eligible for normal
     Council routing."""
-    note = " ".join(
-        [
-            *bilateral_contract.positive_requirements,
-            *bilateral_contract.negative_requirements,
-            *bilateral_contract.hard_guardrail_ids,
-            *bilateral_contract.human_guardrail_ids,
-            *bilateral_contract.editable_guardrail_ids,
-            *bilateral_contract.required_verifiers,
-        ]
-    )
     packet = _compile_compass_with_forced_assessments(
         bilateral_contract,
-        [{"assessment_id": "a1", "participant_refs": ["x"], "note": note}],
+        [
+            {
+                "assessment_id": "a1",
+                "participant_refs": [
+                    f"file:{bilateral_contract.allowed_paths[0]}#assess_plan"
+                ],
+            }
+        ],
         monkeypatch,
     )
     unprojected = packet["atlas"]["unprojected_bilateral_obligations"]
@@ -945,3 +948,50 @@ def test_loop_identity_failure_is_stable_fail_closed_error(
             bilateral_proof_plan=plan,
             _trusted_bilateral_handoff=handoff,
         )
+
+
+class _LargeBilateralMicroContextBridge:
+    def aura_get_micro_context(self, **_: object) -> dict:
+        return {
+            "ok": True,
+            "compressed_context": "base context",
+            "bilateral_micro_context": {
+                "positive_requirements": ["x" * 20_000],
+                "negative_requirements": ["y" * 20_000],
+            },
+            "line_ranges": [],
+            "tests": [],
+        }
+
+    def aura_read_slice(self, **_: object) -> dict:
+        return {"ok": False}
+
+
+def test_external_llm_turn_bounds_large_bilateral_micro_context() -> None:
+    manager = AuraExternalLLMSessionManager(
+        repo_root=".",
+        bridge=_LargeBilateralMicroContextBridge(),
+    )
+    session = ExternalLLMSession(
+        session_id="ELLM-bounded",
+        objective="Keep bilateral context bounded.",
+        plan_phase_hash="phase",
+        provider="test",
+        model="stub",
+        act_capsules=[
+            {
+                "task_id": "T1",
+                "objective": "Bound context.",
+                "target_file": "aura_external_llm_session.py",
+                "target_symbol": "AuraExternalLLMSessionManager._build_turn",
+            }
+        ],
+        max_context_tokens=256,
+        max_output_tokens=256,
+        max_turns=2,
+    )
+    turn = manager._build_turn(session, role="worker", failure_packet={})
+    assert turn is not None
+    assert turn.context_token_estimate <= session.max_context_tokens
+    assert len(turn.compressed_context) <= session.max_context_tokens * 4
+    assert "TRUNCATED" in turn.compressed_context
