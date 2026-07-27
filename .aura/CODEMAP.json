@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1785161100,
+  "generated_at_unix": 1785162443,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1441,
+    "included_file_count": 1442,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -82,6 +82,7 @@
       ".aura/waboose_requests/issue_200_exact_head_harness.v1.json",
       ".aura/waboose_requests/unified_memory_continuity.v1.json",
       ".aura/waboose_requests/unified_memory_continuity_learning.v1.json",
+      ".coderabbit.yaml",
       ".devcontainer/devcontainer.json",
       ".dockerignore",
       ".github/scripts/umc_publish_five_files.sh",
@@ -1463,9 +1464,9 @@
     ]
   },
   "summary": {
-    "file_count": 1441,
-    "total_bytes": 57076265,
-    "text_tokens_est": 4816789,
+    "file_count": 1442,
+    "total_bytes": 57076371,
+    "text_tokens_est": 4816816,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 51,
@@ -1473,13 +1474,13 @@
       "native_accelerator": 8,
       "operator_script": 6,
       "python_module": 930,
-      "schema_or_lexicon": 182,
+      "schema_or_lexicon": 183,
       "support_file": 77
     },
     "topology_nodes": 10666,
     "topology_edges": 25320,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 30602.83
+    "elapsed_ms": 30426.83
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1752,6 +1753,7 @@
       ".aura/vsa_profiles/complex_phasor.v1.json",
       ".aura/waboose_requests/construction_demo.v1.json",
       ".aura/waboose_requests/issue_200_exact_head_harness.v1.json",
+      ".coderabbit.yaml",
       ".devcontainer/devcontainer.json",
       ".dockerignore",
       ".github/scripts/umc_publish_five_files.sh",
@@ -4022,6 +4024,9 @@
     "!topology_deep": [
       "aura_affordance_directory.py:146",
       "aura_node.py:7303"
+    ],
+    "!topology_map": [
+      ".coderabbit.yaml:5"
     ],
     "!total": [
       "aura_savings_dashboard.py:223"
@@ -136310,6 +136315,58 @@
     ]
   },
   "files": [
+    {
+      "path": ".coderabbit.yaml",
+      "role": "schema_or_lexicon",
+      "bytes": 106,
+      "lines": 6,
+      "tokens_est": 27,
+      "symbol_count": 0,
+      "commands": [
+        "!topology_map"
+      ],
+      "command_lines": {
+        "!topology_map": [
+          5
+        ]
+      },
+      "topology": {},
+      "digest8": "bc3f4fcfb2977aca",
+      "vector": [
+        -0.071375,
+        -0.037502,
+        0.056858,
+        0.250417,
+        0.156057,
+        -0.226222,
+        0.088311,
+        0.202027,
+        -0.28187,
+        0.182671,
+        -0.306065,
+        0.068955,
+        0.081053,
+        -0.13912,
+        0.168154,
+        0.226222,
+        0.105248,
+        0.218963,
+        -0.194769,
+        0.09557,
+        -0.23348,
+        0.061697,
+        -0.124604,
+        0.049599,
+        -0.013307,
+        -0.291548,
+        0.269773,
+        0.238319,
+        -0.081053,
+        0.066536,
+        0.165735,
+        0.226222
+      ]
+    },
     {
       "path": ".dockerignore",
       "role": "support_file",
