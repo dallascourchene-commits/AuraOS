@@ -2090,6 +2090,81 @@ def _mint_trusted_bilateral_handoff(
     )
 
 
+def _validate_trusted_bilateral_handoff(
+    *,
+    bilateral_contract: Mapping[str, Any] | Any | None,
+    bilateral_plan_gate: Mapping[str, Any] | None,
+    bilateral_proof_plan: Mapping[str, Any] | None,
+    _trusted_bilateral_handoff: Any,
+    objective: str,
+    architecture_decision: str,
+    act_tasks: list[str | dict[str, Any]],
+    target_file: str | None,
+    target_symbol: str | None,
+    repo_root: Path,
+) -> None:
+    """Fail closed on any bilateral artifact unless it is bound to a genuine,
+    already-authorized `_TrustedBilateralHandoff` recomputed against the live
+    repository identity and the exact context being prepared.
+
+    Raises ``ValueError`` on any missing, forged, stale, or mismatched
+    handoff. Callers that supply no bilateral artifacts at all are unaffected
+    (the non-bilateral path is preserved unchanged).
+    """
+    if bilateral_contract is None and bilateral_plan_gate is None and bilateral_proof_plan is None:
+        return
+    if not isinstance(_trusted_bilateral_handoff, _TrustedBilateralHandoff):
+        raise ValueError(
+            "bilateral artifacts were supplied without a genuine "
+            "_TrustedBilateralHandoff; raw bilateral kwargs are never authority"
+        )
+    from aura_arena_gate_dialogue import _repository_identity
+
+    identity = _repository_identity(repo_root)
+    expected_binding_digest = _bind_trusted_bilateral_handoff(
+        bilateral_contract=_trusted_bilateral_handoff.bilateral_contract,
+        bilateral_plan_gate=_trusted_bilateral_handoff.bilateral_plan_gate,
+        bilateral_proof_plan=_trusted_bilateral_handoff.bilateral_proof_plan,
+        selected_plan_digest=_trusted_bilateral_handoff.selected_plan_digest,
+        objective=objective,
+        architecture_decision=architecture_decision,
+        act_tasks=act_tasks,
+        target_file=target_file,
+        target_symbol=target_symbol,
+        repository_head=str(identity["repository_head"]),
+        source_tree_digest=str(identity["source_tree_digest"]),
+    )
+    if expected_binding_digest != _trusted_bilateral_handoff.binding_digest:
+        raise ValueError(
+            "trusted bilateral handoff binding digest does not match the "
+            "exact context, live repository identity, or selected-plan "
+            "binding being prepared"
+        )
+    gate = dict(_trusted_bilateral_handoff.bilateral_plan_gate or {})
+    if gate.get("passed") is not True:
+        raise ValueError(
+            "trusted bilateral handoff gate did not record passed=True"
+        )
+    for label, supplied, canonical in (
+        ("bilateral_contract", bilateral_contract, _trusted_bilateral_handoff.bilateral_contract),
+        ("bilateral_plan_gate", bilateral_plan_gate, _trusted_bilateral_handoff.bilateral_plan_gate),
+        ("bilateral_proof_plan", bilateral_proof_plan, _trusted_bilateral_handoff.bilateral_proof_plan),
+    ):
+        if supplied is None:
+            continue
+        supplied_data = (
+            supplied.to_dict() if hasattr(supplied, "to_dict") else dict(supplied)
+        )
+        canonical_data = (
+            canonical.to_dict() if hasattr(canonical, "to_dict") else dict(canonical or {})
+        )
+        if _hash_payload(supplied_data) != _hash_payload(canonical_data):
+            raise ValueError(
+                f"raw {label} does not match the handoff-carried canonical value; "
+                "raw bilateral kwargs may never override the trusted handoff"
+            )
+
+
 class ArchitectFusionLoop:
     """Plan/Act/Shadow/Arena coordinator for Architect-driven refactor work."""
 
@@ -2116,9 +2191,18 @@ class ArchitectFusionLoop:
         bilateral_proof_plan: Mapping[str, Any] | None = None,
         _trusted_bilateral_handoff: Any = None,
     ) -> ArchitectLoopResult:
-        # `_trusted_bilateral_handoff` is accepted but intentionally not yet
-        # consulted or enforced here; this parameter is a behaviorally-neutral
-        # substrate addition only. Existing callers are unaffected.
+        _validate_trusted_bilateral_handoff(
+            bilateral_contract=bilateral_contract,
+            bilateral_plan_gate=bilateral_plan_gate,
+            bilateral_proof_plan=bilateral_proof_plan,
+            _trusted_bilateral_handoff=_trusted_bilateral_handoff,
+            objective=objective,
+            architecture_decision=architecture_decision,
+            act_tasks=act_tasks,
+            target_file=target_file,
+            target_symbol=target_symbol,
+            repo_root=self.repo_root,
+        )
         bilateral_data = (
             bilateral_contract.to_dict()
             if hasattr(bilateral_contract, "to_dict")
