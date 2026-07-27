@@ -1376,6 +1376,11 @@ def compile_coding_relationship_compass(
                 - projected["required_verifiers"]
             ),
         }
+        has_unprojected_bilateral_obligation = any(
+            atlas_intelligence["unprojected_bilateral_obligations"].values()
+        )
+    else:
+        has_unprojected_bilateral_obligation = False
 
     targets = _recommended_targets(evidence, selected_files, selected_symbols)
     if not targets:
@@ -1628,6 +1633,8 @@ def compile_coding_relationship_compass(
     if packet.get("prohibitions"):
         failure_classes.append("PROHIBITION")
     if bilateral is not None and not atlas_intelligence.get("assessments"):
+        failure_classes.append("INTENT_FIDELITY")
+    if has_unprojected_bilateral_obligation:
         failure_classes.append("INTENT_FIDELITY")
     packet["change_graph"] = change_graph
     packet["phase_capsules"] = list(change_graph.get("phase_capsules", []) or [])

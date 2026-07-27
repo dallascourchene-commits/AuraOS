@@ -6,6 +6,7 @@ import time
 
 import pytest
 
+import aura_coding_relationship_compass as compass
 from aura_agent_arena_bridge import AuraAgentArenaBridge
 from aura_agent_arena_mcp import TOOL_DEFINITIONS, handle_request
 from aura_architect_council_v3 import route_compass_failure_classes
@@ -766,3 +767,89 @@ def test_mcp_exposes_bounded_refinement_and_revision_tools() -> None:
         "intent_revision_propose",
         "intent_revision_confirm",
     }.issubset(names)
+
+
+def _compile_compass_with_forced_assessments(
+    bilateral_contract: BilateralPlanningContract,
+    assessments: list[dict],
+    monkeypatch: pytest.MonkeyPatch,
+) -> dict:
+    """Compile the real Coding Relationship Compass against this repository,
+    forcing Atlas assessment content so ``_semantic_obligations`` projection
+    is deterministic regardless of the live relational index/atlas content."""
+    original = compass._bounded_atlas_intelligence
+
+    def _forced(atlas, focal_ids, *, max_assessments):
+        bounded = original(atlas, focal_ids, max_assessments=max_assessments)
+        bounded["assessments"] = assessments
+        return bounded
+
+    monkeypatch.setattr(compass, "_bounded_atlas_intelligence", _forced)
+    return compass.compile_coding_relationship_compass(
+        "Add deterministic bilateral plan enforcement in the Architect connector.",
+        ".",
+        target_files=["aura_arena_architect_connector.py"],
+        target_symbols=["assess_plan"],
+        bilateral_contract=bilateral_contract,
+        max_target_files=1,
+    )
+
+
+def test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected(
+    bilateral_contract: BilateralPlanningContract,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Even with non-empty Atlas assessments, any remaining unprojected
+    positive, negative, guardrail, or verifier obligation must still route
+    to the deterministic INTENT_FIDELITY denial before scoring/Council."""
+    packet = _compile_compass_with_forced_assessments(
+        bilateral_contract,
+        [
+            {
+                "assessment_id": "a1",
+                "participant_refs": ["x"],
+                # Only the positive requirement is grounded; negative
+                # requirements, guardrails, and required verifiers remain
+                # unprojected.
+                "note": bilateral_contract.positive_requirements[0],
+            }
+        ],
+        monkeypatch,
+    )
+    unprojected = packet["atlas"]["unprojected_bilateral_obligations"]
+    assert unprojected["negative_requirements"]
+    assert unprojected["guardrail_ids"]
+    assert unprojected["required_verifiers"]
+    assert packet["atlas"]["assessments"]
+    assert "INTENT_FIDELITY" in packet["council_route"]["failure_classes"]
+    assert packet["council_route"]["route"] == "HUMAN_RECONFIRMATION_REQUIRED"
+    assert packet["council_route"]["deterministic_denial"] is True
+    assert packet["council_route"]["council_override_allowed"] is False
+
+
+def test_compass_fully_projected_obligations_preserve_eligible_path(
+    bilateral_contract: BilateralPlanningContract,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """When every positive, negative, guardrail, and verifier obligation is
+    grounded in the Atlas assessments, the deterministic INTENT_FIDELITY
+    denial must not fire and the packet remains eligible for normal
+    Council routing."""
+    note = " ".join(
+        [
+            *bilateral_contract.positive_requirements,
+            *bilateral_contract.negative_requirements,
+            *bilateral_contract.hard_guardrail_ids,
+            *bilateral_contract.human_guardrail_ids,
+            *bilateral_contract.editable_guardrail_ids,
+            *bilateral_contract.required_verifiers,
+        ]
+    )
+    packet = _compile_compass_with_forced_assessments(
+        bilateral_contract,
+        [{"assessment_id": "a1", "participant_refs": ["x"], "note": note}],
+        monkeypatch,
+    )
+    unprojected = packet["atlas"]["unprojected_bilateral_obligations"]
+    assert not any(unprojected.values())
+    assert "INTENT_FIDELITY" not in packet["council_route"]["failure_classes"]
