@@ -18,6 +18,8 @@ RELATIONSHIP_COMPATIBILITY_VERSION = "AURA_RELATIONSHIP_COMPATIBILITY_V1"
 RELATIONSHIP_INTERFACE_VERSION = "AURA_RELATIONSHIP_INTERFACE_V1"
 RELATIONAL_NEIGHBORHOOD_REQUEST_VERSION = "AURA_RELATIONAL_NEIGHBORHOOD_REQUEST_V1"
 COMPASS_OBJECTIVE_CONTRACT_VERSION = "AURA_CODING_RELATIONSHIP_COMPASS_OBJECTIVE_V1"
+BILATERAL_PLANNING_CONTRACT_VERSION = "AURA_BILATERAL_PLANNING_CONTRACT_V1"
+BILATERAL_PLAN_GATE_VERSION = "AURA_BILATERAL_PLAN_GATE_V1"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 
@@ -70,6 +72,17 @@ class HardGuardCode(str, Enum):
     PROHIBITED_RELATIONSHIP = "PROHIBITED_RELATIONSHIP"
     RESOURCE_BUDGET = "RESOURCE_BUDGET"
     PROOF_READINESS = "PROOF_READINESS"
+
+
+class BilateralGuardCode(str, Enum):
+    INTENT_CONFIRMATION = "INTENT_CONFIRMATION"
+    SEMANTIC_DEFINITION = "SEMANTIC_DEFINITION"
+    POSITIVE_REQUIREMENT = "POSITIVE_REQUIREMENT"
+    NEGATIVE_REQUIREMENT = "NEGATIVE_REQUIREMENT"
+    AUTHORITY_DENIAL = "AUTHORITY_DENIAL"
+    SCOPE_PRESERVATION = "SCOPE_PRESERVATION"
+    HUMAN_GUARDRAIL = "HUMAN_GUARDRAIL"
+    PLAN_REVISION_RECONFIRMATION = "PLAN_REVISION_RECONFIRMATION"
 
 
 class CapabilitySelectionStatus(str, Enum):
@@ -538,6 +551,720 @@ def capability_class_index(selections: Sequence[CapabilitySelection]) -> dict[st
     return output
 
 
+def _record_sequence(values: Any, name: str) -> tuple[dict[str, Any], ...]:
+    if isinstance(values, (str, bytes, bytearray, Mapping)) or not isinstance(
+        values, Sequence
+    ):
+        raise TypeError(f"{name} must be a non-text sequence")
+    records: list[dict[str, Any]] = []
+    for index, value in enumerate(values):
+        if not isinstance(value, Mapping):
+            raise TypeError(f"{name}[{index}] must be an object")
+        records.append(dict(value))
+    return tuple(records)
+
+
+@dataclass(frozen=True)
+class BilateralPlanningContract:
+    """Minimum confirmed bilateral contract consumed by planning and execution."""
+
+    intent_digest: str
+    semantic_ledger_digest: str
+    confirmation_digest: str
+    repository_head: str
+    source_tree_digest: str
+    allowed_path_set_digest: str
+    allowed_paths: tuple[str, ...]
+    positive_requirements: tuple[str, ...]
+    negative_requirements: tuple[str, ...]
+    semantic_definitions: tuple[dict[str, Any], ...]
+    guardrails: tuple[dict[str, Any], ...]
+    hard_guardrail_ids: tuple[str, ...]
+    editable_guardrail_ids: tuple[str, ...]
+    human_guardrail_ids: tuple[str, ...]
+    allowed_effects: tuple[str, ...]
+    prohibited_effects: tuple[str, ...]
+    acceptance_evidence: tuple[str, ...]
+    required_verifiers: tuple[str, ...]
+    unified_execution_binding_ref: str
+    guardrail_set_digest: str
+    negative_requirements_digest: str
+    intent_revision_id: str
+    confirmed_at: float
+    expires_at: float
+    contract_digest: str = ""
+
+    def __post_init__(self) -> None:
+        required = {
+            "intent_digest": self.intent_digest,
+            "semantic_ledger_digest": self.semantic_ledger_digest,
+            "confirmation_digest": self.confirmation_digest,
+            "repository_head": self.repository_head,
+            "source_tree_digest": self.source_tree_digest,
+            "allowed_path_set_digest": self.allowed_path_set_digest,
+            "unified_execution_binding_ref": self.unified_execution_binding_ref,
+            "guardrail_set_digest": self.guardrail_set_digest,
+            "negative_requirements_digest": self.negative_requirements_digest,
+        }
+        missing = sorted(key for key, value in required.items() if not _canonical_text(value))
+        if missing:
+            raise ValueError(
+                "bilateral planning contract is missing required identity: "
+                + ", ".join(missing)
+            )
+        if not self.allowed_paths or not self.positive_requirements or not self.negative_requirements:
+            raise ValueError(
+                "bilateral planning contract requires allowed paths and positive/negative requirements"
+            )
+        if not self.semantic_definitions or not self.guardrails:
+            raise ValueError(
+                "bilateral planning contract requires semantic definitions and guardrails"
+            )
+        if not self.hard_guardrail_ids or not self.required_verifiers:
+            raise ValueError(
+                "bilateral planning contract requires hard guardrails and independent verifiers"
+            )
+        if self.expires_at <= self.confirmed_at:
+            raise ValueError("bilateral confirmation expiry must follow confirmation")
+
+    @classmethod
+    def from_canonical_compilation(
+        cls,
+        value: Mapping[str, Any],
+        *,
+        observed_repository_head: str,
+        observed_source_tree_digest: str,
+        observed_at: float,
+        allowed_paths: Sequence[str] | None = None,
+    ) -> "BilateralPlanningContract":
+        from aura_event_contracts import stable_digest, stable_id
+
+        compilation = _mapping(value, "canonical_compilation")
+        intent = _mapping(compilation.get("intent_packet"), "intent_packet")
+        ledger = _mapping(compilation.get("semantic_ledger"), "semantic_ledger")
+        receipt = _mapping(compilation.get("confirmation_receipt"), "confirmation_receipt")
+        session = _mapping(compilation.get("refinement_session"), "refinement_session")
+        execution = _mapping(
+            compilation.get("execution_references"), "execution_references"
+        )
+        u7 = _mapping(compilation.get("u7_references"), "u7_references")
+        guardrails = _record_sequence(compilation.get("guardrails"), "guardrails")
+        positive = _ordered_unique(intent.get("acceptance_criteria") or ())
+        negative = _ordered_unique(
+            session.get("candidate_negative_requirements")
+            or session.get("negative_requirements")
+            or ()
+        )
+        definitions = _record_sequence(ledger.get("definitions"), "semantic definitions")
+        confirmation_digest = _canonical_text(receipt.get("confirmation_id"))
+        repository_head = _canonical_text(receipt.get("repository_head"))
+        source_tree_digest = _canonical_text(receipt.get("source_tree_digest"))
+        if repository_head != _canonical_text(observed_repository_head):
+            raise ValueError("bilateral confirmation repository head is stale")
+        if source_tree_digest != _canonical_text(observed_source_tree_digest):
+            raise ValueError("bilateral confirmation source tree is stale")
+        confirmed_at = float(receipt.get("confirmed_at") or 0.0)
+        expires_at = float(receipt.get("expires_at") or 0.0)
+        if observed_at < confirmed_at or observed_at >= expires_at:
+            raise ValueError("bilateral confirmation is expired or not yet current")
+        if (
+            receipt.get("confirmation_status") != "CONFIRMED"
+            or receipt.get("human_disposition") != "CONFIRMED"
+            or receipt.get("patch_authority") != PATCH_AUTHORITY
+            or receipt.get("vsa_patch_authority") is not False
+        ):
+            raise ValueError("bilateral confirmation authority metadata is invalid")
+        if _canonical_text(ledger.get("intent_digest")) != _canonical_text(
+            intent.get("intent_digest")
+        ):
+            raise ValueError("bilateral intent and SemanticLedger identities disagree")
+        if _canonical_text(receipt.get("semantic_ledger_digest")) != _canonical_text(
+            ledger.get("ledger_digest")
+        ):
+            raise ValueError("bilateral confirmation SemanticLedger identity is stale")
+        if stable_digest(list(positive)) != receipt.get("positive_requirements_digest"):
+            raise ValueError("positive requirement digest mismatch")
+        if stable_digest(list(negative)) != receipt.get("negative_requirements_digest"):
+            raise ValueError("negative requirement digest mismatch")
+        if stable_digest(list(guardrails)) != receipt.get("guardrail_set_digest"):
+            raise ValueError("guardrail set digest mismatch")
+        path_source: Sequence[Any] = (
+            allowed_paths
+            if allowed_paths is not None
+            else [
+                path
+                for item in guardrails
+                for path in (item.get("affected_files") or ())
+            ]
+        )
+        allowed_paths = tuple(
+            _canonical_repo_path(item)
+            for item in _ordered_unique(path_source)
+        )
+        if stable_digest(list(allowed_paths)) != receipt.get("allowed_path_set_digest"):
+            raise ValueError("allowed path set digest mismatch")
+        identity_keys = (
+            "session_id",
+            "repository_head",
+            "source_tree_digest",
+            "working_tree_clean_receipt",
+            "source_request_digest",
+            "positive_requirements_digest",
+            "negative_requirements_digest",
+            "semantic_ledger_digest",
+            "guardrail_set_digest",
+            "authority_digest",
+            "teach_back_digest",
+            "allowed_path_set_digest",
+            "runtime_profile_digest",
+            "unified_execution_binding_ref",
+            "human_reviewer",
+            "human_disposition",
+            "confirmed_at",
+            "expires_at",
+            "expires_or_stales_on",
+        )
+        identity_payload = {key: receipt.get(key) for key in identity_keys}
+        identity_payload["expires_or_stales_on"] = tuple(
+            _ordered_unique(identity_payload.get("expires_or_stales_on") or ())
+        )
+        if confirmation_digest != stable_id("intent-confirmation", identity_payload):
+            raise ValueError("bilateral confirmation identity digest mismatch")
+        hard_ids = _ordered_unique(
+            [
+                item.get("guardrail_id")
+                for item in guardrails
+                if item.get("hardness")
+                in {"HARD_ARCHITECTURAL", "HARD_AUTHORITY", "DOMAIN_REQUIRED"}
+            ]
+        )
+        editable_ids = _ordered_unique(
+            [
+                item.get("guardrail_id")
+                for item in guardrails
+                if item.get("hardness") in {"PROPOSED_DEFAULT", "SOFT_PREFERENCE"}
+            ]
+        )
+        human_ids = _ordered_unique(
+            [
+                item.get("guardrail_id")
+                for item in guardrails
+                if item.get("source_class") == "HUMAN_ADDED"
+            ]
+        )
+        prohibited = _ordered_unique(
+            [
+                *negative,
+                *[
+                    item.get("statement")
+                    for item in guardrails
+                    if item.get("guardrail_id") in hard_ids
+                ],
+            ]
+        )
+        evidence_slice = _mapping(
+            execution.get("arena_evidence_slice"), "arena_evidence_slice"
+        )
+        contract = cls(
+            intent_digest=_canonical_text(intent.get("intent_digest")),
+            semantic_ledger_digest=_canonical_text(ledger.get("ledger_digest")),
+            confirmation_digest=confirmation_digest,
+            repository_head=repository_head,
+            source_tree_digest=source_tree_digest,
+            allowed_path_set_digest=_canonical_text(
+                receipt.get("allowed_path_set_digest")
+            ),
+            allowed_paths=allowed_paths,
+            positive_requirements=positive,
+            negative_requirements=negative,
+            semantic_definitions=definitions,
+            guardrails=guardrails,
+            hard_guardrail_ids=hard_ids,
+            editable_guardrail_ids=editable_ids,
+            human_guardrail_ids=human_ids,
+            allowed_effects=positive,
+            prohibited_effects=prohibited,
+            acceptance_evidence=_ordered_unique(intent.get("required_evidence") or ()),
+            required_verifiers=_ordered_unique(
+                evidence_slice.get("required_verifiers") or ()
+            ),
+            unified_execution_binding_ref=_canonical_text(
+                receipt.get("unified_execution_binding_ref")
+            ),
+            guardrail_set_digest=_canonical_text(receipt.get("guardrail_set_digest")),
+            negative_requirements_digest=_canonical_text(
+                receipt.get("negative_requirements_digest")
+            ),
+            intent_revision_id=_canonical_text(u7.get("intent_revision_id")),
+            confirmed_at=confirmed_at,
+            expires_at=expires_at,
+        )
+        digest = content_digest(contract.to_dict(include_digest=False))
+        return cls(**{**contract.__dict__, "contract_digest": digest})
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "BilateralPlanningContract":
+        data = _mapping(value, "bilateral_planning_contract")
+        required = {
+            "schema_version",
+            "contract_digest",
+            "intent_digest",
+            "semantic_ledger_digest",
+            "confirmation_digest",
+            "repository_head",
+            "source_tree_digest",
+            "allowed_path_set_digest",
+            "allowed_paths",
+            "positive_requirements",
+            "negative_requirements",
+            "semantic_definitions",
+            "guardrails",
+            "hard_guardrail_ids",
+            "editable_guardrail_ids",
+            "human_guardrail_ids",
+            "allowed_effects",
+            "prohibited_effects",
+            "acceptance_evidence",
+            "required_verifiers",
+            "unified_execution_binding_ref",
+            "guardrail_set_digest",
+            "negative_requirements_digest",
+            "intent_revision_id",
+            "confirmed_at",
+            "expires_at",
+            "proposal_only",
+            "safe_to_patch",
+            "production_mutation",
+            "human_review_required",
+            "patch_authority",
+            "vsa_patch_authority",
+        }
+        _strict_keys(data, required=required)
+        if data["schema_version"] != BILATERAL_PLANNING_CONTRACT_VERSION:
+            raise ValueError("unsupported bilateral planning contract version")
+        if (
+            data["proposal_only"] is not True
+            or data["safe_to_patch"] is not False
+            or data["production_mutation"] is not False
+            or data["human_review_required"] is not True
+            or data["patch_authority"] != PATCH_AUTHORITY
+            or data["vsa_patch_authority"] is not False
+        ):
+            raise ValueError("bilateral planning authority metadata is invalid")
+        contract = cls(
+            intent_digest=_canonical_text(data["intent_digest"]),
+            semantic_ledger_digest=_canonical_text(data["semantic_ledger_digest"]),
+            confirmation_digest=_canonical_text(data["confirmation_digest"]),
+            repository_head=_canonical_text(data["repository_head"]),
+            source_tree_digest=_canonical_text(data["source_tree_digest"]),
+            allowed_path_set_digest=_canonical_text(data["allowed_path_set_digest"]),
+            allowed_paths=tuple(
+                _canonical_repo_path(item)
+                for item in _ordered_unique(data["allowed_paths"])
+            ),
+            positive_requirements=_ordered_unique(data["positive_requirements"]),
+            negative_requirements=_ordered_unique(data["negative_requirements"]),
+            semantic_definitions=_record_sequence(
+                data["semantic_definitions"], "semantic_definitions"
+            ),
+            guardrails=_record_sequence(data["guardrails"], "guardrails"),
+            hard_guardrail_ids=_ordered_unique(data["hard_guardrail_ids"]),
+            editable_guardrail_ids=_ordered_unique(data["editable_guardrail_ids"]),
+            human_guardrail_ids=_ordered_unique(data["human_guardrail_ids"]),
+            allowed_effects=_ordered_unique(data["allowed_effects"]),
+            prohibited_effects=_ordered_unique(data["prohibited_effects"]),
+            acceptance_evidence=_ordered_unique(data["acceptance_evidence"]),
+            required_verifiers=_ordered_unique(data["required_verifiers"]),
+            unified_execution_binding_ref=_canonical_text(
+                data["unified_execution_binding_ref"]
+            ),
+            guardrail_set_digest=_canonical_text(data["guardrail_set_digest"]),
+            negative_requirements_digest=_canonical_text(
+                data["negative_requirements_digest"]
+            ),
+            intent_revision_id=_canonical_text(data["intent_revision_id"]),
+            confirmed_at=float(data["confirmed_at"]),
+            expires_at=float(data["expires_at"]),
+            contract_digest=_canonical_text(data["contract_digest"]),
+        )
+        if contract.contract_digest != content_digest(
+            contract.to_dict(include_digest=False)
+        ):
+            raise ValueError("bilateral planning contract digest mismatch")
+        return contract
+
+    def is_current(
+        self,
+        *,
+        repository_head: str,
+        source_tree_digest: str,
+        observed_at: float,
+    ) -> bool:
+        return (
+            self.repository_head == _canonical_text(repository_head)
+            and self.source_tree_digest == _canonical_text(source_tree_digest)
+            and self.confirmed_at <= observed_at < self.expires_at
+        )
+
+    def to_dict(self, *, include_digest: bool = True) -> dict[str, Any]:
+        payload = {
+            "schema_version": BILATERAL_PLANNING_CONTRACT_VERSION,
+            "intent_digest": self.intent_digest,
+            "semantic_ledger_digest": self.semantic_ledger_digest,
+            "confirmation_digest": self.confirmation_digest,
+            "repository_head": self.repository_head,
+            "source_tree_digest": self.source_tree_digest,
+            "allowed_path_set_digest": self.allowed_path_set_digest,
+            "allowed_paths": list(self.allowed_paths),
+            "positive_requirements": list(self.positive_requirements),
+            "negative_requirements": list(self.negative_requirements),
+            "semantic_definitions": [dict(item) for item in self.semantic_definitions],
+            "guardrails": [dict(item) for item in self.guardrails],
+            "hard_guardrail_ids": list(self.hard_guardrail_ids),
+            "editable_guardrail_ids": list(self.editable_guardrail_ids),
+            "human_guardrail_ids": list(self.human_guardrail_ids),
+            "allowed_effects": list(self.allowed_effects),
+            "prohibited_effects": list(self.prohibited_effects),
+            "acceptance_evidence": list(self.acceptance_evidence),
+            "required_verifiers": list(self.required_verifiers),
+            "unified_execution_binding_ref": self.unified_execution_binding_ref,
+            "guardrail_set_digest": self.guardrail_set_digest,
+            "negative_requirements_digest": self.negative_requirements_digest,
+            "intent_revision_id": self.intent_revision_id,
+            "confirmed_at": self.confirmed_at,
+            "expires_at": self.expires_at,
+            "proposal_only": True,
+            "safe_to_patch": False,
+            "production_mutation": False,
+            "human_review_required": True,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+        return {"contract_digest": self.contract_digest, **payload} if include_digest else payload
+
+
+@dataclass(frozen=True)
+class BilateralGuardResult:
+    code: BilateralGuardCode
+    passed: bool
+    reason: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "code": self.code.value,
+            "passed": self.passed,
+            "reason": self.reason,
+        }
+
+
+@dataclass(frozen=True)
+class BilateralPlanGate:
+    results: tuple[BilateralGuardResult, ...]
+    gate_digest: str
+
+    @property
+    def passed(self) -> bool:
+        return bool(self.results) and all(item.passed for item in self.results)
+
+    @property
+    def failure_classes(self) -> tuple[str, ...]:
+        return tuple(item.code.value for item in self.results if not item.passed)
+
+    @property
+    def council_failure_classes(self) -> tuple[str, ...]:
+        classes = {
+            BilateralGuardCode.INTENT_CONFIRMATION: "CONFIRMATION_STALE",
+            BilateralGuardCode.SEMANTIC_DEFINITION: "SEMANTIC_AMBIGUITY",
+            BilateralGuardCode.POSITIVE_REQUIREMENT: "POSITIVE_REQUIREMENT",
+            BilateralGuardCode.NEGATIVE_REQUIREMENT: "NEGATIVE_REQUIREMENT",
+            BilateralGuardCode.AUTHORITY_DENIAL: "AUTHORITY_DENIAL",
+            BilateralGuardCode.SCOPE_PRESERVATION: "INTENT_FIDELITY",
+            BilateralGuardCode.HUMAN_GUARDRAIL: "GUARDRAIL_CONFLICT",
+            BilateralGuardCode.PLAN_REVISION_RECONFIRMATION: (
+                "PLAN_ASSUMPTION_INVALIDATED"
+            ),
+        }
+        return tuple(
+            classes.get(item.code, item.code.value)
+            for item in self.results if not item.passed
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "schema_version": BILATERAL_PLAN_GATE_VERSION,
+            "gate_digest": self.gate_digest,
+            "passed": self.passed,
+            "failure_classes": list(self.failure_classes),
+            "council_failure_classes": list(self.council_failure_classes),
+            "results": [item.to_dict() for item in self.results],
+            "proposal_only": True,
+            "safe_to_patch": False,
+            "production_mutation": False,
+            "human_review_required": True,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+
+
+def _coverage_record(
+    coverage: Any,
+    key: str,
+) -> Mapping[str, Any] | None:
+    if not isinstance(coverage, Mapping):
+        return None
+    item = coverage.get(key)
+    return item if isinstance(item, Mapping) else None
+
+
+def _complete_coverage(
+    coverage: Any,
+    requirements: Sequence[str],
+    *,
+    required_verifiers: Sequence[str] = (),
+    verifier_required: bool = True,
+) -> bool:
+    admitted_verifiers = set(_ordered_unique(required_verifiers))
+    for requirement in requirements:
+        item = _coverage_record(coverage, requirement)
+        if item is None or not _canonical_text(item.get("enforcement")):
+            return False
+        if verifier_required:
+            verifier = _canonical_text(item.get("verifier"))
+            if not verifier or (admitted_verifiers and verifier not in admitted_verifiers):
+                return False
+    return True
+
+
+def evaluate_bilateral_plan(
+    plan: Mapping[str, Any],
+    contract: BilateralPlanningContract | Mapping[str, Any],
+    *,
+    observed_repository_head: str,
+    observed_source_tree_digest: str,
+    observed_at: float,
+) -> BilateralPlanGate:
+    """Fail closed before weighted plan scoring or Council/model deliberation."""
+    candidate = _mapping(plan, "plan")
+    bilateral = (
+        contract
+        if isinstance(contract, BilateralPlanningContract)
+        else BilateralPlanningContract.from_dict(contract)
+    )
+    results: list[BilateralGuardResult] = []
+
+    def add(code: BilateralGuardCode, passed: bool, reason: str) -> None:
+        results.append(BilateralGuardResult(code=code, passed=passed, reason=reason))
+
+    identity_ok = (
+        bilateral.is_current(
+            repository_head=observed_repository_head,
+            source_tree_digest=observed_source_tree_digest,
+            observed_at=observed_at,
+        )
+        and _canonical_text(candidate.get("intent_digest")) == bilateral.intent_digest
+        and _canonical_text(candidate.get("semantic_ledger_digest"))
+        == bilateral.semantic_ledger_digest
+        and _canonical_text(candidate.get("confirmation_digest"))
+        == bilateral.confirmation_digest
+    )
+    add(
+        BilateralGuardCode.INTENT_CONFIRMATION,
+        identity_ok,
+        "confirmed bilateral identities are current and exact"
+        if identity_ok
+        else "candidate or source identity does not match the current confirmation",
+    )
+
+    definitions = candidate.get("semantic_definitions")
+    required_definitions = {
+        content_digest(dict(item)) for item in bilateral.semantic_definitions
+    }
+    supplied_definitions = (
+        {
+            content_digest(dict(item))
+            for item in definitions
+            if isinstance(item, Mapping)
+        }
+        if isinstance(definitions, Sequence)
+        and not isinstance(definitions, (str, bytes))
+        else set()
+    )
+    semantics_ok = bool(required_definitions) and required_definitions.issubset(
+        supplied_definitions
+    )
+    add(
+        BilateralGuardCode.SEMANTIC_DEFINITION,
+        semantics_ok,
+        "all confirmed semantic definitions are represented"
+        if semantics_ok
+        else "candidate omits one or more confirmed semantic definitions",
+    )
+
+    positive_ok = _complete_coverage(
+        candidate.get("positive_requirement_coverage"),
+        bilateral.positive_requirements,
+        required_verifiers=bilateral.required_verifiers,
+    )
+    add(
+        BilateralGuardCode.POSITIVE_REQUIREMENT,
+        positive_ok,
+        "all confirmed positive requirements have enforcement and verifier coverage"
+        if positive_ok
+        else "positive requirement coverage is incomplete",
+    )
+
+    negative_ok = _complete_coverage(
+        candidate.get("negative_requirement_coverage"),
+        bilateral.negative_requirements,
+        required_verifiers=bilateral.required_verifiers,
+    )
+    add(
+        BilateralGuardCode.NEGATIVE_REQUIREMENT,
+        negative_ok,
+        "all confirmed negative requirements have enforcement and verifier coverage"
+        if negative_ok
+        else "negative requirement coverage is incomplete",
+    )
+
+    authority_conflicts = candidate.get("authority_conflicts")
+    declared_effects = {
+        _canonical_text(effect)
+        for effect in candidate.get("effects", ())
+        if _canonical_text(effect)
+    } if isinstance(candidate.get("effects"), Sequence) and not isinstance(
+        candidate.get("effects"), (str, bytes, bytearray)
+    ) else set()
+    tasks_for_authority = candidate.get("act_tasks")
+    if isinstance(tasks_for_authority, Sequence) and not isinstance(
+        tasks_for_authority, (str, bytes, bytearray)
+    ):
+        for task in tasks_for_authority:
+            if not isinstance(task, Mapping):
+                continue
+            for field in ("effects", "allowed_effects", "required_authority"):
+                values = task.get(field)
+                if isinstance(values, Sequence) and not isinstance(
+                    values, (str, bytes, bytearray)
+                ):
+                    declared_effects.update(
+                        _canonical_text(value)
+                        for value in values
+                        if _canonical_text(value)
+                    )
+    unconfirmed_effects = declared_effects - set(bilateral.allowed_effects)
+    authority_ok = (
+        isinstance(authority_conflicts, Sequence)
+        and not isinstance(authority_conflicts, (str, bytes, bytearray))
+        and not list(authority_conflicts)
+        and not unconfirmed_effects
+    )
+    add(
+        BilateralGuardCode.AUTHORITY_DENIAL,
+        authority_ok,
+        "candidate assumes no unconfirmed authority"
+        if authority_ok
+        else "candidate has undeclared or conflicting authority",
+    )
+
+    targets: set[str] = set()
+    tasks = candidate.get("act_tasks")
+    if isinstance(tasks, Sequence) and not isinstance(tasks, (str, bytes, bytearray)):
+        for task in tasks:
+            if not isinstance(task, Mapping):
+                continue
+            for path in (task.get("target_file"), *(task.get("related_files") or ())):
+                if _canonical_text(path):
+                    targets.add(_canonical_repo_path(path))
+    expected_identity_ok = (
+        _canonical_text(candidate.get("expected_repository_head"))
+        == bilateral.repository_head
+        and _canonical_text(candidate.get("expected_source_tree_digest"))
+        == bilateral.source_tree_digest
+        and _canonical_text(candidate.get("allowed_path_set_digest"))
+        == bilateral.allowed_path_set_digest
+    )
+    scope_ok = (
+        bool(targets)
+        and targets.issubset(set(bilateral.allowed_paths))
+        and expected_identity_ok
+    )
+    add(
+        BilateralGuardCode.SCOPE_PRESERVATION,
+        scope_ok,
+        "all exact targets remain inside the confirmed source and path lease"
+        if scope_ok
+        else "candidate expands scope or does not bind the exact confirmed source",
+    )
+
+    guardrail_coverage = candidate.get("guardrail_coverage")
+    hard_ok = _complete_coverage(
+        guardrail_coverage,
+        bilateral.hard_guardrail_ids,
+        required_verifiers=bilateral.required_verifiers,
+    )
+    human_ok = _complete_coverage(
+        guardrail_coverage,
+        bilateral.human_guardrail_ids,
+        required_verifiers=bilateral.required_verifiers,
+    )
+    add(
+        BilateralGuardCode.HUMAN_GUARDRAIL,
+        hard_ok and human_ok,
+        "all hard and human-added guardrails retain enforcement and verifiers"
+        if hard_ok and human_ok
+        else "candidate omits or weakens a hard or human-added guardrail",
+    )
+
+    revision = candidate.get("plan_revision")
+    revision_data = revision if isinstance(revision, Mapping) else {}
+    meaning_changes = any(
+        bool(revision_data.get(field))
+        for field in (
+            "meaning_changed",
+            "scope_changed",
+            "authority_changed",
+            "guardrails_changed",
+            "new_owner_or_dependency",
+        )
+    )
+    reconfirmed = (
+        bool(revision_data.get("human_reconfirmed"))
+        and _canonical_text(revision_data.get("confirmation_digest"))
+        == bilateral.confirmation_digest
+        and _canonical_text(revision_data.get("previous_confirmation_digest"))
+        not in {"", bilateral.confirmation_digest}
+        and _canonical_text(candidate.get("intent_revision_id"))
+        == bilateral.intent_revision_id
+        and _canonical_text(revision_data.get("previous_intent_revision_id"))
+        not in {"", bilateral.intent_revision_id}
+    )
+    revision_ok = not meaning_changes or reconfirmed
+    add(
+        BilateralGuardCode.PLAN_REVISION_RECONFIRMATION,
+        revision_ok,
+        "no semantic plan change occurred after confirmation"
+        if not meaning_changes
+        else (
+            "meaning-changing plan revision is explicitly reconfirmed"
+            if revision_ok
+            else "meaning, scope, authority, guardrails, or ownership changed without reconfirmation"
+        ),
+    )
+
+    payload = [item.to_dict() for item in results]
+    return BilateralPlanGate(
+        results=tuple(results),
+        gate_digest=content_digest(
+            {
+                "schema_version": BILATERAL_PLAN_GATE_VERSION,
+                "contract_digest": bilateral.contract_digest,
+                "plan_digest": content_digest(candidate),
+                "results": payload,
+            }
+        ),
+    )
+
+
 @dataclass(frozen=True)
 class CompassObjectiveContract:
     objective: str
@@ -550,6 +1277,7 @@ class CompassObjectiveContract:
     capabilities: tuple[CapabilitySelection, ...]
     route_reasons: tuple[str, ...]
     zero_model_eligible: bool
+    bilateral_contract: BilateralPlanningContract | None = None
     contract_id: str = ""
 
     @classmethod
@@ -564,6 +1292,7 @@ class CompassObjectiveContract:
         target_symbols: Sequence[str],
         capabilities: Sequence[CapabilitySelection],
         route_reasons: Sequence[str],
+        bilateral_contract: BilateralPlanningContract | Mapping[str, Any] | None = None,
     ) -> "CompassObjectiveContract":
         canonical_objective = _canonical_text(objective)
         if not canonical_objective:
@@ -589,6 +1318,21 @@ class CompassObjectiveContract:
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
+        bilateral = (
+            bilateral_contract
+            if isinstance(bilateral_contract, BilateralPlanningContract)
+            else (
+                BilateralPlanningContract.from_dict(bilateral_contract)
+                if bilateral_contract is not None
+                else None
+            )
+        )
+        if bilateral is not None:
+            if bilateral.repository_head != values["repository_head"]:
+                raise ValueError(
+                    "Compass repository identity disagrees with bilateral confirmation"
+                )
+            values["bilateral_contract"] = bilateral.to_dict()
         if not values["intent_packet_digest"]:
             raise ValueError("intent_packet_digest is required")
         if not values["repository_head"]:
@@ -607,6 +1351,7 @@ class CompassObjectiveContract:
             capabilities=tuple(capabilities),
             route_reasons=tuple(values["route_reasons"]),
             zero_model_eligible=bool(values["zero_model_eligible"]),
+            bilateral_contract=bilateral,
             contract_id=contract_id,
         )
 
@@ -620,7 +1365,7 @@ class CompassObjectiveContract:
             "safe_to_patch", "production_mutation", "human_review_required",
             "patch_authority", "vsa_patch_authority",
         }
-        _strict_keys(data, required=required)
+        _strict_keys(data, required=required, optional={"bilateral_contract"})
         if data["schema_version"] != COMPASS_OBJECTIVE_CONTRACT_VERSION:
             raise ValueError("unsupported objective contract schema version")
         if data["safe_to_patch"] is not False or data["production_mutation"] is not False:
@@ -640,6 +1385,11 @@ class CompassObjectiveContract:
             capabilities=tuple(CapabilitySelection.from_dict(item) for item in data["capabilities"]),
             route_reasons=_ordered_unique(data["route_reasons"]),
             zero_model_eligible=_strict_bool(data["zero_model_eligible"], "zero_model_eligible"),
+            bilateral_contract=(
+                BilateralPlanningContract.from_dict(data["bilateral_contract"])
+                if data.get("bilateral_contract") is not None
+                else None
+            ),
             contract_id=_canonical_text(data["contract_id"]),
         )
         expected = content_digest({key: item for key, item in contract.to_dict().items() if key != "contract_id"})
@@ -658,7 +1408,7 @@ class CompassObjectiveContract:
         return contract
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "schema_version": COMPASS_OBJECTIVE_CONTRACT_VERSION,
             "contract_id": self.contract_id,
             "objective": self.objective,
@@ -677,6 +1427,9 @@ class CompassObjectiveContract:
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
+        if self.bilateral_contract is not None:
+            payload["bilateral_contract"] = self.bilateral_contract.to_dict()
+        return payload
 
 
 @dataclass(frozen=True)
@@ -1263,6 +2016,12 @@ class RelationalNeighborhoodRequest:
 
 __all__ = [
     "AuthorityPosture",
+    "BILATERAL_PLAN_GATE_VERSION",
+    "BILATERAL_PLANNING_CONTRACT_VERSION",
+    "BilateralGuardCode",
+    "BilateralGuardResult",
+    "BilateralPlanGate",
+    "BilateralPlanningContract",
     "CapabilitySelection",
     "CapabilitySelectionStatus",
     "COMPASS_OBJECTIVE_CONTRACT_VERSION",
@@ -1301,5 +2060,6 @@ __all__ = [
     "content_digest",
     "evaluate_relationship_compatibility",
     "evaluate_typed_relationship_compatibility",
+    "evaluate_bilateral_plan",
     "project_relationship_contract",
 ]

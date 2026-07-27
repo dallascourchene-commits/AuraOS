@@ -22,6 +22,7 @@ import math
 from pathlib import Path
 import re
 import subprocess
+import time
 import tokenize
 from typing import Any, Mapping, Sequence
 
@@ -45,6 +46,7 @@ from aura_relational_index import (
 from aura_relational_synthesis import compile_relational_shadow_capsule
 from aura_relationship_contracts import (
     AuthorityPosture,
+    BilateralPlanningContract,
     CompassObjectiveContract,
     InterfaceActor,
     InterfaceBoundary,
@@ -263,6 +265,112 @@ def _stable_digest(value: Any, *, digest_size: int = 24) -> str:
 
 def _ordered_unique(values: Sequence[str]) -> list[str]:
     return list(dict.fromkeys(str(value) for value in values if str(value)))
+
+
+_STRUCTURED_ATLAS_REFERENCE_KEYS = frozenset(
+    {
+        "participant_refs",
+        "participant_ref",
+        "participant_id",
+        "canonical_ref",
+        "evidence_refs",
+        "evidence_ref",
+        "file_path",
+        "file",
+        "path",
+        "qualified_symbol",
+        "symbol",
+    }
+)
+
+
+def _structured_atlas_references(payload: Mapping[str, Any]) -> set[str]:
+    """Collect only explicitly typed Atlas references, never prose tokens."""
+    references: set[str] = set()
+
+    def add(raw: Any) -> None:
+        value = str(raw or "").replace("\\", "/").strip().lower()
+        if not value:
+            return
+        references.add(value)
+        for prefix in ("file:", "path:", "symbol:", "participant:", "participant_id:"):
+            if value.startswith(prefix):
+                references.add(value[len(prefix):].strip())
+        for separator in ("::", "#", "@"):
+            if separator in value:
+                references.update(
+                    part.strip() for part in value.split(separator) if part.strip()
+                )
+
+    def visit(value: Any, *, typed: bool = False) -> None:
+        if isinstance(value, Mapping):
+            for key, item in value.items():
+                key_is_typed = str(key).lower() in _STRUCTURED_ATLAS_REFERENCE_KEYS
+                visit(item, typed=typed or key_is_typed)
+        elif isinstance(value, (list, tuple, set)):
+            for item in value:
+                visit(item, typed=typed)
+        elif typed and isinstance(value, (str, int)):
+            add(value)
+
+    visit(payload)
+    return references
+
+
+def _reference_targets_path(reference: str, path: str) -> bool:
+    reference = reference.replace("\\", "/").strip().lower()
+    path = path.replace("\\", "/").strip().lower().lstrip("./")
+    if not reference or not path:
+        return False
+    candidates = {reference}
+    for prefix in ("file:", "path:", "participant:", "participant_id:"):
+        if reference.startswith(prefix):
+            candidates.add(reference[len(prefix):].strip())
+    return any(
+        candidate == path
+        or candidate.endswith("/" + path)
+        or candidate.startswith(path + "#")
+        or candidate.startswith(path + "::")
+        or candidate.startswith(path + ":")
+        or ("/" + path + "#") in candidate
+        or ("/" + path + "::") in candidate
+        for candidate in candidates
+    )
+
+
+def _semantic_obligations(
+    payload: Mapping[str, Any],
+    bilateral: BilateralPlanningContract,
+) -> dict[str, Any]:
+    """Project obligations only from structured Atlas scope references.
+
+    Free-form notes, risks, effects, and other prose are intentionally ignored
+    so coincidental words can never become semantic evidence.
+    """
+    references = _structured_atlas_references(payload)
+    scope_grounded = any(
+        _reference_targets_path(reference, allowed_path)
+        for reference in references
+        for allowed_path in bilateral.allowed_paths
+    )
+    if not scope_grounded:
+        return {}
+    return {
+        "positive_requirements": list(bilateral.positive_requirements),
+        "negative_requirements_at_risk": list(bilateral.negative_requirements),
+        "guardrail_ids": list(
+            dict.fromkeys(
+                (
+                    *bilateral.hard_guardrail_ids,
+                    *bilateral.human_guardrail_ids,
+                    *bilateral.editable_guardrail_ids,
+                )
+            )
+        ),
+        "required_verifiers": list(bilateral.required_verifiers),
+        "repository_head": bilateral.repository_head,
+        "allowed_path_set_digest": bilateral.allowed_path_set_digest,
+    }
 
 
 def _compass_digest_payload(value: Mapping[str, Any]) -> dict[str, Any]:
@@ -1033,6 +1141,7 @@ def compile_coding_relationship_compass(
     rollout_nonce: str = "",
     rollout_verifier_ref: str = "",
     max_emergent_candidates: int = 12,
+    bilateral_contract: BilateralPlanningContract | Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Compile a bounded coding relationship packet for Architect/Surgeon review.
 
@@ -1096,6 +1205,38 @@ def compile_coding_relationship_compass(
         evidence = _validate_injected_evidence_packet(root, evidence_packet)
     if not evidence.get("ok") or not evidence.get("grounding_ok"):
         raise ValueError("Emergent Evidence Spine did not produce an exact grounded packet")
+    bilateral = (
+        bilateral_contract
+        if isinstance(bilateral_contract, BilateralPlanningContract)
+        else (
+            BilateralPlanningContract.from_dict(bilateral_contract)
+            if bilateral_contract is not None
+            else None
+        )
+    )
+    if bilateral is not None:
+        from aura_arena_gate_dialogue import _repository_identity
+
+        current_identity = _repository_identity(root)
+        if (
+            bilateral.repository_head != str(evidence.get("repo_head") or "")
+            or bilateral.repository_head != current_identity["repository_head"]
+            or bilateral.source_tree_digest
+            != current_identity["source_tree_digest"]
+            or not bilateral.is_current(
+                repository_head=current_identity["repository_head"],
+                source_tree_digest=current_identity["source_tree_digest"],
+                observed_at=time.time(),
+            )
+        ):
+            raise ValueError(
+                "bilateral confirmation does not match Compass repository/source identity"
+            )
+        outside_scope = sorted(set(selected_files) - set(bilateral.allowed_paths))
+        if outside_scope:
+            raise ValueError(
+                f"Compass targets exceed the confirmed allowed paths: {outside_scope}"
+            )
 
     intent_packet = PolysyntheticIntentPacket.from_slots(
         {
@@ -1127,6 +1268,7 @@ def compile_coding_relationship_compass(
             *[f"matched_component:{item}" for item in matched_components],
             f"connectome_path:{capability_path.get('path_digest') or 'unresolved'}",
         ),
+        bilateral_contract=bilateral,
     )
     inventory = evidence.get("atomic_inventory") or {}
     relational_capsule = compile_relational_shadow_capsule(
@@ -1257,6 +1399,53 @@ def compile_coding_relationship_compass(
         neighborhood_focal_ids,
         max_assessments=max(1, max_atlas_assessments),
     )
+    if bilateral is not None:
+        assessments = list(atlas_intelligence.get("assessments") or ())
+        annotated_assessments: list[dict[str, Any]] = []
+        projected: dict[str, set[str]] = {
+            "positive_requirements": set(),
+            "negative_requirements_at_risk": set(),
+            "guardrail_ids": set(),
+            "required_verifiers": set(),
+        }
+        for assessment in assessments:
+            annotated = dict(assessment)
+            obligation = _semantic_obligations(annotated, bilateral)
+            if obligation:
+                annotated["bilateral_obligation"] = obligation
+                for key in projected:
+                    projected[key].update(obligation[key])
+            annotated_assessments.append(annotated)
+        atlas_intelligence["assessments"] = annotated_assessments
+        atlas_intelligence["unprojected_bilateral_obligations"] = {
+            "positive_requirements": sorted(
+                set(bilateral.positive_requirements)
+                - projected["positive_requirements"]
+            ),
+            "negative_requirements": sorted(
+                set(bilateral.negative_requirements)
+                - projected["negative_requirements_at_risk"]
+            ),
+            "guardrail_ids": sorted(
+                set(
+                    (
+                        *bilateral.hard_guardrail_ids,
+                        *bilateral.human_guardrail_ids,
+                        *bilateral.editable_guardrail_ids,
+                    )
+                )
+                - projected["guardrail_ids"]
+            ),
+            "required_verifiers": sorted(
+                set(bilateral.required_verifiers)
+                - projected["required_verifiers"]
+            ),
+        }
+        has_unprojected_bilateral_obligation = any(
+            atlas_intelligence["unprojected_bilateral_obligations"].values()
+        )
+    else:
+        has_unprojected_bilateral_obligation = False
 
     targets = _recommended_targets(evidence, selected_files, selected_symbols)
     if not targets:
@@ -1362,6 +1551,24 @@ def compile_coding_relationship_compass(
             "allowed_scope": "exact grounded source span plus declared tests",
             "expected_output": "PROPOSAL_OR_UNIFIED_DIFF",
             "human_review_required": True,
+            **(
+                {
+                    "intent_digest": bilateral.intent_digest,
+                    "semantic_ledger_digest": bilateral.semantic_ledger_digest,
+                    "confirmation_digest": bilateral.confirmation_digest,
+                    **(
+                        {
+                            "bilateral_obligation": obligation,
+                        }
+                        if (
+                            obligation := _semantic_obligations(item, bilateral)
+                        )
+                        else {}
+                    ),
+                }
+                if bilateral is not None
+                else {}
+            ),
         }
         for index, item in enumerate(targets[:8], start=1)
     ]
@@ -1429,6 +1636,16 @@ def compile_coding_relationship_compass(
         "patch_authority": PATCH_AUTHORITY,
         "vsa_patch_authority": VSA_PATCH_AUTHORITY,
     }
+    if bilateral is not None:
+        packet["bilateral_contract"] = bilateral.to_dict()
+        packet["bilateral_scope"] = {
+            "repository_head": bilateral.repository_head,
+            "source_tree_digest": bilateral.source_tree_digest,
+            "allowed_path_set_digest": bilateral.allowed_path_set_digest,
+            "allowed_paths": list(bilateral.allowed_paths),
+            "prohibition_ids": list(bilateral.hard_guardrail_ids),
+            "human_guardrail_ids": list(bilateral.human_guardrail_ids),
+        }
     packet["rollout"] = rollout
     packet["grounding_digest"] = _stable_digest(_compass_digest_payload(packet))
     grounding_receipt = _build_compass_grounding_receipt(
@@ -1480,6 +1697,10 @@ def compile_coding_relationship_compass(
         failure_classes.append("INTERFACE")
     if packet.get("prohibitions"):
         failure_classes.append("PROHIBITION")
+    if bilateral is not None and not atlas_intelligence.get("assessments"):
+        failure_classes.append("INTENT_FIDELITY")
+    if has_unprojected_bilateral_obligation:
+        failure_classes.append("INTENT_FIDELITY")
     packet["change_graph"] = change_graph
     packet["phase_capsules"] = list(change_graph.get("phase_capsules", []) or [])
     packet["act_capsules"] = capsule_packet
@@ -1550,6 +1771,7 @@ def relationship_compass_grounding(packet: Mapping[str, Any]) -> dict[str, Any]:
         "agent_ir": dict(packet.get("agent_ir") or {}),
         "council_route": dict(packet.get("council_route") or {}),
         "rollout": dict(packet.get("rollout") or {}),
+        "bilateral_contract": dict(packet.get("bilateral_contract") or {}),
         "grounding_ok": bool(packet.get("grounding_ok")),
         "safe_to_patch": False,
         "human_review_required": True,

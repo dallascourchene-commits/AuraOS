@@ -21,7 +21,7 @@ import sys
 from typing import Any
 
 from aura_agent_arena_bridge import BRIDGE_VERSION
-from aura_agent_arena_errors import is_error_packet
+from aura_agent_arena_errors import is_error_packet, make_error_packet
 from aura_agent_arena_fireworks import fireworks_patch_worker
 from aura_agent_arena_persistence_bridge import (
     PersistentAuraAgentArenaBridge as AuraAgentArenaBridge,
@@ -163,6 +163,84 @@ TOOL_DEFINITIONS = [
         },
     },
     {
+        "name": "intent_refinement_start",
+        "description": "Start a bounded proposal-only bilateral intent refinement session.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "source_request": {"type": "string", "maxLength": 6000},
+                "affected_files": {"type": "array", "maxItems": 64, "items": {"type": "string", "maxLength": 512}},
+                "affected_symbols": {"type": "array", "maxItems": 64, "items": {"type": "string", "maxLength": 512}},
+            },
+            "required": ["source_request"],
+        },
+    },
+    {
+        "name": "intent_refinement_answer",
+        "description": "Answer the next deterministic bilateral clarification question.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "session_id": {"type": "string", "maxLength": 256},
+                "answer": {"type": "string", "maxLength": 6000},
+            },
+            "required": ["session_id", "answer"],
+        },
+    },
+    {
+        "name": "intent_refinement_teach_back",
+        "description": "Read the paired positive/negative teach-back for a refinement session.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {"session_id": {"type": "string", "maxLength": 256}},
+            "required": ["session_id"],
+        },
+    },
+    {
+        "name": "intent_refinement_confirm",
+        "description": "Human-confirm a current bilateral intent and compile its proposal-only planning contract.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "session_id": {"type": "string", "maxLength": 256},
+                "allowed_paths": {"type": "array", "minItems": 1, "maxItems": 128, "items": {"type": "string", "maxLength": 512}},
+                "human_reviewer": {"type": "string", "maxLength": 256},
+            },
+            "required": ["session_id", "allowed_paths", "human_reviewer"],
+        },
+    },
+    {
+        "name": "intent_refinement_status",
+        "description": "Return the current bounded refinement and confirmation status.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {"session_id": {"type": "string", "maxLength": 256}},
+            "required": ["session_id"],
+        },
+    },
+    {
+        "name": "intent_revision_propose",
+        "description": "Propose an evidence-bound intent revision delta without granting patch authority.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {"request": {"type": "object"}},
+            "required": ["request"],
+        },
+    },
+    {
+        "name": "intent_revision_confirm",
+        "description": "Record human disposition of a revision; approved revisions still require bilateral recompilation.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "revision_id": {"type": "string", "maxLength": 256},
+                "approved": {"type": "boolean"},
+                "human_reviewer": {"type": "string", "maxLength": 256},
+            },
+            "required": ["revision_id", "approved", "human_reviewer"],
+        },
+    },
+    {
         "name": "aura_prepare_arena",
         "description": "Run Aura's own prepare pipeline for a coding task.",
         "inputSchema": {
@@ -179,6 +257,10 @@ TOOL_DEFINITIONS = [
                 "emergent_max_atomic_nodes": {"type": "integer", "minimum": 1, "maximum": 200, "default": 48},
                 "emergent_include_source": {"type": "boolean", "default": False},
                 "emergent_include_research_plan": {"type": "boolean", "default": True},
+                "bilateral_contract": {"type": "object"},
+                "confirmation_session_id": {"type": "string"},
+                "bilateral_plan_gate": {"type": "object"},
+                "bilateral_proof_plan": {"type": "object"},
             },
             "required": ["objective"],
         },
@@ -787,6 +869,12 @@ def _handle_repo_digest(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> d
 
 @_register_tool("aura_prepare_arena")
 def _handle_prepare_arena(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    for name in ("bilateral_contract", "bilateral_plan_gate", "bilateral_proof_plan"):
+        if name in args and not isinstance(args[name], Mapping):
+            return make_error_packet(
+                "mcp_protocol_error",
+                f"{name} must be an object",
+            )
     return bridge.aura_prepare_arena(
         objective=str(args.get("objective", "")),
         target_file=args.get("target_file"),
@@ -799,6 +887,126 @@ def _handle_prepare_arena(bridge: AuraAgentArenaBridge, args: dict[str, Any]) ->
         emergent_max_atomic_nodes=int(args.get("emergent_max_atomic_nodes", 48)),
         emergent_include_source=_strict_bool_arg(args, "emergent_include_source", default=False),
         emergent_include_research_plan=_strict_bool_arg(args, "emergent_include_research_plan", default=True),
+        bilateral_contract=(
+            dict(args["bilateral_contract"])
+            if isinstance(args.get("bilateral_contract"), Mapping)
+            else None
+        ),
+        confirmation_session_id=str(args.get("confirmation_session_id", "")),
+        bilateral_plan_gate=(
+            dict(args["bilateral_plan_gate"])
+            if isinstance(args.get("bilateral_plan_gate"), Mapping)
+            else None
+        ),
+        bilateral_proof_plan=(
+            dict(args["bilateral_proof_plan"])
+            if isinstance(args.get("bilateral_proof_plan"), Mapping)
+            else None
+        ),
+    )
+
+
+@_register_tool("intent_refinement_start")
+def _handle_intent_refinement_start(
+    bridge: AuraAgentArenaBridge, args: dict[str, Any]
+) -> dict[str, Any]:
+    return bridge.intent_refinement_start(
+        source_request=_bounded_text_arg(
+            args, "source_request", maximum=6000, required=True
+        ),
+        affected_files=list(
+            _bounded_text_array_arg(
+                args, "affected_files", max_items=64, max_item_length=512
+            )
+        ),
+        affected_symbols=list(
+            _bounded_text_array_arg(
+                args, "affected_symbols", max_items=64, max_item_length=512
+            )
+        ),
+    )
+
+
+@_register_tool("intent_refinement_answer")
+def _handle_intent_refinement_answer(
+    bridge: AuraAgentArenaBridge, args: dict[str, Any]
+) -> dict[str, Any]:
+    return bridge.intent_refinement_answer(
+        session_id=_bounded_text_arg(
+            args, "session_id", maximum=256, required=True
+        ),
+        answer=_bounded_text_arg(args, "answer", maximum=6000, required=True),
+    )
+
+
+@_register_tool("intent_refinement_teach_back")
+def _handle_intent_refinement_teach_back(
+    bridge: AuraAgentArenaBridge, args: dict[str, Any]
+) -> dict[str, Any]:
+    return bridge.intent_refinement_teach_back(
+        session_id=_bounded_text_arg(
+            args, "session_id", maximum=256, required=True
+        )
+    )
+
+
+@_register_tool("intent_refinement_confirm")
+def _handle_intent_refinement_confirm(
+    bridge: AuraAgentArenaBridge, args: dict[str, Any]
+) -> dict[str, Any]:
+    return bridge.intent_refinement_confirm(
+        session_id=_bounded_text_arg(
+            args, "session_id", maximum=256, required=True
+        ),
+        allowed_paths=list(
+            _bounded_text_array_arg(
+                args, "allowed_paths", max_items=128, max_item_length=512
+            )
+        ),
+        human_reviewer=_bounded_text_arg(
+            args, "human_reviewer", maximum=256, required=True
+        ),
+    )
+
+
+@_register_tool("intent_refinement_status")
+def _handle_intent_refinement_status(
+    bridge: AuraAgentArenaBridge, args: dict[str, Any]
+) -> dict[str, Any]:
+    return bridge.intent_refinement_status(
+        session_id=_bounded_text_arg(
+            args, "session_id", maximum=256, required=True
+        )
+    )
+
+
+@_register_tool("intent_revision_propose")
+def _handle_intent_revision_propose(
+    bridge: AuraAgentArenaBridge, args: dict[str, Any]
+) -> dict[str, Any]:
+    request = args.get("request")
+    if not isinstance(request, Mapping):
+        raise MCPArgumentError("request must be an object")
+    if len(json.dumps(request, sort_keys=True, default=str).encode("utf-8")) > 131_072:
+        raise MCPArgumentError("request exceeds the bounded revision payload size")
+    return bridge.intent_revision_propose(request)
+
+
+@_register_tool("intent_revision_confirm")
+def _handle_intent_revision_confirm(
+    bridge: AuraAgentArenaBridge, args: dict[str, Any]
+) -> dict[str, Any]:
+    approved = args.get("approved")
+    if type(approved) is not bool:
+        raise MCPArgumentError("approved must be a boolean")
+    return bridge.intent_revision_confirm(
+        revision_id=_bounded_text_arg(
+            args, "revision_id", maximum=256, required=True
+        ),
+        approved=approved,
+        human_reviewer=_bounded_text_arg(
+            args, "human_reviewer", maximum=256, required=True
+        ),
     )
 
 

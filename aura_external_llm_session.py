@@ -57,6 +57,20 @@ def _bounded_payload(value: Any, max_tokens: int) -> Any:
     }
 
 
+def _bounded_text(value: Any, max_tokens: int) -> str:
+    """Bound text under the same deterministic token proxy used by turns."""
+    text = str(value or "")
+    max_chars = max(0, int(max_tokens)) * 4
+    if len(text) <= max_chars:
+        return text
+    if max_chars <= 0:
+        return ""
+    marker = f"[TRUNCATED digest={_digest(text)} tokens={_token_estimate(text)}]\n"
+    if len(marker) >= max_chars:
+        return marker[:max_chars]
+    return marker + text[: max_chars - len(marker)]
+
+
 def _diff_touched_files(diff: str) -> list[str]:
     files: list[str] = []
     seen: set[str] = set()
@@ -506,21 +520,53 @@ class AuraExternalLLMSessionManager:
         )
         if not micro.get("ok"):
             return None
-
+        compressed_context = str(micro.get("compressed_context", ""))
+        bilateral_micro_context = dict(
+            micro.get("bilateral_micro_context") or {}
+        )
         bounded_failure = _bounded_payload(
             failure_packet,
             max(96, session.max_context_tokens // 3),
         )
-        fixed_context_tokens = _token_estimate(
+        fixed_without_compressed_context = _token_estimate(
             json.dumps(
                 {
-                    "compressed_context": micro.get("compressed_context", ""),
                     "failure_packet": bounded_failure,
                     "act_capsule": task,
                 },
                 default=str,
             )
         ) + 96
+        compressed_context_budget = max(
+            0,
+            session.max_context_tokens - fixed_without_compressed_context,
+        )
+        if bilateral_micro_context:
+            compressed_context += (
+                "\n\n[BILATERAL_MICRO_CONTEXT]\n"
+                + json.dumps(
+                    bilateral_micro_context,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                    default=str,
+                )
+            )
+        compressed_context = _bounded_text(
+            compressed_context,
+            compressed_context_budget,
+        )
+        fixed_context_tokens = _token_estimate(
+            json.dumps(
+                {
+                    "compressed_context": compressed_context,
+                    "failure_packet": bounded_failure,
+                    "act_capsule": task,
+                },
+                default=str,
+            )
+        ) + 96
+        # Final serialized-payload fitting below is authoritative. If fixed
+        # metadata consumes the budget, slices receive zero tokens.
         slice_token_budget = max(
             0,
             session.max_context_tokens - fixed_context_tokens,
@@ -559,12 +605,51 @@ class AuraExternalLLMSessionManager:
                 + instruction
             )
         context_payload = {
-            "compressed_context": micro.get("compressed_context", ""),
+            "compressed_context": compressed_context,
             "source_slices": source_slices,
             "test_slices": test_slices,
             "failure_packet": bounded_failure,
             "act_capsule": task,
         }
+        context_token_estimate = _token_estimate(
+            json.dumps(context_payload, default=str)
+        )
+        while context_token_estimate > session.max_context_tokens and test_slices:
+            test_slices.pop()
+            context_payload["test_slices"] = test_slices
+            context_token_estimate = _token_estimate(
+                json.dumps(context_payload, default=str)
+            )
+        while context_token_estimate > session.max_context_tokens and source_slices:
+            source_slices.pop()
+            context_payload["source_slices"] = source_slices
+            context_token_estimate = _token_estimate(
+                json.dumps(context_payload, default=str)
+            )
+        if context_token_estimate > session.max_context_tokens:
+            original_compressed_context = compressed_context
+            low = 0
+            high = _token_estimate(original_compressed_context)
+            best_context: str | None = None
+            best_estimate = 0
+            while low <= high:
+                midpoint = (low + high) // 2
+                candidate = _bounded_text(original_compressed_context, midpoint)
+                context_payload["compressed_context"] = candidate
+                candidate_estimate = _token_estimate(
+                    json.dumps(context_payload, default=str)
+                )
+                if candidate_estimate <= session.max_context_tokens:
+                    best_context = candidate
+                    best_estimate = candidate_estimate
+                    low = midpoint + 1
+                else:
+                    high = midpoint - 1
+            if best_context is None:
+                return None
+            compressed_context = best_context
+            context_payload["compressed_context"] = compressed_context
+            context_token_estimate = best_estimate
         turn_index = len(session.turns) + 1
         turn_id = f"TURN-{_digest({'session': session.session_id, 'task': task_id, 'role': role, 'index': turn_index}, size=8)}"
         return ExternalLLMTurn(
@@ -577,13 +662,13 @@ class AuraExternalLLMSessionManager:
             instruction=instruction,
             output_contract=dict(_ROLE_CONTRACTS[role]),
             act_capsule=dict(task),
-            compressed_context=str(micro.get("compressed_context", "")),
+            compressed_context=compressed_context,
             source_slices=source_slices,
             test_slices=test_slices,
             failure_packet=dict(bounded_failure) if isinstance(bounded_failure, dict) else {"value": bounded_failure},
             allowed_files=allowed_files,
             do_not_touch=do_not_touch,
-            context_token_estimate=_token_estimate(json.dumps(context_payload, default=str)),
+            context_token_estimate=context_token_estimate,
             max_output_tokens=session.max_output_tokens,
             turn_index=turn_index,
             created_at=time.time(),

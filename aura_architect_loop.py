@@ -11,12 +11,14 @@ SYNOPSIS: Deterministic ArchitectFusionLoop substrate. Converts an architect int
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass, field
 import hashlib
 import json
 import logging
 from pathlib import Path
+import subprocess
+import time
 from typing import Any
 
 from aura_codebase_navigator import refresh_codemap_for_paths
@@ -122,11 +124,21 @@ class FractalPlanCapsule:
     st3gg_capsule: str | None
     continuity_capsule: AuraPhaseCapsule | None
     phase_hash: str
+    bilateral_contract: dict[str, Any] = field(default_factory=dict)
+    bilateral_plan_gate: dict[str, Any] = field(default_factory=dict)
+    bilateral_proof_plan: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
         if self.continuity_capsule is not None:
             payload["continuity_capsule"] = self.continuity_capsule.to_dict()
+        for key in (
+            "bilateral_contract",
+            "bilateral_plan_gate",
+            "bilateral_proof_plan",
+        ):
+            if not payload.get(key):
+                payload.pop(key, None)
         return payload
 
     @classmethod
@@ -152,7 +164,15 @@ class GroundingEvidence:
     dream_scores: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        payload = asdict(self)
+        for key in (
+            "bilateral_contract",
+            "bilateral_plan_gate",
+            "bilateral_proof_plan",
+        ):
+            if not payload.get(key):
+                payload.pop(key, None)
+        return payload
 
 
 @dataclass
@@ -198,6 +218,9 @@ class RefactorArenaTransaction:
     agent_leases: list[dict[str, Any]] = field(default_factory=list)
     liquid_arena: dict[str, Any] = field(default_factory=dict)
     routing_decisions: list[dict[str, Any]] = field(default_factory=list)
+    bilateral_contract: dict[str, Any] = field(default_factory=dict)
+    bilateral_plan_gate: dict[str, Any] = field(default_factory=dict)
+    bilateral_proof_plan: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -731,6 +754,7 @@ def _build_act_capsule(
     *,
     index: int,
     constraints: list[str],
+    bilateral_contract_ref: str = "",
 ) -> ActCapsule:
     if isinstance(raw_task, str):
         task = {"objective": raw_task}
@@ -744,6 +768,13 @@ def _build_act_capsule(
     if size not in ACT_SIZE_ORDER:
         size = _classify_act_size(task)
     target_symbol = task.get("target_symbol")
+    topological_grounding = dict(
+        task.get("topological_grounding", {})
+        if isinstance(task.get("topological_grounding"), dict)
+        else {}
+    )
+    if bilateral_contract_ref:
+        topological_grounding["bilateral_contract_ref"] = bilateral_contract_ref
     return ActCapsule(
         capsule_version=ACT_CAPSULE_VERSION,
         task_id=task_id,
@@ -754,7 +785,7 @@ def _build_act_capsule(
         related_files=related_files,
         allowed_scope=str(task.get("allowed_scope", "single bounded edit")),
         context_ref=str(task.get("context_ref") or _act_context_ref(objective, task_id, target_file, target_symbol)),
-        topological_grounding=dict(task.get("topological_grounding", {}) if isinstance(task.get("topological_grounding"), dict) else {}),
+        topological_grounding=topological_grounding,
         acceptance=str(task.get("acceptance", "Return a bounded patch or a refusal reason.")),
         escalate_if=list(task.get("escalate_if", DEFAULT_ACT_ESCALATIONS)),
         constraints=list(task.get("constraints", constraints)),
@@ -847,11 +878,24 @@ def build_fractal_plan_capsule(
     repo_root: str | Path = REPO_ROOT,
     context_pressure: float = 0.0,
     continuity_threshold: float = 0.86,
+    bilateral_contract: Mapping[str, Any] | None = None,
+    bilateral_plan_gate: Mapping[str, Any] | None = None,
+    bilateral_proof_plan: Mapping[str, Any] | None = None,
 ) -> FractalPlanCapsule:
     """Build a deterministic plan capsule that is pre-sharded into bounded Act Capsules."""
     plan_constraints = list(constraints or DEFAULT_CONSTRAINTS)
+    bilateral_data = dict(bilateral_contract or {})
+    bilateral_gate = dict(bilateral_plan_gate or {})
+    bilateral_proof = dict(bilateral_proof_plan or {})
+    contract_ref = str(bilateral_data.get("contract_digest") or "")
     act_capsules = [
-        _build_act_capsule(objective, task, index=index, constraints=plan_constraints)
+        _build_act_capsule(
+            objective,
+            task,
+            index=index,
+            constraints=plan_constraints,
+            bilateral_contract_ref=contract_ref,
+        )
         for index, task in enumerate(act_tasks)
     ]
     fusion_capsule = build_task_capsule(
@@ -921,6 +965,14 @@ def build_fractal_plan_capsule(
         "context_ref": pointer,
         "continuity_phase_hash": continuity_capsule.phase_hash if continuity_capsule else None,
     }
+    if bilateral_data:
+        base_payload.update(
+            {
+                "bilateral_contract_digest": contract_ref,
+                "bilateral_plan_gate_digest": bilateral_gate.get("gate_digest"),
+                "bilateral_proof_plan": bilateral_proof,
+            }
+        )
     return FractalPlanCapsule(
         capsule_version=PLAN_CAPSULE_VERSION,
         objective=objective,
@@ -936,6 +988,9 @@ def build_fractal_plan_capsule(
         st3gg_capsule=st3gg_capsule,
         continuity_capsule=continuity_capsule,
         phase_hash=_hash_payload(base_payload),
+        bilateral_contract=bilateral_data,
+        bilateral_plan_gate=bilateral_gate,
+        bilateral_proof_plan=bilateral_proof,
     )
 
 
@@ -1022,6 +1077,52 @@ def shadow_plan_capsule(
     """Detect fake files, fake symbols, weak tests, and oversized act capsules before Builder runs."""
     by_task = {item.task_id: item for item in grounding}
     findings: list[ShadowFinding] = []
+    bilateral = plan.bilateral_contract
+    bilateral_gate = plan.bilateral_plan_gate
+    if bilateral:
+        if bilateral_gate.get("passed") is not True:
+            findings.append(
+                ShadowFinding(
+                    shadow_type="bilateral_plan_gate",
+                    severity="blocker",
+                    message="Deterministic bilateral plan gate did not pass.",
+                    task_id="PLAN",
+                )
+            )
+        contract_ref = str(bilateral.get("contract_digest") or "")
+        allowed_paths = set(bilateral.get("allowed_paths") or ())
+        for act in plan.act_capsules:
+            if (
+                not contract_ref
+                or act.topological_grounding.get("bilateral_contract_ref")
+                != contract_ref
+            ):
+                findings.append(
+                    ShadowFinding(
+                        shadow_type="intent_trace_missing",
+                        severity="blocker",
+                        message="Act Capsule does not trace to the confirmed bilateral contract.",
+                        task_id=act.task_id,
+                        target_file=act.target_file,
+                        target_symbol=act.target_symbol,
+                    )
+                )
+            act_paths = {
+                item
+                for item in [act.target_file, *act.related_files]
+                if item
+            }
+            if not act_paths.issubset(allowed_paths):
+                findings.append(
+                    ShadowFinding(
+                        shadow_type="confirmed_scope_changed",
+                        severity="blocker",
+                        message="Act Capsule exceeds the confirmed allowed path set.",
+                        task_id=act.task_id,
+                        target_file=act.target_file,
+                        target_symbol=act.target_symbol,
+                    )
+                )
     for act in plan.act_capsules:
         evidence = by_task.get(act.task_id)
         if evidence is None:
@@ -1223,6 +1324,9 @@ def build_refactor_arena(
         agent_leases=liquid_arena.agent_leases,
         liquid_arena=liquid_arena.to_dict(),
         routing_decisions=routing_decisions,
+        bilateral_contract=dict(plan.bilateral_contract),
+        bilateral_plan_gate=dict(plan.bilateral_plan_gate),
+        bilateral_proof_plan=dict(plan.bilateral_proof_plan),
     )
 
 
@@ -1235,6 +1339,7 @@ def stage_arena_patch(
     affected_files: list[str],
     affected_symbols: list[str] | None = None,
     tests: list[str] | None = None,
+    repo_root: str | Path = REPO_ROOT,
 ) -> PatchStageResult:
     """Stage one Builder patch only if it stays inside the task's arena boundary."""
     normalized_files = _normalized_path_list(affected_files)
@@ -1245,6 +1350,57 @@ def stage_arena_patch(
     diff_files = _diff_touched_files(diff)
     all_patch_files = _normalized_path_list([*normalized_files, *diff_files])
     findings: list[ShadowFinding] = []
+    if arena.bilateral_contract:
+        from aura_arena_gate_dialogue import _repository_identity
+        from aura_relationship_contracts import BilateralPlanningContract
+
+        contract = BilateralPlanningContract.from_dict(arena.bilateral_contract)
+        identity = _repository_identity(Path(repo_root))
+        if not contract.is_current(
+            repository_head=str(identity["repository_head"]),
+            source_tree_digest=str(identity["source_tree_digest"]),
+            observed_at=time.time(),
+        ):
+            findings.append(
+                ShadowFinding(
+                    shadow_type="bilateral_confirmation_stale",
+                    severity="blocker",
+                    message="Patch lease no longer matches the current repository identity or confirmation time.",
+                    task_id=task_name,
+                )
+            )
+        allowed_paths = set(
+            _normalized_path_list(
+                arena.bilateral_contract.get("allowed_paths") or ()
+            )
+        )
+        outside_confirmation = sorted(
+            path for path in all_patch_files if path not in allowed_paths
+        )
+        if outside_confirmation:
+            findings.append(
+                ShadowFinding(
+                    shadow_type="bilateral_scope_violation",
+                    severity="blocker",
+                    message=(
+                        "Patch touches files outside the confirmed bilateral path lease: "
+                        + ", ".join(outside_confirmation)
+                    ),
+                    task_id=task_name,
+                )
+            )
+        expected_owner = str(
+            arena.bilateral_proof_plan.get("temporary_agent_identity") or ""
+        )
+        if expected_owner and owner_name != expected_owner:
+            findings.append(
+                ShadowFinding(
+                    shadow_type="bilateral_owner_mismatch",
+                    severity="blocker",
+                    message="Patch owner does not match the temporary Surgeon lease.",
+                    task_id=task_name,
+                )
+            )
     capsule = _agent_capsule_for_task(arena, task_name)
     if capsule is None:
         findings.append(
@@ -1431,6 +1587,21 @@ def verify_refactor_arena(
         record("arena_gate", "passed", plan_phase_hash=arena.plan_phase_hash)
     else:
         fail("arena_gate", "Arena is not ready for patch promotion.", shadow_gate=arena.shadow_report.get("gate"))
+    if arena.bilateral_contract:
+        gate = arena.bilateral_plan_gate
+        if gate.get("passed") is True:
+            record(
+                "bilateral_plan_gate",
+                "passed",
+                confirmation_digest=arena.bilateral_contract.get("confirmation_digest"),
+                gate_digest=gate.get("gate_digest"),
+            )
+        else:
+            fail(
+                "bilateral_plan_gate",
+                "Bilateral plan gate is absent or failed.",
+                failure_classes=list(gate.get("failure_classes") or ()),
+            )
 
     if arena.shared_patch_queue:
         record("patch_queue", "passed", patch_count=len(arena.shared_patch_queue))
@@ -1453,6 +1624,7 @@ def verify_refactor_arena(
             record("arena_lease", "passed", lease_count=len(arena.agent_leases))
     file_locks: dict[str, tuple[str, str]] = {}
     all_tests: set[str] = set()
+    passed_tests: set[str] = set()
     for item in arena.verification_ledger:
         if item.get("stage") == "tests":
             all_tests.update(_normalized_path_list(item.get("test_files", [])))
@@ -1559,11 +1731,64 @@ def verify_refactor_arena(
                     fail("tests", "Verifier test runner raised.", test=test_name, details={"error": str(exc)})
                     continue
                 if passed:
+                    passed_tests.add(test_name)
                     record("tests", "passed", test=test_name, details=details)
                 else:
                     fail("tests", "Verifier test failed.", test=test_name, details=details)
     else:
         record("tests", "passed", test_files=[])
+    if arena.bilateral_contract:
+        negative_coverage = arena.bilateral_proof_plan.get(
+            "negative_requirement_coverage"
+        )
+        negative_requirements = list(
+            arena.bilateral_contract.get("negative_requirements") or ()
+        )
+        trusted_verifiers = set(
+            arena.bilateral_contract.get("required_verifiers") or ()
+        )
+        # Candidate-supplied ``verifier_receipts`` are untrusted proposal data
+        # (the same origin as the plan itself) and must never establish
+        # negative-requirement proof on their own, even when the verifier
+        # name is admitted and the payload claims ``passed: true``. The only
+        # canonical source of proof is ``passed_tests``, populated above from
+        # the trusted ``runner`` callback actually executing each test file
+        # against the current repository state as part of this verification
+        # run. A receipt is only meaningful when it corresponds to one of
+        # those independently-executed, independently-passed test names.
+        missing_negative_proof: list[str] = []
+        for requirement in negative_requirements:
+            coverage = (
+                negative_coverage.get(requirement)
+                if isinstance(negative_coverage, Mapping)
+                else None
+            )
+            verifier = (
+                str(coverage.get("verifier") or "").strip()
+                if isinstance(coverage, Mapping)
+                else ""
+            )
+            if (
+                not verifier
+                or verifier not in trusted_verifiers
+                or verifier not in passed_tests
+            ):
+                missing_negative_proof.append(str(requirement))
+        if missing_negative_proof:
+            fail(
+                "bilateral_negative_proof",
+                "Negative requirements remain without independent verifier proof.",
+                requirements=missing_negative_proof,
+            )
+        else:
+            record(
+                "bilateral_negative_proof",
+                "passed",
+                requirement_count=len(negative_requirements),
+                verifier_identity=list(
+                    arena.bilateral_contract.get("required_verifiers") or ()
+                ),
+            )
 
     hotswap_ready = not failures and bool(arena.shared_patch_queue) and arena.ready_for_incubator
     phase_payload = {
@@ -1589,6 +1814,11 @@ def judge_refactor_arena(verification: VerificationResult) -> dict[str, Any]:
     """Return the deterministic Judge decision for a verified or blocked arena."""
     if verification.hotswap_ready:
         decision = "promote_hotswap"
+    elif any(
+        item.get("stage") in {"bilateral_plan_gate", "bilateral_negative_proof"}
+        for item in verification.failures
+    ):
+        decision = "block_bilateral_contract"
     elif any(item.get("stage") in {"patch_boundary", "patch_task_boundary", "patch_conflict"} for item in verification.failures):
         decision = "escalate_to_judge"
     elif any(item.get("stage") == "tests" for item in verification.failures):
@@ -1749,6 +1979,199 @@ def route_intensity(plan: FractalPlanCapsule, shadow_report: ShadowReport) -> in
     return 0
 
 
+@dataclass(frozen=True)
+class _TrustedBilateralHandoff:
+    """Private, non-serializable carrier for an already-authorized bilateral handoff.
+
+    This carrier is actively validated and enforced: ``_validate_trusted_bilateral_handoff``
+    recomputes its binding digest against the live repository state and exact preparation
+    context, and ``prepare()`` fails closed when bilateral artifacts are supplied without
+    a genuine handoff. It is not registered, persisted, exported, or given a
+    ``to_dict``/serializer of any kind—it exists only so a trusted caller can pass a
+    single opaque, tamper-evident object instead of raw bilateral kwargs.
+    """
+
+    bilateral_contract: Any
+    bilateral_plan_gate: Any
+    bilateral_proof_plan: Any
+    selected_plan_digest: str
+    binding_digest: str
+
+
+def _project_exact_act_tasks(act_tasks: list[str | dict[str, Any]]) -> tuple[Any, ...]:
+    """Deterministically project act_tasks into an immutable, hashable form.
+
+    Strings are kept as-is; mapping tasks are projected into sorted-key tuples so
+    the projection is stable regardless of dict key ordering.
+    """
+    projected: list[Any] = []
+    for task in act_tasks:
+        if isinstance(task, Mapping):
+            projected.append(tuple(sorted((str(k), task[k]) for k in task)))
+        else:
+            projected.append(task)
+    return tuple(projected)
+
+
+def _bind_trusted_bilateral_handoff(
+    *,
+    bilateral_contract: Mapping[str, Any] | Any | None,
+    bilateral_plan_gate: Mapping[str, Any] | None,
+    bilateral_proof_plan: Mapping[str, Any] | None,
+    selected_plan_digest: str,
+    objective: str,
+    architecture_decision: str,
+    act_tasks: list[str | dict[str, Any]],
+    target_file: str | None,
+    target_symbol: str | None,
+    repository_head: str,
+    source_tree_digest: str,
+) -> str:
+    """Compute a deterministic binding digest over the full authorized context."""
+    contract_data = (
+        bilateral_contract.to_dict()
+        if hasattr(bilateral_contract, "to_dict")
+        else dict(bilateral_contract or {})
+    )
+    gate_data = dict(bilateral_plan_gate or {})
+    proof_data = dict(bilateral_proof_plan or {})
+    binding_payload = {
+        "bilateral_contract": contract_data,
+        "bilateral_plan_gate": gate_data,
+        "bilateral_proof_plan_digest": _hash_payload(proof_data),
+        "objective": objective,
+        "architecture_decision": architecture_decision,
+        "act_tasks": _project_exact_act_tasks(act_tasks),
+        "target_file": _normalize_path(target_file),
+        "target_symbol": target_symbol,
+        "repository_head": repository_head,
+        "source_tree_digest": source_tree_digest,
+        "selected_plan_digest": selected_plan_digest,
+    }
+    return _hash_payload(binding_payload)
+
+
+def _mint_trusted_bilateral_handoff(
+    *,
+    bilateral_contract: Mapping[str, Any] | Any | None,
+    bilateral_plan_gate: Mapping[str, Any] | None,
+    bilateral_proof_plan: Mapping[str, Any] | None,
+    selected_plan_digest: str,
+    objective: str,
+    architecture_decision: str,
+    act_tasks: list[str | dict[str, Any]],
+    target_file: str | None,
+    target_symbol: str | None,
+    repository_head: str,
+    source_tree_digest: str,
+) -> _TrustedBilateralHandoff:
+    """Mint a `_TrustedBilateralHandoff` from already-authorized artifacts.
+
+    This factory only computes a deterministic binding; it performs no
+    authorization decisions itself and does not consult any external state.
+    """
+    binding_digest = _bind_trusted_bilateral_handoff(
+        bilateral_contract=bilateral_contract,
+        bilateral_plan_gate=bilateral_plan_gate,
+        bilateral_proof_plan=bilateral_proof_plan,
+        selected_plan_digest=selected_plan_digest,
+        objective=objective,
+        architecture_decision=architecture_decision,
+        act_tasks=act_tasks,
+        target_file=target_file,
+        target_symbol=target_symbol,
+        repository_head=repository_head,
+        source_tree_digest=source_tree_digest,
+    )
+    return _TrustedBilateralHandoff(
+        bilateral_contract=bilateral_contract,
+        bilateral_plan_gate=bilateral_plan_gate,
+        bilateral_proof_plan=bilateral_proof_plan,
+        selected_plan_digest=selected_plan_digest,
+        binding_digest=binding_digest,
+    )
+
+
+def _validate_trusted_bilateral_handoff(
+    *,
+    bilateral_contract: Mapping[str, Any] | Any | None,
+    bilateral_plan_gate: Mapping[str, Any] | None,
+    bilateral_proof_plan: Mapping[str, Any] | None,
+    _trusted_bilateral_handoff: Any,
+    objective: str,
+    architecture_decision: str,
+    act_tasks: list[str | dict[str, Any]],
+    target_file: str | None,
+    target_symbol: str | None,
+    repo_root: Path,
+) -> None:
+    """Fail closed on any bilateral artifact unless it is bound to a genuine,
+    already-authorized `_TrustedBilateralHandoff` recomputed against the live
+    repository identity and the exact context being prepared.
+
+    Raises ``ValueError`` on any missing, forged, stale, or mismatched
+    handoff. Callers that supply no bilateral artifacts at all are unaffected
+    (the non-bilateral path is preserved unchanged).
+    """
+    if bilateral_contract is None and bilateral_plan_gate is None and bilateral_proof_plan is None:
+        return
+    if not isinstance(_trusted_bilateral_handoff, _TrustedBilateralHandoff):
+        raise ValueError(
+            "bilateral artifacts were supplied without a genuine "
+            "_TrustedBilateralHandoff; raw bilateral kwargs are never authority"
+        )
+    from aura_arena_gate_dialogue import _repository_identity
+
+    try:
+        identity = _repository_identity(repo_root)
+    except (OSError, subprocess.SubprocessError, ValueError) as exc:
+        raise ValueError(
+            "repository identity unavailable for bilateral handoff"
+        ) from exc
+    expected_binding_digest = _bind_trusted_bilateral_handoff(
+        bilateral_contract=_trusted_bilateral_handoff.bilateral_contract,
+        bilateral_plan_gate=_trusted_bilateral_handoff.bilateral_plan_gate,
+        bilateral_proof_plan=_trusted_bilateral_handoff.bilateral_proof_plan,
+        selected_plan_digest=_trusted_bilateral_handoff.selected_plan_digest,
+        objective=objective,
+        architecture_decision=architecture_decision,
+        act_tasks=act_tasks,
+        target_file=target_file,
+        target_symbol=target_symbol,
+        repository_head=str(identity["repository_head"]),
+        source_tree_digest=str(identity["source_tree_digest"]),
+    )
+    if expected_binding_digest != _trusted_bilateral_handoff.binding_digest:
+        raise ValueError(
+            "trusted bilateral handoff binding digest does not match the "
+            "exact context, live repository identity, or selected-plan "
+            "binding being prepared"
+        )
+    gate = dict(_trusted_bilateral_handoff.bilateral_plan_gate or {})
+    if gate.get("passed") is not True:
+        raise ValueError(
+            "trusted bilateral handoff gate did not record passed=True"
+        )
+    for label, supplied, canonical in (
+        ("bilateral_contract", bilateral_contract, _trusted_bilateral_handoff.bilateral_contract),
+        ("bilateral_plan_gate", bilateral_plan_gate, _trusted_bilateral_handoff.bilateral_plan_gate),
+        ("bilateral_proof_plan", bilateral_proof_plan, _trusted_bilateral_handoff.bilateral_proof_plan),
+    ):
+        if supplied is None:
+            continue
+        supplied_data = (
+            supplied.to_dict() if hasattr(supplied, "to_dict") else dict(supplied)
+        )
+        canonical_data = (
+            canonical.to_dict() if hasattr(canonical, "to_dict") else dict(canonical or {})
+        )
+        if _hash_payload(supplied_data) != _hash_payload(canonical_data):
+            raise ValueError(
+                f"raw {label} does not match the handoff-carried canonical value; "
+                "raw bilateral kwargs may never override the trusted handoff"
+            )
+
+
 class ArchitectFusionLoop:
     """Plan/Act/Shadow/Arena coordinator for Architect-driven refactor work."""
 
@@ -1770,7 +2193,28 @@ class ArchitectFusionLoop:
         escalation_rules: list[str] | None = None,
         context_pressure: float = 0.0,
         refresh_codemap: bool = True,
+        bilateral_contract: Mapping[str, Any] | Any | None = None,
+        bilateral_plan_gate: Mapping[str, Any] | None = None,
+        bilateral_proof_plan: Mapping[str, Any] | None = None,
+        _trusted_bilateral_handoff: Any = None,
     ) -> ArchitectLoopResult:
+        _validate_trusted_bilateral_handoff(
+            bilateral_contract=bilateral_contract,
+            bilateral_plan_gate=bilateral_plan_gate,
+            bilateral_proof_plan=bilateral_proof_plan,
+            _trusted_bilateral_handoff=_trusted_bilateral_handoff,
+            objective=objective,
+            architecture_decision=architecture_decision,
+            act_tasks=act_tasks,
+            target_file=target_file,
+            target_symbol=target_symbol,
+            repo_root=self.repo_root,
+        )
+        bilateral_data = (
+            bilateral_contract.to_dict()
+            if hasattr(bilateral_contract, "to_dict")
+            else dict(bilateral_contract or {})
+        )
         plan = build_fractal_plan_capsule(
             objective,
             architecture_decision=architecture_decision,
@@ -1784,6 +2228,9 @@ class ArchitectFusionLoop:
             escalation_rules=escalation_rules,
             repo_root=self.repo_root,
             context_pressure=context_pressure,
+            bilateral_contract=bilateral_data,
+            bilateral_plan_gate=bilateral_plan_gate,
+            bilateral_proof_plan=bilateral_proof_plan,
         )
         grounding = ground_plan_capsule(
             plan,

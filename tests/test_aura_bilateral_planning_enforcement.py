@@ -1,0 +1,963 @@
+from __future__ import annotations
+
+from copy import deepcopy
+import subprocess
+import time
+
+import pytest
+
+import aura_coding_relationship_compass as compass
+from aura_agent_arena_bridge import AuraAgentArenaBridge
+from aura_agent_arena_mcp import TOOL_DEFINITIONS, handle_request
+from aura_architect_control import normalize_control_profile
+from aura_architect_council_v3 import route_compass_failure_classes
+from aura_architect_loop import (
+    ArchitectFusionLoop,
+    GroundingEvidence,
+    _mint_trusted_bilateral_handoff,
+    build_fractal_plan_capsule,
+    build_refactor_arena,
+    shadow_plan_capsule,
+    stage_arena_patch,
+    verify_refactor_arena,
+)
+from aura_arena_architect_connector import AuraArenaArchitectConnector
+from aura_external_llm_session import (
+    AuraExternalLLMSessionManager,
+    ExternalLLMSession,
+)
+from aura_relationship_contracts import (
+    BilateralPlanningContract,
+    evaluate_bilateral_plan,
+)
+
+
+@pytest.fixture()
+def bilateral_contract() -> BilateralPlanningContract:
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    started = bridge.intent_refinement_start(
+        source_request=(
+            "Add deterministic bilateral plan enforcement. "
+            "Do not allow a plan without negative requirement verification."
+        ),
+        affected_files=["aura_arena_architect_connector.py"],
+        affected_symbols=["assess_plan"],
+    )
+    assert started["status"] == "TEACH_BACK_PENDING"
+    confirmed = bridge.intent_refinement_confirm(
+        session_id=started["session_id"],
+        allowed_paths=["aura_arena_architect_connector.py"],
+        human_reviewer="pytest-human",
+    )
+    assert confirmed["ok"] is True
+    return BilateralPlanningContract.from_dict(confirmed["bilateral_contract"])
+
+
+@pytest.fixture()
+def bilateral_session() -> tuple[AuraAgentArenaBridge, str, BilateralPlanningContract]:
+    """Like ``bilateral_contract`` but also returns the bridge and session id
+    backing the retained confirmation, for tests that must exercise the
+    authenticated confirmation_session_id path rather than pass an
+    already-instantiated contract object directly."""
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    started = bridge.intent_refinement_start(
+        source_request=(
+            "Add deterministic bilateral plan enforcement. "
+            "Do not allow a plan without negative requirement verification."
+        ),
+        affected_files=["aura_arena_architect_connector.py"],
+        affected_symbols=["assess_plan"],
+    )
+    assert started["status"] == "TEACH_BACK_PENDING"
+    confirmed = bridge.intent_refinement_confirm(
+        session_id=started["session_id"],
+        allowed_paths=["aura_arena_architect_connector.py"],
+        human_reviewer="pytest-human",
+    )
+    assert confirmed["ok"] is True
+    contract = BilateralPlanningContract.from_dict(confirmed["bilateral_contract"])
+    return bridge, str(started["session_id"]), contract
+
+
+def _complete_plan(contract: BilateralPlanningContract) -> dict:
+    coverage = lambda values: {  # noqa: E731
+        value: {
+            "enforcement": f"enforce:{index}",
+            "verifier": contract.required_verifiers[index % len(contract.required_verifiers)],
+        }
+        for index, value in enumerate(values)
+    }
+    return {
+        "architecture_decision": "Reuse the existing Architect connector and gates.",
+        "act_tasks": [
+            {
+                "task_id": "BILATERAL-1",
+                "objective": "Enforce the confirmed bilateral planning contract.",
+                "target_file": "aura_arena_architect_connector.py",
+                "target_symbol": "assess_plan",
+                "acceptance": "The deterministic gate passes before scoring.",
+                "expected_output": "UNIFIED_DIFF",
+                "tests": ["tests/test_aura_bilateral_planning_enforcement.py"],
+            }
+        ],
+        "acceptance_criteria": ["A complete plan remains eligible."],
+        "rollback_conditions": ["Any bilateral proof failure."],
+        "risk_map": ["A missing prohibition could otherwise win on score."],
+        "constraints": ["proposal only"],
+        "architecture_reuse": True,
+        "coverage_tags": ["bilateral"],
+        "intent_digest": contract.intent_digest,
+        "semantic_ledger_digest": contract.semantic_ledger_digest,
+        "confirmation_digest": contract.confirmation_digest,
+        "semantic_definitions": [dict(item) for item in contract.semantic_definitions],
+        "positive_requirement_coverage": coverage(contract.positive_requirements),
+        "negative_requirement_coverage": coverage(contract.negative_requirements),
+        "guardrail_coverage": coverage(
+            [*contract.hard_guardrail_ids, *contract.human_guardrail_ids]
+        ),
+        "guardrail_verifiers": list(contract.required_verifiers),
+        "assumption_register": [],
+        "plan_revision_policy": "reconfirm meaning, scope, authority, or guardrail changes",
+        "authority_conflicts": [],
+        "expected_repository_head": contract.repository_head,
+        "expected_source_tree_digest": contract.source_tree_digest,
+        "allowed_path_set_digest": contract.allowed_path_set_digest,
+        "intent_revision_id": contract.intent_revision_id,
+        "plan_revision": {},
+    }
+
+
+def test_bilateral_plan_gate_passes_complete_exact_plan(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    gate = evaluate_bilateral_plan(
+        _complete_plan(bilateral_contract),
+        bilateral_contract,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+    )
+    assert gate.passed is True
+    assert gate.failure_classes == ()
+
+
+def test_bilateral_plan_gate_rejects_missing_negative_verifier(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    plan = _complete_plan(bilateral_contract)
+    plan["negative_requirement_coverage"] = {}
+    gate = evaluate_bilateral_plan(
+        plan,
+        bilateral_contract,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+    )
+    assert gate.passed is False
+    assert "NEGATIVE_REQUIREMENT" in gate.failure_classes
+
+
+def test_resolve_bilateral_contract_rejects_unretained_in_memory_object(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    """An already-instantiated BilateralPlanningContract that this connector's
+    bridge never retained (e.g. confirmed against a different bridge/session,
+    or held only in memory) must never be returned directly. It must be
+    rejected even when passed straight to _resolve_bilateral_contract, and it
+    must not be usable without a confirmation_session_id."""
+    connector = AuraArenaArchitectConnector(repo_root=".")
+
+    # No confirmation_session_id at all: rejected outright, even though the
+    # object itself is a legitimately confirmed contract from some other
+    # session/bridge.
+    with pytest.raises(ValueError, match="confirmation_session_id is required"):
+        connector._resolve_bilateral_contract(bilateral_contract, "")
+
+    # A confirmation_session_id that this connector's bridge never retained
+    # (nothing has been confirmed on this fresh bridge/connector) must also
+    # be rejected -- the object cannot substitute for canonical retained
+    # confirmation lookup.
+    with pytest.raises(ValueError):
+        connector._resolve_bilateral_contract(bilateral_contract, "unretained-session-id")
+
+
+def test_resolve_bilateral_contract_accepts_object_only_via_matching_session_id(
+    bilateral_session: tuple[AuraAgentArenaBridge, str, BilateralPlanningContract],
+) -> None:
+    """A BilateralPlanningContract object is only accepted when it resolves,
+    by contract_digest, against the canonical bridge-retained confirmation
+    identified by its own confirmation_session_id."""
+    bridge, session_id, bilateral_contract = bilateral_session
+    connector = AuraArenaArchitectConnector(repo_root=".", bridge=bridge)
+
+    resolved = connector._resolve_bilateral_contract(bilateral_contract, session_id)
+    assert resolved.contract_digest == bilateral_contract.contract_digest
+
+    # A different (unrelated, never-retained) session id must still be
+    # rejected even though the supplied object is otherwise well-formed.
+    with pytest.raises(ValueError):
+        connector._resolve_bilateral_contract(bilateral_contract, "some-other-session-id")
+
+
+def test_connector_cannot_select_higher_scoring_ineligible_plan(
+    bilateral_session: tuple[AuraAgentArenaBridge, str, BilateralPlanningContract],
+) -> None:
+    bridge, session_id, bilateral_contract = bilateral_session
+    complete = _complete_plan(bilateral_contract)
+    complete["architecture_reuse"] = False
+    complete["acceptance_criteria"] = []
+    incomplete = deepcopy(complete)
+    incomplete["negative_requirement_coverage"] = {}
+    incomplete["coverage_tags"] = ["bilateral", "extra"]
+    incomplete["architecture_reuse"] = True
+    incomplete["acceptance_criteria"] = [
+        "This otherwise higher-scoring plan must still lose."
+    ]
+    connector = AuraArenaArchitectConnector(repo_root=".", bridge=bridge)
+    result = connector.compare_plans(
+        objective="Choose only a bilaterally eligible plan.",
+        candidates=[
+            {"candidate_id": "incomplete", "plan": incomplete},
+            {"candidate_id": "complete", "plan": complete},
+        ],
+        required_capabilities=["bilateral"],
+        bilateral_contract=bilateral_contract,
+        confirmation_session_id=session_id,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+        record=False,
+    )
+    assert result["ok"] is True
+    assert result["selected_candidate_id"] == "complete"
+    by_id = {item["candidate_id"]: item for item in result["assessments"]}
+    assert by_id["incomplete"]["eligible"] is False
+    assert by_id["incomplete"]["score"] == 0.0
+
+
+def test_compare_plans_session_id_only_all_ineligible_denies_without_selection(
+    bilateral_session: tuple[AuraAgentArenaBridge, str, BilateralPlanningContract],
+) -> None:
+    """Calling compare_plans with only confirmation_session_id (no
+    bilateral_contract object) must still gate on the resolved bilateral
+    contract. If every candidate is bilaterally ineligible, the call must
+    deny deterministically and never select a candidate -- it must not fail
+    open just because the raw bilateral_contract argument was never
+    supplied."""
+    bridge, session_id, bilateral_contract = bilateral_session
+    incomplete_one = _complete_plan(bilateral_contract)
+    incomplete_one["negative_requirement_coverage"] = {}
+    incomplete_two = _complete_plan(bilateral_contract)
+    incomplete_two["positive_requirement_coverage"] = {}
+    connector = AuraArenaArchitectConnector(repo_root=".", bridge=bridge)
+    result = connector.compare_plans(
+        objective="Session-id-only call must not fail open.",
+        candidates=[
+            {"candidate_id": "one", "plan": incomplete_one},
+            {"candidate_id": "two", "plan": incomplete_two},
+        ],
+        required_capabilities=["bilateral"],
+        confirmation_session_id=session_id,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+        record=False,
+    )
+    assert result["ok"] is False
+    assert result["reason"] == "NO_BILATERAL_ELIGIBLE_PLAN"
+    assert "selected_candidate_id" not in result
+    assert "selected_plan" not in result
+
+
+def test_compare_plans_session_id_only_success_requires_bilateral_gate(
+    bilateral_session: tuple[AuraAgentArenaBridge, str, BilateralPlanningContract],
+) -> None:
+    """A successful compare_plans call using only confirmation_session_id
+    (no bilateral_contract object) must still report bilateral_gate_required
+    as True, keyed off the resolved contract rather than the raw argument."""
+    bridge, session_id, bilateral_contract = bilateral_session
+    complete = _complete_plan(bilateral_contract)
+    connector = AuraArenaArchitectConnector(repo_root=".", bridge=bridge)
+    result = connector.compare_plans(
+        objective="Session-id-only call must still require the bilateral gate.",
+        candidates=[{"candidate_id": "complete", "plan": complete}],
+        required_capabilities=["bilateral"],
+        confirmation_session_id=session_id,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+        record=False,
+    )
+    assert result["ok"] is True
+    assert result["selected_candidate_id"] == "complete"
+    assert result["bilateral_gate_required"] is True
+
+
+def test_shadow_and_patch_stage_retain_bilateral_scope(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    plan_data = _complete_plan(bilateral_contract)
+    gate = evaluate_bilateral_plan(
+        plan_data,
+        bilateral_contract,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+    )
+    plan = build_fractal_plan_capsule(
+        "Enforce bilateral planning.",
+        architecture_decision=plan_data["architecture_decision"],
+        act_tasks=plan_data["act_tasks"],
+        bilateral_contract=bilateral_contract.to_dict(),
+        bilateral_plan_gate=gate.to_dict(),
+        bilateral_proof_plan=plan_data,
+    )
+    grounding = [
+        GroundingEvidence(
+            task_id="BILATERAL-1",
+            target_file="aura_arena_architect_connector.py",
+            target_symbol="assess_plan",
+            file_exists=True,
+            codemap_file_hit=True,
+            symbol_exists=True,
+            codemap_symbol_hits=[],
+            test_files=["tests/test_aura_bilateral_planning_enforcement.py"],
+            neighbor_files=[],
+        )
+    ]
+    shadow = shadow_plan_capsule(plan, grounding)
+    assert shadow.ok is True
+    arena = build_refactor_arena(plan, grounding, shadow)
+    staged = stage_arena_patch(
+        arena,
+        task_id="BILATERAL-1",
+        owner="temporary-surgeon",
+        diff=(
+            "--- a/unrelated.py\n"
+            "+++ b/unrelated.py\n"
+            "@@ -1 +1 @@\n"
+            "-old\n"
+            "+new\n"
+        ),
+        affected_files=["unrelated.py"],
+    )
+    assert staged.ok is False
+    assert any(
+        item.shadow_type == "bilateral_scope_violation"
+        for item in staged.findings
+    )
+
+
+def _build_verifiable_arena(
+    bilateral_contract: BilateralPlanningContract,
+    plan_data: dict,
+    *,
+    test_names: list[str] | None = None,
+):
+    """Build a plan/shadow/arena chain identical to
+    test_shadow_and_patch_stage_retain_bilateral_scope, but reusable for
+    exercising verify_refactor_arena directly."""
+    test_names = test_names or ["tests/test_aura_bilateral_planning_enforcement.py"]
+    gate = evaluate_bilateral_plan(
+        plan_data,
+        bilateral_contract,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+    )
+    plan = build_fractal_plan_capsule(
+        "Enforce bilateral planning.",
+        architecture_decision=plan_data["architecture_decision"],
+        act_tasks=plan_data["act_tasks"],
+        bilateral_contract=bilateral_contract.to_dict(),
+        bilateral_plan_gate=gate.to_dict(),
+        bilateral_proof_plan=plan_data,
+    )
+    grounding = [
+        GroundingEvidence(
+            task_id="BILATERAL-1",
+            target_file="aura_arena_architect_connector.py",
+            target_symbol="assess_plan",
+            file_exists=True,
+            codemap_file_hit=True,
+            symbol_exists=True,
+            codemap_symbol_hits=[],
+            test_files=test_names,
+            neighbor_files=[],
+        )
+    ]
+    shadow = shadow_plan_capsule(plan, grounding)
+    assert shadow.ok is True
+    arena = build_refactor_arena(plan, grounding, shadow)
+    staged = stage_arena_patch(
+        arena,
+        task_id="BILATERAL-1",
+        owner="temporary-surgeon",
+        diff=(
+            "--- a/aura_arena_architect_connector.py\n"
+            "+++ b/aura_arena_architect_connector.py\n"
+            "@@ -1 +1 @@\n"
+            "-old\n"
+            "+new\n"
+        ),
+        affected_files=["aura_arena_architect_connector.py"],
+        tests=test_names,
+    )
+    assert staged.ok is True
+    return staged.arena
+
+
+def test_verify_refactor_arena_rejects_candidate_forged_receipt(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    """A candidate-supplied verifier_receipts entry claiming passed: true for
+    an admitted verifier name must never establish negative-requirement
+    proof on its own -- it is untrusted proposal data, not a canonical
+    verification result."""
+    plan_data = _complete_plan(bilateral_contract)
+    requirement = bilateral_contract.negative_requirements[0]
+    verifier = plan_data["negative_requirement_coverage"][requirement]["verifier"]
+    plan_data["verifier_receipts"] = {verifier: {"passed": True}}
+    arena = _build_verifiable_arena(bilateral_contract, plan_data)
+    # No trusted runner is supplied, and the forged receipt lives only in
+    # bilateral_proof_plan (candidate data) -- it must never substitute for
+    # an actually-executed, actually-passed test.
+    result = verify_refactor_arena(arena, repo_root=".", runner=lambda name: False)
+    assert result.ok is False
+    assert any(item["stage"] == "bilateral_negative_proof" for item in result.failures)
+
+
+def test_verify_refactor_arena_accepts_genuine_canonical_run_receipt(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    """The negative-requirement gate is satisfied only through the
+    canonical, connector-independent verification run: a verifier name that
+    is actually executed and actually passes via the trusted runner
+    callback inside verify_refactor_arena itself."""
+    plan_data = _complete_plan(bilateral_contract)
+    requirement = bilateral_contract.negative_requirements[0]
+    verifier = plan_data["negative_requirement_coverage"][requirement]["verifier"]
+    assert verifier in bilateral_contract.required_verifiers
+    # The verifier identity is only proven by an actually-executed,
+    # actually-passed test recorded through the trusted runner -- not by
+    # any candidate-supplied receipt.
+    arena = _build_verifiable_arena(bilateral_contract, plan_data, test_names=[verifier])
+
+    def runner(test_name: str) -> bool:
+        return True
+
+    result = verify_refactor_arena(arena, repo_root=".", runner=runner)
+    assert not any(
+        item["stage"] == "bilateral_negative_proof" for item in result.failures
+    )
+    assert any(
+        item["stage"] == "bilateral_negative_proof" and item["status"] == "passed"
+        for item in result.checks
+    )
+
+
+def test_council_routes_bilateral_meaning_back_to_human() -> None:
+    routed = route_compass_failure_classes(
+        ["SEMANTIC_AMBIGUITY", "AUTHORITY_DENIAL"]
+    )
+    assert routed["route"] == "HUMAN_RECONFIRMATION_REQUIRED"
+    assert routed["deterministic_denial"] is True
+    assert routed["council_override_allowed"] is False
+
+
+@pytest.mark.parametrize(
+    "failure_class",
+    [
+        "INTENT_FIDELITY",
+        "POSITIVE_REQUIREMENT",
+        "NEGATIVE_REQUIREMENT",
+        "PLAN_ASSUMPTION_INVALIDATED",
+    ],
+)
+def test_council_never_overrides_deterministic_bilateral_denials(
+    failure_class: str,
+) -> None:
+    routed = route_compass_failure_classes([failure_class])
+    assert routed["route"] == "HUMAN_RECONFIRMATION_REQUIRED"
+    assert routed["council_override_allowed"] is False
+
+
+def test_bilateral_plan_rejects_changed_semantic_definition(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    plan = _complete_plan(bilateral_contract)
+    plan["semantic_definitions"][0]["definition"] = "caller-rewritten meaning"
+    gate = evaluate_bilateral_plan(
+        plan,
+        bilateral_contract,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+    )
+    assert "SEMANTIC_DEFINITION" in gate.failure_classes
+
+
+def test_bilateral_plan_rejects_unadmitted_verifier(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    plan = _complete_plan(bilateral_contract)
+    requirement = bilateral_contract.negative_requirements[0]
+    plan["negative_requirement_coverage"][requirement]["verifier"] = "caller-test"
+    gate = evaluate_bilateral_plan(
+        plan,
+        bilateral_contract,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+    )
+    assert "NEGATIVE_REQUIREMENT" in gate.failure_classes
+
+
+def test_meaning_change_cannot_echo_old_confirmation(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    plan = _complete_plan(bilateral_contract)
+    plan["plan_revision"] = {
+        "meaning_changed": True,
+        "human_reconfirmed": True,
+        "confirmation_digest": bilateral_contract.confirmation_digest,
+    }
+    gate = evaluate_bilateral_plan(
+        plan,
+        bilateral_contract,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+    )
+    assert "PLAN_REVISION_RECONFIRMATION" in gate.failure_classes
+
+
+def test_prepare_rejects_forged_unretained_contract(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    result = bridge.aura_prepare_arena(
+        objective="Do not trust a caller-created bilateral contract.",
+        target_file="aura_arena_architect_connector.py",
+        bilateral_contract=bilateral_contract.to_dict(),
+        bilateral_proof_plan=_complete_plan(bilateral_contract),
+    )
+    assert result["ok"] is False
+    assert "confirmation_session_id is required" in result["message"]
+
+
+def test_prepare_rejects_gate_only_input_without_retained_confirmation(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    plan = _complete_plan(bilateral_contract)
+    gate = evaluate_bilateral_plan(
+        plan,
+        bilateral_contract,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+    )
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    result = bridge.aura_prepare_arena(
+        objective="A gate-only request must not bypass retained confirmation.",
+        target_file="aura_arena_architect_connector.py",
+        bilateral_plan_gate=gate.to_dict(),
+    )
+    assert result["ok"] is False
+    assert "confirmation_session_id is required" in result["message"]
+
+
+def test_prepare_rejects_proof_plan_only_input_without_retained_confirmation(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    result = bridge.aura_prepare_arena(
+        objective="A proof-plan-only request must not bypass retained confirmation.",
+        target_file="aura_arena_architect_connector.py",
+        bilateral_proof_plan=_complete_plan(bilateral_contract),
+    )
+    assert result["ok"] is False
+    assert "confirmation_session_id is required" in result["message"]
+
+
+def test_prepare_forces_gate_to_exact_prepared_task(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    started = bridge.intent_refinement_start(
+        source_request=(
+            "Add deterministic bilateral plan enforcement. "
+            "Do not allow a plan without negative requirement verification."
+        ),
+        affected_files=["aura_arena_architect_connector.py"],
+        affected_symbols=["assess_plan"],
+    )
+    assert started["status"] == "TEACH_BACK_PENDING"
+    confirmed = bridge.intent_refinement_confirm(
+        session_id=started["session_id"],
+        allowed_paths=["aura_arena_architect_connector.py"],
+        human_reviewer="pytest-human",
+    )
+    assert confirmed["ok"] is True
+    contract = BilateralPlanningContract.from_dict(confirmed["bilateral_contract"])
+
+    plan = _complete_plan(contract)
+    # A benign-looking act_tasks list that (mis)declares an in-scope file while
+    # the request actually targets an out-of-scope file must never authorize
+    # that out-of-scope target_file for the task actually being prepared.
+    plan["act_tasks"] = [
+        {
+            "task_id": "BILATERAL-1",
+            "objective": "Claim scope over the allowed file only.",
+            "target_file": "aura_arena_architect_connector.py",
+            "target_symbol": "assess_plan",
+            "acceptance": "The deterministic gate passes before scoring.",
+            "expected_output": "UNIFIED_DIFF",
+            "tests": ["tests/test_aura_bilateral_planning_enforcement.py"],
+        }
+    ]
+
+    result = bridge.aura_prepare_arena(
+        objective="Attempt to smuggle an out-of-scope target via act_tasks.",
+        target_file="out_of_scope_file.py",
+        confirmation_session_id=started["session_id"],
+        bilateral_proof_plan=plan,
+    )
+    assert result["ok"] is False
+    assert result["error_category"] == "scope_too_broad"
+    assert "SCOPE_PRESERVATION" in result["repair_hint"]
+
+
+@pytest.mark.parametrize("raised", [OSError("git worktree unreadable"),
+                                     subprocess.SubprocessError("git call failed")])
+def test_intent_refinement_confirm_returns_protocol_error_on_repository_lookup_failure(
+    monkeypatch: pytest.MonkeyPatch,
+    raised: Exception,
+) -> None:
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    started = bridge.intent_refinement_start(
+        source_request=(
+            "Add deterministic bilateral plan enforcement. "
+            "Do not allow a plan without negative requirement verification."
+        ),
+        affected_files=["aura_arena_architect_connector.py"],
+        affected_symbols=["assess_plan"],
+    )
+    assert started["status"] == "TEACH_BACK_PENDING"
+
+    def _boom(*args: object, **kwargs: object) -> None:
+        raise raised
+
+    monkeypatch.setattr("aura_arena_gate_dialogue._repository_identity", _boom)
+
+    result = bridge.intent_refinement_confirm(
+        session_id=started["session_id"],
+        allowed_paths=["aura_arena_architect_connector.py"],
+        human_reviewer="pytest-human",
+    )
+    assert result["ok"] is False
+    assert result["error_category"] == "mcp_protocol_error"
+
+    state = bridge._intent_refinements[str(started["session_id"])]
+    assert state["confirmation_in_progress"] is False
+    assert state.get("confirmed") is None
+
+    # The session must not be bricked: a retry without the induced failure
+    # can still confirm successfully.
+    monkeypatch.undo()
+    confirmed = bridge.intent_refinement_confirm(
+        session_id=started["session_id"],
+        allowed_paths=["aura_arena_architect_connector.py"],
+        human_reviewer="pytest-human",
+    )
+    assert confirmed["ok"] is True
+
+
+def test_prepare_deterministic_denial_is_fail_closed(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    started = bridge.intent_refinement_start(
+        source_request=(
+            "Add deterministic bilateral plan enforcement. "
+            "Do not allow a plan without negative requirement verification."
+        ),
+        affected_files=["aura_arena_architect_connector.py"],
+        affected_symbols=["assess_plan"],
+    )
+    assert started["status"] == "TEACH_BACK_PENDING"
+    confirmed = bridge.intent_refinement_confirm(
+        session_id=started["session_id"],
+        allowed_paths=["aura_arena_architect_connector.py"],
+        human_reviewer="pytest-human",
+    )
+    assert confirmed["ok"] is True
+    contract = BilateralPlanningContract.from_dict(confirmed["bilateral_contract"])
+
+    plan = _complete_plan(contract)
+    plan["negative_requirement_coverage"] = {}
+
+    result = bridge.aura_prepare_arena(
+        objective="A plan missing negative coverage must be denied, not proposed.",
+        target_file="aura_arena_architect_connector.py",
+        target_symbol="assess_plan",
+        confirmation_session_id=started["session_id"],
+        bilateral_proof_plan=plan,
+    )
+    assert result["ok"] is False
+    assert result["error_category"] == "scope_too_broad"
+    assert "NEGATIVE_REQUIREMENT" in result["repair_hint"]
+
+
+def test_mcp_rejects_non_object_bilateral_arguments() -> None:
+    response = handle_request(
+        AuraAgentArenaBridge(repo_root="."),
+        {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/call",
+            "params": {
+                "name": "aura_prepare_arena",
+                "arguments": {
+                    "objective": "Fail closed.",
+                    "bilateral_contract": [],
+                },
+            },
+        },
+    )
+    assert response is not None
+    result = response["result"]
+    assert result["isError"] is True
+
+
+def test_mcp_exposes_bounded_refinement_and_revision_tools() -> None:
+    names = {item["name"] for item in TOOL_DEFINITIONS}
+    assert {
+        "intent_refinement_start",
+        "intent_refinement_answer",
+        "intent_refinement_teach_back",
+        "intent_refinement_confirm",
+        "intent_refinement_status",
+        "intent_revision_propose",
+        "intent_revision_confirm",
+    }.issubset(names)
+
+
+def _compile_compass_with_forced_assessments(
+    bilateral_contract: BilateralPlanningContract,
+    assessments: list[dict],
+    monkeypatch: pytest.MonkeyPatch,
+) -> dict:
+    """Compile the real Coding Relationship Compass against this repository,
+    forcing Atlas assessment content so ``_semantic_obligations`` projection
+    is deterministic regardless of the live relational index/atlas content."""
+    original = compass._bounded_atlas_intelligence
+
+    def _forced(atlas, focal_ids, *, max_assessments):
+        bounded = original(atlas, focal_ids, max_assessments=max_assessments)
+        bounded["assessments"] = assessments
+        return bounded
+
+    monkeypatch.setattr(compass, "_bounded_atlas_intelligence", _forced)
+    return compass.compile_coding_relationship_compass(
+        "Add deterministic bilateral plan enforcement in the Architect connector.",
+        ".",
+        target_files=["aura_arena_architect_connector.py"],
+        target_symbols=["assess_plan"],
+        bilateral_contract=bilateral_contract,
+        max_target_files=1,
+    )
+
+
+def test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected(
+    bilateral_contract: BilateralPlanningContract,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Even with non-empty Atlas assessments, any remaining unprojected
+    positive, negative, guardrail, or verifier obligation must still route
+    to the deterministic INTENT_FIDELITY denial before scoring/Council."""
+    packet = _compile_compass_with_forced_assessments(
+        bilateral_contract,
+        [
+            {
+                "assessment_id": "a1",
+                "participant_refs": ["x"],
+                # Only the positive requirement is grounded; negative
+                # requirements, guardrails, and required verifiers remain
+                # unprojected.
+                "note": bilateral_contract.positive_requirements[0],
+            }
+        ],
+        monkeypatch,
+    )
+    unprojected = packet["atlas"]["unprojected_bilateral_obligations"]
+    assert unprojected["positive_requirements"]
+    assert unprojected["negative_requirements"]
+    assert unprojected["guardrail_ids"]
+    assert unprojected["required_verifiers"]
+    assert packet["atlas"]["assessments"]
+    assert "INTENT_FIDELITY" in packet["council_route"]["failure_classes"]
+    assert packet["council_route"]["route"] == "HUMAN_RECONFIRMATION_REQUIRED"
+    assert packet["council_route"]["deterministic_denial"] is True
+    assert packet["council_route"]["council_override_allowed"] is False
+
+
+def test_compass_fully_projected_obligations_preserve_eligible_path(
+    bilateral_contract: BilateralPlanningContract,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """When every positive, negative, guardrail, and verifier obligation is
+    grounded in the Atlas assessments, the deterministic INTENT_FIDELITY
+    denial must not fire and the packet remains eligible for normal
+    Council routing."""
+    packet = _compile_compass_with_forced_assessments(
+        bilateral_contract,
+        [
+            {
+                "assessment_id": "a1",
+                "participant_refs": [
+                    f"file:{bilateral_contract.allowed_paths[0]}#assess_plan"
+                ],
+            }
+        ],
+        monkeypatch,
+    )
+    unprojected = packet["atlas"]["unprojected_bilateral_obligations"]
+    assert not any(unprojected.values())
+    assert "INTENT_FIDELITY" not in packet["council_route"]["failure_classes"]
+
+
+@pytest.mark.parametrize(
+    "raised",
+    [
+        OSError("repository unreadable"),
+        subprocess.SubprocessError("git identity failed"),
+        ValueError("trusted packaged source identity is unavailable"),
+    ],
+)
+def test_connector_identity_failure_returns_deterministic_denial(
+    bilateral_contract: BilateralPlanningContract,
+    monkeypatch: pytest.MonkeyPatch,
+    raised: Exception,
+) -> None:
+    connector = AuraArenaArchitectConnector(
+        repo_root=".",
+        bridge=AuraAgentArenaBridge(repo_root="."),
+    )
+
+    def _boom(*_: object, **__: object) -> None:
+        raise raised
+
+    monkeypatch.setattr("aura_arena_gate_dialogue._repository_identity", _boom)
+    result = connector._prepare_selected_plan(
+        objective="Fail closed when repository identity is unavailable.",
+        selected_plan=_complete_plan(bilateral_contract),
+        profile=normalize_control_profile(None, surface="native"),
+        bilateral_contract=bilateral_contract,
+        bilateral_gate={"passed": True},
+    )
+
+    assert result["ok"] is False
+    assert result["error"] == "repository_identity_unavailable"
+    assert result["error_category"] == "mcp_protocol_error"
+    assert result["deterministic_denial"] is True
+    assert result["council_override_allowed"] is False
+    assert result["human_reconfirmation_required"] is True
+    assert result["production_mutation"] is False
+
+
+@pytest.mark.parametrize(
+    "raised",
+    [
+        OSError("repository unreadable"),
+        subprocess.SubprocessError("git identity failed"),
+        ValueError("trusted packaged source identity is unavailable"),
+    ],
+)
+def test_loop_identity_failure_is_stable_fail_closed_error(
+    bilateral_contract: BilateralPlanningContract,
+    monkeypatch: pytest.MonkeyPatch,
+    raised: Exception,
+) -> None:
+    plan = _complete_plan(bilateral_contract)
+    gate = {"passed": True, "gate_digest": "test-gate"}
+    handoff = _mint_trusted_bilateral_handoff(
+        bilateral_contract=bilateral_contract,
+        bilateral_plan_gate=gate,
+        bilateral_proof_plan=plan,
+        selected_plan_digest="",
+        objective="Fail closed before plan construction.",
+        architecture_decision=plan["architecture_decision"],
+        act_tasks=plan["act_tasks"],
+        target_file="aura_arena_architect_connector.py",
+        target_symbol="assess_plan",
+        repository_head=bilateral_contract.repository_head,
+        source_tree_digest=bilateral_contract.source_tree_digest,
+    )
+
+    def _boom(*_: object, **__: object) -> None:
+        raise raised
+
+    monkeypatch.setattr("aura_arena_gate_dialogue._repository_identity", _boom)
+    with pytest.raises(
+        ValueError,
+        match="repository identity unavailable for bilateral handoff",
+    ):
+        ArchitectFusionLoop(repo_root=".").prepare(
+            "Fail closed before plan construction.",
+            architecture_decision=plan["architecture_decision"],
+            act_tasks=plan["act_tasks"],
+            target_file="aura_arena_architect_connector.py",
+            target_symbol="assess_plan",
+            bilateral_contract=bilateral_contract,
+            bilateral_plan_gate=gate,
+            bilateral_proof_plan=plan,
+            _trusted_bilateral_handoff=handoff,
+        )
+
+
+class _LargeBilateralMicroContextBridge:
+    def aura_get_micro_context(self, **_: object) -> dict:
+        return {
+            "ok": True,
+            "compressed_context": "base context",
+            "bilateral_micro_context": {
+                "positive_requirements": ["x" * 20_000],
+                "negative_requirements": ["y" * 20_000],
+            },
+            "line_ranges": [],
+            "tests": [],
+        }
+
+    def aura_read_slice(self, **_: object) -> dict:
+        return {"ok": False}
+
+
+def test_external_llm_turn_bounds_large_bilateral_micro_context() -> None:
+    manager = AuraExternalLLMSessionManager(
+        repo_root=".",
+        bridge=_LargeBilateralMicroContextBridge(),
+    )
+    session = ExternalLLMSession(
+        session_id="ELLM-bounded",
+        objective="Keep bilateral context bounded.",
+        plan_phase_hash="phase",
+        provider="test",
+        model="stub",
+        act_capsules=[
+            {
+                "task_id": "T1",
+                "objective": "Bound context.",
+                "target_file": "aura_external_llm_session.py",
+                "target_symbol": "AuraExternalLLMSessionManager._build_turn",
+            }
+        ],
+        max_context_tokens=256,
+        max_output_tokens=256,
+        max_turns=2,
+    )
+    turn = manager._build_turn(session, role="worker", failure_packet={})
+    assert turn is not None
+    assert turn.context_token_estimate <= session.max_context_tokens
+    assert len(turn.compressed_context) <= session.max_context_tokens * 4
+    assert "TRUNCATED" in turn.compressed_context
