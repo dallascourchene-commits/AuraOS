@@ -44,6 +44,32 @@ def bilateral_contract() -> BilateralPlanningContract:
     return BilateralPlanningContract.from_dict(confirmed["bilateral_contract"])
 
 
+@pytest.fixture()
+def bilateral_session() -> tuple[AuraAgentArenaBridge, str, BilateralPlanningContract]:
+    """Like ``bilateral_contract`` but also returns the bridge and session id
+    backing the retained confirmation, for tests that must exercise the
+    authenticated confirmation_session_id path rather than pass an
+    already-instantiated contract object directly."""
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    started = bridge.intent_refinement_start(
+        source_request=(
+            "Add deterministic bilateral plan enforcement. "
+            "Do not allow a plan without negative requirement verification."
+        ),
+        affected_files=["aura_arena_architect_connector.py"],
+        affected_symbols=["assess_plan"],
+    )
+    assert started["status"] == "TEACH_BACK_PENDING"
+    confirmed = bridge.intent_refinement_confirm(
+        session_id=started["session_id"],
+        allowed_paths=["aura_arena_architect_connector.py"],
+        human_reviewer="pytest-human",
+    )
+    assert confirmed["ok"] is True
+    contract = BilateralPlanningContract.from_dict(confirmed["bilateral_contract"])
+    return bridge, str(started["session_id"]), contract
+
+
 def _complete_plan(contract: BilateralPlanningContract) -> dict:
     coverage = lambda values: {  # noqa: E731
         value: {
@@ -122,9 +148,52 @@ def test_bilateral_plan_gate_rejects_missing_negative_verifier(
     assert "NEGATIVE_REQUIREMENT" in gate.failure_classes
 
 
-def test_connector_cannot_select_higher_scoring_ineligible_plan(
+def test_resolve_bilateral_contract_rejects_unretained_in_memory_object(
     bilateral_contract: BilateralPlanningContract,
 ) -> None:
+    """An already-instantiated BilateralPlanningContract that this connector's
+    bridge never retained (e.g. confirmed against a different bridge/session,
+    or held only in memory) must never be returned directly. It must be
+    rejected even when passed straight to _resolve_bilateral_contract, and it
+    must not be usable without a confirmation_session_id."""
+    connector = AuraArenaArchitectConnector(repo_root=".")
+
+    # No confirmation_session_id at all: rejected outright, even though the
+    # object itself is a legitimately confirmed contract from some other
+    # session/bridge.
+    with pytest.raises(ValueError, match="confirmation_session_id is required"):
+        connector._resolve_bilateral_contract(bilateral_contract, "")
+
+    # A confirmation_session_id that this connector's bridge never retained
+    # (nothing has been confirmed on this fresh bridge/connector) must also
+    # be rejected -- the object cannot substitute for canonical retained
+    # confirmation lookup.
+    with pytest.raises(ValueError):
+        connector._resolve_bilateral_contract(bilateral_contract, "unretained-session-id")
+
+
+def test_resolve_bilateral_contract_accepts_object_only_via_matching_session_id(
+    bilateral_session: tuple[AuraAgentArenaBridge, str, BilateralPlanningContract],
+) -> None:
+    """A BilateralPlanningContract object is only accepted when it resolves,
+    by contract_digest, against the canonical bridge-retained confirmation
+    identified by its own confirmation_session_id."""
+    bridge, session_id, bilateral_contract = bilateral_session
+    connector = AuraArenaArchitectConnector(repo_root=".", bridge=bridge)
+
+    resolved = connector._resolve_bilateral_contract(bilateral_contract, session_id)
+    assert resolved.contract_digest == bilateral_contract.contract_digest
+
+    # A different (unrelated, never-retained) session id must still be
+    # rejected even though the supplied object is otherwise well-formed.
+    with pytest.raises(ValueError):
+        connector._resolve_bilateral_contract(bilateral_contract, "some-other-session-id")
+
+
+def test_connector_cannot_select_higher_scoring_ineligible_plan(
+    bilateral_session: tuple[AuraAgentArenaBridge, str, BilateralPlanningContract],
+) -> None:
+    bridge, session_id, bilateral_contract = bilateral_session
     complete = _complete_plan(bilateral_contract)
     complete["architecture_reuse"] = False
     complete["acceptance_criteria"] = []
@@ -135,7 +204,7 @@ def test_connector_cannot_select_higher_scoring_ineligible_plan(
     incomplete["acceptance_criteria"] = [
         "This otherwise higher-scoring plan must still lose."
     ]
-    connector = AuraArenaArchitectConnector(repo_root=".")
+    connector = AuraArenaArchitectConnector(repo_root=".", bridge=bridge)
     result = connector.compare_plans(
         objective="Choose only a bilaterally eligible plan.",
         candidates=[
@@ -144,6 +213,7 @@ def test_connector_cannot_select_higher_scoring_ineligible_plan(
         ],
         required_capabilities=["bilateral"],
         bilateral_contract=bilateral_contract,
+        confirmation_session_id=session_id,
         observed_repository_head=bilateral_contract.repository_head,
         observed_source_tree_digest=bilateral_contract.source_tree_digest,
         observed_at=time.time(),

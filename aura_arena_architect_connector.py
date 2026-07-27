@@ -208,22 +208,41 @@ class AuraArenaArchitectConnector:
         self,
         contract: BilateralPlanningContract | Mapping[str, Any] | None,
         confirmation_session_id: str,
+        *,
+        _already_resolved: bool = False,
     ) -> BilateralPlanningContract | None:
         if contract is None and not confirmation_session_id:
             return None
-        if isinstance(contract, BilateralPlanningContract):
+        if _already_resolved:
+            # Internal reuse only: an inner call (assess_plan invoked from
+            # compare_plans, or compare_plans invoked from prepare_refactor)
+            # is being handed a BilateralPlanningContract this same connector
+            # instance already resolved against the retained confirmation
+            # earlier in the same call chain. External callers must never be
+            # able to set this flag.
+            if not isinstance(contract, BilateralPlanningContract):
+                raise ValueError("internal bilateral reuse requires a resolved contract object")
             return contract
         if not confirmation_session_id:
             raise ValueError(
-                "confirmation_session_id is required for serialized bilateral contracts"
+                "confirmation_session_id is required for any bilateral contract, "
+                "including an already-instantiated BilateralPlanningContract"
             )
+        # A caller-supplied contract is never authority on its own, even when it
+        # is already a BilateralPlanningContract instance: it must still resolve
+        # against the canonical bridge-retained human confirmation identified by
+        # confirmation_session_id, or it is rejected.
         retained = self.bridge._retained_bilateral_contract(confirmation_session_id)
         resolved = BilateralPlanningContract.from_dict(retained)
         if contract is not None:
-            supplied = BilateralPlanningContract.from_dict(contract)
+            supplied = (
+                contract
+                if isinstance(contract, BilateralPlanningContract)
+                else BilateralPlanningContract.from_dict(contract)
+            )
             if supplied.contract_digest != resolved.contract_digest:
                 raise ValueError(
-                    "serialized bilateral contract does not match retained confirmation"
+                    "supplied bilateral contract does not match retained confirmation"
                 )
         return resolved
 
@@ -254,11 +273,14 @@ class AuraArenaArchitectConnector:
         observed_source_tree_digest: str = "",
         observed_at: float | None = None,
         _trusted_observation: Mapping[str, Any] | None = None,
+        _trusted_bilateral: bool = False,
     ) -> PlanAssessment:
         profile = normalize_control_profile(control, surface=surface)
         candidate_id, plan = _candidate(candidate)
         bilateral = self._resolve_bilateral_contract(
-            bilateral_contract, confirmation_session_id
+            bilateral_contract,
+            confirmation_session_id,
+            _already_resolved=_trusted_bilateral,
         )
         bilateral_gate = None
         eligible = True
@@ -387,6 +409,7 @@ class AuraArenaArchitectConnector:
         observed_repository_head: str = "",
         observed_source_tree_digest: str = "",
         observed_at: float | None = None,
+        _trusted_bilateral: bool = False,
     ) -> dict[str, Any]:
         objective = str(objective or "").strip()
         if not objective:
@@ -407,7 +430,9 @@ class AuraArenaArchitectConnector:
             raise ValueError("candidate ids must be unique")
         profile = normalize_control_profile(control, surface=surface, benchmark=benchmark)
         bilateral = self._resolve_bilateral_contract(
-            bilateral_contract, confirmation_session_id
+            bilateral_contract,
+            confirmation_session_id,
+            _already_resolved=_trusted_bilateral,
         )
         observation = None
         if bilateral is not None:
@@ -428,6 +453,7 @@ class AuraArenaArchitectConnector:
                 bilateral_contract=bilateral,
                 confirmation_session_id="",
                 _trusted_observation=observation,
+                _trusted_bilateral=bilateral is not None,
             )
             for item in candidates
         ]
@@ -719,6 +745,7 @@ class AuraArenaArchitectConnector:
             observed_repository_head=observed_repository_head,
             observed_source_tree_digest=observed_source_tree_digest,
             observed_at=observed_at,
+            _trusted_bilateral=resolved_contract is not None,
         )
         if not comparison.get("ok"):
             return comparison
