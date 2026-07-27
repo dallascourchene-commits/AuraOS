@@ -596,7 +596,7 @@ class AuraArenaArchitectConnector:
         bilateral_contract: BilateralPlanningContract | Mapping[str, Any] | None = None,
         bilateral_gate: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
-        from aura_architect_loop import ArchitectFusionLoop
+        from aura_architect_loop import ArchitectFusionLoop, _mint_trusted_bilateral_handoff
 
         tasks = [dict(item) for item in list(selected_plan.get("act_tasks") or [])]
         if not tasks:
@@ -621,14 +621,35 @@ class AuraArenaArchitectConnector:
                 "plan_revision",
             )
         }
+        resolved_target_file = target_file or selected_plan.get("target_file")
+        resolved_target_symbol = target_symbol or selected_plan.get("target_symbol")
+        resolved_architecture_decision = str(
+            selected_plan.get("architecture_decision") or "Bounded Architect plan."
+        )
+        _trusted_bilateral_handoff = None
+        if bilateral_contract is not None and bilateral_gate is not None:
+            from aura_arena_gate_dialogue import _repository_identity
+
+            identity = _repository_identity(self.repo_root)
+            _trusted_bilateral_handoff = _mint_trusted_bilateral_handoff(
+                bilateral_contract=bilateral_contract,
+                bilateral_plan_gate=bilateral_gate,
+                bilateral_proof_plan=bilateral_proof_plan,
+                selected_plan_digest=_digest(selected_plan),
+                objective=objective,
+                architecture_decision=resolved_architecture_decision,
+                act_tasks=tasks,
+                target_file=resolved_target_file,
+                target_symbol=resolved_target_symbol,
+                repository_head=str(identity["repository_head"]),
+                source_tree_digest=str(identity["source_tree_digest"]),
+            )
         prepared = ArchitectFusionLoop(repo_root=self.repo_root).prepare(
             objective,
-            architecture_decision=str(
-                selected_plan.get("architecture_decision") or "Bounded Architect plan."
-            ),
+            architecture_decision=resolved_architecture_decision,
             act_tasks=tasks,
-            target_file=target_file or selected_plan.get("target_file"),
-            target_symbol=target_symbol or selected_plan.get("target_symbol"),
+            target_file=resolved_target_file,
+            target_symbol=resolved_target_symbol,
             acceptance_criteria=list(selected_plan.get("acceptance_criteria") or []),
             rollback_conditions=list(selected_plan.get("rollback_conditions") or []),
             risk_map=list(selected_plan.get("risk_map") or []),
@@ -642,6 +663,7 @@ class AuraArenaArchitectConnector:
             bilateral_contract=bilateral_contract,
             bilateral_plan_gate=bilateral_gate,
             bilateral_proof_plan=bilateral_proof_plan,
+            _trusted_bilateral_handoff=_trusted_bilateral_handoff,
         )
         actual_projection = _prepared_projection(prepared)
         if requested_projection != actual_projection:
