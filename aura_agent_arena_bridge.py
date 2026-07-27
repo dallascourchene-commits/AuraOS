@@ -754,15 +754,14 @@ class AuraAgentArenaBridge:
                             f"Failures: {', '.join(computed_gate.failure_classes)}"
                         ),
                     )
-                if (
-                    bilateral_plan_gate
-                    and bilateral_plan_gate.get("gate_digest")
-                    != computed_gate.gate_digest
-                ):
-                    return make_error_packet(
-                        "mcp_protocol_error",
-                        "caller-supplied bilateral gate does not match deterministic recomputation",
-                    )
+                # A caller-supplied bilateral_plan_gate is never authoritative:
+                # gate_digest is always taken from computed_gate below, which is
+                # derived from the retained contract and the exact act_task being
+                # prepared (act_tasks is forced above), not from whatever
+                # act_tasks shape the caller used to build their own gate. A
+                # legitimate caller's gate_digest can therefore differ from the
+                # server recomputation without indicating any disagreement, so
+                # it is not compared here.
                 bilateral_contract = contract.to_dict()
                 bilateral_plan_gate = computed_gate.to_dict()
                 bilateral_proof_plan = proof_plan
