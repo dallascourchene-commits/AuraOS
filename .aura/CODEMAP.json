@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1785192295,
+  "generated_at_unix": 1785192845,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1448,
+    "included_file_count": 1449,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -88,6 +88,7 @@
       ".coderabbit.yaml",
       ".devcontainer/devcontainer.json",
       ".dockerignore",
+      ".github/pr236_manual_repairs.py",
       ".github/scripts/umc_publish_five_files.sh",
       ".github/umc_final5_payload/part-01",
       ".github/umc_final5_payload/part-02",
@@ -1470,23 +1471,23 @@
     ]
   },
   "summary": {
-    "file_count": 1448,
-    "total_bytes": 57282610,
-    "text_tokens_est": 4868355,
+    "file_count": 1449,
+    "total_bytes": 57279437,
+    "text_tokens_est": 4867562,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 51,
       "knowledge_artifact": 185,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 932,
+      "python_module": 933,
       "schema_or_lexicon": 186,
       "support_file": 78
     },
     "topology_nodes": 10720,
     "topology_edges": 25565,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 31802.76
+    "elapsed_ms": 32318.91
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1765,6 +1766,7 @@
       ".coderabbit.yaml",
       ".devcontainer/devcontainer.json",
       ".dockerignore",
+      ".github/pr236_manual_repairs.py",
       ".github/scripts/umc_publish_five_files.sh",
       ".github/umc_final5_payload/part-01",
       ".github/umc_final5_payload/part-02",
@@ -83734,6 +83736,14 @@
         "signature_hash": "621c1ef8c88e571d"
       },
       {
+        "file": ".github/pr236_manual_repairs.py",
+        "kind": "function",
+        "line": 520,
+        "end_line": 524,
+        "semantic_id": ".github/pr236_manual_repairs.py#function:main:94d6d8c9a13339a7",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "aura_blockchain/demo.py",
         "kind": "function",
         "line": 492,
@@ -85696,6 +85706,46 @@
         "end_line": 386,
         "semantic_id": "aura_substrate_contracts.py#method:VerificationReport.passed:362dd6d4692f47dd",
         "signature_hash": "3f0260e8dc67f313"
+      }
+    ],
+    "patch_compass": [
+      {
+        "file": ".github/pr236_manual_repairs.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 166,
+        "semantic_id": ".github/pr236_manual_repairs.py#function:patch_compass:849e39da96c8a46f",
+        "signature_hash": "bcfe3898c70b024a"
+      }
+    ],
+    "patch_connector": [
+      {
+        "file": ".github/pr236_manual_repairs.py",
+        "kind": "function",
+        "line": 335,
+        "end_line": 375,
+        "semantic_id": ".github/pr236_manual_repairs.py#function:patch_connector:d5ac304a4a81ce35",
+        "signature_hash": "35f86096f885f581"
+      }
+    ],
+    "patch_external_context": [
+      {
+        "file": ".github/pr236_manual_repairs.py",
+        "kind": "function",
+        "line": 169,
+        "end_line": 332,
+        "semantic_id": ".github/pr236_manual_repairs.py#function:patch_external_context:bb76d464ee97fdba",
+        "signature_hash": "364ed721d9ec9552"
+      }
+    ],
+    "patch_tests": [
+      {
+        "file": ".github/pr236_manual_repairs.py",
+        "kind": "function",
+        "line": 378,
+        "end_line": 517,
+        "semantic_id": ".github/pr236_manual_repairs.py#function:patch_tests:91feec7240385b3b",
+        "signature_hash": "27f4e0f95d6235e0"
       }
     ],
     "pause": [
@@ -89662,6 +89712,16 @@
         "end_line": 210,
         "semantic_id": "aura_patch_repair.py#async_function:repair_patch_format:e0e21d2d5c1bdf7d",
         "signature_hash": "77304a68cda00ca8"
+      }
+    ],
+    "replace_once": [
+      {
+        "file": ".github/pr236_manual_repairs.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 14,
+        "semantic_id": ".github/pr236_manual_repairs.py#function:replace_once:e6cfdf21489d7408",
+        "signature_hash": "067b5a3f22710416"
       }
     ],
     "replace_or_insert": [
@@ -192392,6 +192452,52 @@
       ]
     },
     {
+      "path": ".github/pr236_manual_repairs.py",
+      "role": "python_module",
+      "bytes": 19247,
+      "lines": 529,
+      "tokens_est": 4812,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "de2fc1ed701f0ee8",
+      "vector": [
+        0.072003,
+        -0.064681,
+        0.057359,
+        0.079326,
+        0.154991,
+        0.047596,
+        -0.272149,
+        -0.145227,
+        0.015865,
+        0.181839,
+        -0.308761,
+        -0.225774,
+        0.147668,
+        -0.242859,
+        -0.189162,
+        0.098852,
+        -0.208688,
+        -0.303879,
+        -0.008543,
+        0.057359,
+        -0.211129,
+        -0.218451,
+        -0.159872,
+        0.028069,
+        0.259945,
+        -0.27703,
+        0.106175,
+        -0.079326,
+        0.176958,
+        -0.21601,
+        0.208688,
+        0.111056
+      ]
+    },
+    {
       "path": ".github/scripts/umc_publish_five_files.sh",
       "role": "operator_script",
       "bytes": 4552,
@@ -195620,47 +195726,47 @@
     {
       "path": ".github/workflows/pr236-source-materialize.yml",
       "role": "schema_or_lexicon",
-      "bytes": 25255,
-      "lines": 550,
-      "tokens_est": 6314,
+      "bytes": 2835,
+      "lines": 81,
+      "tokens_est": 709,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "4cad658a5c85df7c",
+      "digest8": "8b88ac50a9932c27",
       "vector": [
-        0.040577,
-        -0.121732,
-        -0.079755,
-        -0.060166,
-        0.079755,
-        -0.12453,
-        0.099344,
-        0.236468,
-        -0.118933,
-        0.191693,
-        0.323219,
-        -0.118933,
-        0.306428,
-        -0.200088,
-        -0.230871,
-        0.258855,
-        -0.10774,
-        0.110538,
-        -0.079755,
-        -0.180499,
-        0.3568,
-        0.186096,
-        0.023787,
-        -0.065763,
-        0.060166,
-        -0.244863,
-        -0.037779,
-        -0.348405,
-        -0.082554,
-        -0.116135,
-        -0.158111,
-        -0.029384
+        -0.018903,
+        -0.154556,
+        0.107856,
+        -0.227942,
+        -0.070051,
+        0.070051,
+        0.20348,
+        -0.050036,
+        0.17457,
+        0.141213,
+        0.265747,
+        -0.043365,
+        0.25018,
+        -0.221271,
+        0.274643,
+        -0.076722,
+        -0.09896,
+        0.241285,
+        0.210152,
+        -0.161227,
+        0.154556,
+        -0.210152,
+        -0.02335,
+        -0.054484,
+        -0.27909,
+        0.132318,
+        0.274643,
+        -0.176794,
+        -0.214599,
+        0.107856,
+        -0.267971,
+        -0.036693
       ]
     },
     {
