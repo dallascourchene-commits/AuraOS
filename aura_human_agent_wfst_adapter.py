@@ -97,6 +97,97 @@ class HumanAgentWFSTController:
 
         return self.route_command(action_id, payload=payload, telemetry=telemetry)
 
+    def preview_command(
+        self,
+        command: str,
+        *,
+        payload: dict[str, Any] | None = None,
+        telemetry: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Resolve one command without executing its selected workflow action."""
+        text = str(command or "").strip()
+        payload = dict(payload or {})
+        state_before = self._workflow_state()
+        if not text:
+            return {
+                "ok": False,
+                "status": "DENIED",
+                "reason": "command_required",
+                "message": "Command is required.",
+                "state": state_before,
+                "workflow": self._workflow_snapshot(),
+            }
+        if not self._ready():
+            return self._initialization_denial(state_before)
+
+        evidence_view = dict(getattr(self.workflow, "evidence", {}) or {})
+        for key, value in payload.items():
+            if value not in (None, "", [], {}, ()):
+                evidence_view[key] = value
+        route_input = text
+        execution_payload = payload
+        route = self.runtime.route(
+            arena_id="human_agent",
+            current_state=state_before,
+            input_text=route_input,
+            evidence=evidence_view,
+            context=self._context(),
+            policy=self._policy(),
+            telemetry=telemetry,
+        )
+        if state_before == "FRAME" and not route.get("selected"):
+            route_input = "HUMAN.SET_OBJECTIVE"
+            execution_payload = {**payload, "objective": text}
+            route = self.runtime.route(
+                arena_id="human_agent",
+                current_state=state_before,
+                input_text=route_input,
+                evidence=evidence_view,
+                context=self._context(),
+                policy=self._policy(),
+                telemetry=telemetry,
+            )
+        selected = route.get("selected") if isinstance(route, dict) else None
+        if not selected:
+            return {
+                **route,
+                "ok": False,
+                "status": "BLOCKED" if route.get("blocked") else "ABSTAINED",
+                "message": _blocked_message(route),
+                "workflow": self._workflow_snapshot(),
+                "preview_only": True,
+            }
+        if selected.get("meta_transition"):
+            return {
+                "ok": True,
+                "status": "META_PREVIEW",
+                "meta_transition": True,
+                "action_id": "",
+                "execution_payload": {},
+                "route_decision": route,
+                "preview_only": True,
+            }
+        action_id = str((selected.get("provenance") or {}).get("action_id") or "")
+        if not action_id:
+            return {
+                "ok": False,
+                "status": "DENIED",
+                "reason": "selected_transition_has_no_action_binding",
+                "message": "The selected transition has no grounded action binding.",
+                "workflow": self._workflow_snapshot(),
+                "fail_closed": True,
+                "preview_only": True,
+            }
+        return {
+            "ok": True,
+            "status": "ACTION_PREVIEW",
+            "meta_transition": False,
+            "action_id": action_id,
+            "execution_payload": execution_payload,
+            "route_decision": route,
+            "preview_only": True,
+        }
+
     def route_command(
         self,
         command: str,

@@ -923,29 +923,43 @@ def extract_negative_requirements(text: str) -> tuple[NegativeRequirement, ...]:
     results: list[NegativeRequirement] = []
     for sentence_start, sentence_end in _sentence_ranges(source):
         sentence = source[sentence_start:sentence_end]
-        matches = _operator_matches(sentence)
-        if not matches:
-            continue
-        start_local, operator_end, operator = matches[0]
-        raw = sentence[start_local:]
-        left_trim = len(raw) - len(raw.lstrip())
-        span = raw.strip()
-        if not span:
-            continue
-        start = sentence_start + start_local + left_trim
-        end = start + len(span)
-        target = sentence[operator_end:].strip(" \t,:;-.!?\r\n")
-        results.append(NegativeRequirement.create(
-            statement=span,
-            classification=_negative_class(span, operator, target),
-            source_span=span,
-            source_start=start,
-            source_end=end,
-            operator=operator,
-            target=target,
-            scope=target,
-            ambiguous=not target or target.lower() in {"it", "that", "this", "so"},
-        ))
+        # Adversative conjunctions commonly join one positive and one negative
+        # clause ("add logging, but do not change the API").  Parse each side
+        # independently so the prohibition does not absorb the positive clause.
+        boundaries = [0]
+        for match in re.finditer(r"(?:[,;]\s*|\s+)\b(?:but|however)\b\s+", sentence, re.IGNORECASE):
+            boundaries.extend((match.start(), match.end()))
+        boundaries.append(len(sentence))
+        clauses = [
+            (boundaries[index], boundaries[index + 1])
+            for index in range(0, len(boundaries) - 1, 2)
+            if boundaries[index] < boundaries[index + 1]
+        ]
+        for clause_start, clause_end in clauses:
+            clause = sentence[clause_start:clause_end]
+            matches = _operator_matches(clause)
+            if not matches:
+                continue
+            start_local, operator_end, operator = matches[0]
+            raw = clause[start_local:]
+            left_trim = len(raw) - len(raw.lstrip())
+            span = raw.strip()
+            if not span:
+                continue
+            start = sentence_start + clause_start + start_local + left_trim
+            end = start + len(span)
+            target = clause[operator_end:].strip(" \t,:;-.!?\r\n")
+            results.append(NegativeRequirement.create(
+                statement=span,
+                classification=_negative_class(span, operator, target),
+                source_span=span,
+                source_start=start,
+                source_end=end,
+                operator=operator,
+                target=target,
+                scope=target,
+                ambiguous=not target or target.lower() in {"it", "that", "this", "so"},
+            ))
     return tuple(results)
 
 

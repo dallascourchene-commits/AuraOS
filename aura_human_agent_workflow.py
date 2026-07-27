@@ -144,6 +144,7 @@ class HumanAgentWorkflow:
         self.workflow_id = "HWF-" + hashlib.blake2b(f"{self.repo_root}:{time.time()}".encode(),digest_size=8).hexdigest()
         self.objective = ""
         self.evidence: dict[str, Any] = {}
+        self.gate_dialogue_audit: list[dict[str, Any]] = []
         self.last_result: dict[str, Any] = {}
         self.event_log: list[dict[str, Any]] = []
         self.tools = ToolRuntimeFacade(self.repo_root)
@@ -228,6 +229,7 @@ class HumanAgentWorkflow:
             "actions":actions,
             "last_result":self.last_result,
             "event_log":self.event_log[-40:],
+            "gate_dialogue_audit":self.gate_dialogue_audit[-40:],
             "patch_authority":PATCH_AUTHORITY,
             "vsa_patch_authority":VSA_PATCH_AUTHORITY,
         }
@@ -285,6 +287,12 @@ class HumanAgentWorkflow:
         if controller is None:
             return self._result(False, str(action_id), "Guarded WFST routing is unavailable; action failed closed.", ["guarded_wfst"])
         return controller.route_action(str(action_id), payload=dict(payload or {}))
+
+    def preview_guarded_command(self, command: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
+        controller = self._wfst_instance()
+        if controller is None:
+            return self._result(False, "command", "Guarded WFST routing is unavailable; command failed closed.", ["guarded_wfst"])
+        return controller.preview_command(str(command or ""), payload=dict(payload or {}))
 
     def ingest_command(self, command: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
         controller = self._wfst_instance()

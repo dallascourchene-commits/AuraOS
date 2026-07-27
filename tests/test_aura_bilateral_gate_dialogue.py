@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import json
 import subprocess
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -325,3 +327,409 @@ def test_reviewer_identity_bound_to_authenticated_operator(workflow):
     assert approved["decision"]["reviewer"] == "authenticated_operator_alice"
     assert approved["canonical_compilation"]["confirmation_receipt"]["human_reviewer"] == "authenticated_operator_alice"
 
+
+def test_mixed_positive_and_negative_clauses_do_not_self_contradict():
+    from aura_bilateral_intent_compiler import analyze_bilateral_request
+
+    analysis = analyze_bilateral_request(
+        "Add logging, but do not change the API."
+    )
+    assert analysis.positive_requirements == ("Add logging",)
+    assert [item.target for item in analysis.negative_requirements] == [
+        "change the API"
+    ]
+    assert not any(
+        item.ambiguity_class == "CONTRADICTION"
+        for item in analysis.questions
+    )
+
+    negative_first = analyze_bilateral_request(
+        "Do not change the API, but add logging."
+    )
+    assert negative_first.positive_requirements == ("add logging.",)
+    assert [item.target for item in negative_first.negative_requirements] == [
+        "change the API"
+    ]
+
+
+def test_clarification_recomputes_contradictions_before_confirmation():
+    from aura_bilateral_intent_compiler import (
+        analyze_bilateral_request,
+        apply_clarification,
+    )
+
+    analysis = analyze_bilateral_request("Add logging.")
+    question = analysis.questions[0]
+    updated = apply_clarification(
+        analysis,
+        question=question,
+        answer="Do not add logging.",
+    )
+    assert updated.teach_back is None
+    assert any(
+        item.ambiguity_class == "CONTRADICTION"
+        for item in updated.questions
+    )
+
+
+def test_negative_only_request_uses_bounded_positive_fallback():
+    from aura_bilateral_intent_compiler import analyze_bilateral_request
+
+    analysis = analyze_bilateral_request("Do not change the API.")
+    assert analysis.positive_requirements == (
+        "Preserve the confirmed prohibition and locked guardrails.",
+    )
+    assert [item.target for item in analysis.negative_requirements] == [
+        "change the API"
+    ]
+    assert analysis.questions == ()
+    assert analysis.teach_back is not None
+
+
+def test_clarification_audit_retains_question_and_answer_link(workflow):
+    from aura_arena_gate_dialogue import ArenaGateDialogueService, BILATERAL_MARKER
+
+    service = ArenaGateDialogueService(REPO_ROOT, workflow)
+    proposal = service.address(
+        comment=f"{BILATERAL_MARKER} Add logging.",
+        node_context=NODE_CONTEXT,
+        stage_hint="FRAME",
+        prefer_model=False,
+    )
+    question = proposal["next_clarification_question"]
+    clarified = service.address(
+        comment=(
+            f"[AURA_CLARIFICATION_ANSWER:{proposal['proposal_id']}] "
+            "Do not change the API."
+        ),
+        node_context=NODE_CONTEXT,
+        stage_hint="FRAME",
+        prefer_model=False,
+    )
+    session = service._runtime[proposal["proposal_id"]]["session"]
+    assert clarified["can_confirm_intent"] is True
+    assert session.questions_asked[0]["question_id"] == question["question_id"]
+    assert session.answers_received[0]["question_id"] == question["question_id"]
+    assert session.answers_received[0]["question"] == question["question"]
+    assert len(workflow.gate_dialogue_audit) >= 2
+    assert workflow.gate_dialogue_audit[-1]["prior_audit_digest"] == (
+        workflow.gate_dialogue_audit[-2]["audit_digest"]
+    )
+
+
+def test_invalid_topology_path_fails_closed_without_exception(workflow):
+    from aura_arena_gate_dialogue import ArenaGateDialogueService
+
+    service = ArenaGateDialogueService(REPO_ROOT, workflow)
+    invalid = {
+        **NODE_CONTEXT,
+        "selected_node": {
+            **NODE_CONTEXT["selected_node"],
+            "file_path": "../outside.py",
+        },
+    }
+    result = service.address(
+        comment="Add logging. Do not change the API.",
+        node_context=invalid,
+        stage_hint="FRAME",
+        prefer_model=False,
+    )
+    assert result["ok"] is False
+    assert result["reason"] == "invalid_or_stale_topology_path"
+    assert result["fail_closed"] is True
+
+
+def test_legacy_pathless_objective_confirmation_uses_existing_owner(workflow):
+    from aura_arena_gate_dialogue import ArenaGateDialogueService
+
+    service = ArenaGateDialogueService(REPO_ROOT, workflow)
+    proposal = service.address(
+        comment="Frame a bounded objective. Do not widen its scope.",
+        node_context={},
+        stage_hint="FRAME",
+        prefer_model=False,
+    )
+    approved = service.approve(
+        proposal_id=proposal["proposal_id"],
+        approved=True,
+        current_node_context={},
+        stage_hint="FRAME",
+    )
+    assert approved["ok"] is True
+    receipt = approved["canonical_compilation"]["confirmation_receipt"]
+    assert receipt["allowed_path_set_digest"]
+    evidence_slice = approved["canonical_compilation"]["execution_references"][
+        "arena_evidence_slice"
+    ]
+    assert evidence_slice["items"]
+    assert receipt["unified_execution_binding_ref"].startswith(
+        "aura://unified-memory-continuity/execution-binding-request/"
+    )
+    assert (
+        approved["canonical_compilation"]["execution_references"][
+            "binding_status"
+        ]
+        == "AWAITING_CANONICAL_ACT_CAPSULE"
+    )
+    assert approved["canonical_compilation"]["u7_references"][
+        "u7_binding_digest"
+    ]
+
+
+def test_packaged_repository_identity_uses_trusted_build_commit(
+    tmp_path, monkeypatch
+):
+    import aura_arena_gate_dialogue as gate_module
+
+    def unavailable(*args, **kwargs):
+        raise FileNotFoundError("git metadata omitted")
+
+    commit = "a" * 40
+    monkeypatch.setattr(gate_module.subprocess, "run", unavailable)
+    monkeypatch.setenv("AURA_SOURCE_COMMIT", commit)
+    identity = gate_module._repository_identity(tmp_path)
+    assert identity["repository_head"] == commit
+    assert identity["working_tree_clean"] is True
+    assert identity["identity_source"] == "trusted_build_environment"
+
+
+def test_backend_requires_and_single_uses_current_confirmation(workflow):
+    from aura_arena_gate_dialogue import ArenaGateDialogueService
+    from aura_human_agent_arena_server import dispatch_api_request
+
+    service = ArenaGateDialogueService(REPO_ROOT, workflow)
+    proposal = service.address(
+        comment="Frame a guarded objective. Do not widen its scope.",
+        node_context={},
+        stage_hint="FRAME",
+        prefer_model=False,
+    )
+    approved = service.approve(
+        proposal_id=proposal["proposal_id"],
+        approved=True,
+        current_node_context={},
+        stage_hint="FRAME",
+    )
+    compilation = approved["canonical_compilation"]
+    receipt = compilation["confirmation_receipt"]
+    decision = approved["decision"]
+    coding = SimpleNamespace()
+    state = SimpleNamespace(
+        repo_root=REPO_ROOT,
+        workflow=workflow,
+        gate_dialogue=service,
+        coding_workbench=coding,
+    )
+
+    denied_status, denied = dispatch_api_request(
+        state,
+        "POST",
+        "/api/human-agent/workflow/action",
+        {
+            "action_id": "set_objective",
+            "payload": {"objective": "Guarded objective"},
+        },
+    )
+    assert denied_status == 409
+    assert denied["reason"] == "current_confirmation_receipt_required"
+
+    guarded_payload = {
+        "objective": "Guarded objective",
+        "confirmation_id": receipt["confirmation_id"],
+        "confirmation_receipt_id": receipt["confirmation_id"],
+        "intent_digest": compilation["intent_packet"]["intent_digest"],
+        "semantic_ledger_digest": compilation["semantic_ledger"]["ledger_digest"],
+        "repository_head": receipt["repository_head"],
+        "source_tree_digest": receipt["source_tree_digest"],
+        "workflow_id": decision["workflow_id"],
+        "phase_hash": decision["phase_hash"],
+        "node_digest": decision["node_digest"],
+    }
+    status, result = dispatch_api_request(
+        state,
+        "POST",
+        "/api/human-agent/workflow/action",
+        {"action_id": "set_objective", "payload": guarded_payload},
+    )
+    assert status == 200
+    assert result["ok"] is True
+    assert result["bilateral_confirmation_authorization"]["single_use"] is True
+
+    replay_status, replay = dispatch_api_request(
+        state,
+        "POST",
+        "/api/human-agent/workflow/action",
+        {"action_id": "set_objective", "payload": guarded_payload},
+    )
+    assert replay_status == 409
+    assert replay["reason"] == "confirmation_receipt_already_consumed"
+
+
+def test_non_boolean_gate_approval_fails_closed(workflow):
+    from aura_arena_gate_dialogue import ArenaGateDialogueService
+
+    service = ArenaGateDialogueService(REPO_ROOT, workflow)
+    proposal = service.address(
+        comment="Frame a guarded objective. Do not widen its scope.",
+        node_context={},
+        stage_hint="FRAME",
+        prefer_model=False,
+    )
+    denied = service.approve(
+        proposal_id=proposal["proposal_id"],
+        approved="false",  # type: ignore[arg-type]
+        current_node_context={},
+        stage_hint="FRAME",
+    )
+    assert denied["ok"] is False
+    assert denied["reason"] == "approved_must_be_boolean"
+    assert proposal["proposal_id"] in service.pending
+
+
+def test_backend_command_requires_current_confirmation_but_meta_does_not(
+    workflow,
+):
+    from aura_arena_gate_dialogue import ArenaGateDialogueService
+    from aura_human_agent_arena_server import dispatch_api_request
+
+    service = ArenaGateDialogueService(REPO_ROOT, workflow)
+    state = SimpleNamespace(
+        repo_root=REPO_ROOT,
+        workflow=workflow,
+        gate_dialogue=service,
+        coding_workbench=SimpleNamespace(),
+    )
+    meta_status, meta = dispatch_api_request(
+        state,
+        "POST",
+        "/api/human-agent/workflow/command",
+        {"command": "help", "payload": {}},
+    )
+    assert meta_status == 200
+    assert meta["status"] == "META_COMPLETED"
+    assert workflow.objective == ""
+
+    proposal = service.address(
+        comment="Frame a command objective. Do not widen its scope.",
+        node_context={},
+        stage_hint="FRAME",
+        prefer_model=False,
+    )
+    approved = service.approve(
+        proposal_id=proposal["proposal_id"],
+        approved=True,
+        current_node_context={},
+        stage_hint="FRAME",
+    )
+    denied_status, denied = dispatch_api_request(
+        state,
+        "POST",
+        "/api/human-agent/workflow/command",
+        {"command": "Command objective", "payload": {}},
+    )
+    assert denied_status == 409
+    assert denied["reason"] == "current_confirmation_receipt_required"
+
+    compilation = approved["canonical_compilation"]
+    receipt = compilation["confirmation_receipt"]
+    decision = approved["decision"]
+    confirmation = {
+        "confirmation_id": receipt["confirmation_id"],
+        "confirmation_receipt_id": receipt["confirmation_id"],
+        "intent_digest": compilation["intent_packet"]["intent_digest"],
+        "semantic_ledger_digest": compilation["semantic_ledger"]["ledger_digest"],
+        "repository_head": receipt["repository_head"],
+        "source_tree_digest": receipt["source_tree_digest"],
+        "workflow_id": decision["workflow_id"],
+        "phase_hash": decision["phase_hash"],
+        "node_digest": decision["node_digest"],
+    }
+    status, result = dispatch_api_request(
+        state,
+        "POST",
+        "/api/human-agent/workflow/command",
+        {"command": "Command objective", "payload": confirmation},
+    )
+    assert status == 200
+    assert result["ok"] is True
+    assert workflow.objective == "Command objective"
+    assert result["bilateral_confirmation_authorization"]["single_use"] is True
+
+
+def test_confirmation_consumption_is_atomic_under_race(workflow):
+    from aura_arena_gate_dialogue import ArenaGateDialogueService
+
+    service = ArenaGateDialogueService(REPO_ROOT, workflow)
+    proposal = service.address(
+        comment="Frame an atomic objective. Do not widen its scope.",
+        node_context={},
+        stage_hint="FRAME",
+        prefer_model=False,
+    )
+    approved = service.approve(
+        proposal_id=proposal["proposal_id"],
+        approved=True,
+        current_node_context={},
+        stage_hint="FRAME",
+    )
+    compilation = approved["canonical_compilation"]
+    receipt = compilation["confirmation_receipt"]
+    decision = approved["decision"]
+    payload = {
+        "confirmation_id": receipt["confirmation_id"],
+        "confirmation_receipt_id": receipt["confirmation_id"],
+        "intent_digest": compilation["intent_packet"]["intent_digest"],
+        "semantic_ledger_digest": compilation["semantic_ledger"]["ledger_digest"],
+        "repository_head": receipt["repository_head"],
+        "source_tree_digest": receipt["source_tree_digest"],
+        "workflow_id": decision["workflow_id"],
+        "phase_hash": decision["phase_hash"],
+        "node_digest": decision["node_digest"],
+    }
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        results = list(
+            executor.map(
+                lambda _: service.authorize_workflow_action(
+                    action_id="set_objective",
+                    action_payload=payload,
+                ),
+                range(2),
+            )
+        )
+    assert sum(result.get("ok") is True for result in results) == 1
+    assert sum(
+        result.get("reason") == "confirmation_receipt_already_consumed"
+        for result in results
+    ) == 1
+
+
+def test_browser_and_container_bind_confirmation_and_packaged_identity():
+    javascript = (
+        REPO_ROOT / "aura_showcase" / "gate-dialogue.js"
+    ).read_text(encoding="utf-8")
+    for field in (
+        "confirmation_receipt_id",
+        "workflow_id",
+        "phase_hash",
+        "node_digest",
+        "repository_head",
+        "source_tree_digest",
+    ):
+        assert field in javascript
+    assert (
+        "else if (!hasEvidence('verification_packet')) "
+        "result = await action('verify_patch');"
+    ) in javascript
+    assert (
+        "if (result.ok && !hasEvidence('verification_packet'))"
+        not in javascript
+    )
+
+    dockerfile = (REPO_ROOT / "Dockerfile").read_text(encoding="utf-8")
+    workflow_text = (
+        REPO_ROOT / ".github" / "workflows" / "publish-ghcr-showcase.yml"
+    ).read_text(encoding="utf-8")
+    assert "ARG AURA_SOURCE_COMMIT" in dockerfile
+    assert "AURA_SOURCE_COMMIT=${AURA_SOURCE_COMMIT}" in dockerfile
+    assert "AURA_SOURCE_COMMIT=${{ github.sha }}" in workflow_text

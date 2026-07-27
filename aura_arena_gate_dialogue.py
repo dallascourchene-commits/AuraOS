@@ -11,9 +11,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
+import threading
 import time
 from typing import Any
 
@@ -123,7 +125,7 @@ def _phase_hash(state: dict[str, Any]) -> str:
     evidence = {
         str(key): value
         for key, value in dict(state.get("evidence") or {}).items()
-        if key != "approved_gate_intents"
+        if key not in {"approved_gate_intents", "bilateral_intent_audit"}
     }
     routed = dict(state.get("state_packet") or {})
     return _digest(
@@ -191,43 +193,75 @@ def _repository_identity(root: Path) -> dict[str, Any]:
                 digest.update(chunk)
         return "file", digest.hexdigest()
 
-    head = git_text("rev-parse", "HEAD")
-    status = git_text("status", "--porcelain=v1", "--untracked-files=all")
-    clean = not bool(status.strip())
-    tracked_diff = git_bytes("diff", "--binary", "--full-index", "HEAD", "--")
-    untracked_paths = git_bytes(
-        "ls-files", "--others", "--exclude-standard", "-z"
-    ).split(b"\0")
-    untracked: list[dict[str, str]] = []
-    for raw_path in untracked_paths:
-        if not raw_path:
-            continue
-        relative = raw_path.decode("utf-8", errors="surrogateescape")
-        candidate = root / relative
-        if not candidate.is_symlink() and not candidate.is_file():
-            continue
-        kind, digest = content_digest(candidate)
-        untracked.append(
+    try:
+        head = git_text("rev-parse", "HEAD")
+        status = git_text("status", "--porcelain=v1", "--untracked-files=all")
+        clean = not bool(status.strip())
+        tracked_diff = git_bytes("diff", "--binary", "--full-index", "HEAD", "--")
+        untracked_paths = git_bytes(
+            "ls-files", "--others", "--exclude-standard", "-z"
+        ).split(b"\0")
+        untracked: list[dict[str, str]] = []
+        for raw_path in untracked_paths:
+            if not raw_path:
+                continue
+            relative = raw_path.decode("utf-8", errors="surrogateescape")
+            candidate = root / relative
+            if not candidate.is_symlink() and not candidate.is_file():
+                continue
+            kind, digest = content_digest(candidate)
+            untracked.append(
+                {
+                    "path": relative.replace("\\", "/"),
+                    "kind": kind,
+                    "digest": digest,
+                }
+            )
+        untracked.sort(key=lambda item: item["path"])
+        tree_digest = stable_digest(
             {
-                "path": relative.replace("\\", "/"),
-                "kind": kind,
-                "digest": digest,
+                "head": head,
+                "tracked_diff_digest": hashlib.blake2b(
+                    tracked_diff, digest_size=32
+                ).hexdigest(),
+                "untracked": untracked,
             }
         )
-    untracked.sort(key=lambda item: item["path"])
-    tree_digest = stable_digest(
-        {
-            "head": head,
-            "tracked_diff_digest": hashlib.blake2b(
-                tracked_diff, digest_size=32
-            ).hexdigest(),
-            "untracked": untracked,
-        }
-    )
+        identity_source = "git_worktree"
+    except (FileNotFoundError, OSError, subprocess.SubprocessError, ValueError):
+        # Packaged deployments intentionally omit .git.  The image build binds
+        # the immutable source commit through a trusted server environment value.
+        head = str(os.environ.get("AURA_SOURCE_COMMIT") or "").strip().lower()
+        if (
+            len(head) not in {40, 64}
+            or any(char not in "0123456789abcdef" for char in head)
+        ):
+            raise ValueError("trusted packaged source identity is unavailable")
+        status = ""
+        clean = True
+        tree_digest = stable_digest(
+            {
+                "head": head,
+                "tracked_diff_digest": hashlib.blake2b(
+                    b"", digest_size=32
+                ).hexdigest(),
+                "untracked": [],
+            }
+        )
+        identity_source = "trusted_build_environment"
     return {
         "repository_head": head,
         "source_tree_digest": tree_digest,
+        "codemap_digest": (
+            hashlib.blake2b(
+                (root / ".aura" / "CODEMAP.json").read_bytes(),
+                digest_size=32,
+            ).hexdigest()
+            if (root / ".aura" / "CODEMAP.json").is_file()
+            else ""
+        ),
         "working_tree_clean": clean,
+        "identity_source": identity_source,
         "working_tree_clean_receipt": stable_digest(
             {
                 "head": head,
@@ -303,7 +337,21 @@ def _analysis_fields(analysis: BilateralAnalysis) -> dict[str, Any]:
     }
 
 
-def _allowed_paths(node_context: dict[str, Any], state: dict[str, Any]) -> tuple[str, ...]:
+def _is_bounded_repository_path(value: str) -> bool:
+    if not value or value.startswith("/") or "\\" in value:
+        return False
+    path = Path(value)
+    return value not in {".", ".."} and ".." not in path.parts
+
+
+def _allowed_paths(
+    node_context: dict[str, Any],
+    state: dict[str, Any],
+    *,
+    repo_root: Path,
+    strict_refinement: bool,
+    recommended_action_id: str,
+) -> tuple[str, ...]:
     values: list[str] = []
     node_path = str((node_context.get("selected_node") or {}).get("file_path") or "").strip()
     if node_path:
@@ -316,7 +364,23 @@ def _allowed_paths(node_context: dict[str, Any], state: dict[str, Any]) -> tuple
         text = str(item or "").strip().replace("\\", "/")
         if text and text not in values:
             values.append(text)
-    return tuple(values)
+    bounded = tuple(
+        value
+        for value in values
+        if _is_bounded_repository_path(value)
+        and (repo_root / value).resolve().is_relative_to(repo_root)
+        and (repo_root / value).is_file()
+    )
+    if bounded:
+        return bounded
+    if not strict_refinement and recommended_action_id == "set_objective":
+        # The legacy one-turn objective gate predates topology selection.  Bind
+        # that pathless confirmation to the existing workflow owner, never to
+        # an invented or unbounded repository path.
+        owner = "aura_human_agent_workflow.py"
+        if (repo_root / owner).is_file():
+            return (owner,)
+    return ()
 
 
 class ArenaGateDialogueService:
@@ -338,11 +402,12 @@ class ArenaGateDialogueService:
         self.confirmed: dict[str, dict[str, Any]] = {}
         self.history: list[dict[str, Any]] = []
         self._runtime: dict[str, dict[str, Any]] = {}
+        self._confirmation_lock = threading.Lock()
 
     def _resolve_reviewer_identity(self, requested_reviewer: str) -> str:
         if self.operator_identity:
             return self.operator_identity
-        env_operator = _bounded_text(subprocess.os.environ.get("AURA_OPERATOR_IDENTITY"), 180)
+        env_operator = _bounded_text(os.environ.get("AURA_OPERATOR_IDENTITY"), 180)
         if env_operator:
             return env_operator
         requested = _bounded_text(requested_reviewer, 180)
@@ -397,14 +462,26 @@ class ArenaGateDialogueService:
         node_digest = _digest(normalized_node)
         recommended = (guide.get("recommended_actions") or [{}])[0]
         selected = dict(normalized_node.get("selected_node") or {})
+        selected_path = str(selected.get("file_path") or "")
+        if selected_path and (
+            not _is_bounded_repository_path(selected_path)
+            or not (self.repo_root / selected_path).resolve().is_relative_to(
+                self.repo_root
+            )
+            or not (self.repo_root / selected_path).is_file()
+        ):
+            return self._denial("invalid_or_stale_topology_path")
         affected_files = (selected.get("file_path"),) if selected.get("file_path") else ()
         affected_symbols = (selected.get("symbol"),) if selected.get("symbol") else ()
-        analysis = analyze_bilateral_request(
-            clean_comment,
-            arena="HUMAN_AGENT",
-            affected_files=affected_files,
-            affected_symbols=affected_symbols,
-        )
+        try:
+            analysis = analyze_bilateral_request(
+                clean_comment,
+                arena="HUMAN_AGENT",
+                affected_files=affected_files,
+                affected_symbols=affected_symbols,
+            )
+        except ValueError as exc:
+            return self._denial(f"invalid_bilateral_request:{exc}")
         if not strict_refinement and analysis.questions:
             while analysis.questions:
                 question = analysis.questions[0]
@@ -492,6 +569,7 @@ class ArenaGateDialogueService:
             "approval_required": True,
             "approval_scope": "advance_existing_guarded_workflow_only",
             "confirmation_scope": "confirm_canonical_bilateral_intent_for_existing_guarded_workflow_only",
+            "strict_refinement": strict_refinement,
             "refinement_session_id": session.session_id,
             **_analysis_fields(analysis),
             **self._authority(),
@@ -545,6 +623,7 @@ class ArenaGateDialogueService:
             updated_session = refresh_refinement_session(
                 session,
                 updated,
+                question=question,
                 answer=clean_answer,
                 observed_at=observed,
             )
@@ -594,6 +673,8 @@ class ArenaGateDialogueService:
         reviewer: str = "human_operator",
         note: str = "",
     ) -> dict[str, Any]:
+        if type(approved) is not bool:
+            return self._denial("approved_must_be_boolean")
         proposal = self.pending.get(str(proposal_id or ""))
         runtime = self._runtime.get(str(proposal_id or ""))
         if proposal is None or runtime is None:
@@ -614,7 +695,15 @@ class ArenaGateDialogueService:
 
         state = self.workflow.get_state()
         normalized_node = normalize_node_context(current_node_context)
-        paths = _allowed_paths(normalized_node, state)
+        paths = _allowed_paths(
+            normalized_node,
+            state,
+            repo_root=self.repo_root,
+            strict_refinement=bool(proposal.get("strict_refinement")),
+            recommended_action_id=str(
+                (proposal.get("recommended_action") or {}).get("action_id") or ""
+            ),
+        )
         if not paths:
             return self._denial("exact_allowed_path_required", proposal=proposal)
         try:
@@ -646,6 +735,9 @@ class ArenaGateDialogueService:
                 working_tree_clean_receipt=repo["working_tree_clean_receipt"],
                 allowed_paths=paths,
                 runtime_profile_digest=runtime_profile_digest,
+                workflow_phase_hash=proposal["phase_hash"],
+                topology_evidence_digest=proposal["node_digest"],
+                codemap_digest=repo["codemap_digest"],
                 human_reviewer=authenticated_reviewer,
                 confirmed_at=confirmed_at,
                 expires_at=min(
@@ -676,6 +768,8 @@ class ArenaGateDialogueService:
             "phase_hash": proposal["phase_hash"],
             "node_digest": proposal["node_digest"],
             "confirmed_at": confirmed_at,
+            "consumed_at": 0.0,
+            "consumed_action_id": "",
         }
         self.pending.pop(proposal["proposal_id"], None)
         self._runtime.pop(proposal["proposal_id"], None)
@@ -695,7 +789,7 @@ class ArenaGateDialogueService:
                 "u7_references": compilation["u7_references"],
             }
         )
-        self.workflow.evidence["approved_gate_intents"] = ledger[-40:]
+        self.workflow.evidence["approved_gate_intents"] = ledger
         if hasattr(self.workflow, "_event"):
             self.workflow._event(
                 "gate_dialogue_intent_confirmation",
@@ -717,6 +811,115 @@ class ArenaGateDialogueService:
             ),
             **self._authority(),
         }
+
+    def authorize_workflow_action(
+        self,
+        *,
+        action_id: str,
+        action_payload: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Consume one current confirmation before one guarded action dispatch."""
+        confirmation_id = str(action_payload.get("confirmation_id") or "").strip()
+        receipt_id = str(
+            action_payload.get("confirmation_receipt_id") or ""
+        ).strip()
+        if not confirmation_id or receipt_id != confirmation_id:
+            return self._denial("current_confirmation_receipt_required")
+        with self._confirmation_lock:
+            row = next(
+                (
+                    item
+                    for item in self.confirmed.values()
+                    if str(
+                        (
+                            item["proposal"].get("canonical_compilation") or {}
+                        ).get("confirmation_receipt", {}).get("confirmation_id")
+                        or ""
+                    )
+                    == confirmation_id
+                ),
+                None,
+            )
+            if row is None:
+                return self._denial("confirmation_receipt_not_found")
+            if float(row.get("consumed_at") or 0.0):
+                return self._denial("confirmation_receipt_already_consumed")
+            proposal = row["proposal"]
+            compilation = dict(proposal.get("canonical_compilation") or {})
+            receipt = dict(compilation.get("confirmation_receipt") or {})
+            decision = dict(proposal.get("decision") or {})
+            state = self.workflow.get_state()
+            expected = {
+                "workflow_id": str(proposal.get("workflow_id") or ""),
+                "phase_hash": str(proposal.get("phase_hash") or ""),
+                "node_digest": str(proposal.get("node_digest") or ""),
+                "intent_digest": str(
+                    (compilation.get("intent_packet") or {}).get("intent_digest")
+                    or ""
+                ),
+                "semantic_ledger_digest": str(
+                    (compilation.get("semantic_ledger") or {}).get("ledger_digest")
+                    or ""
+                ),
+                "repository_head": str(receipt.get("repository_head") or ""),
+                "source_tree_digest": str(receipt.get("source_tree_digest") or ""),
+            }
+            for key, expected_value in expected.items():
+                if str(action_payload.get(key) or "") != expected_value:
+                    return self._denial(f"confirmation_{key}_mismatch")
+            if str(state.get("workflow_id") or "") != expected["workflow_id"]:
+                return self._denial("stale_workflow_identity")
+            if _phase_hash(state) != expected["phase_hash"]:
+                return self._denial("stale_workflow_phase_or_evidence")
+            if str(decision.get("recommended_action_id") or "") != action_id:
+                return self._denial("confirmation_action_mismatch")
+            if time.time() >= float(receipt.get("expires_at") or 0.0):
+                return self._denial("confirmation_expired")
+            try:
+                repo = _repository_identity(self.repo_root)
+            except (OSError, subprocess.SubprocessError, ValueError):
+                return self._denial("repository_identity_unavailable")
+            if (
+                repo["repository_head"] != expected["repository_head"]
+                or repo["source_tree_digest"] != expected["source_tree_digest"]
+            ):
+                return self._denial("stale_repository_identity")
+            consumed_at = time.time()
+            row["consumed_at"] = consumed_at
+            row["consumed_action_id"] = action_id
+            authorization = {
+                "ok": True,
+                "proposal_id": proposal["proposal_id"],
+                "confirmation_id": confirmation_id,
+                "action_id": action_id,
+                "consumed_at": consumed_at,
+                "single_use": True,
+            }
+            self._record(
+                {
+                    **authorization,
+                    "status": "CONFIRMATION_CONSUMED_FOR_GUARDED_ACTION",
+                }
+            )
+            return authorization
+
+    def record_workflow_action_result(
+        self,
+        authorization: dict[str, Any],
+        result: dict[str, Any],
+    ) -> None:
+        self._record(
+            {
+                "proposal_id": authorization.get("proposal_id", ""),
+                "confirmation_id": authorization.get("confirmation_id", ""),
+                "action_id": authorization.get("action_id", ""),
+                "status": "GUARDED_ACTION_COMPLETED"
+                if result.get("ok")
+                else "GUARDED_ACTION_DENIED",
+                "result_digest": stable_digest(result),
+                "recorded_at": time.time(),
+            }
+        )
 
     def status(self) -> dict[str, Any]:
         current_state = self.workflow.get_state()
@@ -934,7 +1137,16 @@ class ArenaGateDialogueService:
         }
 
     def _record(self, item: dict[str, Any]) -> None:
-        self.history.append(dict(item))
+        durable = list(getattr(self.workflow, "gate_dialogue_audit", ()) or ())
+        prior_digest = str(durable[-1].get("audit_digest") or "") if durable else ""
+        record = {
+            **dict(item),
+            "prior_audit_digest": prior_digest,
+        }
+        record["audit_digest"] = stable_digest(record)
+        durable.append(record)
+        self.workflow.gate_dialogue_audit = durable
+        self.history.append(record)
         self.history = self.history[-MAX_HISTORY:]
 
     @staticmethod

@@ -461,6 +461,9 @@
       semantic_ledger_digest: snapshot.semantic_ledger_digest,
       repository_head: snapshot.repository_head,
       source_tree_digest: snapshot.source_tree_digest,
+      workflow_id: String(S.workflow?.workflow_id || ''),
+      phase_hash: snapshot.phase_hash,
+      node_digest: snapshot.node_digest,
       confirmation_receipt_id: snapshot.confirmation_id,
     };
     const result = await S.runHumanAction?.(actionId, guardedPayload);
@@ -505,37 +508,16 @@
       state.gateCompleted = Boolean(result.ok && hasEvidence('staged_patch'));
     } else if (index === 5) {
       if (!hasEvidence('test_evidence')) result = await action('run_tests', {test_targets: S.workflow?.evidence?.test_targets || []});
-      if (result.ok && !hasEvidence('verification_packet')) {
-        try {
-          validateConfirmationCurrency(index, state);
-          result = await action('verify_patch');
-        } catch (err) {
-          result = {ok: false, error: err.message};
-        }
-      }
+      else if (!hasEvidence('verification_packet')) result = await action('verify_patch');
       state.gateCompleted = Boolean(result.ok && hasEvidence('test_evidence') && hasEvidence('verification_packet'));
     } else if (index === 6) {
       if (!hasEvidence('hotswap_status')) result = await action('check_hotswap');
-      if (result.ok && !hasEvidence('human_review')) {
-        try {
-          validateConfirmationCurrency(index, state);
-          result = await action('human_review', {
-            approved: false,
-            reviewer: 'showcase_human',
-            note: 'Gate Dialogue confirmed continuation to a review packet only. No production approval or merge was granted.',
-          });
-        } catch (err) {
-          result = {ok: false, error: err.message};
-        }
-      }
-      if (result.ok && !hasEvidence('review_packet')) {
-        try {
-          validateConfirmationCurrency(index, state);
-          result = await action('export_handoff');
-        } catch (err) {
-          result = {ok: false, error: err.message};
-        }
-      }
+      else if (!hasEvidence('human_review')) result = await action('human_review', {
+        approved: false,
+        reviewer: 'showcase_human',
+        note: 'Gate Dialogue confirmed continuation to a review packet only. No production approval or merge was granted.',
+      });
+      else if (!hasEvidence('review_packet')) result = await action('export_handoff');
       state.gateCompleted = Boolean(result.ok && (hasEvidence('human_review') || hasEvidence('review_packet')));
     }
     state.execution = result;

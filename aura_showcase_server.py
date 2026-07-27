@@ -87,18 +87,18 @@ class ShowcaseState:
         """Load the real CODEMAP topology lazily when a coding surface is used."""
         if self._human_agent is None:
             from aura_human_agent_arena_server import HumanAgentArenaServerState
-            self._human_agent = HumanAgentArenaServerState(self.repo_root, demo=False)
+            operator_id = getattr(self, "operator_identity", None) or "showcase_human"
+            self._human_agent = HumanAgentArenaServerState(
+                self.repo_root,
+                demo=False,
+                operator_identity=operator_id,
+            )
         return self._human_agent
 
     @property
     def gate_dialogue(self) -> ArenaGateDialogueService:
         """Bind the approval ledger to the same real Human Agent workflow."""
-        if self._gate_dialogue is None:
-            operator_id = getattr(self, "operator_identity", None) or "showcase_human"
-            self._gate_dialogue = ArenaGateDialogueService(
-                self.repo_root, self.human_agent.workflow, operator_identity=operator_id
-            )
-        return self._gate_dialogue
+        return self.human_agent.gate_dialogue
 
     @property
     def attempt_archive(self) -> ArenaAttemptArchive:
@@ -278,12 +278,25 @@ def dispatch_showcase_request(
             stage_hint=str(body.get("stage_hint") or ""),
             prefer_model=body.get("prefer_model", True) is not False,
         )
+        archive = getattr(state, "attempt_archive", None)
+        if archive is not None:
+            result["attempt_artifact"] = archive.record(
+                arena_id="human_agent",
+                route=route,
+                request=body,
+                result=result,
+                workflow_state=_workflow_snapshot_for_archive(state, route),
+                archive_context={"kind": "bilateral_intent_refinement"},
+            )
         return _json(200 if result.get("ok") else 409, result)
 
     if method == "POST" and route == "/api/showcase/human/gate/approve":
+        approved = body.get("approved")
+        if type(approved) is not bool:
+            return _error("approved must be a boolean", 400)
         result = state.gate_dialogue.approve(
             proposal_id=str(body.get("proposal_id") or ""),
-            approved=bool(body.get("approved")),
+            approved=approved,
             current_node_context=(
                 body.get("current_node_context")
                 if isinstance(body.get("current_node_context"), dict)
@@ -293,6 +306,16 @@ def dispatch_showcase_request(
             reviewer=str(body.get("reviewer") or "human_operator"),
             note=str(body.get("note") or ""),
         )
+        archive = getattr(state, "attempt_archive", None)
+        if archive is not None:
+            result["attempt_artifact"] = archive.record(
+                arena_id="human_agent",
+                route=route,
+                request=body,
+                result=result,
+                workflow_state=_workflow_snapshot_for_archive(state, route),
+                archive_context={"kind": "bilateral_intent_confirmation"},
+            )
         return _json(200 if result.get("ok") else 409, result)
 
     if method == "GET" and route == "/api/showcase/human/attempts/status":
