@@ -8,6 +8,17 @@
 
   const STAGES = ['INTAKE', 'FRAME', 'GROUND', 'PLAN', 'ACT', 'PROVE', 'DECIDE'];
   const BILATERAL_MARKER = '[AURA_BILATERAL_REFINE]';
+  const GUARDED_ACTIONS = new Set([
+    'set_objective',
+    'ground_context',
+    'prepare_capsule',
+    'stage_patch',
+    'run_tests',
+    'verify_patch',
+    'check_hotswap',
+    'human_review',
+    'export_handoff',
+  ]);
   const DEFAULT_INTENTS = [
     'Use this selected topology evidence and explain the safest bounded entry point. Do not expand beyond the selected task or grant execution authority.',
     'Frame the objective around this selected file or symbol. Do not alter exact-source or human-review authority.',
@@ -391,6 +402,8 @@
     const index = stageIndex();
     const state = stageState(index);
     if (!state.pending) return;
+    const approvedActionId = String(state.pending.recommended_action?.action_id || '');
+    const approvedActionPayload = plannedActionPayload(approvedActionId);
     setBusy(true, approved ? 'Binding your confirmation to the exact repository, phase, topology, requirements, and guardrails…' : 'Recording rejection…');
     try {
       const result = await S.api('/api/showcase/human/gate/approve', {
@@ -400,6 +413,7 @@
         current_node_context: dialogue.nodeContext || {},
         reviewer: 'showcase_human',
         note: approved ? 'Confirmed canonical bilateral intent for the next existing guarded workflow gate only.' : 'Rejected for correction.',
+        action_payload: approvedActionPayload,
       });
       if (!result.ok) throw new Error(result.reason || result.error || 'Gate confirmation was denied');
       state.decision = result.decision;
@@ -413,8 +427,11 @@
         source_tree_digest: receipt?.source_tree_digest || '',
         phase_hash: result.decision?.phase_hash || '',
         node_digest: result.decision?.node_digest || '',
+        action_payload_digest: result.decision?.action_payload_digest || '',
         confirmed_at: result.decision?.reviewed_at || Date.now() / 1000,
       };
+      state.approvedActionId = approvedActionId;
+      state.approvedActionPayload = approvedActionPayload;
       state.pending = null;
       state.notice = result.note || '';
       if (approved) {
@@ -461,10 +478,42 @@
       semantic_ledger_digest: snapshot.semantic_ledger_digest,
       repository_head: snapshot.repository_head,
       source_tree_digest: snapshot.source_tree_digest,
+      workflow_id: String(S.workflow?.workflow_id || ''),
+      phase_hash: snapshot.phase_hash,
+      node_digest: snapshot.node_digest,
       confirmation_receipt_id: snapshot.confirmation_id,
     };
     const result = await S.runHumanAction?.(actionId, guardedPayload);
     return result || {ok: false, error: 'guarded_workflow_unavailable'};
+  }
+
+  function plannedActionPayload(actionId) {
+    const evidence = S.workflow?.evidence || {};
+    if (actionId === 'set_objective') {
+      return {objective: buildTaskObjective(activeTask())};
+    }
+    if (actionId === 'prepare_capsule') {
+      return {acceptance_criteria: activeTask()?.acceptance_criteria || []};
+    }
+    if (actionId === 'stage_patch') {
+      const diff = String(S.humanWorkspace?.candidateDiff || $('human-candidate-diff')?.value || '').trim();
+      return {
+        candidate_diff: diff,
+        affected_files: evidence.affected_files || evidence.grounding?.localized_files || [],
+        affected_symbols: evidence.grounding?.localized_symbols || [],
+      };
+    }
+    if (actionId === 'run_tests') {
+      return {test_targets: evidence.test_targets || []};
+    }
+    if (actionId === 'human_review') {
+      return {
+        approved: false,
+        reviewer: 'showcase_human',
+        note: 'Gate Dialogue confirmed continuation to a review packet only. No production approval or merge was granted.',
+      };
+    }
+    return {};
   }
 
   async function executeApprovedStage(index, state) {
@@ -481,62 +530,34 @@
       if (!task) await S.loadTopologyTask?.('civic_map_overlay', 1);
       state.gateCompleted = Boolean(activeTask() || S.handoff || S.workflow?.objective);
       if (!state.gateCompleted) result = {ok: false, message: 'A bounded task or handoff is still required.'};
-    } else if (index === 1) {
-      if (!hasEvidence('objective')) result = await action('set_objective', {objective: buildTaskObjective(activeTask())});
-      state.gateCompleted = Boolean(result.ok && (S.workflow?.objective || hasEvidence('objective')));
-    } else if (index === 2) {
-      if (!hasEvidence('grounding')) result = await action('ground_context');
-      state.gateCompleted = Boolean(result.ok && hasEvidence('grounding'));
-    } else if (index === 3) {
-      if (!hasEvidence('plan_phase_hash')) result = await action('prepare_capsule', {acceptance_criteria: activeTask()?.acceptance_criteria || []});
-      state.gateCompleted = Boolean(result.ok && hasEvidence('plan_phase_hash') && hasEvidence('act_capsules'));
-    } else if (index === 4) {
-      const diff = String(S.humanWorkspace?.candidateDiff || $('human-candidate-diff')?.value || '').trim();
-      if (!diff) {
+    } else {
+      const approvedActionId = String(
+        state.decision?.recommended_action_id || state.approvedActionId || ''
+      );
+      const approvedPayload = state.approvedActionPayload || {};
+      if (!GUARDED_ACTIONS.has(approvedActionId)) {
+        result = {ok: false, message: 'No guarded action was bound to this confirmation.'};
+      } else if (
+        approvedActionId === 'stage_patch'
+        && !String(approvedPayload.candidate_diff || '').trim()
+      ) {
         result = {ok: false, message: 'A candidate unified diff is required. The confirmed intent remains available for revision.'};
       } else {
-        const evidence = S.workflow?.evidence || {};
-        if (!hasEvidence('staged_patch')) result = await action('stage_patch', {
-          candidate_diff: diff,
-          affected_files: evidence.affected_files || evidence.grounding?.localized_files || [],
-          affected_symbols: evidence.grounding?.localized_symbols || [],
-        });
+        result = await action(approvedActionId, approvedPayload);
       }
-      state.gateCompleted = Boolean(result.ok && hasEvidence('staged_patch'));
-    } else if (index === 5) {
-      if (!hasEvidence('test_evidence')) result = await action('run_tests', {test_targets: S.workflow?.evidence?.test_targets || []});
-      if (result.ok && !hasEvidence('verification_packet')) {
-        try {
-          validateConfirmationCurrency(index, state);
-          result = await action('verify_patch');
-        } catch (err) {
-          result = {ok: false, error: err.message};
-        }
+      if (index === 1) {
+        state.gateCompleted = Boolean(result.ok && (S.workflow?.objective || hasEvidence('objective')));
+      } else if (index === 2) {
+        state.gateCompleted = Boolean(result.ok && hasEvidence('grounding'));
+      } else if (index === 3) {
+        state.gateCompleted = Boolean(result.ok && hasEvidence('plan_phase_hash') && hasEvidence('act_capsules'));
+      } else if (index === 4) {
+        state.gateCompleted = Boolean(result.ok && hasEvidence('staged_patch'));
+      } else if (index === 5) {
+        state.gateCompleted = Boolean(result.ok && hasEvidence('test_evidence') && hasEvidence('verification_packet'));
+      } else if (index === 6) {
+        state.gateCompleted = Boolean(result.ok && hasEvidence('human_review') && hasEvidence('review_packet'));
       }
-      state.gateCompleted = Boolean(result.ok && hasEvidence('test_evidence') && hasEvidence('verification_packet'));
-    } else if (index === 6) {
-      if (!hasEvidence('hotswap_status')) result = await action('check_hotswap');
-      if (result.ok && !hasEvidence('human_review')) {
-        try {
-          validateConfirmationCurrency(index, state);
-          result = await action('human_review', {
-            approved: false,
-            reviewer: 'showcase_human',
-            note: 'Gate Dialogue confirmed continuation to a review packet only. No production approval or merge was granted.',
-          });
-        } catch (err) {
-          result = {ok: false, error: err.message};
-        }
-      }
-      if (result.ok && !hasEvidence('review_packet')) {
-        try {
-          validateConfirmationCurrency(index, state);
-          result = await action('export_handoff');
-        } catch (err) {
-          result = {ok: false, error: err.message};
-        }
-      }
-      state.gateCompleted = Boolean(result.ok && (hasEvidence('human_review') || hasEvidence('review_packet')));
     }
     state.execution = result;
     if (!state.gateCompleted) {

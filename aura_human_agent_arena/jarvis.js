@@ -52,6 +52,60 @@
     return {};
   }
 
+  async function confirmedWorkflowPayload(actionId, payload, intentText) {
+    const phase = String(workflowState?.current_phase || 'FRAME');
+    const proposal = await jarvisApi('/api/human-agent/gate/address', {
+      comment: `${intentText || `Run ${actionId} with the displayed inputs.`} Do not widen the payload, bypass workflow guards, or grant commit, push, merge, deployment, or production authority.`,
+      node_context: {},
+      stage_hint: phase,
+      prefer_model: false,
+    });
+    if (!proposal.ok || !proposal.can_confirm_intent) {
+      throw new Error(proposal.reason || 'The bilateral intent requires clarification before execution.');
+    }
+    const teachBack = proposal.paired_teach_back || {};
+    const summary = [
+      `Will do: ${(teachBack.will_do || []).join('; ')}`,
+      `Will not do: ${(teachBack.will_not_do || []).join('; ')}`,
+      `Guardrails: ${(teachBack.guardrails || []).map(item => item.statement || item).join('; ')}`,
+    ].join('\n\n');
+    if (!window.confirm(`Confirm this exact guarded action?\n\n${summary}`)) {
+      await jarvisApi('/api/human-agent/gate/approve', {
+        proposal_id: proposal.proposal_id,
+        approved: false,
+        current_node_context: {},
+        stage_hint: phase,
+        note: 'Rejected in the standalone Human Agent Arena.',
+      });
+      throw new Error('Human confirmation was rejected.');
+    }
+    const approved = await jarvisApi('/api/human-agent/gate/approve', {
+      proposal_id: proposal.proposal_id,
+      approved: true,
+      current_node_context: {},
+      stage_hint: phase,
+      reviewer: 'standalone_human',
+      note: 'Confirmed the exact guarded action payload only.',
+      action_payload: payload,
+    });
+    if (!approved.ok) throw new Error(approved.reason || 'Confirmation was denied.');
+    const compilation = approved.canonical_compilation || {};
+    const receipt = compilation.confirmation_receipt || {};
+    const decision = approved.decision || {};
+    return {
+      ...payload,
+      confirmation_id: receipt.confirmation_id || decision.confirmation_id || '',
+      confirmation_receipt_id: receipt.confirmation_id || decision.confirmation_id || '',
+      intent_digest: compilation.intent_packet?.intent_digest || decision.intent_digest || '',
+      semantic_ledger_digest: compilation.semantic_ledger?.ledger_digest || decision.semantic_ledger_digest || '',
+      repository_head: receipt.repository_head || '',
+      source_tree_digest: receipt.source_tree_digest || '',
+      workflow_id: decision.workflow_id || workflowState?.workflow_id || '',
+      phase_hash: decision.phase_hash || '',
+      node_digest: decision.node_digest || '',
+    };
+  }
+
   async function loadWorkflow() {
     try {
       workflowState = await jarvisApi('/api/human-agent/workflow');
@@ -90,10 +144,21 @@
   async function executeWorkflowAction(actionId) {
     const evidence = $('workflow-evidence');
     if (evidence) evidence.innerHTML = '<p class="placeholder">Running grounded action…</p>';
-    const result = await jarvisApi('/api/human-agent/workflow/action', {
-      action_id: actionId,
-      payload: workflowPayloadFor(actionId),
-    });
+    let result;
+    try {
+      const payload = workflowPayloadFor(actionId);
+      const confirmedPayload = await confirmedWorkflowPayload(
+        actionId,
+        payload,
+        `Run ${actionId} with the exact displayed payload.`
+      );
+      result = await jarvisApi('/api/human-agent/workflow/action', {
+        action_id: actionId,
+        payload: confirmedPayload,
+      });
+    } catch (error) {
+      result = {ok: false, error: error.message || 'Confirmation failed.'};
+    }
     renderWorkflowResult(result);
     workflowState = result.workflow || await jarvisApi('/api/human-agent/workflow');
     renderWorkflow(workflowState);
@@ -122,7 +187,30 @@
     if (!command?.trim()) return;
     const transcript = $('command-transcript');
     if (transcript) transcript.innerHTML = `<span class="transcript-speaker">You</span><p>${escape(command)}</p>`;
-    const result = await jarvisApi('/api/human-agent/workflow/command', { command });
+    let result;
+    try {
+      const preview = await jarvisApi('/api/human-agent/workflow/command/preview', {
+        command,
+        payload: {},
+      });
+      if (preview.meta_transition) {
+        result = await jarvisApi('/api/human-agent/workflow/command', {command, payload: {}});
+      } else if (!preview.ok) {
+        result = preview;
+      } else {
+        const confirmedPayload = await confirmedWorkflowPayload(
+          preview.action_id,
+          preview.execution_payload || {},
+          `Run the command “${command}” as ${preview.action_id}.`
+        );
+        result = await jarvisApi('/api/human-agent/workflow/command', {
+          command,
+          payload: confirmedPayload,
+        });
+      }
+    } catch (error) {
+      result = {ok: false, error: error.message || 'Confirmation failed.'};
+    }
     renderWorkflowResult(result);
     workflowState = result.workflow || await jarvisApi('/api/human-agent/workflow');
     renderWorkflow(workflowState);

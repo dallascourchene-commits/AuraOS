@@ -30,6 +30,7 @@ from urllib.parse import parse_qs, urlparse
 
 from aura_arena_research_bridge import ArenaResearchBridge
 from aura_arena_persistence_adapters import ArenaPersistenceCoordinator
+from aura_arena_gate_dialogue import ArenaGateDialogueService
 from aura_coding_workbench_wfst_adapter import CodingWorkbenchWFSTSession
 from aura_construction_human_agent import ConstructionHumanAgentProfileService
 from aura_emergent_refactor_workspace import EmergentResultsStore
@@ -54,11 +55,22 @@ class AuraThreadingHTTPServer(ThreadingHTTPServer):
 class HumanAgentArenaServerState:
     """Holds spatial, guarded-workflow, emergent-evidence, and research surfaces."""
 
-    def __init__(self, repo_root: str | Path = ".", *, demo: bool = False):
+    def __init__(
+        self,
+        repo_root: str | Path = ".",
+        *,
+        demo: bool = False,
+        operator_identity: str | None = None,
+    ):
         self.repo_root = Path(repo_root).resolve()
         self.demo = bool(demo)
         self.arena = HumanAgentArena(self.repo_root, demo=self.demo)
         self.workflow = HumanAgentWorkflow(self.repo_root)
+        self.gate_dialogue = ArenaGateDialogueService(
+            self.repo_root,
+            self.workflow,
+            operator_identity=operator_identity,
+        )
         self.coding_workbench = CodingWorkbenchWFSTSession(self.repo_root)
         self.construction_profile = ConstructionHumanAgentProfileService(
             demo=self.demo
@@ -658,11 +670,71 @@ def dispatch_api_request(
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
 
+    if method == "GET" and route == "/api/human-agent/gate/status":
+        return 200, state.gate_dialogue.status()
+
+    if method == "POST" and route == "/api/human-agent/gate/address":
+        result = state.gate_dialogue.address(
+            comment=str(body.get("comment") or ""),
+            node_context=(
+                body.get("node_context")
+                if isinstance(body.get("node_context"), dict)
+                else {}
+            ),
+            stage_hint=str(body.get("stage_hint") or ""),
+            prefer_model=body.get("prefer_model", True) is not False,
+        )
+        return (200 if result.get("ok") else 409), result
+
+    if method == "POST" and route == "/api/human-agent/gate/approve":
+        approved = body.get("approved")
+        if type(approved) is not bool:
+            return _error("approved must be a boolean")
+        result = state.gate_dialogue.approve(
+            proposal_id=str(body.get("proposal_id") or ""),
+            approved=approved,
+            current_node_context=(
+                body.get("current_node_context")
+                if isinstance(body.get("current_node_context"), dict)
+                else {}
+            ),
+            stage_hint=str(body.get("stage_hint") or ""),
+            reviewer=str(body.get("reviewer") or "human_operator"),
+            note=str(body.get("note") or ""),
+            action_payload=(
+                body.get("action_payload")
+                if isinstance(body.get("action_payload"), dict)
+                else {}
+            ),
+        )
+        return (200 if result.get("ok") else 409), result
+
+    if (
+        method == "POST"
+        and route == "/api/human-agent/workflow/command/preview"
+    ):
+        command = str(body.get("command") or "")
+        if not command.strip():
+            return _error("command is required")
+        return 200, state.workflow.preview_guarded_command(
+            command,
+            dict(body.get("payload") or {}),
+        )
+
     if method == "POST" and route == "/api/human-agent/workflow/action":
         action_id = str(body.get("action_id") or "")
         if not action_id:
             return _error("action_id is required")
         action_payload = dict(body.get("payload") or {})
+        gate_dialogue = getattr(state, "gate_dialogue", None)
+        authorization: dict[str, Any] = {}
+        if isinstance(gate_dialogue, ArenaGateDialogueService):
+            authorization = gate_dialogue.authorize_workflow_action(
+                action_id=action_id,
+                action_payload=action_payload,
+            )
+            if authorization.get("ok") is not True:
+                return 409, authorization
         preview_context: dict[str, Any] = {}
         if action_id == "prepare_capsule":
             action_payload, preview_context = _prepare_payload_with_emergent_context(state, action_payload)
@@ -684,6 +756,9 @@ def dispatch_api_request(
         if emergent_context:
             result["emergent_context"] = emergent_context
             result["workflow"] = state.workflow.get_state()
+        if authorization:
+            gate_dialogue.record_workflow_action_result(authorization, result)
+            result["bilateral_confirmation_authorization"] = authorization
         return (200 if result.get("ok") else 409), result
 
     if method == "POST" and route == "/api/human-agent/workflow/command":
@@ -691,10 +766,38 @@ def dispatch_api_request(
         if not command.strip():
             return _error("command is required")
         command_payload = dict(body.get("payload") or {})
+        gate_dialogue = getattr(state, "gate_dialogue", None)
+        authorization: dict[str, Any] = {}
+        preview: dict[str, Any] = {}
+        if isinstance(gate_dialogue, ArenaGateDialogueService):
+            preview = state.workflow.preview_guarded_command(
+                command,
+                command_payload,
+            )
+            if preview.get("ok") is not True:
+                return 409, preview
+            if preview.get("meta_transition") is not True:
+                action_id = str(preview.get("action_id") or "")
+                authorization = gate_dialogue.authorize_workflow_action(
+                    action_id=action_id,
+                    action_payload=command_payload,
+                    execution_payload=dict(
+                        preview.get("execution_payload") or {}
+                    ),
+                )
+                if authorization.get("ok") is not True:
+                    return 409, authorization
+                command_payload = dict(preview.get("execution_payload") or {})
         preview_context: dict[str, Any] = {}
         if state.workflow.state.objective:
             command_payload, preview_context = _prepare_payload_with_emergent_context(state, command_payload)
-        result = state.workflow.ingest_command(command, command_payload)
+        if authorization:
+            result = state.workflow.execute_guarded(
+                str(authorization["action_id"]),
+                command_payload,
+            )
+        else:
+            result = state.workflow.ingest_command(command, command_payload)
         objective = str(state.workflow.state.objective or "")
         if result.get("ok") and objective:
             emergent_context = _attach_emergent_refactor_context(
@@ -709,6 +812,10 @@ def dispatch_api_request(
             result["workflow"] = state.workflow.get_state()
         elif preview_context:
             result["emergent_context_preview"] = preview_context
+        if authorization:
+            gate_dialogue.record_workflow_action_result(authorization, result)
+            result["bilateral_confirmation_authorization"] = authorization
+            result["command_preview"] = preview
         return (200 if result.get("ok") else 409), result
 
     if method == "GET" and route == "/api/coding-workbench/state":

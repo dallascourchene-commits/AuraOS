@@ -7,6 +7,7 @@ routing, verification, patch, publication, production, or learning authority.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import re
 from typing import Any, Mapping, Sequence
 
 from aura_event_contracts import PATCH_AUTHORITY, VSA_PATCH_AUTHORITY, stable_digest
@@ -24,10 +25,13 @@ from aura_intent_refinement import (
     extract_negative_requirements,
 )
 from aura_unified_memory_continuity import (
+    ArenaEvidenceItem,
     AuthorityEnvelope,
+    EvidenceTruthClass,
     IntentPacket,
     SemanticDefinition,
     SemanticLedger,
+    compile_arena_evidence_slice,
 )
 
 VERSION = "AURA_BILATERAL_CANONICAL_COMPILER_V1"
@@ -91,13 +95,82 @@ def _sentences(text: str) -> tuple[str, ...]:
 
 
 def _positive_requirements(source_request: str, negatives: Sequence[NegativeRequirement]) -> tuple[str, ...]:
-    negative_spans = {item.source_span for item in negatives}
-    positives = tuple(
-        sentence
-        for sentence in _sentences(source_request)
-        if sentence not in negative_spans and not extract_negative_requirements(sentence)
+    source = _required(source_request, "source_request")
+    remaining = list(source)
+    for item in negatives:
+        if source[item.source_start:item.source_end] != item.source_span:
+            continue
+        remaining[item.source_start:item.source_end] = " " * (
+            item.source_end - item.source_start
+        )
+    candidate = "".join(remaining)
+    if not candidate.strip():
+        return ("Preserve the confirmed prohibition and locked guardrails.",)
+    positives: list[str] = []
+    for sentence in _sentences(candidate):
+        clauses = re.split(
+            r"(?:[\s,;:]*\b(?:but|however)\b[\s,;:]*)+",
+            sentence,
+            flags=re.IGNORECASE,
+        )
+        for clause in clauses:
+            cleaned = clause.strip(" \t,;:-")
+            if cleaned and not extract_negative_requirements(cleaned):
+                positives.append(cleaned)
+    return tuple(dict.fromkeys(positives)) or (
+        "Preserve the confirmed prohibition and locked guardrails.",
     )
-    return positives or (_required(source_request, "source_request"),)
+
+
+def _clarification_questions(
+    positive_requirements: Sequence[str],
+    negative_requirements: Sequence[NegativeRequirement],
+) -> tuple[ClarificationQuestion, ...]:
+    questions: list[ClarificationQuestion] = []
+    ambiguous = [item for item in negative_requirements if item.ambiguous]
+    if ambiguous:
+        item = ambiguous[0]
+        questions.append(
+            ClarificationQuestion.create(
+                ambiguity_class=AmbiguityClass.PROHIBITED_OUTCOME,
+                question="What exact outcome must Aura not produce?",
+                why_it_changes_execution="The current negative phrase has no exact operational target.",
+                affected_requirements=(item.requirement_id,),
+            )
+        )
+    contradictions = detect_requirement_contradictions(
+        positive_requirements, negative_requirements
+    )
+    if contradictions:
+        conflict = contradictions[0]
+        questions.append(
+            ClarificationQuestion.create(
+                ambiguity_class=AmbiguityClass.CONTRADICTION,
+                question="Which requirement controls this conflict?",
+                why_it_changes_execution=(
+                    "The same bounded behavior appears in both required and prohibited intent."
+                ),
+                candidate_answers=(
+                    conflict["positive_requirement"],
+                    conflict["negative_requirement"],
+                ),
+            )
+        )
+    if not negative_requirements:
+        questions.append(
+            ClarificationQuestion.create(
+                ambiguity_class=AmbiguityClass.PROHIBITED_OUTCOME,
+                question="What must Aura explicitly not do?",
+                why_it_changes_execution=(
+                    "A bilateral confirmation requires explicit prohibited behavior or a human statement that only hard defaults apply."
+                ),
+                candidate_answers=(
+                    "Only the locked hard defaults apply.",
+                    "Do not expand beyond the selected topology scope.",
+                ),
+            )
+        )
+    return tuple(questions)
 
 
 def _resolved_guardrails(guardrails: Sequence[GuardrailProposal]) -> tuple[GuardrailProposal, ...]:
@@ -162,48 +235,7 @@ def analyze_bilateral_request(
         affected_files=affected_files,
         affected_symbols=affected_symbols,
     )
-    questions: list[ClarificationQuestion] = []
-    ambiguous = [item for item in parsed_negatives if item.ambiguous]
-    if ambiguous:
-        item = ambiguous[0]
-        questions.append(
-            ClarificationQuestion.create(
-                ambiguity_class=AmbiguityClass.PROHIBITED_OUTCOME,
-                question="What exact outcome must Aura not produce?",
-                why_it_changes_execution="The current negative phrase has no exact operational target.",
-                affected_requirements=(item.requirement_id,),
-            )
-        )
-    contradictions = detect_requirement_contradictions(positives, parsed_negatives)
-    if contradictions:
-        conflict = contradictions[0]
-        questions.append(
-            ClarificationQuestion.create(
-                ambiguity_class=AmbiguityClass.CONTRADICTION,
-                question="Which requirement controls this conflict?",
-                why_it_changes_execution=(
-                    "The same bounded behavior appears in both required and prohibited intent."
-                ),
-                candidate_answers=(
-                    conflict["positive_requirement"],
-                    conflict["negative_requirement"],
-                ),
-            )
-        )
-    if not parsed_negatives:
-        questions.append(
-            ClarificationQuestion.create(
-                ambiguity_class=AmbiguityClass.PROHIBITED_OUTCOME,
-                question="What must Aura explicitly not do?",
-                why_it_changes_execution=(
-                    "A bilateral confirmation requires explicit prohibited behavior or a human statement that only hard defaults apply."
-                ),
-                candidate_answers=(
-                    "Only the locked hard defaults apply.",
-                    "Do not expand beyond the selected topology scope.",
-                ),
-            )
-        )
+    questions = _clarification_questions(positives, parsed_negatives)
     teach_back = None if questions else _teach_back(positives, parsed_negatives, guardrails)
     return BilateralAnalysis(
         source_request=source,
@@ -225,6 +257,11 @@ def apply_clarification(
     positives = list(analysis.positive_requirements)
     negatives = list(analysis.negative_requirements)
     if question.ambiguity_class == AmbiguityClass.PROHIBITED_OUTCOME.value:
+        affected = set(question.affected_requirements)
+        if affected:
+            negatives = [
+                item for item in negatives if item.requirement_id not in affected
+            ]
         if value.casefold() == "only the locked hard defaults apply.":
             value = "Do not exceed the locked hard architectural and authority guardrails."
         extracted = extract_negative_requirements(value)
@@ -257,12 +294,22 @@ def apply_clarification(
                 positives = [
                     "Preserve the confirmed prohibition and locked guardrails."
                 ]
-    remaining = tuple(item for item in analysis.questions if item.question_id != question.question_id)
-    teach_back = None if remaining else _teach_back(positives, negatives, analysis.guardrails)
+    normalized_positives = tuple(dict.fromkeys(positives))
+    normalized_negatives = tuple(
+        {item.statement: item for item in negatives}.values()
+    )
+    remaining = _clarification_questions(
+        normalized_positives, normalized_negatives
+    )
+    teach_back = (
+        None
+        if remaining
+        else _teach_back(normalized_positives, normalized_negatives, analysis.guardrails)
+    )
     return BilateralAnalysis(
         source_request=analysis.source_request,
-        positive_requirements=tuple(dict.fromkeys(positives)),
-        negative_requirements=tuple(negatives),
+        positive_requirements=normalized_positives,
+        negative_requirements=normalized_negatives,
         guardrails=analysis.guardrails,
         questions=remaining,
         teach_back=teach_back,
@@ -307,13 +354,36 @@ def refresh_refinement_session(
     session: IntentRefinementSession,
     analysis: BilateralAnalysis,
     *,
+    question: ClarificationQuestion,
     answer: str,
     observed_at: float,
 ) -> IntentRefinementSession:
     if session.current_stage != "CLARIFICATION_REQUIRED":
         raise ValueError("clarification answer requires a clarification-pending session")
-    answers = [*session.answers_received, {"answer": _required(answer, "answer"), "received_at": observed_at}]
+    answers = [
+        *session.answers_received,
+        {
+            "question_id": question.question_id,
+            "ambiguity_class": question.ambiguity_class,
+            "question": question.question,
+            "answer": _required(answer, "answer"),
+            "received_at": observed_at,
+        },
+    ]
     questions = tuple(item.to_dict() for item in analysis.questions)
+    questions_asked = [
+        *session.questions_asked,
+        *[
+            item
+            for item in questions
+            if item.get("question_id")
+            not in {
+                prior.get("question_id")
+                for prior in session.questions_asked
+                if isinstance(prior, Mapping)
+            }
+        ],
+    ]
     target = "CLARIFICATION_REQUIRED" if questions else "TEACH_BACK_PENDING"
     return session.transition(
         target,
@@ -321,7 +391,7 @@ def refresh_refinement_session(
         negative_requirements=tuple(item.statement for item in analysis.negative_requirements),
         guardrails=tuple(item.to_dict() for item in analysis.guardrails),
         unresolved_ambiguities=questions,
-        questions_asked=questions,
+        questions_asked=questions_asked,
         answers_received=answers,
         teach_back=analysis.teach_back,
         now=observed_at,
@@ -337,6 +407,10 @@ def compile_confirmed_bilateral_intent(
     working_tree_clean_receipt: str,
     allowed_paths: Sequence[str],
     runtime_profile_digest: str,
+    workflow_phase_hash: str,
+    topology_evidence_digest: str,
+    topology_selected: bool,
+    codemap_digest: str,
     human_reviewer: str,
     confirmed_at: float,
     expires_at: float,
@@ -367,7 +441,11 @@ def compile_confirmed_bilateral_intent(
         acceptance_criteria=analysis.positive_requirements,
         required_evidence=(
             "current human confirmation receipt",
-            "current selected topology identity",
+            (
+                "current selected topology identity"
+                if topology_selected
+                else "current workflow-owner fallback path receipt"
+            ),
             "independent verification before consequential execution",
         ),
         risk_class="BOUNDED_GATE_DIALOGUE",
@@ -386,8 +464,14 @@ def compile_confirmed_bilateral_intent(
             source_refs=(source_ref,),
         ),
         SemanticDefinition(
-            term="topology evidence",
-            means=("bounded navigation evidence tied to the selected node and current repository identity",),
+            term="topology evidence" if topology_selected else "workflow-owner fallback",
+            means=(
+                (
+                    "bounded navigation evidence tied to the selected node and current repository identity"
+                    if topology_selected
+                    else "the exact existing workflow owner admitted for a legacy pathless objective"
+                ),
+            ),
             does_not_mean=("visual patch authority or permission to widen scope",),
             source_refs=(source_ref,),
         ),
@@ -399,6 +483,79 @@ def compile_confirmed_bilateral_intent(
         ),
     )
     ledger = SemanticLedger.create(intent_digest=intent.intent_digest, definitions=definitions)
+    route_evidence = (
+        ArenaEvidenceItem(
+            evidence_ref=f"aura://codemap/selection/{topology_evidence_digest}",
+            causal_reason="Binds allowed paths to the selected exact topology evidence.",
+            truth_class=EvidenceTruthClass.EXACT_RECEIPT,
+            canonical_owner="aura_codemap_facade",
+            source_digest=topology_evidence_digest,
+            freshness="CURRENT",
+        )
+        if topology_selected
+        else ArenaEvidenceItem(
+            evidence_ref=f"aura://human-agent/workflow-owner/{stable_digest(paths)}",
+            causal_reason=(
+                "Binds the legacy pathless objective to the exact existing workflow-owner fallback."
+            ),
+            truth_class=EvidenceTruthClass.EXACT_RECEIPT,
+            canonical_owner="aura_arena_gate_dialogue._allowed_paths",
+            source_digest=stable_digest(paths),
+            freshness="CURRENT",
+        )
+    )
+    evidence_items = (
+        ArenaEvidenceItem(
+            evidence_ref=f"aura://repository/{repository_head}",
+            causal_reason="Binds the confirmation to the exact source identity.",
+            truth_class=EvidenceTruthClass.EXACT_RECEIPT,
+            canonical_owner="aura_arena_gate_dialogue._repository_identity",
+            source_digest=source_tree_digest,
+            freshness="CURRENT",
+        ),
+        ArenaEvidenceItem(
+            evidence_ref=f"aura://human-agent/workflow/{workflow_phase_hash}",
+            causal_reason="Binds the confirmation to the current guarded WFST phase.",
+            truth_class=EvidenceTruthClass.EXACT_RUNTIME,
+            canonical_owner="aura_human_agent_workflow.HumanAgentWorkflow",
+            source_digest=runtime_profile_digest,
+            freshness="CURRENT",
+        ),
+        route_evidence,
+    )
+    evidence_slice = compile_arena_evidence_slice(
+        repository_head=repository_head,
+        working_tree_digest=source_tree_digest,
+        codemap_digest=codemap_digest,
+        objective_digest=intent.intent_digest,
+        candidate_items=evidence_items,
+        required_refs=tuple(item.evidence_ref for item in evidence_items),
+        prohibitions=prohibitions,
+        required_verifiers=(
+            "human bilateral confirmation",
+            "Human Agent guarded WFST",
+        ),
+    )
+    binding_request_payload = {
+        "session_id": session.session_id,
+        "intent_digest": intent.intent_digest,
+        "semantic_ledger_digest": ledger.ledger_digest,
+        "arena_evidence_slice_digest": evidence_slice.slice_digest,
+        "workflow_phase_hash": workflow_phase_hash,
+        "topology_evidence_digest": topology_evidence_digest,
+        "required_owner": (
+            "aura_unified_memory_continuity_toolchain.UnifiedExecutionBinding"
+        ),
+        "required_adapter": (
+            "aura_unified_memory_continuity_toolchain.compile_bridge_execution_binding"
+        ),
+        "status": "AWAITING_CANONICAL_ACT_CAPSULE",
+    }
+    binding_request_digest = stable_digest(binding_request_payload)
+    binding_request_ref = (
+        f"aura://unified-memory-continuity/execution-binding-request/"
+        f"{binding_request_digest}"
+    )
     confirmed_session = session.transition(
         "HUMAN_CONFIRMED",
         positive_requirements=analysis.positive_requirements,
@@ -423,6 +580,7 @@ def compile_confirmed_bilateral_intent(
         teach_back=analysis.teach_back,
         allowed_paths=paths,
         runtime_profile_digest=runtime_profile_digest,
+        unified_execution_binding_ref=binding_request_ref,
         human_reviewer=human_reviewer,
         human_disposition="CONFIRMED",
         confirmed_at=confirmed_at,
@@ -450,15 +608,23 @@ def compile_confirmed_bilateral_intent(
         },
         now=confirmed_at,
     )
-    u7_refs = {
+    u7_payload = {
         "confirmation_digest": receipt.confirmation_id,
         "negative_requirements_digest": receipt.negative_requirements_digest,
         "guardrail_set_digest": receipt.guardrail_set_digest,
-        "intent_revision_id": "",
-        "incident_replay_digest": "",
+        "intent_revision_status": "NOT_CREATED_NO_POST_CONFIRMATION_DRIFT",
+        "incident_replay_status": "NOT_OBSERVED_NO_EXECUTION_INCIDENT",
         "observed_guardrail_violation_refs": [],
         "proposal_only": True,
         "current_reproof_required_before_learning": True,
+        "current_reproof_owner": (
+            "aura_unified_memory_continuity_learning.compile_current_reproof"
+        ),
+        "intent_revision_owner": "aura_intent_refinement.IntentRevisionDelta",
+    }
+    u7_refs = {
+        **u7_payload,
+        "u7_binding_digest": stable_digest(u7_payload),
     }
     execution_refs = {
         "intent_packet_owner": "aura_unified_memory_continuity.IntentPacket",
@@ -468,7 +634,14 @@ def compile_confirmed_bilateral_intent(
         "unified_execution_binding_owner": (
             "aura_unified_memory_continuity_toolchain.UnifiedExecutionBinding"
         ),
-        "binding_status": "PENDING_PLAN_CAPSULE_AND_EXACT_EVIDENCE",
+        "arena_evidence_slice": evidence_slice.to_dict(),
+        "execution_binding_requirement": {
+            **binding_request_payload,
+            "binding_request_ref": binding_request_ref,
+            "binding_request_digest": binding_request_digest,
+        },
+        "binding_status": "AWAITING_CANONICAL_ACT_CAPSULE",
+        "unified_execution_binding_ref": binding_request_ref,
         "confirmation_ref": receipt.confirmation_id,
         "intent_digest": intent.intent_digest,
         "semantic_ledger_digest": ledger.ledger_digest,

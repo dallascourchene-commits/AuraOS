@@ -63,6 +63,8 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
+          build-args: |
+            AURA_SOURCE_COMMIT=${{ github.sha }}
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}

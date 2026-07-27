@@ -1,0 +1,81 @@
+{
+  "schema_version": "AURA_REFACTOR_OBJECTIVE_V1",
+  "objective_id": "bilateral_intent_guardrail_foundry_pr2_hardening_revision",
+  "title": "Close PR2 bilateral intent confirmation and runtime enforcement gaps",
+  "base_commit": "3138362bc5e9f4a7ac7dcc34c50934a2cf05c6e2",
+  "parent_objective_ref": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json",
+  "scope": {
+    "allowed_source_paths": [
+      "aura_intent_refinement.py",
+      "aura_bilateral_intent_compiler.py",
+      "aura_arena_gate_dialogue.py",
+      "aura_human_agent_wfst_adapter.py",
+      "aura_human_agent_workflow.py",
+      "aura_human_agent_arena_server.py",
+      "aura_showcase_server.py",
+      "aura_showcase/gate-dialogue.js"
+    ],
+    "allowed_test_paths": [
+      "tests/test_aura_bilateral_gate_dialogue.py",
+      "tests/test_aura_human_agent_wfst_live_integration.py"
+    ],
+    "allowed_packaging_paths": [
+      "Dockerfile",
+      ".github/workflows/publish-ghcr-showcase.yml",
+      "requirements.txt"
+    ],
+    "allowed_governance_paths": [
+      ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
+      ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2_hardening_revision.v1.json",
+      ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2_hardening.v1.json"
+    ],
+    "generated_paths_deferred_until_source_and_tests_are_stable": [
+      ".aura/CODEMAP.json",
+      ".aura/CODEMAP.md",
+      "topology_map.json"
+    ]
+  },
+  "requirements": [
+    "Preserve positive clauses when a sentence also contains an explicit prohibition.",
+    "Recompute contradictions after every clarification before confirmation can be admitted.",
+    "Retain digest-chained question, answer, confirmation, consumption, and guarded-action audit records.",
+    "Reject invalid or stale topology paths without throwing an unhandled exception.",
+    "Preserve the legacy one-turn objective gate through the existing workflow owner when no topology path exists.",
+    "Bind packaged deployments to an immutable trusted source commit when Git metadata is intentionally absent.",
+    "Require and single-use a current bilateral confirmation receipt at the backend guarded-action boundary.",
+    "Emit a canonical ArenaEvidenceSlice and explicit pending UnifiedExecutionBinding and U7 reproof contracts without inventing an Act Capsule.",
+    "Install pytest in the isolated development environment and declare its supported range in requirements.txt.",
+    "Rebind the existing PR1 exact-source receipt to the hardened canonical refinement parser blob."
+  ],
+  "prohibitions": [
+    "Do not refactor or modify the Architecture Harness.",
+    "Do not create a parallel memory, truth, policy, routing, verification, persistence, authority, or learning owner.",
+    "Do not fabricate an Act Capsule or claim a completed UnifiedExecutionBinding before the canonical planning gate creates one.",
+    "Do not grant patch, commit, push, pull request, merge, deployment, production, or automatic learning-promotion authority.",
+    "Do not trigger external reviewers without separate explicit authorization.",
+    "Do not regenerate CODEMAP or topology artifacts until source and tests are stable."
+  ],
+  "verification": [
+    "Python compilation",
+    "JavaScript syntax validation",
+    "fatal Ruff classes E9 F63 F7 F82",
+    "focused bilateral Gate Dialogue tests",
+    "Human Agent guarded server regression tests",
+    "Showcase browser contract tests",
+    "full pytest-native suite",
+    "Architecture Harness exact-head verification after source and tests are stable"
+  ],
+  "authority": {
+    "planning_proposes": true,
+    "verification_proves": true,
+    "human_disposes": true,
+    "patch_authority": "exact_source_spans_and_hashes_only",
+    "vsa_patch_authority": false,
+    "production_mutation": false,
+    "automatic_commit": false,
+    "automatic_push": false,
+    "automatic_pull_request": false,
+    "automatic_merge": false,
+    "automatic_learning_promotion": false
+  }
+}

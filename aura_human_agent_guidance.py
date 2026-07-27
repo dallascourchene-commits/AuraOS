@@ -139,10 +139,21 @@ def build_guidance_packet(workflow_state: dict[str, Any]) -> dict[str, Any]:
     routing = dict(workflow_state.get("routing") or {})
     available_raw = [item for item in routing.get("available") or [] if not item.get("meta_transition") and _action_id(item)]
     blocked_raw = [item for item in routing.get("blocked") or [] if not item.get("meta_transition")]
-    available = [_available_row(item, phase) for item in available_raw]
+    evidence_keys = list(workflow_state.get("evidence_keys") or [])
+    evidence = dict(workflow_state.get("evidence") or {})
+    available = [
+        _available_row(item, phase)
+        for item in available_raw
+        if not (
+            item.get("produced_evidence")
+            and all(
+                bool(evidence.get(str(key)))
+                for key in item.get("produced_evidence") or []
+            )
+        )
+    ]
     blocked = [_blocked_row(item, phase) for item in blocked_raw]
     recommended = available[:1]
-    evidence_keys = list(workflow_state.get("evidence_keys") or [])
     packet = {
         "ok": bool(routing.get("ok")),
         "version": GUIDANCE_VERSION,

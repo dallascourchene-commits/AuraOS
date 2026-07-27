@@ -39,7 +39,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Build default Render image
-        run: docker build -t auraos-render-four-tab .
+        run: docker build --build-arg AURA_SOURCE_COMMIT=${{ github.sha }} -t auraos-render-four-tab .
       - name: Launch and verify all four tabs
         shell: bash
         run: |

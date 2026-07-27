@@ -80,6 +80,28 @@ def build_parser() -> argparse.ArgumentParser:
     human_action.add_argument("action_id")
     human_action.add_argument("--payload", default="{}", help="JSON object")
 
+    sub.add_parser("human-gate-status", help="Show bilateral confirmation status")
+
+    gate_address = sub.add_parser(
+        "human-gate-address",
+        help="Compile a bilateral intent proposal before a guarded Human action",
+    )
+    gate_address.add_argument("text")
+    gate_address.add_argument("--stage-hint", default="FRAME")
+    gate_address.add_argument("--node-context", default="{}", help="JSON object")
+
+    gate_approve = sub.add_parser(
+        "human-gate-approve",
+        help="Approve or reject one bilateral intent proposal",
+    )
+    gate_approve.add_argument("proposal_id")
+    disposition = gate_approve.add_mutually_exclusive_group(required=True)
+    disposition.add_argument("--approve", action="store_true")
+    disposition.add_argument("--reject", action="store_true")
+    gate_approve.add_argument("--stage-hint", default="FRAME")
+    gate_approve.add_argument("--node-context", default="{}", help="JSON object")
+    gate_approve.add_argument("--action-payload", default="{}", help="JSON object")
+
     coding_command = sub.add_parser("coding-command", help="Send a guarded Coding Workbench command")
     coding_command.add_argument("text")
     coding_command.add_argument("--payload", default="{}", help="JSON object")
@@ -95,6 +117,7 @@ def main(argv: list[str] | None = None) -> int:
     endpoints = {
         "human-state": ("/api/human-agent/workflow", None),
         "human-routes": ("/api/human-agent/routes", None),
+        "human-gate-status": ("/api/human-agent/gate/status", None),
         "coding-state": ("/api/coding-workbench/state", None),
         "coding-routes": ("/api/coding-workbench/routes", None),
     }
@@ -105,6 +128,21 @@ def main(argv: list[str] | None = None) -> int:
             path, payload = "/api/human-agent/workflow/command", {"command": args.text, "payload": _parse_payload(args.payload)}
         elif args.command == "human-action":
             path, payload = "/api/human-agent/workflow/action", {"action_id": args.action_id, "payload": _parse_payload(args.payload)}
+        elif args.command == "human-gate-address":
+            path, payload = "/api/human-agent/gate/address", {
+                "comment": args.text,
+                "stage_hint": args.stage_hint,
+                "node_context": _parse_payload(args.node_context),
+                "prefer_model": False,
+            }
+        elif args.command == "human-gate-approve":
+            path, payload = "/api/human-agent/gate/approve", {
+                "proposal_id": args.proposal_id,
+                "approved": bool(args.approve),
+                "stage_hint": args.stage_hint,
+                "current_node_context": _parse_payload(args.node_context),
+                "action_payload": _parse_payload(args.action_payload),
+            }
         elif args.command == "coding-command":
             path, payload = "/api/coding-workbench/command", {"command": args.text, "payload": _parse_payload(args.payload)}
         else:
