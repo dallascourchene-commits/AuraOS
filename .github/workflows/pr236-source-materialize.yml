@@ -1,0 +1,56 @@
+name: PR236 Compass and context repairs
+
+on:
+  pull_request:
+    types: [synchronize]
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact branch head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          ref: refactor/bilateral-intent-pr3-enforcement
+
+      - name: Install repository test requirements
+        run: python -m pip install --disable-pip-version-check -r requirements.txt
+
+      - name: Apply manually authored Compass and context repairs
+        run: python .github/pr236_compass_context_fix.py.tmp
+
+      - name: Verify focused bilateral behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/test_aura_bilateral_planning_enforcement.py
+          python -m ruff check \
+            aura_coding_relationship_compass.py \
+            aura_external_llm_session.py \
+            tests/test_aura_bilateral_planning_enforcement.py \
+            --select E9,F63,F7,F82
+          python -m py_compile \
+            aura_coding_relationship_compass.py \
+            aura_external_llm_session.py \
+            tests/test_aura_bilateral_planning_enforcement.py
+
+      - name: Publish verified source repairs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "dallascourchene-commits"
+          git config user.email "281686929+dallascourchene-commits@users.noreply.github.com"
+          git add -- \
+            aura_coding_relationship_compass.py \
+            aura_external_llm_session.py \
+            tests/test_aura_bilateral_planning_enforcement.py
+          git commit -m "fix(pr236): ground Compass and bound bilateral context"
+          git fetch origin refactor/bilateral-intent-pr3-enforcement
+          git rebase origin/refactor/bilateral-intent-pr3-enforcement
+          git push origin HEAD:refactor/bilateral-intent-pr3-enforcement
