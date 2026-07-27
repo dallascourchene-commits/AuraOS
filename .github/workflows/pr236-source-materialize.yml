@@ -1,4 +1,4 @@
-name: PR236 manual review repairs
+name: PR236 repository identity repair
 
 on:
   pull_request:
@@ -22,118 +22,43 @@ jobs:
       - name: Install repository test requirements
         run: python -m pip install --disable-pip-version-check -r requirements.txt
 
-      - name: Apply manually authored repairs
-        run: python .github/pr236_manual_repairs.py
+      - name: Apply repository identity repair
+        run: python .github/pr236_identity_fix.py.tmp
 
-      - name: Fit bilateral context to exact serialized budget
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path("aura_external_llm_session.py")
-          text = path.read_text(encoding="utf-8")
-
-          early = (
-              "        if fixed_context_tokens > session.max_context_tokens:\n"
-              "            return None\n"
-          )
-          replacement = (
-              "        # The final serialized payload fit below is authoritative. If fixed\n"
-              "        # metadata consumes the budget, slices receive zero tokens and the\n"
-              "        # compressed context is reduced to the largest representation that fits.\n"
-          )
-          if text.count(early) != 1:
-              raise SystemExit(f"expected one early context guard, found {text.count(early)}")
-          text = text.replace(early, replacement, 1)
-
-          start_marker = "        if context_token_estimate > session.max_context_tokens:\n"
-          end_marker = "        turn_index = len(session.turns) + 1\n"
-          start = text.find(start_marker)
-          if start < 0:
-              raise SystemExit("final context fit start marker not found")
-          end = text.find(end_marker, start)
-          if end < 0:
-              raise SystemExit("final context fit end marker not found")
-          new_block = (
-              "        if context_token_estimate > session.max_context_tokens:\n"
-              "            original_compressed_context = compressed_context\n"
-              "            low = 0\n"
-              "            high = _token_estimate(original_compressed_context)\n"
-              "            best_context: str | None = None\n"
-              "            best_estimate = 0\n"
-              "            while low <= high:\n"
-              "                midpoint = (low + high) // 2\n"
-              "                candidate = _bounded_text(original_compressed_context, midpoint)\n"
-              "                context_payload[\"compressed_context\"] = candidate\n"
-              "                candidate_estimate = _token_estimate(\n"
-              "                    json.dumps(context_payload, default=str)\n"
-              "                )\n"
-              "                if candidate_estimate <= session.max_context_tokens:\n"
-              "                    best_context = candidate\n"
-              "                    best_estimate = candidate_estimate\n"
-              "                    low = midpoint + 1\n"
-              "                else:\n"
-              "                    high = midpoint - 1\n"
-              "            if best_context is None:\n"
-              "                return None\n"
-              "            compressed_context = best_context\n"
-              "            context_payload[\"compressed_context\"] = compressed_context\n"
-              "            context_token_estimate = best_estimate\n"
-          )
-          path.write_text(text[:start] + new_block + text[end:], encoding="utf-8")
-          PY
-
-      - name: Run bilateral enforcement tests
-        shell: bash
-        run: |
-          set +e
-          python -m pytest -q tests/test_aura_bilateral_planning_enforcement.py > /tmp/pr236-pytest.log 2>&1
-          status=$?
-          cat /tmp/pr236-pytest.log
-          exit "$status"
-
-      - name: Upload focused failure log
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pr236-manual-repair-failure-${{ github.sha }}
-          path: /tmp/pr236-pytest.log
-          if-no-files-found: error
-          retention-days: 1
-
-      - name: Run focused static checks
+      - name: Verify focused bilateral behavior
         shell: bash
         run: |
           set -euo pipefail
+          python -m pytest -q tests/test_aura_bilateral_planning_enforcement.py
           python -m ruff check \
-            aura_coding_relationship_compass.py \
-            aura_external_llm_session.py \
             aura_arena_architect_connector.py \
+            aura_architect_loop.py \
             tests/test_aura_bilateral_planning_enforcement.py \
             --select E9,F63,F7,F82
           python -m py_compile \
-            aura_coding_relationship_compass.py \
-            aura_external_llm_session.py \
             aura_arena_architect_connector.py \
+            aura_architect_loop.py \
             tests/test_aura_bilateral_planning_enforcement.py
 
-      - name: Commit repairs and remove temporary executor
+      - name: Commit verified repair and remove temporary executors
         shell: bash
         run: |
           set -euo pipefail
           rm -f .github/workflows/pr236-source-materialize.yml
           rm -f .github/pr236_manual_repairs.py
+          rm -f .github/pr236_identity_fix.py.tmp
+          rm -f .github/pr236_identity_fix_workflow.yml.tmp
           rm -f .aura/pr236_source_materialization.trigger
           git config user.name "dallascourchene-commits"
           git config user.email "281686929+dallascourchene-commits@users.noreply.github.com"
           git add -A -- \
-            aura_coding_relationship_compass.py \
-            aura_external_llm_session.py \
             aura_arena_architect_connector.py \
+            aura_architect_loop.py \
             tests/test_aura_bilateral_planning_enforcement.py \
             .github/workflows/pr236-source-materialize.yml \
             .github/pr236_manual_repairs.py \
+            .github/pr236_identity_fix.py.tmp \
+            .github/pr236_identity_fix_workflow.yml.tmp \
             .aura/pr236_source_materialization.trigger
-          git commit -m "fix(pr236): manually resolve remaining review findings"
+          git commit -m "fix(pr236): fail closed on repository identity errors"
           git push origin HEAD:refactor/bilateral-intent-pr3-enforcement
