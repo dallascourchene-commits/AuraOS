@@ -33,31 +33,29 @@ jobs:
 
           path = Path("aura_external_llm_session.py")
           text = path.read_text(encoding="utf-8")
-          early = '''        if fixed_context_tokens > session.max_context_tokens:
-              return None
-          '''
-          early_replacement = '''        # The final serialized payload fit below is authoritative. If fixed
-              # metadata consumes the budget, slices receive zero tokens and the
-              # compressed context is reduced to the largest representation that fits.
-          '''
+
+          early = (
+              "        if fixed_context_tokens > session.max_context_tokens:\n"
+              "            return None\n"
+          )
+          replacement = (
+              "        # The final serialized payload fit below is authoritative. If fixed\n"
+              "        # metadata consumes the budget, slices receive zero tokens and the\n"
+              "        # compressed context is reduced to the largest representation that fits.\n"
+          )
           if text.count(early) != 1:
               raise SystemExit(f"expected one early context guard, found {text.count(early)}")
-          text = text.replace(early, early_replacement, 1)
+          text = text.replace(early, replacement, 1)
 
-          old = '''        if context_token_estimate > session.max_context_tokens:
-              overflow = context_token_estimate - session.max_context_tokens
-              compressed_context = _bounded_text(
-                  compressed_context,
-                  max(0, _token_estimate(compressed_context) - overflow - 8),
-              )
-              context_payload["compressed_context"] = compressed_context
-              context_token_estimate = _token_estimate(
-                  json.dumps(context_payload, default=str)
-              )
-          if context_token_estimate > session.max_context_tokens:
-              return None
-          '''
-          new = '''        if context_token_estimate > session.max_context_tokens:
+          start_marker = "        if context_token_estimate > session.max_context_tokens:\n"
+          end_marker = "        turn_index = len(session.turns) + 1\n"
+          start = text.find(start_marker)
+          if start < 0:
+              raise SystemExit("final context fit start marker not found")
+          end = text.find(end_marker, start)
+          if end < 0:
+              raise SystemExit("final context fit end marker not found")
+          new_block = '''        if context_token_estimate > session.max_context_tokens:
               original_compressed_context = compressed_context
               low = 0
               high = _token_estimate(original_compressed_context)
@@ -82,9 +80,12 @@ jobs:
               context_payload["compressed_context"] = compressed_context
               context_token_estimate = best_estimate
           '''
-          if text.count(old) != 1:
-              raise SystemExit(f"expected one final context fit block, found {text.count(old)}")
-          path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          # Normalize the embedded block to the source file's eight-space method indentation.
+          normalized = "\n".join(
+              line[10:] if line.startswith("          ") else line
+              for line in new_block.splitlines()
+          ) + "\n"
+          path.write_text(text[:start] + normalized + text[end:], encoding="utf-8")
           PY
 
       - name: Run bilateral enforcement tests
