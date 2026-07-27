@@ -15,6 +15,7 @@ from aura_architect_loop import (
     build_refactor_arena,
     shadow_plan_capsule,
     stage_arena_patch,
+    verify_refactor_arena,
 )
 from aura_arena_architect_connector import AuraArenaArchitectConnector
 from aura_relationship_contracts import (
@@ -336,6 +337,148 @@ def test_shadow_and_patch_stage_retain_bilateral_scope(
     assert any(
         item.shadow_type == "bilateral_scope_violation"
         for item in staged.findings
+    )
+
+
+def _build_verifiable_arena(
+    bilateral_contract: BilateralPlanningContract,
+    plan_data: dict,
+    *,
+    test_names: list[str] | None = None,
+):
+    """Build a plan/shadow/arena chain identical to
+    test_shadow_and_patch_stage_retain_bilateral_scope, but reusable for
+    exercising verify_refactor_arena directly."""
+    test_names = test_names or ["tests/test_aura_bilateral_planning_enforcement.py"]
+    gate = evaluate_bilateral_plan(
+        plan_data,
+        bilateral_contract,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+    )
+    plan = build_fractal_plan_capsule(
+        "Enforce bilateral planning.",
+        architecture_decision=plan_data["architecture_decision"],
+        act_tasks=plan_data["act_tasks"],
+        bilateral_contract=bilateral_contract.to_dict(),
+        bilateral_plan_gate=gate.to_dict(),
+        bilateral_proof_plan=plan_data,
+    )
+    grounding = [
+        GroundingEvidence(
+            task_id="BILATERAL-1",
+            target_file="aura_arena_architect_connector.py",
+            target_symbol="assess_plan",
+            file_exists=True,
+            codemap_file_hit=True,
+            symbol_exists=True,
+            codemap_symbol_hits=[],
+            test_files=test_names,
+            neighbor_files=[],
+        )
+    ]
+    shadow = shadow_plan_capsule(plan, grounding)
+    assert shadow.ok is True
+    arena = build_refactor_arena(plan, grounding, shadow)
+    staged = stage_arena_patch(
+        arena,
+        task_id="BILATERAL-1",
+        owner="temporary-surgeon",
+        diff=(
+            "--- a/aura_arena_architect_connector.py\n"
+            "+++ b/aura_arena_architect_connector.py\n"
+            "@@ -1 +1 @@\n"
+            "-old\n"
+            "+new\n"
+        ),
+        affected_files=["aura_arena_architect_connector.py"],
+        tests=test_names,
+    )
+    assert staged.ok is True
+    return staged.arena
+
+
+def test_verify_refactor_arena_rejects_candidate_forged_receipt(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    """A candidate-supplied verifier_receipts entry claiming passed: true for
+    an admitted verifier name must never establish negative-requirement
+    proof on its own -- it is untrusted proposal data, not a canonical
+    verification result."""
+    plan_data = _complete_plan(bilateral_contract)
+    requirement = bilateral_contract.negative_requirements[0]
+    verifier = plan_data["negative_requirement_coverage"][requirement]["verifier"]
+    plan_data["verifier_receipts"] = {verifier: {"passed": True}}
+    arena = _build_verifiable_arena(bilateral_contract, plan_data)
+    # No trusted runner is supplied, and the forged receipt lives only in
+    # bilateral_proof_plan (candidate data) -- it must never substitute for
+    # an actually-executed, actually-passed test.
+    result = verify_refactor_arena(arena, repo_root=".", runner=lambda name: False)
+    assert result.ok is False
+    assert any(item["stage"] == "bilateral_negative_proof" for item in result.failures)
+
+
+@pytest.mark.parametrize(
+    "corrupt",
+    [
+        lambda contract: {"contract_digest": "stale-or-wrong-contract-digest"},
+        lambda contract: {"plan_or_act_identity": "wrong-act-identity"},
+        lambda contract: {"source_tree_digest": "wrong-source-lease"},
+        lambda contract: {"verification_run_id": "wrong-run-id"},
+    ],
+)
+def test_verify_refactor_arena_rejects_mismatched_receipt_bindings(
+    bilateral_contract: BilateralPlanningContract, corrupt
+) -> None:
+    """A verifier_receipts entry with a stale/wrong contract, plan/Act,
+    source lease, or run binding must be rejected -- binding mismatches
+    must never be treated as canonical proof."""
+    plan_data = _complete_plan(bilateral_contract)
+    requirement = bilateral_contract.negative_requirements[0]
+    verifier = plan_data["negative_requirement_coverage"][requirement]["verifier"]
+    plan_data["verifier_receipts"] = {
+        verifier: {
+            "passed": True,
+            "contract_digest": bilateral_contract.contract_digest,
+            "plan_or_act_identity": "BILATERAL-1",
+            "source_tree_digest": bilateral_contract.source_tree_digest,
+            "verification_run_id": "genuine-run-id",
+            **corrupt(bilateral_contract),
+        }
+    }
+    arena = _build_verifiable_arena(bilateral_contract, plan_data)
+    result = verify_refactor_arena(arena, repo_root=".", runner=lambda name: False)
+    assert result.ok is False
+    assert any(item["stage"] == "bilateral_negative_proof" for item in result.failures)
+
+
+def test_verify_refactor_arena_accepts_genuine_canonical_run_receipt(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    """The negative-requirement gate is satisfied only through the
+    canonical, connector-independent verification run: a verifier name that
+    is actually executed and actually passes via the trusted runner
+    callback inside verify_refactor_arena itself."""
+    plan_data = _complete_plan(bilateral_contract)
+    requirement = bilateral_contract.negative_requirements[0]
+    verifier = plan_data["negative_requirement_coverage"][requirement]["verifier"]
+    assert verifier in bilateral_contract.required_verifiers
+    # The verifier identity is only proven by an actually-executed,
+    # actually-passed test recorded through the trusted runner -- not by
+    # any candidate-supplied receipt.
+    arena = _build_verifiable_arena(bilateral_contract, plan_data, test_names=[verifier])
+
+    def runner(test_name: str) -> bool:
+        return True
+
+    result = verify_refactor_arena(arena, repo_root=".", runner=runner)
+    assert not any(
+        item["stage"] == "bilateral_negative_proof" for item in result.failures
+    )
+    assert any(
+        item["stage"] == "bilateral_negative_proof" and item["status"] == "passed"
+        for item in result.checks
     )
 
 

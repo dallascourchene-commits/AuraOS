@@ -602,6 +602,13 @@ class AuraArenaArchitectConnector:
         if not tasks:
             raise ValueError("selected plan has no Act Capsules")
         requested_projection = [_task_projection(task) for task in tasks]
+        # ``verifier_receipts`` is deliberately excluded: it is candidate-
+        # authored proposal data with the same untrusted origin as the rest
+        # of ``selected_plan`` and must never be forwarded into the proof
+        # plan as if it were canonical verification evidence. The only
+        # canonical proof of a negative requirement is an actually-executed,
+        # actually-passed test recorded by verify_refactor_arena's own
+        # trusted runner.
         bilateral_proof_plan = {
             key: selected_plan.get(key)
             for key in (
@@ -609,7 +616,6 @@ class AuraArenaArchitectConnector:
                 "negative_requirement_coverage",
                 "guardrail_coverage",
                 "guardrail_verifiers",
-                "verifier_receipts",
                 "assumption_register",
                 "plan_revision_policy",
                 "plan_revision",

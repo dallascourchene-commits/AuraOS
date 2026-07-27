@@ -1746,12 +1746,15 @@ def verify_refactor_arena(
         trusted_verifiers = set(
             arena.bilateral_contract.get("required_verifiers") or ()
         )
-        receipts = arena.bilateral_proof_plan.get("verifier_receipts")
-        verified_receipts = {
-            str(name)
-            for name, receipt in dict(receipts or {}).items()
-            if isinstance(receipt, Mapping) and receipt.get("passed") is True
-        }
+        # Candidate-supplied ``verifier_receipts`` are untrusted proposal data
+        # (the same origin as the plan itself) and must never establish
+        # negative-requirement proof on their own, even when the verifier
+        # name is admitted and the payload claims ``passed: true``. The only
+        # canonical source of proof is ``passed_tests``, populated above from
+        # the trusted ``runner`` callback actually executing each test file
+        # against the current repository state as part of this verification
+        # run. A receipt is only meaningful when it corresponds to one of
+        # those independently-executed, independently-passed test names.
         missing_negative_proof: list[str] = []
         for requirement in negative_requirements:
             coverage = (
@@ -1767,7 +1770,7 @@ def verify_refactor_arena(
             if (
                 not verifier
                 or verifier not in trusted_verifiers
-                or verifier not in passed_tests | verified_receipts
+                or verifier not in passed_tests
             ):
                 missing_negative_proof.append(str(requirement))
         if missing_negative_proof:
