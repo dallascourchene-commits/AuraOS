@@ -975,6 +975,7 @@ class BilateralPlanGate:
         classes = {
             BilateralGuardCode.INTENT_CONFIRMATION: "CONFIRMATION_STALE",
             BilateralGuardCode.SEMANTIC_DEFINITION: "SEMANTIC_AMBIGUITY",
+            BilateralGuardCode.POSITIVE_REQUIREMENT: "POSITIVE_REQUIREMENT",
             BilateralGuardCode.NEGATIVE_REQUIREMENT: "NEGATIVE_REQUIREMENT",
             BilateralGuardCode.AUTHORITY_DENIAL: "AUTHORITY_DENIAL",
             BilateralGuardCode.SCOPE_PRESERVATION: "INTENT_FIDELITY",
@@ -984,7 +985,8 @@ class BilateralPlanGate:
             ),
         }
         return tuple(
-            classes[item.code] for item in self.results if not item.passed
+            classes.get(item.code, item.code.value)
+            for item in self.results if not item.passed
         )
 
     def to_dict(self) -> dict[str, Any]:
