@@ -25,6 +25,68 @@ jobs:
       - name: Apply manually authored repairs
         run: python .github/pr236_manual_repairs.py
 
+      - name: Fit bilateral context to exact serialized budget
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("aura_external_llm_session.py")
+          text = path.read_text(encoding="utf-8")
+          early = '''        if fixed_context_tokens > session.max_context_tokens:
+              return None
+          '''
+          early_replacement = '''        # The final serialized payload fit below is authoritative. If fixed
+              # metadata consumes the budget, slices receive zero tokens and the
+              # compressed context is reduced to the largest representation that fits.
+          '''
+          if text.count(early) != 1:
+              raise SystemExit(f"expected one early context guard, found {text.count(early)}")
+          text = text.replace(early, early_replacement, 1)
+
+          old = '''        if context_token_estimate > session.max_context_tokens:
+              overflow = context_token_estimate - session.max_context_tokens
+              compressed_context = _bounded_text(
+                  compressed_context,
+                  max(0, _token_estimate(compressed_context) - overflow - 8),
+              )
+              context_payload["compressed_context"] = compressed_context
+              context_token_estimate = _token_estimate(
+                  json.dumps(context_payload, default=str)
+              )
+          if context_token_estimate > session.max_context_tokens:
+              return None
+          '''
+          new = '''        if context_token_estimate > session.max_context_tokens:
+              original_compressed_context = compressed_context
+              low = 0
+              high = _token_estimate(original_compressed_context)
+              best_context: str | None = None
+              best_estimate = 0
+              while low <= high:
+                  midpoint = (low + high) // 2
+                  candidate = _bounded_text(original_compressed_context, midpoint)
+                  context_payload["compressed_context"] = candidate
+                  candidate_estimate = _token_estimate(
+                      json.dumps(context_payload, default=str)
+                  )
+                  if candidate_estimate <= session.max_context_tokens:
+                      best_context = candidate
+                      best_estimate = candidate_estimate
+                      low = midpoint + 1
+                  else:
+                      high = midpoint - 1
+              if best_context is None:
+                  return None
+              compressed_context = best_context
+              context_payload["compressed_context"] = compressed_context
+              context_token_estimate = best_estimate
+          '''
+          if text.count(old) != 1:
+              raise SystemExit(f"expected one final context fit block, found {text.count(old)}")
+          path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          PY
+
       - name: Run bilateral enforcement tests
         shell: bash
         run: |
