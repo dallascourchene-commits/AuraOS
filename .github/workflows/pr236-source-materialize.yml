@@ -55,37 +55,33 @@ jobs:
           end = text.find(end_marker, start)
           if end < 0:
               raise SystemExit("final context fit end marker not found")
-          new_block = '''        if context_token_estimate > session.max_context_tokens:
-              original_compressed_context = compressed_context
-              low = 0
-              high = _token_estimate(original_compressed_context)
-              best_context: str | None = None
-              best_estimate = 0
-              while low <= high:
-                  midpoint = (low + high) // 2
-                  candidate = _bounded_text(original_compressed_context, midpoint)
-                  context_payload["compressed_context"] = candidate
-                  candidate_estimate = _token_estimate(
-                      json.dumps(context_payload, default=str)
-                  )
-                  if candidate_estimate <= session.max_context_tokens:
-                      best_context = candidate
-                      best_estimate = candidate_estimate
-                      low = midpoint + 1
-                  else:
-                      high = midpoint - 1
-              if best_context is None:
-                  return None
-              compressed_context = best_context
-              context_payload["compressed_context"] = compressed_context
-              context_token_estimate = best_estimate
-          '''
-          # Normalize the embedded block to the source file's eight-space method indentation.
-          normalized = "\n".join(
-              line[10:] if line.startswith("          ") else line
-              for line in new_block.splitlines()
-          ) + "\n"
-          path.write_text(text[:start] + normalized + text[end:], encoding="utf-8")
+          new_block = (
+              "        if context_token_estimate > session.max_context_tokens:\n"
+              "            original_compressed_context = compressed_context\n"
+              "            low = 0\n"
+              "            high = _token_estimate(original_compressed_context)\n"
+              "            best_context: str | None = None\n"
+              "            best_estimate = 0\n"
+              "            while low <= high:\n"
+              "                midpoint = (low + high) // 2\n"
+              "                candidate = _bounded_text(original_compressed_context, midpoint)\n"
+              "                context_payload[\"compressed_context\"] = candidate\n"
+              "                candidate_estimate = _token_estimate(\n"
+              "                    json.dumps(context_payload, default=str)\n"
+              "                )\n"
+              "                if candidate_estimate <= session.max_context_tokens:\n"
+              "                    best_context = candidate\n"
+              "                    best_estimate = candidate_estimate\n"
+              "                    low = midpoint + 1\n"
+              "                else:\n"
+              "                    high = midpoint - 1\n"
+              "            if best_context is None:\n"
+              "                return None\n"
+              "            compressed_context = best_context\n"
+              "            context_payload[\"compressed_context\"] = compressed_context\n"
+              "            context_token_estimate = best_estimate\n"
+          )
+          path.write_text(text[:start] + new_block + text[end:], encoding="utf-8")
           PY
 
       - name: Run bilateral enforcement tests
