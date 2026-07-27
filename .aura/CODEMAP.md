@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1446
-- **total_bytes**: 57268890
-- **text_tokens_est**: 4864949
+- **total_bytes**: 57267535
+- **text_tokens_est**: 4864610
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 932, 'schema_or_lexicon': 185, 'support_file': 77}
 - **topology_nodes**: 10724
 - **topology_edges**: 25579
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 24499.03
+- **elapsed_ms**: 33390.88
 
 ## Coverage
 
@@ -374,7 +374,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_fst_routing.py` (python_module): 35 symbols, degree 560, ~8991 tokens
 - `test_scientific_memory.py` (python_module): 111 symbols, degree 517, ~13607 tokens
 - `aura_spatial_contracts.py` (python_module): 74 symbols, degree 510, ~16200 tokens
-- `aura_architect_loop.py` (python_module): 75 symbols, degree 503, ~23007 tokens
+- `aura_architect_loop.py` (python_module): 75 symbols, degree 503, ~23051 tokens
 - `aura_live_architect.py` (python_module): 74 symbols, degree 501, ~31372 tokens
 - `aura_relational_authority.py` (python_module): 58 symbols, degree 481, ~19006 tokens
 - `aura_intent_refinement.py` (python_module): 63 symbols, degree 465, ~13815 tokens
@@ -428,7 +428,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `ArchitectCouncilDecision` -> `aura_live_architect.py:140`
 - `ArchitectExecutionResult` -> `aura_architect_loop.py:310`
 - `ArchitectFusionCouncil` -> `aura_live_architect.py:996`
-- `ArchitectFusionLoop` -> `aura_architect_loop.py:2174`
+- `ArchitectFusionLoop` -> `aura_architect_loop.py:2175`
 - `ArchitectLedgerRecord` -> `aura_architect_loop.py:277`
 - `ArchitectLoopResult` -> `aura_architect_loop.py:292`
 - `ArchitectModelProfile` -> `aura_live_architect.py:115`
