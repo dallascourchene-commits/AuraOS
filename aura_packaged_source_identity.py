@@ -21,7 +21,7 @@ EXCLUDED_PARTS = frozenset(
 )
 
 _VERIFY_CACHE_LOCK = threading.Lock()
-_VERIFY_CACHE: dict[Path, tuple[tuple[int, int], dict[str, Any]]] = {}
+_VERIFY_CACHE: dict[Path, tuple[tuple[tuple[int, int], str], dict[str, Any]]] = {}
 
 
 def _digest(value: Any) -> str:
@@ -98,10 +98,6 @@ def verify_packaged_source_manifest(root: str | Path) -> dict[str, Any]:
     except OSError as exc:
         raise ValueError("trusted packaged source manifest is unavailable") from exc
     cache_key = (int(manifest_stat.st_mtime_ns), int(manifest_stat.st_size))
-    with _VERIFY_CACHE_LOCK:
-        cached = _VERIFY_CACHE.get(resolved)
-    if cached is not None and cached[0] == cache_key:
-        return cached[1]
     try:
         payload = json.loads(target.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
@@ -116,8 +112,10 @@ def verify_packaged_source_manifest(root: str | Path) -> dict[str, Any]:
     entries, source_digest = source_snapshot(resolved)
     if entries != payload.get("entries") or source_digest != payload.get("source_digest"):
         raise ValueError("packaged source drift detected")
+    # Cache the validated payload keyed on both manifest stat AND the freshly
+    # computed source digest so in-place source drift is never masked.
     with _VERIFY_CACHE_LOCK:
-        _VERIFY_CACHE[resolved] = (cache_key, payload)
+        _VERIFY_CACHE[resolved] = ((cache_key, source_digest), payload)
     return payload
 
 
