@@ -105,6 +105,9 @@ def _bounded(body: dict[str, Any]) -> None:
 
 
 def _architect_kwargs(body: dict[str, Any], *, surface: str) -> dict[str, Any]:
+    bilateral_contract = body.get("bilateral_contract")
+    if bilateral_contract is not None and not isinstance(bilateral_contract, dict):
+        raise ValueError("bilateral_contract must be an object")
     return {
         "objective": str(body.get("objective", "")),
         "candidates": list(body.get("candidates") or []),
@@ -112,6 +115,8 @@ def _architect_kwargs(body: dict[str, Any], *, surface: str) -> dict[str, Any]:
         "control": body.get("control"),
         "surface": surface,
         "run_id": str(body.get("run_id", "")),
+        "bilateral_contract": bilateral_contract,
+        "confirmation_session_id": str(body.get("confirmation_session_id", "")),
     }
 
 

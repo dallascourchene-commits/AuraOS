@@ -21,7 +21,7 @@ import sys
 from typing import Any
 
 from aura_agent_arena_bridge import BRIDGE_VERSION
-from aura_agent_arena_errors import is_error_packet
+from aura_agent_arena_errors import is_error_packet, make_error_packet
 from aura_agent_arena_fireworks import fireworks_patch_worker
 from aura_agent_arena_persistence_bridge import (
     PersistentAuraAgentArenaBridge as AuraAgentArenaBridge,
@@ -258,6 +258,7 @@ TOOL_DEFINITIONS = [
                 "emergent_include_source": {"type": "boolean", "default": False},
                 "emergent_include_research_plan": {"type": "boolean", "default": True},
                 "bilateral_contract": {"type": "object"},
+                "confirmation_session_id": {"type": "string"},
                 "bilateral_plan_gate": {"type": "object"},
                 "bilateral_proof_plan": {"type": "object"},
             },
@@ -868,6 +869,12 @@ def _handle_repo_digest(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> d
 
 @_register_tool("aura_prepare_arena")
 def _handle_prepare_arena(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    for name in ("bilateral_contract", "bilateral_plan_gate", "bilateral_proof_plan"):
+        if name in args and not isinstance(args[name], Mapping):
+            return make_error_packet(
+                "mcp_protocol_error",
+                f"{name} must be an object",
+            )
     return bridge.aura_prepare_arena(
         objective=str(args.get("objective", "")),
         target_file=args.get("target_file"),
@@ -885,6 +892,7 @@ def _handle_prepare_arena(bridge: AuraAgentArenaBridge, args: dict[str, Any]) ->
             if isinstance(args.get("bilateral_contract"), Mapping)
             else None
         ),
+        confirmation_session_id=str(args.get("confirmation_session_id", "")),
         bilateral_plan_gate=(
             dict(args["bilateral_plan_gate"])
             if isinstance(args.get("bilateral_plan_gate"), Mapping)

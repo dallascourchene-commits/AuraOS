@@ -506,6 +506,20 @@ class AuraExternalLLMSessionManager:
         )
         if not micro.get("ok"):
             return None
+        compressed_context = str(micro.get("compressed_context", ""))
+        bilateral_micro_context = dict(
+            micro.get("bilateral_micro_context") or {}
+        )
+        if bilateral_micro_context:
+            compressed_context += (
+                "\n\n[BILATERAL_MICRO_CONTEXT]\n"
+                + json.dumps(
+                    bilateral_micro_context,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                    default=str,
+                )
+            )
 
         bounded_failure = _bounded_payload(
             failure_packet,
@@ -514,7 +528,7 @@ class AuraExternalLLMSessionManager:
         fixed_context_tokens = _token_estimate(
             json.dumps(
                 {
-                    "compressed_context": micro.get("compressed_context", ""),
+                    "compressed_context": compressed_context,
                     "failure_packet": bounded_failure,
                     "act_capsule": task,
                 },
@@ -559,7 +573,7 @@ class AuraExternalLLMSessionManager:
                 + instruction
             )
         context_payload = {
-            "compressed_context": micro.get("compressed_context", ""),
+            "compressed_context": compressed_context,
             "source_slices": source_slices,
             "test_slices": test_slices,
             "failure_packet": bounded_failure,
@@ -577,7 +591,7 @@ class AuraExternalLLMSessionManager:
             instruction=instruction,
             output_contract=dict(_ROLE_CONTRACTS[role]),
             act_capsule=dict(task),
-            compressed_context=str(micro.get("compressed_context", "")),
+            compressed_context=compressed_context,
             source_slices=source_slices,
             test_slices=test_slices,
             failure_packet=dict(bounded_failure) if isinstance(bounded_failure, dict) else {"value": bounded_failure},

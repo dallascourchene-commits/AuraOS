@@ -1020,14 +1020,18 @@ def _complete_coverage(
     coverage: Any,
     requirements: Sequence[str],
     *,
+    required_verifiers: Sequence[str] = (),
     verifier_required: bool = True,
 ) -> bool:
+    admitted_verifiers = set(_ordered_unique(required_verifiers))
     for requirement in requirements:
         item = _coverage_record(coverage, requirement)
         if item is None or not _canonical_text(item.get("enforcement")):
             return False
-        if verifier_required and not _canonical_text(item.get("verifier")):
-            return False
+        if verifier_required:
+            verifier = _canonical_text(item.get("verifier"))
+            if not verifier or (admitted_verifiers and verifier not in admitted_verifiers):
+                return False
     return True
 
 
@@ -1072,17 +1076,22 @@ def evaluate_bilateral_plan(
     )
 
     definitions = candidate.get("semantic_definitions")
-    required_terms = {
-        _canonical_text(item.get("term"))
-        for item in bilateral.semantic_definitions
-        if _canonical_text(item.get("term"))
+    required_definitions = {
+        content_digest(dict(item)) for item in bilateral.semantic_definitions
     }
-    supplied_terms = {
-        _canonical_text(item.get("term"))
-        for item in definitions
-        if isinstance(item, Mapping) and _canonical_text(item.get("term"))
-    } if isinstance(definitions, Sequence) and not isinstance(definitions, (str, bytes)) else set()
-    semantics_ok = bool(required_terms) and required_terms.issubset(supplied_terms)
+    supplied_definitions = (
+        {
+            content_digest(dict(item))
+            for item in definitions
+            if isinstance(item, Mapping)
+        }
+        if isinstance(definitions, Sequence)
+        and not isinstance(definitions, (str, bytes))
+        else set()
+    )
+    semantics_ok = bool(required_definitions) and required_definitions.issubset(
+        supplied_definitions
+    )
     add(
         BilateralGuardCode.SEMANTIC_DEFINITION,
         semantics_ok,
@@ -1094,6 +1103,7 @@ def evaluate_bilateral_plan(
     positive_ok = _complete_coverage(
         candidate.get("positive_requirement_coverage"),
         bilateral.positive_requirements,
+        required_verifiers=bilateral.required_verifiers,
     )
     add(
         BilateralGuardCode.POSITIVE_REQUIREMENT,
@@ -1106,6 +1116,7 @@ def evaluate_bilateral_plan(
     negative_ok = _complete_coverage(
         candidate.get("negative_requirement_coverage"),
         bilateral.negative_requirements,
+        required_verifiers=bilateral.required_verifiers,
     )
     add(
         BilateralGuardCode.NEGATIVE_REQUIREMENT,
@@ -1116,10 +1127,36 @@ def evaluate_bilateral_plan(
     )
 
     authority_conflicts = candidate.get("authority_conflicts")
+    declared_effects = {
+        _canonical_text(effect)
+        for effect in candidate.get("effects", ())
+        if _canonical_text(effect)
+    } if isinstance(candidate.get("effects"), Sequence) and not isinstance(
+        candidate.get("effects"), (str, bytes, bytearray)
+    ) else set()
+    tasks_for_authority = candidate.get("act_tasks")
+    if isinstance(tasks_for_authority, Sequence) and not isinstance(
+        tasks_for_authority, (str, bytes, bytearray)
+    ):
+        for task in tasks_for_authority:
+            if not isinstance(task, Mapping):
+                continue
+            for field in ("effects", "allowed_effects", "required_authority"):
+                values = task.get(field)
+                if isinstance(values, Sequence) and not isinstance(
+                    values, (str, bytes, bytearray)
+                ):
+                    declared_effects.update(
+                        _canonical_text(value)
+                        for value in values
+                        if _canonical_text(value)
+                    )
+    unconfirmed_effects = declared_effects - set(bilateral.allowed_effects)
     authority_ok = (
         isinstance(authority_conflicts, Sequence)
         and not isinstance(authority_conflicts, (str, bytes, bytearray))
         and not list(authority_conflicts)
+        and not unconfirmed_effects
     )
     add(
         BilateralGuardCode.AUTHORITY_DENIAL,
@@ -1163,10 +1200,12 @@ def evaluate_bilateral_plan(
     hard_ok = _complete_coverage(
         guardrail_coverage,
         bilateral.hard_guardrail_ids,
+        required_verifiers=bilateral.required_verifiers,
     )
     human_ok = _complete_coverage(
         guardrail_coverage,
         bilateral.human_guardrail_ids,
+        required_verifiers=bilateral.required_verifiers,
     )
     add(
         BilateralGuardCode.HUMAN_GUARDRAIL,
@@ -1189,10 +1228,15 @@ def evaluate_bilateral_plan(
         )
     )
     reconfirmed = (
-        _canonical_text(revision_data.get("confirmation_digest"))
+        bool(revision_data.get("human_reconfirmed"))
+        and _canonical_text(revision_data.get("confirmation_digest"))
         == bilateral.confirmation_digest
+        and _canonical_text(revision_data.get("previous_confirmation_digest"))
+        not in {"", bilateral.confirmation_digest}
         and _canonical_text(candidate.get("intent_revision_id"))
         == bilateral.intent_revision_id
+        and _canonical_text(revision_data.get("previous_intent_revision_id"))
+        not in {"", bilateral.intent_revision_id}
     )
     revision_ok = not meaning_changes or reconfirmed
     add(

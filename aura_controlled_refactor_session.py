@@ -88,6 +88,9 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
             }
         bilateral = dict(prepared.get("bilateral_contract") or {})
         bilateral_gate = dict(prepared.get("bilateral_plan_gate") or {})
+        temporary_agent_identity = (
+            f"external_llm:{str(provider or 'external')}:{str(model or '')}"
+        ).rstrip(":")
         if bilateral:
             if bilateral_gate.get("passed") is not True:
                 return {
@@ -106,6 +109,13 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
                     "session_created": False,
                     "production_mutation": False,
                 }
+            phase_hash = str(prepared.get("plan_phase_hash") or "")
+            retained = getattr(self.bridge, "_sessions", {}).get(phase_hash)
+            retained_arena = retained.get("arena") if isinstance(retained, dict) else None
+            if retained_arena is not None:
+                retained_arena.bilateral_proof_plan[
+                    "temporary_agent_identity"
+                ] = temporary_agent_identity
 
         original_bridge = self.bridge
         self.bridge = _PreparedBridgeProxy(original_bridge, prepared)
@@ -141,13 +151,7 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
         self._vault_runs[session_id] = vault_run
         if bilateral:
             binding = {
-                "temporary_agent_identity": stable_digest(
-                    {
-                        "session_id": session_id,
-                        "provider": str(provider or "external"),
-                        "model": str(model or ""),
-                    }
-                ),
+                "temporary_agent_identity": temporary_agent_identity,
                 "session_id": session_id,
                 "confirmation_digest": bilateral.get("confirmation_digest"),
                 "contract_digest": bilateral.get("contract_digest"),
@@ -344,8 +348,20 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
                 )
                 if bool(delta.get(field))
             ]
+            proposed_remaining = [
+                dict(item)
+                for item in list(kwargs.get("remaining_act_capsules") or ())
+                if isinstance(item, Mapping)
+            ]
+            frozen_remaining = [
+                dict(item)
+                for item in session.act_capsules[session.active_task_index :]
+            ]
+            actual_plan_changed = stable_digest(proposed_remaining) != stable_digest(
+                frozen_remaining
+            )
             identity_changed = any(
-                field in delta and str(delta.get(field) or "") != str(expected or "")
+                str(delta.get(field) or "") != str(expected or "")
                 for field, expected in (
                     ("confirmation_digest", bilateral.get("confirmation_digest")),
                     ("intent_revision_id", bilateral.get("intent_revision_id")),
@@ -356,14 +372,17 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
                     ("guardrail_set_digest", bilateral.get("guardrail_set_digest")),
                 )
             )
-            if changed_fields or identity_changed:
+            if changed_fields or identity_changed or actual_plan_changed:
                 bilateral["lease_status"] = "RECONFIRMATION_REQUIRED"
                 return self._block_replan(
                     session,
                     status="BLOCKED_HUMAN_RECONFIRMATION_REQUIRED",
                     error=(
                         "council_replan_changes_confirmed_bilateral_contract:"
-                        + ",".join(changed_fields or ["identity"])
+                        + ",".join(
+                            changed_fields
+                            or (["identity"] if identity_changed else ["frozen_plan"])
+                        )
                     ),
                 )
         used = int(self._council_replans.get(session_id, 0))

@@ -71,6 +71,8 @@ class HumanAgentArchitectCockpit:
         required_capabilities: Sequence[str] = (),
         run_id: str = "",
         benchmark: bool = False,
+        bilateral_contract: Mapping[str, Any] | None = None,
+        confirmation_session_id: str = "",
     ) -> dict[str, Any]:
         result = self.architect.compare_plans(
             objective=objective,
@@ -78,6 +80,8 @@ class HumanAgentArchitectCockpit:
             required_capabilities=required_capabilities,
             run_id=run_id,
             benchmark=benchmark,
+            bilateral_contract=bilateral_contract,
+            confirmation_session_id=confirmation_session_id,
         )
         self._record_event(
             "architect_plan_selected",
@@ -94,6 +98,8 @@ class HumanAgentArchitectCockpit:
         target_file: str | None = None,
         target_symbol: str | None = None,
         run_id: str = "",
+        bilateral_contract: Mapping[str, Any] | None = None,
+        confirmation_session_id: str = "",
         benchmark: bool = False,
     ) -> dict[str, Any]:
         result = self.architect.prepare_refactor(
@@ -103,6 +109,8 @@ class HumanAgentArchitectCockpit:
             target_file=target_file,
             target_symbol=target_symbol,
             run_id=run_id,
+            bilateral_contract=bilateral_contract,
+            confirmation_session_id=confirmation_session_id,
             benchmark=benchmark,
         )
         preparation = dict(result.get("arena_preparation") or {})
@@ -140,6 +148,8 @@ class HumanAgentArchitectCockpit:
         provider: str = "native",
         model: str = "",
         run_id: str = "",
+        bilateral_contract: Mapping[str, Any] | None = None,
+        confirmation_session_id: str = "",
     ) -> dict[str, Any]:
         result = self.architect.open_surgeon_session(
             objective=objective,
@@ -148,6 +158,8 @@ class HumanAgentArchitectCockpit:
             provider=provider,
             model=model,
             run_id=run_id,
+            bilateral_contract=bilateral_contract,
+            confirmation_session_id=confirmation_session_id,
         )
         session_id = str(dict(result.get("session") or {}).get("session_id") or "")
         self._record_event(

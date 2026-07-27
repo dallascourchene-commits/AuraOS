@@ -6,7 +6,7 @@ import time
 import pytest
 
 from aura_agent_arena_bridge import AuraAgentArenaBridge
-from aura_agent_arena_mcp import TOOL_DEFINITIONS
+from aura_agent_arena_mcp import TOOL_DEFINITIONS, handle_request
 from aura_arena_architect_connector import AuraArenaArchitectConnector
 from aura_architect_council_v3 import route_compass_failure_classes
 from aura_architect_loop import (
@@ -125,9 +125,15 @@ def test_connector_cannot_select_higher_scoring_ineligible_plan(
     bilateral_contract: BilateralPlanningContract,
 ) -> None:
     complete = _complete_plan(bilateral_contract)
+    complete["architecture_reuse"] = False
+    complete["acceptance_criteria"] = []
     incomplete = deepcopy(complete)
     incomplete["negative_requirement_coverage"] = {}
     incomplete["coverage_tags"] = ["bilateral", "extra"]
+    incomplete["architecture_reuse"] = True
+    incomplete["acceptance_criteria"] = [
+        "This otherwise higher-scoring plan must still lose."
+    ]
     connector = AuraArenaArchitectConnector(repo_root=".")
     result = connector.compare_plans(
         objective="Choose only a bilaterally eligible plan.",
@@ -211,6 +217,108 @@ def test_council_routes_bilateral_meaning_back_to_human() -> None:
     assert routed["route"] == "HUMAN_RECONFIRMATION_REQUIRED"
     assert routed["deterministic_denial"] is True
     assert routed["council_override_allowed"] is False
+
+
+@pytest.mark.parametrize(
+    "failure_class",
+    [
+        "INTENT_FIDELITY",
+        "POSITIVE_REQUIREMENT",
+        "NEGATIVE_REQUIREMENT",
+        "PLAN_ASSUMPTION_INVALIDATED",
+    ],
+)
+def test_council_never_overrides_deterministic_bilateral_denials(
+    failure_class: str,
+) -> None:
+    routed = route_compass_failure_classes([failure_class])
+    assert routed["route"] == "HUMAN_RECONFIRMATION_REQUIRED"
+    assert routed["council_override_allowed"] is False
+
+
+def test_bilateral_plan_rejects_changed_semantic_definition(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    plan = _complete_plan(bilateral_contract)
+    plan["semantic_definitions"][0]["definition"] = "caller-rewritten meaning"
+    gate = evaluate_bilateral_plan(
+        plan,
+        bilateral_contract,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+    )
+    assert "SEMANTIC_DEFINITION" in gate.failure_classes
+
+
+def test_bilateral_plan_rejects_unadmitted_verifier(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    plan = _complete_plan(bilateral_contract)
+    requirement = bilateral_contract.negative_requirements[0]
+    plan["negative_requirement_coverage"][requirement]["verifier"] = "caller-test"
+    gate = evaluate_bilateral_plan(
+        plan,
+        bilateral_contract,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+    )
+    assert "NEGATIVE_REQUIREMENT" in gate.failure_classes
+
+
+def test_meaning_change_cannot_echo_old_confirmation(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    plan = _complete_plan(bilateral_contract)
+    plan["plan_revision"] = {
+        "meaning_changed": True,
+        "human_reconfirmed": True,
+        "confirmation_digest": bilateral_contract.confirmation_digest,
+    }
+    gate = evaluate_bilateral_plan(
+        plan,
+        bilateral_contract,
+        observed_repository_head=bilateral_contract.repository_head,
+        observed_source_tree_digest=bilateral_contract.source_tree_digest,
+        observed_at=time.time(),
+    )
+    assert "PLAN_REVISION_RECONFIRMATION" in gate.failure_classes
+
+
+def test_prepare_rejects_forged_unretained_contract(
+    bilateral_contract: BilateralPlanningContract,
+) -> None:
+    bridge = AuraAgentArenaBridge(repo_root=".")
+    result = bridge.aura_prepare_arena(
+        objective="Do not trust a caller-created bilateral contract.",
+        target_file="aura_arena_architect_connector.py",
+        bilateral_contract=bilateral_contract.to_dict(),
+        bilateral_proof_plan=_complete_plan(bilateral_contract),
+    )
+    assert result["ok"] is False
+    assert "confirmation_session_id is required" in result["message"]
+
+
+def test_mcp_rejects_non_object_bilateral_arguments() -> None:
+    response = handle_request(
+        AuraAgentArenaBridge(repo_root="."),
+        {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/call",
+            "params": {
+                "name": "aura_prepare_arena",
+                "arguments": {
+                    "objective": "Fail closed.",
+                    "bilateral_contract": [],
+                },
+            },
+        },
+    )
+    assert response is not None
+    result = response["result"]
+    assert result["isError"] is True
 
 
 def test_mcp_exposes_bounded_refinement_and_revision_tools() -> None:

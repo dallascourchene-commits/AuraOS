@@ -22,6 +22,7 @@ import math
 from pathlib import Path
 import re
 import subprocess
+import time
 import tokenize
 from typing import Any, Mapping, Sequence
 
@@ -264,6 +265,47 @@ def _stable_digest(value: Any, *, digest_size: int = 24) -> str:
 
 def _ordered_unique(values: Sequence[str]) -> list[str]:
     return list(dict.fromkeys(str(value) for value in values if str(value)))
+
+
+def _semantic_obligations(
+    payload: Mapping[str, Any],
+    bilateral: BilateralPlanningContract,
+) -> dict[str, Any]:
+    """Project only obligations grounded in the exact Atlas payload."""
+    text = json.dumps(payload, sort_keys=True, default=str).lower()
+
+    def matched(values: Sequence[str]) -> list[str]:
+        return [
+            value
+            for value in values
+            if value.lower() in text
+            or any(
+                len(token) >= 5 and token in text
+                for token in re.findall(r"[a-z0-9_./-]+", value.lower())
+            )
+        ]
+
+    obligation = {
+        "positive_requirements": matched(bilateral.positive_requirements),
+        "negative_requirements_at_risk": matched(bilateral.negative_requirements),
+        "guardrail_ids": matched(
+            (
+                *bilateral.hard_guardrail_ids,
+                *bilateral.human_guardrail_ids,
+                *bilateral.editable_guardrail_ids,
+            )
+        ),
+        "required_verifiers": matched(bilateral.required_verifiers),
+        "repository_head": bilateral.repository_head,
+        "allowed_path_set_digest": bilateral.allowed_path_set_digest,
+    }
+    grounded_keys = (
+        "positive_requirements",
+        "negative_requirements_at_risk",
+        "guardrail_ids",
+        "required_verifiers",
+    )
+    return obligation if any(obligation[key] for key in grounded_keys) else {}
 
 
 def _compass_digest_payload(value: Mapping[str, Any]) -> dict[str, Any]:
@@ -1116,6 +1158,11 @@ def compile_coding_relationship_compass(
             or bilateral.repository_head != current_identity["repository_head"]
             or bilateral.source_tree_digest
             != current_identity["source_tree_digest"]
+            or not bilateral.is_current(
+                repository_head=current_identity["repository_head"],
+                source_tree_digest=current_identity["source_tree_digest"],
+                observed_at=time.time(),
+            )
         ):
             raise ValueError(
                 "bilateral confirmation does not match Compass repository/source identity"
@@ -1288,38 +1335,47 @@ def compile_coding_relationship_compass(
         max_assessments=max(1, max_atlas_assessments),
     )
     if bilateral is not None:
-        adapters = list(atlas_intelligence.get("required_adapters") or ())
-        verifiers = list(bilateral.required_verifiers)
-        guardrail_ids = list(
-            _ordered_unique(
-                [
-                    *bilateral.hard_guardrail_ids,
-                    *bilateral.human_guardrail_ids,
-                    *bilateral.editable_guardrail_ids,
-                ]
-            )
-        )
         assessments = list(atlas_intelligence.get("assessments") or ())
         annotated_assessments: list[dict[str, Any]] = []
-        for index, assessment in enumerate(assessments):
+        projected: dict[str, set[str]] = {
+            "positive_requirements": set(),
+            "negative_requirements_at_risk": set(),
+            "guardrail_ids": set(),
+            "required_verifiers": set(),
+        }
+        for assessment in assessments:
             annotated = dict(assessment)
-            annotated["bilateral_obligation"] = {
-                "positive_requirement": bilateral.positive_requirements[
-                    index % len(bilateral.positive_requirements)
-                ],
-                "negative_requirement_at_risk": bilateral.negative_requirements[
-                    index % len(bilateral.negative_requirements)
-                ],
-                "guardrail_id": guardrail_ids[index % len(guardrail_ids)],
-                "required_adapter": (
-                    adapters[index % len(adapters)] if adapters else "NO_ADAPTER_REQUIRED"
-                ),
-                "required_verifier": verifiers[index % len(verifiers)],
-                "repository_head": bilateral.repository_head,
-                "allowed_path_set_digest": bilateral.allowed_path_set_digest,
-            }
+            obligation = _semantic_obligations(annotated, bilateral)
+            if obligation:
+                annotated["bilateral_obligation"] = obligation
+                for key in projected:
+                    projected[key].update(obligation[key])
             annotated_assessments.append(annotated)
         atlas_intelligence["assessments"] = annotated_assessments
+        atlas_intelligence["unprojected_bilateral_obligations"] = {
+            "positive_requirements": sorted(
+                set(bilateral.positive_requirements)
+                - projected["positive_requirements"]
+            ),
+            "negative_requirements": sorted(
+                set(bilateral.negative_requirements)
+                - projected["negative_requirements_at_risk"]
+            ),
+            "guardrail_ids": sorted(
+                set(
+                    (
+                        *bilateral.hard_guardrail_ids,
+                        *bilateral.human_guardrail_ids,
+                        *bilateral.editable_guardrail_ids,
+                    )
+                )
+                - projected["guardrail_ids"]
+            ),
+            "required_verifiers": sorted(
+                set(bilateral.required_verifiers)
+                - projected["required_verifiers"]
+            ),
+        }
 
     targets = _recommended_targets(evidence, selected_files, selected_symbols)
     if not targets:
@@ -1430,18 +1486,15 @@ def compile_coding_relationship_compass(
                     "intent_digest": bilateral.intent_digest,
                     "semantic_ledger_digest": bilateral.semantic_ledger_digest,
                     "confirmation_digest": bilateral.confirmation_digest,
-                    "positive_requirement": bilateral.positive_requirements[
-                        (index - 1) % len(bilateral.positive_requirements)
-                    ],
-                    "negative_requirement_at_risk": bilateral.negative_requirements[
-                        (index - 1) % len(bilateral.negative_requirements)
-                    ],
-                    "guardrail_id": bilateral.hard_guardrail_ids[
-                        (index - 1) % len(bilateral.hard_guardrail_ids)
-                    ],
-                    "required_verifier": bilateral.required_verifiers[
-                        (index - 1) % len(bilateral.required_verifiers)
-                    ],
+                    **(
+                        {
+                            "bilateral_obligation": obligation,
+                        }
+                        if (
+                            obligation := _semantic_obligations(item, bilateral)
+                        )
+                        else {}
+                    ),
                 }
                 if bilateral is not None
                 else {}

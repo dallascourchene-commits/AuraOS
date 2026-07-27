@@ -17,6 +17,7 @@ Architectural rule:
 
 from __future__ import annotations
 
+from collections import OrderedDict
 from collections.abc import Mapping
 import ast
 import hashlib
@@ -25,6 +26,7 @@ import logging
 import os
 import re
 import subprocess
+import threading
 from pathlib import Path
 import time
 from typing import Any
@@ -59,6 +61,7 @@ _BLOCKED_HUB_FILES = frozenset(
 DEFAULT_MAX_LINES = 120
 DEFAULT_MAX_TOKENS_EST = 2000
 DEFAULT_MAX_RESULTS = 10
+MAX_RETAINED_INTENT_STATES = 256
 
 _NAVIGATION_RULES = [
     "read CODEMAP first",
@@ -203,8 +206,36 @@ class AuraAgentArenaBridge:
         else:
             self.repo_root = Path(repo_root)
         self._sessions: dict[str, dict[str, Any]] = {}
-        self._intent_refinements: dict[str, dict[str, Any]] = {}
-        self._intent_revisions: dict[str, dict[str, Any]] = {}
+        self._intent_refinements: OrderedDict[str, dict[str, Any]] = OrderedDict()
+        self._intent_revisions: OrderedDict[str, dict[str, Any]] = OrderedDict()
+        self._intent_lock = threading.RLock()
+
+    def _prune_intent_state(self, *, observed_at: float) -> None:
+        expired = [
+            session_id
+            for session_id, state in self._intent_refinements.items()
+            if float(getattr(state.get("session"), "expires_at", 0.0) or 0.0)
+            <= observed_at
+        ]
+        for session_id in expired:
+            self._intent_refinements.pop(session_id, None)
+        while len(self._intent_refinements) > MAX_RETAINED_INTENT_STATES:
+            self._intent_refinements.popitem(last=False)
+        while len(self._intent_revisions) > MAX_RETAINED_INTENT_STATES:
+            self._intent_revisions.popitem(last=False)
+
+    def _retained_bilateral_contract(
+        self,
+        confirmation_session_id: str,
+    ) -> dict[str, Any]:
+        with self._intent_lock:
+            self._prune_intent_state(observed_at=time.time())
+            state = self._intent_refinements.get(str(confirmation_session_id))
+            confirmed = dict(state.get("confirmed") or {}) if state else {}
+            contract = confirmed.get("bilateral_contract")
+            if not isinstance(contract, Mapping):
+                raise ValueError("retained bilateral confirmation was not found")
+            return dict(contract)
 
     # ------------------------------------------------------------------
     # Session management
@@ -344,12 +375,15 @@ class AuraAgentArenaBridge:
             created_at=now,
             expires_at=now + 3600.0,
         )
-        self._intent_refinements[session.session_id] = {
-            "analysis": analysis,
-            "session": session,
-            "repository": identity,
-            "confirmed": None,
-        }
+        with self._intent_lock:
+            self._prune_intent_state(observed_at=now)
+            self._intent_refinements[session.session_id] = {
+                "analysis": analysis,
+                "session": session,
+                "repository": identity,
+                "confirmed": None,
+                "confirmation_in_progress": False,
+            }
         return {
             "ok": True,
             "session_id": session.session_id,
@@ -372,27 +406,32 @@ class AuraAgentArenaBridge:
             refresh_refinement_session,
         )
 
-        state = self._intent_refinements.get(str(session_id))
-        if state is None:
-            return make_error_packet("mcp_protocol_error", "intent refinement session not found")
-        if state.get("confirmed"):
-            return make_error_packet(
-                "mcp_protocol_error", "intent refinement is already confirmed"
-            )
-        analysis = state["analysis"]
-        if not analysis.questions:
-            return make_error_packet("mcp_protocol_error", "clarification is not required")
-        question = analysis.questions[0]
-        updated = apply_clarification(analysis, question=question, answer=answer)
-        updated_session = refresh_refinement_session(
-            state["session"],
-            updated,
-            question=question,
-            answer=answer,
-            observed_at=time.time(),
-        )
-        state["analysis"] = updated
-        state["session"] = updated_session
+        try:
+            with self._intent_lock:
+                self._prune_intent_state(observed_at=time.time())
+                state = self._intent_refinements.get(str(session_id))
+                if state is None:
+                    return make_error_packet("mcp_protocol_error", "intent refinement session not found")
+                if state.get("confirmed") or state.get("confirmation_in_progress"):
+                    return make_error_packet(
+                        "mcp_protocol_error", "intent refinement is already confirmed"
+                    )
+                analysis = state["analysis"]
+                if not analysis.questions:
+                    return make_error_packet("mcp_protocol_error", "clarification is not required")
+                question = analysis.questions[0]
+                updated = apply_clarification(analysis, question=question, answer=answer)
+                updated_session = refresh_refinement_session(
+                    state["session"],
+                    updated,
+                    question=question,
+                    answer=answer,
+                    observed_at=time.time(),
+                )
+                state["analysis"] = updated
+                state["session"] = updated_session
+        except (TypeError, ValueError) as exc:
+            return make_error_packet("mcp_protocol_error", f"invalid clarification: {exc}")
         return {
             "ok": True,
             "session_id": session_id,
@@ -405,7 +444,9 @@ class AuraAgentArenaBridge:
         }
 
     def intent_refinement_teach_back(self, *, session_id: str) -> dict[str, Any]:
-        state = self._intent_refinements.get(str(session_id))
+        with self._intent_lock:
+            self._prune_intent_state(observed_at=time.time())
+            state = self._intent_refinements.get(str(session_id))
         if state is None:
             return make_error_packet("mcp_protocol_error", "intent refinement session not found")
         analysis = state["analysis"]
@@ -436,63 +477,107 @@ class AuraAgentArenaBridge:
         from aura_event_contracts import stable_digest
         from aura_relationship_contracts import BilateralPlanningContract
 
-        state = self._intent_refinements.get(str(session_id))
-        if state is None:
-            return make_error_packet("mcp_protocol_error", "intent refinement session not found")
-        if state.get("confirmed"):
-            return make_error_packet(
-                "mcp_protocol_error", "intent refinement is already confirmed"
-            )
+        with self._intent_lock:
+            self._prune_intent_state(observed_at=time.time())
+            state = self._intent_refinements.get(str(session_id))
+            if state is None:
+                return make_error_packet("mcp_protocol_error", "intent refinement session not found")
+            if state.get("confirmed") or state.get("confirmation_in_progress"):
+                return make_error_packet(
+                    "mcp_protocol_error", "intent refinement is already confirmed"
+                )
+            state["confirmation_in_progress"] = True
         identity = _repository_identity(self.repo_root)
         expected = state["repository"]
         if (
             identity["repository_head"] != expected["repository_head"]
             or identity["source_tree_digest"] != expected["source_tree_digest"]
         ):
+            with self._intent_lock:
+                state["confirmation_in_progress"] = False
             return make_error_packet(
                 "mcp_protocol_error",
                 "repository identity changed during bilateral refinement",
             )
-        now = time.time()
-        compilation = compile_confirmed_bilateral_intent(
-            session=state["session"],
-            analysis=state["analysis"],
-            repository_head=identity["repository_head"],
-            source_tree_digest=identity["source_tree_digest"],
-            working_tree_clean_receipt=identity["working_tree_clean_receipt"],
-            allowed_paths=allowed_paths,
-            runtime_profile_digest=stable_digest(
-                {"surface": "MCP", "session_id": session_id}
-            ),
-            workflow_phase_hash=stable_digest(
-                {"phase": "MCP_INTENT_REFINEMENT", "session_id": session_id}
-            ),
-            topology_evidence_digest=stable_digest(
-                {"allowed_paths": sorted(allowed_paths)}
-            ),
-            topology_selected=True,
-            codemap_digest=identity["codemap_digest"],
-            human_reviewer=human_reviewer,
-            confirmed_at=now,
-            expires_at=min(now + 3600.0, float(state["session"].expires_at)),
-            arena="Coding Arena MCP",
-        )
-        contract = BilateralPlanningContract.from_canonical_compilation(
-            compilation,
-            observed_repository_head=identity["repository_head"],
-            observed_source_tree_digest=identity["source_tree_digest"],
-            observed_at=now,
-            allowed_paths=allowed_paths,
-        )
-        state["confirmed"] = {
-            "canonical_compilation": compilation,
-            "bilateral_contract": contract.to_dict(),
-        }
+        try:
+            normalized_paths = tuple(
+                dict.fromkeys(
+                    path
+                    for item in allowed_paths
+                    if (path := _normalize_path(item)) is not None
+                )
+            )
+            analysis_paths = {
+                _normalize_path(path)
+                for guardrail in state["analysis"].guardrails
+                for path in guardrail.affected_files
+                if _normalize_path(path)
+            }
+            codemap = _load_codemap(self.repo_root) or {}
+            codemap_paths = set(
+                (codemap.get("coverage") or {}).get("all_included_paths_sorted") or ()
+            )
+            if (
+                not normalized_paths
+                or not set(normalized_paths).issubset(analysis_paths)
+                or any(_resolve_in_repo(path, self.repo_root) is None for path in normalized_paths)
+                or (codemap_paths and not set(normalized_paths).issubset(codemap_paths))
+            ):
+                raise ValueError(
+                    "allowed_paths must be exact CODEMAP paths retained by the refinement analysis"
+                )
+            now = time.time()
+            compilation = compile_confirmed_bilateral_intent(
+                session=state["session"],
+                analysis=state["analysis"],
+                repository_head=identity["repository_head"],
+                source_tree_digest=identity["source_tree_digest"],
+                working_tree_clean_receipt=identity["working_tree_clean_receipt"],
+                allowed_paths=normalized_paths,
+                runtime_profile_digest=stable_digest(
+                    {"surface": "MCP", "session_id": session_id}
+                ),
+                workflow_phase_hash=stable_digest(
+                    {"phase": "MCP_INTENT_REFINEMENT", "session_id": session_id}
+                ),
+                topology_evidence_digest=stable_digest(
+                    {
+                        "codemap_digest": identity["codemap_digest"],
+                        "allowed_paths": list(normalized_paths),
+                    }
+                ),
+                topology_selected=True,
+                codemap_digest=identity["codemap_digest"],
+                human_reviewer=human_reviewer,
+                confirmed_at=now,
+                expires_at=min(now + 3600.0, float(state["session"].expires_at)),
+                arena="Coding Arena MCP",
+            )
+            contract = BilateralPlanningContract.from_canonical_compilation(
+                compilation,
+                observed_repository_head=identity["repository_head"],
+                observed_source_tree_digest=identity["source_tree_digest"],
+                observed_at=now,
+                allowed_paths=normalized_paths,
+            )
+            confirmed = {
+                "canonical_compilation": compilation,
+                "bilateral_contract": contract.to_dict(),
+            }
+        except (TypeError, ValueError) as exc:
+            with self._intent_lock:
+                state["confirmation_in_progress"] = False
+            return make_error_packet(
+                "mcp_protocol_error", f"invalid bilateral confirmation: {exc}"
+            )
+        with self._intent_lock:
+            state["confirmed"] = confirmed
+            state["confirmation_in_progress"] = False
         return {
             "ok": True,
             "session_id": session_id,
             "status": "CONFIRMED",
-            **state["confirmed"],
+            **confirmed,
             "proposal_only": True,
             "production_mutation": False,
             "patch_authority": PATCH_AUTHORITY,
@@ -500,7 +585,9 @@ class AuraAgentArenaBridge:
         }
 
     def intent_refinement_status(self, *, session_id: str) -> dict[str, Any]:
-        state = self._intent_refinements.get(str(session_id))
+        with self._intent_lock:
+            self._prune_intent_state(observed_at=time.time())
+            state = self._intent_refinements.get(str(session_id))
         if state is None:
             return make_error_packet("mcp_protocol_error", "intent refinement session not found")
         return {
@@ -522,11 +609,16 @@ class AuraAgentArenaBridge:
     def intent_revision_propose(self, request: Mapping[str, Any]) -> dict[str, Any]:
         from aura_intent_refinement import IntentRevisionDelta
 
-        delta = IntentRevisionDelta.create(**dict(request))
-        self._intent_revisions[delta.revision_id] = {
-            "delta": delta.to_dict(),
-            "human_confirmation": None,
-        }
+        try:
+            delta = IntentRevisionDelta.create(**dict(request))
+        except (TypeError, ValueError) as exc:
+            return make_error_packet("mcp_protocol_error", f"invalid intent revision: {exc}")
+        with self._intent_lock:
+            self._prune_intent_state(observed_at=time.time())
+            self._intent_revisions[delta.revision_id] = {
+                "delta": delta.to_dict(),
+                "human_confirmation": None,
+            }
         return {
             "ok": True,
             "revision": delta.to_dict(),
@@ -544,26 +636,28 @@ class AuraAgentArenaBridge:
     ) -> dict[str, Any]:
         from aura_event_contracts import stable_digest
 
-        state = self._intent_revisions.get(str(revision_id))
-        if state is None:
-            return make_error_packet("mcp_protocol_error", "intent revision not found")
-        if state.get("human_confirmation") is not None:
-            return make_error_packet(
-                "mcp_protocol_error", "intent revision already has human disposition"
-            )
-        confirmation = {
-            "revision_id": revision_id,
-            "approved": bool(approved),
-            "human_reviewer": str(human_reviewer or "human_operator"),
-            "reviewed_at": time.time(),
-            "status": (
-                "HUMAN_CONFIRMED_RECOMPILATION_REQUIRED"
-                if approved
-                else "HUMAN_REJECTED"
-            ),
-        }
-        confirmation["confirmation_digest"] = stable_digest(confirmation)
-        state["human_confirmation"] = confirmation
+        with self._intent_lock:
+            self._prune_intent_state(observed_at=time.time())
+            state = self._intent_revisions.get(str(revision_id))
+            if state is None:
+                return make_error_packet("mcp_protocol_error", "intent revision not found")
+            if state.get("human_confirmation") is not None:
+                return make_error_packet(
+                    "mcp_protocol_error", "intent revision already has human disposition"
+                )
+            confirmation = {
+                "revision_id": revision_id,
+                "approved": bool(approved),
+                "human_reviewer": str(human_reviewer or "human_operator"),
+                "reviewed_at": time.time(),
+                "status": (
+                    "HUMAN_CONFIRMED_RECOMPILATION_REQUIRED"
+                    if approved
+                    else "HUMAN_REJECTED"
+                ),
+            }
+            confirmation["confirmation_digest"] = stable_digest(confirmation)
+            state["human_confirmation"] = confirmation
         return {
             "ok": True,
             "revision": dict(state["delta"]),
@@ -585,6 +679,7 @@ class AuraAgentArenaBridge:
         risk_map: list[str] | None = None,
         constraints: list[str] | None = None,
         bilateral_contract: Mapping[str, Any] | None = None,
+        confirmation_session_id: str = "",
         bilateral_plan_gate: Mapping[str, Any] | None = None,
         bilateral_proof_plan: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
@@ -609,7 +704,7 @@ class AuraAgentArenaBridge:
             act_task["target_file"] = _normalize_path(target_file)
         if target_symbol:
             act_task["target_symbol"] = target_symbol
-        if bilateral_contract:
+        if bilateral_contract or confirmation_session_id:
             try:
                 from aura_arena_gate_dialogue import _repository_identity
                 from aura_relationship_contracts import (
@@ -617,7 +712,20 @@ class AuraAgentArenaBridge:
                     evaluate_bilateral_plan,
                 )
 
-                contract = BilateralPlanningContract.from_dict(bilateral_contract)
+                if not confirmation_session_id:
+                    raise ValueError(
+                        "confirmation_session_id is required; caller-supplied contracts are not authority"
+                    )
+                retained_contract = self._retained_bilateral_contract(
+                    confirmation_session_id
+                )
+                if bilateral_contract:
+                    supplied = BilateralPlanningContract.from_dict(bilateral_contract)
+                    if supplied.contract_digest != retained_contract.get("contract_digest"):
+                        raise ValueError(
+                            "caller-supplied bilateral contract does not match retained confirmation"
+                        )
+                contract = BilateralPlanningContract.from_dict(retained_contract)
                 identity = _repository_identity(self.repo_root)
                 proof_plan = dict(bilateral_proof_plan or {})
                 proof_plan["act_tasks"] = list(
@@ -794,6 +902,22 @@ class AuraAgentArenaBridge:
     ) -> dict[str, Any]:
         """Compile and retain one exact-owner model-relative execution binding."""
         try:
+            session = self._require_session(plan_phase_hash)
+            bilateral = dict(
+                getattr(session.get("arena"), "bilateral_contract", {}) or {}
+            )
+            if bilateral:
+                if (
+                    str(contract.get("expected_repository_head") or "")
+                    != str(bilateral.get("repository_head") or "")
+                    or set(contract.get("required_verifiers") or ())
+                    != set(bilateral.get("required_verifiers") or ())
+                    or list(contract.get("semantic_definitions") or ())
+                    != list(bilateral.get("semantic_definitions") or ())
+                ):
+                    raise ValueError(
+                        "unified execution contract does not match the retained bilateral lease"
+                    )
             from aura_unified_memory_continuity_toolchain import (
                 compile_bridge_execution_binding,
                 compile_continuity_owner_projections,
@@ -805,7 +929,6 @@ class AuraAgentArenaBridge:
                 task_id=task_id,
                 contract=contract,
             )
-            session = self._require_session(plan_phase_hash)
             session.setdefault("unified_execution_bindings", {})[str(task_id)] = binding
             result = binding.to_dict()
             result["owner_projections"] = compile_continuity_owner_projections(binding)
@@ -1458,6 +1581,16 @@ class AuraAgentArenaBridge:
             return exc.to_packet()
 
         arena = session["arena"]
+        if (
+            getattr(arena, "bilateral_contract", None)
+            and str(task_id)
+            not in dict(session.get("unified_execution_bindings") or {})
+        ):
+            return make_error_packet(
+                "missing_grounding",
+                "canonical unified execution binding is required before bilateral patch staging",
+                repair_hint="Call aura_compile_unified_execution for this exact Act Capsule.",
+            )
 
         # Validate diff is non-empty.
         if not str(diff or "").strip():
@@ -1478,6 +1611,7 @@ class AuraAgentArenaBridge:
                 affected_files=affected_files,
                 affected_symbols=affected_symbols,
                 tests=tests,
+                repo_root=self.repo_root,
             )
         except Exception as exc:  # noqa: BLE001
             return make_error_packet(

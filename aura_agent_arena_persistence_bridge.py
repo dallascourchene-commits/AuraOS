@@ -314,6 +314,7 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
         emergent_include_source: bool = False,
         emergent_include_research_plan: bool = True,
         bilateral_contract: Mapping[str, Any] | None = None,
+        confirmation_session_id: str = "",
         bilateral_plan_gate: Mapping[str, Any] | None = None,
         bilateral_proof_plan: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
@@ -326,6 +327,7 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
                 risk_map=risk_map,
                 constraints=constraints,
                 bilateral_contract=bilateral_contract,
+                confirmation_session_id=confirmation_session_id,
                 bilateral_plan_gate=bilateral_plan_gate,
                 bilateral_proof_plan=bilateral_proof_plan,
             )
@@ -377,6 +379,7 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
                 list(projection.get("constraints") or []),
             ),
             bilateral_contract=bilateral_contract,
+            confirmation_session_id=confirmation_session_id,
             bilateral_plan_gate=bilateral_plan_gate,
             bilateral_proof_plan=bilateral_proof_plan,
         )

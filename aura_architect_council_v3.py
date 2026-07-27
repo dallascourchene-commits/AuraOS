@@ -269,6 +269,10 @@ def route_compass_failure_classes(failure_classes: list[str] | tuple[str, ...]) 
         "CONFIRMATION_STALE",
         "AUTHORITY_DENIAL",
         "GUARDRAIL_CONFLICT",
+        "INTENT_FIDELITY",
+        "POSITIVE_REQUIREMENT",
+        "NEGATIVE_REQUIREMENT",
+        "PLAN_ASSUMPTION_INVALIDATED",
     }
     structural = {
         "INTERFACE",
@@ -278,9 +282,6 @@ def route_compass_failure_classes(failure_classes: list[str] | tuple[str, ...]) 
         "AUTHORITY",
         "PROHIBITION",
         "SEQUENCE",
-        "INTENT_FIDELITY",
-        "NEGATIVE_REQUIREMENT",
-        "PLAN_ASSUMPTION_INVALIDATED",
     }
     if any(item in human for item in normalized):
         return {

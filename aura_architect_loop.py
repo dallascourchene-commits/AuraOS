@@ -17,6 +17,7 @@ import hashlib
 import json
 import logging
 from pathlib import Path
+import time
 from typing import Any
 
 from aura_codebase_navigator import refresh_codemap_for_paths
@@ -1337,6 +1338,7 @@ def stage_arena_patch(
     affected_files: list[str],
     affected_symbols: list[str] | None = None,
     tests: list[str] | None = None,
+    repo_root: str | Path = REPO_ROOT,
 ) -> PatchStageResult:
     """Stage one Builder patch only if it stays inside the task's arena boundary."""
     normalized_files = _normalized_path_list(affected_files)
@@ -1348,7 +1350,29 @@ def stage_arena_patch(
     all_patch_files = _normalized_path_list([*normalized_files, *diff_files])
     findings: list[ShadowFinding] = []
     if arena.bilateral_contract:
-        allowed_paths = set(arena.bilateral_contract.get("allowed_paths") or ())
+        from aura_arena_gate_dialogue import _repository_identity
+        from aura_relationship_contracts import BilateralPlanningContract
+
+        contract = BilateralPlanningContract.from_dict(arena.bilateral_contract)
+        identity = _repository_identity(Path(repo_root))
+        if not contract.is_current(
+            repository_head=str(identity["repository_head"]),
+            source_tree_digest=str(identity["source_tree_digest"]),
+            observed_at=time.time(),
+        ):
+            findings.append(
+                ShadowFinding(
+                    shadow_type="bilateral_confirmation_stale",
+                    severity="blocker",
+                    message="Patch lease no longer matches the current repository identity or confirmation time.",
+                    task_id=task_name,
+                )
+            )
+        allowed_paths = set(
+            _normalized_path_list(
+                arena.bilateral_contract.get("allowed_paths") or ()
+            )
+        )
         outside_confirmation = sorted(
             path for path in all_patch_files if path not in allowed_paths
         )
@@ -1361,6 +1385,18 @@ def stage_arena_patch(
                         "Patch touches files outside the confirmed bilateral path lease: "
                         + ", ".join(outside_confirmation)
                     ),
+                    task_id=task_name,
+                )
+            )
+        expected_owner = str(
+            arena.bilateral_proof_plan.get("temporary_agent_identity") or ""
+        )
+        if expected_owner and owner_name != expected_owner:
+            findings.append(
+                ShadowFinding(
+                    shadow_type="bilateral_owner_mismatch",
+                    severity="blocker",
+                    message="Patch owner does not match the temporary Surgeon lease.",
                     task_id=task_name,
                 )
             )
@@ -1587,6 +1623,7 @@ def verify_refactor_arena(
             record("arena_lease", "passed", lease_count=len(arena.agent_leases))
     file_locks: dict[str, tuple[str, str]] = {}
     all_tests: set[str] = set()
+    passed_tests: set[str] = set()
     for item in arena.verification_ledger:
         if item.get("stage") == "tests":
             all_tests.update(_normalized_path_list(item.get("test_files", [])))
@@ -1693,6 +1730,7 @@ def verify_refactor_arena(
                     fail("tests", "Verifier test runner raised.", test=test_name, details={"error": str(exc)})
                     continue
                 if passed:
+                    passed_tests.add(test_name)
                     record("tests", "passed", test=test_name, details=details)
                 else:
                     fail("tests", "Verifier test failed.", test=test_name, details=details)
@@ -1707,7 +1745,13 @@ def verify_refactor_arena(
         )
         trusted_verifiers = set(
             arena.bilateral_contract.get("required_verifiers") or ()
-        ) | set(all_tests)
+        )
+        receipts = arena.bilateral_proof_plan.get("verifier_receipts")
+        verified_receipts = {
+            str(name)
+            for name, receipt in dict(receipts or {}).items()
+            if isinstance(receipt, Mapping) and receipt.get("passed") is True
+        }
         missing_negative_proof: list[str] = []
         for requirement in negative_requirements:
             coverage = (
@@ -1720,7 +1764,11 @@ def verify_refactor_arena(
                 if isinstance(coverage, Mapping)
                 else ""
             )
-            if not verifier or verifier not in trusted_verifiers:
+            if (
+                not verifier
+                or verifier not in trusted_verifiers
+                or verifier not in passed_tests | verified_receipts
+            ):
                 missing_negative_proof.append(str(requirement))
         if missing_negative_proof:
             fail(
@@ -1762,13 +1810,13 @@ def judge_refactor_arena(verification: VerificationResult) -> dict[str, Any]:
     """Return the deterministic Judge decision for a verified or blocked arena."""
     if verification.hotswap_ready:
         decision = "promote_hotswap"
-    elif any(item.get("stage") in {"patch_boundary", "patch_task_boundary", "patch_conflict"} for item in verification.failures):
-        decision = "escalate_to_judge"
     elif any(
         item.get("stage") in {"bilateral_plan_gate", "bilateral_negative_proof"}
         for item in verification.failures
     ):
         decision = "block_bilateral_contract"
+    elif any(item.get("stage") in {"patch_boundary", "patch_task_boundary", "patch_conflict"} for item in verification.failures):
+        decision = "escalate_to_judge"
     elif any(item.get("stage") == "tests" for item in verification.failures):
         decision = "repair_with_builder"
     elif any(item.get("stage") == "patch_queue" for item in verification.failures):

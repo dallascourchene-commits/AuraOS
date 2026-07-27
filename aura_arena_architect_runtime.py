@@ -56,6 +56,8 @@ class ArenaArchitectRuntime:
         required_capabilities: Sequence[str] = (),
         run_id: str = "",
         benchmark: bool = False,
+        bilateral_contract: Mapping[str, Any] | None = None,
+        confirmation_session_id: str = "",
     ) -> dict[str, Any]:
         return self.connector.compare_plans(
             objective=objective,
@@ -65,6 +67,8 @@ class ArenaArchitectRuntime:
             surface=self.surface,
             run_id=run_id,
             benchmark=benchmark,
+            bilateral_contract=bilateral_contract,
+            confirmation_session_id=confirmation_session_id,
         )
 
     def prepare_refactor(
@@ -77,6 +81,8 @@ class ArenaArchitectRuntime:
         target_symbol: str | None = None,
         run_id: str = "",
         benchmark: bool = False,
+        bilateral_contract: Mapping[str, Any] | None = None,
+        confirmation_session_id: str = "",
     ) -> dict[str, Any]:
         return self.connector.prepare_refactor(
             objective=objective,
@@ -88,6 +94,8 @@ class ArenaArchitectRuntime:
             surface=self.surface,
             run_id=run_id,
             benchmark=benchmark,
+            bilateral_contract=bilateral_contract,
+            confirmation_session_id=confirmation_session_id,
         )
 
     def open_surgeon_session(
@@ -99,6 +107,8 @@ class ArenaArchitectRuntime:
         provider: str = "native",
         model: str = "",
         run_id: str = "",
+        bilateral_contract: Mapping[str, Any] | None = None,
+        confirmation_session_id: str = "",
     ) -> dict[str, Any]:
         return self.connector.open_surgeon_session(
             objective=objective,
@@ -109,6 +119,8 @@ class ArenaArchitectRuntime:
             control=self.control,
             surface=self.surface,
             run_id=run_id,
+            bilateral_contract=bilateral_contract,
+            confirmation_session_id=confirmation_session_id,
         )
 
     def next_surgeon_turn(self, session_id: str) -> dict[str, Any]:

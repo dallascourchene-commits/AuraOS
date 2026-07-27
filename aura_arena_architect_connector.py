@@ -204,6 +204,29 @@ class AuraArenaArchitectConnector:
             self._bridge = factory(repo_root=self.repo_root)
         return self._bridge
 
+    def _resolve_bilateral_contract(
+        self,
+        contract: BilateralPlanningContract | Mapping[str, Any] | None,
+        confirmation_session_id: str,
+    ) -> BilateralPlanningContract | None:
+        if contract is None and not confirmation_session_id:
+            return None
+        if isinstance(contract, BilateralPlanningContract):
+            return contract
+        if not confirmation_session_id:
+            raise ValueError(
+                "confirmation_session_id is required for serialized bilateral contracts"
+            )
+        retained = self.bridge._retained_bilateral_contract(confirmation_session_id)
+        resolved = BilateralPlanningContract.from_dict(retained)
+        if contract is not None:
+            supplied = BilateralPlanningContract.from_dict(contract)
+            if supplied.contract_digest != resolved.contract_digest:
+                raise ValueError(
+                    "serialized bilateral contract does not match retained confirmation"
+                )
+        return resolved
+
     def validate_control(
         self,
         control: Mapping[str, Any] | ArchitectControlProfile | None = None,
@@ -226,36 +249,37 @@ class AuraArenaArchitectConnector:
         control: Mapping[str, Any] | ArchitectControlProfile | None = None,
         surface: str = "native",
         bilateral_contract: BilateralPlanningContract | Mapping[str, Any] | None = None,
+        confirmation_session_id: str = "",
         observed_repository_head: str = "",
         observed_source_tree_digest: str = "",
         observed_at: float | None = None,
+        _trusted_observation: Mapping[str, Any] | None = None,
     ) -> PlanAssessment:
         profile = normalize_control_profile(control, surface=surface)
         candidate_id, plan = _candidate(candidate)
-        bilateral = (
-            bilateral_contract
-            if isinstance(bilateral_contract, BilateralPlanningContract)
-            else (
-                BilateralPlanningContract.from_dict(bilateral_contract)
-                if bilateral_contract is not None
-                else None
-            )
+        bilateral = self._resolve_bilateral_contract(
+            bilateral_contract, confirmation_session_id
         )
         bilateral_gate = None
         eligible = True
         if bilateral is not None:
-            if not observed_repository_head or not observed_source_tree_digest:
+            if _trusted_observation is None:
                 from aura_arena_gate_dialogue import _repository_identity
 
                 identity = _repository_identity(self.repo_root)
-                observed_repository_head = str(identity["repository_head"])
-                observed_source_tree_digest = str(identity["source_tree_digest"])
+                observation = {
+                    "repository_head": str(identity["repository_head"]),
+                    "source_tree_digest": str(identity["source_tree_digest"]),
+                    "observed_at": time.time(),
+                }
+            else:
+                observation = dict(_trusted_observation)
             gate = evaluate_bilateral_plan(
                 plan,
                 bilateral,
-                observed_repository_head=observed_repository_head,
-                observed_source_tree_digest=observed_source_tree_digest,
-                observed_at=time.time() if observed_at is None else float(observed_at),
+                observed_repository_head=str(observation["repository_head"]),
+                observed_source_tree_digest=str(observation["source_tree_digest"]),
+                observed_at=float(observation["observed_at"]),
             )
             bilateral_gate = gate.to_dict()
             eligible = gate.passed
@@ -359,6 +383,7 @@ class AuraArenaArchitectConnector:
         record: bool = True,
         benchmark: bool = False,
         bilateral_contract: BilateralPlanningContract | Mapping[str, Any] | None = None,
+        confirmation_session_id: str = "",
         observed_repository_head: str = "",
         observed_source_tree_digest: str = "",
         observed_at: float | None = None,
@@ -381,16 +406,28 @@ class AuraArenaArchitectConnector:
         if len(ids) != len(set(ids)):
             raise ValueError("candidate ids must be unique")
         profile = normalize_control_profile(control, surface=surface, benchmark=benchmark)
+        bilateral = self._resolve_bilateral_contract(
+            bilateral_contract, confirmation_session_id
+        )
+        observation = None
+        if bilateral is not None:
+            from aura_arena_gate_dialogue import _repository_identity
+
+            identity = _repository_identity(self.repo_root)
+            observation = {
+                "repository_head": str(identity["repository_head"]),
+                "source_tree_digest": str(identity["source_tree_digest"]),
+                "observed_at": time.time(),
+            }
         assessments = [
             self.assess_plan(
                 item,
                 required_capabilities=required_capabilities,
                 control=profile,
                 surface=profile.surface,
-                bilateral_contract=bilateral_contract,
-                observed_repository_head=observed_repository_head,
-                observed_source_tree_digest=observed_source_tree_digest,
-                observed_at=observed_at,
+                bilateral_contract=bilateral,
+                confirmation_session_id="",
+                _trusted_observation=observation,
             )
             for item in candidates
         ]
@@ -539,6 +576,19 @@ class AuraArenaArchitectConnector:
         if not tasks:
             raise ValueError("selected plan has no Act Capsules")
         requested_projection = [_task_projection(task) for task in tasks]
+        bilateral_proof_plan = {
+            key: selected_plan.get(key)
+            for key in (
+                "positive_requirement_coverage",
+                "negative_requirement_coverage",
+                "guardrail_coverage",
+                "guardrail_verifiers",
+                "verifier_receipts",
+                "assumption_register",
+                "plan_revision_policy",
+                "plan_revision",
+            )
+        }
         prepared = ArchitectFusionLoop(repo_root=self.repo_root).prepare(
             objective,
             architecture_decision=str(
@@ -559,18 +609,7 @@ class AuraArenaArchitectConnector:
             ],
             bilateral_contract=bilateral_contract,
             bilateral_plan_gate=bilateral_gate,
-            bilateral_proof_plan={
-                key: selected_plan.get(key)
-                for key in (
-                    "positive_requirement_coverage",
-                    "negative_requirement_coverage",
-                    "guardrail_coverage",
-                    "guardrail_verifiers",
-                    "assumption_register",
-                    "plan_revision_policy",
-                    "plan_revision",
-                )
-            },
+            bilateral_proof_plan=bilateral_proof_plan,
         )
         actual_projection = _prepared_projection(prepared)
         if requested_projection != actual_projection:
@@ -611,6 +650,7 @@ class AuraArenaArchitectConnector:
                 "hotswap_capsule": None,
                 "selected_plan_digest": _digest(selected_plan),
                 "dependency_map": dependency_map,
+                "unified_execution_bindings": {},
             }
         phase_hash = prepared.plan.phase_hash
         act_capsules = [dict(item) for item in prepared.arena.agent_capsules]
@@ -643,6 +683,7 @@ class AuraArenaArchitectConnector:
                 else dict(bilateral_contract or {})
             ),
             "bilateral_plan_gate": dict(bilateral_gate or {}),
+            "bilateral_proof_plan": bilateral_proof_plan,
         }
 
     def prepare_refactor(
@@ -658,10 +699,14 @@ class AuraArenaArchitectConnector:
         run_id: str = "",
         benchmark: bool = False,
         bilateral_contract: BilateralPlanningContract | Mapping[str, Any] | None = None,
+        confirmation_session_id: str = "",
         observed_repository_head: str = "",
         observed_source_tree_digest: str = "",
         observed_at: float | None = None,
     ) -> dict[str, Any]:
+        resolved_contract = self._resolve_bilateral_contract(
+            bilateral_contract, confirmation_session_id
+        )
         comparison = self.compare_plans(
             objective=objective,
             candidates=candidates,
@@ -670,7 +715,7 @@ class AuraArenaArchitectConnector:
             surface=surface,
             run_id=run_id,
             benchmark=benchmark,
-            bilateral_contract=bilateral_contract,
+            bilateral_contract=resolved_contract,
             observed_repository_head=observed_repository_head,
             observed_source_tree_digest=observed_source_tree_digest,
             observed_at=observed_at,
@@ -688,7 +733,7 @@ class AuraArenaArchitectConnector:
             profile=profile,
             target_file=target_file,
             target_symbol=target_symbol,
-            bilateral_contract=bilateral_contract,
+            bilateral_contract=resolved_contract,
             bilateral_gate=dict(comparison["selected_assessment"]).get("bilateral_gate"),
         )
         result = {
@@ -716,6 +761,7 @@ class AuraArenaArchitectConnector:
         surface: str = "native",
         run_id: str = "",
         bilateral_contract: BilateralPlanningContract | Mapping[str, Any] | None = None,
+        confirmation_session_id: str = "",
         observed_repository_head: str = "",
         observed_source_tree_digest: str = "",
         observed_at: float | None = None,
@@ -728,6 +774,7 @@ class AuraArenaArchitectConnector:
             surface=surface,
             run_id=run_id,
             bilateral_contract=bilateral_contract,
+            confirmation_session_id=confirmation_session_id,
             observed_repository_head=observed_repository_head,
             observed_source_tree_digest=observed_source_tree_digest,
             observed_at=observed_at,

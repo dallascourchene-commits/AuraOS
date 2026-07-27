@@ -63,6 +63,8 @@ ARCHITECT_TOOL_DEFINITIONS = [
                 "required_capabilities": {"type": "array", "items": {"type": "string"}},
                 "control": _CONTROL_SCHEMA,
                 "run_id": {"type": "string"},
+                "bilateral_contract": {"type": "object"},
+                "confirmation_session_id": {"type": "string"},
             },
             "required": ["objective", "candidates"],
         },
@@ -83,6 +85,8 @@ ARCHITECT_TOOL_DEFINITIONS = [
                 "target_symbol": {"type": "string"},
                 "control": _CONTROL_SCHEMA,
                 "run_id": {"type": "string"},
+                "bilateral_contract": {"type": "object"},
+                "confirmation_session_id": {"type": "string"},
             },
             "required": ["objective", "candidates"],
         },
@@ -103,6 +107,8 @@ ARCHITECT_TOOL_DEFINITIONS = [
                 "model": {"type": "string", "default": ""},
                 "control": _CONTROL_SCHEMA,
                 "run_id": {"type": "string"},
+                "bilateral_contract": {"type": "object"},
+                "confirmation_session_id": {"type": "string"},
             },
             "required": ["objective", "candidates"],
         },
@@ -249,6 +255,8 @@ def _compare(bridge: Any, args: dict[str, Any]) -> dict[str, Any]:
         control=args.get("control"),
         surface=_EXTERNAL_SURFACE,
         run_id=str(args.get("run_id", "")),
+        bilateral_contract=args.get("bilateral_contract"),
+        confirmation_session_id=str(args.get("confirmation_session_id", "")),
     )
 
 
@@ -262,6 +270,8 @@ def _prepare(bridge: Any, args: dict[str, Any]) -> dict[str, Any]:
         control=args.get("control"),
         surface=_EXTERNAL_SURFACE,
         run_id=str(args.get("run_id", "")),
+        bilateral_contract=args.get("bilateral_contract"),
+        confirmation_session_id=str(args.get("confirmation_session_id", "")),
     )
 
 
@@ -275,6 +285,8 @@ def _open_surgeon(bridge: Any, args: dict[str, Any]) -> dict[str, Any]:
         control=args.get("control"),
         surface=_EXTERNAL_SURFACE,
         run_id=str(args.get("run_id", "")),
+        bilateral_contract=args.get("bilateral_contract"),
+        confirmation_session_id=str(args.get("confirmation_session_id", "")),
     )
 
 
