@@ -23,7 +23,22 @@ jobs:
         run: python .github/pr236_manual_repairs.py
 
       - name: Run bilateral enforcement tests
-        run: python -m pytest -q tests/test_aura_bilateral_planning_enforcement.py
+        shell: bash
+        run: |
+          set +e
+          python -m pytest -q tests/test_aura_bilateral_planning_enforcement.py > /tmp/pr236-pytest.log 2>&1
+          status=$?
+          cat /tmp/pr236-pytest.log
+          exit "$status"
+
+      - name: Upload focused failure log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr236-manual-repair-failure-${{ github.sha }}
+          path: /tmp/pr236-pytest.log
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Run focused static checks
         shell: bash
