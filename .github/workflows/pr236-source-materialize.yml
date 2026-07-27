@@ -80,6 +80,7 @@ jobs:
             aura_external_llm_session.py \
             tests/test_aura_bilateral_planning_enforcement.py
           git commit -m "fix(pr236): ground Compass and bound bilateral context"
+          git restore -- .github/pr236_compass_context_fix.py.tmp
           git fetch origin refactor/bilateral-intent-pr3-enforcement
           git rebase origin/refactor/bilateral-intent-pr3-enforcement
           git push origin HEAD:refactor/bilateral-intent-pr3-enforcement
