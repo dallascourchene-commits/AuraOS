@@ -7,10 +7,14 @@
     "class": "B",
     "human_approved": true,
     "reason": "Current main contains established Spatial S5/S6, Construction projection, renderer, browser-probe, and lifecycle owners that must be reused by B9 and B10.",
-    "intent_reconfirmation_required": false
+    "intent_reconfirmation_required": false,
+    "local_refinements": [
+      "Class A: reuse scripts/aura_architecture_harness.py as the existing runtime-command dispatcher for explicit V2 profile routing."
+    ]
   },
   "scope": {
     "allowed_source_paths": [
+      "scripts/aura_architecture_harness.py",
       "scripts/aura_runtime_refactor_harness.py",
       "scripts/aura_runtime_profile_v2_adapter.py",
       ".aura/runtime_profiles/construction_demo_bilateral.v2.json",
