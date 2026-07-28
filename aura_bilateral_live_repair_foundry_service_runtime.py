@@ -2,79 +2,19 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from pathlib import Path
+import json
 import time
 from typing import Any
 
 from aura_bilateral_live_repair_foundry_contracts import (
     MAX_ATTEMPTS, _FALSE_AUTHORITY, BilateralIdentity, BilateralLiveRepairError,
     IncidentReplayPacket, RepairCandidateResult, _digest_text, _group_passed,
-    canonical_sanitize, classify_repair_route, derive_repair_failure_class, digest,
+    _runtime_binding_digest, canonical_sanitize, classify_repair_route,
+    derive_repair_failure_class, digest,
 )
 
 
 class _RuntimeRepairMixin:
-    def execute_replay(
-        self,
-        *,
-        packet_id: str,
-        profile_path: str | Path,
-        confirmation_packet: str | Path,
-        output_dir: str | Path,
-        venv_path: str | Path | None = None,
-        baseline_receipt: str | Path | None = None,
-    ) -> dict[str, Any]:
-        packet = self._packet(packet_id)
-        proof = dict(
-            self.runtime_runner(
-                self.repo_root,
-                profile_path=profile_path,
-                confirmation_packet=confirmation_packet,
-                output_dir=output_dir,
-                venv_path=venv_path,
-                install_requirements=False,
-                allow_dirty=False,
-                baseline_receipt=baseline_receipt,
-            )
-        )
-        expected = packet.identity.runtime_profile_digest
-        observed = str(proof.get("profile_sha256") or "").lower()
-        if observed != expected:
-            raise BilateralLiveRepairError("runtime proof profile identity differs from the incident contract")
-        if proof.get("repository_identity_unchanged") is not True:
-            raise BilateralLiveRepairError("runtime replay changed repository identity")
-        proof_digest = digest(proof)
-        result = {
-            "ok": proof.get("ok") is True,
-            "status": "INCIDENT_REPLAY_VERIFIED" if proof.get("ok") is True else "INCIDENT_REPLAY_REPRODUCED",
-            "packet_id": packet.packet_id,
-            "packet_digest": packet.packet_digest,
-            "runtime_proof": proof,
-            "runtime_proof_digest": proof_digest,
-            "authority": {**_FALSE_AUTHORITY, "human_review_required": True},
-        }
-        archive = self.attempt_archive.record(
-            arena_id="construction",
-            route="bilateral-live-repair/runtime-replay",
-            request={
-                "action_id": "execute_incident_replay",
-                "packet_id": packet.packet_id,
-                "packet_digest": packet.packet_digest,
-                "runtime_profile_digest": packet.identity.runtime_profile_digest,
-            },
-            result=result,
-            workflow_state={
-                "workflow_id": packet.packet_id,
-                "current_phase": "B12_RUNTIME_REPLAY",
-                "objective": "Reproduce and verify the exact field incident outside the source checkout",
-            },
-            archive_context={"stage_hint": "B12", "identity_digest": packet.identity.identity_digest},
-        )
-        if archive.get("ok") is not True:
-            raise BilateralLiveRepairError("canonical Attempt Archive did not retain the runtime replay")
-        self._runtime_proofs[proof_digest] = (packet.packet_id, proof)
-        return {**result, "runtime_proof_ref": proof_digest, "attempt_artifact": archive}
-
     def record_repair_attempt(
         self,
         *,
@@ -91,6 +31,15 @@ class _RuntimeRepairMixin:
         candidate = _digest_text(candidate_digest, "candidate_digest")
         proof_ref = _digest_text(runtime_proof_ref, "runtime_proof_ref")
         runtime_proof = self._runtime_proof(packet, proof_ref)
+        runtime_candidate_id = runtime_proof.get("runtime_candidate_id")
+        if (
+            runtime_candidate_id is not None
+            and (
+                not isinstance(runtime_candidate_id, str)
+                or _runtime_binding_digest(runtime_candidate_id) != candidate
+            )
+        ):
+            raise BilateralLiveRepairError("repair candidate differs from the retained runtime proof")
         clean_hypothesis, _ = canonical_sanitize(hypothesis)
         hypothesis_digest = digest(clean_hypothesis)
         prior = self._prior_attempts(packet)
@@ -205,9 +154,11 @@ class _RuntimeRepairMixin:
     def attempts_for_packet(self, packet_id: str) -> tuple[RepairCandidateResult, ...]:
         packet = self._packet(packet_id)
         rows: list[RepairCandidateResult] = []
-        for summary in self.attempt_archive.list(workflow_id=packet.packet_id, limit=MAX_ATTEMPTS + 1):
-            if summary.get("route") != "bilateral-live-repair/repair-attempt":
-                continue
+        for summary in self.attempt_archive.list(
+            workflow_id=packet.packet_id,
+            route="bilateral-live-repair/repair-attempt",
+            limit=MAX_ATTEMPTS + 1,
+        ):
             artifact_ref = str(summary.get("artifact_id") or "")
             artifact = self.attempt_archive.get(artifact_ref)
             result = dict((artifact or {}).get("result") or {})
@@ -224,12 +175,20 @@ class _RuntimeRepairMixin:
             if retained_packet_id != packet.packet_id:
                 raise BilateralLiveRepairError("runtime proof belongs to another incident")
             return dict(proof)
-        for summary in self.attempt_archive.list(workflow_id=packet.packet_id, limit=MAX_ATTEMPTS + 16):
-            if summary.get("route") != "bilateral-live-repair/runtime-replay":
-                continue
+        for summary in self.attempt_archive.list(
+            workflow_id=packet.packet_id,
+            route="bilateral-live-repair/runtime-replay",
+            limit=MAX_ATTEMPTS + 16,
+        ):
             artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
             result = dict((artifact or {}).get("result") or {})
-            proof = result.get("runtime_proof")
+            proof: Any = result.get("runtime_proof")
+            proof_json = result.get("runtime_proof_json")
+            if isinstance(proof_json, str) and proof_json:
+                try:
+                    proof = json.loads(proof_json)
+                except json.JSONDecodeError as exc:
+                    raise BilateralLiveRepairError("archived runtime proof JSON is invalid") from exc
             if (
                 result.get("packet_digest") == packet.packet_digest
                 and result.get("runtime_proof_digest") == proof_ref
@@ -243,9 +202,11 @@ class _RuntimeRepairMixin:
 
     def _prior_attempts(self, packet: IncidentReplayPacket) -> list[dict[str, Any]]:
         rows: list[dict[str, Any]] = []
-        for summary in self.attempt_archive.list(workflow_id=packet.packet_id, limit=MAX_ATTEMPTS + 1):
-            if summary.get("route") != "bilateral-live-repair/repair-attempt":
-                continue
+        for summary in self.attempt_archive.list(
+            workflow_id=packet.packet_id,
+            route="bilateral-live-repair/repair-attempt",
+            limit=MAX_ATTEMPTS + 1,
+        ):
             artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
             if not artifact:
                 continue

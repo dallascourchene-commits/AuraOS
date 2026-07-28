@@ -11,6 +11,7 @@ from aura_arena_attempt_archive import ArenaAttemptArchive
 from aura_bilateral_live_repair_foundry_capture import BoundedIncidentCapture
 from aura_bilateral_live_repair_foundry_contracts import (
     MAX_EVENTS,
+    MAX_ACTIVE_CAPTURES,
     VERSION,
     _FALSE_AUTHORITY,
     BilateralIdentity,
@@ -79,6 +80,9 @@ class _CapturePersistenceMixin:
         }
 
     def start_capture(self, contract: Mapping[str, Any]) -> dict[str, Any]:
+        self._sweep_expired_captures()
+        if len(self._captures) >= MAX_ACTIVE_CAPTURES:
+            raise BilateralLiveRepairError("active capture budget exhausted")
         identity = BilateralIdentity.from_mapping(contract.get("identity") or {})
         capture = BoundedIncidentCapture(
             identity=identity,
@@ -171,9 +175,11 @@ class _CapturePersistenceMixin:
         item = self._packets.get(resolved)
         if item is not None:
             return item
-        for summary in self.attempt_archive.list(workflow_id=resolved, limit=10):
-            if summary.get("route") != "bilateral-live-repair/incident-capture":
-                continue
+        for summary in self.attempt_archive.list(
+            workflow_id=resolved,
+            route="bilateral-live-repair/incident-capture",
+            limit=10,
+        ):
             artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
             result = dict((artifact or {}).get("result") or {})
             packet_json = result.get("incident_replay_packet_json")

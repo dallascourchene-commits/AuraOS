@@ -29,6 +29,7 @@ from aura_showcase_server import (
     _static_response as base_static_response,
     dispatch_showcase_request as base_dispatch_showcase_request,
 )
+from scripts.aura_runtime_profile_v2_adapter import BilateralRuntimeProfileError
 
 SHOWCASE_LIVE_REPAIR_VERSION = "AURA_SHOWCASE_LIVE_REPAIR_V1"
 STATIC_DIR = Path(__file__).resolve().parent / "aura_showcase"
@@ -209,7 +210,7 @@ def dispatch_live_repair_request(
             )
             return _json(200, {"ok": True, "projection": projection})
 
-    except (BilateralLiveRepairError, ValueError, TypeError, KeyError) as exc:
+    except (BilateralLiveRepairError, BilateralRuntimeProfileError, ValueError, TypeError, KeyError) as exc:
         return _error(str(exc), 409)
 
     return base_dispatch_showcase_request(state, method, raw_path, body)

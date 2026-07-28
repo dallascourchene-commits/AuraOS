@@ -20,6 +20,7 @@ from aura_bilateral_live_repair_foundry import (
     derive_repair_failure_class,
     digest,
 )
+from aura_bilateral_live_repair_foundry_contracts import _runtime_binding_digest
 
 
 def sha(value: str) -> str:
@@ -231,6 +232,57 @@ def test_runtime_replay_delegates_to_profile_v2_and_binds_exact_profile(tmp_path
     service.close()
 
 
+def test_repair_candidate_is_bound_to_retained_runtime_candidate(tmp_path):
+    item = identity()
+    service, _db, raw = service_with_packet(tmp_path, item)
+    proof = {
+        **runtime_proof(item),
+        "runtime_candidate_id": "candidate-bound-to-proof",
+    }
+    proof_ref = digest(proof)
+    service._runtime_proofs[proof_ref] = (raw["packet_id"], proof)
+    with pytest.raises(BilateralLiveRepairError, match="candidate differs"):
+        service.record_repair_attempt(
+            packet_id=raw["packet_id"],
+            hypothesis={"cause": "selection reset"},
+            candidate_digest=sha("unrelated candidate"),
+            runtime_proof_ref=proof_ref,
+            minimized_counterexample=None,
+            current_identity=item,
+        )
+    attempt = service.record_repair_attempt(
+        packet_id=raw["packet_id"],
+        hypothesis={"cause": "selection reset"},
+        candidate_digest=_runtime_binding_digest("candidate-bound-to-proof"),
+        runtime_proof_ref=proof_ref,
+        minimized_counterexample=None,
+        current_identity=item,
+    )
+    assert attempt.promotion_ready is True
+    service.close()
+
+
+def test_full_runtime_proof_survives_archive_restart_without_list_truncation(tmp_path):
+    item = identity()
+    first, db_path, raw = service_with_packet(tmp_path, item)
+    proof = runtime_proof(item)
+    proof["positive_assertions"] = [
+        {"assertion_id": f"positive-{index}", "passed": True}
+        for index in range(256)
+    ]
+    proof_ref = retain_proof(first, raw["packet_id"], item, proof)
+    first.close()
+    second = BilateralLiveRepairService(
+        tmp_path,
+        attempt_archive_db_path=db_path,
+        runtime_runner=lambda *_a, **_k: proof,
+    )
+    replay = second._packet(raw["packet_id"])
+    retained = second._runtime_proof(replay, proof_ref)
+    assert len(retained["positive_assertions"]) == 256
+    second.close()
+
+
 def test_missing_negative_proof_blocks_repair_promotion(tmp_path):
     item = identity()
     service, _db, raw = service_with_packet(tmp_path, item)
@@ -374,6 +426,71 @@ def test_u7_delegates_p0_p1_and_finalization_to_canonical_owner(tmp_path, monkey
     assert calls == ["P0", "P1", "FINALIZE"]
     assert result["canonical_owner"] == "aura_unified_memory_continuity_learning"
     assert result["automatic_crystallization"] is False
+    service.close()
+
+
+def test_u7_retry_resumes_from_retained_p0(tmp_path, monkeypatch):
+    calls = []
+    session = {
+        "unified_prediction_packets": {},
+        "unified_p1_observations": {},
+        "unified_learning_results": {},
+    }
+
+    class Bridge:
+        def _require_session(self, phase):
+            assert phase == "phase"
+            return session
+
+    class Packet:
+        def __init__(self, kind):
+            self.kind = kind
+
+        def to_dict(self):
+            return {"kind": self.kind}
+
+    module = types.ModuleType("aura_unified_memory_continuity_learning")
+
+    def commit(*_args, **kwargs):
+        calls.append("P0")
+        value = Packet("P0")
+        session["unified_prediction_packets"][kwargs["task_id"]] = value
+        return value
+
+    def observe(*_args, **kwargs):
+        calls.append("P1")
+        if calls.count("P1") == 1:
+            raise ValueError("transient P1 failure")
+        value = Packet("P1")
+        session["unified_p1_observations"][kwargs["task_id"]] = value
+        return value
+
+    def finalize(*_args, **_kwargs):
+        calls.append("FINALIZE")
+        return {"ok": True}
+
+    module.commit_bridge_prediction = commit
+    module.observe_bridge_prediction = observe
+    module.finalize_bridge_learning = finalize
+    monkeypatch.setitem(sys.modules, "aura_unified_memory_continuity_learning", module)
+    service = BilateralLiveRepairService(
+        tmp_path,
+        attempt_archive_db_path=tmp_path / "u7-resume.db",
+        runtime_runner=lambda *_a, **_k: {},
+    )
+    kwargs = {
+        "bridge": Bridge(),
+        "plan_phase_hash": " phase ",
+        "task_id": " task ",
+        "prediction_contract": {},
+        "observation_contract": {},
+        "finalization_contract": {},
+    }
+    with pytest.raises(ValueError, match="transient"):
+        service.run_governed_u7(**kwargs)
+    result = service.run_governed_u7(**kwargs)
+    assert result["ok"] is True
+    assert calls == ["P0", "P1", "P1", "FINALIZE"]
     service.close()
 
 

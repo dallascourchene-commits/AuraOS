@@ -35,15 +35,19 @@ class _PreviewLearningProjectionMixin:
         environment = _required_text(environment_class, "environment_class", limit=128).upper()
         if environment not in {"LOCAL_EPHEMERAL", "CANARY_ISOLATED"}:
             raise BilateralLiveRepairError("preview must be isolated from production")
+        if type(rollback_preauthorized) is not bool:
+            raise ValueError("rollback_preauthorized must be a boolean")
         clean_before, _ = canonical_sanitize(health_before)
         clean_after, _ = canonical_sanitize(health_after)
+        before_digest = digest(clean_before)
+        after_digest = digest(clean_after)
         degraded = clean_after != clean_before and clean_after.get("ok") is not True
         executed = False
         restored = ""
         if degraded:
             if not rollback_reason.strip():
                 raise ValueError("rollback_reason is required for degraded health")
-            if rollback_preauthorized:
+            if rollback_preauthorized is True:
                 if restore_local is None:
                     raise BilateralLiveRepairError("pre-authorized rollback requires an isolated restore adapter")
                 restored = _digest_text(restore_local(verified), "restored_digest")
@@ -53,15 +57,15 @@ class _PreviewLearningProjectionMixin:
         identity = {
             "replay_packet_digest": packet.packet_digest,
             "bilateral_identity_digest": packet.identity.identity_digest,
-            "candidate": candidate,
-            "verified": verified,
-            "before": clean_before,
-            "after": clean_after,
-            "environment": environment,
+            "candidate_digest": candidate,
+            "last_verified_digest": verified,
+            "health_before_digest": before_digest,
+            "health_after_digest": after_digest,
+            "environment_class": environment,
             "degraded": degraded,
-            "rollback_preauthorized": bool(rollback_preauthorized),
-            "executed": executed,
-            "restored": restored,
+            "rollback_preauthorized": rollback_preauthorized,
+            "technical_rollback_executed": executed,
+            "restored_digest": restored,
         }
         key = digest(identity)
         receipt = PreviewRollbackReceipt(
@@ -70,12 +74,12 @@ class _PreviewLearningProjectionMixin:
             bilateral_identity_digest=packet.identity.identity_digest,
             candidate_digest=candidate,
             last_verified_digest=verified,
-            health_before_digest=digest(clean_before),
-            health_after_digest=digest(clean_after),
+            health_before_digest=before_digest,
+            health_after_digest=after_digest,
             environment_class=environment,
             preview_isolated=True,
             degraded=degraded,
-            rollback_preauthorized=bool(rollback_preauthorized),
+            rollback_preauthorized=rollback_preauthorized,
             technical_rollback_executed=executed,
             restored_digest=restored,
             rollback_reason=str(rollback_reason)[:1000],
@@ -123,28 +127,49 @@ class _PreviewLearningProjectionMixin:
             observe_bridge_prediction,
         )
 
-        prediction = commit_bridge_prediction(
+        phase = _required_text(plan_phase_hash, "plan_phase_hash")
+        task = _required_text(task_id, "task_id")
+        session = None
+        require_session = getattr(bridge, "_require_session", None)
+        if callable(require_session):
+            session = require_session(phase)
+        retained_prediction = (
+            dict(session.get("unified_prediction_packets") or {}).get(task)
+            if isinstance(session, Mapping)
+            else None
+        )
+        prediction = retained_prediction or commit_bridge_prediction(
             bridge,
-            plan_phase_hash=plan_phase_hash,
-            task_id=task_id,
+            plan_phase_hash=phase,
+            task_id=task,
             contract=prediction_contract,
         )
-        observation = observe_bridge_prediction(
+        retained_observation = (
+            dict(session.get("unified_p1_observations") or {}).get(task)
+            if isinstance(session, Mapping)
+            else None
+        )
+        observation = retained_observation or observe_bridge_prediction(
             bridge,
-            plan_phase_hash=plan_phase_hash,
-            task_id=task_id,
+            plan_phase_hash=phase,
+            task_id=task,
             observation=observation_contract,
         )
-        result = finalize_bridge_learning(
+        retained_result = (
+            dict(session.get("unified_learning_results") or {}).get(task)
+            if isinstance(session, Mapping)
+            else None
+        )
+        result = retained_result or finalize_bridge_learning(
             bridge,
-            plan_phase_hash=plan_phase_hash,
-            task_id=task_id,
+            plan_phase_hash=phase,
+            task_id=task,
             contract=finalization_contract,
         )
         return {
             "ok": result.get("ok") is True,
-            "prediction": prediction.to_dict(),
-            "observation": observation.to_dict(),
+            "prediction": prediction.to_dict() if hasattr(prediction, "to_dict") else dict(prediction),
+            "observation": observation.to_dict() if hasattr(observation, "to_dict") else dict(observation),
             "finalization": result,
             "canonical_owner": "aura_unified_memory_continuity_learning",
             "automatic_crystallization": False,
@@ -154,9 +179,11 @@ class _PreviewLearningProjectionMixin:
 
     def latest_preview(self, packet_id: str) -> PreviewRollbackReceipt | None:
         packet = self._packet(packet_id)
-        for summary in self.attempt_archive.list(workflow_id=packet.packet_id, limit=MAX_ATTEMPTS + 8):
-            if summary.get("route") != "bilateral-live-repair/preview-rollback":
-                continue
+        for summary in self.attempt_archive.list(
+            workflow_id=packet.packet_id,
+            route="bilateral-live-repair/preview-rollback",
+            limit=MAX_ATTEMPTS + 8,
+        ):
             artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
             raw = dict((artifact or {}).get("result") or {}).get("preview")
             if isinstance(raw, Mapping):
@@ -183,13 +210,36 @@ class _PreviewLearningProjectionMixin:
     ) -> dict[str, Any]:
         packet = self._packet(packet_id)
         packet.identity.assert_current(current_identity)
-        clean_intent, _ = canonical_sanitize(intent)
+        # Validate caller shape, but derive displayed confirmed intent only from
+        # the digest-bound incident packet rather than caller projection data.
+        canonical_sanitize(intent)
+        clean_intent = {
+            "intent_digest": packet.identity.intent_digest,
+            "expected_positive": list(packet.expected_positive),
+            "expected_negative": list(packet.expected_negative),
+            "preservation_claims": list(packet.preservation_claims),
+        }
         clean_plan, _ = canonical_sanitize(plan)
         clean_targets, _ = canonical_sanitize(code_targets)
         clean_source, _ = canonical_sanitize(source_drilldown)
         clean_receipts, _ = canonical_sanitize(receipt_drilldown)
-        attempt_rows = [item.to_dict() if isinstance(item, RepairCandidateResult) else dict(item) for item in attempts]
-        preview_row = preview.to_dict() if isinstance(preview, PreviewRollbackReceipt) else (dict(preview) if preview else None)
+        parsed_attempts = [
+            item if isinstance(item, RepairCandidateResult) else RepairCandidateResult.from_mapping(item)
+            for item in attempts
+        ]
+        if any(item.replay_packet_digest != packet.packet_digest for item in parsed_attempts):
+            raise BilateralLiveRepairError("repair projection includes an attempt from another incident")
+        attempt_rows = [item.to_dict() for item in parsed_attempts]
+        parsed_preview = (
+            preview
+            if isinstance(preview, PreviewRollbackReceipt)
+            else PreviewRollbackReceipt.from_mapping(preview)
+            if preview
+            else None
+        )
+        if parsed_preview and parsed_preview.replay_packet_digest != packet.packet_digest:
+            raise BilateralLiveRepairError("repair projection includes a preview from another incident")
+        preview_row = parsed_preview.to_dict() if parsed_preview else None
         u7 = dict(u7_result or {})
         projection = {
             "version": PROJECTION_VERSION,

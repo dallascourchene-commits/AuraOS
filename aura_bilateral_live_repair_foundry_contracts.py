@@ -24,8 +24,10 @@ PREVIEW_VERSION = "AURA_LOCAL_PREVIEW_ROLLBACK_V1"
 PROJECTION_VERSION = "AURA_SPATIAL_FOUNDRY_PROJECTION_V1"
 MAX_EVENTS = 256
 MAX_ATTEMPTS = 8
+MAX_ACTIVE_CAPTURES = 32
 MAX_RETENTION_SECONDS = 300
 MAX_TEXT_BYTES = 32 * 1024
+MAX_ARCHIVED_PACKET_BYTES = 8 * 1024 * 1024
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 
@@ -91,7 +93,13 @@ def _normalize(value: Any) -> Any:
     if is_dataclass(value):
         value = asdict(value)
     if isinstance(value, Mapping):
-        return {str(key): _normalize(value[key]) for key in sorted(value, key=lambda item: str(item))}
+        output: dict[str, Any] = {}
+        for key, item in value.items():
+            normalized_key = str(key)
+            if normalized_key in output:
+                raise ValueError(f"mapping keys collide after canonical string conversion: {normalized_key!r}")
+            output[normalized_key] = _normalize(item)
+        return {key: output[key] for key in sorted(output)}
     if isinstance(value, (set, frozenset)):
         normalized = [_normalize(item) for item in value]
         return sorted(normalized, key=lambda item: canonical_bytes(item))
@@ -126,6 +134,13 @@ def canonical_bytes(value: Any) -> bytes:
 
 def digest(value: Any) -> str:
     return hashlib.sha256(canonical_bytes(value)).hexdigest()
+
+
+def _runtime_binding_digest(value: Any) -> str:
+    """Match Runtime Profile V2's canonical requirement/candidate identity."""
+
+    body = json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.blake2b(body.encode(), digest_size=32).hexdigest()
 
 
 @dataclass(frozen=True)
@@ -388,12 +403,53 @@ class PreviewRollbackReceipt:
         if not isinstance(value, Mapping):
             raise ValueError("preview receipt must be an object")
         item = cls(**{name: value.get(name) for name in cls.__dataclass_fields__})
+        for name in (
+            "replay_packet_digest",
+            "bilateral_identity_digest",
+            "candidate_digest",
+            "last_verified_digest",
+            "health_before_digest",
+            "health_after_digest",
+        ):
+            _digest_text(getattr(item, name), name)
+        if item.restored_digest:
+            _digest_text(item.restored_digest, "restored_digest")
+        for name in (
+            "preview_isolated",
+            "degraded",
+            "rollback_preauthorized",
+            "technical_rollback_executed",
+            "human_promotion_required",
+            "production_mutation",
+        ):
+            if type(getattr(item, name)) is not bool:
+                raise ValueError(f"{name} must be a boolean")
+        _timestamp(item.created_at, "created_at")
+        _required_text(item.preview_id, "preview_id", limit=128)
+        if type(item.rollback_reason) is not str:
+            raise ValueError("rollback_reason must be a string")
+        identity = {
+            "replay_packet_digest": item.replay_packet_digest,
+            "bilateral_identity_digest": item.bilateral_identity_digest,
+            "candidate_digest": item.candidate_digest,
+            "last_verified_digest": item.last_verified_digest,
+            "health_before_digest": item.health_before_digest,
+            "health_after_digest": item.health_after_digest,
+            "environment_class": item.environment_class,
+            "degraded": item.degraded,
+            "rollback_preauthorized": item.rollback_preauthorized,
+            "technical_rollback_executed": item.technical_rollback_executed,
+            "restored_digest": item.restored_digest,
+        }
         if (
             item.version != PREVIEW_VERSION
+            or item.preview_id != f"PREVIEW-{digest(identity)[:24]}"
             or item.preview_isolated is not True
             or item.production_mutation is not False
             or item.human_promotion_required is not True
             or item.environment_class not in {"LOCAL_EPHEMERAL", "CANARY_ISOLATED"}
+            or (item.degraded and not item.rollback_reason.strip())
+            or (item.technical_rollback_executed and item.rollback_preauthorized is not True)
             or (item.technical_rollback_executed and item.restored_digest != item.last_verified_digest)
         ):
             raise ValueError("preview receipt authority or rollback identity is invalid")

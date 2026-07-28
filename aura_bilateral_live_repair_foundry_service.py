@@ -10,11 +10,17 @@ from aura_bilateral_live_repair_foundry_contracts import (
     _FALSE_AUTHORITY,
     BilateralLiveRepairError,
     IncidentReplayPacket,
+    _runtime_binding_digest,
+    canonical_bytes,
     digest,
 )
 from aura_bilateral_live_repair_foundry_service_capture import _CapturePersistenceMixin
 from aura_bilateral_live_repair_foundry_service_preview import _PreviewLearningProjectionMixin
 from aura_bilateral_live_repair_foundry_service_runtime import _RuntimeRepairMixin
+from scripts.aura_runtime_profile_v2_adapter import (
+    PROFILE_VERSION as RUNTIME_PROFILE_VERSION,
+    VERSION as RUNTIME_PROOF_VERSION,
+)
 
 _RUNTIME_FALSE_AUTHORITIES = (
     "automatic_fix",
@@ -47,9 +53,11 @@ class BilateralLiveRepairService(
 
     def _sweep_expired_captures(self) -> None:
         now = time.time()
-        for capture in self._captures.values():
+        for capture_id, capture in list(self._captures.items()):
             if not capture._closed and now - capture.started_at > capture.retention_seconds:
                 self._scrub_capture(capture)
+            if capture._closed:
+                self._captures.pop(capture_id, None)
 
     def close(self) -> None:
         for capture in self._captures.values():
@@ -67,6 +75,7 @@ class BilateralLiveRepairService(
         except BilateralLiveRepairError:
             if capture._closed:
                 self._scrub_capture(capture)
+                self._captures.pop(capture_id, None)
             raise
 
     def finalize_capture(self, capture_id: str, contract: Mapping[str, Any]) -> dict[str, Any]:
@@ -76,6 +85,7 @@ class BilateralLiveRepairService(
         finally:
             if capture._closed:
                 self._scrub_capture(capture)
+                self._captures.pop(capture_id, None)
 
     @staticmethod
     def _validate_packet(packet: IncidentReplayPacket) -> IncidentReplayPacket:
@@ -124,6 +134,11 @@ class BilateralLiveRepairService(
             if allow_reduced_fixture:
                 return
             raise BilateralLiveRepairError("runtime proof omitted the canonical V2 version and identity packet")
+        if (
+            proof.get("version") != RUNTIME_PROOF_VERSION
+            or proof.get("profile_version") != RUNTIME_PROFILE_VERSION
+        ):
+            raise BilateralLiveRepairError("runtime proof version or profile version is not canonical")
 
         contract = proof.get("intent_contract")
         verifier = proof.get("independent_verifier")
@@ -155,6 +170,44 @@ class BilateralLiveRepairService(
             raise BilateralLiveRepairError("runtime proof removed mandatory human review")
         if any(proof.get(name) is not False for name in _RUNTIME_FALSE_AUTHORITIES):
             raise BilateralLiveRepairError("runtime proof grants forbidden authority")
+
+        bindings = proof.get("requirement_bindings")
+        groups = (
+            "positive_assertions",
+            "negative_assertions",
+            "preservation_assertions",
+            "fault_injections",
+        )
+        if not isinstance(bindings, Mapping) or set(bindings) != set(groups):
+            raise BilateralLiveRepairError("runtime proof omitted canonical requirement bindings")
+
+        def _bound(group: str) -> set[str]:
+            rows = bindings.get(group)
+            if not isinstance(rows, list) or not rows:
+                raise BilateralLiveRepairError(f"runtime proof {group} bindings are invalid")
+            values: set[str] = set()
+            for row in rows:
+                if not isinstance(row, Mapping):
+                    raise BilateralLiveRepairError(f"runtime proof {group} bindings are invalid")
+                value = row.get("requirement_digest")
+                if not isinstance(value, str) or not value:
+                    raise BilateralLiveRepairError(f"runtime proof {group} bindings are invalid")
+                values.add(value)
+            return values
+
+        expected_positive = {_runtime_binding_digest(item) for item in packet.expected_positive}
+        expected_negative = {_runtime_binding_digest(item) for item in packet.expected_negative}
+        expected_preservation = {_runtime_binding_digest(item) for item in packet.preservation_claims}
+        confirmed_positive = set(proof.get("confirmed_positive_requirement_digests") or ())
+        confirmed_negative = set(proof.get("confirmed_negative_requirement_digests") or ())
+        if (
+            confirmed_positive != expected_positive
+            or confirmed_negative != expected_negative | expected_preservation
+            or _bound("positive_assertions") != expected_positive
+            or _bound("preservation_assertions") != expected_preservation
+            or _bound("negative_assertions") | _bound("fault_injections") != expected_negative
+        ):
+            raise BilateralLiveRepairError("runtime proof requirements differ from the captured obligations")
 
     def execute_replay(
         self,
@@ -194,6 +247,10 @@ class BilateralLiveRepairService(
             "runtime_proof_digest": proof_digest,
             "authority": {**_FALSE_AUTHORITY, "human_review_required": True},
         }
+        archive_result = {
+            key: value for key, value in result.items() if key != "runtime_proof"
+        }
+        archive_result["runtime_proof_json"] = canonical_bytes(proof).decode("ascii")
         archive = self.attempt_archive.record(
             arena_id="construction",
             route="bilateral-live-repair/runtime-replay",
@@ -203,7 +260,7 @@ class BilateralLiveRepairService(
                 "packet_digest": packet.packet_digest,
                 "runtime_profile_digest": packet.identity.runtime_profile_digest,
             },
-            result=result,
+            result=archive_result,
             workflow_state={
                 "workflow_id": packet.packet_id,
                 "current_phase": "B12_RUNTIME_REPLAY",

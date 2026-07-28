@@ -11,6 +11,7 @@ from typing import Any
 from aura_bilateral_live_repair_foundry_contracts import (
     INCIDENT_VERSION,
     MAX_EVENTS,
+    MAX_ARCHIVED_PACKET_BYTES,
     MAX_RETENTION_SECONDS,
     _FALSE_AUTHORITY,
     BilateralIdentity,
@@ -21,6 +22,7 @@ from aura_bilateral_live_repair_foundry_contracts import (
     _required_text,
     _timestamp,
     canonical_sanitize,
+    canonical_bytes,
     digest,
 )
 
@@ -62,6 +64,7 @@ class BoundedIncidentCapture:
         if time.time() - self.started_at > self.retention_seconds:
             self._closed = True
             self._events.clear()
+            self._marker_event = None
             raise BilateralLiveRepairError("capture retention window expired and dissolved")
 
     def observe(
@@ -99,7 +102,7 @@ class BoundedIncidentCapture:
         marker_text = _required_text(marker, "marker", limit=4096)
         event = self.observe(
             "INCIDENT_MARKER",
-            {"marker": marker_text, **dict(payload or {})},
+            {**dict(payload or {}), "marker": marker_text},
             observed_at=observed_at,
         )
         # The canonical marker is retained separately from the rolling deque so
@@ -123,10 +126,21 @@ class BoundedIncidentCapture:
         if current_identity is not None:
             self.identity.assert_current(current_identity)
 
-        positive = tuple(dict.fromkeys(_required_text(item, "positive requirement", limit=4096) for item in expected_positive))
-        negative = tuple(dict.fromkeys(_required_text(item, "negative requirement", limit=4096) for item in expected_negative))
-        preservation = tuple(dict.fromkeys(_required_text(item, "preservation claim", limit=4096) for item in preservation_claims))
-        assets = tuple(dict.fromkeys(_required_text(item, "required asset", limit=2048) for item in required_assets))
+        obligation_redactions: set[str] = set()
+
+        def _obligations(values: Iterable[str], name: str, limit: int) -> tuple[str, ...]:
+            normalized: set[str] = set()
+            for raw in values:
+                text = _required_text(raw, name, limit=limit)
+                clean, redactions = canonical_sanitize(text)
+                normalized.add(_required_text(clean, name, limit=limit))
+                obligation_redactions.update(redactions)
+            return tuple(sorted(normalized))
+
+        positive = _obligations(expected_positive, "positive requirement", 4096)
+        negative = _obligations(expected_negative, "negative requirement", 4096)
+        preservation = _obligations(preservation_claims, "preservation claim", 4096)
+        assets = _obligations(required_assets, "required asset", 2048)
         if not positive or not negative or not preservation:
             raise ValueError("positive, negative, and preservation obligations are required")
 
@@ -148,7 +162,7 @@ class BoundedIncidentCapture:
                     redaction
                     for event in (self._marker_event, *retained)
                     for redaction in event.redactions
-                }
+                } | obligation_redactions
             ),
             "raw_secret_retained": False,
             "unrestricted_recording": False,
@@ -197,6 +211,8 @@ class BoundedIncidentCapture:
             dissolution_receipt=dissolution,
             authority={**_FALSE_AUTHORITY, "human_review_required": True},
         )
+        if len(canonical_bytes(packet.to_dict())) > MAX_ARCHIVED_PACKET_BYTES:
+            raise BilateralLiveRepairError("incident replay packet exceeds the durable archive byte ceiling")
         self._closed = True
         self._events.clear()
         return packet

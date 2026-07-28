@@ -242,19 +242,21 @@ jobs:
           import json
           from pathlib import Path
           receipt = json.loads(Path("review-learning-harness-receipt.json").read_text())
-          assert receipt["status"] == "PASS"
-          assert receipt["crucible"]["failed"] == 0
-          assert receipt["harnesses"]["connectome_available"] is True
-          assert receipt["harnesses"]["emergent_properties_available"] is True
-          assert receipt["harnesses"]["surgeon_control_prepared"] is True
-          assert receipt["harnesses"]["coding_waboose_available"] is True
-          assert receipt["authority"]["production_mutation"] is False
-          assert receipt["authority"]["automatic_fix"] is False
-          assert receipt["authority"]["automatic_commit"] is False
-          assert receipt["authority"]["automatic_push"] is False
-          assert receipt["authority"]["automatic_pull_request"] is False
-          assert receipt["authority"]["automatic_merge"] is False
-          assert receipt["authority"]["human_review_required"] is True
+          assert receipt["status"] == "PASSED"
+          assert receipt["crucible"]["failed_count"] == 0
+          assert receipt["checks"]["atomic_inventory_returned"] is True
+          assert receipt["checks"]["emergent_evidence_invoked"] is True
+          assert receipt["checks"]["surgeon_control_is_proposal_only"] is True
+          assert receipt["checks"]["waboose_prepare_ok"] is True
+          assert receipt["checks"]["waboose_scan_ok"] is True
+          assert receipt["checks"]["waboose_finalize_ok"] is True
+          assert receipt["production_mutation"] is False
+          assert receipt["automatic_fix"] is False
+          assert receipt["automatic_commit"] is False
+          assert receipt["automatic_push"] is False
+          assert receipt["automatic_pull_request"] is False
+          assert receipt["automatic_merge"] is False
+          assert receipt["human_review_required"] is True
           PY
 
       - name: Upload exact-head harness receipt

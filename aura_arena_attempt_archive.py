@@ -24,7 +24,7 @@ ATTEMPT_ARCHIVE_VERSION = "AURA_ARENA_ATTEMPT_ARCHIVE_V1"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 _SCHEMA_VERSION = 1
-_MAX_STRING = 750_000
+_MAX_STRING = 16 * 1024 * 1024
 _MAX_COPY_TEXT = 1_800_000
 
 _SCHEMA = """
@@ -363,6 +363,7 @@ class ArenaAttemptArchive:
         *,
         arena_id: str = "",
         workflow_id: str = "",
+        route: str = "",
         failures_only: bool = False,
         limit: int = 50,
     ) -> list[dict[str, Any]]:
@@ -374,6 +375,9 @@ class ArenaAttemptArchive:
         if workflow_id:
             clauses.append("workflow_id=?")
             params.append(str(workflow_id))
+        if route:
+            clauses.append("route=?")
+            params.append(str(route))
         if failures_only:
             clauses.append("ok=0")
         where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
