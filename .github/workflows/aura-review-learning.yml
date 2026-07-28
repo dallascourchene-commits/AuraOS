@@ -125,25 +125,67 @@ jobs:
           tests/test_aura_review_learning_mcp_codex.py
 
       - name: Validate Draft 2020-12 schema and canonical lesson registry
+        id: validate_registry
+        continue-on-error: true
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           from jsonschema import Draft202012Validator
           from aura_coding_waboose_review_lessons import load_review_lesson_registry
+          from aura_review_lessons_contracts import _digest
 
           schema = json.loads(Path("schemas/aura_review_lesson.schema.json").read_text(encoding="utf-8"))
           payload = json.loads(Path(".aura/review_lessons/pr164_spatial_review_lessons.json").read_text(encoding="utf-8"))
           Draft202012Validator.check_schema(schema)
           errors = sorted(Draft202012Validator(schema).iter_errors(payload), key=lambda item: list(item.absolute_path))
+          canonical = dict(payload)
+          canonical["lessons"] = sorted((dict(item) for item in payload["lessons"]), key=lambda item: str(item["lesson_id"]))
+          canonical["scenarios"] = sorted((dict(item) for item in payload["scenarios"]), key=lambda item: str(item["scenario_id"]))
+          supplied_digest = canonical.pop("registry_digest", "")
+          expected_digest = _digest(canonical, size=20)
+          diagnostic = {
+              "version": "AURA_REVIEW_REGISTRY_VALIDATION_DIAGNOSTIC_V1",
+              "repository_head": "${{ env.AURA_REVIEW_HEAD_SHA }}",
+              "python_version": "${{ matrix.python-version }}",
+              "schema_error_count": len(errors),
+              "first_schema_error_path": (
+                  "/".join(str(item) for item in errors[0].absolute_path) if errors else ""
+              ),
+              "first_schema_error": errors[0].message if errors else "",
+              "supplied_registry_digest": supplied_digest,
+              "expected_registry_digest": expected_digest,
+              "digest_matches": supplied_digest == expected_digest,
+          }
+          Path("review-registry-validation-diagnostic.json").write_text(
+              json.dumps(diagnostic, sort_keys=True, indent=2) + "\n",
+              encoding="utf-8",
+          )
           if errors:
               first = errors[0]
               location = "/".join(str(item) for item in first.absolute_path) or "<root>"
               raise AssertionError(f"review lesson registry schema failure at {location}: {first.message}")
+          if supplied_digest != expected_digest:
+              raise AssertionError(
+                  f"review lesson registry digest mismatch: supplied={supplied_digest} expected={expected_digest}"
+              )
           registry = load_review_lesson_registry(".aura/review_lessons/pr164_spatial_review_lessons.json")
           assert len(registry.lessons) == 13
           assert len(registry.scenarios) == 13
           PY
+
+      - name: Upload registry validation diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-review-registry-validation-${{ matrix.python-version }}-${{ env.AURA_REVIEW_HEAD_SHA }}
+          path: review-registry-validation-diagnostic.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce registry validation
+        if: steps.validate_registry.outcome != 'success'
+        run: exit 1
 
       - name: Verify exact-head source integrity evidence
         run: |
