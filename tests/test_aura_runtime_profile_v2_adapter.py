@@ -24,6 +24,8 @@ from scripts.aura_architecture_harness import _runtime_profile_version
 from scripts.aura_runtime_profile_v2_adapter import (
     NO_POST_CONFIRMATION_REVISION,
     PROFILE_VERSION,
+    U7_INTENT_REVISION_OWNER,
+    U7_REPROOF_OWNER,
     BilateralRuntimeProfileError,
     _json_digest,
     _matches,
@@ -438,9 +440,8 @@ def _write_confirmation_packet(
         "observed_guardrail_violation_refs": [],
         "proposal_only": True,
         "current_reproof_required_before_learning": True,
-        "current_reproof_owner":
-            "aura_unified_memory_continuity_learning.compile_current_reproof",
-        "intent_revision_owner": "aura_intent_refinement.IntentRevisionDelta",
+        "current_reproof_owner": U7_REPROOF_OWNER,
+        "intent_revision_owner": U7_INTENT_REVISION_OWNER,
     }
     packet_authority = bilateral_compiler_capabilities()
     packet_authority.pop("version")

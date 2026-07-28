@@ -770,9 +770,11 @@ test("Construction renderer cleans a non-cooperative late initialization settlem
     /timed out after 10 ms/,
   );
   assert.equal(renderer.status().cleanup_pending, true);
+  await renderer.dispose();
+  assert.equal(renderer.status().state, RENDERER_STATES.DISPOSED);
   await new Promise((resolve) => setTimeout(resolve, 75));
   assert.equal(renderer.status().cleanup_pending, false);
-  assert.equal(renderer.status().state, RENDERER_STATES.LOST);
+  assert.equal(renderer.status().state, RENDERER_STATES.DISPOSED);
   assert.equal(latePresentation.state, RENDERER_STATES.DISPOSED);
   assert.equal(latePresentation.disposed, 2);
 });

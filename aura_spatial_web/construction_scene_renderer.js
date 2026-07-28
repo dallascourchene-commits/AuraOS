@@ -461,10 +461,11 @@ export class ConstructionSceneRenderer {
     this.lateInitializationCleanupPending = true;
     const settle = (failure, error) => {
       this.lateInitializationCleanupPending = false;
-      if (this.state === RENDERER_STATES.DISPOSED) return;
       if (error) this.cleanupFailure = error;
       else if (failure) this.cleanupFailure = failure;
-      this.state = RENDERER_STATES.LOST;
+      if (this.state !== RENDERER_STATES.DISPOSED) {
+        this.state = RENDERER_STATES.LOST;
+      }
     };
     void promise.then(
       () => this._disposeOwnedResources({ force: true }),
@@ -515,6 +516,7 @@ export class ConstructionSceneRenderer {
       }
       this._storeyBlueprint(receipt.selected_storey_frame_id);
       this.selectedStoreyFrameId = receipt.selected_storey_frame_id;
+      this._invalidateInspectorState();
     }
     if (receipt.selected_entity_id !== null) {
       this.focusEntity(receipt.selected_entity_id);
