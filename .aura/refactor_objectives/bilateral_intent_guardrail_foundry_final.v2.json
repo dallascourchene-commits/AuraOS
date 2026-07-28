@@ -10,9 +10,10 @@
     "intent_reconfirmation_required": false,
     "local_refinements": [
       "Reuse the exact canonical confirmation receipt reference even though it is a prefixed stable identifier rather than a bare hexadecimal digest.",
-      "Retain the incident marker separately from the rolling event deque.",
+      "Retain the incident marker separately from the rolling event deque while scrubbing it from active capture memory after finalization or expiry.",
       "Normalize sets by canonical serialized value before hashing.",
       "Persist full sanitized replay packets and all repair/preview evidence through ArenaAttemptArchive.",
+      "Require Runtime Profile V2 output to match the incident intent, confirmation, semantic ledger, guardrails, revision status, repository head, source tree, profile, and independent verifier before archival.",
       "Expose U7 only through in-process canonical Bridge delegation, never as body-supplied authority."
     ]
   },
@@ -31,6 +32,7 @@
     ],
     "allowed_test_paths": [
       "tests/test_aura_bilateral_live_repair_foundry.py",
+      "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_showcase_live_repair_server.py"
     ],
     "allowed_documentation_paths": [
@@ -53,7 +55,8 @@
   "requirements": [
     "Implement explicit bounded privacy-safe incident capture and deterministic replay identity.",
     "Persist full replay, runtime, attempt, and preview evidence through the canonical Attempt Archive.",
-    "Delegate exact reproduction and proof to Runtime Profile V2.",
+    "Scrub rolling events and the separately retained incident marker from active capture memory after finalization, expiry, or service closure.",
+    "Delegate exact reproduction and proof to Runtime Profile V2 and reject any returned proof whose canonical identities differ from the incident packet.",
     "Require positive, negative, preservation, fault, adjacent-regression, clean-repository, and independent-verifier proof before readiness.",
     "Prevent repeated failed hypotheses across process restarts and enforce a bounded attempt budget.",
     "Route local defects to Surgeon and structural defects to Council V3.",
@@ -64,7 +67,8 @@
   "prohibitions": [
     "Do not create a second intent, policy, truth, persistence, runtime, verifier, Crucible, current-reproof, Construction, rollback-authority, or learning plane.",
     "Do not record outside an explicit bounded capture session.",
-    "Do not retain raw secrets or hidden reasoning.",
+    "Do not retain raw secrets, hidden reasoning, expired rolling events, or an expired/finalized marker in active capture memory.",
+    "Do not archive a Runtime V2 proof under an incident packet with mismatched intent, confirmation, guardrail, revision, source, profile, or verifier identity.",
     "Do not retry a failed hypothesis without new evidence.",
     "Do not claim success while any confirmed negative or preservation obligation fails.",
     "Do not preview or roll back through a production environment.",
@@ -76,8 +80,8 @@
   "verification": [
     "Python compilation",
     "fatal Ruff classes E9 F63 F7 F82 in repository CI",
-    "focused B11-B15 pytest suite",
-    "JavaScript syntax check",
+    "focused B11-B15 pytest suite including capture-memory dissolution and exact Runtime V2 identity mismatch cases",
+    "JavaScript syntax check and bounded browser expiration timer",
     "retained bilateral/runtime/U7 regressions",
     "Showcase composition and browser/runtime checks",
     "Coding Waboose scoped review",
