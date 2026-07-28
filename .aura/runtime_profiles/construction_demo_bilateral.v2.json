@@ -1,0 +1,309 @@
+{
+  "allowed_paths": [
+    ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr4.v1.json",
+    ".aura/runtime_profiles/construction_demo.v1.json",
+    ".aura/runtime_profiles/construction_demo_bilateral.v2.json",
+    ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr4.v1.json",
+    "aura_spatial_web/construction_demo_app.js",
+    "aura_spatial_web/construction_mesh_pass.js",
+    "aura_spatial_web/construction_overlay_pass.js",
+    "aura_spatial_web/construction_scene_renderer.js",
+    "aura_spatial_web/gaussian_renderer.js",
+    "aura_spatial_web/renderer_adapter.js",
+    "aura_spatial_web/webgl2_gaussian_pass.js",
+    "aura_spatial_web/webgl2_renderer.js",
+    "scripts/aura_architecture_harness.py",
+    "scripts/aura_runtime_profile_v2_adapter.py",
+    "scripts/aura_runtime_refactor_harness.py",
+    "tests/js/spatial-construction-demo.test.mjs",
+    "tests/js/spatial-construction-review-regressions.test.mjs",
+    "tests/js/spatial-gaussian-covariance.test.mjs",
+    "tests/runtime/construction_demo_browser_probe.cjs"
+  ],
+  "axiom_bindings": [
+    "observe_runtime_before_mutation",
+    "preserve_source_truth_separate_from_presentation_truth",
+    "bind_every_conclusion_to_exact_bilateral_and_repository_identity",
+    "prove_positive_negative_preservation_and_fault_obligations_independently",
+    "dissolve_all_runtime_resources_after_proof",
+    "keep_patch_commit_merge_production_and_learning_authority_outside_the_harness"
+  ],
+  "base_profile": ".aura/runtime_profiles/construction_demo.v1.json",
+  "fault_injections": [
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "hidden-pick-rejected",
+      "json_path": "bilateral.hiddenStoreyPickRejected",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "hidden-focus-rejected",
+      "json_path": "bilateral.hiddenStoreyFocusRejected",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "missing-blueprint-explicit",
+      "json_path": "bilateral.missingBlueprintExplicit",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "invalid-digest-explicit",
+      "json_path": "bilateral.invalidDigestExplicit",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "preinit-switch-rejected",
+      "json_path": "bilateral.preInitializationSwitchRejected",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "delayed-asset-bounded",
+      "json_path": "bilateral.delayedAssetBounded",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "cancellation-explicit",
+      "json_path": "bilateral.cancellationExplicit",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "cancellation-cleanup-terminal",
+      "json_path": "bilateral.cancellationCleanupTerminal",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "device-loss-terminal",
+      "json_path": "bilateral.deviceLossTerminal",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "device-loss-cleanup-terminal",
+      "json_path": "bilateral.deviceLossCleanupTerminal",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "dissolve-terminal",
+      "json_path": "bilateral.dissolveTerminal",
+      "operator": "truthy"
+    }
+  ],
+  "guardrail_ids": [
+    "construction_no_authority_inference",
+    "construction_no_hidden_storey_pick",
+    "construction_no_silent_asset_substitution",
+    "construction_source_geometry_immutable",
+    "runtime_exact_identity_required",
+    "runtime_external_evidence_only",
+    "runtime_human_review_required",
+    "runtime_no_self_authorization"
+  ],
+  "independent_verifier": {
+    "source_path": "tests/runtime/construction_demo_browser_probe.cjs",
+    "source_sha256": "6b6f69045e0b46db88aac37e3f7a9dd75409cb4c5df892d1e90d8e53da830401",
+    "verifier_id": "construction-bilateral-browser-verifier"
+  },
+  "intent_contract": {
+    "allowed_path_set_digest": "8955102abd081153d98021ff48ea5dd3d8cd6e5455aa1a5d3e3670220e7be6c5",
+    "confirmation_digest": "608b429e98c368ebd6a731203e25dc4d7bdcc99a83957e6120c5e5f510ffb6db",
+    "expected_repository_head": "CURRENT_HEAD",
+    "expected_source_tree": "CURRENT_TREE",
+    "guardrail_set_digest": "c6102af3f2bac8977a531bba2b54ca3e4675630b8c503e3f072e67c724e3eb82",
+    "intent_digest": "e9571aec75a743a5c894206aedccaf80f2563e468a7bc07276f5564237242f94",
+    "intent_revision_id": "pr4-b10-revision-1",
+    "semantic_ledger_digest": "95fa87ac2a49312ec1989ec1720e5c2417cb12aa9f869aafa4989e368e40bd7f"
+  },
+  "negative_assertions": [
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "no-production-mutation",
+      "json_path": "productionMutation",
+      "operator": "falsy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "no-automatic-merge",
+      "json_path": "automaticMerge",
+      "operator": "falsy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "no-physical-work-authority",
+      "json_path": "physicalWorkAuthorized",
+      "operator": "falsy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "no-professional-authority",
+      "json_path": "professionalAuthority",
+      "operator": "falsy"
+    }
+  ],
+  "objective": "Run the canonical Construction browser profile and independently prove B10 bilateral storey, blueprint, annotation, selection, authority, fault, cleanup, and relaunch invariants.",
+  "positive_assertions": [
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "browser-proof-ok",
+      "json_path": "ok",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "bilateral-proof-ok",
+      "json_path": "bilateral.ok",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "selected-storey-stable",
+      "json_path": "bilateral.selectedStoreyStable",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "selected-issue-stable",
+      "json_path": "bilateral.selectedIssueStable",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "blueprint-stable",
+      "json_path": "bilateral.blueprintStable",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "annotation-set-stable",
+      "json_path": "bilateral.annotationSetStable",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "representation-sequence-stable",
+      "json_path": "bilateral.representationSequenceStable",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "show-all-retains-selection",
+      "json_path": "bilateral.showAllRetainedSelection",
+      "operator": "truthy"
+    }
+  ],
+  "preservation_assertions": [
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "inspector-state-preserved",
+      "json_path": "bilateral.inspectorStable",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "source-geometry-preserved",
+      "json_path": "bilateral.sourceGeometryUnchanged",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "runtime_harness_receipt.json",
+      "assertion_id": "repository-tree-preserved",
+      "json_path": "repository_unchanged",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "bounded-relaunch-succeeds",
+      "json_path": "bilateral.relaunchSucceeded",
+      "operator": "truthy"
+    }
+  ],
+  "profile_id": "construction-demo-bilateral",
+  "repair_policy": {
+    "automatic_commit": false,
+    "automatic_fix": false,
+    "automatic_merge": false,
+    "automatic_pull_request": false,
+    "automatic_push": false,
+    "human_review_required": true,
+    "learning_promotion": false,
+    "max_attempts": 1,
+    "physical_work_authority": false,
+    "production_mutation": false,
+    "professional_authority": false,
+    "retry_failed_assertions": false
+  },
+  "required_trace_artifacts": [
+    "browser-evidence.json",
+    "runtime_harness_receipt.json",
+    "server-termination.receipt.json"
+  ],
+  "runtime_candidate_id": "construction-demo-b10-candidate",
+  "scenarios": [
+    {
+      "description": "Selected storey, issue, blueprint, annotations, and inspector identity survive repeated Mesh, Splats, Hybrid, isolate, show-all, dissolve, and relaunch transitions.",
+      "required_assertion_ids": [
+        "browser-proof-ok",
+        "bilateral-proof-ok",
+        "selected-storey-stable",
+        "selected-issue-stable",
+        "blueprint-stable",
+        "annotation-set-stable",
+        "representation-sequence-stable",
+        "show-all-retains-selection",
+        "inspector-state-preserved",
+        "source-geometry-preserved",
+        "bounded-relaunch-succeeds"
+      ],
+      "scenario_id": "construction-representation-continuity"
+    },
+    {
+      "description": "The runtime packet grants no production, merge, physical-work, or professional authority.",
+      "required_assertion_ids": [
+        "no-production-mutation",
+        "no-automatic-merge",
+        "no-physical-work-authority",
+        "no-professional-authority"
+      ],
+      "scenario_id": "construction-authority-denial"
+    },
+    {
+      "description": "Hidden storeys cannot be selected and missing or stale assets fail explicitly without unrelated substitution.",
+      "required_assertion_ids": [
+        "hidden-pick-rejected",
+        "hidden-focus-rejected",
+        "missing-blueprint-explicit",
+        "invalid-digest-explicit"
+      ],
+      "scenario_id": "construction-selection-and-asset-faults"
+    },
+    {
+      "description": "Initialization races, delayed loading, cancellation, device loss, cleanup, and dissolution remain bounded and visible.",
+      "required_assertion_ids": [
+        "preinit-switch-rejected",
+        "delayed-asset-bounded",
+        "cancellation-explicit",
+        "cancellation-cleanup-terminal",
+        "device-loss-terminal",
+        "device-loss-cleanup-terminal",
+        "dissolve-terminal"
+      ],
+      "scenario_id": "construction-runtime-lifecycle-faults"
+    },
+    {
+      "description": "The canonical V1 Runtime Harness proves the repository stayed unchanged throughout browser execution.",
+      "required_assertion_ids": [
+        "repository-tree-preserved"
+      ],
+      "scenario_id": "construction-source-tree-preservation"
+    }
+  ],
+  "version": "AURA_RUNTIME_PROFILE_V2"
+}
