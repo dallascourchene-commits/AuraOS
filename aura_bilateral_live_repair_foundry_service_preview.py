@@ -142,6 +142,9 @@ class _PreviewLearningProjectionMixin:
         if archive.get("ok") is not True:
             raise BilateralLiveRepairError("canonical Attempt Archive did not retain the preview/rollback receipt")
         self._previews[receipt.preview_id] = receipt
+        self._previews.move_to_end(receipt.preview_id)
+        while len(self._previews) > 32:
+            self._previews.popitem(last=False)
         if rollback_failure:
             raise BilateralLiveRepairError(rollback_failure)
         return receipt
@@ -248,6 +251,9 @@ class _PreviewLearningProjectionMixin:
                 if receipt.replay_packet_digest != packet.packet_digest:
                     raise BilateralLiveRepairError("archived preview belongs to another incident")
                 self._previews[receipt.preview_id] = receipt
+                self._previews.move_to_end(receipt.preview_id)
+                while len(self._previews) > 32:
+                    self._previews.popitem(last=False)
                 return receipt
         return None
 

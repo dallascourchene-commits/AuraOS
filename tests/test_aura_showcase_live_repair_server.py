@@ -16,8 +16,16 @@ def sha(value): return hashlib.sha256(value.encode()).hexdigest()
 def git_oid(value): return hashlib.sha256(value.encode()).hexdigest()[:40]
 def identity():
     return BilateralIdentity(
-        sha('intent'), 'intent-confirmation_'+sha('confirmation'), sha('ledger'), sha('guards'),
-        'revision-1', git_oid('head'), git_oid('tree'), sha('profile'), 'verifier', sha('verifier-source'),
+        intent_digest=sha('intent'),
+        confirmation_digest='intent-confirmation_'+sha('confirmation'),
+        semantic_ledger_digest=sha('ledger'),
+        guardrail_set_digest=sha('guards'),
+        intent_revision_id='revision-1',
+        repository_head=git_oid('head'),
+        source_tree_digest=git_oid('tree'),
+        runtime_profile_digest=sha('profile'),
+        verifier_id='verifier',
+        verifier_source_digest=sha('verifier-source'),
     )
 
 def decoded(response):

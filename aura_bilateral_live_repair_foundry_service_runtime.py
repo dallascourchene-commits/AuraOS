@@ -44,13 +44,9 @@ class _RuntimeRepairMixin:
         proof_ref = _digest_text(runtime_proof_ref, "runtime_proof_ref")
         runtime_proof = self._runtime_proof(packet, proof_ref)
         runtime_candidate_id = runtime_proof.get("runtime_candidate_id")
-        if (
-            runtime_candidate_id is not None
-            and (
-                not isinstance(runtime_candidate_id, str)
-                or _runtime_binding_digest(runtime_candidate_id) != candidate
-            )
-        ):
+        if runtime_candidate_id is None:
+            raise BilateralLiveRepairError("runtime proof is missing runtime_candidate_id")
+        if not isinstance(runtime_candidate_id, str) or _runtime_binding_digest(runtime_candidate_id) != candidate:
             raise BilateralLiveRepairError("repair candidate differs from the retained runtime proof")
         clean_hypothesis, _ = canonical_sanitize(hypothesis)
         hypothesis_digest = digest(clean_hypothesis)
@@ -192,8 +188,10 @@ class _RuntimeRepairMixin:
         for summary in self.attempt_archive.list(
             workflow_id=packet.packet_id,
             route="bilateral-live-repair/runtime-replay",
-            limit=MAX_ATTEMPTS + 16,
+            limit=0,
         ):
+            if summary.get("result", {}).get("runtime_proof_digest") != proof_ref:
+                continue
             artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
             result = dict((artifact or {}).get("result") or {})
             proof: Any = result.get("runtime_proof")
@@ -211,6 +209,9 @@ class _RuntimeRepairMixin:
             ):
                 normalized = dict(proof)
                 self._runtime_proofs[proof_ref] = (packet.packet_id, normalized)
+                self._runtime_proofs.move_to_end(proof_ref)
+                while len(self._runtime_proofs) > 32:
+                    self._runtime_proofs.popitem(last=False)
                 return normalized
         raise BilateralLiveRepairError("runtime proof reference was not retained by Runtime Profile V2 replay")
 

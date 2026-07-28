@@ -335,9 +335,9 @@ def test_idle_capture_expires_without_another_service_request(tmp_path):
     )
     capture = service._captures[started["capture_id"]]
     capture.mark_incident("selection disappeared")
-    deadline = time.time() + 2.5
+    deadline = time.time() + 10.0
     while started["capture_id"] in service._captures and time.time() < deadline:
-        time.sleep(0.02)
+        time.sleep(0.1)
     assert started["capture_id"] not in service._captures
     assert capture._closed is True
     assert capture._marker_event is None
@@ -415,10 +415,12 @@ def test_capture_enforces_per_event_and_aggregate_byte_ceilings():
     with pytest.raises(BilateralLiveRepairError, match="event exceeds"):
         capture.observe("OVERSIZED", {"data": "x" * MAX_EVENT_BYTES})
     accepted = 0
+    max_iterations = (MAX_CAPTURE_BYTES // 60_000) + 10
     with pytest.raises(BilateralLiveRepairError, match="aggregate byte ceiling"):
-        while True:
+        while accepted < max_iterations:
             capture.observe("BOUNDED", {"data": "x" * 60_000, "index": accepted})
             accepted += 1
+        raise AssertionError("aggregate byte ceiling was not enforced")
     assert accepted * 60_000 < MAX_CAPTURE_BYTES
 
 

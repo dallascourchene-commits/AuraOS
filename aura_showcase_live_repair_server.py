@@ -51,7 +51,6 @@ class LiveRepairShowcaseState(ShowcaseState):
         self._live_repair: BilateralLiveRepairService | None = None
         self.live_repair_attempts: dict[str, RepairCandidateResult] = {}
         self.live_repair_previews: dict[str, PreviewRollbackReceipt] = {}
-        self.live_repair_u7: dict[str, dict[str, Any]] = {}
 
     @property
     def live_repair(self) -> BilateralLiveRepairService:
@@ -143,12 +142,27 @@ def dispatch_live_repair_request(
                 return _json(200, state.live_repair.finalize_capture(capture_id, body))
 
         if method == "POST" and route == "/api/showcase/live-repair/replay/run":
+            venv_path = body.get("venv_path")
+            if venv_path is not None:
+                venv_str = str(venv_path)
+                if any(c in venv_str for c in ("\0", "\n", "\r", ";", "|", "&", "$", "`")):
+                    return _error("venv_path contains unsafe characters", 400)
+            profile_path = str(body.get("profile_path") or "")
+            output_dir = str(body.get("output_dir") or "")
+            allowed_repo_relative = {
+                "scripts/aura_runtime_profile_v2.json",
+                "scripts/runtime_profile_v2_output",
+            }
+            if profile_path and not any(profile_path.endswith(allowed) for allowed in allowed_repo_relative):
+                return _error("profile_path must be an approved repo-relative path", 400)
+            if output_dir and not any(output_dir.endswith(allowed) for allowed in allowed_repo_relative):
+                return _error("output_dir must be an approved repo-relative path", 400)
             result = state.live_repair.execute_replay(
                 packet_id=str(body.get("packet_id") or ""),
-                profile_path=str(body.get("profile_path") or ""),
+                profile_path=profile_path,
                 confirmation_packet=str(body.get("confirmation_packet") or ""),
-                output_dir=str(body.get("output_dir") or ""),
-                venv_path=body.get("venv_path"),
+                output_dir=output_dir,
+                venv_path=venv_path,
                 baseline_receipt=body.get("baseline_receipt"),
             )
             return _json(200 if result.get("ok") else 409, result)
@@ -205,7 +219,6 @@ def dispatch_live_repair_request(
                 if preview_id
                 else state.live_repair.latest_preview(str(body.get("packet_id") or ""))
             )
-            u7_ref = str(body.get("u7_ref") or "")
             projection = state.live_repair.build_projection(
                 packet_id=str(body.get("packet_id") or ""),
                 intent=body.get("intent") if isinstance(body.get("intent"), Mapping) else {},
@@ -213,7 +226,7 @@ def dispatch_live_repair_request(
                 code_targets=[item for item in body.get("code_targets") or [] if isinstance(item, Mapping)],
                 attempts=attempts,
                 preview=preview,
-                u7_result=state.live_repair_u7.get(u7_ref),
+                u7_result=None,
                 source_drilldown=[item for item in body.get("source_drilldown") or [] if isinstance(item, Mapping)],
                 receipt_drilldown=[item for item in body.get("receipt_drilldown") or [] if isinstance(item, Mapping)],
                 current_identity=identity,

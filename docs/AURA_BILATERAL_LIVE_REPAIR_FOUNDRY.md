@@ -175,6 +175,7 @@ python -m py_compile \
 
 pytest -q \
   tests/test_aura_bilateral_live_repair_foundry.py \
+  tests/test_aura_bilateral_live_repair_foundry_hardening.py \
   tests/test_aura_showcase_live_repair_server.py
 
 node --check aura_showcase/live-repair-foundry.js

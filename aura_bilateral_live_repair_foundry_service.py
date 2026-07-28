@@ -68,11 +68,11 @@ class BilateralLiveRepairService(
                 raise
 
     def finalize_capture(self, capture_id: str, contract: Mapping[str, Any]) -> dict[str, Any]:
-        with self._capture_lock:
-            capture = self._capture(capture_id)
-            try:
-                return super().finalize_capture(capture_id, contract)
-            finally:
+        capture = self._capture(capture_id)
+        try:
+            return super().finalize_capture(capture_id, contract)
+        finally:
+            with self._capture_lock:
                 if capture._closed:
                     self._scrub_capture(capture)
                     self._captures.pop(capture_id, None)
@@ -306,6 +306,9 @@ class BilateralLiveRepairService(
         if archive.get("ok") is not True:
             raise BilateralLiveRepairError("canonical Attempt Archive did not retain the runtime replay")
         self._runtime_proofs[proof_digest] = (packet.packet_id, proof)
+        self._runtime_proofs.move_to_end(proof_digest)
+        while len(self._runtime_proofs) > 32:
+            self._runtime_proofs.popitem(last=False)
         return {**result, "runtime_proof_ref": proof_digest, "attempt_artifact": archive}
 
 

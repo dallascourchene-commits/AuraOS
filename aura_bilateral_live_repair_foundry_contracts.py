@@ -312,7 +312,10 @@ class IncidentReplayPacket:
         dissolution_raw = value.get("dissolution_receipt") or {}
         if not isinstance(dissolution_raw, Mapping):
             raise ValueError("dissolution receipt must be an object")
-        dissolution = CaptureDissolutionReceipt(**dict(dissolution_raw))
+        try:
+            dissolution = CaptureDissolutionReceipt(**dict(dissolution_raw))
+        except TypeError as exc:
+            raise ValueError(f"dissolution receipt construction failed: {exc}") from exc
         authority = dict(value.get("authority") or {})
         if any(authority.get(name) is not False for name in _FALSE_AUTHORITY):
             raise ValueError("incident replay packet grants forbidden authority")

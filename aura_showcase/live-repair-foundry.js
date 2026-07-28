@@ -188,7 +188,7 @@
       }
       node.replaceChildren(...children);
     };
-    set('foundry-projection-intent', projection.confirmed_intent?.positive || projection.confirmed_intent || []);
+    set('foundry-projection-intent', projection.expected_positive || projection.confirmed_intent?.positive || []);
     set('foundry-projection-negative', projection.negative_intent || []);
     set('foundry-projection-guardrails', projection.guardrails || []);
     set('foundry-projection-runtime', [

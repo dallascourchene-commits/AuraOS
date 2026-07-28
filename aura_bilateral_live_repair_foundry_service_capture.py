@@ -1,6 +1,7 @@
 """Capture, packet retention, and lifecycle mixin for B11-B15."""
 from __future__ import annotations
 
+from collections import OrderedDict
 from collections.abc import Callable, Mapping
 from dataclasses import asdict
 import json
@@ -53,10 +54,10 @@ class _CapturePersistenceMixin:
         self._capture_lock = threading.RLock()
         self._capture_timers: dict[str, threading.Timer] = {}
         self._captures: dict[str, BoundedIncidentCapture] = {}
-        self._packets: dict[str, IncidentReplayPacket] = {}
+        self._packets: OrderedDict[str, IncidentReplayPacket] = OrderedDict()
         self._pending_packet_archives: dict[str, tuple[IncidentReplayPacket, dict[str, str]]] = {}
-        self._runtime_proofs: dict[str, tuple[str, dict[str, Any]]] = {}
-        self._previews: dict[str, PreviewRollbackReceipt] = {}
+        self._runtime_proofs: OrderedDict[str, tuple[str, dict[str, Any]]] = OrderedDict()
+        self._previews: OrderedDict[str, PreviewRollbackReceipt] = OrderedDict()
 
     def close(self) -> None:
         with self._capture_lock:
@@ -163,15 +164,15 @@ class _CapturePersistenceMixin:
             timer = self._capture_timers.pop(capture.capture_id, None)
             if timer is not None:
                 timer.cancel()
-        self._packets[packet.packet_id] = packet
-        archive_contract = {
-            "arena_id": str(contract.get("arena_id") or "construction"),
-            "objective": str(
-                contract.get("objective")
-                or "Compile an exact field incident replay"
-            ),
-        }
-        self._pending_packet_archives[packet.packet_id] = (packet, archive_contract)
+            self._packets[packet.packet_id] = packet
+            archive_contract = {
+                "arena_id": str(contract.get("arena_id") or "construction"),
+                "objective": str(
+                    contract.get("objective")
+                    or "Compile an exact field incident replay"
+                ),
+            }
+            self._pending_packet_archives[packet.packet_id] = (packet, archive_contract)
         return self._archive_pending_packet(packet.packet_id)
 
     def retry_packet_archive(self, packet_id: str) -> dict[str, Any]:
@@ -181,7 +182,10 @@ class _CapturePersistenceMixin:
         return self._archive_pending_packet(resolved)
 
     def _archive_pending_packet(self, packet_id: str) -> dict[str, Any]:
-        packet, contract = self._pending_packet_archives[packet_id]
+        entry = self._pending_packet_archives.get(packet_id)
+        if entry is None:
+            raise BilateralLiveRepairError(f"pending packet archive not found: {packet_id}")
+        packet, contract = entry
         # The packet is already privacy-sanitized and digest-bound. Preserve its
         # exact canonical bytes as a string so Attempt Archive's key-based secret
         # scrubber does not rewrite safe boolean fields such as
@@ -279,6 +283,7 @@ class _CapturePersistenceMixin:
         resolved = _required_text(packet_id, "packet_id", limit=128)
         item = self._packets.get(resolved)
         if item is not None:
+            self._packets.move_to_end(resolved)
             return item
         for summary in self.attempt_archive.list(
             workflow_id=resolved,
@@ -304,6 +309,9 @@ class _CapturePersistenceMixin:
                 if item.packet_id != resolved:
                     raise BilateralLiveRepairError("archived incident packet identity differs from its workflow key")
                 self._packets[resolved] = item
+                self._packets.move_to_end(resolved)
+                while len(self._packets) > 32:
+                    self._packets.popitem(last=False)
                 return item
         raise BilateralLiveRepairError("incident replay packet was not retained by the canonical Attempt Archive")
 
