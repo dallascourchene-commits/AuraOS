@@ -71,9 +71,11 @@ class BilateralLiveRepairService(
 
     def finalize_capture(self, capture_id: str, contract: Mapping[str, Any]) -> dict[str, Any]:
         capture = self._capture(capture_id)
-        result = super().finalize_capture(capture_id, contract)
-        self._scrub_capture(capture)
-        return result
+        try:
+            return super().finalize_capture(capture_id, contract)
+        finally:
+            if capture._closed:
+                self._scrub_capture(capture)
 
     @staticmethod
     def _validate_packet(packet: IncidentReplayPacket) -> IncidentReplayPacket:
@@ -105,17 +107,23 @@ class BilateralLiveRepairService(
         return self._validate_packet(super()._packet(packet_id))
 
     @staticmethod
-    def _validate_runtime_proof(packet: IncidentReplayPacket, proof: Mapping[str, Any]) -> None:
+    def _validate_runtime_proof(
+        packet: IncidentReplayPacket,
+        proof: Mapping[str, Any],
+        *,
+        allow_reduced_fixture: bool = False,
+    ) -> None:
         if proof.get("profile_sha256") != packet.identity.runtime_profile_digest:
             raise BilateralLiveRepairError("runtime proof profile identity differs from the incident contract")
         if proof.get("repository_identity_unchanged") is not True:
             raise BilateralLiveRepairError("runtime replay changed repository identity")
 
-        # Injected unit-test runners operate outside a Git checkout and intentionally
-        # use a reduced fixture. Canonical repository execution must expose the full
-        # Runtime Profile V2 identity packet and cannot take this compatibility path.
+        # Focused unit-test runners use a reduced fixture outside a Git checkout.
+        # Canonical repository execution must expose the complete V2 identity packet.
         if not proof.get("version"):
-            return
+            if allow_reduced_fixture:
+                return
+            raise BilateralLiveRepairError("runtime proof omitted the canonical V2 version and identity packet")
 
         contract = proof.get("intent_contract")
         verifier = proof.get("independent_verifier")
@@ -171,7 +179,11 @@ class BilateralLiveRepairService(
                 baseline_receipt=baseline_receipt,
             )
         )
-        self._validate_runtime_proof(packet, proof)
+        self._validate_runtime_proof(
+            packet,
+            proof,
+            allow_reduced_fixture=not (self.repo_root / ".git").exists(),
+        )
         proof_digest = digest(proof)
         result = {
             "ok": proof.get("ok") is True,
