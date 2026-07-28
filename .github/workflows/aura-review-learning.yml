@@ -54,10 +54,10 @@ jobs:
           git remote add origin "https://github.com/${{ github.repository }}.git"
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin "$AURA_REVIEW_HEAD_SHA"
+            fetch --no-tags origin "$AURA_REVIEW_HEAD_SHA"
           git checkout --detach FETCH_HEAD
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin \
+            fetch --no-tags origin \
             "$AURA_REVIEW_BASE_REF:refs/remotes/origin/$AURA_REVIEW_BASE_REF"
           unset AUTH_HEADER
           test "$(git rev-parse HEAD)" = "$AURA_REVIEW_HEAD_SHA"
