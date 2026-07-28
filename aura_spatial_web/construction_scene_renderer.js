@@ -354,12 +354,13 @@ export class ConstructionSceneRenderer {
     this.hasMeshes = this.scene.assets.some((item) => item.asset_type === "MESH");
     this.hasSplats = this.scene.assets.some((item) => item.asset_type === "GAUSSIAN_SPLAT");
     if (this.hasSplats) {
-      const invalidManifest = this.scene.assets.some(
-        (asset) =>
-          asset.asset_type === "GAUSSIAN_SPLAT" &&
-          asset.metadata?.gaussian_sh_degree !== 0 &&
-          asset.metadata?.sh_degree !== 0,
-      );
+      const invalidManifest = this.scene.assets.some((asset) => {
+        if (asset.asset_type !== "GAUSSIAN_SPLAT") return false;
+        const g = asset.metadata?.gaussian_sh_degree;
+        const s = asset.metadata?.sh_degree;
+        // At least one alias must declare degree 0, and neither may declare a non-zero degree.
+        return (g !== 0 && s !== 0) || g > 0 || s > 0;
+      });
       const invalidPayload =
         Array.isArray(gaussianPayloads) && gaussianPayloads.some((payload) => payload?.sh_degree !== 0);
       if (invalidManifest || invalidPayload) {
@@ -458,21 +459,17 @@ export class ConstructionSceneRenderer {
 
   _trackLateInitialization(promise) {
     this.lateInitializationCleanupPending = true;
+    const settle = (failure, error) => {
+      this.lateInitializationCleanupPending = false;
+      if (this.state === RENDERER_STATES.DISPOSED) return;
+      if (error) this.cleanupFailure = error;
+      else if (failure) this.cleanupFailure = failure;
+      this.state = RENDERER_STATES.LOST;
+    };
     void promise.then(
       () => this._disposeOwnedResources({ force: true }),
       () => this._disposeOwnedResources({ force: true }),
-    ).then(
-      (failure) => {
-        this.lateInitializationCleanupPending = false;
-        if (failure) this.cleanupFailure = failure;
-        this.state = RENDERER_STATES.LOST;
-      },
-      (error) => {
-        this.lateInitializationCleanupPending = false;
-        this.cleanupFailure = error;
-        this.state = RENDERER_STATES.LOST;
-      },
-    );
+    ).then((failure) => settle(failure, null), (error) => settle(null, error));
   }
 
   continuityState() {
