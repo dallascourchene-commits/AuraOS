@@ -1,0 +1,87 @@
+{
+  "schema_version": "AURA_REFACTOR_OBJECTIVE_V1",
+  "objective_id": "bilateral_intent_guardrail_foundry_pr4",
+  "title": "Bilateral runtime profile and Construction vertical-slice proof",
+  "base_commit": "cac227beaca47ee5c57e1bba98b7642212cf00e3",
+  "plan_revision": {
+    "class": "B",
+    "human_approved": true,
+    "reason": "Current main contains established Spatial S5/S6, Construction projection, renderer, browser-probe, and lifecycle owners that must be reused by B9 and B10.",
+    "intent_reconfirmation_required": false
+  },
+  "scope": {
+    "allowed_source_paths": [
+      "scripts/aura_runtime_refactor_harness.py",
+      "scripts/aura_runtime_profile_v2_adapter.py",
+      ".aura/runtime_profiles/construction_demo_bilateral.v2.json",
+      "aura_spatial_web/construction_scene_renderer.js",
+      "aura_spatial_web/construction_demo_app.js",
+      "aura_spatial_web/construction_overlay_pass.js",
+      "aura_spatial_web/construction_mesh_pass.js"
+    ],
+    "allowed_test_paths": [
+      "tests/test_aura_runtime_refactor_harness.py",
+      "tests/test_aura_runtime_profile_v2_adapter.py",
+      "tests/js/spatial-construction-demo.test.mjs",
+      "tests/js/spatial-construction-review-regressions.test.mjs",
+      "tests/runtime/construction_demo_browser_probe.cjs",
+      "tests/runtime/construction_demo_bilateral_browser_probe.cjs"
+    ],
+    "allowed_governance_paths": [
+      ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr4.v1.json",
+      ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr4.v1.json"
+    ],
+    "generated_paths": [
+      ".aura/CODEMAP.json",
+      ".aura/CODEMAP.md",
+      "Aura_Memory/live_topology_ast.json",
+      "topology_map.json"
+    ]
+  },
+  "requirements": [
+    "Retain exact AURA_RUNTIME_PROFILE_V1 loading and execution semantics.",
+    "Add a bounded V2-compatible path that binds runtime evidence to exact intent, SemanticLedger, confirmation, guardrail, revision, repository-head, source-tree, allowed-path, candidate, profile, and independent-verifier identities.",
+    "Reject partial, malformed, contradictory, stale, or authority-escalating bilateral runtime input deterministically.",
+    "Compile positive, negative, preservation, fault, trace, cleanup, and residual-risk outcomes into an independently reviewable proof packet.",
+    "Keep the selected Construction storey, blueprint, annotations, selectable issue, and inspector state stable across Mesh, Splats, Hybrid, repeated switching, isolation, and show-all transitions.",
+    "Make missing assets, invalid digests, cancellation, delayed loading, context loss, and cleanup failures explicit and bounded.",
+    "Use only fictional deterministic Construction fixtures and preserve canonical Construction state and source geometry."
+  ],
+  "prohibitions": [
+    "Do not create a second runtime harness, renderer authority, Construction truth store, intent owner, verification plane, policy plane, persistence plane, or learning owner.",
+    "Do not infer completion, inspection, professional release, payment release, access control, engineering approval, safety approval, or physical-work authorization.",
+    "Do not mutate canonical Construction records or source geometry.",
+    "Do not make hidden storeys pickable or silently substitute an unrelated asset after a missing or invalid blueprint.",
+    "Do not suppress browser, asset, digest, renderer, cleanup, timeout, cancellation, or resource-lifecycle failures.",
+    "Do not write venvs, logs, traces, screenshots, candidates, or runtime receipts inside the source checkout.",
+    "Do not include B11 incident capture, B12 persistent repair Foundry, B13 canary promotion, B14 learning completion, B15 Spatial Foundry, deployment, production mutation, or automatic merge.",
+    "Do not trigger CodeRabbit, Codex, Greptile, Gitar, or any external reviewer without Dallas's explicit instruction."
+  ],
+  "verification": [
+    "Runtime V1 backward-compatibility tests",
+    "V2 bilateral profile contract and stale-identity tests",
+    "positive negative preservation and fault assertion tests",
+    "Python compilation and fatal Ruff classes E9 F63 F7 F82",
+    "Construction JavaScript renderer and browser regressions",
+    "real isolated loopback server and Chromium runtime proof",
+    "resource cleanup and source-tree cleanliness proof",
+    "retained PR1 through PR3 bilateral enforcement regressions",
+    "Waboose scoped review",
+    "generated navigation verification only after source and tests stabilize"
+  ],
+  "authority": {
+    "planning_proposes": true,
+    "runtime_evidence_proves": true,
+    "human_disposes": true,
+    "patch_authority": "exact_source_spans_and_hashes_only",
+    "vsa_patch_authority": false,
+    "production_mutation": false,
+    "professional_authority": false,
+    "physical_work_authority": false,
+    "automatic_commit": false,
+    "automatic_push": false,
+    "automatic_pull_request": false,
+    "automatic_merge": false,
+    "automatic_learning_promotion": false
+  }
+}
