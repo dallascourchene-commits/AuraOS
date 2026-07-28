@@ -1,0 +1,43 @@
+{
+  "version": "AURA_INTENT_REVISION_DELTA_V1",
+  "revision_id": "bilateral_intent_guardrail_foundry_final_revision_2",
+  "parent_confirmation_scope": "B11_B15_FINAL_PHASE",
+  "trigger_evidence": [
+    "Current B10 source exposes canonical Attempt Archive, Runtime Profile V2, Showcase, Crucible, and U7 owners.",
+    "Current B10 source does not expose a separate canonical production hot-swap or rollback authority owner.",
+    "PR #238 review identified incident-marker eviction and nondeterministic set serialization defects.",
+    "IntentConfirmationReceipt.confirmation_id is a prefixed canonical stable identifier rather than a bare hexadecimal digest."
+  ],
+  "base_repository_head": "f1b9d786c4ff30d1ff5b984f5859db80f33446cc",
+  "changed_assumptions": [
+    "Implement B13 as isolated evidence-only preview/rollback, not production hot swap.",
+    "Validate the canonical confirmation reference as an exact non-empty identifier.",
+    "Persist the full replay packet through ArenaAttemptArchive so repair can resume after process restart."
+  ],
+  "positive_requirements_added": [
+    "The explicit incident marker survives rolling event eviction.",
+    "Canonical serialization remains deterministic for nested sets and mappings.",
+    "Repair and preview state can be reconstructed from the canonical Attempt Archive."
+  ],
+  "negative_requirements_added": [
+    "Do not reject a valid prefixed canonical confirmation receipt merely because it is not bare hexadecimal.",
+    "Do not claim production hot-swap or rollback authority.",
+    "Do not expose request-body construction of canonical U7 Bridge/session authority."
+  ],
+  "scope_changed": false,
+  "authority_changed": false,
+  "prior_confirmation_staled": false,
+  "requires_human_reconfirmation": false,
+  "requires_council_replan": false,
+  "status": "HUMAN_APPROVED_IMPLEMENTATION_REFINEMENT",
+  "authority": {
+    "patch": false,
+    "commit": false,
+    "push": false,
+    "pull_request": false,
+    "merge": false,
+    "deployment": false,
+    "production_mutation": false,
+    "learning_promotion": false
+  }
+}
