@@ -279,9 +279,11 @@ class TestPresentationRenderer {
     this.plan = null;
     this.camera = { yaw: 0, pitch: 0, distance: 12, target: [0, 0, 0] };
     this.disposed = 0;
+    this.initialized = 0;
   }
 
   initialize(scene, plan) {
+    this.initialized += 1;
     this.scene = validateSceneProjection(scene);
     this.plan = validateRenderPlan(plan, this.scene);
     this.state = RENDERER_STATES.INITIALIZED;
@@ -510,18 +512,115 @@ test("Construction scene renderer composes hybrid controls and exact cleanup", a
   renderer.pan(1, 2, 3);
   assert.equal(renderer.pick(0, 0), "entity:work");
   renderer.focusEntity("entity:work");
+  assert.strictEqual(renderer.inspectorState(), renderer.inspectorState());
   const receipt = await renderer.present();
   assert.equal(receipt.representation_mode, "HYBRID");
   assert.equal(receipt.mesh_receipt.visible_mesh_count, 1);
   assert.equal(receipt.overlay_receipt.model.dependencies.length, 0);
   assert.equal(receipt.source_asset_coordinates_immutable, true);
   assert.equal(receipt.renderer_authority, false);
+  assert.equal(receipt.physical_work_authority, false);
+  assert.equal(receipt.professional_authority, false);
+  assert.equal(receipt.inspector_state.selected_entity.projection_only, true);
+  assert.equal(receipt.inspector_state.selected_entity.patch_authority, false);
+  assert.equal(receipt.inspector_state.blueprint.media_type, "image/svg+xml");
+  assert.equal(receipt.inspector_state.blueprint_resolution.status, "BOUND");
   const status = await renderer.dispose();
   assert.equal(status.state, "DISPOSED");
   assert.equal(meshDisposed, 1);
   assert.equal(gaussianDisposed, 1);
   assert.equal(overlayDisposed, 1);
   assert.equal(presentation.disposed, 1);
+});
+
+test("Construction renderer resolves only canonically bound blueprints and reports ambiguity", async () => {
+  const first = constructionFixture();
+  const canonicalPlan = first.scene.assets.find(
+    (asset) => asset.asset_type === "PLANE",
+  );
+  first.scene.assets.push({
+    ...canonicalPlan,
+    asset_id: "asset:unrelated-plan",
+  });
+  const firstPresentation = new TestPresentationRenderer();
+  const firstRenderer = new ConstructionSceneRenderer({
+    presentationRenderer: firstPresentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: firstPresentation,
+      drawGaussianPass: async () => () => {},
+      now: () => 0,
+    }),
+  });
+  await firstRenderer.initialize(first.scene, {
+    ...first.plan,
+    scene_asset_count: first.scene.assets.length,
+    scene_asset_bytes: first.scene.assets.reduce(
+      (total, asset) => total + asset.byte_length,
+      0,
+    ),
+  }, {
+    meshPayloads: [{
+      asset_id: "asset:mesh",
+      source_digest: "1".repeat(64),
+      decoded_byte_length: 256,
+      resource: { local: true },
+    }],
+    gaussianPayloads: [gaussianPayload()],
+  });
+  firstRenderer.isolateStorey("frame:storey");
+  assert.equal(
+    firstRenderer.inspectorState().blueprint.asset_id,
+    canonicalPlan.asset_id,
+  );
+  await firstRenderer.dispose();
+
+  const second = constructionFixture();
+  const secondPlan = second.scene.assets.find(
+    (asset) => asset.asset_type === "PLANE",
+  );
+  const ambiguousPlan = {
+    ...secondPlan,
+    asset_id: "asset:ambiguous-plan",
+  };
+  second.scene.assets.push(ambiguousPlan);
+  second.scene.entities.find(
+    (entity) => entity.entity_type === "ASSET_INSTANCE",
+  ).asset_ids.push(ambiguousPlan.asset_id);
+  const secondPresentation = new TestPresentationRenderer();
+  const secondRenderer = new ConstructionSceneRenderer({
+    presentationRenderer: secondPresentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: secondPresentation,
+      drawGaussianPass: async () => () => {},
+      now: () => 0,
+    }),
+  });
+  await assert.rejects(
+    secondRenderer.initialize(second.scene, {
+      ...second.plan,
+      scene_asset_count: second.scene.assets.length,
+      scene_asset_bytes: second.scene.assets.reduce(
+        (total, asset) => total + asset.byte_length,
+        0,
+      ),
+    }, {
+      meshPayloads: [{
+        asset_id: "asset:mesh",
+        source_digest: "1".repeat(64),
+        decoded_byte_length: 256,
+        resource: { local: true },
+      }],
+      gaussianPayloads: [gaussianPayload()],
+    }),
+    /status AMBIGUOUS, found 2/,
+  );
+  assert.equal(secondRenderer.status().state, RENDERER_STATES.LOST);
+  assert.equal(secondPresentation.initialized, 0);
+  await secondRenderer.dispose();
 });
 
 test("Construction renderer cancellation and device loss fail closed", async () => {
@@ -552,8 +651,14 @@ test("Construction renderer cancellation and device loss fail closed", async () 
   const controller = new AbortController();
   controller.abort();
   await assert.rejects(renderer.present({ signal: controller.signal }), /cancelled/);
-  const status = await renderer.markDeviceLost();
+  const contextLossTarget = new EventTarget();
+  renderer.bindContextLoss(contextLossTarget);
+  const contextLossEvent = new Event("webglcontextlost", { cancelable: true });
+  contextLossTarget.dispatchEvent(contextLossEvent);
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  const status = renderer.status();
   assert.equal(status.state, "LOST");
+  assert.equal(contextLossEvent.defaultPrevented, true);
   assert.equal(status.renderer_authority, false);
   assert.equal(presentation.disposed, 1);
   await renderer.dispose();
@@ -593,6 +698,182 @@ test("Construction renderer Gaussian initialization failure disposes shared pres
   assert.equal(renderer.status().state, "LOST");
   await renderer.dispose();
   assert.equal(sharedPresentation.disposed, 1);
+});
+
+test("Construction renderer bounds a stalled initialization and releases owners", async () => {
+  const { scene, plan } = constructionFixture();
+  const stalledPresentation = new TestPresentationRenderer();
+  stalledPresentation.initialize = (_scene, _plan, { signal } = {}) =>
+    new Promise((_, reject) => {
+      signal?.addEventListener(
+        "abort",
+        () => reject(new Error("stalled presentation initialization cancelled")),
+        { once: true },
+      );
+    });
+  const renderer = new ConstructionSceneRenderer({
+    presentationRenderer: stalledPresentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: stalledPresentation,
+      drawGaussianPass: async () => () => {},
+      now: () => 0,
+    }),
+    initializationTimeoutMs: 10,
+  });
+  await assert.rejects(
+    renderer.initialize(scene, plan, {
+      meshPayloads: [{
+        asset_id: "asset:mesh",
+        source_digest: "1".repeat(64),
+        decoded_byte_length: 256,
+        resource: { local: true },
+      }],
+      gaussianPayloads: [gaussianPayload()],
+    }),
+    /timed out after 10 ms/,
+  );
+  assert.equal(renderer.status().state, RENDERER_STATES.LOST);
+  assert.equal(stalledPresentation.disposed, 1);
+});
+
+test("Construction renderer cleans a non-cooperative late initialization settlement", async () => {
+  const { scene, plan } = constructionFixture();
+  const latePresentation = new TestPresentationRenderer();
+  latePresentation.initialize = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1_050));
+    latePresentation.initialized += 1;
+    latePresentation.state = RENDERER_STATES.INITIALIZED;
+  };
+  const renderer = new ConstructionSceneRenderer({
+    presentationRenderer: latePresentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: latePresentation,
+      drawGaussianPass: async () => () => {},
+      now: () => 0,
+    }),
+    initializationTimeoutMs: 10,
+  });
+  await assert.rejects(
+    renderer.initialize(scene, plan, {
+      meshPayloads: [{
+        asset_id: "asset:mesh",
+        source_digest: "1".repeat(64),
+        decoded_byte_length: 256,
+        resource: { local: true },
+      }],
+      gaussianPayloads: [gaussianPayload()],
+    }),
+    /timed out after 10 ms/,
+  );
+  assert.equal(renderer.status().cleanup_pending, true);
+  await renderer.dispose();
+  assert.equal(renderer.status().state, RENDERER_STATES.DISPOSED);
+  await new Promise((resolve) => setTimeout(resolve, 75));
+  assert.equal(renderer.status().cleanup_pending, false);
+  assert.equal(renderer.status().state, RENDERER_STATES.DISPOSED);
+  assert.equal(latePresentation.state, RENDERER_STATES.DISPOSED);
+  assert.equal(latePresentation.disposed, 2);
+});
+
+test("Construction renderer serializes initialization failure and external cleanup", async () => {
+  const { scene, plan } = constructionFixture();
+  const presentation = new TestPresentationRenderer();
+  presentation.initialize = (_scene, _plan, { signal } = {}) =>
+    new Promise((_, reject) => {
+      signal?.addEventListener("abort", () => reject(new Error("cancelled")), { once: true });
+    });
+  const renderer = new ConstructionSceneRenderer({
+    presentationRenderer: presentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: presentation,
+      drawGaussianPass: async () => () => {},
+      now: () => 0,
+    }),
+  });
+  const initialization = renderer.initialize(scene, plan, {
+    meshPayloads: [{
+      asset_id: "asset:mesh",
+      source_digest: "1".repeat(64),
+      decoded_byte_length: 256,
+      resource: { local: true },
+    }],
+    gaussianPayloads: [gaussianPayload()],
+  });
+  const loss = renderer.markDeviceLost();
+  const disposal = renderer.dispose();
+  await assert.rejects(initialization, /cancelled/);
+  await Promise.all([loss, disposal]);
+  assert.equal(presentation.disposed, 1);
+});
+
+test("Construction renderer accepts either canonical degree-zero metadata alias", async () => {
+  const { scene, plan } = constructionFixture();
+  const splat = scene.assets.find((asset) => asset.asset_type === "GAUSSIAN_SPLAT");
+  delete splat.metadata.gaussian_sh_degree;
+  const presentation = new TestPresentationRenderer();
+  const renderer = new ConstructionSceneRenderer({
+    presentationRenderer: presentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: presentation,
+      drawGaussianPass: async () => () => {},
+      now: () => 0,
+    }),
+  });
+  await renderer.initialize(scene, plan, {
+    meshPayloads: [{
+      asset_id: "asset:mesh",
+      source_digest: "1".repeat(64),
+      decoded_byte_length: 256,
+      resource: { local: true },
+    }],
+    gaussianPayloads: [gaussianPayload()],
+  });
+  await renderer.dispose();
+});
+
+test("Construction device-loss cleanup failures remain observable", async () => {
+  const { scene, plan } = constructionFixture();
+  const presentation = new TestPresentationRenderer();
+  const overlayPass = new ConstructionOverlayPass();
+  const renderer = new ConstructionSceneRenderer({
+    presentationRenderer: presentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass,
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: presentation,
+      drawGaussianPass: async () => () => {},
+      now: () => 0,
+    }),
+  });
+  await renderer.initialize(scene, plan, {
+    meshPayloads: [{
+      asset_id: "asset:mesh",
+      source_digest: "1".repeat(64),
+      decoded_byte_length: 256,
+      resource: { local: true },
+    }],
+    gaussianPayloads: [gaussianPayload()],
+  });
+  overlayPass.dispose = async () => {
+    throw new Error("forced context-loss cleanup failure");
+  };
+
+  await assert.rejects(
+    renderer.markDeviceLost(),
+    /forced context-loss cleanup failure/,
+  );
+  const status = renderer.status();
+  assert.equal(status.state, RENDERER_STATES.LOST);
+  assert.equal(status.cleanup_succeeded, false);
+  assert.match(status.cleanup_error.message, /forced context-loss cleanup failure/);
 });
 
 test("Construction renderer mid-flight abort becomes terminal and releases resources", async () => {
@@ -675,12 +956,27 @@ test("Construction storey isolation filters Gaussian assets", async () => {
       gaussian_color_space: "SPZ_INTERNAL_WIDE_RGB",
     },
   });
+  scene.assets.push({
+    asset_id: "asset:plan:second",
+    asset_type: "PLANE",
+    uri: "aura://construction/plan-second.svg",
+    media_type: "image/svg+xml",
+    content_digest: `sha256:${"5".repeat(64)}`,
+    byte_length: 64,
+    frame_id: "frame:storey:second",
+    bounds_min: [0, 0, 0],
+    bounds_max: [1, 0, 1],
+    source_refs: ["fixture:plan:second"],
+    truth_class: "PRESENTATION",
+    immutable: true,
+    metadata: {},
+  });
   scene.entities.push({
     entity_id: "entity:storey:second",
     entity_type: "ASSET_INSTANCE",
     label: "Second storey",
     frame_id: "frame:storey:second",
-    asset_ids: ["asset:splats:second"],
+    asset_ids: ["asset:splats:second", "asset:plan:second"],
     source_refs: ["construction-demo-storey:second"],
     position: [0, 0, 0],
     rotation_xyzw: [0, 0, 0, 1],

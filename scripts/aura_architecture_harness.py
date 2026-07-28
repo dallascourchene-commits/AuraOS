@@ -57,11 +57,11 @@ _ORIGINAL_CREATE_AI_HANDOFF = _core.create_ai_handoff
 _ORIGINAL_RUN_ARCHITECTURE = _core.run_architecture
 
 GITHUB_PUBLICATION_ROUTE_VERSION = GITHUB_ROUTING_VERSION
+_RUNTIME_PROFILE_V2 = "AURA_RUNTIME_PROFILE_V2"
 
 
 def _github_publication_route_policy() -> dict[str, Any]:
     """Return untrusted routing guidance plus a non-replayable historical case study."""
-
     case = pr184_atomic_publication_case_study()
     return {
         "version": GITHUB_ROUTING_VERSION,
@@ -79,7 +79,6 @@ def _github_publication_route_policy() -> dict[str, Any]:
 
 def doctor(root: Path, python: Path | None) -> dict[str, Any]:
     """Run the original doctor and expose GitHub publication routing guidance."""
-
     output = _ORIGINAL_DOCTOR(root, python)
     output["github_publication_route"] = _github_publication_route_policy()
     return output
@@ -94,7 +93,6 @@ def create_ai_handoff(
     create_archive: bool = True,
 ) -> dict[str, Any]:
     """Create the original handoff plus deterministic GitHub routing metadata."""
-
     # Preserve the PR #182 compatibility seam: callers and tests may
     # monkeypatch the wrapper helper while the original function resolves it
     # from the core module's globals.
@@ -117,7 +115,6 @@ def create_ai_handoff(
 
 def run_architecture(root: Path, **kwargs: Any) -> dict[str, Any]:
     """Run the original architecture analysis and bind routing into its summary."""
-
     output = _ORIGINAL_RUN_ARCHITECTURE(root, **kwargs)
     output.pop("run_digest", None)
     output["github_publication_route"] = _github_publication_route_policy()
@@ -147,6 +144,47 @@ def _runtime_command_index(arguments: list[str]) -> int | None:
     return None
 
 
+def _runtime_profile_version(arguments: list[str]) -> str:
+    root = Path(".").resolve()
+    profile_value = ""
+    index = 0
+    while index < len(arguments):
+        value = arguments[index]
+        if value == "--repo-root" and index + 1 < len(arguments):
+            root = Path(arguments[index + 1]).expanduser().resolve()
+            index += 2
+            continue
+        if value.startswith("--repo-root="):
+            root = Path(value.split("=", 1)[1]).expanduser().resolve()
+            index += 1
+            continue
+        if value == "--profile" and index + 1 < len(arguments):
+            profile_value = arguments[index + 1]
+            index += 2
+            continue
+        if value.startswith("--profile="):
+            profile_value = value.split("=", 1)[1]
+            index += 1
+            continue
+        index += 1
+    if not profile_value:
+        return ""
+    candidate = Path(profile_value).expanduser()
+    candidate = candidate.resolve() if candidate.is_absolute() else (root / candidate).resolve()
+    try:
+        candidate.relative_to(root)
+    except ValueError:
+        return ""
+    if not candidate.is_file() or candidate.is_symlink() or candidate.stat().st_size > 256 * 1024:
+        return ""
+    try:
+        value = json.loads(candidate.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return ""
+    version = value.get("version") if isinstance(value, dict) else ""
+    return version if isinstance(version, str) else ""
+
+
 def main(argv: Iterable[str] | None = None) -> int:
     arguments = list(argv) if argv is not None else list(sys.argv[1:])
     runtime_index = _runtime_command_index(arguments)
@@ -155,14 +193,16 @@ def main(argv: Iterable[str] | None = None) -> int:
             *arguments[:runtime_index],
             *arguments[runtime_index + 1 :],
         ]
-        try:
-            from scripts.aura_runtime_refactor_harness import (
-                main as runtime_main,
-            )
-        except ModuleNotFoundError:  # Direct execution from scripts directory.
-            from aura_runtime_refactor_harness import (  # type: ignore[no-redef]
-                main as runtime_main,
-            )
+        if _runtime_profile_version(runtime_arguments) == _RUNTIME_PROFILE_V2:
+            try:
+                from scripts.aura_runtime_profile_v2_adapter import main as runtime_main
+            except ModuleNotFoundError:  # Direct execution from scripts directory.
+                from aura_runtime_profile_v2_adapter import main as runtime_main  # type: ignore[no-redef]
+        else:
+            try:
+                from scripts.aura_runtime_refactor_harness import main as runtime_main
+            except ModuleNotFoundError:  # Direct execution from scripts directory.
+                from aura_runtime_refactor_harness import main as runtime_main  # type: ignore[no-redef]
         return runtime_main(runtime_arguments)
     return _core.main(arguments)
 

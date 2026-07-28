@@ -140,7 +140,6 @@ function assertVisiblePresentation(receipt, mode) {
   }
 }
 
-
 async function exerciseManualControls(page, receipts) {
   const controls = [
     "#orbit-left",
@@ -185,6 +184,527 @@ async function exerciseRepresentationControls(page, receipts) {
   }
 }
 
+async function exerciseBilateralRendererContract(page) {
+  return page.evaluate(async () => {
+    const GAUSSIAN_REPRESENTATION_DIGEST =
+      "5e4620fc5ea92315714eaf3bfe0247f4a18f6ed51997efb9c5c389d20536d7b7";
+    const [
+      { ConstructionSceneRenderer },
+      { ConstructionMeshPass },
+      { ConstructionOverlayPass },
+      { GaussianRenderer },
+      { RENDERER_STATES, validateRenderPlan, validateSceneProjection },
+    ] = await Promise.all([
+      import("/aura_spatial_web/construction_scene_renderer.js"),
+      import("/aura_spatial_web/construction_mesh_pass.js"),
+      import("/aura_spatial_web/construction_overlay_pass.js"),
+      import("/aura_spatial_web/gaussian_renderer.js"),
+      import("/aura_spatial_web/renderer_adapter.js"),
+    ]);
+
+    const response = await fetch("/api/construction-demo", { cache: "no-store" });
+    if (!response.ok) throw new Error(`bilateral packet failed: ${response.status}`);
+    const packet = await response.json();
+    const sourceSnapshot = JSON.stringify(packet.scene);
+
+    const gaussianGeometry = () => {
+      const positions = [];
+      for (const x of [-8, -4, 0, 4, 8]) {
+        for (const z of [-8, -4, 0, 4, 8]) positions.push([x, 2, z]);
+      }
+      return {
+        positions,
+        rotations_xyzw: positions.map(() => [0, 0, 0, 1]),
+        scales_xyz: positions.map(() => [1.2, 0.18, 1.2]),
+        opacities: positions.map(() => 0.68),
+        sh_coefficients: positions.map(() => [0, 0, 0]),
+        colors_rgba: positions.map(() => [210, 80, 255, 190]),
+      };
+    };
+    const meshPayloads = (scene) =>
+      scene.assets
+        .filter((asset) => asset.asset_type === "MESH")
+        .map((asset) => ({
+          asset_id: asset.asset_id,
+          source_digest: asset.content_digest.split(":", 2).at(-1),
+          decoded_byte_length: Math.max(1, asset.byte_length),
+          resource: Object.freeze({ asset_id: asset.asset_id }),
+        }));
+    const gaussianPayloads = (scene, { staleDigest = false } = {}) => {
+      const geometry = gaussianGeometry();
+      return scene.assets
+        .filter((asset) => asset.asset_type === "GAUSSIAN_SPLAT")
+        .map((asset, index) => ({
+          asset_id: asset.asset_id,
+          source_digest:
+            staleDigest && index === 0
+              ? "0".repeat(64)
+              : asset.content_digest.split(":", 2).at(-1),
+          derived_asset_digest: asset.metadata.import_receipt_digest,
+          representation_digest: GAUSSIAN_REPRESENTATION_DIGEST,
+          sh_degree: 0,
+          color_space: "SPZ_INTERNAL_WIDE_RGB",
+          ...geometry,
+        }));
+    };
+
+    class ProbePresentationRenderer {
+      constructor({ initializeDelayMs = 0, pickEntityId = null } = {}) {
+        this.kind = "HEADLESS";
+        this.state = RENDERER_STATES.NEW;
+        this.camera = { yaw: 0, pitch: 0, distance: 12, target: [0, 0, 0] };
+        this.initializeDelayMs = initializeDelayMs;
+        this.pickEntityId = pickEntityId;
+        this.disposed = 0;
+        this.scene = null;
+        this.plan = null;
+      }
+
+      async initialize(scenePayload, planPayload, { signal } = {}) {
+        if (this.initializeDelayMs) {
+          await new Promise((resolve, reject) => {
+            const timeoutId = setTimeout(resolve, this.initializeDelayMs);
+            signal?.addEventListener(
+              "abort",
+              () => {
+                clearTimeout(timeoutId);
+                reject(new Error("Probe presentation initialization cancelled"));
+              },
+              { once: true },
+            );
+          });
+        }
+        if (signal?.aborted) throw new Error("Probe presentation initialization cancelled");
+        this.scene = validateSceneProjection(scenePayload);
+        this.plan = validateRenderPlan(planPayload, this.scene);
+        this.state = RENDERER_STATES.INITIALIZED;
+        return this.status();
+      }
+
+      async present() {
+        this.state = RENDERER_STATES.PRESENTED;
+        return Object.freeze({
+          renderer: this.kind,
+          outcome: "PRESENTED",
+          scene_digest: this.scene.scene_digest,
+          render_plan_digest: this.plan.render_plan_digest,
+        });
+      }
+
+      pick() {
+        return this.pickEntityId;
+      }
+
+      orbit(deltaYaw, deltaPitch) {
+        this.camera.yaw += deltaYaw;
+        this.camera.pitch += deltaPitch;
+      }
+
+      zoom(delta) {
+        this.camera.distance += delta;
+      }
+
+      async dispose() {
+        if (this.state === RENDERER_STATES.DISPOSED) return this.status();
+        this.disposed += 1;
+        this.scene = null;
+        this.plan = null;
+        this.state = RENDERER_STATES.DISPOSED;
+        return this.status();
+      }
+
+      status() {
+        return Object.freeze({ renderer: this.kind, state: this.state });
+      }
+    }
+
+    const createRenderer = async ({
+      scene = packet.scene,
+      plan = packet.render_plan,
+      initializeDelayMs = 0,
+      pickEntityId = null,
+      signal = undefined,
+      staleGaussianDigest = false,
+      restoreState = null,
+      initializationTimeoutMs = 60_000,
+    } = {}) => {
+      const presentation = new ProbePresentationRenderer({
+        initializeDelayMs,
+        pickEntityId,
+      });
+      const renderer = new ConstructionSceneRenderer({
+        presentationRenderer: presentation,
+        meshPass: new ConstructionMeshPass({
+          drawMeshPass: async () => () => {},
+        }),
+        overlayPass: new ConstructionOverlayPass({
+          drawOverlayPass: async () => () => {},
+        }),
+        gaussianRenderer: new GaussianRenderer({
+          presentationRenderer: presentation,
+          drawGaussianPass: async () => () => {},
+          now: () => 0,
+        }),
+        initializationTimeoutMs,
+      });
+      await renderer.initialize(scene, plan, {
+        meshPayloads: meshPayloads(scene),
+        gaussianPayloads: gaussianPayloads(scene, {
+          staleDigest: staleGaussianDigest,
+        }),
+        signal,
+        restoreState,
+      });
+      return { renderer, presentation };
+    };
+
+    const storeyFrames = packet.scene.entities
+      .filter((item) => item.entity_type === "ASSET_INSTANCE")
+      .map((item) => item.frame_id)
+      .filter((value, index, values) => values.indexOf(value) === index)
+      .sort();
+    const storeyWithIssue = storeyFrames.find((frameId) => {
+      const blueprintCount = packet.scene.assets.filter(
+        (asset) => asset.asset_type === "PLANE" && asset.frame_id === frameId,
+      ).length;
+      const issueCount = packet.scene.entities.filter(
+        (entity) =>
+          entity.frame_id === frameId &&
+          entity.entity_type !== "ASSET_INSTANCE" &&
+          entity.selectable !== false,
+      ).length;
+      return blueprintCount === 1 && issueCount > 0;
+    });
+    const otherStorey = storeyFrames.find((frameId) => frameId !== storeyWithIssue);
+    if (!storeyWithIssue || !otherStorey) {
+      throw new Error("bilateral proof requires two admitted storeys and one selectable issue");
+    }
+    const selectedIssue = packet.scene.entities.find(
+      (entity) =>
+        entity.frame_id === storeyWithIssue &&
+        entity.entity_type !== "ASSET_INSTANCE" &&
+        entity.selectable !== false,
+    );
+    const hiddenStoreyEntity = packet.scene.entities.find(
+      (entity) =>
+        entity.frame_id === otherStorey &&
+        entity.entity_type === "ASSET_INSTANCE" &&
+        entity.selectable !== false,
+    );
+    if (!selectedIssue || !hiddenStoreyEntity) {
+      throw new Error("bilateral proof requires one visible issue and one hidden storey");
+    }
+
+    const primary = await createRenderer({ pickEntityId: hiddenStoreyEntity.entity_id });
+    const { renderer, presentation } = primary;
+    renderer.isolateStorey(storeyWithIssue);
+    renderer.focusEntity(selectedIssue.entity_id);
+    const initialInspector = renderer.inspectorState();
+    const modeReceipts = [];
+    for (const mode of ["MESH", "SPLATS", "HYBRID", "MESH", "HYBRID"]) {
+      renderer.setRepresentationMode(mode);
+      modeReceipts.push(await renderer.present());
+    }
+    const inspectorStable = modeReceipts.every(
+      (receipt) => JSON.stringify(receipt.inspector_state) === JSON.stringify(initialInspector),
+    );
+    const selectedStoreyStable = modeReceipts.every(
+      (receipt) => receipt.selected_storey_frame_id === storeyWithIssue,
+    );
+    const selectedIssueStable = modeReceipts.every(
+      (receipt) => receipt.selected_entity_id === selectedIssue.entity_id,
+    );
+    const blueprintStable = modeReceipts.every(
+      (receipt) =>
+        receipt.inspector_state.blueprint?.asset_id === initialInspector.blueprint?.asset_id &&
+        receipt.inspector_state.blueprint?.content_digest ===
+          initialInspector.blueprint?.content_digest,
+    );
+    const annotationSetStable = modeReceipts.every(
+      (receipt) =>
+        JSON.stringify(receipt.inspector_state.annotation_entity_ids) ===
+        JSON.stringify(initialInspector.annotation_entity_ids),
+    );
+    const representationSequenceStable =
+      modeReceipts.map((receipt) => receipt.representation_mode).join(",") ===
+      "MESH,SPLATS,HYBRID,MESH,HYBRID";
+
+    renderer.showAllStoreys();
+    const showAllReceipt = await renderer.present();
+    const showAllRetainedSelection =
+      showAllReceipt.selected_storey_frame_id === storeyWithIssue &&
+      showAllReceipt.selected_entity_id === selectedIssue.entity_id;
+    renderer.isolateStorey(storeyWithIssue);
+    const hiddenPick = renderer.pick(0, 0);
+    const hiddenStoreyPickRejected =
+      hiddenPick === null && renderer.status().selected_entity_id === selectedIssue.entity_id;
+    let hiddenStoreyFocusRejected = false;
+    try {
+      renderer.focusEntity(hiddenStoreyEntity.entity_id);
+    } catch (error) {
+      hiddenStoreyFocusRejected = String(error?.message || error).includes(
+        "hidden Construction scene entity is not selectable",
+      );
+    }
+
+    let missingBlueprintExplicit = false;
+    const missingBlueprintPresentation = new ProbePresentationRenderer();
+    const missingBlueprintRenderer = new ConstructionSceneRenderer({
+      presentationRenderer: missingBlueprintPresentation,
+      meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+      overlayPass: new ConstructionOverlayPass(),
+    });
+    const missingBlueprintScene = {
+      ...packet.scene,
+      assets: packet.scene.assets.map((asset) =>
+        asset.asset_type === "PLANE" && asset.frame_id === otherStorey
+          ? {
+              ...asset,
+              asset_type: "DOCUMENT",
+            }
+          : asset,
+      ),
+    };
+    try {
+      await missingBlueprintRenderer.initialize(
+        missingBlueprintScene,
+        packet.render_plan,
+        {
+          meshPayloads: meshPayloads(missingBlueprintScene),
+          gaussianPayloads: gaussianPayloads(missingBlueprintScene),
+        },
+      );
+    } catch (error) {
+      missingBlueprintExplicit = String(error?.message || error).includes(
+        "requires exactly one canonically bound blueprint; status MISSING, found 0",
+      );
+      if (!missingBlueprintExplicit) {
+        throw new Error(
+          `missing-blueprint fixture failed outside the canonical binding check: ${String(
+            error?.message || error,
+          )}`,
+        );
+      }
+    }
+    if (!missingBlueprintExplicit) {
+      throw new Error("missing-blueprint fixture unexpectedly initialized");
+    }
+
+    let ambiguousBlueprintExplicit = false;
+    const canonicalBlueprint = packet.scene.assets.find(
+      (asset) =>
+        asset.asset_type === "PLANE" &&
+        asset.frame_id === otherStorey,
+    );
+    if (!canonicalBlueprint) {
+      throw new Error(
+        "bilateral proof requires a canonically bound blueprint on the hidden storey",
+      );
+    }
+    const ambiguousBlueprintId = "asset:ambiguous-plan";
+    const ambiguousBlueprintRenderer = new ConstructionSceneRenderer({
+      presentationRenderer: new ProbePresentationRenderer(),
+      meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+      overlayPass: new ConstructionOverlayPass(),
+    });
+    const validatedScene = validateSceneProjection(packet.scene);
+    ambiguousBlueprintRenderer.scene = {
+      ...validatedScene,
+      assets: [
+        ...validatedScene.assets,
+        Object.freeze({
+          ...canonicalBlueprint,
+          asset_id: ambiguousBlueprintId,
+        }),
+      ],
+      entities: validatedScene.entities.map((entity) =>
+        entity.entity_type === "ASSET_INSTANCE" && entity.frame_id === otherStorey
+          ? Object.freeze({
+              ...entity,
+              asset_ids: Object.freeze([...entity.asset_ids, ambiguousBlueprintId].sort()),
+            })
+          : entity,
+      ),
+    };
+    ambiguousBlueprintRenderer.storeyFrames = Object.freeze([...storeyFrames]);
+    ambiguousBlueprintRenderer.selectedStoreyFrameId = otherStorey;
+    try {
+      ambiguousBlueprintRenderer.isolateStorey(otherStorey);
+    } catch (error) {
+      const inspector = ambiguousBlueprintRenderer.inspectorState();
+      const status = ambiguousBlueprintRenderer.status();
+      ambiguousBlueprintExplicit =
+        String(error?.message || error).includes(
+          "requires exactly one canonically bound blueprint; status AMBIGUOUS, found 2",
+        ) &&
+        inspector.blueprint === null &&
+        inspector.blueprint_resolution.status === "AMBIGUOUS" &&
+        status.inspector_state.blueprint_resolution.status === "AMBIGUOUS";
+    }
+
+    let invalidDigestExplicit = false;
+    try {
+      await createRenderer({ staleGaussianDigest: true });
+    } catch (error) {
+      invalidDigestExplicit = String(error?.message || error).includes(
+        "source digest is stale or ambiguous",
+      );
+    }
+
+    let preInitializationSwitchRejected = false;
+    let delayedAssetBounded = false;
+    const delayedPresentation = new ProbePresentationRenderer({ initializeDelayMs: 100 });
+    const delayedRenderer = new ConstructionSceneRenderer({
+      presentationRenderer: delayedPresentation,
+      meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+      overlayPass: new ConstructionOverlayPass(),
+      gaussianRenderer: new GaussianRenderer({
+        presentationRenderer: delayedPresentation,
+        drawGaussianPass: async () => () => {},
+        now: () => 0,
+      }),
+      initializationTimeoutMs: 20,
+    });
+    const delayedStart = performance.now();
+    const delayedInitialization = delayedRenderer.initialize(
+      packet.scene,
+      packet.render_plan,
+      {
+        meshPayloads: meshPayloads(packet.scene),
+        gaussianPayloads: gaussianPayloads(packet.scene),
+      },
+    );
+    try {
+      delayedRenderer.setRepresentationMode("MESH");
+    } catch (error) {
+      preInitializationSwitchRejected = String(error?.message || error).includes(
+        "cannot change before initialization completes",
+      );
+    }
+    try {
+      await delayedInitialization;
+    } catch (error) {
+      delayedAssetBounded =
+        String(error?.message || error).includes("timed out after 20 ms") &&
+        delayedRenderer.status().state === RENDERER_STATES.LOST &&
+        delayedPresentation.disposed === 1 &&
+        performance.now() - delayedStart < 500;
+    }
+
+    let cancellationExplicit = false;
+    let cancellationCleanupTerminal = false;
+    const cancellation = await createRenderer();
+    const controller = new AbortController();
+    controller.abort();
+    try {
+      await cancellation.renderer.present({ signal: controller.signal });
+    } catch (error) {
+      cancellationExplicit = String(error?.message || error).includes("cancelled");
+    }
+    const cancellationStatus = await cancellation.renderer.dispose();
+    cancellationCleanupTerminal = cancellationStatus.state === RENDERER_STATES.DISPOSED;
+
+    const deviceLoss = await createRenderer();
+    const contextLossTarget = new EventTarget();
+    deviceLoss.renderer.bindContextLoss(contextLossTarget);
+    const contextLossEvent = new Event("webglcontextlost", { cancelable: true });
+    contextLossTarget.dispatchEvent(contextLossEvent);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const deviceLossStatus = deviceLoss.renderer.status();
+    const deviceLossTerminal =
+      contextLossEvent.defaultPrevented &&
+      deviceLossStatus.state === RENDERER_STATES.LOST;
+    const deviceLossDisposeStatus = await deviceLoss.renderer.dispose();
+    const deviceLossCleanupTerminal =
+      [RENDERER_STATES.DISPOSED, RENDERER_STATES.LOST].includes(
+        deviceLossDisposeStatus.state,
+      );
+
+    const continuityReceipt = renderer.continuityState();
+    const primaryDisposeStatus = await renderer.dispose();
+    const dissolveTerminal =
+      primaryDisposeStatus.state === RENDERER_STATES.DISPOSED &&
+      primaryDisposeStatus.selected_storey_frame_id === null &&
+      primaryDisposeStatus.selected_entity_id === null &&
+      presentation.disposed === 1;
+
+    const relaunched = await createRenderer({ restoreState: continuityReceipt });
+    const restoredStatus = relaunched.renderer.status();
+    const relaunchReceipt = await relaunched.renderer.present();
+    const relaunchSucceeded =
+      restoredStatus.selected_storey_frame_id === storeyWithIssue &&
+      restoredStatus.selected_entity_id === selectedIssue.entity_id &&
+      restoredStatus.representation_mode === "HYBRID" &&
+      relaunchReceipt.outcome === "PRESENTED" &&
+      relaunchReceipt.selected_storey_frame_id === storeyWithIssue &&
+      relaunchReceipt.inspector_state.blueprint?.asset_id ===
+        initialInspector.blueprint?.asset_id;
+    await relaunched.renderer.dispose();
+
+    const sourceGeometryUnchanged = JSON.stringify(packet.scene) === sourceSnapshot;
+    const authorityReceipts = [...modeReceipts, showAllReceipt, relaunchReceipt];
+    const physicalWorkAuthorized = authorityReceipts.some(
+      (receipt) => receipt.physical_work_authority !== false,
+    );
+    const professionalAuthority = authorityReceipts.some(
+      (receipt) => receipt.professional_authority !== false,
+    );
+    const automaticMerge = authorityReceipts.some(
+      (receipt) => receipt.automatic_merge !== false,
+    );
+    const productionMutation = authorityReceipts.some(
+      (receipt) => receipt.production_mutation !== false,
+    );
+    const authorityDenialsObserved =
+      !physicalWorkAuthorized &&
+      !professionalAuthority &&
+      !automaticMerge &&
+      !productionMutation;
+    const conditions = {
+      inspectorStable,
+      selectedStoreyStable,
+      selectedIssueStable,
+      blueprintStable,
+      annotationSetStable,
+      representationSequenceStable,
+      showAllRetainedSelection,
+      hiddenStoreyPickRejected,
+      hiddenStoreyFocusRejected,
+      missingBlueprintExplicit,
+      ambiguousBlueprintExplicit,
+      invalidDigestExplicit,
+      preInitializationSwitchRejected,
+      delayedAssetBounded,
+      cancellationExplicit,
+      cancellationCleanupTerminal,
+      deviceLossTerminal,
+      deviceLossCleanupTerminal,
+      dissolveTerminal,
+      relaunchSucceeded,
+      sourceGeometryUnchanged,
+      authorityDenialsObserved,
+    };
+    return Object.freeze({
+      version: "AURA_CONSTRUCTION_BILATERAL_BROWSER_PROOF_V1",
+      ok: Object.values(conditions).every(Boolean),
+      selectedStoreyFrameId: storeyWithIssue,
+      selectedIssueEntityId: selectedIssue.entity_id,
+      hiddenStoreyFrameId: otherStorey,
+      hiddenStoreyEntityId: hiddenStoreyEntity.entity_id,
+      blueprintAssetId: initialInspector.blueprint?.asset_id || null,
+      blueprintDigest: initialInspector.blueprint?.content_digest || null,
+      annotationEntityIds: initialInspector.annotation_entity_ids,
+      modeSequence: modeReceipts.map((receipt) => receipt.representation_mode),
+      ...conditions,
+      physicalWorkAuthorized,
+      professionalAuthority,
+      automaticMerge,
+      productionMutation,
+      humanReviewRequired: true,
+    });
+  });
+}
+
 async function exerciseTour(page, receipts) {
   await page.click("#play-tour");
   await page.waitForFunction(() => {
@@ -200,6 +720,15 @@ async function main() {
   const pageErrors = [];
   const requestFailures = [];
   const receipts = [];
+  let bilateral = {
+    version: "AURA_CONSTRUCTION_BILATERAL_BROWSER_PROOF_V1",
+    ok: false,
+    error: "bilateral proof not run",
+    productionMutation: false,
+    automaticMerge: false,
+    physicalWorkAuthorized: false,
+    professionalAuthority: false,
+  };
 
   let browser = null;
   let page = null;
@@ -240,6 +769,23 @@ async function main() {
 
     await exerciseManualControls(page, receipts);
     await exerciseRepresentationControls(page, receipts);
+    try {
+      bilateral = await exerciseBilateralRendererContract(page);
+      receipts.push({
+        label: "bilateral-renderer-contract",
+        ok: bilateral.ok,
+        selectedStoreyFrameId: bilateral.selectedStoreyFrameId,
+        selectedIssueEntityId: bilateral.selectedIssueEntityId,
+        blueprintAssetId: bilateral.blueprintAssetId,
+        blueprintDigest: bilateral.blueprintDigest,
+        modeSequence: bilateral.modeSequence,
+      });
+    } catch (error) {
+      bilateral = {
+        ...bilateral,
+        error: String(error?.message || error),
+      };
+    }
     await exerciseTour(page, receipts);
     await snapshot(page, "after-tour");
 
@@ -254,6 +800,7 @@ async function main() {
         String(receipt.sceneState || "") !== "Dissolved",
     );
     const failed =
+      bilateral.ok !== true ||
       pageErrors.length > 0 ||
       requestFailures.length > 0 ||
       consoleMessages.some((message) => message.type === "error") ||
@@ -287,13 +834,16 @@ async function main() {
       version: "AURA_CONSTRUCTION_BROWSER_PROBE_V1",
       url: BASE_URL,
       receipts,
+      bilateral,
       consoleMessages,
       pageErrors,
       requestFailures,
       ok: exitCode === 0,
-      productionMutation: false,
+      productionMutation: bilateral.productionMutation,
       automaticPatch: false,
-      automaticMerge: false,
+      automaticMerge: bilateral.automaticMerge,
+      physicalWorkAuthorized: bilateral.physicalWorkAuthorized,
+      professionalAuthority: bilateral.professionalAuthority,
       humanReviewRequired: true,
     };
     fs.writeFileSync(path.join(OUTPUT_DIR, "browser-evidence.json"), JSON.stringify(evidence, null, 2));
