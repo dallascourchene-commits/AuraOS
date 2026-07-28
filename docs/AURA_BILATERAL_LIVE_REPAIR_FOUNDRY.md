@@ -40,12 +40,15 @@ Finalization:
 
 1. rejects an absent marker;
 2. rejects missing positive, negative, or preservation obligations;
-3. rejects stale bilateral identity;
+3. resolves current bilateral identity through a trusted in-process owner and rejects stale identity;
 4. computes one deterministic replay digest;
 5. clears the active event buffer;
 6. stores the complete sanitized packet in the canonical Attempt Archive.
 
 No background or unrestricted recording is enabled.
+The default Showcase server therefore fails capture finalization closed until its
+embedding owner supplies `current_identity_resolver`; a request body cannot
+declare its own identity current.
 
 ## B12 — persistent bounded repair Foundry
 

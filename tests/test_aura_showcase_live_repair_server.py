@@ -59,8 +59,13 @@ def test_static_index_injects_one_foundry_surface_and_authority_rail():
 
 
 def test_browser_cannot_submit_forged_runtime_proof_or_rollback_adapter(tmp_path):
-    state=LiveRepairShowcaseState(tmp_path, demo_project='demo', auto_start=False)
     item=identity()
+    state=LiveRepairShowcaseState(
+        tmp_path,
+        demo_project='demo',
+        auto_start=False,
+        current_identity_resolver=lambda _captured: item,
+    )
     _,started=decoded(dispatch_live_repair_request(state,'POST','/api/showcase/live-repair/capture/start',{
         'identity':dataclasses.asdict(item), 'release_id':'release', 'environment_id':'browser',
         'capture_authorized':True, 'max_events':4, 'retention_seconds':120,

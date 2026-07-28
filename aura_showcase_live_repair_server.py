@@ -8,11 +8,12 @@ create a second domain/UI truth owner.
 from __future__ import annotations
 
 import argparse
+from collections.abc import Callable, Mapping
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import mimetypes
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any
 from urllib.parse import urlparse
 
 from aura_bilateral_live_repair_foundry import (
@@ -37,8 +38,16 @@ MAX_BODY_BYTES = 1_000_000
 
 
 class LiveRepairShowcaseState(ShowcaseState):
-    def __init__(self, repo_root: str | Path, *, demo_project: str, auto_start: bool) -> None:
+    def __init__(
+        self,
+        repo_root: str | Path,
+        *,
+        demo_project: str,
+        auto_start: bool,
+        current_identity_resolver: Callable[[BilateralIdentity], BilateralIdentity] | None = None,
+    ) -> None:
         super().__init__(repo_root, demo_project=demo_project, auto_start=auto_start)
+        self._current_identity_resolver = current_identity_resolver
         self._live_repair: BilateralLiveRepairService | None = None
         self.live_repair_attempts: dict[str, RepairCandidateResult] = {}
         self.live_repair_previews: dict[str, PreviewRollbackReceipt] = {}
@@ -51,6 +60,7 @@ class LiveRepairShowcaseState(ShowcaseState):
             self._live_repair = BilateralLiveRepairService(
                 self.repo_root,
                 attempt_archive=self.attempt_archive,
+                current_identity_resolver=self._current_identity_resolver,
             )
         return self._live_repair
 

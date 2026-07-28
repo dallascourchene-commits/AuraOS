@@ -231,7 +231,7 @@ jobs:
         run: |
           python scripts/aura_review_learning_architect_harness.py \
             --repo-root . \
-            --base-ref "$AURA_REVIEW_BASE_REF" \
+            --base-ref "origin/$AURA_REVIEW_BASE_REF" \
             --head-ref "$AURA_REVIEW_HEAD_SHA" \
             --output review-learning-harness-receipt.json
 

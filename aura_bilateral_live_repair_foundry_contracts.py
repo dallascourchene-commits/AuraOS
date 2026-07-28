@@ -335,6 +335,7 @@ class RepairCandidateResult:
     hypothesis_digest: str
     candidate_digest: str
     runtime_proof_digest: str
+    runtime_proof_passed: bool
     positive_passed: bool
     negative_passed: bool
     preservation_passed: bool
@@ -358,6 +359,10 @@ class RepairCandidateResult:
             raise ValueError("repair attempt must be an object")
         payload = {name: value.get(name) for name in cls.__dataclass_fields__}
         payload["archive_artifact_ref"] = archive_artifact_ref or str(payload.get("archive_artifact_ref") or "")
+        if "runtime_proof_passed" not in value:
+            # Compatibility for receipts written before the proof-level result
+            # was persisted. Promotion could only be true when the proof passed.
+            payload["runtime_proof_passed"] = value.get("promotion_ready") is True
         counterexample = payload.get("minimized_counterexample")
         payload["minimized_counterexample"] = dict(counterexample) if isinstance(counterexample, Mapping) else None
         item = cls(**payload)
@@ -365,6 +370,7 @@ class RepairCandidateResult:
             item.route_class not in _ALLOWED_ROUTE_CLASSES
             or item.route_class != classify_repair_route(item.failure_class)
             or item.promotion_ready != all((
+                item.runtime_proof_passed,
                 item.positive_passed, item.negative_passed, item.preservation_passed,
                 item.fault_injections_passed, item.adjacent_regressions_passed,
                 item.repository_unchanged, item.independent_verifier_exact,
@@ -388,8 +394,10 @@ class PreviewRollbackReceipt:
     degraded: bool
     rollback_preauthorized: bool
     technical_rollback_executed: bool
+    rollback_succeeded: bool
     restored_digest: str
     rollback_reason: str
+    rollback_failure: str
     human_promotion_required: bool
     production_mutation: bool
     created_at: float
@@ -402,7 +410,15 @@ class PreviewRollbackReceipt:
     def from_mapping(cls, value: Mapping[str, Any]) -> "PreviewRollbackReceipt":
         if not isinstance(value, Mapping):
             raise ValueError("preview receipt must be an object")
-        item = cls(**{name: value.get(name) for name in cls.__dataclass_fields__})
+        payload = {name: value.get(name) for name in cls.__dataclass_fields__}
+        if "rollback_succeeded" not in value:
+            payload["rollback_succeeded"] = (
+                value.get("technical_rollback_executed") is True
+                and value.get("restored_digest") == value.get("last_verified_digest")
+            )
+        if "rollback_failure" not in value:
+            payload["rollback_failure"] = ""
+        item = cls(**payload)
         for name in (
             "replay_packet_digest",
             "bilateral_identity_digest",
@@ -419,6 +435,7 @@ class PreviewRollbackReceipt:
             "degraded",
             "rollback_preauthorized",
             "technical_rollback_executed",
+            "rollback_succeeded",
             "human_promotion_required",
             "production_mutation",
         ):
@@ -426,8 +443,8 @@ class PreviewRollbackReceipt:
                 raise ValueError(f"{name} must be a boolean")
         _timestamp(item.created_at, "created_at")
         _required_text(item.preview_id, "preview_id", limit=128)
-        if type(item.rollback_reason) is not str:
-            raise ValueError("rollback_reason must be a string")
+        if type(item.rollback_reason) is not str or type(item.rollback_failure) is not str:
+            raise ValueError("rollback_reason and rollback_failure must be strings")
         identity = {
             "replay_packet_digest": item.replay_packet_digest,
             "bilateral_identity_digest": item.bilateral_identity_digest,
@@ -439,8 +456,13 @@ class PreviewRollbackReceipt:
             "degraded": item.degraded,
             "rollback_preauthorized": item.rollback_preauthorized,
             "technical_rollback_executed": item.technical_rollback_executed,
+            "rollback_succeeded": item.rollback_succeeded,
             "restored_digest": item.restored_digest,
+            "rollback_failure": item.rollback_failure,
         }
+        if "rollback_succeeded" not in value and "rollback_failure" not in value:
+            identity.pop("rollback_succeeded")
+            identity.pop("rollback_failure")
         if (
             item.version != PREVIEW_VERSION
             or item.preview_id != f"PREVIEW-{digest(identity)[:24]}"
@@ -450,7 +472,21 @@ class PreviewRollbackReceipt:
             or item.environment_class not in {"LOCAL_EPHEMERAL", "CANARY_ISOLATED"}
             or (item.degraded and not item.rollback_reason.strip())
             or (item.technical_rollback_executed and item.rollback_preauthorized is not True)
-            or (item.technical_rollback_executed and item.restored_digest != item.last_verified_digest)
+            or (
+                item.rollback_succeeded
+                and (
+                    item.technical_rollback_executed is not True
+                    or item.restored_digest != item.last_verified_digest
+                    or bool(item.rollback_failure)
+                )
+            )
+            or (
+                item.technical_rollback_executed
+                and not item.rollback_succeeded
+                and not item.rollback_failure.strip()
+            )
+            or (not item.technical_rollback_executed and bool(item.restored_digest))
+            or (not item.technical_rollback_executed and bool(item.rollback_failure))
         ):
             raise ValueError("preview receipt authority or rollback identity is invalid")
         return item

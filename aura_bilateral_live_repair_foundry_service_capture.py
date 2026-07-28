@@ -5,15 +5,16 @@ from collections.abc import Callable, Mapping
 from dataclasses import asdict
 import json
 from pathlib import Path
+import threading
 from typing import Any
 
 from aura_arena_attempt_archive import ArenaAttemptArchive
 from aura_bilateral_live_repair_foundry_capture import BoundedIncidentCapture
 from aura_bilateral_live_repair_foundry_contracts import (
-    MAX_EVENTS,
-    MAX_ACTIVE_CAPTURES,
-    VERSION,
     _FALSE_AUTHORITY,
+    MAX_ACTIVE_CAPTURES,
+    MAX_EVENTS,
+    VERSION,
     BilateralIdentity,
     BilateralLiveRepairError,
     IncidentReplayPacket,
@@ -31,6 +32,8 @@ class _CapturePersistenceMixin:
         attempt_archive: ArenaAttemptArchive | None = None,
         attempt_archive_db_path: str | Path | None = None,
         runtime_runner: Callable[..., Mapping[str, Any]] | None = None,
+        current_identity_resolver: Callable[[BilateralIdentity], BilateralIdentity] | None = None,
+        allow_reduced_runtime_fixture: bool = False,
     ) -> None:
         self.repo_root = Path(repo_root).resolve()
         self._owns_archive = attempt_archive is None
@@ -43,17 +46,25 @@ class _CapturePersistenceMixin:
 
             runtime_runner = run_runtime_profile_v2
         self.runtime_runner = runtime_runner
+        self._current_identity_resolver = current_identity_resolver
+        self._allow_reduced_runtime_fixture = allow_reduced_runtime_fixture is True
+        self._capture_lock = threading.RLock()
+        self._capture_timers: dict[str, threading.Timer] = {}
         self._captures: dict[str, BoundedIncidentCapture] = {}
         self._packets: dict[str, IncidentReplayPacket] = {}
         self._runtime_proofs: dict[str, tuple[str, dict[str, Any]]] = {}
         self._previews: dict[str, PreviewRollbackReceipt] = {}
 
     def close(self) -> None:
-        for capture in self._captures.values():
-            capture._closed = True
-            capture._events.clear()
-            capture._marker_event = None
-        self._captures.clear()
+        with self._capture_lock:
+            for timer in self._capture_timers.values():
+                timer.cancel()
+            self._capture_timers.clear()
+            for capture in self._captures.values():
+                capture._closed = True
+                capture._events.clear()
+                capture._marker_event = None
+            self._captures.clear()
         self._packets.clear()
         self._runtime_proofs.clear()
         self._previews.clear()
@@ -61,10 +72,12 @@ class _CapturePersistenceMixin:
             self.attempt_archive.close()
 
     def status(self) -> dict[str, Any]:
+        with self._capture_lock:
+            active_capture_count = sum(not item._closed for item in self._captures.values())
         return {
             "ok": True,
             "version": VERSION,
-            "active_capture_count": sum(not item._closed for item in self._captures.values()),
+            "active_capture_count": active_capture_count,
             "retained_packet_count": len(self._packets),
             "retained_runtime_proof_count": len(self._runtime_proofs),
             "preview_receipt_count": len(self._previews),
@@ -80,19 +93,28 @@ class _CapturePersistenceMixin:
         }
 
     def start_capture(self, contract: Mapping[str, Any]) -> dict[str, Any]:
-        self._sweep_expired_captures()
-        if len(self._captures) >= MAX_ACTIVE_CAPTURES:
-            raise BilateralLiveRepairError("active capture budget exhausted")
-        identity = BilateralIdentity.from_mapping(contract.get("identity") or {})
-        capture = BoundedIncidentCapture(
-            identity=identity,
-            release_id=contract.get("release_id"),
-            environment_id=contract.get("environment_id"),
-            capture_authorized=contract.get("capture_authorized") is True,
-            max_events=int(contract.get("max_events", MAX_EVENTS)),
-            retention_seconds=int(contract.get("retention_seconds", 120)),
-        )
-        self._captures[capture.capture_id] = capture
+        with self._capture_lock:
+            self._sweep_expired_captures()
+            if len(self._captures) >= MAX_ACTIVE_CAPTURES:
+                raise BilateralLiveRepairError("active capture budget exhausted")
+            identity = BilateralIdentity.from_mapping(contract.get("identity") or {})
+            capture = BoundedIncidentCapture(
+                identity=identity,
+                release_id=contract.get("release_id"),
+                environment_id=contract.get("environment_id"),
+                capture_authorized=contract.get("capture_authorized") is True,
+                max_events=int(contract.get("max_events", MAX_EVENTS)),
+                retention_seconds=int(contract.get("retention_seconds", 120)),
+            )
+            self._captures[capture.capture_id] = capture
+            timer = threading.Timer(
+                capture.retention_seconds,
+                self._expire_capture,
+                args=(capture.capture_id,),
+            )
+            timer.daemon = True
+            self._capture_timers[capture.capture_id] = timer
+            timer.start()
         return {
             "ok": True,
             "capture_id": capture.capture_id,
@@ -105,25 +127,39 @@ class _CapturePersistenceMixin:
         }
 
     def observe(self, capture_id: str, event_type: str, payload: Mapping[str, Any] | None = None) -> dict[str, Any]:
-        capture = self._capture(capture_id)
-        event = capture.observe(event_type, payload)
+        with self._capture_lock:
+            capture = self._capture(capture_id)
+            event = capture.observe(event_type, payload)
         return {"ok": True, "capture_id": capture.capture_id, "event": asdict(event)}
 
     def mark(self, capture_id: str, marker: str, payload: Mapping[str, Any] | None = None) -> dict[str, Any]:
-        capture = self._capture(capture_id)
-        event = capture.mark_incident(marker, payload)
+        with self._capture_lock:
+            capture = self._capture(capture_id)
+            event = capture.mark_incident(marker, payload)
         return {"ok": True, "capture_id": capture.capture_id, "marker_event": asdict(event)}
 
     def finalize_capture(self, capture_id: str, contract: Mapping[str, Any]) -> dict[str, Any]:
-        capture = self._capture(capture_id)
-        current_identity = BilateralIdentity.from_mapping(contract.get("current_identity") or {})
-        packet = capture.finalize(
-            expected_positive=contract.get("expected_positive") or (),
-            expected_negative=contract.get("expected_negative") or (),
-            preservation_claims=contract.get("preservation_claims") or (),
-            required_assets=contract.get("required_assets") or (),
-            current_identity=current_identity,
-        )
+        with self._capture_lock:
+            capture = self._capture(capture_id)
+            if self._current_identity_resolver is None:
+                raise BilateralLiveRepairError(
+                    "capture finalization requires a trusted current-identity resolver"
+                )
+            current_identity = self._current_identity_resolver(capture.identity)
+            if not isinstance(current_identity, BilateralIdentity):
+                raise BilateralLiveRepairError(
+                    "trusted current-identity resolver returned an invalid identity"
+                )
+            packet = capture.finalize(
+                expected_positive=contract.get("expected_positive") or (),
+                expected_negative=contract.get("expected_negative") or (),
+                preservation_claims=contract.get("preservation_claims") or (),
+                required_assets=contract.get("required_assets") or (),
+                current_identity=current_identity,
+            )
+            timer = self._capture_timers.pop(capture.capture_id, None)
+            if timer is not None:
+                timer.cancel()
         self._packets[packet.packet_id] = packet
         # The packet is already privacy-sanitized and digest-bound. Preserve its
         # exact canonical bytes as a string so Attempt Archive's key-based secret
@@ -165,10 +201,18 @@ class _CapturePersistenceMixin:
         return {"ok": True, "packet": packet.to_dict(), "attempt_artifact": archive}
 
     def _capture(self, capture_id: str) -> BoundedIncidentCapture:
-        item = self._captures.get(_required_text(capture_id, "capture_id", limit=128))
+        with self._capture_lock:
+            item = self._captures.get(_required_text(capture_id, "capture_id", limit=128))
         if item is None:
             raise BilateralLiveRepairError("capture not found")
         return item
+
+    def _expire_capture(self, capture_id: str) -> None:
+        with self._capture_lock:
+            capture = self._captures.pop(capture_id, None)
+            self._capture_timers.pop(capture_id, None)
+            if capture is not None:
+                self._scrub_capture(capture)
 
     def _packet(self, packet_id: str) -> IncidentReplayPacket:
         resolved = _required_text(packet_id, "packet_id", limit=128)

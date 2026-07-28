@@ -84,7 +84,13 @@ def finalized_capture(item: BilateralIdentity, *, max_events: int = 4) -> Incide
 
 def service_with_packet(tmp_path: Path, item: BilateralIdentity):
     db_path = tmp_path / "attempts.db"
-    service = BilateralLiveRepairService(tmp_path, attempt_archive_db_path=db_path, runtime_runner=lambda *_a, **_k: runtime_proof(item))
+    service = BilateralLiveRepairService(
+        tmp_path,
+        attempt_archive_db_path=db_path,
+        runtime_runner=lambda *_a, **_k: runtime_proof(item),
+        current_identity_resolver=lambda _captured: item,
+        allow_reduced_runtime_fixture=True,
+    )
     started = service.start_capture(
         {
             "identity": dataclasses.asdict(item),
@@ -301,6 +307,26 @@ def test_missing_negative_proof_blocks_repair_promotion(tmp_path):
     service.close()
 
 
+def test_failed_runtime_proof_rehydrates_as_rejected_attempt(tmp_path):
+    item = identity()
+    service, _db, raw = service_with_packet(tmp_path, item)
+    proof_ref = retain_proof(service, raw["packet_id"], item, runtime_proof(item, ok=False))
+    attempt = service.record_repair_attempt(
+        packet_id=raw["packet_id"],
+        hypothesis={"cause": "proof-level failure"},
+        candidate_digest=sha("candidate"),
+        runtime_proof_ref=proof_ref,
+        minimized_counterexample=None,
+        current_identity=item,
+    )
+    assert attempt.runtime_proof_passed is False
+    assert attempt.promotion_ready is False
+    rehydrated = service.attempts_for_packet(raw["packet_id"])[0]
+    assert rehydrated.runtime_proof_passed is False
+    assert rehydrated.promotion_ready is False
+    service.close()
+
+
 def test_failed_hypothesis_cannot_repeat_across_service_restart(tmp_path):
     item = identity()
     first, db_path, raw = service_with_packet(tmp_path, item)
@@ -384,6 +410,7 @@ def test_preview_is_isolated_and_restores_exact_verified_digest(tmp_path):
     )
     assert receipt.preview_isolated is True
     assert receipt.technical_rollback_executed is True
+    assert receipt.rollback_succeeded is True
     assert receipt.restored_digest == verified
     assert receipt.production_mutation is False
     assert service.latest_preview(raw["packet_id"]).preview_id == receipt.preview_id
@@ -399,6 +426,37 @@ def test_preview_is_isolated_and_restores_exact_verified_digest(tmp_path):
             rollback_preauthorized=False,
         )
     service.close()
+
+
+def test_failed_rollback_is_archived_before_error_is_propagated(tmp_path):
+    item = identity()
+    service, db_path, raw = service_with_packet(tmp_path, item)
+    verified = sha("verified")
+    with pytest.raises(BilateralLiveRepairError, match="exact last verified"):
+        service.preview_candidate(
+            packet_id=raw["packet_id"],
+            current_identity=item,
+            candidate_digest=sha("candidate"),
+            last_verified_digest=verified,
+            health_before={"ok": True},
+            health_after={"ok": False},
+            environment_class="LOCAL_EPHEMERAL",
+            rollback_preauthorized=True,
+            rollback_reason="health regression",
+            restore_local=lambda _expected: sha("wrong"),
+        )
+    receipt = service.latest_preview(raw["packet_id"])
+    assert receipt is not None
+    assert receipt.technical_rollback_executed is True
+    assert receipt.rollback_succeeded is False
+    assert receipt.rollback_failure == "rollback did not restore the exact last verified identity"
+    service.close()
+    second = BilateralLiveRepairService(tmp_path, attempt_archive_db_path=db_path)
+    retained = second.latest_preview(raw["packet_id"])
+    assert retained is not None
+    assert retained.preview_id == receipt.preview_id
+    assert retained.rollback_failure == receipt.rollback_failure
+    second.close()
 
 
 def test_u7_delegates_p0_p1_and_finalization_to_canonical_owner(tmp_path, monkeypatch):

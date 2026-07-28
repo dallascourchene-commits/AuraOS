@@ -42,7 +42,7 @@ def identity() -> BilateralIdentity:
     )
 
 
-def packet():
+def packet(*, required_assets=()):
     item = identity()
     capture = BoundedIncidentCapture(
         identity=item,
@@ -56,6 +56,7 @@ def packet():
         expected_positive=["selection remains stable"],
         expected_negative=["hidden storeys are never selected"],
         preservation_claims=["source geometry remains unchanged"],
+        required_assets=required_assets,
         current_identity=item,
     )
     return item, result
@@ -120,6 +121,7 @@ def strict_runtime_proof(item: BilateralIdentity) -> dict:
                 "assertion_ids": ["fault"],
             }],
         },
+        "required_trace_artifacts": [],
     }
 
 
@@ -158,9 +160,27 @@ def test_runtime_proof_requires_exact_versions_and_captured_obligations():
         BilateralLiveRepairService._validate_runtime_proof(replay, wrong_obligations)
 
 
+def test_runtime_proof_binds_every_captured_required_asset():
+    item, replay = packet(required_assets=["incident-console.json"])
+    proof = strict_runtime_proof(item)
+    proof["required_trace_artifacts"] = [{
+        "path": "incident-console.json",
+        "present": True,
+        "within_size_limit": True,
+    }]
+    BilateralLiveRepairService._validate_runtime_proof(replay, proof)
+    proof["required_trace_artifacts"][0]["within_size_limit"] = False
+    with pytest.raises(BilateralLiveRepairError, match="required asset"):
+        BilateralLiveRepairService._validate_runtime_proof(replay, proof)
+
+
 def test_finalize_scrubs_separate_marker_from_service_memory(tmp_path):
     item = identity()
-    service = BilateralLiveRepairService(tmp_path, attempt_archive_db_path=tmp_path / "attempts.db")
+    service = BilateralLiveRepairService(
+        tmp_path,
+        attempt_archive_db_path=tmp_path / "attempts.db",
+        current_identity_resolver=lambda _captured: item,
+    )
     started = service.start_capture(
         {
             "identity": dataclasses.asdict(item),
@@ -185,6 +205,36 @@ def test_finalize_scrubs_separate_marker_from_service_memory(tmp_path):
     service.close()
 
 
+def test_finalize_uses_trusted_identity_resolver_not_request_identity(tmp_path):
+    item = identity()
+    stale = dataclasses.replace(item, intent_digest=sha("changed-intent"))
+    service = BilateralLiveRepairService(
+        tmp_path,
+        attempt_archive_db_path=tmp_path / "attempts.db",
+        current_identity_resolver=lambda _captured: stale,
+    )
+    started = service.start_capture(
+        {
+            "identity": dataclasses.asdict(item),
+            "release_id": "release",
+            "environment_id": "browser",
+            "capture_authorized": True,
+        }
+    )
+    service.mark(started["capture_id"], "selection disappeared")
+    with pytest.raises(BilateralLiveRepairError, match="stale"):
+        service.finalize_capture(
+            started["capture_id"],
+            {
+                "current_identity": dataclasses.asdict(item),
+                "expected_positive": ["selection remains stable"],
+                "expected_negative": ["hidden storeys are never selected"],
+                "preservation_claims": ["source geometry remains unchanged"],
+            },
+        )
+    service.close()
+
+
 def test_status_sweeps_expired_capture_and_scrubs_all_buffers(tmp_path):
     item = identity()
     service = BilateralLiveRepairService(tmp_path, attempt_archive_db_path=tmp_path / "attempts.db")
@@ -202,6 +252,33 @@ def test_status_sweeps_expired_capture_and_scrubs_all_buffers(tmp_path):
     capture.started_at = time.time() - 2
     status = service.status()
     assert status["active_capture_count"] == 0
+    assert capture._closed is True
+    assert capture._marker_event is None
+    assert not capture._events
+    service.close()
+
+
+def test_idle_capture_expires_without_another_service_request(tmp_path):
+    item = identity()
+    service = BilateralLiveRepairService(
+        tmp_path,
+        attempt_archive_db_path=tmp_path / "attempts.db",
+    )
+    started = service.start_capture(
+        {
+            "identity": dataclasses.asdict(item),
+            "release_id": "release",
+            "environment_id": "browser",
+            "capture_authorized": True,
+            "retention_seconds": 1,
+        }
+    )
+    capture = service._captures[started["capture_id"]]
+    capture.mark_incident("selection disappeared")
+    deadline = time.time() + 2.5
+    while started["capture_id"] in service._captures and time.time() < deadline:
+        time.sleep(0.02)
+    assert started["capture_id"] not in service._captures
     assert capture._closed is True
     assert capture._marker_event is None
     assert not capture._events
@@ -248,6 +325,25 @@ def test_marker_payload_cannot_replace_canonical_marker():
     assert event.payload["marker"] == "canonical marker"
 
 
+def test_direct_finalize_dissolves_separately_retained_marker():
+    item = identity()
+    capture = BoundedIncidentCapture(
+        identity=item,
+        release_id="release",
+        environment_id="browser",
+        capture_authorized=True,
+    )
+    capture.mark_incident("canonical marker")
+    capture.finalize(
+        expected_positive=["selection remains stable"],
+        expected_negative=["hidden storeys are never selected"],
+        preservation_claims=["source geometry remains unchanged"],
+        current_identity=item,
+    )
+    assert capture._marker_event is None
+    assert not capture._events
+
+
 def test_expired_capture_scrubs_separate_marker():
     item = identity()
     capture = BoundedIncidentCapture(
@@ -292,7 +388,11 @@ def test_canonical_mapping_rejects_stringified_key_collisions():
 
 def test_preview_receipt_rehydration_recomputes_identity(tmp_path):
     item = identity()
-    service = BilateralLiveRepairService(tmp_path, attempt_archive_db_path=tmp_path / "attempts.db")
+    service = BilateralLiveRepairService(
+        tmp_path,
+        attempt_archive_db_path=tmp_path / "attempts.db",
+        current_identity_resolver=lambda _captured: item,
+    )
     started = service.start_capture(
         {
             "identity": dataclasses.asdict(item),

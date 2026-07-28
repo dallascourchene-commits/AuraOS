@@ -215,6 +215,7 @@ class BoundedIncidentCapture:
             raise BilateralLiveRepairError("incident replay packet exceeds the durable archive byte ceiling")
         self._closed = True
         self._events.clear()
+        self._marker_event = None
         return packet
 
 

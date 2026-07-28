@@ -43,17 +43,26 @@ class _PreviewLearningProjectionMixin:
         after_digest = digest(clean_after)
         degraded = clean_after != clean_before and clean_after.get("ok") is not True
         executed = False
+        rollback_succeeded = False
         restored = ""
+        rollback_failure = ""
         if degraded:
             if not rollback_reason.strip():
                 raise ValueError("rollback_reason is required for degraded health")
             if rollback_preauthorized is True:
                 if restore_local is None:
                     raise BilateralLiveRepairError("pre-authorized rollback requires an isolated restore adapter")
-                restored = _digest_text(restore_local(verified), "restored_digest")
-                if restored != verified:
-                    raise BilateralLiveRepairError("rollback did not restore the exact last verified identity")
                 executed = True
+                try:
+                    restored = _digest_text(restore_local(verified), "restored_digest")
+                    if restored == verified:
+                        rollback_succeeded = True
+                    else:
+                        rollback_failure = "rollback did not restore the exact last verified identity"
+                except Exception as exc:
+                    rollback_failure = (
+                        f"{type(exc).__name__}: isolated restore adapter failed"
+                    )[:1000]
         identity = {
             "replay_packet_digest": packet.packet_digest,
             "bilateral_identity_digest": packet.identity.identity_digest,
@@ -65,7 +74,9 @@ class _PreviewLearningProjectionMixin:
             "degraded": degraded,
             "rollback_preauthorized": rollback_preauthorized,
             "technical_rollback_executed": executed,
+            "rollback_succeeded": rollback_succeeded,
             "restored_digest": restored,
+            "rollback_failure": rollback_failure,
         }
         key = digest(identity)
         receipt = PreviewRollbackReceipt(
@@ -81,8 +92,10 @@ class _PreviewLearningProjectionMixin:
             degraded=degraded,
             rollback_preauthorized=rollback_preauthorized,
             technical_rollback_executed=executed,
+            rollback_succeeded=rollback_succeeded,
             restored_digest=restored,
             rollback_reason=str(rollback_reason)[:1000],
+            rollback_failure=rollback_failure,
             human_promotion_required=True,
             production_mutation=False,
             created_at=time.time(),
@@ -96,7 +109,17 @@ class _PreviewLearningProjectionMixin:
                 "candidate_digest": candidate,
                 "last_verified_digest": verified,
             },
-            result={"ok": not degraded or executed, "status": "ROLLED_BACK" if executed else "PREVIEWED", "preview": receipt.to_dict()},
+            result={
+                "ok": not degraded or rollback_succeeded,
+                "status": (
+                    "ROLLED_BACK"
+                    if rollback_succeeded
+                    else "ROLLBACK_FAILED"
+                    if executed
+                    else "PREVIEWED"
+                ),
+                "preview": receipt.to_dict(),
+            },
             workflow_state={
                 "workflow_id": packet.packet_id,
                 "current_phase": "B13_PREVIEW_ROLLBACK",
@@ -107,6 +130,8 @@ class _PreviewLearningProjectionMixin:
         if archive.get("ok") is not True:
             raise BilateralLiveRepairError("canonical Attempt Archive did not retain the preview/rollback receipt")
         self._previews[receipt.preview_id] = receipt
+        if rollback_failure:
+            raise BilateralLiveRepairError(rollback_failure)
         return receipt
 
     def run_governed_u7(

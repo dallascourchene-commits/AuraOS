@@ -52,16 +52,21 @@ class BilateralLiveRepairService(
         capture._marker_event = None
 
     def _sweep_expired_captures(self) -> None:
-        now = time.time()
-        for capture_id, capture in list(self._captures.items()):
-            if not capture._closed and now - capture.started_at > capture.retention_seconds:
-                self._scrub_capture(capture)
-            if capture._closed:
-                self._captures.pop(capture_id, None)
+        with self._capture_lock:
+            now = time.time()
+            for capture_id, capture in list(self._captures.items()):
+                if not capture._closed and now - capture.started_at > capture.retention_seconds:
+                    self._scrub_capture(capture)
+                if capture._closed:
+                    self._captures.pop(capture_id, None)
+                    timer = self._capture_timers.pop(capture_id, None)
+                    if timer is not None:
+                        timer.cancel()
 
     def close(self) -> None:
-        for capture in self._captures.values():
-            self._scrub_capture(capture)
+        with self._capture_lock:
+            for capture in self._captures.values():
+                self._scrub_capture(capture)
         super().close()
 
     def status(self) -> dict[str, Any]:
@@ -69,23 +74,31 @@ class BilateralLiveRepairService(
         return super().status()
 
     def observe(self, capture_id: str, event_type: str, payload: Mapping[str, Any] | None = None) -> dict[str, Any]:
-        capture = self._capture(capture_id)
-        try:
-            return super().observe(capture_id, event_type, payload)
-        except BilateralLiveRepairError:
-            if capture._closed:
-                self._scrub_capture(capture)
-                self._captures.pop(capture_id, None)
-            raise
+        with self._capture_lock:
+            capture = self._capture(capture_id)
+            try:
+                return super().observe(capture_id, event_type, payload)
+            except BilateralLiveRepairError:
+                if capture._closed:
+                    self._scrub_capture(capture)
+                    self._captures.pop(capture_id, None)
+                    timer = self._capture_timers.pop(capture_id, None)
+                    if timer is not None:
+                        timer.cancel()
+                raise
 
     def finalize_capture(self, capture_id: str, contract: Mapping[str, Any]) -> dict[str, Any]:
-        capture = self._capture(capture_id)
-        try:
-            return super().finalize_capture(capture_id, contract)
-        finally:
-            if capture._closed:
-                self._scrub_capture(capture)
-                self._captures.pop(capture_id, None)
+        with self._capture_lock:
+            capture = self._capture(capture_id)
+            try:
+                return super().finalize_capture(capture_id, contract)
+            finally:
+                if capture._closed:
+                    self._scrub_capture(capture)
+                    self._captures.pop(capture_id, None)
+                    timer = self._capture_timers.pop(capture_id, None)
+                    if timer is not None:
+                        timer.cancel()
 
     @staticmethod
     def _validate_packet(packet: IncidentReplayPacket) -> IncidentReplayPacket:
@@ -209,6 +222,25 @@ class BilateralLiveRepairService(
         ):
             raise BilateralLiveRepairError("runtime proof requirements differ from the captured obligations")
 
+        if packet.required_assets:
+            traces = proof.get("required_trace_artifacts")
+            if not isinstance(traces, list):
+                raise BilateralLiveRepairError("runtime proof omitted captured required assets")
+            proven_assets = {
+                row.get("path")
+                for row in traces
+                if (
+                    isinstance(row, Mapping)
+                    and row.get("present") is True
+                    and row.get("within_size_limit") is True
+                    and isinstance(row.get("path"), str)
+                )
+            }
+            if not set(packet.required_assets).issubset(proven_assets):
+                raise BilateralLiveRepairError(
+                    "runtime proof did not retain every captured required asset"
+                )
+
     def execute_replay(
         self,
         *,
@@ -235,7 +267,7 @@ class BilateralLiveRepairService(
         self._validate_runtime_proof(
             packet,
             proof,
-            allow_reduced_fixture=not (self.repo_root / ".git").exists(),
+            allow_reduced_fixture=self._allow_reduced_runtime_fixture,
         )
         proof_digest = digest(proof)
         result = {
