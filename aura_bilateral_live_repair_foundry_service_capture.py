@@ -3,15 +3,22 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping
 from dataclasses import asdict
+import json
 from pathlib import Path
 from typing import Any
 
 from aura_arena_attempt_archive import ArenaAttemptArchive
 from aura_bilateral_live_repair_foundry_capture import BoundedIncidentCapture
 from aura_bilateral_live_repair_foundry_contracts import (
-    MAX_EVENTS, VERSION, _FALSE_AUTHORITY, BilateralIdentity,
-    BilateralLiveRepairError, IncidentReplayPacket, PreviewRollbackReceipt,
+    MAX_EVENTS,
+    VERSION,
+    _FALSE_AUTHORITY,
+    BilateralIdentity,
+    BilateralLiveRepairError,
+    IncidentReplayPacket,
+    PreviewRollbackReceipt,
     _required_text,
+    canonical_bytes,
 )
 
 
@@ -44,6 +51,7 @@ class _CapturePersistenceMixin:
         for capture in self._captures.values():
             capture._closed = True
             capture._events.clear()
+            capture._marker_event = None
         self._captures.clear()
         self._packets.clear()
         self._runtime_proofs.clear()
@@ -113,6 +121,11 @@ class _CapturePersistenceMixin:
             current_identity=current_identity,
         )
         self._packets[packet.packet_id] = packet
+        # The packet is already privacy-sanitized and digest-bound. Preserve its
+        # exact canonical bytes as a string so Attempt Archive's key-based secret
+        # scrubber does not rewrite safe boolean fields such as
+        # ``raw_secret_retained`` and invalidate durable replay identity.
+        packet_json = canonical_bytes(packet.to_dict()).decode("ascii")
         archive = self.attempt_archive.record(
             arena_id=str(contract.get("arena_id") or "construction"),
             route="bilateral-live-repair/incident-capture",
@@ -129,7 +142,7 @@ class _CapturePersistenceMixin:
                 "packet_digest": packet.packet_digest,
                 "privacy_receipt": packet.privacy_receipt,
                 "dissolution_receipt": asdict(packet.dissolution_receipt),
-                "incident_replay_packet": packet.to_dict(),
+                "incident_replay_packet_json": packet_json,
             },
             workflow_state={
                 "workflow_id": packet.packet_id,
@@ -163,7 +176,18 @@ class _CapturePersistenceMixin:
                 continue
             artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
             result = dict((artifact or {}).get("result") or {})
-            raw_packet = result.get("incident_replay_packet")
+            packet_json = result.get("incident_replay_packet_json")
+            raw_packet: Any = None
+            if isinstance(packet_json, str) and packet_json:
+                try:
+                    raw_packet = json.loads(packet_json)
+                except json.JSONDecodeError as exc:
+                    raise BilateralLiveRepairError("archived incident packet JSON is invalid") from exc
+            elif isinstance(result.get("incident_replay_packet"), Mapping):
+                # Read-only compatibility for artifacts created before exact-byte
+                # packet retention. Identity validation still fails closed if an
+                # older archive scrubbed a digest-bearing nested field.
+                raw_packet = result["incident_replay_packet"]
             if isinstance(raw_packet, Mapping):
                 item = IncidentReplayPacket.from_mapping(raw_packet)
                 if item.packet_id != resolved:
