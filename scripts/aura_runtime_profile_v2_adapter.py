@@ -18,7 +18,10 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from aura_bilateral_intent_compiler import VERSION as CONFIRMATION_PACKET_VERSION
+from aura_bilateral_intent_compiler import (
+    VERSION as CONFIRMATION_PACKET_VERSION,
+    bilateral_compiler_capabilities,
+)
 from aura_event_contracts import stable_digest
 from aura_intent_refinement import IntentConfirmationReceipt, IntentRefinementSession
 from aura_unified_memory_continuity import (
@@ -71,6 +74,8 @@ IDENTIFIER = re.compile(r"[a-z0-9][a-z0-9._:-]{0,127}")
 JSON_PATH = re.compile(r"[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*")
 OPERATORS = frozenset({"equals", "not_equals", "truthy", "falsy", "contains", "nonempty"})
 NO_POST_CONFIRMATION_REVISION = "NOT_CREATED_NO_POST_CONFIRMATION_DRIFT"
+U7_INTENT_REVISION_OWNER = "aura_intent_refinement.IntentRevisionDelta"
+U7_REPROOF_OWNER = "aura_unified_memory_continuity_learning.compile_current_reproof"
 AUTHORITY_CONTRACT = {
     **_v1.AUTHORITY_CONTRACT,
     "production_mutation": False,
@@ -163,7 +168,7 @@ def _git(root: Path, *args: str) -> str:
 
 
 def _repo_identity(root: Path) -> dict[str, Any]:
-    if not (root / ".git").exists():
+    if _git(root, "rev-parse", "--is-inside-work-tree") != "true":
         raise BilateralRuntimeProfileError("V2 runtime proof requires a Git checkout")
     status = [item for item in _git(root, "status", "--porcelain=v1", "-z").split("\x00") if item]
     return {
@@ -590,6 +595,7 @@ def _load_confirmation_packet(
     refinement = raw.get("refinement_session")
     guardrails = raw.get("guardrails")
     u7 = raw.get("u7_references")
+    packet_authority = raw.get("authority")
     if (
         not isinstance(refinement, Mapping)
         or not isinstance(guardrails, list)
@@ -611,7 +617,39 @@ def _load_confirmation_packet(
     ):
         raise BilateralRuntimeProfileError("confirmation packet does not expose the canonical confirmed requirements")
     allowed_paths = list(profile["allowed_paths"])
-    revision_status = u7.get("intent_revision_status")
+    canonical_authority = AuthorityEnvelope(inspect=True).to_dict()
+    compiler_authority = bilateral_compiler_capabilities()
+    canonical_packet_authority = {
+        key: value for key, value in compiler_authority.items() if key != "version"
+    }
+    if (
+        intent.authority.to_dict() != canonical_authority
+        or packet_authority != canonical_packet_authority
+    ):
+        raise BilateralRuntimeProfileError(
+            "confirmation packet authority must be the canonical inspect-only envelope and projection"
+        )
+    u7_payload = {
+        "confirmation_digest": receipt.confirmation_id,
+        "negative_requirements_digest": receipt.negative_requirements_digest,
+        "guardrail_set_digest": receipt.guardrail_set_digest,
+        "intent_revision_status": NO_POST_CONFIRMATION_REVISION,
+        "incident_replay_status": "NOT_OBSERVED_NO_EXECUTION_INCIDENT",
+        "observed_guardrail_violation_refs": [],
+        "proposal_only": True,
+        "current_reproof_required_before_learning": True,
+        "current_reproof_owner": U7_REPROOF_OWNER,
+        "intent_revision_owner": U7_INTENT_REVISION_OWNER,
+    }
+    canonical_u7 = {
+        **u7_payload,
+        "u7_binding_digest": stable_digest(u7_payload),
+    }
+    if dict(u7) != canonical_u7:
+        raise BilateralRuntimeProfileError(
+            "confirmation packet U7 references are incomplete, stale, or not canonically bound"
+        )
+    revision_status = u7["intent_revision_status"]
     if revision_status != profile["intent_contract"]["intent_revision_status"]:
         raise BilateralRuntimeProfileError("canonical intent revision status mismatch")
     if (
@@ -632,7 +670,7 @@ def _load_confirmation_packet(
             "canonical intent, ledger, confirmation, guardrail, or requirement identity mismatch"
         )
     profile_digest = str(profile["profile_sha256"])
-    authority_digest = stable_digest(intent.authority.to_dict())
+    authority_digest = stable_digest(canonical_authority)
     try:
         current = receipt.is_current(
             repository_head=str(repository["head"]),
@@ -705,8 +743,7 @@ def _consume_confirmation(root: Path, confirmation: Mapping[str, Any]) -> dict[s
         raise BilateralRuntimeProfileError("trusted confirmation consumption ledger is unsafe")
     ledger.mkdir(mode=0o700, parents=False, exist_ok=True)
     confirmation_digest = str(confirmation["confirmation_digest"])
-    packet_digest = str(confirmation["packet_sha256"])
-    marker = ledger / f"{confirmation_digest}.{packet_digest}.consumed.json"
+    marker = ledger / f"{confirmation_digest}.consumed.json"
     receipt = {
         "version": "AURA_CONFIRMATION_CONSUMPTION_V1",
         "confirmation_digest": confirmation["confirmation_digest"],

@@ -8,7 +8,10 @@ import subprocess
 
 import pytest
 
-from aura_bilateral_intent_compiler import VERSION as CONFIRMATION_PACKET_VERSION
+from aura_bilateral_intent_compiler import (
+    VERSION as CONFIRMATION_PACKET_VERSION,
+    bilateral_compiler_capabilities,
+)
 from aura_event_contracts import stable_digest
 from aura_intent_refinement import IntentConfirmationReceipt, IntentRefinementSession
 from aura_unified_memory_continuity import (
@@ -426,6 +429,21 @@ def _write_confirmation_packet(
         },
         now=1.0,
     )
+    u7_payload = {
+        "confirmation_digest": receipt.confirmation_id,
+        "negative_requirements_digest": receipt.negative_requirements_digest,
+        "guardrail_set_digest": receipt.guardrail_set_digest,
+        "intent_revision_status": NO_POST_CONFIRMATION_REVISION,
+        "incident_replay_status": "NOT_OBSERVED_NO_EXECUTION_INCIDENT",
+        "observed_guardrail_violation_refs": [],
+        "proposal_only": True,
+        "current_reproof_required_before_learning": True,
+        "current_reproof_owner":
+            "aura_unified_memory_continuity_learning.compile_current_reproof",
+        "intent_revision_owner": "aura_intent_refinement.IntentRevisionDelta",
+    }
+    packet_authority = bilateral_compiler_capabilities()
+    packet_authority.pop("version")
     packet = {
         "version": CONFIRMATION_PACKET_VERSION,
         "intent_packet": intent.to_dict(),
@@ -434,8 +452,10 @@ def _write_confirmation_packet(
         "refinement_session": session.to_dict(),
         "guardrails": guardrails,
         "u7_references": {
-            "intent_revision_status": NO_POST_CONFIRMATION_REVISION,
+            **u7_payload,
+            "u7_binding_digest": stable_digest(u7_payload),
         },
+        "authority": packet_authority,
     }
     target.write_text(json.dumps(packet), encoding="utf-8")
     return target
@@ -688,6 +708,19 @@ def test_v2_runtime_rejects_replayed_confirmation_for_fresh_output(
         )
 
 
+def test_v2_runtime_accepts_a_linked_git_worktree(tmp_path: Path) -> None:
+    root, profile, confirmation = _repo(tmp_path)
+    linked = tmp_path / "linked-worktree"
+    _git(root, "worktree", "add", "--detach", "-q", str(linked), "HEAD")
+    result = run_runtime_profile_v2(
+        linked,
+        profile_path=profile.name,
+        confirmation_packet=confirmation,
+        output_dir=tmp_path / "linked-evidence",
+    )
+    assert result["ok"] is True
+
+
 def test_v2_profile_rejects_unreferenced_assertions(tmp_path: Path) -> None:
     root, profile, _ = _repo(tmp_path)
     payload = json.loads(profile.read_text(encoding="utf-8"))
@@ -753,13 +786,60 @@ def test_v2_runtime_rejects_confirmation_replay_from_renamed_copy(
     )
     assert first["ok"] is True
     copied_confirmation = tmp_path / "renamed-confirmation-copy.json"
-    copied_confirmation.write_bytes(confirmation.read_bytes())
+    copied_confirmation.write_text(
+        json.dumps(
+            json.loads(confirmation.read_text(encoding="utf-8")),
+            indent=2,
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
     with pytest.raises(BilateralRuntimeProfileError, match="already been consumed"):
         run_runtime_profile_v2(
             root,
             profile_path=profile.name,
             confirmation_packet=copied_confirmation,
             output_dir=tmp_path / "evidence-second",
+        )
+
+
+def test_v2_runtime_rejects_partial_or_rebound_u7_references(tmp_path: Path) -> None:
+    root, profile, confirmation = _repo(tmp_path)
+    packet = json.loads(confirmation.read_text(encoding="utf-8"))
+    packet["u7_references"].pop("guardrail_set_digest")
+    confirmation.write_text(json.dumps(packet), encoding="utf-8")
+    with pytest.raises(BilateralRuntimeProfileError, match="U7 references"):
+        run_runtime_profile_v2(
+            root,
+            profile_path=profile.name,
+            confirmation_packet=confirmation,
+            output_dir=tmp_path / "evidence-partial-u7",
+        )
+
+    confirmation = _write_confirmation_packet(root, profile, confirmation)
+    packet = json.loads(confirmation.read_text(encoding="utf-8"))
+    packet["u7_references"]["u7_binding_digest"] = "f" * 64
+    confirmation.write_text(json.dumps(packet), encoding="utf-8")
+    with pytest.raises(BilateralRuntimeProfileError, match="U7 references"):
+        run_runtime_profile_v2(
+            root,
+            profile_path=profile.name,
+            confirmation_packet=confirmation,
+            output_dir=tmp_path / "evidence-rebound-u7",
+        )
+
+
+def test_v2_runtime_rejects_noncanonical_authority_projection(tmp_path: Path) -> None:
+    root, profile, confirmation = _repo(tmp_path)
+    packet = json.loads(confirmation.read_text(encoding="utf-8"))
+    packet["authority"]["automatic_commit"] = True
+    confirmation.write_text(json.dumps(packet), encoding="utf-8")
+    with pytest.raises(BilateralRuntimeProfileError, match="canonical inspect-only"):
+        run_runtime_profile_v2(
+            root,
+            profile_path=profile.name,
+            confirmation_packet=confirmation,
+            output_dir=tmp_path / "evidence-authority",
         )
 
 

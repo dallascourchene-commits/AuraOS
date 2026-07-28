@@ -508,20 +508,19 @@ export class GaussianRenderer {
     }
 
     const assets = [];
-    for (const item of admitted) {
-      if (signal?.aborted) throw new Error("Gaussian initialization cancelled");
-      const asset = await materializeGaussianAsset(item.payload, item.preflight);
-      if (signal?.aborted) throw new Error("Gaussian initialization cancelled");
-      assets.push(asset);
-    }
-
     try {
+      for (const item of admitted) {
+        if (signal?.aborted) throw new Error("Gaussian initialization cancelled");
+        const asset = await materializeGaussianAsset(item.payload, item.preflight);
+        if (signal?.aborted) throw new Error("Gaussian initialization cancelled");
+        assets.push(asset);
+      }
       await this.presentationRenderer.initialize(scenePayload, planPayload, { signal });
       if (signal?.aborted) throw new Error("Gaussian initialization cancelled");
     } catch (error) {
       let cleanupError = null;
       try {
-        await this._disposePresentationRenderer();
+        await this._disposePresentationRenderer({ force: true });
       } catch (cleanup) {
         cleanupError = cleanup;
       }
@@ -563,8 +562,8 @@ export class GaussianRenderer {
     return this.status();
   }
 
-  async _disposePresentationRenderer() {
-    if (this.presentationDisposed) return;
+  async _disposePresentationRenderer({ force = false } = {}) {
+    if (this.presentationDisposed && !force) return;
     await this.presentationRenderer.dispose();
     this.presentationDisposed = true;
   }

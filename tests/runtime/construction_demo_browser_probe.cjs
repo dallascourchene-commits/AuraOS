@@ -456,20 +456,14 @@ async function exerciseBilateralRendererContract(page) {
     });
     const missingBlueprintScene = {
       ...packet.scene,
-      assets: [
-        ...packet.scene.assets.filter(
-          (asset) => !(asset.asset_type === "PLANE" && asset.frame_id === otherStorey),
-        ),
-        {
-          ...packet.scene.assets.find(
-            (asset) =>
-              asset.asset_type === "PLANE" &&
-              asset.frame_id === storeyWithIssue,
-          ),
-          asset_id: "asset:unrelated-plan",
-          frame_id: otherStorey,
-        },
-      ],
+      assets: packet.scene.assets.map((asset) =>
+        asset.asset_type === "PLANE" && asset.frame_id === otherStorey
+          ? {
+              ...asset,
+              asset_type: "DOCUMENT",
+            }
+          : asset,
+      ),
     };
     try {
       await missingBlueprintRenderer.initialize(

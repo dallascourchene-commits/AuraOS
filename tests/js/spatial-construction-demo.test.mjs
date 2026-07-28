@@ -738,6 +738,105 @@ test("Construction renderer bounds a stalled initialization and releases owners"
   assert.equal(stalledPresentation.disposed, 1);
 });
 
+test("Construction renderer cleans a non-cooperative late initialization settlement", async () => {
+  const { scene, plan } = constructionFixture();
+  const latePresentation = new TestPresentationRenderer();
+  latePresentation.initialize = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1_050));
+    latePresentation.initialized += 1;
+    latePresentation.state = RENDERER_STATES.INITIALIZED;
+  };
+  const renderer = new ConstructionSceneRenderer({
+    presentationRenderer: latePresentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: latePresentation,
+      drawGaussianPass: async () => () => {},
+      now: () => 0,
+    }),
+    initializationTimeoutMs: 10,
+  });
+  await assert.rejects(
+    renderer.initialize(scene, plan, {
+      meshPayloads: [{
+        asset_id: "asset:mesh",
+        source_digest: "1".repeat(64),
+        decoded_byte_length: 256,
+        resource: { local: true },
+      }],
+      gaussianPayloads: [gaussianPayload()],
+    }),
+    /timed out after 10 ms/,
+  );
+  assert.equal(renderer.status().cleanup_pending, true);
+  await new Promise((resolve) => setTimeout(resolve, 75));
+  assert.equal(renderer.status().cleanup_pending, false);
+  assert.equal(renderer.status().state, RENDERER_STATES.LOST);
+  assert.equal(latePresentation.state, RENDERER_STATES.DISPOSED);
+  assert.equal(latePresentation.disposed, 2);
+});
+
+test("Construction renderer serializes initialization failure and external cleanup", async () => {
+  const { scene, plan } = constructionFixture();
+  const presentation = new TestPresentationRenderer();
+  presentation.initialize = (_scene, _plan, { signal } = {}) =>
+    new Promise((_, reject) => {
+      signal?.addEventListener("abort", () => reject(new Error("cancelled")), { once: true });
+    });
+  const renderer = new ConstructionSceneRenderer({
+    presentationRenderer: presentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: presentation,
+      drawGaussianPass: async () => () => {},
+      now: () => 0,
+    }),
+  });
+  const initialization = renderer.initialize(scene, plan, {
+    meshPayloads: [{
+      asset_id: "asset:mesh",
+      source_digest: "1".repeat(64),
+      decoded_byte_length: 256,
+      resource: { local: true },
+    }],
+    gaussianPayloads: [gaussianPayload()],
+  });
+  const loss = renderer.markDeviceLost();
+  const disposal = renderer.dispose();
+  await assert.rejects(initialization, /cancelled/);
+  await Promise.all([loss, disposal]);
+  assert.equal(presentation.disposed, 1);
+});
+
+test("Construction renderer accepts either canonical degree-zero metadata alias", async () => {
+  const { scene, plan } = constructionFixture();
+  const splat = scene.assets.find((asset) => asset.asset_type === "GAUSSIAN_SPLAT");
+  delete splat.metadata.gaussian_sh_degree;
+  const presentation = new TestPresentationRenderer();
+  const renderer = new ConstructionSceneRenderer({
+    presentationRenderer: presentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: presentation,
+      drawGaussianPass: async () => () => {},
+      now: () => 0,
+    }),
+  });
+  await renderer.initialize(scene, plan, {
+    meshPayloads: [{
+      asset_id: "asset:mesh",
+      source_digest: "1".repeat(64),
+      decoded_byte_length: 256,
+      resource: { local: true },
+    }],
+    gaussianPayloads: [gaussianPayload()],
+  });
+  await renderer.dispose();
+});
+
 test("Construction device-loss cleanup failures remain observable", async () => {
   const { scene, plan } = constructionFixture();
   const presentation = new TestPresentationRenderer();

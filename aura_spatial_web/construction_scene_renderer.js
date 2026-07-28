@@ -203,8 +203,15 @@ function aggregate(errors, message) {
   return present.length === 1 ? present[0] : new AggregateError(present, message);
 }
 
-async function boundedInitialization(promise, timeoutMs, label, onTimeout) {
+async function boundedInitialization(
+  promise,
+  timeoutMs,
+  label,
+  onTimeout,
+  onLateSettlement,
+) {
   let timeoutId;
+  let graceTimeoutId;
   let timeoutError = null;
   try {
     return await Promise.race([
@@ -224,10 +231,18 @@ async function boundedInitialization(promise, timeoutMs, label, onTimeout) {
     if (error === timeoutError) {
       // Give in-flight init a bounded grace period to settle after abort,
       // never re-introducing an unbounded wait.
+      let settled = false;
       await Promise.race([
-        promise.catch(() => {}),
-        new Promise((resolve) => setTimeout(resolve, 1_000)),
+        promise.then(
+          () => { settled = true; },
+          () => { settled = true; },
+        ),
+        new Promise((resolve) => {
+          graceTimeoutId = setTimeout(resolve, 1_000);
+        }),
       ]);
+      clearTimeout(graceTimeoutId);
+      if (!settled) onLateSettlement?.(promise);
     }
     throw error;
   } finally {
@@ -294,13 +309,34 @@ export class ConstructionSceneRenderer {
     this.cancelled = false;
     this.initializationTimeoutMs = initializationTimeoutMs;
     this.initializationAbortController = null;
+    this.initializationPromise = null;
+    this.cleanupPromise = null;
+    this.resourcesReleased = false;
+    this.lateInitializationCleanupPending = false;
     this.contextLossTarget = null;
     this.contextLossHandler = null;
     this.cleanupFailure = null;
     this.inspectorStateCache = null;
   }
 
-  async initialize(
+  initialize(
+    scenePayload,
+    planPayload,
+    options = {},
+  ) {
+    if (this.initializationPromise || this.state !== RENDERER_STATES.NEW) {
+      return Promise.reject(new Error("Construction scene renderer may initialize only once"));
+    }
+    const operation = this._initialize(scenePayload, planPayload, options);
+    this.initializationPromise = operation;
+    const clear = () => {
+      if (this.initializationPromise === operation) this.initializationPromise = null;
+    };
+    operation.then(clear, clear);
+    return operation;
+  }
+
+  async _initialize(
     scenePayload,
     planPayload,
     { meshPayloads = [], gaussianPayloads = [], signal, restoreState = null } = {},
@@ -321,7 +357,8 @@ export class ConstructionSceneRenderer {
       const invalidManifest = this.scene.assets.some(
         (asset) =>
           asset.asset_type === "GAUSSIAN_SPLAT" &&
-          (asset.metadata?.gaussian_sh_degree !== 0 || asset.metadata?.sh_degree !== 0),
+          asset.metadata?.gaussian_sh_degree !== 0 &&
+          asset.metadata?.sh_degree !== 0,
       );
       const invalidPayload =
         Array.isArray(gaussianPayloads) && gaussianPayloads.some((payload) => payload?.sh_degree !== 0);
@@ -383,6 +420,7 @@ export class ConstructionSceneRenderer {
           this.initializationTimeoutMs,
           "Construction Gaussian initialization",
           (error) => initializationController.abort(error),
+          (promise) => this._trackLateInitialization(promise),
         );
       } else {
         await boundedInitialization(
@@ -394,6 +432,7 @@ export class ConstructionSceneRenderer {
           this.initializationTimeoutMs,
           "Construction presentation initialization",
           (error) => initializationController.abort(error),
+          (promise) => this._trackLateInitialization(promise),
         );
       }
       if (initializationController.signal.aborted || this.cancelled) {
@@ -403,6 +442,7 @@ export class ConstructionSceneRenderer {
       this.state = RENDERER_STATES.INITIALIZED;
       if (restoreState !== null) this._restoreContinuityState(restoreState);
     } catch (error) {
+      this._unbindContextLoss();
       const cleanup = await this._disposeOwnedResources();
       this.state = RENDERER_STATES.LOST;
       if (cleanup) this.cleanupFailure = cleanup;
@@ -414,6 +454,25 @@ export class ConstructionSceneRenderer {
       }
     }
     return this.status();
+  }
+
+  _trackLateInitialization(promise) {
+    this.lateInitializationCleanupPending = true;
+    void promise.then(
+      () => this._disposeOwnedResources({ force: true }),
+      () => this._disposeOwnedResources({ force: true }),
+    ).then(
+      (failure) => {
+        this.lateInitializationCleanupPending = false;
+        if (failure) this.cleanupFailure = failure;
+        this.state = RENDERER_STATES.LOST;
+      },
+      (error) => {
+        this.lateInitializationCleanupPending = false;
+        this.cleanupFailure = error;
+        this.state = RENDERER_STATES.LOST;
+      },
+    );
   }
 
   continuityState() {
@@ -899,52 +958,75 @@ export class ConstructionSceneRenderer {
     this.initializationAbortController?.abort(
       new Error("Construction initialization cancelled by device loss"),
     );
-    const errors = [];
-    try {
-      await this.overlayPass.dispose();
-    } catch (error) {
-      errors.push(error);
+    const pendingInitialization = this.initializationPromise;
+    if (pendingInitialization) {
+      try {
+        await pendingInitialization;
+      } catch {
+        // Initialization owns and completes its rejection cleanup.
+      }
     }
-    try {
-      await this.meshPass.dispose();
-    } catch (error) {
-      errors.push(error);
-    }
-    try {
-      if (this.gaussianOwnerActive) await this.gaussianRenderer.markDeviceLost();
-      else await this.presentationRenderer.dispose();
-    } catch (error) {
-      errors.push(error);
-    }
+    const failure = await this._disposeOwnedResources({ deviceLost: true });
     this.state = RENDERER_STATES.LOST;
-    const failure = aggregate(errors, "Construction device-loss cleanup failed");
     this.cleanupFailure = failure;
     if (failure) throw failure;
     return this.status();
   }
 
-  async _disposeOwnedResources() {
-    const errors = [];
-    for (const owner of [this.overlayPass, this.meshPass]) {
+  async _disposeOwnedResources({ deviceLost = false, force = false } = {}) {
+    if (this.cleanupPromise) {
+      const concurrentFailure = await this.cleanupPromise;
+      if (force) return this._disposeOwnedResources({ deviceLost, force: true });
+      return concurrentFailure;
+    }
+    if (this.resourcesReleased && !force) return null;
+    const cleanup = (async () => {
+      const errors = [];
+      for (const owner of [this.overlayPass, this.meshPass]) {
+        try {
+          await owner.dispose();
+        } catch (error) {
+          errors.push(error);
+        }
+      }
       try {
-        await owner.dispose();
+        if (this.gaussianOwnerActive && deviceLost) {
+          await this.gaussianRenderer.markDeviceLost();
+        } else if (this.gaussianOwnerActive) {
+          await this.gaussianRenderer.dispose();
+        } else {
+          await this.presentationRenderer.dispose();
+        }
       } catch (error) {
         errors.push(error);
       }
-    }
+      return aggregate(errors, "Construction renderer cleanup failed");
+    })();
+    this.cleanupPromise = cleanup;
     try {
-      if (this.gaussianOwnerActive) await this.gaussianRenderer.dispose();
-      else await this.presentationRenderer.dispose();
-    } catch (error) {
-      errors.push(error);
+      const failure = await cleanup;
+      if (!failure) this.resourcesReleased = true;
+      return failure;
+    } finally {
+      if (this.cleanupPromise === cleanup) this.cleanupPromise = null;
     }
-    return aggregate(errors, "Construction renderer cleanup failed");
   }
 
   async dispose() {
     if (this.state === RENDERER_STATES.DISPOSED) return this.status();
     this._unbindContextLoss();
     this.cancelled = true;
+    this.initializationAbortController?.abort(
+      new Error("Construction initialization cancelled by disposal"),
+    );
+    const pendingInitialization = this.initializationPromise;
+    if (pendingInitialization) {
+      try {
+        await pendingInitialization;
+      } catch {
+        // Initialization owns and completes its rejection cleanup.
+      }
+    }
     const failure = await this._disposeOwnedResources();
     this.scene = null;
     this.plan = null;
@@ -973,7 +1055,9 @@ export class ConstructionSceneRenderer {
       selected_storey_frame_id: this.selectedStoreyFrameId,
       selected_entity_id: this.selectedEntityId,
       inspector_state: this.inspectorState(),
-      cleanup_succeeded: this.cleanupFailure === null,
+      cleanup_succeeded:
+        this.cleanupFailure === null && !this.lateInitializationCleanupPending,
+      cleanup_pending: this.lateInitializationCleanupPending,
       cleanup_error: this.cleanupFailure
         ? Object.freeze({
             name: this.cleanupFailure.name || "Error",
