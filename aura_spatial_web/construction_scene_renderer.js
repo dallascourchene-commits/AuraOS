@@ -222,11 +222,12 @@ async function boundedInitialization(promise, timeoutMs, label, onTimeout) {
     ]);
   } catch (error) {
     if (error === timeoutError) {
-      try {
-        await promise;
-      } catch (_) {
-        // The timeout remains the primary failure after cancellation settles.
-      }
+      // Give in-flight init a bounded grace period to settle after abort,
+      // never re-introducing an unbounded wait.
+      await Promise.race([
+        promise.catch(() => {}),
+        new Promise((resolve) => setTimeout(resolve, 1_000)),
+      ]);
     }
     throw error;
   } finally {
