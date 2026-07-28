@@ -1,0 +1,41 @@
+{
+  "version": "AURA_EVIDENCE_BOUND_PLAN_REVISION_DELTA_V1",
+  "revision_id": "bilateral-intent-final-revision-1",
+  "objective_id": "bilateral-intent-guardrail-foundry-final-b11-b15",
+  "base_commit": "f1b9d786c4ff30d1ff5b984f5859db80f33446cc",
+  "discovery": {
+    "canonical_attempt_owner": "aura_arena_attempt_archive.ArenaAttemptArchive",
+    "canonical_runtime_owner": "scripts/aura_runtime_refactor_harness.py plus scripts/aura_runtime_profile_v2_adapter.py",
+    "canonical_crucible_owner": "aura_showcase_crucible.LearningArenaShowcase",
+    "canonical_composition_surface": "aura_showcase_server.ShowcaseState",
+    "finding": "The final B11-B15 work should be a bounded evidence-contract adapter over existing owners rather than a new persistent archive, runtime, truth, learning, publication, or authority plane."
+  },
+  "invalidated_assumption": "The source owner set could not remain locked to governance files only after exact-head discovery identified a narrow adapter seam.",
+  "added_allowed_paths": [
+    "aura_bilateral_live_repair_foundry.py",
+    "tests/test_aura_bilateral_live_repair_foundry.py",
+    ".aura/runtime_profiles/bilateral_live_repair_foundry.v1.json",
+    "docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md",
+    ".aura/plan_revision_deltas/bilateral_intent_guardrail_foundry_final_revision_1.v1.json"
+  ],
+  "authority_impact": "none; every automatic patch, commit, push, pull-request, merge, deployment, production, professional, physical-work, and learning-promotion authority remains false",
+  "requirements_added": [
+    "privacy_redacted_bounded_incident_capture",
+    "deterministic_identity_bound_replay_packet",
+    "no_repeat_bounded_repair_attempts",
+    "positive_negative_preservation_and_adjacent_regression_proof",
+    "retained_last_verified_preview_and_rollback_receipt",
+    "p0_p1_current_reproof_with_human_community_disposition",
+    "qdkt_eligibility_without_auto_crystallization",
+    "projection_only_spatial_foundry_packet"
+  ],
+  "proof": {
+    "focused_test": "tests/test_aura_bilateral_live_repair_foundry.py",
+    "local_result": "9 passed",
+    "source_sha256": "81957a48a123f8eb2fe646a089a4774ab7ddec1dc53d8a04e88830b5699fa15f",
+    "test_sha256": "e11dd4a5a2c3a9a7cab43e6616e6c188fdf610e741818e0bbd8c9fcd60399684"
+  },
+  "rollback": "Delete the added adapter, focused test, profile, documentation, and this revision delta; existing canonical owners are otherwise unchanged.",
+  "human_reconfirmation_required": false,
+  "reason": "The change preserves the confirmed objective, prohibitions, scope, source authority, and human merge gate while selecting the smallest current adapter seam."
+}
