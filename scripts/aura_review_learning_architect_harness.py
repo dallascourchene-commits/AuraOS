@@ -292,7 +292,7 @@ def run(repo_root: Path, *, base_ref: str, head_ref: str) -> dict[str, Any]:
             "profile": "precision",
             "focus_directives": [
                 {
-                    "name": "pr164_review_lessons",
+                    "name": "standard_correctness",
                     "question": "Are all PR164 defect classes executable, bounded, and source-corroborated?",
                     "risk": "correctness",
                     "direction": "both",
@@ -301,7 +301,7 @@ def run(repo_root: Path, *, base_ref: str, head_ref: str) -> dict[str, Any]:
                     "suggested_tools": ["pytest", "ruff", "jsonschema"],
                 },
                 {
-                    "name": "review_authority_boundary",
+                    "name": "dependency_impact",
                     "question": "Can any reviewer payload or detector grant mutation or promotion authority?",
                     "risk": "authority",
                     "direction": "both",
