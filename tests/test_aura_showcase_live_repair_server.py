@@ -28,7 +28,10 @@ def test_showcase_status_and_existing_routes_are_composed(tmp_path):
     assert status == 200 and payload['ok'] is True
     assert payload['automatic_merge'] is False
     delegated_status, delegated=decoded(dispatch_live_repair_request(state,'GET','/api/showcase/projects'))
-    assert delegated_status == 200 and delegated['delegated'] is True
+    assert delegated_status == 200 and delegated['ok'] is True
+    assert delegated['default_project_id'] == 'winnipeg_pathways'
+    assert len(delegated['projects']) == 4
+    assert 'showcase_live_repair_version' not in delegated
     state.close()
 
 def test_showcase_capture_route_is_explicit_and_versioned(tmp_path):
@@ -82,7 +85,6 @@ def test_browser_cannot_submit_forged_runtime_proof_or_rollback_adapter(tmp_path
         'candidate_digest':sha('candidate'), 'last_verified_digest':sha('verified'),
         'health_before':{'ok':True}, 'health_after':{'ok':False},
         'environment_class':'LOCAL_EPHEMERAL', 'rollback_preauthorized':True,
-        'simulated_restored_digest':sha('verified'), 'rollback_reason':'degraded',
     }))
     assert preview_status == 409
     assert 'cannot manufacture a rollback adapter' in preview['error']
