@@ -244,6 +244,7 @@ def run(repo_root: Path, *, base_ref: str, head_ref: str) -> dict[str, Any]:
         "acceptance_criteria": _plan()["acceptance_criteria"],
         "risk_map": _plan()["risk_map"],
         "constraints": _plan()["constraints"],
+        "refresh_codemap": False,
         "use_emergent_evidence": True,
         "emergent_radius": 2,
         "emergent_max_atomic_nodes": 120,
