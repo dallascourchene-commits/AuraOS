@@ -190,41 +190,25 @@ jobs:
       - name: Verify exact-head source integrity evidence
         run: |
           python - <<'PY'
+          import os
           from pathlib import Path
-          from aura_source_integrity import compute_source_integrity
+          from aura_source_integrity import scan_utf8_source_tree
 
           root = Path('.').resolve()
-          required = (
-              'aura_coding_waboose_review_lessons.py',
-              'aura_review_lessons_contracts.py',
-              'aura_review_lessons_external.py',
-              'aura_review_lessons_security.py',
-              'aura_review_lessons_determinism.py',
-              'aura_review_lessons_engine.py',
-              'aura_review_lessons_registry.py',
-              'aura_review_lessons_replay.py',
-              'aura_review_lessons_source_scan.py',
-              'aura_source_integrity.py',
-              'aura_node.py',
-              'aura_coding_waboose_review_learning.py',
-              'aura_agent_arena_review_learning_bridge.py',
-              'aura_agent_arena_review_learning_mcp.py',
-              'schemas/aura_review_lesson.schema.json',
-              '.aura/review_lessons/pr164_spatial_review_lessons.json',
-              'scripts/aura_review_learning_architect_harness.py',
-              'tests/test_aura_coding_waboose_review_lessons.py',
-              'tests/test_aura_coding_waboose_review_learning.py',
-              'tests/test_aura_agent_arena_review_learning.py',
-              'tests/test_aura_review_lessons_codex_regressions.py',
-              'tests/test_aura_source_integrity.py',
-              'tests/test_aura_review_learning_mcp_codex.py',
+          result = scan_utf8_source_tree(
+              root,
+              expected_repository_head=os.environ["AURA_REVIEW_HEAD_SHA"],
+              require_git_tree=True,
           )
-          result = compute_source_integrity(root, required_paths=required)
-          assert result["ok"] is True, result
-          assert result["repository_head"]
-          assert result["source_tree_digest"]
-          assert result["registry_signature"]
-          assert result["validation"]["git_head_matches"] is True
+          assert result["status"] == "PASSED", result
+          assert result["failure_count"] == 0, result
+          assert result["repository_head"] == os.environ["AURA_REVIEW_HEAD_SHA"].lower()
+          assert result["repository_tree"]
+          assert result["git_tree_bound"] is True
+          assert result["git_binding_reason"] == "clean_exact_head"
+          assert result["production_mutation"] is False
+          assert result["automatic_fix"] is False
+          assert result["human_review_required"] is True
           PY
 
       - name: Run focused tests
