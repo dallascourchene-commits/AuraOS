@@ -4,7 +4,7 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import asdict
 import time
-from typing import Any
+from typing import TYPE_CHECKING, Any, cast
 
 from aura_bilateral_live_repair_foundry_contracts import (
     MAX_ATTEMPTS, PROJECTION_VERSION, _FALSE_AUTHORITY, BilateralIdentity,
@@ -14,6 +14,17 @@ from aura_bilateral_live_repair_foundry_contracts import (
 
 
 class _PreviewLearningProjectionMixin:
+    if TYPE_CHECKING:
+        attempt_archive: Any
+        _previews: dict[str, PreviewRollbackReceipt]
+
+        def _packet(self, packet_id: str) -> Any: ...
+
+        def _resolve_current_identity(
+            self,
+            expected: BilateralIdentity,
+        ) -> BilateralIdentity: ...
+
     def preview_candidate(
         self,
         *,
@@ -30,6 +41,7 @@ class _PreviewLearningProjectionMixin:
     ) -> PreviewRollbackReceipt:
         packet = self._packet(packet_id)
         packet.identity.assert_current(current_identity)
+        self._resolve_current_identity(packet.identity)
         candidate = _digest_text(candidate_digest, "candidate_digest")
         verified = _digest_text(last_verified_digest, "last_verified_digest")
         environment = _required_text(environment_class, "environment_class", limit=128).upper()
@@ -137,6 +149,9 @@ class _PreviewLearningProjectionMixin:
     def run_governed_u7(
         self,
         *,
+        packet_id: str,
+        candidate_digest: str,
+        current_identity: BilateralIdentity,
         bridge: Any,
         plan_phase_hash: str,
         task_id: str,
@@ -152,6 +167,10 @@ class _PreviewLearningProjectionMixin:
             observe_bridge_prediction,
         )
 
+        packet = self._packet(packet_id)
+        packet.identity.assert_current(current_identity)
+        self._resolve_current_identity(packet.identity)
+        candidate = _digest_text(candidate_digest, "candidate_digest")
         phase = _required_text(plan_phase_hash, "plan_phase_hash")
         task = _required_text(task_id, "task_id")
         session = None
@@ -193,9 +212,22 @@ class _PreviewLearningProjectionMixin:
         )
         return {
             "ok": result.get("ok") is True,
-            "prediction": prediction.to_dict() if hasattr(prediction, "to_dict") else dict(prediction),
-            "observation": observation.to_dict() if hasattr(observation, "to_dict") else dict(observation),
+            "prediction": (
+                cast(Any, prediction).to_dict()
+                if hasattr(prediction, "to_dict")
+                else dict(cast(Mapping[str, Any], prediction))
+            ),
+            "observation": (
+                cast(Any, observation).to_dict()
+                if hasattr(observation, "to_dict")
+                else dict(cast(Mapping[str, Any], observation))
+            ),
             "finalization": result,
+            "replay_packet_digest": packet.packet_digest,
+            "bilateral_identity_digest": packet.identity.identity_digest,
+            "candidate_digest": candidate,
+            "plan_phase_hash": phase,
+            "task_id": task,
             "canonical_owner": "aura_unified_memory_continuity_learning",
             "automatic_crystallization": False,
             "automatic_promotion": False,
@@ -235,6 +267,7 @@ class _PreviewLearningProjectionMixin:
     ) -> dict[str, Any]:
         packet = self._packet(packet_id)
         packet.identity.assert_current(current_identity)
+        self._resolve_current_identity(packet.identity)
         # Validate caller shape, but derive displayed confirmed intent only from
         # the digest-bound incident packet rather than caller projection data.
         canonical_sanitize(intent)
@@ -266,6 +299,20 @@ class _PreviewLearningProjectionMixin:
             raise BilateralLiveRepairError("repair projection includes a preview from another incident")
         preview_row = parsed_preview.to_dict() if parsed_preview else None
         u7 = dict(u7_result or {})
+        if u7:
+            verified_candidates = {
+                item.candidate_digest
+                for item in parsed_attempts
+                if item.promotion_ready is True
+            }
+            if (
+                u7.get("replay_packet_digest") != packet.packet_digest
+                or u7.get("bilateral_identity_digest") != packet.identity.identity_digest
+                or u7.get("candidate_digest") not in verified_candidates
+            ):
+                raise BilateralLiveRepairError(
+                    "U7 projection evidence is not bound to this incident and verified candidate"
+                )
         projection = {
             "version": PROJECTION_VERSION,
             "projection_only": True,

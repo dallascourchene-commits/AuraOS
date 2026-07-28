@@ -4,7 +4,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 import json
 import time
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from aura_bilateral_live_repair_foundry_contracts import (
     MAX_ATTEMPTS, _FALSE_AUTHORITY, BilateralIdentity, BilateralLiveRepairError,
@@ -15,6 +15,17 @@ from aura_bilateral_live_repair_foundry_contracts import (
 
 
 class _RuntimeRepairMixin:
+    if TYPE_CHECKING:
+        attempt_archive: Any
+        _runtime_proofs: dict[str, tuple[str, dict[str, Any]]]
+
+        def _packet(self, packet_id: str) -> IncidentReplayPacket: ...
+
+        def _resolve_current_identity(
+            self,
+            expected: BilateralIdentity,
+        ) -> BilateralIdentity: ...
+
     def record_repair_attempt(
         self,
         *,
@@ -28,6 +39,7 @@ class _RuntimeRepairMixin:
     ) -> RepairCandidateResult:
         packet = self._packet(packet_id)
         packet.identity.assert_current(current_identity)
+        self._resolve_current_identity(packet.identity)
         candidate = _digest_text(candidate_digest, "candidate_digest")
         proof_ref = _digest_text(runtime_proof_ref, "runtime_proof_ref")
         runtime_proof = self._runtime_proof(packet, proof_ref)
@@ -195,12 +207,29 @@ class _RuntimeRepairMixin:
                 result.get("packet_digest") == packet.packet_digest
                 and result.get("runtime_proof_digest") == proof_ref
                 and isinstance(proof, Mapping)
-                and digest(proof) == proof_ref
+                and self._runtime_proof_identity_matches(proof, proof_ref)
             ):
                 normalized = dict(proof)
                 self._runtime_proofs[proof_ref] = (packet.packet_id, normalized)
                 return normalized
         raise BilateralLiveRepairError("runtime proof reference was not retained by Runtime Profile V2 replay")
+
+    @staticmethod
+    def _runtime_proof_identity_matches(
+        proof: Mapping[str, Any],
+        proof_ref: str,
+    ) -> bool:
+        if proof.get("version"):
+            canonical = {
+                key: value
+                for key, value in proof.items()
+                if key not in {"proof_digest", "proof_path", "output_dir"}
+            }
+            return (
+                proof.get("proof_digest") == proof_ref
+                and _runtime_binding_digest(canonical) == proof_ref
+            )
+        return digest(proof) == proof_ref
 
     def _prior_attempts(self, packet: IncidentReplayPacket) -> list[dict[str, Any]]:
         rows: list[dict[str, Any]] = []

@@ -27,8 +27,8 @@ def sha(value: str) -> str:
     return hashlib.sha256(value.encode()).hexdigest()
 
 
-def sha1(value: str) -> str:
-    return hashlib.sha1(value.encode()).hexdigest()
+def git_oid(value: str) -> str:
+    return hashlib.sha256(value.encode()).hexdigest()[:40]
 
 
 def identity(seed: str = "one") -> BilateralIdentity:
@@ -38,8 +38,8 @@ def identity(seed: str = "one") -> BilateralIdentity:
         semantic_ledger_digest=sha(f"ledger-{seed}"),
         guardrail_set_digest=sha(f"guardrails-{seed}"),
         intent_revision_id=f"revision-{seed}",
-        repository_head=sha1(f"head-{seed}"),
-        source_tree_digest=sha1(f"tree-{seed}"),
+        repository_head=git_oid(f"head-{seed}"),
+        source_tree_digest=git_oid(f"tree-{seed}"),
         runtime_profile_digest=sha(f"profile-{seed}"),
         verifier_id=f"independent-verifier-{seed}",
         verifier_source_digest=sha(f"verifier-source-{seed}"),
@@ -268,6 +268,47 @@ def test_repair_candidate_is_bound_to_retained_runtime_candidate(tmp_path):
     service.close()
 
 
+def test_attempt_preview_and_projection_recheck_trusted_current_identity(tmp_path):
+    item = identity()
+    service, _db, raw = service_with_packet(tmp_path, item)
+    proof_ref = retain_proof(service, raw["packet_id"], item)
+    service._current_identity_resolver = lambda _captured: identity("changed")
+    with pytest.raises(BilateralLiveRepairError, match="stale"):
+        service.record_repair_attempt(
+            packet_id=raw["packet_id"],
+            hypothesis={"cause": "selection reset"},
+            candidate_digest=sha("candidate"),
+            runtime_proof_ref=proof_ref,
+            minimized_counterexample=None,
+            current_identity=item,
+        )
+    with pytest.raises(BilateralLiveRepairError, match="stale"):
+        service.preview_candidate(
+            packet_id=raw["packet_id"],
+            current_identity=item,
+            candidate_digest=sha("candidate"),
+            last_verified_digest=sha("verified"),
+            health_before={"ok": True},
+            health_after={"ok": True},
+            environment_class="LOCAL_EPHEMERAL",
+            rollback_preauthorized=False,
+        )
+    with pytest.raises(BilateralLiveRepairError, match="stale"):
+        service.build_projection(
+            packet_id=raw["packet_id"],
+            intent={},
+            plan={},
+            code_targets=[],
+            attempts=[],
+            preview=None,
+            u7_result=None,
+            source_drilldown=[],
+            receipt_drilldown=[],
+            current_identity=item,
+        )
+    service.close()
+
+
 def test_full_runtime_proof_survives_archive_restart_without_list_truncation(tmp_path):
     item = identity()
     first, db_path, raw = service_with_packet(tmp_path, item)
@@ -345,6 +386,7 @@ def test_failed_hypothesis_cannot_repeat_across_service_restart(tmp_path):
         tmp_path,
         attempt_archive_db_path=db_path,
         runtime_runner=lambda *_a, **_k: runtime_proof(item),
+        current_identity_resolver=lambda _captured: item,
     )
     with pytest.raises(BilateralLiveRepairError, match="repeated failed hypothesis"):
         second.record_repair_attempt(
@@ -388,6 +430,11 @@ def test_failure_routing_matches_harness_surgeon_and_council_classes():
     assert classify_repair_route("INTERFACE") == "STRUCTURAL"
     assert derive_repair_failure_class(runtime_proof(identity(), negative=False)) == "PROHIBITION"
     assert derive_repair_failure_class(runtime_proof(identity())) == "SOURCE_ASSERTION"
+    positive_failure = runtime_proof(identity())
+    positive_failure["positive_assertions"][0]["passed"] = False
+    assert derive_repair_failure_class(positive_failure) == "DEPENDENCY"
+    positive_failure["positive_assertions"][0]["failure_class"] = "LOCAL_TEST"
+    assert derive_repair_failure_class(positive_failure) == "LOCAL_TEST"
     with pytest.raises(ValueError, match="canonical"):
         classify_repair_route("GUESS_AND_PATCH")
 
@@ -472,8 +519,11 @@ def test_u7_delegates_p0_p1_and_finalization_to_canonical_owner(tmp_path, monkey
     module.observe_bridge_prediction = observe
     module.finalize_bridge_learning = finalize
     monkeypatch.setitem(sys.modules, "aura_unified_memory_continuity_learning", module)
-    service = BilateralLiveRepairService(tmp_path, attempt_archive_db_path=tmp_path / "u7.db", runtime_runner=lambda *_a, **_k: {})
+    service, _db, raw = service_with_packet(tmp_path, item := identity())
     result = service.run_governed_u7(
+        packet_id=raw["packet_id"],
+        candidate_digest=sha("candidate"),
+        current_identity=item,
         bridge=object(),
         plan_phase_hash="phase",
         task_id="task",
@@ -531,12 +581,11 @@ def test_u7_retry_resumes_from_retained_p0(tmp_path, monkeypatch):
     module.observe_bridge_prediction = observe
     module.finalize_bridge_learning = finalize
     monkeypatch.setitem(sys.modules, "aura_unified_memory_continuity_learning", module)
-    service = BilateralLiveRepairService(
-        tmp_path,
-        attempt_archive_db_path=tmp_path / "u7-resume.db",
-        runtime_runner=lambda *_a, **_k: {},
-    )
+    service, _db, raw = service_with_packet(tmp_path, item := identity())
     kwargs = {
+        "packet_id": raw["packet_id"],
+        "candidate_digest": sha("candidate"),
+        "current_identity": item,
         "bridge": Bridge(),
         "plan_phase_hash": " phase ",
         "task_id": " task ",
@@ -576,5 +625,48 @@ def test_projection_rejects_stale_identity_and_grants_no_visual_truth(tmp_path):
             packet_id=raw["packet_id"],
             intent={}, plan={}, code_targets=[], attempts=[], preview=None, u7_result=None,
             source_drilldown=[], receipt_drilldown=[], current_identity=identity("two"),
+        )
+    service.close()
+
+
+def test_projection_rejects_cross_incident_or_unverified_u7_evidence(tmp_path):
+    item = identity()
+    service, _db, raw = service_with_packet(tmp_path, item)
+    attempt = service.record_repair_attempt(
+        packet_id=raw["packet_id"],
+        hypothesis={"cause": "selection reset"},
+        candidate_digest=sha("candidate"),
+        runtime_proof_ref=retain_proof(service, raw["packet_id"], item),
+        minimized_counterexample=None,
+        current_identity=item,
+    )
+    u7 = {
+        "replay_packet_digest": raw["packet_digest"],
+        "bilateral_identity_digest": item.identity_digest,
+        "candidate_digest": attempt.candidate_digest,
+        "prediction": {"kind": "P0"},
+        "observation": {"kind": "P1"},
+        "finalization": {"ok": True},
+    }
+    kwargs = {
+        "packet_id": raw["packet_id"],
+        "intent": {},
+        "plan": {},
+        "code_targets": [],
+        "attempts": [attempt],
+        "preview": None,
+        "u7_result": u7,
+        "source_drilldown": [],
+        "receipt_drilldown": [],
+        "current_identity": item,
+    }
+    projection = service.build_projection(**kwargs)
+    assert projection["proof"]["u7"]["candidate_digest"] == attempt.candidate_digest
+    with pytest.raises(BilateralLiveRepairError, match="not bound"):
+        service.build_projection(
+            **{
+                **kwargs,
+                "u7_result": {**u7, "candidate_digest": sha("other-candidate")},
+            }
         )
     service.close()

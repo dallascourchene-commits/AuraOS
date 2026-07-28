@@ -25,6 +25,7 @@ PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 _SCHEMA_VERSION = 1
 _MAX_STRING = 16 * 1024 * 1024
+_MAX_RECORD_BYTES = 24 * 1024 * 1024
 _MAX_COPY_TEXT = 1_800_000
 
 _SCHEMA = """
@@ -86,10 +87,10 @@ def _bounded(value: Any, *, depth: int = 0) -> Any:
         return output
     if isinstance(value, (list, tuple, set)):
         sequence = list(value)
-        output = [_bounded(item, depth=depth + 1) for item in sequence[:200]]
+        list_output = [_bounded(item, depth=depth + 1) for item in sequence[:200]]
         if len(sequence) > 200:
-            output.append({"__truncated_items__": len(sequence) - 200})
-        return output
+            list_output.append({"__truncated_items__": len(sequence) - 200})
+        return list_output
     if isinstance(value, bytes):
         return value.decode("utf-8", errors="replace")[:_MAX_STRING]
     if isinstance(value, str):
@@ -249,6 +250,14 @@ class ArenaAttemptArchive:
         safe_result, red1 = _safe(raw_result)
         safe_state, red2 = _safe(raw_state)
         safe_context, red3 = _safe(raw_context)
+        record_bytes = sum(
+            len(_json(item).encode("utf-8"))
+            for item in (safe_request, safe_result, safe_state, safe_context)
+        )
+        if record_bytes > _MAX_RECORD_BYTES:
+            raise ValueError(
+                f"attempt archive record exceeds {_MAX_RECORD_BYTES} UTF-8 bytes"
+            )
         redactions = sorted(set([*red0, *red1, *red2, *red3]))
 
         action_id = str(

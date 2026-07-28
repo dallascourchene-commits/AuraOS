@@ -3,6 +3,7 @@ from __future__ import annotations
 import dataclasses
 import hashlib
 import json
+from pathlib import Path
 import time
 
 import pytest
@@ -16,15 +17,19 @@ from aura_bilateral_live_repair_foundry import (
     canonical_bytes,
 )
 from aura_arena_attempt_archive import ArenaAttemptArchive
-from aura_bilateral_live_repair_foundry_contracts import _runtime_binding_digest
+from aura_bilateral_live_repair_foundry_contracts import (
+    MAX_CAPTURE_BYTES,
+    MAX_EVENT_BYTES,
+    _runtime_binding_digest,
+)
 
 
 def sha(value: str) -> str:
     return hashlib.sha256(value.encode()).hexdigest()
 
 
-def sha1(value: str) -> str:
-    return hashlib.sha1(value.encode()).hexdigest()
+def git_oid(value: str) -> str:
+    return hashlib.sha256(value.encode()).hexdigest()[:40]
 
 
 def identity() -> BilateralIdentity:
@@ -34,8 +39,8 @@ def identity() -> BilateralIdentity:
         semantic_ledger_digest=sha("ledger"),
         guardrail_set_digest=sha("guardrails"),
         intent_revision_id="NOT_CREATED_NO_POST_CONFIRMATION_DRIFT",
-        repository_head=sha1("head"),
-        source_tree_digest=sha1("tree"),
+        repository_head=git_oid("head"),
+        source_tree_digest=git_oid("tree"),
         runtime_profile_digest=sha("profile"),
         verifier_id="independent-verifier",
         verifier_source_digest=sha("verifier-source"),
@@ -63,7 +68,7 @@ def packet(*, required_assets=()):
 
 
 def strict_runtime_proof(item: BilateralIdentity) -> dict:
-    return {
+    proof = {
         "version": "AURA_RUNTIME_BILATERAL_PROOF_V1",
         "profile_version": "AURA_RUNTIME_PROFILE_V2",
         "ok": True,
@@ -123,6 +128,8 @@ def strict_runtime_proof(item: BilateralIdentity) -> dict:
         },
         "required_trace_artifacts": [],
     }
+    proof["proof_digest"] = _runtime_binding_digest(proof)
+    return proof
 
 
 def test_strict_runtime_proof_binds_every_incident_identity():
@@ -161,16 +168,32 @@ def test_runtime_proof_requires_exact_versions_and_captured_obligations():
 
 
 def test_runtime_proof_binds_every_captured_required_asset():
-    item, replay = packet(required_assets=["incident-console.json"])
+    asset_digest = sha("incident-console")
+    item, replay = packet(required_assets=[{
+        "path": "incident-console.json",
+        "sha256": asset_digest,
+    }])
     proof = strict_runtime_proof(item)
     proof["required_trace_artifacts"] = [{
         "path": "incident-console.json",
         "present": True,
         "within_size_limit": True,
+        "sha256": asset_digest,
     }]
+    proof["proof_digest"] = _runtime_binding_digest({
+        key: value for key, value in proof.items() if key != "proof_digest"
+    })
     BilateralLiveRepairService._validate_runtime_proof(replay, proof)
     proof["required_trace_artifacts"][0]["within_size_limit"] = False
     with pytest.raises(BilateralLiveRepairError, match="required asset"):
+        BilateralLiveRepairService._validate_runtime_proof(replay, proof)
+
+
+def test_runtime_proof_rejects_noncanonical_embedded_digest():
+    item, replay = packet()
+    proof = strict_runtime_proof(item)
+    proof["proof_digest"] = sha("tampered-proof")
+    with pytest.raises(BilateralLiveRepairError, match="canonical owner identity"):
         BilateralLiveRepairService._validate_runtime_proof(replay, proof)
 
 
@@ -232,6 +255,43 @@ def test_finalize_uses_trusted_identity_resolver_not_request_identity(tmp_path):
                 "preservation_claims": ["source geometry remains unchanged"],
             },
         )
+    service.close()
+
+
+def test_failed_archive_retains_finalized_packet_for_bounded_retry(tmp_path):
+    item = identity()
+    service = BilateralLiveRepairService(
+        tmp_path,
+        attempt_archive_db_path=tmp_path / "attempts.db",
+        current_identity_resolver=lambda _captured: item,
+    )
+    started = service.start_capture(
+        {
+            "identity": dataclasses.asdict(item),
+            "release_id": "release",
+            "environment_id": "browser",
+            "capture_authorized": True,
+        }
+    )
+    service.mark(started["capture_id"], "selection disappeared")
+    original_record = service.attempt_archive.record
+    service.attempt_archive.record = lambda **_kwargs: {"ok": False}
+    with pytest.raises(BilateralLiveRepairError, match="retained in memory for archive retry"):
+        service.finalize_capture(
+            started["capture_id"],
+            {
+                "expected_positive": ["selection remains stable"],
+                "expected_negative": ["hidden storeys are never selected"],
+                "preservation_claims": ["source geometry remains unchanged"],
+            },
+        )
+    assert len(service._pending_packet_archives) == 1
+    packet_id = next(iter(service._pending_packet_archives))
+    assert packet_id in service._packets
+    service.attempt_archive.record = original_record
+    retried = service.retry_packet_archive(packet_id)
+    assert retried["ok"] is True
+    assert not service._pending_packet_archives
     service.close()
 
 
@@ -344,6 +404,31 @@ def test_direct_finalize_dissolves_separately_retained_marker():
     assert not capture._events
 
 
+def test_capture_enforces_per_event_and_aggregate_byte_ceilings():
+    item = identity()
+    capture = BoundedIncidentCapture(
+        identity=item,
+        release_id="release",
+        environment_id="browser",
+        capture_authorized=True,
+    )
+    with pytest.raises(BilateralLiveRepairError, match="event exceeds"):
+        capture.observe("OVERSIZED", {"data": "x" * MAX_EVENT_BYTES})
+    accepted = 0
+    with pytest.raises(BilateralLiveRepairError, match="aggregate byte ceiling"):
+        while True:
+            capture.observe("BOUNDED", {"data": "x" * 60_000, "index": accepted})
+            accepted += 1
+    assert accepted * 60_000 < MAX_CAPTURE_BYTES
+
+
+def test_canonical_identity_rejects_runtime_specific_objects_and_class_types():
+    with pytest.raises(ValueError, match="unsupported canonical value type"):
+        canonical_bytes({"value": object()})
+    with pytest.raises(ValueError, match="unsupported canonical value type"):
+        canonical_bytes(BilateralIdentity)
+
+
 def test_expired_capture_scrubs_separate_marker():
     item = identity()
     capture = BoundedIncidentCapture(
@@ -384,6 +469,30 @@ def test_obligations_are_sanitized_and_canonically_ordered():
 def test_canonical_mapping_rejects_stringified_key_collisions():
     with pytest.raises(ValueError, match="collide"):
         canonical_bytes({1: "numeric", "1": "text"})
+
+
+def test_review_workflow_and_waboose_scope_are_exact_and_complete():
+    root = Path(__file__).resolve().parent.parent
+    workflow = (root / ".github" / "workflows" / "aura-review-learning.yml").read_text(
+        encoding="utf-8"
+    )
+    assert workflow.count("fetch --depth=1 --no-tags origin") == 2
+    request = json.loads(
+        (
+            root
+            / ".aura"
+            / "waboose_requests"
+            / "bilateral_intent_guardrail_foundry_final.v2.json"
+        ).read_text(encoding="utf-8")
+    )
+    expected = {
+        "aura_agent_arena_bridge.py",
+        "aura_agent_arena_persistence_bridge.py",
+        "aura_arena_attempt_archive.py",
+        "scripts/aura_review_learning_architect_harness.py",
+    }
+    assert expected.issubset(request["changed_files"])
+    assert expected.issubset(request["allowed_paths"])
 
 
 def test_preview_receipt_rehydration_recomputes_identity(tmp_path):

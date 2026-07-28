@@ -24,7 +24,11 @@
     if (!node) return;
     const row = document.createElement('div');
     row.className = 'foundry-event';
-    row.innerHTML = `<strong>${S.esc(label)}</strong><span>${S.esc(detail)}</span>`;
+    const heading = document.createElement('strong');
+    heading.textContent = String(label);
+    const description = document.createElement('span');
+    description.textContent = String(detail);
+    row.append(heading, description);
     node.prepend(row);
   };
 
@@ -169,9 +173,20 @@
       const node = $(id);
       if (!node) return;
       const rows = Array.isArray(value) ? value : [value];
-      node.innerHTML = rows.filter(item => item !== undefined && item !== null && item !== '')
-        .map(item => `<div class="foundry-chip">${S.esc(typeof item === 'string' ? item : JSON.stringify(item))}</div>`)
-        .join('') || '<span class="muted">No retained evidence yet.</span>';
+      const retained = rows.filter(item => item !== undefined && item !== null && item !== '');
+      const children = retained.map(item => {
+        const chip = document.createElement('div');
+        chip.className = 'foundry-chip';
+        chip.textContent = typeof item === 'string' ? item : JSON.stringify(item);
+        return chip;
+      });
+      if (!children.length) {
+        const empty = document.createElement('span');
+        empty.className = 'muted';
+        empty.textContent = 'No retained evidence yet.';
+        children.push(empty);
+      }
+      node.replaceChildren(...children);
     };
     set('foundry-projection-intent', projection.confirmed_intent?.positive || projection.confirmed_intent || []);
     set('foundry-projection-negative', projection.negative_intent || []);

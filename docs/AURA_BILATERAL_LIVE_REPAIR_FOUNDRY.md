@@ -30,7 +30,7 @@ f1b9d786c4ff30d1ff5b984f5859db80f33446cc
 - bounded UI/runtime events;
 - one explicit human incident marker;
 - exact positive, negative, and preservation obligations;
-- required assets;
+- required assets bound by exact path and SHA-256 content identity;
 - canonical privacy redactions;
 - retention and dissolution receipts.
 
@@ -46,6 +46,9 @@ Finalization:
 6. stores the complete sanitized packet in the canonical Attempt Archive.
 
 No background or unrestricted recording is enabled.
+Each event and the aggregate retained window have independent byte ceilings.
+If durable archival fails after dissolution, the finalized packet remains in a
+bounded in-memory retry queue and can be retried with `retry_packet_archive`.
 The default Showcase server therefore fails capture finalization closed until its
 embedding owner supplies `current_identity_resolver`; a request body cannot
 declare its own identity current.
@@ -99,6 +102,9 @@ commit_bridge_prediction
 → observe_bridge_prediction
 → finalize_bridge_learning
 ```
+
+The delegated result is bound to the incident replay digest, bilateral identity,
+and verified candidate digest before it may appear in a Foundry projection.
 
 The existing owner remains responsible for:
 

@@ -3,13 +3,13 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from pathlib import Path
-import time
 from typing import Any
 
 from aura_bilateral_live_repair_foundry_contracts import (
     _FALSE_AUTHORITY,
     BilateralLiveRepairError,
     IncidentReplayPacket,
+    _digest_text,
     _runtime_binding_digest,
     canonical_bytes,
     digest,
@@ -42,26 +42,6 @@ class BilateralLiveRepairService(
     _CapturePersistenceMixin,
 ):
     """Stateful adapter over canonical Aura owners; no new authority plane."""
-
-    @staticmethod
-    def _scrub_capture(capture: Any) -> None:
-        """Dissolve every in-memory capture buffer, including the separate marker."""
-
-        capture._closed = True
-        capture._events.clear()
-        capture._marker_event = None
-
-    def _sweep_expired_captures(self) -> None:
-        with self._capture_lock:
-            now = time.time()
-            for capture_id, capture in list(self._captures.items()):
-                if not capture._closed and now - capture.started_at > capture.retention_seconds:
-                    self._scrub_capture(capture)
-                if capture._closed:
-                    self._captures.pop(capture_id, None)
-                    timer = self._capture_timers.pop(capture_id, None)
-                    if timer is not None:
-                        timer.cancel()
 
     def close(self) -> None:
         with self._capture_lock:
@@ -152,7 +132,6 @@ class BilateralLiveRepairService(
             or proof.get("profile_version") != RUNTIME_PROFILE_VERSION
         ):
             raise BilateralLiveRepairError("runtime proof version or profile version is not canonical")
-
         contract = proof.get("intent_contract")
         verifier = proof.get("independent_verifier")
         if not isinstance(contract, Mapping) or not isinstance(verifier, Mapping):
@@ -227,19 +206,29 @@ class BilateralLiveRepairService(
             if not isinstance(traces, list):
                 raise BilateralLiveRepairError("runtime proof omitted captured required assets")
             proven_assets = {
-                row.get("path")
+                (row.get("path"), row.get("sha256"))
                 for row in traces
                 if (
                     isinstance(row, Mapping)
                     and row.get("present") is True
                     and row.get("within_size_limit") is True
                     and isinstance(row.get("path"), str)
+                    and isinstance(row.get("sha256"), str)
                 )
             }
-            if not set(packet.required_assets).issubset(proven_assets):
+            expected_assets = {(item.path, item.sha256) for item in packet.required_assets}
+            if not expected_assets.issubset(proven_assets):
                 raise BilateralLiveRepairError(
                     "runtime proof did not retain every captured required asset"
                 )
+        proof_digest = _digest_text(proof.get("proof_digest"), "proof_digest")
+        canonical_proof = {
+            key: value
+            for key, value in proof.items()
+            if key not in {"proof_digest", "proof_path", "output_dir"}
+        }
+        if proof_digest != _runtime_binding_digest(canonical_proof):
+            raise BilateralLiveRepairError("runtime proof digest is not the canonical owner identity")
 
     def execute_replay(
         self,
@@ -252,7 +241,7 @@ class BilateralLiveRepairService(
         baseline_receipt: str | Path | None = None,
     ) -> dict[str, Any]:
         packet = self._packet(packet_id)
-        proof = dict(
+        runner_result = dict(
             self.runtime_runner(
                 self.repo_root,
                 profile_path=profile_path,
@@ -264,12 +253,25 @@ class BilateralLiveRepairService(
                 baseline_receipt=baseline_receipt,
             )
         )
+        proof = {
+            key: value
+            for key, value in runner_result.items()
+            if key not in {"proof_path", "output_dir"}
+        }
         self._validate_runtime_proof(
             packet,
             proof,
             allow_reduced_fixture=self._allow_reduced_runtime_fixture,
         )
-        proof_digest = digest(proof)
+        if proof.get("version"):
+            proof_digest = str(proof.get("proof_digest") or "")
+        else:
+            proof_digest = digest(proof)
+        execution_metadata = {
+            key: runner_result[key]
+            for key in ("proof_path", "output_dir")
+            if key in runner_result
+        }
         result = {
             "ok": proof.get("ok") is True,
             "status": "INCIDENT_REPLAY_VERIFIED" if proof.get("ok") is True else "INCIDENT_REPLAY_REPRODUCED",
@@ -277,6 +279,7 @@ class BilateralLiveRepairService(
             "packet_digest": packet.packet_digest,
             "runtime_proof": proof,
             "runtime_proof_digest": proof_digest,
+            "execution_metadata": execution_metadata,
             "authority": {**_FALSE_AUTHORITY, "human_review_required": True},
         }
         archive_result = {

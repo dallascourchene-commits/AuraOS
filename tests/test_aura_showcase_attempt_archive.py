@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 NODE_CONTEXT = {
     "stage_hint": "ACT",
@@ -167,3 +169,19 @@ def test_browser_archive_exposes_inspect_and_copy_controls():
     assert "Show failed only" in source
     assert "navigator.clipboard" in source
     assert "archived refactoring evidence" in source.lower() or "refactoring artifacts" in source.lower()
+
+
+def test_attempt_archive_rejects_oversized_aggregate_record(tmp_path):
+    from aura_arena_attempt_archive import ArenaAttemptArchive
+
+    archive = ArenaAttemptArchive(REPO_ROOT, db_path=tmp_path / "attempts.db")
+    try:
+        with pytest.raises(ValueError, match="record exceeds"):
+            archive.record(
+                arena_id="coding",
+                route="bounded-record",
+                request={"first": "x" * 13_000_000, "second": "y" * 13_000_000},
+                result={"ok": False},
+            )
+    finally:
+        archive.close()

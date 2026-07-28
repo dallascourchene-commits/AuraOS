@@ -10,6 +10,8 @@ from typing import Any
 
 from aura_bilateral_live_repair_foundry_contracts import (
     INCIDENT_VERSION,
+    MAX_CAPTURE_BYTES,
+    MAX_EVENT_BYTES,
     MAX_EVENTS,
     MAX_ARCHIVED_PACKET_BYTES,
     MAX_RETENTION_SECONDS,
@@ -19,6 +21,7 @@ from aura_bilateral_live_repair_foundry_contracts import (
     CaptureDissolutionReceipt,
     IncidentEvent,
     IncidentReplayPacket,
+    RequiredAssetIdentity,
     _required_text,
     _timestamp,
     canonical_sanitize,
@@ -55,6 +58,8 @@ class BoundedIncidentCapture:
         self.started_at = time.time() if started_at is None else _timestamp(started_at, "started_at")
         self._events: deque[IncidentEvent] = deque(maxlen=self.max_events)
         self._marker_event: IncidentEvent | None = None
+        self._event_sizes: dict[int, int] = {}
+        self._retained_bytes = 0
         self._total_event_count = 0
         self._closed = False
 
@@ -65,6 +70,8 @@ class BoundedIncidentCapture:
             self._closed = True
             self._events.clear()
             self._marker_event = None
+            self._event_sizes.clear()
+            self._retained_bytes = 0
             raise BilateralLiveRepairError("capture retention window expired and dissolved")
 
     def observe(
@@ -85,7 +92,29 @@ class BoundedIncidentCapture:
             payload_digest=digest(clean),
             redactions=redactions,
         )
+        event_bytes = len(canonical_bytes(asdict(event)))
+        if event_bytes > MAX_EVENT_BYTES:
+            raise BilateralLiveRepairError("incident event exceeds the bounded capture byte ceiling")
+        evicted = self._events[0] if len(self._events) == self.max_events else None
+        retained_bytes = self._retained_bytes + event_bytes
+        if (
+            evicted is not None
+            and (
+                self._marker_event is None
+                or evicted.sequence != self._marker_event.sequence
+            )
+        ):
+            retained_bytes -= self._event_sizes.get(evicted.sequence, 0)
+        if retained_bytes > MAX_CAPTURE_BYTES:
+            raise BilateralLiveRepairError("incident capture exceeds the aggregate byte ceiling")
         self._events.append(event)
+        if evicted is not None and (
+            self._marker_event is None
+            or evicted.sequence != self._marker_event.sequence
+        ):
+            self._event_sizes.pop(evicted.sequence, None)
+        self._event_sizes[event.sequence] = event_bytes
+        self._retained_bytes = retained_bytes
         self._total_event_count += 1
         return event
 
@@ -116,7 +145,7 @@ class BoundedIncidentCapture:
         expected_positive: Iterable[str],
         expected_negative: Iterable[str],
         preservation_claims: Iterable[str],
-        required_assets: Iterable[str] = (),
+        required_assets: Iterable[Mapping[str, Any]] = (),
         current_identity: BilateralIdentity | None = None,
         created_at: float | None = None,
     ) -> IncidentReplayPacket:
@@ -140,7 +169,15 @@ class BoundedIncidentCapture:
         positive = _obligations(expected_positive, "positive requirement", 4096)
         negative = _obligations(expected_negative, "negative requirement", 4096)
         preservation = _obligations(preservation_claims, "preservation claim", 4096)
-        assets = _obligations(required_assets, "required asset", 2048)
+        asset_rows: dict[tuple[str, str], RequiredAssetIdentity] = {}
+        for raw in required_assets:
+            clean_asset, redactions = canonical_sanitize(raw)
+            if not isinstance(clean_asset, Mapping):
+                raise ValueError("required asset identity must be an object")
+            asset = RequiredAssetIdentity.from_mapping(clean_asset)
+            asset_rows[(asset.path, asset.sha256)] = asset
+            obligation_redactions.update(redactions)
+        assets = tuple(asset_rows[key] for key in sorted(asset_rows))
         if not positive or not negative or not preservation:
             raise ValueError("positive, negative, and preservation obligations are required")
 
@@ -182,7 +219,7 @@ class BoundedIncidentCapture:
             "expected_positive": list(positive),
             "expected_negative": list(negative),
             "preservation_claims": list(preservation),
-            "required_assets": list(assets),
+            "required_assets": [asdict(item) for item in assets],
             "retention_class": "BOUNDED_SESSION_ONLY",
             "created_at": closed_at,
             "privacy_receipt": privacy,
@@ -216,6 +253,8 @@ class BoundedIncidentCapture:
         self._closed = True
         self._events.clear()
         self._marker_event = None
+        self._event_sizes.clear()
+        self._retained_bytes = 0
         return packet
 
 

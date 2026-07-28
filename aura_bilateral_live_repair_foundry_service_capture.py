@@ -6,6 +6,7 @@ from dataclasses import asdict
 import json
 from pathlib import Path
 import threading
+import time
 from typing import Any
 
 from aura_arena_attempt_archive import ArenaAttemptArchive
@@ -14,6 +15,7 @@ from aura_bilateral_live_repair_foundry_contracts import (
     _FALSE_AUTHORITY,
     MAX_ACTIVE_CAPTURES,
     MAX_EVENTS,
+    MAX_PENDING_PACKET_ARCHIVES,
     VERSION,
     BilateralIdentity,
     BilateralLiveRepairError,
@@ -52,6 +54,7 @@ class _CapturePersistenceMixin:
         self._capture_timers: dict[str, threading.Timer] = {}
         self._captures: dict[str, BoundedIncidentCapture] = {}
         self._packets: dict[str, IncidentReplayPacket] = {}
+        self._pending_packet_archives: dict[str, tuple[IncidentReplayPacket, dict[str, str]]] = {}
         self._runtime_proofs: dict[str, tuple[str, dict[str, Any]]] = {}
         self._previews: dict[str, PreviewRollbackReceipt] = {}
 
@@ -61,11 +64,10 @@ class _CapturePersistenceMixin:
                 timer.cancel()
             self._capture_timers.clear()
             for capture in self._captures.values():
-                capture._closed = True
-                capture._events.clear()
-                capture._marker_event = None
+                self._scrub_capture(capture)
             self._captures.clear()
         self._packets.clear()
+        self._pending_packet_archives.clear()
         self._runtime_proofs.clear()
         self._previews.clear()
         if self._owns_archive:
@@ -79,6 +81,7 @@ class _CapturePersistenceMixin:
             "version": VERSION,
             "active_capture_count": active_capture_count,
             "retained_packet_count": len(self._packets),
+            "pending_packet_archive_count": len(self._pending_packet_archives),
             "retained_runtime_proof_count": len(self._runtime_proofs),
             "preview_receipt_count": len(self._previews),
             "attempt_archive": self.attempt_archive.status(),
@@ -98,10 +101,16 @@ class _CapturePersistenceMixin:
             if len(self._captures) >= MAX_ACTIVE_CAPTURES:
                 raise BilateralLiveRepairError("active capture budget exhausted")
             identity = BilateralIdentity.from_mapping(contract.get("identity") or {})
+            release_id = _required_text(contract.get("release_id"), "release_id", limit=512)
+            environment_id = _required_text(
+                contract.get("environment_id"),
+                "environment_id",
+                limit=512,
+            )
             capture = BoundedIncidentCapture(
                 identity=identity,
-                release_id=contract.get("release_id"),
-                environment_id=contract.get("environment_id"),
+                release_id=release_id,
+                environment_id=environment_id,
                 capture_authorized=contract.get("capture_authorized") is True,
                 max_events=int(contract.get("max_events", MAX_EVENTS)),
                 retention_seconds=int(contract.get("retention_seconds", 120)),
@@ -141,15 +150,9 @@ class _CapturePersistenceMixin:
     def finalize_capture(self, capture_id: str, contract: Mapping[str, Any]) -> dict[str, Any]:
         with self._capture_lock:
             capture = self._capture(capture_id)
-            if self._current_identity_resolver is None:
-                raise BilateralLiveRepairError(
-                    "capture finalization requires a trusted current-identity resolver"
-                )
-            current_identity = self._current_identity_resolver(capture.identity)
-            if not isinstance(current_identity, BilateralIdentity):
-                raise BilateralLiveRepairError(
-                    "trusted current-identity resolver returned an invalid identity"
-                )
+            if len(self._pending_packet_archives) >= MAX_PENDING_PACKET_ARCHIVES:
+                raise BilateralLiveRepairError("pending incident archive retry budget exhausted")
+            current_identity = self._resolve_current_identity(capture.identity)
             packet = capture.finalize(
                 expected_positive=contract.get("expected_positive") or (),
                 expected_negative=contract.get("expected_negative") or (),
@@ -161,43 +164,68 @@ class _CapturePersistenceMixin:
             if timer is not None:
                 timer.cancel()
         self._packets[packet.packet_id] = packet
+        archive_contract = {
+            "arena_id": str(contract.get("arena_id") or "construction"),
+            "objective": str(
+                contract.get("objective")
+                or "Compile an exact field incident replay"
+            ),
+        }
+        self._pending_packet_archives[packet.packet_id] = (packet, archive_contract)
+        return self._archive_pending_packet(packet.packet_id)
+
+    def retry_packet_archive(self, packet_id: str) -> dict[str, Any]:
+        resolved = _required_text(packet_id, "packet_id", limit=128)
+        if resolved not in self._pending_packet_archives:
+            raise BilateralLiveRepairError("pending incident replay archive not found")
+        return self._archive_pending_packet(resolved)
+
+    def _archive_pending_packet(self, packet_id: str) -> dict[str, Any]:
+        packet, contract = self._pending_packet_archives[packet_id]
         # The packet is already privacy-sanitized and digest-bound. Preserve its
         # exact canonical bytes as a string so Attempt Archive's key-based secret
         # scrubber does not rewrite safe boolean fields such as
         # ``raw_secret_retained`` and invalidate durable replay identity.
         packet_json = canonical_bytes(packet.to_dict()).decode("ascii")
-        archive = self.attempt_archive.record(
-            arena_id=str(contract.get("arena_id") or "construction"),
-            route="bilateral-live-repair/incident-capture",
-            request={
-                "action_id": "compile_incident_replay_packet",
-                "capture_id": capture_id,
-                "identity_digest": packet.identity.identity_digest,
-                "confirmation_digest": packet.identity.confirmation_digest,
-            },
-            result={
-                "ok": True,
-                "status": "INCIDENT_REPLAY_COMPILED",
-                "packet_id": packet.packet_id,
-                "packet_digest": packet.packet_digest,
-                "privacy_receipt": packet.privacy_receipt,
-                "dissolution_receipt": asdict(packet.dissolution_receipt),
-                "incident_replay_packet_json": packet_json,
-            },
-            workflow_state={
-                "workflow_id": packet.packet_id,
-                "current_phase": "B11_INCIDENT_CAPTURE",
-                "objective": str(contract.get("objective") or "Compile an exact field incident replay"),
-            },
-            archive_context={
-                "stage_hint": "B11",
-                "incident_packet_digest": packet.packet_digest,
-                "identity_digest": packet.identity.identity_digest,
-            },
-        )
+        try:
+            archive = self.attempt_archive.record(
+                arena_id=contract["arena_id"],
+                route="bilateral-live-repair/incident-capture",
+                request={
+                    "action_id": "compile_incident_replay_packet",
+                    "capture_id": packet.capture_id,
+                    "identity_digest": packet.identity.identity_digest,
+                    "confirmation_digest": packet.identity.confirmation_digest,
+                },
+                result={
+                    "ok": True,
+                    "status": "INCIDENT_REPLAY_COMPILED",
+                    "packet_id": packet.packet_id,
+                    "packet_digest": packet.packet_digest,
+                    "privacy_receipt": packet.privacy_receipt,
+                    "dissolution_receipt": asdict(packet.dissolution_receipt),
+                    "incident_replay_packet_json": packet_json,
+                },
+                workflow_state={
+                    "workflow_id": packet.packet_id,
+                    "current_phase": "B11_INCIDENT_CAPTURE",
+                    "objective": contract["objective"],
+                },
+                archive_context={
+                    "stage_hint": "B11",
+                    "incident_packet_digest": packet.packet_digest,
+                    "identity_digest": packet.identity.identity_digest,
+                },
+            )
+        except Exception as exc:
+            raise BilateralLiveRepairError(
+                f"incident replay {packet.packet_id} retained in memory for archive retry"
+            ) from exc
         if archive.get("ok") is not True:
-            self._packets.pop(packet.packet_id, None)
-            raise BilateralLiveRepairError("canonical Attempt Archive did not retain the incident replay")
+            raise BilateralLiveRepairError(
+                f"incident replay {packet.packet_id} retained in memory for archive retry"
+            )
+        self._pending_packet_archives.pop(packet.packet_id, None)
         return {"ok": True, "packet": packet.to_dict(), "attempt_artifact": archive}
 
     def _capture(self, capture_id: str) -> BoundedIncidentCapture:
@@ -213,6 +241,39 @@ class _CapturePersistenceMixin:
             self._capture_timers.pop(capture_id, None)
             if capture is not None:
                 self._scrub_capture(capture)
+
+    @staticmethod
+    def _scrub_capture(capture: Any) -> None:
+        capture._closed = True
+        capture._events.clear()
+        capture._marker_event = None
+        capture._event_sizes.clear()
+        capture._retained_bytes = 0
+
+    def _sweep_expired_captures(self) -> None:
+        with self._capture_lock:
+            now = time.time()
+            for capture_id, capture in list(self._captures.items()):
+                if not capture._closed and now - capture.started_at > capture.retention_seconds:
+                    self._scrub_capture(capture)
+                if capture._closed:
+                    self._captures.pop(capture_id, None)
+                    timer = self._capture_timers.pop(capture_id, None)
+                    if timer is not None:
+                        timer.cancel()
+
+    def _resolve_current_identity(self, expected: BilateralIdentity) -> BilateralIdentity:
+        if self._current_identity_resolver is None:
+            raise BilateralLiveRepairError(
+                "operation requires a trusted current-identity resolver"
+            )
+        current = self._current_identity_resolver(expected)
+        if not isinstance(current, BilateralIdentity):
+            raise BilateralLiveRepairError(
+                "trusted current-identity resolver returned an invalid identity"
+            )
+        expected.assert_current(current)
+        return current
 
     def _packet(self, packet_id: str) -> IncidentReplayPacket:
         resolved = _required_text(packet_id, "packet_id", limit=128)

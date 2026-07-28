@@ -14,7 +14,7 @@ import hashlib
 import json
 import math
 import re
-from typing import Any
+from typing import Any, cast
 
 from aura_arena_experience import sanitize_experience_payload
 
@@ -25,8 +25,11 @@ PROJECTION_VERSION = "AURA_SPATIAL_FOUNDRY_PROJECTION_V1"
 MAX_EVENTS = 256
 MAX_ATTEMPTS = 8
 MAX_ACTIVE_CAPTURES = 32
+MAX_PENDING_PACKET_ARCHIVES = 8
 MAX_RETENTION_SECONDS = 300
 MAX_TEXT_BYTES = 32 * 1024
+MAX_EVENT_BYTES = 64 * 1024
+MAX_CAPTURE_BYTES = 4 * 1024 * 1024
 MAX_ARCHIVED_PACKET_BYTES = 8 * 1024 * 1024
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
@@ -82,6 +85,12 @@ def _timestamp(value: Any, name: str) -> float:
     return result
 
 
+def _required_int(value: Any, name: str, *, minimum: int = 0) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
+        raise ValueError(f"{name} must be an integer at least {minimum}")
+    return value
+
+
 def _normalize(value: Any) -> Any:
     """Normalize data before canonical sanitization.
 
@@ -90,11 +99,15 @@ def _normalize(value: Any) -> Any:
     tuples preserve their intentional order.
     """
 
-    if is_dataclass(value):
+    if is_dataclass(value) and not isinstance(value, type):
         value = asdict(value)
     if isinstance(value, Mapping):
         output: dict[str, Any] = {}
         for key, item in value.items():
+            if not isinstance(key, (str, int, float, bool)) or (
+                isinstance(key, float) and not math.isfinite(key)
+            ):
+                raise ValueError("mapping keys must have deterministic scalar identities")
             normalized_key = str(key)
             if normalized_key in output:
                 raise ValueError(f"mapping keys collide after canonical string conversion: {normalized_key!r}")
@@ -107,9 +120,11 @@ def _normalize(value: Any) -> Any:
         return [_normalize(item) for item in value]
     if isinstance(value, bytes):
         return value.decode("utf-8", errors="replace")
+    if isinstance(value, float) and not math.isfinite(value):
+        raise ValueError("non-finite values are not permitted in canonical identity")
     if value is None or isinstance(value, (bool, int, float, str)):
         return value
-    return str(value)
+    raise ValueError(f"unsupported canonical value type: {type(value).__name__}")
 
 
 def canonical_sanitize(value: Any) -> tuple[Any, tuple[str, ...]]:
@@ -210,7 +225,7 @@ class IncidentEvent:
             raise ValueError("incident event must be an object")
         payload, redactions = canonical_sanitize(value.get("payload") or {})
         event = cls(
-            sequence=int(value.get("sequence")),
+            sequence=_required_int(value.get("sequence"), "sequence"),
             event_type=_required_text(value.get("event_type"), "event_type", limit=256),
             observed_at=_timestamp(value.get("observed_at"), "observed_at"),
             payload=payload,
@@ -237,6 +252,25 @@ class CaptureDissolutionReceipt:
 
 
 @dataclass(frozen=True)
+class RequiredAssetIdentity:
+    path: str
+    sha256: str
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "path", _required_text(self.path, "required asset path", limit=2048))
+        sha256 = _digest_text(self.sha256, "required asset sha256")
+        if len(sha256) != 64:
+            raise ValueError("required asset sha256 must be a 64-character digest")
+        object.__setattr__(self, "sha256", sha256)
+
+    @classmethod
+    def from_mapping(cls, value: Mapping[str, Any]) -> "RequiredAssetIdentity":
+        if not isinstance(value, Mapping) or set(value) != {"path", "sha256"}:
+            raise ValueError("required asset identity must contain only path and sha256")
+        return cls(path=value["path"], sha256=value["sha256"])
+
+
+@dataclass(frozen=True)
 class IncidentReplayPacket:
     packet_id: str
     identity: BilateralIdentity
@@ -250,7 +284,7 @@ class IncidentReplayPacket:
     expected_positive: tuple[str, ...]
     expected_negative: tuple[str, ...]
     preservation_claims: tuple[str, ...]
-    required_assets: tuple[str, ...]
+    required_assets: tuple[RequiredAssetIdentity, ...]
     retention_class: str
     created_at: float
     packet_digest: str
@@ -290,12 +324,21 @@ class IncidentReplayPacket:
             capture_id=_required_text(value.get("capture_id"), "capture_id", limit=128),
             marker_event=marker,
             events=events,
-            window_start_sequence=int(value.get("window_start_sequence")),
-            total_event_count=int(value.get("total_event_count")),
+            window_start_sequence=_required_int(
+                value.get("window_start_sequence"),
+                "window_start_sequence",
+            ),
+            total_event_count=_required_int(
+                value.get("total_event_count"),
+                "total_event_count",
+            ),
             expected_positive=tuple(_required_text(item, "positive requirement", limit=4096) for item in value.get("expected_positive") or ()),
             expected_negative=tuple(_required_text(item, "negative requirement", limit=4096) for item in value.get("expected_negative") or ()),
             preservation_claims=tuple(_required_text(item, "preservation claim", limit=4096) for item in value.get("preservation_claims") or ()),
-            required_assets=tuple(_required_text(item, "required asset", limit=2048) for item in value.get("required_assets") or ()),
+            required_assets=tuple(
+                RequiredAssetIdentity.from_mapping(item)
+                for item in value.get("required_assets") or ()
+            ),
             retention_class=_required_text(value.get("retention_class"), "retention_class", limit=128),
             created_at=_timestamp(value.get("created_at"), "created_at"),
             packet_digest=_digest_text(value.get("packet_digest"), "packet_digest"),
@@ -365,7 +408,7 @@ class RepairCandidateResult:
             payload["runtime_proof_passed"] = value.get("promotion_ready") is True
         counterexample = payload.get("minimized_counterexample")
         payload["minimized_counterexample"] = dict(counterexample) if isinstance(counterexample, Mapping) else None
-        item = cls(**payload)
+        item = cast(Any, cls)(**payload)
         if (
             item.route_class not in _ALLOWED_ROUTE_CLASSES
             or item.route_class != classify_repair_route(item.failure_class)
@@ -418,7 +461,7 @@ class PreviewRollbackReceipt:
             )
         if "rollback_failure" not in value:
             payload["rollback_failure"] = ""
-        item = cls(**payload)
+        item = cast(Any, cls)(**payload)
         for name in (
             "replay_packet_digest",
             "bilateral_identity_digest",
@@ -521,13 +564,29 @@ def derive_repair_failure_class(runtime_proof: Mapping[str, Any]) -> str:
     if not _group_passed(runtime_proof, "preservation_assertions"):
         return "INVARIANT"
     if not _group_passed(runtime_proof, "positive_assertions"):
-        return "LOCAL_TEST"
+        return _failed_group_class(runtime_proof, "positive_assertions", "DEPENDENCY")
     if not _group_passed(runtime_proof, "fault_injections"):
-        return "LOCAL_TEST"
+        return _failed_group_class(runtime_proof, "fault_injections", "INVARIANT")
     base = runtime_proof.get("base_runtime_receipt")
     if not isinstance(base, Mapping) or base.get("ok") is not True:
-        return "LOCAL_TEST"
+        failure = str(base.get("failure_class") or "").upper() if isinstance(base, Mapping) else ""
+        return failure if failure in _STRUCTURAL_FAILURES | _LOCAL_FAILURES else "DEPENDENCY"
     return "SOURCE_ASSERTION"
+
+
+def _failed_group_class(
+    runtime_proof: Mapping[str, Any],
+    group: str,
+    structural_default: str,
+) -> str:
+    rows = runtime_proof.get(group)
+    if isinstance(rows, Sequence) and not isinstance(rows, (str, bytes, bytearray)):
+        for row in rows:
+            if isinstance(row, Mapping) and row.get("passed") is not True:
+                failure = str(row.get("failure_class") or "").upper()
+                if failure in _STRUCTURAL_FAILURES | _LOCAL_FAILURES:
+                    return failure
+    return structural_default
 
 
 
@@ -538,6 +597,7 @@ __all__ = [
     "CaptureDissolutionReceipt",
     "IncidentEvent",
     "IncidentReplayPacket",
+    "RequiredAssetIdentity",
     "PreviewRollbackReceipt",
     "RepairCandidateResult",
     "canonical_bytes",

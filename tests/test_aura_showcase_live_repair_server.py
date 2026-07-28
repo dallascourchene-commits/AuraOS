@@ -2,6 +2,7 @@ from __future__ import annotations
 import dataclasses
 import hashlib
 import json
+from pathlib import Path
 
 from aura_bilateral_live_repair_foundry import BilateralIdentity
 from aura_showcase_live_repair_server import (
@@ -12,11 +13,11 @@ from aura_showcase_live_repair_server import (
 
 
 def sha(value): return hashlib.sha256(value.encode()).hexdigest()
-def sha1(value): return hashlib.sha1(value.encode()).hexdigest()
+def git_oid(value): return hashlib.sha256(value.encode()).hexdigest()[:40]
 def identity():
     return BilateralIdentity(
         sha('intent'), 'intent-confirmation_'+sha('confirmation'), sha('ledger'), sha('guards'),
-        'revision-1', sha1('head'), sha1('tree'), sha('profile'), 'verifier', sha('verifier-source'),
+        'revision-1', git_oid('head'), git_oid('tree'), sha('profile'), 'verifier', sha('verifier-source'),
     )
 
 def decoded(response):
@@ -56,6 +57,17 @@ def test_static_index_injects_one_foundry_surface_and_authority_rail():
     assert b'no learning promotion' in body
     assert b'live-repair-foundry.js' in body
     assert b'live-repair-foundry.css' in body
+
+
+def test_foundry_renderer_uses_dom_text_nodes_instead_of_inner_html():
+    source = (
+        Path(__file__).resolve().parent.parent
+        / "aura_showcase"
+        / "live-repair-foundry.js"
+    ).read_text(encoding="utf-8")
+    assert ".innerHTML" not in source
+    assert ".textContent" in source
+    assert "replaceChildren" in source
 
 
 def test_browser_cannot_submit_forged_runtime_proof_or_rollback_adapter(tmp_path):
