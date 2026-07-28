@@ -46,16 +46,22 @@ jobs:
         python-version: ["3.10", "3.12"]
 
     steps:
-      - name: Check out exact pull-request head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.AURA_REVIEW_HEAD_SHA }}
-          fetch-depth: 1
-          fetch-tags: false
-          persist-credentials: false
-
-      - name: Fetch exact base ref without retaining credentials
-        run: git fetch --no-tags --depth=1 origin "$AURA_REVIEW_BASE_REF:refs/remotes/origin/$AURA_REVIEW_BASE_REF"
+      - name: Fetch exact review head and base without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$AURA_REVIEW_HEAD_SHA"
+          git checkout --detach FETCH_HEAD
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin \
+            "$AURA_REVIEW_BASE_REF:refs/remotes/origin/$AURA_REVIEW_BASE_REF"
+          unset AUTH_HEADER
+          test "$(git rev-parse HEAD)" = "$AURA_REVIEW_HEAD_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
