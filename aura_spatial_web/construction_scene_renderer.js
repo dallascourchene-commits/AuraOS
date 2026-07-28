@@ -237,6 +237,8 @@ export class ConstructionSceneRenderer {
     this.state = RENDERER_STATES.NEW;
     this.mode = "HYBRID";
     this.selectedEntityId = null;
+    this.selectedStoreyFrameId = null;
+    this.visibleStoreyFrameIds = null;
     this.storeyFrames = Object.freeze([]);
     this.assetFrames = new Map();
     this.basePresentationTransforms = new Map();
@@ -324,6 +326,9 @@ export class ConstructionSceneRenderer {
   }
 
   setRepresentationMode(mode) {
+    if (![RENDERER_STATES.INITIALIZED, RENDERER_STATES.PRESENTED].includes(this.state)) {
+      throw new Error("Construction representation mode cannot change before initialization completes");
+    }
     if (!CONSTRUCTION_REPRESENTATION_MODES.includes(mode)) {
       throw new RangeError(`unknown Construction representation mode: ${mode}`);
     }
@@ -336,8 +341,25 @@ export class ConstructionSceneRenderer {
     this.mode = mode;
   }
 
+  _storeyBlueprint(frameId) {
+    const blueprints = this.scene?.assets.filter(
+      (asset) => asset.asset_type === "PLANE" && asset.frame_id === frameId,
+    ) || [];
+    if (blueprints.length !== 1) {
+      throw new Error(
+        `Construction storey ${frameId} requires exactly one admitted blueprint; found ${blueprints.length}`,
+      );
+    }
+    return blueprints[0];
+  }
+
+  _entityVisible(entity) {
+    return this.visibleStoreyFrameIds === null || this.visibleStoreyFrameIds.has(entity.frame_id);
+  }
+
   isolateStorey(frameId) {
     if (!this.storeyFrames.includes(frameId)) throw new RangeError("unknown Construction storey frame");
+    this._storeyBlueprint(frameId);
     this.meshPass.setVisibleFrameIds([frameId]);
     this.overlayPass.setVisibleFrameIds([frameId]);
     if (this.gaussianOwnerActive) {
@@ -346,12 +368,17 @@ export class ConstructionSceneRenderer {
         .map((asset) => asset.asset_id);
       this.gaussianRenderer.setVisibleAssetIds(visibleGaussianAssetIds);
     }
+    this.selectedStoreyFrameId = frameId;
+    this.visibleStoreyFrameIds = new Set([frameId]);
+    const selected = this.scene.entities.find((item) => item.entity_id === this.selectedEntityId);
+    if (selected && !this._entityVisible(selected)) this.selectedEntityId = null;
   }
 
   showAllStoreys() {
     this.meshPass.setVisibleFrameIds(null);
     this.overlayPass.setVisibleFrameIds(null);
     if (this.gaussianOwnerActive) this.gaussianRenderer.setVisibleAssetIds(null);
+    this.visibleStoreyFrameIds = null;
   }
 
   explodeStoreys(spacing = 3) {
@@ -445,23 +472,93 @@ export class ConstructionSceneRenderer {
   focusEntity(entityId) {
     const entity = this.scene?.entities.find((item) => item.entity_id === entityId);
     if (!entity) throw new RangeError("unknown Construction scene entity");
+    if (entity.selectable === false) throw new RangeError("Construction scene entity is not selectable");
+    if (!this._entityVisible(entity)) {
+      throw new RangeError("hidden Construction scene entity is not selectable");
+    }
     const camera = this.presentationRenderer.camera;
     if (camera && Array.isArray(camera.target)) camera.target = [...entity.position];
     this.selectedEntityId = entityId;
+    if (this.storeyFrames.includes(entity.frame_id)) this.selectedStoreyFrameId = entity.frame_id;
     return entity;
   }
 
   pick(x, y, radius = 18) {
     if (typeof this.presentationRenderer.pick !== "function") return null;
     const entityId = this.presentationRenderer.pick(x, y, radius);
-    if (entityId) this.selectedEntityId = entityId;
+    if (!entityId) return null;
+    const entity = this.scene?.entities.find((item) => item.entity_id === entityId);
+    if (!entity || entity.selectable === false || !this._entityVisible(entity)) return null;
+    this.selectedEntityId = entityId;
+    if (this.storeyFrames.includes(entity.frame_id)) this.selectedStoreyFrameId = entity.frame_id;
     return entityId;
+  }
+
+  inspectorState() {
+    if (!this.scene) {
+      return Object.freeze({
+        selected_storey_frame_id: null,
+        selected_entity: null,
+        blueprint: null,
+        annotation_entity_ids: Object.freeze([]),
+        source_geometry_immutable: true,
+        projection_only: true,
+        human_review_required: true,
+      });
+    }
+    const selectedEntity = this.scene.entities.find(
+      (item) => item.entity_id === this.selectedEntityId,
+    ) || null;
+    const selectedFrameId =
+      this.selectedStoreyFrameId ||
+      (selectedEntity && this.storeyFrames.includes(selectedEntity.frame_id)
+        ? selectedEntity.frame_id
+        : null);
+    const blueprint = selectedFrameId ? this._storeyBlueprint(selectedFrameId) : null;
+    const annotationEntityIds = selectedFrameId
+      ? this.scene.entities
+          .filter(
+            (item) =>
+              item.frame_id === selectedFrameId &&
+              item.entity_type !== "ASSET_INSTANCE" &&
+              item.selectable !== false,
+          )
+          .map((item) => item.entity_id)
+          .sort()
+      : [];
+    return Object.freeze({
+      selected_storey_frame_id: selectedFrameId,
+      selected_entity: selectedEntity
+        ? Object.freeze({
+            entity_id: selectedEntity.entity_id,
+            frame_id: selectedEntity.frame_id,
+            label: selectedEntity.label,
+            entity_type: selectedEntity.entity_type,
+            projection_only: selectedEntity.projection_only === true,
+            patch_authority: selectedEntity.patch_authority === true,
+          })
+        : null,
+      blueprint: blueprint
+        ? Object.freeze({
+            asset_id: blueprint.asset_id,
+            frame_id: blueprint.frame_id,
+            content_digest: blueprint.content_digest,
+            media_type: blueprint.media_type,
+            source_transform_immutable: true,
+          })
+        : null,
+      annotation_entity_ids: Object.freeze(annotationEntityIds),
+      source_geometry_immutable: true,
+      projection_only: true,
+      human_review_required: true,
+    });
   }
 
   resetView() {
     this.showAllStoreys();
     this.collapseStoreys();
     this.selectedEntityId = null;
+    this.selectedStoreyFrameId = null;
     this.overlayPass.setTimelineDay(1_000_000);
     if (this.presentationRenderer.camera) {
       this.presentationRenderer.camera.yaw = 0;
@@ -506,7 +603,9 @@ export class ConstructionSceneRenderer {
         representation_mode: this.mode,
         scene_digest: this.scene.scene_digest,
         render_plan_digest: this.plan.render_plan_digest,
+        selected_storey_frame_id: this.selectedStoreyFrameId,
         selected_entity_id: this.selectedEntityId,
+        inspector_state: this.inspectorState(),
         base_receipt: baseReceipt,
         mesh_receipt: meshReceipt,
         overlay_receipt: overlayReceipt,
@@ -587,6 +686,8 @@ export class ConstructionSceneRenderer {
     this.basePresentationTransforms.clear();
     this.presentationTransforms.clear();
     this.storeyFrames = Object.freeze([]);
+    this.visibleStoreyFrameIds = null;
+    this.selectedStoreyFrameId = null;
     this.selectedEntityId = null;
     this.state = failure ? RENDERER_STATES.LOST : RENDERER_STATES.DISPOSED;
     if (failure) throw failure;
@@ -600,7 +701,9 @@ export class ConstructionSceneRenderer {
       state: this.state,
       representation_mode: this.mode,
       storey_count: this.storeyFrames.length,
+      selected_storey_frame_id: this.selectedStoreyFrameId,
       selected_entity_id: this.selectedEntityId,
+      inspector_state: this.inspectorState(),
       gaussian_owner_active: this.gaussianOwnerActive,
       source_asset_coordinates_immutable: true,
       exploded_view_is_presentation_only: true,
