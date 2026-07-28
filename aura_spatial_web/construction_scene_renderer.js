@@ -16,6 +16,10 @@ export const CONSTRUCTION_REPRESENTATION_MODES = Object.freeze([
   "SPLATS",
   "HYBRID",
 ]);
+export const CONSTRUCTION_AUTHORITY_ENVELOPE = Object.freeze({
+  physical_work_authority: false,
+  professional_authority: false,
+});
 
 const IDENTITY = Object.freeze([
   1, 0, 0, 0,
@@ -241,6 +245,7 @@ export class ConstructionSceneRenderer {
     this.visibleStoreyFrameIds = null;
     this.storeyFrames = Object.freeze([]);
     this.assetFrames = new Map();
+    this.assetMediaTypes = new Map();
     this.basePresentationTransforms = new Map();
     this.presentationTransforms = new Map();
     this.hasMeshes = false;
@@ -260,6 +265,9 @@ export class ConstructionSceneRenderer {
     if (signal?.aborted) throw new Error("Construction scene initialization cancelled");
     this.scene = validateSceneProjection(scenePayload);
     this.plan = validateRenderPlan(planPayload, this.scene);
+    const sourceAssets = new Map(
+      scenePayload.assets.map((asset) => [asset.asset_id, asset]),
+    );
     this.hasMeshes = this.scene.assets.some((item) => item.asset_type === "MESH");
     this.hasSplats = this.scene.assets.some((item) => item.asset_type === "GAUSSIAN_SPLAT");
     if (this.hasSplats) {
@@ -286,6 +294,10 @@ export class ConstructionSceneRenderer {
     );
     for (const asset of this.scene.assets) {
       this.assetFrames.set(asset.asset_id, asset.frame_id);
+      this.assetMediaTypes.set(
+        asset.asset_id,
+        sourceAssets.get(asset.asset_id).media_type,
+      );
     }
     const rawFrames = new Map(scenePayload.frames.map((frame) => [frame.frame_id, frame]));
     const worldTransforms = new Map();
@@ -341,16 +353,53 @@ export class ConstructionSceneRenderer {
     this.mode = mode;
   }
 
-  _storeyBlueprint(frameId) {
-    const blueprints = this.scene?.assets.filter(
-      (asset) => asset.asset_type === "PLANE" && asset.frame_id === frameId,
+  _storeyBlueprintResolution(frameId) {
+    const storeyEntities = this.scene?.entities.filter(
+      (entity) =>
+        entity.entity_type === "ASSET_INSTANCE" &&
+        entity.frame_id === frameId,
     ) || [];
-    if (blueprints.length !== 1) {
+    if (storeyEntities.length !== 1) {
+      return Object.freeze({
+        status: "AMBIGUOUS_STOREY_BINDING",
+        blueprint: null,
+        storey_entity_count: storeyEntities.length,
+        blueprint_count: 0,
+        candidate_asset_ids: Object.freeze([]),
+      });
+    }
+    const referencedAssetIds = new Set(storeyEntities[0].asset_ids);
+    const blueprints = this.scene.assets.filter(
+      (asset) =>
+        referencedAssetIds.has(asset.asset_id) &&
+        asset.asset_type === "PLANE" &&
+        asset.frame_id === frameId,
+    );
+    return Object.freeze({
+      status:
+        blueprints.length === 1
+          ? "BOUND"
+          : blueprints.length === 0
+            ? "MISSING"
+            : "AMBIGUOUS",
+      blueprint: blueprints.length === 1 ? blueprints[0] : null,
+      storey_entity_count: 1,
+      blueprint_count: blueprints.length,
+      candidate_asset_ids: Object.freeze(
+        blueprints.map((asset) => asset.asset_id).sort(),
+      ),
+    });
+  }
+
+  _storeyBlueprint(frameId) {
+    const resolution = this._storeyBlueprintResolution(frameId);
+    if (resolution.status !== "BOUND") {
       throw new Error(
-        `Construction storey ${frameId} requires exactly one admitted blueprint; found ${blueprints.length}`,
+        `Construction storey ${frameId} requires exactly one canonically bound blueprint; ` +
+          `status ${resolution.status}, found ${resolution.blueprint_count}`,
       );
     }
-    return blueprints[0];
+    return resolution.blueprint;
   }
 
   _entityVisible(entity) {
@@ -500,6 +549,12 @@ export class ConstructionSceneRenderer {
         selected_storey_frame_id: null,
         selected_entity: null,
         blueprint: null,
+        blueprint_resolution: Object.freeze({
+          status: "NO_STOREY_SELECTED",
+          storey_entity_count: 0,
+          blueprint_count: 0,
+          candidate_asset_ids: Object.freeze([]),
+        }),
         annotation_entity_ids: Object.freeze([]),
         source_geometry_immutable: true,
         projection_only: true,
@@ -514,13 +569,16 @@ export class ConstructionSceneRenderer {
       (selectedEntity && this.storeyFrames.includes(selectedEntity.frame_id)
         ? selectedEntity.frame_id
         : null);
-    let blueprint = null;
-    if (selectedFrameId) {
-      const blueprints = this.scene.assets.filter(
-        (asset) => asset.asset_type === "PLANE" && asset.frame_id === selectedFrameId,
-      );
-      blueprint = blueprints.length === 1 ? blueprints[0] : null;
-    }
+    const blueprintResolution = selectedFrameId
+      ? this._storeyBlueprintResolution(selectedFrameId)
+      : Object.freeze({
+          status: "NO_STOREY_SELECTED",
+          blueprint: null,
+          storey_entity_count: 0,
+          blueprint_count: 0,
+          candidate_asset_ids: Object.freeze([]),
+        });
+    const blueprint = blueprintResolution.blueprint;
     const annotationEntityIds = selectedFrameId
       ? this.scene.entities
           .filter(
@@ -540,8 +598,8 @@ export class ConstructionSceneRenderer {
             frame_id: selectedEntity.frame_id,
             label: selectedEntity.label,
             entity_type: selectedEntity.entity_type,
-            projection_only: selectedEntity.projection_only === true,
-            patch_authority: selectedEntity.patch_authority === true,
+            projection_only: true,
+            patch_authority: false,
           })
         : null,
       blueprint: blueprint
@@ -549,10 +607,16 @@ export class ConstructionSceneRenderer {
             asset_id: blueprint.asset_id,
             frame_id: blueprint.frame_id,
             content_digest: blueprint.content_digest,
-            media_type: blueprint.media_type,
+            media_type: this.assetMediaTypes.get(blueprint.asset_id),
             source_transform_immutable: true,
           })
         : null,
+      blueprint_resolution: Object.freeze({
+        status: blueprintResolution.status,
+        storey_entity_count: blueprintResolution.storey_entity_count,
+        blueprint_count: blueprintResolution.blueprint_count,
+        candidate_asset_ids: blueprintResolution.candidate_asset_ids,
+      }),
       annotation_entity_ids: Object.freeze(annotationEntityIds),
       source_geometry_immutable: true,
       projection_only: true,
@@ -618,6 +682,7 @@ export class ConstructionSceneRenderer {
         source_asset_coordinates_immutable: true,
         exploded_view_is_presentation_only: true,
         ...AUTHORITY_ENVELOPE,
+        ...CONSTRUCTION_AUTHORITY_ENVELOPE,
       });
     } catch (error) {
       const cleanupError = await this._disposeOwnedResources();
@@ -689,6 +754,7 @@ export class ConstructionSceneRenderer {
     this.scene = null;
     this.plan = null;
     this.assetFrames.clear();
+    this.assetMediaTypes.clear();
     this.basePresentationTransforms.clear();
     this.presentationTransforms.clear();
     this.storeyFrames = Object.freeze([]);
@@ -714,6 +780,7 @@ export class ConstructionSceneRenderer {
       source_asset_coordinates_immutable: true,
       exploded_view_is_presentation_only: true,
       ...AUTHORITY_ENVELOPE,
+      ...CONSTRUCTION_AUTHORITY_ENVELOPE,
     });
   }
 }

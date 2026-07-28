@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Evidence-only V2 adapter over Aura's canonical V1 Runtime Harness."""
+
 from __future__ import annotations
 
 import argparse
@@ -10,7 +11,21 @@ from pathlib import Path, PurePosixPath
 import re
 import subprocess
 import sys
+import time
 from typing import Any
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from aura_bilateral_intent_compiler import VERSION as CONFIRMATION_PACKET_VERSION
+from aura_event_contracts import stable_digest
+from aura_intent_refinement import IntentConfirmationReceipt
+from aura_unified_memory_continuity import (
+    AuthorityEnvelope,
+    IntentPacket,
+    SemanticDefinition,
+    SemanticLedger,
+)
 
 try:
     from scripts import aura_runtime_refactor_harness as _v1
@@ -19,13 +34,10 @@ except ModuleNotFoundError:
 
 VERSION = "AURA_RUNTIME_BILATERAL_PROOF_V1"
 PROFILE_VERSION = "AURA_RUNTIME_PROFILE_V2"
-CURRENT_HEAD = "CURRENT_HEAD"
-CURRENT_TREE = "CURRENT_TREE"
 MAX_ASSERTIONS = 256
 MAX_SCENARIOS = 64
 MAX_TRACES = 64
 MAX_PATHS = 256
-MAX_GUARDRAILS = 256
 MAX_JSON_BYTES = 8 * 1024 * 1024
 GROUPS = (
     "positive_assertions",
@@ -53,10 +65,10 @@ SPECIAL_TRACES = frozenset(
     }
 )
 DIGEST = re.compile(r"[0-9a-f]{64}")
-GIT_SHA = re.compile(r"[0-9a-f]{40}")
 IDENTIFIER = re.compile(r"[a-z0-9][a-z0-9._:-]{0,127}")
 JSON_PATH = re.compile(r"[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*")
 OPERATORS = frozenset({"equals", "not_equals", "truthy", "falsy", "contains", "nonempty"})
+NO_POST_CONFIRMATION_REVISION = "NOT_CREATED_NO_POST_CONFIRMATION_DRIFT"
 AUTHORITY_CONTRACT = {
     **_v1.AUTHORITY_CONTRACT,
     "production_mutation": False,
@@ -137,33 +149,16 @@ def _repo_identity(root: Path) -> dict[str, Any]:
 
 
 def _contract(value: Any) -> dict[str, str]:
-    keys = {
-        "intent_digest",
-        "semantic_ledger_digest",
-        "confirmation_digest",
-        "guardrail_set_digest",
-        "intent_revision_id",
-        "expected_repository_head",
-        "expected_source_tree",
-        "allowed_path_set_digest",
-    }
+    keys = {"confirmation_packet_version", "intent_revision_status"}
     if not isinstance(value, Mapping) or set(value) != keys:
         raise BilateralRuntimeProfileError("intent_contract must be complete and exact")
-    head = value["expected_repository_head"]
-    tree = value["expected_source_tree"]
-    if head != CURRENT_HEAD:
-        _hex(head, "expected_repository_head", GIT_SHA)
-    if tree != CURRENT_TREE:
-        _hex(tree, "expected_source_tree", GIT_SHA)
+    if value["confirmation_packet_version"] != CONFIRMATION_PACKET_VERSION:
+        raise BilateralRuntimeProfileError("intent_contract must require the canonical bilateral confirmation packet")
+    if value["intent_revision_status"] != NO_POST_CONFIRMATION_REVISION:
+        raise BilateralRuntimeProfileError("B9 requires the canonical no-post-confirmation-drift revision status")
     return {
-        "intent_digest": _hex(value["intent_digest"], "intent_digest"),
-        "semantic_ledger_digest": _hex(value["semantic_ledger_digest"], "semantic_ledger_digest"),
-        "confirmation_digest": _hex(value["confirmation_digest"], "confirmation_digest"),
-        "guardrail_set_digest": _hex(value["guardrail_set_digest"], "guardrail_set_digest"),
-        "intent_revision_id": _id(value["intent_revision_id"], "intent_revision_id"),
-        "expected_repository_head": head,
-        "expected_source_tree": tree,
-        "allowed_path_set_digest": _hex(value["allowed_path_set_digest"], "allowed_path_set_digest"),
+        "confirmation_packet_version": CONFIRMATION_PACKET_VERSION,
+        "intent_revision_status": NO_POST_CONFIRMATION_REVISION,
     }
 
 
@@ -203,6 +198,61 @@ def _assertions(raw: Any, group: str, traces: set[str], seen: set[str]) -> tuple
     return tuple(rows)
 
 
+def _requirement_bindings(
+    raw: Any,
+    assertions: Mapping[str, Sequence[Mapping[str, Any]]],
+) -> dict[str, tuple[dict[str, Any], ...]]:
+    if not isinstance(raw, Mapping) or set(raw) != set(GROUPS):
+        raise BilateralRuntimeProfileError("requirement_bindings must cover every assertion group exactly")
+    result: dict[str, tuple[dict[str, Any], ...]] = {}
+    for group in GROUPS:
+        rows = raw[group]
+        if not isinstance(rows, list) or not rows or len(rows) > MAX_ASSERTIONS:
+            raise BilateralRuntimeProfileError(f"requirement_bindings.{group} must be a non-empty bounded array")
+        group_assertions = {str(item["assertion_id"]) for item in assertions[group]}
+        seen_requirements: set[str] = set()
+        normalized: list[dict[str, Any]] = []
+        for index, item in enumerate(rows):
+            if not isinstance(item, Mapping) or set(item) != {
+                "requirement_digest",
+                "assertion_ids",
+            }:
+                raise BilateralRuntimeProfileError(f"requirement_bindings.{group}[{index}] is invalid")
+            requirement_digest = _hex(
+                item["requirement_digest"],
+                f"requirement_bindings.{group}[{index}].requirement_digest",
+            )
+            raw_assertion_ids = item["assertion_ids"]
+            if (
+                not isinstance(raw_assertion_ids, list)
+                or not raw_assertion_ids
+                or len(raw_assertion_ids) > MAX_ASSERTIONS
+            ):
+                raise BilateralRuntimeProfileError(
+                    f"requirement_bindings.{group}[{index}].assertion_ids must be a non-empty bounded array"
+                )
+            assertion_ids = tuple(
+                _id(value, f"requirement_bindings.{group}[{index}].assertion_ids") for value in raw_assertion_ids
+            )
+            if (
+                requirement_digest in seen_requirements
+                or len(set(assertion_ids)) != len(assertion_ids)
+                or not set(assertion_ids).issubset(group_assertions)
+            ):
+                raise BilateralRuntimeProfileError(
+                    f"requirement_bindings.{group}[{index}] is duplicated or references the wrong assertion group"
+                )
+            seen_requirements.add(requirement_digest)
+            normalized.append(
+                {
+                    "requirement_digest": requirement_digest,
+                    "assertion_ids": assertion_ids,
+                }
+            )
+        result[group] = tuple(normalized)
+    return result
+
+
 def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, Any]:
     root = root.expanduser().resolve()
     path = _v1._safe_repo_path(root, str(profile_path), "runtime profile")
@@ -217,9 +267,9 @@ def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, A
         "base_profile",
         "intent_contract",
         "allowed_paths",
-        "guardrail_ids",
         "scenarios",
         *GROUPS,
+        "requirement_bindings",
         "required_trace_artifacts",
         "repair_policy",
         "independent_verifier",
@@ -243,18 +293,8 @@ def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, A
     allowed_paths = tuple(sorted(_path(item, "allowed_paths") for item in raw_allowed_paths))
     if len(set(allowed_paths)) != len(allowed_paths):
         raise BilateralRuntimeProfileError("allowed_paths must be unique and non-empty")
-    raw_guardrail_ids = raw.get("guardrail_ids", [])
-    if not isinstance(raw_guardrail_ids, list) or not raw_guardrail_ids or len(raw_guardrail_ids) > MAX_GUARDRAILS:
-        raise BilateralRuntimeProfileError("guardrail_ids must be a non-empty bounded array")
-    guardrails = tuple(sorted(_id(item, "guardrail_ids") for item in raw_guardrail_ids))
-    if len(set(guardrails)) != len(guardrails):
-        raise BilateralRuntimeProfileError("guardrail_ids must be unique and non-empty")
     for item in allowed_paths:
         _v1._safe_repo_path(root, item, "allowed path")
-    if _json_digest(list(allowed_paths)) != contract["allowed_path_set_digest"]:
-        raise BilateralRuntimeProfileError("allowed_path_set_digest does not match allowed_paths")
-    if _json_digest(list(guardrails)) != contract["guardrail_set_digest"]:
-        raise BilateralRuntimeProfileError("guardrail_set_digest does not match guardrail_ids")
 
     raw_traces = raw.get("required_trace_artifacts")
     if not isinstance(raw_traces, list) or not raw_traces or len(raw_traces) > MAX_TRACES:
@@ -266,6 +306,10 @@ def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, A
 
     seen: set[str] = set()
     groups = {name: _assertions(raw.get(name), name, set(traces), seen) for name in GROUPS}
+    requirement_bindings = _requirement_bindings(
+        raw.get("requirement_bindings"),
+        groups,
+    )
     scenarios = raw.get("scenarios")
     if not isinstance(scenarios, list) or not scenarios or len(scenarios) > MAX_SCENARIOS:
         raise BilateralRuntimeProfileError("scenarios must be a non-empty bounded array")
@@ -317,6 +361,23 @@ def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, A
     verifier_source = _v1._safe_repo_path(root, verifier_path, "independent verifier source")
     if verifier_id in {profile_id, candidate_id} or _v1._sha256(verifier_source) != verifier_sha:
         raise BilateralRuntimeProfileError("independent verifier identity or source digest mismatch")
+    if verifier_path not in allowed_paths:
+        raise BilateralRuntimeProfileError("independent verifier source must be included in allowed_paths")
+    command_sources: list[Path] = []
+    for token in base["probe"]["command"]:
+        if not isinstance(token, str) or not token or "{" in token:
+            continue
+        candidate = (root / token).resolve()
+        try:
+            candidate.relative_to(root)
+        except ValueError:
+            continue
+        if candidate.is_file() and not candidate.is_symlink():
+            command_sources.append(candidate)
+    if command_sources.count(verifier_source) != 1:
+        raise BilateralRuntimeProfileError(
+            "independent verifier source is not the exact probe command evidence producer"
+        )
 
     axioms = raw.get("axiom_bindings") or list(_v1.AXIOM_BINDINGS)
     if not isinstance(axioms, list) or not axioms or any(not isinstance(item, str) for item in axioms):
@@ -333,9 +394,9 @@ def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, A
         "base_profile_sha256": base["profile_sha256"],
         "intent_contract": contract,
         "allowed_paths": allowed_paths,
-        "guardrail_ids": guardrails,
         "scenarios": tuple(scenario_rows),
         **groups,
+        "requirement_bindings": requirement_bindings,
         "required_trace_artifacts": traces,
         "repair_policy": dict(policy),
         "independent_verifier": {
@@ -344,6 +405,251 @@ def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, A
             "source_sha256": verifier_sha,
         },
         "axiom_bindings": tuple(axioms),
+    }
+
+
+def _external_input_path(root: Path, value: str | Path, label: str) -> Path:
+    path = Path(value).expanduser().resolve()
+    try:
+        path.relative_to(root)
+    except ValueError:
+        pass
+    else:
+        raise BilateralRuntimeProfileError(f"{label} must remain outside the source checkout")
+    if not path.is_file() or path.is_symlink():
+        raise BilateralRuntimeProfileError(f"{label} is missing or unsafe")
+    return path
+
+
+def _rehydrate_intent(value: Any) -> IntentPacket:
+    if not isinstance(value, Mapping):
+        raise BilateralRuntimeProfileError("canonical intent packet is missing")
+    expected = set(IntentPacket.__dataclass_fields__)
+    if set(value) != expected or not isinstance(value.get("authority"), Mapping):
+        raise BilateralRuntimeProfileError("canonical intent packet schema is invalid")
+    payload = dict(value)
+    try:
+        payload["authority"] = AuthorityEnvelope(**dict(payload["authority"]))
+        for field in (
+            "constraints",
+            "prohibitions",
+            "acceptance_criteria",
+            "required_evidence",
+        ):
+            payload[field] = tuple(payload[field])
+        return IntentPacket(**payload)
+    except (KeyError, TypeError, ValueError) as exc:
+        raise BilateralRuntimeProfileError(f"canonical intent packet identity is invalid: {exc}") from exc
+
+
+def _rehydrate_ledger(value: Any) -> SemanticLedger:
+    if not isinstance(value, Mapping):
+        raise BilateralRuntimeProfileError("canonical Semantic Ledger is missing")
+    expected = set(SemanticLedger.__dataclass_fields__)
+    if set(value) != expected or not isinstance(value.get("definitions"), list):
+        raise BilateralRuntimeProfileError("canonical Semantic Ledger schema is invalid")
+    payload = dict(value)
+    try:
+        payload["definitions"] = tuple(
+            SemanticDefinition(
+                term=item["term"],
+                means=tuple(item["means"]),
+                does_not_mean=tuple(item["does_not_mean"]),
+                source_refs=tuple(item["source_refs"]),
+                freshness=item.get("freshness", "CURRENT"),
+            )
+            for item in payload["definitions"]
+        )
+        return SemanticLedger(**payload)
+    except (KeyError, TypeError, ValueError) as exc:
+        raise BilateralRuntimeProfileError(f"canonical Semantic Ledger identity is invalid: {exc}") from exc
+
+
+def _rehydrate_receipt(value: Any) -> IntentConfirmationReceipt:
+    if not isinstance(value, Mapping):
+        raise BilateralRuntimeProfileError("canonical confirmation receipt is missing")
+    expected = set(IntentConfirmationReceipt.__dataclass_fields__)
+    if set(value) != expected:
+        raise BilateralRuntimeProfileError("canonical confirmation receipt schema is invalid")
+    payload = dict(value)
+    try:
+        payload["expires_or_stales_on"] = tuple(payload["expires_or_stales_on"])
+        receipt = IntentConfirmationReceipt(**payload)
+    except (KeyError, TypeError, ValueError) as exc:
+        raise BilateralRuntimeProfileError(f"canonical confirmation receipt is invalid: {exc}") from exc
+    if not receipt.has_valid_identity():
+        raise BilateralRuntimeProfileError("canonical confirmation receipt identity is invalid")
+    return receipt
+
+
+def _confirmed_requirement_digests(values: Any, label: str) -> set[str]:
+    if (
+        not isinstance(values, list)
+        or not values
+        or len(values) > MAX_ASSERTIONS
+        or any(not isinstance(item, str) or not item.strip() for item in values)
+    ):
+        raise BilateralRuntimeProfileError(f"{label} must be a non-empty bounded string array")
+    return {_json_digest(item) for item in values}
+
+
+def _validate_requirement_coverage(
+    profile: Mapping[str, Any],
+    positive_requirements: list[str],
+    negative_requirements: list[str],
+) -> dict[str, list[dict[str, Any]]]:
+    bindings = profile["requirement_bindings"]
+    positive = _confirmed_requirement_digests(
+        positive_requirements,
+        "confirmed positive requirements",
+    )
+    negative = _confirmed_requirement_digests(
+        negative_requirements,
+        "confirmed negative requirements",
+    )
+    bound_positive = {item["requirement_digest"] for item in bindings[GROUPS[0]]}
+    bound_negative = {item["requirement_digest"] for group in GROUPS[1:] for item in bindings[group]}
+    if bound_positive != positive:
+        raise BilateralRuntimeProfileError("runtime profile does not cover the exact confirmed positive requirements")
+    if bound_negative != negative:
+        raise BilateralRuntimeProfileError("runtime profile does not cover the exact confirmed negative requirements")
+    return {
+        group: [
+            {
+                "requirement_digest": item["requirement_digest"],
+                "assertion_ids": list(item["assertion_ids"]),
+            }
+            for item in bindings[group]
+        ]
+        for group in GROUPS
+    }
+
+
+def _load_confirmation_packet(
+    root: Path,
+    confirmation_packet: str | Path,
+    *,
+    profile: Mapping[str, Any],
+    repository: Mapping[str, Any],
+) -> dict[str, Any]:
+    path = _external_input_path(root, confirmation_packet, "canonical confirmation packet")
+    if path.stat().st_size > MAX_JSON_BYTES:
+        raise BilateralRuntimeProfileError("canonical confirmation packet is oversized")
+    try:
+        packet_bytes = path.read_bytes()
+        raw = json.loads(packet_bytes.decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise BilateralRuntimeProfileError(
+            f"canonical confirmation packet is not immutable canonical JSON: {exc}"
+        ) from exc
+    packet_sha256 = hashlib.sha256(packet_bytes).hexdigest()
+    if not isinstance(raw, Mapping) or raw.get("version") != CONFIRMATION_PACKET_VERSION:
+        raise BilateralRuntimeProfileError("confirmation packet must come from the canonical bilateral compiler")
+    intent = _rehydrate_intent(raw.get("intent_packet"))
+    ledger = _rehydrate_ledger(raw.get("semantic_ledger"))
+    receipt = _rehydrate_receipt(raw.get("confirmation_receipt"))
+    refinement = raw.get("refinement_session")
+    guardrails = raw.get("guardrails")
+    u7 = raw.get("u7_references")
+    if (
+        not isinstance(refinement, Mapping)
+        or not isinstance(guardrails, list)
+        or not guardrails
+        or not isinstance(u7, Mapping)
+    ):
+        raise BilateralRuntimeProfileError(
+            "confirmation packet is missing canonical refinement, guardrail, or U7 records"
+        )
+    positive_requirements = refinement.get("positive_requirements")
+    negative_requirements = refinement.get("negative_requirements")
+    confirmation_evidence = refinement.get("confirmation_evidence")
+    teach_back = refinement.get("teach_back")
+    if (
+        not isinstance(positive_requirements, list)
+        or not isinstance(negative_requirements, list)
+        or not isinstance(confirmation_evidence, Mapping)
+        or not isinstance(teach_back, Mapping)
+    ):
+        raise BilateralRuntimeProfileError("confirmation packet does not expose the canonical confirmed requirements")
+    allowed_paths = confirmation_evidence.get("allowed_paths")
+    if not isinstance(allowed_paths, list):
+        raise BilateralRuntimeProfileError("confirmation packet does not expose its canonical allowed paths")
+    revision_status = u7.get("intent_revision_status")
+    if revision_status != profile["intent_contract"]["intent_revision_status"]:
+        raise BilateralRuntimeProfileError("canonical intent revision status mismatch")
+    if (
+        intent.intent_digest != ledger.intent_digest
+        or receipt.semantic_ledger_digest != ledger.ledger_digest
+        or receipt.source_request_digest != refinement.get("source_request_digest")
+        or receipt.guardrail_set_digest != stable_digest(guardrails)
+        or not all(item in intent.prohibitions for item in negative_requirements)
+        or list(intent.acceptance_criteria) != positive_requirements
+    ):
+        raise BilateralRuntimeProfileError(
+            "canonical intent, ledger, confirmation, guardrail, or requirement identity mismatch"
+        )
+    profile_digest = str(profile["profile_sha256"])
+    authority_digest = stable_digest(intent.authority.to_dict())
+    try:
+        current = receipt.is_current(
+            repository_head=str(repository["head"]),
+            source_tree_digest=str(repository["source_tree"]),
+            source_request_digest=str(refinement["source_request_digest"]),
+            positive_requirements=positive_requirements,
+            negative_requirements=negative_requirements,
+            semantic_ledger_digest=ledger.ledger_digest,
+            guardrail_set_digest=stable_digest(guardrails),
+            authority_digest=authority_digest,
+            teach_back_digest=str(teach_back.get("teach_back_digest") or ""),
+            allowed_paths=allowed_paths,
+            runtime_profile_digest=profile_digest,
+            now=time.time(),
+        )
+    except (KeyError, TypeError, ValueError) as exc:
+        raise BilateralRuntimeProfileError(f"canonical confirmation currency check failed: {exc}") from exc
+    if not current:
+        raise BilateralRuntimeProfileError(
+            "canonical confirmation is stale, expired, or bound to another source identity"
+        )
+    if tuple(allowed_paths) != tuple(profile["allowed_paths"]):
+        raise BilateralRuntimeProfileError("canonical confirmation allowed paths do not match the runtime profile")
+    requirement_bindings = _validate_requirement_coverage(
+        profile,
+        positive_requirements,
+        negative_requirements,
+    )
+    guardrail_ids = []
+    for item in guardrails:
+        if not isinstance(item, Mapping):
+            raise BilateralRuntimeProfileError("canonical guardrail record is invalid")
+        guardrail_id = item.get("guardrail_id")
+        if not isinstance(guardrail_id, str) or not guardrail_id:
+            raise BilateralRuntimeProfileError("canonical guardrail identity is missing")
+        guardrail_ids.append(guardrail_id)
+    return {
+        "packet_sha256": packet_sha256,
+        "intent_digest": intent.intent_digest,
+        "semantic_ledger_digest": ledger.ledger_digest,
+        "confirmation_digest": receipt.confirmation_id,
+        "guardrail_set_digest": receipt.guardrail_set_digest,
+        "intent_revision_status": str(revision_status),
+        "expected_repository_head": receipt.repository_head,
+        "expected_source_tree": receipt.source_tree_digest,
+        "allowed_path_set_digest": receipt.allowed_path_set_digest,
+        "guardrail_ids": guardrail_ids,
+        "positive_requirement_digests": sorted(
+            _confirmed_requirement_digests(
+                positive_requirements,
+                "confirmed positive requirements",
+            )
+        ),
+        "negative_requirement_digests": sorted(
+            _confirmed_requirement_digests(
+                negative_requirements,
+                "confirmed negative requirements",
+            )
+        ),
+        "requirement_bindings": requirement_bindings,
     }
 
 
@@ -382,33 +688,64 @@ def _matches(actual: Any, operator: str, expected: Any) -> bool:
         return False
 
 
-def _evaluate(output: Path, assertion: Mapping[str, Any]) -> dict[str, Any]:
-    path = _artifact(output, str(assertion["artifact"]))
-    value = _read_json(path, f"runtime trace {assertion['artifact']}", MAX_JSON_BYTES)
+def _snapshot_traces(
+    output: Path,
+    traces: Sequence[str],
+) -> dict[str, dict[str, Any]]:
+    maximum = int(getattr(_v1, "MAX_ARTIFACT_BYTES", 32 * 1024 * 1024))
+    snapshots: dict[str, dict[str, Any]] = {}
+    for name in traces:
+        path = _artifact(output, name)
+        if not path.is_file() or path.is_symlink():
+            raise BilateralRuntimeProfileError(f"runtime trace {name} was not produced by the current run")
+        size = path.stat().st_size
+        if size > maximum or size > MAX_JSON_BYTES:
+            raise BilateralRuntimeProfileError(f"runtime trace {name} is oversized")
+        try:
+            body = path.read_bytes()
+            value = json.loads(body.decode("utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise BilateralRuntimeProfileError(f"runtime trace {name} is not immutable canonical JSON: {exc}") from exc
+        if len(body) != size:
+            raise BilateralRuntimeProfileError(f"runtime trace {name} changed while it was being snapshotted")
+        snapshots[name] = {
+            "value": value,
+            "size_bytes": len(body),
+            "sha256": hashlib.sha256(body).hexdigest(),
+        }
+    return snapshots
+
+
+def _evaluate(
+    snapshots: Mapping[str, Mapping[str, Any]],
+    assertion: Mapping[str, Any],
+) -> dict[str, Any]:
+    snapshot = snapshots[str(assertion["artifact"])]
+    value = snapshot["value"]
     found, actual = _lookup(value, str(assertion["json_path"]))
     return {
         **dict(assertion),
         "found": found,
         "actual": actual,
         "passed": found and _matches(actual, str(assertion["operator"]), assertion.get("expected")),
-        "artifact_sha256": _v1._sha256(path),
+        "artifact_sha256": snapshot["sha256"],
     }
 
 
-def _trace_inventory(output: Path, traces: Sequence[str]) -> list[dict[str, Any]]:
-    maximum = int(getattr(_v1, "MAX_ARTIFACT_BYTES", 32 * 1024 * 1024))
-    rows = []
+def _trace_inventory(
+    snapshots: Mapping[str, Mapping[str, Any]],
+    traces: Sequence[str],
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
     for name in traces:
-        path = _artifact(output, name)
-        present = path.is_file() and not path.is_symlink()
-        size = path.stat().st_size if present else 0
+        snapshot = snapshots[name]
         rows.append(
             {
                 "path": name,
-                "present": present,
-                "size_bytes": size,
-                "within_size_limit": present and size <= maximum,
-                "sha256": _v1._sha256(path) if present and size <= maximum else None,
+                "present": True,
+                "size_bytes": snapshot["size_bytes"],
+                "within_size_limit": True,
+                "sha256": snapshot["sha256"],
             }
         )
     return rows
@@ -418,6 +755,7 @@ def run_runtime_profile_v2(
     root: Path,
     *,
     profile_path: str | Path,
+    confirmation_packet: str | Path,
     output_dir: str | Path,
     venv_path: str | Path | None = None,
     install_requirements: bool = False,
@@ -425,19 +763,24 @@ def run_runtime_profile_v2(
     baseline_receipt: str | Path | None = None,
 ) -> dict[str, Any]:
     root = root.expanduser().resolve()
+    before = _repo_identity(root)
+    if allow_dirty:
+        raise BilateralRuntimeProfileError(
+            "V2 runtime proof cannot bind dirty working-tree execution to a committed source tree"
+        )
+    if before["status"]:
+        raise BilateralRuntimeProfileError("repository is dirty; V2 proof requires a clean tree")
     profile = load_runtime_profile_v2(root, profile_path)
     output = _v1._external_output_path(root, output_dir)
     output.mkdir(parents=True, exist_ok=True)
-    before = _repo_identity(root)
-    if before["status"] and not allow_dirty:
-        raise BilateralRuntimeProfileError("repository is dirty; V2 proof requires a clean tree")
-    contract = profile["intent_contract"]
-    expected_head = before["head"] if contract["expected_repository_head"] == CURRENT_HEAD else contract["expected_repository_head"]
-    expected_tree = before["source_tree"] if contract["expected_source_tree"] == CURRENT_TREE else contract["expected_source_tree"]
-    if before["head"] != expected_head:
-        raise BilateralRuntimeProfileError("expected repository head mismatch")
-    if before["source_tree"] != expected_tree:
-        raise BilateralRuntimeProfileError("expected source-tree mismatch")
+    if any(output.iterdir()):
+        raise BilateralRuntimeProfileError("V2 runtime proof requires a fresh empty output directory")
+    confirmation = _load_confirmation_packet(
+        root,
+        confirmation_packet,
+        profile=profile,
+        repository=before,
+    )
 
     base = _v1.run_runtime_profile(
         root,
@@ -445,13 +788,14 @@ def run_runtime_profile_v2(
         output_dir=output,
         venv_path=venv_path,
         install_requirements=install_requirements,
-        allow_dirty=allow_dirty,
+        allow_dirty=False,
         baseline_receipt=baseline_receipt,
     )
     after = _repo_identity(root)
+    snapshots = _snapshot_traces(output, profile["required_trace_artifacts"])
     results, by_id = {}, {}
     for group in GROUPS:
-        results[group] = [_evaluate(output, row) for row in profile[group]]
+        results[group] = [_evaluate(snapshots, row) for row in profile[group]]
         by_id.update({row["assertion_id"]: row for row in results[group]})
     scenarios = []
     for row in profile["scenarios"]:
@@ -463,7 +807,7 @@ def run_runtime_profile_v2(
                 "failed_assertion_ids": [item["assertion_id"] for item in required if not item["passed"]],
             }
         )
-    traces = _trace_inventory(output, profile["required_trace_artifacts"])
+    traces = _trace_inventory(snapshots, profile["required_trace_artifacts"])
     identity_ok = before == after
     ok = (
         bool(base.get("ok"))
@@ -487,11 +831,29 @@ def run_runtime_profile_v2(
         "repository_identity_before": before,
         "repository_identity_after": after,
         "repository_identity_unchanged": identity_ok,
-        "resolved_expected_repository_head": expected_head,
-        "resolved_expected_source_tree": expected_tree,
-        "intent_contract": profile["intent_contract"],
+        "resolved_expected_repository_head": confirmation["expected_repository_head"],
+        "resolved_expected_source_tree": confirmation["expected_source_tree"],
+        "intent_contract": {
+            key: value
+            for key, value in confirmation.items()
+            if key
+            in {
+                "intent_digest",
+                "semantic_ledger_digest",
+                "confirmation_digest",
+                "guardrail_set_digest",
+                "intent_revision_status",
+                "expected_repository_head",
+                "expected_source_tree",
+                "allowed_path_set_digest",
+            }
+        },
+        "confirmation_packet_sha256": confirmation["packet_sha256"],
         "allowed_paths": list(profile["allowed_paths"]),
-        "guardrail_ids": list(profile["guardrail_ids"]),
+        "guardrail_ids": confirmation["guardrail_ids"],
+        "confirmed_positive_requirement_digests": confirmation["positive_requirement_digests"],
+        "confirmed_negative_requirement_digests": confirmation["negative_requirement_digests"],
+        "requirement_bindings": confirmation["requirement_bindings"],
         "scenarios": scenarios,
         **results,
         "positive_requirements_proved": [item["assertion_id"] for item in results[GROUPS[0]] if item["passed"]],
@@ -500,10 +862,7 @@ def run_runtime_profile_v2(
         "fault_behaviors_proved": [item["assertion_id"] for item in results[GROUPS[3]] if item["passed"]],
         "requirements_unproved": unproved,
         "guardrail_violations": [
-            item["assertion_id"]
-            for group in GROUPS[1:]
-            for item in results[group]
-            if not item["passed"]
+            item["assertion_id"] for group in GROUPS[1:] for item in results[group] if not item["passed"]
         ],
         "required_trace_artifacts": traces,
         "independent_verifier": profile["independent_verifier"],
@@ -530,6 +889,11 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", default=".")
     parser.add_argument("--profile", required=True)
+    parser.add_argument(
+        "--confirmation-packet",
+        required=True,
+        help="External canonical bilateral compiler packet for the exact clean execution head.",
+    )
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--venv")
     parser.add_argument("--install-requirements", action="store_true")
@@ -540,6 +904,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         result = run_runtime_profile_v2(
             Path(args.repo_root),
             profile_path=args.profile,
+            confirmation_packet=args.confirmation_packet,
             output_dir=args.output_dir,
             venv_path=args.venv,
             install_requirements=args.install_requirements,

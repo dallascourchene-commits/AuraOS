@@ -516,12 +516,112 @@ test("Construction scene renderer composes hybrid controls and exact cleanup", a
   assert.equal(receipt.overlay_receipt.model.dependencies.length, 0);
   assert.equal(receipt.source_asset_coordinates_immutable, true);
   assert.equal(receipt.renderer_authority, false);
+  assert.equal(receipt.physical_work_authority, false);
+  assert.equal(receipt.professional_authority, false);
+  assert.equal(receipt.inspector_state.selected_entity.projection_only, true);
+  assert.equal(receipt.inspector_state.selected_entity.patch_authority, false);
+  assert.equal(receipt.inspector_state.blueprint.media_type, "image/svg+xml");
+  assert.equal(receipt.inspector_state.blueprint_resolution.status, "BOUND");
   const status = await renderer.dispose();
   assert.equal(status.state, "DISPOSED");
   assert.equal(meshDisposed, 1);
   assert.equal(gaussianDisposed, 1);
   assert.equal(overlayDisposed, 1);
   assert.equal(presentation.disposed, 1);
+});
+
+test("Construction renderer resolves only canonically bound blueprints and reports ambiguity", async () => {
+  const first = constructionFixture();
+  const canonicalPlan = first.scene.assets.find(
+    (asset) => asset.asset_type === "PLANE",
+  );
+  first.scene.assets.push({
+    ...canonicalPlan,
+    asset_id: "asset:unrelated-plan",
+  });
+  const firstPresentation = new TestPresentationRenderer();
+  const firstRenderer = new ConstructionSceneRenderer({
+    presentationRenderer: firstPresentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: firstPresentation,
+      drawGaussianPass: async () => () => {},
+      now: () => 0,
+    }),
+  });
+  await firstRenderer.initialize(first.scene, {
+    ...first.plan,
+    scene_asset_count: first.scene.assets.length,
+    scene_asset_bytes: first.scene.assets.reduce(
+      (total, asset) => total + asset.byte_length,
+      0,
+    ),
+  }, {
+    meshPayloads: [{
+      asset_id: "asset:mesh",
+      source_digest: "1".repeat(64),
+      decoded_byte_length: 256,
+      resource: { local: true },
+    }],
+    gaussianPayloads: [gaussianPayload()],
+  });
+  firstRenderer.isolateStorey("frame:storey");
+  assert.equal(
+    firstRenderer.inspectorState().blueprint.asset_id,
+    canonicalPlan.asset_id,
+  );
+  await firstRenderer.dispose();
+
+  const second = constructionFixture();
+  const secondPlan = second.scene.assets.find(
+    (asset) => asset.asset_type === "PLANE",
+  );
+  const ambiguousPlan = {
+    ...secondPlan,
+    asset_id: "asset:ambiguous-plan",
+  };
+  second.scene.assets.push(ambiguousPlan);
+  second.scene.entities.find(
+    (entity) => entity.entity_type === "ASSET_INSTANCE",
+  ).asset_ids.push(ambiguousPlan.asset_id);
+  const secondPresentation = new TestPresentationRenderer();
+  const secondRenderer = new ConstructionSceneRenderer({
+    presentationRenderer: secondPresentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass: new ConstructionOverlayPass(),
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: secondPresentation,
+      drawGaussianPass: async () => () => {},
+      now: () => 0,
+    }),
+  });
+  await secondRenderer.initialize(second.scene, {
+    ...second.plan,
+    scene_asset_count: second.scene.assets.length,
+    scene_asset_bytes: second.scene.assets.reduce(
+      (total, asset) => total + asset.byte_length,
+      0,
+    ),
+  }, {
+    meshPayloads: [{
+      asset_id: "asset:mesh",
+      source_digest: "1".repeat(64),
+      decoded_byte_length: 256,
+      resource: { local: true },
+    }],
+    gaussianPayloads: [gaussianPayload()],
+  });
+  secondRenderer.focusEntity("entity:work");
+  assert.throws(
+    () => secondRenderer.isolateStorey("frame:storey"),
+    /status AMBIGUOUS, found 2/,
+  );
+  const inspector = secondRenderer.inspectorState();
+  assert.equal(inspector.blueprint, null);
+  assert.equal(inspector.blueprint_resolution.status, "AMBIGUOUS");
+  assert.equal(secondRenderer.status().inspector_state.blueprint_resolution.status, "AMBIGUOUS");
+  await secondRenderer.dispose();
 });
 
 test("Construction renderer cancellation and device loss fail closed", async () => {

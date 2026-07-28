@@ -441,17 +441,75 @@ async function exerciseBilateralRendererContract(page) {
     });
     missingBlueprintRenderer.scene = {
       ...validateSceneProjection(packet.scene),
-      assets: packet.scene.assets.filter(
-        (asset) => !(asset.asset_type === "PLANE" && asset.frame_id === otherStorey),
-      ),
+      assets: [
+        ...packet.scene.assets.filter(
+          (asset) => !(asset.asset_type === "PLANE" && asset.frame_id === otherStorey),
+        ),
+        {
+          ...packet.scene.assets.find(
+            (asset) =>
+              asset.asset_type === "PLANE" &&
+              asset.frame_id === storeyWithIssue,
+          ),
+          asset_id: "asset:unrelated-plan",
+          frame_id: otherStorey,
+        },
+      ],
     };
     missingBlueprintRenderer.storeyFrames = Object.freeze([...storeyFrames]);
     try {
       missingBlueprintRenderer.isolateStorey(otherStorey);
     } catch (error) {
       missingBlueprintExplicit = String(error?.message || error).includes(
-        "requires exactly one admitted blueprint; found 0",
+        "requires exactly one canonically bound blueprint; status MISSING, found 0",
       );
+    }
+
+    let ambiguousBlueprintExplicit = false;
+    const canonicalBlueprint = packet.scene.assets.find(
+      (asset) =>
+        asset.asset_type === "PLANE" &&
+        asset.frame_id === otherStorey,
+    );
+    const ambiguousBlueprintId = "asset:ambiguous-plan";
+    const ambiguousBlueprintRenderer = new ConstructionSceneRenderer({
+      presentationRenderer: new ProbePresentationRenderer(),
+      meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+      overlayPass: new ConstructionOverlayPass(),
+    });
+    const validatedScene = validateSceneProjection(packet.scene);
+    ambiguousBlueprintRenderer.scene = {
+      ...validatedScene,
+      assets: [
+        ...validatedScene.assets,
+        Object.freeze({
+          ...canonicalBlueprint,
+          asset_id: ambiguousBlueprintId,
+        }),
+      ],
+      entities: validatedScene.entities.map((entity) =>
+        entity.entity_type === "ASSET_INSTANCE" && entity.frame_id === otherStorey
+          ? Object.freeze({
+              ...entity,
+              asset_ids: Object.freeze([...entity.asset_ids, ambiguousBlueprintId].sort()),
+            })
+          : entity,
+      ),
+    };
+    ambiguousBlueprintRenderer.storeyFrames = Object.freeze([...storeyFrames]);
+    ambiguousBlueprintRenderer.selectedStoreyFrameId = otherStorey;
+    try {
+      ambiguousBlueprintRenderer.isolateStorey(otherStorey);
+    } catch (error) {
+      const inspector = ambiguousBlueprintRenderer.inspectorState();
+      const status = ambiguousBlueprintRenderer.status();
+      ambiguousBlueprintExplicit =
+        String(error?.message || error).includes(
+          "requires exactly one canonically bound blueprint; status AMBIGUOUS, found 2",
+        ) &&
+        inspector.blueprint === null &&
+        inspector.blueprint_resolution.status === "AMBIGUOUS" &&
+        status.inspector_state.blueprint_resolution.status === "AMBIGUOUS";
     }
 
     let invalidDigestExplicit = false;
@@ -540,10 +598,24 @@ async function exerciseBilateralRendererContract(page) {
     await relaunched.renderer.dispose();
 
     const sourceGeometryUnchanged = JSON.stringify(packet.scene) === sourceSnapshot;
-    const physicalWorkAuthorized = false;
-    const professionalAuthority = false;
-    const automaticMerge = false;
-    const productionMutation = false;
+    const authorityReceipts = [...modeReceipts, showAllReceipt, relaunchReceipt];
+    const physicalWorkAuthorized = authorityReceipts.some(
+      (receipt) => receipt.physical_work_authority !== false,
+    );
+    const professionalAuthority = authorityReceipts.some(
+      (receipt) => receipt.professional_authority !== false,
+    );
+    const automaticMerge = authorityReceipts.some(
+      (receipt) => receipt.automatic_merge !== false,
+    );
+    const productionMutation = authorityReceipts.some(
+      (receipt) => receipt.production_mutation !== false,
+    );
+    const authorityDenialsObserved =
+      !physicalWorkAuthorized &&
+      !professionalAuthority &&
+      !automaticMerge &&
+      !productionMutation;
     const conditions = {
       inspectorStable,
       selectedStoreyStable,
@@ -555,6 +627,7 @@ async function exerciseBilateralRendererContract(page) {
       hiddenStoreyPickRejected,
       hiddenStoreyFocusRejected,
       missingBlueprintExplicit,
+      ambiguousBlueprintExplicit,
       invalidDigestExplicit,
       preInitializationSwitchRejected,
       delayedAssetBounded,
@@ -565,6 +638,7 @@ async function exerciseBilateralRendererContract(page) {
       dissolveTerminal,
       relaunchSucceeded,
       sourceGeometryUnchanged,
+      authorityDenialsObserved,
     };
     return Object.freeze({
       version: "AURA_CONSTRUCTION_BILATERAL_BROWSER_PROOF_V1",
@@ -713,11 +787,11 @@ async function main() {
       pageErrors,
       requestFailures,
       ok: exitCode === 0 && bilateral.ok === true,
-      productionMutation: false,
+      productionMutation: bilateral.productionMutation,
       automaticPatch: false,
-      automaticMerge: false,
-      physicalWorkAuthorized: false,
-      professionalAuthority: false,
+      automaticMerge: bilateral.automaticMerge,
+      physicalWorkAuthorized: bilateral.physicalWorkAuthorized,
+      professionalAuthority: bilateral.professionalAuthority,
       humanReviewRequired: true,
     };
     fs.writeFileSync(path.join(OUTPUT_DIR, "browser-evidence.json"), JSON.stringify(evidence, null, 2));

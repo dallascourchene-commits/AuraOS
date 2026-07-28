@@ -50,6 +50,12 @@
     },
     {
       "artifact": "browser-evidence.json",
+      "assertion_id": "ambiguous-blueprint-explicit",
+      "json_path": "bilateral.ambiguousBlueprintExplicit",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
       "assertion_id": "invalid-digest-explicit",
       "json_path": "bilateral.invalidDigestExplicit",
       "operator": "truthy"
@@ -97,30 +103,14 @@
       "operator": "truthy"
     }
   ],
-  "guardrail_ids": [
-    "construction_no_authority_inference",
-    "construction_no_hidden_storey_pick",
-    "construction_no_silent_asset_substitution",
-    "construction_source_geometry_immutable",
-    "runtime_exact_identity_required",
-    "runtime_external_evidence_only",
-    "runtime_human_review_required",
-    "runtime_no_self_authorization"
-  ],
   "independent_verifier": {
     "source_path": "tests/runtime/construction_demo_browser_probe.cjs",
-    "source_sha256": "6b6f69045e0b46db88aac37e3f7a9dd75409cb4c5df892d1e90d8e53da830401",
+    "source_sha256": "ccbd2c8802da445d4415dee8ef2bd4ece8a78a63d291b4b1b68d93a27cfbf110",
     "verifier_id": "construction-bilateral-browser-verifier"
   },
   "intent_contract": {
-    "allowed_path_set_digest": "8955102abd081153d98021ff48ea5dd3d8cd6e5455aa1a5d3e3670220e7be6c5",
-    "confirmation_digest": "608b429e98c368ebd6a731203e25dc4d7bdcc99a83957e6120c5e5f510ffb6db",
-    "expected_repository_head": "CURRENT_HEAD",
-    "expected_source_tree": "CURRENT_TREE",
-    "guardrail_set_digest": "c6102af3f2bac8977a531bba2b54ca3e4675630b8c503e3f072e67c724e3eb82",
-    "intent_digest": "e9571aec75a743a5c894206aedccaf80f2563e468a7bc07276f5564237242f94",
-    "intent_revision_id": "pr4-b10-revision-1",
-    "semantic_ledger_digest": "95fa87ac2a49312ec1989ec1720e5c2417cb12aa9f869aafa4989e368e40bd7f"
+    "confirmation_packet_version": "AURA_BILATERAL_CANONICAL_COMPILER_V1",
+    "intent_revision_status": "NOT_CREATED_NO_POST_CONFIRMATION_DRIFT"
   },
   "negative_assertions": [
     {
@@ -150,6 +140,12 @@
   ],
   "objective": "Run the canonical Construction browser profile and independently prove B10 bilateral storey, blueprint, annotation, selection, authority, fault, cleanup, and relaunch invariants.",
   "positive_assertions": [
+    {
+      "artifact": "runtime_harness_receipt.json",
+      "assertion_id": "v1-runtime-passed",
+      "json_path": "ok",
+      "operator": "truthy"
+    },
     {
       "artifact": "browser-evidence.json",
       "assertion_id": "browser-proof-ok",
@@ -225,6 +221,80 @@
       "operator": "truthy"
     }
   ],
+  "requirement_bindings": {
+    "positive_assertions": [
+      {
+        "requirement_digest": "c81bf26f27cd1faab3399424f80571b6af8e8ee0419afe936ed76355f98867d1",
+        "assertion_ids": [
+          "v1-runtime-passed"
+        ]
+      },
+      {
+        "requirement_digest": "e47fbf6ada450a0a9e604bfe472c3fe8cd34753cadf8b801a884668a91c10088",
+        "assertion_ids": [
+          "browser-proof-ok",
+          "bilateral-proof-ok",
+          "selected-storey-stable",
+          "selected-issue-stable",
+          "blueprint-stable",
+          "annotation-set-stable",
+          "representation-sequence-stable",
+          "show-all-retains-selection"
+        ]
+      }
+    ],
+    "negative_assertions": [
+      {
+        "requirement_digest": "fac607627249c9c29dfef84abe5e9a0fa42d77111d03c398d3150067961503ad",
+        "assertion_ids": [
+          "no-production-mutation",
+          "no-automatic-merge",
+          "no-physical-work-authority",
+          "no-professional-authority"
+        ]
+      }
+    ],
+    "preservation_assertions": [
+      {
+        "requirement_digest": "b6bf835e821e82b363402db2cceec35eb172af383e21ea04b2874cf772bdf1ca",
+        "assertion_ids": [
+          "inspector-state-preserved",
+          "source-geometry-preserved",
+          "repository-tree-preserved",
+          "bounded-relaunch-succeeds"
+        ]
+      }
+    ],
+    "fault_injections": [
+      {
+        "requirement_digest": "649b1a3a03f04b71241e12424162cc231bfc960b33bd779d7dcb262bce2837aa",
+        "assertion_ids": [
+          "hidden-pick-rejected",
+          "hidden-focus-rejected"
+        ]
+      },
+      {
+        "requirement_digest": "ff8f15a88217719cab06e27e571f134b1c6dcc9d06d1f81b9c9c42d159abf456",
+        "assertion_ids": [
+          "missing-blueprint-explicit",
+          "ambiguous-blueprint-explicit"
+        ]
+      },
+      {
+        "requirement_digest": "c297ba5b71e473cd47c22ed99c87744bf9b5219d7f1ce58a84ae6ede69094bb0",
+        "assertion_ids": [
+          "invalid-digest-explicit",
+          "preinit-switch-rejected",
+          "delayed-asset-bounded",
+          "cancellation-explicit",
+          "cancellation-cleanup-terminal",
+          "device-loss-terminal",
+          "device-loss-cleanup-terminal",
+          "dissolve-terminal"
+        ]
+      }
+    ]
+  },
   "profile_id": "construction-demo-bilateral",
   "repair_policy": {
     "automatic_commit": false,
@@ -280,6 +350,7 @@
         "hidden-pick-rejected",
         "hidden-focus-rejected",
         "missing-blueprint-explicit",
+        "ambiguous-blueprint-explicit",
         "invalid-digest-explicit"
       ],
       "scenario_id": "construction-selection-and-asset-faults"
@@ -300,6 +371,7 @@
     {
       "description": "The canonical V1 Runtime Harness proves the repository stayed unchanged throughout browser execution.",
       "required_assertion_ids": [
+        "v1-runtime-passed",
         "repository-tree-preserved"
       ],
       "scenario_id": "construction-source-tree-preservation"
