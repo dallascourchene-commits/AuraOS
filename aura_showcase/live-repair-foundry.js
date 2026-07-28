@@ -10,6 +10,7 @@
     active: false,
     eventCount: 0,
     listeners: [],
+    expiryTimer: null,
   };
 
   const $ = id => document.getElementById(id);
@@ -35,8 +36,13 @@
 
   const identity = () => {
     const raw = $('foundry-identity')?.value || '';
-    const parsed = JSON.parse(raw);
-    return parsed;
+    return JSON.parse(raw);
+  };
+
+  const resetControls = () => {
+    if ($('foundry-mark')) $('foundry-mark').disabled = true;
+    if ($('foundry-finalize')) $('foundry-finalize').disabled = true;
+    if ($('foundry-start')) $('foundry-start').disabled = false;
   };
 
   const sendEvent = async (eventType, payload) => {
@@ -83,7 +89,21 @@
   const dissolveListeners = () => {
     state.listeners.forEach(([target, type, handler]) => target.removeEventListener(type, handler));
     state.listeners = [];
+    if (state.expiryTimer !== null) window.clearTimeout(state.expiryTimer);
+    state.expiryTimer = null;
     state.active = false;
+  };
+
+  const expireBoundedCapture = () => {
+    if (!state.active) return;
+    void sendEvent('CAPTURE_WINDOW_EXPIRED', {})
+      .catch(() => {})
+      .finally(() => {
+        dissolveListeners();
+        resetControls();
+        appendEvent('CAPTURE_DISSOLVED', 'bounded retention window expired');
+        output({ok: false, status: 'CAPTURE_EXPIRED_AND_DISSOLVED', fail_closed: true});
+      });
   };
 
   const start = async () => {
@@ -102,6 +122,8 @@
     state.eventCount = 0;
     state.packet = null;
     addBoundedListeners();
+    const retentionMilliseconds = Math.max(1, Number(result.retention_seconds || contract.retention_seconds)) * 1000;
+    state.expiryTimer = window.setTimeout(expireBoundedCapture, retentionMilliseconds + 50);
     $('foundry-mark').disabled = false;
     $('foundry-finalize').disabled = false;
     $('foundry-start').disabled = true;
@@ -135,12 +157,10 @@
       },
     );
     state.packet = result.packet;
-    const projection = await projectCurrentIncident(currentIdentity);
     dissolveListeners();
-    $('foundry-mark').disabled = true;
-    $('foundry-finalize').disabled = true;
-    $('foundry-start').disabled = false;
+    resetControls();
     appendEvent('CAPTURE_DISSOLVED', result.packet?.packet_id || '');
+    const projection = await projectCurrentIncident(currentIdentity);
     output({...result, projection});
   };
 
@@ -210,6 +230,7 @@
   $('foundry-mark')?.addEventListener('click', () => mark().catch(error => output(error.message)));
   $('foundry-finalize')?.addEventListener('click', () => finalize().catch(error => {
     dissolveListeners();
+    resetControls();
     output(error.message);
   }));
 
@@ -219,7 +240,7 @@
     confirmation_digest: '<intent-confirmation_* canonical receipt id>',
     semantic_ledger_digest: '<40-64 hex>',
     guardrail_set_digest: '<40-64 hex>',
-    intent_revision_id: '<current revision id>',
+    intent_revision_id: '<current revision id or canonical no-drift status>',
     repository_head: '<40 hex commit>',
     source_tree_digest: '<40 hex tree>',
     runtime_profile_digest: '<64 hex sha256>',
