@@ -133,14 +133,17 @@ jobs:
           from aura_coding_waboose_review_lessons import load_review_lesson_registry
 
           schema = json.loads(Path("schemas/aura_review_lesson.schema.json").read_text(encoding="utf-8"))
+          payload = json.loads(Path(".aura/review_lessons/pr164_spatial_review_lessons.json").read_text(encoding="utf-8"))
           Draft202012Validator.check_schema(schema)
+          errors = sorted(Draft202012Validator(schema).iter_errors(payload), key=lambda item: list(item.absolute_path))
+          if errors:
+              first = errors[0]
+              location = "/".join(str(item) for item in first.absolute_path) or "<root>"
+              raise AssertionError(f"review lesson registry schema failure at {location}: {first.message}")
           registry = load_review_lesson_registry(".aura/review_lessons/pr164_spatial_review_lessons.json")
           assert len(registry.lessons) == 13
           assert len(registry.scenarios) == 13
           PY
-          python -m jsonschema \
-            -i .aura/review_lessons/pr164_spatial_review_lessons.json \
-            schemas/aura_review_lesson.schema.json
 
       - name: Verify exact-head source integrity evidence
         run: |
