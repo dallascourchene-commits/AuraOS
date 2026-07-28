@@ -1,0 +1,70 @@
+{
+  "version": "AURA_WABOOSE_REQUEST_V1",
+  "request_id": "bilateral-intent-guardrail-foundry-final-b11-b15",
+  "objective_ref": ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_final.v1.json",
+  "repository": "dallascourchene-commits/AuraOS",
+  "base_commit": "f1b9d786c4ff30d1ff5b984f5859db80f33446cc",
+  "review_mode": "precision",
+  "scope_mode": "files_only",
+  "run_tests": false,
+  "purpose": "Review the consolidated final B11-B15 refactor for canonical-owner reuse, dependency-gate integrity, exact identity, privacy, bounded repair, rollback, current reproof, governed learning, projection-only UI, and final publication safety.",
+  "required_invariants": [
+    "B9_and_B10_remain_the_merged_foundation",
+    "incident_capture_is_bounded_private_redacted_and_exact_identity_bound",
+    "deterministic_replay_precedes_repair",
+    "repair_candidates_prove_positive_negative_preservation_fault_cleanup_and_independent_verifier_obligations",
+    "failed_hypotheses_are_deduplicated_and_recorded_without_becoming_truth",
+    "preview_retains_the_last_verified_version_and_separates_technical_rollback_from_human_promotion",
+    "merged_u7_current_reproof_remains_the_only_learning_lifecycle",
+    "p0_and_independent_p1_cover_positive_negative_guardrail_and_preservation_behavior",
+    "stale_intent_or_source_invalidates_old_reproof_evidence",
+    "human_or_community_disposition_precedes_governed_learning_eligibility",
+    "spatial_foundry_is_non_authoritative_projection_only",
+    "no_new_intent_memory_truth_policy_routing_verification_persistence_continuity_learning_publication_or_authority_plane",
+    "source_and_tests_stabilize_before_docs_or_generated_navigation",
+    "no_partial_publication_and_no_automatic_merge"
+  ],
+  "risk_map": [
+    "privacy_or_secret_leak_in_incident_capture",
+    "unbounded_recording_or_retention",
+    "stale_release_environment_source_confirmation_or_revision_replay",
+    "non_deterministic_replay",
+    "repair_loop_repetition",
+    "attempt_archive_bypass",
+    "negative_test_omission",
+    "candidate_self_verification",
+    "silent_scope_or_authority_expansion",
+    "rollback_to_unverified_state",
+    "preview_becoming_production_mutation",
+    "human_promotion_bypass",
+    "duplicate_continuity_or_learning_owner",
+    "old_p0_p1_or_reproof_evidence_reuse_after_intent_or_source_change",
+    "qdkt_auto_crystallization",
+    "visual_projection_treated_as_truth_or_patch_authority",
+    "documentation_or_codemap_generated_from_unstable_source",
+    "generated_navigation_absorbing_source_changes",
+    "partial_or_out_of_scope_publication"
+  ],
+  "initial_allowed_paths": [
+    ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_final.v1.json",
+    ".aura/waboose_requests/bilateral_intent_guardrail_foundry_final.v1.json"
+  ],
+  "source_allowlist_status": "LOCKED_PENDING_EXACT_HEAD_HARNESS_DISCOVERY",
+  "external_reviewers": {
+    "coderabbit": false,
+    "greptile": false,
+    "gitar": false,
+    "codex": false
+  },
+  "authority": {
+    "modify_source": false,
+    "apply_patch": false,
+    "commit": false,
+    "push": false,
+    "create_pull_request": false,
+    "merge": false,
+    "deploy": false,
+    "production_mutation": false,
+    "learning_promotion": false
+  }
+}
