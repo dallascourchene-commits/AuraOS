@@ -260,10 +260,21 @@ async function exerciseBilateralRendererContract(page) {
         this.plan = null;
       }
 
-      async initialize(scenePayload, planPayload) {
+      async initialize(scenePayload, planPayload, { signal } = {}) {
         if (this.initializeDelayMs) {
-          await new Promise((resolve) => setTimeout(resolve, this.initializeDelayMs));
+          await new Promise((resolve, reject) => {
+            const timeoutId = setTimeout(resolve, this.initializeDelayMs);
+            signal?.addEventListener(
+              "abort",
+              () => {
+                clearTimeout(timeoutId);
+                reject(new Error("Probe presentation initialization cancelled"));
+              },
+              { once: true },
+            );
+          });
         }
+        if (signal?.aborted) throw new Error("Probe presentation initialization cancelled");
         this.scene = validateSceneProjection(scenePayload);
         this.plan = validateRenderPlan(planPayload, this.scene);
         this.state = RENDERER_STATES.INITIALIZED;
@@ -443,8 +454,8 @@ async function exerciseBilateralRendererContract(page) {
       meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
       overlayPass: new ConstructionOverlayPass(),
     });
-    missingBlueprintRenderer.scene = {
-      ...validateSceneProjection(packet.scene),
+    const missingBlueprintScene = {
+      ...packet.scene,
       assets: [
         ...packet.scene.assets.filter(
           (asset) => !(asset.asset_type === "PLANE" && asset.frame_id === otherStorey),
@@ -460,13 +471,29 @@ async function exerciseBilateralRendererContract(page) {
         },
       ],
     };
-    missingBlueprintRenderer.storeyFrames = Object.freeze([...storeyFrames]);
     try {
-      missingBlueprintRenderer.isolateStorey(otherStorey);
+      await missingBlueprintRenderer.initialize(
+        missingBlueprintScene,
+        packet.render_plan,
+        {
+          meshPayloads: meshPayloads(missingBlueprintScene),
+          gaussianPayloads: gaussianPayloads(missingBlueprintScene),
+        },
+      );
     } catch (error) {
       missingBlueprintExplicit = String(error?.message || error).includes(
         "requires exactly one canonically bound blueprint; status MISSING, found 0",
       );
+      if (!missingBlueprintExplicit) {
+        throw new Error(
+          `missing-blueprint fixture failed outside the canonical binding check: ${String(
+            error?.message || error,
+          )}`,
+        );
+      }
+    }
+    if (!missingBlueprintExplicit) {
+      throw new Error("missing-blueprint fixture unexpectedly initialized");
     }
 
     let ambiguousBlueprintExplicit = false;
@@ -475,6 +502,11 @@ async function exerciseBilateralRendererContract(page) {
         asset.asset_type === "PLANE" &&
         asset.frame_id === otherStorey,
     );
+    if (!canonicalBlueprint) {
+      throw new Error(
+        "bilateral proof requires a canonically bound blueprint on the hidden storey",
+      );
+    }
     const ambiguousBlueprintId = "asset:ambiguous-plan";
     const ambiguousBlueprintRenderer = new ConstructionSceneRenderer({
       presentationRenderer: new ProbePresentationRenderer(),
@@ -698,6 +730,10 @@ async function main() {
     version: "AURA_CONSTRUCTION_BILATERAL_BROWSER_PROOF_V1",
     ok: false,
     error: "bilateral proof not run",
+    productionMutation: false,
+    automaticMerge: false,
+    physicalWorkAuthorized: false,
+    professionalAuthority: false,
   };
 
   let browser = null;
@@ -770,6 +806,7 @@ async function main() {
         String(receipt.sceneState || "") !== "Dissolved",
     );
     const failed =
+      bilateral.ok !== true ||
       pageErrors.length > 0 ||
       requestFailures.length > 0 ||
       consoleMessages.some((message) => message.type === "error") ||

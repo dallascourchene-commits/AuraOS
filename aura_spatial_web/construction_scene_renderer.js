@@ -203,18 +203,32 @@ function aggregate(errors, message) {
   return present.length === 1 ? present[0] : new AggregateError(present, message);
 }
 
-async function boundedInitialization(promise, timeoutMs, label) {
+async function boundedInitialization(promise, timeoutMs, label, onTimeout) {
   let timeoutId;
+  let timeoutError = null;
   try {
     return await Promise.race([
       promise,
       new Promise((_, reject) => {
         timeoutId = setTimeout(
-          () => reject(new Error(`${label} timed out after ${timeoutMs} ms`)),
+          () => {
+            timeoutError = new Error(`${label} timed out after ${timeoutMs} ms`);
+            reject(timeoutError);
+            onTimeout?.(timeoutError);
+          },
           timeoutMs,
         );
       }),
     ]);
+  } catch (error) {
+    if (error === timeoutError) {
+      try {
+        await promise;
+      } catch (_) {
+        // The timeout remains the primary failure after cancellation settles.
+      }
+    }
+    throw error;
   } finally {
     clearTimeout(timeoutId);
   }
@@ -278,8 +292,11 @@ export class ConstructionSceneRenderer {
     this.gaussianOwnerActive = false;
     this.cancelled = false;
     this.initializationTimeoutMs = initializationTimeoutMs;
+    this.initializationAbortController = null;
     this.contextLossTarget = null;
     this.contextLossHandler = null;
+    this.cleanupFailure = null;
+    this.inspectorStateCache = null;
   }
 
   async initialize(
@@ -292,6 +309,7 @@ export class ConstructionSceneRenderer {
     }
     if (signal?.aborted) throw new Error("Construction scene initialization cancelled");
     this.scene = validateSceneProjection(scenePayload);
+    this._invalidateInspectorState();
     this.plan = validateRenderPlan(planPayload, this.scene);
     const sourceAssets = new Map(
       scenePayload.assets.map((asset) => [asset.asset_id, asset]),
@@ -335,6 +353,11 @@ export class ConstructionSceneRenderer {
       this.presentationTransforms.set(frameId, transform);
     }
 
+    const initializationController = new AbortController();
+    this.initializationAbortController = initializationController;
+    const forwardAbort = () => initializationController.abort(signal?.reason);
+    signal?.addEventListener("abort", forwardAbort, { once: true });
+    if (signal?.aborted) forwardAbort();
     try {
       for (const frameId of this.storeyFrames) {
         this._storeyBlueprint(frameId);
@@ -354,19 +377,25 @@ export class ConstructionSceneRenderer {
             scenePayload,
             planPayload,
             gaussianPayloads,
-            { signal },
+            { signal: initializationController.signal },
           ),
           this.initializationTimeoutMs,
           "Construction Gaussian initialization",
+          (error) => initializationController.abort(error),
         );
       } else {
         await boundedInitialization(
-          this.presentationRenderer.initialize(scenePayload, planPayload),
+          this.presentationRenderer.initialize(
+            scenePayload,
+            planPayload,
+            { signal: initializationController.signal },
+          ),
           this.initializationTimeoutMs,
           "Construction presentation initialization",
+          (error) => initializationController.abort(error),
         );
       }
-      if (signal?.aborted || this.cancelled) {
+      if (initializationController.signal.aborted || this.cancelled) {
         throw new Error("Construction scene initialization cancelled");
       }
       this.mode = this.hasMeshes && this.hasSplats ? "HYBRID" : this.hasSplats ? "SPLATS" : "MESH";
@@ -375,7 +404,13 @@ export class ConstructionSceneRenderer {
     } catch (error) {
       const cleanup = await this._disposeOwnedResources();
       this.state = RENDERER_STATES.LOST;
+      if (cleanup) this.cleanupFailure = cleanup;
       throw aggregate([error, cleanup], "Construction initialization and cleanup failed");
+    } finally {
+      signal?.removeEventListener("abort", forwardAbort);
+      if (this.initializationAbortController === initializationController) {
+        this.initializationAbortController = null;
+      }
     }
     return this.status();
   }
@@ -442,7 +477,9 @@ export class ConstructionSceneRenderer {
     this.contextLossTarget = canvas;
     this.contextLossHandler = (event) => {
       event?.preventDefault?.();
-      void this.markDeviceLost().catch(() => {});
+      void this.markDeviceLost().catch((error) => {
+        this.cleanupFailure = error;
+      });
     };
     canvas.addEventListener("webglcontextlost", this.contextLossHandler);
     return () => this._unbindContextLoss();
@@ -525,6 +562,10 @@ export class ConstructionSceneRenderer {
     return this.visibleStoreyFrameIds === null || this.visibleStoreyFrameIds.has(entity.frame_id);
   }
 
+  _invalidateInspectorState() {
+    this.inspectorStateCache = null;
+  }
+
   isolateStorey(frameId) {
     if (!this.storeyFrames.includes(frameId)) throw new RangeError("unknown Construction storey frame");
     this._storeyBlueprint(frameId);
@@ -540,6 +581,7 @@ export class ConstructionSceneRenderer {
     this.visibleStoreyFrameIds = new Set([frameId]);
     const selected = this.scene.entities.find((item) => item.entity_id === this.selectedEntityId);
     if (selected && !this._entityVisible(selected)) this.selectedEntityId = null;
+    this._invalidateInspectorState();
   }
 
   showAllStoreys() {
@@ -547,6 +589,7 @@ export class ConstructionSceneRenderer {
     this.overlayPass.setVisibleFrameIds(null);
     if (this.gaussianOwnerActive) this.gaussianRenderer.setVisibleAssetIds(null);
     this.visibleStoreyFrameIds = null;
+    this._invalidateInspectorState();
   }
 
   explodeStoreys(spacing = 3) {
@@ -648,6 +691,7 @@ export class ConstructionSceneRenderer {
     if (camera && Array.isArray(camera.target)) camera.target = [...entity.position];
     this.selectedEntityId = entityId;
     if (this.storeyFrames.includes(entity.frame_id)) this.selectedStoreyFrameId = entity.frame_id;
+    this._invalidateInspectorState();
     return entity;
   }
 
@@ -659,12 +703,31 @@ export class ConstructionSceneRenderer {
     if (!entity || entity.selectable === false || !this._entityVisible(entity)) return null;
     this.selectedEntityId = entityId;
     if (this.storeyFrames.includes(entity.frame_id)) this.selectedStoreyFrameId = entity.frame_id;
+    this._invalidateInspectorState();
     return entityId;
   }
 
   inspectorState() {
+    const cacheKey = Object.freeze({
+      scene: this.scene,
+      selectedEntityId: this.selectedEntityId,
+      selectedStoreyFrameId: this.selectedStoreyFrameId,
+      visibleStoreyFrameIds:
+        this.visibleStoreyFrameIds === null
+          ? null
+          : [...this.visibleStoreyFrameIds].sort().join("\0"),
+    });
+    if (
+      this.inspectorStateCache &&
+      this.inspectorStateCache.scene === cacheKey.scene &&
+      this.inspectorStateCache.selectedEntityId === cacheKey.selectedEntityId &&
+      this.inspectorStateCache.selectedStoreyFrameId === cacheKey.selectedStoreyFrameId &&
+      this.inspectorStateCache.visibleStoreyFrameIds === cacheKey.visibleStoreyFrameIds
+    ) {
+      return this.inspectorStateCache.value;
+    }
     if (!this.scene) {
-      return Object.freeze({
+      const value = Object.freeze({
         selected_storey_frame_id: null,
         selected_entity: null,
         blueprint: null,
@@ -679,6 +742,8 @@ export class ConstructionSceneRenderer {
         projection_only: true,
         human_review_required: true,
       });
+      this.inspectorStateCache = { ...cacheKey, value };
+      return value;
     }
     const selectedEntity = this.scene.entities.find(
       (item) => item.entity_id === this.selectedEntityId,
@@ -709,7 +774,7 @@ export class ConstructionSceneRenderer {
           .map((item) => item.entity_id)
           .sort()
       : [];
-    return Object.freeze({
+    const value = Object.freeze({
       selected_storey_frame_id: selectedFrameId,
       selected_entity: selectedEntity
         ? Object.freeze({
@@ -741,6 +806,8 @@ export class ConstructionSceneRenderer {
       projection_only: true,
       human_review_required: true,
     });
+    this.inspectorStateCache = { ...cacheKey, value };
+    return value;
   }
 
   resetView() {
@@ -748,6 +815,7 @@ export class ConstructionSceneRenderer {
     this.collapseStoreys();
     this.selectedEntityId = null;
     this.selectedStoreyFrameId = null;
+    this._invalidateInspectorState();
     this.overlayPass.setTimelineDay(1_000_000);
     if (this.presentationRenderer.camera) {
       this.presentationRenderer.camera.yaw = 0;
@@ -806,6 +874,7 @@ export class ConstructionSceneRenderer {
     } catch (error) {
       const cleanupError = await this._disposeOwnedResources();
       this.state = RENDERER_STATES.LOST;
+      this.cleanupFailure = cleanupError;
       if (cleanupError) {
         throw new AggregateError(
           [error, cleanupError],
@@ -826,6 +895,9 @@ export class ConstructionSceneRenderer {
     if (this.state === RENDERER_STATES.DISPOSED) return this.status();
     this._unbindContextLoss();
     this.cancelled = true;
+    this.initializationAbortController?.abort(
+      new Error("Construction initialization cancelled by device loss"),
+    );
     const errors = [];
     try {
       await this.overlayPass.dispose();
@@ -845,6 +917,7 @@ export class ConstructionSceneRenderer {
     }
     this.state = RENDERER_STATES.LOST;
     const failure = aggregate(errors, "Construction device-loss cleanup failed");
+    this.cleanupFailure = failure;
     if (failure) throw failure;
     return this.status();
   }
@@ -882,7 +955,9 @@ export class ConstructionSceneRenderer {
     this.visibleStoreyFrameIds = null;
     this.selectedStoreyFrameId = null;
     this.selectedEntityId = null;
+    this._invalidateInspectorState();
     this.state = failure ? RENDERER_STATES.LOST : RENDERER_STATES.DISPOSED;
+    this.cleanupFailure = failure;
     if (failure) throw failure;
     return this.status();
   }
@@ -897,6 +972,13 @@ export class ConstructionSceneRenderer {
       selected_storey_frame_id: this.selectedStoreyFrameId,
       selected_entity_id: this.selectedEntityId,
       inspector_state: this.inspectorState(),
+      cleanup_succeeded: this.cleanupFailure === null,
+      cleanup_error: this.cleanupFailure
+        ? Object.freeze({
+            name: this.cleanupFailure.name || "Error",
+            message: String(this.cleanupFailure.message || this.cleanupFailure),
+          })
+        : null,
       gaussian_owner_active: this.gaussianOwnerActive,
       source_asset_coordinates_immutable: true,
       exploded_view_is_presentation_only: true,

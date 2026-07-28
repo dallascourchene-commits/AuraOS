@@ -23,12 +23,23 @@ from scripts.aura_runtime_profile_v2_adapter import (
     PROFILE_VERSION,
     BilateralRuntimeProfileError,
     _json_digest,
+    _matches,
     load_runtime_profile_v2,
     run_runtime_profile_v2,
 )
 
 POSITIVE_REQUIREMENT = "The fixture runtime succeeds through the canonical V1 path."
 NEGATIVE_REQUIREMENT = "Do not grant automatic merge or mutate the source checkout."
+ALLOWED_PATHS = sorted(
+    [
+        ".aura/waboose_requests/bilateral.json",
+        "aura_coding_waboose_cli.py",
+        "probe.py",
+        "profile-v1.json",
+        "profile-v2.json",
+        "server.py",
+    ]
+)
 
 
 def _free_port() -> int:
@@ -56,11 +67,17 @@ def _source_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
-def _write_fixture(root: Path, *, positive_expected: bool = True) -> Path:
+def _write_fixture(
+    root: Path,
+    *,
+    positive_expected: bool = True,
+    waboose_overwrite_trace: bool = False,
+) -> Path:
     port = _free_port()
     (root / "server.py").write_text(
         """from http.server import BaseHTTPRequestHandler, HTTPServer
 import sys
+import time
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -72,7 +89,16 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, *_):
         pass
 
-HTTPServer(("127.0.0.1", int(sys.argv[1])), Handler).serve_forever()
+last_error = None
+for _ in range(100):
+    try:
+        server = HTTPServer(("127.0.0.1", int(sys.argv[1])), Handler)
+    except OSError as error:
+        last_error = error
+        time.sleep(0.05)
+    else:
+        server.serve_forever()
+raise last_error
 """,
         encoding="utf-8",
     )
@@ -95,6 +121,17 @@ output.mkdir(parents=True, exist_ok=True)
 """,
         encoding="utf-8",
     )
+    overwrite_trace = (
+        """
+output = state.parent
+(output / "browser-evidence.json").write_text(
+    json.dumps({"ok": False, "automaticMerge": True}),
+    encoding="utf-8",
+)
+"""
+        if waboose_overwrite_trace
+        else ""
+    )
     (root / "aura_coding_waboose_cli.py").write_text(
         """import json
 import sys
@@ -102,6 +139,9 @@ from pathlib import Path
 
 state = Path(sys.argv[sys.argv.index("--state-file") + 1])
 state.write_text(json.dumps({"ok": True}), encoding="utf-8")
+"""
+        + overwrite_trace
+        + """
 print("bilateral request verified")
 """,
         encoding="utf-8",
@@ -131,16 +171,6 @@ print("bilateral request verified")
     }
     (root / "profile-v1.json").write_text(json.dumps(v1), encoding="utf-8")
 
-    allowed_paths = sorted(
-        [
-            ".aura/waboose_requests/bilateral.json",
-            "aura_coding_waboose_cli.py",
-            "probe.py",
-            "profile-v1.json",
-            "profile-v2.json",
-            "server.py",
-        ]
-    )
     assertion_ids = [
         "positive-ok",
         "bilateral-waboose-ok",
@@ -160,7 +190,7 @@ print("bilateral request verified")
             "confirmation_packet_version": CONFIRMATION_PACKET_VERSION,
             "intent_revision_status": NO_POST_CONFIRMATION_REVISION,
         },
-        "allowed_paths": allowed_paths,
+        "allowed_paths": ALLOWED_PATHS,
         "scenarios": [
             {
                 "scenario_id": "fixture-runtime-proof",
@@ -321,16 +351,6 @@ def _write_confirmation_packet(
             "human_disposition": "CONFIRMED",
         }
     ]
-    allowed_paths = sorted(
-        [
-            ".aura/waboose_requests/bilateral.json",
-            "aura_coding_waboose_cli.py",
-            "probe.py",
-            "profile-v1.json",
-            "profile-v2.json",
-            "server.py",
-        ]
-    )
     source_request_digest = stable_digest(intent.user_meaning)
     teach_back_digest = "a" * 64
     head = repository_head or _git(root, "rev-parse", "HEAD")
@@ -381,7 +401,7 @@ def _write_confirmation_packet(
             (),
             {"teach_back_digest": teach_back_digest},
         )(),
-        allowed_paths=allowed_paths,
+        allowed_paths=ALLOWED_PATHS,
         runtime_profile_digest=_sha256(profile),
         unified_execution_binding_ref="aura://fixture/execution-binding",
         human_reviewer="fixture-human",
@@ -401,7 +421,7 @@ def _write_confirmation_packet(
             "source_tree_digest": tree,
             "semantic_ledger_digest": ledger.ledger_digest,
             "authority": authority.to_dict(),
-            "allowed_paths": allowed_paths,
+            "allowed_paths": ALLOWED_PATHS,
             "runtime_profile_digest": _sha256(profile),
         },
         now=1.0,
@@ -665,4 +685,92 @@ def test_v2_runtime_rejects_replayed_confirmation_for_fresh_output(
             profile_path=profile.name,
             confirmation_packet=confirmation,
             output_dir=tmp_path / "evidence-second",
+        )
+
+
+def test_v2_profile_rejects_unreferenced_assertions(tmp_path: Path) -> None:
+    root, profile, _ = _repo(tmp_path)
+    payload = json.loads(profile.read_text(encoding="utf-8"))
+    payload["scenarios"][0]["required_assertion_ids"].remove("termination-terminal")
+    profile.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(BilateralRuntimeProfileError, match="scenarios leave assertions unreferenced"):
+        load_runtime_profile_v2(root, profile.name)
+
+
+def test_v2_profile_rejects_assertion_artifact_outside_admitted_traces(
+    tmp_path: Path,
+) -> None:
+    root, profile, _ = _repo(tmp_path)
+    payload = json.loads(profile.read_text(encoding="utf-8"))
+    payload["positive_assertions"][0]["artifact"] = "unlisted-evidence.json"
+    profile.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(BilateralRuntimeProfileError, match="artifact is not an admitted trace"):
+        load_runtime_profile_v2(root, profile.name)
+
+
+def test_v2_json_equality_keeps_booleans_distinct_from_numbers() -> None:
+    assert _matches(True, "equals", True) is True
+    assert _matches(True, "equals", 1) is False
+    assert _matches(False, "equals", 0) is False
+    assert _matches(True, "not_equals", 1) is True
+
+
+@pytest.mark.parametrize(
+    ("replacement", "message"),
+    [
+        (
+            '"version": "AURA_RUNTIME_PROFILE_V2", "version": "AURA_RUNTIME_PROFILE_V2"',
+            "duplicate JSON object key",
+        ),
+        ('"max_attempts": NaN', "non-finite JSON constant"),
+    ],
+)
+def test_v2_profile_rejects_noncanonical_json(
+    tmp_path: Path,
+    replacement: str,
+    message: str,
+) -> None:
+    root, profile, _ = _repo(tmp_path)
+    body = profile.read_text(encoding="utf-8")
+    if replacement.startswith('"version"'):
+        body = body.replace('"version": "AURA_RUNTIME_PROFILE_V2"', replacement, 1)
+    else:
+        body = body.replace('"max_attempts": 1', replacement, 1)
+    profile.write_text(body, encoding="utf-8")
+    with pytest.raises(BilateralRuntimeProfileError, match=message):
+        load_runtime_profile_v2(root, profile.name)
+
+
+def test_v2_runtime_rejects_confirmation_replay_from_renamed_copy(
+    tmp_path: Path,
+) -> None:
+    root, profile, confirmation = _repo(tmp_path)
+    first = run_runtime_profile_v2(
+        root,
+        profile_path=profile.name,
+        confirmation_packet=confirmation,
+        output_dir=tmp_path / "evidence-first",
+    )
+    assert first["ok"] is True
+    copied_confirmation = tmp_path / "renamed-confirmation-copy.json"
+    copied_confirmation.write_bytes(confirmation.read_bytes())
+    with pytest.raises(BilateralRuntimeProfileError, match="already been consumed"):
+        run_runtime_profile_v2(
+            root,
+            profile_path=profile.name,
+            confirmation_packet=copied_confirmation,
+            output_dir=tmp_path / "evidence-second",
+        )
+
+
+def test_v2_runtime_rejects_waboose_overwrite_of_v1_trace(
+    tmp_path: Path,
+) -> None:
+    root, profile, confirmation = _repo(tmp_path, waboose_overwrite_trace=True)
+    with pytest.raises(BilateralRuntimeProfileError, match="V1 runtime traces changed after"):
+        run_runtime_profile_v2(
+            root,
+            profile_path=profile.name,
+            confirmation_packet=confirmation,
+            output_dir=tmp_path / "evidence",
         )

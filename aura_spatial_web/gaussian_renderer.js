@@ -510,11 +510,13 @@ export class GaussianRenderer {
     const assets = [];
     for (const item of admitted) {
       if (signal?.aborted) throw new Error("Gaussian initialization cancelled");
-      assets.push(await materializeGaussianAsset(item.payload, item.preflight));
+      const asset = await materializeGaussianAsset(item.payload, item.preflight);
+      if (signal?.aborted) throw new Error("Gaussian initialization cancelled");
+      assets.push(asset);
     }
 
     try {
-      await this.presentationRenderer.initialize(scenePayload, planPayload);
+      await this.presentationRenderer.initialize(scenePayload, planPayload, { signal });
       if (signal?.aborted) throw new Error("Gaussian initialization cancelled");
     } catch (error) {
       let cleanupError = null;

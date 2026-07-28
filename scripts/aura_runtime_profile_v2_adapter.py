@@ -94,6 +94,27 @@ def _source_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
+def _reject_json_constant(value: str) -> None:
+    raise ValueError(f"non-finite JSON constant {value} is not permitted")
+
+
+def _reject_duplicate_json_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError(f"duplicate JSON object key {key!r}")
+        value[key] = item
+    return value
+
+
+def _strict_json_loads(body: str) -> Any:
+    return json.loads(
+        body,
+        parse_constant=_reject_json_constant,
+        object_pairs_hook=_reject_duplicate_json_keys,
+    )
+
+
 def _id(value: Any, label: str) -> str:
     if not isinstance(value, str) or not IDENTIFIER.fullmatch(value):
         raise BilateralRuntimeProfileError(f"{label} is invalid")
@@ -119,8 +140,8 @@ def _read_json(path: Path, label: str, maximum: int) -> Any:
     if not path.is_file() or path.is_symlink() or path.stat().st_size > maximum:
         raise BilateralRuntimeProfileError(f"{label} is missing, unsafe, or oversized")
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return _strict_json_loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
         raise BilateralRuntimeProfileError(f"{label} is not canonical UTF-8 JSON: {exc}") from exc
 
 
@@ -555,8 +576,8 @@ def _load_confirmation_packet(
         raise BilateralRuntimeProfileError("canonical confirmation packet is oversized")
     try:
         packet_bytes = path.read_bytes()
-        raw = json.loads(packet_bytes.decode("utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raw = _strict_json_loads(packet_bytes.decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
         raise BilateralRuntimeProfileError(
             f"canonical confirmation packet is not immutable canonical JSON: {exc}"
         ) from exc
@@ -633,8 +654,6 @@ def _load_confirmation_packet(
         raise BilateralRuntimeProfileError(
             "canonical confirmation is stale, expired, or bound to another source identity"
         )
-    if tuple(allowed_paths) != tuple(profile["allowed_paths"]):
-        raise BilateralRuntimeProfileError("canonical confirmation allowed paths do not match the runtime profile")
     requirement_bindings = _validate_requirement_coverage(
         profile,
         positive_requirements,
@@ -676,9 +695,18 @@ def _load_confirmation_packet(
     }
 
 
-def _consume_confirmation(confirmation: Mapping[str, Any]) -> dict[str, Any]:
-    source = Path(str(confirmation["source_path"]))
-    marker = source.with_name(f"{source.name}.{confirmation['confirmation_digest']}.consumed.json")
+def _consume_confirmation(root: Path, confirmation: Mapping[str, Any]) -> dict[str, Any]:
+    common_git_dir = Path(_git(root, "rev-parse", "--git-common-dir"))
+    if not common_git_dir.is_absolute():
+        common_git_dir = root / common_git_dir
+    common_git_dir = common_git_dir.resolve()
+    ledger = common_git_dir / "aura-confirmation-consumption-v1"
+    if ledger.exists() and (not ledger.is_dir() or ledger.is_symlink()):
+        raise BilateralRuntimeProfileError("trusted confirmation consumption ledger is unsafe")
+    ledger.mkdir(mode=0o700, parents=False, exist_ok=True)
+    confirmation_digest = str(confirmation["confirmation_digest"])
+    packet_digest = str(confirmation["packet_sha256"])
+    marker = ledger / f"{confirmation_digest}.{packet_digest}.consumed.json"
     receipt = {
         "version": "AURA_CONFIRMATION_CONSUMPTION_V1",
         "confirmation_digest": confirmation["confirmation_digest"],
@@ -730,10 +758,15 @@ def _lookup(value: Any, path: str) -> tuple[bool, Any]:
 
 
 def _matches(actual: Any, operator: str, expected: Any) -> bool:
+    def json_equal(left: Any, right: Any) -> bool:
+        if isinstance(left, bool) or isinstance(right, bool):
+            return type(left) is type(right) and left == right
+        return left == right
+
     if operator == "equals":
-        return actual == expected
+        return json_equal(actual, expected)
     if operator == "not_equals":
-        return actual != expected
+        return not json_equal(actual, expected)
     if operator == "truthy":
         return bool(actual)
     if operator == "falsy":
@@ -761,8 +794,8 @@ def _snapshot_traces(
             raise BilateralRuntimeProfileError(f"runtime trace {name} is oversized")
         try:
             body = path.read_bytes()
-            value = json.loads(body.decode("utf-8"))
-        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            value = _strict_json_loads(body.decode("utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
             raise BilateralRuntimeProfileError(f"runtime trace {name} is not immutable canonical JSON: {exc}") from exc
         if len(body) != size:
             raise BilateralRuntimeProfileError(f"runtime trace {name} changed while it was being snapshotted")
@@ -839,7 +872,7 @@ def run_runtime_profile_v2(
         profile=profile,
         repository=before,
     )
-    consumption = _consume_confirmation(confirmation)
+    consumption = _consume_confirmation(root, confirmation)
 
     base = _v1.run_runtime_profile(
         root,
@@ -850,6 +883,12 @@ def run_runtime_profile_v2(
         allow_dirty=False,
         baseline_receipt=baseline_receipt,
     )
+    pre_waboose_trace_names = tuple(
+        name
+        for name in profile["required_trace_artifacts"]
+        if name != "verify-bilateral-waboose.receipt.json"
+    )
+    pre_waboose_snapshots = _snapshot_traces(output, pre_waboose_trace_names)
     if profile["base_environment_create_venv"]:
         runtime_venv = (
             Path(venv_path).expanduser().resolve()
@@ -878,8 +917,22 @@ def run_runtime_profile_v2(
         timeout_seconds=300,
         label="verify-bilateral-waboose",
     )
+    post_waboose_snapshots = _snapshot_traces(output, pre_waboose_trace_names)
+    changed_traces = [
+        name
+        for name in pre_waboose_trace_names
+        if post_waboose_snapshots[name]["sha256"] != pre_waboose_snapshots[name]["sha256"]
+    ]
+    if changed_traces:
+        raise BilateralRuntimeProfileError(
+            "V1 runtime traces changed after bilateral Waboose execution: "
+            + ", ".join(changed_traces)
+        )
     after = _repo_identity(root)
-    snapshots = _snapshot_traces(output, profile["required_trace_artifacts"])
+    snapshots = {
+        **pre_waboose_snapshots,
+        **_snapshot_traces(output, ("verify-bilateral-waboose.receipt.json",)),
+    }
     results, by_id = {}, {}
     for group in GROUPS:
         results[group] = [_evaluate(snapshots, row) for row in profile[group]]

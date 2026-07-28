@@ -512,6 +512,7 @@ test("Construction scene renderer composes hybrid controls and exact cleanup", a
   renderer.pan(1, 2, 3);
   assert.equal(renderer.pick(0, 0), "entity:work");
   renderer.focusEntity("entity:work");
+  assert.strictEqual(renderer.inspectorState(), renderer.inspectorState());
   const receipt = await renderer.present();
   assert.equal(receipt.representation_mode, "HYBRID");
   assert.equal(receipt.mesh_receipt.visible_mesh_count, 1);
@@ -702,7 +703,14 @@ test("Construction renderer Gaussian initialization failure disposes shared pres
 test("Construction renderer bounds a stalled initialization and releases owners", async () => {
   const { scene, plan } = constructionFixture();
   const stalledPresentation = new TestPresentationRenderer();
-  stalledPresentation.initialize = () => new Promise(() => {});
+  stalledPresentation.initialize = (_scene, _plan, { signal } = {}) =>
+    new Promise((_, reject) => {
+      signal?.addEventListener(
+        "abort",
+        () => reject(new Error("stalled presentation initialization cancelled")),
+        { once: true },
+      );
+    });
   const renderer = new ConstructionSceneRenderer({
     presentationRenderer: stalledPresentation,
     meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
@@ -728,6 +736,43 @@ test("Construction renderer bounds a stalled initialization and releases owners"
   );
   assert.equal(renderer.status().state, RENDERER_STATES.LOST);
   assert.equal(stalledPresentation.disposed, 1);
+});
+
+test("Construction device-loss cleanup failures remain observable", async () => {
+  const { scene, plan } = constructionFixture();
+  const presentation = new TestPresentationRenderer();
+  const overlayPass = new ConstructionOverlayPass();
+  const renderer = new ConstructionSceneRenderer({
+    presentationRenderer: presentation,
+    meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+    overlayPass,
+    gaussianRenderer: new GaussianRenderer({
+      presentationRenderer: presentation,
+      drawGaussianPass: async () => () => {},
+      now: () => 0,
+    }),
+  });
+  await renderer.initialize(scene, plan, {
+    meshPayloads: [{
+      asset_id: "asset:mesh",
+      source_digest: "1".repeat(64),
+      decoded_byte_length: 256,
+      resource: { local: true },
+    }],
+    gaussianPayloads: [gaussianPayload()],
+  });
+  overlayPass.dispose = async () => {
+    throw new Error("forced context-loss cleanup failure");
+  };
+
+  await assert.rejects(
+    renderer.markDeviceLost(),
+    /forced context-loss cleanup failure/,
+  );
+  const status = renderer.status();
+  assert.equal(status.state, RENDERER_STATES.LOST);
+  assert.equal(status.cleanup_succeeded, false);
+  assert.match(status.cleanup_error.message, /forced context-loss cleanup failure/);
 });
 
 test("Construction renderer mid-flight abort becomes terminal and releases resources", async () => {

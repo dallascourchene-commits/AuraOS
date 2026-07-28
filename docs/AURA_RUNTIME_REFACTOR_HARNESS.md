@@ -89,6 +89,19 @@ Supported placeholders are:
 
 Commands are argument arrays and never pass through a shell.
 
+### Runtime Profile V2 confirmation recovery
+
+An `AURA_RUNTIME_PROFILE_V2` run consumes its canonical confirmation before it
+starts the V1 runtime path. This is intentionally fail closed: a crash,
+readiness timeout, virtual-environment failure, or later verification failure
+still consumes that confirmation even when no bilateral proof is emitted.
+
+To recover, issue a new current confirmation packet and run again with a fresh,
+empty output directory. Never delete or alter a record in the trusted
+Git-common-directory `aura-confirmation-consumption-v1` ledger. Removing a
+consumption record would defeat the replay boundary and is not an authorized
+recovery action.
+
 ## Security and boundedness
 
 The harness enforces:
