@@ -1,0 +1,47 @@
+{
+  "version": "AURA_BILATERAL_LIVE_REPAIR_PROFILE_V1",
+  "profile_id": "bilateral-live-repair-foundry-final",
+  "base_commit": "f1b9d786c4ff30d1ff5b984f5859db80f33446cc",
+  "objective": "Prove the bounded B11-B15 incident, replay, repair, preview, current-reproof, governed-learning eligibility, and projection contracts without mutating source or granting authority.",
+  "implementation": "aura_bilateral_live_repair_foundry.py",
+  "independent_verifier": {
+    "source": "tests/test_aura_bilateral_live_repair_foundry.py",
+    "source_sha256": "e11dd4a5a2c3a9a7cab43e6616e6c188fdf610e741818e0bbd8c9fcd60399684"
+  },
+  "required_assertions": [
+    "incident_capture_is_bounded",
+    "incident_marker_is_explicit",
+    "secrets_are_redacted",
+    "replay_is_exact_identity_bound",
+    "capture_dissolves_after_finalize",
+    "repair_attempt_budget_is_bounded",
+    "failed_hypotheses_cannot_repeat",
+    "negative_and_preservation_proof_cannot_be_skipped",
+    "last_verified_version_is_retained",
+    "rollback_is_explicit",
+    "p0_positive_and_negative_are_required",
+    "p1_guardrail_and_preservation_are_required",
+    "human_community_disposition_is_required",
+    "qdkt_has_no_auto_crystallization",
+    "spatial_projection_is_non_authoritative"
+  ],
+  "authority": {
+    "automatic_fix": false,
+    "automatic_commit": false,
+    "automatic_push": false,
+    "automatic_pull_request": false,
+    "automatic_merge": false,
+    "deployment": false,
+    "production_mutation": false,
+    "professional_authority": false,
+    "physical_work_authority": false,
+    "learning_promotion": false,
+    "human_review_required": true
+  },
+  "limits": {
+    "maximum_capture_events": 256,
+    "maximum_repair_attempts": 8,
+    "unrestricted_recording": false,
+    "persistent_repair_loop": false
+  }
+}

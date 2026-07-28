@@ -1,0 +1,39 @@
+{
+  "version": "AURA_FINAL_DEFINITION_OF_DONE_EVIDENCE_V1",
+  "objective_id": "bilateral-intent-guardrail-foundry-final-b11-b15",
+  "base_commit": "f1b9d786c4ff30d1ff5b984f5859db80f33446cc",
+  "status": "STAGED_FOR_PR_VERIFICATION",
+  "implemented": {
+    "B11": ["bounded_capture", "incident_marker", "privacy_redaction", "identity_bound_replay", "dissolution"],
+    "B12": ["bounded_candidate_cycle", "minimal_counterexample_record", "negative_and_preservation_gates", "no_repeat_hypothesis", "attempt_budget"],
+    "B13": ["last_verified_reference", "health_comparison", "explicit_rollback", "human_promotion_gate"],
+    "B14": ["p0_positive_negative", "independent_p1_guardrail_preservation", "human_community_disposition", "relationship_experience_reference", "qdkt_no_auto_crystallization"],
+    "B15": ["projection_only_packet", "intent_negative_guardrails_plan_targets_runtime_failures_proof_approvals_drilldown", "no_visual_truth_or_execution_authority"]
+  },
+  "focused_proof": {
+    "command": "python -m pytest -q tests/test_aura_bilateral_live_repair_foundry.py",
+    "isolated_result": "9 passed",
+    "source_compile": "passed"
+  },
+  "remaining_pr_gates": [
+    "repository_ci",
+    "retained_regressions",
+    "fatal_lint",
+    "waboose",
+    "one_coderabbit_review",
+    "one_codex_review",
+    "one_gitar_review",
+    "human_review",
+    "separate_merge_instruction"
+  ],
+  "generated_navigation": "deferred_until_reviewed_source_is_stable",
+  "authority": {
+    "automatic_merge": false,
+    "deployment": false,
+    "production_mutation": false,
+    "professional": false,
+    "physical_work": false,
+    "learning_promotion": false,
+    "human_review_required": true
+  }
+}
