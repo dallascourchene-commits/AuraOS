@@ -203,6 +203,23 @@ function aggregate(errors, message) {
   return present.length === 1 ? present[0] : new AggregateError(present, message);
 }
 
+async function boundedInitialization(promise, timeoutMs, label) {
+  let timeoutId;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        timeoutId = setTimeout(
+          () => reject(new Error(`${label} timed out after ${timeoutMs} ms`)),
+          timeoutMs,
+        );
+      }),
+    ]);
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 export class ConstructionSceneRenderer {
   constructor({
     presentationRenderer,
@@ -212,6 +229,7 @@ export class ConstructionSceneRenderer {
     drawGaussianPass = null,
     drawPointCloudPass = null,
     gaussianLimits = null,
+    initializationTimeoutMs = 60_000,
   } = {}) {
     if (!presentationRenderer || typeof presentationRenderer.initialize !== "function") {
       throw new TypeError("Construction scene renderer requires a presentation renderer");
@@ -224,6 +242,13 @@ export class ConstructionSceneRenderer {
     }
     if (gaussianRenderer !== null && !(gaussianRenderer instanceof GaussianRenderer)) {
       throw new TypeError("gaussianRenderer must be a GaussianRenderer when supplied");
+    }
+    if (
+      !Number.isInteger(initializationTimeoutMs) ||
+      initializationTimeoutMs < 1 ||
+      initializationTimeoutMs > 300_000
+    ) {
+      throw new RangeError("initializationTimeoutMs must be an integer in [1, 300000]");
     }
     this.presentationRenderer = presentationRenderer;
     this.meshPass = meshPass;
@@ -252,12 +277,15 @@ export class ConstructionSceneRenderer {
     this.hasSplats = false;
     this.gaussianOwnerActive = false;
     this.cancelled = false;
+    this.initializationTimeoutMs = initializationTimeoutMs;
+    this.contextLossTarget = null;
+    this.contextLossHandler = null;
   }
 
   async initialize(
     scenePayload,
     planPayload,
-    { meshPayloads = [], gaussianPayloads = [], signal } = {},
+    { meshPayloads = [], gaussianPayloads = [], signal, restoreState = null } = {},
   ) {
     if (this.state !== RENDERER_STATES.NEW) {
       throw new Error("Construction scene renderer may initialize only once");
@@ -308,6 +336,9 @@ export class ConstructionSceneRenderer {
     }
 
     try {
+      for (const frameId of this.storeyFrames) {
+        this._storeyBlueprint(frameId);
+      }
       this.meshPass.initialize(scenePayload, meshPayloads);
       this.overlayPass.initialize(scenePayload);
       for (const [frameId, transform] of this.presentationTransforms) {
@@ -318,23 +349,111 @@ export class ConstructionSceneRenderer {
       }
       if (this.hasSplats) {
         this.gaussianOwnerActive = true;
-        await this.gaussianRenderer.initialize(
-          scenePayload,
-          planPayload,
-          gaussianPayloads,
-          { signal },
+        await boundedInitialization(
+          this.gaussianRenderer.initialize(
+            scenePayload,
+            planPayload,
+            gaussianPayloads,
+            { signal },
+          ),
+          this.initializationTimeoutMs,
+          "Construction Gaussian initialization",
         );
       } else {
-        await this.presentationRenderer.initialize(scenePayload, planPayload);
+        await boundedInitialization(
+          this.presentationRenderer.initialize(scenePayload, planPayload),
+          this.initializationTimeoutMs,
+          "Construction presentation initialization",
+        );
       }
+      if (signal?.aborted || this.cancelled) {
+        throw new Error("Construction scene initialization cancelled");
+      }
+      this.mode = this.hasMeshes && this.hasSplats ? "HYBRID" : this.hasSplats ? "SPLATS" : "MESH";
+      this.state = RENDERER_STATES.INITIALIZED;
+      if (restoreState !== null) this._restoreContinuityState(restoreState);
     } catch (error) {
       const cleanup = await this._disposeOwnedResources();
       this.state = RENDERER_STATES.LOST;
       throw aggregate([error, cleanup], "Construction initialization and cleanup failed");
     }
-    this.mode = this.hasMeshes && this.hasSplats ? "HYBRID" : this.hasSplats ? "SPLATS" : "MESH";
-    this.state = RENDERER_STATES.INITIALIZED;
     return this.status();
+  }
+
+  continuityState() {
+    if (![RENDERER_STATES.INITIALIZED, RENDERER_STATES.PRESENTED].includes(this.state)) {
+      throw new Error("Construction continuity state requires an initialized renderer");
+    }
+    return Object.freeze({
+      version: "AURA_CONSTRUCTION_CONTINUITY_V1",
+      scene_digest: this.scene.scene_digest,
+      representation_mode: this.mode,
+      selected_storey_frame_id: this.selectedStoreyFrameId,
+      selected_entity_id: this.selectedEntityId,
+      visible_storey_frame_ids:
+        this.visibleStoreyFrameIds === null
+          ? null
+          : Object.freeze([...this.visibleStoreyFrameIds].sort()),
+    });
+  }
+
+  _restoreContinuityState(receipt) {
+    if (
+      !receipt ||
+      receipt.version !== "AURA_CONSTRUCTION_CONTINUITY_V1" ||
+      receipt.scene_digest !== this.scene.scene_digest
+    ) {
+      throw new Error("Construction continuity receipt is stale or invalid");
+    }
+    const visible = receipt.visible_storey_frame_ids;
+    if (visible === null) {
+      this.showAllStoreys();
+    } else if (
+      Array.isArray(visible) &&
+      visible.length === 1 &&
+      visible[0] === receipt.selected_storey_frame_id
+    ) {
+      this.isolateStorey(visible[0]);
+    } else {
+      throw new Error("Construction continuity receipt has an unsupported visibility state");
+    }
+    if (receipt.selected_storey_frame_id !== null) {
+      if (!this.storeyFrames.includes(receipt.selected_storey_frame_id)) {
+        throw new Error("Construction continuity receipt selects an unknown storey");
+      }
+      this._storeyBlueprint(receipt.selected_storey_frame_id);
+      this.selectedStoreyFrameId = receipt.selected_storey_frame_id;
+    }
+    if (receipt.selected_entity_id !== null) {
+      this.focusEntity(receipt.selected_entity_id);
+    }
+    this.setRepresentationMode(receipt.representation_mode);
+  }
+
+  bindContextLoss(canvas) {
+    if (
+      !canvas ||
+      typeof canvas.addEventListener !== "function" ||
+      typeof canvas.removeEventListener !== "function"
+    ) {
+      throw new TypeError("Construction context-loss binding requires an event target");
+    }
+    this._unbindContextLoss();
+    this.contextLossTarget = canvas;
+    this.contextLossHandler = (event) => {
+      event?.preventDefault?.();
+      void this.markDeviceLost().catch(() => {});
+    };
+    canvas.addEventListener("webglcontextlost", this.contextLossHandler);
+    return () => this._unbindContextLoss();
+  }
+
+  _unbindContextLoss() {
+    if (this.contextLossTarget && this.contextLossHandler) {
+      this.contextLossTarget.removeEventListener("webglcontextlost", this.contextLossHandler);
+    }
+    this.contextLossTarget = null;
+    this.contextLossHandler = null;
   }
 
   setRepresentationMode(mode) {
@@ -705,6 +824,7 @@ export class ConstructionSceneRenderer {
 
   async markDeviceLost() {
     if (this.state === RENDERER_STATES.DISPOSED) return this.status();
+    this._unbindContextLoss();
     this.cancelled = true;
     const errors = [];
     try {
@@ -749,6 +869,7 @@ export class ConstructionSceneRenderer {
 
   async dispose() {
     if (this.state === RENDERER_STATES.DISPOSED) return this.status();
+    this._unbindContextLoss();
     this.cancelled = true;
     const failure = await this._disposeOwnedResources();
     this.scene = null;
@@ -818,5 +939,6 @@ export function createConstructionWebGL2SceneRenderer({
     drawGaussianPass,
     gaussianLimits,
   });
+  controller.bindContextLoss(canvas);
   return controller;
 }

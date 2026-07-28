@@ -10,7 +10,7 @@ import pytest
 
 from aura_bilateral_intent_compiler import VERSION as CONFIRMATION_PACKET_VERSION
 from aura_event_contracts import stable_digest
-from aura_intent_refinement import IntentConfirmationReceipt
+from aura_intent_refinement import IntentConfirmationReceipt, IntentRefinementSession
 from aura_unified_memory_continuity import (
     AuthorityEnvelope,
     IntentPacket,
@@ -52,6 +52,10 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _source_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
+
 def _write_fixture(root: Path, *, positive_expected: bool = True) -> Path:
     port = _free_port()
     (root / "server.py").write_text(
@@ -91,6 +95,20 @@ output.mkdir(parents=True, exist_ok=True)
 """,
         encoding="utf-8",
     )
+    (root / "aura_coding_waboose_cli.py").write_text(
+        """import json
+import sys
+from pathlib import Path
+
+state = Path(sys.argv[sys.argv.index("--state-file") + 1])
+state.write_text(json.dumps({"ok": True}), encoding="utf-8")
+print("bilateral request verified")
+""",
+        encoding="utf-8",
+    )
+    request_path = root / ".aura" / "waboose_requests" / "bilateral.json"
+    request_path.parent.mkdir(parents=True, exist_ok=True)
+    request_path.write_text('{"version":"FIXTURE_WABOOSE_REQUEST_V1"}', encoding="utf-8")
     v1 = {
         "version": "AURA_RUNTIME_PROFILE_V1",
         "profile_id": "fixture-runtime-v1",
@@ -113,12 +131,23 @@ output.mkdir(parents=True, exist_ok=True)
     }
     (root / "profile-v1.json").write_text(json.dumps(v1), encoding="utf-8")
 
-    allowed_paths = sorted(["probe.py", "profile-v1.json", "profile-v2.json", "server.py"])
+    allowed_paths = sorted(
+        [
+            ".aura/waboose_requests/bilateral.json",
+            "aura_coding_waboose_cli.py",
+            "probe.py",
+            "profile-v1.json",
+            "profile-v2.json",
+            "server.py",
+        ]
+    )
     assertion_ids = [
         "positive-ok",
+        "bilateral-waboose-ok",
         "negative-no-merge",
         "preserve-source",
         "fault-explicit",
+        "termination-terminal",
     ]
     v2 = {
         "version": PROFILE_VERSION,
@@ -126,6 +155,7 @@ output.mkdir(parents=True, exist_ok=True)
         "objective": "Prove positive, negative, preservation, and fault behavior.",
         "runtime_candidate_id": "fixture-candidate-v2",
         "base_profile": "profile-v1.json",
+        "bilateral_waboose_request": ".aura/waboose_requests/bilateral.json",
         "intent_contract": {
             "confirmation_packet_version": CONFIRMATION_PACKET_VERSION,
             "intent_revision_status": NO_POST_CONFIRMATION_REVISION,
@@ -145,7 +175,14 @@ output.mkdir(parents=True, exist_ok=True)
                 "json_path": "ok",
                 "operator": "equals",
                 "expected": positive_expected,
-            }
+            },
+            {
+                "assertion_id": "bilateral-waboose-ok",
+                "artifact": "verify-bilateral-waboose.receipt.json",
+                "json_path": "returncode",
+                "operator": "equals",
+                "expected": 0,
+            },
         ],
         "negative_assertions": [
             {
@@ -169,13 +206,20 @@ output.mkdir(parents=True, exist_ok=True)
                 "artifact": "browser-evidence.json",
                 "json_path": "fault.explicit",
                 "operator": "truthy",
-            }
+            },
+            {
+                "assertion_id": "termination-terminal",
+                "artifact": "server-termination.receipt.json",
+                "json_path": "returncode",
+                "operator": "not_equals",
+                "expected": None,
+            },
         ],
         "requirement_bindings": {
             "positive_assertions": [
                 {
                     "requirement_digest": _json_digest(POSITIVE_REQUIREMENT),
-                    "assertion_ids": ["positive-ok"],
+                    "assertion_ids": ["positive-ok", "bilateral-waboose-ok"],
                 }
             ],
             "negative_assertions": [
@@ -193,7 +237,7 @@ output.mkdir(parents=True, exist_ok=True)
             "fault_injections": [
                 {
                     "requirement_digest": _json_digest(NEGATIVE_REQUIREMENT),
-                    "assertion_ids": ["fault-explicit"],
+                    "assertion_ids": ["fault-explicit", "termination-terminal"],
                 }
             ],
         },
@@ -201,6 +245,7 @@ output.mkdir(parents=True, exist_ok=True)
             "browser-evidence.json",
             "runtime_harness_receipt.json",
             "server-termination.receipt.json",
+            "verify-bilateral-waboose.receipt.json",
         ],
         "repair_policy": {
             "automatic_fix": False,
@@ -219,7 +264,7 @@ output.mkdir(parents=True, exist_ok=True)
         "independent_verifier": {
             "verifier_id": "fixture-browser-probe",
             "source_path": "probe.py",
-            "source_sha256": _sha256(root / "probe.py"),
+            "source_sha256": _source_sha256(root / "probe.py"),
         },
     }
     path = root / "profile-v2.json"
@@ -276,13 +321,54 @@ def _write_confirmation_packet(
             "human_disposition": "CONFIRMED",
         }
     ]
-    allowed_paths = sorted(["probe.py", "profile-v1.json", "profile-v2.json", "server.py"])
+    allowed_paths = sorted(
+        [
+            ".aura/waboose_requests/bilateral.json",
+            "aura_coding_waboose_cli.py",
+            "probe.py",
+            "profile-v1.json",
+            "profile-v2.json",
+            "server.py",
+        ]
+    )
     source_request_digest = stable_digest(intent.user_meaning)
     teach_back_digest = "a" * 64
+    head = repository_head or _git(root, "rev-parse", "HEAD")
+    tree = source_tree or _git(root, "rev-parse", "HEAD^{tree}")
+    session = IntentRefinementSession.create(
+        repository_head=head,
+        working_tree_digest=tree,
+        arena="CONSTRUCTION",
+        source_request=intent.user_meaning,
+        created_at=1.0,
+        expires_at=4_102_444_800.0,
+    )
+    session = session.transition(
+        "ANALYZED",
+        positive_requirements=positives,
+        negative_requirements=negatives,
+        guardrails=guardrails,
+        unresolved_ambiguities=(),
+        now=1.0,
+    )
+    teach_back = {
+        "teach_back_digest": teach_back_digest,
+        "required_human_decisions": [],
+    }
+    session = session.transition(
+        "TEACH_BACK_PENDING",
+        teach_back=teach_back,
+        now=1.0,
+    )
+    session = session.transition(
+        "HUMAN_CONFIRMED",
+        confirmation_status="CONFIRMED",
+        now=1.0,
+    )
     receipt = IntentConfirmationReceipt.create(
-        session_id="fixture-session",
-        repository_head=repository_head or _git(root, "rev-parse", "HEAD"),
-        source_tree_digest=source_tree or _git(root, "rev-parse", "HEAD^{tree}"),
+        session_id=session.session_id,
+        repository_head=head,
+        source_tree_digest=tree,
         working_tree_clean_receipt=stable_digest({"clean": True}),
         source_request_digest=source_request_digest,
         positive_requirements=positives,
@@ -308,18 +394,24 @@ def _write_confirmation_packet(
             "requirements change",
         ),
     )
+    session = session.transition(
+        "COMPILED",
+        confirmation_receipt=receipt,
+        confirmation_evidence={
+            "source_tree_digest": tree,
+            "semantic_ledger_digest": ledger.ledger_digest,
+            "authority": authority.to_dict(),
+            "allowed_paths": allowed_paths,
+            "runtime_profile_digest": _sha256(profile),
+        },
+        now=1.0,
+    )
     packet = {
         "version": CONFIRMATION_PACKET_VERSION,
         "intent_packet": intent.to_dict(),
         "semantic_ledger": ledger.to_dict(),
         "confirmation_receipt": receipt.to_dict(),
-        "refinement_session": {
-            "source_request_digest": source_request_digest,
-            "positive_requirements": positives,
-            "negative_requirements": negatives,
-            "teach_back": {"teach_back_digest": teach_back_digest},
-            "confirmation_evidence": {"allowed_paths": allowed_paths},
-        },
+        "refinement_session": session.to_dict(),
         "guardrails": guardrails,
         "u7_references": {
             "intent_revision_status": NO_POST_CONFIRMATION_REVISION,
@@ -383,10 +475,10 @@ def test_v2_runtime_binds_canonical_confirmation_and_one_trace_snapshot(
     assert result["repository_identity_unchanged"] is True
     assert result["resolved_expected_repository_head"] == _git(root, "rev-parse", "HEAD")
     assert result["resolved_expected_source_tree"] == _git(root, "rev-parse", "HEAD^{tree}")
-    assert result["positive_requirements_proved"] == ["positive-ok"]
+    assert result["positive_requirements_proved"] == ["positive-ok", "bilateral-waboose-ok"]
     assert result["negative_requirements_proved"] == ["negative-no-merge"]
     assert result["preservation_requirements_proved"] == ["preserve-source"]
-    assert result["fault_behaviors_proved"] == ["fault-explicit"]
+    assert result["fault_behaviors_proved"] == ["fault-explicit", "termination-terminal"]
     assert result["requirements_unproved"] == []
     assert result["automatic_merge"] is False
     assert result["physical_work_authority"] is False
@@ -433,9 +525,20 @@ def test_v2_profile_binds_verifier_to_probe_command(tmp_path: Path) -> None:
     root, profile, _ = _repo(tmp_path)
     payload = json.loads(profile.read_text(encoding="utf-8"))
     payload["independent_verifier"]["source_path"] = "server.py"
-    payload["independent_verifier"]["source_sha256"] = _sha256(root / "server.py")
+    payload["independent_verifier"]["source_sha256"] = _source_sha256(root / "server.py")
     profile.write_text(json.dumps(payload), encoding="utf-8")
-    with pytest.raises(BilateralRuntimeProfileError, match="evidence producer"):
+    with pytest.raises(BilateralRuntimeProfileError, match="direct entry point"):
+        load_runtime_profile_v2(root, profile.name)
+
+
+def test_v2_profile_rejects_wrapper_that_merely_mentions_verifier(tmp_path: Path) -> None:
+    root, profile, _ = _repo(tmp_path)
+    (root / "wrapper.py").write_text("raise SystemExit(0)\n", encoding="utf-8")
+    v1_path = root / "profile-v1.json"
+    payload = json.loads(v1_path.read_text(encoding="utf-8"))
+    payload["probe"]["command"] = ["{python}", "wrapper.py", "probe.py"]
+    v1_path.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(BilateralRuntimeProfileError, match="direct entry point"):
         load_runtime_profile_v2(root, profile.name)
 
 
@@ -543,3 +646,23 @@ def test_v2_runtime_reports_unproved_assertion_without_claiming_success(
     assert result["requirements_unproved"] == ["positive-ok"]
     assert result["residual_risks"]
     assert result["automatic_fix"] is False
+
+
+def test_v2_runtime_rejects_replayed_confirmation_for_fresh_output(
+    tmp_path: Path,
+) -> None:
+    root, profile, confirmation = _repo(tmp_path)
+    first = run_runtime_profile_v2(
+        root,
+        profile_path=profile.name,
+        confirmation_packet=confirmation,
+        output_dir=tmp_path / "evidence-first",
+    )
+    assert first["ok"] is True
+    with pytest.raises(BilateralRuntimeProfileError, match="already been consumed"):
+        run_runtime_profile_v2(
+            root,
+            profile_path=profile.name,
+            confirmation_packet=confirmation,
+            output_dir=tmp_path / "evidence-second",
+        )

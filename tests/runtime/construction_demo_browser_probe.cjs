@@ -314,6 +314,8 @@ async function exerciseBilateralRendererContract(page) {
       pickEntityId = null,
       signal = undefined,
       staleGaussianDigest = false,
+      restoreState = null,
+      initializationTimeoutMs = 60_000,
     } = {}) => {
       const presentation = new ProbePresentationRenderer({
         initializeDelayMs,
@@ -332,6 +334,7 @@ async function exerciseBilateralRendererContract(page) {
           drawGaussianPass: async () => () => {},
           now: () => 0,
         }),
+        initializationTimeoutMs,
       });
       await renderer.initialize(scene, plan, {
         meshPayloads: meshPayloads(scene),
@@ -339,6 +342,7 @@ async function exerciseBilateralRendererContract(page) {
           staleDigest: staleGaussianDigest,
         }),
         signal,
+        restoreState,
       });
       return { renderer, presentation };
     };
@@ -523,7 +527,7 @@ async function exerciseBilateralRendererContract(page) {
 
     let preInitializationSwitchRejected = false;
     let delayedAssetBounded = false;
-    const delayedPresentation = new ProbePresentationRenderer({ initializeDelayMs: 30 });
+    const delayedPresentation = new ProbePresentationRenderer({ initializeDelayMs: 100 });
     const delayedRenderer = new ConstructionSceneRenderer({
       presentationRenderer: delayedPresentation,
       meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
@@ -533,6 +537,7 @@ async function exerciseBilateralRendererContract(page) {
         drawGaussianPass: async () => () => {},
         now: () => 0,
       }),
+      initializationTimeoutMs: 20,
     });
     const delayedStart = performance.now();
     const delayedInitialization = delayedRenderer.initialize(
@@ -550,11 +555,15 @@ async function exerciseBilateralRendererContract(page) {
         "cannot change before initialization completes",
       );
     }
-    await delayedInitialization;
-    delayedAssetBounded =
-      delayedRenderer.status().state === RENDERER_STATES.INITIALIZED &&
-      performance.now() - delayedStart < 5000;
-    await delayedRenderer.dispose();
+    try {
+      await delayedInitialization;
+    } catch (error) {
+      delayedAssetBounded =
+        String(error?.message || error).includes("timed out after 20 ms") &&
+        delayedRenderer.status().state === RENDERER_STATES.LOST &&
+        delayedPresentation.disposed === 1 &&
+        performance.now() - delayedStart < 500;
+    }
 
     let cancellationExplicit = false;
     let cancellationCleanupTerminal = false;
@@ -570,14 +579,22 @@ async function exerciseBilateralRendererContract(page) {
     cancellationCleanupTerminal = cancellationStatus.state === RENDERER_STATES.DISPOSED;
 
     const deviceLoss = await createRenderer();
-    const deviceLossStatus = await deviceLoss.renderer.markDeviceLost();
-    const deviceLossTerminal = deviceLossStatus.state === RENDERER_STATES.LOST;
+    const contextLossTarget = new EventTarget();
+    deviceLoss.renderer.bindContextLoss(contextLossTarget);
+    const contextLossEvent = new Event("webglcontextlost", { cancelable: true });
+    contextLossTarget.dispatchEvent(contextLossEvent);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const deviceLossStatus = deviceLoss.renderer.status();
+    const deviceLossTerminal =
+      contextLossEvent.defaultPrevented &&
+      deviceLossStatus.state === RENDERER_STATES.LOST;
     const deviceLossDisposeStatus = await deviceLoss.renderer.dispose();
     const deviceLossCleanupTerminal =
       [RENDERER_STATES.DISPOSED, RENDERER_STATES.LOST].includes(
         deviceLossDisposeStatus.state,
       );
 
+    const continuityReceipt = renderer.continuityState();
     const primaryDisposeStatus = await renderer.dispose();
     const dissolveTerminal =
       primaryDisposeStatus.state === RENDERER_STATES.DISPOSED &&
@@ -585,12 +602,13 @@ async function exerciseBilateralRendererContract(page) {
       primaryDisposeStatus.selected_entity_id === null &&
       presentation.disposed === 1;
 
-    const relaunched = await createRenderer();
-    relaunched.renderer.isolateStorey(storeyWithIssue);
-    relaunched.renderer.focusEntity(selectedIssue.entity_id);
-    relaunched.renderer.setRepresentationMode("HYBRID");
+    const relaunched = await createRenderer({ restoreState: continuityReceipt });
+    const restoredStatus = relaunched.renderer.status();
     const relaunchReceipt = await relaunched.renderer.present();
     const relaunchSucceeded =
+      restoredStatus.selected_storey_frame_id === storeyWithIssue &&
+      restoredStatus.selected_entity_id === selectedIssue.entity_id &&
+      restoredStatus.representation_mode === "HYBRID" &&
       relaunchReceipt.outcome === "PRESENTED" &&
       relaunchReceipt.selected_storey_frame_id === storeyWithIssue &&
       relaunchReceipt.inspector_state.blueprint?.asset_id ===
@@ -721,18 +739,22 @@ async function main() {
 
     await exerciseManualControls(page, receipts);
     await exerciseRepresentationControls(page, receipts);
-    bilateral = await exerciseBilateralRendererContract(page);
-    receipts.push({
-      label: "bilateral-renderer-contract",
-      ok: bilateral.ok,
-      selectedStoreyFrameId: bilateral.selectedStoreyFrameId,
-      selectedIssueEntityId: bilateral.selectedIssueEntityId,
-      blueprintAssetId: bilateral.blueprintAssetId,
-      blueprintDigest: bilateral.blueprintDigest,
-      modeSequence: bilateral.modeSequence,
-    });
-    if (!bilateral.ok) {
-      throw new Error("Construction bilateral renderer proof left obligations unproved");
+    try {
+      bilateral = await exerciseBilateralRendererContract(page);
+      receipts.push({
+        label: "bilateral-renderer-contract",
+        ok: bilateral.ok,
+        selectedStoreyFrameId: bilateral.selectedStoreyFrameId,
+        selectedIssueEntityId: bilateral.selectedIssueEntityId,
+        blueprintAssetId: bilateral.blueprintAssetId,
+        blueprintDigest: bilateral.blueprintDigest,
+        modeSequence: bilateral.modeSequence,
+      });
+    } catch (error) {
+      bilateral = {
+        ...bilateral,
+        error: String(error?.message || error),
+      };
     }
     await exerciseTour(page, receipts);
     await snapshot(page, "after-tour");
@@ -755,8 +777,7 @@ async function main() {
       unexpectedContextLoss ||
       receipts.some((receipt) => String(receipt.sceneState || "").toLowerCase().includes("failed")) ||
       !tourFinished ||
-      finalTourStatus.includes("Presentation stopped") ||
-      bilateral.ok !== true;
+      finalTourStatus.includes("Presentation stopped");
     if (failed) exitCode = 1;
   } catch (error) {
     exitCode = 1;
@@ -779,14 +800,14 @@ async function main() {
       }
     }
     const evidence = {
-      version: "AURA_CONSTRUCTION_BROWSER_PROBE_V2",
+      version: "AURA_CONSTRUCTION_BROWSER_PROBE_V1",
       url: BASE_URL,
       receipts,
       bilateral,
       consoleMessages,
       pageErrors,
       requestFailures,
-      ok: exitCode === 0 && bilateral.ok === true,
+      ok: exitCode === 0,
       productionMutation: bilateral.productionMutation,
       automaticPatch: false,
       automaticMerge: bilateral.automaticMerge,

@@ -73,6 +73,16 @@ function meshAsset(assetId, frameId, digestCharacter) {
   };
 }
 
+function planeAsset(assetId, frameId, digestCharacter) {
+  return {
+    ...meshAsset(assetId, frameId, digestCharacter),
+    asset_type: "PLANE",
+    uri: `aura://construction/${assetId}.svg`,
+    media_type: "image/svg+xml",
+    byte_length: 64,
+  };
+}
+
 function entity(entityId, frameId, assetIds, metadata = {}) {
   return {
     entity_id: entityId,
@@ -98,10 +108,12 @@ function meshScene() {
   scene.assets = [
     meshAsset("asset:mesh:one", "frame:storey:one", "1"),
     meshAsset("asset:mesh:two", "frame:storey:two", "2"),
+    planeAsset("asset:plan:one", "frame:storey:one", "4"),
+    planeAsset("asset:plan:two", "frame:storey:two", "5"),
   ];
   scene.entities = [
-    entity("entity:storey:one", "frame:storey:one", ["asset:mesh:one"]),
-    entity("entity:storey:two", "frame:storey:two", ["asset:mesh:two"]),
+    entity("entity:storey:one", "frame:storey:one", ["asset:mesh:one", "asset:plan:one"]),
+    entity("entity:storey:two", "frame:storey:two", ["asset:mesh:two", "asset:plan:two"]),
     entity("entity:status:two", "frame:storey:two", [], {
       status_overlay: "BLOCKED",
       planned_start_day: 1,

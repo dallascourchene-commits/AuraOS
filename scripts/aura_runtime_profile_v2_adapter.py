@@ -7,6 +7,7 @@ import argparse
 from collections.abc import Iterable, Mapping, Sequence
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
@@ -19,7 +20,7 @@ if __package__ in {None, ""}:
 
 from aura_bilateral_intent_compiler import VERSION as CONFIRMATION_PACKET_VERSION
 from aura_event_contracts import stable_digest
-from aura_intent_refinement import IntentConfirmationReceipt
+from aura_intent_refinement import IntentConfirmationReceipt, IntentRefinementSession
 from aura_unified_memory_continuity import (
     AuthorityEnvelope,
     IntentPacket,
@@ -62,6 +63,7 @@ SPECIAL_TRACES = frozenset(
         "readiness.receipt.json",
         "server-output.receipt.json",
         "server-termination.receipt.json",
+        "verify-bilateral-waboose.receipt.json",
     }
 )
 DIGEST = re.compile(r"[0-9a-f]{64}")
@@ -86,6 +88,10 @@ class BilateralRuntimeProfileError(_v1.RuntimeHarnessError):
 def _json_digest(value: Any) -> str:
     body = json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
     return hashlib.blake2b(body.encode(), digest_size=32).hexdigest()
+
+
+def _source_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def _id(value: Any, label: str) -> str:
@@ -265,6 +271,7 @@ def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, A
         "objective",
         "runtime_candidate_id",
         "base_profile",
+        "bilateral_waboose_request",
         "intent_contract",
         "allowed_paths",
         "scenarios",
@@ -285,6 +292,10 @@ def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, A
         raise BilateralRuntimeProfileError("objective must be a non-empty bounded string")
     base_path = _path(raw.get("base_profile"), "base_profile")
     base = _v1.load_runtime_profile(root, base_path)
+    bilateral_waboose_request = _path(
+        raw.get("bilateral_waboose_request"),
+        "bilateral_waboose_request",
+    )
     contract = _contract(raw.get("intent_contract"))
 
     raw_allowed_paths = raw.get("allowed_paths", [])
@@ -295,6 +306,10 @@ def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, A
         raise BilateralRuntimeProfileError("allowed_paths must be unique and non-empty")
     for item in allowed_paths:
         _v1._safe_repo_path(root, item, "allowed path")
+    if bilateral_waboose_request not in allowed_paths:
+        raise BilateralRuntimeProfileError(
+            "bilateral_waboose_request must be included in allowed_paths"
+        )
 
     raw_traces = raw.get("required_trace_artifacts")
     if not isinstance(raw_traces, list) or not raw_traces or len(raw_traces) > MAX_TRACES:
@@ -303,6 +318,13 @@ def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, A
     admitted = set(base["probe"]["required_artifacts"]) | set(SPECIAL_TRACES)
     if len(set(traces)) != len(traces) or not set(traces).issubset(admitted):
         raise BilateralRuntimeProfileError("required traces are duplicated or not emitted by the V1 run")
+    if not {
+        "server-termination.receipt.json",
+        "verify-bilateral-waboose.receipt.json",
+    }.issubset(traces):
+        raise BilateralRuntimeProfileError(
+            "required traces must bind server termination and bilateral Waboose execution"
+        )
 
     seen: set[str] = set()
     groups = {name: _assertions(raw.get(name), name, set(traces), seen) for name in GROUPS}
@@ -359,24 +381,18 @@ def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, A
     verifier_path = _path(verifier["source_path"], "verifier source")
     verifier_sha = _hex(verifier["source_sha256"], "verifier source_sha256")
     verifier_source = _v1._safe_repo_path(root, verifier_path, "independent verifier source")
-    if verifier_id in {profile_id, candidate_id} or _v1._sha256(verifier_source) != verifier_sha:
+    if verifier_id in {profile_id, candidate_id} or _source_sha256(verifier_source) != verifier_sha:
         raise BilateralRuntimeProfileError("independent verifier identity or source digest mismatch")
     if verifier_path not in allowed_paths:
         raise BilateralRuntimeProfileError("independent verifier source must be included in allowed_paths")
-    command_sources: list[Path] = []
-    for token in base["probe"]["command"]:
-        if not isinstance(token, str) or not token or "{" in token:
-            continue
-        candidate = (root / token).resolve()
-        try:
-            candidate.relative_to(root)
-        except ValueError:
-            continue
-        if candidate.is_file() and not candidate.is_symlink():
-            command_sources.append(candidate)
-    if command_sources.count(verifier_source) != 1:
+    probe_command = base["probe"]["command"]
+    if (
+        len(probe_command) != 2
+        or probe_command[0] not in {"node", "node.exe", "{python}", "python", "python3", "python.exe"}
+        or probe_command[1] != verifier_path
+    ):
         raise BilateralRuntimeProfileError(
-            "independent verifier source is not the exact probe command evidence producer"
+            "independent verifier source must be the probe interpreter's direct entry point"
         )
 
     axioms = raw.get("axiom_bindings") or list(_v1.AXIOM_BINDINGS)
@@ -390,8 +406,10 @@ def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, A
         "profile_path": path.relative_to(root).as_posix(),
         "profile_sha256": _v1._sha256(path),
         "base_profile": base_path,
+        "base_environment_create_venv": base["environment"]["create_venv"],
         "base_profile_id": base["profile_id"],
         "base_profile_sha256": base["profile_sha256"],
+        "bilateral_waboose_request": bilateral_waboose_request,
         "intent_contract": contract,
         "allowed_paths": allowed_paths,
         "scenarios": tuple(scenario_rows),
@@ -560,20 +578,18 @@ def _load_confirmation_packet(
         raise BilateralRuntimeProfileError(
             "confirmation packet is missing canonical refinement, guardrail, or U7 records"
         )
-    positive_requirements = refinement.get("positive_requirements")
-    negative_requirements = refinement.get("negative_requirements")
-    confirmation_evidence = refinement.get("confirmation_evidence")
+    if set(refinement) != set(IntentRefinementSession.__dataclass_fields__):
+        raise BilateralRuntimeProfileError("canonical refinement session schema is invalid")
+    positive_requirements = refinement.get("candidate_positive_requirements")
+    negative_requirements = refinement.get("candidate_negative_requirements")
     teach_back = refinement.get("teach_back")
     if (
         not isinstance(positive_requirements, list)
         or not isinstance(negative_requirements, list)
-        or not isinstance(confirmation_evidence, Mapping)
         or not isinstance(teach_back, Mapping)
     ):
         raise BilateralRuntimeProfileError("confirmation packet does not expose the canonical confirmed requirements")
-    allowed_paths = confirmation_evidence.get("allowed_paths")
-    if not isinstance(allowed_paths, list):
-        raise BilateralRuntimeProfileError("confirmation packet does not expose its canonical allowed paths")
+    allowed_paths = list(profile["allowed_paths"])
     revision_status = u7.get("intent_revision_status")
     if revision_status != profile["intent_contract"]["intent_revision_status"]:
         raise BilateralRuntimeProfileError("canonical intent revision status mismatch")
@@ -582,6 +598,12 @@ def _load_confirmation_packet(
         or receipt.semantic_ledger_digest != ledger.ledger_digest
         or receipt.source_request_digest != refinement.get("source_request_digest")
         or receipt.guardrail_set_digest != stable_digest(guardrails)
+        or receipt.session_id != refinement.get("session_id")
+        or refinement.get("current_stage") != "COMPILED"
+        or refinement.get("confirmation_status") != "CONFIRMED"
+        or refinement.get("confirmation_receipt_id") != receipt.confirmation_id
+        or refinement.get("repository_head") != receipt.repository_head
+        or refinement.get("working_tree_digest") != receipt.source_tree_digest
         or not all(item in intent.prohibitions for item in negative_requirements)
         or list(intent.acceptance_criteria) != positive_requirements
     ):
@@ -627,6 +649,7 @@ def _load_confirmation_packet(
             raise BilateralRuntimeProfileError("canonical guardrail identity is missing")
         guardrail_ids.append(guardrail_id)
     return {
+        "source_path": str(path),
         "packet_sha256": packet_sha256,
         "intent_digest": intent.intent_digest,
         "semantic_ledger_digest": ledger.ledger_digest,
@@ -650,6 +673,41 @@ def _load_confirmation_packet(
             )
         ),
         "requirement_bindings": requirement_bindings,
+    }
+
+
+def _consume_confirmation(confirmation: Mapping[str, Any]) -> dict[str, Any]:
+    source = Path(str(confirmation["source_path"]))
+    marker = source.with_name(f"{source.name}.{confirmation['confirmation_digest']}.consumed.json")
+    receipt = {
+        "version": "AURA_CONFIRMATION_CONSUMPTION_V1",
+        "confirmation_digest": confirmation["confirmation_digest"],
+        "confirmation_packet_sha256": confirmation["packet_sha256"],
+        "consumed_at": time.time(),
+    }
+    body = (json.dumps(receipt, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
+    flags = os.O_CREAT | os.O_EXCL | os.O_WRONLY
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    try:
+        descriptor = os.open(marker, flags, 0o600)
+    except FileExistsError as exc:
+        raise BilateralRuntimeProfileError(
+            "canonical confirmation has already been consumed and cannot be replayed"
+        ) from exc
+    except OSError as exc:
+        raise BilateralRuntimeProfileError(
+            f"canonical confirmation consumption record cannot be created: {exc}"
+        ) from exc
+    try:
+        os.write(descriptor, body)
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+    return {
+        **receipt,
+        "record_path": str(marker),
+        "record_sha256": hashlib.sha256(body).hexdigest(),
     }
 
 
@@ -781,6 +839,7 @@ def run_runtime_profile_v2(
         profile=profile,
         repository=before,
     )
+    consumption = _consume_confirmation(confirmation)
 
     base = _v1.run_runtime_profile(
         root,
@@ -790,6 +849,34 @@ def run_runtime_profile_v2(
         install_requirements=install_requirements,
         allow_dirty=False,
         baseline_receipt=baseline_receipt,
+    )
+    if profile["base_environment_create_venv"]:
+        runtime_venv = (
+            Path(venv_path).expanduser().resolve()
+            if venv_path is not None
+            else root.parent / f".{root.name}-runtime-harness-venv"
+        )
+        runtime_python = _v1._venv_python(runtime_venv)
+    else:
+        runtime_python = Path(sys.executable).resolve()
+    bilateral_waboose = _v1._run_command(
+        (
+            "{python}",
+            "aura_coding_waboose_cli.py",
+            "--repo-root",
+            "{repo}",
+            "--state-file",
+            "{output}/bilateral-waboose-state.json",
+            "run",
+            "--request",
+            profile["bilateral_waboose_request"],
+        ),
+        root=root,
+        output=output,
+        python=runtime_python,
+        env=_v1._safe_environment(root),
+        timeout_seconds=300,
+        label="verify-bilateral-waboose",
     )
     after = _repo_identity(root)
     snapshots = _snapshot_traces(output, profile["required_trace_artifacts"])
@@ -809,9 +896,21 @@ def run_runtime_profile_v2(
         )
     traces = _trace_inventory(snapshots, profile["required_trace_artifacts"])
     identity_ok = before == after
+    termination = snapshots["server-termination.receipt.json"]["value"]
+    termination_ok = (
+        isinstance(termination, Mapping)
+        and isinstance(termination.get("returncode"), int)
+    )
+    bilateral_waboose_ok = (
+        bilateral_waboose.get("returncode") == 0
+        and bilateral_waboose.get("timed_out") is False
+        and bilateral_waboose.get("capture_complete") is True
+    )
     ok = (
         bool(base.get("ok"))
         and identity_ok
+        and termination_ok
+        and bilateral_waboose_ok
         and all(item["passed"] for rows in results.values() for item in rows)
         and all(item["passed"] for item in scenarios)
         and all(item["present"] and item["within_size_limit"] for item in traces)
@@ -849,6 +948,7 @@ def run_runtime_profile_v2(
             }
         },
         "confirmation_packet_sha256": confirmation["packet_sha256"],
+        "confirmation_consumption_receipt": consumption,
         "allowed_paths": list(profile["allowed_paths"]),
         "guardrail_ids": confirmation["guardrail_ids"],
         "confirmed_positive_requirement_digests": confirmation["positive_requirement_digests"],
@@ -874,6 +974,8 @@ def run_runtime_profile_v2(
             "ok": base.get("ok"),
             "cycle_state": base.get("cycle_state"),
         },
+        "server_termination_terminal": termination_ok,
+        "bilateral_waboose_receipt": bilateral_waboose,
         "residual_risks": [] if ok else ["one or more runtime proof obligations remain unproved"],
         "human_review_required": True,
         "axiom_bindings": list(profile["axiom_bindings"]),
