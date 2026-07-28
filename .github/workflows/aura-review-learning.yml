@@ -170,8 +170,8 @@ jobs:
                   f"review lesson registry digest mismatch: supplied={supplied_digest} expected={expected_digest}"
               )
           registry = load_review_lesson_registry(".aura/review_lessons/pr164_spatial_review_lessons.json")
-          assert len(registry.lessons) == 13
-          assert len(registry.scenarios) == 13
+          assert len(registry["lessons"]) == 13
+          assert len(registry["scenarios"]) == 13
           PY
 
       - name: Upload registry validation diagnostic
