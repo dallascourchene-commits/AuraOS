@@ -24,6 +24,8 @@ CURRENT_TREE = "CURRENT_TREE"
 MAX_ASSERTIONS = 256
 MAX_SCENARIOS = 64
 MAX_TRACES = 64
+MAX_PATHS = 256
+MAX_GUARDRAILS = 256
 MAX_JSON_BYTES = 8 * 1024 * 1024
 GROUPS = (
     "positive_assertions",
@@ -235,11 +237,17 @@ def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, A
     base = _v1.load_runtime_profile(root, base_path)
     contract = _contract(raw.get("intent_contract"))
 
-    allowed_paths = tuple(sorted(_path(item, "allowed_paths") for item in raw.get("allowed_paths", [])))
-    guardrails = tuple(sorted(_id(item, "guardrail_ids") for item in raw.get("guardrail_ids", [])))
-    if not allowed_paths or len(set(allowed_paths)) != len(allowed_paths):
+    raw_allowed_paths = raw.get("allowed_paths", [])
+    if not isinstance(raw_allowed_paths, list) or not raw_allowed_paths or len(raw_allowed_paths) > MAX_PATHS:
+        raise BilateralRuntimeProfileError("allowed_paths must be a non-empty bounded array")
+    allowed_paths = tuple(sorted(_path(item, "allowed_paths") for item in raw_allowed_paths))
+    if len(set(allowed_paths)) != len(allowed_paths):
         raise BilateralRuntimeProfileError("allowed_paths must be unique and non-empty")
-    if not guardrails or len(set(guardrails)) != len(guardrails):
+    raw_guardrail_ids = raw.get("guardrail_ids", [])
+    if not isinstance(raw_guardrail_ids, list) or not raw_guardrail_ids or len(raw_guardrail_ids) > MAX_GUARDRAILS:
+        raise BilateralRuntimeProfileError("guardrail_ids must be a non-empty bounded array")
+    guardrails = tuple(sorted(_id(item, "guardrail_ids") for item in raw_guardrail_ids))
+    if len(set(guardrails)) != len(guardrails):
         raise BilateralRuntimeProfileError("guardrail_ids must be unique and non-empty")
     for item in allowed_paths:
         _v1._safe_repo_path(root, item, "allowed path")
@@ -270,7 +278,10 @@ def load_runtime_profile_v2(root: Path, profile_path: str | Path) -> dict[str, A
         }:
             raise BilateralRuntimeProfileError(f"scenarios[{index}] is invalid")
         scenario_id = _id(item["scenario_id"], f"scenarios[{index}].scenario_id")
-        required = tuple(_id(value, "required_assertion_ids") for value in item["required_assertion_ids"])
+        raw_required = item["required_assertion_ids"]
+        if not isinstance(raw_required, list) or len(raw_required) > MAX_ASSERTIONS:
+            raise BilateralRuntimeProfileError(f"scenarios[{index}].required_assertion_ids must be a bounded array")
+        required = tuple(_id(value, "required_assertion_ids") for value in raw_required)
         if scenario_id in scenario_ids or not required or not set(required).issubset(seen):
             raise BilateralRuntimeProfileError(f"scenarios[{index}] references invalid assertions")
         scenario_ids.add(scenario_id)

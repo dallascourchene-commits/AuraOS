@@ -514,7 +514,13 @@ export class ConstructionSceneRenderer {
       (selectedEntity && this.storeyFrames.includes(selectedEntity.frame_id)
         ? selectedEntity.frame_id
         : null);
-    const blueprint = selectedFrameId ? this._storeyBlueprint(selectedFrameId) : null;
+    let blueprint = null;
+    if (selectedFrameId) {
+      const blueprints = this.scene.assets.filter(
+        (asset) => asset.asset_type === "PLANE" && asset.frame_id === selectedFrameId,
+      );
+      blueprint = blueprints.length === 1 ? blueprints[0] : null;
+    }
     const annotationEntityIds = selectedFrameId
       ? this.scene.entities
           .filter(

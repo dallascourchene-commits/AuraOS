@@ -154,9 +154,17 @@ def _runtime_profile_version(arguments: list[str]) -> str:
             root = Path(arguments[index + 1]).expanduser().resolve()
             index += 2
             continue
+        if value.startswith("--repo-root="):
+            root = Path(value.split("=", 1)[1]).expanduser().resolve()
+            index += 1
+            continue
         if value == "--profile" and index + 1 < len(arguments):
             profile_value = arguments[index + 1]
             index += 2
+            continue
+        if value.startswith("--profile="):
+            profile_value = value.split("=", 1)[1]
+            index += 1
             continue
         index += 1
     if not profile_value:
