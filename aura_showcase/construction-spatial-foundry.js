@@ -116,15 +116,6 @@
       next.coordination_candidates = Array.isArray(next.coordination_candidates)
         ? next.coordination_candidates
         : [];
-      next.transition_state = 'REPLAY_READY';
-      next.transition_evidence = {
-        identity_current: true,
-        operator_authorized: true,
-        incident_marker_present: true,
-        capture_dissolved: true,
-        required_assets_bound: true,
-        runtime_proof_retained: false,
-      };
     }
     return originalApi(path, next);
   };
