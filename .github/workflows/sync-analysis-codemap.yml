@@ -181,7 +181,7 @@ jobs:
         run: |
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           test -z "$(git status --short)"
-          python scripts/aura_review_learning_architect_harness.py \
+          PYTHONPATH=. python scripts/aura_review_learning_architect_harness.py \
             --repo-root . \
             --base-ref origin/main \
             --head-ref "$SOURCE_SHA" \
