@@ -24,6 +24,7 @@ MAX_PROJECTION_NESTING = 12
 _HEX = re.compile(r"^[0-9a-f]{40,64}$")
 _AUTHORITY_TOKENS = frozenset(
     {
+        "accessgranted",
         "approval",
         "authorization",
         "automaticcommit",
@@ -266,9 +267,8 @@ def project_guarded_wfst(
         "current_state": state,
         "evidence": clean_evidence,
     }
-    return {
+    output = {
         **binding,
-        "state_binding_digest": digest(binding),
         "admitted_transitions": admitted,
         "blocked_transitions": blocked,
         "recommended_transition": admitted[0]["transition_id"] if admitted else None,
@@ -277,6 +277,8 @@ def project_guarded_wfst(
         "state_mutation": False,
         "human_review_required": True,
     }
+    output["state_binding_digest"] = digest(output)
+    return output
 
 
 def build_spatial_foundry_projection_v2(
@@ -344,6 +346,21 @@ def build_spatial_foundry_projection_v2(
             or transitions.get("state_mutation") is not False
         ):
             raise BilateralLiveRepairError("guarded WFST projection grants forbidden authority")
+        supplied_binding_digest = str(
+            transitions.get("state_binding_digest") or ""
+        ).strip().lower()
+        canonical_transition = {
+            key: value
+            for key, value in transitions.items()
+            if key != "state_binding_digest"
+        }
+        if (
+            not _HEX.fullmatch(supplied_binding_digest)
+            or digest(canonical_transition) != supplied_binding_digest
+        ):
+            raise BilateralLiveRepairError(
+                "guarded WFST state binding digest is missing or invalid"
+            )
 
     output = dict(base)
     base_digest = output.pop("projection_digest")
