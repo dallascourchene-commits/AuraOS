@@ -157,10 +157,23 @@ def _read_psutil_temp_c() -> float | None:
 
 def _run_windows_acpi_probe() -> float | None:
     """Perform one bounded Windows ACPI query and return Celsius."""
+    system_root = os.environ.get("SystemRoot") or os.environ.get("WINDIR")
+    if not system_root:
+        return None
+    powershell = (
+        Path(system_root)
+        / "System32"
+        / "WindowsPowerShell"
+        / "v1.0"
+        / "powershell.exe"
+    )
+    if not powershell.is_file():
+        return None
+
     try:
         completed = subprocess.run(  # nosec B603 - fixed executable/arguments, shell disabled
             [
-                "powershell.exe",
+                str(powershell),
                 "-NoProfile",
                 "-NonInteractive",
                 "-Command",
