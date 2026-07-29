@@ -317,6 +317,8 @@ def build_spatial_foundry_projection_v2(
         "payment_released": False,
         "access_granted": False,
         "automatic_execution": False,
+        "survey_authority": False,
+        "construction_truth": False,
     }.items():
         if clean_decision.get(key, expected) is not expected:
             raise BilateralLiveRepairError(f"domain_decision.{key} must remain false")
