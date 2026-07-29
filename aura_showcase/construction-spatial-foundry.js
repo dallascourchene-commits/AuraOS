@@ -24,6 +24,11 @@
     if (!result.ok) throw new Error(result.error || 'Trusted current identity is unavailable');
     adapter.identityHandle = String(result.identity_handle || '');
     adapter.identitySummary = result;
+    if (adapter.identityHandle) {
+      const legacyIdentity = $('foundry-identity');
+      const card = legacyIdentity?.closest('.foundry-card');
+      if (card) card.hidden = true;
+    }
     renderIdentity({
       identity_digest: result.identity_digest,
       intent_revision_id: result.intent_revision_id,
@@ -56,8 +61,14 @@
 
   const ensureIdentity = async () => {
     if (adapter.identityHandle) return adapter.identityHandle;
-    await loadIdentity();
-    if (!adapter.identityHandle) throw new Error('Server did not issue an identity handle.');
+    try {
+      await loadIdentity();
+    } catch (error) {
+      const legacyIdentity = $('foundry-identity');
+      const card = legacyIdentity?.closest('.foundry-card');
+      if (card) card.hidden = false;
+      renderIdentity({ok: false, error: error.message, fail_closed: true});
+    }
     return adapter.identityHandle;
   };
 
@@ -67,10 +78,13 @@
     if (!next || typeof next !== 'object' || Array.isArray(next)) return originalApi(path, next);
 
     if (path === '/api/showcase/live-repair/capture/start') {
-      next.identity_handle = await ensureIdentity();
+      const identityHandle = await ensureIdentity();
+      if (identityHandle) {
+        next.identity_handle = identityHandle;
+        delete next.identity;
+        delete next.current_identity;
+      }
       next.arena_id = 'construction';
-      delete next.identity;
-      delete next.current_identity;
     }
 
     if (path.includes('/api/showcase/live-repair/capture/') && path.endsWith('/finalize/v1')) {
@@ -84,8 +98,11 @@
       '/api/showcase/live-repair/preview',
       '/api/showcase/live-repair/projection',
     ].includes(path)) {
-      next.identity_handle = await ensureIdentity();
-      delete next.current_identity;
+      const identityHandle = await ensureIdentity();
+      if (identityHandle) {
+        next.identity_handle = identityHandle;
+        delete next.current_identity;
+      }
     }
 
     if (path === '/api/showcase/live-repair/projection') {
@@ -122,15 +139,6 @@
     }
     return originalApi(path, next);
   };
-
-  const legacyIdentity = $('foundry-identity');
-  if (legacyIdentity) {
-    const card = legacyIdentity.closest('.foundry-card');
-    if (card) {
-      card.hidden = true;
-      card.dataset.legacyIdentityFallback = 'true';
-    }
-  }
 
   void loadIdentity().catch(error => {
     adapter.identityHandle = '';
