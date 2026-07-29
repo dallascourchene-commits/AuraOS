@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1480
-- **total_bytes**: 57724793
-- **text_tokens_est**: 4976080
+- **total_bytes**: 57728748
+- **text_tokens_est**: 4977069
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 54, 'knowledge_artifact': 188, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 949, 'schema_or_lexicon': 196, 'support_file': 77}
-- **topology_nodes**: 10913
-- **topology_edges**: 26149
+- **topology_nodes**: 10915
+- **topology_edges**: 26160
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 33350.48
+- **elapsed_ms**: 26184.75
 
 ## Coverage
 
@@ -390,8 +390,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 10913
-- **edges**: 26149
+- **nodes**: 10915
+- **edges**: 26160
 - **top_files_by_degree**:
   - `aura_node.py` degree=891 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=757 nodes=69 neighbors=`aura_construction_spatial_foundry.py`, `aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`
@@ -444,7 +444,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `ArchitectureComponent` -> `aura_coding_relationship_compass.py:161`
 - `ArenaArchitectRuntime` -> `aura_arena_architect_runtime.py:20`
 - `ArenaAttemptArchive` -> `aura_arena_attempt_archive.py:218`
-- `ArenaBoundBilateralLiveRepairService` -> `aura_construction_spatial_foundry.py:341`
+- `ArenaBoundBilateralLiveRepairService` -> `aura_construction_spatial_foundry.py:342`
 - `ArenaBridgeError` -> `aura_agent_arena_errors.py:93`
 - `ArenaConnectorServerState` -> `aura_arena_connector_server.py:62`
 - `ArenaCrucibleService` -> `aura_arena_crucible.py:31`
