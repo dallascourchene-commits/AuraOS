@@ -1,0 +1,98 @@
+name: PR240 Codex Final Verification
+
+on:
+  push:
+    branches:
+      - analysis/bilateral-intent-final-b11-b15
+    paths:
+      - .github/workflows/pr240-codex-final-verify.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-architecture-codemap-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify-and-clean:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout latest exact branch head
+        uses: actions/checkout@v4
+        with:
+          ref: analysis/bilateral-intent-final-b11-b15
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install pytest jsonschema ruff pyyaml
+
+      - name: Run focused Codex verification
+        id: verify
+        shell: bash
+        run: |
+          set +e
+          status=0
+          python -m py_compile \
+            aura_bilateral_live_repair_foundry_capture.py \
+            aura_bilateral_live_repair_foundry_service_capture.py \
+            aura_bilateral_live_repair_foundry_service_runtime.py \
+            aura_bilateral_live_repair_foundry_service_preview.py \
+            aura_showcase_live_repair_server.py || status=$?
+          ruff check --select E9,F63,F7,F82 \
+            aura_bilateral_live_repair_foundry_capture.py \
+            aura_bilateral_live_repair_foundry_service_capture.py \
+            aura_bilateral_live_repair_foundry_service_runtime.py \
+            aura_bilateral_live_repair_foundry_service_preview.py \
+            aura_showcase_live_repair_server.py \
+            tests/test_aura_bilateral_live_repair_foundry.py \
+            tests/test_aura_bilateral_live_repair_foundry_hardening.py \
+            tests/test_aura_showcase_live_repair_server.py || status=$?
+          python -m pytest -q \
+            tests/test_aura_bilateral_live_repair_foundry.py \
+            tests/test_aura_bilateral_live_repair_foundry_hardening.py \
+            tests/test_aura_showcase_live_repair_server.py \
+            tests/test_aura_showcase_attempt_archive.py || status=$?
+          node --check aura_showcase/live-repair-foundry.js || status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Remove one-shot workflow and push result marker
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERIFY_STATUS: ${{ steps.verify.outputs.status }}
+        shell: bash
+        run: |
+          rm -f .github/workflows/pr240-codex-final-verify.yml
+          git config user.name "AuraOS PR240 Verification"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if [ "${VERIFY_STATUS:-1}" = "0" ]; then
+            message="test: verify PR240 Codex repairs passed"
+          else
+            message="test: verify PR240 Codex repairs failed"
+          fi
+          git commit -m "$message"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          GIT_CONFIG_COUNT=1 \
+          GIT_CONFIG_KEY_0=http.https://github.com/.extraheader \
+          GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $AUTH_HEADER" \
+            git push origin HEAD:analysis/bilateral-intent-final-b11-b15
+          unset AUTH_HEADER
+
+      - name: Enforce verification result
+        if: always()
+        env:
+          VERIFY_STATUS: ${{ steps.verify.outputs.status }}
+        run: test "${VERIFY_STATUS:-1}" = "0"
