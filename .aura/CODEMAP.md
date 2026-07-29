@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1511
-- **total_bytes**: 58058867
-- **text_tokens_est**: 5059612
+- **total_bytes**: 58060780
+- **text_tokens_est**: 5060089
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 59, 'knowledge_artifact': 189, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 958, 'schema_or_lexicon': 211, 'support_file': 78}
 - **topology_nodes**: 11071
-- **topology_edges**: 26717
+- **topology_edges**: 26718
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 27921.42
+- **elapsed_ms**: 31882.27
 
 ## Coverage
 
@@ -49,6 +49,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!INPUTS` -> `aura_spatial_web/interaction_adapter.js:61`
 - `!METRIC_NAME` -> `aura_spatial_web/telemetry.js:30`
 - `!Number` -> `aura_showcase/pascal-workbench/pascal-workbench.js:105`, `aura_spatial_web/construction_mesh_pass.js:15`, `aura_spatial_web/construction_overlay_pass.js:26`, `aura_spatial_web/construction_scene_renderer.js:33`
+- `!Object` -> `aura_showcase/pascal-workbench/pascal-workbench.js:650`
 - `!REFERENCE_SPACES` -> `aura_spatial_web/webxr_session.js:32`
 - `!RENDERERS` -> `aura_spatial_web/renderer_adapter.js:474`, `aura_spatial_web/telemetry.js:22`
 - `!S` -> `aura_showcase/app.js:82`, `aura_showcase/attempt-archive.js:5`, `aura_showcase/civic.js:132`, `aura_showcase/construction-spatial-foundry.js:6`
@@ -112,7 +113,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!decision` -> `aura_showcase/gate-dialogue.js:274`
 - `!dialogue` -> `aura_showcase/gate-dialogue.js:49`
 - `!dimensionsVisible` -> `aura_showcase/pascal-construction-foundry.js:237`
-- `!disposed` -> `aura_showcase/pascal-workbench/pascal-workbench.js:770`
+- `!disposed` -> `aura_showcase/pascal-workbench/pascal-workbench.js:772`
 - `!doc` -> `aura_spatial_web/accessibility.js:45`
 - `!doctype` -> `aura_amd_track3_cli.py:187`, `aura_coding_arena/index.html:1`, `aura_efficiency_report.py:124`, `aura_human_agent_arena/index.html:1`
 - `!dragging` -> `aura_coding_arena/main.js:217`, `aura_human_agent_arena/main.js:613`, `aura_showcase/intent.js:355`, `aura_showcase/topology.js:272`
@@ -121,7 +122,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!entity` -> `aura_spatial_web/construction_demo_app.js:206`, `aura_spatial_web/construction_scene_renderer.js:744`
 - `!entityId` -> `aura_spatial_web/construction_scene_renderer.js:760`
 - `!entityIds` -> `aura_spatial_web/renderer_adapter.js:434`
-- `!envelope` -> `aura_showcase/pascal-construction-foundry.js:196`, `aura_showcase/pascal-workbench/pascal-workbench.js:657`
+- `!envelope` -> `aura_showcase/pascal-construction-foundry.js:196`, `aura_showcase/pascal-workbench/pascal-workbench.js:659`
 - `!evolve_reasoning` -> `AURA_FINAL_REPORT.md:157`, `aura_node.py:7373`
 - `!example` -> `aura_showcase/app.js:315`
 - `!existingIds` -> `aura_human_agent_arena/main.js:92`
@@ -145,7 +146,6 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!g` -> `aura_showcase/civic.js:88`
 - `!gl` -> `aura_spatial_web/webgl2_gaussian_pass.js:200`, `aura_spatial_web/webgl2_renderer.js:265`
 - `!globalThis` -> `aura_spatial_web/gaussian_renderer.js:212`
-- `!handler` -> `aura_showcase/pascal-workbench/pascal-workbench.js:651`
 - `!hard` -> `aura_showcase/gate-dialogue.js:250`
 - `!hasEvidence` -> `aura_showcase/human.js:460`
 - `!hasInput` -> `aura_showcase/human.js:636`
@@ -411,7 +411,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 - **source**: compiled_deep_topology
 - **nodes**: 11071
-- **edges**: 26717
+- **edges**: 26718
 - **top_files_by_degree**:
   - `aura_node.py` degree=891 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=757 nodes=69 neighbors=`aura_construction_spatial_foundry.py`, `aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`
