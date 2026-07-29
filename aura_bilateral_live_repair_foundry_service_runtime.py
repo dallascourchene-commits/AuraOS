@@ -190,10 +190,10 @@ class _RuntimeRepairMixin:
             route="bilateral-live-repair/runtime-replay",
             limit=0,
         ):
-            if summary.get("result", {}).get("runtime_proof_digest") != proof_ref:
-                continue
             artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
             result = dict((artifact or {}).get("result") or {})
+            if result.get("runtime_proof_digest") != proof_ref:
+                continue
             proof: Any = result.get("runtime_proof")
             proof_json = result.get("runtime_proof_json")
             if isinstance(proof_json, str) and proof_json:
