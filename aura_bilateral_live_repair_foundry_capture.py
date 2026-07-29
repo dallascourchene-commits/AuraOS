@@ -29,6 +29,7 @@ from aura_bilateral_live_repair_foundry_contracts import (
     digest,
 )
 
+
 class BoundedIncidentCapture:
     """Explicitly authorized, rolling, privacy-minimized field capture."""
 
@@ -50,8 +51,13 @@ class BoundedIncidentCapture:
         if not 1 <= int(retention_seconds) <= MAX_RETENTION_SECONDS:
             raise ValueError("retention_seconds exceeds the bounded capture policy")
         self.identity = identity
-        self.release_id = _required_text(release_id, "release_id", limit=512)
-        self.environment_id = _required_text(environment_id, "environment_id", limit=512)
+        clean_release, release_redactions = canonical_sanitize(release_id)
+        clean_environment, environment_redactions = canonical_sanitize(environment_id)
+        if not isinstance(clean_release, str) or not isinstance(clean_environment, str):
+            raise ValueError("release_id and environment_id must sanitize to text")
+        self.release_id = _required_text(clean_release, "release_id", limit=512)
+        self.environment_id = _required_text(clean_environment, "environment_id", limit=512)
+        self._metadata_redactions = set(release_redactions) | set(environment_redactions)
         self.capture_id = f"CAP-{secrets.token_hex(12)}"
         self.max_events = int(max_events)
         self.retention_seconds = int(retention_seconds)
@@ -134,8 +140,6 @@ class BoundedIncidentCapture:
             {**dict(payload or {}), "marker": marker_text},
             observed_at=observed_at,
         )
-        # The canonical marker is retained separately from the rolling deque so
-        # later events can never evict replay identity.
         self._marker_event = event
         return event
 
@@ -158,6 +162,8 @@ class BoundedIncidentCapture:
         obligation_redactions: set[str] = set()
 
         def _obligations(values: Iterable[str], name: str, limit: int) -> tuple[str, ...]:
+            if isinstance(values, (str, bytes, bytearray, Mapping)) or not isinstance(values, Iterable):
+                raise ValueError(f"{name} values must be a non-string iterable")
             normalized: set[str] = set()
             for raw in values:
                 text = _required_text(raw, name, limit=limit)
@@ -169,6 +175,11 @@ class BoundedIncidentCapture:
         positive = _obligations(expected_positive, "positive requirement", 4096)
         negative = _obligations(expected_negative, "negative requirement", 4096)
         preservation = _obligations(preservation_claims, "preservation claim", 4096)
+        if (
+            isinstance(required_assets, (str, bytes, bytearray, Mapping))
+            or not isinstance(required_assets, Iterable)
+        ):
+            raise ValueError("required_assets must be a non-string iterable of objects")
         asset_rows: dict[tuple[str, str], RequiredAssetIdentity] = {}
         for raw in required_assets:
             clean_asset, redactions = canonical_sanitize(raw)
@@ -199,7 +210,7 @@ class BoundedIncidentCapture:
                     redaction
                     for event in (self._marker_event, *retained)
                     for redaction in event.redactions
-                } | obligation_redactions
+                } | obligation_redactions | self._metadata_redactions
             ),
             "raw_secret_retained": False,
             "unrestricted_recording": False,
@@ -256,7 +267,6 @@ class BoundedIncidentCapture:
         self._event_sizes.clear()
         self._retained_bytes = 0
         return packet
-
 
 
 __all__ = ["BoundedIncidentCapture"]
