@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1785293434,
+  "generated_at_unix": 1785294733,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1471,
+    "included_file_count": 1470,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,10 +13,12 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 25,
+      ".git": 30,
+      ".pytest_cache": 5,
+      ".ruff_cache": 4,
       "Aura_Memory": 6,
       "Aura_Sandbox": 1,
-      "__pycache__": 8
+      "__pycache__": 67
     },
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
@@ -165,7 +167,6 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
-      ".github/workflows/pr240-codex-final-verify.yml",
       ".github/workflows/provider-routing-materialize.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
@@ -1493,9 +1494,9 @@
     ]
   },
   "summary": {
-    "file_count": 1471,
-    "total_bytes": 57632892,
-    "text_tokens_est": 4953102,
+    "file_count": 1470,
+    "total_bytes": 57629245,
+    "text_tokens_est": 4952190,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 53,
@@ -1503,13 +1504,13 @@
       "native_accelerator": 8,
       "operator_script": 6,
       "python_module": 945,
-      "schema_or_lexicon": 193,
+      "schema_or_lexicon": 192,
       "support_file": 77
     },
     "topology_nodes": 10834,
     "topology_edges": 25888,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 32595.79
+    "elapsed_ms": 26895.26
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1862,7 +1863,6 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
-      ".github/workflows/pr240-codex-final-verify.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -198761,52 +198761,6 @@
         0.106887,
         -0.031437,
         -0.225092
-      ]
-    },
-    {
-      "path": ".github/workflows/pr240-codex-final-verify.yml",
-      "role": "schema_or_lexicon",
-      "bytes": 3647,
-      "lines": 99,
-      "tokens_est": 912,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "bea9b6064840a8d4",
-      "vector": [
-        0.2868,
-        0.227853,
-        0.123562,
-        -0.112226,
-        0.143967,
-        0.001134,
-        -0.069149,
-        0.282266,
-        0.211983,
-        0.119028,
-        -0.241456,
-        0.200647,
-        -0.275464,
-        -0.191578,
-        -0.257327,
-        -0.071417,
-        0.007935,
-        -0.255059,
-        0.053279,
-        0.248258,
-        0.193845,
-        -0.060081,
-        0.273197,
-        0.073684,
-        -0.051012,
-        0.01247,
-        -0.048745,
-        -0.239189,
-        0.19838,
-        0.171173,
-        -0.087287,
-        -0.041943
       ]
     },
     {
