@@ -11,7 +11,8 @@ from __future__ import annotations
 
 import asyncio
 import os
-import subprocess
+import shutil
+import subprocess  # nosec B404 - invoked with a resolved executable and no shell
 from pathlib import Path
 from threading import Lock, Thread
 from time import monotonic
@@ -157,17 +158,23 @@ def _read_psutil_temp_c() -> float | None:
 
 def _run_windows_acpi_probe() -> float | None:
     """Perform one bounded Windows ACPI query and return Celsius."""
+    powershell = shutil.which("powershell.exe")
+    if powershell is None:
+        return None
+    script = (
+        "$ErrorActionPreference = 'Stop'; "
+        "Get-CimInstance -Namespace root/wmi "
+        "-ClassName MSAcpi_ThermalZoneTemperature | "
+        "ForEach-Object { $_.CurrentTemperature }"
+    )
     try:
         completed = subprocess.run(  # nosec B603 - fixed executable/arguments, shell disabled
             [
-                "powershell.exe",
+                powershell,
                 "-NoProfile",
                 "-NonInteractive",
                 "-Command",
-                "$ErrorActionPreference = 'Stop'; "
-                "Get-CimInstance -Namespace root/wmi "
-                "-ClassName MSAcpi_ThermalZoneTemperature | "
-                "ForEach-Object { $_.CurrentTemperature }",
+                script,
             ],
             capture_output=True,
             text=True,
