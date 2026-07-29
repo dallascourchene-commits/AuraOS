@@ -39,22 +39,34 @@
   }
 
   async function request(path, payload) {
-    const response = await fetch(path, {
-      method: payload === undefined ? "GET" : "POST",
-      headers: payload === undefined ? {} : { "Content-Type": "application/json" },
-      body: payload === undefined ? undefined : JSON.stringify(payload),
-      cache: "no-store",
-      credentials: "same-origin",
-    });
-    const body = await response.json().catch(() => ({}));
-    if (!response.ok || body.ok !== true) {
-      throw new Error(
-        body.error
-        || body.reason
-        || `Pascal API failed with ${response.status}`,
-      );
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    try {
+      const response = await fetch(path, {
+        method: payload === undefined ? "GET" : "POST",
+        headers: payload === undefined ? {} : { "Content-Type": "application/json" },
+        body: payload === undefined ? undefined : JSON.stringify(payload),
+        cache: "no-store",
+        credentials: "same-origin",
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok || body.ok !== true) {
+        throw new Error(
+          body.error
+          || body.reason
+          || `Pascal API failed with ${response.status}`,
+        );
+      }
+      return body;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error.name === "AbortError") {
+        throw new Error("Pascal API request timed out after 30 seconds");
+      }
+      throw error;
     }
-    return body;
   }
 
   function workbenchUrl(start) {

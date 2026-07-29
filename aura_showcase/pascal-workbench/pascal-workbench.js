@@ -53,6 +53,7 @@
   let disposed = false;
   const seenNonces = new Set();
   const hitRegions = [];
+  let focusedRegionIndex = -1;
 
   const nativeFetch = window.fetch;
   const NativeWebSocket = window.WebSocket;
@@ -615,6 +616,7 @@
     window.removeEventListener("message", onMessage);
     window.removeEventListener("resize", onResize);
     canvas.removeEventListener("click", onCanvasClick);
+    canvas.removeEventListener("keydown", onCanvasKeyDown);
     restoreNetworkGuards();
     context.clearRect(0, 0, canvas.width, canvas.height);
     scene = null;
@@ -681,6 +683,18 @@
     }
   }
 
+  function selectRegionByNodeId(nodeId) {
+    if (nodeId === selectedNodeId) return;
+    parent.postMessage(
+      {
+        type: "AURA_PASCAL_SELECTION_REQUEST",
+        session_id: identity.sessionId,
+        node_id: nodeId,
+      },
+      identity.expectedOrigin,
+    );
+  }
+
   async function onCanvasClick(event) {
     if (state !== "ACTIVE" || !scene || disposed) return;
     const rect = canvas.getBoundingClientRect();
@@ -696,15 +710,60 @@
         && y <= item.y + item.height
       ),
     );
-    if (!hit || hit.nodeId === selectedNodeId) return;
-    parent.postMessage(
-      {
-        type: "AURA_PASCAL_SELECTION_REQUEST",
-        session_id: identity.sessionId,
-        node_id: hit.nodeId,
-      },
-      identity.expectedOrigin,
-    );
+    if (hit) {
+      selectRegionByNodeId(hit.nodeId);
+    }
+  }
+
+  function onCanvasKeyDown(event) {
+    if (state !== "ACTIVE" || !scene || disposed || hitRegions.length === 0) return;
+
+    if (event.key === "Tab") {
+      event.preventDefault();
+      if (event.shiftKey) {
+        focusedRegionIndex = focusedRegionIndex <= 0
+          ? hitRegions.length - 1
+          : focusedRegionIndex - 1;
+      } else {
+        focusedRegionIndex = (focusedRegionIndex + 1) % hitRegions.length;
+      }
+      highlightFocusedRegion();
+      return;
+    }
+
+    if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+      event.preventDefault();
+      focusedRegionIndex = focusedRegionIndex <= 0
+        ? hitRegions.length - 1
+        : focusedRegionIndex - 1;
+      highlightFocusedRegion();
+      return;
+    }
+
+    if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+      event.preventDefault();
+      focusedRegionIndex = (focusedRegionIndex + 1) % hitRegions.length;
+      highlightFocusedRegion();
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      if (focusedRegionIndex >= 0 && focusedRegionIndex < hitRegions.length) {
+        selectRegionByNodeId(hitRegions[focusedRegionIndex].nodeId);
+      }
+      return;
+    }
+  }
+
+  function highlightFocusedRegion() {
+    if (focusedRegionIndex < 0 || focusedRegionIndex >= hitRegions.length) return;
+    const region = hitRegions[focusedRegionIndex];
+    context.strokeStyle = "#ffdd00";
+    context.lineWidth = 3;
+    context.setLineDash([8, 4]);
+    context.strokeRect(region.x, region.y, region.width, region.height);
+    context.setLineDash([]);
   }
 
   function onResize() {
@@ -715,6 +774,7 @@
 
   window.addEventListener("message", onMessage);
   canvas.addEventListener("click", onCanvasClick);
+  canvas.addEventListener("keydown", onCanvasKeyDown);
   window.addEventListener("resize", onResize);
 
   (async () => {

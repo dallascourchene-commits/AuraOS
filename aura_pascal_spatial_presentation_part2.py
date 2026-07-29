@@ -146,6 +146,7 @@ class PascalSceneArtifactManifest:
         supplied = _hex64(self.artifact_digest, "artifact_digest")
         if supplied != sha256_digest(self._body()):
             raise PascalPresentationError("Pascal artifact digest is invalid")
+        object.__setattr__(self, "artifact_digest", supplied)
 
     def _body(self) -> dict[str, Any]:
         return {
@@ -291,6 +292,7 @@ class AuraPascalCoordinateReceipt:
         supplied = _hex64(self.receipt_digest, "receipt_digest")
         if supplied != sha256_digest(self._body()):
             raise PascalPresentationError("coordinate receipt digest is invalid")
+        object.__setattr__(self, "receipt_digest", supplied)
 
     def _body(self) -> dict[str, Any]:
         return {
@@ -410,6 +412,7 @@ class AuraPascalBridgeMessage:
         supplied = _hex64(self.message_digest, "message_digest")
         if supplied != bridge_sha256(self._body()):
             raise PascalPresentationError("bridge message digest is invalid")
+        object.__setattr__(self, "message_digest", supplied)
 
     def _body(self) -> dict[str, Any]:
         return {

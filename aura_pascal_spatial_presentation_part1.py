@@ -390,6 +390,7 @@ class PascalSourceLock:
             raise PascalPresentationError(
                 "Pascal source-lock digest differs from the trusted runtime anchor"
             )
+        object.__setattr__(self, "lock_digest", supplied)
 
     def _body(self) -> dict[str, Any]:
         return {
