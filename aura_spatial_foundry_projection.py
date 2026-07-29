@@ -212,6 +212,9 @@ def _clean_mapping(value: Any, name: str) -> dict[str, Any]:
     clean, _ = canonical_sanitize(value)
     if not isinstance(clean, Mapping):
         raise ValueError(f"{name} must remain an object after sanitization")
+    authority = _authority_path(clean)
+    if authority is not None:
+        raise ValueError(f"{name} cannot supply authority field after canonicalization: {authority}")
     return dict(clean)
 
 
@@ -312,7 +315,10 @@ def project_guarded_wfst(
 
     arena = validate_foundry_arena(arena_id)
     state = _required_text(current_state, "current_state", limit=128).upper()
-    clean_evidence = _clean_mapping(evidence or {}, "transition_evidence")
+    clean_evidence = _clean_mapping(
+        {} if evidence is None else evidence,
+        "transition_evidence",
+    )
     admitted: list[dict[str, Any]] = []
     blocked: list[dict[str, Any]] = []
     for transition in _TRANSITIONS:
@@ -390,14 +396,23 @@ def build_spatial_foundry_projection_v2(
     ]
     _reject_duplicate_identity(clean_targets, "target_id", "domain_targets")
     _reject_duplicate_identity(clean_artifacts, "artifact_id", "domain_artifacts")
-    clean_presentation = _clean_mapping(presentation or {}, "presentation")
-    clean_construction = _clean_mapping(construction or {}, "construction")
+    clean_presentation = _clean_mapping(
+        {} if presentation is None else presentation,
+        "presentation",
+    )
+    clean_construction = _clean_mapping(
+        {} if construction is None else construction,
+        "construction",
+    )
     clean_candidates = [
         _validate_coordination_candidate(row, index)
         for index, row in enumerate(_clean_rows(coordination_candidates, "coordination_candidates", limit=64))
     ]
     _reject_duplicate_identity(clean_candidates, "candidate_id", "coordination_candidates")
-    clean_decision = _clean_mapping(domain_decision or {}, "domain_decision")
+    clean_decision = _clean_mapping(
+        {} if domain_decision is None else domain_decision,
+        "domain_decision",
+    )
     for key, expected in {
         "physical_work_authorized": False,
         "professional_approval": False,
@@ -411,20 +426,27 @@ def build_spatial_foundry_projection_v2(
             raise BilateralLiveRepairError(f"domain_decision.{key} must remain false")
         clean_decision[key] = expected
     clean_decision["human_review_required"] = True
-    transitions = _clean_mapping(transition_projection or {}, "guarded_wfst")
-    if transitions:
-        if transitions.get("arena_id") != arena:
-            raise BilateralLiveRepairError("guarded WFST arena differs from replay-bound arena")
-        if (
-            transitions.get("projection_only") is not True
-            or transitions.get("execution_authority") is not False
-            or transitions.get("state_mutation") is not False
-        ):
-            raise BilateralLiveRepairError("guarded WFST projection grants forbidden authority")
-        supplied_binding_digest = str(transitions.get("state_binding_digest") or "").strip().lower()
-        canonical_transition = {key: value for key, value in transitions.items() if key != "state_binding_digest"}
-        if not _HEX.fullmatch(supplied_binding_digest) or digest(canonical_transition) != supplied_binding_digest:
-            raise BilateralLiveRepairError("guarded WFST state binding digest is missing or invalid")
+    transitions = (
+        project_guarded_wfst(
+            arena_id=arena,
+            current_state="IDLE",
+            evidence={},
+        )
+        if transition_projection is None
+        else _clean_mapping(transition_projection, "guarded_wfst")
+    )
+    if transitions.get("arena_id") != arena:
+        raise BilateralLiveRepairError("guarded WFST arena differs from replay-bound arena")
+    if (
+        transitions.get("projection_only") is not True
+        or transitions.get("execution_authority") is not False
+        or transitions.get("state_mutation") is not False
+    ):
+        raise BilateralLiveRepairError("guarded WFST projection grants forbidden authority")
+    supplied_binding_digest = str(transitions.get("state_binding_digest") or "").strip().lower()
+    canonical_transition = {key: value for key, value in transitions.items() if key != "state_binding_digest"}
+    if not _HEX.fullmatch(supplied_binding_digest) or digest(canonical_transition) != supplied_binding_digest:
+        raise BilateralLiveRepairError("guarded WFST state binding digest is missing or invalid")
 
     output = dict(base)
     base_digest = output.pop("projection_digest")

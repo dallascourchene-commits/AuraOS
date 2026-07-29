@@ -21,8 +21,9 @@ Construction truth owners.
   - keeps all domain authority false.
 - `aura_construction_spatial_foundry.py`
   - supplies exact arena attribution over the canonical Attempt Archive;
-  - retains governed U7/current-reproof results in that existing archive and
-    retrieves only incident-, identity-, and verified-candidate-bound evidence;
+  - records governed U7/current-reproof results in that existing archive for
+    audit, while projecting only bounded in-process results returned by the
+    canonical U7 owner; unverified archive output is never rehydrated as proof;
   - projects the canonical
     `aura_construction_adapter.ConstructionCoordinationCandidate` through a
     state-bound `ConstructionCoordinationCandidateArtifact`;
@@ -42,6 +43,8 @@ Construction truth owners.
     configured;
   - refreshes a server-issued identity handle once when it expires or becomes
     stale;
+  - preserves an owner-issued Construction state digest instead of substituting
+    repository source-tree identity;
   - adds required-asset path/SHA-256 intake;
   - requests the V2 Construction projection.
 

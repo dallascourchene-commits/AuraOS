@@ -139,11 +139,21 @@
       path === '/api/showcase/live-repair/projection'
       && adapter.identityBrokerAvailable
     ) {
+      if (
+        next.domain !== undefined
+        && (
+          !next.domain
+          || typeof next.domain !== 'object'
+          || Array.isArray(next.domain)
+        )
+      ) {
+        throw new Error('Construction projection domain must be an object.');
+      }
       next.projection_version = 'AURA_SPATIAL_FOUNDRY_PROJECTION_V2';
       next.domain = {
+        ...(next.domain || {}),
         arena_id: 'construction',
         domain_type: 'CONSTRUCTION',
-        state_digest: adapter.identitySummary?.source_tree_digest || '',
         adapter_version: 'AURA_CONSTRUCTION_SPATIAL_FOUNDRY_BROWSER_V1',
         privacy_class: 'PRESENTATION_MINIMIZED',
       };

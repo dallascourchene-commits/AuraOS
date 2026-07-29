@@ -23,7 +23,7 @@ from aura_bilateral_live_repair_foundry import (
     PreviewRollbackReceipt,
     RepairCandidateResult,
 )
-from aura_bilateral_live_repair_foundry_contracts import digest
+from aura_bilateral_live_repair_foundry_contracts import canonical_sanitize, digest
 from aura_construction_adapter import (
     CONSTRUCTION_ADAPTER_VERSION,
     ConstructionCoordinationCandidate,
@@ -52,6 +52,7 @@ _HEX = re.compile(r"^[0-9a-f]{40,64}$")
 _CANONICAL_STATE_HEX = re.compile(r"^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$")
 _CANDIDATE_HEX = _CANONICAL_STATE_HEX
 MAX_REQUEST_NESTING = 12
+MAX_ARCHIVE_SCAN_ROWS = 500
 _RAW_CURRENCY_KEYS = frozenset(
     {
         "identitycurrency",
@@ -392,6 +393,7 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         delegate = attempt_archive or ArenaAttemptArchive(repo_root, db_path=attempt_archive_db_path)
         self._arena_archive = _ArenaBoundArchive(delegate)
         self._capture_arena: dict[str, str] = {}
+        self._u7_results: OrderedDict[str, tuple[str, dict[str, Any]]] = OrderedDict()
         super().__init__(
             repo_root,
             attempt_archive=self._arena_archive,
@@ -405,6 +407,7 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
             super().close()
         finally:
             self._capture_arena.clear()
+            self._u7_results.clear()
             self._arena_archive._capture_arenas.clear()
             if self._owns_bound_archive:
                 self._arena_archive.delegate.close()
@@ -512,6 +515,15 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         arena = self.arena_for_packet(packet_id)
         result["arena_id"] = arena
         result["arena_binding_immutable"] = True
+        clean_result, _ = canonical_sanitize(result)
+        if not isinstance(clean_result, Mapping):
+            raise BilateralLiveRepairError("canonical U7 owner returned an invalid result")
+        retained_result = dict(clean_result)
+        result_digest = digest(retained_result)
+        binding_digest = _digest_text(
+            retained_result.get("u7_binding_digest"),
+            "u7_binding_digest",
+        )
         archive = self.attempt_archive.record(
             arena_id=arena,
             route="bilateral-live-repair/u7-current-reproof",
@@ -520,7 +532,11 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
                 "candidate_digest": result.get("candidate_digest"),
                 "task_id": result.get("task_id"),
             },
-            result={"u7_result": result},
+            result={
+                "ok": retained_result.get("ok") is True,
+                "u7_result": retained_result,
+                "u7_result_digest": result_digest,
+            },
             workflow_state={
                 "workflow_id": packet_id,
                 "status": "CURRENT_REPROOF_RETAINED",
@@ -534,7 +550,11 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         artifact_ref = str(archive.get("artifact_id") or "")
         if not artifact_ref:
             raise BilateralLiveRepairError("canonical Attempt Archive did not retain governed U7 evidence")
-        return {**result, "archive_artifact_ref": artifact_ref}
+        self._u7_results[binding_digest] = (result_digest, retained_result)
+        self._u7_results.move_to_end(binding_digest)
+        while len(self._u7_results) > 32:
+            self._u7_results.popitem(last=False)
+        return {**retained_result, "archive_artifact_ref": artifact_ref}
 
     def has_retained_runtime_proof(self, packet_id: str) -> bool:
         """Report verified Runtime Profile V2 evidence independently of attempts."""
@@ -543,7 +563,7 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         for summary in self.attempt_archive.list(
             workflow_id=packet.packet_id,
             route="bilateral-live-repair/runtime-replay",
-            limit=0,
+            limit=MAX_ARCHIVE_SCAN_ROWS,
         ):
             artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
             result = dict((artifact or {}).get("result") or {})
@@ -568,7 +588,7 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         for summary in self.attempt_archive.list(
             workflow_id=packet.packet_id,
             route="bilateral-live-repair/preview-rollback",
-            limit=0,
+            limit=MAX_ARCHIVE_SCAN_ROWS,
         ):
             artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
             raw = dict((artifact or {}).get("result") or {}).get("preview")
@@ -586,23 +606,16 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         *,
         candidate_digests: Sequence[str] = (),
     ) -> dict[str, Any] | None:
-        """Read the latest canonically archived, packet-bound U7 result."""
+        """Read canonical in-process U7 evidence without trusting archive output."""
 
         packet = self.packet(packet_id)
         allowed = {_candidate_digest_text(item, "candidate_digest") for item in candidate_digests}
         if not allowed:
             return None
-        for summary in self.attempt_archive.list(
-            workflow_id=packet.packet_id,
-            route="bilateral-live-repair/u7-current-reproof",
-            limit=0,
-        ):
-            artifact_ref = str(summary.get("artifact_id") or "")
-            artifact = self.attempt_archive.get(artifact_ref)
-            raw = dict((artifact or {}).get("result") or {}).get("u7_result")
-            if not isinstance(raw, Mapping):
-                continue
+        for result_digest, raw in reversed(self._u7_results.values()):
             result = dict(raw)
+            if digest(result) != result_digest:
+                raise BilateralLiveRepairError("retained canonical U7 result content is invalid")
             candidate = str(result.get("candidate_digest") or "")
             binding_payload = {
                 "version": "AURA_BILATERAL_LIVE_REPAIR_U7_BINDING_V1",
@@ -619,7 +632,7 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
                 or result.get("u7_binding_digest") != digest(binding_payload)
             ):
                 continue
-            return {**result, "archive_artifact_ref": artifact_ref}
+            return result
         return None
 
     def build_projection_v2(
@@ -689,7 +702,7 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         transitions = project_guarded_wfst(
             arena_id=bound,
             current_state=transition_state,
-            evidence=transition_evidence or {},
+            evidence=({} if transition_evidence is None else transition_evidence),
         )
         return build_spatial_foundry_projection_v2(
             base_projection=base,

@@ -166,7 +166,9 @@ def _is_v2_projection(body: Mapping[str, Any]) -> bool:
 
 
 def _mapping_rows(body: Mapping[str, Any], key: str) -> list[Mapping[str, Any]]:
-    value = body.get(key) or []
+    if key not in body:
+        return []
+    value = body[key]
     if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
         raise BilateralLiveRepairError(f"{key} must be an array")
     rows = list(value)
@@ -177,9 +179,9 @@ def _mapping_rows(body: Mapping[str, Any], key: str) -> list[Mapping[str, Any]]:
 
 
 def _optional_mapping(body: Mapping[str, Any], key: str) -> Mapping[str, Any]:
-    value = body.get(key)
-    if value is None:
+    if key not in body:
         return {}
+    value = body[key]
     if not isinstance(value, Mapping):
         raise BilateralLiveRepairError(f"{key} must be an object")
     return value
@@ -206,7 +208,7 @@ def _selected_attempts(
     body: Mapping[str, Any],
 ) -> list[RepairCandidateResult]:
     attempts = list(state.live_repair.attempts_for_packet(packet_id))
-    raw_ids = body.get("attempt_ids") or []
+    raw_ids = body.get("attempt_ids", ())
     if isinstance(raw_ids, (str, bytes, bytearray)) or not isinstance(raw_ids, Sequence):
         raise BilateralLiveRepairError("attempt_ids must be an array")
     if not raw_ids:
@@ -273,8 +275,8 @@ def _v2_projection_response(
     try:
         projection = state.live_repair.build_projection_v2(
             packet_id=packet_id,
-            intent=body.get("intent") if isinstance(body.get("intent"), Mapping) else {},
-            plan=body.get("plan") if isinstance(body.get("plan"), Mapping) else {},
+            intent=_optional_mapping(body, "intent"),
+            plan=_optional_mapping(body, "plan"),
             code_targets=_mapping_rows(body, "code_targets"),
             attempts=attempts,
             preview=preview,
@@ -312,6 +314,11 @@ def _derive_transition_state(
     *,
     runtime_proof_retained: bool,
 ) -> tuple[str, dict[str, bool]]:
+    def required_asset_is_bound(item: Any) -> bool:
+        if isinstance(item, Mapping):
+            return bool(item.get("path")) and bool(item.get("sha256"))
+        return bool(getattr(item, "path", "")) and bool(getattr(item, "sha256", ""))
+
     dissolution = packet.dissolution_receipt
     capture_dissolved = (
         dissolution.terminal_state == "DISSOLVED"
@@ -324,7 +331,7 @@ def _derive_transition_state(
         "operator_authorized": packet.privacy_receipt.get("unrestricted_recording") is False,
         "incident_marker_present": packet.marker_event.event_type == "INCIDENT_MARKER",
         "capture_dissolved": capture_dissolved,
-        "required_assets_bound": bool(packet.required_assets),
+        "required_assets_bound": all(required_asset_is_bound(item) for item in packet.required_assets),
         "runtime_proof_retained": runtime_proof_retained is True,
         "repair_attempt_retained": bool(attempts),
         "preview_receipt_retained": preview is not None,

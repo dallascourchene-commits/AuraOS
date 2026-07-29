@@ -15,6 +15,7 @@ from referencing import Registry, Resource
 from aura_bilateral_live_repair_foundry import (
     BilateralIdentity,
     BilateralLiveRepairError,
+    BilateralLiveRepairService,
     RepairCandidateResult,
 )
 from aura_bilateral_live_repair_foundry_contracts import PROJECTION_VERSION, digest
@@ -237,6 +238,27 @@ def test_v2_projection_defaults_complete_false_decision_and_validates_schema():
     assert _construction_validator() is _construction_validator()
 
 
+def test_v2_projection_builds_valid_default_wfst_and_rejects_empty_explicit_wfst():
+    result = build_spatial_foundry_projection_v2(
+        base_projection=base_projection(),
+        arena_id="construction",
+        domain={"arena_id": "construction", "domain_type": "CONSTRUCTION"},
+    )
+    assert result["guarded_wfst"]["arena_id"] == "construction"
+    assert result["guarded_wfst"]["projection_only"] is True
+    assert result["guarded_wfst"]["execution_authority"] is False
+    assert result["guarded_wfst"]["state_mutation"] is False
+    validate_construction_schema(result)
+
+    with pytest.raises(BilateralLiveRepairError, match="arena"):
+        build_spatial_foundry_projection_v2(
+            base_projection=base_projection(),
+            arena_id="construction",
+            domain={"arena_id": "construction", "domain_type": "CONSTRUCTION"},
+            transition_projection={},
+        )
+
+
 def test_v2_projection_accepts_canonical_construction_state_digest():
     state_digest = stable_digest({"project_id": "project-1", "events": []})
     assert len(state_digest) == 32
@@ -317,6 +339,23 @@ def test_v2_projection_rejects_arena_authority_candidate_and_transition_tamperin
                     }
                 ],
             }
+        )
+
+
+def test_v2_projection_scans_canonicalized_dataclasses_for_authority():
+    @dataclasses.dataclass
+    class NestedAuthority:
+        physical_work_authorized: bool = True
+
+    with pytest.raises(ValueError, match="after canonicalization"):
+        build_spatial_foundry_projection_v2(
+            base_projection=base_projection(),
+            arena_id="construction",
+            domain={
+                "arena_id": "construction",
+                "domain_type": "CONSTRUCTION",
+                "nested": NestedAuthority(),
+            },
         )
 
 
@@ -540,7 +579,7 @@ def test_required_assets_and_exact_arena_survive_capture_and_preview(tmp_path: P
                 domain_decision=mismatched_decision,
             )
 
-        service.preview_candidate(
+        first_preview = service.preview_candidate(
             packet_id=packet_id,
             current_identity=item,
             candidate_digest=sha("candidate"),
@@ -550,6 +589,17 @@ def test_required_assets_and_exact_arena_survive_capture_and_preview(tmp_path: P
             environment_class="LOCAL_EPHEMERAL",
             rollback_preauthorized=False,
         )
+        service.preview_candidate(
+            packet_id=packet_id,
+            current_identity=item,
+            candidate_digest=sha("newer-candidate"),
+            last_verified_digest=sha("newer-verified"),
+            health_before={"ok": True},
+            health_after={"ok": True},
+            environment_class="LOCAL_EPHEMERAL",
+            rollback_preauthorized=False,
+        )
+        assert service.preview_for_packet(packet_id, first_preview.preview_id) == first_preview
         preview = service.attempt_archive.list(
             workflow_id=packet_id,
             route="bilateral-live-repair/preview-rollback",
@@ -557,6 +607,35 @@ def test_required_assets_and_exact_arena_survive_capture_and_preview(tmp_path: P
         )[0]
         assert preview["arena_id"] == "construction"
         assert preview["arena_id"] != "coding"
+
+        retained_proof_ref = sha("retained-runtime-proof")
+        service._runtime_proofs[retained_proof_ref] = (
+            packet_id,
+            {"ok": True},
+        )
+        service.attempt_archive.record(
+            arena_id="construction",
+            route="bilateral-live-repair/runtime-replay",
+            request={"packet_id": packet_id},
+            result={
+                "ok": True,
+                "packet_digest": packet["packet_digest"],
+                "runtime_proof_digest": retained_proof_ref,
+            },
+            workflow_state={"workflow_id": packet_id},
+        )
+        service.attempt_archive.record(
+            arena_id="construction",
+            route="bilateral-live-repair/runtime-replay",
+            request={"packet_id": packet_id},
+            result={
+                "ok": True,
+                "packet_digest": sha("another-packet"),
+                "runtime_proof_digest": sha("newer-unrelated-proof"),
+            },
+            workflow_state={"workflow_id": packet_id},
+        )
+        assert service.has_retained_runtime_proof(packet_id) is True
 
         with pytest.raises(BilateralLiveRepairError, match="arena"):
             service.record_repair_attempt(
@@ -742,6 +821,11 @@ def test_v2_endpoint_rejects_malformed_evidence_domain_and_client_u7(
         ({"domain_targets": [{"ok": True}, "bad-row"]}, "domain_targets[1]"),
         ({"domain": {"domain_type": "SPATIAL"}}, "domain.domain_type"),
         ({"u7_result": {"fabricated": True}}, "client-authored U7"),
+        ({"intent": False}, "intent must be an object"),
+        ({"plan": 0}, "plan must be an object"),
+        ({"attempt_ids": ""}, "attempt_ids must be an array"),
+        ({"domain_targets": False}, "domain_targets must be an array"),
+        ({"presentation": None}, "presentation must be an object"),
     ):
         status, result = decoded(
             dispatch_construction_foundry_request(
@@ -862,50 +946,128 @@ def test_transition_state_advances_only_through_satisfied_predecessors():
     )
     assert state == "DISSOLVED"
 
+    packet.required_assets = ()
+    state, evidence = construction_server._derive_transition_state(
+        packet,
+        [],
+        None,
+        None,
+        runtime_proof_retained=False,
+    )
+    assert evidence["required_assets_bound"] is True
+    assert state == "REPLAY_READY"
 
-def test_latest_u7_result_reads_canonical_packet_and_candidate_binding(
+
+def test_latest_u7_result_uses_only_canonical_in_process_owner_results(
     trusted_finalized_packet,
+    monkeypatch,
 ):
     state, _handle, packet_id = trusted_finalized_packet
     packet = state.live_repair.packet(packet_id)
-    candidate_digest = sha("verified-candidate")
-    binding = {
+
+    def canonical_u7(_service, **kwargs):
+        binding = {
+            "version": "AURA_BILATERAL_LIVE_REPAIR_U7_BINDING_V1",
+            "replay_packet_digest": packet.packet_digest,
+            "bilateral_identity_digest": packet.identity.identity_digest,
+            "candidate_digest": kwargs["candidate_digest"],
+            "plan_phase_hash": kwargs["plan_phase_hash"],
+            "task_id": kwargs["task_id"],
+        }
+        return {
+            "ok": True,
+            **{key: value for key, value in binding.items() if key != "version"},
+            "u7_binding_digest": digest(binding),
+            "prediction": {"prediction_id": kwargs["task_id"]},
+            "observation": {"observed": True},
+            "finalization": {"human_disposition": "ACCEPTED"},
+            "canonical_owner": "aura_unified_memory_continuity_learning",
+            "automatic_crystallization": False,
+            "automatic_promotion": False,
+            "production_mutation": False,
+        }
+
+    monkeypatch.setattr(
+        BilateralLiveRepairService,
+        "run_governed_u7",
+        canonical_u7,
+    )
+    older_candidate = sha("verified-candidate")
+    newer_candidate = sha("newer-candidate")
+    for candidate_digest, task_id in (
+        (older_candidate, "task-1"),
+        (newer_candidate, "task-2"),
+    ):
+        state.live_repair.run_governed_u7(
+            packet_id=packet_id,
+            candidate_digest=candidate_digest,
+            current_identity=packet.identity,
+            bridge=object(),
+            plan_phase_hash=sha(f"phase-{task_id}"),
+            task_id=task_id,
+            prediction_contract={},
+            observation_contract={},
+            finalization_contract={},
+        )
+
+    retained = state.live_repair.latest_u7_result(
+        packet_id,
+        candidate_digests=[older_candidate],
+    )
+    assert retained is not None
+    assert retained["candidate_digest"] == older_candidate
+    assert retained["finalization"]["human_disposition"] == "ACCEPTED"
+
+    binding_digest = retained["u7_binding_digest"]
+    retained_digest, retained_row = state.live_repair._u7_results[binding_digest]
+    retained_row["finalization"] = {"human_disposition": "TAMPERED"}
+    with pytest.raises(BilateralLiveRepairError, match="content is invalid"):
+        state.live_repair.latest_u7_result(
+            packet_id,
+            candidate_digests=[older_candidate],
+        )
+    state.live_repair._u7_results[binding_digest] = (
+        retained_digest,
+        {
+            **retained,
+            "finalization": {"human_disposition": "ACCEPTED"},
+        },
+    )
+
+    fabricated_candidate = sha("fabricated-candidate")
+    fabricated_binding = {
         "version": "AURA_BILATERAL_LIVE_REPAIR_U7_BINDING_V1",
         "replay_packet_digest": packet.packet_digest,
         "bilateral_identity_digest": packet.identity.identity_digest,
-        "candidate_digest": candidate_digest,
-        "plan_phase_hash": sha("phase"),
-        "task_id": "task-1",
+        "candidate_digest": fabricated_candidate,
+        "plan_phase_hash": sha("fabricated-phase"),
+        "task_id": "fabricated-task",
     }
-    u7_result = {
+    fabricated = {
         "ok": True,
-        **{key: value for key, value in binding.items() if key != "version"},
-        "u7_binding_digest": digest(binding),
-        "finalization": {"human_disposition": "ACCEPTED"},
-        "canonical_owner": "aura_unified_memory_continuity_learning",
+        **{key: value for key, value in fabricated_binding.items() if key != "version"},
+        "u7_binding_digest": digest(fabricated_binding),
+        "finalization": {"human_disposition": "FORGED"},
     }
     state.live_repair.attempt_archive.record(
         arena_id="construction",
         route="bilateral-live-repair/u7-current-reproof",
-        request={"candidate_digest": candidate_digest},
-        result={"u7_result": u7_result},
+        request={"candidate_digest": fabricated_candidate},
+        result={
+            "ok": True,
+            "u7_result": fabricated,
+            "u7_result_digest": digest(fabricated),
+        },
         workflow_state={
             "workflow_id": packet_id,
             "status": "CURRENT_REPROOF_RETAINED",
         },
         archive_context={"projection_only": True},
     )
-    retained = state.live_repair.latest_u7_result(
-        packet_id,
-        candidate_digests=[candidate_digest],
-    )
-    assert retained is not None
-    assert retained["u7_binding_digest"] == digest(binding)
-    assert retained["finalization"]["human_disposition"] == "ACCEPTED"
     assert (
         state.live_repair.latest_u7_result(
             packet_id,
-            candidate_digests=[sha("other-candidate")],
+            candidate_digests=[fabricated_candidate],
         )
         is None
     )
@@ -1011,6 +1173,8 @@ def test_composed_static_surface_adds_trusted_identity_and_required_asset_intake
     assert b"adapter.identityBrokerAvailable" in script
     assert b"identityHandleExpired" in script
     assert b"adapter.identitySummary = null" in script
+    assert b"state_digest: adapter.identitySummary" not in script
+    assert b"...(next.domain || {})" in script
 
 
 @pytest.mark.parametrize(
