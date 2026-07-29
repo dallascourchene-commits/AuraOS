@@ -51,6 +51,7 @@ def runtime_proof(item: BilateralIdentity, *, negative: bool = True, ok: bool = 
         "ok": ok,
         "profile_sha256": item.runtime_profile_digest,
         "repository_identity_unchanged": True,
+        "runtime_candidate_id": "candidate",
         "positive_assertions": [{"assertion_id": "positive", "passed": True}],
         "negative_assertions": [{"assertion_id": "negative", "passed": negative}],
         "preservation_assertions": [{"assertion_id": "preservation", "passed": True}],
@@ -336,7 +337,7 @@ def test_missing_negative_proof_blocks_repair_promotion(tmp_path):
     attempt = service.record_repair_attempt(
         packet_id=raw["packet_id"],
         hypothesis={"cause": "selection reset"},
-        candidate_digest=sha("candidate"),
+        candidate_digest=_runtime_binding_digest("candidate"),
         runtime_proof_ref=retain_proof(service, raw["packet_id"], item, runtime_proof(item, negative=False)),
         minimized_counterexample={"hidden_storey_selected": True},
         current_identity=item,
@@ -355,7 +356,7 @@ def test_failed_runtime_proof_rehydrates_as_rejected_attempt(tmp_path):
     attempt = service.record_repair_attempt(
         packet_id=raw["packet_id"],
         hypothesis={"cause": "proof-level failure"},
-        candidate_digest=sha("candidate"),
+        candidate_digest=_runtime_binding_digest("candidate"),
         runtime_proof_ref=proof_ref,
         minimized_counterexample=None,
         current_identity=item,
@@ -375,7 +376,7 @@ def test_failed_hypothesis_cannot_repeat_across_service_restart(tmp_path):
     first.record_repair_attempt(
         packet_id=raw["packet_id"],
         hypothesis={"cause": "selection reset"},
-        candidate_digest=sha("candidate-1"),
+        candidate_digest=_runtime_binding_digest("candidate"),
         runtime_proof_ref=proof_ref,
         minimized_counterexample={"hidden": True},
         current_identity=item,
@@ -392,7 +393,7 @@ def test_failed_hypothesis_cannot_repeat_across_service_restart(tmp_path):
         second.record_repair_attempt(
             packet_id=raw["packet_id"],
             hypothesis={"cause": "selection reset"},
-            candidate_digest=sha("candidate-2"),
+            candidate_digest=_runtime_binding_digest("candidate"),
             runtime_proof_ref=proof_ref,
             minimized_counterexample=None,
             current_identity=item,
@@ -408,7 +409,7 @@ def test_repair_attempt_budget_is_persistent_and_bounded(tmp_path):
         service.record_repair_attempt(
             packet_id=raw["packet_id"],
             hypothesis={"strategy": index},
-            candidate_digest=sha(f"candidate-{index}"),
+            candidate_digest=_runtime_binding_digest("candidate"),
             runtime_proof_ref=proof_ref,
             minimized_counterexample={"strategy": index},
             current_identity=item,
@@ -417,7 +418,7 @@ def test_repair_attempt_budget_is_persistent_and_bounded(tmp_path):
         service.record_repair_attempt(
             packet_id=raw["packet_id"],
             hypothesis={"strategy": 9},
-            candidate_digest=sha("candidate-9"),
+            candidate_digest=_runtime_binding_digest("candidate"),
             runtime_proof_ref=proof_ref,
             minimized_counterexample=None,
             current_identity=item,
@@ -635,7 +636,7 @@ def test_projection_rejects_cross_incident_or_unverified_u7_evidence(tmp_path):
     attempt = service.record_repair_attempt(
         packet_id=raw["packet_id"],
         hypothesis={"cause": "selection reset"},
-        candidate_digest=sha("candidate"),
+        candidate_digest=_runtime_binding_digest("candidate"),
         runtime_proof_ref=retain_proof(service, raw["packet_id"], item),
         minimized_counterexample=None,
         current_identity=item,

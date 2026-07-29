@@ -1,10 +1,17 @@
-name: PR240 Final Fixture Repair and Verification
+name: Synchronize CODEMAP on architecture work branches
 
 on:
   pull_request:
   push:
     branches:
-      - analysis/bilateral-intent-final-b11-b15
+      - "analysis/**"
+      - "docs/**"
+      - "fix/construction-demo-runtime-harness-*"
+    paths-ignore:
+      - ".aura/CODEMAP.json"
+      - ".aura/CODEMAP.md"
+      - "topology_map.json"
+      - "Aura_Memory/live_topology_ast.json"
 
 permissions:
   contents: write
@@ -14,154 +21,123 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  repair-verify-clean:
+  sync-codemap:
+    if: >-
+      github.actor != 'github-actions[bot]' &&
+      (github.event_name == 'push' ||
+       startsWith(github.event.pull_request.head.ref, 'analysis/') ||
+       startsWith(github.event.pull_request.head.ref, 'docs/') ||
+       startsWith(github.event.pull_request.head.ref, 'fix/construction-demo-runtime-harness-'))
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 45
     steps:
-      - name: Fetch latest exact PR branch head
+      - name: Fetch exact head without persisted credentials
         env:
           GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           git init .
           git remote add origin "https://github.com/${{ github.repository }}.git"
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin \
-            analysis/bilateral-intent-final-b11-b15
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
           unset AUTH_HEADER
           git checkout --detach FETCH_HEAD
-          git rev-parse HEAD > /tmp/pr240-start-sha
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
-
-      - name: Install verification dependencies
+      - name: Install declared dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-          python -m pip install pytest jsonschema ruff pyyaml
-
-      - name: Bind legacy fixtures to retained runtime candidate
+      - name: Regenerate and validate CODEMAP
         run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path("tests/test_aura_bilateral_live_repair_foundry.py")
-          text = path.read_text(encoding="utf-8")
-          anchor = '        "repository_identity_unchanged": True,\n'
-          if text.count(anchor) != 1:
-              raise RuntimeError("runtime proof fixture anchor drifted")
-          text = text.replace(
-              anchor,
-              anchor + '        "runtime_candidate_id": "candidate",\n',
-              1,
-          )
-
-          def replace_in_test(source: str, name: str, old: str, new: str) -> str:
-              start = source.index(f"def {name}(")
-              next_start = source.find("\ndef ", start + 1)
-              end = len(source) if next_start < 0 else next_start
-              block = source[start:end]
-              if block.count(old) != 1:
-                  raise RuntimeError(f"{name}: expected one candidate fixture replacement")
-              return source[:start] + block.replace(old, new, 1) + source[end:]
-
-          replacements = [
-              (
-                  "test_missing_negative_proof_blocks_repair_promotion",
-                  'candidate_digest=sha("candidate"),',
-                  'candidate_digest=_runtime_binding_digest("candidate"),',
-              ),
-              (
-                  "test_failed_runtime_proof_rehydrates_as_rejected_attempt",
-                  'candidate_digest=sha("candidate"),',
-                  'candidate_digest=_runtime_binding_digest("candidate"),',
-              ),
-              (
-                  "test_failed_hypothesis_cannot_repeat_across_service_restart",
-                  'candidate_digest=sha("candidate-1"),',
-                  'candidate_digest=_runtime_binding_digest("candidate"),',
-              ),
-              (
-                  "test_failed_hypothesis_cannot_repeat_across_service_restart",
-                  'candidate_digest=sha("candidate-2"),',
-                  'candidate_digest=_runtime_binding_digest("candidate"),',
-              ),
-              (
-                  "test_repair_attempt_budget_is_persistent_and_bounded",
-                  'candidate_digest=sha(f"candidate-{index}"),',
-                  'candidate_digest=_runtime_binding_digest("candidate"),',
-              ),
-              (
-                  "test_repair_attempt_budget_is_persistent_and_bounded",
-                  'candidate_digest=sha("candidate-9"),',
-                  'candidate_digest=_runtime_binding_digest("candidate"),',
-              ),
-              (
-                  "test_projection_rejects_cross_incident_or_unverified_u7_evidence",
-                  'candidate_digest=sha("candidate"),',
-                  'candidate_digest=_runtime_binding_digest("candidate"),',
-              ),
-          ]
-          for name, old, new in replacements:
-              text = replace_in_test(text, name, old, new)
-
-          path.write_text(text, encoding="utf-8")
-          PY
-
-      - name: Run final Codex verification
-        run: |
-          python -m py_compile \
-            aura_bilateral_live_repair_foundry_capture.py \
-            aura_bilateral_live_repair_foundry_service_capture.py \
-            aura_bilateral_live_repair_foundry_service_runtime.py \
-            aura_bilateral_live_repair_foundry_service_preview.py \
-            aura_showcase_live_repair_server.py \
-            tests/test_aura_bilateral_live_repair_foundry.py
-          ruff check --select E9,F63,F7,F82 \
-            aura_bilateral_live_repair_foundry_capture.py \
-            aura_bilateral_live_repair_foundry_service_capture.py \
-            aura_bilateral_live_repair_foundry_service_runtime.py \
-            aura_bilateral_live_repair_foundry_service_preview.py \
-            aura_showcase_live_repair_server.py \
-            tests/test_aura_bilateral_live_repair_foundry.py \
-            tests/test_aura_bilateral_live_repair_foundry_hardening.py \
-            tests/test_aura_showcase_live_repair_server.py
-          python -m pytest -q \
-            tests/test_aura_bilateral_live_repair_foundry.py \
-            tests/test_aura_bilateral_live_repair_foundry_hardening.py \
-            tests/test_aura_showcase_live_repair_server.py \
-            tests/test_aura_showcase_attempt_archive.py
-          node --check aura_showcase/live-repair-foundry.js
-
-      - name: Restore canonical workflow and regenerate CODEMAP
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin main:refs/remotes/origin/main
-          git show origin/main:.github/workflows/sync-analysis-codemap.yml \
-            > .github/workflows/sync-analysis-codemap.yml
-          rm -f .github/workflows/pr240-codex-final-verify.yml
+          cp .aura/CODEMAP.json /tmp/aura-codemap-reference.json
           python aura_codebase_navigator.py
-          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          set +e
+          python -m aura_codemap_verify \
+            --compare-json /tmp/aura-codemap-reference.json \
+            > /tmp/aura-codemap-comparison.json
+          comparison_status=$?
+          set -e
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import subprocess
+
+          result = json.loads(
+              Path('/tmp/aura-codemap-comparison.json').read_text(encoding='utf-8')
+          )
+          if result.get('stable_comparison', {}).get('ok') is True:
+              subprocess.run(
+                  [
+                      'git', 'checkout', 'HEAD', '--',
+                      '.aura/CODEMAP.json',
+                      '.aura/CODEMAP.md',
+                      'topology_map.json',
+                      'Aura_Memory/live_topology_ast.json',
+                  ],
+                  check=True,
+              )
+              Path('/tmp/aura-codemap-change-class.txt').write_text(
+                  'VOLATILE_ONLY\n', encoding='utf-8'
+              )
+          else:
+              Path('/tmp/aura-codemap-change-class.txt').write_text(
+                  'MEANINGFUL\n', encoding='utf-8'
+              )
+          PY
+          if [ "$(cat /tmp/aura-codemap-change-class.txt)" = "MEANINGFUL" ]; then
+            python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          else
+            test "$comparison_status" -eq 0
+          fi
           test -s .aura/CODEMAP.json
           test -s .aura/CODEMAP.md
           test -s topology_map.json
           test -s Aura_Memory/live_topology_ast.json
           git diff --check
-          git config user.name "AuraOS PR240 Verification"
-          git config user.email "actions@users.noreply.github.com"
-          git add -A
-          git commit -m "fix: bind final PR240 fixtures and verify Codex repairs"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin \
-            analysis/bilateral-intent-final-b11-b15:refs/remotes/origin/pr240-final
-          test "$(git rev-parse refs/remotes/origin/pr240-final)" = "$(cat /tmp/pr240-start-sha)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            push origin HEAD:analysis/bilateral-intent-final-b11-b15
-          unset AUTH_HEADER
+      - name: Commit synchronized maps
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+        run: |
+          set -o pipefail
+          {
+            set -x
+            git config user.name "AuraOS CODEMAP Bot"
+            git config user.email "actions@users.noreply.github.com"
+            git status --short
+            git add \
+              .aura/CODEMAP.json \
+              .aura/CODEMAP.md \
+              topology_map.json
+            git add -f Aura_Memory/live_topology_ast.json
+            git diff --cached --stat
+            if git diff --cached --quiet; then
+              exit 0
+            fi
+            git commit -m "docs: synchronize CODEMAP and topology"
+            AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+            git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+              push origin HEAD:"${TARGET_BRANCH}"
+            unset AUTH_HEADER
+          } 2>&1 | tee codemap-push.log
+      - name: Upload synchronized maps and push diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: synchronized-codemap-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            .aura/CODEMAP.json
+            .aura/CODEMAP.md
+            topology_map.json
+            Aura_Memory/live_topology_ast.json
+            codemap-push.log
+            /tmp/aura-codemap-comparison.json
+            /tmp/aura-codemap-change-class.txt
+          if-no-files-found: error
+          retention-days: 14
