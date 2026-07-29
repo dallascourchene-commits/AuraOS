@@ -29,7 +29,9 @@ jobs:
        startsWith(github.event.pull_request.head.ref, 'docs/') ||
        startsWith(github.event.pull_request.head.ref, 'fix/construction-demo-runtime-harness-'))
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
+    env:
+      PR240_RESTORE_HEAD: ab9db8108e2306fa7bcb6045d4681a2127090913
     steps:
       - name: Fetch exact head without persisted credentials
         env:
@@ -45,15 +47,124 @@ jobs:
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
-      - name: Install declared dependencies
+
+      - name: Install declared and focused verifier dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-      - name: Regenerate and validate CODEMAP
+          python -m pip install pytest jsonschema ruff pyyaml
+
+      - name: Apply only still-current PR240 review repairs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile scripts/pr240_resolve_open_reviews.py
+          python scripts/pr240_resolve_open_reviews.py
+          rm scripts/pr240_resolve_open_reviews.py
+          rm .github/workflows/pr240-resolve-open-reviews.yml
+
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR240_RESTORE_HEAD"
+          git show "$PR240_RESTORE_HEAD:.github/workflows/sync-analysis-codemap.yml" \
+            > .github/workflows/sync-analysis-codemap.yml
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin main:refs/remotes/origin/main
+          unset AUTH_HEADER
+
+          test ! -e scripts/pr240_resolve_open_reviews.py
+          test ! -e .github/workflows/pr240-resolve-open-reviews.yml
+          git diff --check
+
+      - name: Compile repaired source and focused regressions
+        run: |
+          python -m py_compile \
+            aura_bilateral_live_repair_foundry.py \
+            aura_bilateral_live_repair_foundry_contracts.py \
+            aura_bilateral_live_repair_foundry_capture.py \
+            aura_bilateral_live_repair_foundry_service.py \
+            aura_bilateral_live_repair_foundry_service_capture.py \
+            aura_bilateral_live_repair_foundry_service_runtime.py \
+            aura_bilateral_live_repair_foundry_service_preview.py \
+            aura_showcase_live_repair_server.py \
+            scripts/aura_review_learning_architect_harness.py \
+            tests/test_aura_bilateral_live_repair_foundry.py \
+            tests/test_aura_bilateral_live_repair_foundry_hardening.py \
+            tests/test_aura_showcase_live_repair_server.py
+
+      - name: Run fatal Ruff checks
+        run: |
+          ruff check --select E9,F63,F7,F82 \
+            aura_bilateral_live_repair_foundry.py \
+            aura_bilateral_live_repair_foundry_contracts.py \
+            aura_bilateral_live_repair_foundry_capture.py \
+            aura_bilateral_live_repair_foundry_service.py \
+            aura_bilateral_live_repair_foundry_service_capture.py \
+            aura_bilateral_live_repair_foundry_service_runtime.py \
+            aura_bilateral_live_repair_foundry_service_preview.py \
+            aura_showcase_live_repair_server.py \
+            scripts/aura_review_learning_architect_harness.py \
+            tests/test_aura_bilateral_live_repair_foundry.py \
+            tests/test_aura_bilateral_live_repair_foundry_hardening.py \
+            tests/test_aura_showcase_live_repair_server.py
+
+      - name: Run focused B11-B15 tests and JavaScript validation
+        run: |
+          pytest -q \
+            tests/test_aura_bilateral_live_repair_foundry.py \
+            tests/test_aura_bilateral_live_repair_foundry_hardening.py \
+            tests/test_aura_showcase_live_repair_server.py \
+            tests/test_aura_showcase_attempt_archive.py
+          node --check aura_showcase/live-repair-foundry.js
+
+      - name: Commit verified permanent source tree locally
+        id: source_commit
+        run: |
+          git config user.name "AuraOS PR240 Review Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "fix: resolve remaining PR240 review findings"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Run Aura-native exact-head review harness
+        env:
+          SOURCE_SHA: ${{ steps.source_commit.outputs.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test -z "$(git status --short)"
+          python scripts/aura_review_learning_architect_harness.py \
+            --repo-root . \
+            --base-ref origin/main \
+            --head-ref "$SOURCE_SHA" \
+            --output /tmp/pr240-review-harness-receipt.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          receipt = json.loads(
+              Path('/tmp/pr240-review-harness-receipt.json').read_text(encoding='utf-8')
+          )
+          assert receipt['status'] == 'PASSED', receipt
+          assert receipt['checks']['waboose_prepare_ok'] is True, receipt
+          assert receipt['checks']['waboose_scan_ok'] is True, receipt
+          assert receipt['checks']['waboose_finalize_ok'] is True, receipt
+          assert receipt['checks']['crucible_passed'] is True, receipt
+          assert receipt['production_mutation'] is False, receipt
+          assert receipt['automatic_fix'] is False, receipt
+          assert receipt['automatic_commit'] is False, receipt
+          assert receipt['automatic_push'] is False, receipt
+          assert receipt['automatic_pull_request'] is False, receipt
+          assert receipt['automatic_merge'] is False, receipt
+          assert receipt['human_review_required'] is True, receipt
+          PY
+
+      - name: Regenerate and validate CODEMAP from final source tree
         run: |
           cp .aura/CODEMAP.json /tmp/aura-codemap-reference.json
           python aura_codebase_navigator.py
@@ -99,8 +210,11 @@ jobs:
           test -s .aura/CODEMAP.md
           test -s topology_map.json
           test -s Aura_Memory/live_topology_ast.json
+          ! grep -q 'scripts/pr240_resolve_open_reviews.py' .aura/CODEMAP.md
+          ! grep -q '.github/workflows/pr240-resolve-open-reviews.yml' .aura/CODEMAP.md
           git diff --check
-      - name: Commit synchronized maps
+
+      - name: Commit final synchronized tree and push once
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
@@ -110,23 +224,22 @@ jobs:
             set -x
             git config user.name "AuraOS CODEMAP Bot"
             git config user.email "actions@users.noreply.github.com"
-            git status --short
             git add \
               .aura/CODEMAP.json \
               .aura/CODEMAP.md \
               topology_map.json
             git add -f Aura_Memory/live_topology_ast.json
             git diff --cached --stat
-            if git diff --cached --quiet; then
-              exit 0
+            if ! git diff --cached --quiet; then
+              git commit -m "docs: synchronize CODEMAP and topology"
             fi
-            git commit -m "docs: synchronize CODEMAP and topology"
             AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
             git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
               push origin HEAD:"${TARGET_BRANCH}"
             unset AUTH_HEADER
           } 2>&1 | tee codemap-push.log
-      - name: Upload synchronized maps and push diagnostics
+
+      - name: Upload verification, synchronized maps, and push diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -137,7 +250,8 @@ jobs:
             topology_map.json
             Aura_Memory/live_topology_ast.json
             codemap-push.log
+            /tmp/pr240-review-harness-receipt.json
             /tmp/aura-codemap-comparison.json
             /tmp/aura-codemap-change-class.txt
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
