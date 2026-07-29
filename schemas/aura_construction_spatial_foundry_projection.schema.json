@@ -49,7 +49,17 @@
               "CONTRADICTED"
             ]
           },
-          "recommended_for_human_review": {"type": "boolean"}
+          "recommended_for_human_review": {"type": "boolean"},
+          "candidate_id": {"type": "string", "minLength": 1},
+          "candidate_digest": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+          "base_state_digest": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+          "closure_count": {"type": "integer", "minimum": 0},
+          "closure_total": {"type": "integer", "minimum": 0},
+          "open_obligations": {"type": "array", "items": {"type": "string"}},
+          "schedule_delta": {"type": "object"},
+          "budget_delta": {"type": "object"},
+          "idle_time_delta": {"type": "object"},
+          "evidence_refs": {"type": "array", "items": {"type": "string"}}
         },
         "not": {
           "anyOf": [
