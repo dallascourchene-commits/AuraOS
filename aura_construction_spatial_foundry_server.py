@@ -707,7 +707,11 @@ def make_handler(state: ConstructionFoundryShowcaseState):
                 return
             self._send(*dispatch_construction_foundry_request(state, "POST", self.path, payload))
 
-        def log_message(self, format: str, *args: Any) -> None:
+        def log_message(  # pylint: disable=redefined-builtin
+            self,
+            format: str,
+            *args: Any,
+        ) -> None:
             return
 
     return Handler

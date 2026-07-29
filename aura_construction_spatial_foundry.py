@@ -531,11 +531,40 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
             kwargs.pop("candidate_digest", None),
             "candidate_digest",
         )
+        current_identity = kwargs.pop("current_identity", None)
+        if not isinstance(current_identity, BilateralIdentity):
+            raise ValueError("current_identity must be a BilateralIdentity")
+        bridge = kwargs.pop("bridge", None)
+        if bridge is None:
+            raise ValueError("bridge is required")
+        plan_phase_hash = _required_text(
+            kwargs.pop("plan_phase_hash", None),
+            "plan_phase_hash",
+        )
+        task_id = _required_text(kwargs.pop("task_id", None), "task_id")
+        contracts: dict[str, Mapping[str, Any]] = {}
+        for name in (
+            "prediction_contract",
+            "observation_contract",
+            "finalization_contract",
+        ):
+            value = kwargs.pop(name, None)
+            if not isinstance(value, Mapping):
+                raise ValueError(f"{name} must be an object")
+            contracts[name] = value
+        if kwargs:
+            raise TypeError(f"unexpected governed U7 arguments: {sorted(kwargs)}")
         result = dict(
             super().run_governed_u7(
                 packet_id=packet_id,
                 candidate_digest=candidate_digest,
-                **kwargs,
+                current_identity=current_identity,
+                bridge=bridge,
+                plan_phase_hash=plan_phase_hash,
+                task_id=task_id,
+                prediction_contract=contracts["prediction_contract"],
+                observation_contract=contracts["observation_contract"],
+                finalization_contract=contracts["finalization_contract"],
             )
         )
         arena = self.arena_for_packet(packet_id)
