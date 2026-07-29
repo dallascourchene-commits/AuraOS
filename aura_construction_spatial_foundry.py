@@ -53,6 +53,8 @@ _CANONICAL_STATE_HEX = re.compile(r"^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$")
 _CANDIDATE_HEX = _CANONICAL_STATE_HEX
 MAX_REQUEST_NESTING = 12
 MAX_ARCHIVE_SCAN_ROWS = 500
+MAX_RETAINED_U7_PACKETS = 64
+MAX_RETAINED_U7_RESULTS_PER_PACKET = 32
 _RAW_CURRENCY_KEYS = frozenset(
     {
         "identitycurrency",
@@ -393,7 +395,10 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         delegate = attempt_archive or ArenaAttemptArchive(repo_root, db_path=attempt_archive_db_path)
         self._arena_archive = _ArenaBoundArchive(delegate)
         self._capture_arena: dict[str, str] = {}
-        self._u7_results: OrderedDict[str, tuple[str, dict[str, Any]]] = OrderedDict()
+        self._u7_results: OrderedDict[
+            str,
+            OrderedDict[str, tuple[str, dict[str, Any]]],
+        ] = OrderedDict()
         super().__init__(
             repo_root,
             attempt_archive=self._arena_archive,
@@ -550,9 +555,13 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         artifact_ref = str(archive.get("artifact_id") or "")
         if not artifact_ref:
             raise BilateralLiveRepairError("canonical Attempt Archive did not retain governed U7 evidence")
-        self._u7_results[binding_digest] = (result_digest, retained_result)
-        self._u7_results.move_to_end(binding_digest)
-        while len(self._u7_results) > 32:
+        packet_results = self._u7_results.setdefault(packet_id, OrderedDict())
+        packet_results[binding_digest] = (result_digest, retained_result)
+        packet_results.move_to_end(binding_digest)
+        while len(packet_results) > MAX_RETAINED_U7_RESULTS_PER_PACKET:
+            packet_results.popitem(last=False)
+        self._u7_results.move_to_end(packet_id)
+        while len(self._u7_results) > MAX_RETAINED_U7_PACKETS:
             self._u7_results.popitem(last=False)
         return {**retained_result, "archive_artifact_ref": artifact_ref}
 
@@ -612,7 +621,11 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         allowed = {_candidate_digest_text(item, "candidate_digest") for item in candidate_digests}
         if not allowed:
             return None
-        for result_digest, raw in reversed(self._u7_results.values()):
+        packet_results = self._u7_results.get(packet.packet_id)
+        if packet_results is None:
+            return None
+        self._u7_results.move_to_end(packet.packet_id)
+        for result_digest, raw in reversed(packet_results.values()):
             result = dict(raw)
             if digest(result) != result_digest:
                 raise BilateralLiveRepairError("retained canonical U7 result content is invalid")

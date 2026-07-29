@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import OrderedDict
 import dataclasses
 import functools
 import hashlib
@@ -1019,20 +1020,28 @@ def test_latest_u7_result_uses_only_canonical_in_process_owner_results(
     assert retained["finalization"]["human_disposition"] == "ACCEPTED"
 
     binding_digest = retained["u7_binding_digest"]
-    retained_digest, retained_row = state.live_repair._u7_results[binding_digest]
+    packet_results = state.live_repair._u7_results[packet_id]
+    retained_digest, retained_row = packet_results[binding_digest]
     retained_row["finalization"] = {"human_disposition": "TAMPERED"}
     with pytest.raises(BilateralLiveRepairError, match="content is invalid"):
         state.live_repair.latest_u7_result(
             packet_id,
             candidate_digests=[older_candidate],
         )
-    state.live_repair._u7_results[binding_digest] = (
+    packet_results[binding_digest] = (
         retained_digest,
         {
             **retained,
             "finalization": {"human_disposition": "ACCEPTED"},
         },
     )
+
+    for index in range(40):
+        state.live_repair._u7_results[f"unrelated-packet-{index}"] = OrderedDict()
+    assert state.live_repair.latest_u7_result(
+        packet_id,
+        candidate_digests=[older_candidate],
+    ) is not None
 
     fabricated_candidate = sha("fabricated-candidate")
     fabricated_binding = {
