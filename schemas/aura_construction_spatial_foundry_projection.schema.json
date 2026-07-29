@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://auraos.local/schemas/aura_construction_spatial_foundry_projection.schema.json",
+  "title": "Aura Construction Spatial Foundry Projection",
+  "allOf": [
+    {"$ref": "aura_spatial_foundry_projection_v2.schema.json"}
+  ],
+  "properties": {
+    "arena_id": {"const": "construction"},
+    "domain": {
+      "type": "object",
+      "required": ["arena_id", "domain_type"],
+      "properties": {
+        "arena_id": {"const": "construction"},
+        "domain_type": {"const": "CONSTRUCTION"}
+      }
+    },
+    "coordination_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "candidate_id",
+          "candidate_digest",
+          "base_state_digest",
+          "assessment_status",
+          "closure_count",
+          "closure_total",
+          "open_obligations",
+          "schedule_delta",
+          "budget_delta",
+          "idle_time_delta",
+          "evidence_refs",
+          "recommended_for_human_review",
+          "candidate_type",
+          "version"
+        ],
+        "properties": {
+          "candidate_type": {"const": "CONSTRUCTION_COORDINATION"},
+          "version": {"const": "AURA_CONSTRUCTION_COORDINATION_CANDIDATE_V1"},
+          "assessment_status": {
+            "enum": [
+              "HARD_BLOCKED",
+              "NEEDS_EVIDENCE",
+              "EVIDENCE_SATISFIED",
+              "READY_FOR_HUMAN_REVIEW",
+              "DEFERRED",
+              "WAIVED_BY_AUTHORIZED_HUMAN",
+              "CONTRADICTED"
+            ]
+          },
+          "recommended_for_human_review": {"type": "boolean"}
+        },
+        "not": {
+          "anyOf": [
+            {"required": ["promotion_ready"]},
+            {"required": ["runtime_proof_digest"]},
+            {"required": ["failure_class"]},
+            {"required": ["route_class"]}
+          ]
+        },
+        "additionalProperties": true
+      }
+    },
+    "domain_decision": {
+      "type": "object",
+      "required": [
+        "physical_work_authorized",
+        "professional_approval",
+        "payment_released",
+        "access_granted",
+        "automatic_execution",
+        "survey_authority",
+        "construction_truth",
+        "human_review_required"
+      ],
+      "properties": {
+        "physical_work_authorized": {"const": false},
+        "professional_approval": {"const": false},
+        "payment_released": {"const": false},
+        "access_granted": {"const": false},
+        "automatic_execution": {"const": false},
+        "survey_authority": {"const": false},
+        "construction_truth": {"const": false},
+        "human_review_required": {"const": true}
+      }
+    }
+  }
+}

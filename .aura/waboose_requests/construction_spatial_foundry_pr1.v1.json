@@ -1,0 +1,39 @@
+{
+  "version": "AURA_CODING_WABOOSE_REQUEST_V1",
+  "request_id": "construction-spatial-foundry-pr1",
+  "base_commit": "211b5c76138667861d0b789f7e863a658ff16676",
+  "objective_ref": ".aura/refactor_objectives/construction_spatial_foundry_pr1.v1.json",
+  "review_files": [
+    "aura_spatial_foundry_projection.py",
+    "aura_construction_spatial_foundry.py",
+    "aura_construction_spatial_foundry_server.py",
+    "aura_showcase/construction-spatial-foundry.js",
+    "schemas/aura_spatial_foundry_projection_v2.schema.json",
+    "schemas/aura_construction_spatial_foundry_projection.schema.json",
+    "tests/test_aura_construction_spatial_foundry.py",
+    "docs/AURA_CONSTRUCTION_SPATIAL_FOUNDRY_PR1.md"
+  ],
+  "required_checks": [
+    "canonical_owner_reuse",
+    "arena_binding_immutable",
+    "v1_projection_compatibility",
+    "candidate_type_separation",
+    "identity_currency_fail_closed",
+    "required_asset_binding",
+    "false_authority_envelope",
+    "guarded_wfst_no_execution_authority",
+    "schema_validation",
+    "focused_tests"
+  ],
+  "ignored_generated_navigation": [
+    ".aura/CODEMAP.json",
+    ".aura/CODEMAP.md",
+    "topology_map.json"
+  ],
+  "patch_authority": false,
+  "automatic_commit": false,
+  "automatic_push": false,
+  "automatic_pull_request": false,
+  "automatic_merge": false,
+  "human_review_required": true
+}

@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://auraos.local/schemas/aura_spatial_foundry_projection_v2.schema.json",
+  "title": "Aura Spatial Foundry Projection V2",
+  "type": "object",
+  "required": [
+    "version",
+    "projection_only",
+    "stale",
+    "arena_id",
+    "compatibility",
+    "domain",
+    "domain_targets",
+    "domain_artifacts",
+    "coordination_candidates",
+    "domain_decision",
+    "guarded_wfst",
+    "authority",
+    "projection_digest"
+  ],
+  "properties": {
+    "version": {"const": "AURA_SPATIAL_FOUNDRY_PROJECTION_V2"},
+    "projection_only": {"const": true},
+    "stale": {"const": false},
+    "arena_id": {"enum": ["coding", "construction", "spatial"]},
+    "compatibility": {
+      "type": "object",
+      "required": ["base_projection_version", "base_projection_digest", "v1_readable", "code_targets_retained"],
+      "properties": {
+        "base_projection_version": {"const": "AURA_SPATIAL_FOUNDRY_PROJECTION_V1"},
+        "base_projection_digest": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+        "v1_readable": {"const": true},
+        "code_targets_retained": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "domain": {
+      "type": "object",
+      "required": ["arena_id", "domain_type"],
+      "properties": {
+        "arena_id": {"enum": ["coding", "construction", "spatial"]},
+        "domain_type": {"type": "string", "minLength": 1},
+        "state_digest": {"type": "string", "pattern": "^$|^[0-9a-f]{40,64}$"},
+        "runtime_packet_digest": {"type": "string", "pattern": "^$|^[0-9a-f]{40,64}$"}
+      },
+      "additionalProperties": true
+    },
+    "domain_targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target_id", "target_type", "canonical_ref", "digest", "truth_class"],
+        "properties": {
+          "target_id": {"type": "string", "minLength": 1},
+          "target_type": {"type": "string", "minLength": 1},
+          "canonical_ref": {"type": "string", "minLength": 1},
+          "digest": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+          "truth_class": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": true
+      }
+    },
+    "domain_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["artifact_id", "artifact_type", "digest", "source_ref"],
+        "properties": {
+          "artifact_id": {"type": "string", "minLength": 1},
+          "artifact_type": {"type": "string", "minLength": 1},
+          "digest": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+          "source_ref": {"type": "string", "minLength": 1},
+          "coordinate_receipt_digest": {"type": "string", "pattern": "^$|^[0-9a-f]{40,64}$"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "coordination_candidates": {"type": "array"},
+    "domain_decision": {"type": "object"},
+    "guarded_wfst": {"type": "object"},
+    "authority": {
+      "type": "object",
+      "required": [
+        "construction_truth",
+        "survey_authority",
+        "professional_approval",
+        "physical_work_authorized",
+        "payment_released",
+        "access_granted",
+        "automatic_execution",
+        "human_review_required"
+      ],
+      "properties": {
+        "construction_truth": {"const": false},
+        "survey_authority": {"const": false},
+        "professional_approval": {"const": false},
+        "physical_work_authorized": {"const": false},
+        "payment_released": {"const": false},
+        "access_granted": {"const": false},
+        "automatic_execution": {"const": false},
+        "human_review_required": {"const": true}
+      },
+      "additionalProperties": true
+    },
+    "projection_digest": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"}
+  },
+  "additionalProperties": true
+}
