@@ -68,15 +68,15 @@ jobs:
 
           path = Path("scripts/pr240_resolve_open_reviews.py")
           text = path.read_text(encoding="utf-8")
-          old_helper = '''def replace_once(path: str, old: str, new: str) -> None:
+          old_helper = """def replace_once(path: str, old: str, new: str) -> None:
               target = ROOT / path
               text = target.read_text(encoding="utf-8")
               count = text.count(old)
               if count != 1:
                   raise RuntimeError(f"{path}: expected exactly one replacement site, found {count}")
               target.write_text(text.replace(old, new, 1), encoding="utf-8")
-          '''
-          new_helper = '''def replace_once(
+          """
+          new_helper = """def replace_once(
               path: str,
               old: str,
               new: str,
@@ -90,24 +90,20 @@ jobs:
                       f"{path}: expected {expected_count} replacement site(s), found {count}"
                   )
               target.write_text(text.replace(old, new, 1), encoding="utf-8")
-          '''
+          """
           if text.count(old_helper) != 1:
               raise RuntimeError("PR240 patch helper drifted")
           text = text.replace(old_helper, new_helper, 1)
-          old_tail = '''        target_symbols=["BilateralLiveRepairService", "BoundedIncidentCapture"],
-          ''',
-          )
-          # The same old target block occurs in atomic inventory and is replaced once more.
-          '''
-          new_tail = '''        target_symbols=["BilateralLiveRepairService", "BoundedIncidentCapture"],
-          ''',
-              2,
-          )
-          # The same old target block occurs in atomic inventory and is replaced once more.
-          '''
-          if text.count(old_tail) != 1:
-              raise RuntimeError("PR240 duplicate harness target call drifted")
-          path.write_text(text.replace(old_tail, new_tail, 1), encoding="utf-8")
+
+          lines = text.splitlines()
+          marker = "# The same old target block occurs in atomic inventory and is replaced once more."
+          if lines.count(marker) != 1:
+              raise RuntimeError("PR240 duplicate harness target marker drifted")
+          marker_index = lines.index(marker)
+          if marker_index < 1 or lines[marker_index - 1].strip() != ")":
+              raise RuntimeError("PR240 duplicate harness target call boundary drifted")
+          lines.insert(marker_index - 1, "    2,")
+          path.write_text("\n".join(lines) + "\n", encoding="utf-8")
           PY
 
           python -m py_compile scripts/pr240_resolve_open_reviews.py
@@ -118,14 +114,14 @@ jobs:
 
           path = Path(".github/workflows/aura-review-learning.yml")
           text = path.read_text(encoding="utf-8")
-          old = '''      - name: Install focused verifier dependencies
+          old = """      - name: Install focused verifier dependencies
                   run: python -m pip install --disable-pip-version-check pytest jsonschema ruff
-          '''
-          new = '''      - name: Install focused verifier dependencies
+          """
+          new = """      - name: Install focused verifier dependencies
                   run: |
                     python -m pip install --disable-pip-version-check -r requirements.txt
                     python -m pip install --disable-pip-version-check pytest jsonschema ruff pyyaml
-          '''
+          """
           if text.count(old) != 1:
               raise RuntimeError("Aura Review Learning dependency step drifted")
           path.write_text(text.replace(old, new, 1), encoding="utf-8")
