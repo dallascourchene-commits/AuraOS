@@ -10,14 +10,15 @@ before applying runtime thermal gates.
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Iterable
 import os
-import shutil
-import subprocess  # nosec B404 - invoked with a resolved executable and no shell
 from pathlib import Path
+import shutil
+
+# Only a resolved PowerShell executable is invoked, with shell expansion disabled.
+import subprocess  # nosec B404
 from threading import Lock, Thread
 from time import monotonic
-from typing import Iterable
-
 
 DEFAULT_THERMAL_FALLBACK_C = 39.0
 MIN_VALID_TEMP_C = -40.0
@@ -96,7 +97,7 @@ def _parse_temp_c(raw: object, *, unit_hint: str = "auto") -> float | None:
 
 def _discover_thermal_paths() -> tuple[Path, ...]:
     """Discover and briefly cache Linux/Android thermal and laptop hwmon paths."""
-    global _THERMAL_PATHS_CACHE, _THERMAL_PATHS_CACHE_EXPIRES_AT
+    global _THERMAL_PATHS_CACHE, _THERMAL_PATHS_CACHE_EXPIRES_AT  # noqa: PLW0603
 
     now = monotonic()
     with _THERMAL_PATHS_CACHE_LOCK:
@@ -168,7 +169,8 @@ def _run_windows_acpi_probe() -> float | None:
         "ForEach-Object { $_.CurrentTemperature }"
     )
     try:
-        completed = subprocess.run(  # nosec B603 - fixed executable/arguments, shell disabled
+        # The executable and arguments are fixed; caller data never enters the command.
+        completed = subprocess.run(  # nosec B603
             [
                 powershell,
                 "-NoProfile",
@@ -196,8 +198,8 @@ def _run_windows_acpi_probe() -> float | None:
 
 
 def _store_windows_acpi_probe_result(value: float | None) -> None:
-    global _WINDOWS_ACPI_CACHE_C, _WINDOWS_ACPI_CACHE_READY
-    global _WINDOWS_ACPI_CACHE_EXPIRES_AT, _WINDOWS_ACPI_PROBE_IN_FLIGHT
+    global _WINDOWS_ACPI_CACHE_C, _WINDOWS_ACPI_CACHE_READY  # noqa: PLW0603
+    global _WINDOWS_ACPI_CACHE_EXPIRES_AT, _WINDOWS_ACPI_PROBE_IN_FLIGHT  # noqa: PLW0603
 
     ttl = (
         _WINDOWS_ACPI_CACHE_TTL_SECONDS
@@ -217,7 +219,7 @@ def _windows_acpi_probe_worker() -> None:
 
 def _read_windows_acpi_temp_c() -> float | None:
     """Return cached Windows ACPI data and avoid blocking active event loops."""
-    global _WINDOWS_ACPI_PROBE_IN_FLIGHT
+    global _WINDOWS_ACPI_PROBE_IN_FLIGHT  # noqa: PLW0603
 
     if os.name != "nt":
         return None
