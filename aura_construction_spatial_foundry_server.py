@@ -7,10 +7,11 @@ asset intake, and V2 domain projection while retaining all legacy routes.
 from __future__ import annotations
 
 import argparse
+import json
+import logging
 from collections.abc import Callable, Mapping
 from dataclasses import asdict
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import json
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -40,6 +41,7 @@ from scripts.aura_runtime_profile_v2_adapter import BilateralRuntimeProfileError
 
 CONSTRUCTION_FOUNDRY_SERVER_VERSION = "AURA_CONSTRUCTION_SPATIAL_FOUNDRY_SERVER_V1"
 STATIC_DIR = Path(__file__).resolve().parent / "aura_showcase"
+LOGGER = logging.getLogger(__name__)
 
 
 class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
@@ -115,10 +117,13 @@ class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
 
 
 def _identity_provider_from_path(path: str | Path) -> Callable[[], BilateralIdentity]:
-    resolved = Path(path).resolve()
+    source = Path(path)
+    if source.is_symlink():
+        raise BilateralLiveRepairError("trusted identity packet must not be a symlink")
+    resolved = source.resolve()
 
     def provide() -> BilateralIdentity:
-        if not resolved.is_file() or resolved.is_symlink():
+        if not resolved.is_file():
             raise BilateralLiveRepairError("trusted identity packet is unavailable")
         try:
             value = json.loads(resolved.read_text(encoding="utf-8"))
@@ -142,11 +147,53 @@ def _is_v2_projection(body: Mapping[str, Any]) -> bool:
                 "construction",
                 "coordination_candidates",
                 "domain_decision",
-                "transition_state",
-                "transition_evidence",
             )
         )
     )
+
+
+def _derive_transition_state(
+    packet: Any,
+    attempts: list[RepairCandidateResult],
+    preview: PreviewRollbackReceipt | None,
+    u7_result: Mapping[str, Any] | None,
+) -> tuple[str, dict[str, bool]]:
+    dissolution = packet.dissolution_receipt
+    capture_dissolved = (
+        dissolution.terminal_state == "DISSOLVED"
+        and dissolution.buffers_cleared is True
+        and dissolution.timers_released is True
+        and dissolution.listeners_released is True
+    )
+    evidence = {
+        "identity_current": True,
+        "operator_authorized": packet.privacy_receipt.get("unrestricted_recording") is False,
+        "incident_marker_present": packet.marker_event.event_type == "INCIDENT_MARKER",
+        "capture_dissolved": capture_dissolved,
+        "required_assets_bound": bool(packet.required_assets),
+        "runtime_proof_retained": bool(attempts),
+        "repair_attempt_retained": bool(attempts),
+        "preview_receipt_retained": preview is not None,
+        "u7_current_reproof_retained": bool(u7_result),
+        "human_disposition_retained": bool(
+            dict((u7_result or {}).get("finalization") or {}).get("human_disposition")
+        ),
+        "resources_dissolved": capture_dissolved,
+    }
+    state = "INCIDENT_MARKED"
+    if evidence["capture_dissolved"] and evidence["required_assets_bound"]:
+        state = "REPLAY_READY"
+    if evidence["runtime_proof_retained"]:
+        state = "RUNTIME_PROVEN"
+    if evidence["repair_attempt_retained"]:
+        state = "REPAIR_ASSESSED"
+    if evidence["preview_receipt_retained"]:
+        state = "PREVIEWED"
+    if evidence["u7_current_reproof_retained"]:
+        state = "REPROOF_RETAINED"
+    if evidence["human_disposition_retained"] and evidence["resources_dissolved"]:
+        state = "DISSOLVED"
+    return state, evidence
 
 
 def dispatch_construction_foundry_request(
@@ -170,6 +217,10 @@ def dispatch_construction_foundry_request(
 
         if method == "POST":
             reject_raw_identity_currency_claim(body)
+            if "transition_state" in body or "transition_evidence" in body:
+                raise BilateralLiveRepairError(
+                    "browser requests cannot supply guarded WFST state or evidence"
+                )
 
         if method == "POST" and route == "/api/showcase/live-repair/capture/start":
             if body.get("identity_handle"):
@@ -185,7 +236,7 @@ def dispatch_construction_foundry_request(
 
         if method == "POST" and route == "/api/showcase/live-repair/attempt":
             packet_id = str(body.get("packet_id") or "")
-            packet = state.live_repair._packet(packet_id)
+            packet = state.live_repair.packet(packet_id)
             identity = state.resolve_request_identity(body, expected=packet.identity)
             body["current_identity"] = asdict(identity)
             body["arena_id"] = state.live_repair.arena_for_packet(packet_id)
@@ -194,7 +245,7 @@ def dispatch_construction_foundry_request(
 
         if method == "POST" and route == "/api/showcase/live-repair/preview":
             packet_id = str(body.get("packet_id") or "")
-            packet = state.live_repair._packet(packet_id)
+            packet = state.live_repair.packet(packet_id)
             identity = state.resolve_request_identity(body, expected=packet.identity)
             body["current_identity"] = asdict(identity)
             body.pop("identity_handle", None)
@@ -206,7 +257,7 @@ def dispatch_construction_foundry_request(
             and _is_v2_projection(body)
         ):
             packet_id = str(body.get("packet_id") or "")
-            packet = state.live_repair._packet(packet_id)
+            packet = state.live_repair.packet(packet_id)
             identity = state.resolve_request_identity(body, expected=packet.identity)
             attempt_ids = [str(item) for item in body.get("attempt_ids") or []]
             attempts: list[RepairCandidateResult] = (
@@ -224,6 +275,14 @@ def dispatch_construction_foundry_request(
                 if preview_id
                 else state.live_repair.latest_preview(packet_id)
             )
+            u7_result = (
+                body.get("u7_result")
+                if isinstance(body.get("u7_result"), Mapping)
+                else None
+            )
+            transition_state, transition_evidence = _derive_transition_state(
+                packet, attempts, preview, u7_result
+            )
             projection = state.live_repair.build_projection_v2(
                 packet_id=packet_id,
                 intent=body.get("intent") if isinstance(body.get("intent"), Mapping) else {},
@@ -233,7 +292,7 @@ def dispatch_construction_foundry_request(
                 ],
                 attempts=attempts,
                 preview=preview,
-                u7_result=body.get("u7_result") if isinstance(body.get("u7_result"), Mapping) else None,
+                u7_result=u7_result,
                 source_drilldown=[
                     item for item in body.get("source_drilldown") or [] if isinstance(item, Mapping)
                 ],
@@ -263,12 +322,8 @@ def dispatch_construction_foundry_request(
                     if isinstance(body.get("domain_decision"), Mapping)
                     else None
                 ),
-                transition_state=str(body.get("transition_state") or "IDLE"),
-                transition_evidence=(
-                    body.get("transition_evidence")
-                    if isinstance(body.get("transition_evidence"), Mapping)
-                    else {}
-                ),
+                transition_state=transition_state,
+                transition_evidence=transition_evidence,
             )
             return _json(
                 200,
@@ -281,7 +336,7 @@ def dispatch_construction_foundry_request(
 
         if method == "POST" and route == "/api/showcase/live-repair/projection":
             packet_id = str(body.get("packet_id") or "")
-            packet = state.live_repair._packet(packet_id)
+            packet = state.live_repair.packet(packet_id)
             identity = state.resolve_request_identity(body, expected=packet.identity)
             body["current_identity"] = asdict(identity)
             body.pop("identity_handle", None)
@@ -294,14 +349,11 @@ def dispatch_construction_foundry_request(
         ):
             body["arena_id"] = "construction"
 
-    except (
-        BilateralLiveRepairError,
-        BilateralRuntimeProfileError,
-        ValueError,
-        TypeError,
-        KeyError,
-    ) as exc:
+    except (BilateralLiveRepairError, BilateralRuntimeProfileError, ValueError) as exc:
         return _error(str(exc), 409)
+    except Exception:  # noqa: BLE001
+        LOGGER.exception("unexpected Construction Foundry request failure")
+        return _error("internal Construction Foundry error", 500)
 
     return base_dispatch_live_repair_request(state, method, raw_path, body)
 
@@ -337,9 +389,10 @@ def _static_response(route: str) -> tuple[int, str, bytes]:
             body = body.replace(
                 b'<section class="foundry-authority"',
                 _CONSTRUCTION_MARKUP + b'\n  <section class="foundry-authority"',
+                1,
             )
         if b"construction-spatial-foundry.js" not in body:
-            body = body.replace(b"</body>", _SCRIPT + b"</body>")
+            body = body.replace(b"</body>", _SCRIPT + b"</body>", 1)
     return status, content_type, body
 
 
@@ -386,7 +439,7 @@ def make_handler(state: ConstructionFoundryShowcaseState):
                 )
             )
 
-        def log_message(self, format: str, *args: Any) -> None:
+        def log_message(self, message_format: str, *args: Any) -> None:
             return
 
     return Handler
@@ -417,6 +470,7 @@ def serve(
         print(f"Aura Construction Spatial Foundry: http://{host}:{port}")
         server.serve_forever()
     finally:
+        server.server_close()
         state.close()
 
 
