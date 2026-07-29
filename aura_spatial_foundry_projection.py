@@ -56,6 +56,7 @@ _AUTHORITY_TOKENS = frozenset(
         "visualtruth",
     }
 )
+_AUTHORITY_METADATA_TOKENS = frozenset({"authorityclass", "authorityroute"})
 _V1_FALSE_AUTHORITY = {
     "visual_truth": False,
     "patch": False,
@@ -154,7 +155,7 @@ def validate_foundry_arena(value: Any) -> str:
 
 
 def _required_text(value: Any, name: str, *, limit: int = 4096) -> str:
-    if type(value) is not str or not value.strip():
+    if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{name} must be a non-empty string")
     text = value.strip()
     if len(text.encode("utf-8")) > limit:
@@ -195,7 +196,14 @@ def _authority_path(
     if isinstance(value, Mapping):
         for key, item in value.items():
             child = f"{path}.{key}"
-            if _normalize_key(key) in _AUTHORITY_TOKENS and item is not False:
+            normalized = _normalize_key(key)
+            if (
+                normalized in _AUTHORITY_TOKENS
+                or (
+                    "authority" in normalized
+                    and normalized not in _AUTHORITY_METADATA_TOKENS
+                )
+            ) and item is not False:
                 return child
             found = _authority_path(item, child, depth=depth + 1)
             if found:
@@ -463,10 +471,13 @@ def build_spatial_foundry_projection_v2(
     ):
         raise BilateralLiveRepairError("guarded WFST projection grants forbidden authority")
     try:
+        current_state = transitions.get("current_state")
+        if not isinstance(current_state, str):
+            raise ValueError("guarded WFST current_state must be a string")
         canonical_transitions = _clean_mapping(
             project_guarded_wfst(
                 arena_id=arena,
-                current_state=transitions.get("current_state"),
+                current_state=current_state,
                 evidence=transitions.get("evidence"),
             ),
             "canonical_guarded_wfst",

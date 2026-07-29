@@ -30,6 +30,8 @@ from aura_construction_spatial_foundry import (
     TrustedBilateralIdentityBroker,
     reject_raw_identity_currency_claim,
 )
+from aura_construction_state import ConstructionProjectState
+from aura_event_contracts import stable_digest
 from aura_showcase_live_repair_server import (
     DEFAULT_HOST,
     DEFAULT_PORT,
@@ -44,6 +46,7 @@ from aura_showcase_live_repair_server import (
 from aura_showcase_live_repair_server import (
     dispatch_live_repair_request as base_dispatch_live_repair_request,
 )
+from aura_spatial_receipts import validate_spatial_dissolution_receipt_payload
 from scripts.aura_runtime_profile_v2_adapter import BilateralRuntimeProfileError
 
 CONSTRUCTION_FOUNDRY_SERVER_VERSION = "AURA_CONSTRUCTION_SPATIAL_FOUNDRY_SERVER_V1"
@@ -119,7 +122,10 @@ class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
                 attempt_archive=self.attempt_archive,
                 current_identity_resolver=self._current_identity_resolver,
             )
-        return self._live_repair
+        retained = self._live_repair
+        if not isinstance(retained, ArenaBoundBilateralLiveRepairService):
+            raise BilateralLiveRepairError("Construction Foundry live-repair service type is invalid")
+        return retained
 
     def issue_current_identity_summary(self) -> dict[str, Any]:
         if self._identity_broker is None:
@@ -177,19 +183,114 @@ class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
 
 
 def _identity_provider_from_path(path: str | Path) -> Callable[[], BilateralIdentity]:
-    source = Path(path).absolute()
-    if source.is_symlink():
-        raise BilateralLiveRepairError("trusted identity packet must not be a symlink")
-    resolved = source.resolve()
+    load = _trusted_mapping_provider_from_path(path, "identity packet")
 
     def provide() -> BilateralIdentity:
+        return BilateralIdentity.from_mapping(load())
+
+    return provide
+
+
+def _trusted_mapping_provider_from_path(
+    path: str | Path,
+    label: str,
+) -> Callable[[], dict[str, Any]]:
+    source = Path(path).absolute()
+    if source.is_symlink():
+        raise BilateralLiveRepairError(f"trusted {label} must not be a symlink")
+    resolved = source.resolve()
+
+    def provide() -> dict[str, Any]:
         if source.is_symlink() or source.resolve() != resolved or not source.is_file():
-            raise BilateralLiveRepairError("trusted identity packet is unavailable")
+            raise BilateralLiveRepairError(f"trusted {label} is unavailable")
         try:
             value = json.loads(source.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
-            raise BilateralLiveRepairError("trusted identity packet is invalid") from exc
-        return BilateralIdentity.from_mapping(value)
+            raise BilateralLiveRepairError(f"trusted {label} is invalid") from exc
+        if not isinstance(value, dict):
+            raise BilateralLiveRepairError(f"trusted {label} must be a JSON object")
+        return value
+
+    return provide
+
+
+def _construction_state_digest_provider_from_path(
+    path: str | Path,
+) -> Callable[[str], str]:
+    load = _trusted_mapping_provider_from_path(path, "Construction state packet")
+
+    def provide(_packet_id: str) -> str:
+        try:
+            raw = load()
+            state = ConstructionProjectState.from_dict(raw)
+        except (KeyError, TypeError, ValueError) as exc:
+            raise BilateralLiveRepairError("trusted Construction state packet is invalid") from exc
+        canonical = json.loads(json.dumps(state.to_dict(), sort_keys=True))
+        if canonical != raw:
+            raise BilateralLiveRepairError("trusted Construction state packet is not canonical")
+        return state.state_digest
+
+    return provide
+
+
+def _presentation_dissolution_provider_from_path(
+    path: str | Path,
+) -> Callable[[str], bool]:
+    load = _trusted_mapping_provider_from_path(path, "presentation dissolution packet")
+
+    def provide(packet_id: str) -> bool:
+        raw = load()
+        if raw.get("packet_id") != packet_id:
+            raise BilateralLiveRepairError("trusted presentation dissolution packet belongs to another replay packet")
+        dissolution_raw = raw.get("dissolution_receipt")
+        cleanup = raw.get("renderer_cleanup_receipt")
+        if not isinstance(dissolution_raw, Mapping) or not isinstance(cleanup, Mapping):
+            raise BilateralLiveRepairError("trusted presentation dissolution packet lacks canonical cleanup receipts")
+        try:
+            dissolution = validate_spatial_dissolution_receipt_payload(dissolution_raw)
+        except (KeyError, TypeError, ValueError) as exc:
+            raise BilateralLiveRepairError("trusted presentation dissolution receipt is invalid") from exc
+        required_cleanup = {
+            "state",
+            "renderer_allocated",
+            "evidence_class",
+            "session_id",
+            "scene_digest",
+            "render_plan_digest",
+            "renderer_authority",
+            "execution_authority",
+            "renderer_resources_released",
+            "renderer_resources_released_verified",
+            "raw_sensor_data_retained",
+        }
+        if set(cleanup) != required_cleanup:
+            raise BilateralLiveRepairError("trusted renderer cleanup receipt has unexpected fields")
+        renderer_allocated = cleanup.get("renderer_allocated")
+        expected_state = "DISPOSED" if renderer_allocated is True else "NOT_ALLOCATED"
+        expected_released = renderer_allocated is True
+        if (
+            not isinstance(renderer_allocated, bool)
+            or cleanup.get("state") != expected_state
+            or cleanup.get("evidence_class") != "CLIENT_REPORTED"
+            or cleanup.get("session_id") != dissolution.session_id
+            or cleanup.get("scene_digest") != dissolution.scene_digest
+            or cleanup.get("render_plan_digest") != dissolution.render_plan_digest
+            or cleanup.get("renderer_authority") is not False
+            or cleanup.get("execution_authority") is not False
+            or cleanup.get("renderer_resources_released") is not expected_released
+            or cleanup.get("renderer_resources_released_verified") is not False
+            or cleanup.get("raw_sensor_data_retained") is not False
+        ):
+            raise BilateralLiveRepairError("trusted renderer cleanup receipt is invalid or stale")
+        supplied_cleanup_digest = raw.get("renderer_cleanup_digest")
+        if supplied_cleanup_digest != stable_digest(cleanup, digest_size=32):
+            raise BilateralLiveRepairError("trusted renderer cleanup digest is invalid")
+        return (
+            dissolution.to_dict()["terminal_state"] == "DISSOLVED"
+            and raw.get("renderer_cleanup_observed") is True
+            and raw.get("lease_released") is True
+            and raw.get("renderer_resource_boundary_satisfied") is True
+        )
 
     return provide
 
@@ -517,7 +618,7 @@ def dispatch_construction_foundry_request(
         KeyError,
     ) as exc:
         return _error(str(exc), 409)
-    except Exception:
+    except Exception:  # pylint: disable=broad-exception-caught
         LOGGER.exception("unexpected Construction Foundry request failure")
         return _error("internal Construction Foundry error", 500)
 
@@ -606,7 +707,7 @@ def make_handler(state: ConstructionFoundryShowcaseState):
                 return
             self._send(*dispatch_construction_foundry_request(state, "POST", self.path, payload))
 
-        def log_message(self, message_format: str, *args: Any) -> None:
+        def log_message(self, format: str, *args: Any) -> None:
             return
 
     return Handler
@@ -620,13 +721,25 @@ def serve(
     demo_project: str,
     auto_start: bool,
     trusted_identity_packet: str | Path | None = None,
+    construction_state_packet: str | Path | None = None,
+    presentation_dissolution_packet: str | Path | None = None,
 ) -> None:
     provider = _identity_provider_from_path(trusted_identity_packet) if trusted_identity_packet else None
+    state_provider = (
+        _construction_state_digest_provider_from_path(construction_state_packet) if construction_state_packet else None
+    )
+    dissolution_provider = (
+        _presentation_dissolution_provider_from_path(presentation_dissolution_packet)
+        if presentation_dissolution_packet
+        else None
+    )
     state = ConstructionFoundryShowcaseState(
         repo_root,
         demo_project=demo_project,
         auto_start=auto_start,
         trusted_identity_provider=provider,
+        construction_state_digest_provider=state_provider,
+        presentation_dissolution_provider=dissolution_provider,
     )
     server = HTTPServer((host, port), make_handler(state))
     try:
@@ -644,6 +757,8 @@ def main() -> int:
     parser.add_argument("--repo-root", default=".")
     parser.add_argument("--demo-project", default="winnipeg_pathways")
     parser.add_argument("--trusted-identity-packet", default="")
+    parser.add_argument("--construction-state-packet", default="")
+    parser.add_argument("--presentation-dissolution-packet", default="")
     parser.add_argument("--no-auto-start", action="store_true")
     args = parser.parse_args()
     serve(
@@ -653,6 +768,8 @@ def main() -> int:
         demo_project=args.demo_project,
         auto_start=not args.no_auto_start,
         trusted_identity_packet=args.trusted_identity_packet or None,
+        construction_state_packet=args.construction_state_packet or None,
+        presentation_dissolution_packet=args.presentation_dissolution_packet or None,
     )
     return 0
 

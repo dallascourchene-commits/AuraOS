@@ -413,6 +413,26 @@ class ArenaAttemptArchive:
         decoded["copy_diff"] = decoded.get("candidate_diff", "")
         return decoded
 
+    def find_preview(
+        self,
+        *,
+        workflow_id: str,
+        preview_id: str,
+    ) -> dict[str, Any] | None:
+        """Return an exact archived preview without a newest-row scan ceiling."""
+
+        row = self._conn.execute(
+            """SELECT artifact_id
+               FROM arena_attempt_artifacts
+               WHERE workflow_id=?
+                 AND route='bilateral-live-repair/preview-rollback'
+                 AND json_extract(result_json, '$.preview.preview_id')=?
+               ORDER BY created_at DESC
+               LIMIT 1""",
+            (str(workflow_id), str(preview_id)),
+        ).fetchone()
+        return self.get(str(row["artifact_id"])) if row is not None else None
+
     def export_jsonl(
         self,
         path: str | Path,

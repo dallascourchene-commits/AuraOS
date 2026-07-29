@@ -10,7 +10,7 @@ from pathlib import Path
 import subprocess
 from types import SimpleNamespace
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, ValidationError
 import pytest
 from referencing import Registry, Resource
 
@@ -22,7 +22,13 @@ from aura_bilateral_live_repair_foundry import (
 )
 from aura_bilateral_live_repair_foundry_contracts import PROJECTION_VERSION, digest
 from aura_construction_adapter import ConstructionCoordinationCandidate
-from aura_construction_contracts import ConstructionScope
+from aura_construction_contracts import (
+    ConstructionAuthorityClass,
+    ConstructionEvidence,
+    ConstructionEvidenceClass,
+    ConstructionPrivacyClass,
+    ConstructionScope,
+)
 from aura_construction_spatial_foundry import (
     ArenaBoundBilateralLiveRepairService,
     ConstructionCoordinationCandidateArtifact,
@@ -36,7 +42,13 @@ from aura_construction_spatial_foundry_server import (
     _static_response,
     dispatch_construction_foundry_request,
 )
-from aura_event_contracts import stable_digest
+from aura_construction_state import (
+    GENESIS_CHAIN_DIGEST,
+    ConstructionEvent,
+    replay_construction_events,
+)
+from aura_event_contracts import ActorType, MeasurementClass, stable_digest
+from aura_spatial_contracts import SpatialDissolutionReceipt
 from aura_spatial_foundry_projection import (
     SPATIAL_FOUNDRY_PROJECTION_V2,
     build_spatial_foundry_projection_v2,
@@ -237,7 +249,22 @@ def test_v2_projection_defaults_complete_false_decision_and_validates_schema():
     assert result["domain_decision"]["survey_authority"] is False
     assert result["domain_decision"]["construction_truth"] is False
     validate_construction_schema(result)
-    assert _construction_validator() is _construction_validator()
+    validator = _construction_validator()
+    assert validator is _construction_validator()
+
+
+def test_construction_schema_rejects_partial_domain_decision_bindings():
+    result = build_spatial_foundry_projection_v2(
+        base_projection=base_projection(),
+        arena_id="construction",
+        domain={"arena_id": "construction", "domain_type": "CONSTRUCTION"},
+    )
+    result["domain_decision"] = {
+        **result["domain_decision"],
+        "status": "READY_FOR_HUMAN_REVIEW",
+    }
+    with pytest.raises(ValidationError):
+        validate_construction_schema(result)
 
 
 def test_v2_projection_builds_valid_default_wfst_and_rejects_empty_explicit_wfst():
@@ -357,6 +384,31 @@ def test_v2_projection_scans_canonicalized_dataclasses_for_authority():
                 "arena_id": "construction",
                 "domain_type": "CONSTRUCTION",
                 "nested": NestedAuthority(),
+            },
+        )
+
+
+@pytest.mark.parametrize(
+    "authority_key",
+    [
+        "authority",
+        "professional_authority",
+        "physical_work_authority",
+        "production_authority",
+        "custom_authority",
+        "authority_claim",
+        "has_authority",
+    ],
+)
+def test_v2_projection_rejects_authority_aliases(authority_key: str):
+    with pytest.raises(ValueError, match="authority"):
+        build_spatial_foundry_projection_v2(
+            base_projection=base_projection(),
+            arena_id="construction",
+            domain={
+                "arena_id": "construction",
+                "domain_type": "CONSTRUCTION",
+                "nested": {authority_key: True},
             },
         )
 
@@ -641,6 +693,17 @@ def test_required_assets_and_exact_arena_survive_capture_and_preview(tmp_path: P
             environment_class="LOCAL_EPHEMERAL",
             rollback_preauthorized=False,
         )
+        for index in range(501):
+            service.attempt_archive.record(
+                arena_id="construction",
+                route="bilateral-live-repair/preview-rollback",
+                request={"packet_id": packet_id},
+                result={
+                    "ok": True,
+                    "preview": {"preview_id": f"NEWER-{index:03d}"},
+                },
+                workflow_state={"workflow_id": packet_id},
+            )
         assert service.preview_for_packet(packet_id, first_preview.preview_id) == first_preview
         preview = service.attempt_archive.list(
             workflow_id=packet_id,
@@ -938,6 +1001,138 @@ def test_v2_endpoint_resolves_construction_state_at_server_boundary(
     )
     assert status == 409
     assert "differs from trusted Construction state" in result["error"]
+
+
+def test_executable_state_and_dissolution_file_providers_are_canonical(
+    tmp_path: Path,
+):
+    scope = ConstructionScope("project-1", "zone-1", "work-package-1")
+    evidence = ConstructionEvidence.create(
+        scope=scope,
+        subject_id="wall-1",
+        evidence_class=ConstructionEvidenceClass.DOCUMENT,
+        source_ref="source:test",
+        payload_digest=sha("payload"),
+        measurement_class=MeasurementClass.EMPIRICAL,
+        confidence=0.9,
+        authority_class=ConstructionAuthorityClass.INFORMATIVE,
+        privacy_class=ConstructionPrivacyClass.PROJECT,
+        observed_at=1.0,
+        expires_at=50.0,
+    )
+    event = ConstructionEvent.create(
+        ledger_id="construction/project-1",
+        sequence_number=1,
+        previous_chain_digest=GENESIS_CHAIN_DIGEST,
+        trace_id="trace-1",
+        record=evidence,
+        actor_id="human:test",
+        actor_type=ActorType.HUMAN,
+        created_at=2.0,
+    )
+    construction_state = replay_construction_events((event,))
+    state_path = tmp_path / "construction-state.json"
+    state_path.write_text(json.dumps(construction_state.to_dict()), encoding="utf-8")
+    state_provider = construction_server._construction_state_digest_provider_from_path(state_path)
+    assert state_provider("IRP-1") == construction_state.state_digest
+
+    dissolution = SpatialDissolutionReceipt(
+        receipt_id="dissolution:test",
+        session_id="spatial-session:test",
+        scene_digest=sha("scene"),
+        render_plan_digest=sha("plan"),
+        terminal_state="DISSOLVED",
+        reason_code="SPATIAL_ARENA_COMPLETE",
+        sequence=1,
+        source_refs=("owner:test",),
+    ).to_dict()
+    cleanup = {
+        "state": "DISPOSED",
+        "renderer_allocated": True,
+        "evidence_class": "CLIENT_REPORTED",
+        "session_id": dissolution["session_id"],
+        "scene_digest": dissolution["scene_digest"],
+        "render_plan_digest": dissolution["render_plan_digest"],
+        "renderer_authority": False,
+        "execution_authority": False,
+        "renderer_resources_released": True,
+        "renderer_resources_released_verified": False,
+        "raw_sensor_data_retained": False,
+    }
+    packet = {
+        "packet_id": "IRP-1",
+        "dissolution_receipt": dissolution,
+        "renderer_cleanup_receipt": cleanup,
+        "renderer_cleanup_digest": stable_digest(cleanup, digest_size=32),
+        "renderer_cleanup_observed": True,
+        "lease_released": True,
+        "renderer_resource_boundary_satisfied": True,
+    }
+    dissolution_path = tmp_path / "presentation-dissolution.json"
+    dissolution_path.write_text(json.dumps(packet), encoding="utf-8")
+    dissolution_provider = construction_server._presentation_dissolution_provider_from_path(dissolution_path)
+    assert dissolution_provider("IRP-1") is True
+    with pytest.raises(BilateralLiveRepairError, match="another replay packet"):
+        dissolution_provider("IRP-2")
+
+
+def test_serve_wires_configured_state_and_dissolution_providers(
+    tmp_path: Path,
+    monkeypatch,
+):
+    captured: dict[str, object] = {}
+
+    def state_provider(_packet_id):
+        return sha("state")
+
+    def dissolution_provider(_packet_id):
+        return True
+
+    class FakeState:
+        def __init__(self, _repo_root, **kwargs):
+            captured.update(kwargs)
+
+        def close(self):
+            captured["state_closed"] = True
+
+    class FakeServer:
+        def __init__(self, _address, _handler):
+            pass
+
+        def serve_forever(self):
+            captured["served"] = True
+
+        def server_close(self):
+            captured["server_closed"] = True
+
+    monkeypatch.setattr(
+        construction_server,
+        "_construction_state_digest_provider_from_path",
+        lambda _path: state_provider,
+    )
+    monkeypatch.setattr(
+        construction_server,
+        "_presentation_dissolution_provider_from_path",
+        lambda _path: dissolution_provider,
+    )
+    monkeypatch.setattr(construction_server, "ConstructionFoundryShowcaseState", FakeState)
+    monkeypatch.setattr(construction_server, "HTTPServer", FakeServer)
+    monkeypatch.setattr(construction_server, "make_handler", lambda _state: object())
+
+    construction_server.serve(
+        host="127.0.0.1",
+        port=0,
+        repo_root=tmp_path,
+        demo_project="demo",
+        auto_start=False,
+        construction_state_packet=tmp_path / "state.json",
+        presentation_dissolution_packet=tmp_path / "dissolution.json",
+    )
+    assert captured["construction_state_digest_provider"] is state_provider
+    assert captured["presentation_dissolution_provider"] is dissolution_provider
+    assert captured["served"] is True
+    assert captured["server_closed"] is True
+    assert captured["state_closed"] is True
 
 
 def test_v2_endpoint_queries_u7_only_for_the_selected_preview_candidate(
@@ -1400,7 +1595,8 @@ def test_composed_static_surface_adds_trusted_identity_and_required_asset_intake
     assert b"if (adapter.legacyFallbackConfirmed) return '';" in script
     assert b"identityBrokerUnavailable(error)" in script
     assert b"state_digest: adapter.identitySummary" not in script
-    assert b"...(next.domain || {})" in script
+    assert b"...(next.domain || {})" not in script
+    assert b"const domain = hasOwn(next, 'domain') ? next.domain : {};" in script
 
 
 def test_browser_composition_rejects_present_malformed_v2_evidence():

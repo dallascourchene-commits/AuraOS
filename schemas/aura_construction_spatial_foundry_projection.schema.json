@@ -122,6 +122,9 @@
         "recommended_for_human_review": {"type": "boolean"},
         "reasons": {"type": "array", "items": {"type": "string"}},
         "open_obligations": {"type": "array", "items": {"type": "string"}},
+        "version": {
+          "const": "AURA_CONSTRUCTION_DOMAIN_DECISION_ENVELOPE_V1"
+        },
         "physical_work_authorized": {"const": false},
         "professional_approval": {"const": false},
         "payment_released": {"const": false},
@@ -130,7 +133,34 @@
         "survey_authority": {"const": false},
         "construction_truth": {"const": false},
         "human_review_required": {"const": true}
-      }
+      },
+      "oneOf": [
+        {
+          "not": {
+            "anyOf": [
+              {"required": ["status"]},
+              {"required": ["candidate_id"]},
+              {"required": ["candidate_digest"]},
+              {"required": ["recommended_for_human_review"]},
+              {"required": ["reasons"]},
+              {"required": ["open_obligations"]},
+              {"required": ["version"]}
+            ]
+          }
+        },
+        {
+          "required": [
+            "status",
+            "candidate_id",
+            "candidate_digest",
+            "recommended_for_human_review",
+            "reasons",
+            "open_obligations",
+            "version"
+          ]
+        }
+      ],
+      "additionalProperties": false
     }
   }
 }

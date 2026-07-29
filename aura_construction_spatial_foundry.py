@@ -13,7 +13,7 @@ from dataclasses import asdict, dataclass, fields
 from pathlib import Path
 import re
 import secrets
-from typing import Any
+from typing import Any, cast
 
 from aura_arena_attempt_archive import ArenaAttemptArchive
 from aura_bilateral_live_repair_foundry import (
@@ -242,7 +242,7 @@ class DomainDecisionEnvelope:
         )
         object.__setattr__(self, "reasons", _strings(self.reasons, "reasons"))
         object.__setattr__(self, "open_obligations", _strings(self.open_obligations, "open_obligations"))
-        if type(self.recommended_for_human_review) is not bool:
+        if not isinstance(self.recommended_for_human_review, bool):
             raise ValueError("recommended_for_human_review must be a boolean")
         for name in (
             "physical_work_authorized",
@@ -367,6 +367,17 @@ class _ArenaBoundArchive:
     def get(self, artifact_id: str) -> dict[str, Any] | None:
         return self.delegate.get(artifact_id)
 
+    def find_preview(
+        self,
+        *,
+        workflow_id: str,
+        preview_id: str,
+    ) -> dict[str, Any] | None:
+        return self.delegate.find_preview(
+            workflow_id=workflow_id,
+            preview_id=preview_id,
+        )
+
     def status(self) -> dict[str, Any]:
         return {
             **self.delegate.status(),
@@ -401,7 +412,7 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         ] = OrderedDict()
         super().__init__(
             repo_root,
-            attempt_archive=self._arena_archive,
+            attempt_archive=cast(ArenaAttemptArchive, self._arena_archive),
             runtime_runner=runtime_runner,
             current_identity_resolver=current_identity_resolver,
             allow_reduced_runtime_fixture=allow_reduced_runtime_fixture,
@@ -516,7 +527,17 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
 
     def run_governed_u7(self, **kwargs: Any) -> dict[str, Any]:
         packet_id = _required_text(kwargs.pop("packet_id", None), "packet_id")
-        result = dict(super().run_governed_u7(packet_id=packet_id, **kwargs))
+        candidate_digest = _candidate_digest_text(
+            kwargs.pop("candidate_digest", None),
+            "candidate_digest",
+        )
+        result = dict(
+            super().run_governed_u7(
+                packet_id=packet_id,
+                candidate_digest=candidate_digest,
+                **kwargs,
+            )
+        )
         arena = self.arena_for_packet(packet_id)
         result["arena_id"] = arena
         result["arena_binding_immutable"] = True
@@ -599,20 +620,17 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         selected = str(preview_id or "").strip()
         if not selected:
             return self.latest_preview(packet.packet_id)
-        for summary in self.attempt_archive.list(
+        artifact = self._arena_archive.find_preview(
             workflow_id=packet.packet_id,
-            route="bilateral-live-repair/preview-rollback",
-            limit=MAX_ARCHIVE_SCAN_ROWS,
-        ):
-            artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
-            raw = dict((artifact or {}).get("result") or {}).get("preview")
-            if not isinstance(raw, Mapping) or raw.get("preview_id") != selected:
-                continue
-            receipt = PreviewRollbackReceipt.from_mapping(raw)
-            if receipt.replay_packet_digest != packet.packet_digest:
-                raise BilateralLiveRepairError("requested preview belongs to another incident")
-            return receipt
-        return None
+            preview_id=selected,
+        )
+        raw = dict((artifact or {}).get("result") or {}).get("preview")
+        if not isinstance(raw, Mapping):
+            return None
+        receipt = PreviewRollbackReceipt.from_mapping(raw)
+        if receipt.replay_packet_digest != packet.packet_digest:
+            raise BilateralLiveRepairError("requested preview belongs to another incident")
+        return receipt
 
     def latest_u7_result(
         self,
