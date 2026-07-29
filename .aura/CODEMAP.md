@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1480
-- **total_bytes**: 57780070
-- **text_tokens_est**: 4989899
+- **total_bytes**: 57780940
+- **text_tokens_est**: 4990116
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 54, 'knowledge_artifact': 188, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 949, 'schema_or_lexicon': 196, 'support_file': 77}
 - **topology_nodes**: 10932
 - **topology_edges**: 26240
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 31200.32
+- **elapsed_ms**: 31405.9
 
 ## Coverage
 
@@ -446,7 +446,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `ArchitectureComponent` -> `aura_coding_relationship_compass.py:161`
 - `ArenaArchitectRuntime` -> `aura_arena_architect_runtime.py:20`
 - `ArenaAttemptArchive` -> `aura_arena_attempt_archive.py:218`
-- `ArenaBoundBilateralLiveRepairService` -> `aura_construction_spatial_foundry.py:379`
+- `ArenaBoundBilateralLiveRepairService` -> `aura_construction_spatial_foundry.py:381`
 - `ArenaBridgeError` -> `aura_agent_arena_errors.py:93`
 - `ArenaConnectorServerState` -> `aura_arena_connector_server.py:62`
 - `ArenaCrucibleService` -> `aura_arena_crucible.py:31`
