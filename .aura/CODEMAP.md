@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1480
-- **total_bytes**: 57797206
-- **text_tokens_est**: 4994184
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 54, 'knowledge_artifact': 188, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 949, 'schema_or_lexicon': 196, 'support_file': 77}
-- **topology_nodes**: 10934
-- **topology_edges**: 26256
+- **file_count**: 1481
+- **total_bytes**: 57813371
+- **text_tokens_est**: 4998226
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 54, 'knowledge_artifact': 188, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 949, 'schema_or_lexicon': 197, 'support_file': 77}
+- **topology_nodes**: 10939
+- **topology_edges**: 26293
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 32535.38
+- **elapsed_ms**: 32460.77
 
 ## Coverage
 
-- **included_file_count**: 1480
+- **included_file_count**: 1481
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=200, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
@@ -373,7 +373,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md`
 - `.aura/arena_routes/coding.v1.json`
-- ... 1257 more; query CODEMAP.json for exact file cards
+- ... 1258 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
@@ -393,8 +393,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 10934
-- **edges**: 26256
+- **nodes**: 10939
+- **edges**: 26293
 - **top_files_by_degree**:
   - `aura_node.py` degree=891 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=757 nodes=69 neighbors=`aura_construction_spatial_foundry.py`, `aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`
@@ -447,7 +447,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `ArchitectureComponent` -> `aura_coding_relationship_compass.py:161`
 - `ArenaArchitectRuntime` -> `aura_arena_architect_runtime.py:20`
 - `ArenaAttemptArchive` -> `aura_arena_attempt_archive.py:218`
-- `ArenaBoundBilateralLiveRepairService` -> `aura_construction_spatial_foundry.py:381`
+- `ArenaBoundBilateralLiveRepairService` -> `aura_construction_spatial_foundry.py:392`
 - `ArenaBridgeError` -> `aura_agent_arena_errors.py:93`
 - `ArenaConnectorServerState` -> `aura_arena_connector_server.py:62`
 - `ArenaCrucibleService` -> `aura_arena_crucible.py:31`
