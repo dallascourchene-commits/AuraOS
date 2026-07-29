@@ -1,0 +1,44 @@
+{
+  "version": "AURA_CODING_WABOOSE_REQUEST_V1",
+  "objective": "Implement PR 2 Pascal contracts, exact compatibility boundary, same-origin presentation bridge, deterministic local 2D/3D workbench, guarded six-slot action routing, exact receipts, and disposable lifecycle without changing canonical Construction or Spatial ownership.",
+  "changed_symbols": [
+    "PascalSourceLock",
+    "PascalSceneArtifactManifest",
+    "AuraPascalCoordinateReceipt",
+    "AuraPascalPresentationBridgeV1",
+    "PascalPresentationSession",
+    "PascalPresentationRegistry",
+    "PascalFoundryShowcaseState",
+    "dispatch_pascal_foundry_request"
+  ],
+  "canonical_neighbors": [
+    "aura_spatial_contracts.py",
+    "aura_spatial_interaction.py",
+    "aura_spatial_foundry_projection.py",
+    "aura_construction_spatial_foundry.py",
+    "aura_construction_spatial_foundry_server.py",
+    "aura_showcase_live_repair_server.py"
+  ],
+  "required_invariants": [
+    "ConstructionProjectState remains canonical Construction truth",
+    "Spatial and Pascal remain projection-only",
+    "all authority fields remain false",
+    "every accepted bridge action compiles through the canonical six-slot Spatial owner",
+    "wrong origin, stale identity, sequence gaps, nonce replay, digest tampering, hidden-storey selection, and post-dissolution messages fail closed",
+    "no external asset request or persistent canonical browser storage",
+    "PR 1 Construction Foundry remains usable when Pascal assets are absent"
+  ],
+  "review_focus": [
+    "callers and callees",
+    "schema/runtime parity",
+    "bridge state sequencing",
+    "pending command and receipt binding",
+    "same-origin and payload authority boundaries",
+    "dissolution and relaunch",
+    "third-party source identity and license retention",
+    "backward compatibility"
+  ],
+  "automatic_patch_authority": false,
+  "merge_authority": false,
+  "human_review_required": true
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/aura_pascal_presentation_bridge_v1.schema.json",
+  "title": "Aura Pascal Presentation Bridge V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["message_id", "session_id", "sequence", "nonce", "spatial_scene_digest", "render_plan_digest", "pascal_artifact_digest", "coordinate_receipt_digest", "state_binding_digest", "sent_at", "direction", "action", "payload", "message_digest", "version"],
+  "properties": {
+    "message_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"},
+    "session_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"},
+    "sequence": {"type": "integer", "minimum": 1, "maximum": 2147483647},
+    "nonce": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"},
+    "spatial_scene_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "render_plan_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "pascal_artifact_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "coordinate_receipt_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "state_binding_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sent_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"},
+    "direction": {"enum": ["PARENT_TO_PASCAL", "PASCAL_TO_PARENT"]},
+    "action": {"enum": ["LOAD_ARTIFACT", "SET_VIEW_2D", "SET_VIEW_3D", "SET_STOREY", "SET_SELECTION", "SET_DIMENSIONS", "RESET_CAMERA", "DISSOLVE", "READY", "LOAD_RECEIPT", "VIEW_STATE", "SELECTION_CHANGED", "RENDER_RECEIPT", "PRESENTATION_ERROR", "DISSOLUTION_RECEIPT"]},
+    "payload": {"type": "object"},
+    "message_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "version": {"const": "AURA_PASCAL_PRESENTATION_BRIDGE_V1"}
+  }
+}

@@ -1,0 +1,24 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #071018;
+  color: #e8f4ff;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: #071018; }
+body { overflow: hidden; }
+.workbench { min-height: 100vh; display: grid; grid-template-rows: auto 1fr auto; gap: 12px; padding: 16px; }
+.workbench-header, .workbench-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.workbench-header h1 { margin: 2px 0 0; font-size: clamp(1rem, 2.5vw, 1.5rem); }
+.eyebrow { margin: 0; color: #7ec8ff; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.status-stack { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.status-stack span { border: 1px solid #28536f; border-radius: 999px; padding: 6px 10px; background: #0b1d2a; font-size: 0.78rem; }
+.viewport-shell { position: relative; min-height: 340px; overflow: hidden; border: 1px solid #24475d; border-radius: 14px; background: radial-gradient(circle at 50% 35%, #15374a, #071018 68%); }
+#pascal-canvas { display: block; width: 100%; height: 100%; min-height: 340px; cursor: crosshair; }
+#empty-state { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; color: #9fb9ca; text-align: center; pointer-events: none; }
+.workbench-footer { color: #9fb9ca; font-size: 0.75rem; flex-wrap: wrap; }
+@media (max-width: 640px) {
+  .workbench { padding: 10px; }
+  .workbench-header, .workbench-footer { align-items: flex-start; flex-direction: column; }
+  .status-stack { justify-content: flex-start; }
+}

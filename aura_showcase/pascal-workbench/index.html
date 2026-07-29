@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Aura Pascal Workbench</title>
+  <link rel="stylesheet" href="pascal-workbench.css">
+</head>
+<body>
+  <main class="workbench" aria-label="Pascal local presentation workbench">
+    <header class="workbench-header">
+      <div>
+        <p class="eyebrow">Pinned Pascal compatibility surface</p>
+        <h1 id="scene-title">Waiting for exact artifact</h1>
+      </div>
+      <div class="status-stack">
+        <span id="view-badge">UNSET</span>
+        <span id="storey-badge">No storey</span>
+      </div>
+    </header>
+    <section class="viewport-shell">
+      <canvas id="pascal-canvas" width="1200" height="720" aria-label="Deterministic building view"></canvas>
+      <div id="empty-state">The server-issued LOAD_ARTIFACT command has not arrived.</div>
+    </section>
+    <footer class="workbench-footer">
+      <span id="selection-label">Selection: none</span>
+      <span id="network-label">External requests: 0</span>
+      <span>Presentation only · no Construction authority</span>
+    </footer>
+  </main>
+  <script src="pascal-workbench.js"></script>
+</body>
+</html>

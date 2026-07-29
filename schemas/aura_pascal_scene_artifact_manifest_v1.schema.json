@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/aura_pascal_scene_artifact_manifest_v1.schema.json",
+  "title": "Pascal Scene Artifact Manifest V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["artifact_id", "artifact_digest", "source_kind", "package_lock_digest", "scene_json_sha256", "root_node_id", "storey_ids", "node_bindings", "repository", "commit", "working_copy_only", "persistent_scene_mutation", "external_asset_fetch", "destroy_on_dissolution", "construction_truth", "survey_authority", "version"],
+  "properties": {
+    "artifact_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"},
+    "artifact_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_kind": {"enum": ["PASCAL_BUILD_JSON", "IFC_CONVERTED", "SYNTHETIC_FIXTURE"]},
+    "package_lock_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "scene_json_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "root_node_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"},
+    "storey_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"}},
+    "node_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["node_id", "node_kind", "aura_entity_id", "aura_target_ref", "storey_id", "selectable"],
+        "properties": {
+          "node_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"},
+          "node_kind": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"},
+          "aura_entity_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"},
+          "aura_target_ref": {"type": "string", "minLength": 1, "maxLength": 2048},
+          "storey_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"},
+          "selectable": {"type": "boolean"}
+        }
+      }
+    },
+    "repository": {"const": "pascalorg/editor"},
+    "commit": {"const": "42ac4be1ce5f3fee74806aa093267b6fee77d47d"},
+    "working_copy_only": {"const": true},
+    "persistent_scene_mutation": {"const": false},
+    "external_asset_fetch": {"const": false},
+    "destroy_on_dissolution": {"const": true},
+    "construction_truth": {"const": false},
+    "survey_authority": {"const": false},
+    "version": {"const": "AURA_PASCAL_SCENE_ARTIFACT_MANIFEST_V1"}
+  }
+}

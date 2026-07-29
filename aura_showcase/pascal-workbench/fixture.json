@@ -1,0 +1,50 @@
+{
+  "version": "AURA_PASCAL_LOCAL_SCENE_FIXTURE_V1",
+  "scene_id": "hbc-construction-demo",
+  "label": "Hudson's Bay Construction Demonstrator",
+  "units": "meters",
+  "external_asset_fetch": false,
+  "persistent_canonical_storage": false,
+  "storeys": [
+    {
+      "id": "L1",
+      "label": "Ground Floor",
+      "elevation": 0,
+      "width": 22,
+      "depth": 16,
+      "rooms": [
+        {"node_id": "room-retail-l1", "label": "Retail Hall", "x": 0.5, "y": 0.5, "width": 12.5, "depth": 9.5},
+        {"node_id": "room-service-l1", "label": "Service Core", "x": 13.5, "y": 0.5, "width": 8, "depth": 6},
+        {"node_id": "room-staging-l1", "label": "Material Staging", "x": 13.5, "y": 7, "width": 8, "depth": 8.5},
+        {"node_id": "room-entry-l1", "label": "Public Entry", "x": 0.5, "y": 10.5, "width": 12.5, "depth": 5}
+      ],
+      "walls": [
+        {"node_id": "wall-north-l1", "x1": 0, "y1": 0, "x2": 22, "y2": 0},
+        {"node_id": "wall-east-l1", "x1": 22, "y1": 0, "x2": 22, "y2": 16},
+        {"node_id": "wall-south-l1", "x1": 22, "y1": 16, "x2": 0, "y2": 16},
+        {"node_id": "wall-west-l1", "x1": 0, "y1": 16, "x2": 0, "y2": 0},
+        {"node_id": "wall-core-l1", "x1": 13.25, "y1": 0, "x2": 13.25, "y2": 16}
+      ]
+    },
+    {
+      "id": "L2",
+      "label": "Second Floor",
+      "elevation": 4.2,
+      "width": 22,
+      "depth": 16,
+      "rooms": [
+        {"node_id": "room-office-l2", "label": "Project Office", "x": 0.5, "y": 0.5, "width": 9.5, "depth": 7},
+        {"node_id": "room-mechanical-l2", "label": "Mechanical", "x": 10.5, "y": 0.5, "width": 11, "depth": 7},
+        {"node_id": "room-training-l2", "label": "Training Room", "x": 0.5, "y": 8, "width": 12.5, "depth": 7.5},
+        {"node_id": "room-storage-l2", "label": "Secure Storage", "x": 13.5, "y": 8, "width": 8, "depth": 7.5}
+      ],
+      "walls": [
+        {"node_id": "wall-north-l2", "x1": 0, "y1": 0, "x2": 22, "y2": 0},
+        {"node_id": "wall-east-l2", "x1": 22, "y1": 0, "x2": 22, "y2": 16},
+        {"node_id": "wall-south-l2", "x1": 22, "y1": 16, "x2": 0, "y2": 16},
+        {"node_id": "wall-west-l2", "x1": 0, "y1": 16, "x2": 0, "y2": 0},
+        {"node_id": "wall-core-l2", "x1": 0, "y1": 7.75, "x2": 22, "y2": 7.75}
+      ]
+    }
+  ]
+}
