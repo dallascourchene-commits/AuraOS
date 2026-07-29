@@ -1,0 +1,453 @@
+"""Composed Construction Spatial Foundry server for PR 1.
+
+This adapter reuses the merged Showcase and B15 live-repair routes.  It adds a
+trusted identity-handle boundary, exact Construction arena attribution, required
+asset intake, and V2 domain projection while retaining all legacy routes.
+"""
+from __future__ import annotations
+
+import argparse
+from collections.abc import Callable, Mapping
+from dataclasses import asdict
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import json
+from pathlib import Path
+from typing import Any
+from urllib.parse import urlparse
+
+from aura_bilateral_live_repair_foundry import (
+    BilateralIdentity,
+    BilateralLiveRepairError,
+    PreviewRollbackReceipt,
+    RepairCandidateResult,
+)
+from aura_construction_spatial_foundry import (
+    ArenaBoundBilateralLiveRepairService,
+    TrustedBilateralIdentityBroker,
+    reject_raw_identity_currency_claim,
+)
+from aura_showcase_live_repair_server import (
+    DEFAULT_HOST,
+    DEFAULT_PORT,
+    MAX_BODY_BYTES,
+    LiveRepairShowcaseState,
+    _error,
+    _json,
+    _static_response as base_static_response,
+    dispatch_live_repair_request as base_dispatch_live_repair_request,
+)
+from scripts.aura_runtime_profile_v2_adapter import BilateralRuntimeProfileError
+
+CONSTRUCTION_FOUNDRY_SERVER_VERSION = "AURA_CONSTRUCTION_SPATIAL_FOUNDRY_SERVER_V1"
+STATIC_DIR = Path(__file__).resolve().parent / "aura_showcase"
+
+
+class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
+    def __init__(
+        self,
+        repo_root: str | Path,
+        *,
+        demo_project: str,
+        auto_start: bool,
+        trusted_identity_provider: Callable[[], BilateralIdentity] | None = None,
+        current_identity_resolver: Callable[[BilateralIdentity], BilateralIdentity] | None = None,
+    ) -> None:
+        effective_resolver = current_identity_resolver
+        if effective_resolver is None and trusted_identity_provider is not None:
+            effective_resolver = lambda _expected: trusted_identity_provider()
+        super().__init__(
+            repo_root,
+            demo_project=demo_project,
+            auto_start=auto_start,
+            current_identity_resolver=effective_resolver,
+        )
+        self._trusted_identity_provider = trusted_identity_provider
+        self._identity_broker = (
+            TrustedBilateralIdentityBroker(
+                trusted_identity_provider,
+                current_identity_resolver=effective_resolver,
+            )
+            if trusted_identity_provider is not None
+            else None
+        )
+
+    @property
+    def live_repair(self) -> ArenaBoundBilateralLiveRepairService:
+        if self._live_repair is None:
+            self._live_repair = ArenaBoundBilateralLiveRepairService(
+                self.repo_root,
+                attempt_archive=self.attempt_archive,
+                current_identity_resolver=self._current_identity_resolver,
+            )
+        return self._live_repair
+
+    def issue_current_identity_summary(self) -> dict[str, Any]:
+        if self._identity_broker is None:
+            raise BilateralLiveRepairError(
+                "trusted current identity provider is not configured"
+            )
+        return self._identity_broker.issue_summary()
+
+    def resolve_request_identity(
+        self,
+        body: Mapping[str, Any],
+        *,
+        expected: BilateralIdentity | None = None,
+        legacy_field: str = "current_identity",
+    ) -> BilateralIdentity:
+        reject_raw_identity_currency_claim(body)
+        handle = str(body.get("identity_handle") or "").strip()
+        if handle:
+            if self._identity_broker is None:
+                raise BilateralLiveRepairError(
+                    "trusted identity handle cannot be resolved by this server"
+                )
+            return self._identity_broker.resolve(handle, expected=expected)
+        if self._identity_broker is not None:
+            raise BilateralLiveRepairError(
+                "polished Construction flow requires a server-issued identity_handle"
+            )
+        raw = body.get(legacy_field)
+        item = BilateralIdentity.from_mapping(raw or {})
+        if expected is not None:
+            expected.assert_current(item)
+        return item
+
+
+def _identity_provider_from_path(path: str | Path) -> Callable[[], BilateralIdentity]:
+    resolved = Path(path).resolve()
+
+    def provide() -> BilateralIdentity:
+        if not resolved.is_file() or resolved.is_symlink():
+            raise BilateralLiveRepairError("trusted identity packet is unavailable")
+        try:
+            value = json.loads(resolved.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise BilateralLiveRepairError("trusted identity packet is invalid") from exc
+        return BilateralIdentity.from_mapping(value)
+
+    return provide
+
+
+def _is_v2_projection(body: Mapping[str, Any]) -> bool:
+    return bool(
+        body.get("projection_version") == "AURA_SPATIAL_FOUNDRY_PROJECTION_V2"
+        or any(
+            key in body
+            for key in (
+                "domain",
+                "domain_targets",
+                "domain_artifacts",
+                "presentation",
+                "construction",
+                "coordination_candidates",
+                "domain_decision",
+                "transition_state",
+                "transition_evidence",
+            )
+        )
+    )
+
+
+def dispatch_construction_foundry_request(
+    state: ConstructionFoundryShowcaseState,
+    method: str,
+    raw_path: str,
+    payload: Mapping[str, Any] | None = None,
+) -> tuple[int, str, bytes]:
+    route = urlparse(raw_path).path.rstrip("/") or "/"
+    body = dict(payload or {})
+    try:
+        if method == "GET" and route == "/api/showcase/live-repair/identity/current":
+            result = state.issue_current_identity_summary()
+            return _json(
+                200,
+                {
+                    **result,
+                    "construction_foundry_server_version": CONSTRUCTION_FOUNDRY_SERVER_VERSION,
+                },
+            )
+
+        if method == "POST":
+            reject_raw_identity_currency_claim(body)
+
+        if method == "POST" and route == "/api/showcase/live-repair/capture/start":
+            if body.get("identity_handle"):
+                identity = state.resolve_request_identity(body, legacy_field="identity")
+                body["identity"] = asdict(identity)
+                body.pop("identity_handle", None)
+            elif state._identity_broker is not None:
+                raise BilateralLiveRepairError(
+                    "capture start requires a server-issued identity_handle"
+                )
+            body["arena_id"] = "construction"
+            return base_dispatch_live_repair_request(state, method, raw_path, body)
+
+        if method == "POST" and route == "/api/showcase/live-repair/attempt":
+            packet_id = str(body.get("packet_id") or "")
+            packet = state.live_repair._packet(packet_id)
+            identity = state.resolve_request_identity(body, expected=packet.identity)
+            body["current_identity"] = asdict(identity)
+            body["arena_id"] = state.live_repair.arena_for_packet(packet_id)
+            body.pop("identity_handle", None)
+            return base_dispatch_live_repair_request(state, method, raw_path, body)
+
+        if method == "POST" and route == "/api/showcase/live-repair/preview":
+            packet_id = str(body.get("packet_id") or "")
+            packet = state.live_repair._packet(packet_id)
+            identity = state.resolve_request_identity(body, expected=packet.identity)
+            body["current_identity"] = asdict(identity)
+            body.pop("identity_handle", None)
+            return base_dispatch_live_repair_request(state, method, raw_path, body)
+
+        if (
+            method == "POST"
+            and route == "/api/showcase/live-repair/projection"
+            and _is_v2_projection(body)
+        ):
+            packet_id = str(body.get("packet_id") or "")
+            packet = state.live_repair._packet(packet_id)
+            identity = state.resolve_request_identity(body, expected=packet.identity)
+            attempt_ids = [str(item) for item in body.get("attempt_ids") or []]
+            attempts: list[RepairCandidateResult] = (
+                [
+                    state.live_repair_attempts[(packet.packet_digest, item)]
+                    for item in attempt_ids
+                    if (packet.packet_digest, item) in state.live_repair_attempts
+                ]
+                if attempt_ids
+                else list(state.live_repair.attempts_for_packet(packet_id))
+            )
+            preview_id = str(body.get("preview_id") or "")
+            preview: PreviewRollbackReceipt | None = (
+                state.live_repair_previews.get(preview_id)
+                if preview_id
+                else state.live_repair.latest_preview(packet_id)
+            )
+            projection = state.live_repair.build_projection_v2(
+                packet_id=packet_id,
+                intent=body.get("intent") if isinstance(body.get("intent"), Mapping) else {},
+                plan=body.get("plan") if isinstance(body.get("plan"), Mapping) else {},
+                code_targets=[
+                    item for item in body.get("code_targets") or [] if isinstance(item, Mapping)
+                ],
+                attempts=attempts,
+                preview=preview,
+                u7_result=body.get("u7_result") if isinstance(body.get("u7_result"), Mapping) else None,
+                source_drilldown=[
+                    item for item in body.get("source_drilldown") or [] if isinstance(item, Mapping)
+                ],
+                receipt_drilldown=[
+                    item for item in body.get("receipt_drilldown") or [] if isinstance(item, Mapping)
+                ],
+                current_identity=identity,
+                domain=body.get("domain") if isinstance(body.get("domain"), Mapping) else {
+                    "arena_id": "construction",
+                    "domain_type": "CONSTRUCTION",
+                },
+                domain_targets=[
+                    item for item in body.get("domain_targets") or [] if isinstance(item, Mapping)
+                ],
+                domain_artifacts=[
+                    item for item in body.get("domain_artifacts") or [] if isinstance(item, Mapping)
+                ],
+                presentation=body.get("presentation") if isinstance(body.get("presentation"), Mapping) else {},
+                construction=body.get("construction") if isinstance(body.get("construction"), Mapping) else {},
+                coordination_candidates=[
+                    item
+                    for item in body.get("coordination_candidates") or []
+                    if isinstance(item, Mapping)
+                ],
+                domain_decision=(
+                    body.get("domain_decision")
+                    if isinstance(body.get("domain_decision"), Mapping)
+                    else None
+                ),
+                transition_state=str(body.get("transition_state") or "IDLE"),
+                transition_evidence=(
+                    body.get("transition_evidence")
+                    if isinstance(body.get("transition_evidence"), Mapping)
+                    else {}
+                ),
+            )
+            return _json(
+                200,
+                {
+                    "ok": True,
+                    "projection": projection,
+                    "construction_foundry_server_version": CONSTRUCTION_FOUNDRY_SERVER_VERSION,
+                },
+            )
+
+        if method == "POST" and route == "/api/showcase/live-repair/projection":
+            packet_id = str(body.get("packet_id") or "")
+            packet = state.live_repair._packet(packet_id)
+            identity = state.resolve_request_identity(body, expected=packet.identity)
+            body["current_identity"] = asdict(identity)
+            body.pop("identity_handle", None)
+            return base_dispatch_live_repair_request(state, method, raw_path, body)
+
+        if (
+            method == "POST"
+            and route.startswith("/api/showcase/live-repair/capture/")
+            and route.endswith("/finalize/v1")
+        ):
+            body["arena_id"] = "construction"
+
+    except (
+        BilateralLiveRepairError,
+        BilateralRuntimeProfileError,
+        ValueError,
+        TypeError,
+        KeyError,
+    ) as exc:
+        return _error(str(exc), 409)
+
+    return base_dispatch_live_repair_request(state, method, raw_path, body)
+
+
+_CONSTRUCTION_MARKUP = b"""
+<section id="construction-foundry-pr1" class="foundry-grid" aria-label="Construction Foundry PR1 bindings">
+  <article class="foundry-card">
+    <p class="eyebrow">Trusted current identity</p>
+    <pre id="construction-foundry-identity-summary">Server identity not loaded.</pre>
+  </article>
+  <article class="foundry-card">
+    <p class="eyebrow">Required asset identities</p>
+    <label>JSON array of path / sha256 pairs
+      <textarea id="construction-foundry-required-assets" spellcheck="false">[]</textarea>
+    </label>
+  </article>
+</section>
+"""
+
+_SCRIPT = b'  <script src="construction-spatial-foundry.js"></script>\n'
+
+
+def _static_response(route: str) -> tuple[int, str, bytes]:
+    if route.lstrip("/") == "construction-spatial-foundry.js":
+        path = STATIC_DIR / "construction-spatial-foundry.js"
+        if not path.is_file() or path.is_symlink():
+            return _error("Construction Foundry static asset not found", 404)
+        return 200, "application/javascript; charset=utf-8", path.read_bytes()
+
+    status, content_type, body = base_static_response(route)
+    if status == 200 and route in {"/", "/index.html"}:
+        if b'id="construction-foundry-pr1"' not in body:
+            body = body.replace(
+                b'<section class="foundry-authority"',
+                _CONSTRUCTION_MARKUP + b'\n  <section class="foundry-authority"',
+            )
+        if b"construction-spatial-foundry.js" not in body:
+            body = body.replace(b"</body>", _SCRIPT + b"</body>")
+    return status, content_type, body
+
+
+def make_handler(state: ConstructionFoundryShowcaseState):
+    class Handler(BaseHTTPRequestHandler):
+        def _send(self, status: int, content_type: str, body: bytes) -> None:
+            self.send_response(status)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.end_headers()
+            self.wfile.write(body)
+
+        def _payload(self) -> dict[str, Any]:
+            try:
+                length = int(self.headers.get("Content-Length", "0") or 0)
+            except ValueError:
+                return {}
+            if length < 0 or length > MAX_BODY_BYTES:
+                return {}
+            raw = self.rfile.read(length) if length else b""
+            if not raw:
+                return {}
+            try:
+                value = json.loads(raw.decode("utf-8"))
+            except (UnicodeDecodeError, json.JSONDecodeError):
+                return {}
+            return value if isinstance(value, dict) else {}
+
+        def do_GET(self) -> None:  # noqa: N802
+            route = urlparse(self.path).path
+            if route.startswith("/api/"):
+                self._send(
+                    *dispatch_construction_foundry_request(state, "GET", self.path)
+                )
+            else:
+                self._send(*_static_response(route))
+
+        def do_POST(self) -> None:  # noqa: N802
+            self._send(
+                *dispatch_construction_foundry_request(
+                    state, "POST", self.path, self._payload()
+                )
+            )
+
+        def log_message(self, format: str, *args: Any) -> None:
+            return
+
+    return Handler
+
+
+def serve(
+    *,
+    host: str,
+    port: int,
+    repo_root: str | Path,
+    demo_project: str,
+    auto_start: bool,
+    trusted_identity_packet: str | Path | None = None,
+) -> None:
+    provider = (
+        _identity_provider_from_path(trusted_identity_packet)
+        if trusted_identity_packet
+        else None
+    )
+    state = ConstructionFoundryShowcaseState(
+        repo_root,
+        demo_project=demo_project,
+        auto_start=auto_start,
+        trusted_identity_provider=provider,
+    )
+    server = HTTPServer((host, port), make_handler(state))
+    try:
+        print(f"Aura Construction Spatial Foundry: http://{host}:{port}")
+        server.serve_forever()
+    finally:
+        state.close()
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--host", default=DEFAULT_HOST)
+    parser.add_argument("--port", type=int, default=DEFAULT_PORT)
+    parser.add_argument("--repo-root", default=".")
+    parser.add_argument("--demo-project", default="winnipeg_pathways")
+    parser.add_argument("--trusted-identity-packet", default="")
+    parser.add_argument("--no-auto-start", action="store_true")
+    args = parser.parse_args()
+    serve(
+        host=args.host,
+        port=args.port,
+        repo_root=args.repo_root,
+        demo_project=args.demo_project,
+        auto_start=not args.no_auto_start,
+        trusted_identity_packet=args.trusted_identity_packet or None,
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+
+__all__ = [
+    "CONSTRUCTION_FOUNDRY_SERVER_VERSION",
+    "ConstructionFoundryShowcaseState",
+    "dispatch_construction_foundry_request",
+    "make_handler",
+    "serve",
+]
