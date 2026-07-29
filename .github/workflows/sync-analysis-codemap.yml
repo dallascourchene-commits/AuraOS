@@ -18,12 +18,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - name: Checkout latest exact branch head
-        uses: actions/checkout@v4
-        with:
-          ref: analysis/bilateral-intent-final-b11-b15
-          fetch-depth: 0
-          persist-credentials: false
+      - name: Fetch exact PR head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
 
       - uses: actions/setup-python@v5
         with:
@@ -75,11 +83,10 @@ jobs:
         run: |
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags origin main:refs/remotes/origin/main
+            fetch --no-tags --depth=1 origin main:refs/remotes/origin/main
           git show origin/main:.github/workflows/sync-analysis-codemap.yml \
             > .github/workflows/sync-analysis-codemap.yml
           rm -f .github/workflows/pr240-codex-final-verify.yml
-          cp .aura/CODEMAP.json /tmp/aura-codemap-before-cleanup.json
           python aura_codebase_navigator.py
           python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
           test -s .aura/CODEMAP.json
