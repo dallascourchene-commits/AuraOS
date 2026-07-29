@@ -1,7 +1,7 @@
 """Isolated preview, canonical U7 delegation, and projection mixin."""
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Mapping, MutableMapping, Sequence
 from dataclasses import asdict
 import time
 from typing import TYPE_CHECKING, Any, cast
@@ -180,6 +180,41 @@ class _PreviewLearningProjectionMixin:
         require_session = getattr(bridge, "_require_session", None)
         if callable(require_session):
             session = require_session(phase)
+        binding_payload = {
+            "version": "AURA_BILATERAL_LIVE_REPAIR_U7_BINDING_V1",
+            "replay_packet_digest": packet.packet_digest,
+            "bilateral_identity_digest": packet.identity.identity_digest,
+            "candidate_digest": candidate,
+            "plan_phase_hash": phase,
+            "task_id": task,
+        }
+        binding_row = {**binding_payload, "binding_digest": digest(binding_payload)}
+        if isinstance(session, MutableMapping):
+            bindings = session.setdefault("bilateral_live_repair_u7_bindings", {})
+            if not isinstance(bindings, MutableMapping):
+                raise BilateralLiveRepairError("governed U7 binding registry is invalid")
+            retained_state_exists = any(
+                task in dict(session.get(name) or {})
+                for name in (
+                    "unified_prediction_packets",
+                    "unified_p1_observations",
+                    "unified_learning_results",
+                    "unified_learning_finalization_claims",
+                )
+            )
+            retained_binding = bindings.get(task)
+            if retained_binding is None:
+                if retained_state_exists:
+                    raise BilateralLiveRepairError(
+                        "retained governed U7 state lacks an incident/candidate binding"
+                    )
+                bindings[task] = binding_row
+            elif not isinstance(retained_binding, Mapping) or dict(retained_binding) != binding_row:
+                raise BilateralLiveRepairError(
+                    "governed U7 task is bound to another incident or repair candidate"
+                )
+        elif session is not None:
+            raise BilateralLiveRepairError("governed U7 bridge session is not mutable")
         retained_prediction = (
             dict(session.get("unified_prediction_packets") or {}).get(task)
             if isinstance(session, Mapping)
@@ -231,6 +266,7 @@ class _PreviewLearningProjectionMixin:
             "candidate_digest": candidate,
             "plan_phase_hash": phase,
             "task_id": task,
+            "u7_binding_digest": binding_row["binding_digest"],
             "canonical_owner": "aura_unified_memory_continuity_learning",
             "automatic_crystallization": False,
             "automatic_promotion": False,
@@ -274,8 +310,6 @@ class _PreviewLearningProjectionMixin:
         packet = self._packet(packet_id)
         packet.identity.assert_current(current_identity)
         self._resolve_current_identity(packet.identity)
-        # Validate caller shape, but derive displayed confirmed intent only from
-        # the digest-bound incident packet rather than caller projection data.
         canonical_sanitize(intent)
         clean_intent = {
             "intent_digest": packet.identity.intent_digest,
