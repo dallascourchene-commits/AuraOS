@@ -43,11 +43,13 @@ All Construction, survey, professional, payment, access, execution, patch, deplo
 
 Every bridge message binds:
 
-- exact session and actual loopback HTTP Host/Origin;
+- exact session identity;
 - direction-specific sequence;
 - one-time nonce retained for the full bounded session;
 - Spatial scene, render-plan, Pascal artifact, coordinate receipt, and state digests;
 - UTC timestamp, direction, action, bounded payload, and message digest.
+
+The server validates actual HTTP Host and Origin headers out-of-band. Sequence, nonce, and digest belong to the bridge message envelope; callers cannot override these server-owned identity fields outside the validated message structure.
 
 Python and JavaScript use the same type-tagged bridge encoding. Safe integers are decimal tagged values; non-integer numbers use their exact big-endian IEEE-754 bytes. This avoids JSON exponent, negative-zero, and formatting differences between runtimes.
 

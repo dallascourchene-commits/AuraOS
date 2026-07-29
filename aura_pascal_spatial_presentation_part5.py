@@ -161,14 +161,19 @@ def load_pascal_compatibility_fixture(
         )
 
     for relative, expected in lock.local_assets:
-        candidate = (base / relative).resolve()
+        unresolved = base / relative
+        if unresolved.is_symlink():
+            raise PascalPresentationError(
+                f"locked Pascal asset is a symlink: {relative}"
+            )
+        candidate = unresolved.resolve()
         try:
             candidate.relative_to(base)
         except ValueError as exc:
             raise PascalPresentationError(
                 f"locked Pascal asset escapes the repository root: {relative}"
             ) from exc
-        if not candidate.is_file() or candidate.is_symlink():
+        if not candidate.is_file():
             raise PascalPresentationError(
                 f"locked Pascal asset is unavailable: {relative}"
             )

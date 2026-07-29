@@ -475,6 +475,21 @@ def test_nonce_history_is_not_evicted_and_session_is_bounded(monkeypatch):
         nonce="load",
     )
     active.accept(receipt, origin=active.expected_origin)
+    replay = child_message(
+        active,
+        PascalBridgeAction.VIEW_STATE,
+        {
+            "command_message_digest": "0" * 64,
+            "view": "2D",
+            "storey_id": "L1",
+            "node_id": manifest.root_node_id,
+            "dimensions_visible": True,
+        },
+        sequence=3,
+        nonce="load",
+    )
+    with pytest.raises(PascalPresentationError, match="nonce"):
+        active.accept(replay, origin=active.expected_origin)
     with pytest.raises(PascalPresentationError, match="message ceiling"):
         active.issue_parent_message(PascalBridgeAction.SET_VIEW_3D, {})
 
@@ -514,24 +529,48 @@ def test_registry_never_evicts_active_or_incomplete_dissolution():
     assert registry.get(second.session_id) is second
 
 
-def test_dissolution_requires_exact_cleanup_and_iframe_finalization():
+@pytest.mark.parametrize(
+    "incomplete_field",
+    [
+        "renderer_released",
+        "listeners_released",
+        "timers_released",
+        "buffers_cleared",
+        "indexeddb_deleted",
+        "network_guards_restored",
+    ],
+)
+def test_dissolution_requires_exact_cleanup_and_iframe_finalization(incomplete_field):
     active = session()
     ready(active)
     load(active)
     command = active.issue_parent_message(PascalBridgeAction.DISSOLVE, {})
+    complete_payload = {
+        "command_message_digest": command.message_digest,
+        "renderer_released": True,
+        "listeners_released": True,
+        "timers_released": True,
+        "buffers_cleared": True,
+        "indexeddb_deleted": True,
+        "network_guards_restored": True,
+        "external_requests": 0,
+    }
+    incomplete_payload = complete_payload.copy()
+    incomplete_payload[incomplete_field] = False
+    incomplete = child_message(
+        active,
+        PascalBridgeAction.DISSOLUTION_RECEIPT,
+        incomplete_payload,
+        sequence=3,
+        nonce=f"incomplete-{incomplete_field}",
+    )
+    with pytest.raises(PascalPresentationError):
+        active.accept(incomplete, origin=active.expected_origin)
+    assert active.state is not PascalPresentationState.DISSOLVED
     receipt = child_message(
         active,
         PascalBridgeAction.DISSOLUTION_RECEIPT,
-        {
-            "command_message_digest": command.message_digest,
-            "renderer_released": True,
-            "listeners_released": True,
-            "timers_released": True,
-            "buffers_cleared": True,
-            "indexeddb_deleted": True,
-            "network_guards_restored": True,
-            "external_requests": 0,
-        },
+        complete_payload,
         sequence=3,
         nonce="dissolve",
     )

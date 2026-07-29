@@ -647,8 +647,10 @@
   });
 
   async function handleCommand(message) {
+    if (!Object.prototype.hasOwnProperty.call(commandHandlers, message.action)) {
+      throw new Error(`unknown parent action ${message.action}`);
+    }
     const handler = commandHandlers[message.action];
-    if (!handler) throw new Error(`unknown parent action ${message.action}`);
     await handler(message);
   }
 
@@ -788,6 +790,11 @@
       working_copy_only: true,
     });
   })().catch((error) => {
+    disposed = true;
+    window.removeEventListener("message", onMessage);
+    window.removeEventListener("resize", onResize);
+    canvas.removeEventListener("click", onCanvasClick);
+    canvas.removeEventListener("keydown", onCanvasKeyDown);
     document.body.textContent = (
       `Pascal workbench failed closed: ${String((error && error.message) || error)}`
     );

@@ -91,6 +91,7 @@ def test_browser_cannot_supply_server_owned_pascal_session_identity():
     _body_must_not_supply_identity({"action": "SET_VIEW_2D", "payload": {}})
     for key in (
         "expected_origin",
+        "origin",
         "spatial_scene_digest",
         "render_plan_digest",
         "pascal_artifact_digest",
