@@ -53,6 +53,7 @@ CONSTRUCTION_FOUNDRY_SERVER_VERSION = "AURA_CONSTRUCTION_SPATIAL_FOUNDRY_SERVER_
 STATIC_DIR = Path(__file__).resolve().parent / "aura_showcase"
 LOGGER = logging.getLogger(__name__)
 _STATE_DIGEST = re.compile(r"^[0-9a-f]{32}$|^[0-9a-f]{40,64}$")
+_MISSING = object()
 _V2_PROJECTION_VERSION = "AURA_SPATIAL_FOUNDRY_PROJECTION_V2"
 _V2_DOMAIN_FIELDS = frozenset(
     {
@@ -156,10 +157,21 @@ class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
     def resolve_construction_state_digest(
         self,
         packet_id: str,
-        requested_digest: Any,
+        requested_digest: Any = _MISSING,
         *,
         required: bool,
     ) -> str:
+        requested = ""
+        if requested_digest is not _MISSING:
+            if not isinstance(requested_digest, str):
+                raise BilateralLiveRepairError(
+                    "domain.state_digest must be a string when supplied"
+                )
+            requested = requested_digest.strip().lower()
+            if requested and not _STATE_DIGEST.fullmatch(requested):
+                raise BilateralLiveRepairError(
+                    "domain.state_digest must be empty or a canonical digest"
+                )
         if self._construction_state_digest_provider is None:
             if required:
                 raise BilateralLiveRepairError(
@@ -169,7 +181,6 @@ class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
         resolved = str(self._construction_state_digest_provider(packet_id) or "").strip().lower()
         if not _STATE_DIGEST.fullmatch(resolved):
             raise BilateralLiveRepairError("trusted Construction state digest is invalid")
-        requested = str(requested_digest or "").strip().lower()
         if requested and requested != resolved:
             raise BilateralLiveRepairError(
                 "requested domain.state_digest differs from trusted Construction state"
@@ -427,7 +438,11 @@ def _v2_projection_response(
     coordination_candidates = _mapping_rows(body, "coordination_candidates")
     trusted_state_digest = state.resolve_construction_state_digest(
         packet_id,
-        raw_domain.get("state_digest"),
+        (
+            raw_domain["state_digest"]
+            if "state_digest" in raw_domain
+            else _MISSING
+        ),
         required=bool(raw_domain.get("state_digest")) or bool(coordination_candidates),
     )
     domain = {

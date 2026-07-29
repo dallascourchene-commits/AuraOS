@@ -1003,6 +1003,32 @@ def test_v2_endpoint_resolves_construction_state_at_server_boundary(
     assert "differs from trusted Construction state" in result["error"]
 
 
+@pytest.mark.parametrize("state_digest", [False, 0, None, []])
+def test_v2_endpoint_rejects_present_non_string_construction_state_digest(
+    trusted_finalized_packet,
+    state_digest,
+):
+    state, handle, packet_id = trusted_finalized_packet
+    status, result = decoded(
+        dispatch_construction_foundry_request(
+            state,
+            "POST",
+            "/api/showcase/live-repair/projection",
+            {
+                "identity_handle": handle,
+                "packet_id": packet_id,
+                "projection_version": SPATIAL_FOUNDRY_PROJECTION_V2,
+                "domain": {
+                    "domain_type": "CONSTRUCTION",
+                    "state_digest": state_digest,
+                },
+            },
+        )
+    )
+    assert status == 409
+    assert result["error"] == "domain.state_digest must be a string when supplied"
+
+
 def test_executable_state_and_dissolution_file_providers_are_canonical(
     tmp_path: Path,
 ):
