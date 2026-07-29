@@ -1,15 +1,17 @@
 {
   "version": "AURA_CODING_WABOOSE_REQUEST_V1",
-  "objective": "Implement PR 2 Pascal contracts, exact compatibility boundary, same-origin presentation bridge, deterministic local 2D/3D workbench, guarded six-slot action routing, exact receipts, and disposable lifecycle without changing canonical Construction or Spatial ownership.",
+  "objective": "Repair and harden PR 2 Pascal contracts, trusted source lock, actual Host/Origin boundary, cross-runtime bridge digests, deterministic local 2D/3D workbench, guarded six-slot routing, exact command postconditions, and complete disposable lifecycle without changing canonical Construction or Spatial ownership.",
   "changed_symbols": [
     "PascalSourceLock",
     "PascalSceneArtifactManifest",
     "AuraPascalCoordinateReceipt",
-    "AuraPascalPresentationBridgeV1",
+    "AuraPascalBridgeMessage",
     "PascalPresentationSession",
     "PascalPresentationRegistry",
     "PascalFoundryShowcaseState",
-    "dispatch_pascal_foundry_request"
+    "dispatch_pascal_foundry_request",
+    "bridge_sha256",
+    "IPv6HTTPServer"
   ],
   "canonical_neighbors": [
     "aura_spatial_contracts.py",
@@ -24,19 +26,25 @@
     "Spatial and Pascal remain projection-only",
     "all authority fields remain false",
     "every accepted bridge action compiles through the canonical six-slot Spatial owner",
-    "wrong origin, stale identity, sequence gaps, nonce replay, digest tampering, hidden-storey selection, and post-dissolution messages fail closed",
+    "actual HTTP Host/Origin, stale identity, sequence gaps, lifetime nonce replay, digest tampering, contradictory receipts, hidden-storey selection, and post-dissolution messages fail closed",
+    "parent sequence advances only after an exact receipt or exact command-bound error",
     "no external asset request or persistent canonical browser storage",
+    "only fully dissolved sessions are evictable",
+    "Pascal assets are served only after lock and dependent-contract validation",
     "PR 1 Construction Foundry remains usable when Pascal assets are absent"
   ],
   "review_focus": [
     "callers and callees",
     "schema/runtime parity",
-    "bridge state sequencing",
-    "pending command and receipt binding",
-    "same-origin and payload authority boundaries",
-    "dissolution and relaunch",
+    "Python/JavaScript numeric digest parity",
+    "bridge state and error-recovery sequencing",
+    "pending command payload and receipt postconditions",
+    "actual Host/Origin and DNS-rebinding boundary",
+    "static asset path and validation boundary",
+    "dissolution ordering and registry eviction",
     "third-party source identity and license retention",
-    "backward compatibility"
+    "PR 1 CSP/basemap backward compatibility",
+    "IPv4/IPv6 loopback behavior"
   ],
   "automatic_patch_authority": false,
   "merge_authority": false,

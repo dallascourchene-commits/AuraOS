@@ -3,11 +3,15 @@
 
   const root = document.getElementById("pascal-construction-foundry");
   if (!root) return;
+
   const statusNode = document.getElementById("pascal-foundry-status");
   const receiptNode = document.getElementById("pascal-foundry-receipt");
   const host = document.getElementById("pascal-workbench-host");
   const buttons = new Map(
-    Array.from(root.querySelectorAll("[data-pascal-action]"), (button) => [button.dataset.pascalAction, button])
+    Array.from(
+      root.querySelectorAll("[data-pascal-action]"),
+      (button) => [button.dataset.pascalAction, button],
+    ),
   );
 
   let iframe = null;
@@ -20,7 +24,9 @@
 
   function setStatus(text, detail) {
     statusNode.textContent = text;
-    if (detail !== undefined) receiptNode.textContent = JSON.stringify(detail, null, 2);
+    if (detail !== undefined) {
+      receiptNode.textContent = JSON.stringify(detail, null, 2);
+    }
   }
 
   function setControls(active) {
@@ -28,8 +34,8 @@
       const button = buttons.get(name);
       if (button) button.disabled = !active || pending;
     });
-    const launch = buttons.get("launch");
-    if (launch) launch.disabled = Boolean(iframe) || pending;
+    const launchButton = buttons.get("launch");
+    if (launchButton) launchButton.disabled = Boolean(iframe) || pending;
   }
 
   async function request(path, payload) {
@@ -41,8 +47,12 @@
       credentials: "same-origin",
     });
     const body = await response.json().catch(() => ({}));
-    if (!response.ok || body.ok === false) {
-      throw new Error(body.error || body.reason || `Pascal API failed with ${response.status}`);
+    if (!response.ok || body.ok !== true) {
+      throw new Error(
+        body.error
+        || body.reason
+        || `Pascal API failed with ${response.status}`,
+      );
     }
     return body;
   }
@@ -78,12 +88,17 @@
       iframe.referrerPolicy = "no-referrer";
       iframe.src = workbenchUrl(fixture);
       host.replaceChildren(iframe);
-      setStatus("Pascal iframe created; waiting for exact READY receipt.", session);
+      setStatus(
+        "Pascal iframe created; waiting for exact READY receipt.",
+        session,
+      );
     } catch (error) {
       iframe = null;
       session = null;
       fixture = null;
-      setStatus(`Pascal launch failed closed: ${String(error.message || error)}`);
+      setStatus(
+        `Pascal launch failed closed: ${String(error.message || error)}`,
+      );
     } finally {
       pending = false;
       setControls(Boolean(iframe && session && session.state === "ACTIVE"));
@@ -108,7 +123,9 @@
     } catch (error) {
       pending = false;
       setControls(Boolean(iframe && session && session.state === "ACTIVE"));
-      setStatus(`Pascal command failed closed: ${String(error.message || error)}`);
+      setStatus(
+        `Pascal command failed closed: ${String(error.message || error)}`,
+      );
     }
   }
 
@@ -131,7 +148,10 @@
       });
       return;
     }
-    if (["LOAD_RECEIPT", "VIEW_STATE", "SELECTION_CHANGED", "PRESENTATION_ERROR"].includes(action)) {
+    if (
+      ["LOAD_RECEIPT", "VIEW_STATE", "SELECTION_CHANGED", "PRESENTATION_ERROR"]
+        .includes(action)
+    ) {
       pending = false;
       setControls(Boolean(iframe && session.state === "ACTIVE"));
       return;
@@ -147,12 +167,19 @@
       session = finalized.session;
       pending = false;
       setControls(false);
-      setStatus("Pascal renderer, storage, listeners, and iframe dissolved.", finalized);
+      setStatus(
+        "Pascal renderer, storage, listeners, network guards, and iframe dissolved.",
+        finalized,
+      );
     }
   }
 
   function onWindowMessage(event) {
-    if (event.origin !== location.origin || !iframe || event.source !== iframe.contentWindow) return;
+    if (
+      event.origin !== location.origin
+      || !iframe
+      || event.source !== iframe.contentWindow
+    ) return;
     const envelope = event.data;
     if (!envelope || typeof envelope !== "object") return;
     if (envelope.type === "AURA_PASCAL_BRIDGE_MESSAGE") {
@@ -161,7 +188,9 @@
         .catch((error) => {
           pending = false;
           setControls(Boolean(iframe && session && session.state === "ACTIVE"));
-          setStatus(`Pascal receipt failed closed: ${String(error.message || error)}`);
+          setStatus(
+            `Pascal receipt failed closed: ${String(error.message || error)}`,
+          );
         });
       return;
     }
@@ -171,13 +200,21 @@
       && envelope.session_id === session.session_id
       && typeof envelope.node_id === "string"
     ) {
-      eventQueue = eventQueue.then(() => sendCommand("SET_SELECTION", { node_id: envelope.node_id }));
+      eventQueue = eventQueue.then(
+        () => sendCommand("SET_SELECTION", { node_id: envelope.node_id }),
+      );
     }
   }
 
   buttons.get("launch")?.addEventListener("click", launch);
-  buttons.get("2d")?.addEventListener("click", () => sendCommand("SET_VIEW_2D"));
-  buttons.get("3d")?.addEventListener("click", () => sendCommand("SET_VIEW_3D"));
+  buttons.get("2d")?.addEventListener(
+    "click",
+    () => sendCommand("SET_VIEW_2D"),
+  );
+  buttons.get("3d")?.addEventListener(
+    "click",
+    () => sendCommand("SET_VIEW_3D"),
+  );
   buttons.get("storey")?.addEventListener("click", () => {
     if (!fixture) return;
     const storeys = fixture.artifact_manifest.storey_ids;
@@ -188,22 +225,24 @@
     dimensionsVisible = !dimensionsVisible;
     sendCommand("SET_DIMENSIONS", { visible: dimensionsVisible });
   });
-  buttons.get("reset")?.addEventListener("click", () => sendCommand("RESET_CAMERA"));
-  buttons.get("dissolve")?.addEventListener("click", () => sendCommand("DISSOLVE"));
+  buttons.get("reset")?.addEventListener(
+    "click",
+    () => sendCommand("RESET_CAMERA"),
+  );
+  buttons.get("dissolve")?.addEventListener(
+    "click",
+    () => sendCommand("DISSOLVE"),
+  );
   window.addEventListener("message", onWindowMessage);
-
-  const style = document.createElement("style");
-  style.textContent = `
-    .pascal-controls { display: flex; flex-wrap: wrap; gap: .55rem; margin: .8rem 0; }
-    .pascal-controls button { min-width: 5rem; }
-    .pascal-stage-card { min-height: 30rem; }
-    .pascal-workbench-host { min-height: 28rem; border: 1px solid rgba(126,200,255,.25); border-radius: 12px; overflow: hidden; background: #071018; }
-    .pascal-workbench-frame { width: 100%; min-height: 28rem; height: 64vh; border: 0; display: block; background: #071018; }
-  `;
-  document.head.appendChild(style);
   setControls(false);
 
   request("/api/construction/pascal/manifest")
-    .then((result) => setStatus("Pinned Pascal presentation organ is available.", result))
-    .catch((error) => setStatus(`Pascal is unavailable; PR 1 remains active. ${String(error.message || error)}`));
+    .then((result) => {
+      setStatus("Pinned Pascal presentation organ is available.", result);
+    })
+    .catch((error) => {
+      setStatus(
+        `Pascal is unavailable; PR 1 remains active. ${String(error.message || error)}`,
+      );
+    });
 })();

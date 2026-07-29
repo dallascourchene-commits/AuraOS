@@ -1,5 +1,36 @@
-import aura_pascal_spatial_presentation_part1 as _p1
-from aura_pascal_spatial_presentation_part1 import *  # noqa: F403
+"""Pascal artifact, coordinate, and bridge-message contracts."""
+from __future__ import annotations
+
+from collections.abc import Mapping, Sequence
+from dataclasses import asdict, dataclass, fields
+import math
+import secrets
+from typing import Any
+
+from aura_spatial_contracts import SpatialInteractionAction
+
+from aura_pascal_spatial_presentation_part1 import (
+    BridgeDirection,
+    PASCAL_COMMIT,
+    PASCAL_COORDINATE_RECEIPT_VERSION,
+    PASCAL_PRESENTATION_BRIDGE_VERSION,
+    PASCAL_REPOSITORY,
+    PASCAL_SCENE_ARTIFACT_VERSION,
+    PascalBridgeAction,
+    PascalPresentationError,
+    PascalPresentationState,
+    _clean_payload,
+    _hex64,
+    _identifier,
+    _required_text,
+    _strict_bool,
+    _strict_keys,
+    _timestamp,
+    _utc_timestamp,
+    bridge_sha256,
+    sha256_digest,
+)
+
 
 @dataclass(frozen=True)
 class PascalNodeBinding:
@@ -12,17 +43,27 @@ class PascalNodeBinding:
 
     def __post_init__(self) -> None:
         for name in ("node_id", "node_kind", "aura_entity_id", "storey_id"):
-            object.__setattr__(self, name, _identifier(getattr(self, name), f"node_binding.{name}"))
+            object.__setattr__(
+                self,
+                name,
+                _identifier(getattr(self, name), f"node_binding.{name}"),
+            )
         object.__setattr__(
             self,
             "aura_target_ref",
-            _required_text(self.aura_target_ref, "node_binding.aura_target_ref", maximum=2048),
+            _required_text(
+                self.aura_target_ref,
+                "node_binding.aura_target_ref",
+                maximum=2048,
+            ),
         )
-        if type(self.selectable) is not bool:
+        if not isinstance(self.selectable, bool):
             raise PascalPresentationError("node_binding.selectable must be a boolean")
 
     @classmethod
     def from_mapping(cls, value: Mapping[str, Any]) -> "PascalNodeBinding":
+        if not isinstance(value, Mapping):
+            raise PascalPresentationError("PascalNodeBinding must be an object")
         _strict_keys(value, {field.name for field in fields(cls)}, "PascalNodeBinding")
         return cls(**dict(value))
 
@@ -51,11 +92,25 @@ class PascalSceneArtifactManifest:
         object.__setattr__(self, "artifact_id", _identifier(self.artifact_id, "artifact_id"))
         if self.repository != PASCAL_REPOSITORY or self.commit != PASCAL_COMMIT:
             raise PascalPresentationError("artifact must bind the exact approved Pascal source")
-        if self.source_kind not in {"PASCAL_BUILD_JSON", "IFC_CONVERTED", "SYNTHETIC_FIXTURE"}:
+        if self.source_kind not in {
+            "PASCAL_BUILD_JSON",
+            "IFC_CONVERTED",
+            "SYNTHETIC_FIXTURE",
+        }:
             raise PascalPresentationError("unsupported Pascal artifact source_kind")
-        object.__setattr__(self, "package_lock_digest", _hex64(self.package_lock_digest, "package_lock_digest"))
-        object.__setattr__(self, "scene_json_sha256", _hex64(self.scene_json_sha256, "scene_json_sha256"))
+        object.__setattr__(
+            self,
+            "package_lock_digest",
+            _hex64(self.package_lock_digest, "package_lock_digest"),
+        )
+        object.__setattr__(
+            self,
+            "scene_json_sha256",
+            _hex64(self.scene_json_sha256, "scene_json_sha256"),
+        )
         object.__setattr__(self, "root_node_id", _identifier(self.root_node_id, "root_node_id"))
+        if not isinstance(self.storey_ids, tuple):
+            raise PascalPresentationError("storey_ids must be a tuple")
         storeys = tuple(_identifier(item, "storey_ids[]") for item in self.storey_ids)
         if not storeys or len(storeys) != len(set(storeys)):
             raise PascalPresentationError("storey_ids must be unique and non-empty")
@@ -70,9 +125,13 @@ class PascalSceneArtifactManifest:
             raise PascalPresentationError("node and Aura entity mappings must be one-to-one")
         if self.root_node_id not in set(node_ids):
             raise PascalPresentationError("root_node_id is not present in node_bindings")
-        unknown_storeys = sorted({item.storey_id for item in self.node_bindings} - set(storeys))
+        unknown_storeys = sorted(
+            {item.storey_id for item in self.node_bindings} - set(storeys)
+        )
         if unknown_storeys:
-            raise PascalPresentationError(f"node bindings reference unknown storeys: {unknown_storeys}")
+            raise PascalPresentationError(
+                f"node bindings reference unknown storeys: {unknown_storeys}"
+            )
         for name, expected in (
             ("working_copy_only", True),
             ("persistent_scene_mutation", False),
@@ -85,8 +144,7 @@ class PascalSceneArtifactManifest:
         if self.version != PASCAL_SCENE_ARTIFACT_VERSION:
             raise PascalPresentationError("unsupported Pascal artifact manifest version")
         supplied = _hex64(self.artifact_digest, "artifact_digest")
-        expected = _sha256(self._body())
-        if supplied != expected:
+        if supplied != sha256_digest(self._body()):
             raise PascalPresentationError("Pascal artifact digest is invalid")
 
     def _body(self) -> dict[str, Any]:
@@ -114,6 +172,8 @@ class PascalSceneArtifactManifest:
 
     @classmethod
     def from_mapping(cls, value: Mapping[str, Any]) -> "PascalSceneArtifactManifest":
+        if not isinstance(value, Mapping):
+            raise PascalPresentationError("PascalSceneArtifactManifest must be an object")
         expected = {
             "artifact_id",
             "artifact_digest",
@@ -134,6 +194,14 @@ class PascalSceneArtifactManifest:
             "version",
         }
         _strict_keys(value, expected, "PascalSceneArtifactManifest")
+        storeys = value["storey_ids"]
+        bindings = value["node_bindings"]
+        if isinstance(storeys, (str, bytes, bytearray)) or not isinstance(storeys, Sequence):
+            raise PascalPresentationError("storey_ids must be an array")
+        if isinstance(bindings, (str, bytes, bytearray)) or not isinstance(bindings, Sequence):
+            raise PascalPresentationError("node_bindings must be an array")
+        if any(not isinstance(item, Mapping) for item in bindings):
+            raise PascalPresentationError("node_bindings rows must be objects")
         return cls(
             artifact_id=value["artifact_id"],
             artifact_digest=value["artifact_digest"],
@@ -141,8 +209,8 @@ class PascalSceneArtifactManifest:
             package_lock_digest=value["package_lock_digest"],
             scene_json_sha256=value["scene_json_sha256"],
             root_node_id=value["root_node_id"],
-            storey_ids=tuple(value["storey_ids"]),
-            node_bindings=tuple(PascalNodeBinding.from_mapping(item) for item in value["node_bindings"]),
+            storey_ids=tuple(storeys),
+            node_bindings=tuple(PascalNodeBinding.from_mapping(item) for item in bindings),
             repository=value["repository"],
             commit=value["commit"],
             working_copy_only=value["working_copy_only"],
@@ -154,7 +222,7 @@ class PascalSceneArtifactManifest:
             version=value["version"],
         )
 
-    def binding_for_node(self, node_id: str) -> PascalNodeBinding:
+    def binding_for_node(self, node_id: Any) -> PascalNodeBinding:
         selected = _identifier(node_id, "node_id")
         matches = [item for item in self.node_bindings if item.node_id == selected]
         if len(matches) != 1:
@@ -163,6 +231,17 @@ class PascalSceneArtifactManifest:
 
     def root_binding(self) -> PascalNodeBinding:
         return self.binding_for_node(self.root_node_id)
+
+    def first_selectable_on_storey(self, storey_id: str) -> PascalNodeBinding:
+        storey = _identifier(storey_id, "storey_id")
+        matches = [
+            item
+            for item in self.node_bindings
+            if item.storey_id == storey and item.selectable
+        ]
+        if not matches:
+            raise PascalPresentationError("storey has no selectable Pascal node")
+        return sorted(matches, key=lambda item: item.node_id)[0]
 
 
 @dataclass(frozen=True)
@@ -189,7 +268,7 @@ class AuraPascalCoordinateReceipt:
             object.__setattr__(self, name, _hex64(getattr(self, name), name))
         for name in ("pascal_frame_id", "aura_frame_id"):
             object.__setattr__(self, name, _identifier(getattr(self, name), name))
-        if len(self.transform_matrix) != 16:
+        if not isinstance(self.transform_matrix, tuple) or len(self.transform_matrix) != 16:
             raise PascalPresentationError("transform_matrix must contain 16 values")
         matrix = tuple(float(item) for item in self.transform_matrix)
         if not all(math.isfinite(item) for item in matrix):
@@ -210,7 +289,7 @@ class AuraPascalCoordinateReceipt:
         if self.version != PASCAL_COORDINATE_RECEIPT_VERSION:
             raise PascalPresentationError("unsupported coordinate receipt version")
         supplied = _hex64(self.receipt_digest, "receipt_digest")
-        if supplied != _sha256(self._body()):
+        if supplied != sha256_digest(self._body()):
             raise PascalPresentationError("coordinate receipt digest is invalid")
 
     def _body(self) -> dict[str, Any]:
@@ -236,6 +315,8 @@ class AuraPascalCoordinateReceipt:
 
     @classmethod
     def from_mapping(cls, value: Mapping[str, Any]) -> "AuraPascalCoordinateReceipt":
+        if not isinstance(value, Mapping):
+            raise PascalPresentationError("AuraPascalCoordinateReceipt must be an object")
         expected = {
             "receipt_id",
             "receipt_digest",
@@ -254,6 +335,9 @@ class AuraPascalCoordinateReceipt:
             "version",
         }
         _strict_keys(value, expected, "AuraPascalCoordinateReceipt")
+        matrix = value["transform_matrix"]
+        if isinstance(matrix, (str, bytes, bytearray)) or not isinstance(matrix, Sequence):
+            raise PascalPresentationError("transform_matrix must be an array")
         return cls(
             receipt_id=value["receipt_id"],
             receipt_digest=value["receipt_digest"],
@@ -261,7 +345,7 @@ class AuraPascalCoordinateReceipt:
             spatial_scene_digest=value["spatial_scene_digest"],
             pascal_frame_id=value["pascal_frame_id"],
             aura_frame_id=value["aura_frame_id"],
-            transform_matrix=tuple(value["transform_matrix"]),
+            transform_matrix=tuple(matrix),
             source_unit_meters=value["source_unit_meters"],
             destination_unit_meters=value["destination_unit_meters"],
             node_mapping_digest=value["node_mapping_digest"],
@@ -306,8 +390,16 @@ class AuraPascalBridgeMessage:
             object.__setattr__(self, name, _hex64(getattr(self, name), name))
         object.__setattr__(self, "sent_at", _timestamp(self.sent_at))
         try:
-            direction = self.direction if isinstance(self.direction, BridgeDirection) else BridgeDirection(str(self.direction))
-            action = self.action if isinstance(self.action, PascalBridgeAction) else PascalBridgeAction(str(self.action))
+            direction = (
+                self.direction
+                if isinstance(self.direction, BridgeDirection)
+                else BridgeDirection(str(self.direction))
+            )
+            action = (
+                self.action
+                if isinstance(self.action, PascalBridgeAction)
+                else PascalBridgeAction(str(self.action))
+            )
         except ValueError as exc:
             raise PascalPresentationError("unsupported bridge direction or action") from exc
         object.__setattr__(self, "direction", direction)
@@ -316,7 +408,7 @@ class AuraPascalBridgeMessage:
         if self.version != PASCAL_PRESENTATION_BRIDGE_VERSION:
             raise PascalPresentationError("unsupported Pascal presentation bridge version")
         supplied = _hex64(self.message_digest, "message_digest")
-        if supplied != _sha256(self._body()):
+        if supplied != bridge_sha256(self._body()):
             raise PascalPresentationError("bridge message digest is invalid")
 
     def _body(self) -> dict[str, Any]:
@@ -331,8 +423,8 @@ class AuraPascalBridgeMessage:
             "coordinate_receipt_digest": self.coordinate_receipt_digest,
             "state_binding_digest": self.state_binding_digest,
             "sent_at": self.sent_at,
-            "direction": self.direction.value if isinstance(self.direction, BridgeDirection) else str(self.direction),
-            "action": self.action.value if isinstance(self.action, PascalBridgeAction) else str(self.action),
+            "direction": self.direction.value,
+            "action": self.action.value,
             "payload": dict(self.payload),
             "version": self.version,
         }
@@ -375,10 +467,12 @@ class AuraPascalBridgeMessage:
             "payload": clean_payload,
             "version": PASCAL_PRESENTATION_BRIDGE_VERSION,
         }
-        return cls(**body, message_digest=_sha256(body))
+        return cls(**body, message_digest=bridge_sha256(body))
 
     @classmethod
     def from_mapping(cls, value: Mapping[str, Any]) -> "AuraPascalBridgeMessage":
+        if not isinstance(value, Mapping):
+            raise PascalPresentationError("AuraPascalBridgeMessage must be an object")
         expected = {
             "message_id",
             "session_id",
@@ -400,7 +494,7 @@ class AuraPascalBridgeMessage:
         return cls(**dict(value))
 
 
-_PARENT_ACTIONS = frozenset(
+PARENT_ACTIONS = frozenset(
     {
         PascalBridgeAction.LOAD_ARTIFACT,
         PascalBridgeAction.SET_VIEW_2D,
@@ -412,7 +506,7 @@ _PARENT_ACTIONS = frozenset(
         PascalBridgeAction.DISSOLVE,
     }
 )
-_CHILD_ACTIONS = frozenset(
+CHILD_ACTIONS = frozenset(
     {
         PascalBridgeAction.READY,
         PascalBridgeAction.LOAD_RECEIPT,
@@ -423,7 +517,7 @@ _CHILD_ACTIONS = frozenset(
         PascalBridgeAction.DISSOLUTION_RECEIPT,
     }
 )
-_ACTION_STATE = {
+ACTION_STATE = {
     PascalBridgeAction.READY: ({PascalPresentationState.CREATED}, PascalPresentationState.READY),
     PascalBridgeAction.LOAD_ARTIFACT: ({PascalPresentationState.READY}, None),
     PascalBridgeAction.LOAD_RECEIPT: ({PascalPresentationState.READY}, PascalPresentationState.ACTIVE),
@@ -446,7 +540,7 @@ _ACTION_STATE = {
         PascalPresentationState.DISSOLVED,
     ),
 }
-_PENDING_RECEIPT_ACTION = {
+PENDING_RECEIPT_ACTION = {
     PascalBridgeAction.LOAD_ARTIFACT: PascalBridgeAction.LOAD_RECEIPT,
     PascalBridgeAction.SET_VIEW_2D: PascalBridgeAction.VIEW_STATE,
     PascalBridgeAction.SET_VIEW_3D: PascalBridgeAction.VIEW_STATE,
@@ -456,7 +550,7 @@ _PENDING_RECEIPT_ACTION = {
     PascalBridgeAction.RESET_CAMERA: PascalBridgeAction.VIEW_STATE,
     PascalBridgeAction.DISSOLVE: PascalBridgeAction.DISSOLUTION_RECEIPT,
 }
-_SPATIAL_ACTION_MAP = {
+SPATIAL_ACTION_MAP = {
     PascalBridgeAction.LOAD_ARTIFACT: SpatialInteractionAction.FOCUS,
     PascalBridgeAction.SET_VIEW_2D: SpatialInteractionAction.FOCUS,
     PascalBridgeAction.SET_VIEW_3D: SpatialInteractionAction.FOCUS,
@@ -474,4 +568,15 @@ _SPATIAL_ACTION_MAP = {
     PascalBridgeAction.DISSOLUTION_RECEIPT: SpatialInteractionAction.DESELECT,
 }
 
-__all__ = _p1.__all__ + ['AuraPascalBridgeMessage', 'AuraPascalCoordinateReceipt', 'PascalNodeBinding', 'PascalSceneArtifactManifest', '_ACTION_STATE', '_CHILD_ACTIONS', '_PARENT_ACTIONS', '_PENDING_RECEIPT_ACTION', '_SPATIAL_ACTION_MAP']
+
+__all__ = [
+    "ACTION_STATE",
+    "AuraPascalBridgeMessage",
+    "AuraPascalCoordinateReceipt",
+    "CHILD_ACTIONS",
+    "PARENT_ACTIONS",
+    "PENDING_RECEIPT_ACTION",
+    "PascalNodeBinding",
+    "PascalSceneArtifactManifest",
+    "SPATIAL_ACTION_MAP",
+]
