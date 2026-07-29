@@ -1,3 +1,5 @@
+"""Focused regression coverage for Aura's cross-platform thermal reader."""
+
 import sys
 from types import SimpleNamespace
 
