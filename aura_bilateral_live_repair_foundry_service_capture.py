@@ -67,24 +67,28 @@ class _CapturePersistenceMixin:
             for capture in self._captures.values():
                 self._scrub_capture(capture)
             self._captures.clear()
-        self._packets.clear()
-        self._pending_packet_archives.clear()
-        self._runtime_proofs.clear()
-        self._previews.clear()
+            self._packets.clear()
+            self._pending_packet_archives.clear()
+            self._runtime_proofs.clear()
+            self._previews.clear()
         if self._owns_archive:
             self.attempt_archive.close()
 
     def status(self) -> dict[str, Any]:
         with self._capture_lock:
             active_capture_count = sum(not item._closed for item in self._captures.values())
+            retained_packet_count = len(self._packets)
+            pending_packet_archive_count = len(self._pending_packet_archives)
+            retained_runtime_proof_count = len(self._runtime_proofs)
+            preview_receipt_count = len(self._previews)
         return {
             "ok": True,
             "version": VERSION,
             "active_capture_count": active_capture_count,
-            "retained_packet_count": len(self._packets),
-            "pending_packet_archive_count": len(self._pending_packet_archives),
-            "retained_runtime_proof_count": len(self._runtime_proofs),
-            "preview_receipt_count": len(self._previews),
+            "retained_packet_count": retained_packet_count,
+            "pending_packet_archive_count": pending_packet_archive_count,
+            "retained_runtime_proof_count": retained_runtime_proof_count,
+            "preview_receipt_count": preview_receipt_count,
             "attempt_archive": self.attempt_archive.status(),
             "canonical_owners": {
                 "sanitization": "aura_arena_experience.sanitize_experience_payload",
@@ -177,19 +181,17 @@ class _CapturePersistenceMixin:
 
     def retry_packet_archive(self, packet_id: str) -> dict[str, Any]:
         resolved = _required_text(packet_id, "packet_id", limit=128)
-        if resolved not in self._pending_packet_archives:
-            raise BilateralLiveRepairError("pending incident replay archive not found")
+        with self._capture_lock:
+            if resolved not in self._pending_packet_archives:
+                raise BilateralLiveRepairError("pending incident replay archive not found")
         return self._archive_pending_packet(resolved)
 
     def _archive_pending_packet(self, packet_id: str) -> dict[str, Any]:
-        entry = self._pending_packet_archives.get(packet_id)
+        with self._capture_lock:
+            entry = self._pending_packet_archives.get(packet_id)
         if entry is None:
             raise BilateralLiveRepairError(f"pending packet archive not found: {packet_id}")
         packet, contract = entry
-        # The packet is already privacy-sanitized and digest-bound. Preserve its
-        # exact canonical bytes as a string so Attempt Archive's key-based secret
-        # scrubber does not rewrite safe boolean fields such as
-        # ``raw_secret_retained`` and invalidate durable replay identity.
         packet_json = canonical_bytes(packet.to_dict()).decode("ascii")
         try:
             archive = self.attempt_archive.record(
@@ -229,7 +231,17 @@ class _CapturePersistenceMixin:
             raise BilateralLiveRepairError(
                 f"incident replay {packet.packet_id} retained in memory for archive retry"
             )
-        self._pending_packet_archives.pop(packet.packet_id, None)
+        with self._capture_lock:
+            retained = self._pending_packet_archives.get(packet.packet_id)
+            if retained is None or retained[0].packet_digest != packet.packet_digest:
+                raise BilateralLiveRepairError(
+                    "pending incident replay identity changed before durable completion"
+                )
+            self._pending_packet_archives.pop(packet.packet_id, None)
+            self._packets[packet.packet_id] = packet
+            self._packets.move_to_end(packet.packet_id)
+            while len(self._packets) > 32:
+                self._packets.popitem(last=False)
         return {"ok": True, "packet": packet.to_dict(), "attempt_artifact": archive}
 
     def _capture(self, capture_id: str) -> BoundedIncidentCapture:
@@ -281,10 +293,15 @@ class _CapturePersistenceMixin:
 
     def _packet(self, packet_id: str) -> IncidentReplayPacket:
         resolved = _required_text(packet_id, "packet_id", limit=128)
-        item = self._packets.get(resolved)
-        if item is not None:
-            self._packets.move_to_end(resolved)
-            return item
+        with self._capture_lock:
+            if resolved in self._pending_packet_archives:
+                raise BilateralLiveRepairError(
+                    "incident replay packet is pending durable archival"
+                )
+            item = self._packets.get(resolved)
+            if item is not None:
+                self._packets.move_to_end(resolved)
+                return item
         for summary in self.attempt_archive.list(
             workflow_id=resolved,
             route="bilateral-live-repair/incident-capture",
@@ -300,18 +317,16 @@ class _CapturePersistenceMixin:
                 except json.JSONDecodeError as exc:
                     raise BilateralLiveRepairError("archived incident packet JSON is invalid") from exc
             elif isinstance(result.get("incident_replay_packet"), Mapping):
-                # Read-only compatibility for artifacts created before exact-byte
-                # packet retention. Identity validation still fails closed if an
-                # older archive scrubbed a digest-bearing nested field.
                 raw_packet = result["incident_replay_packet"]
             if isinstance(raw_packet, Mapping):
                 item = IncidentReplayPacket.from_mapping(raw_packet)
                 if item.packet_id != resolved:
                     raise BilateralLiveRepairError("archived incident packet identity differs from its workflow key")
-                self._packets[resolved] = item
-                self._packets.move_to_end(resolved)
-                while len(self._packets) > 32:
-                    self._packets.popitem(last=False)
+                with self._capture_lock:
+                    self._packets[resolved] = item
+                    self._packets.move_to_end(resolved)
+                    while len(self._packets) > 32:
+                        self._packets.popitem(last=False)
                 return item
         raise BilateralLiveRepairError("incident replay packet was not retained by the canonical Attempt Archive")
 
