@@ -12,7 +12,7 @@ from collections.abc import Callable, Mapping
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import mimetypes
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 from urllib.parse import urlparse
 
@@ -49,13 +49,12 @@ class LiveRepairShowcaseState(ShowcaseState):
         super().__init__(repo_root, demo_project=demo_project, auto_start=auto_start)
         self._current_identity_resolver = current_identity_resolver
         self._live_repair: BilateralLiveRepairService | None = None
-        self.live_repair_attempts: dict[str, RepairCandidateResult] = {}
+        self.live_repair_attempts: dict[tuple[str, str], RepairCandidateResult] = {}
         self.live_repair_previews: dict[str, PreviewRollbackReceipt] = {}
 
     @property
     def live_repair(self) -> BilateralLiveRepairService:
         if self._live_repair is None:
-            # Reuse the exact same canonical Attempt Archive object as Showcase.
             self._live_repair = BilateralLiveRepairService(
                 self.repo_root,
                 attempt_archive=self.attempt_archive,
@@ -98,6 +97,19 @@ def _parts(path: str) -> list[str]:
     return [part for part in path.strip("/").split("/") if part]
 
 
+def _approved_repo_relative_path(value: Any, name: str, allowed: set[str]) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    if "\\" in text or "\0" in text or "\n" in text or "\r" in text:
+        raise ValueError(f"{name} must be a POSIX repository-relative path")
+    pure = PurePosixPath(text)
+    normalized = pure.as_posix()
+    if pure.is_absolute() or ".." in pure.parts or normalized not in allowed:
+        raise ValueError(f"{name} must be an approved repo-relative path")
+    return normalized
+
+
 def dispatch_live_repair_request(
     state: LiveRepairShowcaseState,
     method: str,
@@ -120,8 +132,6 @@ def dispatch_live_repair_request(
             and parts[:4] == ["api", "showcase", "live-repair", "capture"]
         ):
             capture_id, action = parts[4], parts[5]
-            # The route shape intentionally reserves the final component for
-            # future versioning while accepting the stable v1 literal now.
             if parts[6] != "v1":
                 return _error("unsupported live-repair route version", 404)
             if action == "event":
@@ -147,16 +157,16 @@ def dispatch_live_repair_request(
                 venv_str = str(venv_path)
                 if any(c in venv_str for c in ("\0", "\n", "\r", ";", "|", "&", "$", "`")):
                     return _error("venv_path contains unsafe characters", 400)
-            profile_path = str(body.get("profile_path") or "")
-            output_dir = str(body.get("output_dir") or "")
-            allowed_repo_relative = {
-                "scripts/aura_runtime_profile_v2.json",
-                "scripts/runtime_profile_v2_output",
-            }
-            if profile_path and not any(profile_path.endswith(allowed) for allowed in allowed_repo_relative):
-                return _error("profile_path must be an approved repo-relative path", 400)
-            if output_dir and not any(output_dir.endswith(allowed) for allowed in allowed_repo_relative):
-                return _error("output_dir must be an approved repo-relative path", 400)
+            profile_path = _approved_repo_relative_path(
+                body.get("profile_path"),
+                "profile_path",
+                {".aura/runtime_profiles/construction_demo_bilateral.v2.json"},
+            )
+            output_dir = _approved_repo_relative_path(
+                body.get("output_dir"),
+                "output_dir",
+                {"scripts/runtime_profile_v2_output"},
+            )
             result = state.live_repair.execute_replay(
                 packet_id=str(body.get("packet_id") or ""),
                 profile_path=profile_path,
@@ -169,8 +179,9 @@ def dispatch_live_repair_request(
 
         if method == "POST" and route == "/api/showcase/live-repair/attempt":
             identity = BilateralIdentity.from_mapping(body.get("current_identity") or {})
+            packet_id = str(body.get("packet_id") or "")
             result = state.live_repair.record_repair_attempt(
-                packet_id=str(body.get("packet_id") or ""),
+                packet_id=packet_id,
                 hypothesis=body.get("hypothesis") if isinstance(body.get("hypothesis"), Mapping) else {},
                 candidate_digest=str(body.get("candidate_digest") or ""),
                 runtime_proof_ref=str(body.get("runtime_proof_ref") or ""),
@@ -182,7 +193,7 @@ def dispatch_live_repair_request(
                 current_identity=identity,
                 arena_id=str(body.get("arena_id") or "coding"),
             )
-            state.live_repair_attempts[result.attempt_id] = result
+            state.live_repair_attempts[(result.replay_packet_digest, result.attempt_id)] = result
             return _json(200 if result.promotion_ready else 409, {"ok": result.promotion_ready, "attempt": result.to_dict()})
 
         if method == "POST" and route == "/api/showcase/live-repair/preview":
@@ -207,20 +218,26 @@ def dispatch_live_repair_request(
 
         if method == "POST" and route == "/api/showcase/live-repair/projection":
             identity = BilateralIdentity.from_mapping(body.get("current_identity") or {})
+            packet_id = str(body.get("packet_id") or "")
+            packet = state.live_repair._packet(packet_id)
             attempt_ids = [str(item) for item in body.get("attempt_ids") or []]
             attempts = (
-                [state.live_repair_attempts[item] for item in attempt_ids if item in state.live_repair_attempts]
+                [
+                    state.live_repair_attempts[(packet.packet_digest, item)]
+                    for item in attempt_ids
+                    if (packet.packet_digest, item) in state.live_repair_attempts
+                ]
                 if attempt_ids
-                else list(state.live_repair.attempts_for_packet(str(body.get("packet_id") or "")))
+                else list(state.live_repair.attempts_for_packet(packet_id))
             )
             preview_id = str(body.get("preview_id") or "")
             preview = (
                 state.live_repair_previews.get(preview_id)
                 if preview_id
-                else state.live_repair.latest_preview(str(body.get("packet_id") or ""))
+                else state.live_repair.latest_preview(packet_id)
             )
             projection = state.live_repair.build_projection(
-                packet_id=str(body.get("packet_id") or ""),
+                packet_id=packet_id,
                 intent=body.get("intent") if isinstance(body.get("intent"), Mapping) else {},
                 plan=body.get("plan") if isinstance(body.get("plan"), Mapping) else {},
                 code_targets=[item for item in body.get("code_targets") or [] if isinstance(item, Mapping)],
