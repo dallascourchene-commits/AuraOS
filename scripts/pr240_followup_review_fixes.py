@@ -169,5 +169,12 @@ replace_once(
           python -m pip install --disable-pip-version-check pytest jsonschema ruff pyyaml
 """,
 )
+replace_once(
+    ".github/workflows/aura-review-learning.yml",
+    """          python scripts/aura_review_learning_architect_harness.py \\
+""",
+    """          PYTHONPATH=. python scripts/aura_review_learning_architect_harness.py \\
+""",
+)
 
 print("PR240 structural follow-up fixes applied")
