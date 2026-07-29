@@ -7,6 +7,7 @@ Construction truth owners.
 from __future__ import annotations
 
 import re
+import secrets
 from collections import OrderedDict
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import asdict, dataclass, fields
@@ -21,7 +22,7 @@ from aura_bilateral_live_repair_foundry import (
     PreviewRollbackReceipt,
     RepairCandidateResult,
 )
-from aura_bilateral_live_repair_foundry_contracts import canonical_sanitize, digest
+from aura_bilateral_live_repair_foundry_contracts import canonical_sanitize
 from aura_spatial_foundry_projection import (
     SPATIAL_FOUNDRY_PROJECTION_V2,
     build_spatial_foundry_projection_v2,
@@ -149,12 +150,6 @@ class ConstructionCoordinationCandidateArtifact:
     def from_mapping(cls, value: Mapping[str, Any]) -> "ConstructionCoordinationCandidateArtifact":
         if not isinstance(value, Mapping):
             raise ValueError("Construction candidate must be an object")
-        expected = {field.name for field in fields(cls)}
-        if set(value) != expected:
-            raise ValueError(
-                "Construction candidate schema mismatch; "
-                f"missing={sorted(expected - set(value))}, unknown={sorted(set(value) - expected)}"
-            )
         if any(
             key in value
             for key in (
@@ -166,6 +161,12 @@ class ConstructionCoordinationCandidateArtifact:
             )
         ):
             raise ValueError("software repair fields are forbidden in Construction candidates")
+        expected = {field.name for field in fields(cls)}
+        if set(value) != expected:
+            raise ValueError(
+                "Construction candidate schema mismatch; "
+                f"missing={sorted(expected - set(value))}, unknown={sorted(set(value) - expected)}"
+            )
         return cls(**{name: value[name] for name in expected})
 
     def to_dict(self) -> dict[str, Any]:
@@ -413,7 +414,7 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
 
     def start_capture(self, contract: Mapping[str, Any]) -> dict[str, Any]:
         arena = validate_foundry_arena(contract.get("arena_id") or "construction")
-        result = super().start_capture(contract)
+        result = super().start_capture({**dict(contract), "arena_id": arena})
         capture_id = str(result["capture_id"])
         with self._capture_lock:
             self._capture_arena[capture_id] = arena
@@ -438,8 +439,13 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         finally:
             self._prune_capture_arenas()
 
+    def packet(self, packet_id: str):
+        """Return one canonical replay packet through a stable adapter API."""
+
+        return self._packet(packet_id)
+
     def arena_for_packet(self, packet_id: str) -> str:
-        self._packet(packet_id)
+        self.packet(packet_id)
         return self._arena_archive.arena_for_packet(packet_id)
 
     def record_repair_attempt(
@@ -572,7 +578,9 @@ class TrustedBilateralIdentityBroker:
 
     def issue_summary(self) -> dict[str, Any]:
         item = self._current()
-        handle = f"BID-{item.identity_digest[:24]}"
+        handle = f"BID-{secrets.token_hex(16)}"
+        while handle in self._handles:
+            handle = f"BID-{secrets.token_hex(16)}"
         self._handles[handle] = item
         self._handles.move_to_end(handle)
         while len(self._handles) > self.max_handles:
@@ -617,7 +625,7 @@ class TrustedBilateralIdentityBroker:
         if expected is not None:
             expected.assert_current(current)
         self._handles.move_to_end(key)
-        return current
+        return retained
 
 
 def reject_raw_identity_currency_claim(value: Mapping[str, Any]) -> None:
