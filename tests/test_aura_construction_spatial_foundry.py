@@ -1432,6 +1432,12 @@ vm.runInThisContext(fs.readFileSync(process.argv[1], 'utf8'));
 (async () => {
   await new Promise(resolve => setImmediate(resolve));
   const projectionPath = '/api/showcase/live-repair/projection';
+  for (const value of [false, null, '', []]) {
+    await assert.rejects(
+      window.Showcase.api(projectionPath, {domain: value}),
+      /Construction projection domain must be an object/,
+    );
+  }
   const malformedRows = [false, null, '', {unexpected: 'object'}];
   for (const key of ['domain_targets', 'domain_artifacts', 'coordination_candidates']) {
     for (const value of malformedRows) {

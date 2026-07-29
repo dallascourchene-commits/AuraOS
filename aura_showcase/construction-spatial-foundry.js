@@ -160,9 +160,10 @@
       ) {
         throw new Error('Construction projection domain must be an object.');
       }
+      const domain = hasOwn(next, 'domain') ? next.domain : {};
       next.projection_version = 'AURA_SPATIAL_FOUNDRY_PROJECTION_V2';
       next.domain = {
-        ...(next.domain || {}),
+        ...domain,
         arena_id: 'construction',
         domain_type: 'CONSTRUCTION',
         adapter_version: 'AURA_CONSTRUCTION_SPATIAL_FOUNDRY_BROWSER_V1',
