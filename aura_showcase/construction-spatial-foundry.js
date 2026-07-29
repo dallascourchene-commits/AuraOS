@@ -1,6 +1,7 @@
 'use strict';
 
 (() => {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
   const S = window.Showcase;
   if (!S || typeof S.api !== 'function') return;
 
@@ -39,7 +40,12 @@
 
   const requiredAssets = () => {
     const raw = $('construction-foundry-required-assets')?.value || '[]';
-    const parsed = JSON.parse(raw);
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch (_error) {
+      throw new Error('Required assets must contain valid JSON.');
+    }
     if (!Array.isArray(parsed)) throw new Error('Required assets must be a JSON array.');
     return parsed.map((item, index) => {
       if (!item || typeof item !== 'object' || Array.isArray(item)) {
