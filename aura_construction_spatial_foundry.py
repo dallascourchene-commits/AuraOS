@@ -6,11 +6,11 @@ Construction truth owners.
 """
 from __future__ import annotations
 
+import re
 from collections import OrderedDict
 from collections.abc import Callable, Mapping, Sequence
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, fields
 from pathlib import Path
-import re
 from typing import Any
 
 from aura_arena_attempt_archive import ArenaAttemptArchive
@@ -45,6 +45,7 @@ _ALLOWED_ASSESSMENT_STATUS = frozenset(
     }
 )
 _HEX = re.compile(r"^[0-9a-f]{40,64}$")
+MAX_REQUEST_NESTING = 12
 _RAW_CURRENCY_KEYS = frozenset(
     {
         "identitycurrency",
@@ -148,7 +149,7 @@ class ConstructionCoordinationCandidateArtifact:
     def from_mapping(cls, value: Mapping[str, Any]) -> "ConstructionCoordinationCandidateArtifact":
         if not isinstance(value, Mapping):
             raise ValueError("Construction candidate must be an object")
-        expected = set(cls.__dataclass_fields__)
+        expected = {field.name for field in fields(cls)}
         if set(value) != expected:
             raise ValueError(
                 "Construction candidate schema mismatch; "
@@ -165,7 +166,7 @@ class ConstructionCoordinationCandidateArtifact:
             )
         ):
             raise ValueError("software repair fields are forbidden in Construction candidates")
-        return cls(**{name: value[name] for name in cls.__dataclass_fields__})
+        return cls(**{name: value[name] for name in expected})
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -217,13 +218,13 @@ class DomainDecisionEnvelope:
     def from_mapping(cls, value: Mapping[str, Any]) -> "DomainDecisionEnvelope":
         if not isinstance(value, Mapping):
             raise ValueError("domain decision must be an object")
-        expected = set(cls.__dataclass_fields__)
+        expected = {field.name for field in fields(cls)}
         if set(value) != expected:
             raise ValueError(
                 "domain decision schema mismatch; "
                 f"missing={sorted(expected - set(value))}, unknown={sorted(set(value) - expected)}"
             )
-        return cls(**{name: value[name] for name in cls.__dataclass_fields__})
+        return cls(**{name: value[name] for name in expected})
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -239,6 +240,9 @@ class _ArenaBoundArchive:
 
     def bind_capture(self, capture_id: str, arena_id: str) -> None:
         self._capture_arenas[_required_text(capture_id, "capture_id")] = validate_foundry_arena(arena_id)
+
+    def unbind_capture(self, capture_id: str) -> None:
+        self._capture_arenas.pop(str(capture_id or ""), None)
 
     def bind_packet(self, packet_id: str, arena_id: str) -> None:
         packet = _required_text(packet_id, "packet_id")
@@ -256,13 +260,23 @@ class _ArenaBoundArchive:
         retained = self._packet_arenas.get(packet)
         if retained:
             return retained
-        for summary in self.delegate.list(workflow_id=packet, limit=32):
-            arena = str(summary.get("arena_id") or "")
-            if arena:
-                resolved = validate_foundry_arena(arena)
-                self.bind_packet(packet, resolved)
-                return resolved
-        raise BilateralLiveRepairError("replay packet has no exact arena binding")
+        summaries = self.delegate.list(
+            workflow_id=packet,
+            route="bilateral-live-repair/incident-capture",
+            limit=32,
+        )
+        arenas = {
+            validate_foundry_arena(summary.get("arena_id"))
+            for summary in summaries
+            if summary.get("arena_id")
+        }
+        if len(arenas) != 1:
+            raise BilateralLiveRepairError(
+                "replay packet has no unique canonical incident-capture arena binding"
+            )
+        resolved = arenas.pop()
+        self.bind_packet(packet, resolved)
+        return resolved
 
     def record(
         self,
@@ -352,16 +366,58 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         )
 
     def close(self) -> None:
-        super().close()
-        if self._owns_bound_archive:
-            self._arena_archive.delegate.close()
+        try:
+            super().close()
+        finally:
+            self._capture_arena.clear()
+            self._arena_archive._capture_arenas.clear()
+            if self._owns_bound_archive:
+                self._arena_archive.delegate.close()
+
+    def _release_capture_arena(self, capture_id: str) -> None:
+        with self._capture_lock:
+            self._capture_arena.pop(str(capture_id or ""), None)
+            self._arena_archive.unbind_capture(capture_id)
+
+    def _prune_capture_arenas(self) -> None:
+        with self._capture_lock:
+            retained = set(self._captures)
+            stale = [
+                capture_id
+                for capture_id in self._capture_arena
+                if capture_id not in retained
+            ]
+        for capture_id in stale:
+            self._release_capture_arena(capture_id)
+
+    def _expire_capture(self, capture_id: str) -> None:
+        try:
+            super()._expire_capture(capture_id)
+        finally:
+            self._release_capture_arena(capture_id)
+
+    def _sweep_expired_captures(self) -> None:
+        super()._sweep_expired_captures()
+        self._prune_capture_arenas()
+
+    def observe(
+        self,
+        capture_id: str,
+        event_type: str,
+        payload: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        try:
+            return super().observe(capture_id, event_type, payload)
+        finally:
+            self._prune_capture_arenas()
 
     def start_capture(self, contract: Mapping[str, Any]) -> dict[str, Any]:
         arena = validate_foundry_arena(contract.get("arena_id") or "construction")
         result = super().start_capture(contract)
         capture_id = str(result["capture_id"])
-        self._capture_arena[capture_id] = arena
-        self._arena_archive.bind_capture(capture_id, arena)
+        with self._capture_lock:
+            self._capture_arena[capture_id] = arena
+            self._arena_archive.bind_capture(capture_id, arena)
         return {**result, "arena_id": arena, "arena_binding_immutable": True}
 
     def finalize_capture(self, capture_id: str, contract: Mapping[str, Any]) -> dict[str, Any]:
@@ -371,12 +427,16 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         supplied = contract.get("arena_id")
         if supplied is not None and validate_foundry_arena(supplied) != bound:
             raise BilateralLiveRepairError("capture finalization cannot change arena_id")
-        result = super().finalize_capture(capture_id, {**dict(contract), "arena_id": bound})
-        packet_id = str((result.get("packet") or {}).get("packet_id") or "")
-        if packet_id:
-            self._arena_archive.bind_packet(packet_id, bound)
-        self._capture_arena.pop(capture_id, None)
-        return {**result, "arena_id": bound}
+        try:
+            result = super().finalize_capture(
+                capture_id, {**dict(contract), "arena_id": bound}
+            )
+            packet_id = str((result.get("packet") or {}).get("packet_id") or "")
+            if packet_id:
+                self._arena_archive.bind_packet(packet_id, bound)
+            return {**result, "arena_id": bound}
+        finally:
+            self._prune_capture_arenas()
 
     def arena_for_packet(self, packet_id: str) -> str:
         self._packet(packet_id)
@@ -407,8 +467,8 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         )
 
     def run_governed_u7(self, **kwargs: Any) -> dict[str, Any]:
-        result = dict(super().run_governed_u7(**kwargs))
-        packet_id = str(kwargs.get("packet_id") or "")
+        packet_id = _required_text(kwargs.pop("packet_id", None), "packet_id")
+        result = dict(super().run_governed_u7(packet_id=packet_id, **kwargs))
         result["arena_id"] = self.arena_for_packet(packet_id)
         result["arena_binding_immutable"] = True
         return result
@@ -564,7 +624,11 @@ def reject_raw_identity_currency_claim(value: Mapping[str, Any]) -> None:
     if not isinstance(value, Mapping):
         raise ValueError("request body must be an object")
 
-    def walk(item: Any, path: str) -> None:
+    def walk(item: Any, path: str, depth: int) -> None:
+        if depth > MAX_REQUEST_NESTING:
+            raise BilateralLiveRepairError(
+                f"request nesting exceeds {MAX_REQUEST_NESTING} levels at {path}"
+            )
         if isinstance(item, Mapping):
             for key, child in item.items():
                 normalized = re.sub(r"[^a-z0-9]+", "", str(key).casefold())
@@ -572,12 +636,12 @@ def reject_raw_identity_currency_claim(value: Mapping[str, Any]) -> None:
                     raise BilateralLiveRepairError(
                         f"raw request cannot declare identity currency at {path}.{key}"
                     )
-                walk(child, f"{path}.{key}")
+                walk(child, f"{path}.{key}", depth + 1)
         elif isinstance(item, (list, tuple)):
             for index, child in enumerate(item):
-                walk(child, f"{path}[{index}]")
+                walk(child, f"{path}[{index}]", depth + 1)
 
-    walk(value, "$")
+    walk(value, "$", 0)
 
 
 __all__ = [
