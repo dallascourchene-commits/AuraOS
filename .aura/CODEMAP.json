@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1785274688,
+  "generated_at_unix": 1785284881,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1470,
+    "included_file_count": 1472,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -165,6 +165,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/pr240-resolve-open-reviews.yml",
       ".github/workflows/provider-routing-materialize.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
@@ -1101,6 +1102,7 @@
       "scripts/deploy_huggingface_space.py",
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
+      "scripts/pr240_resolve_open_reviews.py",
       "scripts/update_architect_benchmark_readme.py",
       "setup.sh",
       "setup_aura.sh",
@@ -1492,23 +1494,23 @@
     ]
   },
   "summary": {
-    "file_count": 1470,
-    "total_bytes": 57625449,
-    "text_tokens_est": 4951240,
+    "file_count": 1472,
+    "total_bytes": 57675633,
+    "text_tokens_est": 4963786,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 53,
       "knowledge_artifact": 187,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 945,
-      "schema_or_lexicon": 192,
+      "python_module": 946,
+      "schema_or_lexicon": 193,
       "support_file": 77
     },
     "topology_nodes": 10833,
     "topology_edges": 25881,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 32652.29
+    "elapsed_ms": 26366.76
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1861,6 +1863,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/pr240-resolve-open-reviews.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -2655,6 +2658,7 @@
       "scripts/deploy_huggingface_space.py",
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
+      "scripts/pr240_resolve_open_reviews.py",
       "scripts/update_architect_benchmark_readme.py",
       "setup.sh",
       "setup_aura.sh",
@@ -4021,7 +4025,8 @@
     "!state": [
       "aura_showcase/gate-dialogue.js:317",
       "aura_showcase/live-repair-foundry.js:53",
-      "aura_spatial_web/construction_demo_app.js:198"
+      "aura_spatial_web/construction_demo_app.js:198",
+      "scripts/pr240_resolve_open_reviews.py:510"
     ],
     "!statement": [
       "aura_showcase/civic.js:303",
@@ -81860,6 +81865,16 @@
         "signature_hash": "d2148ef08126acc1"
       }
     ],
+    "insert_before": [
+      {
+        "file": "scripts/pr240_resolve_open_reviews.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "scripts/pr240_resolve_open_reviews.py#function:insert_before:fcfa15d4b6fd7d4b",
+        "signature_hash": "f774f353079f0672"
+      }
+    ],
     "insert_llm_call": [
       {
         "file": "aura_model_cognome_call_logger.py",
@@ -90992,6 +91007,16 @@
         "end_line": 210,
         "semantic_id": "aura_patch_repair.py#async_function:repair_patch_format:e0e21d2d5c1bdf7d",
         "signature_hash": "77304a68cda00ca8"
+      }
+    ],
+    "replace_once": [
+      {
+        "file": "scripts/pr240_resolve_open_reviews.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 21,
+        "semantic_id": "scripts/pr240_resolve_open_reviews.py#function:replace_once:a1c304716d47638b",
+        "signature_hash": "84542ee41d8a4689"
       }
     ],
     "replace_or_insert": [
@@ -198751,6 +198776,52 @@
       ]
     },
     {
+      "path": ".github/workflows/pr240-resolve-open-reviews.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 4996,
+      "lines": 123,
+      "tokens_est": 1249,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f72e03499df8053e",
+      "vector": [
+        -0.001172,
+        -0.141772,
+        -0.137085,
+        0.097249,
+        0.167549,
+        0.090219,
+        -0.115995,
+        -0.195669,
+        -0.186296,
+        0.115995,
+        -0.066785,
+        -0.272999,
+        0.251909,
+        0.005858,
+        0.282373,
+        -0.209729,
+        0.080845,
+        -0.160519,
+        -0.298776,
+        -0.111309,
+        0.298776,
+        0.132399,
+        0.190982,
+        -0.205042,
+        -0.188639,
+        -0.043352,
+        -0.153489,
+        0.155832,
+        0.242536,
+        0.057412,
+        0.287059,
+        -0.015232
+      ]
+    },
+    {
       "path": ".github/workflows/provider-routing-materialize.yml",
       "role": "schema_or_lexicon",
       "bytes": 4134,
@@ -213903,6 +213974,58 @@
         0.247687,
         0.042849,
         -0.138997
+      ]
+    },
+    {
+      "path": "scripts/pr240_resolve_open_reviews.py",
+      "role": "python_module",
+      "bytes": 45188,
+      "lines": 1021,
+      "tokens_est": 11297,
+      "symbol_count": 2,
+      "commands": [
+        "!state"
+      ],
+      "command_lines": {
+        "!state": [
+          510
+        ]
+      },
+      "topology": {},
+      "digest8": "cdde74aef1df7fb7",
+      "vector": [
+        -0.241383,
+        -0.005666,
+        0.28218,
+        -0.109926,
+        -0.014732,
+        -0.28898,
+        0.064595,
+        0.241383,
+        0.245916,
+        -0.28218,
+        0.062329,
+        -0.057796,
+        0.19152,
+        0.082728,
+        -0.259515,
+        0.252716,
+        -0.021532,
+        0.232317,
+        -0.19152,
+        0.155256,
+        0.114459,
+        0.118992,
+        0.268581,
+        -0.148456,
+        0.125791,
+        -0.150723,
+        -0.143923,
+        0.137124,
+        -0.057796,
+        0.005666,
+        0.19152,
+        -0.164322
       ]
     },
     {
