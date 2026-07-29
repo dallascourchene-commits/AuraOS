@@ -391,3 +391,87 @@ def test_composed_static_surface_adds_trusted_identity_and_required_asset_intake
     assert b'id="construction-foundry-identity-summary"' in body
     assert b'id="construction-foundry-required-assets"' in body
     assert b"construction-spatial-foundry.js" in body
+
+
+def test_projection_and_request_nesting_are_bounded():
+    nested: dict[str, object] = {}
+    cursor = nested
+    for _ in range(14):
+        child: dict[str, object] = {}
+        cursor["child"] = child
+        cursor = child
+    with pytest.raises(ValueError, match="projection nesting"):
+        project_guarded_wfst(
+            arena_id="construction",
+            current_state="IDLE",
+            evidence=nested,
+        )
+    with pytest.raises(BilateralLiveRepairError, match="request nesting"):
+        reject_raw_identity_currency_claim(nested)
+
+
+def test_abnormal_capture_expiry_releases_arena_binding(tmp_path: Path):
+    item = identity()
+    service = ArenaBoundBilateralLiveRepairService(
+        tmp_path,
+        attempt_archive_db_path=tmp_path / "expiry-attempts.db",
+        current_identity_resolver=lambda _expected: item,
+    )
+    started = service.start_capture(
+        {
+            "identity": dataclasses.asdict(item),
+            "release_id": "release-expiry",
+            "environment_id": "browser-expiry",
+            "capture_authorized": True,
+            "max_events": 4,
+            "retention_seconds": 120,
+            "arena_id": "construction",
+        }
+    )
+    capture_id = started["capture_id"]
+    assert service._capture_arena[capture_id] == "construction"
+    service._expire_capture(capture_id)
+    assert capture_id not in service._capture_arena
+    assert capture_id not in service._arena_archive._capture_arenas
+    service.close()
+
+
+def test_arena_rehydrates_from_canonical_incident_row_after_restart(tmp_path: Path):
+    item = identity()
+    db_path = tmp_path / "restart-attempts.db"
+    first = ArenaBoundBilateralLiveRepairService(
+        tmp_path,
+        attempt_archive_db_path=db_path,
+        current_identity_resolver=lambda _expected: item,
+    )
+    started = first.start_capture(
+        {
+            "identity": dataclasses.asdict(item),
+            "release_id": "release-restart",
+            "environment_id": "browser-restart",
+            "capture_authorized": True,
+            "max_events": 4,
+            "retention_seconds": 120,
+            "arena_id": "construction",
+        }
+    )
+    first.mark(started["capture_id"], "restart identity check", {})
+    finalized = first.finalize_capture(
+        started["capture_id"],
+        {
+            "expected_positive": ["retain exact arena"],
+            "expected_negative": ["never infer arena from a later generic row"],
+            "preservation_claims": ["Attempt Archive remains canonical"],
+            "arena_id": "construction",
+        },
+    )
+    packet_id = finalized["packet"]["packet_id"]
+    first.close()
+
+    second = ArenaBoundBilateralLiveRepairService(
+        tmp_path,
+        attempt_archive_db_path=db_path,
+        current_identity_resolver=lambda _expected: item,
+    )
+    assert second.arena_for_packet(packet_id) == "construction"
+    second.close()
