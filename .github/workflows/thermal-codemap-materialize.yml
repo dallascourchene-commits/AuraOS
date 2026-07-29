@@ -1,0 +1,55 @@
+name: Materialize thermal CODEMAP once
+
+on:
+  push:
+    branches:
+      - "refactor/thermal-codemap-materialize"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: thermal-codemap-materialize-once
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out exact branch head
+        uses: actions/checkout@v4
+        with:
+          ref: refactor/thermal-codemap-materialize
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install declared dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Remove this one-use workflow and regenerate Aura maps
+        run: |
+          git rm .github/workflows/thermal-codemap-materialize.yml
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s topology_map.json
+          git diff --check
+
+      - name: Commit synchronized maps and self-removal
+        run: |
+          git config user.name "AuraOS CODEMAP Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
+          git diff --cached --check
+          git commit -m "chore: synchronize CODEMAP for thermal detection"
+          git push origin HEAD:refactor/thermal-codemap-materialize
