@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1481
-- **total_bytes**: 57816538
-- **text_tokens_est**: 4999018
+- **total_bytes**: 57820988
+- **text_tokens_est**: 5000130
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 54, 'knowledge_artifact': 188, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 949, 'schema_or_lexicon': 197, 'support_file': 77}
-- **topology_nodes**: 10939
-- **topology_edges**: 26297
+- **topology_nodes**: 10941
+- **topology_edges**: 26301
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 33198.52
+- **elapsed_ms**: 31593.99
 
 ## Coverage
 
@@ -142,7 +142,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!hard` -> `aura_showcase/gate-dialogue.js:250`
 - `!hasEvidence` -> `aura_showcase/human.js:460`
 - `!hasInput` -> `aura_showcase/human.js:636`
-- `!hasOwn` -> `aura_showcase/construction-spatial-foundry.js:173`
+- `!hasOwn` -> `aura_showcase/construction-spatial-foundry.js:184`
 - `!heal` -> `aura_node.py:5282`
 - `!help` -> `AURA_FINAL_REPORT.md:48`, `SYNTAX_FIXES_APPLIED.md:107`, `aura_node.py:7740`
 - `!hero` -> `aura_showcase/human.js:341`
@@ -393,8 +393,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 10939
-- **edges**: 26297
+- **nodes**: 10941
+- **edges**: 26301
 - **top_files_by_degree**:
   - `aura_node.py` degree=891 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=757 nodes=69 neighbors=`aura_construction_spatial_foundry.py`, `aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`
