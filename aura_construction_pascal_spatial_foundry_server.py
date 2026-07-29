@@ -141,7 +141,7 @@ def _body_must_not_supply_identity(body: Mapping[str, Any]) -> None:
         raise PascalPresentationError(f"request cannot supply server-owned Pascal session identity: {supplied}")
 
 
-def dispatch_pascal_foundry_request(state: PascalFoundryShowcaseState, method: str, raw_path: str, payload: Mapping[str, Any] | None = None) -> tuple[int, str, bytes]:
+def dispatch_pascal_foundry_request(state: PascalFoundryShowcaseState, method: str, raw_path: str, payload: Mapping[str, Any] | None = None, request_origin: str | None = None) -> tuple[int, str, bytes]:
     route = urlparse(raw_path).path.rstrip("/") or "/"
     body = dict(payload or {})
     try:
@@ -169,7 +169,7 @@ def dispatch_pascal_foundry_request(state: PascalFoundryShowcaseState, method: s
                 if set(body) != {"message"} or not isinstance(body["message"], Mapping):
                     raise PascalPresentationError("event request requires exactly one message object")
                 message = AuraPascalBridgeMessage.from_mapping(body["message"])
-                result = session.accept(message, origin=state.presentation_origin)
+                result = session.accept(message, origin=request_origin)
                 return _json(200, {"ok": True, "acceptance": result, "session": session.status()})
             if method == "POST" and suffix == "dissolution/finalize":
                 if set(body) != {"iframe_removed"} or body["iframe_removed"] is not True:
@@ -221,7 +221,7 @@ def make_handler(state: PascalFoundryShowcaseState):
     class Handler(BaseHTTPRequestHandler):
         def _send(self, status: int, content_type: str, body: bytes) -> None:
             self.send_response(status)
-            for name, value in (("Content-Type", content_type), ("Content-Length", str(len(body))), ("Cache-Control", "no-store"), ("X-Content-Type-Options", "nosniff"), ("Referrer-Policy", "no-referrer"), ("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'")):
+            for name, value in (("Content-Type", content_type), ("Content-Length", str(len(body))), ("Cache-Control", "no-store"), ("X-Content-Type-Options", "nosniff"), ("Referrer-Policy", "no-referrer"), ("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https://tile.openstreetmap.org data:; connect-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'")):
                 self.send_header(name, value)
             self.end_headers(); self.wfile.write(body)
 
@@ -247,7 +247,8 @@ def make_handler(state: PascalFoundryShowcaseState):
             try: payload = self._payload()
             except PascalPresentationError as exc:
                 self._send(*_error(str(exc), 400)); return
-            self._send(*dispatch_pascal_foundry_request(state, "POST", self.path, payload))
+            request_origin = self.headers.get("Origin")
+            self._send(*dispatch_pascal_foundry_request(state, "POST", self.path, payload, request_origin=request_origin))
 
         def log_message(self, format: str, *args: Any) -> None:
             return
