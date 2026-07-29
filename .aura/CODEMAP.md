@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1480
-- **total_bytes**: 57793528
-- **text_tokens_est**: 4993264
+- **total_bytes**: 57797206
+- **text_tokens_est**: 4994184
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 54, 'knowledge_artifact': 188, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 949, 'schema_or_lexicon': 196, 'support_file': 77}
 - **topology_nodes**: 10934
 - **topology_edges**: 26256
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 31403.23
+- **elapsed_ms**: 32535.38
 
 ## Coverage
 
@@ -31,7 +31,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Command Index
 
-- `!Array` -> `aura_human_agent_arena/jarvis.js:383`, `aura_showcase/civic.js:55`, `aura_showcase/construction-spatial-foundry.js:63`, `aura_spatial_web/construction_mesh_pass.js:23`
+- `!Array` -> `aura_human_agent_arena/jarvis.js:383`, `aura_showcase/civic.js:55`, `aura_showcase/construction-spatial-foundry.js:64`, `aura_spatial_web/construction_mesh_pass.js:23`
 - `!Aura_Memory` -> `.coderabbit.yaml:5`
 - `!Aura_Sandbox` -> `.gitignore:46`
 - `!Aura_Staging` -> `.github/workflows/aura-spatial-s5-s6-construction.yml:120`
@@ -62,7 +62,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!actionId` -> `aura_human_agent_arena/wfst.js:45`
 - `!actions` -> `aura_human_agent_arena/main.js:222`
 - `!activeApp` -> `aura_spatial_web/bootstrap.js:99`
-- `!adapter` -> `aura_showcase/construction-spatial-foundry.js:41`
+- `!adapter` -> `aura_showcase/construction-spatial-foundry.js:42`
 - `!ai_route` -> `aura_ai_router.py:628`, `aura_node.py:7274`
 - `!ai_router_regen` -> `aura_node.py:7289`
 - `!anchor` -> `aura_showcase/attempt-archive.js:83`
@@ -88,7 +88,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!calibrate` -> `AURA_FINAL_REPORT.md:163`, `aura_node.py:7604`
 - `!camera` -> `aura_spatial_web/construction_scene_renderer.js:166`
 - `!canvas` -> `aura_human_agent_arena/jarvis.js:372`, `aura_savings_dashboard.py:174`, `aura_showcase/intent.js:6`, `aura_showcase/topology.js:6`
-- `!card` -> `aura_showcase/construction-spatial-foundry.js:22`
+- `!card` -> `aura_showcase/construction-spatial-foundry.js:23`
 - `!catalyze` -> `AURA_FINAL_REPORT.md:156`, `aura_node.py:7311`, `generate_ai_router.py:356`, `test_aura_functions.py:920`
 - `!children` -> `aura_showcase/live-repair-foundry.js:196`
 - `!civicSessionId` -> `aura_human_agent_arena/main.js:818`
@@ -142,6 +142,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!hard` -> `aura_showcase/gate-dialogue.js:250`
 - `!hasEvidence` -> `aura_showcase/human.js:460`
 - `!hasInput` -> `aura_showcase/human.js:636`
+- `!hasOwn` -> `aura_showcase/construction-spatial-foundry.js:173`
 - `!heal` -> `aura_node.py:5282`
 - `!help` -> `AURA_FINAL_REPORT.md:48`, `SYNTAX_FIXES_APPLIED.md:107`, `aura_node.py:7740`
 - `!hero` -> `aura_showcase/human.js:341`
@@ -157,7 +158,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!invalid_base64` -> `test_scientific_memory.py:972`
 - `!isSelected` -> `aura_human_agent_arena/main.js:477`
 - `!isVisible` -> `aura_spatial_web/webgl2_gaussian_pass.js:262`
-- `!item` -> `aura_showcase/construction-spatial-foundry.js:66`, `aura_showcase/human.js:142`
+- `!item` -> `aura_showcase/construction-spatial-foundry.js:67`, `aura_showcase/human.js:142`
 - `!items` -> `aura_coding_arena/main.js:116`, `aura_human_agent_arena/main.js:869`, `aura_showcase/civic.js:6`, `aura_showcase/gate-dialogue.js:242`
 - `!keepSet` -> `aura_human_agent_arena/main.js:587`
 - `!known` -> `aura_spatial_web/gaussian_renderer.js:559`
@@ -178,8 +179,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!metrics` -> `aura_spatial_web/telemetry.js:23`
 - `!microArena` -> `aura_coding_arena/main.js:271`
 - `!nav` -> `aura_showcase/crucible.js:100`
-- `!next` -> `aura_showcase/construction-spatial-foundry.js:117`, `aura_showcase/human.js:624`
-- `!node` -> `aura_human_agent_arena/emergent.js:37`, `aura_showcase/construction-spatial-foundry.js:28`, `aura_showcase/gate-dialogue.js:229`, `aura_showcase/intent.js:346`
+- `!next` -> `aura_showcase/construction-spatial-foundry.js:118`, `aura_showcase/human.js:624`
+- `!node` -> `aura_human_agent_arena/emergent.js:37`, `aura_showcase/construction-spatial-foundry.js:29`, `aura_showcase/gate-dialogue.js:229`, `aura_showcase/intent.js:346`
 - `!nodeId` -> `aura_showcase/topology.js:70`
 - `!nodes` -> `aura_showcase/topology.js:296`
 - `!objective` -> `aura_human_agent_arena/emergent.js:156`
@@ -190,7 +191,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!packet` -> `aura_showcase/crucible.js:233`, `aura_showcase/gate-dialogue.js:152`, `aura_showcase/intent.js:254`
 - `!pairs` -> `aura_human_agent_arena/jarvis.js:395`
 - `!panel` -> `aura_human_agent_arena/main.js:241`
-- `!path` -> `aura_showcase/construction-spatial-foundry.js:71`
+- `!path` -> `aura_showcase/construction-spatial-foundry.js:72`
 - `!payload` -> `aura_spatial_web/construction_mesh_pass.js:71`, `aura_spatial_web/gaussian_renderer.js:220`
 - `!ping_mesh` -> `AURA_FINAL_REPORT.md:166`, `aura_capability_lane_registry.py:158`, `aura_node.py:5717`
 - `!pkt` -> `aura_human_agent_arena/main.js:298`
@@ -276,7 +277,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!value` -> `aura_showcase/app.js:223`, `aura_spatial_web/construction_overlay_pass.js:71`, `aura_spatial_web/interaction_adapter.js:37`, `aura_spatial_web/renderer_adapter.js:152`
 - `!vao` -> `aura_spatial_web/webgl2_gaussian_pass.js:328`
 - `!view` -> `aura_showcase/app.js:270`, `aura_showcase/crucible.js:126`, `aura_showcase/human.js:341`
-- `!visible` -> `aura_showcase/construction-spatial-foundry.js:23`
+- `!visible` -> `aura_showcase/construction-spatial-foundry.js:24`
 - `!voice` -> `aura_node.py:7803`
 - `!window` -> `aura_human_agent_arena/jarvis.js:72`
 - `!ws` -> `aura_human_agent_arena/main.js:239`
