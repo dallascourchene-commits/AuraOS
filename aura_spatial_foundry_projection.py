@@ -27,21 +27,54 @@ _AUTHORITY_TOKENS = frozenset(
         "accessgranted",
         "approval",
         "authorization",
+        "automaticcrystallization",
         "automaticcommit",
         "automaticexecution",
         "automaticmerge",
         "automaticpullrequest",
         "automaticpush",
+        "commit",
         "constructiontruth",
+        "deployment",
         "executionauthority",
+        "learningpromotion",
+        "merge",
+        "patch",
         "patchauthority",
         "paymentreleased",
+        "physicalwork",
         "physicalworkauthorized",
+        "professional",
         "professionalapproval",
         "productionmutation",
+        "pullrequest",
+        "push",
         "rendererauthority",
         "surveyauthority",
         "visualtruth",
+    }
+)
+_V1_FALSE_AUTHORITY = {
+    "visual_truth": False,
+    "patch": False,
+    "commit": False,
+    "push": False,
+    "pull_request": False,
+    "merge": False,
+    "deployment": False,
+    "production_mutation": False,
+    "professional": False,
+    "physical_work": False,
+    "learning_promotion": False,
+    "automatic_crystallization": False,
+}
+_REPAIR_CANDIDATE_FIELDS = frozenset(
+    {
+        "attempt_id",
+        "promotion_ready",
+        "runtime_proof_digest",
+        "failure_class",
+        "route_class",
     }
 )
 _DOMAIN_FALSE_AUTHORITY = {
@@ -211,6 +244,37 @@ def _validate_domain_artifact(row: Mapping[str, Any], index: int) -> dict[str, A
     return result
 
 
+def _reject_duplicate_identity(
+    rows: Sequence[Mapping[str, Any]],
+    key: str,
+    name: str,
+) -> None:
+    seen: set[str] = set()
+    for index, row in enumerate(rows):
+        identity = str(row.get(key) or "")
+        if identity in seen:
+            raise ValueError(f"{name}[{index}].{key} duplicates {identity}")
+        seen.add(identity)
+
+
+def _validate_coordination_candidate(
+    row: Mapping[str, Any],
+    index: int,
+) -> dict[str, Any]:
+    forbidden = sorted(_REPAIR_CANDIDATE_FIELDS.intersection(row))
+    if forbidden:
+        raise ValueError(
+            "software repair fields are forbidden in "
+            f"coordination_candidates[{index}]: {forbidden}"
+        )
+    if row.get("candidate_type") != "CONSTRUCTION_COORDINATION":
+        raise ValueError(
+            f"coordination_candidates[{index}].candidate_type must remain "
+            "CONSTRUCTION_COORDINATION"
+        )
+    return dict(row)
+
+
 def validate_projection_v1(value: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(value, Mapping):
         raise ValueError("base_projection must be an object")
@@ -224,6 +288,19 @@ def validate_projection_v1(value: Mapping[str, Any]) -> dict[str, Any]:
         or digest(projection) != supplied
     ):
         raise BilateralLiveRepairError("base Spatial Foundry V1 projection is invalid")
+    authority = projection.get("authority")
+    if not isinstance(authority, Mapping):
+        raise BilateralLiveRepairError(
+            "base Spatial Foundry V1 authority envelope is missing"
+        )
+    if any(authority.get(key) is not expected for key, expected in _V1_FALSE_AUTHORITY.items()):
+        raise BilateralLiveRepairError(
+            "base Spatial Foundry V1 authority envelope grants forbidden authority"
+        )
+    if authority.get("human_review_required") is not True:
+        raise BilateralLiveRepairError(
+            "base Spatial Foundry V1 authority envelope requires human review"
+        )
     return {**projection, "projection_digest": supplied}
 
 
@@ -317,10 +394,18 @@ def build_spatial_foundry_projection_v2(
         _validate_domain_artifact(row, index)
         for index, row in enumerate(_clean_rows(domain_artifacts, "domain_artifacts"))
     ]
+    _reject_duplicate_identity(clean_targets, "target_id", "domain_targets")
+    _reject_duplicate_identity(clean_artifacts, "artifact_id", "domain_artifacts")
     clean_presentation = _clean_mapping(presentation or {}, "presentation")
     clean_construction = _clean_mapping(construction or {}, "construction")
-    clean_candidates = _clean_rows(
-        coordination_candidates, "coordination_candidates", limit=64
+    clean_candidates = [
+        _validate_coordination_candidate(row, index)
+        for index, row in enumerate(
+            _clean_rows(coordination_candidates, "coordination_candidates", limit=64)
+        )
+    ]
+    _reject_duplicate_identity(
+        clean_candidates, "candidate_id", "coordination_candidates"
     )
     clean_decision = _clean_mapping(domain_decision or {}, "domain_decision")
     for key, expected in {
@@ -329,6 +414,8 @@ def build_spatial_foundry_projection_v2(
         "payment_released": False,
         "access_granted": False,
         "automatic_execution": False,
+        "survey_authority": False,
+        "construction_truth": False,
     }.items():
         if clean_decision.get(key, expected) is not expected:
             raise BilateralLiveRepairError(f"domain_decision.{key} must remain false")

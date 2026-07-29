@@ -23,43 +23,61 @@
           "candidate_id",
           "candidate_digest",
           "base_state_digest",
-          "assessment_status",
-          "closure_count",
-          "closure_total",
-          "open_obligations",
-          "schedule_delta",
-          "budget_delta",
-          "idle_time_delta",
-          "evidence_refs",
-          "recommended_for_human_review",
+          "scope",
+          "lane",
+          "title",
+          "summary",
+          "required_claim_ids",
+          "declared_hard_blockers",
+          "assumptions",
+          "authority_route",
+          "projected_time_delta_hours",
+          "projected_cost_delta_cad",
+          "projected_idle_delta_hours",
+          "safety_risk",
+          "deadline_risk",
+          "evidence_quality",
+          "reversibility",
+          "measurement_class",
           "candidate_type",
           "version"
         ],
         "properties": {
           "candidate_type": {"const": "CONSTRUCTION_COORDINATION"},
-          "version": {"const": "AURA_CONSTRUCTION_COORDINATION_CANDIDATE_V1"},
-          "assessment_status": {
-            "enum": [
-              "HARD_BLOCKED",
-              "NEEDS_EVIDENCE",
-              "EVIDENCE_SATISFIED",
-              "READY_FOR_HUMAN_REVIEW",
-              "DEFERRED",
-              "WAIVED_BY_AUTHORIZED_HUMAN",
-              "CONTRADICTED"
-            ]
+          "version": {
+            "const": "AURA_CONSTRUCTION_COORDINATION_CANDIDATE_PROJECTION_V1"
           },
-          "recommended_for_human_review": {"type": "boolean"},
           "candidate_id": {"type": "string", "minLength": 1},
-          "candidate_digest": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+          "candidate_digest": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$"
+          },
           "base_state_digest": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
-          "closure_count": {"type": "integer", "minimum": 0},
-          "closure_total": {"type": "integer", "minimum": 0},
-          "open_obligations": {"type": "array", "items": {"type": "string"}},
-          "schedule_delta": {"type": "object"},
-          "budget_delta": {"type": "object"},
-          "idle_time_delta": {"type": "object"},
-          "evidence_refs": {"type": "array", "items": {"type": "string"}}
+          "scope": {
+            "type": "object",
+            "required": ["project_id", "zone_id", "work_package_id"],
+            "properties": {
+              "project_id": {"type": "string", "minLength": 1},
+              "zone_id": {"type": "string"},
+              "work_package_id": {"type": "string"}
+            },
+            "additionalProperties": false
+          },
+          "lane": {"type": "string", "minLength": 1},
+          "title": {"type": "string", "minLength": 1},
+          "summary": {"type": "string", "minLength": 1},
+          "required_claim_ids": {"type": "array", "items": {"type": "string"}},
+          "declared_hard_blockers": {"type": "array", "items": {"type": "string"}},
+          "assumptions": {"type": "array", "items": {"type": "string"}},
+          "authority_route": {"type": "string", "minLength": 1},
+          "projected_time_delta_hours": {"type": "number"},
+          "projected_cost_delta_cad": {"type": "number"},
+          "projected_idle_delta_hours": {"type": "number"},
+          "safety_risk": {"type": "number", "minimum": 0, "maximum": 1},
+          "deadline_risk": {"type": "number", "minimum": 0, "maximum": 1},
+          "evidence_quality": {"type": "number", "minimum": 0, "maximum": 1},
+          "reversibility": {"type": "number", "minimum": 0, "maximum": 1},
+          "measurement_class": {"type": "string", "minLength": 1}
         },
         "not": {
           "anyOf": [
@@ -69,7 +87,7 @@
             {"required": ["route_class"]}
           ]
         },
-        "additionalProperties": true
+        "additionalProperties": false
       }
     },
     "domain_decision": {
@@ -85,6 +103,22 @@
         "human_review_required"
       ],
       "properties": {
+        "status": {
+          "enum": [
+            "READY_FOR_HUMAN_REVIEW",
+            "DEFERRED",
+            "REJECTED",
+            "WITHDRAWN"
+          ]
+        },
+        "candidate_id": {"type": "string", "minLength": 1},
+        "candidate_digest": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$"
+        },
+        "recommended_for_human_review": {"type": "boolean"},
+        "reasons": {"type": "array", "items": {"type": "string"}},
+        "open_obligations": {"type": "array", "items": {"type": "string"}},
         "physical_work_authorized": {"const": false},
         "professional_approval": {"const": false},
         "payment_released": {"const": false},

@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import asdict
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
@@ -152,6 +152,156 @@ def _is_v2_projection(body: Mapping[str, Any]) -> bool:
     )
 
 
+def _mapping_rows(body: Mapping[str, Any], key: str) -> list[Mapping[str, Any]]:
+    value = body.get(key) or []
+    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
+        raise BilateralLiveRepairError(f"{key} must be an array")
+    rows = list(value)
+    for index, row in enumerate(rows):
+        if not isinstance(row, Mapping):
+            raise BilateralLiveRepairError(f"{key}[{index}] must be an object")
+    return rows
+
+
+def _optional_mapping(body: Mapping[str, Any], key: str) -> Mapping[str, Any]:
+    value = body.get(key)
+    if value is None:
+        return {}
+    if not isinstance(value, Mapping):
+        raise BilateralLiveRepairError(f"{key} must be an object")
+    return value
+
+
+def _validate_required_asset_paths(body: Mapping[str, Any]) -> None:
+    assets = _mapping_rows(body, "required_assets")
+    seen: dict[str, str] = {}
+    for index, row in enumerate(assets):
+        path = str(row.get("path") or "").strip()
+        sha256 = str(row.get("sha256") or "").strip().lower()
+        if not path:
+            raise BilateralLiveRepairError(
+                f"required_assets[{index}].path must be non-empty"
+            )
+        previous = seen.get(path)
+        if previous is not None:
+            detail = "conflicting hashes" if previous != sha256 else "duplicate path"
+            raise BilateralLiveRepairError(
+                f"required_assets[{index}] has {detail}: {path}"
+            )
+        seen[path] = sha256
+
+
+def _selected_attempts(
+    state: ConstructionFoundryShowcaseState,
+    packet_id: str,
+    body: Mapping[str, Any],
+) -> list[RepairCandidateResult]:
+    attempts = list(state.live_repair.attempts_for_packet(packet_id))
+    raw_ids = body.get("attempt_ids") or []
+    if isinstance(raw_ids, (str, bytes, bytearray)) or not isinstance(
+        raw_ids, Sequence
+    ):
+        raise BilateralLiveRepairError("attempt_ids must be an array")
+    if not raw_ids:
+        return attempts
+    attempt_ids = [str(item or "").strip() for item in raw_ids]
+    if any(not item for item in attempt_ids):
+        raise BilateralLiveRepairError("attempt_ids must contain non-empty strings")
+    if len(attempt_ids) != len(set(attempt_ids)):
+        raise BilateralLiveRepairError("attempt_ids must not contain duplicates")
+    by_id = {item.attempt_id: item for item in attempts}
+    missing = [item for item in attempt_ids if item not in by_id]
+    if missing:
+        raise BilateralLiveRepairError(
+            f"requested attempts are not retained for this packet: {missing}"
+        )
+    return [by_id[item] for item in attempt_ids]
+
+
+def _v2_projection_response(
+    state: ConstructionFoundryShowcaseState,
+    body: Mapping[str, Any],
+) -> tuple[int, str, bytes]:
+    packet_id = str(body.get("packet_id") or "")
+    packet = state.live_repair.packet(packet_id)
+    identity = state.resolve_request_identity(body, expected=packet.identity)
+    attempts = _selected_attempts(state, packet_id, body)
+    preview_id = str(body.get("preview_id") or "")
+    preview: PreviewRollbackReceipt | None = (
+        state.live_repair_previews.get(preview_id)
+        if preview_id
+        else state.live_repair.latest_preview(packet_id)
+    )
+    if preview_id and preview is None:
+        raise BilateralLiveRepairError(
+            "requested preview is not retained for this packet"
+        )
+    if "u7_result" in body:
+        raise BilateralLiveRepairError(
+            "V2 projection cannot accept client-authored U7 evidence"
+        )
+    transition_state, transition_evidence = _derive_transition_state(
+        packet, attempts, preview, None
+    )
+    raw_domain = _optional_mapping(body, "domain")
+    requested_arena = raw_domain.get("arena_id")
+    if requested_arena not in {None, "", "construction"}:
+        raise BilateralLiveRepairError(
+            "Construction server domain.arena_id must be construction"
+        )
+    requested_type = raw_domain.get("domain_type")
+    if requested_type not in {None, "", "CONSTRUCTION"}:
+        raise BilateralLiveRepairError(
+            "Construction server domain.domain_type must be CONSTRUCTION"
+        )
+    domain = {
+        **dict(raw_domain),
+        "arena_id": "construction",
+        "domain_type": "CONSTRUCTION",
+        "runtime_packet_digest": packet.packet_digest,
+    }
+    try:
+        projection = state.live_repair.build_projection_v2(
+            packet_id=packet_id,
+            intent=body.get("intent")
+            if isinstance(body.get("intent"), Mapping)
+            else {},
+            plan=body.get("plan") if isinstance(body.get("plan"), Mapping) else {},
+            code_targets=_mapping_rows(body, "code_targets"),
+            attempts=attempts,
+            preview=preview,
+            u7_result=None,
+            source_drilldown=_mapping_rows(body, "source_drilldown"),
+            receipt_drilldown=_mapping_rows(body, "receipt_drilldown"),
+            current_identity=identity,
+            domain=domain,
+            domain_targets=_mapping_rows(body, "domain_targets"),
+            domain_artifacts=_mapping_rows(body, "domain_artifacts"),
+            presentation=_optional_mapping(body, "presentation"),
+            construction=_optional_mapping(body, "construction"),
+            coordination_candidates=_mapping_rows(
+                body, "coordination_candidates"
+            ),
+            domain_decision=(
+                _optional_mapping(body, "domain_decision")
+                if "domain_decision" in body
+                else None
+            ),
+            transition_state=transition_state,
+            transition_evidence=transition_evidence,
+        )
+    except ValueError as exc:
+        raise BilateralLiveRepairError(str(exc)) from exc
+    return _json(
+        200,
+        {
+            "ok": True,
+            "projection": projection,
+            "construction_foundry_server_version": CONSTRUCTION_FOUNDRY_SERVER_VERSION,
+        },
+    )
+
+
 def _derive_transition_state(
     packet: Any,
     attempts: list[RepairCandidateResult],
@@ -251,88 +401,22 @@ def dispatch_construction_foundry_request(
             body.pop("identity_handle", None)
             return base_dispatch_live_repair_request(state, method, raw_path, body)
 
+        if method == "POST" and route == "/api/showcase/live-repair/replay/run":
+            packet_id = str(body.get("packet_id") or "")
+            packet = state.live_repair.packet(packet_id)
+            if state._identity_broker is not None:
+                state.resolve_request_identity(body, expected=packet.identity)
+                body.pop("identity_handle", None)
+            elif state._current_identity_resolver is not None:
+                state.live_repair.assert_current_identity(packet_id)
+            return base_dispatch_live_repair_request(state, method, raw_path, body)
+
         if (
             method == "POST"
             and route == "/api/showcase/live-repair/projection"
             and _is_v2_projection(body)
         ):
-            packet_id = str(body.get("packet_id") or "")
-            packet = state.live_repair.packet(packet_id)
-            identity = state.resolve_request_identity(body, expected=packet.identity)
-            attempt_ids = [str(item) for item in body.get("attempt_ids") or []]
-            attempts: list[RepairCandidateResult] = (
-                [
-                    state.live_repair_attempts[(packet.packet_digest, item)]
-                    for item in attempt_ids
-                    if (packet.packet_digest, item) in state.live_repair_attempts
-                ]
-                if attempt_ids
-                else list(state.live_repair.attempts_for_packet(packet_id))
-            )
-            preview_id = str(body.get("preview_id") or "")
-            preview: PreviewRollbackReceipt | None = (
-                state.live_repair_previews.get(preview_id)
-                if preview_id
-                else state.live_repair.latest_preview(packet_id)
-            )
-            u7_result = (
-                body.get("u7_result")
-                if isinstance(body.get("u7_result"), Mapping)
-                else None
-            )
-            transition_state, transition_evidence = _derive_transition_state(
-                packet, attempts, preview, u7_result
-            )
-            projection = state.live_repair.build_projection_v2(
-                packet_id=packet_id,
-                intent=body.get("intent") if isinstance(body.get("intent"), Mapping) else {},
-                plan=body.get("plan") if isinstance(body.get("plan"), Mapping) else {},
-                code_targets=[
-                    item for item in body.get("code_targets") or [] if isinstance(item, Mapping)
-                ],
-                attempts=attempts,
-                preview=preview,
-                u7_result=u7_result,
-                source_drilldown=[
-                    item for item in body.get("source_drilldown") or [] if isinstance(item, Mapping)
-                ],
-                receipt_drilldown=[
-                    item for item in body.get("receipt_drilldown") or [] if isinstance(item, Mapping)
-                ],
-                current_identity=identity,
-                domain=body.get("domain") if isinstance(body.get("domain"), Mapping) else {
-                    "arena_id": "construction",
-                    "domain_type": "CONSTRUCTION",
-                },
-                domain_targets=[
-                    item for item in body.get("domain_targets") or [] if isinstance(item, Mapping)
-                ],
-                domain_artifacts=[
-                    item for item in body.get("domain_artifacts") or [] if isinstance(item, Mapping)
-                ],
-                presentation=body.get("presentation") if isinstance(body.get("presentation"), Mapping) else {},
-                construction=body.get("construction") if isinstance(body.get("construction"), Mapping) else {},
-                coordination_candidates=[
-                    item
-                    for item in body.get("coordination_candidates") or []
-                    if isinstance(item, Mapping)
-                ],
-                domain_decision=(
-                    body.get("domain_decision")
-                    if isinstance(body.get("domain_decision"), Mapping)
-                    else None
-                ),
-                transition_state=transition_state,
-                transition_evidence=transition_evidence,
-            )
-            return _json(
-                200,
-                {
-                    "ok": True,
-                    "projection": projection,
-                    "construction_foundry_server_version": CONSTRUCTION_FOUNDRY_SERVER_VERSION,
-                },
-            )
+            return _v2_projection_response(state, body)
 
         if method == "POST" and route == "/api/showcase/live-repair/projection":
             packet_id = str(body.get("packet_id") or "")
@@ -347,9 +431,10 @@ def dispatch_construction_foundry_request(
             and route.startswith("/api/showcase/live-repair/capture/")
             and route.endswith("/finalize/v1")
         ):
+            _validate_required_asset_paths(body)
             body["arena_id"] = "construction"
 
-    except (BilateralLiveRepairError, BilateralRuntimeProfileError, ValueError) as exc:
+    except (BilateralLiveRepairError, BilateralRuntimeProfileError) as exc:
         return _error(str(exc), 409)
     except Exception:  # noqa: BLE001
         LOGGER.exception("unexpected Construction Foundry request failure")

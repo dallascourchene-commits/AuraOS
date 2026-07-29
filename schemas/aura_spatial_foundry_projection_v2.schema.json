@@ -79,6 +79,13 @@
     "domain_decision": {"type": "object"},
     "guarded_wfst": {
       "type": "object",
+      "required": [
+        "state_binding_digest",
+        "projection_only",
+        "execution_authority",
+        "state_mutation",
+        "human_review_required"
+      ],
       "properties": {
         "state_binding_digest": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
         "projection_only": {"const": true},

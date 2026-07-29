@@ -22,7 +22,11 @@ from aura_bilateral_live_repair_foundry import (
     PreviewRollbackReceipt,
     RepairCandidateResult,
 )
-from aura_bilateral_live_repair_foundry_contracts import canonical_sanitize
+from aura_construction_adapter import (
+    CONSTRUCTION_ADAPTER_VERSION,
+    ConstructionCoordinationCandidate,
+)
+from aura_construction_contracts import PATCH_AUTHORITY
 from aura_spatial_foundry_projection import (
     SPATIAL_FOUNDRY_PROJECTION_V2,
     build_spatial_foundry_projection_v2,
@@ -30,22 +34,22 @@ from aura_spatial_foundry_projection import (
     validate_foundry_arena,
 )
 
-CONSTRUCTION_CANDIDATE_VERSION = "AURA_CONSTRUCTION_COORDINATION_CANDIDATE_V1"
+CONSTRUCTION_CANDIDATE_VERSION = (
+    "AURA_CONSTRUCTION_COORDINATION_CANDIDATE_PROJECTION_V1"
+)
 DOMAIN_DECISION_VERSION = "AURA_CONSTRUCTION_DOMAIN_DECISION_ENVELOPE_V1"
 TRUSTED_IDENTITY_SUMMARY_VERSION = "AURA_TRUSTED_BILATERAL_IDENTITY_SUMMARY_V1"
 ARENA_BOUND_SERVICE_VERSION = "AURA_ARENA_BOUND_BILATERAL_LIVE_REPAIR_V1"
-_ALLOWED_ASSESSMENT_STATUS = frozenset(
+_ALLOWED_DECISION_STATUS = frozenset(
     {
-        "HARD_BLOCKED",
-        "NEEDS_EVIDENCE",
-        "EVIDENCE_SATISFIED",
         "READY_FOR_HUMAN_REVIEW",
         "DEFERRED",
-        "WAIVED_BY_AUTHORIZED_HUMAN",
-        "CONTRADICTED",
+        "REJECTED",
+        "WITHDRAWN",
     }
 )
 _HEX = re.compile(r"^[0-9a-f]{40,64}$")
+_CANDIDATE_HEX = re.compile(r"^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$")
 MAX_REQUEST_NESTING = 12
 _RAW_CURRENCY_KEYS = frozenset(
     {
@@ -58,7 +62,7 @@ _RAW_CURRENCY_KEYS = frozenset(
 
 
 def _required_text(value: Any, name: str, *, limit: int = 4096) -> str:
-    if type(value) is not str or not value.strip():
+    if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{name} must be a non-empty string")
     text = value.strip()
     if len(text.encode("utf-8")) > limit:
@@ -73,10 +77,13 @@ def _digest_text(value: Any, name: str) -> str:
     return text
 
 
-def _strict_int(value: Any, name: str, *, minimum: int = 0) -> int:
-    if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
-        raise ValueError(f"{name} must be an integer at least {minimum}")
-    return value
+def _candidate_digest_text(value: Any, name: str) -> str:
+    text = _required_text(value, name, limit=128).lower()
+    if not _CANDIDATE_HEX.fullmatch(text):
+        raise ValueError(
+            f"{name} must be a 32-character or 40-64 character lowercase hex digest"
+        )
+    return text
 
 
 def _strings(value: Any, name: str, *, limit: int = 256) -> tuple[str, ...]:
@@ -89,62 +96,33 @@ def _strings(value: Any, name: str, *, limit: int = 256) -> tuple[str, ...]:
         raise ValueError(f"{name} must not contain duplicates")
     return result
 
-
-def _mapping(value: Any, name: str) -> dict[str, Any]:
-    if not isinstance(value, Mapping):
-        raise ValueError(f"{name} must be an object")
-    clean, _ = canonical_sanitize(value)
-    if not isinstance(clean, Mapping):
-        raise ValueError(f"{name} must remain an object after sanitization")
-    return dict(clean)
-
-
 @dataclass(frozen=True)
 class ConstructionCoordinationCandidateArtifact:
-    candidate_id: str
-    candidate_digest: str
+    candidate: ConstructionCoordinationCandidate
     base_state_digest: str
-    assessment_status: str
-    closure_count: int
-    closure_total: int
-    open_obligations: tuple[str, ...]
-    schedule_delta: Mapping[str, Any]
-    budget_delta: Mapping[str, Any]
-    idle_time_delta: Mapping[str, Any]
-    evidence_refs: tuple[str, ...]
-    recommended_for_human_review: bool
-    candidate_type: str = "CONSTRUCTION_COORDINATION"
     version: str = CONSTRUCTION_CANDIDATE_VERSION
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "candidate_id", _required_text(self.candidate_id, "candidate_id"))
-        object.__setattr__(self, "candidate_digest", _digest_text(self.candidate_digest, "candidate_digest"))
-        object.__setattr__(self, "base_state_digest", _digest_text(self.base_state_digest, "base_state_digest"))
-        status = _required_text(self.assessment_status, "assessment_status", limit=128).upper()
-        if status not in _ALLOWED_ASSESSMENT_STATUS:
-            raise ValueError(f"unsupported Construction assessment_status: {status}")
-        object.__setattr__(self, "assessment_status", status)
-        closure_count = _strict_int(self.closure_count, "closure_count")
-        closure_total = _strict_int(self.closure_total, "closure_total")
-        if closure_count > closure_total:
-            raise ValueError("closure_count cannot exceed closure_total")
-        object.__setattr__(self, "closure_count", closure_count)
-        object.__setattr__(self, "closure_total", closure_total)
-        object.__setattr__(self, "open_obligations", _strings(self.open_obligations, "open_obligations"))
-        object.__setattr__(self, "schedule_delta", _mapping(self.schedule_delta, "schedule_delta"))
-        object.__setattr__(self, "budget_delta", _mapping(self.budget_delta, "budget_delta"))
-        object.__setattr__(self, "idle_time_delta", _mapping(self.idle_time_delta, "idle_time_delta"))
-        object.__setattr__(self, "evidence_refs", _strings(self.evidence_refs, "evidence_refs"))
-        if type(self.recommended_for_human_review) is not bool:
-            raise ValueError("recommended_for_human_review must be a boolean")
-        if self.recommended_for_human_review != (status == "READY_FOR_HUMAN_REVIEW"):
+        if not isinstance(self.candidate, ConstructionCoordinationCandidate):
             raise ValueError(
-                "recommended_for_human_review is true only for READY_FOR_HUMAN_REVIEW"
+                "candidate must be owned by "
+                "aura_construction_adapter.ConstructionCoordinationCandidate"
             )
-        if self.candidate_type != "CONSTRUCTION_COORDINATION":
-            raise ValueError("candidate_type must remain CONSTRUCTION_COORDINATION")
+        object.__setattr__(
+            self,
+            "base_state_digest",
+            _digest_text(self.base_state_digest, "base_state_digest"),
+        )
         if self.version != CONSTRUCTION_CANDIDATE_VERSION:
-            raise ValueError("unsupported Construction candidate version")
+            raise ValueError("unsupported Construction candidate projection version")
+
+    @property
+    def candidate_id(self) -> str:
+        return self.candidate.candidate_id
+
+    @property
+    def candidate_digest(self) -> str:
+        return self.candidate.candidate_digest
 
     @classmethod
     def from_mapping(cls, value: Mapping[str, Any]) -> "ConstructionCoordinationCandidateArtifact":
@@ -161,16 +139,72 @@ class ConstructionCoordinationCandidateArtifact:
             )
         ):
             raise ValueError("software repair fields are forbidden in Construction candidates")
-        expected = {field.name for field in fields(cls)}
+        candidate_fields = {
+            field.name
+            for field in fields(ConstructionCoordinationCandidate)
+            if field.name
+            not in {
+                "version",
+                "proposal_only",
+                "physical_work_authorized",
+                "payment_released",
+                "access_controlled",
+                "patch_authority",
+                "vsa_patch_authority",
+            }
+        }
+        expected = candidate_fields | {
+            "base_state_digest",
+            "candidate_type",
+            "version",
+        }
         if set(value) != expected:
             raise ValueError(
-                "Construction candidate schema mismatch; "
+                "Construction candidate projection schema mismatch; "
                 f"missing={sorted(expected - set(value))}, unknown={sorted(set(value) - expected)}"
             )
-        return cls(**{name: value[name] for name in expected})
+        if value.get("candidate_type") != "CONSTRUCTION_COORDINATION":
+            raise ValueError("candidate_type must remain CONSTRUCTION_COORDINATION")
+        if value.get("version") != CONSTRUCTION_CANDIDATE_VERSION:
+            raise ValueError("unsupported Construction candidate projection version")
+        canonical = {
+            name: value[name]
+            for name in candidate_fields
+        }
+        canonical.update(
+            {
+                "version": CONSTRUCTION_ADAPTER_VERSION,
+                "proposal_only": True,
+                "physical_work_authorized": False,
+                "payment_released": False,
+                "access_controlled": False,
+                "patch_authority": PATCH_AUTHORITY,
+                "vsa_patch_authority": False,
+            }
+        )
+        return cls(
+            candidate=ConstructionCoordinationCandidate.from_dict(canonical),
+            base_state_digest=value["base_state_digest"],
+        )
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        canonical = self.candidate.to_dict()
+        for key in (
+            "version",
+            "proposal_only",
+            "physical_work_authorized",
+            "payment_released",
+            "access_controlled",
+            "patch_authority",
+            "vsa_patch_authority",
+        ):
+            canonical.pop(key, None)
+        return {
+            **canonical,
+            "base_state_digest": self.base_state_digest,
+            "candidate_type": "CONSTRUCTION_COORDINATION",
+            "version": self.version,
+        }
 
 
 @dataclass(frozen=True)
@@ -192,9 +226,16 @@ class DomainDecisionEnvelope:
     version: str = DOMAIN_DECISION_VERSION
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "status", _required_text(self.status, "status", limit=128).upper())
+        status = _required_text(self.status, "status", limit=128).upper()
+        if status not in _ALLOWED_DECISION_STATUS:
+            raise ValueError(f"unsupported non-authoritative decision status: {status}")
+        object.__setattr__(self, "status", status)
         object.__setattr__(self, "candidate_id", _required_text(self.candidate_id, "candidate_id"))
-        object.__setattr__(self, "candidate_digest", _digest_text(self.candidate_digest, "candidate_digest"))
+        object.__setattr__(
+            self,
+            "candidate_digest",
+            _candidate_digest_text(self.candidate_digest, "candidate_digest"),
+        )
         object.__setattr__(self, "reasons", _strings(self.reasons, "reasons"))
         object.__setattr__(self, "open_obligations", _strings(self.open_obligations, "open_obligations"))
         if type(self.recommended_for_human_review) is not bool:
@@ -444,6 +485,12 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
 
         return self._packet(packet_id)
 
+    def assert_current_identity(self, packet_id: str) -> BilateralIdentity:
+        """Recheck a packet against the trusted current-identity owner."""
+
+        packet = self.packet(packet_id)
+        return self._resolve_current_identity(packet.identity)
+
     def arena_for_packet(self, packet_id: str) -> str:
         self.packet(packet_id)
         return self._arena_archive.arena_for_packet(packet_id)
@@ -523,6 +570,16 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
             else ConstructionCoordinationCandidateArtifact.from_mapping(item)
             for item in coordination_candidates
         ]
+        if parsed_candidates:
+            domain_state_digest = _digest_text(
+                domain.get("state_digest"), "domain.state_digest"
+            )
+            for item in parsed_candidates:
+                if item.base_state_digest != domain_state_digest:
+                    raise BilateralLiveRepairError(
+                        "Construction candidate base_state_digest differs from "
+                        "domain.state_digest"
+                    )
         decision = (
             domain_decision
             if isinstance(domain_decision, DomainDecisionEnvelope)
@@ -530,6 +587,18 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
             if domain_decision
             else None
         )
+        if decision is not None:
+            matches = [
+                item
+                for item in parsed_candidates
+                if item.candidate_id == decision.candidate_id
+                and item.candidate_digest == decision.candidate_digest
+            ]
+            if len(matches) != 1:
+                raise BilateralLiveRepairError(
+                    "domain decision must bind exactly one projected "
+                    "Construction candidate"
+                )
         transitions = project_guarded_wfst(
             arena_id=bound,
             current_state=transition_state,
@@ -599,6 +668,7 @@ class TrustedBilateralIdentityBroker:
             "full_identity_returned": False,
             "request_body_can_declare_currency": False,
             "expires_on_identity_change": True,
+            "pins_issued_identity": True,
             "authority": {
                 "patch": False,
                 "commit": False,

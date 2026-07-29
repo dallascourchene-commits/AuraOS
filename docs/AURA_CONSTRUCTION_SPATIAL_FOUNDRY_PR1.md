@@ -21,7 +21,10 @@ Construction truth owners.
   - keeps all domain authority false.
 - `aura_construction_spatial_foundry.py`
   - supplies exact arena attribution over the canonical Attempt Archive;
-  - separates `ConstructionCoordinationCandidateArtifact` from
+  - projects the canonical
+    `aura_construction_adapter.ConstructionCoordinationCandidate` through a
+    state-bound `ConstructionCoordinationCandidateArtifact`;
+  - keeps canonical Construction candidates separate from
     `RepairCandidateResult`;
   - supplies a server-side trusted bilateral identity handle.
 - `aura_construction_spatial_foundry_server.py`
@@ -33,23 +36,33 @@ Construction truth owners.
 - `aura_showcase/construction-spatial-foundry.js`
   - preserves the legacy Foundry script;
   - obtains trusted identity from the composed server;
+  - preserves the legacy B15 identity flow when no trusted provider is
+    configured;
   - adds required-asset path/SHA-256 intake;
   - requests the V2 Construction projection.
 
 ## Exact arena binding
 
-The allowed arenas are `coding`, `construction`, and `spatial`. The adapter binds
-the selected arena to the bounded capture and replay workflow. Every subsequent
-runtime replay, repair attempt, preview, and archive call is corrected to that
-immutable packet binding. This specifically prevents the generic B15 preview
-default from labeling Construction evidence as Coding.
+The generic projection contract recognizes `coding`, `construction`, and
+`spatial`, but PR 1's composed server selects only the `construction` arena. The
+adapter binds that Construction arena to the bounded capture and replay
+workflow. Every subsequent runtime replay, repair attempt, preview, and archive
+call is corrected to that immutable packet binding. This specifically prevents
+the generic B15 preview default from labeling Construction evidence as Coding.
 
 ## Candidate semantics
 
-A Construction coordination candidate can only reach
-`READY_FOR_HUMAN_REVIEW`. It has no `promotion_ready`, runtime proof, failure
-class, or Surgeon/Council route fields. Software repair candidates retain their
+A Construction coordination candidate is parsed and identity-checked by the
+existing `aura_construction_adapter` owner. The Foundry artifact adds only the
+exact `base_state_digest` projection binding. It has no `promotion_ready`,
+runtime proof, failure class, or Surgeon/Council route fields. A domain decision
+must match exactly one projected canonical candidate and remains limited to a
+closed, non-authoritative status set. Software repair candidates retain their
 existing B12 meaning.
+
+Identity handles pin the exact identity present at issuance. Resolution returns
+that retained identity only while the current trusted owner still matches it;
+an identity change expires the handle rather than retargeting it.
 
 ## Guarded-WFST projection
 

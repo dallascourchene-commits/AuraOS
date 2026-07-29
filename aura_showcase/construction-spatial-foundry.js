@@ -9,9 +9,19 @@
   const adapter = {
     identityHandle: '',
     identitySummary: null,
+    identityBrokerAvailable: false,
   };
 
-  const $ = id => document.getElementById(id);
+  const $ = id => (
+    typeof document !== 'undefined' ? document.getElementById(id) : null
+  );
+  const setLegacyIdentityVisible = visible => {
+    const legacyIdentity = $('foundry-identity');
+    const card = legacyIdentity?.closest('.foundry-card');
+    if (!card) return;
+    card.hidden = !visible;
+    card.dataset.legacyIdentityFallback = String(visible);
+  };
   const renderIdentity = value => {
     const node = $('construction-foundry-identity-summary');
     if (!node) return;
@@ -25,6 +35,8 @@
     if (!result.ok) throw new Error(result.error || 'Trusted current identity is unavailable');
     adapter.identityHandle = String(result.identity_handle || '');
     adapter.identitySummary = result;
+    adapter.identityBrokerAvailable = Boolean(adapter.identityHandle);
+    setLegacyIdentityVisible(!adapter.identityBrokerAvailable);
     renderIdentity({
       identity_digest: result.identity_digest,
       intent_revision_id: result.intent_revision_id,
@@ -47,6 +59,7 @@
       throw new Error('Required assets must contain valid JSON.');
     }
     if (!Array.isArray(parsed)) throw new Error('Required assets must be a JSON array.');
+    const paths = new Map();
     return parsed.map((item, index) => {
       if (!item || typeof item !== 'object' || Array.isArray(item)) {
         throw new Error(`Required asset ${index + 1} must be an object.`);
@@ -56,14 +69,28 @@
       if (!path || !/^[0-9a-f]{64}$/.test(sha256)) {
         throw new Error(`Required asset ${index + 1} needs path and 64-character sha256.`);
       }
+      if (paths.has(path)) {
+        const detail = paths.get(path) === sha256 ? 'duplicate path' : 'conflicting hashes';
+        throw new Error(`Required asset ${index + 1} has ${detail}: ${path}.`);
+      }
+      paths.set(path, sha256);
       return {path, sha256};
     });
   };
 
   const ensureIdentity = async () => {
     if (adapter.identityHandle) return adapter.identityHandle;
-    await loadIdentity();
-    if (!adapter.identityHandle) throw new Error('Server did not issue an identity handle.');
+    if (!adapter.identityBrokerAvailable && adapter.identitySummary) return '';
+    try {
+      await loadIdentity();
+    } catch (error) {
+      adapter.identityHandle = '';
+      adapter.identityBrokerAvailable = false;
+      adapter.identitySummary = {ok: false, error: error.message, legacy_fallback: true};
+      setLegacyIdentityVisible(true);
+      renderIdentity(adapter.identitySummary);
+      return '';
+    }
     return adapter.identityHandle;
   };
 
@@ -73,10 +100,13 @@
     if (!next || typeof next !== 'object' || Array.isArray(next)) return originalApi(path, next);
 
     if (path === '/api/showcase/live-repair/capture/start') {
-      next.identity_handle = await ensureIdentity();
+      const identityHandle = await ensureIdentity();
       next.arena_id = 'construction';
-      delete next.identity;
-      delete next.current_identity;
+      if (identityHandle) {
+        next.identity_handle = identityHandle;
+        delete next.identity;
+        delete next.current_identity;
+      }
     }
 
     if (path.includes('/api/showcase/live-repair/capture/') && path.endsWith('/finalize/v1')) {
@@ -89,18 +119,24 @@
       '/api/showcase/live-repair/attempt',
       '/api/showcase/live-repair/preview',
       '/api/showcase/live-repair/projection',
+      '/api/showcase/live-repair/replay/run',
     ].includes(path)) {
-      next.identity_handle = await ensureIdentity();
-      delete next.current_identity;
+      const identityHandle = await ensureIdentity();
+      if (identityHandle) {
+        next.identity_handle = identityHandle;
+        delete next.current_identity;
+      }
     }
 
-    if (path === '/api/showcase/live-repair/projection') {
+    if (
+      path === '/api/showcase/live-repair/projection'
+      && adapter.identityBrokerAvailable
+    ) {
       next.projection_version = 'AURA_SPATIAL_FOUNDRY_PROJECTION_V2';
       next.domain = {
         arena_id: 'construction',
         domain_type: 'CONSTRUCTION',
         state_digest: adapter.identitySummary?.source_tree_digest || '',
-        runtime_packet_digest: adapter.identitySummary?.runtime_profile_digest || '',
         adapter_version: 'AURA_CONSTRUCTION_SPATIAL_FOUNDRY_BROWSER_V1',
         privacy_class: 'PRESENTATION_MINIMIZED',
       };
@@ -120,18 +156,12 @@
     return originalApi(path, next);
   };
 
-  const legacyIdentity = $('foundry-identity');
-  if (legacyIdentity) {
-    const card = legacyIdentity.closest('.foundry-card');
-    if (card) {
-      card.hidden = true;
-      card.dataset.legacyIdentityFallback = 'true';
-    }
-  }
-
+  setLegacyIdentityVisible(true);
   void loadIdentity().catch(error => {
     adapter.identityHandle = '';
-    adapter.identitySummary = null;
-    renderIdentity({ok: false, error: error.message, fail_closed: true});
+    adapter.identityBrokerAvailable = false;
+    adapter.identitySummary = {ok: false, error: error.message, legacy_fallback: true};
+    setLegacyIdentityVisible(true);
+    renderIdentity(adapter.identitySummary);
   });
 })();
