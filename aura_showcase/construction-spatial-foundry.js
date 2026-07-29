@@ -94,6 +94,13 @@
     return adapter.identityHandle;
   };
 
+  const identityHandleExpired = result => (
+    result
+    && result.ok === false
+    && /(?:trusted identity handle is missing or expired|bilateral identity.*stale|identity handle.*stale)/i
+      .test(String(result.error || ''))
+  );
+
   S.api = async (path, body) => {
     if (body === undefined) return originalApi(path);
     const next = body && typeof body === 'object' && !Array.isArray(body) ? {...body} : body;
@@ -153,7 +160,17 @@
         ? next.coordination_candidates
         : [];
     }
-    return originalApi(path, next);
+    let result = await originalApi(path, next);
+    if (next.identity_handle && identityHandleExpired(result)) {
+      adapter.identityHandle = '';
+      adapter.identitySummary = null;
+      const refreshedHandle = await ensureIdentity();
+      if (refreshedHandle) {
+        next.identity_handle = refreshedHandle;
+        result = await originalApi(path, next);
+      }
+    }
+    return result;
   };
 
   setLegacyIdentityVisible(true);

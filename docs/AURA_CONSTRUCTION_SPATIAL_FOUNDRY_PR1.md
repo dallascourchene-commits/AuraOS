@@ -21,6 +21,8 @@ Construction truth owners.
   - keeps all domain authority false.
 - `aura_construction_spatial_foundry.py`
   - supplies exact arena attribution over the canonical Attempt Archive;
+  - retains governed U7/current-reproof results in that existing archive and
+    retrieves only incident-, identity-, and verified-candidate-bound evidence;
   - projects the canonical
     `aura_construction_adapter.ConstructionCoordinationCandidate` through a
     state-bound `ConstructionCoordinationCandidateArtifact`;
@@ -38,6 +40,8 @@ Construction truth owners.
   - obtains trusted identity from the composed server;
   - preserves the legacy B15 identity flow when no trusted provider is
     configured;
+  - refreshes a server-issued identity handle once when it expires or becomes
+    stale;
   - adds required-asset path/SHA-256 intake;
   - requests the V2 Construction projection.
 
@@ -60,9 +64,16 @@ must match exactly one projected canonical candidate and remains limited to a
 closed, non-authoritative status set. Software repair candidates retain their
 existing B12 meaning.
 
+Canonical Construction state digests use the 32-character BLAKE2 format emitted
+by `aura_event_contracts.stable_digest`; the projection also retains compatibility
+with existing 40-64 character digest identities.
+
 Identity handles pin the exact identity present at issuance. Resolution returns
 that retained identity only while the current trusted owner still matches it;
 an identity change expires the handle rather than retargeting it.
+When no trusted identity provider is configured, the explicitly legacy local
+flow pins the operator-supplied capture identity for finalization instead of
+advertising a capture that can never produce a replay packet.
 
 ## Guarded-WFST projection
 

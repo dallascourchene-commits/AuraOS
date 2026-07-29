@@ -4,14 +4,15 @@ The adapter corrects arena attribution and adds Construction projection contract
 without replacing the B15 service, Attempt Archive, Runtime Profile V2, U7, or
 Construction truth owners.
 """
+
 from __future__ import annotations
 
-import re
-import secrets
 from collections import OrderedDict
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import asdict, dataclass, fields
 from pathlib import Path
+import re
+import secrets
 from typing import Any
 
 from aura_arena_attempt_archive import ArenaAttemptArchive
@@ -22,6 +23,7 @@ from aura_bilateral_live_repair_foundry import (
     PreviewRollbackReceipt,
     RepairCandidateResult,
 )
+from aura_bilateral_live_repair_foundry_contracts import digest
 from aura_construction_adapter import (
     CONSTRUCTION_ADAPTER_VERSION,
     ConstructionCoordinationCandidate,
@@ -34,9 +36,7 @@ from aura_spatial_foundry_projection import (
     validate_foundry_arena,
 )
 
-CONSTRUCTION_CANDIDATE_VERSION = (
-    "AURA_CONSTRUCTION_COORDINATION_CANDIDATE_PROJECTION_V1"
-)
+CONSTRUCTION_CANDIDATE_VERSION = "AURA_CONSTRUCTION_COORDINATION_CANDIDATE_PROJECTION_V1"
 DOMAIN_DECISION_VERSION = "AURA_CONSTRUCTION_DOMAIN_DECISION_ENVELOPE_V1"
 TRUSTED_IDENTITY_SUMMARY_VERSION = "AURA_TRUSTED_BILATERAL_IDENTITY_SUMMARY_V1"
 ARENA_BOUND_SERVICE_VERSION = "AURA_ARENA_BOUND_BILATERAL_LIVE_REPAIR_V1"
@@ -49,7 +49,8 @@ _ALLOWED_DECISION_STATUS = frozenset(
     }
 )
 _HEX = re.compile(r"^[0-9a-f]{40,64}$")
-_CANDIDATE_HEX = re.compile(r"^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$")
+_CANONICAL_STATE_HEX = re.compile(r"^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$")
+_CANDIDATE_HEX = _CANONICAL_STATE_HEX
 MAX_REQUEST_NESTING = 12
 _RAW_CURRENCY_KEYS = frozenset(
     {
@@ -80,9 +81,14 @@ def _digest_text(value: Any, name: str) -> str:
 def _candidate_digest_text(value: Any, name: str) -> str:
     text = _required_text(value, name, limit=128).lower()
     if not _CANDIDATE_HEX.fullmatch(text):
-        raise ValueError(
-            f"{name} must be a 32-character or 40-64 character lowercase hex digest"
-        )
+        raise ValueError(f"{name} must be a 32-character or 40-64 character lowercase hex digest")
+    return text
+
+
+def _state_digest_text(value: Any, name: str) -> str:
+    text = _required_text(value, name, limit=128).lower()
+    if not _CANONICAL_STATE_HEX.fullmatch(text):
+        raise ValueError(f"{name} must be a 32-character or 40-64 character lowercase hex digest")
     return text
 
 
@@ -96,6 +102,7 @@ def _strings(value: Any, name: str, *, limit: int = 256) -> tuple[str, ...]:
         raise ValueError(f"{name} must not contain duplicates")
     return result
 
+
 @dataclass(frozen=True)
 class ConstructionCoordinationCandidateArtifact:
     candidate: ConstructionCoordinationCandidate
@@ -104,14 +111,11 @@ class ConstructionCoordinationCandidateArtifact:
 
     def __post_init__(self) -> None:
         if not isinstance(self.candidate, ConstructionCoordinationCandidate):
-            raise ValueError(
-                "candidate must be owned by "
-                "aura_construction_adapter.ConstructionCoordinationCandidate"
-            )
+            raise ValueError("candidate must be owned by aura_construction_adapter.ConstructionCoordinationCandidate")
         object.__setattr__(
             self,
             "base_state_digest",
-            _digest_text(self.base_state_digest, "base_state_digest"),
+            _state_digest_text(self.base_state_digest, "base_state_digest"),
         )
         if self.version != CONSTRUCTION_CANDIDATE_VERSION:
             raise ValueError("unsupported Construction candidate projection version")
@@ -125,7 +129,7 @@ class ConstructionCoordinationCandidateArtifact:
         return self.candidate.candidate_digest
 
     @classmethod
-    def from_mapping(cls, value: Mapping[str, Any]) -> "ConstructionCoordinationCandidateArtifact":
+    def from_mapping(cls, value: Mapping[str, Any]) -> ConstructionCoordinationCandidateArtifact:
         if not isinstance(value, Mapping):
             raise ValueError("Construction candidate must be an object")
         if any(
@@ -167,10 +171,7 @@ class ConstructionCoordinationCandidateArtifact:
             raise ValueError("candidate_type must remain CONSTRUCTION_COORDINATION")
         if value.get("version") != CONSTRUCTION_CANDIDATE_VERSION:
             raise ValueError("unsupported Construction candidate projection version")
-        canonical = {
-            name: value[name]
-            for name in candidate_fields
-        }
+        canonical = {name: value[name] for name in candidate_fields}
         canonical.update(
             {
                 "version": CONSTRUCTION_ADAPTER_VERSION,
@@ -257,7 +258,7 @@ class DomainDecisionEnvelope:
             raise ValueError("unsupported domain decision version")
 
     @classmethod
-    def from_mapping(cls, value: Mapping[str, Any]) -> "DomainDecisionEnvelope":
+    def from_mapping(cls, value: Mapping[str, Any]) -> DomainDecisionEnvelope:
         if not isinstance(value, Mapping):
             raise ValueError("domain decision must be an object")
         expected = {field.name for field in fields(cls)}
@@ -307,15 +308,9 @@ class _ArenaBoundArchive:
             route="bilateral-live-repair/incident-capture",
             limit=32,
         )
-        arenas = {
-            validate_foundry_arena(summary.get("arena_id"))
-            for summary in summaries
-            if summary.get("arena_id")
-        }
+        arenas = {validate_foundry_arena(summary.get("arena_id")) for summary in summaries if summary.get("arena_id")}
         if len(arenas) != 1:
-            raise BilateralLiveRepairError(
-                "replay packet has no unique canonical incident-capture arena binding"
-            )
+            raise BilateralLiveRepairError("replay packet has no unique canonical incident-capture arena binding")
         resolved = arenas.pop()
         self.bind_packet(packet, resolved)
         return resolved
@@ -394,9 +389,7 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         allow_reduced_runtime_fixture: bool = False,
     ) -> None:
         self._owns_bound_archive = attempt_archive is None
-        delegate = attempt_archive or ArenaAttemptArchive(
-            repo_root, db_path=attempt_archive_db_path
-        )
+        delegate = attempt_archive or ArenaAttemptArchive(repo_root, db_path=attempt_archive_db_path)
         self._arena_archive = _ArenaBoundArchive(delegate)
         self._capture_arena: dict[str, str] = {}
         super().__init__(
@@ -424,11 +417,7 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
     def _prune_capture_arenas(self) -> None:
         with self._capture_lock:
             retained = set(self._captures)
-            stale = [
-                capture_id
-                for capture_id in self._capture_arena
-                if capture_id not in retained
-            ]
+            stale = [capture_id for capture_id in self._capture_arena if capture_id not in retained]
         for capture_id in stale:
             self._release_capture_arena(capture_id)
 
@@ -470,9 +459,7 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         if supplied is not None and validate_foundry_arena(supplied) != bound:
             raise BilateralLiveRepairError("capture finalization cannot change arena_id")
         try:
-            result = super().finalize_capture(
-                capture_id, {**dict(contract), "arena_id": bound}
-            )
+            result = super().finalize_capture(capture_id, {**dict(contract), "arena_id": bound})
             packet_id = str((result.get("packet") or {}).get("packet_id") or "")
             if packet_id:
                 self._arena_archive.bind_packet(packet_id, bound)
@@ -522,9 +509,118 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
     def run_governed_u7(self, **kwargs: Any) -> dict[str, Any]:
         packet_id = _required_text(kwargs.pop("packet_id", None), "packet_id")
         result = dict(super().run_governed_u7(packet_id=packet_id, **kwargs))
-        result["arena_id"] = self.arena_for_packet(packet_id)
+        arena = self.arena_for_packet(packet_id)
+        result["arena_id"] = arena
         result["arena_binding_immutable"] = True
-        return result
+        archive = self.attempt_archive.record(
+            arena_id=arena,
+            route="bilateral-live-repair/u7-current-reproof",
+            request={
+                "packet_id": packet_id,
+                "candidate_digest": result.get("candidate_digest"),
+                "task_id": result.get("task_id"),
+            },
+            result={"u7_result": result},
+            workflow_state={
+                "workflow_id": packet_id,
+                "status": "CURRENT_REPROOF_RETAINED",
+            },
+            archive_context={
+                "canonical_owner": "aura_unified_memory_continuity_learning",
+                "projection_only": True,
+                "automatic_promotion": False,
+            },
+        )
+        artifact_ref = str(archive.get("artifact_id") or "")
+        if not artifact_ref:
+            raise BilateralLiveRepairError("canonical Attempt Archive did not retain governed U7 evidence")
+        return {**result, "archive_artifact_ref": artifact_ref}
+
+    def has_retained_runtime_proof(self, packet_id: str) -> bool:
+        """Report verified Runtime Profile V2 evidence independently of attempts."""
+
+        packet = self.packet(packet_id)
+        for summary in self.attempt_archive.list(
+            workflow_id=packet.packet_id,
+            route="bilateral-live-repair/runtime-replay",
+            limit=0,
+        ):
+            artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
+            result = dict((artifact or {}).get("result") or {})
+            proof_ref = str(result.get("runtime_proof_digest") or "")
+            if result.get("packet_digest") != packet.packet_digest or not proof_ref:
+                continue
+            self._runtime_proof(packet, proof_ref)
+            return True
+        return False
+
+    def preview_for_packet(
+        self,
+        packet_id: str,
+        preview_id: str = "",
+    ) -> PreviewRollbackReceipt | None:
+        """Return a packet-bound preview through a stable adapter API."""
+
+        packet = self.packet(packet_id)
+        selected = str(preview_id or "").strip()
+        if not selected:
+            return self.latest_preview(packet.packet_id)
+        for summary in self.attempt_archive.list(
+            workflow_id=packet.packet_id,
+            route="bilateral-live-repair/preview-rollback",
+            limit=0,
+        ):
+            artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
+            raw = dict((artifact or {}).get("result") or {}).get("preview")
+            if not isinstance(raw, Mapping) or raw.get("preview_id") != selected:
+                continue
+            receipt = PreviewRollbackReceipt.from_mapping(raw)
+            if receipt.replay_packet_digest != packet.packet_digest:
+                raise BilateralLiveRepairError("requested preview belongs to another incident")
+            return receipt
+        return None
+
+    def latest_u7_result(
+        self,
+        packet_id: str,
+        *,
+        candidate_digests: Sequence[str] = (),
+    ) -> dict[str, Any] | None:
+        """Read the latest canonically archived, packet-bound U7 result."""
+
+        packet = self.packet(packet_id)
+        allowed = {_candidate_digest_text(item, "candidate_digest") for item in candidate_digests}
+        if not allowed:
+            return None
+        for summary in self.attempt_archive.list(
+            workflow_id=packet.packet_id,
+            route="bilateral-live-repair/u7-current-reproof",
+            limit=0,
+        ):
+            artifact_ref = str(summary.get("artifact_id") or "")
+            artifact = self.attempt_archive.get(artifact_ref)
+            raw = dict((artifact or {}).get("result") or {}).get("u7_result")
+            if not isinstance(raw, Mapping):
+                continue
+            result = dict(raw)
+            candidate = str(result.get("candidate_digest") or "")
+            binding_payload = {
+                "version": "AURA_BILATERAL_LIVE_REPAIR_U7_BINDING_V1",
+                "replay_packet_digest": result.get("replay_packet_digest"),
+                "bilateral_identity_digest": result.get("bilateral_identity_digest"),
+                "candidate_digest": candidate,
+                "plan_phase_hash": result.get("plan_phase_hash"),
+                "task_id": result.get("task_id"),
+            }
+            if (
+                result.get("replay_packet_digest") != packet.packet_digest
+                or result.get("bilateral_identity_digest") != packet.identity.identity_digest
+                or candidate not in allowed
+                or result.get("u7_binding_digest") != digest(binding_payload)
+            ):
+                continue
+            return {**result, "archive_artifact_ref": artifact_ref}
+        return None
 
     def build_projection_v2(
         self,
@@ -544,9 +640,7 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
         domain_artifacts: Sequence[Mapping[str, Any]] = (),
         presentation: Mapping[str, Any] | None = None,
         construction: Mapping[str, Any] | None = None,
-        coordination_candidates: Sequence[
-            ConstructionCoordinationCandidateArtifact | Mapping[str, Any]
-        ] = (),
+        coordination_candidates: Sequence[ConstructionCoordinationCandidateArtifact | Mapping[str, Any]] = (),
         domain_decision: DomainDecisionEnvelope | Mapping[str, Any] | None = None,
         transition_state: str = "IDLE",
         transition_evidence: Mapping[str, Any] | None = None,
@@ -571,14 +665,11 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
             for item in coordination_candidates
         ]
         if parsed_candidates:
-            domain_state_digest = _digest_text(
-                domain.get("state_digest"), "domain.state_digest"
-            )
+            domain_state_digest = _state_digest_text(domain.get("state_digest"), "domain.state_digest")
             for item in parsed_candidates:
                 if item.base_state_digest != domain_state_digest:
                     raise BilateralLiveRepairError(
-                        "Construction candidate base_state_digest differs from "
-                        "domain.state_digest"
+                        "Construction candidate base_state_digest differs from domain.state_digest"
                     )
         decision = (
             domain_decision
@@ -591,14 +682,10 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
             matches = [
                 item
                 for item in parsed_candidates
-                if item.candidate_id == decision.candidate_id
-                and item.candidate_digest == decision.candidate_digest
+                if item.candidate_id == decision.candidate_id and item.candidate_digest == decision.candidate_digest
             ]
             if len(matches) != 1:
-                raise BilateralLiveRepairError(
-                    "domain decision must bind exactly one projected "
-                    "Construction candidate"
-                )
+                raise BilateralLiveRepairError("domain decision must bind exactly one projected Construction candidate")
         transitions = project_guarded_wfst(
             arena_id=bound,
             current_state=transition_state,
@@ -637,11 +724,7 @@ class TrustedBilateralIdentityBroker:
         item = self.provider()
         if not isinstance(item, BilateralIdentity):
             raise BilateralLiveRepairError("trusted identity provider returned an invalid identity")
-        current = (
-            self.current_identity_resolver(item)
-            if self.current_identity_resolver is not None
-            else item
-        )
+        current = self.current_identity_resolver(item) if self.current_identity_resolver is not None else item
         item.assert_current(current)
         return item
 
@@ -704,16 +787,12 @@ def reject_raw_identity_currency_claim(value: Mapping[str, Any]) -> None:
 
     def walk(item: Any, path: str, depth: int) -> None:
         if depth > MAX_REQUEST_NESTING:
-            raise BilateralLiveRepairError(
-                f"request nesting exceeds {MAX_REQUEST_NESTING} levels at {path}"
-            )
+            raise BilateralLiveRepairError(f"request nesting exceeds {MAX_REQUEST_NESTING} levels at {path}")
         if isinstance(item, Mapping):
             for key, child in item.items():
                 normalized = re.sub(r"[^a-z0-9]+", "", str(key).casefold())
                 if normalized in _RAW_CURRENCY_KEYS:
-                    raise BilateralLiveRepairError(
-                        f"raw request cannot declare identity currency at {path}.{key}"
-                    )
+                    raise BilateralLiveRepairError(f"raw request cannot declare identity currency at {path}.{key}")
                 walk(child, f"{path}.{key}", depth + 1)
         elif isinstance(item, (list, tuple)):
             for index, child in enumerate(item):

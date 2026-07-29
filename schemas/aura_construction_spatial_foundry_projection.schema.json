@@ -52,7 +52,10 @@
             "type": "string",
             "pattern": "^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$"
           },
-          "base_state_digest": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+          "base_state_digest": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$"
+          },
           "scope": {
             "type": "object",
             "required": ["project_id", "zone_id", "work_package_id"],

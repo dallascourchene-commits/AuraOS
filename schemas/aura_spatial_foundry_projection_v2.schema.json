@@ -40,7 +40,7 @@
       "properties": {
         "arena_id": {"enum": ["coding", "construction", "spatial"]},
         "domain_type": {"type": "string", "minLength": 1},
-        "state_digest": {"type": "string", "pattern": "^$|^[0-9a-f]{40,64}$"},
+        "state_digest": {"type": "string", "pattern": "^$|^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$"},
         "runtime_packet_digest": {"type": "string", "pattern": "^$|^[0-9a-f]{40,64}$"}
       },
       "additionalProperties": true

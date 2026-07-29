@@ -4,14 +4,15 @@ This adapter reuses the merged Showcase and B15 live-repair routes.  It adds a
 trusted identity-handle boundary, exact Construction arena attribution, required
 asset intake, and V2 domain projection while retaining all legacy routes.
 """
+
 from __future__ import annotations
 
 import argparse
-import json
-import logging
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import asdict
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import json
+import logging
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -34,7 +35,11 @@ from aura_showcase_live_repair_server import (
     LiveRepairShowcaseState,
     _error,
     _json,
+)
+from aura_showcase_live_repair_server import (
     _static_response as base_static_response,
+)
+from aura_showcase_live_repair_server import (
     dispatch_live_repair_request as base_dispatch_live_repair_request,
 )
 from scripts.aura_runtime_profile_v2_adapter import BilateralRuntimeProfileError
@@ -56,7 +61,21 @@ class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
     ) -> None:
         effective_resolver = current_identity_resolver
         if effective_resolver is None and trusted_identity_provider is not None:
-            effective_resolver = lambda _expected: trusted_identity_provider()
+
+            def resolve_provider(_expected: BilateralIdentity) -> BilateralIdentity:
+                return trusted_identity_provider()
+
+            effective_resolver = resolve_provider
+        if effective_resolver is None:
+            # Preserve the explicitly documented local legacy flow: its capture
+            # identity is pinned for the lifetime of that capture. Broker-backed
+            # deployments still re-resolve through their trusted provider.
+            def retain_legacy_identity(
+                expected: BilateralIdentity,
+            ) -> BilateralIdentity:
+                return expected
+
+            effective_resolver = retain_legacy_identity
         super().__init__(
             repo_root,
             demo_project=demo_project,
@@ -85,9 +104,7 @@ class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
 
     def issue_current_identity_summary(self) -> dict[str, Any]:
         if self._identity_broker is None:
-            raise BilateralLiveRepairError(
-                "trusted current identity provider is not configured"
-            )
+            raise BilateralLiveRepairError("trusted current identity provider is not configured")
         return self._identity_broker.issue_summary()
 
     def resolve_request_identity(
@@ -101,14 +118,10 @@ class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
         handle = str(body.get("identity_handle") or "").strip()
         if handle:
             if self._identity_broker is None:
-                raise BilateralLiveRepairError(
-                    "trusted identity handle cannot be resolved by this server"
-                )
+                raise BilateralLiveRepairError("trusted identity handle cannot be resolved by this server")
             return self._identity_broker.resolve(handle, expected=expected)
         if self._identity_broker is not None:
-            raise BilateralLiveRepairError(
-                "polished Construction flow requires a server-issued identity_handle"
-            )
+            raise BilateralLiveRepairError("polished Construction flow requires a server-issued identity_handle")
         raw = body.get(legacy_field)
         item = BilateralIdentity.from_mapping(raw or {})
         if expected is not None:
@@ -117,16 +130,16 @@ class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
 
 
 def _identity_provider_from_path(path: str | Path) -> Callable[[], BilateralIdentity]:
-    source = Path(path)
+    source = Path(path).absolute()
     if source.is_symlink():
         raise BilateralLiveRepairError("trusted identity packet must not be a symlink")
     resolved = source.resolve()
 
     def provide() -> BilateralIdentity:
-        if not resolved.is_file():
+        if source.is_symlink() or source.resolve() != resolved or not source.is_file():
             raise BilateralLiveRepairError("trusted identity packet is unavailable")
         try:
-            value = json.loads(resolved.read_text(encoding="utf-8"))
+            value = json.loads(source.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
             raise BilateralLiveRepairError("trusted identity packet is invalid") from exc
         return BilateralIdentity.from_mapping(value)
@@ -179,15 +192,11 @@ def _validate_required_asset_paths(body: Mapping[str, Any]) -> None:
         path = str(row.get("path") or "").strip()
         sha256 = str(row.get("sha256") or "").strip().lower()
         if not path:
-            raise BilateralLiveRepairError(
-                f"required_assets[{index}].path must be non-empty"
-            )
+            raise BilateralLiveRepairError(f"required_assets[{index}].path must be non-empty")
         previous = seen.get(path)
         if previous is not None:
             detail = "conflicting hashes" if previous != sha256 else "duplicate path"
-            raise BilateralLiveRepairError(
-                f"required_assets[{index}] has {detail}: {path}"
-            )
+            raise BilateralLiveRepairError(f"required_assets[{index}] has {detail}: {path}")
         seen[path] = sha256
 
 
@@ -198,9 +207,7 @@ def _selected_attempts(
 ) -> list[RepairCandidateResult]:
     attempts = list(state.live_repair.attempts_for_packet(packet_id))
     raw_ids = body.get("attempt_ids") or []
-    if isinstance(raw_ids, (str, bytes, bytearray)) or not isinstance(
-        raw_ids, Sequence
-    ):
+    if isinstance(raw_ids, (str, bytes, bytearray)) or not isinstance(raw_ids, Sequence):
         raise BilateralLiveRepairError("attempt_ids must be an array")
     if not raw_ids:
         return attempts
@@ -212,9 +219,7 @@ def _selected_attempts(
     by_id = {item.attempt_id: item for item in attempts}
     missing = [item for item in attempt_ids if item not in by_id]
     if missing:
-        raise BilateralLiveRepairError(
-            f"requested attempts are not retained for this packet: {missing}"
-        )
+        raise BilateralLiveRepairError(f"requested attempts are not retained for this packet: {missing}")
     return [by_id[item] for item in attempt_ids]
 
 
@@ -227,33 +232,38 @@ def _v2_projection_response(
     identity = state.resolve_request_identity(body, expected=packet.identity)
     attempts = _selected_attempts(state, packet_id, body)
     preview_id = str(body.get("preview_id") or "")
-    preview: PreviewRollbackReceipt | None = (
-        state.live_repair_previews.get(preview_id)
-        if preview_id
-        else state.live_repair.latest_preview(packet_id)
+    preview = state.live_repair.preview_for_packet(
+        packet_id,
+        preview_id,
     )
     if preview_id and preview is None:
-        raise BilateralLiveRepairError(
-            "requested preview is not retained for this packet"
-        )
+        raise BilateralLiveRepairError("requested preview is not retained for this packet")
+    if preview is not None and preview.replay_packet_digest != packet.packet_digest:
+        raise BilateralLiveRepairError("requested preview belongs to another incident")
+    if preview is not None and preview.candidate_digest not in {item.candidate_digest for item in attempts}:
+        raise BilateralLiveRepairError("selected preview is not bound to a selected repair attempt")
     if "u7_result" in body:
-        raise BilateralLiveRepairError(
-            "V2 projection cannot accept client-authored U7 evidence"
-        )
+        raise BilateralLiveRepairError("V2 projection cannot accept client-authored U7 evidence")
+    verified_candidate_digests = [item.candidate_digest for item in attempts if item.promotion_ready is True]
+    u7_result = state.live_repair.latest_u7_result(
+        packet_id,
+        candidate_digests=verified_candidate_digests,
+    )
+    runtime_proof_retained = state.live_repair.has_retained_runtime_proof(packet_id)
     transition_state, transition_evidence = _derive_transition_state(
-        packet, attempts, preview, None
+        packet,
+        attempts,
+        preview,
+        u7_result,
+        runtime_proof_retained=runtime_proof_retained,
     )
     raw_domain = _optional_mapping(body, "domain")
     requested_arena = raw_domain.get("arena_id")
     if requested_arena not in {None, "", "construction"}:
-        raise BilateralLiveRepairError(
-            "Construction server domain.arena_id must be construction"
-        )
+        raise BilateralLiveRepairError("Construction server domain.arena_id must be construction")
     requested_type = raw_domain.get("domain_type")
     if requested_type not in {None, "", "CONSTRUCTION"}:
-        raise BilateralLiveRepairError(
-            "Construction server domain.domain_type must be CONSTRUCTION"
-        )
+        raise BilateralLiveRepairError("Construction server domain.domain_type must be CONSTRUCTION")
     domain = {
         **dict(raw_domain),
         "arena_id": "construction",
@@ -263,14 +273,12 @@ def _v2_projection_response(
     try:
         projection = state.live_repair.build_projection_v2(
             packet_id=packet_id,
-            intent=body.get("intent")
-            if isinstance(body.get("intent"), Mapping)
-            else {},
+            intent=body.get("intent") if isinstance(body.get("intent"), Mapping) else {},
             plan=body.get("plan") if isinstance(body.get("plan"), Mapping) else {},
             code_targets=_mapping_rows(body, "code_targets"),
             attempts=attempts,
             preview=preview,
-            u7_result=None,
+            u7_result=u7_result,
             source_drilldown=_mapping_rows(body, "source_drilldown"),
             receipt_drilldown=_mapping_rows(body, "receipt_drilldown"),
             current_identity=identity,
@@ -279,14 +287,8 @@ def _v2_projection_response(
             domain_artifacts=_mapping_rows(body, "domain_artifacts"),
             presentation=_optional_mapping(body, "presentation"),
             construction=_optional_mapping(body, "construction"),
-            coordination_candidates=_mapping_rows(
-                body, "coordination_candidates"
-            ),
-            domain_decision=(
-                _optional_mapping(body, "domain_decision")
-                if "domain_decision" in body
-                else None
-            ),
+            coordination_candidates=_mapping_rows(body, "coordination_candidates"),
+            domain_decision=(_optional_mapping(body, "domain_decision") if "domain_decision" in body else None),
             transition_state=transition_state,
             transition_evidence=transition_evidence,
         )
@@ -307,6 +309,8 @@ def _derive_transition_state(
     attempts: list[RepairCandidateResult],
     preview: PreviewRollbackReceipt | None,
     u7_result: Mapping[str, Any] | None,
+    *,
+    runtime_proof_retained: bool,
 ) -> tuple[str, dict[str, bool]]:
     dissolution = packet.dissolution_receipt
     capture_dissolved = (
@@ -321,28 +325,32 @@ def _derive_transition_state(
         "incident_marker_present": packet.marker_event.event_type == "INCIDENT_MARKER",
         "capture_dissolved": capture_dissolved,
         "required_assets_bound": bool(packet.required_assets),
-        "runtime_proof_retained": bool(attempts),
+        "runtime_proof_retained": runtime_proof_retained is True,
         "repair_attempt_retained": bool(attempts),
         "preview_receipt_retained": preview is not None,
-        "u7_current_reproof_retained": bool(u7_result),
-        "human_disposition_retained": bool(
-            dict((u7_result or {}).get("finalization") or {}).get("human_disposition")
-        ),
+        "u7_current_reproof_retained": bool(u7_result) and u7_result.get("ok") is True,
+        "human_disposition_retained": bool(dict((u7_result or {}).get("finalization") or {}).get("human_disposition")),
         "resources_dissolved": capture_dissolved,
     }
     state = "INCIDENT_MARKED"
-    if evidence["capture_dissolved"] and evidence["required_assets_bound"]:
-        state = "REPLAY_READY"
-    if evidence["runtime_proof_retained"]:
-        state = "RUNTIME_PROVEN"
-    if evidence["repair_attempt_retained"]:
-        state = "REPAIR_ASSESSED"
-    if evidence["preview_receipt_retained"]:
-        state = "PREVIEWED"
-    if evidence["u7_current_reproof_retained"]:
-        state = "REPROOF_RETAINED"
-    if evidence["human_disposition_retained"] and evidence["resources_dissolved"]:
-        state = "DISSOLVED"
+    ordered_stages = (
+        (
+            "REPLAY_READY",
+            evidence["capture_dissolved"] and evidence["required_assets_bound"],
+        ),
+        ("RUNTIME_PROVEN", evidence["runtime_proof_retained"]),
+        ("REPAIR_ASSESSED", evidence["repair_attempt_retained"]),
+        ("PREVIEWED", evidence["preview_receipt_retained"]),
+        ("REPROOF_RETAINED", evidence["u7_current_reproof_retained"]),
+        (
+            "DISSOLVED",
+            evidence["human_disposition_retained"] and evidence["resources_dissolved"],
+        ),
+    )
+    for next_state, requirements_satisfied in ordered_stages:
+        if not requirements_satisfied:
+            break
+        state = next_state
     return state, evidence
 
 
@@ -368,9 +376,7 @@ def dispatch_construction_foundry_request(
         if method == "POST":
             reject_raw_identity_currency_claim(body)
             if "transition_state" in body or "transition_evidence" in body:
-                raise BilateralLiveRepairError(
-                    "browser requests cannot supply guarded WFST state or evidence"
-                )
+                raise BilateralLiveRepairError("browser requests cannot supply guarded WFST state or evidence")
 
         if method == "POST" and route == "/api/showcase/live-repair/capture/start":
             if body.get("identity_handle"):
@@ -378,9 +384,7 @@ def dispatch_construction_foundry_request(
                 body["identity"] = asdict(identity)
                 body.pop("identity_handle", None)
             elif state._identity_broker is not None:
-                raise BilateralLiveRepairError(
-                    "capture start requires a server-issued identity_handle"
-                )
+                raise BilateralLiveRepairError("capture start requires a server-issued identity_handle")
             body["arena_id"] = "construction"
             return base_dispatch_live_repair_request(state, method, raw_path, body)
 
@@ -411,11 +415,7 @@ def dispatch_construction_foundry_request(
                 state.live_repair.assert_current_identity(packet_id)
             return base_dispatch_live_repair_request(state, method, raw_path, body)
 
-        if (
-            method == "POST"
-            and route == "/api/showcase/live-repair/projection"
-            and _is_v2_projection(body)
-        ):
+        if method == "POST" and route == "/api/showcase/live-repair/projection" and _is_v2_projection(body):
             return _v2_projection_response(state, body)
 
         if method == "POST" and route == "/api/showcase/live-repair/projection":
@@ -436,7 +436,7 @@ def dispatch_construction_foundry_request(
 
     except (BilateralLiveRepairError, BilateralRuntimeProfileError) as exc:
         return _error(str(exc), 409)
-    except Exception:  # noqa: BLE001
+    except Exception:
         LOGGER.exception("unexpected Construction Foundry request failure")
         return _error("internal Construction Foundry error", 500)
 
@@ -495,34 +495,35 @@ def make_handler(state: ConstructionFoundryShowcaseState):
         def _payload(self) -> dict[str, Any]:
             try:
                 length = int(self.headers.get("Content-Length", "0") or 0)
-            except ValueError:
-                return {}
+            except (TypeError, ValueError) as exc:
+                raise BilateralLiveRepairError("Content-Length must be a valid integer") from exc
             if length < 0 or length > MAX_BODY_BYTES:
-                return {}
+                raise BilateralLiveRepairError(f"request body must be between 0 and {MAX_BODY_BYTES} bytes")
             raw = self.rfile.read(length) if length else b""
             if not raw:
                 return {}
             try:
                 value = json.loads(raw.decode("utf-8"))
-            except (UnicodeDecodeError, json.JSONDecodeError):
-                return {}
-            return value if isinstance(value, dict) else {}
+            except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise BilateralLiveRepairError("request body must be valid UTF-8 JSON") from exc
+            if not isinstance(value, dict):
+                raise BilateralLiveRepairError("request body must be a JSON object")
+            return value
 
-        def do_GET(self) -> None:  # noqa: N802
+        def do_GET(self) -> None:
             route = urlparse(self.path).path
             if route.startswith("/api/"):
-                self._send(
-                    *dispatch_construction_foundry_request(state, "GET", self.path)
-                )
+                self._send(*dispatch_construction_foundry_request(state, "GET", self.path))
             else:
                 self._send(*_static_response(route))
 
-        def do_POST(self) -> None:  # noqa: N802
-            self._send(
-                *dispatch_construction_foundry_request(
-                    state, "POST", self.path, self._payload()
-                )
-            )
+        def do_POST(self) -> None:
+            try:
+                payload = self._payload()
+            except BilateralLiveRepairError as exc:
+                self._send(*_error(str(exc), 400))
+                return
+            self._send(*dispatch_construction_foundry_request(state, "POST", self.path, payload))
 
         def log_message(self, message_format: str, *args: Any) -> None:
             return
@@ -539,11 +540,7 @@ def serve(
     auto_start: bool,
     trusted_identity_packet: str | Path | None = None,
 ) -> None:
-    provider = (
-        _identity_provider_from_path(trusted_identity_packet)
-        if trusted_identity_packet
-        else None
-    )
+    provider = _identity_provider_from_path(trusted_identity_packet) if trusted_identity_packet else None
     state = ConstructionFoundryShowcaseState(
         repo_root,
         demo_project=demo_project,

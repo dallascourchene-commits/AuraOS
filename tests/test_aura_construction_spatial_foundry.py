@@ -1,21 +1,25 @@
 from __future__ import annotations
 
 import dataclasses
+import functools
 import hashlib
+import io
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
-import pytest
 from jsonschema import Draft202012Validator
+import pytest
 from referencing import Registry, Resource
 
-import aura_construction_spatial_foundry_server as construction_server
 from aura_bilateral_live_repair_foundry import (
     BilateralIdentity,
     BilateralLiveRepairError,
     RepairCandidateResult,
 )
 from aura_bilateral_live_repair_foundry_contracts import PROJECTION_VERSION, digest
+from aura_construction_adapter import ConstructionCoordinationCandidate
+from aura_construction_contracts import ConstructionScope
 from aura_construction_spatial_foundry import (
     ArenaBoundBilateralLiveRepairService,
     ConstructionCoordinationCandidateArtifact,
@@ -23,13 +27,13 @@ from aura_construction_spatial_foundry import (
     TrustedBilateralIdentityBroker,
     reject_raw_identity_currency_claim,
 )
-from aura_construction_adapter import ConstructionCoordinationCandidate
-from aura_construction_contracts import ConstructionScope
+import aura_construction_spatial_foundry_server as construction_server
 from aura_construction_spatial_foundry_server import (
     ConstructionFoundryShowcaseState,
     _static_response,
     dispatch_construction_foundry_request,
 )
+from aura_event_contracts import stable_digest
 from aura_spatial_foundry_projection import (
     SPATIAL_FOUNDRY_PROJECTION_V2,
     build_spatial_foundry_projection_v2,
@@ -141,23 +145,24 @@ def decoded(response):
     return response[0], json.loads(response[2].decode())
 
 
-def validate_construction_schema(value: dict) -> None:
+@functools.lru_cache(maxsize=1)
+def _construction_validator() -> Draft202012Validator:
     root = Path(__file__).resolve().parents[1]
     base_schema = json.loads(
-        (root / "schemas/aura_spatial_foundry_projection_v2.schema.json").read_text(
-            encoding="utf-8"
-        )
+        (root / "schemas/aura_spatial_foundry_projection_v2.schema.json").read_text(encoding="utf-8")
     )
     construction_schema = json.loads(
-        (
-            root / "schemas/aura_construction_spatial_foundry_projection.schema.json"
-        ).read_text(encoding="utf-8")
+        (root / "schemas/aura_construction_spatial_foundry_projection.schema.json").read_text(encoding="utf-8")
     )
     registry = Registry().with_resource(
         base_schema["$id"],
         Resource.from_contents(base_schema),
     )
-    Draft202012Validator(construction_schema, registry=registry).validate(value)
+    return Draft202012Validator(construction_schema, registry=registry)
+
+
+def validate_construction_schema(value: dict) -> None:
+    _construction_validator().validate(value)
 
 
 def test_v2_projection_wraps_v1_without_removing_code_targets():
@@ -228,6 +233,35 @@ def test_v2_projection_defaults_complete_false_decision_and_validates_schema():
     )
     assert result["domain_decision"]["survey_authority"] is False
     assert result["domain_decision"]["construction_truth"] is False
+    validate_construction_schema(result)
+    assert _construction_validator() is _construction_validator()
+
+
+def test_v2_projection_accepts_canonical_construction_state_digest():
+    state_digest = stable_digest({"project_id": "project-1", "events": []})
+    assert len(state_digest) == 32
+    candidate = construction_candidate()
+    canonical_candidate = ConstructionCoordinationCandidateArtifact(
+        candidate=candidate.candidate,
+        base_state_digest=state_digest,
+    )
+    result = build_spatial_foundry_projection_v2(
+        base_projection=base_projection(),
+        arena_id="construction",
+        domain={
+            "arena_id": "construction",
+            "domain_type": "CONSTRUCTION",
+            "state_digest": state_digest,
+        },
+        coordination_candidates=[canonical_candidate.to_dict()],
+        transition_projection=project_guarded_wfst(
+            arena_id="construction",
+            current_state="IDLE",
+            evidence={},
+        ),
+    )
+    assert result["domain"]["state_digest"] == state_digest
+    assert result["coordination_candidates"][0]["base_state_digest"] == state_digest
     validate_construction_schema(result)
 
 
@@ -314,6 +348,17 @@ def test_v2_projection_rejects_duplicate_domain_identities_and_v1_authority():
     with pytest.raises(BilateralLiveRepairError, match="forbidden authority"):
         build_spatial_foundry_projection_v2(
             base_projection=unsafe,
+            arena_id="construction",
+            domain={"arena_id": "construction", "domain_type": "CONSTRUCTION"},
+            transition_projection=transitions,
+        )
+    unknown = base_projection()
+    unknown["authority"]["execution_authority"] = True
+    unknown_body = {key: value for key, value in unknown.items() if key != "projection_digest"}
+    unknown["projection_digest"] = digest(unknown_body)
+    with pytest.raises(BilateralLiveRepairError, match="unknown authority"):
+        build_spatial_foundry_projection_v2(
+            base_projection=unknown,
             arena_id="construction",
             domain={"arena_id": "construction", "domain_type": "CONSTRUCTION"},
             transition_projection=transitions,
@@ -434,16 +479,12 @@ def test_required_assets_and_exact_arena_survive_capture_and_preview(tmp_path: P
                 "expected_positive": ["retain exact selection"],
                 "expected_negative": ["never hide digest failures"],
                 "preservation_claims": ["Construction truth remains unchanged"],
-                "required_assets": [
-                    {"path": "fixtures/pascal-scene.json", "sha256": sha("scene")}
-                ],
+                "required_assets": [{"path": "fixtures/pascal-scene.json", "sha256": sha("scene")}],
                 "arena_id": "construction",
             },
         )
         packet = finalized["packet"]
-        assert packet["required_assets"] == (
-            {"path": "fixtures/pascal-scene.json", "sha256": sha("scene")},
-        )
+        assert packet["required_assets"] == ({"path": "fixtures/pascal-scene.json", "sha256": sha("scene")},)
         packet_id = packet["packet_id"]
         assert started["capture_id"] not in service._capture_arena
         assert started["capture_id"] not in service._arena_archive._capture_arenas
@@ -546,13 +587,9 @@ def test_trusted_identity_summary_returns_handle_not_full_identity_and_stales():
 
 def test_raw_request_cannot_declare_identity_currency():
     with pytest.raises(BilateralLiveRepairError, match="cannot declare identity currency"):
-        reject_raw_identity_currency_claim(
-            {"identity_handle": "BID-1", "identity_is_current": True}
-        )
+        reject_raw_identity_currency_claim({"identity_handle": "BID-1", "identity_is_current": True})
     with pytest.raises(BilateralLiveRepairError, match="cannot declare identity currency"):
-        reject_raw_identity_currency_claim(
-            {"metadata": {"identity_currency": "CURRENT"}}
-        )
+        reject_raw_identity_currency_claim({"metadata": {"identity_currency": "CURRENT"}})
 
 
 @pytest.fixture
@@ -571,19 +608,14 @@ def trusted_showcase_state(tmp_path: Path):
         state.close()
 
 
-def test_composed_server_issues_identity_handle_and_rejects_raw_currency(
-    trusted_showcase_state,
-):
+@pytest.fixture
+def trusted_finalized_packet(trusted_showcase_state):
     state, _item = trusted_showcase_state
     status, summary = decoded(
-        dispatch_construction_foundry_request(
-            state, "GET", "/api/showcase/live-repair/identity/current"
-        )
+        dispatch_construction_foundry_request(state, "GET", "/api/showcase/live-repair/identity/current")
     )
     assert status == 200
     handle = summary["identity_handle"]
-    assert summary["full_identity_returned"] is False
-
     start_status, started = decoded(
         dispatch_construction_foundry_request(
             state,
@@ -600,7 +632,25 @@ def test_composed_server_issues_identity_handle_and_rejects_raw_currency(
         )
     )
     assert start_status == 200
-    assert started["arena_id"] == "construction"
+    state.live_repair.mark(started["capture_id"], "incident", {})
+    finalized = state.live_repair.finalize_capture(
+        started["capture_id"],
+        {
+            "expected_positive": ["retain evidence"],
+            "expected_negative": ["never accept malformed evidence"],
+            "preservation_claims": ["Construction truth remains unchanged"],
+            "required_assets": [{"path": "fixtures/scene.json", "sha256": sha("scene")}],
+            "arena_id": "construction",
+        },
+    )
+    return state, handle, finalized["packet"]["packet_id"]
+
+
+def test_composed_server_issues_identity_handle_and_rejects_raw_currency(
+    trusted_finalized_packet,
+):
+    state, handle, packet_id = trusted_finalized_packet
+    assert state.live_repair.arena_for_packet(packet_id) == "construction"
 
     denied_status, denied = decoded(
         dispatch_construction_foundry_request(
@@ -629,9 +679,7 @@ def test_default_server_preserves_legacy_identity_flow(tmp_path: Path):
     )
     try:
         status, _summary = decoded(
-            dispatch_construction_foundry_request(
-                state, "GET", "/api/showcase/live-repair/identity/current"
-            )
+            dispatch_construction_foundry_request(state, "GET", "/api/showcase/live-repair/identity/current")
         )
         assert status == 409
         start_status, started = decoded(
@@ -651,46 +699,44 @@ def test_default_server_preserves_legacy_identity_flow(tmp_path: Path):
         )
         assert start_status == 200
         assert started["arena_id"] == "construction"
+        state.live_repair.mark(started["capture_id"], "incident", {})
+        finalized = state.live_repair.finalize_capture(
+            started["capture_id"],
+            {
+                "expected_positive": ["retain legacy compatibility"],
+                "expected_negative": ["never mutate identity"],
+                "preservation_claims": ["Construction truth remains unchanged"],
+                "required_assets": [{"path": "fixtures/legacy.json", "sha256": sha("legacy")}],
+                "arena_id": "construction",
+            },
+        )
+        assert BilateralIdentity.from_mapping(finalized["packet"]["identity"]).identity_digest == item.identity_digest
     finally:
         state.close()
 
 
-def test_v2_endpoint_rejects_malformed_evidence_domain_and_client_u7(
-    trusted_showcase_state,
+def test_identity_packet_provider_rechecks_symlink_on_each_read(
+    tmp_path: Path,
+    monkeypatch,
 ):
-    state, _item = trusted_showcase_state
-    _, summary = decoded(
-        dispatch_construction_foundry_request(
-            state, "GET", "/api/showcase/live-repair/identity/current"
-        )
+    packet_path = tmp_path / "identity.json"
+    packet_path.write_text(json.dumps(dataclasses.asdict(identity())), encoding="utf-8")
+    provider = construction_server._identity_provider_from_path(packet_path)
+    assert provider() == identity()
+    original_is_symlink = Path.is_symlink
+    monkeypatch.setattr(
+        Path,
+        "is_symlink",
+        lambda current: True if current.absolute() == packet_path.absolute() else original_is_symlink(current),
     )
-    handle = summary["identity_handle"]
-    _, started = decoded(
-        dispatch_construction_foundry_request(
-            state,
-            "POST",
-            "/api/showcase/live-repair/capture/start",
-            {
-                "identity_handle": handle,
-                "release_id": "release",
-                "environment_id": "browser",
-                "capture_authorized": True,
-                "max_events": 4,
-                "retention_seconds": 120,
-            },
-        )
-    )
-    state.live_repair.mark(started["capture_id"], "incident", {})
-    finalized = state.live_repair.finalize_capture(
-        started["capture_id"],
-        {
-            "expected_positive": ["retain evidence"],
-            "expected_negative": ["never accept malformed evidence"],
-            "preservation_claims": ["Construction truth remains unchanged"],
-            "arena_id": "construction",
-        },
-    )
-    packet_id = finalized["packet"]["packet_id"]
+    with pytest.raises(BilateralLiveRepairError, match="unavailable"):
+        provider()
+
+
+def test_v2_endpoint_rejects_malformed_evidence_domain_and_client_u7(
+    trusted_finalized_packet,
+):
+    state, handle, packet_id = trusted_finalized_packet
 
     for mutation, expected in (
         ({"domain_targets": [{"ok": True}, "bad-row"]}, "domain_targets[1]"),
@@ -714,41 +760,163 @@ def test_v2_endpoint_rejects_malformed_evidence_domain_and_client_u7(
         assert expected in result["error"]
 
 
-def test_identity_handle_rewrites_attempt_preview_projection_and_replay_routes(
-    trusted_showcase_state,
+@pytest.mark.parametrize(
+    ("attempt_candidate", "preview_candidate", "preview_packet", "expected"),
+    [
+        ("attempt-a", "attempt-b", None, "selected repair attempt"),
+        ("attempt-a", "attempt-a", "wrong-packet", "another incident"),
+    ],
+)
+def test_v2_projection_binds_explicit_preview_to_packet_and_selected_attempt(
+    trusted_finalized_packet,
     monkeypatch,
+    attempt_candidate: str,
+    preview_candidate: str,
+    preview_packet: str | None,
+    expected: str,
 ):
-    state, item = trusted_showcase_state
-    _, summary = decoded(
-        dispatch_construction_foundry_request(
-            state, "GET", "/api/showcase/live-repair/identity/current"
-        )
+    state, handle, packet_id = trusted_finalized_packet
+    packet = state.live_repair.packet(packet_id)
+    attempt = SimpleNamespace(
+        attempt_id="RA-001",
+        candidate_digest=sha(attempt_candidate),
+        promotion_ready=True,
     )
-    handle = summary["identity_handle"]
-    _, started = decoded(
+    preview = SimpleNamespace(
+        preview_id="PREVIEW-SELECTED",
+        replay_packet_digest=preview_packet or packet.packet_digest,
+        candidate_digest=sha(preview_candidate),
+    )
+    monkeypatch.setattr(
+        state.live_repair,
+        "attempts_for_packet",
+        lambda _packet_id: (attempt,),
+    )
+    monkeypatch.setattr(
+        state.live_repair,
+        "preview_for_packet",
+        lambda _packet_id, _preview_id="": preview,
+    )
+    status, result = decoded(
         dispatch_construction_foundry_request(
             state,
             "POST",
-            "/api/showcase/live-repair/capture/start",
+            "/api/showcase/live-repair/projection",
             {
                 "identity_handle": handle,
-                "release_id": "release",
-                "environment_id": "browser",
-                "capture_authorized": True,
+                "packet_id": packet_id,
+                "preview_id": preview.preview_id,
+                "attempt_ids": [attempt.attempt_id],
+                "projection_version": SPATIAL_FOUNDRY_PROJECTION_V2,
             },
         )
     )
-    state.live_repair.mark(started["capture_id"], "incident", {})
-    finalized = state.live_repair.finalize_capture(
-        started["capture_id"],
-        {
-            "expected_positive": ["retain evidence"],
-            "expected_negative": ["never accept stale identity"],
-            "preservation_claims": ["Construction truth remains unchanged"],
-            "arena_id": "construction",
-        },
+    assert status == 409
+    assert expected in result["error"]
+
+
+def test_transition_state_advances_only_through_satisfied_predecessors():
+    packet = SimpleNamespace(
+        dissolution_receipt=SimpleNamespace(
+            terminal_state="DISSOLVED",
+            buffers_cleared=True,
+            timers_released=True,
+            listeners_released=True,
+        ),
+        privacy_receipt={"unrestricted_recording": False},
+        marker_event=SimpleNamespace(event_type="INCIDENT_MARKER"),
+        required_assets=({"path": "scene.json", "sha256": sha("scene")},),
     )
-    packet_id = finalized["packet"]["packet_id"]
+    attempt = SimpleNamespace(candidate_digest=sha("candidate"))
+    preview = SimpleNamespace(candidate_digest=attempt.candidate_digest)
+    u7 = {
+        "ok": True,
+        "finalization": {"human_disposition": "ACCEPTED"},
+    }
+
+    state, evidence = construction_server._derive_transition_state(
+        packet,
+        [attempt],
+        preview,
+        u7,
+        runtime_proof_retained=False,
+    )
+    assert evidence["repair_attempt_retained"] is True
+    assert state == "REPLAY_READY"
+
+    state, _ = construction_server._derive_transition_state(
+        packet,
+        [],
+        preview,
+        u7,
+        runtime_proof_retained=True,
+    )
+    assert state == "RUNTIME_PROVEN"
+
+    state, _ = construction_server._derive_transition_state(
+        packet,
+        [attempt],
+        preview,
+        u7,
+        runtime_proof_retained=True,
+    )
+    assert state == "DISSOLVED"
+
+
+def test_latest_u7_result_reads_canonical_packet_and_candidate_binding(
+    trusted_finalized_packet,
+):
+    state, _handle, packet_id = trusted_finalized_packet
+    packet = state.live_repair.packet(packet_id)
+    candidate_digest = sha("verified-candidate")
+    binding = {
+        "version": "AURA_BILATERAL_LIVE_REPAIR_U7_BINDING_V1",
+        "replay_packet_digest": packet.packet_digest,
+        "bilateral_identity_digest": packet.identity.identity_digest,
+        "candidate_digest": candidate_digest,
+        "plan_phase_hash": sha("phase"),
+        "task_id": "task-1",
+    }
+    u7_result = {
+        "ok": True,
+        **{key: value for key, value in binding.items() if key != "version"},
+        "u7_binding_digest": digest(binding),
+        "finalization": {"human_disposition": "ACCEPTED"},
+        "canonical_owner": "aura_unified_memory_continuity_learning",
+    }
+    state.live_repair.attempt_archive.record(
+        arena_id="construction",
+        route="bilateral-live-repair/u7-current-reproof",
+        request={"candidate_digest": candidate_digest},
+        result={"u7_result": u7_result},
+        workflow_state={
+            "workflow_id": packet_id,
+            "status": "CURRENT_REPROOF_RETAINED",
+        },
+        archive_context={"projection_only": True},
+    )
+    retained = state.live_repair.latest_u7_result(
+        packet_id,
+        candidate_digests=[candidate_digest],
+    )
+    assert retained is not None
+    assert retained["u7_binding_digest"] == digest(binding)
+    assert retained["finalization"]["human_disposition"] == "ACCEPTED"
+    assert (
+        state.live_repair.latest_u7_result(
+            packet_id,
+            candidate_digests=[sha("other-candidate")],
+        )
+        is None
+    )
+
+
+def test_identity_handle_rewrites_attempt_preview_projection_and_replay_routes(
+    trusted_finalized_packet,
+    monkeypatch,
+):
+    state, handle, packet_id = trusted_finalized_packet
+    item = identity()
     forwarded: list[tuple[str, dict]] = []
 
     def fake_dispatch(_state, _method, raw_path, payload):
@@ -793,9 +961,7 @@ def test_identity_handle_rewrites_attempt_preview_projection_and_replay_routes(
 def test_finalize_rejects_duplicate_required_asset_paths(trusted_showcase_state):
     state, _item = trusted_showcase_state
     _, summary = decoded(
-        dispatch_construction_foundry_request(
-            state, "GET", "/api/showcase/live-repair/identity/current"
-        )
+        dispatch_construction_foundry_request(state, "GET", "/api/showcase/live-repair/identity/current")
     )
     _, started = decoded(
         dispatch_construction_foundry_request(
@@ -839,12 +1005,57 @@ def test_composed_static_surface_adds_trusted_identity_and_required_asset_intake
     assert b'id="construction-foundry-identity-summary"' in body
     assert b'id="construction-foundry-required-assets"' in body
     assert b"construction-spatial-foundry.js" in body
-    script_status, _, script = _static_response(
-        "/construction-spatial-foundry.js"
-    )
+    script_status, _, script = _static_response("/construction-spatial-foundry.js")
     assert script_status == 200
     assert b"setLegacyIdentityVisible(true)" in script
     assert b"adapter.identityBrokerAvailable" in script
+    assert b"identityHandleExpired" in script
+    assert b"adapter.identitySummary = null" in script
+
+
+@pytest.mark.parametrize(
+    ("content_length", "body", "expected"),
+    [
+        ("not-an-integer", b"{}", "valid integer"),
+        (str(construction_server.MAX_BODY_BYTES + 1), b"", "between 0 and"),
+        ("2", b"\xff\xff", "valid UTF-8 JSON"),
+        ("2", b"[]", "JSON object"),
+    ],
+)
+def test_http_handler_rejects_malformed_post_bodies(
+    trusted_showcase_state,
+    content_length: str,
+    body: bytes,
+    expected: str,
+):
+    state, _item = trusted_showcase_state
+    handler_type = construction_server.make_handler(state)
+    handler = handler_type.__new__(handler_type)
+    handler.headers = {"Content-Length": content_length}
+    handler.rfile = io.BytesIO(body)
+    with pytest.raises(BilateralLiveRepairError, match=expected):
+        handler._payload()
+
+
+def test_http_handler_does_not_dispatch_invalid_json(
+    trusted_showcase_state,
+    monkeypatch,
+):
+    state, _item = trusted_showcase_state
+    handler_type = construction_server.make_handler(state)
+    handler = handler_type.__new__(handler_type)
+    handler.headers = {"Content-Length": "1"}
+    handler.rfile = io.BytesIO(b"{")
+    handler.path = "/api/showcase/live-repair/capture/CAPTURE-1/event/v1"
+    sent: list[tuple] = []
+    handler._send = lambda *response: sent.append(response)
+    monkeypatch.setattr(
+        construction_server,
+        "dispatch_construction_foundry_request",
+        lambda *_args, **_kwargs: pytest.fail("malformed JSON must not reach request dispatch"),
+    )
+    handler.do_POST()
+    assert sent[0][0] == 400
 
 
 def test_projection_and_request_nesting_are_bounded():
