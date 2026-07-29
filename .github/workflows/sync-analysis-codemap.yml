@@ -41,8 +41,7 @@ jobs:
           git init .
           git remote add origin "https://github.com/${{ github.repository }}.git"
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch --no-tags --depth=1 origin "$TARGET_SHA"
           unset AUTH_HEADER
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
@@ -105,179 +104,65 @@ jobs:
           path.write_text("\n".join(lines) + "\n", encoding="utf-8")
           PY
 
-          python -m py_compile scripts/pr240_resolve_open_reviews.py
+          python -m py_compile scripts/pr240_resolve_open_reviews.py scripts/pr240_followup_review_fixes.py
           python scripts/pr240_resolve_open_reviews.py
-
-          python - <<'PY'
-          from pathlib import Path
-
-          def replace_once(path: Path, old: str, new: str) -> None:
-              text = path.read_text(encoding="utf-8")
-              if text.count(old) != 1:
-                  raise RuntimeError(f"{path}: follow-up replacement drifted")
-              path.write_text(text.replace(old, new, 1), encoding="utf-8")
-
-          archive_path = Path("aura_arena_attempt_archive.py")
-          replace_once(
-              archive_path,
-              """        return [self._decode_summary(row) for row in rows]
-
-              def get(self, artifact_id: str) -> dict[str, Any] | None:
-          """,
-              """        return [self._decode_summary(row) for row in rows]
-
-              def find_by_result_value(
-                  self,
-                  *,
-                  workflow_id: str,
-                  route: str,
-                  result_key: str,
-                  result_value: Any,
-              ) -> dict[str, Any] | None:
-                  if result_key not in {"runtime_proof_digest"}:
-                      raise ValueError("unsupported Attempt Archive result lookup key")
-                  rows = self._conn.execute(
-                      "SELECT artifact_id FROM arena_attempt_artifacts "
-                      "WHERE workflow_id=? AND route=? ORDER BY created_at DESC",
-                      (str(workflow_id), str(route)),
-                  ).fetchall()
-                  for row in rows:
-                      artifact = self.get(str(row[0]))
-                      result = (artifact or {}).get("result")
-                      if isinstance(result, dict) and result.get(result_key) == result_value:
-                          return artifact
-                  return None
-
-              def get(self, artifact_id: str) -> dict[str, Any] | None:
-          """,
-          )
-
-          runtime_path = Path("aura_bilateral_live_repair_foundry_service_runtime.py")
-          replace_once(
-              runtime_path,
-              """        for summary in self.attempt_archive.list(
-                  workflow_id=packet.packet_id,
-                  route="bilateral-live-repair/runtime-replay",
-                  limit=0,
-              ):
-                  if summary.get("result", {}).get("runtime_proof_digest") != proof_ref:
-                      continue
-                  artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
-                  result = dict((artifact or {}).get("result") or {})
-                  proof: Any = result.get("runtime_proof")
-                  proof_json = result.get("runtime_proof_json")
-                  if isinstance(proof_json, str) and proof_json:
-                      try:
-                          proof = json.loads(proof_json)
-                      except json.JSONDecodeError as exc:
-                          raise BilateralLiveRepairError("archived runtime proof JSON is invalid") from exc
-                  if (
-                      result.get("packet_digest") == packet.packet_digest
-                      and result.get("runtime_proof_digest") == proof_ref
-                      and isinstance(proof, Mapping)
-                      and self._runtime_proof_identity_matches(proof, proof_ref)
-                  ):
-                      normalized = dict(proof)
-                      self._runtime_proofs[proof_ref] = (packet.packet_id, normalized)
-                      self._runtime_proofs.move_to_end(proof_ref)
-                      while len(self._runtime_proofs) > 32:
-                          self._runtime_proofs.popitem(last=False)
-                      return normalized
-          """,
-              """        artifact = self.attempt_archive.find_by_result_value(
-                  workflow_id=packet.packet_id,
-                  route="bilateral-live-repair/runtime-replay",
-                  result_key="runtime_proof_digest",
-                  result_value=proof_ref,
-              )
-              result = dict((artifact or {}).get("result") or {})
-              proof: Any = result.get("runtime_proof")
-              proof_json = result.get("runtime_proof_json")
-              if isinstance(proof_json, str) and proof_json:
-                  try:
-                      proof = json.loads(proof_json)
-                  except json.JSONDecodeError as exc:
-                      raise BilateralLiveRepairError("archived runtime proof JSON is invalid") from exc
-              if (
-                  result.get("packet_digest") == packet.packet_digest
-                  and result.get("runtime_proof_digest") == proof_ref
-                  and isinstance(proof, Mapping)
-                  and self._runtime_proof_identity_matches(proof, proof_ref)
-              ):
-                  normalized = dict(proof)
-                  self._runtime_proofs[proof_ref] = (packet.packet_id, normalized)
-                  self._runtime_proofs.move_to_end(proof_ref)
-                  while len(self._runtime_proofs) > 32:
-                      self._runtime_proofs.popitem(last=False)
-                  return normalized
-          """,
-          )
-
-          tests_path = Path("tests/test_aura_bilateral_live_repair_foundry.py")
-          tests = tests_path.read_text(encoding="utf-8")
-          candidate_anchor = '        "repository_identity_unchanged": True,\n'
-          if tests.count(candidate_anchor) != 1:
-              raise RuntimeError("runtime proof fixture identity anchor drifted")
-          tests = tests.replace(candidate_anchor, candidate_anchor + '        "runtime_candidate_id": "candidate",\n', 1)
-
-          def replace_in_test(name: str, old: str, new: str) -> None:
-              global tests
-              start = tests.index(f"def {name}(")
-              next_start = tests.find("\ndef ", start + 1)
-              end = len(tests) if next_start < 0 else next_start
-              block = tests[start:end]
-              if block.count(old) != 1:
-                  raise RuntimeError(f"{name}: candidate fixture replacement drifted")
-              tests = tests[:start] + block.replace(old, new, 1) + tests[end:]
-
-          replace_in_test("test_missing_negative_proof_blocks_repair_promotion", 'candidate_digest=sha("candidate"),', 'candidate_digest=_runtime_binding_digest("candidate"),')
-          replace_in_test("test_failed_runtime_proof_rehydrates_as_rejected_attempt", 'candidate_digest=sha("candidate"),', 'candidate_digest=_runtime_binding_digest("candidate"),')
-          replace_in_test("test_failed_hypothesis_cannot_repeat_across_service_restart", 'candidate_digest=sha("candidate-1"),', 'candidate_digest=_runtime_binding_digest("candidate"),')
-          replace_in_test("test_failed_hypothesis_cannot_repeat_across_service_restart", 'candidate_digest=sha("candidate-2"),', 'candidate_digest=_runtime_binding_digest("candidate"),')
-          replace_in_test("test_repair_attempt_budget_is_persistent_and_bounded", 'candidate_digest=sha(f"candidate-{index}"),', 'candidate_digest=_runtime_binding_digest("candidate"),')
-          replace_in_test("test_repair_attempt_budget_is_persistent_and_bounded", 'candidate_digest=sha("candidate-9"),', 'candidate_digest=_runtime_binding_digest("candidate"),')
-          tests_path.write_text(tests, encoding="utf-8")
-          PY
-
-          python - <<'PY'
-          from pathlib import Path
-          path = Path(".github/workflows/aura-review-learning.yml")
-          text = path.read_text(encoding="utf-8")
-          old = """      - name: Install focused verifier dependencies
-                  run: python -m pip install --disable-pip-version-check pytest jsonschema ruff
-          """
-          new = """      - name: Install focused verifier dependencies
-                  run: |
-                    python -m pip install --disable-pip-version-check -r requirements.txt
-                    python -m pip install --disable-pip-version-check pytest jsonschema ruff pyyaml
-          """
-          if text.count(old) != 1:
-              raise RuntimeError("Aura Review Learning dependency step drifted")
-          path.write_text(text.replace(old, new, 1), encoding="utf-8")
-          PY
-
+          python scripts/pr240_followup_review_fixes.py
           rm scripts/pr240_resolve_open_reviews.py
+          rm scripts/pr240_followup_review_fixes.py
           rm .github/workflows/pr240-resolve-open-reviews.yml
+
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch --no-tags --depth=1 origin "$PR240_RESTORE_HEAD"
           git show "$PR240_RESTORE_HEAD:.github/workflows/sync-analysis-codemap.yml" > .github/workflows/sync-analysis-codemap.yml
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch --no-tags --depth=1 origin main:refs/remotes/origin/main
           unset AUTH_HEADER
+
           test ! -e scripts/pr240_resolve_open_reviews.py
+          test ! -e scripts/pr240_followup_review_fixes.py
           test ! -e .github/workflows/pr240-resolve-open-reviews.yml
           git diff --check
 
       - name: Compile repaired source and focused regressions
         run: |
-          python -m py_compile aura_arena_attempt_archive.py aura_bilateral_live_repair_foundry.py aura_bilateral_live_repair_foundry_contracts.py aura_bilateral_live_repair_foundry_capture.py aura_bilateral_live_repair_foundry_service.py aura_bilateral_live_repair_foundry_service_capture.py aura_bilateral_live_repair_foundry_service_runtime.py aura_bilateral_live_repair_foundry_service_preview.py aura_showcase_live_repair_server.py scripts/aura_review_learning_architect_harness.py tests/test_aura_bilateral_live_repair_foundry.py tests/test_aura_bilateral_live_repair_foundry_hardening.py tests/test_aura_showcase_live_repair_server.py
+          python -m py_compile \
+            aura_arena_attempt_archive.py \
+            aura_bilateral_live_repair_foundry.py \
+            aura_bilateral_live_repair_foundry_contracts.py \
+            aura_bilateral_live_repair_foundry_capture.py \
+            aura_bilateral_live_repair_foundry_service.py \
+            aura_bilateral_live_repair_foundry_service_capture.py \
+            aura_bilateral_live_repair_foundry_service_runtime.py \
+            aura_bilateral_live_repair_foundry_service_preview.py \
+            aura_showcase_live_repair_server.py \
+            scripts/aura_review_learning_architect_harness.py \
+            tests/test_aura_bilateral_live_repair_foundry.py \
+            tests/test_aura_bilateral_live_repair_foundry_hardening.py \
+            tests/test_aura_showcase_live_repair_server.py
 
       - name: Run fatal Ruff checks
         run: |
-          ruff check --select E9,F63,F7,F82 aura_arena_attempt_archive.py aura_bilateral_live_repair_foundry.py aura_bilateral_live_repair_foundry_contracts.py aura_bilateral_live_repair_foundry_capture.py aura_bilateral_live_repair_foundry_service.py aura_bilateral_live_repair_foundry_service_capture.py aura_bilateral_live_repair_foundry_service_runtime.py aura_bilateral_live_repair_foundry_service_preview.py aura_showcase_live_repair_server.py scripts/aura_review_learning_architect_harness.py tests/test_aura_bilateral_live_repair_foundry.py tests/test_aura_bilateral_live_repair_foundry_hardening.py tests/test_aura_showcase_live_repair_server.py
+          ruff check --select E9,F63,F7,F82 \
+            aura_arena_attempt_archive.py \
+            aura_bilateral_live_repair_foundry.py \
+            aura_bilateral_live_repair_foundry_contracts.py \
+            aura_bilateral_live_repair_foundry_capture.py \
+            aura_bilateral_live_repair_foundry_service.py \
+            aura_bilateral_live_repair_foundry_service_capture.py \
+            aura_bilateral_live_repair_foundry_service_runtime.py \
+            aura_bilateral_live_repair_foundry_service_preview.py \
+            aura_showcase_live_repair_server.py \
+            scripts/aura_review_learning_architect_harness.py \
+            tests/test_aura_bilateral_live_repair_foundry.py \
+            tests/test_aura_bilateral_live_repair_foundry_hardening.py \
+            tests/test_aura_showcase_live_repair_server.py
 
       - name: Run focused B11-B15 tests and JavaScript validation
         run: |
-          python -m pytest -q tests/test_aura_bilateral_live_repair_foundry.py tests/test_aura_bilateral_live_repair_foundry_hardening.py tests/test_aura_showcase_live_repair_server.py tests/test_aura_showcase_attempt_archive.py
+          python -m pytest -q \
+            tests/test_aura_bilateral_live_repair_foundry.py \
+            tests/test_aura_bilateral_live_repair_foundry_hardening.py \
+            tests/test_aura_showcase_live_repair_server.py \
+            tests/test_aura_showcase_attempt_archive.py
           node --check aura_showcase/live-repair-foundry.js
 
       - name: Commit verified permanent source tree locally
@@ -296,10 +181,15 @@ jobs:
         run: |
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           test -z "$(git status --short)"
-          python scripts/aura_review_learning_architect_harness.py --repo-root . --base-ref origin/main --head-ref "$SOURCE_SHA" --output /tmp/pr240-review-harness-receipt.json
+          python scripts/aura_review_learning_architect_harness.py \
+            --repo-root . \
+            --base-ref origin/main \
+            --head-ref "$SOURCE_SHA" \
+            --output /tmp/pr240-review-harness-receipt.json
           python - <<'PY'
           import json
           from pathlib import Path
+
           receipt = json.loads(Path('/tmp/pr240-review-harness-receipt.json').read_text(encoding='utf-8'))
           assert receipt['status'] == 'PASSED', receipt
           assert receipt['checks']['waboose_prepare_ok'] is True, receipt
@@ -327,19 +217,28 @@ jobs:
           import json
           from pathlib import Path
           import subprocess
+
           result = json.loads(Path('/tmp/aura-codemap-comparison.json').read_text(encoding='utf-8'))
           if result.get('stable_comparison', {}).get('ok') is True:
-              subprocess.run(['git', 'checkout', 'HEAD', '--', '.aura/CODEMAP.json', '.aura/CODEMAP.md', 'topology_map.json', 'Aura_Memory/live_topology_ast.json'], check=True)
+              subprocess.run(
+                  ['git', 'checkout', 'HEAD', '--', '.aura/CODEMAP.json', '.aura/CODEMAP.md', 'topology_map.json', 'Aura_Memory/live_topology_ast.json'],
+                  check=True,
+              )
               Path('/tmp/aura-codemap-change-class.txt').write_text('VOLATILE_ONLY\n', encoding='utf-8')
           else:
               Path('/tmp/aura-codemap-change-class.txt').write_text('MEANINGFUL\n', encoding='utf-8')
           PY
-          if [ "$(cat /tmp/aura-codemap-change-class.txt)" = "MEANINGFUL" ]; then python -m aura_codemap_verify --compare-json .aura/CODEMAP.json; else test "$comparison_status" -eq 0; fi
+          if [ "$(cat /tmp/aura-codemap-change-class.txt)" = "MEANINGFUL" ]; then
+            python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          else
+            test "$comparison_status" -eq 0
+          fi
           test -s .aura/CODEMAP.json
           test -s .aura/CODEMAP.md
           test -s topology_map.json
           test -s Aura_Memory/live_topology_ast.json
           ! grep -q 'scripts/pr240_resolve_open_reviews.py' .aura/CODEMAP.md
+          ! grep -q 'scripts/pr240_followup_review_fixes.py' .aura/CODEMAP.md
           ! grep -q '.github/workflows/pr240-resolve-open-reviews.yml' .aura/CODEMAP.md
           git diff --check
 
@@ -356,7 +255,9 @@ jobs:
             git add .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
             git add -f Aura_Memory/live_topology_ast.json
             git diff --cached --stat
-            if ! git diff --cached --quiet; then git commit -m "docs: synchronize CODEMAP and topology"; fi
+            if ! git diff --cached --quiet; then
+              git commit -m "docs: synchronize CODEMAP and topology"
+            fi
             AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
             git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" push origin HEAD:"${TARGET_BRANCH}"
             unset AUTH_HEADER
