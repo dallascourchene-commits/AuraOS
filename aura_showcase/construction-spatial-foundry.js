@@ -10,6 +10,7 @@
     identityHandle: '',
     identitySummary: null,
     identityBrokerAvailable: false,
+    legacyFallbackConfirmed: false,
   };
 
   const $ = id => (
@@ -36,6 +37,7 @@
     adapter.identityHandle = String(result.identity_handle || '');
     adapter.identitySummary = result;
     adapter.identityBrokerAvailable = Boolean(adapter.identityHandle);
+    adapter.legacyFallbackConfirmed = false;
     setLegacyIdentityVisible(!adapter.identityBrokerAvailable);
     renderIdentity({
       identity_digest: result.identity_digest,
@@ -77,16 +79,24 @@
       return {path, sha256};
     });
   };
+  const identityBrokerUnavailable = error => (
+    /trusted current identity provider is not configured/i.test(String(error?.message || ''))
+  );
 
   const ensureIdentity = async () => {
     if (adapter.identityHandle) return adapter.identityHandle;
-    if (!adapter.identityBrokerAvailable && adapter.identitySummary) return '';
+    if (adapter.legacyFallbackConfirmed) return '';
     try {
       await loadIdentity();
     } catch (error) {
       adapter.identityHandle = '';
       adapter.identityBrokerAvailable = false;
-      adapter.identitySummary = {ok: false, error: error.message, legacy_fallback: true};
+      adapter.legacyFallbackConfirmed = identityBrokerUnavailable(error);
+      adapter.identitySummary = {
+        ok: false,
+        error: error.message,
+        legacy_fallback: adapter.legacyFallbackConfirmed,
+      };
       setLegacyIdentityVisible(true);
       renderIdentity(adapter.identitySummary);
       return '';
@@ -174,6 +184,7 @@
     if (next.identity_handle && identityHandleExpired(result)) {
       adapter.identityHandle = '';
       adapter.identitySummary = null;
+      adapter.legacyFallbackConfirmed = false;
       const refreshedHandle = await ensureIdentity();
       if (refreshedHandle) {
         next.identity_handle = refreshedHandle;
@@ -187,7 +198,12 @@
   void loadIdentity().catch(error => {
     adapter.identityHandle = '';
     adapter.identityBrokerAvailable = false;
-    adapter.identitySummary = {ok: false, error: error.message, legacy_fallback: true};
+    adapter.legacyFallbackConfirmed = identityBrokerUnavailable(error);
+    adapter.identitySummary = {
+      ok: false,
+      error: error.message,
+      legacy_fallback: adapter.legacyFallbackConfirmed,
+    };
     setLegacyIdentityVisible(true);
     renderIdentity(adapter.identitySummary);
   });

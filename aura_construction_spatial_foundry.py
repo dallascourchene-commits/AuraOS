@@ -579,7 +579,12 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
             proof_ref = str(result.get("runtime_proof_digest") or "")
             if result.get("packet_digest") != packet.packet_digest or not proof_ref:
                 continue
-            self._runtime_proof(packet, proof_ref)
+            proof = self._runtime_proof(packet, proof_ref)
+            self._validate_runtime_proof(
+                packet,
+                proof,
+                allow_reduced_fixture=self._allow_reduced_runtime_fixture,
+            )
             return True
         return False
 

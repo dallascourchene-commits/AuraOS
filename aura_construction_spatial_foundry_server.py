@@ -14,6 +14,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import logging
 from pathlib import Path
+import re
 from typing import Any
 from urllib.parse import urlparse
 
@@ -23,6 +24,7 @@ from aura_bilateral_live_repair_foundry import (
     PreviewRollbackReceipt,
     RepairCandidateResult,
 )
+from aura_bilateral_live_repair_foundry_contracts import PROJECTION_VERSION
 from aura_construction_spatial_foundry import (
     ArenaBoundBilateralLiveRepairService,
     TrustedBilateralIdentityBroker,
@@ -47,6 +49,19 @@ from scripts.aura_runtime_profile_v2_adapter import BilateralRuntimeProfileError
 CONSTRUCTION_FOUNDRY_SERVER_VERSION = "AURA_CONSTRUCTION_SPATIAL_FOUNDRY_SERVER_V1"
 STATIC_DIR = Path(__file__).resolve().parent / "aura_showcase"
 LOGGER = logging.getLogger(__name__)
+_STATE_DIGEST = re.compile(r"^[0-9a-f]{32}$|^[0-9a-f]{40,64}$")
+_V2_PROJECTION_VERSION = "AURA_SPATIAL_FOUNDRY_PROJECTION_V2"
+_V2_DOMAIN_FIELDS = frozenset(
+    {
+        "domain",
+        "domain_targets",
+        "domain_artifacts",
+        "presentation",
+        "construction",
+        "coordination_candidates",
+        "domain_decision",
+    }
+)
 
 
 class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
@@ -58,6 +73,8 @@ class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
         auto_start: bool,
         trusted_identity_provider: Callable[[], BilateralIdentity] | None = None,
         current_identity_resolver: Callable[[BilateralIdentity], BilateralIdentity] | None = None,
+        construction_state_digest_provider: Callable[[str], str] | None = None,
+        presentation_dissolution_provider: Callable[[str], bool] | None = None,
     ) -> None:
         effective_resolver = current_identity_resolver
         if effective_resolver is None and trusted_identity_provider is not None:
@@ -83,6 +100,8 @@ class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
             current_identity_resolver=effective_resolver,
         )
         self._trusted_identity_provider = trusted_identity_provider
+        self._construction_state_digest_provider = construction_state_digest_provider
+        self._presentation_dissolution_provider = presentation_dissolution_provider
         self._identity_broker = (
             TrustedBilateralIdentityBroker(
                 trusted_identity_provider,
@@ -128,6 +147,34 @@ class ConstructionFoundryShowcaseState(LiveRepairShowcaseState):
             expected.assert_current(item)
         return item
 
+    def resolve_construction_state_digest(
+        self,
+        packet_id: str,
+        requested_digest: Any,
+        *,
+        required: bool,
+    ) -> str:
+        if self._construction_state_digest_provider is None:
+            if required:
+                raise BilateralLiveRepairError(
+                    "trusted Construction state digest provider is not configured"
+                )
+            return ""
+        resolved = str(self._construction_state_digest_provider(packet_id) or "").strip().lower()
+        if not _STATE_DIGEST.fullmatch(resolved):
+            raise BilateralLiveRepairError("trusted Construction state digest is invalid")
+        requested = str(requested_digest or "").strip().lower()
+        if requested and requested != resolved:
+            raise BilateralLiveRepairError(
+                "requested domain.state_digest differs from trusted Construction state"
+            )
+        return resolved
+
+    def presentation_resources_dissolved(self, packet_id: str) -> bool:
+        if self._presentation_dissolution_provider is None:
+            return False
+        return self._presentation_dissolution_provider(packet_id) is True
+
 
 def _identity_provider_from_path(path: str | Path) -> Callable[[], BilateralIdentity]:
     source = Path(path).absolute()
@@ -148,21 +195,17 @@ def _identity_provider_from_path(path: str | Path) -> Callable[[], BilateralIden
 
 
 def _is_v2_projection(body: Mapping[str, Any]) -> bool:
-    return bool(
-        body.get("projection_version") == "AURA_SPATIAL_FOUNDRY_PROJECTION_V2"
-        or any(
-            key in body
-            for key in (
-                "domain",
-                "domain_targets",
-                "domain_artifacts",
-                "presentation",
-                "construction",
-                "coordination_candidates",
-                "domain_decision",
-            )
+    has_domain_fields = any(key in body for key in _V2_DOMAIN_FIELDS)
+    if "projection_version" not in body:
+        return has_domain_fields
+    version = body.get("projection_version")
+    if version not in {PROJECTION_VERSION, _V2_PROJECTION_VERSION}:
+        raise BilateralLiveRepairError("unsupported projection_version")
+    if version == PROJECTION_VERSION and has_domain_fields:
+        raise BilateralLiveRepairError(
+            "Spatial Foundry V1 projection cannot include V2 domain fields"
         )
-    )
+    return version == _V2_PROJECTION_VERSION
 
 
 def _mapping_rows(body: Mapping[str, Any], key: str) -> list[Mapping[str, Any]]:
@@ -246,11 +289,24 @@ def _v2_projection_response(
         raise BilateralLiveRepairError("selected preview is not bound to a selected repair attempt")
     if "u7_result" in body:
         raise BilateralLiveRepairError("V2 projection cannot accept client-authored U7 evidence")
-    verified_candidate_digests = [item.candidate_digest for item in attempts if item.promotion_ready is True]
+    verified_candidate_digests = {
+        item.candidate_digest for item in attempts if item.promotion_ready is True
+    }
+    u7_candidate_digests: list[str] = []
+    if preview is not None:
+        if preview.candidate_digest not in verified_candidate_digests:
+            raise BilateralLiveRepairError(
+                "selected preview candidate is not a promotion-ready selected repair attempt"
+            )
+        u7_candidate_digests.append(preview.candidate_digest)
     u7_result = state.live_repair.latest_u7_result(
         packet_id,
-        candidate_digests=verified_candidate_digests,
+        candidate_digests=u7_candidate_digests,
     )
+    if u7_result is not None and (
+        preview is None or u7_result.get("candidate_digest") != preview.candidate_digest
+    ):
+        raise BilateralLiveRepairError("retained U7 evidence differs from the selected preview candidate")
     runtime_proof_retained = state.live_repair.has_retained_runtime_proof(packet_id)
     transition_state, transition_evidence = _derive_transition_state(
         packet,
@@ -258,6 +314,7 @@ def _v2_projection_response(
         preview,
         u7_result,
         runtime_proof_retained=runtime_proof_retained,
+        presentation_resources_dissolved=state.presentation_resources_dissolved(packet_id),
     )
     raw_domain = _optional_mapping(body, "domain")
     requested_arena = raw_domain.get("arena_id")
@@ -266,12 +323,22 @@ def _v2_projection_response(
     requested_type = raw_domain.get("domain_type")
     if requested_type not in {None, "", "CONSTRUCTION"}:
         raise BilateralLiveRepairError("Construction server domain.domain_type must be CONSTRUCTION")
+    coordination_candidates = _mapping_rows(body, "coordination_candidates")
+    trusted_state_digest = state.resolve_construction_state_digest(
+        packet_id,
+        raw_domain.get("state_digest"),
+        required=bool(raw_domain.get("state_digest")) or bool(coordination_candidates),
+    )
     domain = {
         **dict(raw_domain),
         "arena_id": "construction",
         "domain_type": "CONSTRUCTION",
         "runtime_packet_digest": packet.packet_digest,
     }
+    if trusted_state_digest:
+        domain["state_digest"] = trusted_state_digest
+    else:
+        domain.pop("state_digest", None)
     try:
         projection = state.live_repair.build_projection_v2(
             packet_id=packet_id,
@@ -289,7 +356,7 @@ def _v2_projection_response(
             domain_artifacts=_mapping_rows(body, "domain_artifacts"),
             presentation=_optional_mapping(body, "presentation"),
             construction=_optional_mapping(body, "construction"),
-            coordination_candidates=_mapping_rows(body, "coordination_candidates"),
+            coordination_candidates=coordination_candidates,
             domain_decision=(_optional_mapping(body, "domain_decision") if "domain_decision" in body else None),
             transition_state=transition_state,
             transition_evidence=transition_evidence,
@@ -313,6 +380,7 @@ def _derive_transition_state(
     u7_result: Mapping[str, Any] | None,
     *,
     runtime_proof_retained: bool,
+    presentation_resources_dissolved: bool = False,
 ) -> tuple[str, dict[str, bool]]:
     def required_asset_is_bound(item: Any) -> bool:
         if isinstance(item, Mapping):
@@ -337,7 +405,7 @@ def _derive_transition_state(
         "preview_receipt_retained": preview is not None,
         "u7_current_reproof_retained": bool(u7_result) and u7_result.get("ok") is True,
         "human_disposition_retained": bool(dict((u7_result or {}).get("finalization") or {}).get("human_disposition")),
-        "resources_dissolved": capture_dissolved,
+        "resources_dissolved": presentation_resources_dissolved is True,
     }
     state = "INCIDENT_MARKED"
     ordered_stages = (
@@ -441,7 +509,13 @@ def dispatch_construction_foundry_request(
             _validate_required_asset_paths(body)
             body["arena_id"] = "construction"
 
-    except (BilateralLiveRepairError, BilateralRuntimeProfileError) as exc:
+    except (
+        BilateralLiveRepairError,
+        BilateralRuntimeProfileError,
+        ValueError,
+        TypeError,
+        KeyError,
+    ) as exc:
         return _error(str(exc), 409)
     except Exception:
         LOGGER.exception("unexpected Construction Foundry request failure")

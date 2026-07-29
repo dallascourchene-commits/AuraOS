@@ -139,6 +139,11 @@ _TRANSITIONS = (
         "requires": ("human_disposition_retained", "resources_dissolved"),
     },
 )
+_WFST_STATES = frozenset(
+    str(state)
+    for transition in _TRANSITIONS
+    for state in (transition["from_state"], transition["to_state"])
+)
 
 
 def validate_foundry_arena(value: Any) -> str:
@@ -302,6 +307,14 @@ def validate_projection_v1(value: Mapping[str, Any]) -> dict[str, Any]:
         raise BilateralLiveRepairError("base Spatial Foundry V1 authority envelope grants forbidden authority")
     if authority.get("human_review_required") is not True:
         raise BilateralLiveRepairError("base Spatial Foundry V1 authority envelope requires human review")
+    code_targets = projection.get("code_targets")
+    if (
+        "code_targets" not in projection
+        or isinstance(code_targets, (str, bytes, bytearray))
+        or not isinstance(code_targets, Sequence)
+        or any(not isinstance(row, Mapping) for row in code_targets)
+    ):
+        raise BilateralLiveRepairError("base Spatial Foundry V1 code_targets must be retained as an array of objects")
     return {**projection, "projection_digest": supplied}
 
 
@@ -315,6 +328,8 @@ def project_guarded_wfst(
 
     arena = validate_foundry_arena(arena_id)
     state = _required_text(current_state, "current_state", limit=128).upper()
+    if state not in _WFST_STATES:
+        raise BilateralLiveRepairError(f"unsupported guarded WFST current_state: {state}")
     clean_evidence = _clean_mapping(
         {} if evidence is None else evidence,
         "transition_evidence",
@@ -427,10 +442,13 @@ def build_spatial_foundry_projection_v2(
         clean_decision[key] = expected
     clean_decision["human_review_required"] = True
     transitions = (
-        project_guarded_wfst(
-            arena_id=arena,
-            current_state="IDLE",
-            evidence={},
+        _clean_mapping(
+            project_guarded_wfst(
+                arena_id=arena,
+                current_state="IDLE",
+                evidence={},
+            ),
+            "guarded_wfst",
         )
         if transition_projection is None
         else _clean_mapping(transition_projection, "guarded_wfst")
@@ -441,12 +459,22 @@ def build_spatial_foundry_projection_v2(
         transitions.get("projection_only") is not True
         or transitions.get("execution_authority") is not False
         or transitions.get("state_mutation") is not False
+        or transitions.get("human_review_required") is not True
     ):
         raise BilateralLiveRepairError("guarded WFST projection grants forbidden authority")
-    supplied_binding_digest = str(transitions.get("state_binding_digest") or "").strip().lower()
-    canonical_transition = {key: value for key, value in transitions.items() if key != "state_binding_digest"}
-    if not _HEX.fullmatch(supplied_binding_digest) or digest(canonical_transition) != supplied_binding_digest:
-        raise BilateralLiveRepairError("guarded WFST state binding digest is missing or invalid")
+    try:
+        canonical_transitions = _clean_mapping(
+            project_guarded_wfst(
+                arena_id=arena,
+                current_state=transitions.get("current_state"),
+                evidence=transitions.get("evidence"),
+            ),
+            "canonical_guarded_wfst",
+        )
+    except (TypeError, ValueError) as exc:
+        raise BilateralLiveRepairError(f"guarded WFST projection is invalid: {exc}") from exc
+    if transitions != canonical_transitions:
+        raise BilateralLiveRepairError("guarded WFST projection differs from the canonical grammar")
 
     output = dict(base)
     base_digest = output.pop("projection_digest")

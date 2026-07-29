@@ -405,6 +405,46 @@ def test_v2_projection_rejects_duplicate_domain_identities_and_v1_authority():
         )
 
 
+def test_v2_projection_requires_retained_code_targets_and_canonical_wfst_rows():
+    missing_targets = base_projection()
+    missing_targets.pop("code_targets")
+    unsigned = {key: value for key, value in missing_targets.items() if key != "projection_digest"}
+    missing_targets["projection_digest"] = digest(unsigned)
+    with pytest.raises(BilateralLiveRepairError, match="code_targets"):
+        build_spatial_foundry_projection_v2(
+            base_projection=missing_targets,
+            arena_id="construction",
+            domain={"arena_id": "construction", "domain_type": "CONSTRUCTION"},
+        )
+
+    transitions = project_guarded_wfst(
+        arena_id="construction",
+        current_state="IDLE",
+        evidence={"identity_current": True},
+    )
+    transitions["blocked_transitions"][0]["state_mutation"] = True
+    unsigned_transition = {
+        key: value for key, value in transitions.items() if key != "state_binding_digest"
+    }
+    transitions["state_binding_digest"] = digest(unsigned_transition)
+    with pytest.raises(BilateralLiveRepairError, match="canonical grammar"):
+        build_spatial_foundry_projection_v2(
+            base_projection=base_projection(),
+            arena_id="construction",
+            domain={"arena_id": "construction", "domain_type": "CONSTRUCTION"},
+            transition_projection=transitions,
+        )
+
+
+def test_guarded_wfst_rejects_unknown_current_state():
+    with pytest.raises(BilateralLiveRepairError, match="unsupported guarded WFST current_state"):
+        project_guarded_wfst(
+            arena_id="construction",
+            current_state="NOT_A_CANONICAL_STATE",
+            evidence={},
+        )
+
+
 def test_construction_candidate_and_repair_candidate_types_fail_closed():
     candidate = construction_candidate()
     with pytest.raises((ValueError, TypeError)):
@@ -612,7 +652,10 @@ def test_required_assets_and_exact_arena_survive_capture_and_preview(tmp_path: P
         retained_proof_ref = sha("retained-runtime-proof")
         service._runtime_proofs[retained_proof_ref] = (
             packet_id,
-            {"ok": True},
+            {
+                "profile_sha256": packet["identity"]["runtime_profile_digest"],
+                "repository_identity_unchanged": True,
+            },
         )
         service.attempt_archive.record(
             arena_id="construction",
@@ -681,6 +724,7 @@ def trusted_showcase_state(tmp_path: Path):
         auto_start=False,
         trusted_identity_provider=lambda: item,
         current_identity_resolver=lambda _expected: item,
+        construction_state_digest_provider=lambda _packet_id: sha("state"),
     )
     try:
         yield state, item
@@ -845,6 +889,164 @@ def test_v2_endpoint_rejects_malformed_evidence_domain_and_client_u7(
         assert expected in result["error"]
 
 
+def test_projection_version_is_validated_independently_of_domain_fields(
+    trusted_showcase_state,
+):
+    state, _item = trusted_showcase_state
+    for payload, expected in (
+        ({"projection_version": "AURA_UNKNOWN_PROJECTION_V99"}, "unsupported projection_version"),
+        (
+            {
+                "projection_version": PROJECTION_VERSION,
+                "domain": {"domain_type": "CONSTRUCTION"},
+            },
+            "cannot include V2 domain fields",
+        ),
+    ):
+        status, result = decoded(
+            dispatch_construction_foundry_request(
+                state,
+                "POST",
+                "/api/showcase/live-repair/projection",
+                payload,
+            )
+        )
+        assert status == 409
+        assert expected in result["error"]
+
+
+def test_v2_endpoint_resolves_construction_state_at_server_boundary(
+    trusted_finalized_packet,
+):
+    state, handle, packet_id = trusted_finalized_packet
+    status, result = decoded(
+        dispatch_construction_foundry_request(
+            state,
+            "POST",
+            "/api/showcase/live-repair/projection",
+            {
+                "identity_handle": handle,
+                "packet_id": packet_id,
+                "projection_version": SPATIAL_FOUNDRY_PROJECTION_V2,
+                "domain": {
+                    "domain_type": "CONSTRUCTION",
+                    "state_digest": sha("client-controlled-state"),
+                },
+            },
+        )
+    )
+    assert status == 409
+    assert "differs from trusted Construction state" in result["error"]
+
+
+def test_v2_endpoint_queries_u7_only_for_the_selected_preview_candidate(
+    trusted_finalized_packet,
+    monkeypatch,
+):
+    state, handle, packet_id = trusted_finalized_packet
+    packet = state.live_repair.packet(packet_id)
+    preview_candidate = sha("preview-candidate")
+    other_candidate = sha("newer-candidate")
+    attempts = (
+        SimpleNamespace(
+            attempt_id="RA-PREVIEW",
+            candidate_digest=preview_candidate,
+            promotion_ready=True,
+        ),
+        SimpleNamespace(
+            attempt_id="RA-OTHER",
+            candidate_digest=other_candidate,
+            promotion_ready=True,
+        ),
+    )
+    preview = SimpleNamespace(
+        preview_id="PREVIEW-BOUND",
+        replay_packet_digest=packet.packet_digest,
+        candidate_digest=preview_candidate,
+    )
+    queried: list[list[str]] = []
+    monkeypatch.setattr(state.live_repair, "attempts_for_packet", lambda _packet_id: attempts)
+    monkeypatch.setattr(
+        state.live_repair,
+        "preview_for_packet",
+        lambda _packet_id, _preview_id="": preview,
+    )
+    monkeypatch.setattr(
+        state.live_repair,
+        "latest_u7_result",
+        lambda _packet_id, *, candidate_digests: queried.append(list(candidate_digests)) or None,
+    )
+    monkeypatch.setattr(state.live_repair, "has_retained_runtime_proof", lambda _packet_id: False)
+    monkeypatch.setattr(
+        state.live_repair,
+        "build_projection_v2",
+        lambda **_kwargs: {"version": SPATIAL_FOUNDRY_PROJECTION_V2},
+    )
+    status, _result = decoded(
+        dispatch_construction_foundry_request(
+            state,
+            "POST",
+            "/api/showcase/live-repair/projection",
+            {
+                "identity_handle": handle,
+                "packet_id": packet_id,
+                "preview_id": preview.preview_id,
+                "projection_version": SPATIAL_FOUNDRY_PROJECTION_V2,
+            },
+        )
+    )
+    assert status == 200
+    assert queried == [[preview_candidate]]
+
+
+def test_archived_runtime_proof_is_revalidated_before_transition_use(
+    trusted_finalized_packet,
+):
+    state, _handle, packet_id = trusted_finalized_packet
+    packet = state.live_repair.packet(packet_id)
+    fabricated = {
+        "profile_sha256": sha("wrong-profile"),
+        "repository_identity_unchanged": True,
+    }
+    proof_ref = digest(fabricated)
+    state.live_repair.attempt_archive.record(
+        arena_id="construction",
+        route="bilateral-live-repair/runtime-replay",
+        request={"packet_id": packet_id},
+        result={
+            "ok": True,
+            "packet_digest": packet.packet_digest,
+            "runtime_proof_digest": proof_ref,
+            "runtime_proof": fabricated,
+        },
+        workflow_state={"workflow_id": packet_id},
+    )
+    with pytest.raises(BilateralLiveRepairError, match="profile identity differs"):
+        state.live_repair.has_retained_runtime_proof(packet_id)
+
+
+def test_composed_dispatcher_maps_contract_value_errors_to_conflict(
+    trusted_showcase_state,
+    monkeypatch,
+):
+    state, _item = trusted_showcase_state
+    monkeypatch.setattr(
+        construction_server,
+        "reject_raw_identity_currency_claim",
+        lambda _body: (_ for _ in ()).throw(ValueError("malformed legacy receipt")),
+    )
+    status, result = decoded(
+        dispatch_construction_foundry_request(
+            state,
+            "POST",
+            "/api/showcase/live-repair/projection",
+            {},
+        )
+    )
+    assert status == 409
+    assert result["error"] == "malformed legacy receipt"
+
+
 @pytest.mark.parametrize(
     ("attempt_candidate", "preview_candidate", "preview_packet", "expected"),
     [
@@ -945,6 +1147,17 @@ def test_transition_state_advances_only_through_satisfied_predecessors():
         u7,
         runtime_proof_retained=True,
     )
+    assert state == "REPROOF_RETAINED"
+
+    state, evidence = construction_server._derive_transition_state(
+        packet,
+        [attempt],
+        preview,
+        u7,
+        runtime_proof_retained=True,
+        presentation_resources_dissolved=True,
+    )
+    assert evidence["resources_dissolved"] is True
     assert state == "DISSOLVED"
 
     packet.required_assets = ()
@@ -1182,6 +1395,9 @@ def test_composed_static_surface_adds_trusted_identity_and_required_asset_intake
     assert b"adapter.identityBrokerAvailable" in script
     assert b"identityHandleExpired" in script
     assert b"adapter.identitySummary = null" in script
+    assert b"adapter.legacyFallbackConfirmed" in script
+    assert b"if (adapter.legacyFallbackConfirmed) return '';" in script
+    assert b"identityBrokerUnavailable(error)" in script
     assert b"state_digest: adapter.identitySummary" not in script
     assert b"...(next.domain || {})" in script
 
