@@ -2,7 +2,10 @@
 """Apply structural follow-up fixes after the verified PR240 patch set."""
 from __future__ import annotations
 
+import base64
+import os
 from pathlib import Path
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -13,6 +16,34 @@ def replace_once(relative: str, old: str, new: str) -> None:
     if text.count(old) != 1:
         raise RuntimeError(f"{relative}: expected one follow-up replacement site")
     path.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+
+# The exact-head workflow starts from a depth-one checkout. Deepen only the
+# checked-out head enough to prove the retained review-lesson merge ancestry;
+# do not fetch every branch or tag.
+token = os.environ.get("GH_TOKEN", "")
+if not token:
+    raise RuntimeError("GH_TOKEN is required to fetch bounded review ancestry")
+auth_header = base64.b64encode(f"x-access-token:{token}".encode("utf-8")).decode("ascii")
+head_sha = subprocess.check_output(
+    ["git", "rev-parse", "HEAD"],
+    cwd=ROOT,
+    text=True,
+).strip()
+subprocess.run(
+    [
+        "git",
+        "-c",
+        f"http.https://github.com/.extraheader=AUTHORIZATION: basic {auth_header}",
+        "fetch",
+        "--deepen=1024",
+        "--no-tags",
+        "origin",
+        head_sha,
+    ],
+    cwd=ROOT,
+    check=True,
+)
 
 
 # Arena Attempt Archive: exact, unbounded-by-recency lookup for retained proof identity.
@@ -172,25 +203,25 @@ replace_once(
 replace_once(
     ".github/workflows/aura-review-learning.yml",
     """          git checkout --detach FETCH_HEAD
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \\
-            fetch --depth=1 --no-tags origin \\
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --depth=1 --no-tags origin \
             "$AURA_REVIEW_BASE_REF:refs/remotes/origin/$AURA_REVIEW_BASE_REF"
 """,
     """          git checkout --detach FETCH_HEAD
           # Keep the exact-head checkout while fetching only the bounded ancestry
           # required to prove the retained review-lesson merge is an ancestor.
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \\
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
             fetch --deepen=1024 --no-tags origin "$AURA_REVIEW_HEAD_SHA"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \\
-            fetch --depth=1 --no-tags origin \\
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --depth=1 --no-tags origin \
             "$AURA_REVIEW_BASE_REF:refs/remotes/origin/$AURA_REVIEW_BASE_REF"
 """,
 )
 replace_once(
     ".github/workflows/aura-review-learning.yml",
-    """          python scripts/aura_review_learning_architect_harness.py \\
+    """          python scripts/aura_review_learning_architect_harness.py \
 """,
-    """          PYTHONPATH=. python scripts/aura_review_learning_architect_harness.py \\
+    """          PYTHONPATH=. python scripts/aura_review_learning_architect_harness.py \
 """,
 )
 
