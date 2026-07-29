@@ -935,6 +935,7 @@ def test_v2_endpoint_rejects_malformed_evidence_domain_and_client_u7(
         ({"attempt_ids": ""}, "attempt_ids must be an array"),
         ({"domain_targets": False}, "domain_targets must be an array"),
         ({"presentation": None}, "presentation must be an object"),
+        ({"domain_decision": {}}, "domain decision schema mismatch"),
     ):
         status, result = decoded(
             dispatch_construction_foundry_request(

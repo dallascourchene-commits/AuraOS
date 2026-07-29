@@ -753,7 +753,7 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
             domain_decision
             if isinstance(domain_decision, DomainDecisionEnvelope)
             else DomainDecisionEnvelope.from_mapping(domain_decision)
-            if domain_decision
+            if domain_decision is not None
             else None
         )
         if decision is not None:
