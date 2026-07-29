@@ -1,14 +1,163 @@
-name: Synchronize CODEMAP on architecture work branches
+name: PR240 Codex Repair Verification
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - "analysis/bilateral-intent-final-b11-b15"
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: pr240-codex-repair
+  cancel-in-progress: false
 
 jobs:
-  temporarily-disabled-for-pr240-repair:
-    if: ${{ false }}
+  repair-verify-and-push:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
-      - run: echo "PR240 repair staging guard"
+      - name: Checkout exact branch without persisted credentials
+        uses: actions/checkout@v4
+        with:
+          ref: analysis/bilateral-intent-final-b11-b15
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install focused verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install pytest jsonschema ruff pyyaml
+
+      - name: Apply exact Codex repairs
+        run: |
+          python -m py_compile scripts/pr240_resolve_open_reviews.py
+          python scripts/pr240_resolve_open_reviews.py
+          git diff --check
+
+      - name: Compile repaired source
+        run: |
+          python -m py_compile \
+            aura_bilateral_live_repair_foundry_capture.py \
+            aura_bilateral_live_repair_foundry_service_capture.py \
+            aura_bilateral_live_repair_foundry_service_runtime.py \
+            aura_bilateral_live_repair_foundry_service_preview.py \
+            aura_showcase_live_repair_server.py \
+            tests/test_aura_bilateral_live_repair_foundry.py \
+            tests/test_aura_showcase_live_repair_server.py
+
+      - name: Run fatal Ruff checks
+        run: |
+          ruff check --select E9,F63,F7,F82 \
+            aura_bilateral_live_repair_foundry_capture.py \
+            aura_bilateral_live_repair_foundry_service_capture.py \
+            aura_bilateral_live_repair_foundry_service_runtime.py \
+            aura_bilateral_live_repair_foundry_service_preview.py \
+            aura_showcase_live_repair_server.py \
+            tests/test_aura_bilateral_live_repair_foundry.py \
+            tests/test_aura_showcase_live_repair_server.py
+
+      - name: Run focused B11-B15 and Showcase regressions
+        run: |
+          python -m pytest -q \
+            tests/test_aura_bilateral_live_repair_foundry.py \
+            tests/test_aura_bilateral_live_repair_foundry_hardening.py \
+            tests/test_aura_showcase_live_repair_server.py \
+            tests/test_aura_showcase_attempt_archive.py
+          node --check aura_showcase/live-repair-foundry.js
+
+      - name: Restore canonical workflow and remove temporary repair machinery
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          export GIT_CONFIG_COUNT=1
+          export GIT_CONFIG_KEY_0=http.https://github.com/.extraheader
+          export GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $AUTH_HEADER"
+          git fetch --no-tags origin main:refs/remotes/origin/main
+          unset AUTH_HEADER GIT_CONFIG_COUNT GIT_CONFIG_KEY_0 GIT_CONFIG_VALUE_0
+          git show origin/main:.github/workflows/sync-analysis-codemap.yml > .github/workflows/sync-analysis-codemap.yml
+          rm -f scripts/pr240_resolve_open_reviews.py
+          rm -f scripts/pr240_followup_review_fixes.py
+          rm -f .github/workflows/pr240-resolve-open-reviews.yml
+          git diff --check
+
+      - name: Regenerate and validate CODEMAP
+        run: |
+          cp .aura/CODEMAP.json /tmp/aura-codemap-reference.json
+          python aura_codebase_navigator.py
+          set +e
+          python -m aura_codemap_verify --compare-json /tmp/aura-codemap-reference.json > /tmp/aura-codemap-comparison.json
+          comparison_status=$?
+          set -e
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import subprocess
+
+          result = json.loads(Path('/tmp/aura-codemap-comparison.json').read_text(encoding='utf-8'))
+          if result.get('stable_comparison', {}).get('ok') is True:
+              subprocess.run(
+                  ['git', 'checkout', 'HEAD', '--', '.aura/CODEMAP.json', '.aura/CODEMAP.md', 'topology_map.json', 'Aura_Memory/live_topology_ast.json'],
+                  check=True,
+              )
+          PY
+          test "$comparison_status" -eq 0 || python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s topology_map.json
+          test -s Aura_Memory/live_topology_ast.json
+          git diff --check
+
+      - name: Commit verified repair locally
+        id: repair_commit
+        run: |
+          git config user.name "AuraOS PR240 Codex Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "fix: resolve Codex findings on PR240"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Run Aura native exact-head review harness
+        env:
+          SOURCE_SHA: ${{ steps.repair_commit.outputs.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test -z "$(git status --short)"
+          PYTHONPATH=. python scripts/aura_review_learning_architect_harness.py \
+            --repo-root . \
+            --base-ref origin/main \
+            --head-ref "$SOURCE_SHA" \
+            --output /tmp/pr240-codex-harness-receipt.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          receipt = json.loads(Path('/tmp/pr240-codex-harness-receipt.json').read_text(encoding='utf-8'))
+          assert receipt['status'] == 'PASSED', receipt
+          assert receipt['checks']['waboose_prepare_ok'] is True, receipt
+          assert receipt['checks']['waboose_scan_ok'] is True, receipt
+          assert receipt['checks']['waboose_finalize_ok'] is True, receipt
+          assert receipt['checks']['crucible_passed'] is True, receipt
+          assert receipt['production_mutation'] is False, receipt
+          assert receipt['automatic_merge'] is False, receipt
+          assert receipt['human_review_required'] is True, receipt
+          PY
+
+      - name: Push verified exact head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          export GIT_CONFIG_COUNT=1
+          export GIT_CONFIG_KEY_0=http.https://github.com/.extraheader
+          export GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $AUTH_HEADER"
+          git push origin HEAD:analysis/bilateral-intent-final-b11-b15
+          unset AUTH_HEADER GIT_CONFIG_COUNT GIT_CONFIG_KEY_0 GIT_CONFIG_VALUE_0
