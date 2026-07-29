@@ -11,6 +11,7 @@
     eventCount: 0,
     listeners: [],
     expiryTimer: null,
+    finalizing: false,
   };
 
   const $ = id => document.getElementById(id);
@@ -75,6 +76,7 @@
     const onClick = event => {
       const target = event.target?.closest?.('button, input, textarea, select');
       if (!target || !target.closest('#foundry-view')) return;
+      if (new Set(['foundry-start', 'foundry-mark', 'foundry-finalize']).has(String(target.id || ''))) return;
       void sendEvent('FOUNDRY_UI_ACTION', {
         element_id: String(target.id || ''),
         element_type: String(target.tagName || ''),
@@ -104,6 +106,7 @@
       .catch(() => {})
       .finally(() => {
         dissolveListeners();
+        state.finalizing = false;
         resetControls();
         appendEvent('CAPTURE_DISSOLVED', 'bounded retention window expired');
         output({ok: false, status: 'CAPTURE_EXPIRED_AND_DISSOLVED', fail_closed: true});
@@ -123,6 +126,7 @@
     const result = await request('/api/showcase/live-repair/capture/start', contract);
     state.captureId = result.capture_id;
     state.active = true;
+    state.finalizing = false;
     state.eventCount = 0;
     state.packet = null;
     addBoundedListeners();
@@ -147,21 +151,30 @@
   };
 
   const finalize = async () => {
+    if (!state.active || state.finalizing) return;
+    state.finalizing = true;
     const currentIdentity = identity();
-    const result = await request(
-      `/api/showcase/live-repair/capture/${encodeURIComponent(state.captureId)}/finalize/v1`,
-      {
-        current_identity: currentIdentity,
-        expected_positive: lines($('foundry-positive')?.value),
-        expected_negative: lines($('foundry-negative')?.value),
-        preservation_claims: lines($('foundry-preservation')?.value),
-        required_assets: [],
-        arena_id: 'construction',
-        objective: 'Compile an exact privacy-safe deterministic field replay',
-      },
-    );
+    let result;
+    try {
+      result = await request(
+        `/api/showcase/live-repair/capture/${encodeURIComponent(state.captureId)}/finalize/v1`,
+        {
+          current_identity: currentIdentity,
+          expected_positive: lines($('foundry-positive')?.value),
+          expected_negative: lines($('foundry-negative')?.value),
+          preservation_claims: lines($('foundry-preservation')?.value),
+          required_assets: [],
+          arena_id: 'construction',
+          objective: 'Compile an exact privacy-safe deterministic field replay',
+        },
+      );
+    } catch (error) {
+      state.finalizing = false;
+      throw error;
+    }
     state.packet = result.packet;
     dissolveListeners();
+    state.finalizing = false;
     resetControls();
     appendEvent('CAPTURE_DISSOLVED', result.packet?.packet_id || '');
     const projection = await projectCurrentIncident(currentIdentity);
@@ -188,7 +201,7 @@
       }
       node.replaceChildren(...children);
     };
-    set('foundry-projection-intent', projection.expected_positive || projection.confirmed_intent?.positive || []);
+    set('foundry-projection-intent', projection.confirmed_intent?.expected_positive || []);
     set('foundry-projection-negative', projection.negative_intent || []);
     set('foundry-projection-guardrails', projection.guardrails || []);
     set('foundry-projection-runtime', [
@@ -244,8 +257,6 @@
   $('foundry-start')?.addEventListener('click', () => start().catch(error => output(error.message)));
   $('foundry-mark')?.addEventListener('click', () => mark().catch(error => output(error.message)));
   $('foundry-finalize')?.addEventListener('click', () => finalize().catch(error => {
-    dissolveListeners();
-    resetControls();
     output(error.message);
   }));
 
