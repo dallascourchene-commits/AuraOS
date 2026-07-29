@@ -6,6 +6,7 @@ on:
       - analysis/bilateral-intent-final-b11-b15
     paths:
       - "scripts/pr240_resolve_open_reviews.py"
+      - "scripts/pr240_followup_review_fixes.py"
       - ".github/workflows/pr240-resolve-open-reviews.yml"
 
 permissions:
@@ -34,16 +35,20 @@ jobs:
         run: python -m pip install --disable-pip-version-check pytest jsonschema ruff pyyaml
 
       - name: Apply verified still-current review fixes
-        run: python scripts/pr240_resolve_open_reviews.py
+        run: |
+          python scripts/pr240_resolve_open_reviews.py
+          python scripts/pr240_followup_review_fixes.py
 
       - name: Remove one-shot patch infrastructure
         run: |
           rm scripts/pr240_resolve_open_reviews.py
+          rm scripts/pr240_followup_review_fixes.py
           rm .github/workflows/pr240-resolve-open-reviews.yml
 
       - name: Compile patched source and tests
         run: |
           python -m py_compile \
+            aura_arena_attempt_archive.py \
             aura_bilateral_live_repair_foundry.py \
             aura_bilateral_live_repair_foundry_contracts.py \
             aura_bilateral_live_repair_foundry_capture.py \
@@ -60,6 +65,7 @@ jobs:
       - name: Run fatal Ruff checks
         run: |
           ruff check --select E9,F63,F7,F82 \
+            aura_arena_attempt_archive.py \
             aura_bilateral_live_repair_foundry.py \
             aura_bilateral_live_repair_foundry_contracts.py \
             aura_bilateral_live_repair_foundry_capture.py \
