@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""Apply the verified, still-current PR #240 review fixes.
-
-This file is temporary and is deleted by the one-shot workflow before the final
-fix commit is pushed. Every replacement is exact and fails closed if the source
-head differs from the reviewed PR head.
-"""
+"""Apply the still-current Codex findings for PR #240 and fail closed on drift."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -17,15 +12,35 @@ def replace_once(path: str, old: str, new: str) -> None:
     text = target.read_text(encoding="utf-8")
     count = text.count(old)
     if count != 1:
-        raise RuntimeError(f"{path}: expected exactly one replacement site, found {count}")
+        raise RuntimeError(f"{path}: expected one replacement site, found {count}")
     target.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 
-def insert_before(path: str, marker: str, addition: str) -> None:
-    replace_once(path, marker, addition + marker)
+def append_once(path: str, marker: str, addition: str) -> None:
+    target = ROOT / path
+    text = target.read_text(encoding="utf-8")
+    if marker in text:
+        return
+    target.write_text(text.rstrip() + "\n\n" + addition.strip() + "\n", encoding="utf-8")
 
 
-# 1. Fail closed on scalar strings/mappings supplied where obligation arrays are required.
+# Sanitize packet metadata before digesting and reject scalar obligation collections.
+replace_once(
+    "aura_bilateral_live_repair_foundry_capture.py",
+    '''        self.identity = identity
+        self.release_id = _required_text(release_id, "release_id", limit=512)
+        self.environment_id = _required_text(environment_id, "environment_id", limit=512)
+''',
+    '''        self.identity = identity
+        clean_release, release_redactions = canonical_sanitize(release_id)
+        clean_environment, environment_redactions = canonical_sanitize(environment_id)
+        if not isinstance(clean_release, str) or not isinstance(clean_environment, str):
+            raise ValueError("release_id and environment_id must sanitize to text")
+        self.release_id = _required_text(clean_release, "release_id", limit=512)
+        self.environment_id = _required_text(clean_environment, "environment_id", limit=512)
+        self._metadata_redactions = set(release_redactions) | set(environment_redactions)
+''',
+)
 replace_once(
     "aura_bilateral_live_repair_foundry_capture.py",
     '''        def _obligations(values: Iterable[str], name: str, limit: int) -> tuple[str, ...]:
@@ -33,7 +48,7 @@ replace_once(
             for raw in values:
 ''',
     '''        def _obligations(values: Iterable[str], name: str, limit: int) -> tuple[str, ...]:
-            if isinstance(values, (str, bytes, bytearray)) or not isinstance(values, Iterable):
+            if isinstance(values, (str, bytes, bytearray, Mapping)) or not isinstance(values, Iterable):
                 raise ValueError(f"{name} values must be a non-string iterable")
             normalized: set[str] = set()
             for raw in values:
@@ -53,8 +68,15 @@ replace_once(
         for raw in required_assets:
 ''',
 )
+replace_once(
+    "aura_bilateral_live_repair_foundry_capture.py",
+    '''                } | obligation_redactions
+''',
+    '''                } | obligation_redactions | self._metadata_redactions
+''',
+)
 
-# 2. Keep pending packets unusable until canonical archival succeeds and guard shared state.
+# Keep packets unavailable until durable archival succeeds and bound the packet cache.
 replace_once(
     "aura_bilateral_live_repair_foundry_service_capture.py",
     '''    def close(self) -> None:
@@ -124,13 +146,15 @@ replace_once(
 ''',
     '''        with self._capture_lock:
             retained = self._pending_packet_archives.get(packet.packet_id)
-            if retained is None:
+            if retained is None or retained[0].packet_digest != packet.packet_digest:
                 raise BilateralLiveRepairError(
-                    "pending incident replay archive disappeared before durable completion"
+                    "pending incident replay identity changed before durable completion"
                 )
-            if retained[0].packet_digest != packet.packet_digest:
-                raise BilateralLiveRepairError("pending incident replay identity changed during archival")
             self._pending_packet_archives.pop(packet.packet_id, None)
+            self._packets[packet.packet_id] = packet
+            self._packets.move_to_end(packet.packet_id)
+            while len(self._packets) > 32:
+                self._packets.popitem(last=False)
         return {"ok": True, "packet": packet.to_dict(), "attempt_artifact": archive}
 ''',
 )
@@ -173,7 +197,32 @@ replace_once(
 ''',
 )
 
-# 3. Bind retained/resumed U7 state to the exact incident and verified candidate.
+# Load runtime artifacts before filtering their decoded result fields.
+replace_once(
+    "aura_bilateral_live_repair_foundry_service_runtime.py",
+    '''        for summary in self.attempt_archive.list(
+            workflow_id=packet.packet_id,
+            route="bilateral-live-repair/runtime-replay",
+            limit=0,
+        ):
+            if summary.get("result", {}).get("runtime_proof_digest") != proof_ref:
+                continue
+            artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
+            result = dict((artifact or {}).get("result") or {})
+''',
+    '''        for summary in self.attempt_archive.list(
+            workflow_id=packet.packet_id,
+            route="bilateral-live-repair/runtime-replay",
+            limit=0,
+        ):
+            artifact = self.attempt_archive.get(str(summary.get("artifact_id") or ""))
+            result = dict((artifact or {}).get("result") or {})
+            if result.get("runtime_proof_digest") != proof_ref:
+                continue
+''',
+)
+
+# Bind every resumed U7 stage to the exact incident, bilateral identity, and candidate.
 replace_once(
     "aura_bilateral_live_repair_foundry_service_preview.py",
     "from collections.abc import Callable, Mapping, Sequence\n",
@@ -204,7 +253,6 @@ replace_once(
             bindings = session.setdefault("bilateral_live_repair_u7_bindings", {})
             if not isinstance(bindings, MutableMapping):
                 raise BilateralLiveRepairError("governed U7 binding registry is invalid")
-            retained_binding = bindings.get(task)
             retained_state_exists = any(
                 task in dict(session.get(name) or {})
                 for name in (
@@ -214,6 +262,7 @@ replace_once(
                     "unified_learning_finalization_claims",
                 )
             )
+            retained_binding = bindings.get(task)
             if retained_binding is None:
                 if retained_state_exists:
                     raise BilateralLiveRepairError(
@@ -240,90 +289,42 @@ replace_once(
 ''',
 )
 
-# 4. Harden the Showcase API boundary and namespace ephemeral selections by incident.
-replace_once(
-    "aura_showcase_live_repair_server.py",
-    "from http.server import BaseHTTPRequestHandler, HTTPServer\n",
-    "from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer\n",
-)
+# Admit the checked-in V2 profile and namespace attempt selections by packet.
 replace_once(
     "aura_showcase_live_repair_server.py",
     "from pathlib import Path\n",
-    "from pathlib import Path, PurePosixPath\nimport tempfile\n",
+    "from pathlib import Path, PurePosixPath\n",
 )
 replace_once(
     "aura_showcase_live_repair_server.py",
     '''        self.live_repair_attempts: dict[str, RepairCandidateResult] = {}
-        self.live_repair_previews: dict[str, PreviewRollbackReceipt] = {}
 ''',
     '''        self.live_repair_attempts: dict[tuple[str, str], RepairCandidateResult] = {}
-        self.live_repair_previews: dict[tuple[str, str], PreviewRollbackReceipt] = {}
 ''',
 )
 replace_once(
     "aura_showcase_live_repair_server.py",
-    '''    def close(self) -> None:
-        if self._live_repair is not None:
-            self._live_repair.close()
-        super().close()
+    '''def dispatch_live_repair_request(
 ''',
-    '''    def close(self) -> None:
-        try:
-            if self._live_repair is not None:
-                self._live_repair.close()
-        finally:
-            super().close()
-''',
-)
-insert_before(
-    "aura_showcase_live_repair_server.py",
-    "def dispatch_live_repair_request(\n",
-    '''def _validated_repo_json_path(
-    root: Path,
-    value: Any,
-    name: str,
-    *,
-    allowed_prefixes: tuple[str, ...],
-) -> str:
-    if type(value) is not str or not value.strip() or "\\x00" in value or "\\\\" in value:
-        raise ValueError(f"{name} must be a non-empty POSIX repository path")
-    pure = PurePosixPath(value.strip())
-    if pure.is_absolute() or ".." in pure.parts or pure.suffix.lower() != ".json":
-        raise ValueError(f"{name} must be an approved repo-relative JSON path")
+    '''def _approved_repo_relative_path(value: Any, name: str, allowed: set[str]) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    if "\\" in text or "\\x00" in text:
+        raise ValueError(f"{name} must be a POSIX repository-relative path")
+    pure = PurePosixPath(text)
     normalized = pure.as_posix()
-    if not any(normalized.startswith(prefix) for prefix in allowed_prefixes):
-        raise ValueError(f"{name} is outside the approved repository path set")
-    candidate = root
-    for part in pure.parts:
-        candidate = candidate / part
-        if candidate.is_symlink():
-            raise ValueError(f"{name} contains a symbolic link")
-    resolved = candidate.resolve()
-    try:
-        resolved.relative_to(root)
-    except ValueError as exc:
-        raise ValueError(f"{name} escapes the repository") from exc
-    if not resolved.is_file():
-        raise ValueError(f"{name} does not identify an existing file")
+    if pure.is_absolute() or ".." in pure.parts or normalized not in allowed:
+        raise ValueError(f"{name} must be an approved repo-relative path")
     return normalized
 
 
-def _require_loopback_host(host: str) -> None:
-    if host not in {"127.0.0.1", "::1", "localhost"}:
-        raise ValueError("live-repair Showcase must bind to loopback only")
-
-
+def dispatch_live_repair_request(
 ''',
 )
 replace_once(
     "aura_showcase_live_repair_server.py",
-    '''        if method == "POST" and route == "/api/showcase/live-repair/replay/run":
-            venv_path = body.get("venv_path")
-            if venv_path is not None:
-                venv_str = str(venv_path)
-                if any(c in venv_str for c in ("\\0", "\\n", "\\r", ";", "|", "&", "$", "`")):
-                    return _error("venv_path contains unsafe characters", 400)
-            profile_path = str(body.get("profile_path") or "")
+    '''            profile_path = str(body.get("profile_path") or "")
             output_dir = str(body.get("output_dir") or "")
             allowed_repo_relative = {
                 "scripts/aura_runtime_profile_v2.json",
@@ -333,167 +334,117 @@ replace_once(
                 return _error("profile_path must be an approved repo-relative path", 400)
             if output_dir and not any(output_dir.endswith(allowed) for allowed in allowed_repo_relative):
                 return _error("output_dir must be an approved repo-relative path", 400)
-            result = state.live_repair.execute_replay(
-                packet_id=str(body.get("packet_id") or ""),
-                profile_path=profile_path,
-                confirmation_packet=str(body.get("confirmation_packet") or ""),
-                output_dir=output_dir,
-                venv_path=venv_path,
-                baseline_receipt=body.get("baseline_receipt"),
-            )
-            return _json(200 if result.get("ok") else 409, result)
 ''',
-    '''        if method == "POST" and route == "/api/showcase/live-repair/replay/run":
-            if any(body.get(name) not in (None, "") for name in ("venv_path", "output_dir", "baseline_receipt")):
-                return _error(
-                    "browser replay cannot select an interpreter, output directory, or baseline receipt",
-                    400,
-                )
-            profile_path = _validated_repo_json_path(
-                state.repo_root,
+    '''            profile_path = _approved_repo_relative_path(
                 body.get("profile_path"),
                 "profile_path",
-                allowed_prefixes=("scripts/", ".aura/"),
+                {".aura/runtime_profiles/construction_demo_bilateral.v2.json"},
             )
-            confirmation_packet = _validated_repo_json_path(
-                state.repo_root,
-                body.get("confirmation_packet"),
-                "confirmation_packet",
-                allowed_prefixes=(".aura/", "Aura_Staging/", "analysis/"),
+            output_dir = _approved_repo_relative_path(
+                body.get("output_dir"),
+                "output_dir",
+                {"scripts/runtime_profile_v2_output"},
             )
-            with tempfile.TemporaryDirectory(prefix="aura-live-repair-runtime-") as output_dir:
-                result = state.live_repair.execute_replay(
-                    packet_id=str(body.get("packet_id") or ""),
-                    profile_path=profile_path,
-                    confirmation_packet=confirmation_packet,
-                    output_dir=output_dir,
-                    venv_path=None,
-                    baseline_receipt=None,
-                )
-            return _json(200 if result.get("ok") else 409, result)
 ''',
 )
 replace_once(
     "aura_showcase_live_repair_server.py",
     '''            state.live_repair_attempts[result.attempt_id] = result
 ''',
-    '''            state.live_repair_attempts[(str(body.get("packet_id") or ""), result.attempt_id)] = result
+    '''            state.live_repair_attempts[(result.replay_packet_digest, result.attempt_id)] = result
 ''',
 )
 replace_once(
     "aura_showcase_live_repair_server.py",
-    '''            state.live_repair_previews[receipt.preview_id] = receipt
-''',
-    '''            state.live_repair_previews[(str(body.get("packet_id") or ""), receipt.preview_id)] = receipt
-''',
-)
-replace_once(
-    "aura_showcase_live_repair_server.py",
-    '''            attempt_ids = [str(item) for item in body.get("attempt_ids") or []]
+    '''            identity = BilateralIdentity.from_mapping(body.get("current_identity") or {})
+            attempt_ids = [str(item) for item in body.get("attempt_ids") or []]
             attempts = (
                 [state.live_repair_attempts[item] for item in attempt_ids if item in state.live_repair_attempts]
                 if attempt_ids
                 else list(state.live_repair.attempts_for_packet(str(body.get("packet_id") or "")))
             )
-            preview_id = str(body.get("preview_id") or "")
-            preview = (
-                state.live_repair_previews.get(preview_id)
-                if preview_id
-                else state.live_repair.latest_preview(str(body.get("packet_id") or ""))
-            )
 ''',
-    '''            packet_id = str(body.get("packet_id") or "")
+    '''            identity = BilateralIdentity.from_mapping(body.get("current_identity") or {})
+            packet_id = str(body.get("packet_id") or "")
+            packet = state.live_repair._packet(packet_id)
             attempt_ids = [str(item) for item in body.get("attempt_ids") or []]
             attempts = (
                 [
-                    state.live_repair_attempts[(packet_id, item)]
+                    state.live_repair_attempts[(packet.packet_digest, item)]
                     for item in attempt_ids
-                    if (packet_id, item) in state.live_repair_attempts
+                    if (packet.packet_digest, item) in state.live_repair_attempts
                 ]
                 if attempt_ids
                 else list(state.live_repair.attempts_for_packet(packet_id))
             )
-            preview_id = str(body.get("preview_id") or "")
-            preview = (
-                state.live_repair_previews.get((packet_id, preview_id))
-                if preview_id
-                else state.live_repair.latest_preview(packet_id)
-            )
-''',
-)
-replace_once(
-    "aura_showcase_live_repair_server.py",
-    '''        def _payload(self) -> dict[str, Any]:
-            try:
-                length = int(self.headers.get("Content-Length", "0") or 0)
-            except ValueError:
-                return {}
-            if length < 0 or length > MAX_BODY_BYTES:
-                return {}
-            raw = self.rfile.read(length) if length else b""
-            if not raw:
-                return {}
-            try:
-                value = json.loads(raw.decode("utf-8"))
-            except (UnicodeDecodeError, json.JSONDecodeError):
-                return {}
-            return value if isinstance(value, dict) else {}
-''',
-    '''        def _payload(self) -> tuple[dict[str, Any] | None, int]:
-            try:
-                length = int(self.headers.get("Content-Length", "0") or 0)
-            except ValueError:
-                return None, 400
-            if length < 0:
-                return None, 400
-            if length > MAX_BODY_BYTES:
-                return None, 413
-            raw = self.rfile.read(length) if length else b""
-            if not raw:
-                return {}, 200
-            try:
-                value = json.loads(raw.decode("utf-8"))
-            except (UnicodeDecodeError, json.JSONDecodeError):
-                return None, 400
-            if not isinstance(value, dict):
-                return None, 400
-            return value, 200
-''',
-)
-replace_once(
-    "aura_showcase_live_repair_server.py",
-    '''        def do_POST(self) -> None:  # noqa: N802
-            self._send(*dispatch_live_repair_request(state, "POST", self.path, self._payload()))
-''',
-    '''        def do_POST(self) -> None:  # noqa: N802
-            payload, status = self._payload()
-            if payload is None:
-                message = "request body exceeds the bounded byte ceiling" if status == 413 else "request body is invalid"
-                self._send(*_error(message, status))
-                return
-            self._send(*dispatch_live_repair_request(state, "POST", self.path, payload))
-''',
-)
-replace_once(
-    "aura_showcase_live_repair_server.py",
-    '''def serve(*, host: str, port: int, repo_root: str | Path, demo_project: str, auto_start: bool) -> None:
-    state = LiveRepairShowcaseState(repo_root, demo_project=demo_project, auto_start=auto_start)
-    server = HTTPServer((host, port), make_handler(state))
-''',
-    '''def serve(*, host: str, port: int, repo_root: str | Path, demo_project: str, auto_start: bool) -> None:
-    _require_loopback_host(host)
-    state = LiveRepairShowcaseState(repo_root, demo_project=demo_project, auto_start=auto_start)
-    server = ThreadingHTTPServer((host, port), make_handler(state))
-    server.daemon_threads = True
-    server.socket.settimeout(30.0)
 ''',
 )
 
-# 5. Preserve browser retry controls after validation errors and render canonical positives.
+# Keep retryable captures alive, display canonical positives, and avoid finalize/event races.
 replace_once(
     "aura_showcase/live-repair-foundry.js",
-    "    set('foundry-projection-intent', projection.expected_positive || projection.confirmed_intent?.positive || []);\n",
-    "    set('foundry-projection-intent', projection.confirmed_intent?.expected_positive || []);\n",
+    '''    expiryTimer: null,
+''',
+    '''    expiryTimer: null,
+    finalizing: false,
+''',
+)
+replace_once(
+    "aura_showcase/live-repair-foundry.js",
+    '''      if (!target || !target.closest('#foundry-view')) return;
+      void sendEvent('FOUNDRY_UI_ACTION', {
+''',
+    '''      if (!target || !target.closest('#foundry-view')) return;
+      if (new Set(['foundry-start', 'foundry-mark', 'foundry-finalize']).has(String(target.id || ''))) return;
+      void sendEvent('FOUNDRY_UI_ACTION', {
+''',
+)
+replace_once(
+    "aura_showcase/live-repair-foundry.js",
+    '''  const finalize = async () => {
+    const currentIdentity = identity();
+    const result = await request(
+''',
+    '''  const finalize = async () => {
+    if (!state.active || state.finalizing) return;
+    state.finalizing = true;
+    const currentIdentity = identity();
+    let result;
+    try {
+      result = await request(
+''',
+)
+replace_once(
+    "aura_showcase/live-repair-foundry.js",
+    '''      },
+    );
+    state.packet = result.packet;
+''',
+    '''        },
+      );
+    } catch (error) {
+      state.finalizing = false;
+      throw error;
+    }
+    state.packet = result.packet;
+''',
+)
+replace_once(
+    "aura_showcase/live-repair-foundry.js",
+    '''    dissolveListeners();
+    resetControls();
+''',
+    '''    dissolveListeners();
+    state.finalizing = false;
+    resetControls();
+''',
+)
+replace_once(
+    "aura_showcase/live-repair-foundry.js",
+    '''    set('foundry-projection-intent', projection.expected_positive || projection.confirmed_intent?.positive || []);
+''',
+    '''    set('foundry-projection-intent', projection.confirmed_intent?.expected_positive || []);
+''',
 )
 replace_once(
     "aura_showcase/live-repair-foundry.js",
@@ -504,517 +455,167 @@ replace_once(
   }));
 ''',
     '''  $('foundry-finalize')?.addEventListener('click', () => finalize().catch(error => {
-    // Validation failures leave the server capture active, so preserve the
-    // controls and listeners for correction/retry. Errors after successful
-    // finalization occur after finalize() has already dissolved the browser state.
-    if (!state.active) resetControls();
     output(error.message);
   }));
 ''',
 )
 
-# 6. Replace the PR164-specific internal harness plan with the B11-B15 acceptance scope.
-replace_once(
-    "scripts/aura_review_learning_architect_harness.py",
-    '''"""Execute Aura's native planning/review surfaces for the PR164 lesson refactor.
-
-The harness is read-only with respect to tracked source.  It uses the retained
-Agent Bridge, Architect preparation path, Selective Council V3 lane router,
-Surgeon control contract, Capability Connectome/Affordance Directory, Emergent
-Evidence Spine, and Coding Waboose.  It writes one bounded JSON receipt only to
-an explicitly supplied artifact path.
-"""
-''',
-    '''"""Execute Aura's native review surfaces for the final B11-B15 Foundry head.
-
-The harness is read-only with respect to tracked source. It uses the retained
-Agent Bridge, Architect preparation path, Selective Council V3 lane router,
-Surgeon control contract, Capability Connectome/Affordance Directory, Emergent
-Evidence Spine, Coding Waboose, and Crucible. It writes one bounded JSON receipt
-only to an explicitly supplied artifact path.
-"""
-''',
-)
-replace_once(
-    "scripts/aura_review_learning_architect_harness.py",
-    'HARNESS_VERSION = "AURA_PR164_REVIEW_LEARNING_ARCHITECT_HARNESS_V1"\n',
-    'HARNESS_VERSION = "AURA_BILATERAL_LIVE_REPAIR_B11_B15_ARCHITECT_HARNESS_V1"\n',
-)
-start = (ROOT / "scripts/aura_review_learning_architect_harness.py").read_text(encoding="utf-8")
-plan_start = start.index("def _plan() -> dict[str, Any]:\n")
-plan_end = start.index("\n\ndef run(repo_root: Path", plan_start)
-new_plan = '''def _plan() -> dict[str, Any]:
-    tasks = [
-        {
-            "task_id": "B11",
-            "title": "Bounded privacy-safe incident capture and durable replay",
-            "target_file": "aura_bilateral_live_repair_foundry_capture.py",
-            "related_files": [
-                "aura_bilateral_live_repair_foundry_contracts.py",
-                "aura_bilateral_live_repair_foundry_service_capture.py",
-            ],
-            "size": "L",
-            "depends_on": [],
-        },
-        {
-            "task_id": "B12",
-            "title": "Runtime Profile V2 equivalence and persistent repair attempts",
-            "target_file": "aura_bilateral_live_repair_foundry_service_runtime.py",
-            "related_files": [
-                "aura_bilateral_live_repair_foundry_service.py",
-                "aura_arena_attempt_archive.py",
-            ],
-            "size": "L",
-            "depends_on": ["B11"],
-        },
-        {
-            "task_id": "B13",
-            "title": "Isolated preview and exact technical rollback receipts",
-            "target_file": "aura_bilateral_live_repair_foundry_service_preview.py",
-            "related_files": ["aura_bilateral_live_repair_foundry_contracts.py"],
-            "size": "M",
-            "depends_on": ["B12"],
-        },
-        {
-            "task_id": "B14",
-            "title": "Canonical U7 delegation bound to incident and candidate",
-            "target_file": "aura_bilateral_live_repair_foundry_service_preview.py",
-            "related_files": [
-                "aura_agent_arena_bridge.py",
-                "aura_agent_arena_persistence_bridge.py",
-            ],
-            "size": "L",
-            "depends_on": ["B12", "B13"],
-        },
-        {
-            "task_id": "B15",
-            "title": "Projection-only Spatial Foundry and Showcase composition",
-            "target_file": "aura_showcase_live_repair_server.py",
-            "related_files": [
-                "aura_showcase/live-repair-foundry.js",
-                "aura_showcase/live-repair-foundry.css",
-            ],
-            "size": "L",
-            "depends_on": ["B11", "B12", "B13", "B14"],
-        },
-        {
-            "task_id": "B15V",
-            "title": "Focused hardening, exact-head workflow, and documentation",
-            "target_file": "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-            "related_files": [
-                ".github/workflows/aura-review-learning.yml",
-                ".aura/waboose_requests/bilateral_intent_guardrail_foundry_final.v2.json",
-                "docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md",
-            ],
-            "size": "M",
-            "depends_on": ["B15"],
-        },
-    ]
-    return {
-        "architecture_decision": (
-            "Compose bounded live repair from canonical Attempt Archive, Runtime Profile V2, "
-            "Showcase, U7, Council V3, Surgeon, Connectome, Emergent Properties, and Crucible "
-            "owners; do not create a second authority, truth, persistence, verifier, or learning plane."
-        ),
-        "target_file": "aura_bilateral_live_repair_foundry_service.py",
-        "target_symbol": "BilateralLiveRepairService",
-        "act_tasks": tasks,
-        "acceptance_criteria": [
-            "Incident capture is explicit, byte/event/time bounded, sanitized, deterministic, and dissolved.",
-            "Pending replay packets cannot drive downstream work before durable Attempt Archive retention.",
-            "Runtime V2 proof is exact-intent, source, profile, asset, verifier, and candidate bound.",
-            "Repair attempts are restart-persistent, bounded, non-repeating, and correctly routed.",
-            "Preview/rollback remains isolated, pre-authorized, and exact-last-verified bound.",
-            "Retained U7 state is bound to the exact incident and verified candidate before resume.",
-            "Spatial Foundry remains projection-only and existing Showcase routes still compose.",
-            "No patch, commit, push, pull-request, merge, production, professional, physical-work, or learning authority expands.",
-        ],
-        "rollback_conditions": [
-            "Any capture, cache, archive, proof, preview, or U7 state becomes unbounded or cross-incident.",
-            "Any browser path can select an interpreter, arbitrary filesystem target, rollback adapter, or U7 owner.",
-            "Any projection fabricates confirmed intent or treats visual state as source truth.",
-            "Focused tests, Coding Waboose, Council, Surgeon, Connectome, Emergent, or Crucible evidence fails.",
-        ],
-        "risk_map": [
-            "privacy and secret leakage",
-            "capture or archive memory exhaustion",
-            "stale or cross-incident identity reuse",
-            "runtime proof or required-asset substitution",
-            "repeated failed hypothesis or attempt-budget bypass",
-            "rollback authority escalation",
-            "U7 resume misbinding",
-            "projection truth escalation",
-            "Showcase regression",
-            "workflow or generated-navigation drift",
-        ],
-        "constraints": [
-            "canonical owners remain singular",
-            "exact current identity is resolved outside request bodies",
-            "all durable evidence is digest-bound and archive-backed",
-            "generated maps are excluded from targeted external review until source stabilizes",
-            "human/community review remains mandatory",
-        ],
-        "escalation_rules": [
-            "Council handles interface, dependency, sequence, continuity, rollback, or cost defects.",
-            "Surgeon receives one exact bounded file/symbol slice at a time.",
-            "Failed local verification returns a repair packet; it never promotes automatically.",
-        ],
-    }
-'''
-start = start[:plan_start] + new_plan + start[plan_end:]
-(ROOT / "scripts/aura_review_learning_architect_harness.py").write_text(start, encoding="utf-8")
-
-replace_once(
-    "scripts/aura_review_learning_architect_harness.py",
-    '''    objective = (
-        "Integrate PR164 CodeRabbit, Codex, and manual review lessons into Coding "
-        "Waboose through typed detectors, Crucible replay, Connectome registration, "
-        "and review-only Agent Bridge tools."
-    )
-''',
-    '''    objective = (
-        "Verify the exact final B11-B15 bilateral live-repair and Spatial Foundry head "
-        "through canonical Architect, Council V3, Surgeon, Connectome, Emergent Properties, "
-        "Coding Waboose, Crucible, Runtime V2, Attempt Archive, Showcase, and U7 boundaries."
-    )
-''',
-)
-replace_once(
-    "scripts/aura_review_learning_architect_harness.py",
-    '''        target_files=[
-            "aura_coding_waboose.py",
-            "aura_waboose_learning.py",
-            "aura_coding_waboose_review_lessons.py",
-            "aura_coding_waboose_review_learning.py",
-            "aura_agent_arena_review_learning_bridge.py",
-        ],
-        target_symbols=["CodingWaboose", "ReviewLessonEngine"],
-''',
-    '''        target_files=[
-            "aura_bilateral_live_repair_foundry_service.py",
-            "aura_bilateral_live_repair_foundry_service_capture.py",
-            "aura_bilateral_live_repair_foundry_service_runtime.py",
-            "aura_bilateral_live_repair_foundry_service_preview.py",
-            "aura_showcase_live_repair_server.py",
-        ],
-        target_symbols=["BilateralLiveRepairService", "BoundedIncidentCapture"],
-''',
-)
-# The same old target block occurs in atomic inventory and is replaced once more.
-replace_once(
-    "scripts/aura_review_learning_architect_harness.py",
-    '''        query="review lesson detector Coding Waboose Agent Bridge",
-        target_files=[
-            "aura_coding_waboose.py",
-            "aura_waboose_learning.py",
-            "aura_coding_waboose_review_lessons.py",
-            "aura_coding_waboose_review_learning.py",
-            "aura_agent_arena_review_learning_bridge.py",
-        ],
-        target_symbols=["CodingWaboose", "ReviewLessonEngine"],
-''',
-    '''        query="bilateral live repair incident replay Runtime V2 U7 Spatial Foundry",
-        target_files=[
-            "aura_bilateral_live_repair_foundry_service.py",
-            "aura_bilateral_live_repair_foundry_service_capture.py",
-            "aura_bilateral_live_repair_foundry_service_runtime.py",
-            "aura_bilateral_live_repair_foundry_service_preview.py",
-            "aura_showcase_live_repair_server.py",
-        ],
-        target_symbols=["BilateralLiveRepairService", "BoundedIncidentCapture"],
-''',
-)
-replace_once(
-    "scripts/aura_review_learning_architect_harness.py",
-    '''            "target_files": [
-                "aura_coding_waboose.py",
-                "aura_waboose_learning.py",
-                "aura_coding_waboose_review_lessons.py",
-                "aura_coding_waboose_review_learning.py",
-                "aura_agent_arena_review_learning_bridge.py",
-            ],
-            "target_symbols": ["CodingWaboose", "ReviewLessonEngine"],
-            "target_arena": "coding_waboose",
-''',
-    '''            "target_files": [
-                "aura_bilateral_live_repair_foundry_service.py",
-                "aura_bilateral_live_repair_foundry_service_capture.py",
-                "aura_bilateral_live_repair_foundry_service_runtime.py",
-                "aura_bilateral_live_repair_foundry_service_preview.py",
-                "aura_showcase_live_repair_server.py",
-            ],
-            "target_symbols": ["BilateralLiveRepairService", "BoundedIncidentCapture"],
-            "target_arena": "coding_arena",
-''',
-)
-replace_once(
-    "scripts/aura_review_learning_architect_harness.py",
-    '''        "target_file": "aura_coding_waboose.py",
-        "target_symbol": "CodingWaboose",
-''',
-    '''        "target_file": "aura_bilateral_live_repair_foundry_service.py",
-        "target_symbol": "BilateralLiveRepairService",
-''',
-)
-replace_once(
-    "scripts/aura_review_learning_architect_harness.py",
-    '    candidate = {"candidate_id": "PR164-REVIEW-LEARNING", "plan": plan, "score": 1.0}\n',
-    '    candidate = {"candidate_id": "B11-B15-LIVE-REPAIR-FOUNDRY", "plan": plan, "score": 1.0}\n',
-)
-replace_once(
-    "scripts/aura_review_learning_architect_harness.py",
-    '''                    "question": "Are all PR164 defect classes executable, bounded, and source-corroborated?",
-                    "risk": "correctness",
-                    "direction": "both",
-                    "target_patterns": ["review_lessons", "waboose", "agent_arena"],
-                    "required_evidence": ["exact_source", "crucible_replay", "focused_tests"],
-''',
-    '''                    "question": "Are all B11-B15 capture, replay, repair, preview, U7, and projection contracts bounded and source-corroborated?",
-                    "risk": "correctness",
-                    "direction": "both",
-                    "target_patterns": ["bilateral_live_repair", "runtime_proof", "incident_replay", "projection"],
-                    "required_evidence": ["exact_source", "crucible_replay", "focused_tests", "attempt_archive"],
-''',
-)
-replace_once(
-    "scripts/aura_review_learning_architect_harness.py",
-    '''                    "question": "Can any reviewer payload or detector grant mutation or promotion authority?",
-                    "risk": "authority",
-                    "direction": "both",
-                    "target_patterns": ["automatic_", "patch_authority", "human_review"],
-''',
-    '''                    "question": "Can any request, retained artifact, rollback, U7 resume, or projection grant mutation or promotion authority?",
-                    "risk": "authority",
-                    "direction": "both",
-                    "target_patterns": ["automatic_", "production_mutation", "rollback_preauthorized", "human_review"],
-''',
-)
-replace_once(
-    "scripts/aura_review_learning_architect_harness.py",
-    '''    expected_lanes = {"scope", "tests", "sequence", "continuity", "rollback", "cost"}
-    checks = {
-''',
-    '''    required_lanes = {"scope", "tests", "continuity", "rollback"}
-    checks = {
-''',
-)
-replace_once(
-    "scripts/aura_review_learning_architect_harness.py",
-    '        "council_v3_all_justified_lanes_selected": set(council_lanes) == expected_lanes,\n',
-    '        "council_v3_required_lanes_selected": required_lanes.issubset(set(council_lanes)),\n',
-)
-
-# 7. Make the exact-head workflow execute the Foundry source/tests in addition to retained regressions.
-workflow_path = ROOT / ".github/workflows/aura-review-learning.yml"
-workflow = workflow_path.read_text(encoding="utf-8")
-path_anchor = '      - "scripts/aura_review_learning_architect_harness.py"\n'
-foundry_paths = '''      - "aura_bilateral_live_repair_foundry.py"
-      - "aura_bilateral_live_repair_foundry_contracts.py"
-      - "aura_bilateral_live_repair_foundry_capture.py"
-      - "aura_bilateral_live_repair_foundry_service.py"
-      - "aura_bilateral_live_repair_foundry_service_capture.py"
-      - "aura_bilateral_live_repair_foundry_service_runtime.py"
-      - "aura_bilateral_live_repair_foundry_service_preview.py"
-      - "aura_arena_attempt_archive.py"
-      - "aura_showcase_live_repair_server.py"
-      - "aura_showcase/live-repair-foundry.js"
-      - "aura_showcase/live-repair-foundry.css"
-      - ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_final.v2.json"
-      - ".aura/waboose_requests/bilateral_intent_guardrail_foundry_final.v2.json"
-'''
-if workflow.count(path_anchor) != 1:
-    raise RuntimeError("workflow path anchor changed")
-workflow = workflow.replace(path_anchor, path_anchor + foundry_paths, 1)
-compile_anchor = '            scripts/aura_review_learning_architect_harness.py \\\n'
-compile_foundry = '''            aura_bilateral_live_repair_foundry.py \\
-            aura_bilateral_live_repair_foundry_contracts.py \\
-            aura_bilateral_live_repair_foundry_capture.py \\
-            aura_bilateral_live_repair_foundry_service.py \\
-            aura_bilateral_live_repair_foundry_service_capture.py \\
-            aura_bilateral_live_repair_foundry_service_runtime.py \\
-            aura_bilateral_live_repair_foundry_service_preview.py \\
-            aura_showcase_live_repair_server.py \\
-'''
-if workflow.count(compile_anchor) != 1:
-    raise RuntimeError("workflow compile anchor changed")
-workflow = workflow.replace(compile_anchor, compile_anchor + compile_foundry, 1)
-ruff_anchor = '          scripts/aura_review_learning_architect_harness.py\n'
-ruff_foundry = '''          aura_bilateral_live_repair_foundry.py
-          aura_bilateral_live_repair_foundry_contracts.py
-          aura_bilateral_live_repair_foundry_capture.py
-          aura_bilateral_live_repair_foundry_service.py
-          aura_bilateral_live_repair_foundry_service_capture.py
-          aura_bilateral_live_repair_foundry_service_runtime.py
-          aura_bilateral_live_repair_foundry_service_preview.py
-          aura_showcase_live_repair_server.py
-'''
-if workflow.count(ruff_anchor) != 1:
-    raise RuntimeError("workflow Ruff anchor changed")
-workflow = workflow.replace(ruff_anchor, ruff_anchor + ruff_foundry, 1)
-test_anchor = '          tests/test_aura_waboose_learning.py\n'
-foundry_tests = '''          tests/test_aura_bilateral_live_repair_foundry.py
-          tests/test_aura_bilateral_live_repair_foundry_hardening.py
-          tests/test_aura_showcase_live_repair_server.py
-          tests/test_aura_showcase_attempt_archive.py
-'''
-if workflow.count(test_anchor) != 1:
-    raise RuntimeError("workflow test anchor changed")
-workflow = workflow.replace(test_anchor, test_anchor + foundry_tests, 1)
-workflow_path.write_text(workflow, encoding="utf-8")
-
-# 8. Update the review-learning guide so its executed scope matches the harness.
-replace_once(
-    "docs/AURA_CODING_WABOOSE_REVIEW_LEARNING.md",
-    '''Target reviewer scope is restricted to permanent source and tests:
-
-```text
-aura_coding_waboose_review_lessons.py
-aura_coding_waboose_review_learning.py
-aura_agent_arena_review_learning_bridge.py
-aura_agent_arena_review_learning_mcp.py
-schemas/aura_review_lesson.schema.json
-.aura/review_lessons/pr164_spatial_review_lessons.json
-scripts/aura_review_learning_architect_harness.py
-tests/test_aura_coding_waboose_review_lessons.py
-tests/test_aura_coding_waboose_review_learning.py
-tests/test_aura_agent_arena_review_learning.py
-.github/workflows/aura-review-learning.yml
-docs/AURA_CODING_WABOOSE_REVIEW_LEARNING.md
-```
-''',
-    '''Target reviewer scope for the final Foundry gate is restricted to the permanent B11-B15 source, tests, governance manifests, and the retained review-learning integration surfaces declared by:
-
-```text
-.aura/waboose_requests/bilateral_intent_guardrail_foundry_final.v2.json
-```
-
-The executed harness plan must name the bilateral capture, Runtime V2, persistent repair, isolated preview/rollback, U7 binding, Showcase projection, focused tests, and exact-head workflow files. PR164 lesson files remain retained regressions, but they are not substituted for B11-B15 acceptance evidence.
-''',
-)
-
-# 9. Add focused regression coverage for the newly closed findings.
-insert_before(
-    "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-    "def test_canonical_mapping_rejects_stringified_key_collisions():\n",
-    '''def test_finalize_rejects_scalar_obligation_strings():
+# Focused permanent regressions for the Codex root causes.
+append_once(
+    "tests/test_aura_bilateral_live_repair_foundry.py",
+    "def test_pr240_codex_scalar_metadata_and_restart_regressions",
+    r'''
+def test_pr240_codex_scalar_metadata_and_restart_regressions(tmp_path):
     item = identity()
     capture = BoundedIncidentCapture(
         identity=item,
-        release_id="release",
-        environment_id="browser",
+        release_id="Bearer metadata-secret",
+        environment_id="environment api_key=metadata-secret",
         capture_authorized=True,
     )
-    capture.mark_incident("canonical marker")
+    assert "metadata-secret" not in capture.release_id
+    assert "metadata-secret" not in capture.environment_id
+    capture.mark_incident("failure")
     with pytest.raises(ValueError, match="non-string iterable"):
         capture.finalize(
-            expected_positive="works",  # type: ignore[arg-type]
-            expected_negative=["never hides failures"],
-            preservation_claims=["source remains unchanged"],
+            expected_positive="works",
+            expected_negative=["never hides"],
+            preservation_claims=["source remains"],
             current_identity=item,
         )
 
+    service, db_path, packet = service_with_packet(tmp_path, item)
+    proof_ref = retain_proof(service, packet["packet_id"], item)
+    service.close()
+    restarted = BilateralLiveRepairService(
+        tmp_path,
+        attempt_archive_db_path=db_path,
+        current_identity_resolver=lambda _captured: item,
+        allow_reduced_runtime_fixture=True,
+    )
+    retained_packet = restarted._packet(packet["packet_id"])
+    retained_proof = restarted._runtime_proof(retained_packet, proof_ref)
+    assert retained_proof.get("runtime_proof_digest") == proof_ref or retained_proof.get("proof_digest") == proof_ref
+    restarted.close()
 
-''',
-)
-replace_once(
-    "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-    '''    assert len(service._pending_packet_archives) == 1
+
+def test_pr240_codex_pending_packet_is_blocked_until_retry(tmp_path, monkeypatch):
+    item = identity()
+    service = BilateralLiveRepairService(
+        tmp_path,
+        attempt_archive_db_path=tmp_path / "attempts.db",
+        current_identity_resolver=lambda _captured: item,
+        allow_reduced_runtime_fixture=True,
+    )
+    started = service.start_capture({
+        "identity": dataclasses.asdict(item),
+        "release_id": "release",
+        "environment_id": "browser",
+        "capture_authorized": True,
+    })
+    service.mark(started["capture_id"], "failure")
+    original_record = service.attempt_archive.record
+
+    def fail_capture(*args, **kwargs):
+        if kwargs.get("route") == "bilateral-live-repair/incident-capture":
+            raise OSError("temporary archive failure")
+        return original_record(*args, **kwargs)
+
+    monkeypatch.setattr(service.attempt_archive, "record", fail_capture)
+    with pytest.raises(BilateralLiveRepairError, match="retained in memory"):
+        service.finalize_capture(started["capture_id"], {
+            "expected_positive": ["works"],
+            "expected_negative": ["never hides"],
+            "preservation_claims": ["source remains"],
+        })
     packet_id = next(iter(service._pending_packet_archives))
-    assert packet_id in service._packets
-    service.attempt_archive.record = original_record
-    retried = service.retry_packet_archive(packet_id)
-    assert retried["ok"] is True
-    assert not service._pending_packet_archives
-''',
-    '''    assert len(service._pending_packet_archives) == 1
-    packet_id = next(iter(service._pending_packet_archives))
-    assert packet_id in service._packets
     with pytest.raises(BilateralLiveRepairError, match="pending durable archival"):
         service._packet(packet_id)
-    service.attempt_archive.record = original_record
-    retried = service.retry_packet_archive(packet_id)
-    assert retried["ok"] is True
-    assert not service._pending_packet_archives
+    monkeypatch.setattr(service.attempt_archive, "record", original_record)
+    service.retry_packet_archive(packet_id)
     assert service._packet(packet_id).packet_id == packet_id
-''',
-)
-replace_once(
-    "tests/test_aura_bilateral_live_repair_foundry.py",
-    '''    result = service.run_governed_u7(**kwargs)
-    assert result["ok"] is True
-    assert calls == ["P0", "P1", "P1", "FINALIZE"]
     service.close()
-''',
-    '''    result = service.run_governed_u7(**kwargs)
-    assert result["ok"] is True
-    assert result["u7_binding_digest"]
-    assert calls == ["P0", "P1", "P1", "FINALIZE"]
+
+
+def test_pr240_codex_u7_resume_rejects_cross_candidate_binding(tmp_path, monkeypatch):
+    session = {
+        "unified_prediction_packets": {},
+        "unified_p1_observations": {},
+        "unified_learning_results": {},
+    }
+
+    class Bridge:
+        def _require_session(self, _phase):
+            return session
+
+    class Packet:
+        def __init__(self, kind):
+            self.kind = kind
+        def to_dict(self):
+            return {"kind": self.kind}
+
+    module = types.ModuleType("aura_unified_memory_continuity_learning")
+    def commit(*_args, **kwargs):
+        value = Packet("P0")
+        session["unified_prediction_packets"][kwargs["task_id"]] = value
+        return value
+    def observe(*_args, **kwargs):
+        value = Packet("P1")
+        session["unified_p1_observations"][kwargs["task_id"]] = value
+        return value
+    def finalize(*_args, **kwargs):
+        value = {"ok": True}
+        session["unified_learning_results"][kwargs["task_id"]] = value
+        return value
+    module.commit_bridge_prediction = commit
+    module.observe_bridge_prediction = observe
+    module.finalize_bridge_learning = finalize
+    monkeypatch.setitem(sys.modules, "aura_unified_memory_continuity_learning", module)
+
+    item = identity()
+    service, _db, packet = service_with_packet(tmp_path, item)
+    common = {
+        "packet_id": packet["packet_id"],
+        "current_identity": item,
+        "bridge": Bridge(),
+        "plan_phase_hash": "phase",
+        "task_id": "task",
+        "prediction_contract": {},
+        "observation_contract": {},
+        "finalization_contract": {},
+    }
+    service.run_governed_u7(candidate_digest=sha("candidate-a"), **common)
     with pytest.raises(BilateralLiveRepairError, match="bound to another incident or repair candidate"):
-        service.run_governed_u7(**{**kwargs, "candidate_digest": sha("other-candidate")})
+        service.run_governed_u7(candidate_digest=sha("candidate-b"), **common)
     service.close()
 ''',
 )
-insert_before(
+append_once(
     "tests/test_aura_showcase_live_repair_server.py",
-    "def test_static_index_injects_one_foundry_surface_and_authority_rail():\n",
-    '''def test_replay_route_rejects_caller_selected_runtime_paths(tmp_path):
-    state = LiveRepairShowcaseState(tmp_path, demo_project="demo", auto_start=False)
-    status, payload = decoded(
-        dispatch_live_repair_request(
-            state,
-            "POST",
-            "/api/showcase/live-repair/replay/run",
-            {
-                "packet_id": "IRP-invalid",
-                "profile_path": "../../profile.json",
-                "confirmation_packet": ".aura/confirmation.json",
-                "venv_path": "/tmp/attacker-venv",
-            },
-        )
-    )
-    assert status == 400
-    assert payload["fail_closed"] is True
-    assert "cannot select" in payload["error"]
-    state.close()
+    "def test_pr240_codex_browser_and_profile_regressions",
+    r'''
+def test_pr240_codex_browser_and_profile_regressions():
+    source = (
+        Path(__file__).resolve().parent.parent
+        / "aura_showcase"
+        / "live-repair-foundry.js"
+    ).read_text(encoding="utf-8")
+    assert "projection.confirmed_intent?.expected_positive" in source
+    assert "foundry-finalize']).has" in source
+    finalize_handler = source.split("$('foundry-finalize')?.addEventListener", 1)[1]
+    assert "dissolveListeners();" not in finalize_handler.split("window.addEventListener", 1)[0]
 
-
-def test_attempt_selection_cache_is_namespaced_by_packet(tmp_path):
-    state = LiveRepairShowcaseState(tmp_path, demo_project="demo", auto_start=False)
-    first = object()
-    second = object()
-    state.live_repair_attempts[("IRP-one", "RA-001-same")] = first  # type: ignore[assignment]
-    state.live_repair_attempts[("IRP-two", "RA-001-same")] = second  # type: ignore[assignment]
-    assert state.live_repair_attempts[("IRP-one", "RA-001-same")] is first
-    assert state.live_repair_attempts[("IRP-two", "RA-001-same")] is second
-    state.close()
-
-
-''',
-)
-replace_once(
-    "tests/test_aura_showcase_live_repair_server.py",
-    '''    assert delegated['default_project_id'] == 'winnipeg_pathways'
-    assert len(delegated['projects']) == 4
-''',
-    '''    assert delegated['projects']
+    server_source = (
+        Path(__file__).resolve().parent.parent
+        / "aura_showcase_live_repair_server.py"
+    ).read_text(encoding="utf-8")
+    assert ".aura/runtime_profiles/construction_demo_bilateral.v2.json" in server_source
+    assert "dict[tuple[str, str], RepairCandidateResult]" in server_source
 ''',
 )
 
-# Final self-checks: no known stale implementation markers may remain.
-checks = {
-    "aura_showcase/live-repair-foundry.js": [
-        "projection.confirmed_intent?.positive",
-        "dissolveListeners();\n    resetControls();\n    output(error.message);",
-    ],
-    "scripts/aura_review_learning_architect_harness.py": [
-        "PR164-REVIEW-LEARNING",
-        "Are all PR164 defect classes executable",
-    ],
-}
-for relative, forbidden in checks.items():
-    text = (ROOT / relative).read_text(encoding="utf-8")
-    for marker in forbidden:
-        if marker in text:
-            raise RuntimeError(f"{relative}: stale marker remains: {marker}")
-
-print("PR240 verified review fixes applied")
+# The follow-up helper is intentionally inert; this script owns the complete repair.
+(ROOT / "scripts/pr240_followup_review_fixes.py").write_text(
+    '#!/usr/bin/env python3\n"""No-op: PR240 Codex repairs are applied by pr240_resolve_open_reviews.py."""\n',
+    encoding="utf-8",
+)
