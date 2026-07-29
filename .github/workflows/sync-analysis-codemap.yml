@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   verify-clean-and-restore:
-    if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
