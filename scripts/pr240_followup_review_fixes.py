@@ -148,6 +148,12 @@ tests = replace_in_test(
     'candidate_digest=sha("candidate-9"),',
     'candidate_digest=_runtime_binding_digest("candidate"),',
 )
+tests = replace_in_test(
+    tests,
+    "test_projection_rejects_cross_incident_or_unverified_u7_evidence",
+    'candidate_digest=sha("candidate"),',
+    'candidate_digest=_runtime_binding_digest("candidate"),',
+)
 tests_path.write_text(tests, encoding="utf-8")
 
 # The exact-head Review Learning workflow must install the repository's declared
