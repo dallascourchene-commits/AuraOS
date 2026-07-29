@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1480
-- **total_bytes**: 57755902
-- **text_tokens_est**: 4983858
+- **total_bytes**: 57771892
+- **text_tokens_est**: 4987855
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 54, 'knowledge_artifact': 188, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 949, 'schema_or_lexicon': 196, 'support_file': 77}
-- **topology_nodes**: 10924
-- **topology_edges**: 26200
+- **topology_nodes**: 10931
+- **topology_edges**: 26231
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 31581.95
+- **elapsed_ms**: 34614.11
 
 ## Coverage
 
@@ -178,7 +178,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!metrics` -> `aura_spatial_web/telemetry.js:23`
 - `!microArena` -> `aura_coding_arena/main.js:271`
 - `!nav` -> `aura_showcase/crucible.js:100`
-- `!next` -> `aura_showcase/construction-spatial-foundry.js:100`, `aura_showcase/human.js:624`
+- `!next` -> `aura_showcase/construction-spatial-foundry.js:107`, `aura_showcase/human.js:624`
 - `!node` -> `aura_human_agent_arena/emergent.js:37`, `aura_showcase/construction-spatial-foundry.js:27`, `aura_showcase/gate-dialogue.js:229`, `aura_showcase/intent.js:346`
 - `!nodeId` -> `aura_showcase/topology.js:70`
 - `!nodes` -> `aura_showcase/topology.js:296`
@@ -392,8 +392,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 10924
-- **edges**: 26200
+- **nodes**: 10931
+- **edges**: 26231
 - **top_files_by_degree**:
   - `aura_node.py` degree=891 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=757 nodes=69 neighbors=`aura_construction_spatial_foundry.py`, `aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`
@@ -446,7 +446,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `ArchitectureComponent` -> `aura_coding_relationship_compass.py:161`
 - `ArenaArchitectRuntime` -> `aura_arena_architect_runtime.py:20`
 - `ArenaAttemptArchive` -> `aura_arena_attempt_archive.py:218`
-- `ArenaBoundBilateralLiveRepairService` -> `aura_construction_spatial_foundry.py:383`
+- `ArenaBoundBilateralLiveRepairService` -> `aura_construction_spatial_foundry.py:378`
 - `ArenaBridgeError` -> `aura_agent_arena_errors.py:93`
 - `ArenaConnectorServerState` -> `aura_arena_connector_server.py:62`
 - `ArenaCrucibleService` -> `aura_arena_crucible.py:31`
