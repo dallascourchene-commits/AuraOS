@@ -41,6 +41,7 @@ AuraOS now contains a connected family of operating surfaces rather than one mon
 | **Aura Gate** | Wraps an exact Forge contract with verified OIDC identity, static policy, expiring leases, governed egress, MCP/A2A adapters, comparisons, and append-only audit evidence | Private Forge-specific proof; no identity-in-body trust, automatic promotion, or release authority |
 | **Coding Waboose** | Computes exact diff/symbol/dependency impact, runs deterministic scans, and lets coding agents steer run-specific evidence review | Review only; agent findings cannot self-confirm or mutate, commit, push, open, or merge |
 | **Runtime Refactor Harness** | Boots a repository-declared loopback application in an external virtual environment, drives a real probe/browser, captures exact artifacts, and binds failing and repaired receipts | Observation and verification only; no automatic patch, commit, push, PR, or merge |
+| **Bilateral Live Repair / Spatial Foundry** | Captures one explicit bounded incident, compiles a deterministic replay, delegates exact Runtime Profile V2 proof and governed U7 reproof, preserves failed repair evidence, and projects the result in Showcase | Adapter and projection only; no background recording, production hot-swap, merge, deployment, physical-work, professional, or learning-promotion authority |
 | **Agent Arena Bridge** | Exposes bounded CLI/MCP workflows, external-agent handoffs, and exact GitHub publication contracts using server-side compare-and-swap | External agents may prepare or explicitly publish bounded changes; merge authority remains separate and human-controlled |
 | **Planning Board** | Represents proposal-only goals, actions, predicates, constraints, backward regression, forward replay, and continuity stages | Cannot execute or authorize actions |
 | **Civic Commons Arena** | Coordinates governed civic objectives, evidence, needs, resources, scenarios, consent, dissent, and reversible pilots | Non-binding; no funding, voting, legal approval, or person-level targeting |
@@ -51,6 +52,36 @@ AuraOS now contains a connected family of operating surfaces rather than one mon
 | **Ephemeral Organ Runtime** | Compiles temporary capability systems with manifests, leases, sandbox policy, verification, dissolution, and receipts | No ambient authority; arbitrary components fail closed without a real sandbox |
 | **Model Cognome** | Records endpoint capability evidence, usage, cost, latency, drift, replay, shadow, and governed route proposals | Active routing changes require explicit authorization and verification |
 | **Empirical Cost Observatory** | Separates measured, calculated, estimated, and unavailable usage/cost evidence | Measurement cannot mutate production or upgrade a claim class |
+
+## Final bilateral live-repair path
+
+B11–B15 completes the bilateral-intent refactor by composing existing owners rather than adding another truth, policy, persistence, verifier, rollback-authority, Construction, Crucible, or learning plane:
+
+```text
+confirmed positive + negative intent and guardrails
+  → explicit bounded “Aura, watch this” capture
+  → canonical privacy sanitization
+  → exact IncidentReplayPacket + Attempt Archive retention
+  → Runtime Profile V2 reproduction outside the source checkout
+  → positive + negative + preservation + fault proof
+  → bounded repair hypotheses and persistent no-repeat budget
+  → Surgeon for local failure / Council V3 for structural failure
+  → isolated preview and exact last-verified rollback
+  → canonical U7 P0 → P1 → current reproof
+  → human/community disposition
+  → Relationship Experience and governed QDKT observation
+  → projection-only Spatial Foundry
+```
+
+The incident marker is retained separately from the rolling event window so it cannot be evicted. Finalization, expiry, and closure scrub the rolling events, marker, browser listeners, and timers from active memory. The already-sanitized packet is retained as exact canonical JSON inside `ArenaAttemptArchive`, preventing archive key redaction from changing digest-bearing safe fields.
+
+Runtime evidence is accepted only when its intent, confirmation, Semantic Ledger, guardrail, revision, repository-head, source-tree, runtime-profile, independent-verifier, human-review, and authority identities match the incident contract. Repair readiness additionally requires adjacent-regression and repository-cleanliness evidence. Failed hypotheses and the eight-attempt ceiling persist across restarts.
+
+B13 is isolated preview and technical rollback, not production hot swap. Rollback requires an exact last-verified digest, an isolated environment class, prior authorization, and a trusted in-process restore adapter. Browser request bodies cannot manufacture rollback or U7 authority objects.
+
+The Showcase Foundry displays confirmed intent, negative intent, guardrails, runtime evidence, failed attempts, minimized counterexamples, P0/P1/current reproof, human/community disposition, and exact source/receipt drill-down. Its visual layout is explanatory only.
+
+See [`docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md`](docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md) and [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md).
 
 ## AI-safe architecture handoff
 
@@ -503,6 +534,14 @@ Launch the four-surface showcase:
 python3 aura_showcase_server.py --demo-project winnipeg_pathways
 ```
 
+Launch the bilateral live-repair Showcase composition:
+
+```bash
+python3 aura_showcase_live_repair_server.py --demo-project winnipeg_pathways
+```
+
+The Foundry capture route remains disabled until the user explicitly starts a bounded session and supplies a current exact bilateral identity. It is intended for loopback/local demonstration and governed field-replay evidence, not ambient production recording.
+
 Launch the local Coding Arena:
 
 ```bash
@@ -554,6 +593,7 @@ AuraOS evidence does not establish consciousness, unrestricted autonomy, univers
 - [`USER_GUIDE.md`](USER_GUIDE.md) — installation, operating workflows, commands, APIs, testing, and troubleshooting
 - [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md) — canonical ownership, planes, data flows, contracts, and authority model
 - [`.aura/CODEMAP.md`](.aura/CODEMAP.md) — current compact repository navigation
+- [`docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md`](docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md) — B11–B15 incident capture, deterministic replay, bounded repair, isolated preview/rollback, U7 delegation, Spatial Foundry, testing, and authority boundaries
 - [`docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md`](docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md) — governed Spatial lifecycle, Construction projection, privacy, evidence, checkpoints, Agent Bridge/MCP/CLI, and dissolution boundaries
 - [`docs/AURA_GATE.md`](docs/AURA_GATE.md) — Phase 2 authority flow, identity, policy, protocols, deployment, audit, and proof limits
 - [`docs/AURA_COUNCIL_V3_EFFICIENCY_AND_SCALE_ENHANCEMENT_PROPOSAL.md`](docs/AURA_COUNCIL_V3_EFFICIENCY_AND_SCALE_ENHANCEMENT_PROPOSAL.md) — operation-DAG, parallel-wave, quality, speed, and token-efficiency recommendations for Council V3.1
@@ -589,6 +629,7 @@ AI agents should not approach AuraOS as an ordinary flat repository. Aura includ
 - **CODEMAP and topology** — read [`.aura/CODEMAP.md`](.aura/CODEMAP.md) first; regenerate with `python aura_codebase_navigator.py` and verify with `python -m aura_codemap_verify --compare-json .aura/CODEMAP.json` only after source stabilizes.
 - **Aura Architecture Harness** — `scripts/aura_architecture_harness.py` reconstructs a reproducible environment, runs doctor checks, exports AI-safe source handoffs, supervises long runs with 10-minute check-ins and a 20-minute reassessment pause, and invokes the Connectome, Relational Index, Relationship Atlas, Emergent Properties, and Architect Fusion Loop without granting patch authority.
 - **Runtime Refactor Harness** — the `runtime` command consumes a repository-owned profile, creates an external virtual environment, starts a loopback server, drives a real probe/browser, captures screenshots/logs/receipts, runs retained gates, dissolves the process, and binds a failing baseline to a later `REPAIRED_AND_VERIFIED` receipt. It observes and proves; it never patches or merges.
+- **Bilateral Live Repair / Spatial Foundry** — `aura_showcase_live_repair_server.py` composes the Showcase with explicit bounded incident capture, replay, repair evidence, and a non-authoritative spatial proof surface while reusing Attempt Archive, Runtime Profile V2, U7, Waboose, Council, and Crucible owners.
 - **Coding Waboose** — `aura_coding_waboose_cli.py` performs deterministic graph-guided review, static checks, semantic rule packs, focused-test selection, evidence corroboration, and bounded Forge repair requests. Waboose reviews; it does not patch or merge.
 - **Coding Relationship Compass** — compiles objective-bounded callers, callees, shared resources, required tests, invariants, and authority risks from Aura's topology.
 - **Council V3 and Surgeon** — route failure classes and prepare bounded repair strategies while keeping execution and merge human-authorized.

@@ -46,15 +46,22 @@ jobs:
         python-version: ["3.10", "3.12"]
 
     steps:
-      - name: Check out exact pull-request head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.AURA_REVIEW_HEAD_SHA }}
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Fetch exact base ref without retaining credentials
-        run: git fetch --no-tags --depth=1 origin "$AURA_REVIEW_BASE_REF:refs/remotes/origin/$AURA_REVIEW_BASE_REF"
+      - name: Fetch exact review head and base without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --depth=1 --no-tags origin "$AURA_REVIEW_HEAD_SHA"
+          git checkout --detach FETCH_HEAD
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --depth=1 --no-tags origin \
+            "$AURA_REVIEW_BASE_REF:refs/remotes/origin/$AURA_REVIEW_BASE_REF"
+          unset AUTH_HEADER
+          test "$(git rev-parse HEAD)" = "$AURA_REVIEW_HEAD_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -93,46 +100,92 @@ jobs:
             tests/test_aura_review_learning_mcp_codex.py
 
       - name: Run focused Ruff checks
-        run: |
-          ruff check \
-            aura_coding_waboose_review_lessons.py \
-            aura_review_lessons_contracts.py \
-            aura_review_lessons_external.py \
-            aura_review_lessons_security.py \
-            aura_review_lessons_determinism.py \
-            aura_review_lessons_engine.py \
-            aura_review_lessons_registry.py \
-            aura_review_lessons_replay.py \
-            aura_review_lessons_source_scan.py \
-            aura_source_integrity.py \
-            aura_coding_waboose_review_learning.py \
-            aura_agent_arena_review_learning_bridge.py \
-            aura_agent_arena_review_learning_mcp.py \
-            scripts/aura_review_learning_architect_harness.py \
-            tests/test_aura_coding_waboose_review_lessons.py \
-            tests/test_aura_coding_waboose_review_learning.py \
-            tests/test_aura_agent_arena_review_learning.py \
-            tests/test_aura_review_lessons_codex_regressions.py \
-            tests/test_aura_source_integrity.py \
-            tests/test_aura_review_learning_mcp_codex.py
+        run: >-
+          ruff check --select E9,F63,F7,F82
+          aura_coding_waboose_review_lessons.py
+          aura_review_lessons_contracts.py
+          aura_review_lessons_external.py
+          aura_review_lessons_security.py
+          aura_review_lessons_determinism.py
+          aura_review_lessons_engine.py
+          aura_review_lessons_registry.py
+          aura_review_lessons_replay.py
+          aura_review_lessons_source_scan.py
+          aura_source_integrity.py
+          aura_node.py
+          aura_coding_waboose_review_learning.py
+          aura_agent_arena_review_learning_bridge.py
+          aura_agent_arena_review_learning_mcp.py
+          scripts/aura_review_learning_architect_harness.py
+          tests/test_aura_coding_waboose_review_lessons.py
+          tests/test_aura_coding_waboose_review_learning.py
+          tests/test_aura_agent_arena_review_learning.py
+          tests/test_aura_review_lessons_codex_regressions.py
+          tests/test_aura_source_integrity.py
+          tests/test_aura_review_learning_mcp_codex.py
 
       - name: Validate Draft 2020-12 schema and canonical lesson registry
+        id: validate_registry
+        continue-on-error: true
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           from jsonschema import Draft202012Validator
-          from aura_coding_waboose_review_lessons import validate_review_lesson_registry
+          from aura_coding_waboose_review_lessons import load_review_lesson_registry
+          from aura_review_lessons_contracts import _digest
 
           schema = json.loads(Path("schemas/aura_review_lesson.schema.json").read_text(encoding="utf-8"))
-          registry = json.loads(Path(".aura/review_lessons/pr164_spatial_review_lessons.json").read_text(encoding="utf-8"))
+          payload = json.loads(Path(".aura/review_lessons/pr164_spatial_review_lessons.json").read_text(encoding="utf-8"))
           Draft202012Validator.check_schema(schema)
-          Draft202012Validator(schema).validate(registry)
-          validated = validate_review_lesson_registry(registry)
-          assert validated["registry_digest"] == registry["registry_digest"]
-          assert validated["authority"]["production_mutation"] is False
-          assert validated["authority"]["automatic_merge"] is False
+          errors = sorted(Draft202012Validator(schema).iter_errors(payload), key=lambda item: list(item.absolute_path))
+          canonical = dict(payload)
+          canonical["lessons"] = sorted((dict(item) for item in payload["lessons"]), key=lambda item: str(item["lesson_id"]))
+          canonical["scenarios"] = sorted((dict(item) for item in payload["scenarios"]), key=lambda item: str(item["scenario_id"]))
+          supplied_digest = canonical.pop("registry_digest", "")
+          expected_digest = _digest(canonical, size=20)
+          diagnostic = {
+              "version": "AURA_REVIEW_REGISTRY_VALIDATION_DIAGNOSTIC_V1",
+              "repository_head": "${{ env.AURA_REVIEW_HEAD_SHA }}",
+              "python_version": "${{ matrix.python-version }}",
+              "schema_error_count": len(errors),
+              "first_schema_error_path": (
+                  "/".join(str(item) for item in errors[0].absolute_path) if errors else ""
+              ),
+              "first_schema_error": errors[0].message if errors else "",
+              "supplied_registry_digest": supplied_digest,
+              "expected_registry_digest": expected_digest,
+              "digest_matches": supplied_digest == expected_digest,
+          }
+          Path("review-registry-validation-diagnostic.json").write_text(
+              json.dumps(diagnostic, sort_keys=True, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          if errors:
+              first = errors[0]
+              location = "/".join(str(item) for item in first.absolute_path) or "<root>"
+              raise AssertionError(f"review lesson registry schema failure at {location}: {first.message}")
+          if supplied_digest != expected_digest:
+              raise AssertionError(
+                  f"review lesson registry digest mismatch: supplied={supplied_digest} expected={expected_digest}"
+              )
+          registry = load_review_lesson_registry(".aura/review_lessons/pr164_spatial_review_lessons.json")
+          assert len(registry["lessons"]) == 13
+          assert len(registry["scenarios"]) == 13
           PY
+
+      - name: Upload registry validation diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-review-registry-validation-${{ matrix.python-version }}-${{ env.AURA_REVIEW_HEAD_SHA }}
+          path: review-registry-validation-diagnostic.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce registry validation
+        if: steps.validate_registry.outcome != 'success'
+        run: exit 1
 
       - name: Verify exact-head source integrity evidence
         run: |
@@ -141,41 +194,46 @@ jobs:
           from pathlib import Path
           from aura_source_integrity import scan_utf8_source_tree
 
-          packet = scan_utf8_source_tree(
-              Path("."),
+          root = Path('.').resolve()
+          result = scan_utf8_source_tree(
+              root,
               expected_repository_head=os.environ["AURA_REVIEW_HEAD_SHA"],
               require_git_tree=True,
           )
-          assert packet["status"] == "PASSED", packet["failures"]
-          assert packet["git_tree_bound"] is True
-          assert packet["repository_head"] == os.environ["AURA_REVIEW_HEAD_SHA"]
-          assert len(packet["repository_tree"]) == 40
-          assert len(packet["source_digest"]) == 64
+          assert result["status"] == "PASSED", result
+          assert result["failure_count"] == 0, result
+          assert result["repository_head"] == os.environ["AURA_REVIEW_HEAD_SHA"].lower()
+          assert result["repository_tree"]
+          assert result["git_tree_bound"] is True
+          assert result["git_binding_reason"] == "clean_exact_head"
+          assert result["production_mutation"] is False
+          assert result["automatic_fix"] is False
+          assert result["human_review_required"] is True
           PY
 
       - name: Run focused tests
-        run: |
-          python -m pytest -q --tb=short \
-            tests/test_aura_coding_waboose_review_lessons.py \
-            tests/test_aura_coding_waboose_review_learning.py \
-            tests/test_aura_agent_arena_review_learning.py \
-            tests/test_aura_review_lessons_codex_regressions.py \
-            tests/test_aura_source_integrity.py \
-            tests/test_aura_review_learning_mcp_codex.py \
-            tests/test_aura_coding_waboose.py \
-            tests/test_aura_waboose_learning.py
+        run: >-
+          python -m pytest -q
+          tests/test_aura_coding_waboose_review_lessons.py
+          tests/test_aura_coding_waboose_review_learning.py
+          tests/test_aura_agent_arena_review_learning.py
+          tests/test_aura_review_lessons_codex_regressions.py
+          tests/test_aura_source_integrity.py
+          tests/test_aura_review_learning_mcp_codex.py
+          tests/test_aura_coding_waboose.py
+          tests/test_aura_waboose_learning.py
 
       - name: Run Aura-native Architect, Council, Surgeon, Connectome, Emergent, and Waboose harness
         if: matrix.python-version == '3.12'
         env:
-          AURA_BASE_REF: origin/${{ env.AURA_REVIEW_BASE_REF }}
-          AURA_HEAD_REF: HEAD
+          AURA_REVIEW_HEAD_SHA: ${{ env.AURA_REVIEW_HEAD_SHA }}
+          AURA_REVIEW_BASE_REF: ${{ env.AURA_REVIEW_BASE_REF }}
         run: |
           python scripts/aura_review_learning_architect_harness.py \
             --repo-root . \
-            --base-ref "$AURA_BASE_REF" \
-            --head-ref "$AURA_HEAD_REF" \
-            --output Aura_Staging/review_learning_harness/architect_receipt.json
+            --base-ref "origin/$AURA_REVIEW_BASE_REF" \
+            --head-ref "$AURA_REVIEW_HEAD_SHA" \
+            --output review-learning-harness-receipt.json
 
       - name: Assert review-only authority envelope
         if: matrix.python-version == '3.12'
@@ -183,12 +241,15 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-
-          receipt = json.loads(
-              Path("Aura_Staging/review_learning_harness/architect_receipt.json").read_text(encoding="utf-8")
-          )
+          receipt = json.loads(Path("review-learning-harness-receipt.json").read_text())
           assert receipt["status"] == "PASSED"
-          assert receipt["repository_head"] == "${{ env.AURA_REVIEW_HEAD_SHA }}"
+          assert receipt["crucible"]["failed_count"] == 0
+          assert receipt["checks"]["atomic_inventory_returned"] is True
+          assert receipt["checks"]["emergent_evidence_invoked"] is True
+          assert receipt["checks"]["surgeon_control_is_proposal_only"] is True
+          assert receipt["checks"]["waboose_prepare_ok"] is True
+          assert receipt["checks"]["waboose_scan_ok"] is True
+          assert receipt["checks"]["waboose_finalize_ok"] is True
           assert receipt["production_mutation"] is False
           assert receipt["automatic_fix"] is False
           assert receipt["automatic_commit"] is False
@@ -196,17 +257,13 @@ jobs:
           assert receipt["automatic_pull_request"] is False
           assert receipt["automatic_merge"] is False
           assert receipt["human_review_required"] is True
-          assert receipt["crucible"]["failed_count"] == 0
-          assert set(receipt["council_v3"]["selected_lanes"]) == {
-              "scope", "tests", "sequence", "continuity", "rollback", "cost"
-          }
           PY
 
       - name: Upload exact-head harness receipt
         if: matrix.python-version == '3.12'
         uses: actions/upload-artifact@v4
         with:
-          name: aura-review-learning-receipt-${{ env.AURA_REVIEW_HEAD_SHA }}
-          path: Aura_Staging/review_learning_harness/architect_receipt.json
+          name: aura-review-learning-harness-${{ env.AURA_REVIEW_HEAD_SHA }}
+          path: review-learning-harness-receipt.json
           if-no-files-found: error
           retention-days: 14

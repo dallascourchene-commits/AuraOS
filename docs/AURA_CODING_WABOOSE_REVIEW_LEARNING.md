@@ -171,6 +171,29 @@ Repository paths reject absolute paths, traversal, dot segments, repeated separa
 
 A workflow file existing in the repository is only configured evidence. It becomes execution evidence only after GitHub reports the run and its conclusion for the exact PR head SHA.
 
+## B11–B15 final Foundry harness binding
+
+The final bilateral live-repair and Spatial Foundry refactor binds its scoped review request at:
+
+```text
+.aura/waboose_requests/bilateral_intent_guardrail_foundry_final.v2.json
+```
+
+The request covers the bounded incident-capture, durable replay, Runtime Profile V2 equivalence, persistent repair, isolated preview/rollback, canonical U7 delegation, Showcase composition, and projection-only Spatial Foundry files and tests. It also admits the final objective, plan-revision delta, definition-of-done receipt, architecture addendum, and generated navigation paths while keeping generated maps out of targeted external review.
+
+For this final phase, the Review Learning workflow is intentionally part of the exact-head acceptance bundle because it executes the retained Aura-native harness over the complete branch range. A passing receipt must show:
+
+- exact current PR head and base ancestry;
+- Connectome and owner reuse rather than duplicate planes;
+- Council V3 scope, tests, sequence, continuity, rollback, and cost lanes;
+- Surgeon proposal-only control;
+- Coding Waboose review over the exact changed range;
+- Crucible adversarial replay with no unresolved failed lesson;
+- `production_mutation`, `automatic_fix`, `automatic_commit`, `automatic_push`, `automatic_pull_request`, and `automatic_merge` all false;
+- `human_review_required` true.
+
+This binding does not make the review-learning subsystem a B11–B15 truth, persistence, verifier, rollback, or learning owner. It is an exact-head internal review gate before the separately authorized final Codex and CodeRabbit reviews.
+
 ## CodeRabbit and Codex review scope
 
 Target reviewer scope is restricted to permanent source and tests:

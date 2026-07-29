@@ -1,0 +1,47 @@
+#foundry-view { padding-bottom: 3rem; }
+.foundry-hero { background: radial-gradient(circle at 20% 20%, rgba(92, 211, 255, .13), transparent 38%), rgba(6, 13, 23, .92); }
+.foundry-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1rem 0; }
+.foundry-card { border: 1px solid rgba(112, 211, 255, .24); border-radius: 16px; background: rgba(6, 13, 23, .88); padding: 1rem; min-height: 220px; }
+.foundry-card textarea { width: 100%; min-height: 72px; margin: .35rem 0 .7rem; resize: vertical; background: rgba(2, 8, 15, .85); color: #e9f8ff; border: 1px solid rgba(112, 211, 255, .24); border-radius: 9px; padding: .7rem; }
+#foundry-identity { min-height: 275px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.foundry-proof pre { max-height: 430px; overflow: auto; white-space: pre-wrap; }
+.foundry-event { display: grid; grid-template-columns: minmax(150px, .7fr) 1fr; gap: .75rem; border-bottom: 1px solid rgba(112, 211, 255, .14); padding: .6rem 0; }
+.foundry-event span { color: var(--muted, #9eb0bd); }
+.foundry-authority { display: flex; flex-wrap: wrap; gap: .55rem; align-items: center; border: 1px solid rgba(255, 111, 111, .38); border-radius: 14px; padding: .85rem; background: rgba(43, 10, 18, .5); }
+.foundry-authority strong { color: #fff; margin-right: .4rem; }
+.foundry-authority span { border: 1px solid rgba(255, 139, 139, .35); border-radius: 999px; padding: .25rem .55rem; color: #ffc3c3; font-size: .82rem; }
+@media (max-width: 900px) { .foundry-grid { grid-template-columns: 1fr; } }
+
+.foundry-projection {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.foundry-node {
+  min-height: 9rem;
+  border: 1px solid rgba(121, 170, 255, .28);
+  border-radius: 18px;
+  padding: 1rem;
+  background: radial-gradient(circle at top, rgba(82, 109, 255, .12), rgba(7, 13, 28, .76));
+  box-shadow: inset 0 0 28px rgba(68, 120, 255, .06);
+}
+.foundry-center { grid-column: span 2; border-color: rgba(93, 231, 190, .45); }
+.foundry-left { border-color: rgba(255, 94, 128, .45); }
+.foundry-right { border-color: rgba(173, 113, 255, .45); }
+.foundry-drilldown { grid-column: span 2; }
+.foundry-chip {
+  margin: .38rem 0;
+  padding: .48rem .62rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .055);
+  overflow-wrap: anywhere;
+  font-size: .87rem;
+}
+@media (max-width: 1050px) {
+  .foundry-projection { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 680px) {
+  .foundry-projection { grid-template-columns: 1fr; }
+  .foundry-center, .foundry-drilldown { grid-column: span 1; }
+}
