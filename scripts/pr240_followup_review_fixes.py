@@ -171,6 +171,23 @@ replace_once(
 )
 replace_once(
     ".github/workflows/aura-review-learning.yml",
+    """          git checkout --detach FETCH_HEAD
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \\
+            fetch --depth=1 --no-tags origin \\
+            "$AURA_REVIEW_BASE_REF:refs/remotes/origin/$AURA_REVIEW_BASE_REF"
+""",
+    """          git checkout --detach FETCH_HEAD
+          # Keep the exact-head checkout while fetching only the bounded ancestry
+          # required to prove the retained review-lesson merge is an ancestor.
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \\
+            fetch --deepen=1024 --no-tags origin "$AURA_REVIEW_HEAD_SHA"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \\
+            fetch --depth=1 --no-tags origin \\
+            "$AURA_REVIEW_BASE_REF:refs/remotes/origin/$AURA_REVIEW_BASE_REF"
+""",
+)
+replace_once(
+    ".github/workflows/aura-review-learning.yml",
     """          python scripts/aura_review_learning_architect_harness.py \\
 """,
     """          PYTHONPATH=. python scripts/aura_review_learning_architect_harness.py \\
