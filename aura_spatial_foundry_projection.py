@@ -26,6 +26,7 @@ _HEX = re.compile(r"^[0-9a-f]{40,64}$")
 _CANONICAL_STATE_HEX = re.compile(r"^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$")
 _AUTHORITY_TOKENS = frozenset(
     {
+        "accesscontrolled",
         "accessgranted",
         "approval",
         "authorization",

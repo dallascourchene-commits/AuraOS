@@ -617,13 +617,24 @@ def dispatch_construction_foundry_request(
             body.pop("identity_handle", None)
             return base_dispatch_live_repair_request(state, method, raw_path, body)
 
+        capture_parts = tuple(part for part in route.split("/") if part)
         if (
             method == "POST"
-            and route.startswith("/api/showcase/live-repair/capture/")
-            and route.endswith("/finalize/v1")
+            and len(capture_parts) == 7
+            and capture_parts[:4] == ("api", "showcase", "live-repair", "capture")
+            and capture_parts[5] in {"event", "mark", "finalize"}
+            and capture_parts[6] == "v1"
         ):
-            _validate_required_asset_paths(body)
-            body["arena_id"] = "construction"
+            capture_id = capture_parts[4]
+            if state._identity_broker is not None:
+                expected_identity = state.live_repair.capture_identity(capture_id)
+                state.resolve_request_identity(body, expected=expected_identity)
+                body.pop("identity_handle", None)
+            else:
+                state.live_repair.assert_current_capture_identity(capture_id)
+            if capture_parts[5] == "finalize":
+                _validate_required_asset_paths(body)
+                body["arena_id"] = "construction"
 
     except (
         BilateralLiveRepairError,

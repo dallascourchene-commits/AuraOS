@@ -413,6 +413,22 @@ def test_v2_projection_rejects_authority_aliases(authority_key: str):
         )
 
 
+@pytest.mark.parametrize("evidence_field", ["presentation", "construction"])
+def test_v2_projection_rejects_access_controlled_in_additive_evidence(
+    evidence_field: str,
+):
+    with pytest.raises(ValueError, match="access_controlled"):
+        build_spatial_foundry_projection_v2(
+            base_projection=base_projection(),
+            arena_id="construction",
+            domain={
+                "arena_id": "construction",
+                "domain_type": "CONSTRUCTION",
+            },
+            **{evidence_field: {"access_controlled": True}},
+        )
+
+
 def test_v2_projection_rejects_duplicate_domain_identities_and_v1_authority():
     transitions = project_guarded_wfst(
         arena_id="construction",
@@ -1565,6 +1581,62 @@ def test_identity_handle_rewrites_attempt_preview_projection_and_replay_routes(
     assert forwarded[0][1]["arena_id"] == "construction"
 
 
+def test_brokered_capture_continuations_require_bound_identity_handle(
+    trusted_showcase_state,
+):
+    state, _item = trusted_showcase_state
+    _, summary = decoded(
+        dispatch_construction_foundry_request(
+            state,
+            "GET",
+            "/api/showcase/live-repair/identity/current",
+        )
+    )
+    handle = summary["identity_handle"]
+    _, started = decoded(
+        dispatch_construction_foundry_request(
+            state,
+            "POST",
+            "/api/showcase/live-repair/capture/start",
+            {
+                "identity_handle": handle,
+                "release_id": "release",
+                "environment_id": "browser",
+                "capture_authorized": True,
+            },
+        )
+    )
+    capture_id = started["capture_id"]
+    continuation_bodies = {
+        "event": {"event_type": "BROWSER_EVENT", "payload": {"step": 1}},
+        "mark": {"marker": "incident", "payload": {"step": 2}},
+        "finalize": {
+            "expected_positive": ["retain evidence"],
+            "expected_negative": ["never accept forged capture evidence"],
+            "preservation_claims": ["Construction truth remains unchanged"],
+            "required_assets": [],
+        },
+    }
+    for action, body in continuation_bodies.items():
+        route = f"/api/showcase/live-repair/capture/{capture_id}/{action}/v1"
+        denied_status, denied = decoded(
+            dispatch_construction_foundry_request(state, "POST", route, body)
+        )
+        assert denied_status == 409
+        assert "identity_handle" in denied["error"]
+
+        accepted_status, accepted = decoded(
+            dispatch_construction_foundry_request(
+                state,
+                "POST",
+                route,
+                {**body, "identity_handle": handle},
+            )
+        )
+        assert accepted_status == 200
+        assert accepted["ok"] is True
+
+
 def test_finalize_rejects_duplicate_required_asset_paths(trusted_showcase_state):
     state, _item = trusted_showcase_state
     _, summary = decoded(
@@ -1590,6 +1662,7 @@ def test_finalize_rejects_duplicate_required_asset_paths(trusted_showcase_state)
             "POST",
             f"/api/showcase/live-repair/capture/{started['capture_id']}/finalize/v1",
             {
+                "identity_handle": summary["identity_handle"],
                 "expected_positive": ["retain evidence"],
                 "expected_negative": ["never accept conflicting assets"],
                 "preservation_claims": ["Construction truth remains unchanged"],
@@ -1706,6 +1779,17 @@ vm.runInThisContext(fs.readFileSync(process.argv[1], 'utf8'));
   const retained = forwarded.at(-1).body;
   for (const key of Object.keys(supplied)) {
     assert.deepStrictEqual(retained[key], supplied[key], `${key} must be retained`);
+  }
+
+  for (const action of ['event', 'mark', 'finalize']) {
+    await window.Showcase.api(
+      `/api/showcase/live-repair/capture/CAPTURE-1/${action}/v1`,
+      {current_identity: {forged: true}},
+    );
+    const continuation = forwarded.at(-1).body;
+    assert.strictEqual(continuation.identity_handle, 'BID-TEST');
+    assert.strictEqual(Object.hasOwn(continuation, 'identity'), false);
+    assert.strictEqual(Object.hasOwn(continuation, 'current_identity'), false);
   }
 })().catch(error => {
   console.error(error);

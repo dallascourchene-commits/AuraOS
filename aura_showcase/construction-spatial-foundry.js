@@ -127,10 +127,21 @@
       }
     }
 
-    if (path.includes('/api/showcase/live-repair/capture/') && path.endsWith('/finalize/v1')) {
-      next.required_assets = requiredAssets();
-      next.arena_id = 'construction';
-      delete next.current_identity;
+    const captureContinuation = (
+      path.includes('/api/showcase/live-repair/capture/')
+      && /\/(?:event|mark|finalize)\/v1$/.test(path)
+    );
+    if (captureContinuation) {
+      const identityHandle = await ensureIdentity();
+      if (identityHandle) {
+        next.identity_handle = identityHandle;
+        delete next.identity;
+        delete next.current_identity;
+      }
+      if (path.endsWith('/finalize/v1')) {
+        next.required_assets = requiredAssets();
+        next.arena_id = 'construction';
+      }
     }
 
     if ([

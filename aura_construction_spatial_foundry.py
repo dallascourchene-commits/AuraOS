@@ -491,6 +491,16 @@ class ArenaBoundBilateralLiveRepairService(BilateralLiveRepairService):
 
         return self._packet(packet_id)
 
+    def capture_identity(self, capture_id: str) -> BilateralIdentity:
+        """Return the immutable bilateral identity bound to an active capture."""
+
+        return self._capture(capture_id).identity
+
+    def assert_current_capture_identity(self, capture_id: str) -> BilateralIdentity:
+        """Recheck an active capture against the trusted current-identity owner."""
+
+        return self._resolve_current_identity(self.capture_identity(capture_id))
+
     def assert_current_identity(self, packet_id: str) -> BilateralIdentity:
         """Recheck a packet against the trusted current-identity owner."""
 
