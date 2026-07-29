@@ -16,6 +16,7 @@
   const $ = id => (
     typeof document !== 'undefined' ? document.getElementById(id) : null
   );
+  const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
   const setLegacyIdentityVisible = visible => {
     const legacyIdentity = $('foundry-identity');
     const card = legacyIdentity?.closest('.foundry-card');
@@ -150,7 +151,7 @@
       && adapter.identityBrokerAvailable
     ) {
       if (
-        next.domain !== undefined
+        hasOwn(next, 'domain')
         && (
           !next.domain
           || typeof next.domain !== 'object'
@@ -167,18 +168,33 @@
         adapter_version: 'AURA_CONSTRUCTION_SPATIAL_FOUNDRY_BROWSER_V1',
         privacy_class: 'PRESENTATION_MINIMIZED',
       };
-      next.domain_targets = Array.isArray(next.domain_targets) ? next.domain_targets : [];
-      next.domain_artifacts = Array.isArray(next.domain_artifacts) ? next.domain_artifacts : [];
-      next.presentation = next.presentation || {
-        active_view: 'REPAIR_PREVIEW',
-        selected_storey: '',
-        selected_entity: '',
-        selected_issue: '',
+      for (const key of ['domain_targets', 'domain_artifacts', 'coordination_candidates']) {
+        if (!hasOwn(next, key)) {
+          next[key] = [];
+        } else if (!Array.isArray(next[key])) {
+          throw new Error(`Construction projection ${key} must be an array.`);
+        }
+      }
+      const objectDefaults = {
+        presentation: {
+          active_view: 'REPAIR_PREVIEW',
+          selected_storey: '',
+          selected_entity: '',
+          selected_issue: '',
+        },
+        construction: {},
       };
-      next.construction = next.construction || {};
-      next.coordination_candidates = Array.isArray(next.coordination_candidates)
-        ? next.coordination_candidates
-        : [];
+      for (const [key, defaultValue] of Object.entries(objectDefaults)) {
+        if (!hasOwn(next, key)) {
+          next[key] = defaultValue;
+        } else if (
+          !next[key]
+          || typeof next[key] !== 'object'
+          || Array.isArray(next[key])
+        ) {
+          throw new Error(`Construction projection ${key} must be an object.`);
+        }
+      }
     }
     let result = await originalApi(path, next);
     if (next.identity_handle && identityHandleExpired(result)) {

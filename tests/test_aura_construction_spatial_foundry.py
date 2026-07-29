@@ -7,6 +7,7 @@ import hashlib
 import io
 import json
 from pathlib import Path
+import subprocess
 from types import SimpleNamespace
 
 from jsonschema import Draft202012Validator
@@ -1400,6 +1401,95 @@ def test_composed_static_surface_adds_trusted_identity_and_required_asset_intake
     assert b"identityBrokerUnavailable(error)" in script
     assert b"state_digest: adapter.identitySummary" not in script
     assert b"...(next.domain || {})" in script
+
+
+def test_browser_composition_rejects_present_malformed_v2_evidence():
+    browser_adapter = (
+        Path(__file__).resolve().parents[1]
+        / "aura_showcase"
+        / "construction-spatial-foundry.js"
+    )
+    node_test = r"""
+const assert = require('assert');
+const fs = require('fs');
+const vm = require('vm');
+
+const forwarded = [];
+global.document = {getElementById: () => null};
+global.window = {
+  Showcase: {
+    api: async (path, body) => {
+      if (path === '/api/showcase/live-repair/identity/current') {
+        return {ok: true, identity_handle: 'BID-TEST'};
+      }
+      forwarded.push({path, body});
+      return {ok: true};
+    },
+  },
+};
+vm.runInThisContext(fs.readFileSync(process.argv[1], 'utf8'));
+
+(async () => {
+  await new Promise(resolve => setImmediate(resolve));
+  const projectionPath = '/api/showcase/live-repair/projection';
+  const malformedRows = [false, null, '', {unexpected: 'object'}];
+  for (const key of ['domain_targets', 'domain_artifacts', 'coordination_candidates']) {
+    for (const value of malformedRows) {
+      await assert.rejects(
+        window.Showcase.api(projectionPath, {[key]: value}),
+        new RegExp(`Construction projection ${key} must be an array`),
+      );
+    }
+  }
+
+  const malformedObjects = [false, null, '', []];
+  for (const key of ['presentation', 'construction']) {
+    for (const value of malformedObjects) {
+      await assert.rejects(
+        window.Showcase.api(projectionPath, {[key]: value}),
+        new RegExp(`Construction projection ${key} must be an object`),
+      );
+    }
+  }
+  assert.strictEqual(forwarded.length, 0, 'malformed evidence must not be forwarded');
+
+  await window.Showcase.api(projectionPath, {});
+  const defaulted = forwarded.at(-1).body;
+  assert.deepStrictEqual(defaulted.domain_targets, []);
+  assert.deepStrictEqual(defaulted.domain_artifacts, []);
+  assert.deepStrictEqual(defaulted.coordination_candidates, []);
+  assert.deepStrictEqual(defaulted.construction, {});
+  assert.deepStrictEqual(defaulted.presentation, {
+    active_view: 'REPAIR_PREVIEW',
+    selected_storey: '',
+    selected_entity: '',
+    selected_issue: '',
+  });
+
+  const supplied = {
+    domain_targets: [{target_id: 'target-1'}],
+    domain_artifacts: [{artifact_id: 'artifact-1'}],
+    coordination_candidates: [{candidate_id: 'candidate-1'}],
+    presentation: {active_view: 'ISSUE_DETAIL'},
+    construction: {project_id: 'project-1'},
+  };
+  await window.Showcase.api(projectionPath, supplied);
+  const retained = forwarded.at(-1).body;
+  for (const key of Object.keys(supplied)) {
+    assert.deepStrictEqual(retained[key], supplied[key], `${key} must be retained`);
+  }
+})().catch(error => {
+  console.error(error);
+  process.exitCode = 1;
+});
+"""
+    result = subprocess.run(
+        ["node", "-e", node_test, str(browser_adapter)],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, f"{result.stdout}\n{result.stderr}"
 
 
 @pytest.mark.parametrize(
