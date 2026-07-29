@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://auraos.local/schemas/aura_construction_spatial_foundry_projection.schema.json",
+  "title": "Aura Construction Spatial Foundry Projection",
+  "allOf": [
+    {"$ref": "aura_spatial_foundry_projection_v2.schema.json"}
+  ],
+  "properties": {
+    "arena_id": {"const": "construction"},
+    "domain": {
+      "type": "object",
+      "required": ["arena_id", "domain_type"],
+      "properties": {
+        "arena_id": {"const": "construction"},
+        "domain_type": {"const": "CONSTRUCTION"}
+      }
+    },
+    "coordination_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "candidate_id",
+          "candidate_digest",
+          "base_state_digest",
+          "scope",
+          "lane",
+          "title",
+          "summary",
+          "required_claim_ids",
+          "declared_hard_blockers",
+          "assumptions",
+          "authority_route",
+          "projected_time_delta_hours",
+          "projected_cost_delta_cad",
+          "projected_idle_delta_hours",
+          "safety_risk",
+          "deadline_risk",
+          "evidence_quality",
+          "reversibility",
+          "measurement_class",
+          "candidate_type",
+          "version"
+        ],
+        "properties": {
+          "candidate_type": {"const": "CONSTRUCTION_COORDINATION"},
+          "version": {
+            "const": "AURA_CONSTRUCTION_COORDINATION_CANDIDATE_PROJECTION_V1"
+          },
+          "candidate_id": {"type": "string", "minLength": 1},
+          "candidate_digest": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$"
+          },
+          "base_state_digest": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$"
+          },
+          "scope": {
+            "type": "object",
+            "required": ["project_id", "zone_id", "work_package_id"],
+            "properties": {
+              "project_id": {"type": "string", "minLength": 1},
+              "zone_id": {"type": "string"},
+              "work_package_id": {"type": "string"}
+            },
+            "additionalProperties": false
+          },
+          "lane": {"type": "string", "minLength": 1},
+          "title": {"type": "string", "minLength": 1},
+          "summary": {"type": "string", "minLength": 1},
+          "required_claim_ids": {"type": "array", "items": {"type": "string"}},
+          "declared_hard_blockers": {"type": "array", "items": {"type": "string"}},
+          "assumptions": {"type": "array", "items": {"type": "string"}},
+          "authority_route": {"type": "string", "minLength": 1},
+          "projected_time_delta_hours": {"type": "number"},
+          "projected_cost_delta_cad": {"type": "number"},
+          "projected_idle_delta_hours": {"type": "number"},
+          "safety_risk": {"type": "number", "minimum": 0, "maximum": 1},
+          "deadline_risk": {"type": "number", "minimum": 0, "maximum": 1},
+          "evidence_quality": {"type": "number", "minimum": 0, "maximum": 1},
+          "reversibility": {"type": "number", "minimum": 0, "maximum": 1},
+          "measurement_class": {"type": "string", "minLength": 1}
+        },
+        "not": {
+          "anyOf": [
+            {"required": ["promotion_ready"]},
+            {"required": ["runtime_proof_digest"]},
+            {"required": ["failure_class"]},
+            {"required": ["route_class"]}
+          ]
+        },
+        "additionalProperties": false
+      }
+    },
+    "domain_decision": {
+      "type": "object",
+      "required": [
+        "physical_work_authorized",
+        "professional_approval",
+        "payment_released",
+        "access_granted",
+        "automatic_execution",
+        "survey_authority",
+        "construction_truth",
+        "human_review_required"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "READY_FOR_HUMAN_REVIEW",
+            "DEFERRED",
+            "REJECTED",
+            "WITHDRAWN"
+          ]
+        },
+        "candidate_id": {"type": "string", "minLength": 1},
+        "candidate_digest": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$"
+        },
+        "recommended_for_human_review": {"type": "boolean"},
+        "reasons": {"type": "array", "items": {"type": "string"}},
+        "open_obligations": {"type": "array", "items": {"type": "string"}},
+        "version": {
+          "const": "AURA_CONSTRUCTION_DOMAIN_DECISION_ENVELOPE_V1"
+        },
+        "physical_work_authorized": {"const": false},
+        "professional_approval": {"const": false},
+        "payment_released": {"const": false},
+        "access_granted": {"const": false},
+        "automatic_execution": {"const": false},
+        "survey_authority": {"const": false},
+        "construction_truth": {"const": false},
+        "human_review_required": {"const": true}
+      },
+      "oneOf": [
+        {
+          "not": {
+            "anyOf": [
+              {"required": ["status"]},
+              {"required": ["candidate_id"]},
+              {"required": ["candidate_digest"]},
+              {"required": ["recommended_for_human_review"]},
+              {"required": ["reasons"]},
+              {"required": ["open_obligations"]},
+              {"required": ["version"]}
+            ]
+          }
+        },
+        {
+          "required": [
+            "status",
+            "candidate_id",
+            "candidate_digest",
+            "recommended_for_human_review",
+            "reasons",
+            "open_obligations",
+            "version"
+          ]
+        }
+      ],
+      "additionalProperties": false
+    }
+  }
+}
