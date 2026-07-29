@@ -77,7 +77,17 @@
     },
     "coordination_candidates": {"type": "array"},
     "domain_decision": {"type": "object"},
-    "guarded_wfst": {"type": "object"},
+    "guarded_wfst": {
+      "type": "object",
+      "properties": {
+        "state_binding_digest": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+        "projection_only": {"const": true},
+        "execution_authority": {"const": false},
+        "state_mutation": {"const": false},
+        "human_review_required": {"const": true}
+      },
+      "additionalProperties": true
+    },
     "authority": {
       "type": "object",
       "required": [
