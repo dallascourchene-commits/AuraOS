@@ -6,8 +6,8 @@ authority owner.
 """
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
 import re
+from collections.abc import Mapping, Sequence
 from typing import Any
 
 from aura_bilateral_live_repair_foundry_contracts import (
@@ -20,6 +20,7 @@ from aura_bilateral_live_repair_foundry_contracts import (
 SPATIAL_FOUNDRY_PROJECTION_V2 = "AURA_SPATIAL_FOUNDRY_PROJECTION_V2"
 SPATIAL_FOUNDRY_WFST_V1 = "AURA_CONSTRUCTION_SPATIAL_FOUNDRY_GUARDED_WFST_V1"
 ALLOWED_FOUNDRY_ARENAS = frozenset({"coding", "construction", "spatial"})
+MAX_PROJECTION_NESTING = 12
 _HEX = re.compile(r"^[0-9a-f]{40,64}$")
 _AUTHORITY_TOKENS = frozenset(
     {
@@ -135,18 +136,27 @@ def _normalize_key(value: Any) -> str:
     return re.sub(r"[^a-z0-9]+", "", str(value).casefold())
 
 
-def _authority_path(value: Any, path: str = "$") -> str | None:
+def _authority_path(
+    value: Any,
+    path: str = "$",
+    *,
+    depth: int = 0,
+) -> str | None:
+    if depth > MAX_PROJECTION_NESTING:
+        raise ValueError(
+            f"projection nesting exceeds {MAX_PROJECTION_NESTING} levels at {path}"
+        )
     if isinstance(value, Mapping):
         for key, item in value.items():
             child = f"{path}.{key}"
             if _normalize_key(key) in _AUTHORITY_TOKENS and item is not False:
                 return child
-            found = _authority_path(item, child)
+            found = _authority_path(item, child, depth=depth + 1)
             if found:
                 return found
     elif isinstance(value, (list, tuple)):
         for index, item in enumerate(value):
-            found = _authority_path(item, f"{path}[{index}]")
+            found = _authority_path(item, f"{path}[{index}]", depth=depth + 1)
             if found:
                 return found
     return None
