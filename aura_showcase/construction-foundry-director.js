@@ -68,11 +68,38 @@
     return chapterById(session?.selected_chapter_id) || chapterById(session?.next_chapter_id);
   }
 
-  function applyDirective(chapter, receipt = null) {
+  function waitForP3View(activeView, deadline = Date.now() + 15000) {
+    return new Promise((resolve, reject) => {
+      const check = () => {
+        const target = document.querySelector(`[data-construction-view="${activeView}"]`);
+        const stage = document.getElementById("construction-decision-foundry");
+        const expectedMode = activeView.toLowerCase().replaceAll("_", "-");
+        if (
+          target?.getAttribute("aria-pressed") === "true"
+          && stage?.dataset.presentationMode === expectedMode
+        ) {
+          resolve();
+          return;
+        }
+        if (Date.now() >= deadline) {
+          reject(new Error(`P3 did not retain the exact ${activeView} presentation receipt`));
+          return;
+        }
+        setTimeout(check, 40);
+      };
+      check();
+    });
+  }
+
+  async function applyDirective(chapter, receipt = null) {
     const directive = receipt?.effect_receipt?.ui_directive || chapter?.ui_directive || {};
     if (directive.active_view) {
       const target = document.querySelector(`[data-construction-view="${directive.active_view}"]`);
-      if (target && !target.disabled) target.click();
+      if (!target || target.disabled) {
+        throw new Error(`P3 ${directive.active_view} control is unavailable`);
+      }
+      if (target.getAttribute("aria-pressed") !== "true") target.click();
+      await waitForP3View(directive.active_view);
     }
     if (directive.panel === "coordination_candidates") {
       document.getElementById("construction-candidates")?.scrollIntoView({ block: "nearest" });
@@ -176,9 +203,9 @@
     if (result.receipt) {
       receiptNode.textContent = JSON.stringify(result.receipt, null, 2);
       const chapter = chapterById(result.receipt.chapter_id);
-      applyDirective(chapter, result.receipt);
+      await applyDirective(chapter, result.receipt);
     } else {
-      applyDirective(selectedChapter());
+      await applyDirective(selectedChapter());
     }
     render();
     return result;
