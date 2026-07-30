@@ -104,6 +104,7 @@
     notesNode.append(list);
   }
 
+
   function renderChapterOptions() {
     if (!manifest || !session) return;
     if (chapterSelect.options.length !== manifest.chapters.length) {
