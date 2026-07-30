@@ -391,7 +391,7 @@ def build_default_manifest(
         _chapter(0, "FRAME_CONSTRUCTION", "Frame the Construction objective", "FRAME", "CONSTRUCTION_GROUNDED", "FRAME_CONSTRUCTION", ("p3_available", "construction_identity_bound"), ("construction_scene", "inspect", "spatial_projection", "selected_project", "presentation_only", "show_design"), ("Confirm that Aura remains the truth, evidence, and authority system.", "Introduce Pascal as the disposable geometry body."), ui={"active_view": "DESIGN"}),
         _chapter(1, "SHOW_FLOOR_PLAN", "Open the exact floor plan", "CONSTRUCTION_GROUNDED", "FLOORPLAN_READY", "SET_VIEW", ("pascal_artifact_bound", "coordinate_receipt_bound"), ("construction_storey", "inspect", "floorplan_projection", "selected_storey", "presentation_only", "show_floorplan"), ("Show the exact storey and node binding.",), ui={"active_view": "FLOOR_PLAN"}),
         _chapter(2, "SHOW_AS_BUILT", "Project the Aura-derived as-built state", "FLOORPLAN_READY", "AS_BUILT_READY", "SET_VIEW", ("as_built_scene_bound",), ("construction_scene", "compare", "evidence_projection", "selected_project", "derived_only", "show_as_built"), ("The as-built view is derived evidence, not survey truth.",), ui={"active_view": "AS_BUILT"}),
-        _chapter(3, "COMPARE_REPRESENTATIONS", "Compare design and as-built", "AS_BUILT_READY", "COMPARE_READY", "SET_VIEW", ("renderers_synchronized",), ("construction_scene", "compare", "synchronized_projection", "selected_target", "review_only", "compare_representations"), ("Keep the Pascal and Aura renderers technically separate.",), ui={"active_view": "COMPARE"}),
+        _chapter(3, "COMPARE_REPRESENTATIONS", "Compare design and as-built", "AS_BUILT_READY", "COMPARE_READY", "SET_VIEW", ("compare_receipt_bound",), ("construction_scene", "compare", "synchronized_projection", "selected_target", "review_only", "compare_representations"), ("Keep the Pascal and Aura renderers technically separate.",), ui={"active_view": "COMPARE"}),
         _chapter(4, "REVIEW_CANDIDATES", "Review bounded Construction alternatives", "COMPARE_READY", "CANDIDATES_READY", "FOCUS_CANDIDATES", ("construction_candidates_bound", "domain_decision_bound"), ("construction_plan", "assess", "coordination_candidate", "authorized_reviewer", "proposal_only", "compare_candidate"), ("Ready for human review is not approval.",), ui={"panel": "coordination_candidates"}),
         _chapter(5, "AURA_WATCH_THIS", "Aura, watch this", "CANDIDATES_READY", "CAPTURE_ACTIVE", "START_CAPTURE", ("identity_current", "operator_authorized"), ("foundry_session", "bounded_observe", "incident_capture", "human_operator", "explicitly_authorized", "start_capture"), ("Start one explicit bounded capture; unrestricted recording remains off.",), consequential=True),
         _chapter(6, "MARK_INCIDENT", "Mark the exact presentation fault", "CAPTURE_ACTIVE", "INCIDENT_MARKED", "MARK_INCIDENT", ("capture_active", "fault_fixture_bound"), ("foundry_session", "observe", "incident_marker", "human_operator", "attest", "mark_incident"), ("The fixture demonstrates an interface fault, not a Construction decision.",), consequential=True),
@@ -402,7 +402,7 @@ def build_default_manifest(
         _chapter(11, "SUCCESSFUL_PREVIEW", "Demonstrate successful isolated preview", "ROLLBACK_DEMONSTRATED", "PREVIEWED", "PREVIEW_SUCCESS", ("rollback_receipt_retained",), ("isolated_environment", "preview", "software_repair", "verified_candidate", "proposal_only", "preview_candidate"), ("A successful preview remains proposal-only and cannot deploy itself.",), consequential=True),
         _chapter(12, "CURRENT_REPROOF", "Run P0, P1, current reproof, and disposition", "PREVIEWED", "REPROOF_RETAINED", "RUN_GOVERNED_U7", ("successful_preview_retained", "u7_bridge_ready"), ("continuity", "reprove", "governed_learning", "verified_repair", "human_review_required", "current_reproof"), ("Canonical U7 remains the only learning-to-reproof owner.",), consequential=True),
         _chapter(13, "RETURN_TO_CONSTRUCTION", "Return to Construction without changing truth", "REPROOF_RETAINED", "CONSTRUCTION_RETURNED", "RETURN_CONSTRUCTION", ("human_disposition_retained",), ("construction_scene", "inspect", "spatial_projection", "selected_project", "presentation_only", "return_to_construction"), ("The software repair lane cannot approve physical work or mutate Construction state.",), ui={"active_view": "COMPARE"}),
-        _chapter(14, "DISSOLVE", "Dissolve the presentation session", "CONSTRUCTION_RETURNED", "DISSOLVED", "DISSOLVE", ("construction_state_unchanged", "resources_dissolved"), ("presentation_session", "terminate", "lifecycle_cleanup", "active_session", "mandatory", "dissolve"), ("Finish with exact cleanup and a separately governed human review decision.",), consequential=True),
+        _chapter(14, "DISSOLVE", "Dissolve the presentation session", "CONSTRUCTION_RETURNED", "DISSOLVED", "DISSOLVE", ("construction_state_unchanged", "capture_resources_dissolved"), ("presentation_session", "terminate", "lifecycle_cleanup", "active_session", "mandatory", "dissolve"), ("Finish with exact cleanup and a separately governed human review decision.",), consequential=True),
     )
     return ConstructionFoundryDirectorManifest(
         chapters=chapters,
@@ -645,7 +645,6 @@ class ConstructionFoundryDirector:
                 session.playing = False
                 session.selected_index = max(-1, session.selected_index - 1)
             elif action is DirectorControl.NEXT:
-                session.playing = False
                 if session.selected_index < session.executed_index:
                     session.selected_index += 1
             elif action is DirectorControl.JUMP:
@@ -674,7 +673,7 @@ class ConstructionFoundryDirector:
                         "pascal_artifact_bound",
                         "coordinate_receipt_bound",
                         "as_built_scene_bound",
-                        "renderers_synchronized",
+                        "compare_receipt_bound",
                         "construction_candidates_bound",
                         "domain_decision_bound",
                         "identity_current",
@@ -684,7 +683,7 @@ class ConstructionFoundryDirector:
                         "rollback_adapter_ready",
                         "u7_bridge_ready",
                         "construction_state_unchanged",
-                        "resources_dissolved",
+                        "capture_resources_dissolved",
                     }
                 }
             return {"ok": True, "control": action.value, "session": session.snapshot(self.manifest)}
