@@ -256,6 +256,7 @@
       return result;
     }
     session = result.session;
+    let syncFailed = false;
     await settleDirective(async () => {
       if (result.receipt) {
         receiptNode.textContent = JSON.stringify(result.receipt, null, 2);
@@ -264,7 +265,14 @@
       } else {
         await applyDirective(selectedChapter());
       }
-    }, render);
+    }, render).catch(() => { syncFailed = true; });
+    // If P3 presentation sync failed after the server committed the chapter,
+    // disable progression controls so the user must retry or re-sync before
+    // issuing another NEXT command.  render() has already been called by
+    // applyDirective's catch handler, so the UI reflects the committed state.
+    if (syncFailed) {
+      statusNode.textContent = "P3 presentation sync failed; retry or re-sync before continuing.";
+    }
     return result;
   }
 

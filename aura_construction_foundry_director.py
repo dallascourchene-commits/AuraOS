@@ -476,6 +476,7 @@ class ConstructionFoundryDirector:
         self.manifest = manifest
         self._lock = threading.RLock()
         self._sessions: dict[str, DirectorSession] = {}
+        self._transition_claims: dict[str, str] = {}  # session_id → transition_digest
 
     def start_session(
         self,
@@ -538,6 +539,22 @@ class ConstructionFoundryDirector:
         with self._lock:
             return self._project_next_locked(session)
 
+    def claim_next(self, session_id: str) -> dict[str, Any]:
+        """Atomically project and reserve the next transition for this session.
+
+        Returns the projection with a transition_digest.  The server must
+        call this before executing any canonical effect, then pass the
+        transition_digest to commit_next.  A second caller for the same
+        session will see a stale-claim error because commit_next clears
+        the claim.
+        """
+        session = self.require_session(session_id)
+        with self._lock:
+            projection = self._project_next_locked(session)
+            if projection.get("admitted") is True:
+                self._transition_claims[session.session_id] = projection["transition_digest"]
+            return projection
+
     def _project_next_locked(self, session: DirectorSession) -> dict[str, Any]:
         """Project the next chapter transition.  Caller must hold self._lock."""
         next_index = session.executed_index + 1
@@ -598,6 +615,13 @@ class ConstructionFoundryDirector:
         # occur if any validation or budget check fails.
         with self._lock:
             session = self.require_session(session_id)
+            # Verify the caller holds the active transition claim for this session.
+            expected_claim = self._transition_claims.get(session.session_id)
+            if expected_claim is not None and expected_claim != transition_digest:
+                raise ValueError(
+                    "Director transition claim is stale: another request "
+                    "already claimed or committed this chapter"
+                )
             # Re-project inside the lock to get the current expected transition
             expected = self._project_next_locked(session)
             if expected.get("admitted") is not True:
@@ -641,6 +665,8 @@ class ConstructionFoundryDirector:
             session.dissolved = chapter.to_state == self.manifest.terminal_state
             if session.dissolved:
                 session.playing = False
+            # Clear the transition claim after successful commit
+            self._transition_claims.pop(session.session_id, None)
             return {"ok": True, "receipt": receipt, "session": session.snapshot(self.manifest)}
 
     def control(

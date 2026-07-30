@@ -469,7 +469,7 @@ class _P4U7Bridge:
                 "expected_repository_head": head,
                 "purpose": "Bind P4 current reproof to exact retained runtime and preview evidence",
                 "user_meaning": "Demonstrate bounded self-repair without changing Construction truth or granting authority",
-                "authority": {"inspect": True, "edit": True, "test": True},
+                "authority": {"inspect": True, "edit": False, "test": True},
                 "semantic_definitions": [
                     {
                         "term": term,
@@ -746,10 +746,6 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
         return identity
 
     def execute_exact_runtime_replay(self, *, packet_id: str, identity: BilateralIdentity) -> dict[str, Any]:
-        if self.p4_confirmation_consumed:
-            raise PascalPresentationError(
-                "P4 confirmation was already consumed; dissolve and Restart for a fresh exact confirmation"
-            )
         if self.p4_confirmation_path is None or self.p4_runtime_output_dir is None:
             raise PascalPresentationError("P4 external runtime paths are unavailable")
         service = self.live_repair
@@ -765,7 +761,13 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
                 required_assets=self.p4_required_assets,
             )
 
+        # Move the consumed check, replay execution, and consumption update
+        # all inside the lock so concurrent callers cannot both pass the guard.
         with self._p4_runtime_lock:
+            if self.p4_confirmation_consumed:
+                raise PascalPresentationError(
+                    "P4 confirmation was already consumed; dissolve and Restart for a fresh exact confirmation"
+                )
             service.runtime_runner = adapted_runner
             try:
                 result = service.execute_replay(
@@ -776,9 +778,9 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
                 )
             finally:
                 service.runtime_runner = canonical_runner
-        if result.get("ok") is not True:
-            raise PascalPresentationError("P4 Runtime Profile V2 proof did not satisfy every obligation")
-        self.p4_confirmation_consumed = True
+            if result.get("ok") is not True:
+                raise PascalPresentationError("P4 Runtime Profile V2 proof did not satisfy every obligation")
+            self.p4_confirmation_consumed = True
         return result
 
     def dissolve_p4_runtime(self) -> dict[str, Any]:
@@ -1104,8 +1106,13 @@ def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition:
                     "arena_id": "construction",
                     "objective": "Clean up orphaned capture after failed Director commit",
                 })
-            except Exception:
-                pass
+            except Exception as cleanup_exc:
+                # Cleanup evidence must not be hidden.  Attach the cleanup
+                # failure to the re-raised error so it remains observable.
+                raise RuntimeError(
+                    f"P4 Director commit failed and orphaned capture "
+                    f"{_pending_capture_id} could not be released: {cleanup_exc}"
+                ) from cleanup_exc
         raise
 
 
@@ -1160,6 +1167,7 @@ def dispatch_p4_foundry_request(
             parts = suffix.split("/")
             session_id = parts[0]
             if method == "GET" and len(parts) == 1:
+                _projection_and_identity(state, _query_projection_body(raw_path), require_all=True)
                 return _json(200, {"ok": True, "session": director.require_session(session_id).snapshot(director.manifest), "receipts": director.receipts(session_id)})
             if method == "POST" and len(parts) == 2 and parts[1] == "control":
                 allowed = {"control", "chapter_id", "identity_handle", *_IDENTITY_KEYS}
@@ -1185,7 +1193,7 @@ def dispatch_p4_foundry_request(
                 navigation = director.control(session_id, control=DirectorControl.NEXT)
                 if browsing_retained_chapter:
                     return _json(200, navigation)
-                transition = director.project_next(session_id)
+                transition = director.claim_next(session_id)
                 if transition.get("admitted") is not True:
                     return _json(409, {"ok": False, "error": "P4 transition is blocked", "transition": transition})
                 return _json(200, _execute_chapter(state, session_id, transition))
