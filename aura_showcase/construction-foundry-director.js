@@ -215,8 +215,11 @@
     const generation = ++playGeneration;
     await control("PLAY");
     while (generation === playGeneration && session && !session.dissolved) {
-      await control("NEXT");
-      await new Promise((resolve) => setTimeout(resolve, 650));
+      const result = await control("NEXT");
+      const chapter = result.receipt ? chapterById(result.receipt.chapter_id) : null;
+      if (chapter && chapter.consequential !== true) {
+        await new Promise((resolve) => setTimeout(resolve, 650));
+      }
     }
   }
 
