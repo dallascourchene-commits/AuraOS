@@ -24,7 +24,8 @@
     ],
     "allowed_test_paths": [
       "tests/test_aura_construction_foundry_director.py",
-      "tests/test_aura_construction_pascal_spatial_foundry_p4.py"
+      "tests/test_aura_construction_pascal_spatial_foundry_p4.py",
+      "tests/test_aura_construction_p4_browser_contract.py"
     ],
     "allowed_governance_paths": [
       ".aura/runtime_profiles/construction_foundry_p4.confirmation.template.json",
@@ -46,6 +47,7 @@
     "Retain exact required-asset hashes before capture finalization.",
     "Delegate incident capture, replay, Runtime Profile V2 proof, repair attempt routing, isolated preview, exact rollback, current reproof, and human disposition to existing owners.",
     "Project six-slot route packets and guarded transition evidence without mutating canonical Construction state.",
+    "Wait for P3's exact retained presentation receipt before advancing a Director chapter.",
     "Preserve P3 as an operational fallback when P4 initialization fails."
   ],
   "prohibitions": [
@@ -54,7 +56,7 @@
     "Do not let a chapter jump execute or skip an unproven consequential transition.",
     "Do not permit live external models, internet dependencies, random candidate generation, automatic patching, deployment, or merge.",
     "Do not mutate ConstructionProjectState, Pascal source artifacts, source geometry, professional approval, payment, access, safety, or physical-work authority.",
-    "Do not hide failed initialization, asset identity, runtime, preview, rollback, U7, or cleanup evidence.",
+    "Do not hide failed initialization, asset identity, runtime, preview, rollback, U7, presentation synchronization, or cleanup evidence.",
     "Do not trigger CodeRabbit, Codex, Greptile, Gitar, or another external reviewer without Dallas's explicit instruction."
   ],
   "verification": [
@@ -63,6 +65,7 @@
     "P4 status fallback and retained static injection tests",
     "exact-head confirmation and external runtime-path tests",
     "canonical UnifiedExecutionBinding test for U7 delegation",
+    "browser queue and exact P3 presentation receipt synchronization test",
     "P3 focused regression tests",
     "JavaScript syntax and serialized-control review",
     "Waboose scoped review",
