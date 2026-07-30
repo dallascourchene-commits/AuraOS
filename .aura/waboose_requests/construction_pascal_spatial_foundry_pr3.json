@@ -1,0 +1,35 @@
+{
+  "version": "AURA_CODING_WABOOSE_REQUEST_V1",
+  "request_id": "construction-pascal-spatial-foundry-pr3",
+  "base_commit": "825e7ceff94e5050e19cbd32dd97f4fce31f551a",
+  "changed_symbols": [
+    "ConstructionFoundryDecisionCompiler",
+    "P3FoundryShowcaseState",
+    "dispatch_p3_foundry_request",
+    "construction-decision-foundry.js",
+    "construction-decision-as-built-sync.js"
+  ],
+  "review_focus": [
+    "Construction authority boundaries",
+    "Pascal P2 compatibility and source-lock preservation",
+    "stale identity and hidden-storey rejection",
+    "six-slot Spatial interaction compilation",
+    "renderer lifecycle and same-origin bridge boundaries",
+    "digest-bound JSON/PDF exports",
+    "browser/server synchronization races",
+    "fallback behavior when P3 assets are unavailable"
+  ],
+  "required_neighbors": [
+    "aura_construction_spatial_foundry.py",
+    "aura_construction_demo_fixture_builder.py",
+    "aura_construction_demo_projection.py",
+    "aura_spatial_interaction.py",
+    "aura_spatial_render_plan.py",
+    "aura_pascal_spatial_presentation.py",
+    "aura_construction_pascal_spatial_foundry_server.py",
+    "aura_spatial_web/construction_scene_renderer.js"
+  ],
+  "patch_authority": false,
+  "merge_authority": false,
+  "human_review_required": true
+}
