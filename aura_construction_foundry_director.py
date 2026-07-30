@@ -433,6 +433,7 @@ class DirectorSession:
     sequence: int = 0
     playing: bool = False
     dissolved: bool = False
+    p3_sync_pending: bool = False
     evidence: dict[str, bool] = field(default_factory=dict)
     context: dict[str, Any] = field(default_factory=dict)
     receipts: list[dict[str, Any]] = field(default_factory=list)
@@ -540,20 +541,43 @@ class ConstructionFoundryDirector:
             return self._project_next_locked(session)
 
     def claim_next(self, session_id: str) -> dict[str, Any]:
-        """Atomically project and reserve the next transition for this session.
-
-        Returns the projection with a transition_digest.  The server must
-        call this before executing any canonical effect, then pass the
-        transition_digest to commit_next.  A second caller for the same
-        session will see a stale-claim error because commit_next clears
-        the claim.
-        """
+        """Atomically project and reserve the next transition for this session."""
         session = self.require_session(session_id)
         with self._lock:
+            # Block progression if a P3 presentation sync is still pending.
+            if session.p3_sync_pending:
+                raise ValueError(
+                    "Director progression blocked: P3 presentation sync "
+                    "acknowledgement is pending"
+                )
+            # Fail closed if a claim is already active for this session.
+            if session.session_id in self._transition_claims:
+                raise ValueError(
+                    "Director transition is already claimed by another "
+                    "in-flight request for this session"
+                )
             projection = self._project_next_locked(session)
             if projection.get("admitted") is True:
-                self._transition_claims[session.session_id] = projection["transition_digest"]
+                import secrets
+                claim_token = secrets.token_hex(16)
+                self._transition_claims[session.session_id] = (
+                    projection["transition_digest"],
+                    claim_token,
+                )
+                projection["claim_token"] = claim_token
             return projection
+
+    def release_claim(self, session_id: str) -> None:
+        """Release an active transition claim (e.g. after effect failure)."""
+        with self._lock:
+            self._transition_claims.pop(session_id, None)
+
+    def acknowledge_p3_sync(self, session_id: str) -> dict[str, Any]:
+        """Acknowledge that the P3 presentation sync has completed."""
+        session = self.require_session(session_id)
+        with self._lock:
+            session.p3_sync_pending = False
+            return {"ok": True, "session": session.snapshot(self.manifest)}
 
     def _project_next_locked(self, session: DirectorSession) -> dict[str, Any]:
         """Project the next chapter transition.  Caller must hold self._lock."""
@@ -595,6 +619,7 @@ class ConstructionFoundryDirector:
         *,
         transition_digest: str,
         effect_receipt: Mapping[str, Any],
+        claim_token: str = "",
         evidence_updates: Mapping[str, Any] | None = None,
         context_updates: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
@@ -615,12 +640,19 @@ class ConstructionFoundryDirector:
         # occur if any validation or budget check fails.
         with self._lock:
             session = self.require_session(session_id)
-            # Verify the caller holds the active transition claim for this session.
-            expected_claim = self._transition_claims.get(session.session_id)
-            if expected_claim is not None and expected_claim != transition_digest:
+            # Require an active claim with a matching token.  Reject absent,
+            # stale, or mismatched claims to enforce the reservation contract.
+            active_claim = self._transition_claims.get(session.session_id)
+            if active_claim is None:
                 raise ValueError(
-                    "Director transition claim is stale: another request "
-                    "already claimed or committed this chapter"
+                    "Director commit rejected: no active transition claim; "
+                    "call claim_next before executing the chapter effect"
+                )
+            expected_digest, expected_token = active_claim
+            if expected_digest != transition_digest or expected_token != claim_token:
+                raise ValueError(
+                    "Director transition claim is stale or mismatched: another "
+                    "request already claimed or committed this chapter"
                 )
             # Re-project inside the lock to get the current expected transition
             expected = self._project_next_locked(session)
@@ -665,6 +697,11 @@ class ConstructionFoundryDirector:
             session.dissolved = chapter.to_state == self.manifest.terminal_state
             if session.dissolved:
                 session.playing = False
+            # Mark P3 sync as pending for presentation chapters that carry
+            # a ui_directive with an active_view, so progression is blocked
+            # until the browser acknowledges the sync.
+            ui = dict(chapter.ui_directive) if chapter.ui_directive else {}
+            session.p3_sync_pending = bool(ui.get("active_view"))
             # Clear the transition claim after successful commit
             self._transition_claims.pop(session.session_id, None)
             return {"ok": True, "receipt": receipt, "session": session.snapshot(self.manifest)}

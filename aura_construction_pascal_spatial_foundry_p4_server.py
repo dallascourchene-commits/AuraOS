@@ -734,15 +734,16 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
         return removed
 
     def refresh_demo_identity(self) -> BilateralIdentity:
-        identity, confirmation_path, output_dir = _compile_confirmation_bundle(self.repo_root)
-        new_root = confirmation_path.parent
-        self._p4_external_roots.add(new_root)
-        self._cleanup_external_roots(retain={new_root})
-        self.p4_identity = identity
-        self.p4_confirmation_path = confirmation_path
-        self.p4_runtime_output_dir = output_dir
-        self.p4_confirmation_consumed = False
-        self.p4_u7_bridge._sessions.clear()
+        with self._p4_runtime_lock:
+            identity, confirmation_path, output_dir = _compile_confirmation_bundle(self.repo_root)
+            new_root = confirmation_path.parent
+            self._p4_external_roots.add(new_root)
+            self._cleanup_external_roots(retain={new_root})
+            self.p4_identity = identity
+            self.p4_confirmation_path = confirmation_path
+            self.p4_runtime_output_dir = output_dir
+            self.p4_confirmation_consumed = False
+            self.p4_u7_bridge._sessions.clear()
         return identity
 
     def execute_exact_runtime_replay(self, *, packet_id: str, identity: BilateralIdentity) -> dict[str, Any]:
@@ -784,20 +785,21 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
         return result
 
     def dissolve_p4_runtime(self) -> dict[str, Any]:
-        service = self._live_repair
-        before = service.status() if service is not None else {
-            "active_capture_count": 0,
-            "pending_packet_archive_count": 0,
-        }
-        if before.get("active_capture_count") != 0:
-            raise PascalPresentationError("P4 cannot dissolve while a bounded capture remains active")
-        if before.get("pending_packet_archive_count") != 0:
-            raise PascalPresentationError("P4 cannot dissolve while incident archival remains pending")
-        if service is not None:
-            service.close()
-            self._live_repair = None
-        self.p4_u7_bridge._sessions.clear()
-        removed_roots = self._cleanup_external_roots()
+        with self._p4_runtime_lock:
+            service = self._live_repair
+            before = service.status() if service is not None else {
+                "active_capture_count": 0,
+                "pending_packet_archive_count": 0,
+            }
+            if before.get("active_capture_count") != 0:
+                raise PascalPresentationError("P4 cannot dissolve while a bounded capture remains active")
+            if before.get("pending_packet_archive_count") != 0:
+                raise PascalPresentationError("P4 cannot dissolve while incident archival remains pending")
+            if service is not None:
+                service.close()
+                self._live_repair = None
+            self.p4_u7_bridge._sessions.clear()
+            removed_roots = self._cleanup_external_roots()
         return {
             "ok": True,
             "status": "DISSOLVED",
@@ -832,13 +834,14 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
         return self.p4_director
 
     def close(self) -> None:
-        if self.p4_director is not None:
-            self.p4_director.close()
-        self.p4_director = None
-        self.p4_static_assets.clear()
-        self.p4_required_assets = ()
-        self.p4_u7_bridge._sessions.clear()
-        self._cleanup_external_roots()
+        with self._p4_runtime_lock:
+            if self.p4_director is not None:
+                self.p4_director.close()
+            self.p4_director = None
+            self.p4_static_assets.clear()
+            self.p4_required_assets = ()
+            self.p4_u7_bridge._sessions.clear()
+            self._cleanup_external_roots()
         super().close()
 
 
@@ -1087,25 +1090,37 @@ def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition:
         evidence["runtime_resources_dissolved"] = True
     else:
         raise PascalPresentationError(f"unsupported P4 chapter effect: {effect}")
+    _claim_token = str(transition.get("claim_token") or "")
     try:
         return director.commit_next(
             session_id,
             transition_digest=str(transition["transition_digest"]),
             effect_receipt=result,
+            claim_token=_claim_token,
             evidence_updates=evidence,
             context_updates=updates,
         )
     except Exception:
+        # Release the transition claim so the session is not permanently stuck.
+        director.release_claim(session_id)
         if _pending_capture_id is not None:
             try:
-                state.live_repair.finalize_capture(_pending_capture_id, {
+                cleanup_result = state.live_repair.finalize_capture(_pending_capture_id, {
                     "expected_positive": (),
                     "expected_negative": (),
                     "preservation_claims": (),
                     "required_assets": [],
                     "arena_id": "construction",
-                    "objective": "Clean up orphaned capture after failed Director commit",
+                    "objective": "Orphaned-capture cleanup after failed Director commit (uncommitted transition)",
                 })
+                # Record the orphan-cleanup receipt in the session context
+                # so the archive artifact is traceable to the failed transition.
+                _orphan_receipt = {
+                    "orphaned_capture_id": _pending_capture_id,
+                    "orphan_cleanup_result": cleanup_result,
+                    "orphan_status": "UNCOMMITTED_TRANSITION_CLEANUP",
+                    "director_commit_failed": True,
+                }
             except Exception as cleanup_exc:
                 # Cleanup evidence must not be hidden.  Attach the cleanup
                 # failure to the re-raised error so it remains observable.
@@ -1167,8 +1182,18 @@ def dispatch_p4_foundry_request(
             parts = suffix.split("/")
             session_id = parts[0]
             if method == "GET" and len(parts) == 1:
-                _projection_and_identity(state, _query_projection_body(raw_path), require_all=True)
-                return _json(200, {"ok": True, "session": director.require_session(session_id).snapshot(director.manifest), "receipts": director.receipts(session_id)})
+                _resolved_projection, resolved_identity = _projection_and_identity(
+                    state, _query_projection_body(raw_path), require_all=True,
+                )
+                target_session = director.require_session(session_id)
+                if resolved_identity.identity_digest != target_session.identity_digest:
+                    raise PascalPresentationError(
+                        "resolved identity does not match the session's bound identity"
+                    )
+                return _json(200, {"ok": True, "session": target_session.snapshot(director.manifest), "receipts": director.receipts(session_id)})
+            if method == "POST" and len(parts) == 2 and parts[1] == "ack-p3-sync":
+                _projection_and_identity(state, body, require_all=True)
+                return _json(200, director.acknowledge_p3_sync(session_id))
             if method == "POST" and len(parts) == 2 and parts[1] == "control":
                 allowed = {"control", "chapter_id", "identity_handle", *_IDENTITY_KEYS}
                 unknown = sorted(set(body) - allowed)
