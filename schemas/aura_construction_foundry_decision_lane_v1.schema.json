@@ -137,7 +137,10 @@
     "readyCandidate": {
       "allOf": [
         { "$ref": "#/$defs/candidateBase" },
-        { "properties": { "role": { "const": "READY_FOR_HUMAN_REVIEW" }, "recommended_for_human_review": { "const": true } } }
+        {
+          "required": ["role", "recommended_for_human_review"],
+          "properties": { "role": { "const": "READY_FOR_HUMAN_REVIEW" }, "recommended_for_human_review": { "const": true } }
+        }
       ]
     }
   }

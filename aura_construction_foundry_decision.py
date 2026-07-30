@@ -499,6 +499,17 @@ class ConstructionFoundryDecisionCompiler:
         day = _finite(timeline_day, "timeline_day")
         if not 0.0 <= day <= 30.0:
             raise ValueError("timeline_day must be between 0 and 30")
+        # Reject explicitly-supplied blank string selection values instead
+        # of silently treating them as defaults via ``or`` fallback.
+        for _name, _val in (
+            ("selected_storey", selected_storey),
+            ("selected_node", selected_node),
+            ("selected_issue_id", selected_issue_id),
+            ("selected_candidate_id", selected_candidate_id),
+            ("selected_candidate_digest", selected_candidate_digest),
+        ):
+            if _val is not None and not str(_val).strip():
+                raise ValueError(f"{_name} must not be blank")
         storey_id = selected_storey or self.manifest.storey_ids[0]
         if storey_id not in self.manifest.storey_ids:
             raise PascalPresentationError(
