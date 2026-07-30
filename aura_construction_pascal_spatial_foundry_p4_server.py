@@ -959,6 +959,7 @@ def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition:
     evidence: dict[str, bool] = {}
     updates: dict[str, Any] = {}
     effect = chapter.effect
+    _pending_capture_id: str | None = None
     if effect in {"FRAME_CONSTRUCTION", "SET_VIEW", "FOCUS_CANDIDATES", "RETURN_CONSTRUCTION"}:
         result = {"ok": True, "effect": effect, "ui_directive": dict(chapter.ui_directive), "projection_only": True}
     elif effect == "START_CAPTURE":
@@ -973,6 +974,9 @@ def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition:
         })
         updates["capture_id"] = result["capture_id"]
         evidence.update({"capture_active": True, "capture_resources_dissolved": False})
+        # If commit_next fails after start_capture has mutated service state,
+        # clean up the orphaned capture before re-raising.
+        _pending_capture_id = result["capture_id"]
     elif effect == "MARK_INCIDENT":
         capture_id = str(context.get("capture_id") or "")
         state.live_repair.observe(capture_id, fixture.event_type, {"fixture_id": fixture.fixture_id, "selection_sync": "STALE_ACKNOWLEDGEMENT"})
@@ -1081,13 +1085,28 @@ def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition:
         evidence["runtime_resources_dissolved"] = True
     else:
         raise PascalPresentationError(f"unsupported P4 chapter effect: {effect}")
-    return director.commit_next(
-        session_id,
-        transition_digest=str(transition["transition_digest"]),
-        effect_receipt=result,
-        evidence_updates=evidence,
-        context_updates=updates,
-    )
+    try:
+        return director.commit_next(
+            session_id,
+            transition_digest=str(transition["transition_digest"]),
+            effect_receipt=result,
+            evidence_updates=evidence,
+            context_updates=updates,
+        )
+    except Exception:
+        if _pending_capture_id is not None:
+            try:
+                state.live_repair.finalize_capture(_pending_capture_id, {
+                    "expected_positive": (),
+                    "expected_negative": (),
+                    "preservation_claims": (),
+                    "required_assets": [],
+                    "arena_id": "construction",
+                    "objective": "Clean up orphaned capture after failed Director commit",
+                })
+            except Exception:
+                pass
+        raise
 
 
 def dispatch_p4_foundry_request(

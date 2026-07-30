@@ -536,37 +536,41 @@ class ConstructionFoundryDirector:
     def project_next(self, session_id: str) -> dict[str, Any]:
         session = self.require_session(session_id)
         with self._lock:
-            next_index = session.executed_index + 1
-            if next_index >= len(self.manifest.chapters):
-                return {
-                    "admitted": False,
-                    "terminal": True,
-                    "missing_evidence": [],
-                    "next_chapter": None,
-                    "session": session.snapshot(self.manifest),
-                }
-            chapter = self.manifest.chapters[next_index]
-            if chapter.from_state != session.current_state:
-                raise ValueError("Director session state differs from the manifest chain")
-            missing = [name for name in chapter.required_evidence if session.evidence.get(name) is not True]
-            projection = {
-                "version": DIRECTOR_RECEIPT_VERSION,
-                "manifest_digest": self.manifest.manifest_digest,
-                "session_id": session.session_id,
-                "sequence": session.sequence + 1,
-                "chapter": chapter.to_dict(),
-                "from_state": session.current_state,
-                "to_state": chapter.to_state,
-                "missing_evidence": missing,
-                "admitted": not missing,
-                "recommended": not missing,
-                "execution_authority": False,
-                "construction_state_mutation": False,
-                "human_review_required": True,
-                "authority": {**_FALSE_AUTHORITY},
+            return self._project_next_locked(session)
+
+    def _project_next_locked(self, session: DirectorSession) -> dict[str, Any]:
+        """Project the next chapter transition.  Caller must hold self._lock."""
+        next_index = session.executed_index + 1
+        if next_index >= len(self.manifest.chapters):
+            return {
+                "admitted": False,
+                "terminal": True,
+                "missing_evidence": [],
+                "next_chapter": None,
+                "session": session.snapshot(self.manifest),
             }
-            projection["transition_digest"] = digest(projection)
-            return {**projection, "session": session.snapshot(self.manifest)}
+        chapter = self.manifest.chapters[next_index]
+        if chapter.from_state != session.current_state:
+            raise ValueError("Director session state differs from the manifest chain")
+        missing = [name for name in chapter.required_evidence if session.evidence.get(name) is not True]
+        projection = {
+            "version": DIRECTOR_RECEIPT_VERSION,
+            "manifest_digest": self.manifest.manifest_digest,
+            "session_id": session.session_id,
+            "sequence": session.sequence + 1,
+            "chapter": chapter.to_dict(),
+            "from_state": session.current_state,
+            "to_state": chapter.to_state,
+            "missing_evidence": missing,
+            "admitted": not missing,
+            "recommended": not missing,
+            "execution_authority": False,
+            "construction_state_mutation": False,
+            "human_review_required": True,
+            "authority": {**_FALSE_AUTHORITY},
+        }
+        projection["transition_digest"] = digest(projection)
+        return {**projection, "session": session.snapshot(self.manifest)}
 
     def commit_next(
         self,
@@ -577,54 +581,63 @@ class ConstructionFoundryDirector:
         evidence_updates: Mapping[str, Any] | None = None,
         context_updates: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
-        expected = self.project_next(session_id)
-        if expected.get("admitted") is not True:
-            raise ValueError(f"Director transition is blocked by evidence: {expected.get('missing_evidence')}")
-        if _digest_text(transition_digest, "transition_digest") != expected["transition_digest"]:
-            raise ValueError("Director transition digest is stale or mismatched")
+        # Validate everything before acquiring the lock or mutating anything.
+        # This ensures no session state changes on rejection.
         if not isinstance(effect_receipt, Mapping):
             raise ValueError("effect_receipt must be an object")
         if effect_receipt.get("ok") is not True:
             raise ValueError("canonical chapter effect did not return an exact successful receipt")
-        session = self.require_session(session_id)
-        chapter = self.manifest.chapters[session.executed_index + 1]
-        receipt = {
-            "version": DIRECTOR_RECEIPT_VERSION,
-            "session_id": session.session_id,
-            "manifest_digest": self.manifest.manifest_digest,
-            "sequence": session.sequence + 1,
-            "chapter_id": chapter.chapter_id,
-            "chapter_digest": chapter.chapter_digest,
-            "transition_digest": transition_digest,
-            "from_state": chapter.from_state,
-            "to_state": chapter.to_state,
-            "six_slot_packet": dict(chapter.six_slot_packet),
-            "effect": chapter.effect,
-            "effect_receipt": dict(effect_receipt),
-            "construction_state_digest_before": session.construction_state_digest,
-            "construction_state_digest_after": session.construction_state_digest,
-            "construction_state_unchanged": True,
-            "human_review_required": True,
-            "authority": {**_FALSE_AUTHORITY},
-        }
-        receipt["receipt_digest"] = digest(receipt)
+        if evidence_updates:
+            for key, value in evidence_updates.items():
+                if not isinstance(key, str) or type(value) is not bool:
+                    raise ValueError("evidence_updates must contain exact boolean evidence")
+        if context_updates is not None and not isinstance(context_updates, Mapping):
+            raise ValueError("context_updates must be an object")
+        # Single critical section: project, validate, and commit atomically
+        # so a consequential chapter cannot commit twice and no mutations
+        # occur if any validation or budget check fails.
         with self._lock:
+            session = self.require_session(session_id)
+            # Re-project inside the lock to get the current expected transition
+            expected = self._project_next_locked(session)
+            if expected.get("admitted") is not True:
+                raise ValueError(f"Director transition is blocked by evidence: {expected.get('missing_evidence')}")
+            if _digest_text(transition_digest, "transition_digest") != expected["transition_digest"]:
+                raise ValueError("Director transition digest is stale or mismatched")
+            chapter = self.manifest.chapters[session.executed_index + 1]
+            # Check budget BEFORE appending or mutating anything
+            if len(session.receipts) + 1 > MAX_RECEIPTS:
+                raise ValueError("Director receipt budget exhausted")
+            receipt = {
+                "version": DIRECTOR_RECEIPT_VERSION,
+                "session_id": session.session_id,
+                "manifest_digest": self.manifest.manifest_digest,
+                "sequence": session.sequence + 1,
+                "chapter_id": chapter.chapter_id,
+                "chapter_digest": chapter.chapter_digest,
+                "transition_digest": transition_digest,
+                "from_state": chapter.from_state,
+                "to_state": chapter.to_state,
+                "six_slot_packet": dict(chapter.six_slot_packet),
+                "effect": chapter.effect,
+                "effect_receipt": dict(effect_receipt),
+                "construction_state_digest_before": session.construction_state_digest,
+                "construction_state_digest_after": session.construction_state_digest,
+                "construction_state_unchanged": True,
+                "human_review_required": True,
+                "authority": {**_FALSE_AUTHORITY},
+            }
+            receipt["receipt_digest"] = digest(receipt)
             session.sequence += 1
             session.executed_index += 1
             session.selected_index = session.executed_index
             session.current_state = chapter.to_state
             if evidence_updates:
                 for key, value in evidence_updates.items():
-                    if not isinstance(key, str) or type(value) is not bool:
-                        raise ValueError("evidence_updates must contain exact boolean evidence")
                     session.evidence[key] = value
             if context_updates:
-                if not isinstance(context_updates, Mapping):
-                    raise ValueError("context_updates must be an object")
                 session.context.update(dict(context_updates))
             session.receipts.append(receipt)
-            if len(session.receipts) > MAX_RECEIPTS:
-                raise ValueError("Director receipt budget exhausted")
             session.dissolved = chapter.to_state == self.manifest.terminal_state
             if session.dissolved:
                 session.playing = False

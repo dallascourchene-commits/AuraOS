@@ -142,16 +142,23 @@
 
   async function applyDirective(chapter, receipt = null) {
     const directive = receipt?.effect_receipt?.ui_directive || chapter?.ui_directive || {};
-    if (directive.active_view) {
-      const target = document.querySelector(`[data-construction-view="${directive.active_view}"]`);
-      if (!target || target.disabled) {
-        throw new Error(`P3 ${directive.active_view} control is unavailable`);
+    try {
+      if (directive.active_view) {
+        const target = document.querySelector(`[data-construction-view="${directive.active_view}"]`);
+        if (!target || target.disabled) {
+          throw new Error(`P3 ${directive.active_view} control is unavailable`);
+        }
+        if (target.getAttribute("aria-pressed") !== "true") target.click();
+        await waitForP3View(directive.active_view);
       }
-      if (target.getAttribute("aria-pressed") !== "true") target.click();
-      await waitForP3View(directive.active_view);
-    }
-    if (directive.panel === "coordination_candidates") {
-      document.getElementById("construction-candidates")?.scrollIntoView({ block: "nearest" });
+      if (directive.panel === "coordination_candidates") {
+        document.getElementById("construction-candidates")?.scrollIntoView({ block: "nearest" });
+      }
+    } catch (error) {
+      // The session has already advanced on the server; render the current
+      // state so the UI stays consistent before re-throwing the error.
+      render();
+      throw error;
     }
   }
 

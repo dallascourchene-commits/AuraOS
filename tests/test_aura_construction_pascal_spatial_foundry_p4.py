@@ -113,28 +113,30 @@ def test_confirmation_bundle_is_exact_head_bound_and_external(tmp_path: Path):
     _git_repo(root)
 
     identity, confirmation_path, output_dir = p4._compile_confirmation_bundle(root)
-    head = _run(root, "git", "rev-parse", "HEAD")
-    tree = _run(root, "git", "rev-parse", "HEAD^{tree}")
-    assert identity.repository_head == head
-    assert identity.source_tree_digest == tree
-    assert identity.verifier_source_digest == hashlib.sha256(verifier_body).hexdigest()
-    assert confirmation_path.is_file()
-    assert root not in confirmation_path.parents
-    assert root not in output_dir.parents
-    packet = json.loads(confirmation_path.read_text(encoding="utf-8"))
-    assert identity.intent_digest == p4._bilateral_identity_digest(
-        packet["intent_packet"]["intent_digest"], "intent digest"
-    )
-    assert identity.semantic_ledger_digest == p4._bilateral_identity_digest(
-        packet["semantic_ledger"]["ledger_digest"], "Semantic Ledger digest"
-    )
-    assert identity.guardrail_set_digest == p4._bilateral_identity_digest(
-        packet["confirmation_receipt"]["guardrail_set_digest"], "guardrail-set digest"
-    )
-    assert packet["confirmation_receipt"]["repository_head"] == head
-    assert packet["u7_references"]["proposal_only"] is True
-    assert packet["u7_references"]["current_reproof_required_before_learning"] is True
-    shutil.rmtree(confirmation_path.parent)
+    try:
+        head = _run(root, "git", "rev-parse", "HEAD")
+        tree = _run(root, "git", "rev-parse", "HEAD^{tree}")
+        assert identity.repository_head == head
+        assert identity.source_tree_digest == tree
+        assert identity.verifier_source_digest == hashlib.sha256(verifier_body).hexdigest()
+        assert confirmation_path.is_file()
+        assert root not in confirmation_path.parents
+        assert root not in output_dir.parents
+        packet = json.loads(confirmation_path.read_text(encoding="utf-8"))
+        assert identity.intent_digest == p4._bilateral_identity_digest(
+            packet["intent_packet"]["intent_digest"], "intent digest"
+        )
+        assert identity.semantic_ledger_digest == p4._bilateral_identity_digest(
+            packet["semantic_ledger"]["ledger_digest"], "Semantic Ledger digest"
+        )
+        assert identity.guardrail_set_digest == p4._bilateral_identity_digest(
+            packet["confirmation_receipt"]["guardrail_set_digest"], "guardrail-set digest"
+        )
+        assert packet["confirmation_receipt"]["repository_head"] == head
+        assert packet["u7_references"]["proposal_only"] is True
+        assert packet["u7_references"]["current_reproof_required_before_learning"] is True
+    finally:
+        shutil.rmtree(confirmation_path.parent, ignore_errors=True)
 
 
 def test_canonical_compiler_digest_projection_is_exact_and_namespaced():
