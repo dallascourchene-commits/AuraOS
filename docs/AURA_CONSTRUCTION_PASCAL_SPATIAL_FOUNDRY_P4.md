@@ -32,6 +32,10 @@ Each chapter carries an exact six-slot packet, evidence gates, presenter notes, 
 
 The browser exposes Play, Pause, Previous, Next, Restart, and chapter selection. All requests share one serialized queue. Previous and chapter jump are presentation navigation only; they cannot execute or skip an unproven chapter. Restart is admitted only after dissolution and creates a fresh server-owned confirmation, bilateral identity, and Director session.
 
+## Browser synchronization contract
+
+The Director bundle contains a testable synchronization contract that waits for P3 to retain both the selected view button receipt and the synchronized `presentationMode`; it fails closed on timeout, always re-renders the server-updated Director session in a `finally` path, and applies pacing only to non-consequential presentation chapters. A test-only early branch exposes these exact helpers before DOM initialization, while production exposes no test hooks. Node behavior tests exercise successful retention, timeout, render-on-failure reconciliation, and pacing without depending on source-string spelling.
+
 ## Exact identity
 
 The browser never declares itself current. The P4 server compiles a canonical bilateral confirmation against the current clean Git head and source tree, the exact existing Runtime Profile V2, the exact independent verifier source, the current CODEMAP digest, and the profile’s exact allowed paths. The full confirmation and runtime output remain outside the source checkout. The browser receives only a bounded identity handle and must also supply all five exact P3 identities for every stateful Director request.
@@ -57,7 +61,7 @@ Each Runtime V2 confirmation and trace run uses a unique process-temporary direc
 
 ## Verification
 
-Focused tests cover the manifest chain, evidence gates, blocked chapter skipping, exact transition receipts, complete tour, restart, P3 fallback status, idempotent static injection, exact-head confirmation, external runtime paths, canonical U7 execution binding, and proposal-only disposition contracts. Before merge, run the existing P3 regressions and a real loopback P4 browser walkthrough through Aura’s Runtime Refactor Harness.
+Focused tests cover the manifest chain, evidence gates, blocked chapter skipping, exact transition receipts, complete tour, restart, P3 fallback status, idempotent static injection, exact-head confirmation, external runtime paths, canonical U7 execution binding, proposal-only disposition contracts, exact P3 presentation retention, fail-closed synchronization timeout, render-on-failure reconciliation, and bounded presentation pacing. Before merge, run the existing P3 regressions and a real loopback P4 browser walkthrough through Aura’s Runtime Refactor Harness.
 
 ## Authority boundary
 
