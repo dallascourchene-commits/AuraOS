@@ -431,32 +431,58 @@ def dispatch_p3_foundry_request(
                 200,
                 {"ok": True, "projection": public_projection(projection)},
             )
-        if method == "POST" and route == "/api/construction/decision-lane/presentation-receipt":
-            # P3-owned presentation receipt issuance.  P4 calls this to
-            # obtain a verifiable receipt that P3 retained the requested
-            # view.  The receipt is stored in P3 state and signed with a
-            # digest over chapter_id, active_view, and identity_digest.
-            import hashlib as _hl
-            projection = _compile_from_request(state, body, require_identities=True)
+        if method == "POST" and route == "/api/construction/decision-lane/issue-presentation-receipt":
+            # P3-owned presentation receipt issuance.  Called by the browser
+            # after P3/Pascal presentation sync has verified the retained
+            # view state.  Validates only the five P3 identities against a
+            # compiled projection; accepts receipt-binding fields separately.
+            _receipt_body = {k: v for k, v in body.items() if k in (*_IDENTITY_KEYS, *_SELECTION_KEYS, "timeline_day")}
+            projection = _compile_from_request(state, _receipt_body, require_identities=True)
             chapter_id = str(body.get("chapter_id") or "")
             active_view = str(body.get("active_view") or "")
-            identity_digest = str(body.get("identity_digest") or "")
+            director_session_id = str(body.get("director_session_id") or "")
+            director_receipt_digest = str(body.get("director_receipt_digest") or "")
             if not chapter_id or not active_view:
                 return _json(400, {"ok": False, "error": "chapter_id and active_view are required"})
-            digest_input = f"{chapter_id}|{active_view}|{identity_digest}"
-            receipt_digest = _hl.sha256(digest_input.encode()).hexdigest()
+            # Verify the compiled projection's active_view matches the
+            # requested view — this proves P3 retained the presentation state.
+            compiled_view = projection.get("presentation", {}).get("active_view") or projection.get("active_view", "")
+            if compiled_view != active_view:
+                return _json(409, {"ok": False, "error": f"P3 retained view '{compiled_view}' does not match requested '{active_view}'"})
+            # Resolve the identity digest from the compiled projection.
+            identity_digest = str(projection.get("identity_digest") or hashlib.sha256(json.dumps(_receipt_body, sort_keys=True).encode()).hexdigest())
+            digest_input = f"{chapter_id}|{active_view}|{identity_digest}|{director_session_id}|{director_receipt_digest}"
+            receipt_digest = hashlib.sha256(digest_input.encode()).hexdigest()
             receipt = {
                 "chapter_id": chapter_id,
                 "active_view": active_view,
                 "identity_digest": identity_digest,
+                "director_session_id": director_session_id,
+                "director_receipt_digest": director_receipt_digest,
                 "receipt_digest": receipt_digest,
                 "issued_by": "p3-presentation",
             }
-            # Retain the receipt in P3 state for later validation.
+            # Retain the receipt in P3 state keyed by chapter_id for lookup.
             if not hasattr(state, "_p3_presentation_receipts"):
                 state._p3_presentation_receipts = {}
             state._p3_presentation_receipts[chapter_id] = receipt
             return _json(200, {"ok": True, "presentation_receipt": receipt})
+        if method == "POST" and route == "/api/construction/decision-lane/validate-presentation-receipt":
+            # P3-owned receipt validation/lookup.  Called by P4 during
+            # ack-p3-sync.  Returns the already-retained receipt only if
+            # it matches — does NOT issue a new receipt.
+            chapter_id = str(body.get("chapter_id") or "")
+            receipt_digest = str(body.get("receipt_digest") or "")
+            if not chapter_id or not receipt_digest:
+                return _json(400, {"ok": False, "error": "chapter_id and receipt_digest are required"})
+            if not hasattr(state, "_p3_presentation_receipts"):
+                return _json(404, {"ok": False, "error": "no retained presentation receipts"})
+            retained = state._p3_presentation_receipts.get(chapter_id)
+            if retained is None:
+                return _json(404, {"ok": False, "error": "no retained receipt for this chapter"})
+            if retained.get("receipt_digest") != receipt_digest:
+                return _json(409, {"ok": False, "error": "receipt digest does not match retained receipt"})
+            return _json(200, {"ok": True, "presentation_receipt": retained})
         if method == "POST" and route == "/api/construction/decision-lane/project":
             projection = _compile_from_request(state, body, require_identities=True)
             return _json(

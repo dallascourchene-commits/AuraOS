@@ -268,7 +268,7 @@
           const activeView = chapter?.ui_directive?.active_view || null;
           // Request a P3-issued presentation receipt so the P4 ack is bound
           // to P3-retained state, not a browser-computed hash.
-          const p3ReceiptResponse = await fetch("/api/construction/decision-lane/presentation-receipt", {
+          const p3ReceiptResponse = await fetch("/api/construction/decision-lane/issue-presentation-receipt", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "same-origin",
@@ -278,6 +278,8 @@
               identity_handle: identityHandle,
               chapter_id: chapterId,
               active_view: activeView,
+              director_session_id: session.session_id,
+              director_receipt_digest: result.receipt?.receipt_digest || result.receipt?.transition_digest || "",
             }),
           });
           const p3ReceiptResult = await p3ReceiptResponse.json().catch(() => ({}));

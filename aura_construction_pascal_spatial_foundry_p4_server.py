@@ -747,35 +747,38 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
         return identity
 
     def execute_exact_runtime_replay(self, *, packet_id: str, identity: BilateralIdentity) -> dict[str, Any]:
-        if self.p4_confirmation_path is None or self.p4_runtime_output_dir is None:
-            raise PascalPresentationError("P4 external runtime paths are unavailable")
-        service = self.live_repair
-        canonical_runner = service.runtime_runner
-
-        def adapted_runner(root: Path, **kwargs: Any) -> Mapping[str, Any]:
-            canonical_proof = canonical_runner(root, **kwargs)
-            return _adapt_runtime_proof_identity(
-                canonical_proof,
-                identity=identity,
-                confirmation_path=self.p4_confirmation_path,
-                repo_root=self.repo_root,
-                required_assets=self.p4_required_assets,
-            )
-
-        # Move the consumed check, replay execution, and consumption update
-        # all inside the lock so concurrent callers cannot both pass the guard.
+        # Acquire the lock at the very beginning so lifecycle mutations
+        # (refresh, dissolve, close) cannot interleave with state reads.
         with self._p4_runtime_lock:
+            if self.p4_confirmation_path is None or self.p4_runtime_output_dir is None:
+                raise PascalPresentationError("P4 external runtime paths are unavailable")
             if self.p4_confirmation_consumed:
                 raise PascalPresentationError(
                     "P4 confirmation was already consumed; dissolve and Restart for a fresh exact confirmation"
                 )
+            # Capture immutable local references inside the lock.
+            confirmation_path = self.p4_confirmation_path
+            runtime_output_dir = self.p4_runtime_output_dir
+            service = self.live_repair
+            canonical_runner = service.runtime_runner
+
+            def adapted_runner(root: Path, **kwargs: Any) -> Mapping[str, Any]:
+                canonical_proof = canonical_runner(root, **kwargs)
+                return _adapt_runtime_proof_identity(
+                    canonical_proof,
+                    identity=identity,
+                    confirmation_path=confirmation_path,
+                    repo_root=self.repo_root,
+                    required_assets=self.p4_required_assets,
+                )
+
             service.runtime_runner = adapted_runner
             try:
                 result = service.execute_replay(
                     packet_id=packet_id,
                     profile_path=_RUNTIME_PROFILE,
-                    confirmation_packet=self.p4_confirmation_path,
-                    output_dir=self.p4_runtime_output_dir,
+                    confirmation_packet=confirmation_path,
+                    output_dir=runtime_output_dir,
                 )
             finally:
                 service.runtime_runner = canonical_runner
@@ -1207,31 +1210,30 @@ def dispatch_p4_foundry_request(
                 _presentation_receipt = body.get("presentation_receipt")
                 if not isinstance(_presentation_receipt, Mapping):
                     raise PascalPresentationError("P3 presentation receipt is required and must be an object")
-                # Validate the P3-issued receipt by checking it against P3's
-                # retained presentation receipts via the P3 server API.
-                _p3_receipt = _presentation_receipt.get("receipt_digest")
-                if not _p3_receipt or not isinstance(_p3_receipt, str):
+                _p3_receipt_digest = _presentation_receipt.get("receipt_digest")
+                if not _p3_receipt_digest or not isinstance(_p3_receipt_digest, str):
                     raise PascalPresentationError("P3 presentation receipt must include a receipt_digest")
-                # Verify the receipt was issued by P3 by calling the P3
-                # presentation-receipt route with the same parameters.
-                _p3_body = {
-                    **dict(body),
+                # Validate the receipt against P3's retained receipts via the
+                # P3 validate-presentation-receipt lookup endpoint.  This does
+                # NOT issue a new receipt — it only returns a match if P3
+                # already retained one after presentation sync.
+                _p3_validate_body = {
                     "chapter_id": _presentation_receipt.get("chapter_id"),
-                    "active_view": _presentation_receipt.get("active_view"),
-                    "identity_digest": resolved_identity.identity_digest,
+                    "receipt_digest": _p3_receipt_digest,
                 }
                 _p3_status, _p3_ct, _p3_resp = dispatch_p3_foundry_request(
                     state, "POST",
-                    "/api/construction/decision-lane/presentation-receipt",
-                    _p3_body,
+                    "/api/construction/decision-lane/validate-presentation-receipt",
+                    _p3_validate_body,
+                    request_origin="p4-internal",
+                    request_host="p4-internal",
                 )
                 if _p3_status != 200:
-                    raise PascalPresentationError("P3 presentation receipt validation failed")
-                import json as _json_mod
-                _p3_result = _json_mod.loads(_p3_resp)
-                _p3_issued = _p3_result.get("presentation_receipt", {})
-                if _p3_issued.get("receipt_digest") != _p3_receipt:
-                    raise PascalPresentationError("P3 presentation receipt digest does not match P3-issued receipt")
+                    raise PascalPresentationError("P3 presentation receipt validation failed — no retained receipt matches")
+                _p3_result = json.loads(_p3_resp)
+                _p3_retained = _p3_result.get("presentation_receipt", {})
+                if _p3_retained.get("receipt_digest") != _p3_receipt_digest:
+                    raise PascalPresentationError("P3 presentation receipt digest does not match P3-retained receipt")
                 # Bind the receipt to the session identity.
                 _presentation_receipt = {
                     **dict(_presentation_receipt),
