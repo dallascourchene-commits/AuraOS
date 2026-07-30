@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 from pathlib import Path
 import subprocess
 import time
@@ -121,9 +122,106 @@ def test_confirmation_bundle_is_exact_head_bound_and_external(tmp_path: Path):
     assert root not in confirmation_path.parents
     assert root not in output_dir.parents
     packet = json.loads(confirmation_path.read_text(encoding="utf-8"))
+    assert identity.intent_digest == p4._bilateral_identity_digest(
+        packet["intent_packet"]["intent_digest"], "intent digest"
+    )
+    assert identity.semantic_ledger_digest == p4._bilateral_identity_digest(
+        packet["semantic_ledger"]["ledger_digest"], "Semantic Ledger digest"
+    )
+    assert identity.guardrail_set_digest == p4._bilateral_identity_digest(
+        packet["confirmation_receipt"]["guardrail_set_digest"], "guardrail-set digest"
+    )
     assert packet["confirmation_receipt"]["repository_head"] == head
     assert packet["u7_references"]["proposal_only"] is True
     assert packet["u7_references"]["current_reproof_required_before_learning"] is True
+    shutil.rmtree(confirmation_path.parent)
+
+
+def test_canonical_compiler_digest_projection_is_exact_and_namespaced():
+    canonical = "a" * 32
+    intent = p4._bilateral_identity_digest(canonical, "intent_digest")
+    ledger = p4._bilateral_identity_digest(canonical, "semantic_ledger_digest")
+    assert len(intent) == 64
+    assert len(ledger) == 64
+    assert intent != ledger
+    assert p4._bilateral_identity_digest("b" * 40, "repository_head") == "b" * 40
+
+
+def test_runtime_proof_adapter_retains_canonical_contract_and_required_assets(tmp_path: Path):
+    root = tmp_path / "repo"
+    root.mkdir()
+    asset_path = root / "asset.js"
+    asset_path.write_text("exact asset\n", encoding="utf-8")
+    asset = RequiredAsset("asset.js", hashlib.sha256(asset_path.read_bytes()).hexdigest())
+    canonical_contract = {
+        "intent_digest": "1" * 32,
+        "semantic_ledger_digest": "2" * 32,
+        "guardrail_set_digest": "3" * 32,
+        "confirmation_digest": "intent-confirmation_fixture",
+        "intent_revision_status": "NOT_CREATED_NO_POST_CONFIRMATION_DRIFT",
+        "expected_repository_head": "4" * 40,
+        "expected_source_tree": "5" * 40,
+    }
+    confirmation = root.parent / "confirmation.json"
+    confirmation.write_text(json.dumps({
+        "intent_packet": {"intent_digest": canonical_contract["intent_digest"]},
+        "semantic_ledger": {"ledger_digest": canonical_contract["semantic_ledger_digest"]},
+        "confirmation_receipt": {
+            "confirmation_id": canonical_contract["confirmation_digest"],
+            "guardrail_set_digest": canonical_contract["guardrail_set_digest"],
+            "repository_head": canonical_contract["expected_repository_head"],
+            "source_tree_digest": canonical_contract["expected_source_tree"],
+        },
+        "u7_references": {
+            "intent_revision_status": canonical_contract["intent_revision_status"],
+        },
+    }), encoding="utf-8")
+    identity = p4.BilateralIdentity(
+        intent_digest=p4._bilateral_identity_digest("1" * 32, "intent digest"),
+        confirmation_digest=canonical_contract["confirmation_digest"],
+        semantic_ledger_digest=p4._bilateral_identity_digest(
+            "2" * 32, "Semantic Ledger digest"
+        ),
+        guardrail_set_digest=p4._bilateral_identity_digest(
+            "3" * 32, "guardrail-set digest"
+        ),
+        intent_revision_id=canonical_contract["intent_revision_status"],
+        repository_head=canonical_contract["expected_repository_head"],
+        source_tree_digest=canonical_contract["expected_source_tree"],
+        runtime_profile_digest="6" * 64,
+        verifier_id="verifier",
+        verifier_source_digest="7" * 64,
+    )
+    runtime_output = tmp_path / "runtime-output"
+    runtime_output.mkdir()
+    proof = {
+        "ok": True,
+        "intent_contract": canonical_contract,
+        "required_trace_artifacts": [],
+        "proof_digest": "8" * 64,
+        "proof_path": str(runtime_output / "bilateral_runtime_proof.json"),
+        "output_dir": str(runtime_output),
+    }
+    projected = p4._adapt_runtime_proof_identity(
+        proof,
+        identity=identity,
+        confirmation_path=confirmation,
+        repo_root=root,
+        required_assets=(asset,),
+    )
+    assert projected["canonical_intent_contract"] == canonical_contract
+    assert projected["intent_contract"]["intent_digest"] == identity.intent_digest
+    assert projected["identity_adapter"]["verification_owner_changed"] is False
+    assert any(row["path"] == "asset.js" for row in projected["required_trace_artifacts"])
+    canonical = {
+        key: value
+        for key, value in projected.items()
+        if key not in {"proof_digest", "proof_path", "output_dir"}
+    }
+    assert projected["proof_digest"] == p4.runtime_binding_digest(canonical)
+    assert Path(projected["proof_path"]).is_file()
+    stored = json.loads(Path(projected["proof_path"]).read_text(encoding="utf-8"))
+    assert stored["proof_digest"] == projected["proof_digest"]
 
 
 def test_canonical_u7_bridge_compiles_exact_execution_binding(tmp_path: Path):
