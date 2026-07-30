@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1533
-- **total_bytes**: 58378805
-- **text_tokens_est**: 5138942
+- **total_bytes**: 58380928
+- **text_tokens_est**: 5139472
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 191, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 966, 'schema_or_lexicon': 217, 'support_file': 79}
 - **topology_nodes**: 11210
-- **topology_edges**: 27097
+- **topology_edges**: 27098
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 33218.61
+- **elapsed_ms**: 32221.84
 
 ## Coverage
 
@@ -61,7 +61,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!String` -> `aura_showcase/attempt-archive.js:187`, `aura_showcase/gate-dialogue.js:315`, `aura_showcase/human.js:657`
 - `!TRUTH_CLASSES` -> `aura_spatial_web/renderer_adapter.js:333`
 - `!UP_AXES` -> `aura_spatial_web/renderer_adapter.js:324`
-- `!ackResponse` -> `aura_showcase/construction-foundry-director.js:289`
+- `!ackResponse` -> `aura_showcase/construction-foundry-director.js:301`
 - `!action` -> `aura_showcase/civic.js:77`
 - `!actionForEffect` -> `aura_showcase/civic.js:108`
 - `!actionId` -> `aura_human_agent_arena/wfst.js:45`
@@ -125,7 +125,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!dimensionsVisible` -> `aura_showcase/pascal-construction-foundry.js:237`
 - `!disposed` -> `aura_showcase/pascal-workbench/pascal-workbench.js:772`
 - `!doc` -> `aura_spatial_web/accessibility.js:45`
-- `!doctype` -> `aura_amd_track3_cli.py:187`, `aura_coding_arena/index.html:1`, `aura_construction_pascal_spatial_foundry_p3_server.py:98`, `aura_efficiency_report.py:124`
+- `!doctype` -> `aura_amd_track3_cli.py:187`, `aura_coding_arena/index.html:1`, `aura_construction_pascal_spatial_foundry_p3_server.py:99`, `aura_efficiency_report.py:124`
 - `!dragging` -> `aura_coding_arena/main.js:217`, `aura_human_agent_arena/main.js:613`, `aura_showcase/intent.js:355`, `aura_showcase/topology.js:272`
 - `!el` -> `aura_human_agent_arena/main.js:855`
 - `!empirical_lab` -> `aura_node.py:6303`
@@ -429,7 +429,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 - **source**: compiled_deep_topology
 - **nodes**: 11210
-- **edges**: 27097
+- **edges**: 27098
 - **top_files_by_degree**:
   - `aura_node.py` degree=891 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=757 nodes=69 neighbors=`aura_construction_spatial_foundry.py`, `aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`
