@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1785431032,
+  "generated_at_unix": 1785432634,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1532,
+    "included_file_count": 1533,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,9 +13,9 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 209,
+      ".git": 25,
       "Aura_Memory": 6,
-      "Aura_Sandbox": 1,
+      "Aura_Sandbox": 2,
       "__pycache__": 8
     },
     "all_included_paths_sorted": [
@@ -1341,6 +1341,7 @@
       "tests/test_aura_construction_human_agent.py",
       "tests/test_aura_construction_human_agent_server.py",
       "tests/test_aura_construction_learning.py",
+      "tests/test_aura_construction_p4_browser_contract.py",
       "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py",
       "tests/test_aura_construction_pascal_spatial_foundry_p4.py",
       "tests/test_aura_construction_pascal_spatial_foundry_server.py",
@@ -1554,23 +1555,23 @@
     ]
   },
   "summary": {
-    "file_count": 1532,
-    "total_bytes": 58344502,
-    "text_tokens_est": 5131018,
+    "file_count": 1533,
+    "total_bytes": 58347668,
+    "text_tokens_est": 5131810,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 64,
       "knowledge_artifact": 191,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 966,
+      "python_module": 967,
       "schema_or_lexicon": 217,
       "support_file": 78
     },
-    "topology_nodes": 11204,
-    "topology_edges": 27074,
+    "topology_nodes": 11205,
+    "topology_edges": 27076,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 33451.76
+    "elapsed_ms": 32969.5
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -2935,6 +2936,7 @@
       "tests/test_aura_construction_human_agent.py",
       "tests/test_aura_construction_human_agent_server.py",
       "tests/test_aura_construction_learning.py",
+      "tests/test_aura_construction_p4_browser_contract.py",
       "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py",
       "tests/test_aura_construction_pascal_spatial_foundry_p4.py",
       "tests/test_aura_construction_pascal_spatial_foundry_server.py",
@@ -3539,7 +3541,7 @@
       "test_aura_functions.py:920"
     ],
     "!chapter": [
-      "aura_showcase/construction-foundry-director.js:85"
+      "aura_showcase/construction-foundry-director.js:112"
     ],
     "!children": [
       "aura_showcase/live-repair-foundry.js:196"
@@ -3853,7 +3855,7 @@
     "!manifest": [
       "AURA_FINAL_REPORT.md:138",
       "aura_node.py:7740",
-      "aura_showcase/construction-foundry-director.js:108",
+      "aura_showcase/construction-foundry-director.js:135",
       "aura_showcase/pascal-workbench/pascal-workbench.js:557",
       "aura_spatial_web/construction_mesh_pass.js:144",
       "aura_spatial_web/gaussian_renderer.js:484"
@@ -4209,7 +4211,7 @@
       "aura_node.py:5822"
     ],
     "!session": [
-      "aura_showcase/construction-foundry-director.js:108",
+      "aura_showcase/construction-foundry-director.js:135",
       "aura_showcase/pascal-construction-foundry.js:121"
     ],
     "!sessionId": [
@@ -4314,7 +4316,7 @@
     "!target": [
       "aura_coding_arena/main.js:143",
       "aura_human_agent_arena/main.js:441",
-      "aura_showcase/construction-foundry-director.js:75",
+      "aura_showcase/construction-foundry-director.js:98",
       "aura_showcase/gate-dialogue.js:575",
       "aura_showcase/human.js:672",
       "aura_showcase/intent.js:301",
@@ -8043,8 +8045,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "class",
-        "line": 128,
-        "end_line": 186,
+        "line": 136,
+        "end_line": 194,
         "semantic_id": "aura_construction_foundry_director.py#class:ConstructionDemoFaultFixture:b419ab38f0994708",
         "signature_hash": "dce468e73b8c844f"
       }
@@ -8233,8 +8235,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "class",
-        "line": 462,
-        "end_line": 703,
+        "line": 470,
+        "end_line": 711,
         "semantic_id": "aura_construction_foundry_director.py#class:ConstructionFoundryDirector:4b88937970ec68bf",
         "signature_hash": "414ec8c92fb31cf9"
       }
@@ -8243,8 +8245,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "class",
-        "line": 239,
-        "end_line": 331,
+        "line": 247,
+        "end_line": 339,
         "semantic_id": "aura_construction_foundry_director.py#class:ConstructionFoundryDirectorManifest:bef0776e7431db4b",
         "signature_hash": "ebcd90ce711c7603"
       }
@@ -8841,8 +8843,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "class",
-        "line": 190,
-        "end_line": 235,
+        "line": 198,
+        "end_line": 243,
         "semantic_id": "aura_construction_foundry_director.py#class:DirectorChapter:502f98fe98438ca2",
         "signature_hash": "d0c772087624231b"
       }
@@ -8851,8 +8853,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "class",
-        "line": 102,
-        "end_line": 108,
+        "line": 110,
+        "end_line": 116,
         "semantic_id": "aura_construction_foundry_director.py#class:DirectorControl:30e3072f4e088d31",
         "signature_hash": "6deeabd7d869a988"
       }
@@ -8861,8 +8863,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "class",
-        "line": 417,
-        "end_line": 459,
+        "line": 425,
+        "end_line": 467,
         "semantic_id": "aura_construction_foundry_director.py#class:DirectorSession:d1cf298170acbcbf",
         "signature_hash": "afbb6236922faa17"
       }
@@ -13897,8 +13899,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "class",
-        "line": 112,
-        "end_line": 124,
+        "line": 120,
+        "end_line": 132,
         "semantic_id": "aura_construction_foundry_director.py#class:RequiredAsset:45957a339b09dedd",
         "signature_hash": "023f934b9e1104c1"
       }
@@ -20703,8 +20705,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 465,
-        "end_line": 470,
+        "line": 473,
+        "end_line": 478,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionFoundryDirector.__init__:78984b813c73fc18",
         "signature_hash": "3adf8fac91cb3f97"
       },
@@ -23727,32 +23729,32 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 116,
-        "end_line": 121,
+        "line": 124,
+        "end_line": 129,
         "semantic_id": "aura_construction_foundry_director.py#method:RequiredAsset.__post_init__:9295f5510d5932af",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 143,
-        "end_line": 183,
+        "line": 151,
+        "end_line": 191,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionDemoFaultFixture.__post_init__:e97b9bf9140c6e87",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 203,
-        "end_line": 228,
+        "line": 211,
+        "end_line": 236,
         "semantic_id": "aura_construction_foundry_director.py#method:DirectorChapter.__post_init__:4f4040b552625b86",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 249,
-        "end_line": 290,
+        "line": 257,
+        "end_line": 298,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionFoundryDirectorManifest.__post_init__:74ba05b7621191c0",
         "signature_hash": "175e4972e4d2d582"
       },
@@ -30445,8 +30447,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "function",
-        "line": 334,
-        "end_line": 360,
+        "line": 342,
+        "end_line": 368,
         "semantic_id": "aura_construction_foundry_director.py#function:_chapter:4fa4ae598a0ee462",
         "signature_hash": "39a55c0ad23f510c"
       }
@@ -34953,8 +34955,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "function",
-        "line": 78,
-        "end_line": 82,
+        "line": 79,
+        "end_line": 83,
         "semantic_id": "aura_construction_foundry_director.py#function:_digest_text:6657fb5344334a89",
         "signature_hash": "843f4065c9e6fce4"
       },
@@ -53717,8 +53719,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "function",
-        "line": 69,
-        "end_line": 75,
+        "line": 70,
+        "end_line": 76,
         "semantic_id": "aura_construction_foundry_director.py#function:_required_text:d2b90ea43c22e670",
         "signature_hash": "ba0efde7544d6d2d"
       },
@@ -57815,8 +57817,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "function",
-        "line": 96,
-        "end_line": 99,
+        "line": 104,
+        "end_line": 107,
         "semantic_id": "aura_construction_foundry_director.py#function:_slots:b04ac0d8c9486b77",
         "signature_hash": "e894d61bc66f3b64"
       },
@@ -58753,6 +58755,14 @@
     ],
     "_state_digest_text": [
       {
+        "file": "aura_construction_foundry_director.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 90,
+        "semantic_id": "aura_construction_foundry_director.py#function:_state_digest_text:2e0b0432be2012df",
+        "signature_hash": "5ab3086249f47c2f"
+      },
+      {
         "file": "aura_construction_spatial_foundry.py",
         "kind": "function",
         "line": 91,
@@ -59487,8 +59497,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "function",
-        "line": 85,
-        "end_line": 93,
+        "line": 93,
+        "end_line": 101,
         "semantic_id": "aura_construction_foundry_director.py#function:_strings:35c609d4c7fc56a8",
         "signature_hash": "55a3755ff09650f7"
       },
@@ -69215,8 +69225,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "function",
-        "line": 363,
-        "end_line": 413,
+        "line": 371,
+        "end_line": 421,
         "semantic_id": "aura_construction_foundry_director.py#function:build_default_manifest:d3829a656748845e",
         "signature_hash": "a0ed4fb1e21dea18"
       }
@@ -70629,8 +70639,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "function",
-        "line": 49,
-        "end_line": 56,
+        "line": 50,
+        "end_line": 57,
         "semantic_id": "aura_construction_foundry_director.py#function:canonical_bytes:7fd9402c68df2247",
         "signature_hash": "b8735a6f3e386d20"
       }
@@ -71049,8 +71059,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 307,
-        "end_line": 312,
+        "line": 315,
+        "end_line": 320,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionFoundryDirectorManifest.chapter:d3a1e173963f8bd0",
         "signature_hash": "d48617b1ad6e0d6b"
       }
@@ -71059,8 +71069,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 231,
-        "end_line": 232,
+        "line": 239,
+        "end_line": 240,
         "semantic_id": "aura_construction_foundry_director.py#method:DirectorChapter.chapter_digest:633426e6b3d0e350",
         "signature_hash": "bbfe8af7a922c332"
       }
@@ -71959,8 +71969,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 696,
-        "end_line": 703,
+        "line": 704,
+        "end_line": 711,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionFoundryDirector.close:8bc12e2ae9be2659",
         "signature_hash": "818fdb66f3084fa5"
       },
@@ -73007,8 +73017,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 563,
-        "end_line": 623,
+        "line": 571,
+        "end_line": 631,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionFoundryDirector.commit_next:6b841eb68d4b9e0b",
         "signature_hash": "42e9bbb8216f9299"
       }
@@ -74541,8 +74551,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 625,
-        "end_line": 689,
+        "line": 633,
+        "end_line": 697,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionFoundryDirector.control:8e13771df666a4df",
         "signature_hash": "6c4c4a4893d3a8f2"
       }
@@ -76703,8 +76713,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "function",
-        "line": 59,
-        "end_line": 60,
+        "line": 60,
+        "end_line": 61,
         "semantic_id": "aura_construction_foundry_director.py#function:digest:4febb660ebf9ab5a",
         "signature_hash": "3c60ab9e6d97eef8"
       },
@@ -88135,8 +88145,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 293,
-        "end_line": 305,
+        "line": 301,
+        "end_line": 313,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionFoundryDirectorManifest.manifest_digest:bff5c03427573036",
         "signature_hash": "de5478ec6035ed91"
       }
@@ -91143,8 +91153,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 528,
-        "end_line": 561,
+        "line": 536,
+        "end_line": 569,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionFoundryDirector.project_next:c694d2ca0ae38b64",
         "signature_hash": "de3fcca6a37e0c17"
       }
@@ -92229,8 +92239,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 691,
-        "end_line": 694,
+        "line": 699,
+        "end_line": 702,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionFoundryDirector.receipts:fb3e9e1ed49a3703",
         "signature_hash": "9e53fe3928aaa307"
       }
@@ -94323,8 +94333,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 509,
-        "end_line": 515,
+        "line": 517,
+        "end_line": 523,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionFoundryDirector.require_session:1ffeb249bc682147",
         "signature_hash": "f179b96f375c9687"
       }
@@ -96293,8 +96303,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "function",
-        "line": 63,
-        "end_line": 66,
+        "line": 64,
+        "end_line": 67,
         "semantic_id": "aura_construction_foundry_director.py#function:runtime_binding_digest:42ac9faf168faad2",
         "signature_hash": "95348651f121742c"
       }
@@ -97995,8 +98005,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 432,
-        "end_line": 459,
+        "line": 440,
+        "end_line": 467,
         "semantic_id": "aura_construction_foundry_director.py#method:DirectorSession.snapshot:eb8a397f165ba20a",
         "signature_hash": "4dbd10fb90a41f37"
       },
@@ -98505,8 +98515,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 472,
-        "end_line": 507,
+        "line": 480,
+        "end_line": 515,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionFoundryDirector.start_session:f1b62180661e6273",
         "signature_hash": "ef4951ae13ad43e6"
       }
@@ -109223,6 +109233,16 @@
         "signature_hash": "eef692604dbf460b"
       }
     ],
+    "test_director_accepts_canonical_32_character_construction_state_digest": [
+      {
+        "file": "tests/test_aura_construction_foundry_director.py",
+        "kind": "function",
+        "line": 194,
+        "end_line": 201,
+        "semantic_id": "tests/test_aura_construction_foundry_director.py#function:test_director_accepts_canonical_32_character_construction_state_digest:a00bd0acc279013f",
+        "signature_hash": "abe4ebe58aee8a8e"
+      }
+    ],
     "test_director_blocks_missing_evidence_then_commits_exact_receipt": [
       {
         "file": "tests/test_aura_construction_foundry_director.py",
@@ -109231,6 +109251,16 @@
         "end_line": 89,
         "semantic_id": "tests/test_aura_construction_foundry_director.py#function:test_director_blocks_missing_evidence_then_commits_exact_receipt:f10c6e9cb54ba4c2",
         "signature_hash": "3bad0825e678e7d7"
+      }
+    ],
+    "test_director_browser_waits_for_exact_p3_presentation_receipt": [
+      {
+        "file": "tests/test_aura_construction_p4_browser_contract.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 17,
+        "semantic_id": "tests/test_aura_construction_p4_browser_contract.py#function:test_director_browser_waits_for_exact_p3_presentation_receipt:51a175c41a9be095",
+        "signature_hash": "de01663cc89e1acb"
       }
     ],
     "test_dirty_checkout_fails_closed_with_external_paths": [
@@ -138047,32 +138077,32 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 123,
-        "end_line": 124,
+        "line": 131,
+        "end_line": 132,
         "semantic_id": "aura_construction_foundry_director.py#method:RequiredAsset.to_dict:78689a1f1c5f8345",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 185,
-        "end_line": 186,
+        "line": 193,
+        "end_line": 194,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionDemoFaultFixture.to_dict:9e199583b8e2cffd",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 234,
-        "end_line": 235,
+        "line": 242,
+        "end_line": 243,
         "semantic_id": "aura_construction_foundry_director.py#method:DirectorChapter.to_dict:8c7696178a9bb93a",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 314,
-        "end_line": 331,
+        "line": 322,
+        "end_line": 339,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionFoundryDirectorManifest.to_dict:8b870e52f9aa40ae",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -141293,8 +141323,8 @@
       {
         "file": "aura_construction_foundry_director.py",
         "kind": "method",
-        "line": 517,
-        "end_line": 526,
+        "line": 525,
+        "end_line": 534,
         "semantic_id": "aura_construction_foundry_director.py#method:ConstructionFoundryDirector.update_evidence:524532b76927c9dd",
         "signature_hash": "4e815a8464ba94e5"
       }
@@ -160340,17 +160370,17 @@
     {
       "path": "aura_construction_foundry_director.py",
       "role": "python_module",
-      "bytes": 36240,
-      "lines": 719,
-      "tokens_est": 9060,
-      "symbol_count": 37,
+      "bytes": 36585,
+      "lines": 727,
+      "tokens_est": 9147,
+      "symbol_count": 38,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 52,
-        "node_count": 38,
-        "edge_count": 225,
-        "degree": 225,
+        "hub_rank": 50,
+        "node_count": 39,
+        "edge_count": 229,
+        "degree": 229,
         "symbols": [
           "ConstructionDemoFaultFixture",
           "ConstructionFoundryDirector",
@@ -160365,13 +160395,13 @@
           "_digest_text",
           "_required_text",
           "_slots",
+          "_state_digest_text",
           "_strings",
           "build_default_manifest",
           "canonical_bytes",
           "chapter",
           "chapter_digest",
-          "close",
-          "commit_next"
+          "close"
         ],
         "neighbor_files": [
           "aura_construction_pascal_spatial_foundry_p4_server.py",
@@ -160379,45 +160409,45 @@
           "aura_metaharness.py"
         ],
         "edge_kinds": {
-          "call": 150,
-          "defines": 74,
+          "call": 152,
+          "defines": 76,
           "import_module": 1
         }
       },
-      "digest8": "411c6de1bd6c9908",
+      "digest8": "6590b8a0e7324a71",
       "vector": [
-        0.011232,
-        0.218397,
-        -0.193437,
-        0.303259,
-        -0.081119,
-        -0.263324,
-        -0.048671,
-        -0.073631,
-        -0.106078,
-        -0.175965,
-        -0.106078,
-        -0.108574,
-        0.198429,
-        0.288284,
-        -0.245852,
-        0.003744,
-        -0.096095,
-        0.086111,
-        -0.053663,
-        -0.121054,
-        -0.0312,
-        -0.021216,
-        -0.028704,
-        0.061151,
-        0.275804,
-        0.26582,
-        0.220893,
-        -0.220893,
-        0.25334,
-        -0.01872,
-        -0.223389,
-        0.303259
+        0.026812,
+        -0.1979,
+        0.080437,
+        0.172364,
+        -0.254078,
+        -0.060008,
+        0.271953,
+        -0.047241,
+        -0.090651,
+        -0.029366,
+        0.225989,
+        -0.044687,
+        0.121294,
+        0.021705,
+        -0.029366,
+        0.00383,
+        0.157043,
+        -0.15449,
+        0.238757,
+        0.271953,
+        -0.236203,
+        0.016598,
+        -0.225989,
+        -0.323024,
+        0.105972,
+        -0.049794,
+        -0.195346,
+        0.279613,
+        0.123847,
+        -0.279613,
+        0.218328,
+        -0.1979
       ]
     },
     {
@@ -163559,7 +163589,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 51,
+        "hub_rank": 52,
         "node_count": 72,
         "edge_count": 227,
         "degree": 227,
@@ -173797,7 +173827,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 50,
+        "hub_rank": 51,
         "node_count": 37,
         "edge_count": 229,
         "degree": 229,
@@ -200276,47 +200306,47 @@
     {
       "path": ".aura/refactor_objectives/construction_pascal_spatial_foundry_p4.v1.json",
       "role": "schema_or_lexicon",
-      "bytes": 4679,
-      "lines": 87,
-      "tokens_est": 1170,
+      "bytes": 4940,
+      "lines": 90,
+      "tokens_est": 1235,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "bc1a12ffca312697",
+      "digest8": "bbd155a472d7b3a4",
       "vector": [
-        -0.018928,
-        -0.112309,
-        -0.041643,
-        0.301593,
-        -0.23345,
-        -0.114832,
-        -0.319259,
-        0.301593,
-        -0.049214,
-        -0.152689,
-        0.251117,
-        -0.203165,
-        0.157737,
-        -0.188022,
-        0.203165,
-        0.0265,
-        0.14007,
-        0.018928,
-        -0.097166,
-        0.016405,
-        0.013881,
-        -0.170356,
-        -0.157737,
-        0.273831,
-        -0.263736,
-        -0.180451,
-        0.309164,
-        0.109785,
-        0.109785,
-        -0.122404,
-        -0.076976,
-        -0.001262
+        -0.187981,
+        -0.305002,
+        -0.085899,
+        0.028633,
+        0.133205,
+        0.051041,
+        -0.028633,
+        0.20043,
+        -0.130715,
+        -0.252716,
+        -0.095858,
+        -0.222838,
+        -0.270145,
+        0.217859,
+        -0.100837,
+        -0.018674,
+        -0.125736,
+        -0.280104,
+        0.185491,
+        0.001245,
+        -0.143164,
+        0.250226,
+        0.048551,
+        0.016184,
+        -0.118266,
+        -0.275124,
+        0.285084,
+        0.093368,
+        -0.285084,
+        0.018674,
+        0.230308,
+        0.051041
       ]
     },
     {
@@ -201334,47 +201364,47 @@
     {
       "path": ".aura/waboose_requests/construction_pascal_spatial_foundry_p4.v1.json",
       "role": "schema_or_lexicon",
-      "bytes": 4611,
-      "lines": 95,
-      "tokens_est": 1153,
+      "bytes": 4884,
+      "lines": 99,
+      "tokens_est": 1221,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "6a7bb1a6fec45efc",
+      "digest8": "bf974ce56746b998",
       "vector": [
-        0.037827,
-        -0.116282,
-        -0.063044,
-        -0.093866,
-        0.096668,
-        0.074252,
-        0.091064,
-        0.186331,
-        0.161113,
-        0.07145,
-        -0.343241,
-        0.021015,
-        -0.018213,
-        -0.247974,
-        -0.203143,
-        0.245172,
-        -0.354449,
-        0.068648,
-        -0.007005,
-        -0.074252,
-        0.163915,
-        0.07145,
-        0.040629,
-        0.205945,
-        -0.200341,
-        0.329231,
-        0.155509,
-        0.023817,
-        0.326429,
-        0.04343,
-        -0.149905,
-        -0.292806
+        -0.044874,
+        0.106416,
+        0.106416,
+        0.016668,
+        -0.116673,
+        -0.065388,
+        -0.216678,
+        0.214114,
+        -0.101287,
+        -0.178215,
+        0.252577,
+        -0.088466,
+        0.016668,
+        0.226935,
+        0.255142,
+        0.050003,
+        -0.262834,
+        -0.144879,
+        0.124366,
+        0.257706,
+        0.257706,
+        0.070517,
+        0.016668,
+        -0.021796,
+        -0.206421,
+        -0.196164,
+        -0.303862,
+        0.167958,
+        -0.12693,
+        0.029489,
+        0.255142,
+        0.321812
       ]
     },
     {
@@ -207989,9 +208019,9 @@
     {
       "path": "aura_showcase/construction-foundry-director.js",
       "role": "interface_surface",
-      "bytes": 8334,
-      "lines": 232,
-      "tokens_est": 2083,
+      "bytes": 9529,
+      "lines": 262,
+      "tokens_est": 2382,
       "symbol_count": 0,
       "commands": [
         "!chapter",
@@ -208005,12 +208035,12 @@
       ],
       "command_lines": {
         "!chapter": [
-          85,
-          120
+          112,
+          147
         ],
         "!manifest": [
-          108,
-          125
+          135,
+          152
         ],
         "!projection": [
           26
@@ -208026,51 +208056,51 @@
           5
         ],
         "!session": [
-          108,
-          125,
           135,
-          153,
-          190
+          152,
+          162,
+          180,
+          217
         ],
         "!target": [
-          75
+          98
         ]
       },
       "topology": {},
-      "digest8": "8c2e27d913fe3e43",
+      "digest8": "b5de434c321051ee",
       "vector": [
-        -0.046189,
-        0.151765,
-        0.257341,
-        0.067305,
-        0.025074,
-        -0.08842,
-        0.281096,
-        -0.162323,
-        -0.072583,
-        -0.014517,
-        0.022435,
-        0.027714,
-        0.241505,
-        -0.278456,
-        0.336523,
-        0.091059,
-        -0.157044,
-        -0.225668,
-        -0.128011,
-        -0.114814,
-        0.051468,
-        -0.009238,
-        -0.320687,
-        0.133289,
-        -0.275817,
-        0.273177,
-        -0.180799,
-        0.122732,
-        -0.17288,
-        -0.228308,
-        -0.13065,
-        0.009238
+        -0.130105,
+        0.120378,
+        0.127673,
+        0.096059,
+        0.11065,
+        -0.18847,
+        -0.183606,
+        0.181175,
+        0.052285,
+        -0.0839,
+        -0.113082,
+        0.166583,
+        -0.076604,
+        -0.178743,
+        -0.273586,
+        -0.144696,
+        0.139833,
+        0.186038,
+        0.261426,
+        -0.117946,
+        0.280881,
+        0.12281,
+        -0.125242,
+        -0.137401,
+        -0.00608,
+        0.22738,
+        0.144696,
+        -0.232244,
+        0.307632,
+        -0.232244,
+        0.120378,
+        -0.300336
       ]
     },
     {
@@ -226034,47 +226064,47 @@
     {
       "path": "tests/test_aura_construction_foundry_director.py",
       "role": "python_module",
-      "bytes": 7413,
-      "lines": 192,
-      "tokens_est": 1854,
-      "symbol_count": 9,
+      "bytes": 7791,
+      "lines": 202,
+      "tokens_est": 1948,
+      "symbol_count": 10,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "e9c8ca1cf61fc78d",
+      "digest8": "07c735e09c28c22d",
       "vector": [
-        0.211354,
-        -0.166623,
-        -0.175569,
-        0.21359,
-        0.021247,
-        -0.195698,
-        -0.09058,
-        0.023484,
-        0.27845,
-        -0.110709,
-        0.135311,
-        -0.258321,
-        0.204644,
-        0.171096,
-        0.273977,
-        0.101763,
-        0.086107,
-        -0.16215,
-        -0.171096,
-        0.202408,
-        -0.211354,
-        -0.27845,
-        -0.144257,
-        -0.247139,
-        -0.242666,
-        -0.077161,
-        0.186752,
-        -0.014538,
-        -0.101763,
-        -0.086107,
-        -0.099526,
-        0.191225
+        -0.185294,
+        0.246594,
+        0.032043,
+        0.135139,
+        -0.140712,
+        -0.266098,
+        0.21873,
+        -0.023684,
+        -0.252166,
+        0.043189,
+        0.137925,
+        0.045975,
+        -0.037616,
+        -0.112848,
+        -0.277244,
+        -0.324612,
+        0.207585,
+        -0.087771,
+        -0.093343,
+        -0.154644,
+        -0.029257,
+        0.277244,
+        -0.101702,
+        0.160216,
+        -0.054334,
+        -0.335758,
+        0.268885,
+        -0.023684,
+        -0.020898,
+        0.009752,
+        0.257739,
+        -0.104489
       ]
     },
     {
@@ -226259,6 +226289,52 @@
         -0.27452,
         0.012226,
         0.281189
+      ]
+    },
+    {
+      "path": "tests/test_aura_construction_p4_browser_contract.py",
+      "role": "python_module",
+      "bytes": 714,
+      "lines": 18,
+      "tokens_est": 179,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2de8968f4fbc6e02",
+      "vector": [
+        0.147375,
+        0.22309,
+        0.114925,
+        0.133854,
+        -0.244723,
+        0.095996,
+        0.112221,
+        -0.244723,
+        0.174416,
+        -0.244723,
+        0.101405,
+        -0.171712,
+        -0.025689,
+        -0.201457,
+        -0.250132,
+        -0.047322,
+        0.304214,
+        -0.001352,
+        -0.155487,
+        0.066251,
+        0.263652,
+        0.012169,
+        -0.287989,
+        -0.128446,
+        0.031097,
+        0.155487,
+        -0.247427,
+        0.190641,
+        -0.236611,
+        -0.187937,
+        -0.063547,
+        -0.106813
       ]
     },
     {
@@ -236510,11 +236586,11 @@
       "generated_by": "aura_topology_manager",
       "root": ".",
       "module_count": 637,
-      "node_count": 11204,
-      "edge_count": 27074,
+      "node_count": 11205,
+      "edge_count": 27076,
       "spectral_layout": true,
-      "spectral_sparsity": 0.0532,
-      "global_health": 0.971147
+      "spectral_sparsity": 0.053195,
+      "global_health": 0.97115
     },
     "file_index": {
       "aura_node.py": {
@@ -238704,8 +238780,46 @@
           "import_module": 10
         }
       },
-      "aura_obsidian_graph_bridge.py": {
+      "aura_construction_foundry_director.py": {
         "hub_rank": 50,
+        "node_count": 39,
+        "edge_count": 229,
+        "degree": 229,
+        "symbols": [
+          "ConstructionDemoFaultFixture",
+          "ConstructionFoundryDirector",
+          "ConstructionFoundryDirectorManifest",
+          "DirectorChapter",
+          "DirectorControl",
+          "DirectorSession",
+          "RequiredAsset",
+          "__init__",
+          "__post_init__",
+          "_chapter",
+          "_digest_text",
+          "_required_text",
+          "_slots",
+          "_state_digest_text",
+          "_strings",
+          "build_default_manifest",
+          "canonical_bytes",
+          "chapter",
+          "chapter_digest",
+          "close"
+        ],
+        "neighbor_files": [
+          "aura_construction_pascal_spatial_foundry_p4_server.py",
+          "aura_human_agent_wfst_adapter.py",
+          "aura_metaharness.py"
+        ],
+        "edge_kinds": {
+          "call": 152,
+          "defines": 76,
+          "import_module": 1
+        }
+      },
+      "aura_obsidian_graph_bridge.py": {
+        "hub_rank": 51,
         "node_count": 37,
         "edge_count": 229,
         "degree": 229,
@@ -238746,7 +238860,7 @@
         }
       },
       "aura_emergent_potential_repl.py": {
-        "hub_rank": 51,
+        "hub_rank": 52,
         "node_count": 72,
         "edge_count": 227,
         "degree": 227,
@@ -238788,44 +238902,6 @@
           "defines": 142,
           "call": 80,
           "import_module": 5
-        }
-      },
-      "aura_construction_foundry_director.py": {
-        "hub_rank": 52,
-        "node_count": 38,
-        "edge_count": 225,
-        "degree": 225,
-        "symbols": [
-          "ConstructionDemoFaultFixture",
-          "ConstructionFoundryDirector",
-          "ConstructionFoundryDirectorManifest",
-          "DirectorChapter",
-          "DirectorControl",
-          "DirectorSession",
-          "RequiredAsset",
-          "__init__",
-          "__post_init__",
-          "_chapter",
-          "_digest_text",
-          "_required_text",
-          "_slots",
-          "_strings",
-          "build_default_manifest",
-          "canonical_bytes",
-          "chapter",
-          "chapter_digest",
-          "close",
-          "commit_next"
-        ],
-        "neighbor_files": [
-          "aura_construction_pascal_spatial_foundry_p4_server.py",
-          "aura_human_agent_wfst_adapter.py",
-          "aura_metaharness.py"
-        ],
-        "edge_kinds": {
-          "call": 150,
-          "defines": 74,
-          "import_module": 1
         }
       },
       "aura_forge.py": {
