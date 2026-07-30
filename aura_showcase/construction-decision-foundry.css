@@ -1,0 +1,197 @@
+.construction-decision-grid {
+  grid-template-columns: minmax(260px, 0.8fr) minmax(320px, 1.2fr);
+}
+
+.construction-view-controls,
+.construction-export-controls,
+.construction-overlay-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 0.8rem 0;
+}
+
+.construction-view-controls button[aria-pressed="true"],
+.construction-candidate[aria-pressed="true"] {
+  outline: 2px solid currentcolor;
+  outline-offset: 2px;
+}
+
+.construction-overlay-toggle {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.35rem;
+  text-transform: capitalize;
+}
+
+.construction-candidate-card,
+.construction-decision-packet-card {
+  grid-column: span 1;
+}
+
+#construction-candidates {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.construction-candidate {
+  align-items: flex-start;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem;
+  text-align: left;
+  width: 100%;
+}
+
+.construction-candidate-role,
+.construction-review-badge {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.construction-candidate-hard_blocked,
+.construction-blocked {
+  border-left: 4px solid currentcolor;
+}
+
+.construction-candidate-needs_evidence {
+  border-left: 4px dashed currentcolor;
+}
+
+.construction-candidate-ready_for_human_review,
+.construction-review-badge {
+  border-left: 4px double currentcolor;
+}
+
+.construction-selection-dl,
+.construction-decision-dl {
+  display: grid;
+  gap: 0.35rem 0.75rem;
+  grid-template-columns: max-content minmax(0, 1fr);
+}
+
+.construction-selection-dl dt,
+.construction-decision-dl dt {
+  font-weight: 700;
+}
+
+.construction-selection-dl dd,
+.construction-decision-dl dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+#construction-evidence-pins {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.construction-pin {
+  border: 1px solid currentcolor;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.7rem;
+  text-align: left;
+  width: 100%;
+}
+
+.construction-muted {
+  opacity: 0.72;
+}
+
+.construction-digest {
+  display: block;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+#construction-decision-foundry[data-presentation-mode="as-built"] .construction-decision-controls::after {
+  content: "Aura-derived as-built presentation selected; Pascal remains a separate design organ.";
+  display: block;
+  font-weight: 700;
+  margin-top: 0.75rem;
+}
+
+#construction-decision-foundry[data-presentation-mode="compare"] .construction-decision-controls::after {
+  content: "Synchronized split presentation: Pascal design and Aura-derived as-built. No survey alignment or same-canvas authority is implied.";
+  display: block;
+  font-weight: 700;
+  margin-top: 0.75rem;
+}
+
+#construction-decision-foundry[data-error="true"] {
+  outline: 3px solid currentcolor;
+  outline-offset: 4px;
+}
+
+@media (max-width: 900px) {
+  .construction-decision-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.construction-comparison-card {
+  grid-column: 1 / -1;
+}
+
+.construction-stage-heading {
+  align-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.construction-geometry-stage {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+
+.construction-render-pane {
+  border: 1px solid currentcolor;
+  border-radius: 0.65rem;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0.65rem;
+}
+
+.construction-render-pane[hidden] {
+  display: none;
+}
+
+#construction-pascal-mount > #pascal-construction-foundry {
+  margin: 0;
+}
+
+#construction-pascal-mount .foundry-card {
+  min-width: 0;
+}
+
+#construction-as-built-frame {
+  border: 0;
+  display: block;
+  min-height: 680px;
+  width: 100%;
+}
+
+.construction-pin[aria-pressed="true"] {
+  outline: 2px solid currentcolor;
+  outline-offset: 2px;
+}
+
+#construction-decision-foundry[data-presentation-mode="design"] .construction-geometry-stage,
+#construction-decision-foundry[data-presentation-mode="floor-plan"] .construction-geometry-stage,
+#construction-decision-foundry[data-presentation-mode="as-built"] .construction-geometry-stage {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (max-width: 1180px) {
+  .construction-geometry-stage {
+    grid-template-columns: 1fr;
+  }
+}

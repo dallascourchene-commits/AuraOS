@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://auraos.local/schemas/aura_construction_foundry_decision_lane_v1.schema.json",
+  "title": "Aura Construction Foundry Decision Lane V1",
+  "type": "object",
+  "required": [
+    "version",
+    "domain",
+    "artifacts",
+    "presentation",
+    "construction",
+    "spatial_interactions",
+    "coordination_candidates",
+    "domain_decision",
+    "authority",
+    "projection_digest",
+    "exports"
+  ],
+  "properties": {
+    "version": { "const": "AURA_CONSTRUCTION_FOUNDRY_DECISION_LANE_V1" },
+    "projection_digest": { "$ref": "#/$defs/hex64" },
+    "domain": {
+      "type": "object",
+      "required": ["arena_id", "state_digest", "runtime_packet_digest", "privacy_class"],
+      "properties": {
+        "arena_id": { "const": "construction" },
+        "state_digest": { "type": "string", "pattern": "^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$" },
+        "runtime_packet_digest": { "$ref": "#/$defs/hex64" },
+        "privacy_class": { "const": "PROJECT" }
+      },
+      "additionalProperties": true
+    },
+    "artifacts": {
+      "type": "object",
+      "required": ["pascal_artifact_digest", "coordinate_receipt_digest", "as_built_scene_digest"],
+      "properties": {
+        "pascal_artifact_digest": { "$ref": "#/$defs/hex64" },
+        "coordinate_receipt_digest": { "$ref": "#/$defs/hex64" },
+        "as_built_scene_digest": { "$ref": "#/$defs/hex64" }
+      },
+      "additionalProperties": true
+    },
+    "presentation": {
+      "type": "object",
+      "required": ["active_view", "selected_storey", "selected_node", "selected_issue_id", "timeline_day"],
+      "properties": {
+        "active_view": { "enum": ["DESIGN", "FLOOR_PLAN", "AS_BUILT", "COMPARE"] },
+        "timeline_day": { "type": "number", "minimum": 0, "maximum": 30 },
+        "selection_survives_view_switch": { "const": true }
+      },
+      "additionalProperties": true
+    },
+    "construction": { "type": "object" },
+    "spatial_interactions": { "type": "object" },
+    "coordination_candidates": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "prefixItems": [
+        { "$ref": "#/$defs/hardBlockedCandidate" },
+        { "$ref": "#/$defs/needsEvidenceCandidate" },
+        { "$ref": "#/$defs/readyCandidate" }
+      ],
+      "items": false
+    },
+    "domain_decision": {
+      "type": "object",
+      "required": ["status", "physical_work_authorized", "professional_approval", "payment_released", "access_granted", "automatic_execution", "human_review_required"],
+      "properties": {
+        "status": { "const": "READY_FOR_HUMAN_REVIEW" },
+        "physical_work_authorized": { "const": false },
+        "professional_approval": { "const": false },
+        "payment_released": { "const": false },
+        "access_granted": { "const": false },
+        "automatic_execution": { "const": false },
+        "human_review_required": { "const": true }
+      },
+      "additionalProperties": true
+    },
+    "authority": { "$ref": "#/$defs/authority" },
+    "exports": {
+      "type": "object",
+      "required": ["json_sha256", "pdf_sha256", "canonical_project_record", "approved_change_order"],
+      "properties": {
+        "json_sha256": { "$ref": "#/$defs/hex64" },
+        "pdf_sha256": { "$ref": "#/$defs/hex64" },
+        "canonical_project_record": { "const": false },
+        "approved_change_order": { "const": false }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "hex64": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "authority": {
+      "type": "object",
+      "required": ["survey_authority", "professional_approval", "physical_work_authorized", "payment_released", "access_granted", "automatic_execution", "construction_event_appended", "human_review_required"],
+      "properties": {
+        "survey_authority": { "const": false },
+        "professional_approval": { "const": false },
+        "physical_work_authorized": { "const": false },
+        "payment_released": { "const": false },
+        "access_granted": { "const": false },
+        "automatic_execution": { "const": false },
+        "construction_event_appended": { "const": false },
+        "human_review_required": { "const": true }
+      },
+      "additionalProperties": true
+    },
+    "candidateBase": {
+      "type": "object",
+      "required": ["role", "closure_count", "closure_total", "physical_work_authorized", "professional_approval", "payment_released", "access_granted", "automatic_execution"],
+      "properties": {
+        "closure_count": { "type": "integer", "minimum": 0 },
+        "closure_total": { "type": "integer", "minimum": 1 },
+        "physical_work_authorized": { "const": false },
+        "professional_approval": { "const": false },
+        "payment_released": { "const": false },
+        "access_granted": { "const": false },
+        "automatic_execution": { "const": false }
+      },
+      "additionalProperties": true
+    },
+    "hardBlockedCandidate": {
+      "allOf": [
+        { "$ref": "#/$defs/candidateBase" },
+        { "properties": { "role": { "const": "HARD_BLOCKED" } } }
+      ]
+    },
+    "needsEvidenceCandidate": {
+      "allOf": [
+        { "$ref": "#/$defs/candidateBase" },
+        { "properties": { "role": { "const": "NEEDS_EVIDENCE" } } }
+      ]
+    },
+    "readyCandidate": {
+      "allOf": [
+        { "$ref": "#/$defs/candidateBase" },
+        {
+          "required": ["role", "recommended_for_human_review"],
+          "properties": { "role": { "const": "READY_FOR_HUMAN_REVIEW" }, "recommended_for_human_review": { "const": true } }
+        }
+      ]
+    }
+  }
+}

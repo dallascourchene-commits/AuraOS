@@ -54,7 +54,7 @@ APPROVED_LOCAL_ASSET_PATHS = frozenset(
     }
 )
 # Replaced after the final local-asset hashes are computed.
-PASCAL_APPROVED_LOCK_DIGEST = "7c0830edc42139cf43b61c7365996b33abb86ccb54b3389761418b73b9fced08"
+PASCAL_APPROVED_LOCK_DIGEST = "fd4fafbd016f8094d8f8b102d04ed35cc2466fc6f6ad46a2d4a1c3b761d2bea5"
 
 _HEX40 = re.compile(r"^[0-9a-f]{40}$")
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
