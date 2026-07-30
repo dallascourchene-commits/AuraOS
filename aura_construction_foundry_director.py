@@ -24,6 +24,7 @@ FAULT_FIXTURE_VERSION = "AURA_CONSTRUCTION_DEMO_FAULT_FIXTURE_V1"
 MAX_SESSIONS = 8
 MAX_RECEIPTS = 256
 _HEX = re.compile(r"^[0-9a-f]{64}$")
+_STATE_HEX = re.compile(r"^(?:[0-9a-f]{32}|[0-9a-f]{40,64})$")
 _SLOT_KEYS = ("DIR", "ASP", "CLASS", "SUBJ", "VOICE", "STEM")
 
 _FALSE_AUTHORITY = {
@@ -79,6 +80,13 @@ def _digest_text(value: Any, name: str) -> str:
     text = _required_text(value, name, limit=128).lower()
     if not _HEX.fullmatch(text):
         raise ValueError(f"{name} must be a 64-character lowercase hexadecimal digest")
+    return text
+
+
+def _state_digest_text(value: Any, name: str) -> str:
+    text = _required_text(value, name, limit=128).lower()
+    if not _STATE_HEX.fullmatch(text):
+        raise ValueError(f"{name} must be a 32-character or 40-64 character lowercase hexadecimal digest")
     return text
 
 
@@ -477,7 +485,7 @@ class ConstructionFoundryDirector:
         initial_evidence: Mapping[str, Any],
     ) -> dict[str, Any]:
         identity = _digest_text(identity_digest, "identity_digest")
-        state = _digest_text(construction_state_digest, "construction_state_digest")
+        state = _state_digest_text(construction_state_digest, "construction_state_digest")
         evidence = {str(key): value is True for key, value in dict(initial_evidence).items()}
         session_id = "P4-" + digest(
             {
