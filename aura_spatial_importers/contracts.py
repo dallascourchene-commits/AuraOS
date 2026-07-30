@@ -456,7 +456,7 @@ class SpatialImportResult:
     indices: tuple[int, ...] = ()
     colors_rgba: tuple[tuple[int, int, int, int], ...] = ()
     gaussian_splats: GaussianSplatData | None = None
-    metadata: Mapping[str, Any] = ()  # type: ignore[assignment]
+    metadata: Mapping[str, Any] | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.receipt, SpatialImportReceipt):
@@ -480,6 +480,8 @@ class SpatialImportResult:
                 raise ValueError("gaussian splat count must align with positions")
         elif self.gaussian_splats is not None:
             raise ValueError("non-Gaussian imports cannot carry GaussianSplatData")
+        if self.metadata is None:
+            object.__setattr__(self, "metadata", {})
         if not isinstance(self.metadata, Mapping):
             raise ValueError("import metadata must be an object")
         metadata = dict(self.metadata)

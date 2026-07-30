@@ -241,6 +241,40 @@ def _work_package_rows(
     return rows, by_id
 
 
+def _needs_evidence_package(
+    candidate: ConstructionCoordinationCandidate,
+    fixture: ConstructionDemoProjectFixture,
+    work_packages: Mapping[str, Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Derive the work package whose inspections gate this candidate.
+
+    Each required claim's scope carries a work_package_id.  Find the claim
+    in the fixture state's active claim events, read its scope, and look up
+    the projected work package row.  Fall back to the candidate's own scope
+    if no claim-scope package is found.
+    """
+    claim_events = getattr(fixture.state, "active_claim_events", ())
+    if isinstance(claim_events, (tuple, list)):
+        for event in claim_events:
+            claim = getattr(event, "record", None)
+            if claim is None:
+                continue
+            claim_id = getattr(claim, "claim_id", "")
+            if claim_id in candidate.required_claim_ids:
+                wp_id = getattr(claim.scope, "work_package_id", "")
+                pkg = work_packages.get(wp_id)
+                if pkg is not None:
+                    return pkg
+    # Fallback: use the candidate's own scope work package
+    own_wp = work_packages.get(candidate.scope.work_package_id, {})
+    if own_wp:
+        return own_wp
+    raise ValueError(
+        "NEEDS_EVIDENCE candidate cannot derive its gating work package "
+        "from required claims or candidate scope"
+    )
+
+
 def _candidate_projection(
     *,
     role: str,
@@ -270,7 +304,12 @@ def _candidate_projection(
     if role == "HARD_BLOCKED":
         open_obligations.extend(blockers or ("hard blocker remains open",))
     elif role == "NEEDS_EVIDENCE":
-        package = work_packages.get("wp-electrical-isolation", {})
+        # Derive the work package from the candidate's required claims rather
+        # than hardcoding a package ID.  Each required claim's scope carries
+        # the work_package_id whose inspections gate this candidate.
+        package = _needs_evidence_package(
+            candidate, fixture, work_packages
+        )
         for inspection in package.get("inspections", []):
             if inspection.get("status") != "PASSED":
                 open_obligations.append(
@@ -509,6 +548,28 @@ class ConstructionFoundryDecisionCompiler:
         selected_issue = work_package_by_id.get(issue_id)
         if selected_issue is None:
             raise ValueError("selected issue is not admitted by the P3 decision lane")
+        # Bind the selected issue to the selected Pascal storey/node.  The
+        # issue's presentation_storey_id and pascal_node_id must match the
+        # independently selected Pascal binding, otherwise the compare receipt
+        # would claim unrelated targets are synchronized.  When the caller
+        # explicitly selects an issue, its Pascal binding must match.  When
+        # no issue is specified, derive the Pascal binding from the issue's
+        # work package instead of accepting an unrelated default.
+        if selected_issue_id is not None:
+            if (
+                selected_issue["presentation_storey_id"] != storey_id
+                or selected_issue["pascal_node_id"] != binding.node_id
+            ):
+                raise PascalPresentationError(
+                    "selected issue does not bind to the selected Pascal storey/node"
+                )
+        else:
+            # No explicit issue selection — override the default Pascal
+            # binding with the issue's canonical presentation targets.
+            storey_id = selected_issue["presentation_storey_id"]
+            binding = self.manifest.binding_for_node(
+                selected_issue["pascal_node_id"]
+            )
 
         candidates = [
             _candidate_projection(
@@ -814,6 +875,19 @@ class ConstructionFoundryDecisionCompiler:
             "candidate_digests": [
                 item["artifact"]["candidate_digest"] for item in candidates
             ],
+            "selected_candidate": {
+                "candidate_id": selected_candidate["artifact"]["candidate_id"],
+                "candidate_digest": selected_candidate["artifact"]["candidate_digest"],
+                "role": selected_candidate["role"],
+                "title": selected_candidate["artifact"]["title"],
+            },
+            "presentation_state": {
+                "active_view": view,
+                "selected_storey": storey_id,
+                "selected_node": binding.node_id,
+                "selected_issue_id": issue_id,
+                "timeline_day": day,
+            },
             "source_records_mutated": False,
             "construction_event_appended": False,
             "physical_work_authorized": False,
@@ -835,6 +909,13 @@ class ConstructionFoundryDecisionCompiler:
                 f"Coordinate receipt: {self.coordinate_receipt.receipt_digest}",
                 f"As-built scene: {as_built_scene.scene_digest}",
                 f"Recommended candidate: {decision.candidate_id}",
+                f"Selected candidate: {selected_candidate['artifact']['candidate_id']}",
+                f"Selected candidate role: {selected_candidate['role']}",
+                f"Active view: {view}",
+                f"Selected storey: {storey_id}",
+                f"Selected node: {binding.node_id}",
+                f"Selected issue: {issue_id}",
+                f"Timeline day: {day}",
                 "Status: READY_FOR_HUMAN_REVIEW (not approval)",
                 "Physical work authorized: false",
                 "Professional approval: false",

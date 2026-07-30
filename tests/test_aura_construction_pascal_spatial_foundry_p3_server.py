@@ -100,8 +100,10 @@ def test_p3_server_rejects_stale_identity_hidden_storey_and_authority_fields() -
         hidden = state.require_p3().manifest.first_selectable_on_storey(other_storey)
         exact = {
             "state_digest": initial["domain"]["state_digest"],
+            "runtime_packet_digest": initial["domain"]["runtime_packet_digest"],
             "pascal_artifact_digest": initial["artifacts"]["pascal_artifact_digest"],
             "coordinate_receipt_digest": initial["artifacts"]["coordinate_receipt_digest"],
+            "as_built_scene_digest": initial["artifacts"]["as_built_scene_digest"],
         }
 
         stale = dispatch_p3_foundry_request(

@@ -140,6 +140,7 @@ class P3FoundryShowcaseState(PascalFoundryShowcaseState):
         self.p3_load_error = ""
         self.p3_compiler: ConstructionFoundryDecisionCompiler | None = None
         self.p3_static_assets: dict[str, bytes] = {}
+        self.p3_renderer_assets: dict[str, bytes] = {}
         self.p3_as_built_html = b""
         if not self.pascal_available:
             self.p3_load_error = (
@@ -171,6 +172,7 @@ class P3FoundryShowcaseState(PascalFoundryShowcaseState):
                         f"P3 static asset is unavailable: {route}"
                     )
                 retained[route] = source.read_bytes()
+            renderer_retained: dict[str, bytes] = {}
             for required_route in _AS_BUILT_REQUIRED_ASSETS:
                 resolved = _safe_construction_demo_static_file(
                     self.repo_root,
@@ -185,9 +187,11 @@ class P3FoundryShowcaseState(PascalFoundryShowcaseState):
                     raise PascalPresentationError(
                         f"retained Aura Construction renderer asset is invalid: {required_route}"
                     )
+                renderer_retained[required_route] = source_path.read_bytes()
             as_built_html = _AS_BUILT_HTML
             self.p3_compiler = compiler
             self.p3_static_assets = retained
+            self.p3_renderer_assets = renderer_retained
             self.p3_as_built_html = as_built_html
         except (
             OSError,
@@ -202,6 +206,7 @@ class P3FoundryShowcaseState(PascalFoundryShowcaseState):
             self.p3_load_error = str(exc)
             self.p3_compiler = None
             self.p3_static_assets = {}
+            self.p3_renderer_assets = {}
             self.p3_as_built_html = b""
 
     @property
@@ -210,6 +215,7 @@ class P3FoundryShowcaseState(PascalFoundryShowcaseState):
             self.pascal_available
             and self.p3_compiler is not None
             and set(self.p3_static_assets) == set(_P3_STATIC_PATHS)
+            and set(self.p3_renderer_assets) == set(_AS_BUILT_REQUIRED_ASSETS)
             and bool(self.p3_as_built_html)
         )
 
@@ -223,6 +229,7 @@ class P3FoundryShowcaseState(PascalFoundryShowcaseState):
 
     def close(self) -> None:
         self.p3_static_assets.clear()
+        self.p3_renderer_assets.clear()
         self.p3_as_built_html = b""
         self.p3_compiler = None
         super().close()
@@ -251,13 +258,49 @@ def _validate_request_context(
         )
 
 
-def _assert_exact_identities(
-    state: P3FoundryShowcaseState,
+_IDENTITY_KEYS = (
+    "state_digest",
+    "runtime_packet_digest",
+    "pascal_artifact_digest",
+    "coordinate_receipt_digest",
+    "as_built_scene_digest",
+)
+_SELECTION_KEYS = (
+    "active_view",
+    "selected_storey",
+    "selected_node",
+    "selected_issue_id",
+    "selected_candidate_id",
+    "selected_candidate_digest",
+)
+_ALLOWED_QUERY_KEYS = frozenset(_IDENTITY_KEYS + _SELECTION_KEYS + ("timeline_day",))
+
+
+def _assert_exact_identities_from_projection(
+    projection: Mapping[str, Any],
     body: Mapping[str, Any],
+    *,
+    require_all: bool = False,
 ) -> None:
-    expected = state.require_p3().exact_identities()
+    """Validate identities from an already-compiled projection.
+
+    This avoids the double fixture/runtime/scene compilation that occurred
+    when _assert_exact_identities called exact_identities() and then
+    compile() rebuilt the same objects.
+    """
+    expected = {
+        "state_digest": projection["domain"]["state_digest"],
+        "runtime_packet_digest": projection["domain"]["runtime_packet_digest"],
+        "pascal_artifact_digest": projection["artifacts"]["pascal_artifact_digest"],
+        "coordinate_receipt_digest": projection["artifacts"]["coordinate_receipt_digest"],
+        "as_built_scene_digest": projection["artifacts"]["as_built_scene_digest"],
+    }
     for name, actual in expected.items():
         supplied = body.get(name)
+        if require_all and supplied is None:
+            raise PascalPresentationError(
+                f"{name} is required for stateful P3 requests but was omitted"
+            )
         if supplied is not None and supplied != actual:
             raise PascalPresentationError(
                 f"{name} is stale or belongs to another P3 decision lane"
@@ -267,28 +310,18 @@ def _assert_exact_identities(
 def _compile_from_request(
     state: P3FoundryShowcaseState,
     body: Mapping[str, Any],
+    *,
+    require_identities: bool = False,
 ) -> dict[str, Any]:
-    allowed = {
-        "active_view",
-        "selected_storey",
-        "selected_node",
-        "selected_issue_id",
-        "selected_candidate_id",
-        "selected_candidate_digest",
-        "timeline_day",
-        "state_digest",
-        "runtime_packet_digest",
-        "pascal_artifact_digest",
-        "coordinate_receipt_digest",
-        "as_built_scene_digest",
-    }
+    allowed = _ALLOWED_QUERY_KEYS
     unknown = sorted(set(body) - allowed)
     if unknown:
         raise PascalPresentationError(
             f"P3 projection request contains unknown fields: {unknown}"
         )
-    _assert_exact_identities(state, body)
-    return state.require_p3().compile(
+    # Compile once, then validate identities from the compiled projection
+    # instead of calling exact_identities() which rebuilds the same objects.
+    projection = state.require_p3().compile(
         active_view=body.get("active_view", "DESIGN"),
         selected_storey=body.get("selected_storey"),
         selected_node=body.get("selected_node"),
@@ -297,36 +330,36 @@ def _compile_from_request(
         selected_candidate_digest=body.get("selected_candidate_digest"),
         timeline_day=body.get("timeline_day", 12.0),
     )
+    _assert_exact_identities_from_projection(
+        projection, body, require_all=require_identities
+    )
+    return projection
 
 
 def _query_projection_body(raw_path: str) -> dict[str, Any]:
-    query = parse_qs(urlparse(raw_path).query, keep_blank_values=False)
+    query = parse_qs(urlparse(raw_path).query, keep_blank_values=True)
     body: dict[str, Any] = {}
-    for key in (
-        "active_view",
-        "selected_storey",
-        "selected_node",
-        "selected_issue_id",
-        "selected_candidate_id",
-        "selected_candidate_digest",
-        "state_digest",
-        "runtime_packet_digest",
-        "pascal_artifact_digest",
-        "coordinate_receipt_digest",
-        "as_built_scene_digest",
-    ):
+    for key in _ALLOWED_QUERY_KEYS:
         if key in query:
-            if len(query[key]) != 1:
+            values = query[key]
+            if len(values) != 1:
                 raise PascalPresentationError(
                     f"P3 projection query field must occur once: {key}"
                 )
-            body[key] = query[key][0]
-    if "timeline_day" in query:
-        if len(query["timeline_day"]) != 1:
-            raise PascalPresentationError(
-                "P3 projection query field must occur once: timeline_day"
-            )
-        body["timeline_day"] = float(query["timeline_day"][0])
+            value = values[0]
+            if not value or not value.strip():
+                raise PascalPresentationError(
+                    f"P3 projection query field must not be blank: {key}"
+                )
+            if key == "timeline_day":
+                body[key] = float(value)
+            else:
+                body[key] = value
+    unknown = sorted(set(query) - _ALLOWED_QUERY_KEYS)
+    if unknown:
+        raise PascalPresentationError(
+            f"P3 projection query contains unknown fields: {unknown}"
+        )
     return body
 
 
@@ -393,7 +426,7 @@ def dispatch_p3_foundry_request(
                 {"ok": True, "projection": public_projection(projection)},
             )
         if method == "POST" and route == "/api/construction/decision-lane/project":
-            projection = _compile_from_request(state, body)
+            projection = _compile_from_request(state, body, require_identities=True)
             return _json(
                 200,
                 {"ok": True, "projection": public_projection(projection)},
@@ -405,6 +438,7 @@ def dispatch_p3_foundry_request(
             projection = _compile_from_request(
                 state,
                 _query_projection_body(raw_path),
+                require_identities=True,
             )
             if route.endswith(".json"):
                 return (
@@ -452,6 +486,19 @@ def _static_response(
     if route.startswith("/aura_spatial_web/") or route.startswith("/demo_assets/"):
         if state is None or not state.p3_available:
             return _error("Aura as-built renderer asset is unavailable", 404)
+        retained_bytes = state.p3_renderer_assets.get(route)
+        if retained_bytes is not None:
+            suffix = Path(route).suffix
+            media_type = (
+                "application/javascript; charset=utf-8"
+                if suffix == ".js"
+                else "text/css; charset=utf-8"
+                if suffix == ".css"
+                else mimetypes.guess_type(route)[0] or "application/octet-stream"
+            )
+            if media_type.startswith("text/") or suffix in {".json", ".svg"}:
+                media_type += "; charset=utf-8"
+            return 200, media_type, retained_bytes
         safe_file = _safe_construction_demo_static_file(state.repo_root, route)
         if safe_file is None:
             return _error("Aura as-built renderer asset is not admitted", 404)

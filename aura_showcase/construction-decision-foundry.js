@@ -31,9 +31,11 @@
     dependencies: "dependencies",
     crews: "trades",
     budget: "budgets",
-    schedule: "status",
-    material_staging: "floorPlans",
-    waste_and_bin_zones: "syntheticRules",
+    // schedule, material_staging, and waste_and_bin_zones are projected by
+    // the compiler and rendered in the inspector/evidence panels, but the
+    // as-built renderer has no distinct layer for them.  Mapping them to
+    // shared layers would create aliasing where toggling one affects
+    // another.  They are omitted from the renderer overlay set.
   });
 
   let projection = null;
