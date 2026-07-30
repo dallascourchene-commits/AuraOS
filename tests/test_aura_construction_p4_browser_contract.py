@@ -13,3 +13,5 @@ def test_director_browser_waits_for_exact_p3_presentation_receipt() -> None:
     assert 'target?.getAttribute("aria-pressed") === "true"' in source
     assert "stage?.dataset.presentationMode === expectedMode" in source
     assert "requestQueue = requestQueue" in source
+    assert "chapter.consequential !== true" in source
+    assert "const result = await control(\"NEXT\")" in source
