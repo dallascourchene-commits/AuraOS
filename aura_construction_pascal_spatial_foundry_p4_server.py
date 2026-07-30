@@ -1113,14 +1113,20 @@ def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition:
                     "arena_id": "construction",
                     "objective": "Orphaned-capture cleanup after failed Director commit (uncommitted transition)",
                 })
-                # Record the orphan-cleanup receipt in the session context
+                # Persist the orphan-cleanup receipt in the session context
                 # so the archive artifact is traceable to the failed transition.
-                _orphan_receipt = {
+                orphan_receipt = {
                     "orphaned_capture_id": _pending_capture_id,
                     "orphan_cleanup_result": cleanup_result,
                     "orphan_status": "UNCOMMITTED_TRANSITION_CLEANUP",
                     "director_commit_failed": True,
+                    "original_error": str(exc),
                 }
+                try:
+                    target = director.require_session(session_id)
+                    target.context["orphan_cleanup_receipt"] = orphan_receipt
+                except Exception:
+                    pass  # Session may already be gone; the receipt is still in the error chain
             except Exception as cleanup_exc:
                 # Cleanup evidence must not be hidden.  Attach the cleanup
                 # failure to the re-raised error so it remains observable.
@@ -1192,14 +1198,24 @@ def dispatch_p4_foundry_request(
                     )
                 return _json(200, {"ok": True, "session": target_session.snapshot(director.manifest), "receipts": director.receipts(session_id)})
             if method == "POST" and len(parts) == 2 and parts[1] == "ack-p3-sync":
-                _projection_and_identity(state, body, require_all=True)
+                _resolved, resolved_identity = _projection_and_identity(state, body, require_all=True)
+                _target = director.require_session(session_id)
+                if resolved_identity.identity_digest != _target.identity_digest:
+                    raise PascalPresentationError(
+                        "resolved identity does not match the session's bound identity"
+                    )
                 return _json(200, director.acknowledge_p3_sync(session_id))
             if method == "POST" and len(parts) == 2 and parts[1] == "control":
                 allowed = {"control", "chapter_id", "identity_handle", *_IDENTITY_KEYS}
                 unknown = sorted(set(body) - allowed)
                 if unknown:
                     raise PascalPresentationError(f"P4 control request contains unknown fields: {unknown}")
-                _projection_and_identity(state, body, require_all=True)
+                _resolved, resolved_identity = _projection_and_identity(state, body, require_all=True)
+                _target = director.require_session(session_id)
+                if resolved_identity.identity_digest != _target.identity_digest:
+                    raise PascalPresentationError(
+                        "resolved identity does not match the session's bound identity"
+                    )
                 control = DirectorControl(str(body.get("control") or "").upper())
                 if control is DirectorControl.RESTART:
                     prior = director.require_session(session_id)
@@ -1221,7 +1237,13 @@ def dispatch_p4_foundry_request(
                 transition = director.claim_next(session_id)
                 if transition.get("admitted") is not True:
                     return _json(409, {"ok": False, "error": "P4 transition is blocked", "transition": transition})
-                return _json(200, _execute_chapter(state, session_id, transition))
+                try:
+                    return _json(200, _execute_chapter(state, session_id, transition))
+                except Exception:
+                    # Release the claim if the effect itself threw before
+                    # commit_next could run, so the session is not stuck.
+                    director.release_claim(session_id)
+                    raise
         return _error("unknown P4 Construction Director route", 404)
     except (OSError, subprocess.SubprocessError, UnicodeDecodeError, json.JSONDecodeError, BilateralLiveRepairError, PascalPresentationError, TypeError, ValueError, KeyError, OverflowError) as exc:
         return _error(str(exc), 409)

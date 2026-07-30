@@ -264,13 +264,23 @@
         await applyDirective(chapter, result.receipt);
         // Acknowledge P3 sync to the server so progression is unblocked.
         if (result.session && result.session.p3_sync_pending) {
-          await fetch(`/api/construction/director/session/${encodeURIComponent(session.session_id)}/ack-p3-sync`, {
+          const ackResponse = await fetch(`/api/construction/director/session/${encodeURIComponent(session.session_id)}/ack-p3-sync`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "same-origin",
             cache: "no-store",
-            body: JSON.stringify(exactIdentityBody(projection)),
+            body: JSON.stringify({
+              ...exactIdentityBody(projection),
+              identity_handle: identityHandle,
+            }),
           });
+          const ackResult = await ackResponse.json().catch(() => ({}));
+          if (!ackResponse.ok || ackResult.ok !== true) {
+            throw new Error(`P3 sync acknowledgement failed: ${ackResult.error || ackResponse.status}`);
+          }
+          if (ackResult.session) {
+            session = ackResult.session;
+          }
         }
       } else {
         await applyDirective(selectedChapter());
