@@ -36,7 +36,7 @@ def initial_evidence():
         "pascal_artifact_bound": True,
         "coordinate_receipt_bound": True,
         "as_built_scene_bound": True,
-        "renderers_synchronized": True,
+        "compare_receipt_bound": True,
         "construction_candidates_bound": True,
         "domain_decision_bound": True,
         "identity_current": True,
@@ -46,7 +46,7 @@ def initial_evidence():
         "rollback_adapter_ready": True,
         "u7_bridge_ready": True,
         "construction_state_unchanged": True,
-        "resources_dissolved": True,
+        "capture_resources_dissolved": True,
     }
 
 
@@ -148,3 +148,44 @@ def test_complete_tour_requires_each_derived_evidence_gate_and_restart_after_dis
     restarted = director.control(session_id, control="RESTART")
     assert restarted["session"]["current_state"] == "FRAME"
     assert restarted["session"]["receipt_count"] == 0
+
+
+def test_next_after_previous_only_returns_to_retained_chapter():
+    director = ConstructionFoundryDirector(manifest())
+    started = director.start_session(
+        identity_digest=sha("identity-history"),
+        construction_state_digest=sha("state-history"),
+        initial_evidence=initial_evidence(),
+    )
+    session_id = started["session_id"]
+    for _ in range(2):
+        transition = director.project_next(session_id)
+        director.commit_next(
+            session_id,
+            transition_digest=transition["transition_digest"],
+            effect_receipt={"ok": True},
+        )
+    director.control(session_id, control="PREVIOUS")
+    before = director.require_session(session_id)
+    assert before.selected_index == 0
+    assert before.executed_index == 1
+    navigation = director.control(session_id, control="NEXT")
+    assert navigation["session"]["selected_index"] == 1
+    assert navigation["session"]["executed_index"] == 1
+    assert director.project_next(session_id)["chapter"]["order"] == 2
+
+
+def test_play_state_survives_next_until_pause_or_dissolution():
+    item = manifest()
+    director = ConstructionFoundryDirector(item)
+    session = director.start_session(
+        identity_digest=sha("identity-play"),
+        construction_state_digest=sha("state-play"),
+        initial_evidence=initial_evidence(),
+    )
+    session_id = session["session_id"]
+    director.control(session_id, control="PLAY")
+    director.control(session_id, control="NEXT")
+    assert director.require_session(session_id).playing is True
+    director.control(session_id, control="PAUSE")
+    assert director.require_session(session_id).playing is False
