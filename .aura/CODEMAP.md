@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1522
-- **total_bytes**: 58187301
-- **text_tokens_est**: 5091722
+- **total_bytes**: 58188780
+- **text_tokens_est**: 5092091
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 62, 'knowledge_artifact': 190, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 962, 'schema_or_lexicon': 214, 'support_file': 78}
 - **topology_nodes**: 11113
 - **topology_edges**: 26818
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 32937.68
+- **elapsed_ms**: 32642.39
 
 ## Coverage
 
@@ -31,9 +31,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Command Index
 
-- `!ALLOWED_KEYS` -> `aura_showcase/construction-decision-as-built-sync.js:112`
-- `!ALLOWED_OVERLAYS` -> `aura_showcase/construction-decision-as-built-sync.js:145`
-- `!Array` -> `aura_human_agent_arena/jarvis.js:383`, `aura_showcase/civic.js:55`, `aura_showcase/construction-decision-as-built-sync.js:141`, `aura_showcase/construction-spatial-foundry.js:64`
+- `!ALLOWED_KEYS` -> `aura_showcase/construction-decision-as-built-sync.js:124`
+- `!ALLOWED_OVERLAYS` -> `aura_showcase/construction-decision-as-built-sync.js:157`
+- `!Array` -> `aura_human_agent_arena/jarvis.js:383`, `aura_showcase/civic.js:55`, `aura_showcase/construction-decision-as-built-sync.js:153`, `aura_showcase/construction-spatial-foundry.js:64`
 - `!Aura_Memory` -> `.coderabbit.yaml:5`
 - `!Aura_Sandbox` -> `.gitignore:46`
 - `!Aura_Staging` -> `.github/workflows/aura-spatial-s5-s6-construction.yml:120`
@@ -47,11 +47,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!ENTITY` -> `scripts/aura_verify_construction_demo_assets.py:41`
 - `!GUARDED_ACTIONS` -> `aura_showcase/gate-dialogue.js:538`
 - `!HANDEDNESS` -> `aura_spatial_web/renderer_adapter.js:324`
-- `!HEX64` -> `aura_showcase/construction-decision-as-built-sync.js:117`
+- `!HEX64` -> `aura_showcase/construction-decision-as-built-sync.js:129`
 - `!ID` -> `aura_spatial_web/bootstrap.js:33`, `aura_spatial_web/interaction_adapter.js:22`, `aura_spatial_web/renderer_adapter.js:168`
 - `!INPUTS` -> `aura_spatial_web/interaction_adapter.js:61`
 - `!METRIC_NAME` -> `aura_spatial_web/telemetry.js:30`
-- `!Number` -> `aura_showcase/construction-decision-as-built-sync.js:135`, `aura_showcase/pascal-workbench/pascal-workbench.js:105`, `aura_spatial_web/construction_mesh_pass.js:15`, `aura_spatial_web/construction_overlay_pass.js:26`
+- `!Number` -> `aura_showcase/construction-decision-as-built-sync.js:147`, `aura_showcase/pascal-workbench/pascal-workbench.js:105`, `aura_spatial_web/construction_mesh_pass.js:15`, `aura_spatial_web/construction_overlay_pass.js:26`
 - `!Object` -> `aura_showcase/pascal-workbench/pascal-workbench.js:650`
 - `!REFERENCE_SPACES` -> `aura_spatial_web/webxr_session.js:32`
 - `!RENDERERS` -> `aura_spatial_web/renderer_adapter.js:474`, `aura_spatial_web/telemetry.js:22`
@@ -79,12 +79,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!ar_stop` -> `AURA_FINAL_REPORT.md:169`, `aura_node.py:6676`, `refactored-auraos-upgrades.md:2572`
 - `!archive` -> `aura_showcase/attempt-archive.js:94`
 - `!artifactId` -> `aura_showcase/attempt-archive.js:98`
-- `!asBuiltFrame` -> `aura_showcase/construction-decision-foundry.js:241`
-- `!asBuiltVisible` -> `aura_showcase/construction-decision-foundry.js:480`
+- `!asBuiltFrame` -> `aura_showcase/construction-decision-foundry.js:240`
+- `!asBuiltVisible` -> `aura_showcase/construction-decision-foundry.js:479`
 - `!assetIds` -> `aura_spatial_web/renderer_adapter.js:402`
 - `!attention` -> `aura_node.py:5759`
 - `!audit` -> `aura_node.py:6257`
-- `!available` -> `aura_showcase/construction-decision-foundry.js:272`
+- `!available` -> `aura_showcase/construction-decision-foundry.js:271`
 - `!back` -> `aura_showcase/human.js:624`
 - `!backtrack` -> `AURA_FINAL_REPORT.md:143`, `arxiv_forager.py:657`, `aura_node.py:6277`, `test_aura_fusion.py:58`
 - `!base` -> `aura_spatial_web/construction_scene_renderer.js:691`
@@ -117,7 +117,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!current` -> `aura_spatial_web/construction_scene_renderer.js:691`
 - `!db_repair` -> `aura_node.py:3064`
 - `!decision` -> `aura_showcase/gate-dialogue.js:274`
-- `!designVisible` -> `aura_showcase/construction-decision-foundry.js:479`
+- `!designVisible` -> `aura_showcase/construction-decision-foundry.js:478`
 - `!dialogue` -> `aura_showcase/gate-dialogue.js:49`
 - `!dimensionsVisible` -> `aura_showcase/pascal-construction-foundry.js:237`
 - `!disposed` -> `aura_showcase/pascal-workbench/pascal-workbench.js:772`
@@ -126,10 +126,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!dragging` -> `aura_coding_arena/main.js:217`, `aura_human_agent_arena/main.js:613`, `aura_showcase/intent.js:355`, `aura_showcase/topology.js:272`
 - `!el` -> `aura_human_agent_arena/main.js:855`
 - `!empirical_lab` -> `aura_node.py:6303`
-- `!entity` -> `aura_showcase/construction-decision-as-built-sync.js:131`, `aura_spatial_web/construction_demo_app.js:206`, `aura_spatial_web/construction_scene_renderer.js:744`
+- `!entity` -> `aura_showcase/construction-decision-as-built-sync.js:143`, `aura_spatial_web/construction_demo_app.js:206`, `aura_spatial_web/construction_scene_renderer.js:744`
 - `!entityId` -> `aura_spatial_web/construction_scene_renderer.js:760`
 - `!entityIds` -> `aura_spatial_web/renderer_adapter.js:434`
-- `!envelope` -> `aura_showcase/construction-decision-as-built-sync.js:258`, `aura_showcase/construction-decision-foundry.js:525`, `aura_showcase/pascal-construction-foundry.js:196`, `aura_showcase/pascal-workbench/pascal-workbench.js:659`
+- `!envelope` -> `aura_showcase/construction-decision-as-built-sync.js:270`, `aura_showcase/construction-decision-foundry.js:524`, `aura_showcase/pascal-construction-foundry.js:196`, `aura_showcase/pascal-workbench/pascal-workbench.js:659`
 - `!evolve_reasoning` -> `AURA_FINAL_REPORT.md:157`, `aura_node.py:7373`
 - `!example` -> `aura_showcase/app.js:315`
 - `!existingIds` -> `aura_human_agent_arena/main.js:92`
@@ -180,8 +180,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!keepSet` -> `aura_human_agent_arena/main.js:587`
 - `!known` -> `aura_spatial_web/gaussian_renderer.js:559`
 - `!lastPointer` -> `aura_coding_arena/main.js:217`, `aura_human_agent_arena/main.js:613`, `aura_showcase/intent.js:355`, `aura_showcase/topology.js:272`
-- `!latest` -> `aura_showcase/construction-decision-as-built-sync.js:159`
-- `!launch` -> `aura_showcase/construction-decision-foundry.js:124`
+- `!latest` -> `aura_showcase/construction-decision-as-built-sync.js:171`
+- `!launch` -> `aura_showcase/construction-decision-foundry.js:123`
 - `!lexc` -> `aura_showcase/intent.js:181`
 - `!liveState` -> `aura_human_agent_arena/main.js:138`
 - `!loaded` -> `aura_showcase/civic.js:210`
@@ -191,7 +191,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!marker` -> `aura_showcase/live-repair-foundry.js:144`
 - `!markov` -> `AURA_FINAL_REPORT.md:144`, `aura_node.py:7576`
 - `!mesh_status` -> `AURA_FINAL_REPORT.md:167`, `aura_capability_lane_registry.py:158`, `aura_node.py:5722`
-- `!message` -> `aura_showcase/construction-decision-foundry.js:551`
+- `!message` -> `aura_showcase/construction-decision-foundry.js:549`
 - `!meta_analyze` -> `aura_node.py:7424`
 - `!meta_reason` -> `AURA_FINAL_REPORT.md:155`, `aura_arch_reasoner.py:93`, `aura_node.py:7449`
 - `!metadata` -> `aura_spatial_web/gaussian_renderer.js:250`, `aura_spatial_web/interaction_adapter.js:72`
@@ -209,22 +209,22 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!optimize` -> `AURA_FINAL_REPORT.md:172`, `aura_node.py:6004`
 - `!originalShow` -> `aura_showcase/human.js:618`
 - `!overlay` -> `aura_spatial_web/construction_wireframe_pass.js:101`
-- `!overlaysInitialized` -> `aura_showcase/construction-decision-foundry.js:265`
-- `!packet` -> `aura_showcase/construction-decision-as-built-sync.js:126`, `aura_showcase/crucible.js:233`, `aura_showcase/gate-dialogue.js:152`, `aura_showcase/intent.js:254`
+- `!overlaysInitialized` -> `aura_showcase/construction-decision-foundry.js:264`
+- `!packet` -> `aura_showcase/construction-decision-as-built-sync.js:138`, `aura_showcase/crucible.js:233`, `aura_showcase/gate-dialogue.js:152`, `aura_showcase/intent.js:254`
 - `!pairs` -> `aura_human_agent_arena/jarvis.js:395`
 - `!panel` -> `aura_human_agent_arena/main.js:241`
-- `!pascalFrame` -> `aura_showcase/construction-decision-foundry.js:124`
+- `!pascalFrame` -> `aura_showcase/construction-decision-foundry.js:123`
 - `!path` -> `aura_showcase/construction-spatial-foundry.js:72`
 - `!payload` -> `aura_showcase/pascal-workbench/pascal-workbench.js:510`, `aura_spatial_web/construction_mesh_pass.js:71`, `aura_spatial_web/gaussian_renderer.js:220`
 - `!ping_mesh` -> `AURA_FINAL_REPORT.md:166`, `aura_capability_lane_registry.py:158`, `aura_node.py:5717`
-- `!pins` -> `aura_showcase/construction-decision-foundry.js:315`
+- `!pins` -> `aura_showcase/construction-decision-foundry.js:314`
 - `!pkt` -> `aura_human_agent_arena/main.js:298`
 - `!plan` -> `aura_affordance_directory.py:461`, `aura_node.py:5675`
 - `!present` -> `aura_spatial_web/construction_scene_renderer.js:202`
 - `!presentationRenderer` -> `aura_spatial_web/app.js:112`, `aura_spatial_web/construction_scene_renderer.js:264`, `aura_spatial_web/gaussian_renderer.js:432`
 - `!preview` -> `aura_human_agent_arena/jarvis.js:198`
 - `!program` -> `aura_spatial_web/webgl2_gaussian_pass.js:217`, `aura_spatial_web/webgl2_renderer.js:285`
-- `!projection` -> `aura_showcase/construction-decision-foundry.js:241`
+- `!projection` -> `aura_showcase/construction-decision-foundry.js:240`
 - `!proposal` -> `aura_human_agent_arena/jarvis.js:63`
 - `!push` -> `aura_node.py:5239`, `test_aura_functions.py:207`
 - `!qdkt` -> `aura_affordance_directory.py:356`
@@ -236,12 +236,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!receipt` -> `aura_spatial_web/app.js:112`, `aura_spatial_web/construction_scene_renderer.js:495`
 - `!rect` -> `aura_showcase/civic.js:174`, `aura_showcase/intent.js:271`
 - `!renderPlan` -> `aura_spatial_web/webxr_session.js:37`
-- `!renderer` -> `aura_showcase/construction-decision-as-built-sync.js:159`, `aura_spatial_web/app.js:112`
+- `!renderer` -> `aura_showcase/construction-decision-as-built-sync.js:171`, `aura_spatial_web/app.js:112`
 - `!rendererFactories` -> `aura_spatial_web/app.js:67`
 - `!repair_db` -> `aura_node.py:7051`
 - `!res` -> `aura_coding_arena/main.js:48`, `aura_human_agent_arena/main.js:75`
 - `!research` -> `AURA_FINAL_REPORT.md:142`, `aura_affordance_directory.py:597`, `aura_capability_lane_registry.py:120`, `aura_coding_arena_workflow.py:743`
-- `!response` -> `aura_human_agent_arena/construction.js:18`, `aura_showcase/construction-decision-as-built-sync.js:211`, `aura_showcase/construction-decision-foundry.js:106`, `aura_showcase/pascal-construction-foundry.js:55`
+- `!response` -> `aura_human_agent_arena/construction.js:18`, `aura_showcase/construction-decision-as-built-sync.js:223`, `aura_showcase/construction-decision-foundry.js:105`, `aura_showcase/pascal-construction-foundry.js:55`
 - `!result` -> `aura_human_agent_arena/emergent.js:131`, `aura_human_agent_arena/jarvis.js:334`, `aura_showcase/app.js:67`, `aura_showcase/attempt-archive.js:142`
 - `!review` -> `aura_node.py:6781`, `mistral_gate.py:93`
 - `!rollback` -> `aura_node.py:6766`
@@ -270,6 +270,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!snapshot` -> `aura_showcase/gate-dialogue.js:451`
 - `!something` -> `aura_node.py:5042`
 - `!source` -> `aura_coding_arena/main.js:143`, `aura_human_agent_arena/main.js:441`, `aura_showcase/intent.js:301`, `aura_showcase/topology.js:196`
+- `!splatAssets` -> `aura_showcase/construction-decision-as-built-sync.js:72`
 - `!srcPos` -> `index.html:122`
 - `!stage` -> `AURA_FINAL_REPORT.md:149`, `aura_capability_lane_registry.py:229`, `aura_live_architect.py:2249`, `aura_node.py:5548`
 - `!stageComplete` -> `aura_showcase/human.js:312`
@@ -305,7 +306,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!types` -> `aura_coding_arena/main.js:70`, `aura_human_agent_arena/main.js:128`, `aura_showcase/topology.js:119`
 - `!useDemo` -> `aura_coding_arena/main.js:285`, `aura_human_agent_arena/main.js:733`
 - `!validateMessageShape` -> `aura_showcase/pascal-workbench/pascal-workbench.js:245`
-- `!value` -> `aura_showcase/app.js:223`, `aura_showcase/construction-decision-as-built-sync.js:101`, `aura_spatial_web/construction_overlay_pass.js:71`, `aura_spatial_web/interaction_adapter.js:37`
+- `!value` -> `aura_showcase/app.js:223`, `aura_showcase/construction-decision-as-built-sync.js:113`, `aura_spatial_web/construction_overlay_pass.js:71`, `aura_spatial_web/interaction_adapter.js:37`
 - `!vao` -> `aura_spatial_web/webgl2_gaussian_pass.js:328`
 - `!view` -> `aura_showcase/app.js:270`, `aura_showcase/crucible.js:126`, `aura_showcase/human.js:341`
 - `!visible` -> `aura_showcase/construction-spatial-foundry.js:24`
