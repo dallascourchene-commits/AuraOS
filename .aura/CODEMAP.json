@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1785433116,
+  "generated_at_unix": 1785434089,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1228,6 +1228,7 @@
       "tests/fixtures/relationship_atlas/relational_index_fixture.json",
       "tests/fixtures/spatial/gltf/triangle.gltf",
       "tests/fixtures/spatial/ply/points_ascii.ply",
+      "tests/js/construction-foundry-director-contract.test.mjs",
       "tests/js/spatial-accessibility.test.mjs",
       "tests/js/spatial-app.test.mjs",
       "tests/js/spatial-construction-demo.test.mjs",
@@ -1341,7 +1342,6 @@
       "tests/test_aura_construction_human_agent.py",
       "tests/test_aura_construction_human_agent_server.py",
       "tests/test_aura_construction_learning.py",
-      "tests/test_aura_construction_p4_browser_contract.py",
       "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py",
       "tests/test_aura_construction_pascal_spatial_foundry_p4.py",
       "tests/test_aura_construction_pascal_spatial_foundry_server.py",
@@ -1556,22 +1556,22 @@
   },
   "summary": {
     "file_count": 1533,
-    "total_bytes": 58347668,
-    "text_tokens_est": 5131810,
+    "total_bytes": 58353221,
+    "text_tokens_est": 5132549,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 64,
       "knowledge_artifact": 191,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 967,
+      "python_module": 966,
       "schema_or_lexicon": 217,
-      "support_file": 78
+      "support_file": 79
     },
     "topology_nodes": 11205,
     "topology_edges": 27076,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 26212.85
+    "elapsed_ms": 32604.49
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -2831,6 +2831,7 @@
       "tests/fixtures/relationship_atlas/relational_index_fixture.json",
       "tests/fixtures/spatial/gltf/triangle.gltf",
       "tests/fixtures/spatial/ply/points_ascii.ply",
+      "tests/js/construction-foundry-director-contract.test.mjs",
       "tests/js/spatial-accessibility.test.mjs",
       "tests/js/spatial-app.test.mjs",
       "tests/js/spatial-construction-demo.test.mjs",
@@ -2936,7 +2937,6 @@
       "tests/test_aura_construction_human_agent.py",
       "tests/test_aura_construction_human_agent_server.py",
       "tests/test_aura_construction_learning.py",
-      "tests/test_aura_construction_p4_browser_contract.py",
       "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py",
       "tests/test_aura_construction_pascal_spatial_foundry_p4.py",
       "tests/test_aura_construction_pascal_spatial_foundry_server.py",
@@ -3352,6 +3352,7 @@
     ],
     "!Number": [
       "aura_showcase/construction-decision-as-built-sync.js:147",
+      "aura_showcase/construction-foundry-director.js:26",
       "aura_showcase/pascal-workbench/pascal-workbench.js:105",
       "aura_spatial_web/construction_mesh_pass.js:15",
       "aura_spatial_web/construction_overlay_pass.js:26",
@@ -3422,6 +3423,9 @@
     ],
     "!activeApp": [
       "aura_spatial_web/bootstrap.js:99"
+    ],
+    "!activeView": [
+      "aura_showcase/construction-foundry-director.js:9"
     ],
     "!adapter": [
       "aura_showcase/construction-spatial-foundry.js:42"
@@ -3541,7 +3545,7 @@
       "test_aura_functions.py:920"
     ],
     "!chapter": [
-      "aura_showcase/construction-foundry-director.js:112"
+      "aura_showcase/construction-foundry-director.js:161"
     ],
     "!children": [
       "aura_showcase/live-repair-foundry.js:196"
@@ -3855,7 +3859,7 @@
     "!manifest": [
       "AURA_FINAL_REPORT.md:138",
       "aura_node.py:7740",
-      "aura_showcase/construction-foundry-director.js:135",
+      "aura_showcase/construction-foundry-director.js:184",
       "aura_showcase/pascal-workbench/pascal-workbench.js:557",
       "aura_spatial_web/construction_mesh_pass.js:144",
       "aura_spatial_web/gaussian_renderer.js:484"
@@ -3997,7 +4001,7 @@
     ],
     "!projection": [
       "aura_showcase/construction-decision-foundry.js:242",
-      "aura_showcase/construction-foundry-director.js:26"
+      "aura_showcase/construction-foundry-director.js:98"
     ],
     "!proposal": [
       "aura_human_agent_arena/jarvis.js:63"
@@ -4106,7 +4110,7 @@
       "aura_human_agent_arena/construction.js:18",
       "aura_showcase/construction-decision-as-built-sync.js:223",
       "aura_showcase/construction-decision-foundry.js:107",
-      "aura_showcase/construction-foundry-director.js:43",
+      "aura_showcase/construction-foundry-director.js:115",
       "aura_showcase/pascal-construction-foundry.js:55",
       "aura_spatial_web/bootstrap.js:26",
       "aura_spatial_web/construction_demo_app.js:394"
@@ -4118,7 +4122,7 @@
       "aura_showcase/attempt-archive.js:142",
       "aura_showcase/civic.js:140",
       "aura_showcase/construction-decision-foundry.js:107",
-      "aura_showcase/construction-foundry-director.js:51",
+      "aura_showcase/construction-foundry-director.js:123",
       "aura_showcase/construction-spatial-foundry.js:37",
       "aura_showcase/crucible.js:161",
       "aura_showcase/gate-dialogue.js:357",
@@ -4136,7 +4140,7 @@
     ],
     "!root": [
       "aura_showcase/construction-decision-foundry.js:5",
-      "aura_showcase/construction-foundry-director.js:5",
+      "aura_showcase/construction-foundry-director.js:77",
       "aura_showcase/pascal-construction-foundry.js:5"
     ],
     "!route": [
@@ -4211,7 +4215,7 @@
       "aura_node.py:5822"
     ],
     "!session": [
-      "aura_showcase/construction-foundry-director.js:135",
+      "aura_showcase/construction-foundry-director.js:184",
       "aura_showcase/pascal-construction-foundry.js:121"
     ],
     "!sessionId": [
@@ -4316,7 +4320,7 @@
     "!target": [
       "aura_coding_arena/main.js:143",
       "aura_human_agent_arena/main.js:441",
-      "aura_showcase/construction-foundry-director.js:98",
+      "aura_showcase/construction-foundry-director.js:147",
       "aura_showcase/gate-dialogue.js:575",
       "aura_showcase/human.js:672",
       "aura_showcase/intent.js:301",
@@ -109253,16 +109257,6 @@
         "signature_hash": "3bad0825e678e7d7"
       }
     ],
-    "test_director_browser_waits_for_exact_p3_presentation_receipt": [
-      {
-        "file": "tests/test_aura_construction_p4_browser_contract.py",
-        "kind": "function",
-        "line": 6,
-        "end_line": 17,
-        "semantic_id": "tests/test_aura_construction_p4_browser_contract.py#function:test_director_browser_waits_for_exact_p3_presentation_receipt:51a175c41a9be095",
-        "signature_hash": "de01663cc89e1acb"
-      }
-    ],
     "test_dirty_checkout_fails_closed_with_external_paths": [
       {
         "file": "tests/test_aura_exact_head_transport.py",
@@ -200306,47 +200300,47 @@
     {
       "path": ".aura/refactor_objectives/construction_pascal_spatial_foundry_p4.v1.json",
       "role": "schema_or_lexicon",
-      "bytes": 4940,
-      "lines": 90,
-      "tokens_est": 1235,
+      "bytes": 5460,
+      "lines": 93,
+      "tokens_est": 1365,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "bbd155a472d7b3a4",
+      "digest8": "facc2d9401d8dc83",
       "vector": [
-        -0.187981,
-        -0.305002,
-        -0.085899,
-        0.028633,
-        0.133205,
-        0.051041,
-        -0.028633,
-        0.20043,
-        -0.130715,
-        -0.252716,
-        -0.095858,
-        -0.222838,
-        -0.270145,
-        0.217859,
-        -0.100837,
-        -0.018674,
-        -0.125736,
-        -0.280104,
-        0.185491,
-        0.001245,
-        -0.143164,
-        0.250226,
-        0.048551,
-        0.016184,
-        -0.118266,
-        -0.275124,
-        0.285084,
-        0.093368,
-        -0.285084,
-        0.018674,
-        0.230308,
-        0.051041
+        0.045336,
+        0.279756,
+        0.206776,
+        0.193507,
+        -0.063028,
+        -0.027644,
+        -0.047548,
+        -0.200142,
+        -0.021009,
+        -0.224469,
+        -0.169181,
+        -0.281968,
+        0.173604,
+        0.071874,
+        0.113893,
+        -0.273122,
+        0.184661,
+        0.13822,
+        0.136008,
+        -0.151489,
+        0.246584,
+        0.25543,
+        -0.246584,
+        0.032067,
+        0.067451,
+        -0.233315,
+        -0.113893,
+        -0.268699,
+        -0.087355,
+        0.166969,
+        0.116104,
+        0.186873
       ]
     },
     {
@@ -201364,47 +201358,47 @@
     {
       "path": ".aura/waboose_requests/construction_pascal_spatial_foundry_p4.v1.json",
       "role": "schema_or_lexicon",
-      "bytes": 4884,
-      "lines": 99,
-      "tokens_est": 1221,
+      "bytes": 5556,
+      "lines": 106,
+      "tokens_est": 1389,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "bf974ce56746b998",
+      "digest8": "0344db9219113720",
       "vector": [
-        -0.044874,
-        0.106416,
-        0.106416,
-        0.016668,
-        -0.116673,
-        -0.065388,
-        -0.216678,
-        0.214114,
-        -0.101287,
-        -0.178215,
-        0.252577,
-        -0.088466,
-        0.016668,
-        0.226935,
-        0.255142,
-        0.050003,
-        -0.262834,
-        -0.144879,
-        0.124366,
-        0.257706,
-        0.257706,
-        0.070517,
-        0.016668,
-        -0.021796,
-        -0.206421,
-        -0.196164,
-        -0.303862,
-        0.167958,
-        -0.12693,
-        0.029489,
-        0.255142,
-        0.321812
+        0.114238,
+        -0.163014,
+        0.160446,
+        0.275968,
+        -0.026955,
+        -0.250296,
+        -0.288804,
+        -0.127074,
+        0.180984,
+        -0.078298,
+        0.201521,
+        0.275968,
+        0.088566,
+        0.273401,
+        -0.093701,
+        -0.039791,
+        -0.132208,
+        0.008985,
+        0.011552,
+        -0.281102,
+        -0.193819,
+        -0.088566,
+        -0.327311,
+        0.111671,
+        0.163014,
+        0.157879,
+        -0.214356,
+        -0.145044,
+        0.173282,
+        -0.168148,
+        -0.085999,
+        -0.032089
       ]
     },
     {
@@ -208019,11 +208013,13 @@
     {
       "path": "aura_showcase/construction-foundry-director.js",
       "role": "interface_surface",
-      "bytes": 9529,
-      "lines": 262,
-      "tokens_est": 2382,
+      "bytes": 11226,
+      "lines": 312,
+      "tokens_est": 2806,
       "symbol_count": 0,
       "commands": [
+        "!Number",
+        "!activeView",
         "!chapter",
         "!manifest",
         "!projection",
@@ -208034,73 +208030,80 @@
         "!target"
       ],
       "command_lines": {
+        "!Number": [
+          26,
+          28
+        ],
+        "!activeView": [
+          9
+        ],
         "!chapter": [
-          112,
-          147
+          161,
+          196
         ],
         "!manifest": [
-          135,
-          152
+          184,
+          201
         ],
         "!projection": [
-          26
+          98
         ],
         "!response": [
-          43
+          115
         ],
         "!result": [
-          51,
-          57
+          123,
+          129
         ],
         "!root": [
-          5
+          77
         ],
         "!session": [
-          135,
-          152,
-          162,
-          180,
-          217
+          184,
+          201,
+          211,
+          229,
+          267
         ],
         "!target": [
-          98
+          147
         ]
       },
       "topology": {},
-      "digest8": "b5de434c321051ee",
+      "digest8": "47d90c15cb48d151",
       "vector": [
-        -0.130105,
-        0.120378,
-        0.127673,
-        0.096059,
-        0.11065,
-        -0.18847,
-        -0.183606,
-        0.181175,
-        0.052285,
-        -0.0839,
-        -0.113082,
-        0.166583,
-        -0.076604,
-        -0.178743,
-        -0.273586,
-        -0.144696,
-        0.139833,
-        0.186038,
-        0.261426,
-        -0.117946,
-        0.280881,
-        0.12281,
-        -0.125242,
-        -0.137401,
-        -0.00608,
-        0.22738,
-        0.144696,
-        -0.232244,
-        0.307632,
-        -0.232244,
-        0.120378,
-        -0.300336
+        -0.215209,
+        -0.196185,
+        0.051127,
+        0.281793,
+        -0.198563,
+        -0.174783,
+        -0.010701,
+        -0.241367,
+        0.029725,
+        0.065395,
+        0.167649,
+        -0.158137,
+        -0.179539,
+        0.243745,
+        -0.058261,
+        0.084419,
+        -0.258013,
+        -0.260391,
+        -0.177161,
+        -0.241367,
+        -0.024969,
+        -0.032103,
+        -0.082041,
+        0.186673,
+        0.160515,
+        0.184295,
+        0.160515,
+        -0.189051,
+        -0.288927,
+        0.253257,
+        -0.027347,
+        0.086797
       ]
     },
     {
@@ -214334,47 +214337,47 @@
     {
       "path": "docs/AURA_CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY_P4.md",
       "role": "knowledge_artifact",
-      "bytes": 5425,
-      "lines": 65,
-      "tokens_est": 1354,
+      "bytes": 6209,
+      "lines": 69,
+      "tokens_est": 1550,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "603d672c713e98a2",
+      "digest8": "8c33cd1cf2fa38aa",
       "vector": [
-        -0.065807,
-        0.262148,
-        0.268621,
-        -0.113274,
-        0.121904,
-        -0.268621,
-        -0.13485,
-        -0.0356,
-        -0.173687,
-        0.206051,
-        0.234099,
-        -0.130535,
-        0.096013,
-        -0.266463,
-        -0.231942,
-        0.100328,
-        -0.050704,
-        -0.240572,
-        -0.186632,
-        -0.171529,
-        -0.050704,
-        0.171529,
-        0.057176,
-        0.270779,
-        -0.257833,
-        0.070122,
-        0.167214,
-        0.102486,
-        -0.231942,
-        0.052861,
-        0.173687,
-        -0.130535
+        0.258333,
+        -0.242676,
+        0.19347,
+        -0.034668,
+        -0.137554,
+        -0.25386,
+        -0.24044,
+        0.081638,
+        -0.242676,
+        -0.195707,
+        0.20018,
+        0.112951,
+        0.130844,
+        -0.184524,
+        -0.101768,
+        -0.144264,
+        0.057035,
+        0.26057,
+        0.137554,
+        0.150974,
+        0.019012,
+        -0.22702,
+        -0.24715,
+        0.063745,
+        0.110714,
+        -0.269516,
+        0.041378,
+        0.182287,
+        0.045851,
+        -0.010065,
+        -0.27399,
+        -0.168867
       ]
     },
     {
@@ -226292,52 +226295,6 @@
       ]
     },
     {
-      "path": "tests/test_aura_construction_p4_browser_contract.py",
-      "role": "python_module",
-      "bytes": 714,
-      "lines": 18,
-      "tokens_est": 179,
-      "symbol_count": 1,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "2de8968f4fbc6e02",
-      "vector": [
-        0.147375,
-        0.22309,
-        0.114925,
-        0.133854,
-        -0.244723,
-        0.095996,
-        0.112221,
-        -0.244723,
-        0.174416,
-        -0.244723,
-        0.101405,
-        -0.171712,
-        -0.025689,
-        -0.201457,
-        -0.250132,
-        -0.047322,
-        0.304214,
-        -0.001352,
-        -0.155487,
-        0.066251,
-        0.263652,
-        0.012169,
-        -0.287989,
-        -0.128446,
-        0.031097,
-        0.155487,
-        -0.247427,
-        0.190641,
-        -0.236611,
-        -0.187937,
-        -0.063547,
-        -0.106813
-      ]
-    },
-    {
       "path": "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py",
       "role": "python_module",
       "bytes": 8319,
@@ -235329,6 +235286,52 @@
         0.202969,
         0.042803,
         0.051087
+      ]
+    },
+    {
+      "path": "tests/js/construction-foundry-director-contract.test.mjs",
+      "role": "support_file",
+      "bytes": 2594,
+      "lines": 0,
+      "tokens_est": 0,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2406761b28381b2e",
+      "vector": [
+        0.171836,
+        0.016796,
+        0.07106,
+        0.145996,
+        -0.14858,
+        0.047804,
+        -0.228684,
+        0.164084,
+        -0.078812,
+        0.040052,
+        0.089148,
+        -0.184756,
+        0.324293,
+        -0.288117,
+        0.251941,
+        0.23902,
+        -0.244188,
+        -0.10982,
+        -0.223516,
+        -0.009044,
+        0.034884,
+        0.13566,
+        -0.073644,
+        -0.076228,
+        -0.0969,
+        0.231268,
+        -0.197676,
+        -0.231268,
+        -0.003876,
+        0.17442,
+        0.272613,
+        -0.262277
       ]
     },
     {
