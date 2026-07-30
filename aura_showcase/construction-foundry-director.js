@@ -266,9 +266,21 @@
         if (result.session && result.session.p3_sync_pending) {
           const chapterId = result.receipt?.chapter_id || null;
           const activeView = chapter?.ui_directive?.active_view || null;
-          // Request P3 receipt issuance and P4 acknowledgement in one step.
-          // The browser sends the chapter/view/session bindings; P4 resolves
-          // the bilateral identity internally and calls P3 issue+validate.
+          // Step 1: Retain P3 presentation state so the P3 issue endpoint
+          // can validate against P3-owned retained state.
+          await fetch("/api/construction/decision-lane/retain-presentation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "same-origin",
+            cache: "no-store",
+            body: JSON.stringify({
+              ...exactIdentityBody(projection),
+              identity_handle: identityHandle,
+              active_view: activeView,
+            }),
+          });
+          // Step 2: Request P4 acknowledgement.  P4 resolves the bilateral
+          // identity internally and calls P3 issue+validate with it.
           const ackResponse = await fetch(`/api/construction/director/session/${encodeURIComponent(session.session_id)}/ack-p3-sync`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },

@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 from collections.abc import Mapping
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import hashlib
 import json
 import mimetypes
 from pathlib import Path
@@ -431,11 +432,30 @@ def dispatch_p3_foundry_request(
                 200,
                 {"ok": True, "projection": public_projection(projection)},
             )
+        if method == "POST" and route == "/api/construction/decision-lane/retain-presentation":
+            # P3-owned presentation retention.  Called by the browser after
+            # P3/Pascal presentation sync has confirmed the current view.
+            # Writes a retained presentation record that the issue endpoint
+            # validates against — the issue endpoint does NOT recompile from
+            # caller-supplied state.
+            _retain_body = {k: v for k, v in body.items() if k in (*_IDENTITY_KEYS, *_SELECTION_KEYS, "timeline_day")}
+            projection = _compile_from_request(state, _retain_body, require_identities=True)
+            active_view = str(body.get("active_view") or "")
+            if not active_view:
+                return _json(400, {"ok": False, "error": "active_view is required"})
+            compiled_view = projection.get("presentation", {}).get("active_view") or projection.get("active_view", "")
+            if compiled_view != active_view:
+                return _json(409, {"ok": False, "error": f"compiled view '{compiled_view}' does not match retained '{active_view}'"})
+            state._p3_retained_presentation = {
+                "active_view": active_view,
+                "projection_digest": hashlib.sha256(json.dumps(projection, sort_keys=True, default=str).encode()).hexdigest(),
+            }
+            return _json(200, {"ok": True, "retained_view": active_view})
         if method == "POST" and route == "/api/construction/decision-lane/issue-presentation-receipt":
-            # P3-owned presentation receipt issuance.  Called by the browser
-            # after P3/Pascal presentation sync has verified the retained
-            # view state.  Validates only the five P3 identities against a
-            # compiled projection; accepts receipt-binding fields separately.
+            # P3-owned presentation receipt issuance.  Called by P4 after
+            # the browser has retained the P3 presentation state via
+            # retain-presentation.  Validates against the P3-owned retained
+            # state — does NOT recompile from caller-supplied active_view.
             _receipt_body = {k: v for k, v in body.items() if k in (*_IDENTITY_KEYS, *_SELECTION_KEYS, "timeline_day")}
             projection = _compile_from_request(state, _receipt_body, require_identities=True)
             chapter_id = str(body.get("chapter_id") or "")
@@ -446,14 +466,17 @@ def dispatch_p3_foundry_request(
                 return _json(400, {"ok": False, "error": "chapter_id and active_view are required"})
             if not director_session_id or not director_receipt_digest:
                 return _json(400, {"ok": False, "error": "director_session_id and director_receipt_digest are required"})
-            # Verify the compiled projection's active_view matches the
-            # requested view — this proves P3 retained the presentation state.
-            compiled_view = projection.get("presentation", {}).get("active_view") or projection.get("active_view", "")
-            if compiled_view != active_view:
-                return _json(409, {"ok": False, "error": f"P3 retained view '{compiled_view}' does not match requested '{active_view}'"})
+            # Validate against P3-owned retained presentation state, not a
+            # freshly compiled projection from caller-supplied fields.
+            retained_presentation = getattr(state, "_p3_retained_presentation", None)
+            if retained_presentation is None:
+                return _json(409, {"ok": False, "error": "no retained P3 presentation state — call retain-presentation first"})
+            retained_view = retained_presentation.get("active_view")
+            if retained_view != active_view:
+                return _json(409, {"ok": False, "error": f"P3 retained view '{retained_view}' does not match requested '{active_view}'"})
             # Resolve the identity digest from the caller-supplied
-            # bilateral identity_digest (passed by the browser from the
-            # P4-issued identity handle), not from the P3 projection.
+            # bilateral identity_digest (passed by P4 from the resolved
+            # identity handle), not from the P3 projection.
             identity_digest = str(body.get("identity_digest") or "")
             if not identity_digest:
                 return _json(400, {"ok": False, "error": "identity_digest is required"})
