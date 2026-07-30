@@ -563,9 +563,25 @@ class ConstructionFoundryDecisionCompiler:
                 raise PascalPresentationError(
                     "selected issue does not bind to the selected Pascal storey/node"
                 )
+        elif selected_storey is not None or selected_node is not None:
+            # The caller supplied a Pascal target but no issue.  Derive the
+            # matching Construction issue from the work package that binds
+            # to that target, or fail closed if no unique package matches.
+            matching = [
+                wp for wp in work_packages
+                if wp["presentation_storey_id"] == storey_id
+                and wp["pascal_node_id"] == binding.node_id
+            ]
+            if len(matching) != 1:
+                raise PascalPresentationError(
+                    "supplied Pascal storey/node does not bind to exactly one "
+                    "Construction work package; provide selected_issue_id"
+                )
+            issue_id = matching[0]["work_package_id"]
+            selected_issue = matching[0]
         else:
-            # No explicit issue selection — override the default Pascal
-            # binding with the issue's canonical presentation targets.
+            # No explicit issue or Pascal selection — derive the Pascal
+            # binding from the default focus work package's canonical targets.
             storey_id = selected_issue["presentation_storey_id"]
             binding = self.manifest.binding_for_node(
                 selected_issue["pascal_node_id"]

@@ -123,6 +123,12 @@ _AS_BUILT_REQUIRED_ASSETS = (
     "/aura_spatial_web/construction_demo.css",
     "/aura_spatial_web/construction_scene_renderer.js",
     "/aura_spatial_web/construction_wireframe_pass.js",
+    "/aura_spatial_web/construction_mesh_pass.js",
+    "/aura_spatial_web/construction_overlay_pass.js",
+    "/aura_spatial_web/gaussian_renderer.js",
+    "/aura_spatial_web/renderer_adapter.js",
+    "/aura_spatial_web/webgl2_renderer.js",
+    "/aura_spatial_web/webgl2_gaussian_pass.js",
 )
 
 
@@ -489,15 +495,14 @@ def _static_response(
         retained_bytes = state.p3_renderer_assets.get(route)
         if retained_bytes is not None:
             suffix = Path(route).suffix
-            media_type = (
-                "application/javascript; charset=utf-8"
-                if suffix == ".js"
-                else "text/css; charset=utf-8"
-                if suffix == ".css"
-                else mimetypes.guess_type(route)[0] or "application/octet-stream"
-            )
-            if media_type.startswith("text/") or suffix in {".json", ".svg"}:
-                media_type += "; charset=utf-8"
+            if suffix == ".js":
+                media_type = "application/javascript; charset=utf-8"
+            elif suffix == ".css":
+                media_type = "text/css; charset=utf-8"
+            else:
+                media_type = mimetypes.guess_type(route)[0] or "application/octet-stream"
+                if media_type.startswith("text/") or suffix in {".json", ".svg"}:
+                    media_type += "; charset=utf-8"
             return 200, media_type, retained_bytes
         safe_file = _safe_construction_demo_static_file(state.repo_root, route)
         if safe_file is None:
@@ -519,12 +524,16 @@ def _static_response(
         and state is not None
         and state.p3_available
     ):
+        # Recompute the lowercase body after each insertion so subsequent
+        # anchors are found at their post-mutation offsets, not the stale
+        # pre-mutation positions.
         body_lower = body.lower()
         if b"construction-decision-foundry.css" not in body_lower:
             head_idx = body_lower.find(b"</head>")
             if head_idx == -1:
                 return _error("P2 markup lacks a </head> anchor for P3 injection", 500)
             body = body[:head_idx] + _P3_STYLE + body[head_idx:]
+            body_lower = body.lower()
         if b'id="construction-decision-foundry"' not in body_lower:
             section_idx = body_lower.find(b'<section class="foundry-authority"')
             if section_idx == -1:
@@ -532,6 +541,7 @@ def _static_response(
                     "P2 markup lacks a foundry-authority anchor for P3 injection", 500
                 )
             body = body[:section_idx] + _P3_MARKUP + b"\n  " + body[section_idx:]
+            body_lower = body.lower()
         if b"construction-decision-foundry.js" not in body_lower:
             body_idx = body_lower.find(b"</body>")
             if body_idx == -1:
