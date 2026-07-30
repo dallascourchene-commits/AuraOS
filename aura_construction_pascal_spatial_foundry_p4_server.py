@@ -1100,7 +1100,7 @@ def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition:
             evidence_updates=evidence,
             context_updates=updates,
         )
-    except Exception:
+    except Exception as exc:
         # Release the transition claim so the session is not permanently stuck.
         director.release_claim(session_id)
         if _pending_capture_id is not None:

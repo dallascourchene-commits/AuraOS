@@ -14,6 +14,7 @@ from enum import Enum
 import hashlib
 import json
 import re
+import secrets
 import threading
 from typing import Any
 
@@ -530,7 +531,7 @@ class ConstructionFoundryDirector:
         session = self.require_session(session_id)
         with self._lock:
             for key, value in evidence.items():
-                if not isinstance(key, str) or not key.strip() or type(value) is not bool:
+                if not isinstance(key, str) or not key.strip() or not isinstance(value, bool):
                     raise ValueError("evidence entries must be non-empty string keys and exact booleans")
                 session.evidence[key.strip()] = value
             return session.snapshot(self.manifest)
@@ -558,7 +559,6 @@ class ConstructionFoundryDirector:
                 )
             projection = self._project_next_locked(session)
             if projection.get("admitted") is True:
-                import secrets
                 claim_token = secrets.token_hex(16)
                 self._transition_claims[session.session_id] = (
                     projection["transition_digest"],
@@ -631,7 +631,7 @@ class ConstructionFoundryDirector:
             raise ValueError("canonical chapter effect did not return an exact successful receipt")
         if evidence_updates:
             for key, value in evidence_updates.items():
-                if not isinstance(key, str) or type(value) is not bool:
+                if not isinstance(key, str) or not isinstance(value, bool):
                     raise ValueError("evidence_updates must contain exact boolean evidence")
         if context_updates is not None and not isinstance(context_updates, Mapping):
             raise ValueError("context_updates must be an object")
