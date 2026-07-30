@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1533
-- **total_bytes**: 58363891
-- **text_tokens_est**: 5135215
+- **total_bytes**: 58367321
+- **text_tokens_est**: 5136073
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 191, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 966, 'schema_or_lexicon': 217, 'support_file': 79}
 - **topology_nodes**: 11209
 - **topology_edges**: 27090
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 31880.91
+- **elapsed_ms**: 20815.16
 
 ## Coverage
 
@@ -61,7 +61,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!String` -> `aura_showcase/attempt-archive.js:187`, `aura_showcase/gate-dialogue.js:315`, `aura_showcase/human.js:657`
 - `!TRUTH_CLASSES` -> `aura_spatial_web/renderer_adapter.js:333`
 - `!UP_AXES` -> `aura_spatial_web/renderer_adapter.js:324`
-- `!ackResponse` -> `aura_showcase/construction-foundry-director.js:278`
+- `!ackResponse` -> `aura_showcase/construction-foundry-director.js:282`
 - `!action` -> `aura_showcase/civic.js:77`
 - `!actionForEffect` -> `aura_showcase/civic.js:108`
 - `!actionId` -> `aura_human_agent_arena/wfst.js:45`
