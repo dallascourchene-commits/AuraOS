@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1522
-- **total_bytes**: 58186865
-- **text_tokens_est**: 5091613
+- **total_bytes**: 58187234
+- **text_tokens_est**: 5091706
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 62, 'knowledge_artifact': 190, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 962, 'schema_or_lexicon': 214, 'support_file': 78}
 - **topology_nodes**: 11113
 - **topology_edges**: 26818
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 32810.22
+- **elapsed_ms**: 32887.34
 
 ## Coverage
 
@@ -129,7 +129,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!entity` -> `aura_showcase/construction-decision-as-built-sync.js:131`, `aura_spatial_web/construction_demo_app.js:206`, `aura_spatial_web/construction_scene_renderer.js:744`
 - `!entityId` -> `aura_spatial_web/construction_scene_renderer.js:760`
 - `!entityIds` -> `aura_spatial_web/renderer_adapter.js:434`
-- `!envelope` -> `aura_showcase/construction-decision-as-built-sync.js:248`, `aura_showcase/construction-decision-foundry.js:525`, `aura_showcase/pascal-construction-foundry.js:196`, `aura_showcase/pascal-workbench/pascal-workbench.js:659`
+- `!envelope` -> `aura_showcase/construction-decision-as-built-sync.js:255`, `aura_showcase/construction-decision-foundry.js:525`, `aura_showcase/pascal-construction-foundry.js:196`, `aura_showcase/pascal-workbench/pascal-workbench.js:659`
 - `!evolve_reasoning` -> `AURA_FINAL_REPORT.md:157`, `aura_node.py:7373`
 - `!example` -> `aura_showcase/app.js:315`
 - `!existingIds` -> `aura_human_agent_arena/main.js:92`
