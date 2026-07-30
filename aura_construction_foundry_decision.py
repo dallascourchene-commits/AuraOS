@@ -403,9 +403,9 @@ class ConstructionFoundryDecisionCompiler:
     asset_pack_path: Path | None = None
 
     def __post_init__(self) -> None:
-        if type(self.manifest) is not PascalSceneArtifactManifest:
+        if not isinstance(self.manifest, PascalSceneArtifactManifest):
             raise ValueError("manifest must be an exact PascalSceneArtifactManifest")
-        if type(self.coordinate_receipt) is not AuraPascalCoordinateReceipt:
+        if not isinstance(self.coordinate_receipt, AuraPascalCoordinateReceipt):
             raise ValueError(
                 "coordinate_receipt must be an exact AuraPascalCoordinateReceipt"
             )

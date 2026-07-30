@@ -472,16 +472,24 @@ def _static_response(
         and state is not None
         and state.p3_available
     ):
-        if b"construction-decision-foundry.css" not in body:
-            body = body.replace(b"</head>", _P3_STYLE + b"</head>", 1)
-        if b'id="construction-decision-foundry"' not in body:
-            body = body.replace(
-                b'<section class="foundry-authority"',
-                _P3_MARKUP + b'\n  <section class="foundry-authority"',
-                1,
-            )
-        if b"construction-decision-foundry.js" not in body:
-            body = body.replace(b"</body>", _P3_SCRIPT + b"</body>", 1)
+        body_lower = body.lower()
+        if b"construction-decision-foundry.css" not in body_lower:
+            head_idx = body_lower.find(b"</head>")
+            if head_idx == -1:
+                return _error("P2 markup lacks a </head> anchor for P3 injection", 500)
+            body = body[:head_idx] + _P3_STYLE + body[head_idx:]
+        if b'id="construction-decision-foundry"' not in body_lower:
+            section_idx = body_lower.find(b'<section class="foundry-authority"')
+            if section_idx == -1:
+                return _error(
+                    "P2 markup lacks a foundry-authority anchor for P3 injection", 500
+                )
+            body = body[:section_idx] + _P3_MARKUP + b"\n  " + body[section_idx:]
+        if b"construction-decision-foundry.js" not in body_lower:
+            body_idx = body_lower.find(b"</body>")
+            if body_idx == -1:
+                return _error("P2 markup lacks a </body> anchor for P3 injection", 500)
+            body = body[:body_idx] + _P3_SCRIPT + body[body_idx:]
     return status, content_type, body
 
 
@@ -589,8 +597,8 @@ def make_handler(state: P3FoundryShowcaseState):
             )
             self._send(*response, route=route)
 
-        def log_message(self, message_format: str, *args: Any) -> None:
-            del message_format, args
+        def log_message(self, format: str, *args: Any) -> None:
+            del format, args
 
     return Handler
 

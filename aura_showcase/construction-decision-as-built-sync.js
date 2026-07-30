@@ -67,10 +67,22 @@ function meshPayloads(scene) {
     }));
 }
 
-function gaussianGeometry() {
+function gaussianGeometry(scene) {
+  const splatAssets = scene.assets.filter((asset) => asset.asset_type === "GAUSSIAN_SPLAT");
+  if (!splatAssets.length) return { positions: [], rotations_xyzw: [], scales_xyz: [], opacities: [], sh_coefficients: [], colors_rgba: [] };
+  const asset = splatAssets[0];
+  const [minB, maxB] = asset.bounds_min && asset.bounds_max
+    ? [asset.bounds_min, asset.bounds_max]
+    : [[-8, 0, -8], [8, 4, 8]];
+  const gridN = 5;
   const positions = [];
-  for (const x of [-8, -4, 0, 4, 8]) {
-    for (const z of [-8, -4, 0, 4, 8]) positions.push([x, 2, z]);
+  for (let ix = 0; ix < gridN; ix++) {
+    for (let iz = 0; iz < gridN; iz++) {
+      const x = minB[0] + ((maxB[0] - minB[0]) * ix) / (gridN - 1);
+      const y = (minB[1] + maxB[1]) / 2;
+      const z = minB[2] + ((maxB[2] - minB[2]) * iz) / (gridN - 1);
+      positions.push([x, y, z]);
+    }
   }
   return {
     positions,
@@ -83,7 +95,7 @@ function gaussianGeometry() {
 }
 
 function gaussianPayloads(scene) {
-  const geometry = gaussianGeometry();
+  const geometry = gaussianGeometry(scene);
   return scene.assets
     .filter((asset) => asset.asset_type === "GAUSSIAN_SPLAT")
     .map((asset) => ({
@@ -260,7 +272,22 @@ window.addEventListener("message", (event) => {
   void apply();
 });
 window.addEventListener("resize", () => {
-  if (renderer) void present();
+  if (!renderer) return;
+  present().catch((error) => {
+    statusNode.textContent = "Failed closed";
+    intentNode.textContent = String(error?.message || error);
+    post(RECEIPT_TYPE, {
+      version: VERSION,
+      ok: false,
+      error: String(error?.message || error),
+      client_reported: true,
+      renderer_authority: false,
+      construction_truth: false,
+      physical_work_authorized: false,
+    });
+    renderer?.dispose?.();
+    renderer = null;
+  });
 });
 window.addEventListener("beforeunload", () => renderer?.dispose?.());
 

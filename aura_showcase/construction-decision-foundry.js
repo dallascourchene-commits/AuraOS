@@ -40,7 +40,6 @@
   let requestQueue = Promise.resolve();
   let pascalQueue = Promise.resolve();
   let overlaysInitialized = false;
-  let asBuiltReady = false;
   let pascalFrame = null;
   let pascalSessionId = "";
   let pascalStorey = "";
@@ -526,7 +525,6 @@
 
     if (event.source === asBuiltFrame.contentWindow) {
       if (envelope.type === AS_BUILT_READY_TYPE) {
-        asBuiltReady = true;
         syncNode.textContent = "Aura as-built renderer ready; awaiting exact P3 projection.";
         synchronizeAsBuilt();
         return;
@@ -580,7 +578,6 @@
   });
 
   asBuiltFrame.addEventListener("load", () => {
-    asBuiltReady = true;
     syncNode.textContent = "Aura as-built renderer loaded; verifying exact packet.";
     synchronizeAsBuilt();
   });

@@ -456,7 +456,7 @@ class SpatialImportResult:
     indices: tuple[int, ...] = ()
     colors_rgba: tuple[tuple[int, int, int, int], ...] = ()
     gaussian_splats: GaussianSplatData | None = None
-    metadata: Mapping[str, Any] = MappingProxyType({})
+    metadata: Mapping[str, Any] = ()  # type: ignore[assignment]
 
     def __post_init__(self) -> None:
         if not isinstance(self.receipt, SpatialImportReceipt):
