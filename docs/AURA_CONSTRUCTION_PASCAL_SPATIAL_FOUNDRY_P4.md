@@ -47,9 +47,13 @@ P4 reuses:
 
 The deterministic repair fixture is a software presentation-interface fault. It is not a Construction coordination candidate and cannot approve design, safety, payment, access, equipment operation, professional release, or physical work.
 
+## Runtime V2 to B11 identity compatibility
+
+The canonical bilateral compiler and Semantic Ledger use their existing 32-character BLAKE2 stable identities, while the B11 live-repair envelope historically admits 40–64-character hexadecimal identities. P4 does not replace either owner. It validates the exact canonical Runtime V2 contract against the external confirmation packet, retains that original contract and proof digest, and derives namespaced SHA-256 compatibility handles only for the three affected canonical IDs. The projected B11 proof is written beside the canonical proof outside the checkout, carries every exact P4 required-asset trace, records that the verification owner did not change, and remains human-review-only.
+
 ## Runtime and storage
 
-The Runtime V2 confirmation and trace output are written to a sibling `.AuraOS-p4-runtime` directory. Canonical governed U7 records use the repository-confined, ignored `Aura_Memory/p4_foundry_runtime` area. The source checkout must remain Git-clean throughout the recording path.
+Each Runtime V2 confirmation and trace run uses a unique process-temporary directory outside the source checkout. The Director removes those external roots during terminal dissolution. Canonical governed U7 records continue to use Aura’s existing repository-confined, ignored `Aura_Memory/p4_foundry_runtime` owner paths. The tracked source checkout remains Git-clean throughout the recording path.
 
 ## Verification
 
@@ -57,4 +61,4 @@ Focused tests cover the manifest chain, evidence gates, blocked chapter skipping
 
 ## Authority boundary
 
-P4 is presentation and proof coordination only. It grants no Construction truth, professional authority, physical-work authority, patch authority, deployment authority, merge authority, or automatic learning promotion. The final state is `READY_FOR_HUMAN_REVIEW`, and merge remains a separate trusted-human action.
+P4 is presentation and proof coordination only. It grants no Construction truth, professional authority, physical-work authority, patch authority, deployment authority, merge authority, or automatic learning promotion. The final Director state is `DISSOLVED`; the retained U7 disposition remains `NOT_REVIEWED`, and any approval or merge remains a separate trusted-human action.
