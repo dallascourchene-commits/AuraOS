@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1531
-- **total_bytes**: 58281861
-- **text_tokens_est**: 5115357
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 191, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 965, 'schema_or_lexicon': 217, 'support_file': 78}
-- **topology_nodes**: 11159
-- **topology_edges**: 26930
+- **file_count**: 1532
+- **total_bytes**: 58344502
+- **text_tokens_est**: 5131018
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 191, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 966, 'schema_or_lexicon': 217, 'support_file': 78}
+- **topology_nodes**: 11204
+- **topology_edges**: 27074
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 31399.88
+- **elapsed_ms**: 33451.76
 
 ## Coverage
 
-- **included_file_count**: 1531
+- **included_file_count**: 1532
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=209, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
@@ -406,7 +406,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md`
 - `.aura/arena_routes/coding.v1.json`
-- ... 1308 more; query CODEMAP.json for exact file cards
+- ... 1309 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
@@ -419,15 +419,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `test_scientific_memory.py` (python_module): 111 symbols, degree 517, ~13607 tokens
 - `aura_spatial_contracts.py` (python_module): 74 symbols, degree 513, ~16200 tokens
 - `aura_live_architect.py` (python_module): 74 symbols, degree 506, ~31372 tokens
-- `aura_architect_loop.py` (python_module): 75 symbols, degree 503, ~23051 tokens
+- `aura_architect_loop.py` (python_module): 75 symbols, degree 505, ~23051 tokens
 - `aura_relational_authority.py` (python_module): 58 symbols, degree 481, ~19006 tokens
 - `aura_intent_refinement.py` (python_module): 63 symbols, degree 465, ~13815 tokens
 
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 11159
-- **edges**: 26930
+- **nodes**: 11204
+- **edges**: 27074
 - **top_files_by_degree**:
   - `aura_node.py` degree=891 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=757 nodes=69 neighbors=`aura_construction_spatial_foundry.py`, `aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`
@@ -438,7 +438,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
   - `test_scientific_memory.py` degree=517 nodes=120 neighbors=`arxiv_forager.py`, `aura_paper_memory.py`, `aura_scientific_memory.py`, `travel_price_sidecar.py`
   - `aura_spatial_contracts.py` degree=513 nodes=75 neighbors=`aura_construction_demo_director.py`, `aura_construction_demo_projection.py`, `aura_construction_foundry_decision.py`, `aura_event_contracts.py`
   - `aura_live_architect.py` degree=506 nodes=85 neighbors=`aura_architect_council_calling_benchmark.py`, `aura_architect_council_v2.py`, `aura_architect_council_v3.py`, `aura_architect_loop.py`
-  - `aura_architect_loop.py` degree=503 nodes=78 neighbors=`aura_arena_architect_connector.py`, `aura_arena_st3gg_codec.py`, `aura_codebase_navigator.py`, `aura_construction_architect_refactor.py`
+  - `aura_architect_loop.py` degree=505 nodes=78 neighbors=`aura_arena_architect_connector.py`, `aura_arena_st3gg_codec.py`, `aura_codebase_navigator.py`, `aura_construction_architect_refactor.py`
   - `aura_relational_authority.py` degree=481 nodes=59 neighbors=`aura_civic_planning.py`, `aura_construction_authority.py`, `aura_gate.py`, `aura_gate_audit.py`
   - `aura_intent_refinement.py` degree=465 nodes=64 neighbors=`aura_bilateral_intent_compiler.py`, `aura_bilateral_intent_ingestion.py`, `aura_event_contracts.py`
 
