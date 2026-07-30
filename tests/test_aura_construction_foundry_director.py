@@ -57,10 +57,11 @@ def _ack_p3_sync(director, session_id, identity_handle="test-handle"):
     if not session.p3_sync_pending:
         return
     last_receipt = session.receipts[-1]
-    chapter = last_receipt.get("chapter", {})
-    ui = dict(chapter.get("ui_directive") or {})
     chapter_id = last_receipt.get("chapter_id")
-    active_view = ui.get("active_view")
+    # Resolve the required view from the manifest chapter definition,
+    # not from the committed receipt (which has no "chapter" key).
+    manifest_chapter = director.manifest.chapter(chapter_id)
+    active_view = dict(manifest_chapter.ui_directive or {}).get("active_view")
     # Simulate a P3-issued receipt digest.
     digest_input = f"{chapter_id}|{active_view}|{session.identity_digest}"
     receipt_digest = _hl.sha256(digest_input.encode()).hexdigest()

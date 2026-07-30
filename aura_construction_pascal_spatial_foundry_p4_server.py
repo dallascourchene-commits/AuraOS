@@ -1239,9 +1239,11 @@ def dispatch_p4_foundry_request(
                 # target Director session — not just the digest.
                 _target_session = director.require_session(session_id)
                 _last_receipt = _target_session.receipts[-1] if _target_session.receipts else {}
-                _last_chapter = _last_receipt.get("chapter", {})
-                _last_ui = dict(_last_chapter.get("ui_directive") or {})
-                _required_view = _last_ui.get("active_view")
+                _last_chapter_id = _last_receipt.get("chapter_id", "")
+                # Resolve the required view from the manifest chapter definition,
+                # not from the committed receipt (which has no "chapter" key).
+                _required_chapter = director.manifest.chapter(_last_chapter_id)
+                _required_view = dict(_required_chapter.ui_directive or {}).get("active_view")
                 if _p3_retained.get("director_session_id") != session_id:
                     raise PascalPresentationError("P3 receipt director_session_id does not match target session")
                 if _p3_retained.get("chapter_id") != _last_receipt.get("chapter_id"):

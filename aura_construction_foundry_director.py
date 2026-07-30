@@ -622,8 +622,11 @@ class ConstructionFoundryDirector:
                     "last committed chapter"
                 )
             expected_view = presentation_receipt.get("active_view")
-            ui = dict(last_receipt.get("chapter", {}).get("ui_directive") or {})
-            required_view = ui.get("active_view")
+            # Resolve the required view from the manifest chapter definition,
+            # not from the committed receipt (which does not contain a
+            # "chapter" key — only chapter_id, chapter_digest, etc.).
+            required_chapter = self.manifest.chapter(last_receipt.get("chapter_id", ""))
+            required_view = dict(required_chapter.ui_directive or {}).get("active_view")
             if required_view and expected_view != required_view:
                 raise ValueError(
                     "P3 presentation receipt active_view does not match the "
