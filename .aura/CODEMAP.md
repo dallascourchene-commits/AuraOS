@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1533
-- **total_bytes**: 58372982
-- **text_tokens_est**: 5137489
+- **total_bytes**: 58375660
+- **text_tokens_est**: 5138156
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 191, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 966, 'schema_or_lexicon': 217, 'support_file': 79}
 - **topology_nodes**: 11210
 - **topology_edges**: 27093
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 31465.39
+- **elapsed_ms**: 32215.71
 
 ## Coverage
 
@@ -61,7 +61,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!String` -> `aura_showcase/attempt-archive.js:187`, `aura_showcase/gate-dialogue.js:315`, `aura_showcase/human.js:657`
 - `!TRUTH_CLASSES` -> `aura_spatial_web/renderer_adapter.js:333`
 - `!UP_AXES` -> `aura_spatial_web/renderer_adapter.js:324`
-- `!ackResponse` -> `aura_showcase/construction-foundry-director.js:299`
+- `!ackResponse` -> `aura_showcase/construction-foundry-director.js:301`
 - `!action` -> `aura_showcase/civic.js:77`
 - `!actionForEffect` -> `aura_showcase/civic.js:108`
 - `!actionId` -> `aura_human_agent_arena/wfst.js:45`
@@ -213,8 +213,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!originalShow` -> `aura_showcase/human.js:618`
 - `!overlay` -> `aura_spatial_web/construction_wireframe_pass.js:101`
 - `!overlaysInitialized` -> `aura_showcase/construction-decision-foundry.js:266`
-- `!p3ReceiptResponse` -> `aura_showcase/construction-foundry-director.js:284`
-- `!p3ReceiptResult` -> `aura_showcase/construction-foundry-director.js:284`
+- `!p3ReceiptResponse` -> `aura_showcase/construction-foundry-director.js:286`
+- `!p3ReceiptResult` -> `aura_showcase/construction-foundry-director.js:286`
 - `!packet` -> `aura_showcase/construction-decision-as-built-sync.js:138`, `aura_showcase/crucible.js:233`, `aura_showcase/gate-dialogue.js:152`, `aura_showcase/intent.js:254`
 - `!pairs` -> `aura_human_agent_arena/jarvis.js:395`
 - `!panel` -> `aura_human_agent_arena/main.js:241`
