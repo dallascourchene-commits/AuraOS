@@ -207,39 +207,46 @@ async function initialize() {
     credentials: "same-origin",
     cache: "no-store",
   });
-  packet = await response.json();
-  if (!response.ok || packet.ok !== true) {
+  const candidate = await response.json();
+  if (!response.ok || candidate.ok !== true) {
     throw new Error(`Aura as-built packet failed with ${response.status}`);
   }
-  if (!HEX64.test(packet.state_digest) || !HEX64.test(packet.scene?.scene_digest)) {
+  if (!HEX64.test(candidate.state_digest) || !HEX64.test(candidate.scene?.scene_digest)) {
     throw new Error("Aura as-built packet lacks exact current identities");
   }
+  packet = candidate;
   resizeCanvas();
   const drawMeshPass = createConstructionWireframePass({
     overlay: meshOverlay,
     getCamera: () => renderer?.presentationRenderer?.camera,
     getCanvas: () => canvas,
   });
-  renderer = createConstructionWebGL2SceneRenderer({
+  const localRenderer = createConstructionWebGL2SceneRenderer({
     canvas,
     drawMeshPass,
     drawOverlayPass: async () => () => {},
     maxVisibleSplats: 250_000,
   });
-  await renderer.initialize(packet.scene, packet.render_plan, {
-    meshPayloads: meshPayloads(packet.scene),
-    gaussianPayloads: gaussianPayloads(packet.scene),
-  });
-  renderer.setRepresentationMode("HYBRID");
-  await present();
-  post(READY_TYPE, {
-    version: VERSION,
-    state_digest: packet.state_digest,
-    as_built_scene_digest: packet.scene.scene_digest,
-    renderer_authority: false,
-    construction_truth: false,
-  });
-  void apply();
+  try {
+    await localRenderer.initialize(packet.scene, packet.render_plan, {
+      meshPayloads: meshPayloads(packet.scene),
+      gaussianPayloads: gaussianPayloads(packet.scene),
+    });
+    localRenderer.setRepresentationMode("HYBRID");
+    renderer = localRenderer;
+    await present();
+    post(READY_TYPE, {
+      version: VERSION,
+      state_digest: packet.state_digest,
+      as_built_scene_digest: packet.scene.scene_digest,
+      renderer_authority: false,
+      construction_truth: false,
+    });
+    void apply();
+  } catch (error) {
+    localRenderer.dispose?.();
+    throw error;
+  }
 }
 
 window.addEventListener("message", (event) => {

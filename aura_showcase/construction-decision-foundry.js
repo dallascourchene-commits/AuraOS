@@ -586,10 +586,11 @@
   });
 
   mountPascalSurface();
-  fetch("/api/construction/decision-lane", {
-    credentials: "same-origin",
-    cache: "no-store",
-  })
+  requestQueue = requestQueue
+    .then(() => fetch("/api/construction/decision-lane", {
+      credentials: "same-origin",
+      cache: "no-store",
+    }))
     .then(async (response) => {
       const result = await response.json().catch(() => ({}));
       if (!response.ok || result.ok !== true || !result.projection) {

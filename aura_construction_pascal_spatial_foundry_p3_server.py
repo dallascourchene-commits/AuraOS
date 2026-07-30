@@ -458,9 +458,12 @@ def _static_response(
         _safe_route, source = safe_file
         if not source.is_file() or source.is_symlink():
             return _error("Aura as-built renderer asset not found", 404)
-        media_type = mimetypes.guess_type(source.name)[0] or "application/octet-stream"
-        if media_type.startswith("text/") or source.suffix in {".js", ".json", ".svg"}:
-            media_type += "; charset=utf-8"
+        if source.suffix == ".js":
+            media_type = "application/javascript; charset=utf-8"
+        else:
+            media_type = mimetypes.guess_type(source.name)[0] or "application/octet-stream"
+            if media_type.startswith("text/") or source.suffix in {".json", ".svg"}:
+                media_type += "; charset=utf-8"
         return 200, media_type, source.read_bytes()
     status, content_type, body = p2_static_response(route, state)
     if (
