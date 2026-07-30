@@ -189,3 +189,13 @@ def test_play_state_survives_next_until_pause_or_dissolution():
     assert director.require_session(session_id).playing is True
     director.control(session_id, control="PAUSE")
     assert director.require_session(session_id).playing is False
+
+
+def test_director_accepts_canonical_32_character_construction_state_digest():
+    director = ConstructionFoundryDirector(manifest())
+    session = director.start_session(
+        identity_digest=sha("identity-state-32"),
+        construction_state_digest="a" * 32,
+        initial_evidence=initial_evidence(),
+    )
+    assert session["construction_state_digest"] == "a" * 32
