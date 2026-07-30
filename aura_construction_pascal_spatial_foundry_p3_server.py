@@ -504,19 +504,11 @@ def _static_response(
                 if media_type.startswith("text/") or suffix in {".json", ".svg"}:
                     media_type += "; charset=utf-8"
             return 200, media_type, retained_bytes
-        safe_file = _safe_construction_demo_static_file(state.repo_root, route)
-        if safe_file is None:
-            return _error("Aura as-built renderer asset is not admitted", 404)
-        _safe_route, source = safe_file
-        if not source.is_file() or source.is_symlink():
-            return _error("Aura as-built renderer asset not found", 404)
-        if source.suffix == ".js":
-            media_type = "application/javascript; charset=utf-8"
-        else:
-            media_type = mimetypes.guess_type(source.name)[0] or "application/octet-stream"
-            if media_type.startswith("text/") or source.suffix in {".json", ".svg"}:
-                media_type += "; charset=utf-8"
-        return 200, media_type, source.read_bytes()
+        # Reject unretained renderer-prefixed routes instead of falling back
+        # to the live filesystem.  Every reachable as-built asset must be
+        # retained at startup; serving mutable on-disk bytes after startup
+        # would break the startup-bound identity contract.
+        return _error("Aura as-built renderer asset is not retained", 404)
     status, content_type, body = p2_static_response(route, state)
     if (
         status == 200

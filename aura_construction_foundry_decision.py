@@ -587,42 +587,15 @@ class ConstructionFoundryDecisionCompiler:
                 selected_issue["pascal_node_id"]
             )
 
-        candidates = [
-            _candidate_projection(
-                role=role,
-                fixture=fixture,
-                runtime_packet=runtime_packet,
-                work_packages=work_package_by_id,
-            )
-            for role in (
-                "HARD_BLOCKED",
-                "NEEDS_EVIDENCE",
-                "READY_FOR_HUMAN_REVIEW",
-            )
-        ]
+        candidates = self._evaluate_candidates(
+            fixture, runtime_packet, work_package_by_id,
+        )
         recommended = next(
             item for item in candidates if item["recommended_for_human_review"]
         )
-        if selected_candidate_id is not None:
-            selected_rows = [
-                item
-                for item in candidates
-                if item["artifact"]["candidate_id"] == selected_candidate_id
-            ]
-            if len(selected_rows) != 1:
-                raise ValueError(
-                    "selected candidate is not admitted by the P3 decision lane"
-                )
-            selected_candidate = selected_rows[0]
-        else:
-            selected_candidate = recommended
-        if (
-            selected_candidate_digest is not None
-            and selected_candidate_digest
-            != selected_candidate["artifact"]["candidate_digest"]
-        ):
-            raise ValueError("selected candidate digest is stale or belongs to another candidate")
-
+        selected_candidate = self._resolve_selected_candidate(
+            candidates, recommended, selected_candidate_id, selected_candidate_digest,
+        )
         decision = DomainDecisionEnvelope(
             status="READY_FOR_HUMAN_REVIEW",
             candidate_id=recommended["artifact"]["candidate_id"],
@@ -635,6 +608,111 @@ class ConstructionFoundryDecisionCompiler:
             ),
             open_obligations=("authorized owner review remains external",),
         )
+        compare_receipt = self._build_compare_receipt(
+            storey_id, binding, issue_id, selected_issue, day, as_built_scene,
+        )
+        issue_interaction = compile_spatial_interaction(
+            as_built_scene,
+            action=SpatialInteractionAction.FOCUS,
+            target_entity_ids=(selected_issue["spatial_entity_id"],),
+            metadata={
+                "active_view": view,
+                "timeline_day": day,
+                "selected_issue_id": issue_id,
+                "presentation_storey_id": storey_id,
+                "pascal_node_id": binding.node_id,
+            },
+        )
+        candidate_interaction = self._build_candidate_interaction(
+            fixture, as_built_scene, selected_candidate,
+        )
+        as_built_packet = _as_built_packet(fixture, as_built_scene)
+
+        body = self._build_projection_body(
+            view, day, storey_id, binding, issue_id, selected_issue,
+            selected_candidate, fixture, runtime_packet_digest, fallback,
+            work_packages, candidates, decision, compare_receipt,
+            issue_interaction, candidate_interaction, as_built_scene,
+        )
+        projection_digest = stable_digest(body, digest_size=32)
+        export_json, export_pdf = self._build_exports(
+            projection_digest, fixture, runtime_packet_digest, as_built_scene,
+            decision, candidates, selected_candidate,
+            view, storey_id, binding, issue_id, day,
+        )
+        as_built_json = (canonical_json(as_built_packet) + "\n").encode("utf-8")
+        return {
+            **body,
+            "projection_digest": projection_digest,
+            "exports": {
+                "json_sha256": sha256_digest(export_json),
+                "pdf_sha256": sha256_digest(export_pdf),
+                "ifc_export_sha256": None,
+                "pascal_export_sha256": self.manifest.scene_json_sha256,
+                "canonical_project_record": False,
+                "approved_change_order": False,
+            },
+            "_export_json": export_json,
+            "_export_pdf": export_pdf,
+            "_as_built_packet_json": as_built_json,
+        }
+
+    def _evaluate_candidates(
+        self,
+        fixture: ConstructionDemoProjectFixture,
+        runtime_packet: Mapping[str, Any],
+        work_package_by_id: dict[str, dict[str, Any]],
+    ) -> list[dict[str, Any]]:
+        return [
+            _candidate_projection(
+                role=role,
+                fixture=fixture,
+                runtime_packet=runtime_packet,
+                work_packages=work_package_by_id,
+            )
+            for role in ("HARD_BLOCKED", "NEEDS_EVIDENCE", "READY_FOR_HUMAN_REVIEW")
+        ]
+
+    def _resolve_selected_candidate(
+        self,
+        candidates: list[dict[str, Any]],
+        recommended: dict[str, Any],
+        selected_candidate_id: str | None,
+        selected_candidate_digest: str | None,
+    ) -> dict[str, Any]:
+        _has_id = selected_candidate_id is not None and bool(str(selected_candidate_id).strip())
+        _has_digest = selected_candidate_digest is not None and bool(str(selected_candidate_digest).strip())
+        if _has_id != _has_digest:
+            raise ValueError(
+                "selected_candidate_id and selected_candidate_digest must be "
+                "supplied together; neither may be supplied in isolation"
+            )
+        if _has_id:
+            selected_rows = [
+                item for item in candidates
+                if item["artifact"]["candidate_id"] == selected_candidate_id
+            ]
+            if len(selected_rows) != 1:
+                raise ValueError("selected candidate is not admitted by the P3 decision lane")
+            selected_candidate = selected_rows[0]
+        else:
+            selected_candidate = recommended
+        if (
+            selected_candidate_digest is not None
+            and selected_candidate_digest != selected_candidate["artifact"]["candidate_digest"]
+        ):
+            raise ValueError("selected candidate digest is stale or belongs to another candidate")
+        return selected_candidate
+
+    def _build_compare_receipt(
+        self,
+        storey_id: str,
+        binding: PascalNodeBinding,
+        issue_id: str,
+        selected_issue: dict[str, Any],
+        day: float,
+        as_built_scene: SpatialSceneSnapshot,
+    ) -> dict[str, Any]:
         compare_receipt_body = {
             "version": CONSTRUCTION_COMPARE_RECEIPT_VERSION,
             "pascal_artifact_digest": self.manifest.artifact_digest,
@@ -655,23 +733,17 @@ class ConstructionFoundryDecisionCompiler:
             "survey_authority": False,
             "construction_truth": False,
         }
-        compare_receipt = {
+        return {
             **compare_receipt_body,
             "receipt_digest": stable_digest(compare_receipt_body, digest_size=32),
         }
 
-        issue_interaction = compile_spatial_interaction(
-            as_built_scene,
-            action=SpatialInteractionAction.FOCUS,
-            target_entity_ids=(selected_issue["spatial_entity_id"],),
-            metadata={
-                "active_view": view,
-                "timeline_day": day,
-                "selected_issue_id": issue_id,
-                "presentation_storey_id": storey_id,
-                "pascal_node_id": binding.node_id,
-            },
-        )
+    def _build_candidate_interaction(
+        self,
+        fixture: ConstructionDemoProjectFixture,
+        as_built_scene: SpatialSceneSnapshot,
+        selected_candidate: dict[str, Any],
+    ) -> Any:
         candidate_title = selected_candidate["artifact"]["title"]
         matching_alternatives = [
             item for item in fixture.alternatives if item.title == candidate_title
@@ -681,24 +753,39 @@ class ConstructionFoundryDecisionCompiler:
                 "selected Construction candidate lacks one exact presentation alternative"
             )
         candidate_entity_id = _scene_entity_id(
-            as_built_scene,
-            "alternative_ref",
-            matching_alternatives[0].alternative_id,
+            as_built_scene, "alternative_ref", matching_alternatives[0].alternative_id,
         )
-        candidate_interaction = compile_spatial_interaction(
+        return compile_spatial_interaction(
             as_built_scene,
             action=SpatialInteractionAction.SELECT,
             target_entity_ids=(candidate_entity_id,),
             metadata={
-                "selected_candidate_digest": selected_candidate["artifact"][
-                    "candidate_digest"
-                ],
+                "selected_candidate_digest": selected_candidate["artifact"]["candidate_digest"],
                 "review_only": True,
             },
         )
-        as_built_packet = _as_built_packet(fixture, as_built_scene)
 
-        body = {
+    def _build_projection_body(
+        self,
+        view: str,
+        day: float,
+        storey_id: str,
+        binding: PascalNodeBinding,
+        issue_id: str,
+        selected_issue: dict[str, Any],
+        selected_candidate: dict[str, Any],
+        fixture: ConstructionDemoProjectFixture,
+        runtime_packet_digest: str,
+        fallback: bool,
+        work_packages: list[dict[str, Any]],
+        candidates: list[dict[str, Any]],
+        decision: DomainDecisionEnvelope,
+        compare_receipt: dict[str, Any],
+        issue_interaction: Any,
+        candidate_interaction: Any,
+        as_built_scene: SpatialSceneSnapshot,
+    ) -> dict[str, Any]:
+        return {
             "version": CONSTRUCTION_FOUNDRY_DECISION_VERSION,
             "domain": {
                 "arena_id": "construction",
@@ -729,9 +816,7 @@ class ConstructionFoundryDecisionCompiler:
                 "selected_domain_storey_id": selected_issue["domain_storey_id"],
                 "as_built_frame_id": selected_issue["as_built_frame_id"],
                 "selected_candidate_id": selected_candidate["artifact"]["candidate_id"],
-                "selected_candidate_digest": selected_candidate["artifact"][
-                    "candidate_digest"
-                ],
+                "selected_candidate_digest": selected_candidate["artifact"]["candidate_digest"],
                 "timeline_day": day,
                 "camera_target": {
                     "pascal_entity_id": binding.aura_entity_id,
@@ -754,102 +839,7 @@ class ConstructionFoundryDecisionCompiler:
                 }
                 for item in self.manifest.node_bindings
             ],
-            "construction": {
-                "work_packages": work_packages,
-                "geofences": [
-                    {
-                        "geofence_id": f"presentation-zone:{item.zone_id}",
-                        "zone_id": item.zone_id,
-                        "storey_id": item.storey_id,
-                        "truth_class": "SYNTHETIC_DEMO_PRESENTATION",
-                        "survey_authority": False,
-                        "access_authority": False,
-                    }
-                    for item in fixture.work_packages
-                ],
-                "crew_projection": [
-                    {
-                        "trade_id": item.trade_id,
-                        "trade_name": item.name,
-                        "subcontractor_id": item.subcontractor_id,
-                        "person_level_data_included": False,
-                        "crew_count_claimed": False,
-                        "projection_only": True,
-                    }
-                    for item in fixture.trades
-                ],
-                "schedule_projection": [
-                    {
-                        "work_package_id": item["work_package_id"],
-                        "planned_start_day": item["planned_start_day"],
-                        "planned_finish_day": item["planned_finish_day"],
-                        "dependency_ids": item["dependency_ids"],
-                        "projection_only": True,
-                    }
-                    for item in work_packages
-                ],
-                "material_staging": [
-                    {
-                        "staging_id": f"staging:{item['work_package_id']}",
-                        "work_package_id": item["work_package_id"],
-                        "storey_id": item["domain_storey_id"],
-                        "zone_id": item["zone_id"],
-                        "truth_class": "SYNTHETIC_DEMO_PRESENTATION",
-                        "physical_work_authorized": False,
-                    }
-                    for item in work_packages
-                    if item["status"] in {"READY_FOR_REVIEW", "ACTIVE"}
-                ],
-                "waste_and_bin_zones": [
-                    {
-                        "zone_id": f"waste-bin:{storey_id}",
-                        "storey_id": storey_id,
-                        "truth_class": "SYNTHETIC_DEMO_PRESENTATION",
-                        "access_authority": False,
-                    }
-                    for storey_id in sorted(
-                        {item["domain_storey_id"] for item in work_packages}
-                    )
-                ],
-                "trades": [item.to_dict() for item in fixture.trades],
-                "inspections": [item.to_dict() for item in fixture.inspections],
-                "hazards": [item.to_dict() for item in fixture.hazards],
-                "rules": [item.to_dict() for item in fixture.rules],
-                "work_history": [item.to_dict() for item in fixture.work_history],
-                "evidence_pins": [
-                    {
-                        "work_package_id": item["work_package_id"],
-                        "construction_scope_ref": item["construction_scope_ref"],
-                        "spatial_entity_id": item["spatial_entity_id"],
-                        "domain_storey_id": item["domain_storey_id"],
-                        "as_built_frame_id": item["as_built_frame_id"],
-                        "presentation_storey_id": item["presentation_storey_id"],
-                        "pascal_node_id": item["pascal_node_id"],
-                        "pascal_aura_target_ref": item["pascal_aura_target_ref"],
-                        "evidence_refs": item["evidence_refs"],
-                        "inspection_ids": [
-                            row["inspection_id"] for row in item["inspections"]
-                        ],
-                        "hazard_ids": [row["hazard_id"] for row in item["hazards"]],
-                        "authority_owner": "AUTHORIZED_DOMAIN_REVIEW",
-                        "visual_truth": False,
-                    }
-                    for item in work_packages
-                    if item["evidence_refs"] or item["inspections"] or item["hazards"]
-                ],
-                "overlays": {
-                    "work_packages": True,
-                    "hazards": True,
-                    "geofences": True,
-                    "inspections": True,
-                    "dependencies": True,
-                    "crews": True,
-                    "budget": True,
-                    "schedule": True,
-                    "material_staging": True,
-                    "waste_and_bin_zones": True,
-                },
-            },
+            "construction": self._build_construction_projection(fixture, work_packages),
             "spatial_interactions": {
                 "selected_issue_focus": issue_interaction.to_dict(),
                 "selected_candidate_review": candidate_interaction.to_dict(),
@@ -878,7 +868,122 @@ class ConstructionFoundryDecisionCompiler:
                 "truth_owner_changed": False,
             },
         }
-        projection_digest = stable_digest(body, digest_size=32)
+
+    def _build_construction_projection(
+        self,
+        fixture: ConstructionDemoProjectFixture,
+        work_packages: list[dict[str, Any]],
+    ) -> dict[str, Any]:
+        return {
+            "work_packages": work_packages,
+            "geofences": [
+                {
+                    "geofence_id": f"presentation-zone:{item.zone_id}",
+                    "zone_id": item.zone_id,
+                    "storey_id": item.storey_id,
+                    "truth_class": "SYNTHETIC_DEMO_PRESENTATION",
+                    "survey_authority": False,
+                    "access_authority": False,
+                }
+                for item in fixture.work_packages
+            ],
+            "crew_projection": [
+                {
+                    "trade_id": item.trade_id,
+                    "trade_name": item.name,
+                    "subcontractor_id": item.subcontractor_id,
+                    "person_level_data_included": False,
+                    "crew_count_claimed": False,
+                    "projection_only": True,
+                }
+                for item in fixture.trades
+            ],
+            "schedule_projection": [
+                {
+                    "work_package_id": item["work_package_id"],
+                    "planned_start_day": item["planned_start_day"],
+                    "planned_finish_day": item["planned_finish_day"],
+                    "dependency_ids": item["dependency_ids"],
+                    "projection_only": True,
+                }
+                for item in work_packages
+            ],
+            "material_staging": [
+                {
+                    "staging_id": f"staging:{item['work_package_id']}",
+                    "work_package_id": item["work_package_id"],
+                    "storey_id": item["domain_storey_id"],
+                    "zone_id": item["zone_id"],
+                    "truth_class": "SYNTHETIC_DEMO_PRESENTATION",
+                    "physical_work_authorized": False,
+                }
+                for item in work_packages
+                if item["status"] in {"READY_FOR_REVIEW", "ACTIVE"}
+            ],
+            "waste_and_bin_zones": [
+                {
+                    "zone_id": f"waste-bin:{storey_id}",
+                    "storey_id": storey_id,
+                    "truth_class": "SYNTHETIC_DEMO_PRESENTATION",
+                    "access_authority": False,
+                }
+                for storey_id in sorted(
+                    {item["domain_storey_id"] for item in work_packages}
+                )
+            ],
+            "trades": [item.to_dict() for item in fixture.trades],
+            "inspections": [item.to_dict() for item in fixture.inspections],
+            "hazards": [item.to_dict() for item in fixture.hazards],
+            "rules": [item.to_dict() for item in fixture.rules],
+            "work_history": [item.to_dict() for item in fixture.work_history],
+            "evidence_pins": [
+                {
+                    "work_package_id": item["work_package_id"],
+                    "construction_scope_ref": item["construction_scope_ref"],
+                    "spatial_entity_id": item["spatial_entity_id"],
+                    "domain_storey_id": item["domain_storey_id"],
+                    "as_built_frame_id": item["as_built_frame_id"],
+                    "presentation_storey_id": item["presentation_storey_id"],
+                    "pascal_node_id": item["pascal_node_id"],
+                    "pascal_aura_target_ref": item["pascal_aura_target_ref"],
+                    "evidence_refs": item["evidence_refs"],
+                    "inspection_ids": [row["inspection_id"] for row in item["inspections"]],
+                    "hazard_ids": [row["hazard_id"] for row in item["hazards"]],
+                    "authority_owner": "AUTHORIZED_DOMAIN_REVIEW",
+                    "visual_truth": False,
+                }
+                for item in work_packages
+                if item["evidence_refs"] or item["inspections"] or item["hazards"]
+            ],
+            "overlays": {
+                "work_packages": True,
+                "hazards": True,
+                "geofences": True,
+                "inspections": True,
+                "dependencies": True,
+                "crews": True,
+                "budget": True,
+                "schedule": True,
+                "material_staging": True,
+                "waste_and_bin_zones": True,
+            },
+        }
+
+    def _build_exports(
+        self,
+        projection_digest: str,
+        fixture: ConstructionDemoProjectFixture,
+        runtime_packet_digest: str,
+        as_built_scene: SpatialSceneSnapshot,
+        decision: DomainDecisionEnvelope,
+        candidates: list[dict[str, Any]],
+        selected_candidate: dict[str, Any],
+        view: str,
+        storey_id: str,
+        binding: PascalNodeBinding,
+        issue_id: str,
+        day: float,
+    ) -> tuple[bytes, bytes]:
         export_body = {
             "version": CONSTRUCTION_DECISION_EXPORT_VERSION,
             "projection_digest": projection_digest,
@@ -940,22 +1045,7 @@ class ConstructionFoundryDecisionCompiler:
                 "Automatic execution: false",
             ]
         )
-        as_built_json = (canonical_json(as_built_packet) + "\n").encode("utf-8")
-        return {
-            **body,
-            "projection_digest": projection_digest,
-            "exports": {
-                "json_sha256": sha256_digest(export_json),
-                "pdf_sha256": sha256_digest(export_pdf),
-                "ifc_export_sha256": None,
-                "pascal_export_sha256": self.manifest.scene_json_sha256,
-                "canonical_project_record": False,
-                "approved_change_order": False,
-            },
-            "_export_json": export_json,
-            "_export_pdf": export_pdf,
-            "_as_built_packet_json": as_built_json,
-        }
+        return export_json, export_pdf
 
 
 def public_projection(value: Mapping[str, Any]) -> dict[str, Any]:

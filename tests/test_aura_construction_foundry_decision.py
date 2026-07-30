@@ -132,8 +132,13 @@ def test_p3_projection_rejects_unadmitted_view_storey_candidate_and_time() -> No
         compiler.compile(active_view="APPROVE")
     with pytest.raises(PascalPresentationError, match="not admitted"):
         compiler.compile(selected_storey="L999")
-    with pytest.raises(ValueError, match="not admitted"):
+    with pytest.raises(ValueError, match="supplied together"):
         compiler.compile(selected_candidate_id="candidate-not-admitted")
+    with pytest.raises(ValueError, match="not admitted"):
+        compiler.compile(
+            selected_candidate_id="candidate-not-admitted",
+            selected_candidate_digest="0" * 64,
+        )
     with pytest.raises(ValueError, match="between 0 and 30"):
         compiler.compile(timeline_day=31.0)
 

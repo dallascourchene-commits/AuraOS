@@ -128,7 +128,7 @@
   function waitForPascalActive(deadline = Date.now() + 15000) {
     return new Promise((resolve, reject) => {
       const check = () => {
-        pascalFrame = document.querySelector(".pascal-workbench-frame");
+        pascalFrame = document.querySelector("[data-pascal-workbench-frame], .pascal-workbench-frame");
         if (pascalFrame && pascalSessionId && pascalActive) {
           resolve();
           return;
@@ -544,7 +544,7 @@
       }
     }
 
-    pascalFrame = document.querySelector(".pascal-workbench-frame");
+    pascalFrame = document.querySelector("[data-pascal-workbench-frame], .pascal-workbench-frame");
     if (!pascalFrame || event.source !== pascalFrame.contentWindow) return;
     if (envelope.type !== "AURA_PASCAL_BRIDGE_MESSAGE") return;
     const message = envelope.message;
@@ -570,10 +570,14 @@
       && pascalStorey
       && pascalNode
     ) {
+      // Pascal-originated selection changes must clear the stale issue ID
+      // so the server derives the matching Construction work package from
+      // the new Pascal target instead of rejecting the mismatched pair.
       requestQueue = requestQueue
         .then(() => requestProjection({
           selected_storey: pascalStorey,
           selected_node: pascalNode,
+          selected_issue_id: null,
         }))
         .catch(showError);
     }
