@@ -572,10 +572,49 @@ class ConstructionFoundryDirector:
         with self._lock:
             self._transition_claims.pop(session_id, None)
 
-    def acknowledge_p3_sync(self, session_id: str) -> dict[str, Any]:
-        """Acknowledge that the P3 presentation sync has completed."""
+    def acknowledge_p3_sync(
+        self,
+        session_id: str,
+        *,
+        presentation_receipt: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Acknowledge that the P3 presentation sync has completed.
+
+        Requires a verifiable P3 presentation receipt bound to the session's
+        last committed chapter, including the active_view, receipt digest,
+        and session identity.  Rejects ack when no sync is pending or when
+        the receipt does not match.
+        """
         session = self.require_session(session_id)
         with self._lock:
+            if not session.p3_sync_pending:
+                raise ValueError("no P3 presentation sync is pending for this session")
+            if not isinstance(presentation_receipt, Mapping):
+                raise ValueError("P3 presentation receipt must be an object")
+            # Validate the receipt is bound to the last committed chapter.
+            if not session.receipts:
+                raise ValueError("no committed chapter receipt to acknowledge against")
+            last_receipt = session.receipts[-1]
+            expected_chapter_id = presentation_receipt.get("chapter_id")
+            if expected_chapter_id != last_receipt.get("chapter_id"):
+                raise ValueError(
+                    "P3 presentation receipt chapter_id does not match the "
+                    "last committed chapter"
+                )
+            expected_view = presentation_receipt.get("active_view")
+            ui = dict(last_receipt.get("chapter", {}).get("ui_directive") or {})
+            required_view = ui.get("active_view")
+            if required_view and expected_view != required_view:
+                raise ValueError(
+                    "P3 presentation receipt active_view does not match the "
+                    "required presentation view"
+                )
+            # Validate the receipt is bound to the session identity.
+            receipt_identity = presentation_receipt.get("identity_digest")
+            if receipt_identity and receipt_identity != session.identity_digest:
+                raise ValueError(
+                    "P3 presentation receipt identity does not match the session"
+                )
             session.p3_sync_pending = False
             return {"ok": True, "session": session.snapshot(self.manifest)}
 

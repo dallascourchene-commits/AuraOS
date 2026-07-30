@@ -50,6 +50,25 @@ def initial_evidence():
     }
 
 
+def _ack_p3_sync(director, session_id):
+    """Acknowledge P3 sync with a valid presentation receipt derived from the
+    last committed chapter."""
+    session = director.require_session(session_id)
+    if not session.p3_sync_pending:
+        return
+    last_receipt = session.receipts[-1]
+    chapter = last_receipt.get("chapter", {})
+    ui = dict(chapter.get("ui_directive") or {})
+    director.acknowledge_p3_sync(
+        session_id,
+        presentation_receipt={
+            "chapter_id": last_receipt.get("chapter_id"),
+            "active_view": ui.get("active_view"),
+            "identity_digest": session.identity_digest,
+        },
+    )
+
+
 def test_manifest_is_exact_offline_chain():
     item = manifest()
     payload = item.to_dict()
@@ -89,7 +108,7 @@ def test_director_blocks_missing_evidence_then_commits_exact_receipt():
     assert result["receipt"]["authority"]["construction_truth"] is False
     assert result["session"]["current_state"] == "CONSTRUCTION_GROUNDED"
     if result["session"].get("p3_sync_pending"):
-        director.acknowledge_p3_sync(session["session_id"])
+        _ack_p3_sync(director, session["session_id"])
 
 
 def test_navigation_cannot_skip_or_reexecute_consequential_chapters():
@@ -112,7 +131,7 @@ def test_navigation_cannot_skip_or_reexecute_consequential_chapters():
         claim_token=first.get("claim_token", ""),
     )
     if director.require_session(session_id).p3_sync_pending:
-        director.acknowledge_p3_sync(session_id)
+        _ack_p3_sync(director, session_id)
     director.control(session_id, control="PREVIOUS")
     assert director.require_session(session_id).executed_index == 0
     assert director.require_session(session_id).selected_index == -1
@@ -149,7 +168,7 @@ def test_complete_tour_requires_each_derived_evidence_gate_and_restart_after_dis
         )
         # Acknowledge P3 sync for presentation chapters so progression continues.
         if director.require_session(session_id).p3_sync_pending:
-            director.acknowledge_p3_sync(session_id)
+            _ack_p3_sync(director, session_id)
     final = director.require_session(session_id)
     assert final.dissolved is True
     assert final.current_state == "DISSOLVED"
@@ -177,7 +196,7 @@ def test_next_after_previous_only_returns_to_retained_chapter():
             claim_token=transition.get("claim_token", ""),
         )
         if director.require_session(session_id).p3_sync_pending:
-            director.acknowledge_p3_sync(session_id)
+            _ack_p3_sync(director, session_id)
     director.control(session_id, control="PREVIOUS")
     before = director.require_session(session_id)
     assert before.selected_index == 0

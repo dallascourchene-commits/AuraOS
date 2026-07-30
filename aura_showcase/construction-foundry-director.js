@@ -272,6 +272,10 @@
             body: JSON.stringify({
               ...exactIdentityBody(projection),
               identity_handle: identityHandle,
+              presentation_receipt: {
+                chapter_id: result.receipt?.chapter_id || null,
+                active_view: chapter?.ui_directive?.active_view || null,
+              },
             }),
           });
           const ackResult = await ackResponse.json().catch(() => ({}));

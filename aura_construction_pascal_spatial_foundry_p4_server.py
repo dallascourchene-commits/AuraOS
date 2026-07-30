@@ -1204,7 +1204,18 @@ def dispatch_p4_foundry_request(
                     raise PascalPresentationError(
                         "resolved identity does not match the session's bound identity"
                     )
-                return _json(200, director.acknowledge_p3_sync(session_id))
+                _presentation_receipt = body.get("presentation_receipt")
+                if not isinstance(_presentation_receipt, Mapping):
+                    raise PascalPresentationError("P3 presentation receipt is required and must be an object")
+                # Bind the receipt to the session identity.
+                _presentation_receipt = {
+                    **dict(_presentation_receipt),
+                    "identity_digest": resolved_identity.identity_digest,
+                }
+                return _json(200, director.acknowledge_p3_sync(
+                    session_id,
+                    presentation_receipt=_presentation_receipt,
+                ))
             if method == "POST" and len(parts) == 2 and parts[1] == "control":
                 allowed = {"control", "chapter_id", "identity_handle", *_IDENTITY_KEYS}
                 unknown = sorted(set(body) - allowed)
