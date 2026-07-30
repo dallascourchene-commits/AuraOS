@@ -4,22 +4,30 @@ import test from "node:test";
 import vm from "node:vm";
 
 const source = await readFile(
-  new URL("../../aura_showcase/construction-foundry-director-contract.js", import.meta.url),
+  new URL("../../aura_showcase/construction-foundry-director.js", import.meta.url),
   "utf8",
 );
-const context = { Promise, TypeError, Error, Number, Object, Boolean, setTimeout };
+const context = {
+  Promise,
+  TypeError,
+  Error,
+  Number,
+  Object,
+  Boolean,
+  setTimeout,
+  __AURA_CONSTRUCTION_DIRECTOR_TEST__: true,
+};
 context.globalThis = context;
 vm.runInNewContext(source, context, {
-  filename: "construction-foundry-director-contract.js",
+  filename: "construction-foundry-director.js",
 });
-const contract = context.AuraConstructionDirectorContract;
+const contract = context.AuraConstructionDirectorTestHooks;
 
-test("waitForPresentation resolves only after exact P3 retained state", async () => {
+test("waitForP3View resolves only after exact P3 retained state", async () => {
   let clock = 0;
   let pressed = false;
   const stage = { dataset: { presentationMode: "design" } };
-  const result = await contract.waitForPresentation({
-    activeView: "AS_BUILT",
+  const result = await contract.waitForP3View("AS_BUILT", {
     getControl: () => ({
       getAttribute: (name) => (name === "aria-pressed" && pressed ? "true" : "false"),
     }),
@@ -42,11 +50,10 @@ test("waitForPresentation resolves only after exact P3 retained state", async ()
   );
 });
 
-test("waitForPresentation fails closed when P3 never retains the view", async () => {
+test("waitForP3View fails closed when P3 never retains the view", async () => {
   let clock = 0;
   await assert.rejects(
-    contract.waitForPresentation({
-      activeView: "COMPARE",
+    contract.waitForP3View("COMPARE", {
       getControl: () => ({ getAttribute: () => "false" }),
       getStage: () => ({ dataset: { presentationMode: "design" } }),
       now: () => clock,
