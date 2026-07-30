@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/aura_pascal_coordinate_receipt_v1.schema.json",
+  "title": "Aura Pascal Coordinate Receipt V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["receipt_id", "receipt_digest", "pascal_artifact_digest", "spatial_scene_digest", "pascal_frame_id", "aura_frame_id", "transform_matrix", "source_unit_meters", "destination_unit_meters", "node_mapping_digest", "visual_alignment_only", "verified", "survey_authority", "construction_truth", "version"],
+  "properties": {
+    "receipt_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"},
+    "receipt_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "pascal_artifact_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "spatial_scene_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "pascal_frame_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"},
+    "aura_frame_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"},
+    "transform_matrix": {"type": "array", "minItems": 16, "maxItems": 16, "items": {"type": "number"}},
+    "source_unit_meters": {"type": "number", "exclusiveMinimum": 0},
+    "destination_unit_meters": {"type": "number", "exclusiveMinimum": 0},
+    "node_mapping_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "visual_alignment_only": {"const": true},
+    "verified": {"const": true},
+    "survey_authority": {"const": false},
+    "construction_truth": {"const": false},
+    "version": {"const": "AURA_PASCAL_COORDINATE_RECEIPT_V1"}
+  }
+}
