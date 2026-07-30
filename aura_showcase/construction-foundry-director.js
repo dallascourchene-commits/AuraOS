@@ -1,6 +1,78 @@
 (() => {
   "use strict";
 
+  function shouldPaceAfterChapter(chapter) {
+    return Boolean(chapter && chapter.consequential !== true);
+  }
+
+  function waitForP3View(activeView, options = {}) {
+    if (typeof activeView !== "string" || !activeView.trim()) {
+      return Promise.reject(new TypeError("activeView must be a non-empty string"));
+    }
+    const normalizedView = activeView.trim().toUpperCase();
+    const getControl = options.getControl
+      || ((view) => document.querySelector(`[data-construction-view="${view}"]`));
+    const getStage = options.getStage
+      || (() => document.getElementById("construction-decision-foundry"));
+    const now = options.now || Date.now;
+    const schedule = options.schedule || setTimeout;
+    const timeoutMs = options.timeoutMs ?? 15000;
+    const pollMs = options.pollMs ?? 40;
+    if (
+      typeof getControl !== "function"
+      || typeof getStage !== "function"
+      || typeof now !== "function"
+      || typeof schedule !== "function"
+      || !Number.isFinite(timeoutMs)
+      || timeoutMs < 0
+      || !Number.isFinite(pollMs)
+      || pollMs < 0
+    ) {
+      return Promise.reject(new TypeError("P3 presentation wait contract is invalid"));
+    }
+    const expectedMode = normalizedView.toLowerCase().replaceAll("_", "-");
+    const deadline = now() + timeoutMs;
+    return new Promise((resolve, reject) => {
+      const check = () => {
+        const target = getControl(normalizedView);
+        const stage = getStage();
+        if (
+          target?.getAttribute?.("aria-pressed") === "true"
+          && stage?.dataset?.presentationMode === expectedMode
+        ) {
+          resolve({ activeView: normalizedView, presentationMode: expectedMode });
+          return;
+        }
+        if (now() >= deadline) {
+          reject(new Error(`P3 did not retain the exact ${normalizedView} presentation receipt`));
+          return;
+        }
+        schedule(check, pollMs);
+      };
+      check();
+    });
+  }
+
+  async function settleDirective(effect, render) {
+    if (typeof effect !== "function" || typeof render !== "function") {
+      throw new TypeError("directive effect and render must be functions");
+    }
+    try {
+      return await effect();
+    } finally {
+      render();
+    }
+  }
+
+  if (globalThis.__AURA_CONSTRUCTION_DIRECTOR_TEST__ === true) {
+    globalThis.AuraConstructionDirectorTestHooks = Object.freeze({
+      settleDirective,
+      shouldPaceAfterChapter,
+      waitForP3View,
+    });
+    return;
+  }
+
   const root = document.getElementById("construction-foundry-director");
   if (!root) return;
 
@@ -10,12 +82,6 @@
   const receiptNode = document.getElementById("construction-director-receipt");
   const chapterSelect = document.getElementById("construction-director-chapters");
   const controls = Array.from(root.querySelectorAll("[data-director-control]"));
-
-  const directorContract = globalThis.AuraConstructionDirectorContract;
-  if (!directorContract) {
-    statusNode.textContent = "P4 stopped safely: Director contract is unavailable.";
-    return;
-  }
 
   let projection = null;
   let identityHandle = "";
@@ -72,14 +138,6 @@
 
   function selectedChapter() {
     return chapterById(session?.selected_chapter_id) || chapterById(session?.next_chapter_id);
-  }
-
-  function waitForP3View(activeView) {
-    return directorContract.waitForPresentation({
-      activeView,
-      getControl: (view) => document.querySelector(`[data-construction-view="${view}"]`),
-      getStage: () => document.getElementById("construction-decision-foundry"),
-    });
   }
 
   async function applyDirective(chapter, receipt = null) {
@@ -191,7 +249,7 @@
       return result;
     }
     session = result.session;
-    await directorContract.settleDirective(async () => {
+    await settleDirective(async () => {
       if (result.receipt) {
         receiptNode.textContent = JSON.stringify(result.receipt, null, 2);
         const chapter = chapterById(result.receipt.chapter_id);
@@ -209,7 +267,7 @@
     while (generation === playGeneration && session && !session.dissolved) {
       const result = await control("NEXT");
       const chapter = result.receipt ? chapterById(result.receipt.chapter_id) : null;
-      if (directorContract.shouldPaceAfterChapter(chapter)) {
+      if (shouldPaceAfterChapter(chapter)) {
         await new Promise((resolve) => setTimeout(resolve, 650));
       }
     }
