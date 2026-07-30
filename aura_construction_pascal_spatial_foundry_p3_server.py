@@ -444,13 +444,19 @@ def dispatch_p3_foundry_request(
             director_receipt_digest = str(body.get("director_receipt_digest") or "")
             if not chapter_id or not active_view:
                 return _json(400, {"ok": False, "error": "chapter_id and active_view are required"})
+            if not director_session_id or not director_receipt_digest:
+                return _json(400, {"ok": False, "error": "director_session_id and director_receipt_digest are required"})
             # Verify the compiled projection's active_view matches the
             # requested view — this proves P3 retained the presentation state.
             compiled_view = projection.get("presentation", {}).get("active_view") or projection.get("active_view", "")
             if compiled_view != active_view:
                 return _json(409, {"ok": False, "error": f"P3 retained view '{compiled_view}' does not match requested '{active_view}'"})
-            # Resolve the identity digest from the compiled projection.
-            identity_digest = str(projection.get("identity_digest") or hashlib.sha256(json.dumps(_receipt_body, sort_keys=True).encode()).hexdigest())
+            # Resolve the identity digest from the caller-supplied
+            # bilateral identity_digest (passed by the browser from the
+            # P4-issued identity handle), not from the P3 projection.
+            identity_digest = str(body.get("identity_digest") or "")
+            if not identity_digest:
+                return _json(400, {"ok": False, "error": "identity_digest is required"})
             digest_input = f"{chapter_id}|{active_view}|{identity_digest}|{director_session_id}|{director_receipt_digest}"
             receipt_digest = hashlib.sha256(digest_input.encode()).hexdigest()
             receipt = {

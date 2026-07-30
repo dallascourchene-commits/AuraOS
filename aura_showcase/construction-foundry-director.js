@@ -266,26 +266,9 @@
         if (result.session && result.session.p3_sync_pending) {
           const chapterId = result.receipt?.chapter_id || null;
           const activeView = chapter?.ui_directive?.active_view || null;
-          // Request a P3-issued presentation receipt so the P4 ack is bound
-          // to P3-retained state, not a browser-computed hash.
-          const p3ReceiptResponse = await fetch("/api/construction/decision-lane/issue-presentation-receipt", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "same-origin",
-            cache: "no-store",
-            body: JSON.stringify({
-              ...exactIdentityBody(projection),
-              identity_handle: identityHandle,
-              chapter_id: chapterId,
-              active_view: activeView,
-              director_session_id: session.session_id,
-              director_receipt_digest: result.receipt?.receipt_digest || result.receipt?.transition_digest || "",
-            }),
-          });
-          const p3ReceiptResult = await p3ReceiptResponse.json().catch(() => ({}));
-          if (!p3ReceiptResponse.ok || !p3ReceiptResult.presentation_receipt) {
-            throw new Error(`P3 presentation receipt issuance failed: ${p3ReceiptResult.error || p3ReceiptResponse.status}`);
-          }
+          // Request P3 receipt issuance and P4 acknowledgement in one step.
+          // The browser sends the chapter/view/session bindings; P4 resolves
+          // the bilateral identity internally and calls P3 issue+validate.
           const ackResponse = await fetch(`/api/construction/director/session/${encodeURIComponent(session.session_id)}/ack-p3-sync`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -294,7 +277,12 @@
             body: JSON.stringify({
               ...exactIdentityBody(projection),
               identity_handle: identityHandle,
-              presentation_receipt: p3ReceiptResult.presentation_receipt,
+              presentation_receipt: {
+                chapter_id: chapterId,
+                active_view: activeView,
+                director_session_id: session.session_id,
+                director_receipt_digest: result.receipt?.receipt_digest || result.receipt?.transition_digest || "",
+              },
             }),
           });
           const ackResult = await ackResponse.json().catch(() => ({}));
