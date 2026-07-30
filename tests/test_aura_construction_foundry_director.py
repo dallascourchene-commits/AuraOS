@@ -50,21 +50,27 @@ def initial_evidence():
     }
 
 
-def _ack_p3_sync(director, session_id):
+def _ack_p3_sync(director, session_id, identity_handle="test-handle"):
     """Acknowledge P3 sync with a valid presentation receipt derived from the
     last committed chapter."""
+    import hashlib as _hl
     session = director.require_session(session_id)
     if not session.p3_sync_pending:
         return
     last_receipt = session.receipts[-1]
     chapter = last_receipt.get("chapter", {})
     ui = dict(chapter.get("ui_directive") or {})
+    chapter_id = last_receipt.get("chapter_id")
+    active_view = ui.get("active_view")
+    digest_input = f"{chapter_id}|{active_view}|{identity_handle}"
+    receipt_digest = _hl.sha256(digest_input.encode()).hexdigest()
     director.acknowledge_p3_sync(
         session_id,
         presentation_receipt={
-            "chapter_id": last_receipt.get("chapter_id"),
-            "active_view": ui.get("active_view"),
+            "chapter_id": chapter_id,
+            "active_view": active_view,
             "identity_digest": session.identity_digest,
+            "receipt_digest": receipt_digest,
         },
     )
 

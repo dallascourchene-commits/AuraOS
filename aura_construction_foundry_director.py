@@ -567,10 +567,19 @@ class ConstructionFoundryDirector:
                 projection["claim_token"] = claim_token
             return projection
 
-    def release_claim(self, session_id: str) -> None:
-        """Release an active transition claim (e.g. after effect failure)."""
+    def release_claim(self, session_id: str, *, claim_token: str = "") -> None:
+        """Release an active transition claim only if the token matches.
+
+        This prevents a stale error path from removing a newer claim
+        that belongs to a different request.
+        """
         with self._lock:
-            self._transition_claims.pop(session_id, None)
+            active = self._transition_claims.get(session_id)
+            if active is not None:
+                _expected_digest, expected_token = active
+                if claim_token and expected_token != claim_token:
+                    return  # Token mismatch — do not release a different request's claim
+                self._transition_claims.pop(session_id, None)
 
     def acknowledge_p3_sync(
         self,
@@ -581,9 +590,8 @@ class ConstructionFoundryDirector:
         """Acknowledge that the P3 presentation sync has completed.
 
         Requires a verifiable P3 presentation receipt bound to the session's
-        last committed chapter, including the active_view, receipt digest,
-        and session identity.  Rejects ack when no sync is pending or when
-        the receipt does not match.
+        last committed chapter, including a P3-generated receipt digest,
+        the active_view, chapter_id, and identity digest.
         """
         session = self.require_session(session_id)
         with self._lock:

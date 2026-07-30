@@ -264,6 +264,14 @@
         await applyDirective(chapter, result.receipt);
         // Acknowledge P3 sync to the server so progression is unblocked.
         if (result.session && result.session.p3_sync_pending) {
+          const chapterId = result.receipt?.chapter_id || null;
+          const activeView = chapter?.ui_directive?.active_view || null;
+          // Compute a P3 receipt digest proving P3 retained the presentation
+          // state: SHA-256 over chapter_id | active_view | identity_digest.
+          const encoder = new TextEncoder();
+          const digestInput = `${chapterId}|${activeView}|${identityHandle}`;
+          const digestBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(digestInput));
+          const receiptDigest = Array.from(new Uint8Array(digestBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
           const ackResponse = await fetch(`/api/construction/director/session/${encodeURIComponent(session.session_id)}/ack-p3-sync`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -273,8 +281,9 @@
               ...exactIdentityBody(projection),
               identity_handle: identityHandle,
               presentation_receipt: {
-                chapter_id: result.receipt?.chapter_id || null,
-                active_view: chapter?.ui_directive?.active_view || null,
+                chapter_id: chapterId,
+                active_view: activeView,
+                receipt_digest: receiptDigest,
               },
             }),
           });

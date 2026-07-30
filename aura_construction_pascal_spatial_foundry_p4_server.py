@@ -1102,7 +1102,9 @@ def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition:
         )
     except Exception as exc:
         # Release the transition claim so the session is not permanently stuck.
-        director.release_claim(session_id)
+        # Pass the claim_token so a stale error path cannot release a newer
+        # claim that belongs to a different request.
+        director.release_claim(session_id, claim_token=_claim_token)
         if _pending_capture_id is not None:
             try:
                 cleanup_result = state.live_repair.finalize_capture(_pending_capture_id, {
@@ -1207,6 +1209,16 @@ def dispatch_p4_foundry_request(
                 _presentation_receipt = body.get("presentation_receipt")
                 if not isinstance(_presentation_receipt, Mapping):
                     raise PascalPresentationError("P3 presentation receipt is required and must be an object")
+                # Validate the P3-generated receipt digest: SHA-256 over
+                # chapter_id | active_view | identity_digest, using the
+                # resolved identity digest as the binding.
+                _receipt_digest = _presentation_receipt.get("receipt_digest")
+                if not _receipt_digest or not isinstance(_receipt_digest, str):
+                    raise PascalPresentationError("P3 presentation receipt must include a receipt_digest")
+                _digest_input = f"{_presentation_receipt.get('chapter_id')}|{_presentation_receipt.get('active_view')}|{body.get('identity_handle', '')}"
+                _expected_digest = hashlib.sha256(_digest_input.encode()).hexdigest()
+                if _receipt_digest != _expected_digest:
+                    raise PascalPresentationError("P3 presentation receipt digest does not match")
                 # Bind the receipt to the session identity.
                 _presentation_receipt = {
                     **dict(_presentation_receipt),
@@ -1253,7 +1265,9 @@ def dispatch_p4_foundry_request(
                 except Exception:
                     # Release the claim if the effect itself threw before
                     # commit_next could run, so the session is not stuck.
-                    director.release_claim(session_id)
+                    # Pass the claim_token so we only release OUR claim, not
+                    # a newer one from a different request.
+                    director.release_claim(session_id, claim_token=str(transition.get("claim_token") or ""))
                     raise
         return _error("unknown P4 Construction Director route", 404)
     except (OSError, subprocess.SubprocessError, UnicodeDecodeError, json.JSONDecodeError, BilateralLiveRepairError, PascalPresentationError, TypeError, ValueError, KeyError, OverflowError) as exc:
