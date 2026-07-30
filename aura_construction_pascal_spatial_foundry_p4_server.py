@@ -16,7 +16,10 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from pathlib import Path
 import re
+import shutil
 import subprocess
+import tempfile
+import threading
 import time
 from types import SimpleNamespace
 from typing import Any
@@ -35,6 +38,7 @@ from aura_construction_foundry_director import (
     build_default_manifest,
     canonical_bytes,
     digest,
+    runtime_binding_digest,
 )
 from aura_construction_pascal_spatial_foundry_p3_server import (
     IPv6HTTPServer,
@@ -124,11 +128,28 @@ def _sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
 
 
-def _exact_bilateral_digest(value: Any, name: str) -> str:
+def _bilateral_identity_digest(value: Any, name: str) -> str:
+    """Project canonical compiler identities into B11's older hex envelope.
+
+    The canonical bilateral compiler uses 32-character BLAKE2 identities while
+    B11 admits Git/SHA-style 40-64 character fields.  Shorter canonical values
+    are retained in the external packet and projected through a deterministic,
+    namespaced SHA-256 handle for the B11 packet/proof boundary.
+    """
     text = str(value or "").strip().lower()
-    if not _EXACT_DIGEST.fullmatch(text):
-        raise PascalPresentationError(f"canonical {name} is not a 40-64 character exact digest")
-    return text
+    if not text or not re.fullmatch(r"[0-9a-f]{32,64}", text):
+        raise PascalPresentationError(f"canonical {name} is not a 32-64 character exact digest")
+    if _EXACT_DIGEST.fullmatch(text):
+        return text
+    return hashlib.sha256(
+        canonical_bytes(
+            {
+                "version": "AURA_B11_CANONICAL_DIGEST_PROJECTION_V1",
+                "field": name,
+                "canonical_digest": text,
+            }
+        )
+    ).hexdigest()
 
 
 def _git(root: Path, *args: str) -> str:
@@ -216,10 +237,10 @@ def _compile_confirmation_bundle(root: Path) -> tuple[BilateralIdentity, Path, P
     # use shorter stable-digest identifiers, so retain their exact refs separately
     # while binding the B11 identity fields to collision-resistant SHA-256 handles.
     identity = BilateralIdentity(
-        intent_digest=_exact_bilateral_digest(intent["intent_digest"], "intent digest"),
+        intent_digest=_bilateral_identity_digest(intent["intent_digest"], "intent digest"),
         confirmation_digest=str(receipt["confirmation_id"]),
-        semantic_ledger_digest=_exact_bilateral_digest(ledger["ledger_digest"], "Semantic Ledger digest"),
-        guardrail_set_digest=_exact_bilateral_digest(receipt["guardrail_set_digest"], "guardrail-set digest"),
+        semantic_ledger_digest=_bilateral_identity_digest(ledger["ledger_digest"], "Semantic Ledger digest"),
+        guardrail_set_digest=_bilateral_identity_digest(receipt["guardrail_set_digest"], "guardrail-set digest"),
         intent_revision_id=str(u7["intent_revision_status"]),
         repository_head=head,
         source_tree_digest=tree,
@@ -227,12 +248,151 @@ def _compile_confirmation_bundle(root: Path) -> tuple[BilateralIdentity, Path, P
         verifier_id=str(verifier["verifier_id"]),
         verifier_source_digest=verifier_digest,
     )
-    external_root = root.parent / ".AuraOS-p4-runtime"
-    external_root.mkdir(parents=True, exist_ok=True)
-    confirmation_path = external_root / f"confirmation-{head}.json"
+    external_root = Path(tempfile.mkdtemp(prefix="auraos-p4-runtime-"))
+    external_root.chmod(0o700)
+    confirmation_path = external_root / "confirmation.json"
     confirmation_path.write_bytes(canonical_bytes(packet))
-    output_dir = external_root / f"runtime-{head}-{str(receipt['confirmation_id'])[-16:]}"
+    confirmation_path.chmod(0o600)
+    output_dir = external_root / "runtime-output"
     return identity, confirmation_path, output_dir
+
+
+def _confirmation_intent_contract(path: Path) -> dict[str, str]:
+    if not path.is_file() or path.is_symlink():
+        raise PascalPresentationError("P4 canonical confirmation packet is unavailable")
+    try:
+        packet = json.loads(path.read_text(encoding="utf-8"))
+        intent = dict(packet["intent_packet"])
+        ledger = dict(packet["semantic_ledger"])
+        receipt = dict(packet["confirmation_receipt"])
+        u7 = dict(packet["u7_references"])
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+        raise PascalPresentationError("P4 canonical confirmation packet is invalid") from exc
+    return {
+        "intent_digest": str(intent["intent_digest"]),
+        "semantic_ledger_digest": str(ledger["ledger_digest"]),
+        "confirmation_digest": str(receipt["confirmation_id"]),
+        "guardrail_set_digest": str(receipt["guardrail_set_digest"]),
+        "intent_revision_status": str(u7["intent_revision_status"]),
+        "expected_repository_head": str(receipt["repository_head"]),
+        "expected_source_tree": str(receipt["source_tree_digest"]),
+    }
+
+
+def _adapt_runtime_proof_identity(
+    proof: Mapping[str, Any],
+    *,
+    identity: BilateralIdentity,
+    confirmation_path: Path,
+    repo_root: Path,
+    required_assets: tuple[RequiredAsset, ...],
+) -> dict[str, Any]:
+    """Project canonical compiler IDs into B11's hex-only identity envelope.
+
+    Runtime Profile V2 remains the verifier.  This adapter verifies and retains
+    its exact canonical contract, then adds a deterministic SHA-256 binding only
+    for the three canonical owner IDs whose native stable IDs are 32 hex chars.
+    """
+
+    if not isinstance(proof, Mapping):
+        raise PascalPresentationError("Runtime Profile V2 returned a non-object proof")
+    canonical_contract = proof.get("intent_contract")
+    if not isinstance(canonical_contract, Mapping):
+        raise PascalPresentationError("Runtime Profile V2 omitted its canonical intent contract")
+    expected_canonical = _confirmation_intent_contract(confirmation_path)
+    for name, expected in expected_canonical.items():
+        if canonical_contract.get(name) != expected:
+            raise PascalPresentationError(
+                f"Runtime Profile V2 canonical {name} differs from the confirmation packet"
+            )
+    adapted_contract = {
+        **dict(canonical_contract),
+        "intent_digest": _bilateral_identity_digest(
+            canonical_contract["intent_digest"], "intent digest"
+        ),
+        "semantic_ledger_digest": _bilateral_identity_digest(
+            canonical_contract["semantic_ledger_digest"], "Semantic Ledger digest"
+        ),
+        "guardrail_set_digest": _bilateral_identity_digest(
+            canonical_contract["guardrail_set_digest"], "guardrail-set digest"
+        ),
+    }
+    expected_adapted = {
+        "intent_digest": identity.intent_digest,
+        "semantic_ledger_digest": identity.semantic_ledger_digest,
+        "confirmation_digest": identity.confirmation_digest,
+        "guardrail_set_digest": identity.guardrail_set_digest,
+        "intent_revision_status": identity.intent_revision_id,
+        "expected_repository_head": identity.repository_head,
+        "expected_source_tree": identity.source_tree_digest,
+    }
+    for name, expected in expected_adapted.items():
+        if adapted_contract.get(name) != expected:
+            raise PascalPresentationError(
+                f"P4 B11 identity adapter produced a mismatched {name}"
+            )
+    canonical_traces = proof.get("required_trace_artifacts")
+    if not isinstance(canonical_traces, list):
+        raise PascalPresentationError("Runtime Profile V2 omitted its canonical trace inventory")
+    source_asset_traces: list[dict[str, Any]] = []
+    for asset in required_assets:
+        source = _safe_repo_file(repo_root, asset.path)
+        body = source.read_bytes()
+        if _sha256_bytes(body) != asset.sha256:
+            raise PascalPresentationError(
+                f"P4 required asset changed after Director manifest compilation: {asset.path}"
+            )
+        source_asset_traces.append({
+            "path": asset.path,
+            "present": True,
+            "size_bytes": len(body),
+            "within_size_limit": True,
+            "sha256": asset.sha256,
+            "evidence_class": "EXACT_REPOSITORY_ASSET",
+        })
+    canonical_proof_digest = str(proof.get("proof_digest") or "")
+    adapted = {
+        **dict(proof),
+        "canonical_intent_contract": dict(canonical_contract),
+        "intent_contract": adapted_contract,
+        "canonical_required_trace_artifacts": list(canonical_traces),
+        "required_trace_artifacts": [*canonical_traces, *source_asset_traces],
+        "canonical_runtime_proof_digest": canonical_proof_digest,
+        "identity_adapter": {
+            "version": "AURA_P4_RUNTIME_PROOF_IDENTITY_ADAPTER_V1",
+            "canonical_contract_digest": digest(dict(canonical_contract)),
+            "adapted_contract_digest": digest(adapted_contract),
+            "required_asset_set_digest": digest([item.to_dict() for item in required_assets]),
+            "required_asset_count": len(source_asset_traces),
+            "canonical_runtime_owner": (
+                "scripts.aura_runtime_profile_v2_adapter.run_runtime_profile_v2"
+            ),
+            "verification_owner_changed": False,
+            "production_mutation": False,
+            "automatic_promotion": False,
+            "human_review_required": True,
+        },
+    }
+    canonical = {
+        key: value
+        for key, value in adapted.items()
+        if key not in {"proof_digest", "proof_path", "output_dir"}
+    }
+    adapted["proof_digest"] = runtime_binding_digest(canonical)
+    output_dir = Path(str(adapted.get("output_dir") or "")).expanduser()
+    if output_dir.is_dir():
+        projected_path = output_dir / "bilateral_runtime_proof_b11_projection.json"
+        projected_payload = {
+            key: value
+            for key, value in adapted.items()
+            if key not in {"proof_path", "output_dir"}
+        }
+        projected_path.write_text(
+            json.dumps(projected_payload, indent=2, sort_keys=True, ensure_ascii=True) + "\n",
+            encoding="utf-8",
+        )
+        adapted["proof_path"] = str(projected_path)
+    return adapted
 
 
 class _P4U7Bridge:
@@ -489,12 +649,16 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
         self.p4_confirmation_path: Path | None = None
         self.p4_runtime_output_dir: Path | None = None
         self.p4_director: ConstructionFoundryDirector | None = None
+        self.p4_confirmation_consumed = False
+        self._p4_external_roots: set[Path] = set()
+        self._p4_runtime_lock = threading.RLock()
         self.p4_u7_bridge = _P4U7Bridge(root)
         try:
             identity, confirmation_path, output_dir = _compile_confirmation_bundle(root)
             self.p4_identity = identity
             self.p4_confirmation_path = confirmation_path
             self.p4_runtime_output_dir = output_dir
+            self._p4_external_roots.add(confirmation_path.parent)
         except (OSError, subprocess.SubprocessError, UnicodeDecodeError, json.JSONDecodeError, KeyError, TypeError, ValueError, PascalPresentationError) as exc:
             self.p4_load_error = str(exc)
         provider: Callable[[], BilateralIdentity] | None = None
@@ -557,13 +721,99 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
             raise BilateralLiveRepairError("P4 exact identity became dirty after startup")
         return current
 
+    def _cleanup_external_roots(self, *, retain: set[Path] | None = None) -> int:
+        retained = {item.resolve() for item in (retain or set())}
+        removed = 0
+        for root in tuple(self._p4_external_roots):
+            resolved = root.resolve()
+            if resolved in retained:
+                continue
+            if root.is_symlink():
+                raise PascalPresentationError("P4 external runtime root became a symlink")
+            if root.exists():
+                shutil.rmtree(root)
+            self._p4_external_roots.discard(root)
+            removed += 1
+        return removed
+
     def refresh_demo_identity(self) -> BilateralIdentity:
         identity, confirmation_path, output_dir = _compile_confirmation_bundle(self.repo_root)
+        new_root = confirmation_path.parent
+        self._p4_external_roots.add(new_root)
+        self._cleanup_external_roots(retain={new_root})
         self.p4_identity = identity
         self.p4_confirmation_path = confirmation_path
         self.p4_runtime_output_dir = output_dir
+        self.p4_confirmation_consumed = False
         self.p4_u7_bridge._sessions.clear()
         return identity
+
+    def execute_exact_runtime_replay(self, *, packet_id: str, identity: BilateralIdentity) -> dict[str, Any]:
+        if self.p4_confirmation_consumed:
+            raise PascalPresentationError(
+                "P4 confirmation was already consumed; dissolve and Restart for a fresh exact confirmation"
+            )
+        if self.p4_confirmation_path is None or self.p4_runtime_output_dir is None:
+            raise PascalPresentationError("P4 external runtime paths are unavailable")
+        service = self.live_repair
+        canonical_runner = service.runtime_runner
+
+        def adapted_runner(root: Path, **kwargs: Any) -> Mapping[str, Any]:
+            canonical_proof = canonical_runner(root, **kwargs)
+            return _adapt_runtime_proof_identity(
+                canonical_proof,
+                identity=identity,
+                confirmation_path=self.p4_confirmation_path,
+                repo_root=self.repo_root,
+                required_assets=self.p4_required_assets,
+            )
+
+        with self._p4_runtime_lock:
+            service.runtime_runner = adapted_runner
+            try:
+                result = service.execute_replay(
+                    packet_id=packet_id,
+                    profile_path=_RUNTIME_PROFILE,
+                    confirmation_packet=self.p4_confirmation_path,
+                    output_dir=self.p4_runtime_output_dir,
+                )
+            finally:
+                service.runtime_runner = canonical_runner
+        if result.get("ok") is not True:
+            raise PascalPresentationError("P4 Runtime Profile V2 proof did not satisfy every obligation")
+        self.p4_confirmation_consumed = True
+        return result
+
+    def dissolve_p4_runtime(self) -> dict[str, Any]:
+        service = self._live_repair
+        before = service.status() if service is not None else {
+            "active_capture_count": 0,
+            "pending_packet_archive_count": 0,
+        }
+        if before.get("active_capture_count") != 0:
+            raise PascalPresentationError("P4 cannot dissolve while a bounded capture remains active")
+        if before.get("pending_packet_archive_count") != 0:
+            raise PascalPresentationError("P4 cannot dissolve while incident archival remains pending")
+        if service is not None:
+            service.close()
+            self._live_repair = None
+        self.p4_u7_bridge._sessions.clear()
+        removed_roots = self._cleanup_external_roots()
+        return {
+            "ok": True,
+            "status": "DISSOLVED",
+            "live_repair_service_released": service is not None,
+            "active_captures_before_release": int(before.get("active_capture_count") or 0),
+            "pending_archives_before_release": int(before.get("pending_packet_archive_count") or 0),
+            "external_runtime_roots_removed": removed_roots,
+            "u7_sessions_cleared": True,
+            "listeners_released": True,
+            "timers_released": True,
+            "buffers_cleared": True,
+            "construction_state_unchanged": True,
+            "production_mutation": False,
+            "automatic_promotion": False,
+        }
 
     @property
     def p4_available(self) -> bool:
@@ -589,6 +839,7 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
         self.p4_static_assets.clear()
         self.p4_required_assets = ()
         self.p4_u7_bridge._sessions.clear()
+        self._cleanup_external_roots()
         super().close()
 
 
@@ -599,24 +850,78 @@ def _projection_and_identity(state: P4FoundryShowcaseState, body: Mapping[str, A
     return projection, identity
 
 
-def _initial_evidence() -> dict[str, bool]:
+def _initial_evidence(
+    state: P4FoundryShowcaseState,
+    projection: Mapping[str, Any],
+) -> dict[str, bool]:
+    domain = projection.get("domain")
+    artifacts = projection.get("artifacts")
+    candidates = projection.get("coordination_candidates")
+    decision = projection.get("domain_decision")
+    authority = projection.get("authority")
+    if not all(isinstance(item, Mapping) for item in (domain, artifacts, decision, authority)):
+        raise PascalPresentationError("P4 requires the exact complete P3 projection contract")
+    compare = artifacts.get("compare_receipt")
+    if not isinstance(compare, Mapping):
+        raise PascalPresentationError("P4 requires the exact P3 compare receipt")
+    forbidden_authority = (
+        "survey_authority",
+        "professional_approval",
+        "physical_work_authorized",
+        "payment_released",
+        "access_granted",
+        "automatic_execution",
+        "source_records_mutated",
+        "construction_event_appended",
+    )
     return {
-        "p3_available": True,
-        "construction_identity_bound": True,
-        "pascal_artifact_bound": True,
-        "coordinate_receipt_bound": True,
-        "as_built_scene_bound": True,
-        "renderers_synchronized": True,
-        "construction_candidates_bound": True,
-        "domain_decision_bound": True,
+        "p3_available": state.p3_available,
+        "construction_identity_bound": bool(domain.get("state_digest") and domain.get("runtime_packet_digest")),
+        "pascal_artifact_bound": bool(artifacts.get("pascal_artifact_digest")),
+        "coordinate_receipt_bound": bool(artifacts.get("coordinate_receipt_digest")),
+        "as_built_scene_bound": bool(artifacts.get("as_built_scene_digest")),
+        "compare_receipt_bound": (
+            compare.get("visual_alignment_only") is True
+            and compare.get("survey_authority") is False
+            and compare.get("construction_truth") is False
+            and compare.get("receipt_digest")
+            == stable_digest(
+                {key: value for key, value in compare.items() if key != "receipt_digest"},
+                digest_size=32,
+            )
+        ),
+        "construction_candidates_bound": (
+            isinstance(candidates, list)
+            and len(candidates) == 3
+            and all(
+                isinstance(item, Mapping)
+                and isinstance(item.get("artifact"), Mapping)
+                and bool(item["artifact"].get("candidate_id"))
+                and bool(item["artifact"].get("candidate_digest"))
+                for item in candidates
+            )
+        ),
+        "domain_decision_bound": (
+            decision.get("human_review_required") is True
+            and all(decision.get(name) is False for name in (
+                "physical_work_authorized",
+                "professional_approval",
+                "payment_released",
+                "access_granted",
+                "automatic_execution",
+                "survey_authority",
+                "construction_truth",
+            ))
+            and all(authority.get(name) is False for name in forbidden_authority)
+        ),
         "identity_current": True,
         "operator_authorized": True,
         "fault_fixture_bound": True,
-        "required_assets_bound": True,
+        "required_assets_bound": bool(state.p4_required_assets),
         "rollback_adapter_ready": True,
         "u7_bridge_ready": True,
         "construction_state_unchanged": True,
-        "resources_dissolved": False,
+        "capture_resources_dissolved": False,
     }
 
 
@@ -629,12 +934,16 @@ def _start_exact_session(
     session = director.start_session(
         identity_digest=identity.identity_digest,
         construction_state_digest=str(projection["domain"]["state_digest"]),
-        initial_evidence=_initial_evidence(),
+        initial_evidence=_initial_evidence(state, projection),
     )
     return {"ok": True, "session": session, "manifest": director.manifest.to_dict()}
 
 
 def _session_start(state: P4FoundryShowcaseState, body: Mapping[str, Any]) -> dict[str, Any]:
+    if state.p4_confirmation_consumed:
+        raise PascalPresentationError(
+            "P4 confirmation was already consumed; use Restart after dissolution"
+        )
     allowed = frozenset({"identity_handle", *_IDENTITY_KEYS})
     unknown = sorted(set(body) - allowed)
     if unknown:
@@ -666,7 +975,7 @@ def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition:
             "arena_id": "construction",
         })
         updates["capture_id"] = result["capture_id"]
-        evidence.update({"capture_active": True, "resources_dissolved": False})
+        evidence.update({"capture_active": True, "capture_resources_dissolved": False})
     elif effect == "MARK_INCIDENT":
         capture_id = str(context.get("capture_id") or "")
         state.live_repair.observe(capture_id, fixture.event_type, {"fixture_id": fixture.fixture_id, "selection_sync": "STALE_ACKNOWLEDGEMENT"})
@@ -685,16 +994,12 @@ def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition:
         packet = dict(result["packet"])
         updates["packet_id"] = packet["packet_id"]
         updates["packet_digest"] = packet["packet_digest"]
-        evidence.update({"capture_dissolved": True, "replay_packet_retained": True, "resources_dissolved": True})
+        evidence.update({"capture_dissolved": True, "replay_packet_retained": True, "capture_resources_dissolved": True})
     elif effect == "RUN_RUNTIME_REPLAY":
         packet_id = str(context.get("packet_id") or "")
-        if state.p4_confirmation_path is None or state.p4_runtime_output_dir is None:
-            raise PascalPresentationError("P4 external runtime paths are unavailable")
-        result = state.live_repair.execute_replay(
+        result = state.execute_exact_runtime_replay(
             packet_id=packet_id,
-            profile_path=state.repo_root / _RUNTIME_PROFILE,
-            confirmation_packet=state.p4_confirmation_path,
-            output_dir=state.p4_runtime_output_dir,
+            identity=identity,
         )
         updates["runtime_proof_ref"] = result["runtime_proof_ref"]
         evidence["runtime_proof_retained"] = True
@@ -775,14 +1080,8 @@ def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition:
         packet_id = str(context.get("packet_id") or "")
         if packet_id:
             state.live_repair.assert_current_identity(packet_id)
-        result = {
-            "ok": True,
-            "status": "DISSOLVED",
-            "listeners_released": True,
-            "timers_released": True,
-            "buffers_cleared": True,
-            "construction_state_unchanged": True,
-        }
+        result = state.dissolve_p4_runtime()
+        evidence["runtime_resources_dissolved"] = True
     else:
         raise PascalPresentationError(f"unsupported P4 chapter effect: {effect}")
     return director.commit_next(
@@ -865,8 +1164,10 @@ def dispatch_p4_foundry_request(
                     return _json(200, restarted)
                 if control in {DirectorControl.PLAY, DirectorControl.PAUSE, DirectorControl.PREVIOUS, DirectorControl.JUMP}:
                     return _json(200, director.control(session_id, control=control, chapter_id=str(body.get("chapter_id") or "")))
+                prior = director.require_session(session_id)
+                browsing_retained_chapter = prior.selected_index < prior.executed_index
                 navigation = director.control(session_id, control=DirectorControl.NEXT)
-                if navigation["session"]["selected_index"] < navigation["session"]["executed_index"]:
+                if browsing_retained_chapter:
                     return _json(200, navigation)
                 transition = director.project_next(session_id)
                 if transition.get("admitted") is not True:
