@@ -462,10 +462,13 @@ def dispatch_p3_foundry_request(
                 "receipt_digest": receipt_digest,
                 "issued_by": "p3-presentation",
             }
-            # Retain the receipt in P3 state keyed by chapter_id for lookup.
+            # Retain the receipt in P3 state keyed by a composite of
+            # director_session_id and chapter_id so receipts from different
+            # sessions or transitions cannot collide.
             if not hasattr(state, "_p3_presentation_receipts"):
                 state._p3_presentation_receipts = {}
-            state._p3_presentation_receipts[chapter_id] = receipt
+            _receipt_key = f"{director_session_id}:{chapter_id}"
+            state._p3_presentation_receipts[_receipt_key] = receipt
             return _json(200, {"ok": True, "presentation_receipt": receipt})
         if method == "POST" and route == "/api/construction/decision-lane/validate-presentation-receipt":
             # P3-owned receipt validation/lookup.  Called by P4 during
@@ -473,13 +476,15 @@ def dispatch_p3_foundry_request(
             # it matches — does NOT issue a new receipt.
             chapter_id = str(body.get("chapter_id") or "")
             receipt_digest = str(body.get("receipt_digest") or "")
+            director_session_id = str(body.get("director_session_id") or "")
             if not chapter_id or not receipt_digest:
                 return _json(400, {"ok": False, "error": "chapter_id and receipt_digest are required"})
             if not hasattr(state, "_p3_presentation_receipts"):
                 return _json(404, {"ok": False, "error": "no retained presentation receipts"})
-            retained = state._p3_presentation_receipts.get(chapter_id)
+            _lookup_key = f"{director_session_id}:{chapter_id}"
+            retained = state._p3_presentation_receipts.get(_lookup_key)
             if retained is None:
-                return _json(404, {"ok": False, "error": "no retained receipt for this chapter"})
+                return _json(404, {"ok": False, "error": "no retained receipt for this session and chapter"})
             if retained.get("receipt_digest") != receipt_digest:
                 return _json(409, {"ok": False, "error": "receipt digest does not match retained receipt"})
             return _json(200, {"ok": True, "presentation_receipt": retained})

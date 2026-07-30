@@ -1220,13 +1220,14 @@ def dispatch_p4_foundry_request(
                 _p3_validate_body = {
                     "chapter_id": _presentation_receipt.get("chapter_id"),
                     "receipt_digest": _p3_receipt_digest,
+                    "director_session_id": session_id,
                 }
                 _p3_status, _p3_ct, _p3_resp = dispatch_p3_foundry_request(
                     state, "POST",
                     "/api/construction/decision-lane/validate-presentation-receipt",
                     _p3_validate_body,
-                    request_origin="p4-internal",
-                    request_host="p4-internal",
+                    request_origin=state.presentation_origin,
+                    request_host=state.presentation_netloc,
                 )
                 if _p3_status != 200:
                     raise PascalPresentationError("P3 presentation receipt validation failed — no retained receipt matches")
@@ -1234,11 +1235,23 @@ def dispatch_p4_foundry_request(
                 _p3_retained = _p3_result.get("presentation_receipt", {})
                 if _p3_retained.get("receipt_digest") != _p3_receipt_digest:
                     raise PascalPresentationError("P3 presentation receipt digest does not match P3-retained receipt")
-                # Bind the receipt to the session identity.
-                _presentation_receipt = {
-                    **dict(_presentation_receipt),
-                    "identity_digest": resolved_identity.identity_digest,
-                }
+                # Validate ALL retained receipt binding fields against the
+                # target Director session — not just the digest.
+                _target_session = director.require_session(session_id)
+                _last_receipt = _target_session.receipts[-1] if _target_session.receipts else {}
+                _last_chapter = _last_receipt.get("chapter", {})
+                _last_ui = dict(_last_chapter.get("ui_directive") or {})
+                _required_view = _last_ui.get("active_view")
+                if _p3_retained.get("director_session_id") != session_id:
+                    raise PascalPresentationError("P3 receipt director_session_id does not match target session")
+                if _p3_retained.get("chapter_id") != _last_receipt.get("chapter_id"):
+                    raise PascalPresentationError("P3 receipt chapter_id does not match last committed chapter")
+                if _required_view and _p3_retained.get("active_view") != _required_view:
+                    raise PascalPresentationError("P3 receipt active_view does not match required presentation view")
+                if _p3_retained.get("identity_digest") and _p3_retained.get("identity_digest") != resolved_identity.identity_digest:
+                    raise PascalPresentationError("P3 receipt identity does not match resolved identity")
+                # Use the P3-retained receipt as authoritative, not client-supplied fields.
+                _presentation_receipt = dict(_p3_retained)
                 return _json(200, director.acknowledge_p3_sync(
                     session_id,
                     presentation_receipt=_presentation_receipt,
