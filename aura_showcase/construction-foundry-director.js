@@ -11,6 +11,12 @@
   const chapterSelect = document.getElementById("construction-director-chapters");
   const controls = Array.from(root.querySelectorAll("[data-director-control]"));
 
+  const directorContract = globalThis.AuraConstructionDirectorContract;
+  if (!directorContract) {
+    statusNode.textContent = "P4 stopped safely: Director contract is unavailable.";
+    return;
+  }
+
   let projection = null;
   let identityHandle = "";
   let manifest = null;
@@ -68,26 +74,11 @@
     return chapterById(session?.selected_chapter_id) || chapterById(session?.next_chapter_id);
   }
 
-  function waitForP3View(activeView, deadline = Date.now() + 15000) {
-    return new Promise((resolve, reject) => {
-      const check = () => {
-        const target = document.querySelector(`[data-construction-view="${activeView}"]`);
-        const stage = document.getElementById("construction-decision-foundry");
-        const expectedMode = activeView.toLowerCase().replaceAll("_", "-");
-        if (
-          target?.getAttribute("aria-pressed") === "true"
-          && stage?.dataset.presentationMode === expectedMode
-        ) {
-          resolve();
-          return;
-        }
-        if (Date.now() >= deadline) {
-          reject(new Error(`P3 did not retain the exact ${activeView} presentation receipt`));
-          return;
-        }
-        setTimeout(check, 40);
-      };
-      check();
+  function waitForP3View(activeView) {
+    return directorContract.waitForPresentation({
+      activeView,
+      getControl: (view) => document.querySelector(`[data-construction-view="${view}"]`),
+      getStage: () => document.getElementById("construction-decision-foundry"),
     });
   }
 
@@ -200,14 +191,15 @@
       return result;
     }
     session = result.session;
-    if (result.receipt) {
-      receiptNode.textContent = JSON.stringify(result.receipt, null, 2);
-      const chapter = chapterById(result.receipt.chapter_id);
-      await applyDirective(chapter, result.receipt);
-    } else {
-      await applyDirective(selectedChapter());
-    }
-    render();
+    await directorContract.settleDirective(async () => {
+      if (result.receipt) {
+        receiptNode.textContent = JSON.stringify(result.receipt, null, 2);
+        const chapter = chapterById(result.receipt.chapter_id);
+        await applyDirective(chapter, result.receipt);
+      } else {
+        await applyDirective(selectedChapter());
+      }
+    }, render);
     return result;
   }
 
@@ -217,7 +209,7 @@
     while (generation === playGeneration && session && !session.dissolved) {
       const result = await control("NEXT");
       const chapter = result.receipt ? chapterById(result.receipt.chapter_id) : null;
-      if (chapter && chapter.consequential !== true) {
+      if (directorContract.shouldPaceAfterChapter(chapter)) {
         await new Promise((resolve) => setTimeout(resolve, 650));
       }
     }
