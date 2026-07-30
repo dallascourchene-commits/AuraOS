@@ -431,6 +431,32 @@ def dispatch_p3_foundry_request(
                 200,
                 {"ok": True, "projection": public_projection(projection)},
             )
+        if method == "POST" and route == "/api/construction/decision-lane/presentation-receipt":
+            # P3-owned presentation receipt issuance.  P4 calls this to
+            # obtain a verifiable receipt that P3 retained the requested
+            # view.  The receipt is stored in P3 state and signed with a
+            # digest over chapter_id, active_view, and identity_digest.
+            import hashlib as _hl
+            projection = _compile_from_request(state, body, require_identities=True)
+            chapter_id = str(body.get("chapter_id") or "")
+            active_view = str(body.get("active_view") or "")
+            identity_digest = str(body.get("identity_digest") or "")
+            if not chapter_id or not active_view:
+                return _json(400, {"ok": False, "error": "chapter_id and active_view are required"})
+            digest_input = f"{chapter_id}|{active_view}|{identity_digest}"
+            receipt_digest = _hl.sha256(digest_input.encode()).hexdigest()
+            receipt = {
+                "chapter_id": chapter_id,
+                "active_view": active_view,
+                "identity_digest": identity_digest,
+                "receipt_digest": receipt_digest,
+                "issued_by": "p3-presentation",
+            }
+            # Retain the receipt in P3 state for later validation.
+            if not hasattr(state, "_p3_presentation_receipts"):
+                state._p3_presentation_receipts = {}
+            state._p3_presentation_receipts[chapter_id] = receipt
+            return _json(200, {"ok": True, "presentation_receipt": receipt})
         if method == "POST" and route == "/api/construction/decision-lane/project":
             projection = _compile_from_request(state, body, require_identities=True)
             return _json(

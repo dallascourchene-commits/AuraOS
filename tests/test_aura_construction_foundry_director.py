@@ -51,8 +51,7 @@ def initial_evidence():
 
 
 def _ack_p3_sync(director, session_id, identity_handle="test-handle"):
-    """Acknowledge P3 sync with a valid presentation receipt derived from the
-    last committed chapter."""
+    """Acknowledge P3 sync with a valid P3-issued presentation receipt."""
     import hashlib as _hl
     session = director.require_session(session_id)
     if not session.p3_sync_pending:
@@ -62,7 +61,8 @@ def _ack_p3_sync(director, session_id, identity_handle="test-handle"):
     ui = dict(chapter.get("ui_directive") or {})
     chapter_id = last_receipt.get("chapter_id")
     active_view = ui.get("active_view")
-    digest_input = f"{chapter_id}|{active_view}|{identity_handle}"
+    # Simulate a P3-issued receipt digest.
+    digest_input = f"{chapter_id}|{active_view}|{session.identity_digest}"
     receipt_digest = _hl.sha256(digest_input.encode()).hexdigest()
     director.acknowledge_p3_sync(
         session_id,

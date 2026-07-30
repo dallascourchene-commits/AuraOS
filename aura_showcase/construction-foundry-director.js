@@ -266,12 +266,24 @@
         if (result.session && result.session.p3_sync_pending) {
           const chapterId = result.receipt?.chapter_id || null;
           const activeView = chapter?.ui_directive?.active_view || null;
-          // Compute a P3 receipt digest proving P3 retained the presentation
-          // state: SHA-256 over chapter_id | active_view | identity_digest.
-          const encoder = new TextEncoder();
-          const digestInput = `${chapterId}|${activeView}|${identityHandle}`;
-          const digestBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(digestInput));
-          const receiptDigest = Array.from(new Uint8Array(digestBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+          // Request a P3-issued presentation receipt so the P4 ack is bound
+          // to P3-retained state, not a browser-computed hash.
+          const p3ReceiptResponse = await fetch("/api/construction/decision-lane/presentation-receipt", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "same-origin",
+            cache: "no-store",
+            body: JSON.stringify({
+              ...exactIdentityBody(projection),
+              identity_handle: identityHandle,
+              chapter_id: chapterId,
+              active_view: activeView,
+            }),
+          });
+          const p3ReceiptResult = await p3ReceiptResponse.json().catch(() => ({}));
+          if (!p3ReceiptResponse.ok || !p3ReceiptResult.presentation_receipt) {
+            throw new Error(`P3 presentation receipt issuance failed: ${p3ReceiptResult.error || p3ReceiptResponse.status}`);
+          }
           const ackResponse = await fetch(`/api/construction/director/session/${encodeURIComponent(session.session_id)}/ack-p3-sync`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -280,11 +292,7 @@
             body: JSON.stringify({
               ...exactIdentityBody(projection),
               identity_handle: identityHandle,
-              presentation_receipt: {
-                chapter_id: chapterId,
-                active_view: activeView,
-                receipt_digest: receiptDigest,
-              },
+              presentation_receipt: p3ReceiptResult.presentation_receipt,
             }),
           });
           const ackResult = await ackResponse.json().catch(() => ({}));

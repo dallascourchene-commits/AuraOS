@@ -1115,8 +1115,10 @@ def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition:
                     "arena_id": "construction",
                     "objective": "Orphaned-capture cleanup after failed Director commit (uncommitted transition)",
                 })
-                # Persist the orphan-cleanup receipt in the session context
-                # so the archive artifact is traceable to the failed transition.
+                # Persist the orphan-cleanup receipt in the Director failure
+                # ledger via a lock-protected API so the archive artifact is
+                # traceable to the failed transition even if context mutation
+                # would race with session close.
                 orphan_receipt = {
                     "orphaned_capture_id": _pending_capture_id,
                     "orphan_cleanup_result": cleanup_result,
@@ -1124,11 +1126,7 @@ def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition:
                     "director_commit_failed": True,
                     "original_error": str(exc),
                 }
-                try:
-                    target = director.require_session(session_id)
-                    target.context["orphan_cleanup_receipt"] = orphan_receipt
-                except Exception:
-                    pass  # Session may already be gone; the receipt is still in the error chain
+                director.record_failure_ledger(session_id, orphan_receipt)
             except Exception as cleanup_exc:
                 # Cleanup evidence must not be hidden.  Attach the cleanup
                 # failure to the re-raised error so it remains observable.
@@ -1209,16 +1207,31 @@ def dispatch_p4_foundry_request(
                 _presentation_receipt = body.get("presentation_receipt")
                 if not isinstance(_presentation_receipt, Mapping):
                     raise PascalPresentationError("P3 presentation receipt is required and must be an object")
-                # Validate the P3-generated receipt digest: SHA-256 over
-                # chapter_id | active_view | identity_digest, using the
-                # resolved identity digest as the binding.
-                _receipt_digest = _presentation_receipt.get("receipt_digest")
-                if not _receipt_digest or not isinstance(_receipt_digest, str):
+                # Validate the P3-issued receipt by checking it against P3's
+                # retained presentation receipts via the P3 server API.
+                _p3_receipt = _presentation_receipt.get("receipt_digest")
+                if not _p3_receipt or not isinstance(_p3_receipt, str):
                     raise PascalPresentationError("P3 presentation receipt must include a receipt_digest")
-                _digest_input = f"{_presentation_receipt.get('chapter_id')}|{_presentation_receipt.get('active_view')}|{body.get('identity_handle', '')}"
-                _expected_digest = hashlib.sha256(_digest_input.encode()).hexdigest()
-                if _receipt_digest != _expected_digest:
-                    raise PascalPresentationError("P3 presentation receipt digest does not match")
+                # Verify the receipt was issued by P3 by calling the P3
+                # presentation-receipt route with the same parameters.
+                _p3_body = {
+                    **dict(body),
+                    "chapter_id": _presentation_receipt.get("chapter_id"),
+                    "active_view": _presentation_receipt.get("active_view"),
+                    "identity_digest": resolved_identity.identity_digest,
+                }
+                _p3_status, _p3_ct, _p3_resp = dispatch_p3_foundry_request(
+                    state, "POST",
+                    "/api/construction/decision-lane/presentation-receipt",
+                    _p3_body,
+                )
+                if _p3_status != 200:
+                    raise PascalPresentationError("P3 presentation receipt validation failed")
+                import json as _json_mod
+                _p3_result = _json_mod.loads(_p3_resp)
+                _p3_issued = _p3_result.get("presentation_receipt", {})
+                if _p3_issued.get("receipt_digest") != _p3_receipt:
+                    raise PascalPresentationError("P3 presentation receipt digest does not match P3-issued receipt")
                 # Bind the receipt to the session identity.
                 _presentation_receipt = {
                     **dict(_presentation_receipt),

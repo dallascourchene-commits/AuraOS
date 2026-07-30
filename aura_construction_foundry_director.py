@@ -570,16 +570,28 @@ class ConstructionFoundryDirector:
     def release_claim(self, session_id: str, *, claim_token: str = "") -> None:
         """Release an active transition claim only if the token matches.
 
-        This prevents a stale error path from removing a newer claim
-        that belongs to a different request.
+        Requires a non-empty claim_token.  A missing or mismatched token
+        is a no-op (fail-closed) so a stale or unauthenticated error path
+        cannot remove another request's claim.
         """
         with self._lock:
             active = self._transition_claims.get(session_id)
             if active is not None:
                 _expected_digest, expected_token = active
-                if claim_token and expected_token != claim_token:
-                    return  # Token mismatch — do not release a different request's claim
+                if not claim_token or expected_token != claim_token:
+                    return  # Token missing or mismatch — fail closed
                 self._transition_claims.pop(session_id, None)
+
+    def record_failure_ledger(self, session_id: str, entry: Mapping[str, Any]) -> None:
+        """Atomically record a failure-ledger entry under the Director lock.
+
+        Used for orphan-cleanup traceability when a transition fails after
+        a canonical owner has produced artifacts.
+        """
+        with self._lock:
+            session = self.require_session(session_id)
+            ledger = session.context.setdefault("_failure_ledger", [])
+            ledger.append(dict(entry))
 
     def acknowledge_p3_sync(
         self,
