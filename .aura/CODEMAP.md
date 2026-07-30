@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1533
-- **total_bytes**: 58355216
-- **text_tokens_est**: 5133048
+- **total_bytes**: 58357795
+- **text_tokens_est**: 5133691
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 191, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 966, 'schema_or_lexicon': 217, 'support_file': 79}
-- **topology_nodes**: 11206
-- **topology_edges**: 27077
+- **topology_nodes**: 11207
+- **topology_edges**: 27080
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 32515.9
+- **elapsed_ms**: 33550.02
 
 ## Coverage
 
@@ -427,8 +427,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 11206
-- **edges**: 27077
+- **nodes**: 11207
+- **edges**: 27080
 - **top_files_by_degree**:
   - `aura_node.py` degree=891 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=757 nodes=69 neighbors=`aura_construction_spatial_foundry.py`, `aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`
