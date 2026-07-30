@@ -245,6 +245,9 @@ async function initialize() {
     void apply();
   } catch (error) {
     localRenderer.dispose?.();
+    if (renderer === localRenderer) {
+      renderer = null;
+    }
     throw error;
   }
 }
