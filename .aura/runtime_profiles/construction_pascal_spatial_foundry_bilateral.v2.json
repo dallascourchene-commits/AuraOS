@@ -1,0 +1,279 @@
+{
+  "allowed_paths": [
+    ".aura/refactor_objectives/construction_pascal_spatial_foundry_pr5.v1.json",
+    ".aura/runtime_profiles/construction_demo_bilateral.v2.json",
+    ".aura/runtime_profiles/construction_foundry_p4.confirmation.template.json",
+    ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
+    ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json",
+    ".aura/waboose_requests/construction_pascal_spatial_foundry_pr5.v1.json",
+    ".gitignore",
+    "aura_construction_foundry_decision.py",
+    "aura_construction_foundry_director.py",
+    "aura_construction_pascal_spatial_foundry_p3_server.py",
+    "aura_construction_pascal_spatial_foundry_p4_server.py",
+    "aura_pascal_spatial_presentation_part1.py",
+    "aura_showcase/construction-decision-as-built-sync.js",
+    "aura_showcase/construction-decision-foundry.js",
+    "aura_showcase/construction-foundry-director.js",
+    "aura_showcase/pascal-workbench/artifact-manifest.json",
+    "aura_showcase/pascal-workbench/coordinate-receipt.json",
+    "aura_showcase/pascal-workbench/fixture.json",
+    "aura_showcase/pascal-workbench/pascal-workbench.js",
+    "scripts/aura_architecture_harness.py",
+    "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
+    "scripts/aura_runtime_profile_v2_adapter.py",
+    "scripts/aura_runtime_refactor_harness.py",
+    "tests/js/construction-foundry-director-contract.test.mjs",
+    "tests/runtime/construction_pascal_spatial_foundry_browser_probe.cjs",
+    "tests/test_aura_construction_foundry_director.py",
+    "tests/test_aura_construction_pascal_spatial_foundry_p4.py",
+    "tests/test_aura_construction_pascal_spatial_foundry_pr5.py",
+    "third_party/pascal/pascal-lock.json"
+  ],
+  "axiom_bindings": [
+    "bind_complete_mvp_to_exact_clean_head",
+    "preserve_source_truth_separate_from_presentation_truth",
+    "prove_current_run_freshness_and_full_lifecycle",
+    "reuse_canonical_runtime_archive_reproof_and_authority_owners",
+    "dissolve_all_runtime_resources_after_proof",
+    "keep_patch_commit_publication_merge_construction_and_learning_authority_outside_runtime_evidence"
+  ],
+  "base_profile": ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
+  "bilateral_waboose_request": ".aura/waboose_requests/construction_pascal_spatial_foundry_pr5.v1.json",
+  "positive_assertions": [
+    {
+      "artifact": "runtime_harness_receipt.json",
+      "assertion_id": "v1-runtime-passed",
+      "json_path": "ok",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "verify-bilateral-waboose.receipt.json",
+      "assertion_id": "bilateral-waboose-passed",
+      "json_path": "returncode",
+      "operator": "equals",
+      "expected": 0
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "browser-proof-ok",
+      "json_path": "ok",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "exact-fifteen-chapter-order",
+      "json_path": "exactOrder",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "relaunch-succeeded",
+      "json_path": "relaunchSucceeded",
+      "operator": "truthy"
+    }
+  ],
+  "negative_assertions": [
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "no-production-mutation",
+      "json_path": "productionMutation",
+      "operator": "falsy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "no-automatic-merge",
+      "json_path": "automaticMerge",
+      "operator": "falsy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "no-physical-work-authority",
+      "json_path": "physicalWorkAuthorized",
+      "operator": "falsy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "no-professional-authority",
+      "json_path": "professionalAuthority",
+      "operator": "falsy"
+    }
+  ],
+  "preservation_assertions": [
+    {
+      "artifact": "runtime_harness_receipt.json",
+      "assertion_id": "repository-tree-preserved",
+      "json_path": "repository_unchanged",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "source-not-mutated",
+      "json_path": "sourceMutation",
+      "operator": "falsy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "all-authority-false",
+      "json_path": "allAuthorityFalse",
+      "operator": "truthy"
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "terminal-dissolution-proved",
+      "json_path": "finalState.dissolved",
+      "operator": "truthy"
+    }
+  ],
+  "fault_injections": [
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "no-page-errors",
+      "json_path": "pageErrors",
+      "operator": "equals",
+      "expected": []
+    },
+    {
+      "artifact": "browser-evidence.json",
+      "assertion_id": "no-request-failures",
+      "json_path": "requestFailures",
+      "operator": "equals",
+      "expected": []
+    },
+    {
+      "artifact": "server-termination.receipt.json",
+      "assertion_id": "server-termination-terminal",
+      "json_path": "returncode",
+      "operator": "not_equals",
+      "expected": null
+    }
+  ],
+  "independent_verifier": {
+    "source_path": "tests/runtime/construction_pascal_spatial_foundry_browser_probe.cjs",
+    "source_sha256": "8e7ab66a2f0885e2ecf271f989b886dff3721a36c03f0e9dfcbb26e8cd0b157f",
+    "verifier_id": "construction-pascal-pr5-browser-verifier"
+  },
+  "intent_contract": {
+    "confirmation_packet_version": "AURA_BILATERAL_CANONICAL_COMPILER_V1",
+    "intent_revision_status": "NOT_CREATED_NO_POST_CONFIRMATION_DRIFT"
+  },
+  "objective": "Independently prove the complete Construction + Pascal Spatial Foundry MVP at one exact clean head, including all fifteen Director chapters, current-run evidence, nested Runtime V2 repair proof, dissolution, relaunch, and unchanged authority.",
+  "profile_id": "construction-pascal-spatial-foundry-pr5-bilateral",
+  "repair_policy": {
+    "automatic_fix": false,
+    "automatic_commit": false,
+    "automatic_push": false,
+    "automatic_pull_request": false,
+    "automatic_merge": false,
+    "production_mutation": false,
+    "professional_authority": false,
+    "physical_work_authority": false,
+    "learning_promotion": false,
+    "max_attempts": 1,
+    "retry_failed_assertions": false,
+    "human_review_required": true
+  },
+  "required_trace_artifacts": [
+    "browser-evidence.json",
+    "construction-foundry-projection.json",
+    "incident-replay-packet.json",
+    "runtime-profile-v2-proof.json",
+    "repair-attempt.json",
+    "preview-rollback-receipt.json",
+    "u7-current-reproof.json",
+    "attempt-archive-index.json",
+    "cleanup-receipt.json",
+    "runtime_harness_receipt.json",
+    "server-termination.receipt.json",
+    "verify-bilateral-waboose.receipt.json"
+  ],
+  "requirement_bindings": {
+    "positive_assertions": [
+      {
+        "requirement_digest": "17dd239d18ec037d7ed5ed7b431ef26f6c9fdffe90f8cf7f25ed66c85fb3506a",
+        "assertion_ids": [
+          "browser-proof-ok",
+          "exact-fifteen-chapter-order"
+        ]
+      },
+      {
+        "requirement_digest": "92bc084d885e96052ce8963671bcafa91516e7175ae05257918b0c55e5821cff",
+        "assertion_ids": [
+          "v1-runtime-passed",
+          "bilateral-waboose-passed",
+          "relaunch-succeeded"
+        ]
+      }
+    ],
+    "negative_assertions": [
+      {
+        "requirement_digest": "9ddda2d7063c54cf01c100c957a44e7b28e143fd4104d0c54999fc459904111b",
+        "assertion_ids": [
+          "no-production-mutation",
+          "no-automatic-merge",
+          "no-physical-work-authority",
+          "no-professional-authority"
+        ]
+      }
+    ],
+    "preservation_assertions": [
+      {
+        "requirement_digest": "91b051560b627770abae619bfd2fc7d0cd16708baea047a4e76c8c5c6ada61f6",
+        "assertion_ids": [
+          "repository-tree-preserved",
+          "source-not-mutated",
+          "all-authority-false",
+          "terminal-dissolution-proved"
+        ]
+      }
+    ],
+    "fault_injections": [
+      {
+        "requirement_digest": "d06a3846df5669c6cdabff945c66b0e2b674c341e96af3c5cc7323d75057eac2",
+        "assertion_ids": [
+          "no-page-errors",
+          "no-request-failures",
+          "server-termination-terminal"
+        ]
+      }
+    ]
+  },
+  "runtime_candidate_id": "construction-pascal-spatial-foundry-pr5-candidate",
+  "scenarios": [
+    {
+      "scenario_id": "complete-director-tour",
+      "description": "The exact fifteen-chapter tour and all required current-run browser evidence complete successfully.",
+      "required_assertion_ids": [
+        "browser-proof-ok",
+        "exact-fifteen-chapter-order",
+        "no-page-errors",
+        "no-request-failures"
+      ]
+    },
+    {
+      "scenario_id": "authority-denial",
+      "description": "No runtime or presentation result grants consequential authority.",
+      "required_assertion_ids": [
+        "no-production-mutation",
+        "no-automatic-merge",
+        "no-physical-work-authority",
+        "no-professional-authority",
+        "all-authority-false"
+      ]
+    },
+    {
+      "scenario_id": "source-and-lifecycle-preservation",
+      "description": "The source tree remains exact while the presentation dissolves and relaunches cleanly.",
+      "required_assertion_ids": [
+        "v1-runtime-passed",
+        "bilateral-waboose-passed",
+        "repository-tree-preserved",
+        "source-not-mutated",
+        "terminal-dissolution-proved",
+        "relaunch-succeeded",
+        "server-termination-terminal"
+      ]
+    }
+  ],
+  "version": "AURA_RUNTIME_PROFILE_V2"
+}
