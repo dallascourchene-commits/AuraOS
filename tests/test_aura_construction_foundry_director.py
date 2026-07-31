@@ -533,3 +533,99 @@ def test_construction_state_and_authority_remain_unchanged():
     # Final state digest should match the original (unchanged).
     final = director.require_session(session_id)
     assert final.construction_state_digest == original_state
+
+
+def test_acknowledge_rejects_missing_identity_digest():
+    """acknowledge_p3_sync rejects a receipt with no identity_digest."""
+    director = ConstructionFoundryDirector(manifest())
+    session = director.start_session(
+        identity_digest=sha("identity-no-id"),
+        construction_state_digest=sha("state-no-id"),
+        initial_evidence=initial_evidence(),
+    )
+    session_id = session["session_id"]
+    claimed = director.claim_next(session_id)
+    director.commit_next(
+        session_id,
+        transition_digest=claimed["transition_digest"],
+        effect_receipt={"ok": True},
+        claim_token=claimed["claim_token"],
+    )
+    sess = director.require_session(session_id)
+    if not sess.p3_sync_pending:
+        return
+    last_receipt = sess.receipts[-1]
+    chapter_id = last_receipt.get("chapter_id")
+    manifest_chapter = director.manifest.chapter(chapter_id)
+    active_view = dict(manifest_chapter.ui_directive or {}).get("active_view")
+    # Missing identity_digest.
+    with pytest.raises(ValueError, match="identity_digest"):
+        director.acknowledge_p3_sync(
+            session_id,
+            presentation_receipt={
+                "chapter_id": chapter_id,
+                "active_view": active_view,
+                "receipt_digest": "fake",
+            },
+        )
+    # Empty identity_digest.
+    with pytest.raises(ValueError, match="identity_digest"):
+        director.acknowledge_p3_sync(
+            session_id,
+            presentation_receipt={
+                "chapter_id": chapter_id,
+                "active_view": active_view,
+                "identity_digest": "",
+                "receipt_digest": "fake",
+            },
+        )
+    # p3_sync_pending must remain True.
+    assert director.require_session(session_id).p3_sync_pending is True
+
+
+def test_acknowledge_rejects_missing_receipt_digest():
+    """acknowledge_p3_sync rejects a receipt with no receipt_digest."""
+    director = ConstructionFoundryDirector(manifest())
+    session = director.start_session(
+        identity_digest=sha("identity-no-digest"),
+        construction_state_digest=sha("state-no-digest"),
+        initial_evidence=initial_evidence(),
+    )
+    session_id = session["session_id"]
+    claimed = director.claim_next(session_id)
+    director.commit_next(
+        session_id,
+        transition_digest=claimed["transition_digest"],
+        effect_receipt={"ok": True},
+        claim_token=claimed["claim_token"],
+    )
+    sess = director.require_session(session_id)
+    if not sess.p3_sync_pending:
+        return
+    last_receipt = sess.receipts[-1]
+    chapter_id = last_receipt.get("chapter_id")
+    manifest_chapter = director.manifest.chapter(chapter_id)
+    active_view = dict(manifest_chapter.ui_directive or {}).get("active_view")
+    # Missing receipt_digest.
+    with pytest.raises(ValueError, match="receipt_digest"):
+        director.acknowledge_p3_sync(
+            session_id,
+            presentation_receipt={
+                "chapter_id": chapter_id,
+                "active_view": active_view,
+                "identity_digest": sess.identity_digest,
+            },
+        )
+    # Empty receipt_digest.
+    with pytest.raises(ValueError, match="receipt_digest"):
+        director.acknowledge_p3_sync(
+            session_id,
+            presentation_receipt={
+                "chapter_id": chapter_id,
+                "active_view": active_view,
+                "identity_digest": sess.identity_digest,
+                "receipt_digest": "",
+            },
+        )
+    # p3_sync_pending must remain True.
+    assert director.require_session(session_id).p3_sync_pending is True

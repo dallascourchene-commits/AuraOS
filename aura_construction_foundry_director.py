@@ -464,6 +464,7 @@ class DirectorSession:
             "evidence": dict(sorted(self.evidence.items())),
             "context": dict(self.context),
             "receipt_count": len(self.receipts),
+            "p3_sync_pending": self.p3_sync_pending,
             "human_review_required": True,
             "authority": {**_FALSE_AUTHORITY},
         }
@@ -633,10 +634,20 @@ class ConstructionFoundryDirector:
                     "required presentation view"
                 )
             # Validate the receipt is bound to the session identity.
-            receipt_identity = presentation_receipt.get("identity_digest")
-            if receipt_identity and receipt_identity != session.identity_digest:
+            receipt_identity = str(presentation_receipt.get("identity_digest") or "")
+            if not receipt_identity:
+                raise ValueError(
+                    "P3 presentation receipt must include a non-empty identity_digest"
+                )
+            if receipt_identity != session.identity_digest:
                 raise ValueError(
                     "P3 presentation receipt identity does not match the session"
+                )
+            # Validate the receipt includes a P3-issued receipt digest.
+            receipt_digest = str(presentation_receipt.get("receipt_digest") or "")
+            if not receipt_digest:
+                raise ValueError(
+                    "P3 presentation receipt must include a non-empty receipt_digest"
                 )
             session.p3_sync_pending = False
             return {"ok": True, "session": session.snapshot(self.manifest)}
