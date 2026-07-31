@@ -550,15 +550,26 @@ def dispatch_p3_foundry_request(
             director_receipt_digest = str(body.get("director_receipt_digest") or "")
             identity_digest = str(body.get("identity_digest") or "")
             chapter_id = str(body.get("chapter_id") or "")
-            if director_session_id and director_receipt_digest:
+            # Detect whether ANY Director binding field is present.  If so,
+            # require the complete binding group — no partial bindings allowed.
+            _director_bindings_present = any([
+                director_session_id, director_receipt_digest,
+                str(body.get("identity_digest") or ""),
+                str(body.get("chapter_id") or ""),
+                str(body.get("active_view") or ""),
+                str(body.get("sync_nonce") or ""),
+            ])
+            if _director_bindings_present:
                 active_view = str(body.get("active_view") or "")
                 _bidentity_digest = str(body.get("identity_digest") or "")
                 _bchapter_id = str(body.get("chapter_id") or "")
                 _sync_nonce = str(body.get("sync_nonce") or "")
-                # When Director bindings are present, ALL five fields must be
+                # When any Director binding is present, ALL five fields must be
                 # supplied.  Reject explicitly instead of falling through to
                 # a plain projection response that lacks projection_digest.
                 _missing = []
+                if not director_session_id: _missing.append("director_session_id")
+                if not director_receipt_digest: _missing.append("director_receipt_digest")
                 if not active_view: _missing.append("active_view")
                 if not _bidentity_digest: _missing.append("identity_digest")
                 if not _bchapter_id: _missing.append("chapter_id")

@@ -794,15 +794,21 @@ def test_confirm_presentation_rejects_duplicate(monkeypatch):
         state.close()
 
 
-def test_direct_confirm_after_project_without_render_step(monkeypatch):
-    """Negative: prepare→project→confirm→ack with no render step.
+def test_anti_replay_ordering_allows_direct_sequence_without_renderer_proof(monkeypatch):
+    """Documented behavior: prepare→project→confirm→ack succeeds via direct API.
 
-    A direct API caller who knows the /project response values can call
-    confirm-presentation.  The protocol provides ordering and anti-replay
-    guarantees but does NOT claim cryptographic proof that a human observed
-    the rendered pixels.  The receipt_digest includes a server-owned
-    render_capability that the caller never sees, so the caller cannot
-    predict or forge the receipt.
+    This is NOT a security regression.  The protocol provides:
+    - Ordering (PREPARED → PROJECTED → RENDER_CONFIRMED → ACKNOWLEDGED)
+    - Anti-replay (one-time nonce, one-time state transitions)
+    - Server-generated receipt (non-deterministic from caller's view)
+
+    It does NOT provide cryptographic proof that a human observed pixels.
+    The render_capability is server-owned and never returned to any caller.
+    The receipt_digest includes it, making the receipt unpredictable.
+
+    This test documents the achievable guarantee: a caller who is the
+    browser's agent CAN transition the state machine.  The receipt is
+    bound to server-owned values the caller cannot predict or forge.
     """
     monkeypatch.setattr(p4, "_validate_request_context", lambda *_args, **_kwargs: None)
     import aura_construction_pascal_spatial_foundry_p3_server as p3mod
@@ -938,5 +944,51 @@ def test_direct_confirm_after_project_without_render_step(monkeypatch):
         )
         assert ack_status == 200
         assert director.require_session(session_id).p3_sync_pending is False
+    finally:
+        state.close()
+
+
+def test_p3_project_rejects_partial_director_bindings(monkeypatch):
+    """P3 /project must reject partial Director binding groups with 400.
+
+    If any Director binding field is present (e.g. director_session_id
+    alone), the route must require the complete binding group and reject
+    with 400 — not fall through to a plain projection response.
+    """
+    monkeypatch.setattr(p4, "_validate_request_context", lambda *_args, **_kwargs: None)
+    import aura_construction_pascal_spatial_foundry_p3_server as p3mod
+    monkeypatch.setattr(p3mod, "_validate_request_context", lambda *_args, **_kwargs: None)
+
+    state = p3mod.P3FoundryShowcaseState(
+        Path(__file__).resolve().parents[1],
+        demo_project="winnipeg_pathways",
+        auto_start=False,
+        presentation_origin="http://127.0.0.1:8765",
+    )
+    try:
+        # Compile a real projection to get valid identity fields.
+        projection = state.require_p3().compile(active_view="DESIGN", timeline_day=14.0)
+        # Only director_session_id present — no other Director bindings.
+        status, _, resp = p3mod.dispatch_p3_foundry_request(
+            state, "POST", "/api/construction/decision-lane/project",
+            {
+                "active_view": "DESIGN", "timeline_day": 14.0,
+                "state_digest": projection["domain"]["state_digest"],
+                "runtime_packet_digest": projection["domain"]["runtime_packet_digest"],
+                "pascal_artifact_digest": projection["artifacts"]["pascal_artifact_digest"],
+                "coordinate_receipt_digest": projection["artifacts"]["coordinate_receipt_digest"],
+                "as_built_scene_digest": projection["artifacts"]["as_built_scene_digest"],
+                "director_session_id": "partial-session-id",
+                # Missing: director_receipt_digest, identity_digest,
+                # chapter_id, sync_nonce
+            },
+            request_origin="http://127.0.0.1:8765",
+            request_host="127.0.0.1:8765",
+        )
+        assert status == 400, f"partial bindings should be rejected, got {status}: {resp.decode()[:200]}"
+        body = json.loads(resp.decode())
+        assert "missing required fields" in body.get("error", "")
+        # Verify no sync state was created.
+        assert not hasattr(state, "_p3_sync_nonces") or not state._p3_sync_nonces
     finally:
         state.close()
