@@ -1310,7 +1310,7 @@ def dispatch_p4_foundry_request(
                     return _json(409, {"ok": False, "error": "P4 transition is blocked", "transition": transition})
                 try:
                     return _json(200, _execute_chapter(state, session_id, transition))
-                except Exception:
+                except Exception as exc:
                     # Release the claim if the effect itself threw before
                     # commit_next could run, so the session is not stuck.
                     # Pass the claim_token so we only release OUR claim, not
