@@ -697,6 +697,13 @@ def run_runtime_profile(
         python = Path(sys.executable).resolve()
 
     base_env = _safe_environment(root)
+    # Propagate nested replay mode and port override to child processes.
+    # _safe_environment only passes SAFE_ENV_KEYS, so these must be added
+    # explicitly or the nested P4 server and browser probe won't see them.
+    for _propagated_key in ("AURA_NESTED_REPLAY_MODE", "AURA_RUNTIME_SERVER_PORT"):
+        _propagated_val = os.environ.get(_propagated_key)
+        if _propagated_val is not None:
+            base_env[_propagated_key] = _propagated_val
     if install_requirements:
         for index, requirement in enumerate(profile["environment"]["requirements"]):
             result = _run_command(
@@ -786,6 +793,11 @@ def run_runtime_profile(
                 key: _substitute(value, root=root, output=output, python=python)
                 for key, value in profile["probe"]["env"].items()
             }
+            # Also propagate nested replay mode to the browser probe.
+            for _propagated_key in ("AURA_NESTED_REPLAY_MODE", "AURA_RUNTIME_SERVER_PORT"):
+                _propagated_val = os.environ.get(_propagated_key)
+                if _propagated_val is not None:
+                    probe_env_values[_propagated_key] = _propagated_val
             probe_env = _safe_environment(root, probe_env_values)
             probe_receipt = _run_command(
                 profile["probe"]["command"],
