@@ -1218,17 +1218,33 @@ def test_p4_runtime_runner_replacement_and_restoration():
     assert state.p4_confirmation_consumed, "confirmation not consumed"
     assert result.get("ok") is True, "result should be ok"
 
-    # Complete identity-adapter assertions
-    adapted_contract = result.get("intent_contract", {})
-    assert adapted_contract.get("intent_digest") == _intent, "lost intent_digest"
-    assert adapted_contract.get("confirmation_digest") == _confirmation, "lost confirmation_digest"
-    assert adapted_contract.get("semantic_ledger_digest") == _ledger, "lost semantic_ledger_digest"
-    assert adapted_contract.get("guardrail_set_digest") == _guardrail, "lost guardrail_set_digest"
+    # Canonical intent contract — exact-object equality (catches missing,
+    # changed, renamed, extra, and partial retention in one assertion).
+    expected_canonical_contract = {
+        "intent_digest": _intent,
+        "semantic_ledger_digest": _ledger,
+        "confirmation_digest": _confirmation,
+        "guardrail_set_digest": _guardrail,
+        "intent_revision_status": "P0",
+        "expected_repository_head": _repo_head,
+        "expected_source_tree": _source_tree,
+    }
+    assert result.get("canonical_intent_contract") == expected_canonical_contract, \
+        "canonical_intent_contract does not match exact expected object"
 
-    # canonical_intent_contract retains the original confirmation-bound values
-    canonical_contract = result.get("canonical_intent_contract", {})
-    assert canonical_contract.get("intent_digest") == _intent, "canonical intent_digest lost"
-    assert canonical_contract.get("confirmation_digest") == _confirmation, "canonical confirmation_digest lost"
+    # Adapted intent contract — exact-object equality mirroring the
+    # adapter's expected_adapted invariant.
+    expected_adapted_contract = {
+        "intent_digest": identity.intent_digest,
+        "semantic_ledger_digest": identity.semantic_ledger_digest,
+        "confirmation_digest": identity.confirmation_digest,
+        "guardrail_set_digest": identity.guardrail_set_digest,
+        "intent_revision_status": identity.intent_revision_id,
+        "expected_repository_head": identity.repository_head,
+        "expected_source_tree": identity.source_tree_digest,
+    }
+    assert result.get("intent_contract") == expected_adapted_contract, \
+        "adapted intent_contract does not match exact expected object"
 
     # identity_adapter metadata
     adapter = result.get("identity_adapter", {})
