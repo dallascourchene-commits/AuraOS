@@ -530,19 +530,22 @@ def dispatch_p3_foundry_request(
             chapter_id = str(body.get("chapter_id") or "")
             if director_session_id and director_receipt_digest:
                 active_view = str(body.get("active_view") or "")
-                if not hasattr(state, "_p3_retained_presentation"):
-                    state._p3_retained_presentation = {}
-                _retain_key = f"{director_session_id}:{director_receipt_digest}"
-                # Immutable: reject overwrite of an existing record.
-                if _retain_key not in state._p3_retained_presentation:
-                    state._p3_retained_presentation[_retain_key] = {
-                        "active_view": active_view,
-                        "director_session_id": director_session_id,
-                        "director_receipt_digest": director_receipt_digest,
-                        "identity_digest": identity_digest,
-                        "chapter_id": chapter_id,
-                        "projection_digest": hashlib.sha256(json.dumps(projection, sort_keys=True, default=str).encode()).hexdigest(),
-                    }
+                _bidentity_digest = str(body.get("identity_digest") or "")
+                # Require all 5 binding fields as an all-or-nothing group.
+                if active_view and _bidentity_digest and str(body.get("chapter_id") or ""):
+                    if not hasattr(state, "_p3_retained_presentation"):
+                        state._p3_retained_presentation = {}
+                    _retain_key = f"{director_session_id}:{director_receipt_digest}"
+                    # Immutable: reject overwrite of an existing record.
+                    if _retain_key not in state._p3_retained_presentation:
+                        state._p3_retained_presentation[_retain_key] = {
+                            "active_view": active_view,
+                            "director_session_id": director_session_id,
+                            "director_receipt_digest": director_receipt_digest,
+                            "identity_digest": _bidentity_digest,
+                            "chapter_id": str(body.get("chapter_id") or ""),
+                            "projection_digest": hashlib.sha256(json.dumps(projection, sort_keys=True, default=str).encode()).hexdigest(),
+                        }
             return _json(
                 200,
                 {"ok": True, "projection": public_projection(projection)},

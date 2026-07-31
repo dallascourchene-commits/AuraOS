@@ -266,30 +266,10 @@
         if (result.session && result.session.p3_sync_pending) {
           const chapterId = result.receipt?.chapter_id || null;
           const activeView = chapter?.ui_directive?.active_view || null;
-          // Step 1: Request P3 projection for the required view with Director
-          // bindings.  P3 records the retained presentation state as a side
-          // effect of compilation — this is P3-owned evidence, not a client
-          // assertion.
-          const projectResponse = await fetch("/api/construction/decision-lane/project", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "same-origin",
-            cache: "no-store",
-            body: JSON.stringify({
-              ...exactIdentityBody(projection),
-              identity_handle: identityHandle,
-              active_view: activeView,
-              director_session_id: session.session_id,
-              director_receipt_digest: result.receipt?.receipt_digest || result.receipt?.transition_digest || "",
-              chapter_id: chapterId,
-            }),
-          });
-          const projectResult = await projectResponse.json().catch(() => ({}));
-          if (!projectResponse.ok || !projectResult.ok) {
-            throw new Error(`P3 projection for presentation sync failed: ${projectResult.error || projectResponse.status}`);
-          }
-          // Step 2: Request P4 acknowledgement.  P4 resolves the bilateral
-          // identity internally and calls P3 issue+validate with it.
+          // Request P4 acknowledgement — P4 resolves the bilateral identity
+          // internally and handles the full P3 project+issue+validate flow
+          // with the resolved identity_digest. The browser does NOT call P3
+          // directly for retention because it doesn't have identity_digest.
           const ackResponse = await fetch(`/api/construction/director/session/${encodeURIComponent(session.session_id)}/ack-p3-sync`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },

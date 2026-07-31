@@ -1221,6 +1221,28 @@ def dispatch_p4_foundry_request(
                 _required_chapter = director.manifest.chapter(_last_chapter_id)
                 _required_view = dict(_required_chapter.ui_directive or {}).get("active_view")
                 _director_receipt_digest = str(_last_receipt.get("receipt_digest") or _last_receipt.get("transition_digest") or "")
+                # Step 0: Call P3 project with Director bindings + resolved
+                # identity_digest so P3 records the retained presentation
+                # state as a side effect of compilation.  The browser cannot
+                # do this directly because it does not have identity_digest.
+                _p3_project_body = {
+                    **{k: v for k, v in body.items() if k in (*_IDENTITY_KEYS, *_SELECTION_KEYS, "timeline_day")},
+                    "identity_handle": body.get("identity_handle", ""),
+                    "identity_digest": resolved_identity.identity_digest,
+                    "active_view": _presentation_receipt.get("active_view"),
+                    "director_session_id": session_id,
+                    "director_receipt_digest": _director_receipt_digest,
+                    "chapter_id": _last_chapter_id,
+                }
+                _p3_proj_status, _, _p3_proj_resp = dispatch_p3_foundry_request(
+                    state, "POST",
+                    "/api/construction/decision-lane/project",
+                    _p3_project_body,
+                    request_origin=state.presentation_origin,
+                    request_host=state.presentation_netloc,
+                )
+                if _p3_proj_status != 200:
+                    raise PascalPresentationError("P3 project for presentation retention failed")
                 # Step 1: Call P3 issue with resolved identity_digest.
                 _p3_issue_body = {
                     **{k: v for k, v in body.items() if k in (*_IDENTITY_KEYS, *_SELECTION_KEYS, "timeline_day")},
