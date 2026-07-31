@@ -432,41 +432,6 @@ def dispatch_p3_foundry_request(
                 200,
                 {"ok": True, "projection": public_projection(projection)},
             )
-        if method == "POST" and route == "/api/construction/decision-lane/retain-presentation":
-            # P3-owned presentation retention.  Called by the browser after
-            # P3/Pascal presentation sync has confirmed the current view.
-            # Writes an immutable, bound retained presentation record keyed
-            # by director_session_id + director_receipt_digest so it cannot
-            # be reused by a different session or transition.
-            _retain_body = {k: v for k, v in body.items() if k in (*_IDENTITY_KEYS, *_SELECTION_KEYS, "timeline_day")}
-            projection = _compile_from_request(state, _retain_body, require_identities=True)
-            active_view = str(body.get("active_view") or "")
-            director_session_id = str(body.get("director_session_id") or "")
-            director_receipt_digest = str(body.get("director_receipt_digest") or "")
-            identity_digest = str(body.get("identity_digest") or "")
-            chapter_id = str(body.get("chapter_id") or "")
-            if not active_view or not director_session_id or not director_receipt_digest or not identity_digest or not chapter_id:
-                return _json(400, {"ok": False, "error": "active_view, director_session_id, director_receipt_digest, identity_digest, and chapter_id are required"})
-            compiled_view = projection.get("presentation", {}).get("active_view") or projection.get("active_view", "")
-            if compiled_view != active_view:
-                return _json(409, {"ok": False, "error": f"compiled view '{compiled_view}' does not match retained '{active_view}'"})
-            # Store under a composite key so the record is bound to the
-            # exact Director session and transition, not a global singleton.
-            # Reject overwrite of an existing record (immutability).
-            if not hasattr(state, "_p3_retained_presentation"):
-                state._p3_retained_presentation = {}
-            _retain_key = f"{director_session_id}:{director_receipt_digest}"
-            if _retain_key in state._p3_retained_presentation:
-                return _json(409, {"ok": False, "error": "retained presentation record already exists for this session and receipt digest"})
-            state._p3_retained_presentation[_retain_key] = {
-                "active_view": active_view,
-                "director_session_id": director_session_id,
-                "director_receipt_digest": director_receipt_digest,
-                "identity_digest": identity_digest,
-                "chapter_id": chapter_id,
-                "projection_digest": hashlib.sha256(json.dumps(projection, sort_keys=True, default=str).encode()).hexdigest(),
-            }
-            return _json(200, {"ok": True, "retained_view": active_view, "retention_key": _retain_key})
         if method == "POST" and route == "/api/construction/decision-lane/issue-presentation-receipt":
             # P3-owned presentation receipt issuance.  Called by P4 after
             # the browser has retained the P3 presentation state via
@@ -504,6 +469,8 @@ def dispatch_p3_foundry_request(
                 return _json(409, {"ok": False, "error": "retained record director_receipt_digest mismatch"})
             if retained_presentation.get("chapter_id") and retained_presentation.get("chapter_id") != chapter_id:
                 return _json(409, {"ok": False, "error": "retained record chapter_id mismatch"})
+            if retained_presentation.get("identity_digest") and retained_presentation.get("identity_digest") != identity_digest:
+                return _json(409, {"ok": False, "error": "retained record identity_digest mismatch"})
             # Resolve the identity digest from the caller-supplied
             # bilateral identity_digest (passed by P4 from the resolved
             # identity handle), not from the P3 projection.
@@ -549,6 +516,30 @@ def dispatch_p3_foundry_request(
             return _json(200, {"ok": True, "presentation_receipt": retained})
         if method == "POST" and route == "/api/construction/decision-lane/project":
             projection = _compile_from_request(state, body, require_identities=True)
+            # When Director session bindings are present, P3 records the
+            # retained presentation state as a side effect of compilation —
+            # not from a separate client-authored assertion.  This is the
+            # P3-owned evidence that the projection was actually compiled
+            # for the requested view.
+            director_session_id = str(body.get("director_session_id") or "")
+            director_receipt_digest = str(body.get("director_receipt_digest") or "")
+            identity_digest = str(body.get("identity_digest") or "")
+            chapter_id = str(body.get("chapter_id") or "")
+            if director_session_id and director_receipt_digest:
+                active_view = str(body.get("active_view") or "")
+                if not hasattr(state, "_p3_retained_presentation"):
+                    state._p3_retained_presentation = {}
+                _retain_key = f"{director_session_id}:{director_receipt_digest}"
+                # Immutable: reject overwrite of an existing record.
+                if _retain_key not in state._p3_retained_presentation:
+                    state._p3_retained_presentation[_retain_key] = {
+                        "active_view": active_view,
+                        "director_session_id": director_session_id,
+                        "director_receipt_digest": director_receipt_digest,
+                        "identity_digest": identity_digest,
+                        "chapter_id": chapter_id,
+                        "projection_digest": hashlib.sha256(json.dumps(projection, sort_keys=True, default=str).encode()).hexdigest(),
+                    }
             return _json(
                 200,
                 {"ok": True, "projection": public_projection(projection)},
