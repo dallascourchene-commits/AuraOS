@@ -29,7 +29,7 @@ attempt-archive-index.json
 cleanup-receipt.json
 ```
 
-The Runtime Harness additionally emits readiness, probe, server output, server termination, verification-command, runtime-harness, and bilateral-Waboose receipts.
+The Runtime Harness additionally emits readiness, probe, server output, server termination, verification-command, and runtime-harness receipts. The V2 bilateral adapter separately emits the bilateral-Waboose receipt after V1 succeeds.
 
 ## Freshness rules
 

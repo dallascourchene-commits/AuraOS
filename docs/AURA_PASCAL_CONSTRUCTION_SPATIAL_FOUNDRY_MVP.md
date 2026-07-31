@@ -60,7 +60,7 @@ tests/runtime/construction_pascal_spatial_foundry_browser_probe.cjs
 scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py
 ```
 
-The V1 profile boots the P4 loopback server, drives real Chromium, captures seventeen named screenshots plus exact JSON evidence, runs focused tests and Coding Waboose, verifies CODEMAP, terminates the server, and proves the repository did not change.
+The V1 profile boots the P4 loopback server, drives real Chromium, captures seventeen named screenshots plus exact JSON evidence, runs focused tests, verifies CODEMAP, terminates the server, and proves the repository did not change. The V2 adapter runs bilateral Waboose after V1 succeeds and verifies that it did not change the retained V1 artifacts.
 
 The V2 profile consumes an external canonical bilateral confirmation compiled against the exact clean profile and current source tree. It independently evaluates positive, negative, preservation, and fault obligations. The PR5 wrapper compiles that confirmation outside the checkout and delegates to the existing Runtime Profile V2 adapter.
 
