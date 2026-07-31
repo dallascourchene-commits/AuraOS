@@ -1087,9 +1087,8 @@ def test_p4_runtime_runner_replacement_and_restoration():
     from pathlib import Path
     from tempfile import mkdtemp
     import json as _json
-    import hashlib as _hashlib
 
-    # Use 64-char hex digests so they pass _EXACT_DIGEST (40-64 hex) and
+    # Use 64-char hex digests
     # are returned as-is by _bilateral_identity_digest (no projection).
     _intent = "a" * 64
     _ledger = "b" * 64
