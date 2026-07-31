@@ -829,18 +829,27 @@ def _snapshot_traces(
         size = path.stat().st_size
         if size > maximum or size > MAX_JSON_BYTES:
             raise BilateralRuntimeProfileError(f"runtime trace {name} is oversized")
-        try:
-            body = path.read_bytes()
-            value = _strict_json_loads(body.decode("utf-8"))
-        except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
-            raise BilateralRuntimeProfileError(f"runtime trace {name} is not immutable canonical JSON: {exc}") from exc
+        body = path.read_bytes()
         if len(body) != size:
             raise BilateralRuntimeProfileError(f"runtime trace {name} changed while it was being snapshotted")
-        snapshots[name] = {
-            "value": value,
-            "size_bytes": len(body),
-            "sha256": hashlib.sha256(body).hexdigest(),
-        }
+        sha256 = hashlib.sha256(body).hexdigest()
+        # Binary artifacts (e.g. PNG screenshots) are snapshot by size +
+        # SHA-256 only.  JSON artifacts are also parsed for path assertions.
+        if name.endswith(".json"):
+            try:
+                value = _strict_json_loads(body.decode("utf-8"))
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
+                raise BilateralRuntimeProfileError(f"runtime trace {name} is not immutable canonical JSON: {exc}") from exc
+            snapshots[name] = {
+                "value": value,
+                "size_bytes": len(body),
+                "sha256": sha256,
+            }
+        else:
+            snapshots[name] = {
+                "size_bytes": len(body),
+                "sha256": sha256,
+            }
     return snapshots
 
 

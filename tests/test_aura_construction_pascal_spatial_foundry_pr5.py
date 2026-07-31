@@ -4,6 +4,8 @@ import hashlib
 import json
 from pathlib import Path
 
+import pytest
+
 from aura_pascal_spatial_presentation import load_pascal_compatibility_fixture
 from scripts.aura_construction_pascal_spatial_foundry_pr5_runtime import (
     NEGATIVE_REQUIREMENTS,
@@ -142,7 +144,6 @@ def test_pr5_coordinate_receipt_mismatched_artifact_digest_fails_closed(tmp_path
         # On Linux/macOS, re-raise so a regression is not hidden.
         import platform
         if platform.system() == "Windows":
-            import pytest
             pytest.skip("Pascal fixture has pre-existing digest mismatch on Windows")
         raise
 
