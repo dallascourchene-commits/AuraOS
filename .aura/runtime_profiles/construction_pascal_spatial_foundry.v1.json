@@ -1,0 +1,147 @@
+{
+  "version": "AURA_RUNTIME_PROFILE_V1",
+  "profile_id": "construction-pascal-spatial-foundry-pr5-browser",
+  "objective": "Boot the exact P4 Construction + Pascal Spatial Foundry, drive the complete deterministic fifteen-chapter Director tour in real Chromium, capture every required scene and exact receipt, prove no unexpected network or authority escalation, verify cleanup and source-tree preservation, and stop at human review.",
+  "environment": {
+    "create_venv": true,
+    "requirements": [
+      "requirements.txt"
+    ]
+  },
+  "server": {
+    "command": [
+      "{python}",
+      "aura_construction_pascal_spatial_foundry_p4_server.py",
+      "--repo-root",
+      "{repo}",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "8768"
+    ],
+    "readiness_url": "http://127.0.0.1:8768/api/construction/director/status",
+    "readiness_timeout_seconds": 90
+  },
+  "probe": {
+    "command": [
+      "node",
+      "tests/runtime/construction_pascal_spatial_foundry_browser_probe.cjs"
+    ],
+    "timeout_seconds": 1200,
+    "env": {
+      "AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL": "http://127.0.0.1:8768/",
+      "AURA_RUNTIME_EVIDENCE_DIR": "{output}",
+      "AURA_P4_CHAPTER_TIMEOUT_MS": "300000"
+    },
+    "required_artifacts": [
+      "00-bilateral-intent.png",
+      "01-design-3d.png",
+      "02-floorplan-2d.png",
+      "03-as-built.png",
+      "04-compare.png",
+      "05-obligation-inspector.png",
+      "06-timeline-budget-crews.png",
+      "07-construction-candidates.png",
+      "08-construction-decision.png",
+      "09-capture-started.png",
+      "10-incident-marked.png",
+      "11-replay-proof.png",
+      "12-repair-route.png",
+      "13-preview-rollback.png",
+      "14-current-reproof.png",
+      "15-observatory.png",
+      "16-dissolved.png",
+      "browser-evidence.json",
+      "construction-foundry-projection.json",
+      "incident-replay-packet.json",
+      "runtime-profile-v2-proof.json",
+      "repair-attempt.json",
+      "preview-rollback-receipt.json",
+      "u7-current-reproof.json",
+      "attempt-archive-index.json",
+      "cleanup-receipt.json"
+    ],
+    "success_json": "browser-evidence.json",
+    "success_field": "ok"
+  },
+  "verification_commands": [
+    {
+      "command": [
+        "node",
+        "--check",
+        "aura_showcase/construction-foundry-director.js"
+      ],
+      "timeout_seconds": 30
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "aura_showcase/construction-decision-foundry.js"
+      ],
+      "timeout_seconds": 30
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "aura_showcase/pascal-workbench/pascal-workbench.js"
+      ],
+      "timeout_seconds": 30
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "tests/js/construction-foundry-director-contract.test.mjs"
+      ],
+      "timeout_seconds": 120
+    },
+    {
+      "command": [
+        "{python}",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_aura_construction_foundry_director.py",
+        "tests/test_aura_construction_pascal_spatial_foundry_p4.py",
+        "tests/test_aura_construction_pascal_spatial_foundry_pr5.py"
+      ],
+      "timeout_seconds": 600
+    },
+    {
+      "command": [
+        "{python}",
+        "aura_coding_waboose_cli.py",
+        "--repo-root",
+        "{repo}",
+        "--state-file",
+        "{output}/waboose-state.json",
+        "run",
+        "--request",
+        ".aura/waboose_requests/construction_pascal_spatial_foundry_pr5.v1.json"
+      ],
+      "timeout_seconds": 600
+    },
+    {
+      "command": [
+        "{python}",
+        "-m",
+        "aura_codemap_verify",
+        "--compare-json",
+        ".aura/CODEMAP.json"
+      ],
+      "timeout_seconds": 240
+    }
+  ],
+  "axiom_bindings": [
+    "bind_complete_mvp_to_exact_clean_head",
+    "preserve_pascal_as_disposable_presentation_organ",
+    "preserve_construction_truth_and_authority_owners",
+    "prove_full_director_sequence_in_real_chromium",
+    "capture_current_run_artifacts_only",
+    "reject_unexpected_network_and_stale_evidence",
+    "dissolve_browser_renderer_storage_capture_and_runtime_resources",
+    "keep_patch_publication_merge_construction_and_learning_authority_outside_runtime_evidence"
+  ]
+}
