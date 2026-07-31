@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1785487912,
+  "generated_at_unix": 1785488589,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1543,
+    "included_file_count": 1546,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -1253,6 +1253,9 @@
       "tests/js/spatial-webgl2.test.mjs",
       "tests/js/spatial-webgpu.test.mjs",
       "tests/js/spatial-webxr.test.mjs",
+      "tests/pascal_spatial_presentation_test_contracts.py",
+      "tests/pascal_spatial_presentation_test_lifecycle.py",
+      "tests/pascal_spatial_presentation_test_support.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -1565,23 +1568,23 @@
     ]
   },
   "summary": {
-    "file_count": 1543,
-    "total_bytes": 58503857,
-    "text_tokens_est": 5169272,
+    "file_count": 1546,
+    "total_bytes": 58504441,
+    "text_tokens_est": 5169418,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 64,
       "knowledge_artifact": 195,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 968,
+      "python_module": 971,
       "schema_or_lexicon": 221,
       "support_file": 79
     },
     "topology_nodes": 11210,
     "topology_edges": 27099,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 24994.36
+    "elapsed_ms": 32982.94
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -2866,6 +2869,9 @@
       "tests/js/spatial-webgl2.test.mjs",
       "tests/js/spatial-webgpu.test.mjs",
       "tests/js/spatial-webxr.test.mjs",
+      "tests/pascal_spatial_presentation_test_contracts.py",
+      "tests/pascal_spatial_presentation_test_lifecycle.py",
+      "tests/pascal_spatial_presentation_test_support.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -71638,20 +71644,20 @@
     ],
     "child_message": [
       {
+        "file": "tests/pascal_spatial_presentation_test_support.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 73,
+        "semantic_id": "tests/pascal_spatial_presentation_test_support.py#function:child_message:d03fb40508d76ff3",
+        "signature_hash": "bfa84ad4fe2335b2"
+      },
+      {
         "file": "tests/test_aura_construction_pascal_spatial_foundry_server.py",
         "kind": "function",
         "line": 61,
         "end_line": 75,
         "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_server.py#function:child_message:b695c896fcb26418",
         "signature_hash": "3152a9f6bb2dbedf"
-      },
-      {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
-        "kind": "function",
-        "line": 59,
-        "end_line": 73,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:child_message:decc28de1d8b6186",
-        "signature_hash": "bfa84ad4fe2335b2"
       }
     ],
     "choose_profile_for_phase": [
@@ -79846,19 +79852,19 @@
     ],
     "fixture": [
       {
+        "file": "tests/pascal_spatial_presentation_test_support.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "tests/pascal_spatial_presentation_test_support.py#function:fixture:82f0d49c537a7397",
+        "signature_hash": "c73d3075455b50af"
+      },
+      {
         "file": "tests/test_aura_construction_adapter.py",
         "kind": "function",
         "line": 23,
         "end_line": 24,
         "semantic_id": "tests/test_aura_construction_adapter.py#function:fixture:5dd48d21b2036ac3",
-        "signature_hash": "c73d3075455b50af"
-      },
-      {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
-        "kind": "function",
-        "line": 43,
-        "end_line": 44,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:fixture:9c856a60264a6146",
         "signature_hash": "c73d3075455b50af"
       }
     ],
@@ -86232,11 +86238,11 @@
         "signature_hash": "ad6ded087560c269"
       },
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_support.py",
         "kind": "function",
         "line": 93,
         "end_line": 120,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:load:039441f846b5ee53",
+        "semantic_id": "tests/pascal_spatial_presentation_test_support.py#function:load:509d7da1c5b4b2d8",
         "signature_hash": "901e6f55c33cb73f"
       }
     ],
@@ -92224,11 +92230,11 @@
     ],
     "ready": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_support.py",
         "kind": "function",
         "line": 76,
         "end_line": 90,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:ready:ceb2755ab8d9afad",
+        "semantic_id": "tests/pascal_spatial_presentation_test_support.py#function:ready:39f479a62758b8cf",
         "signature_hash": "d7667134c1df9820"
       }
     ],
@@ -97618,11 +97624,11 @@
     ],
     "session": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_support.py",
         "kind": "function",
         "line": 47,
         "end_line": 56,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:session:e7305bde81c967ad",
+        "semantic_id": "tests/pascal_spatial_presentation_test_support.py#function:session:2272be4e81ff22d5",
         "signature_hash": "3d813af4243cdf9a"
       }
     ],
@@ -100644,11 +100650,11 @@
     ],
     "test_all_canonical_authority_aliases_fail_closed": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_lifecycle.py",
         "kind": "function",
-        "line": 397,
-        "end_line": 404,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_all_canonical_authority_aliases_fail_closed:0340e457fe13add1",
+        "line": 51,
+        "end_line": 58,
+        "semantic_id": "tests/pascal_spatial_presentation_test_lifecycle.py#function:test_all_canonical_authority_aliases_fail_closed:4d0d04cf94602de9",
         "signature_hash": "2c33e1230a89f672"
       }
     ],
@@ -103260,21 +103266,21 @@
     ],
     "test_bridge_payload_byte_ceiling_is_enforced": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 228,
-        "end_line": 242,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_bridge_payload_byte_ceiling_is_enforced:ff7d42dc5b70a5db",
+        "line": 109,
+        "end_line": 123,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_bridge_payload_byte_ceiling_is_enforced:6e19cae7c274b611",
         "signature_hash": "40924d3fe7a9f86a"
       }
     ],
     "test_bridge_payload_depth_and_non_mapping_are_rejected": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 245,
-        "end_line": 277,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_bridge_payload_depth_and_non_mapping_are_rejected:a2e52af00c829875",
+        "line": 126,
+        "end_line": 158,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_bridge_payload_depth_and_non_mapping_are_rejected:0072208478ca2963",
         "signature_hash": "e2d6487ef5f8f625"
       }
     ],
@@ -105698,11 +105704,11 @@
     ],
     "test_committed_pascal_contracts_validate_against_schemas": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 158,
-        "end_line": 164,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_committed_pascal_contracts_validate_against_schemas:421320cf25d9bdcb",
+        "line": 39,
+        "end_line": 45,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_committed_pascal_contracts_validate_against_schemas:e30dc3986b06e535",
         "signature_hash": "4642d2345f7ffaa1"
       }
     ],
@@ -108040,11 +108046,11 @@
     ],
     "test_cross_runtime_bridge_number_digest_vector_is_stable": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 214,
-        "end_line": 224,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_cross_runtime_bridge_number_digest_vector_is_stable:ae6b14fd0ab09ff9",
+        "line": 95,
+        "end_line": 105,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_cross_runtime_bridge_number_digest_vector_is_stable:237e092dfae7a6b4",
         "signature_hash": "4a74e63edf186f2c"
       }
     ],
@@ -109538,11 +109544,11 @@
     ],
     "test_dissolution_requires_exact_cleanup_and_iframe_finalization": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_lifecycle.py",
         "kind": "function",
-        "line": 543,
-        "end_line": 583,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_dissolution_requires_exact_cleanup_and_iframe_finalization:37ed21e30ef35b60",
+        "line": 197,
+        "end_line": 237,
+        "semantic_id": "tests/pascal_spatial_presentation_test_lifecycle.py#function:test_dissolution_requires_exact_cleanup_and_iframe_finalization:e4a4881a266f1b45",
         "signature_hash": "4f57da6505900889"
       }
     ],
@@ -111156,11 +111162,11 @@
     ],
     "test_exact_pinned_pascal_fixture_and_spatial_scene_are_valid": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 123,
-        "end_line": 141,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_exact_pinned_pascal_fixture_and_spatial_scene_are_valid:a1f36eb87ee08f20",
+        "line": 4,
+        "end_line": 22,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_exact_pinned_pascal_fixture_and_spatial_scene_are_valid:efd71dbd20bcd6e8",
         "signature_hash": "172a439e70833401"
       }
     ],
@@ -118658,11 +118664,11 @@
     ],
     "test_manifest_structural_type_errors_fail_as_contract_errors": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 205,
-        "end_line": 211,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_manifest_structural_type_errors_fail_as_contract_errors:37fec19d80ee8d28",
+        "line": 86,
+        "end_line": 92,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_manifest_structural_type_errors_fail_as_contract_errors:7028a3aad4b81383",
         "signature_hash": "73b5c5f83187776d"
       }
     ],
@@ -121032,11 +121038,11 @@
     ],
     "test_nonce_history_is_not_evicted_and_session_is_bounded": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_lifecycle.py",
         "kind": "function",
-        "line": 447,
-        "end_line": 494,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_nonce_history_is_not_evicted_and_session_is_bounded:6c218ea0eb59e39e",
+        "line": 101,
+        "end_line": 148,
+        "semantic_id": "tests/pascal_spatial_presentation_test_lifecycle.py#function:test_nonce_history_is_not_evicted_and_session_is_bounded:b2e6a86906a0013b",
         "signature_hash": "87edf77935884b96"
       }
     ],
@@ -122438,11 +122444,11 @@
     ],
     "test_parent_sequence_advances_only_after_exact_postcondition": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 300,
-        "end_line": 347,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_parent_sequence_advances_only_after_exact_postcondition:654f1af3f2727445",
+        "line": 181,
+        "end_line": 228,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_parent_sequence_advances_only_after_exact_postcondition:9579a9c992e71e6c",
         "signature_hash": "d173c0e26b0c0518"
       }
     ],
@@ -125368,11 +125374,11 @@
     ],
     "test_ready_is_required_and_actual_origin_is_exact": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 280,
-        "end_line": 297,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_ready_is_required_and_actual_origin_is_exact:bec4674efe304679",
+        "line": 161,
+        "end_line": 178,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_ready_is_required_and_actual_origin_is_exact:49b958c58777e418",
         "signature_hash": "eab245fcc0d0c0fd"
       }
     ],
@@ -126168,11 +126174,11 @@
     ],
     "test_registry_never_evicts_active_or_incomplete_dissolution": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_lifecycle.py",
         "kind": "function",
-        "line": 497,
-        "end_line": 529,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_registry_never_evicts_active_or_incomplete_dissolution:c97c0319092b9e04",
+        "line": 151,
+        "end_line": 183,
+        "semantic_id": "tests/pascal_spatial_presentation_test_lifecycle.py#function:test_registry_never_evicts_active_or_incomplete_dissolution:c43c3c0646c93a00",
         "signature_hash": "85547c31d7706b59"
       }
     ],
@@ -126338,11 +126344,11 @@
     ],
     "test_rejected_parent_command_can_retry_without_sequence_desynchronization": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_lifecycle.py",
         "kind": "function",
-        "line": 350,
-        "end_line": 384,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_rejected_parent_command_can_retry_without_sequence_desynchronization:fd059f80afd19c0a",
+        "line": 4,
+        "end_line": 38,
+        "semantic_id": "tests/pascal_spatial_presentation_test_lifecycle.py#function:test_rejected_parent_command_can_retry_without_sequence_desynchronization:7fc7be0da4687732",
         "signature_hash": "49a0c3c4618793f2"
       }
     ],
@@ -129384,11 +129390,11 @@
     ],
     "test_scene_asset_tampering_fails_closed": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 167,
-        "end_line": 186,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_scene_asset_tampering_fails_closed:330b8e33ba466671",
+        "line": 48,
+        "end_line": 67,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_scene_asset_tampering_fails_closed:7c12171a869cd193",
         "signature_hash": "4831e24b0306d1fe"
       }
     ],
@@ -131092,11 +131098,11 @@
     ],
     "test_source_lock_rejects_recomputed_but_unapproved_package_identity": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 189,
-        "end_line": 195,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_source_lock_rejects_recomputed_but_unapproved_package_identity:fbf86df0565669d7",
+        "line": 70,
+        "end_line": 76,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_source_lock_rejects_recomputed_but_unapproved_package_identity:390b0411f0fe549f",
         "signature_hash": "7c50f910fb0d258a"
       }
     ],
@@ -132398,11 +132404,11 @@
     ],
     "test_static_workbench_has_exact_cleanup_3d_dimensions_and_no_remote_dependencies": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_lifecycle.py",
         "kind": "function",
-        "line": 586,
-        "end_line": 597,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_static_workbench_has_exact_cleanup_3d_dimensions_and_no_remote_dependencies:44fb127f6503b16e",
+        "line": 240,
+        "end_line": 251,
+        "semantic_id": "tests/pascal_spatial_presentation_test_lifecycle.py#function:test_static_workbench_has_exact_cleanup_3d_dimensions_and_no_remote_dependencies:9735ede91538ae9e",
         "signature_hash": "b14180ead217c8d5"
       }
     ],
@@ -136346,11 +136352,11 @@
     ],
     "test_view_storey_selection_and_dimension_postconditions_are_exact": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_lifecycle.py",
         "kind": "function",
-        "line": 407,
-        "end_line": 444,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_view_storey_selection_and_dimension_postconditions_are_exact:214a1cef78b9fc42",
+        "line": 61,
+        "end_line": 98,
+        "semantic_id": "tests/pascal_spatial_presentation_test_lifecycle.py#function:test_view_storey_selection_and_dimension_postconditions_are_exact:ccc72724771fb5c6",
         "signature_hash": "77c51a40c9e51c8d"
       }
     ],
@@ -222533,6 +222539,144 @@
       ]
     },
     {
+      "path": "tests/pascal_spatial_presentation_test_contracts.py",
+      "role": "python_module",
+      "bytes": 8505,
+      "lines": 229,
+      "tokens_est": 2126,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1f67782e1f904ab8",
+      "vector": [
+        -0.272799,
+        -0.277922,
+        0.049949,
+        0.300975,
+        0.165216,
+        0.10374,
+        0.213885,
+        0.198516,
+        0.139601,
+        0.111425,
+        -0.078126,
+        0.111425,
+        -0.116548,
+        0.259992,
+        0.162655,
+        0.003842,
+        0.111425,
+        -0.180585,
+        -0.098618,
+        -0.049949,
+        -0.055072,
+        0.247184,
+        -0.229254,
+        -0.190831,
+        -0.119109,
+        0.203639,
+        -0.126794,
+        -0.203639,
+        -0.190831,
+        -0.234377,
+        -0.162655,
+        -0.180585
+      ]
+    },
+    {
+      "path": "tests/pascal_spatial_presentation_test_lifecycle.py",
+      "role": "python_module",
+      "bytes": 8467,
+      "lines": 252,
+      "tokens_est": 2117,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f974fe2274de448b",
+      "vector": [
+        -0.0778,
+        -0.151773,
+        -0.014029,
+        0.159425,
+        0.297169,
+        0.169629,
+        -0.179832,
+        0.154324,
+        -0.029334,
+        -0.215543,
+        -0.01658,
+        0.210441,
+        -0.154324,
+        -0.20534,
+        -0.095655,
+        -0.093104,
+        -0.289516,
+        0.169629,
+        0.315024,
+        0.095655,
+        -0.006377,
+        -0.320126,
+        -0.108409,
+        0.014029,
+        -0.315024,
+        0.075249,
+        0.261457,
+        0.088003,
+        -0.20534,
+        0.024233,
+        -0.008928,
+        0.192586
+      ]
+    },
+    {
+      "path": "tests/pascal_spatial_presentation_test_support.py",
+      "role": "python_module",
+      "bytes": 3619,
+      "lines": 121,
+      "tokens_est": 905,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6688cbcc0e635cdf",
+      "vector": [
+        0.196069,
+        0.174679,
+        -0.046344,
+        0.215082,
+        -0.196069,
+        0.089122,
+        0.243601,
+        0.253107,
+        0.174679,
+        -0.267367,
+        -0.032084,
+        0.243601,
+        0.169926,
+        -0.15329,
+        -0.074863,
+        -0.25073,
+        0.093875,
+        -0.184186,
+        0.174679,
+        -0.262613,
+        -0.005941,
+        0.089122,
+        -0.124771,
+        0.303015,
+        0.16755,
+        -0.108135,
+        -0.300639,
+        0.136654,
+        -0.036837,
+        -0.067733,
+        0.129524,
+        -0.022578
+      ]
+    },
+    {
       "path": "tests/test_aura_adaptive_execution.py",
       "role": "python_module",
       "bytes": 12822,
@@ -230415,47 +230559,47 @@
     {
       "path": "tests/test_aura_pascal_spatial_presentation.py",
       "role": "python_module",
-      "bytes": 20443,
-      "lines": 598,
-      "tokens_est": 5111,
-      "symbol_count": 22,
+      "bytes": 436,
+      "lines": 13,
+      "tokens_est": 109,
+      "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "53ddd23a1466f3f6",
+      "digest8": "043b979ff581c3cf",
       "vector": [
-        0.117295,
-        -0.085855,
-        0.09311,
-        0.122132,
-        0.303516,
-        -0.160827,
-        -0.168082,
-        0.206778,
-        -0.100366,
-        -0.030231,
-        -0.09311,
-        -0.272076,
-        0.056834,
-        -0.141479,
-        -0.228544,
-        0.158409,
-        0.117295,
-        0.214033,
-        -0.264821,
-        -0.230962,
-        -0.073763,
-        0.095529,
-        -0.160827,
-        0.303516,
-        0.107621,
-        0.293842,
-        0.279331,
-        -0.180175,
-        -0.105203,
-        -0.189848,
-        0.030231,
-        -0.001209
+        -0.216167,
+        0.142244,
+        -0.200486,
+        -0.086243,
+        0.142244,
+        -0.178086,
+        0.238567,
+        0.01232,
+        -0.00112,
+        -0.216167,
+        0.128804,
+        -0.225127,
+        -0.153445,
+        -0.204966,
+        -0.245288,
+        -0.249768,
+        0.249768,
+        0.245288,
+        -0.128804,
+        0.276649,
+        0.061602,
+        -0.122084,
+        -0.274409,
+        -0.01232,
+        0.238567,
+        -0.039201,
+        0.148965,
+        -0.153445,
+        0.153445,
+        -0.184806,
+        -0.025761,
+        -0.043681
       ]
     },
     {
