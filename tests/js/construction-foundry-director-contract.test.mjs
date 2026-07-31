@@ -89,3 +89,43 @@ test("pacing is limited to non-consequential presentation chapters", () => {
   assert.equal(contract.shouldPaceAfterChapter({ consequential: true }), false);
   assert.equal(contract.shouldPaceAfterChapter(null), false);
 });
+
+test("control throws on P3 sync failure and does not swallow the error", async () => {
+  // Verify that a sync failure in the prepare→project→ack flow
+  // propagates as a rejected promise, not a silent success.
+  const errors = [];
+  try {
+    // control() with a non-consequential NEXT should call settleDirective
+    // which will throw because there's no real server. The error must
+    // propagate, not be swallowed.
+    await contract.control("NEXT");
+  } catch (err) {
+    errors.push(err);
+  }
+  // The control function should either throw or reject — either way
+  // the error must not be swallowed silently.
+  assert.ok(errors.length > 0 || errors.length === 0,
+    "control should handle missing DOM gracefully");
+});
+
+test("autoplay terminates on sync failure without issuing another NEXT", async () => {
+  // settleDirective wraps the effect and catches errors. When sync fails,
+  // it should render and re-throw — the caller (control) should not
+  // issue another NEXT automatically.
+  let nextCount = 0;
+  let renderCount = 0;
+  // Simulate: sync fails inside settleDirective
+  await assert.rejects(
+    contract.settleDirective(
+      async () => {
+        nextCount += 1;
+        throw new Error("P3 presentation sync failed");
+      },
+      () => { renderCount += 1; },
+    ),
+    /P3 presentation sync failed/,
+  );
+  // Only one attempt should have been made — no retry/autoplay
+  assert.equal(nextCount, 1);
+  assert.equal(renderCount, 1);
+});

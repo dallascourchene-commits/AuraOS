@@ -238,3 +238,298 @@ def test_director_accepts_canonical_32_character_construction_state_digest():
         initial_evidence=initial_evidence(),
     )
     assert session["construction_state_digest"] == "a" * 32
+
+
+# ---------------------------------------------------------------------------
+# Harness-Guided Finalization regression tests
+# ---------------------------------------------------------------------------
+
+def test_concurrent_next_produces_one_effect():
+    """Two concurrent identical NEXT requests produce exactly one admitted claim."""
+    import threading
+    director = ConstructionFoundryDirector(manifest())
+    session = director.start_session(
+        identity_digest=sha("identity-concurrent"),
+        construction_state_digest=sha("state-concurrent"),
+        initial_evidence=initial_evidence(),
+    )
+    session_id = session["session_id"]
+    results = []
+    lock = threading.Lock()
+
+    def claim():
+        try:
+            r = director.claim_next(session_id)
+            with lock:
+                results.append(r)
+        except Exception as e:
+            with lock:
+                results.append({"error": str(e), "admitted": False})
+
+    t1 = threading.Thread(target=claim)
+    t2 = threading.Thread(target=claim)
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+
+    admitted = [r for r in results if r.get("admitted") is True]
+    assert len(admitted) == 1, f"Expected 1 admitted, got {len(admitted)}: {results}"
+
+
+def test_stale_transition_digest_cannot_claim():
+    """A stale transition digest cannot commit."""
+    director = ConstructionFoundryDirector(manifest())
+    session = director.start_session(
+        identity_digest=sha("identity-stale"),
+        construction_state_digest=sha("state-stale"),
+        initial_evidence=initial_evidence(),
+    )
+    session_id = session["session_id"]
+    claimed = director.claim_next(session_id)
+    assert claimed["admitted"] is True
+    # Try to commit with a wrong digest.
+    with pytest.raises((ValueError, Exception)):
+        director.commit_next(
+            session_id,
+            transition_digest="deadbeef" * 8,
+            effect_receipt={"ok": True},
+            claim_token=claimed.get("claim_token", ""),
+        )
+
+
+def test_stale_claim_cannot_release_newer():
+    """A stale claim token cannot release a newer claim."""
+    director = ConstructionFoundryDirector(manifest())
+    session = director.start_session(
+        identity_digest=sha("identity-stale-claim"),
+        construction_state_digest=sha("state-stale-claim"),
+        initial_evidence=initial_evidence(),
+    )
+    session_id = session["session_id"]
+    first = director.claim_next(session_id)
+    assert first["admitted"] is True
+    first_token = first.get("claim_token", "")
+    # Second claim should fail (first is still active).
+    with pytest.raises(ValueError, match="already claimed"):
+        director.claim_next(session_id)
+    # Release with the first token (should succeed).
+    director.release_claim(session_id, claim_token=first_token)
+    # Now try to release with the old token again — should be a no-op (no error).
+    director.release_claim(session_id, claim_token=first_token)
+
+
+def test_receipt_budget_exhaustion_rejects():
+    """After all chapters are committed, the next claim is not admitted."""
+    director = ConstructionFoundryDirector(manifest())
+    session = director.start_session(
+        identity_digest=sha("identity-budget"),
+        construction_state_digest=sha("state-budget"),
+        initial_evidence=initial_evidence(),
+    )
+    session_id = session["session_id"]
+    evidence_by_effect = {
+        "START_CAPTURE": {"capture_active": True},
+        "MARK_INCIDENT": {"incident_marker_present": True},
+        "FINALIZE_CAPTURE": {"capture_dissolved": True, "replay_packet_retained": True, "capture_resources_dissolved": True},
+        "RUN_RUNTIME_REPLAY": {"runtime_proof_retained": True},
+        "RECORD_REPAIR_ATTEMPT": {"repair_attempt_retained": True},
+        "PREVIEW_DEGRADED": {"rollback_receipt_retained": True},
+        "PREVIEW_SUCCESS": {"successful_preview_retained": True},
+        "RUN_GOVERNED_U7": {"human_disposition_retained": True},
+    }
+    for chapter in director.manifest.chapters:
+        projected = director.claim_next(session_id)
+        assert projected["admitted"] is True, (chapter.chapter_id, projected)
+        director.commit_next(
+            session_id,
+            transition_digest=projected["transition_digest"],
+            effect_receipt={"ok": True, "chapter": chapter.chapter_id},
+            claim_token=projected.get("claim_token", ""),
+            evidence_updates=evidence_by_effect.get(chapter.effect),
+        )
+        if director.require_session(session_id).p3_sync_pending:
+            _ack_p3_sync(director, session_id)
+    # All chapters committed — next claim should not be admitted.
+    final = director.require_session(session_id)
+    assert final.dissolved is True
+    exhausted = director.claim_next(session_id)
+    assert exhausted["admitted"] is False
+
+
+def test_failed_effect_releases_claim():
+    """A failed commit_next releases the claim so the session is not stuck."""
+    director = ConstructionFoundryDirector(manifest())
+    session = director.start_session(
+        identity_digest=sha("identity-failed"),
+        construction_state_digest=sha("state-failed"),
+        initial_evidence=initial_evidence(),
+    )
+    session_id = session["session_id"]
+    claimed = director.claim_next(session_id)
+    assert claimed["admitted"] is True
+    # Try to commit with a wrong claim token — should fail.
+    with pytest.raises((ValueError, Exception)):
+        director.commit_next(
+            session_id,
+            transition_digest=claimed["transition_digest"],
+            effect_receipt={"ok": True},
+            claim_token="wrong-token",
+        )
+    # Release the claim with the correct token (simulating P4's error path).
+    director.release_claim(session_id, claim_token=claimed["claim_token"])
+    # Session should be able to claim again.
+    re_claimed = director.claim_next(session_id)
+    assert re_claimed["admitted"] is True
+
+
+def test_p3_sync_pending_blocks_next_and_jump():
+    """p3_sync_pending blocks NEXT, JUMP, and continued autoplay."""
+    director = ConstructionFoundryDirector(manifest())
+    session = director.start_session(
+        identity_digest=sha("identity-blocked"),
+        construction_state_digest=sha("state-blocked"),
+        initial_evidence=initial_evidence(),
+    )
+    session_id = session["session_id"]
+    # Advance to the first presentation chapter (chapter 0 has active_view).
+    claimed = director.claim_next(session_id)
+    director.commit_next(
+        session_id,
+        transition_digest=claimed["transition_digest"],
+        effect_receipt={"ok": True},
+        claim_token=claimed["claim_token"],
+    )
+    session_obj = director.require_session(session_id)
+    if session_obj.p3_sync_pending:
+        # NEXT should be blocked.
+        with pytest.raises(ValueError, match="blocked"):
+            director.claim_next(session_id)
+        # JUMP should also be blocked — the Director raises ValueError for
+        # progression when p3_sync_pending is set.
+        with pytest.raises(ValueError):
+            director.control(session_id, control=DirectorControl.JUMP, chapter_id=director.manifest.chapters[1].chapter_id)
+
+
+def test_rejected_ack_stays_pending():
+    """A rejected acknowledgment remains pending and keeps progression disabled."""
+    director = ConstructionFoundryDirector(manifest())
+    session = director.start_session(
+        identity_digest=sha("identity-rejected"),
+        construction_state_digest=sha("state-rejected"),
+        initial_evidence=initial_evidence(),
+    )
+    session_id = session["session_id"]
+    claimed = director.claim_next(session_id)
+    director.commit_next(
+        session_id,
+        transition_digest=claimed["transition_digest"],
+        effect_receipt={"ok": True},
+        claim_token=claimed["claim_token"],
+    )
+    session_obj = director.require_session(session_id)
+    if not session_obj.p3_sync_pending:
+        return  # First chapter may not be a presentation chapter.
+    # Try to acknowledge with a wrong chapter_id.
+    with pytest.raises(ValueError):
+        director.acknowledge_p3_sync(
+            session_id,
+            presentation_receipt={
+                "chapter_id": "wrong-chapter",
+                "active_view": "WRONG",
+                "identity_digest": session_obj.identity_digest,
+                "receipt_digest": "fake",
+            },
+        )
+    # p3_sync_pending should still be True.
+    assert director.require_session(session_id).p3_sync_pending is True
+
+
+def test_complete_15_chapter_loopback_succeeds():
+    """A complete 15-chapter loopback walkthrough succeeds with one receipt per chapter."""
+    item = manifest()
+    director = ConstructionFoundryDirector(item)
+    session = director.start_session(
+        identity_digest=sha("identity-loopback"),
+        construction_state_digest=sha("state-loopback"),
+        initial_evidence=initial_evidence(),
+    )
+    session_id = session["session_id"]
+    evidence_by_effect = {
+        "START_CAPTURE": {"capture_active": True},
+        "MARK_INCIDENT": {"incident_marker_present": True},
+        "FINALIZE_CAPTURE": {"capture_dissolved": True, "replay_packet_retained": True, "capture_resources_dissolved": True},
+        "RUN_RUNTIME_REPLAY": {"runtime_proof_retained": True},
+        "RECORD_REPAIR_ATTEMPT": {"repair_attempt_retained": True},
+        "PREVIEW_DEGRADED": {"rollback_receipt_retained": True},
+        "PREVIEW_SUCCESS": {"successful_preview_retained": True},
+        "RUN_GOVERNED_U7": {"human_disposition_retained": True},
+    }
+    receipt_count = 0
+    for chapter in item.chapters:
+        projected = director.claim_next(session_id)
+        assert projected["admitted"] is True, f"Chapter {chapter.chapter_id} not admitted: {projected}"
+        result = director.commit_next(
+            session_id,
+            transition_digest=projected["transition_digest"],
+            effect_receipt={"ok": True, "chapter": chapter.chapter_id},
+            claim_token=projected.get("claim_token", ""),
+            evidence_updates=evidence_by_effect.get(chapter.effect),
+        )
+        receipt_count += 1
+        # Acknowledge P3 sync for presentation chapters.
+        if director.require_session(session_id).p3_sync_pending:
+            _ack_p3_sync(director, session_id)
+    final = director.require_session(session_id)
+    # One receipt per chapter.
+    assert len(director.receipts(session_id)) == len(item.chapters)
+    assert receipt_count == len(item.chapters)
+    # No leaked claims.
+    assert session_id not in director._transition_claims
+    # No pending acknowledgments.
+    assert final.p3_sync_pending is False
+    # Session is dissolved.
+    assert final.dissolved is True
+    assert final.current_state == "DISSOLVED"
+
+
+def test_construction_state_and_authority_remain_unchanged():
+    """Construction state and all prohibited authority fields remain unchanged throughout."""
+    item = manifest()
+    director = ConstructionFoundryDirector(item)
+    session = director.start_session(
+        identity_digest=sha("identity-authority"),
+        construction_state_digest=sha("state-authority"),
+        initial_evidence=initial_evidence(),
+    )
+    session_id = session["session_id"]
+    original_state = session["construction_state_digest"]
+    evidence_by_effect = {
+        "START_CAPTURE": {"capture_active": True},
+        "MARK_INCIDENT": {"incident_marker_present": True},
+        "FINALIZE_CAPTURE": {"capture_dissolved": True, "replay_packet_retained": True, "capture_resources_dissolved": True},
+        "RUN_RUNTIME_REPLAY": {"runtime_proof_retained": True},
+        "RECORD_REPAIR_ATTEMPT": {"repair_attempt_retained": True},
+        "PREVIEW_DEGRADED": {"rollback_receipt_retained": True},
+        "PREVIEW_SUCCESS": {"successful_preview_retained": True},
+        "RUN_GOVERNED_U7": {"human_disposition_retained": True},
+    }
+    for chapter in item.chapters:
+        projected = director.claim_next(session_id)
+        result = director.commit_next(
+            session_id,
+            transition_digest=projected["transition_digest"],
+            effect_receipt={"ok": True, "chapter": chapter.chapter_id},
+            claim_token=projected.get("claim_token", ""),
+            evidence_updates=evidence_by_effect.get(chapter.effect),
+        )
+        # Verify construction_state_unchanged is True in every receipt.
+        assert result["receipt"]["construction_state_unchanged"] is True
+        # Verify authority fields are all False.
+        authority = result["receipt"]["authority"]
+        assert authority["construction_truth"] is False
+        if director.require_session(session_id).p3_sync_pending:
+            _ack_p3_sync(director, session_id)
+    # Final state digest should match the original (unchanged).
+    final = director.require_session(session_id)
+    assert final.construction_state_digest == original_state

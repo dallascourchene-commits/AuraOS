@@ -69,6 +69,7 @@
       settleDirective,
       shouldPaceAfterChapter,
       waitForP3View,
+      control,
     });
     return;
   }

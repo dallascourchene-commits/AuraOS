@@ -521,8 +521,18 @@ def dispatch_p3_foundry_request(
                 return _json(400, {"ok": False, "error": "receipt_digest is required"})
             return _json(200, {"ok": True, "presentation_receipt": retained})
         if method == "POST" and route == "/api/construction/decision-lane/project":
+            # Reject prohibited authority fields before filtering.
+            _prohibited = {"physical_work_authorized", "automatic_execution", "human_review_required"}
+            _found_prohibited = _prohibited & set(body)
+            if _found_prohibited:
+                return _json(409, {"ok": False, "error": f"unknown fields: {sorted(_found_prohibited)}"})
             # Filter to only P3-allowed fields before compilation — Director
             # binding fields are extracted separately after compilation.
+            _allowed_extra = {"identity_handle", "identity_digest", "active_view", "director_session_id", "director_receipt_digest", "chapter_id", "sync_nonce"}
+            _all_allowed = {*_IDENTITY_KEYS, *_SELECTION_KEYS, "timeline_day", *_allowed_extra}
+            _unknown = sorted(set(body) - _all_allowed)
+            if _unknown:
+                return _json(409, {"ok": False, "error": f"unknown fields: {_unknown}"})
             _proj_body = {k: v for k, v in body.items() if k in (*_IDENTITY_KEYS, *_SELECTION_KEYS, "timeline_day")}
             projection = _compile_from_request(state, _proj_body, require_identities=True)
             # When Director session bindings are present, P3 records the
