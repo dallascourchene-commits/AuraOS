@@ -268,7 +268,7 @@
           const activeView = chapter?.ui_directive?.active_view || null;
           // Step 1: Retain P3 presentation state so the P3 issue endpoint
           // can validate against P3-owned retained state.
-          await fetch("/api/construction/decision-lane/retain-presentation", {
+          const retainResponse = await fetch("/api/construction/decision-lane/retain-presentation", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "same-origin",
@@ -277,8 +277,15 @@
               ...exactIdentityBody(projection),
               identity_handle: identityHandle,
               active_view: activeView,
+              director_session_id: session.session_id,
+              director_receipt_digest: result.receipt?.receipt_digest || result.receipt?.transition_digest || "",
+              chapter_id: chapterId,
             }),
           });
+          const retainResult = await retainResponse.json().catch(() => ({}));
+          if (!retainResponse.ok || !retainResult.ok) {
+            throw new Error(`P3 presentation retention failed: ${retainResult.error || retainResponse.status}`);
+          }
           // Step 2: Request P4 acknowledgement.  P4 resolves the bilateral
           // identity internally and calls P3 issue+validate with it.
           const ackResponse = await fetch(`/api/construction/director/session/${encodeURIComponent(session.session_id)}/ack-p3-sync`, {

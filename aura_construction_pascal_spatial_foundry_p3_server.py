@@ -435,22 +435,35 @@ def dispatch_p3_foundry_request(
         if method == "POST" and route == "/api/construction/decision-lane/retain-presentation":
             # P3-owned presentation retention.  Called by the browser after
             # P3/Pascal presentation sync has confirmed the current view.
-            # Writes a retained presentation record that the issue endpoint
-            # validates against — the issue endpoint does NOT recompile from
-            # caller-supplied state.
+            # Writes an immutable, bound retained presentation record keyed
+            # by director_session_id + director_receipt_digest so it cannot
+            # be reused by a different session or transition.
             _retain_body = {k: v for k, v in body.items() if k in (*_IDENTITY_KEYS, *_SELECTION_KEYS, "timeline_day")}
             projection = _compile_from_request(state, _retain_body, require_identities=True)
             active_view = str(body.get("active_view") or "")
-            if not active_view:
-                return _json(400, {"ok": False, "error": "active_view is required"})
+            director_session_id = str(body.get("director_session_id") or "")
+            director_receipt_digest = str(body.get("director_receipt_digest") or "")
+            identity_digest = str(body.get("identity_digest") or "")
+            chapter_id = str(body.get("chapter_id") or "")
+            if not active_view or not director_session_id or not director_receipt_digest:
+                return _json(400, {"ok": False, "error": "active_view, director_session_id, and director_receipt_digest are required"})
             compiled_view = projection.get("presentation", {}).get("active_view") or projection.get("active_view", "")
             if compiled_view != active_view:
                 return _json(409, {"ok": False, "error": f"compiled view '{compiled_view}' does not match retained '{active_view}'"})
-            state._p3_retained_presentation = {
+            # Store under a composite key so the record is bound to the
+            # exact Director session and transition, not a global singleton.
+            if not hasattr(state, "_p3_retained_presentation"):
+                state._p3_retained_presentation = {}
+            _retain_key = f"{director_session_id}:{director_receipt_digest}"
+            state._p3_retained_presentation[_retain_key] = {
                 "active_view": active_view,
+                "director_session_id": director_session_id,
+                "director_receipt_digest": director_receipt_digest,
+                "identity_digest": identity_digest,
+                "chapter_id": chapter_id,
                 "projection_digest": hashlib.sha256(json.dumps(projection, sort_keys=True, default=str).encode()).hexdigest(),
             }
-            return _json(200, {"ok": True, "retained_view": active_view})
+            return _json(200, {"ok": True, "retained_view": active_view, "retention_key": _retain_key})
         if method == "POST" and route == "/api/construction/decision-lane/issue-presentation-receipt":
             # P3-owned presentation receipt issuance.  Called by P4 after
             # the browser has retained the P3 presentation state via
@@ -468,9 +481,14 @@ def dispatch_p3_foundry_request(
                 return _json(400, {"ok": False, "error": "director_session_id and director_receipt_digest are required"})
             # Validate against P3-owned retained presentation state, not a
             # freshly compiled projection from caller-supplied fields.
-            retained_presentation = getattr(state, "_p3_retained_presentation", None)
-            if retained_presentation is None:
+            # Look up by composite key bound to the exact session+transition.
+            retained_map = getattr(state, "_p3_retained_presentation", None)
+            if retained_map is None or not retained_map:
                 return _json(409, {"ok": False, "error": "no retained P3 presentation state — call retain-presentation first"})
+            _retain_lookup_key = f"{director_session_id}:{director_receipt_digest}"
+            retained_presentation = retained_map.get(_retain_lookup_key)
+            if retained_presentation is None:
+                return _json(409, {"ok": False, "error": "no retained presentation record for this session and receipt digest"})
             retained_view = retained_presentation.get("active_view")
             if retained_view != active_view:
                 return _json(409, {"ok": False, "error": f"P3 retained view '{retained_view}' does not match requested '{active_view}'"})
