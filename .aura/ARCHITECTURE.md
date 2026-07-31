@@ -2,7 +2,7 @@
 
 > Canonical architecture, ownership, data-flow, and authority anchor for humans and AI agents
 
-**Architecture audit:** reviewed through July 25, 2026 and the preceding merged development, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S6, Construction Arena G0–G8, Coding Relationship Compass C0–C9, typed Coding Waboose review learning, source-integrity and Crucible ancestry hardening, bounded browser/interchange/Gaussian representation support, the Runtime Refactor Harness, and the atomic Agent Bridge GitHub publication lane.
+**Architecture audit:** reviewed through July 31, 2026 and the preceding merged development, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S6, Construction Arena G0–G8, the merged Construction + Pascal Spatial Foundry PR1–PR5 path through PR #252, Coding Relationship Compass C0–C9, typed Coding Waboose review learning, source-integrity and Crucible ancestry hardening, bounded browser/interchange/Gaussian representation support, the Runtime Refactor Harness, and the atomic Agent Bridge GitHub publication lane.
 
 **Navigation rule:** read this file before subsystem documents. Regenerate CODEMAP/topology from the current tree after architecture or source changes.
 
@@ -123,6 +123,79 @@ human_review_required: true
 ```
 
 Runtime evidence can localize defects and prove a candidate repair on one exact tree. It cannot grant patch, publication, Construction, renderer, professional, or merge authority.
+
+<!-- AURA_CONSTRUCTION_PASCAL_DEMO_OPERATIONS:START -->
+## 3C. Construction + Pascal Spatial Foundry demonstration boundary
+
+The merged PR1–PR5 Construction + Pascal Spatial Foundry is one governed demonstration path over existing owners. It does not add another Construction truth store, renderer truth store, runtime verifier, archive, rollback authority, policy plane, persistence plane, routing plane, or learning owner.
+
+```text
+clean exact repository head + bilateral confirmation
+  → canonical Construction state and identity
+  → P4 loopback server on 127.0.0.1:8768
+  → pinned Pascal 2D/3D presentation organ
+  → P3 synchronized Design / Floor Plan / As-built / Compare views
+  → deterministic fifteen-chapter Director
+  → explicit bounded incident capture
+  → retained replay and Construction Demo Runtime Profile V2 on 127.0.0.1:8767
+  → isolated repair route, degraded preview, exact rollback, successful preview
+  → canonical U7 P0 → P1 → current reproof and human disposition
+  → terminal dissolution and fresh relaunch
+  → current-run screenshots, JSON receipts, Runtime Harness proof, and bilateral Waboose review
+```
+
+Ownership remains explicit:
+
+- **Aura** owns bilateral intent, canonical Construction state, evidence, obligations, candidate roles, authority, Director admission, capture/replay, Runtime Profile V2 delegation, Attempt Archive references, rollback proof, U7 reproof, cleanup, and human-review disposition.
+- **Pascal** is the pinned local disposable geometry/presentation organ for storey, node, dimensions, selection, and 2D/3D visual working state.
+- **The local browser** is the trusted same-origin presentation agent under Trust Model A. The protocol proves ordering, anti-replay, current-run receipt binding, and retained browser/runtime evidence; it does not claim hostile-browser pixel attestation.
+
+There are two operator surfaces:
+
+1. manual presenter mode for a narrated recording, controlled through the Director UI;
+2. full bilateral proof mode through `scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py`, which owns an exclusive fresh external evidence directory, drives headless Chromium, captures seventeen screenshots and exact JSON evidence, runs focused JavaScript/Python/CODEMAP checks, terminates the server, runs bilateral Waboose, verifies source preservation, and stops at human review.
+
+Primary implementation owners:
+
+- `aura_construction_foundry_director.py`;
+- `aura_construction_pascal_spatial_foundry_p4_server.py`;
+- `aura_construction_pascal_spatial_foundry_p3_server.py`;
+- `aura_pascal_spatial_presentation_part1.py` through `aura_pascal_spatial_presentation_part5.py`;
+- `scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py`;
+- `scripts/aura_runtime_refactor_harness.py`;
+- `scripts/aura_runtime_profile_v2_adapter.py`;
+- `.aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json`;
+- `.aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json`;
+- `tests/runtime/construction_pascal_spatial_foundry_browser_probe.cjs`;
+- `tests/runtime/construction_pascal_spatial_foundry_probe_contract.cjs`.
+
+Operational documentation is canonicalized in:
+
+- `docs/AURA_CONSTRUCTION_FOUNDRY_OPERATOR_GUIDE.md`;
+- `docs/AURA_CONSTRUCTION_FOUNDRY_VIDEO_SCRIPT.md`;
+- `docs/AURA_CONSTRUCTION_FOUNDRY_EVIDENCE_GUIDE.md`;
+- `docs/AURA_PASCAL_CONSTRUCTION_SPATIAL_FOUNDRY_MVP.md`.
+
+Authority remains:
+
+```yaml
+projection_only: true
+runtime_evidence_authority: false
+construction_truth_mutation: false
+professional_authority: false
+physical_work_authority: false
+payment_release: false
+access_control: false
+automatic_patch: false
+automatic_commit: false
+automatic_push: false
+automatic_pull_request: false
+automatic_merge: false
+automatic_deployment: false
+automatic_learning_promotion: false
+human_review_required: true
+```
+<!-- AURA_CONSTRUCTION_PASCAL_DEMO_OPERATIONS:END -->
 
 ## 4. Constitutional invariants
 
