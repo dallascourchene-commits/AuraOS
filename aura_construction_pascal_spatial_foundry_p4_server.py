@@ -824,8 +824,29 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
             service = self.live_repair
             canonical_runner = service.runtime_runner
 
+            # Allocate a dynamic port for the nested V1 server.
+            import socket as _socket
+            _sock = _socket.socket(_socket.AF_INET, _socket.SOCK_STREAM)
+            _sock.bind(("127.0.0.1", 0))
+            _nested_port = _sock.getsockname()[1]
+            _sock.close()
+
+            # Issue a sealed nested-replay capability. This can only be
+            # created here — the seal object is module-private to the
+            # V1 harness, so public API callers cannot forge it.
+            from scripts.aura_runtime_refactor_harness import _issue_nested_replay_capability
+            from scripts.aura_runtime_profile_v2_adapter import _run_runtime_profile_v2_nested
+            _capability = _issue_nested_replay_capability(_nested_port)
+
+            # Install a private nested runner closure. The public
+            # execute_replay() method needs no nested argument — it
+            # calls self.runtime_runner which is temporarily replaced.
             def adapted_runner(root: Path, **kwargs: Any) -> Mapping[str, Any]:
-                canonical_proof = canonical_runner(root, **kwargs)
+                canonical_proof = _run_runtime_profile_v2_nested(
+                    root,
+                    nested_capability=_capability,
+                    **kwargs,
+                )
                 return _adapt_runtime_proof_identity(
                     canonical_proof,
                     identity=identity,
@@ -835,28 +856,12 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
                 )
 
             service.runtime_runner = adapted_runner
-            # Use a dynamic port for the nested V1 server to avoid conflict
-            # with the outer P4 server that is already bound to port 8768.
-            import socket as _socket
-            _sock = _socket.socket(_socket.AF_INET, _socket.SOCK_STREAM)
-            _sock.bind(("127.0.0.1", 0))
-            _nested_port = _sock.getsockname()[1]
-            _sock.close()
-            # Build an internal nested replay context — NOT an env var that
-            # can be spoofed from outside. This is passed through the Python
-            # call chain to the V1 harness which propagates it to child
-            # processes as explicit env additions.
-            _nested_context = {
-                "AURA_NESTED_REPLAY_MODE": "1",
-                "AURA_RUNTIME_SERVER_PORT": str(_nested_port),
-            }
             try:
                 result = service.execute_replay(
                     packet_id=packet_id,
                     profile_path=_RUNTIME_PROFILE,
                     confirmation_packet=confirmation_path,
                     output_dir=runtime_output_dir,
-                    nested_replay_context=_nested_context,
                 )
             finally:
                 service.runtime_runner = canonical_runner

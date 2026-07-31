@@ -239,24 +239,19 @@ class BilateralLiveRepairService(
         output_dir: str | Path,
         venv_path: str | Path | None = None,
         baseline_receipt: str | Path | None = None,
-        nested_replay_context: Mapping[str, str] | None = None,
     ) -> dict[str, Any]:
+        """Public execute_replay. Nested replay mode is NOT accepted."""
         packet = self._packet(packet_id)
-        runner_kwargs: dict[str, Any] = dict(
-            profile_path=profile_path,
-            confirmation_packet=confirmation_packet,
-            output_dir=output_dir,
-            venv_path=venv_path,
-            install_requirements=False,
-            allow_dirty=False,
-            baseline_receipt=baseline_receipt,
-        )
-        if nested_replay_context is not None:
-            runner_kwargs["nested_replay_context"] = nested_replay_context
         runner_result = dict(
             self.runtime_runner(
                 self.repo_root,
-                **runner_kwargs,
+                profile_path=profile_path,
+                confirmation_packet=confirmation_packet,
+                output_dir=output_dir,
+                venv_path=venv_path,
+                install_requirements=False,
+                allow_dirty=False,
+                baseline_receipt=baseline_receipt,
             )
         )
         proof = {

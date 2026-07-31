@@ -28,12 +28,49 @@ from urllib.error import URLError
 from urllib.parse import urlparse
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 import venv
+from dataclasses import dataclass
 
 VERSION = "AURA_RUNTIME_REFACTOR_HARNESS_V1"
 PROFILE_VERSION = "AURA_RUNTIME_PROFILE_V1"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 MAX_PROFILE_BYTES = 256 * 1024
 MAX_RECEIPT_BYTES = 2 * 1024 * 1024
+
+# --- Private nested-replay capability (unforgeable by public API callers) ---
+
+_NESTED_REPLAY_SEAL = object()
+
+
+@dataclass(frozen=True, slots=True)
+class _NestedReplayCapability:
+    """Private, identity-sealed capability for nested runtime proofs.
+
+    Only P4FoundryShowcaseState.execute_exact_runtime_replay() can create
+    a valid instance via _issue_nested_replay_capability(). Public API
+    callers cannot forge this because the seal object is module-private.
+    """
+    _seal: object
+    port: int
+
+
+def _issue_nested_replay_capability(port: int) -> _NestedReplayCapability:
+    """Create a valid nested-replay capability. Called only by P4 server."""
+    if not isinstance(port, int) or not (1 <= port <= 65535):
+        raise ValueError(f"nested replay port must be 1-65535, got {port}")
+    return _NestedReplayCapability(_seal=_NESTED_REPLAY_SEAL, port=port)
+
+
+def _validate_nested_replay_capability(capability: _NestedReplayCapability) -> int:
+    """Validate a nested-replay capability and return its port. Raises on forgery."""
+    if type(capability) is not _NestedReplayCapability:
+        raise RuntimeHarnessError("nested replay capability is not a _NestedReplayCapability instance")
+    if capability._seal is not _NESTED_REPLAY_SEAL:
+        raise RuntimeHarnessError("nested replay capability has an invalid seal")
+    if not (1 <= capability.port <= 65535):
+        raise RuntimeHarnessError(f"nested replay port out of range: {capability.port}")
+    return capability.port
+
+
 MAX_COMMANDS = 32
 MAX_COMMAND_ARGS = 96
 MAX_ARG_BYTES = 16 * 1024
@@ -662,18 +699,66 @@ def run_runtime_profile(
     install_requirements: bool = False,
     allow_dirty: bool = False,
     baseline_receipt: str | Path | None = None,
-    nested_replay_context: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
-    root = root.expanduser().resolve()
-    if not root.is_dir():
-        raise RuntimeHarnessError("repository root is missing")
-    # Reject externally supplied nested replay mode — it must come from
-    # the internal nested_replay_context parameter, not from the environment.
-    if os.environ.get("AURA_NESTED_REPLAY_MODE") and nested_replay_context is None:
+    """Public V1 runtime profile runner. Nested replay mode is NOT accepted."""
+    # Reject externally supplied nested replay mode — it must come through
+    # the private _run_runtime_profile_nested helper with a sealed capability.
+    if os.environ.get("AURA_NESTED_REPLAY_MODE"):
         raise RuntimeHarnessError(
             "AURA_NESTED_REPLAY_MODE is set in the external environment — "
             "this variable is internal-only; unset it before running a top-level proof"
         )
+    return _run_runtime_profile_impl(
+        root,
+        profile_path=profile_path,
+        output_dir=output_dir,
+        venv_path=venv_path,
+        install_requirements=install_requirements,
+        allow_dirty=allow_dirty,
+        baseline_receipt=baseline_receipt,
+        nested_capability=None,
+    )
+
+
+def _run_runtime_profile_nested(
+    root: Path,
+    *,
+    profile_path: str | Path,
+    output_dir: str | Path,
+    venv_path: str | Path | None = None,
+    install_requirements: bool = False,
+    allow_dirty: bool = False,
+    baseline_receipt: str | Path | None = None,
+    nested_capability: _NestedReplayCapability,
+) -> dict[str, Any]:
+    """Private nested V1 runner. Requires a sealed _NestedReplayCapability."""
+    _port = _validate_nested_replay_capability(nested_capability)
+    return _run_runtime_profile_impl(
+        root,
+        profile_path=profile_path,
+        output_dir=output_dir,
+        venv_path=venv_path,
+        install_requirements=install_requirements,
+        allow_dirty=allow_dirty,
+        baseline_receipt=baseline_receipt,
+        nested_capability=nested_capability,
+    )
+
+
+def _run_runtime_profile_impl(
+    root: Path,
+    *,
+    profile_path: str | Path,
+    output_dir: str | Path,
+    venv_path: str | Path | None = None,
+    install_requirements: bool = False,
+    allow_dirty: bool = False,
+    baseline_receipt: str | Path | None = None,
+    nested_capability: _NestedReplayCapability | None = None,
+) -> dict[str, Any]:
+    root = root.expanduser().resolve()
+    if not root.is_dir():
+        raise RuntimeHarnessError("repository root is missing")
     profile = load_runtime_profile(root, profile_path)
     output = _external_output_path(root, output_dir)
     # Reject non-empty output directories to prevent stale artifact reuse.
@@ -705,13 +790,12 @@ def run_runtime_profile(
         python = Path(sys.executable).resolve()
 
     base_env = _safe_environment(root)
-    # Propagate nested replay context to child processes when provided
-    # internally. This is NOT inherited from the external environment —
-    # it comes from the nested_replay_context parameter set by
-    # execute_exact_runtime_replay in the P4 server.
-    if nested_replay_context:
-        for _key, _val in nested_replay_context.items():
-            base_env[_key] = _val
+    # When a nested capability is present, propagate its port and mode
+    # to child processes as explicit env additions. This is NOT inherited
+    # from the external environment — it comes from the sealed capability.
+    if nested_capability is not None:
+        base_env["AURA_NESTED_REPLAY_MODE"] = "1"
+        base_env["AURA_RUNTIME_SERVER_PORT"] = str(nested_capability.port)
     if install_requirements:
         for index, requirement in enumerate(profile["environment"]["requirements"]):
             result = _run_command(
@@ -740,24 +824,20 @@ def run_runtime_profile(
         output=output,
         python=python,
     )
-    # Allow port override via environment variable for nested runtime proofs.
-    # When the V2 adapter re-runs the V1 profile inside an already-running
-    # P4 server, the nested server must use a different port.
-    _port_override = os.environ.get("AURA_RUNTIME_SERVER_PORT")
-    if _port_override:
+    # Apply port override from the nested capability (not from os.environ).
+    if nested_capability is not None:
+        _port_str = str(nested_capability.port)
         server_command = [
-            arg if arg != "8768" else _port_override
+            arg if arg != "8768" else _port_str
             for arg in server_command
         ]
-        # Also update the readiness URL if it references the old port.
         readiness_url = profile["server"].get("readiness_url", "")
         if "8768" in readiness_url:
-            profile["server"]["readiness_url"] = readiness_url.replace("8768", _port_override)
-        # Update probe environment to point at the nested server port.
+            profile["server"]["readiness_url"] = readiness_url.replace("8768", _port_str)
         probe_env = profile.get("probe", {}).get("env", {})
         if "AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL" in probe_env:
             probe_env["AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL"] = (
-                probe_env["AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL"].replace("8768", _port_override)
+                probe_env["AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL"].replace("8768", _port_str)
             )
     process: subprocess.Popen[Any] | None = None
     server_capture: (
@@ -801,10 +881,11 @@ def run_runtime_profile(
                 key: _substitute(value, root=root, output=output, python=python)
                 for key, value in profile["probe"]["env"].items()
             }
-            # Also propagate nested replay context to the browser probe.
-            if nested_replay_context:
-                for _key, _val in nested_replay_context.items():
-                    probe_env_values[_key] = _val
+            # Also propagate nested replay mode to the browser probe
+            # from the sealed capability.
+            if nested_capability is not None:
+                probe_env_values["AURA_NESTED_REPLAY_MODE"] = "1"
+                probe_env_values["AURA_RUNTIME_SERVER_PORT"] = str(nested_capability.port)
             probe_env = _safe_environment(root, probe_env_values)
             probe_receipt = _run_command(
                 profile["probe"]["command"],
