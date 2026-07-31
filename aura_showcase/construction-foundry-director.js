@@ -308,8 +308,32 @@
           if (!projectResponse.ok || !projectResult.ok) {
             throw new Error(`P3 project for presentation sync failed: ${projectResult.error || projectResponse.status}`);
           }
-          const presentationReceiptDigest = projectResult.presentation_receipt_digest || null;
-          // Step 3: Request P4 acknowledgement — validates the retained
+          const projectionDigest = projectResult.projection_digest || null;
+          const presentationRevision = projectResult.presentation_revision || null;
+          // Step 3: After waitForP3View has confirmed the actual DOM state,
+          // call confirm-presentation to create the final P3-owned receipt.
+          // This is the event that transitions PROJECTED → RENDER_CONFIRMED.
+          const confirmResponse = await fetch("/api/construction/decision-lane/confirm-presentation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "same-origin",
+            cache: "no-store",
+            body: JSON.stringify({
+              director_session_id: prepareResult.director_session_id,
+              director_receipt_digest: prepareResult.director_receipt_digest,
+              chapter_id: prepareResult.chapter_id,
+              active_view: prepareResult.active_view,
+              identity_digest: prepareResult.identity_digest,
+              projection_digest: projectionDigest,
+              presentation_revision: presentationRevision,
+            }),
+          });
+          const confirmResult = await confirmResponse.json().catch(() => ({}));
+          if (!confirmResponse.ok || !confirmResult.ok) {
+            throw new Error(`P3 confirm-presentation failed: ${confirmResult.error || confirmResponse.status}`);
+          }
+          const presentationReceiptDigest = confirmResult.presentation_receipt_digest || null;
+          // Step 4: Request P4 acknowledgement — validates the confirmed
           // P3 record via lookup only (does NOT create it).
           const ackResponse = await fetch(`/api/construction/director/session/${encodeURIComponent(session.session_id)}/ack-p3-sync`, {
             method: "POST",

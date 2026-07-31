@@ -1226,12 +1226,22 @@ def dispatch_p4_foundry_request(
                 _sync_nonce = secrets.token_hex(16)
                 if not hasattr(state, "_p3_sync_nonces"):
                     state._p3_sync_nonces = {}
-                # Store the nonce AND the server-derived active_view so P3
-                # project can validate the caller didn't substitute a
-                # different view than the manifest requires.
-                state._p3_sync_nonces[f"{session_id}:{_director_receipt_digest}"] = {
-                    "nonce": _sync_nonce,
-                    "active_view": _required_view,
+                _sync_key = f"{session_id}:{_director_receipt_digest}"
+                # Store a complete server-owned synchronization record.
+                # The nonce is consumed during P3 /project (PREPARED→PROJECTED).
+                # A separate confirm-presentation step (PROJECTED→RENDER_CONFIRMED)
+                # is required before ack-p3-sync can clear the gate.
+                state._p3_sync_nonces[_sync_key] = {
+                    "state": "PREPARED",
+                    "sync_nonce": _sync_nonce,
+                    "director_session_id": session_id,
+                    "director_receipt_digest": _director_receipt_digest,
+                    "chapter_id": _last_chapter_id,
+                    "required_view": _required_view,
+                    "identity_digest": resolved_identity.identity_digest,
+                    "projection_digest": "",
+                    "presentation_revision": "",
+                    "presentation_receipt_digest": "",
                 }
                 return _json(200, {
                     "ok": True,
@@ -1290,6 +1300,11 @@ def dispatch_p4_foundry_request(
                     raise PascalPresentationError("P3 receipt identity does not match resolved identity")
                 if _p3_retained.get("director_receipt_digest") != _director_receipt_digest:
                     raise PascalPresentationError("P3 receipt director_receipt_digest does not match last committed receipt digest")
+                # Transition: RENDER_CONFIRMED → ACKNOWLEDGED.
+                _sync_map = getattr(state, "_p3_sync_nonces", None)
+                _sync_key = f"{session_id}:{_director_receipt_digest}"
+                if _sync_map and _sync_key in _sync_map:
+                    _sync_map[_sync_key]["state"] = "ACKNOWLEDGED"
                 # Use the P3-retained receipt as authoritative.
                 _presentation_receipt = dict(_p3_retained)
                 return _json(200, director.acknowledge_p3_sync(

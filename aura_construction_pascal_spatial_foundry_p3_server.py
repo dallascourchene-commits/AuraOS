@@ -9,10 +9,11 @@ from __future__ import annotations
 
 import argparse
 from collections.abc import Mapping
-from http.server import BaseHTTPRequestHandler, HTTPServer
 import hashlib
 import json
 import mimetypes
+import secrets
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urlparse
@@ -498,28 +499,33 @@ def dispatch_p3_foundry_request(
             return _json(200, {"ok": True, "presentation_receipt": receipt})
         if method == "POST" and route == "/api/construction/decision-lane/validate-presentation-receipt":
             # P3-owned receipt validation/lookup.  Called by P4 during
-            # ack-p3-sync.  Returns the already-retained presentation record
-            # only if it matches — does NOT issue a new receipt.
+            # ack-p3-sync.  Returns the confirmed presentation record
+            # only if its state is RENDER_CONFIRMED — not PROJECTED.
             chapter_id = str(body.get("chapter_id") or "")
             receipt_digest = str(body.get("receipt_digest") or "")
             director_session_id = str(body.get("director_session_id") or "")
             director_receipt_digest = str(body.get("director_receipt_digest") or "")
             if not director_session_id or not director_receipt_digest:
                 return _json(400, {"ok": False, "error": "director_session_id and director_receipt_digest are required"})
-            # Look up from _p3_retained_presentation (written by the project
-            # route as a side effect of compilation).
-            retained_map = getattr(state, "_p3_retained_presentation", None)
-            if retained_map is None or not retained_map:
-                return _json(404, {"ok": False, "error": "no retained P3 presentation state"})
-            _retain_key = f"{director_session_id}:{director_receipt_digest}"
-            retained = retained_map.get(_retain_key)
-            if retained is None:
-                return _json(404, {"ok": False, "error": "no retained presentation record for this session and receipt digest"})
-            if receipt_digest and retained.get("receipt_digest") != receipt_digest:
-                return _json(409, {"ok": False, "error": "receipt digest does not match retained record"})
+            _sync_map = getattr(state, "_p3_sync_nonces", None)
+            _sync_key = f"{director_session_id}:{director_receipt_digest}"
+            _sync_record = _sync_map.get(_sync_key) if _sync_map else None
+            if not isinstance(_sync_record, dict):
+                return _json(404, {"ok": False, "error": "no synchronization record found"})
+            if _sync_record.get("state") != "RENDER_CONFIRMED":
+                return _json(409, {"ok": False, "error": f"sync record is {_sync_record.get('state')}, must be RENDER_CONFIRMED"})
             if not receipt_digest:
                 return _json(400, {"ok": False, "error": "receipt_digest is required"})
-            return _json(200, {"ok": True, "presentation_receipt": retained})
+            if _sync_record.get("presentation_receipt_digest") != receipt_digest:
+                return _json(409, {"ok": False, "error": "receipt_digest does not match confirmed record"})
+            # Return the retained presentation record (created during
+            # confirm-presentation) which has active_view, not required_view.
+            retained_map = getattr(state, "_p3_retained_presentation", None)
+            _retain_key = _sync_key
+            retained = retained_map.get(_retain_key) if retained_map else None
+            if retained is None:
+                return _json(404, {"ok": False, "error": "no retained presentation record found"})
+            return _json(200, {"ok": True, "presentation_receipt": dict(retained)})
         if method == "POST" and route == "/api/construction/decision-lane/project":
             # Reject prohibited authority fields before filtering.
             _prohibited = {"physical_work_authorized", "automatic_execution", "human_review_required"}
@@ -551,57 +557,105 @@ def dispatch_p3_foundry_request(
                 _sync_nonce = str(body.get("sync_nonce") or "")
                 # Require all 5 binding fields + a valid one-time nonce.
                 if active_view and _bidentity_digest and _bchapter_id and _sync_nonce:
-                    # Consume the one-time nonce — ties retention to a
-                    # prior prepare-p3-sync call and prevents replay.
-                    _nonce_map = getattr(state, "_p3_sync_nonces", None)
-                    _nonce_key = f"{director_session_id}:{director_receipt_digest}"
-                    _nonce_entry = _nonce_map.get(_nonce_key) if _nonce_map else None
-                    # Nonce entry is now a dict with nonce + active_view.
-                    if isinstance(_nonce_entry, dict):
-                        _expected_nonce = _nonce_entry.get("nonce", "")
-                        _expected_view = _nonce_entry.get("active_view", "")
-                    else:
-                        _expected_nonce = _nonce_entry or ""
-                        _expected_view = ""
+                    _sync_map = getattr(state, "_p3_sync_nonces", None)
+                    _sync_key = f"{director_session_id}:{director_receipt_digest}"
+                    _sync_record = _sync_map.get(_sync_key) if _sync_map else None
+                    if not isinstance(_sync_record, dict) or _sync_record.get("state") != "PREPARED":
+                        return _json(403, {"ok": False, "error": "no PREPARED sync record — call prepare-p3-sync first"})
+                    _expected_nonce = _sync_record.get("sync_nonce", "")
+                    _expected_view = _sync_record.get("required_view", "")
+                    _expected_identity = _sync_record.get("identity_digest", "")
+                    _expected_chapter = _sync_record.get("chapter_id", "")
                     if not _expected_nonce or _expected_nonce != _sync_nonce:
-                        return _json(403, {"ok": False, "error": "invalid or missing sync_nonce — call prepare-p3-sync first"})
+                        return _json(403, {"ok": False, "error": "invalid or missing sync_nonce"})
                     # Validate the caller's active_view matches the
                     # server-derived view from prepare-p3-sync.
                     if _expected_view and active_view != _expected_view:
                         return _json(403, {"ok": False, "error": "active_view does not match the server-derived presentation view"})
-                    # One-time use: consume the nonce.
-                    del _nonce_map[_nonce_key]
-                    if not hasattr(state, "_p3_retained_presentation"):
-                        state._p3_retained_presentation = {}
-                    _retain_key = f"{director_session_id}:{director_receipt_digest}"
-                    # If a record already exists (idempotent re-request),
-                    # return the existing receipt digest rather than a
-                    # generic projection response.
-                    if _retain_key in state._p3_retained_presentation:
-                        _existing = state._p3_retained_presentation[_retain_key]
-                        return _json(
-                            200,
-                            {"ok": True, "projection": public_projection(projection), "presentation_receipt_digest": _existing.get("receipt_digest")},
-                        )
-                    _digest_input = f"{_bchapter_id}|{active_view}|{_bidentity_digest}|{director_session_id}|{director_receipt_digest}"
-                    _receipt_digest = hashlib.sha256(_digest_input.encode()).hexdigest()
-                    state._p3_retained_presentation[_retain_key] = {
-                        "active_view": active_view,
-                        "director_session_id": director_session_id,
-                        "director_receipt_digest": director_receipt_digest,
-                        "identity_digest": _bidentity_digest,
-                        "chapter_id": _bchapter_id,
-                        "projection_digest": hashlib.sha256(json.dumps(projection, sort_keys=True, default=str).encode()).hexdigest(),
-                        "receipt_digest": _receipt_digest,
-                    }
-                    return _json(
-                        200,
-                        {"ok": True, "projection": public_projection(projection), "presentation_receipt_digest": _receipt_digest},
-                    )
+                    # Validate identity and chapter match the server-owned record.
+                    if _expected_identity and _bidentity_digest != _expected_identity:
+                        return _json(403, {"ok": False, "error": "identity_digest does not match the server-owned sync record"})
+                    if _expected_chapter and _bchapter_id != _expected_chapter:
+                        return _json(403, {"ok": False, "error": "chapter_id does not match the server-owned sync record"})
+                    # Derive server-owned projection digest and revision.
+                    _projection_digest = hashlib.sha256(
+                        json.dumps(projection, sort_keys=True, default=str).encode()
+                    ).hexdigest()
+                    _presentation_revision = secrets.token_hex(8)
+                    # Transition: PREPARED → PROJECTED.
+                    # Do NOT create the final presentation receipt — that
+                    # requires a separate confirm-presentation step.
+                    _sync_record["state"] = "PROJECTED"
+                    _sync_record["projection_digest"] = _projection_digest
+                    _sync_record["presentation_revision"] = _presentation_revision
+                    return _json(200, {
+                        "ok": True,
+                        "projection": public_projection(projection),
+                        "projection_digest": _projection_digest,
+                        "presentation_revision": _presentation_revision,
+                    })
             return _json(
                 200,
                 {"ok": True, "projection": public_projection(projection)},
             )
+        if method == "POST" and route == "/api/construction/decision-lane/confirm-presentation":
+            # Presentation-owner confirmation: PROJECTED → RENDER_CONFIRMED.
+            # Called by the browser after waitForP3View() confirms the actual
+            # DOM state matches the required view.  This is the event that
+            # creates the final presentation receipt — not P3 /project.
+            director_session_id = str(body.get("director_session_id") or "")
+            director_receipt_digest = str(body.get("director_receipt_digest") or "")
+            chapter_id = str(body.get("chapter_id") or "")
+            active_view = str(body.get("active_view") or "")
+            identity_digest = str(body.get("identity_digest") or "")
+            projection_digest = str(body.get("projection_digest") or "")
+            presentation_revision = str(body.get("presentation_revision") or "")
+            if not director_session_id or not director_receipt_digest:
+                return _json(400, {"ok": False, "error": "director_session_id and director_receipt_digest are required"})
+            _sync_map = getattr(state, "_p3_sync_nonces", None)
+            _sync_key = f"{director_session_id}:{director_receipt_digest}"
+            _sync_record = _sync_map.get(_sync_key) if _sync_map else None
+            if not isinstance(_sync_record, dict):
+                return _json(404, {"ok": False, "error": "no synchronization record found"})
+            if _sync_record.get("state") != "PROJECTED":
+                return _json(409, {"ok": False, "error": f"sync record is {_sync_record.get('state')}, must be PROJECTED"})
+            # Validate every submitted field against the server-owned record.
+            if _sync_record.get("chapter_id") != chapter_id:
+                return _json(409, {"ok": False, "error": "chapter_id does not match sync record"})
+            if _sync_record.get("required_view") != active_view:
+                return _json(409, {"ok": False, "error": "active_view does not match sync record"})
+            if _sync_record.get("identity_digest") != identity_digest:
+                return _json(409, {"ok": False, "error": "identity_digest does not match sync record"})
+            if _sync_record.get("projection_digest") != projection_digest:
+                return _json(409, {"ok": False, "error": "projection_digest does not match sync record"})
+            if _sync_record.get("presentation_revision") != presentation_revision:
+                return _json(409, {"ok": False, "error": "presentation_revision does not match sync record"})
+            # Create the final immutable presentation receipt.
+            _receipt_input = "|".join([
+                "v1", director_session_id, director_receipt_digest,
+                chapter_id, active_view, identity_digest,
+                projection_digest, presentation_revision,
+            ])
+            _receipt_digest = hashlib.sha256(_receipt_input.encode()).hexdigest()
+            # Transition: PROJECTED → RENDER_CONFIRMED.
+            _sync_record["state"] = "RENDER_CONFIRMED"
+            _sync_record["presentation_receipt_digest"] = _receipt_digest
+            # Store in retained presentation map for validate lookup.
+            if not hasattr(state, "_p3_retained_presentation"):
+                state._p3_retained_presentation = {}
+            state._p3_retained_presentation[_sync_key] = {
+                **dict(_sync_record),
+                "active_view": active_view,
+                "director_session_id": director_session_id,
+                "director_receipt_digest": director_receipt_digest,
+                "identity_digest": identity_digest,
+                "chapter_id": chapter_id,
+                "receipt_digest": _receipt_digest,
+            }
+            return _json(200, {
+                "ok": True,
+                "presentation_receipt_digest": _receipt_digest,
+            })
         if method == "GET" and route in {
             "/api/construction/decision-lane/export.json",
             "/api/construction/decision-lane/export.pdf",

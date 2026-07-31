@@ -297,94 +297,94 @@ def test_available_status_projects_exact_manifest_without_authority(monkeypatch)
 
 
 def test_p3_sync_protocol_end_to_end(monkeypatch):
-    """End-to-end test: prepare-p3-sync → P3 project → ack-p3-sync clears the gate."""
+    """End-to-end test: prepare→project→confirm→ack clears the gate.
+
+    Uses one real P4FoundryShowcaseState with shared mutable state —
+    no copies between separate P3 and P4 state objects.
+    """
     monkeypatch.setattr(p4, "_validate_request_context", lambda *_args, **_kwargs: None)
     import aura_construction_pascal_spatial_foundry_p3_server as p3mod
     monkeypatch.setattr(p3mod, "_validate_request_context", lambda *_args, **_kwargs: None)
 
     director = ConstructionFoundryDirector(_manifest())
     import hashlib as _hl
-
-    ident_digest = _hl.sha256(b"e2e-identity").hexdigest()
-    state = SimpleNamespace(
-        p4_available=True,
-        p4_load_error="",
-        p3_available=True,
-        p4_director=director,
-        presentation_origin="http://127.0.0.1:8765",
-        presentation_netloc="127.0.0.1:8765",
-        _p3_retained_presentation={},
-        _p3_sync_nonces={},
-        require_p4=lambda: director,
-    )
-
     from collections import namedtuple
     FakeIdentity = namedtuple("FakeIdentity", ["identity_digest"])
+    ident_digest = _hl.sha256(b"e2e-identity").hexdigest()
     fake_identity = FakeIdentity(identity_digest=ident_digest)
 
     def fake_proj_identity(_state, _body, require_all=True):
         return ({}, fake_identity)
     monkeypatch.setattr(p4, "_projection_and_identity", fake_proj_identity)
 
-    session = director.start_session(
-        identity_digest=ident_digest,
-        construction_state_digest=_hl.sha256(b"e2e-state").hexdigest(),
-        initial_evidence={
-            "p3_available": True, "construction_identity_bound": True,
-            "pascal_artifact_bound": True, "coordinate_receipt_bound": True,
-            "as_built_scene_bound": True, "compare_receipt_bound": True,
-            "construction_candidates_bound": True, "domain_decision_bound": True,
-            "identity_current": True, "operator_authorized": True,
-            "fault_fixture_bound": True, "required_assets_bound": True,
-            "rollback_adapter_ready": True, "u7_bridge_ready": True,
-            "construction_state_unchanged": True, "capture_resources_dissolved": True,
-        },
-    )
-    session_id = session["session_id"]
-
-    claimed = director.claim_next(session_id)
-    assert claimed["admitted"] is True
-    director.commit_next(
-        session_id,
-        transition_digest=claimed["transition_digest"],
-        effect_receipt={"ok": True},
-        claim_token=claimed["claim_token"],
-    )
-    sess = director.require_session(session_id)
-    if not sess.p3_sync_pending:
-        return
-
-    last_receipt = sess.receipts[-1]
-    chapter_id = last_receipt.get("chapter_id")
-    manifest_chapter = director.manifest.chapter(chapter_id)
-    active_view = dict(manifest_chapter.ui_directive or {}).get("active_view")
-
-    # Step 2: Call prepare-p3-sync.
-    prep_status, _, prep_resp = p4.dispatch_p4_foundry_request(
-        state, "POST",
-        f"/api/construction/director/session/{session_id}/prepare-p3-sync",
-        {"identity_handle": "e2e-handle"},
-    )
-    assert prep_status == 200
-    prep = json.loads(prep_resp.decode())
-    assert prep["ok"] is True
-    assert prep["identity_digest"] == ident_digest
-    assert prep["sync_nonce"]
-    assert prep["chapter_id"] == chapter_id
-    assert prep["active_view"] == active_view
-
-    # Step 3: Call P3 project via real dispatch (not manual injection).
-    from aura_construction_pascal_spatial_foundry_p3_server import dispatch_p3_foundry_request
-    p3_state = p3mod.P3FoundryShowcaseState(
+    # Use one real P3FoundryShowcaseState as the shared state.
+    # P4FoundryShowcaseState inherits from P3, so this mirrors production.
+    state = p3mod.P3FoundryShowcaseState(
         Path(__file__).resolve().parents[1],
         demo_project="winnipeg_pathways",
         auto_start=False,
         presentation_origin="http://127.0.0.1:8765",
     )
+    # Attach P4-specific attributes.
+    state.p4_available = True
+    state.p4_load_error = ""
+    state.p4_director = director
+    state.presentation_origin = "http://127.0.0.1:8765"
+    state.presentation_netloc = "127.0.0.1:8765"
+    state.require_p4 = lambda: director
+
     try:
-        # Copy the nonce from P4 state to P3 state so P3 project can consume it.
-        p3_state._p3_sync_nonces = dict(state._p3_sync_nonces)
-        projection = p3_state.require_p3().compile(active_view=active_view, timeline_day=14.0)
+        session = director.start_session(
+            identity_digest=ident_digest,
+            construction_state_digest=_hl.sha256(b"e2e-state").hexdigest(),
+            initial_evidence={
+                "p3_available": True, "construction_identity_bound": True,
+                "pascal_artifact_bound": True, "coordinate_receipt_bound": True,
+                "as_built_scene_bound": True, "compare_receipt_bound": True,
+                "construction_candidates_bound": True, "domain_decision_bound": True,
+                "identity_current": True, "operator_authorized": True,
+                "fault_fixture_bound": True, "required_assets_bound": True,
+                "rollback_adapter_ready": True, "u7_bridge_ready": True,
+                "construction_state_unchanged": True, "capture_resources_dissolved": True,
+            },
+        )
+        session_id = session["session_id"]
+
+        claimed = director.claim_next(session_id)
+        assert claimed["admitted"] is True
+        director.commit_next(
+            session_id,
+            transition_digest=claimed["transition_digest"],
+            effect_receipt={"ok": True},
+            claim_token=claimed["claim_token"],
+        )
+        sess = director.require_session(session_id)
+        assert sess.p3_sync_pending is True, "first chapter must create sync gate"
+
+        last_receipt = sess.receipts[-1]
+        chapter_id = last_receipt.get("chapter_id")
+        manifest_chapter = director.manifest.chapter(chapter_id)
+        active_view = dict(manifest_chapter.ui_directive or {}).get("active_view")
+
+        # Step 1: prepare-p3-sync.
+        prep_status, _, prep_resp = p4.dispatch_p4_foundry_request(
+            state, "POST",
+            f"/api/construction/director/session/{session_id}/prepare-p3-sync",
+            {"identity_handle": "e2e-handle"},
+        )
+        assert prep_status == 200
+        prep = json.loads(prep_resp.decode())
+        assert prep["ok"] is True
+        assert prep["sync_nonce"]
+
+        # Capture sync map identity AFTER prepare creates it.
+        sync_map = state._p3_sync_nonces
+
+        sync_key = f"{session_id}:{prep['director_receipt_digest']}"
+        assert sync_map[sync_key]["state"] == "PREPARED"
+
+        # Step 2: P3 /project via real dispatch.
+        projection = state.require_p3().compile(active_view=active_view, timeline_day=14.0)
         exact_identity = {
             "state_digest": projection["domain"]["state_digest"],
             "runtime_packet_digest": projection["domain"]["runtime_packet_digest"],
@@ -392,8 +392,8 @@ def test_p3_sync_protocol_end_to_end(monkeypatch):
             "coordinate_receipt_digest": projection["artifacts"]["coordinate_receipt_digest"],
             "as_built_scene_digest": projection["artifacts"]["as_built_scene_digest"],
         }
-        proj_status, _, proj_resp = dispatch_p3_foundry_request(
-            p3_state, "POST",
+        proj_status, _, proj_resp = p3mod.dispatch_p3_foundry_request(
+            state, "POST",
             "/api/construction/decision-lane/project",
             {
                 **exact_identity,
@@ -412,18 +412,43 @@ def test_p3_sync_protocol_end_to_end(monkeypatch):
         assert proj_status == 200, f"P3 project failed: {proj_resp.decode()[:200]}"
         proj = json.loads(proj_resp.decode())
         assert proj["ok"] is True
-        presentation_receipt_digest = proj.get("presentation_receipt_digest")
-        assert presentation_receipt_digest, "P3 project must return presentation_receipt_digest"
+        assert proj["projection_digest"], "P3 project must return projection_digest"
+        assert proj["presentation_revision"], "P3 project must return presentation_revision"
+        assert "presentation_receipt_digest" not in proj or not proj.get("presentation_receipt_digest"), \
+            "P3 project must NOT return presentation_receipt_digest"
 
-        # Verify nonce is consumed.
-        nonce_key = f"{session_id}:{prep['director_receipt_digest']}"
-        assert nonce_key not in p3_state._p3_sync_nonces, "nonce must be consumed after project"
+        # Verify state transitioned to PROJECTED.
+        assert sync_map[sync_key]["state"] == "PROJECTED"
 
-        # Step 4: Call ack-p3-sync with the receipt from P3 project.
-        # Copy the retained record from P3 state to our test state.
-        retain_key = f"{session_id}:{prep['director_receipt_digest']}"
-        state._p3_retained_presentation = p3_state._p3_retained_presentation
+        # Step 3: confirm-presentation.
+        confirm_status, _, confirm_resp = p3mod.dispatch_p3_foundry_request(
+            state, "POST",
+            "/api/construction/decision-lane/confirm-presentation",
+            {
+                "director_session_id": prep["director_session_id"],
+                "director_receipt_digest": prep["director_receipt_digest"],
+                "chapter_id": prep["chapter_id"],
+                "active_view": active_view,
+                "identity_digest": prep["identity_digest"],
+                "projection_digest": proj["projection_digest"],
+                "presentation_revision": proj["presentation_revision"],
+            },
+            request_origin="http://127.0.0.1:8765",
+            request_host="127.0.0.1:8765",
+        )
+        assert confirm_status == 200, f"confirm failed: {confirm_resp.decode()[:200]}"
+        confirm = json.loads(confirm_resp.decode())
+        assert confirm["ok"] is True
+        assert confirm["presentation_receipt_digest"], "confirm must return presentation_receipt_digest"
 
+        # Verify state transitioned to RENDER_CONFIRMED.
+        assert sync_map[sync_key]["state"] == "RENDER_CONFIRMED"
+
+        # Verify the SAME sync map was mutated (no copies).
+        assert state._p3_sync_nonces is sync_map
+        assert sync_key in state._p3_retained_presentation
+
+        # Step 4: ack-p3-sync.
         ack_status, _, ack_resp = p4.dispatch_p4_foundry_request(
             state, "POST",
             f"/api/construction/director/session/{session_id}/ack-p3-sync",
@@ -432,7 +457,7 @@ def test_p3_sync_protocol_end_to_end(monkeypatch):
                 "presentation_receipt": {
                     "chapter_id": chapter_id,
                     "active_view": active_view,
-                    "receipt_digest": presentation_receipt_digest,
+                    "receipt_digest": confirm["presentation_receipt_digest"],
                 },
             },
         )
@@ -441,15 +466,18 @@ def test_p3_sync_protocol_end_to_end(monkeypatch):
         assert ack["ok"] is True
         assert ack["session"]["p3_sync_pending"] is False
 
-        # Step 5: Verify the next transition is admitted.
+        # Verify state transitioned to ACKNOWLEDGED.
+        assert sync_map[sync_key]["state"] == "ACKNOWLEDGED"
+
+        # Step 5: Next transition is admitted.
         next_claim = director.claim_next(session_id)
         assert next_claim["admitted"] is True
     finally:
-        p3_state.close()
+        state.close()
 
 
-def test_p3_sync_protocol_rejects_direct_ack_without_retention(monkeypatch):
-    """Direct ack-p3-sync without P3 project retention must fail."""
+def test_p3_sync_protocol_rejects_ack_without_render_confirmation(monkeypatch):
+    """Critical negative: prepare→project→ack (skip confirm) must fail."""
     monkeypatch.setattr(p4, "_validate_request_context", lambda *_args, **_kwargs: None)
     import aura_construction_pascal_spatial_foundry_p3_server as p3mod
     monkeypatch.setattr(p3mod, "_validate_request_context", lambda *_args, **_kwargs: None)
@@ -458,63 +486,104 @@ def test_p3_sync_protocol_rejects_direct_ack_without_retention(monkeypatch):
     import hashlib as _hl
     from collections import namedtuple
     FakeIdentity = namedtuple("FakeIdentity", ["identity_digest"])
-    ident_digest = _hl.sha256(b"e2e-direct").hexdigest()
+    ident_digest = _hl.sha256(b"e2e-skip").hexdigest()
     fake_identity = FakeIdentity(identity_digest=ident_digest)
 
     def fake_proj_identity(_state, _body, require_all=True):
         return ({}, fake_identity)
     monkeypatch.setattr(p4, "_projection_and_identity", fake_proj_identity)
 
-    state = SimpleNamespace(
-        p4_available=True, p4_load_error="", p3_available=True,
-        p4_director=director,
+    state = p3mod.P3FoundryShowcaseState(
+        Path(__file__).resolve().parents[1],
+        demo_project="winnipeg_pathways",
+        auto_start=False,
         presentation_origin="http://127.0.0.1:8765",
-        presentation_netloc="127.0.0.1:8765",
-        _p3_retained_presentation={},
-        _p3_sync_nonces={},
-        require_p4=lambda: director,
     )
+    state.p4_available = True
+    state.p4_load_error = ""
+    state.p4_director = director
+    state.presentation_origin = "http://127.0.0.1:8765"
+    state.presentation_netloc = "127.0.0.1:8765"
+    state.require_p4 = lambda: director
 
-    session = director.start_session(
-        identity_digest=ident_digest,
-        construction_state_digest=_hl.sha256(b"e2e-direct-state").hexdigest(),
-        initial_evidence={
-            "p3_available": True, "construction_identity_bound": True,
-            "pascal_artifact_bound": True, "coordinate_receipt_bound": True,
-            "as_built_scene_bound": True, "compare_receipt_bound": True,
-            "construction_candidates_bound": True, "domain_decision_bound": True,
-            "identity_current": True, "operator_authorized": True,
-            "fault_fixture_bound": True, "required_assets_bound": True,
-            "rollback_adapter_ready": True, "u7_bridge_ready": True,
-            "construction_state_unchanged": True, "capture_resources_dissolved": True,
-        },
-    )
-    session_id = session["session_id"]
-    claimed = director.claim_next(session_id)
-    director.commit_next(
-        session_id,
-        transition_digest=claimed["transition_digest"],
-        effect_receipt={"ok": True},
-        claim_token=claimed["claim_token"],
-    )
-    sess = director.require_session(session_id)
-    if not sess.p3_sync_pending:
-        return
-
-    # Try to ack without any retained P3 record.
-    ack_status, _, ack_resp = p4.dispatch_p4_foundry_request(
-        state, "POST",
-        f"/api/construction/director/session/{session_id}/ack-p3-sync",
-        {
-            "identity_handle": "e2e-handle",
-            "presentation_receipt": {
-                "chapter_id": sess.receipts[-1].get("chapter_id"),
-                "active_view": "WRONG",
-                "receipt_digest": "forged",
+    try:
+        session = director.start_session(
+            identity_digest=ident_digest,
+            construction_state_digest=_hl.sha256(b"e2e-skip-state").hexdigest(),
+            initial_evidence={
+                "p3_available": True, "construction_identity_bound": True,
+                "pascal_artifact_bound": True, "coordinate_receipt_bound": True,
+                "as_built_scene_bound": True, "compare_receipt_bound": True,
+                "construction_candidates_bound": True, "domain_decision_bound": True,
+                "identity_current": True, "operator_authorized": True,
+                "fault_fixture_bound": True, "required_assets_bound": True,
+                "rollback_adapter_ready": True, "u7_bridge_ready": True,
+                "construction_state_unchanged": True, "capture_resources_dissolved": True,
             },
-        },
-    )
-    # Must fail — no retained P3 record exists.
-    assert ack_status != 200
-    # p3_sync_pending must remain True.
-    assert director.require_session(session_id).p3_sync_pending is True
+        )
+        session_id = session["session_id"]
+        claimed = director.claim_next(session_id)
+        director.commit_next(
+            session_id,
+            transition_digest=claimed["transition_digest"],
+            effect_receipt={"ok": True},
+            claim_token=claimed["claim_token"],
+        )
+        assert director.require_session(session_id).p3_sync_pending is True
+
+        # prepare
+        prep_status, _, prep_resp = p4.dispatch_p4_foundry_request(
+            state, "POST",
+            f"/api/construction/director/session/{session_id}/prepare-p3-sync",
+            {"identity_handle": "e2e-skip"},
+        )
+        assert prep_status == 200
+        prep = json.loads(prep_resp.decode())
+
+        # project
+        sess = director.require_session(session_id)
+        chapter_id = sess.receipts[-1].get("chapter_id")
+        active_view = dict(director.manifest.chapter(chapter_id).ui_directive or {}).get("active_view")
+        projection = state.require_p3().compile(active_view=active_view, timeline_day=14.0)
+        exact_identity = {
+            "state_digest": projection["domain"]["state_digest"],
+            "runtime_packet_digest": projection["domain"]["runtime_packet_digest"],
+            "pascal_artifact_digest": projection["artifacts"]["pascal_artifact_digest"],
+            "coordinate_receipt_digest": projection["artifacts"]["coordinate_receipt_digest"],
+            "as_built_scene_digest": projection["artifacts"]["as_built_scene_digest"],
+        }
+        proj_status, _, proj_resp = p3mod.dispatch_p3_foundry_request(
+            state, "POST", "/api/construction/decision-lane/project",
+            {
+                **exact_identity, "active_view": active_view, "timeline_day": 14.0,
+                "identity_handle": "e2e-skip", "identity_digest": prep["identity_digest"],
+                "director_session_id": prep["director_session_id"],
+                "director_receipt_digest": prep["director_receipt_digest"],
+                "chapter_id": prep["chapter_id"], "sync_nonce": prep["sync_nonce"],
+            },
+            request_origin="http://127.0.0.1:8765", request_host="127.0.0.1:8765",
+        )
+        assert proj_status == 200
+        proj = json.loads(proj_resp.decode())
+        assert proj["projection_digest"]
+
+        sync_key = f"{session_id}:{prep['director_receipt_digest']}"
+        assert state._p3_sync_nonces[sync_key]["state"] == "PROJECTED"
+
+        # Try ack WITHOUT confirm-presentation — must fail.
+        ack_status, _, ack_resp = p4.dispatch_p4_foundry_request(
+            state, "POST",
+            f"/api/construction/director/session/{session_id}/ack-p3-sync",
+            {
+                "identity_handle": "e2e-skip",
+                "presentation_receipt": {
+                    "chapter_id": chapter_id, "active_view": active_view,
+                    "receipt_digest": "forged-attempt",
+                },
+            },
+        )
+        assert ack_status != 200, "ack must fail when state is PROJECTED, not RENDER_CONFIRMED"
+        assert director.require_session(session_id).p3_sync_pending is True
+        assert state._p3_sync_nonces[sync_key]["state"] == "PROJECTED"
+    finally:
+        state.close()
