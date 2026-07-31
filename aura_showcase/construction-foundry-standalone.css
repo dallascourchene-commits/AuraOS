@@ -1,0 +1,436 @@
+:root {
+  color-scheme: dark;
+  --construction-bg: #050b10;
+  --construction-panel: rgba(10, 24, 32, 0.94);
+  --construction-panel-strong: #0a1820;
+  --construction-line: rgba(121, 188, 216, 0.25);
+  --construction-line-strong: rgba(75, 214, 196, 0.62);
+  --construction-text: #eefbff;
+  --construction-muted: #9bb8c3;
+  --construction-cyan: #45dbc8;
+  --construction-blue: #62a9ff;
+  --construction-amber: #f6c75b;
+  --construction-danger: #ff7d91;
+}
+
+body[data-aura-surface="CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY"] {
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 15% -10%, rgba(69, 219, 200, 0.14), transparent 35%),
+    radial-gradient(circle at 95% 5%, rgba(98, 169, 255, 0.14), transparent 32%),
+    linear-gradient(180deg, #071119 0%, var(--construction-bg) 45%, #03070a 100%);
+  color: var(--construction-text);
+}
+
+body[data-aura-surface="CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY"] button,
+body[data-aura-surface="CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY"] select,
+body[data-aura-surface="CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY"] input {
+  font: inherit;
+}
+
+body[data-aura-surface="CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY"] button,
+body[data-aura-surface="CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY"] a {
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease,
+    transform 140ms ease;
+}
+
+body[data-aura-surface="CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY"] button {
+  border: 1px solid var(--construction-line);
+  border-radius: 10px;
+  padding: 0.65rem 0.9rem;
+  color: var(--construction-text);
+  background: #0d222c;
+}
+
+body[data-aura-surface="CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY"] button:hover:not(:disabled),
+body[data-aura-surface="CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY"] a:hover {
+  border-color: var(--construction-line-strong);
+  transform: translateY(-1px);
+}
+
+body[data-aura-surface="CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY"] button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.construction-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem clamp(1rem, 2.5vw, 2rem);
+  border-bottom: 1px solid var(--construction-line);
+  background: rgba(4, 10, 14, 0.9);
+  backdrop-filter: blur(18px);
+}
+
+.construction-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.construction-brand > div {
+  display: grid;
+}
+
+.construction-brand strong {
+  font-size: 0.9rem;
+}
+
+.construction-brand small {
+  color: var(--construction-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+}
+
+.construction-brand-mark {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  border: 2px solid var(--construction-cyan);
+  border-radius: 8px;
+  box-shadow:
+    0 0 20px rgba(69, 219, 200, 0.3),
+    inset 0 0 12px rgba(69, 219, 200, 0.12);
+  transform: rotate(45deg);
+}
+
+.construction-brand-mark::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid var(--construction-blue);
+  border-radius: 3px;
+}
+
+.construction-authority {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.construction-authority span {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--construction-line);
+  border-radius: 999px;
+  color: var(--construction-muted);
+  background: rgba(7, 20, 27, 0.86);
+  font-size: 0.72rem;
+}
+
+.construction-legacy-link {
+  justify-self: end;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--construction-line);
+  border-radius: 9px;
+  color: var(--construction-muted);
+  text-decoration: none;
+  font-size: 0.75rem;
+}
+
+.construction-shell {
+  width: min(1840px, calc(100% - 2rem));
+  max-width: none;
+  margin: 0 auto;
+  padding: 1rem 0 2rem;
+}
+
+.construction-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(300px, 0.5fr);
+  gap: 1rem;
+  align-items: stretch;
+  margin-bottom: 1rem;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  border: 1px solid var(--construction-line);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(69, 219, 200, 0.1), rgba(98, 169, 255, 0.05)),
+    var(--construction-panel);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+}
+
+.construction-hero h1 {
+  max-width: 1050px;
+  margin: 0.15rem 0 0.6rem;
+  font-size: clamp(2rem, 4vw, 4.5rem);
+  line-height: 0.98;
+}
+
+.construction-lede {
+  max-width: 1050px;
+  margin: 0;
+  color: #c5dce4;
+  font-size: clamp(0.95rem, 1.25vw, 1.15rem);
+}
+
+.construction-boundary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 0;
+}
+
+.construction-boundary div {
+  padding: 0.9rem;
+  border: 1px solid var(--construction-line);
+  border-radius: 12px;
+  background: rgba(4, 13, 18, 0.68);
+}
+
+.construction-boundary dt {
+  color: var(--construction-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.construction-boundary dd {
+  margin: 0.3rem 0 0;
+  font-weight: 700;
+}
+
+.construction-director-band,
+.construction-workspace {
+  margin-top: 1rem;
+}
+
+body[data-aura-surface="CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY"] .foundry-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+body[data-aura-surface="CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY"] .foundry-card {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid var(--construction-line);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(15, 35, 45, 0.88), rgba(7, 18, 24, 0.94));
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.24);
+}
+
+#construction-foundry-director {
+  position: relative;
+  grid-template-columns: 1fr;
+  padding: 1rem;
+  border-color: var(--construction-line-strong);
+  background:
+    linear-gradient(135deg, rgba(69, 219, 200, 0.1), rgba(98, 169, 255, 0.04)),
+    var(--construction-panel);
+}
+
+#construction-foundry-director::before {
+  content: "GUIDED DEMONSTRATION";
+  position: absolute;
+  top: -0.65rem;
+  left: 1rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--construction-line-strong);
+  border-radius: 999px;
+  background: #07151c;
+  color: var(--construction-cyan);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+#construction-director-status {
+  color: var(--construction-muted);
+}
+
+#construction-director-current,
+#construction-director-notes,
+#construction-director-receipt {
+  background: rgba(3, 10, 14, 0.76);
+}
+
+#construction-decision-foundry {
+  grid-template-columns: minmax(300px, 0.7fr) minmax(340px, 0.8fr);
+}
+
+.construction-comparison-card {
+  padding: 0.9rem;
+  border-color: var(--construction-line-strong);
+  background:
+    linear-gradient(180deg, rgba(9, 27, 36, 0.98), rgba(4, 12, 17, 0.98));
+}
+
+.construction-stage-heading {
+  padding: 0.15rem 0.25rem 0.8rem;
+}
+
+.construction-geometry-stage {
+  min-height: 720px;
+}
+
+.construction-render-pane {
+  min-height: 0;
+  border-color: var(--construction-line);
+  background: #050d12;
+}
+
+.construction-render-pane h3 {
+  margin: 0 0 0.65rem;
+  color: var(--construction-cyan);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#construction-pascal-mount > #pascal-construction-foundry {
+  grid-template-columns: minmax(240px, 0.32fr) minmax(0, 1.68fr);
+  align-items: stretch;
+}
+
+#construction-pascal-mount .pascal-controller {
+  align-content: start;
+}
+
+#construction-pascal-mount .pascal-controller pre {
+  max-height: 14rem;
+  font-size: 0.7rem;
+}
+
+#construction-pascal-mount .pascal-stage-card {
+  min-height: 680px;
+  padding: 0.5rem;
+}
+
+#construction-pascal-mount .pascal-workbench-host,
+#construction-pascal-mount .pascal-workbench-frame {
+  min-height: 660px;
+  height: min(76vh, 920px);
+  border-radius: 10px;
+}
+
+#construction-as-built-frame {
+  min-height: 720px;
+  height: min(76vh, 920px);
+  border-radius: 10px;
+  background: #071018;
+}
+
+.construction-decision-controls,
+.construction-decision-inspector,
+.construction-candidate-card,
+.construction-decision-packet-card {
+  min-height: 100%;
+}
+
+.construction-view-controls button[aria-pressed="true"],
+.construction-candidate[aria-pressed="true"],
+.construction-pin[aria-pressed="true"] {
+  border-color: var(--construction-cyan);
+  box-shadow: 0 0 0 2px rgba(69, 219, 200, 0.15);
+}
+
+.construction-candidate-hard_blocked {
+  border-left-color: var(--construction-danger);
+}
+
+.construction-candidate-needs_evidence {
+  border-left-color: var(--construction-amber);
+}
+
+.construction-candidate-ready_for_human_review {
+  border-left-color: var(--construction-cyan);
+}
+
+.construction-export-controls a {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--construction-line);
+  border-radius: 9px;
+  color: var(--construction-text);
+  text-decoration: none;
+  background: #0d222c;
+}
+
+#pascal-component-staging[hidden] {
+  display: none;
+}
+
+.construction-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--construction-line);
+  border-radius: 12px;
+  color: var(--construction-muted);
+  background: rgba(5, 14, 19, 0.78);
+  font-size: 0.8rem;
+}
+
+.construction-footer strong {
+  color: var(--construction-text);
+}
+
+@media (max-width: 1180px) {
+  .construction-topbar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .construction-authority {
+    display: none;
+  }
+
+  #construction-decision-foundry,
+  #construction-pascal-mount > #pascal-construction-foundry {
+    grid-template-columns: 1fr;
+  }
+
+  #construction-pascal-mount .pascal-stage-card,
+  #construction-pascal-mount .pascal-workbench-host,
+  #construction-pascal-mount .pascal-workbench-frame {
+    min-height: 580px;
+  }
+}
+
+@media (max-width: 760px) {
+  .construction-topbar {
+    position: static;
+    grid-template-columns: 1fr;
+  }
+
+  .construction-legacy-link {
+    justify-self: start;
+  }
+
+  .construction-shell {
+    width: min(100% - 1rem, 1840px);
+  }
+
+  .construction-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .construction-boundary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .construction-geometry-stage {
+    min-height: 0;
+  }
+
+  #construction-as-built-frame,
+  #construction-pascal-mount .pascal-stage-card,
+  #construction-pascal-mount .pascal-workbench-host,
+  #construction-pascal-mount .pascal-workbench-frame {
+    min-height: 460px;
+    height: 62vh;
+  }
+}

@@ -1,7 +1,7 @@
 {
   "version": "AURA_RUNTIME_PROFILE_V1",
   "profile_id": "construction-pascal-spatial-foundry-pr5-browser",
-  "objective": "Boot the exact P4 Construction + Pascal Spatial Foundry, drive the complete deterministic fifteen-chapter Director tour in real Chromium, capture every required scene and exact receipt, prove no unexpected network or authority escalation, verify cleanup and source-tree preservation, and stop at human review.",
+  "objective": "Boot the standalone P4 Construction + Pascal Spatial Foundry, drive the complete deterministic fifteen-chapter Director tour in real Chromium, capture every required scene and exact receipt, prove no unexpected network or authority escalation, verify cleanup and source-tree preservation, and stop at human review.",
   "environment": {
     "create_venv": true,
     "requirements": [
@@ -11,7 +11,7 @@
   "server": {
     "command": [
       "{python}",
-      "aura_construction_pascal_spatial_foundry_p4_server.py",
+      "aura_construction_pascal_spatial_foundry_standalone_server.py",
       "--repo-root",
       "{repo}",
       "--host",
@@ -91,6 +91,15 @@
     },
     {
       "command": [
+        "{python}",
+        "-m",
+        "py_compile",
+        "aura_construction_pascal_spatial_foundry_standalone_server.py"
+      ],
+      "timeout_seconds": 30
+    },
+    {
+      "command": [
         "node",
         "--test",
         "tests/js/construction-foundry-director-contract.test.mjs"
@@ -105,7 +114,8 @@
         "-q",
         "tests/test_aura_construction_foundry_director.py",
         "tests/test_aura_construction_pascal_spatial_foundry_p4.py",
-        "tests/test_aura_construction_pascal_spatial_foundry_pr5.py"
+        "tests/test_aura_construction_pascal_spatial_foundry_pr5.py",
+        "tests/test_aura_construction_pascal_spatial_foundry_standalone_server.py"
       ],
       "timeout_seconds": 600
     },
