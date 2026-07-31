@@ -1066,7 +1066,7 @@ def test_p3_project_rejects_partial_director_bindings(monkeypatch):
         state.close()
 
 
-def test_p4_runtime_runner_replacement_and_restoration(monkeypatch):
+def test_p4_runtime_runner_replacement_and_restoration():
     """Verify that execute_exact_runtime_replay replaces and restores runtime_runner.
 
     Tests:
@@ -1075,6 +1075,8 @@ def test_p4_runtime_runner_replacement_and_restoration(monkeypatch):
     - canonical runner is restored after failure
     - _RUNTIME_PROFILE (Construction Demo V2) is passed to execute_replay
     - confirmation is consumed exactly once on success
+    - second replay attempt is rejected
+    - adapted proof retains P4 identity binding
     """
     from aura_bilateral_live_repair_foundry import BilateralIdentity
     from aura_construction_pascal_spatial_foundry_p4_server import (
@@ -1084,23 +1086,67 @@ def test_p4_runtime_runner_replacement_and_restoration(monkeypatch):
     )
     from pathlib import Path
     from tempfile import mkdtemp
+    import json as _json
+    import hashlib as _hashlib
 
-    # Create a minimal mock service
+    # Use 64-char hex digests so they pass _EXACT_DIGEST (40-64 hex) and
+    # are returned as-is by _bilateral_identity_digest (no projection).
+    _intent = "a" * 64
+    _ledger = "b" * 64
+    _guardrail = "d" * 64
+    _confirmation = "e" * 64
+    _repo_head = "f" * 64
+    _source_tree = "1" * 64
+
+    # Build a valid confirmation packet that _confirmation_intent_contract can parse.
+    confirmation_data = {
+        "intent_packet": {"intent_digest": _intent},
+        "semantic_ledger": {"ledger_digest": _ledger},
+        "confirmation_receipt": {
+            "confirmation_id": _confirmation,
+            "guardrail_set_digest": _guardrail,
+            "repository_head": _repo_head,
+            "source_tree_digest": _source_tree,
+        },
+        "u7_references": {"intent_revision_status": "P0"},
+    }
+
     class MockService:
         def __init__(self):
             self.runtime_runner = self._canonical_runner
-            self.execute_replay_called = False
+            self.execute_replay_called = 0
             self.profile_path_received = None
 
         def _canonical_runner(self, root, **kwargs):
-            return {"ok": True, "proof": "canonical", "intent_contract": {"positive": []}, "requirement_bindings": {"positive_assertions": [], "negative_assertions": [], "preservation_assertions": [], "fault_injections": []}, "repair_policy": {"human_review_required": True}, "required_trace_artifacts": [], "base_profile": "test", "base_environment_create_venv": False, "bilateral_waboose_request": "test"}
+            return {
+                "ok": True,
+                "proof": "canonical",
+                "intent_contract": {
+                    "intent_digest": _intent,
+                    "semantic_ledger_digest": _ledger,
+                    "guardrail_set_digest": _guardrail,
+                    "confirmation_digest": _confirmation,
+                    "intent_revision_status": "P0",
+                    "expected_repository_head": _repo_head,
+                    "expected_source_tree": _source_tree,
+                },
+                "requirement_bindings": {
+                    "positive_assertions": [],
+                    "negative_assertions": [],
+                    "preservation_assertions": [],
+                    "fault_injections": [],
+                },
+                "repair_policy": {"human_review_required": True},
+                "required_trace_artifacts": [],
+                "base_profile": "test",
+                "base_environment_create_venv": False,
+                "bilateral_waboose_request": "test",
+            }
 
         def execute_replay(self, *, packet_id, profile_path, confirmation_packet, output_dir, **kwargs):
-            self.execute_replay_called = True
+            self.execute_replay_called += 1
             self.profile_path_received = profile_path
-            # Verify runtime_runner was replaced
             assert self.runtime_runner is not self._canonical_runner, "runner not replaced"
-            # Call the adapted runner with the repo root and kwargs
             result = self.runtime_runner(Path("."), profile_path=profile_path, confirmation_packet=confirmation_packet, output_dir=output_dir, **kwargs)
             return result
 
@@ -1108,7 +1154,7 @@ def test_p4_runtime_runner_replacement_and_restoration(monkeypatch):
         def __init__(self):
             self.p4_confirmation_path = Path(mkdtemp()) / "confirmation.json"
             self.p4_confirmation_path.parent.mkdir(parents=True, exist_ok=True)
-            self.p4_confirmation_path.write_text('{"ok": true}')
+            self.p4_confirmation_path.write_text(_json.dumps(confirmation_data))
             self.p4_runtime_output_dir = Path(mkdtemp()) / "output"
             self.p4_runtime_output_dir.mkdir(parents=True, exist_ok=True)
             self.p4_confirmation_consumed = False
@@ -1126,13 +1172,13 @@ def test_p4_runtime_runner_replacement_and_restoration(monkeypatch):
 
     state = MockState()
     identity = BilateralIdentity(
-        intent_digest="a" * 64,
-        confirmation_digest="b" * 64,
-        semantic_ledger_digest="c" * 64,
-        guardrail_set_digest="d" * 64,
+        intent_digest=_intent,
+        confirmation_digest=_confirmation,
+        semantic_ledger_digest=_ledger,
+        guardrail_set_digest=_guardrail,
         intent_revision_id="P0",
-        repository_head="e" * 40,
-        source_tree_digest="f" * 40,
+        repository_head=_repo_head,
+        source_tree_digest=_source_tree,
         runtime_profile_digest="0" * 64,
         verifier_id="test-verifier",
         verifier_source_digest="1" * 64,
@@ -1141,32 +1187,36 @@ def test_p4_runtime_runner_replacement_and_restoration(monkeypatch):
     service = state._live_repair
     original_runner = service.runtime_runner
 
-    # Test 1: successful execution
-    # Mock _adapt_runtime_proof_identity to avoid needing a real confirmation packet
-    import aura_construction_pascal_spatial_foundry_p4_server as p4mod
-    original_adapt = p4mod._adapt_runtime_proof_identity
-    p4mod._adapt_runtime_proof_identity = lambda proof, **kw: dict(proof)
-
-    try:
-        P4FoundryShowcaseState.execute_exact_runtime_replay(
-            state, packet_id="test-packet", identity=identity
-        )
-    finally:
-        p4mod._adapt_runtime_proof_identity = original_adapt
-    assert service.execute_replay_called, "execute_replay was not called"
+    # Test 1: successful execution — do NOT mock _adapt_runtime_proof_identity
+    result = P4FoundryShowcaseState.execute_exact_runtime_replay(
+        state, packet_id="test-packet", identity=identity
+    )
+    assert service.execute_replay_called == 1, "execute_replay was not called"
     assert service.profile_path_received == _RUNTIME_PROFILE, "wrong profile passed"
     assert service.runtime_runner is original_runner, "runner not restored after success"
     assert state.p4_confirmation_consumed, "confirmation not consumed"
+    # Verify identity adaptation was applied (not bypassed)
+    assert result.get("ok") is True, "result should be ok"
+    adapted_contract = result.get("intent_contract", {})
+    assert adapted_contract.get("intent_digest") == _intent, "identity adaptation lost intent_digest"
+    assert adapted_contract.get("confirmation_digest") == _confirmation, "identity adaptation lost confirmation_digest"
 
-    # Test 2: runner restored after failure
+    # Test 2: second replay attempt is rejected (one-time consumption)
+    with pytest.raises(PascalPresentationError, match="already consumed"):
+        P4FoundryShowcaseState.execute_exact_runtime_replay(
+            state, packet_id="test-packet", identity=identity
+        )
+    assert service.execute_replay_called == 1, "execute_replay should not be called again"
+
+    # Test 3: runner restored after failure
     state2 = MockState()
     service2 = state2._live_repair
     original_runner2 = service2.runtime_runner
 
-    def failing_runner(self, *, packet_id, profile_path, confirmation_packet, output_dir, **kwargs):
+    def failing_execute(**kw):
         raise RuntimeError("intentional failure")
 
-    service2.execute_replay = lambda **kw: failing_runner(service2, **kw)
+    service2.execute_replay = failing_execute
 
     with pytest.raises((RuntimeError, PascalPresentationError)):
         P4FoundryShowcaseState.execute_exact_runtime_replay(
@@ -1177,10 +1227,9 @@ def test_p4_runtime_runner_replacement_and_restoration(monkeypatch):
 
     # Cleanup
     import shutil as _shutil
-    _shutil.rmtree(state.p4_confirmation_path.parent, ignore_errors=True)
-    _shutil.rmtree(state.p4_runtime_output_dir, ignore_errors=True)
-    _shutil.rmtree(state2.p4_confirmation_path.parent, ignore_errors=True)
-    _shutil.rmtree(state2.p4_runtime_output_dir, ignore_errors=True)
+    for s in (state, state2):
+        _shutil.rmtree(s.p4_confirmation_path.parent, ignore_errors=True)
+        _shutil.rmtree(s.p4_runtime_output_dir, ignore_errors=True)
 
 
 def test_p4_runtime_profile_is_construction_demo_not_pr5():
