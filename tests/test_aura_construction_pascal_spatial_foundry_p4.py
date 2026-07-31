@@ -1064,3 +1064,134 @@ def test_p3_project_rejects_partial_director_bindings(monkeypatch):
         assert not hasattr(state, "_p3_sync_nonces") or not state._p3_sync_nonces
     finally:
         state.close()
+
+
+def test_p4_runtime_runner_replacement_and_restoration(monkeypatch):
+    """Verify that execute_exact_runtime_replay replaces and restores runtime_runner.
+
+    Tests:
+    - adapted_runner is installed during execution
+    - canonical runner is restored after success
+    - canonical runner is restored after failure
+    - _RUNTIME_PROFILE (Construction Demo V2) is passed to execute_replay
+    - confirmation is consumed exactly once on success
+    """
+    from aura_bilateral_live_repair_foundry import BilateralIdentity
+    from aura_construction_pascal_spatial_foundry_p4_server import (
+        P4FoundryShowcaseState,
+        PascalPresentationError,
+        _RUNTIME_PROFILE,
+    )
+    from pathlib import Path
+    from tempfile import mkdtemp
+
+    # Create a minimal mock service
+    class MockService:
+        def __init__(self):
+            self.runtime_runner = self._canonical_runner
+            self.execute_replay_called = False
+            self.profile_path_received = None
+
+        def _canonical_runner(self, root, **kwargs):
+            return {"ok": True, "proof": "canonical", "intent_contract": {"positive": []}, "requirement_bindings": {"positive_assertions": [], "negative_assertions": [], "preservation_assertions": [], "fault_injections": []}, "repair_policy": {"human_review_required": True}, "required_trace_artifacts": [], "base_profile": "test", "base_environment_create_venv": False, "bilateral_waboose_request": "test"}
+
+        def execute_replay(self, *, packet_id, profile_path, confirmation_packet, output_dir, **kwargs):
+            self.execute_replay_called = True
+            self.profile_path_received = profile_path
+            # Verify runtime_runner was replaced
+            assert self.runtime_runner is not self._canonical_runner, "runner not replaced"
+            # Call the adapted runner with the repo root and kwargs
+            result = self.runtime_runner(Path("."), profile_path=profile_path, confirmation_packet=confirmation_packet, output_dir=output_dir, **kwargs)
+            return result
+
+    class MockState:
+        def __init__(self):
+            self.p4_confirmation_path = Path(mkdtemp()) / "confirmation.json"
+            self.p4_confirmation_path.parent.mkdir(parents=True, exist_ok=True)
+            self.p4_confirmation_path.write_text('{"ok": true}')
+            self.p4_runtime_output_dir = Path(mkdtemp()) / "output"
+            self.p4_runtime_output_dir.mkdir(parents=True, exist_ok=True)
+            self.p4_confirmation_consumed = False
+            self.p4_required_assets = ()
+            self.repo_root = Path(".")
+            self._p4_runtime_lock = __import__("threading").RLock()
+            self._live_repair = MockService()
+
+        @property
+        def live_repair(self):
+            return self._live_repair
+
+        def close(self):
+            pass
+
+    state = MockState()
+    identity = BilateralIdentity(
+        intent_digest="a" * 64,
+        confirmation_digest="b" * 64,
+        semantic_ledger_digest="c" * 64,
+        guardrail_set_digest="d" * 64,
+        intent_revision_id="P0",
+        repository_head="e" * 40,
+        source_tree_digest="f" * 40,
+        runtime_profile_digest="0" * 64,
+        verifier_id="test-verifier",
+        verifier_source_digest="1" * 64,
+    )
+
+    service = state._live_repair
+    original_runner = service.runtime_runner
+
+    # Test 1: successful execution
+    # Mock _adapt_runtime_proof_identity to avoid needing a real confirmation packet
+    import aura_construction_pascal_spatial_foundry_p4_server as p4mod
+    original_adapt = p4mod._adapt_runtime_proof_identity
+    p4mod._adapt_runtime_proof_identity = lambda proof, **kw: dict(proof)
+
+    try:
+        P4FoundryShowcaseState.execute_exact_runtime_replay(
+            state, packet_id="test-packet", identity=identity
+        )
+    finally:
+        p4mod._adapt_runtime_proof_identity = original_adapt
+    assert service.execute_replay_called, "execute_replay was not called"
+    assert service.profile_path_received == _RUNTIME_PROFILE, "wrong profile passed"
+    assert service.runtime_runner is original_runner, "runner not restored after success"
+    assert state.p4_confirmation_consumed, "confirmation not consumed"
+
+    # Test 2: runner restored after failure
+    state2 = MockState()
+    service2 = state2._live_repair
+    original_runner2 = service2.runtime_runner
+
+    def failing_runner(self, *, packet_id, profile_path, confirmation_packet, output_dir, **kwargs):
+        raise RuntimeError("intentional failure")
+
+    service2.execute_replay = lambda **kw: failing_runner(service2, **kw)
+
+    with pytest.raises((RuntimeError, PascalPresentationError)):
+        P4FoundryShowcaseState.execute_exact_runtime_replay(
+            state2, packet_id="test-packet", identity=identity
+        )
+    assert service2.runtime_runner is original_runner2, "runner not restored after failure"
+    assert not state2.p4_confirmation_consumed, "confirmation consumed despite failure"
+
+    # Cleanup
+    import shutil as _shutil
+    _shutil.rmtree(state.p4_confirmation_path.parent, ignore_errors=True)
+    _shutil.rmtree(state.p4_runtime_output_dir, ignore_errors=True)
+    _shutil.rmtree(state2.p4_confirmation_path.parent, ignore_errors=True)
+    _shutil.rmtree(state2.p4_runtime_output_dir, ignore_errors=True)
+
+
+def test_p4_runtime_profile_is_construction_demo_not_pr5():
+    """Verify _RUNTIME_PROFILE is the Construction Demo V2, not the PR5 V2.
+
+    This confirms the profile graph is non-recursive:
+    PR5 V2 → PR5 V1 → P4 :8768
+      └── RUN_RUNTIME_V2
+          └── Construction Demo V2 → Construction Demo V1 :8767
+    """
+    from aura_construction_pascal_spatial_foundry_p4_server import _RUNTIME_PROFILE
+    assert _RUNTIME_PROFILE == ".aura/runtime_profiles/construction_demo_bilateral.v2.json"
+    assert "construction_pascal_spatial_foundry" not in _RUNTIME_PROFILE, \
+        "P4 runtime profile must NOT be the PR5 profile (would cause recursion)"
