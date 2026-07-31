@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from types import SimpleNamespace
 
 import aura_construction_pascal_spatial_foundry_standalone_server as standalone
@@ -95,3 +97,21 @@ def test_standalone_page_csp_is_same_origin_and_frame_capable() -> None:
     assert "frame-src 'self'" in policy
     assert "script-src 'self'" in policy
     assert "object-src 'none'" in policy
+
+
+def test_pr5_browser_profile_launches_the_standalone_server() -> None:
+    root = Path(__file__).resolve().parents[1]
+    profile = json.loads(
+        (
+            root
+            / ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json"
+        ).read_text(encoding="utf-8")
+    )
+    command = profile["server"]["command"]
+    assert command[1] == (
+        "aura_construction_pascal_spatial_foundry_standalone_server.py"
+    )
+    assert (
+        "tests/test_aura_construction_pascal_spatial_foundry_standalone_server.py"
+        in profile["verification_commands"][5]["command"]
+    )
