@@ -83,6 +83,44 @@ The Showcase Foundry displays confirmed intent, negative intent, guardrails, run
 
 See [`docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md`](docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md) and [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md).
 
+<!-- AURA_CONSTRUCTION_PASCAL_DEMO_OPERATIONS:START -->
+## Construction + Pascal Spatial Foundry demo
+
+The merged PR1–PR5 MVP combines Aura's canonical Construction state, bilateral intent, evidence, verification, guarded repair, U7 reproof, and authority boundaries with a pinned disposable Pascal 2D/3D presentation organ.
+
+Two operating modes are supported:
+
+**Manual presenter mode** — recommended for a narrated recording:
+
+```bash
+python aura_construction_pascal_spatial_foundry_p4_server.py \
+  --repo-root . \
+  --host 127.0.0.1 \
+  --port 8768
+```
+
+Open `http://127.0.0.1:8768/` and use the Director's **Next** control to present the exact fifteen-chapter sequence at your own pace.
+
+**Full bilateral proof mode** — automatically drives real Chromium, captures the seventeen required screenshots and JSON evidence, runs retained verification and Coding Waboose, proves cleanup/relaunch, and stops at human review:
+
+```bash
+python scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py \
+  --repo-root . \
+  --venv ../.AuraOS-pr5-runtime-venv \
+  --output-dir ../AuraOS-pr5-runtime-evidence/<fresh-run-id> \
+  --install-requirements
+```
+
+The output directory must not already exist. Both modes are loopback-only and retain false authority for Construction truth mutation, professional approval, physical work, payment, access, deployment, merge, and learning promotion.
+
+Operational documentation:
+
+- [`docs/AURA_CONSTRUCTION_FOUNDRY_OPERATOR_GUIDE.md`](docs/AURA_CONSTRUCTION_FOUNDRY_OPERATOR_GUIDE.md) — Ubuntu setup, rehearsal, manual presentation, full proof, reset, and troubleshooting;
+- [`docs/AURA_CONSTRUCTION_FOUNDRY_VIDEO_SCRIPT.md`](docs/AURA_CONSTRUCTION_FOUNDRY_VIDEO_SCRIPT.md) — narrated shot list, timing, edit points, and authority-safe wording;
+- [`docs/AURA_CONSTRUCTION_FOUNDRY_EVIDENCE_GUIDE.md`](docs/AURA_CONSTRUCTION_FOUNDRY_EVIDENCE_GUIDE.md) — artifact verdict, archival, failure classification, and publication handling;
+- [`docs/AURA_PASCAL_CONSTRUCTION_SPATIAL_FOUNDRY_MVP.md`](docs/AURA_PASCAL_CONSTRUCTION_SPATIAL_FOUNDRY_MVP.md) — canonical merged integration narrative.
+<!-- AURA_CONSTRUCTION_PASCAL_DEMO_OPERATIONS:END -->
+
 ## AI-safe architecture handoff
 
 Use the architecture harness `handoff` operation before giving AuraOS to an AI reviewer:
