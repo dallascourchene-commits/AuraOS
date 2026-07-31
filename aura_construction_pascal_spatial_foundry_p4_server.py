@@ -824,6 +824,11 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
             _sock.close()
             _saved_port = os.environ.get("AURA_RUNTIME_SERVER_PORT")
             os.environ["AURA_RUNTIME_SERVER_PORT"] = str(_nested_port)
+            # Break the V2→V1→Director→V2 recursion: tell the nested browser
+            # probe to skip RUN_RUNTIME_REPLAY since the outer proof already
+            # covers that obligation.
+            _saved_nested = os.environ.get("AURA_NESTED_REPLAY_MODE")
+            os.environ["AURA_NESTED_REPLAY_MODE"] = "1"
             try:
                 result = service.execute_replay(
                     packet_id=packet_id,
@@ -837,6 +842,10 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
                     os.environ["AURA_RUNTIME_SERVER_PORT"] = _saved_port
                 else:
                     os.environ.pop("AURA_RUNTIME_SERVER_PORT", None)
+                if _saved_nested is not None:
+                    os.environ["AURA_NESTED_REPLAY_MODE"] = _saved_nested
+                else:
+                    os.environ.pop("AURA_NESTED_REPLAY_MODE", None)
             if result.get("ok") is not True:
                 raise PascalPresentationError("P4 Runtime Profile V2 proof did not satisfy every obligation")
             self.p4_confirmation_consumed = True

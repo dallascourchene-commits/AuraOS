@@ -7,6 +7,8 @@ const { chromium } = require("playwright-core");
 const BASE_URL = process.env.AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL || "http://127.0.0.1:8768/";
 const OUTPUT_DIR = process.env.AURA_RUNTIME_EVIDENCE_DIR || "/tmp/aura-construction-pascal-foundry-runtime";
 const CHAPTER_TIMEOUT_MS = Number(process.env.AURA_P4_CHAPTER_TIMEOUT_MS || 240000);
+// When set, the probe skips RUN_RUNTIME_REPLAY to break the V2→V1→V2 recursion.
+const NESTED_REPLAY_MODE = process.env.AURA_NESTED_REPLAY_MODE === "1";
 
 // Validate BASE_URL is loopback only — reject any non-loopback origin.
 const _parsedBaseUrl = new URL(BASE_URL);
@@ -229,6 +231,13 @@ async function main() {
     }
 
     for (const chapter of manifest.manifest.chapters) {
+      // In nested replay mode, skip RUN_RUNTIME_REPLAY to break the
+      // V2→V1→Director→V2 recursion. The outer V2 proof already covers
+      // the runtime replay obligation; the nested probe only needs to
+      // verify the browser contract for the other 14 chapters.
+      if (NESTED_REPLAY_MODE && chapter.chapter_id === "RUN_RUNTIME_V2") {
+        continue;
+      }
       const state = await advance(page, chapter.chapter_id);
       const receipt = state.receipt;
       if (!receipt || receipt.chapter_id !== chapter.chapter_id) throw new Error(`missing exact receipt for ${chapter.chapter_id}`);
@@ -270,8 +279,12 @@ async function main() {
     writeJson("attempt-archive-index.json", archive);
     const allAuthorityFalse = chapterReceipts.every((receipt) =>
       Object.values(receipt.authority || {}).every((value) => value === false));
+    // In nested mode, compare against the filtered chapter list (excluding skipped chapter).
+    const expectedChapterIds = NESTED_REPLAY_MODE
+      ? manifest.manifest.chapters.filter((ch) => ch.chapter_id !== "RUN_RUNTIME_V2").map((ch) => ch.chapter_id)
+      : manifest.manifest.chapters.map((ch) => ch.chapter_id);
     const exactOrder = chapterReceipts.map((receipt) => receipt.chapter_id)
-      .join("|") === manifest.manifest.chapters.map((chapter) => chapter.chapter_id).join("|");
+      .join("|") === expectedChapterIds.join("|");
     const artifacts = fs.readdirSync(OUTPUT_DIR).sort();
     const evidence = {
       version: "AURA_CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY_BROWSER_PROOF_V1",
@@ -289,6 +302,7 @@ async function main() {
       requestFailures,
       externalRequests,
       allAuthorityFalse,
+      nestedReplayMode: NESTED_REPLAY_MODE,
       sourceMutation: false,
       productionMutation: false,
       automaticMerge: false,
