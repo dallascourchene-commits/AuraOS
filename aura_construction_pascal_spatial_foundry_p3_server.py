@@ -433,70 +433,6 @@ def dispatch_p3_foundry_request(
                 200,
                 {"ok": True, "projection": public_projection(projection)},
             )
-        if method == "POST" and route == "/api/construction/decision-lane/issue-presentation-receipt":
-            # P3-owned presentation receipt issuance.  Called by P4 after
-            # the browser has retained the P3 presentation state via
-            # retain-presentation.  Validates against the P3-owned retained
-            # state — does NOT recompile from caller-supplied active_view.
-            _receipt_body = {k: v for k, v in body.items() if k in (*_IDENTITY_KEYS, *_SELECTION_KEYS, "timeline_day")}
-            projection = _compile_from_request(state, _receipt_body, require_identities=True)
-            chapter_id = str(body.get("chapter_id") or "")
-            active_view = str(body.get("active_view") or "")
-            director_session_id = str(body.get("director_session_id") or "")
-            director_receipt_digest = str(body.get("director_receipt_digest") or "")
-            if not chapter_id or not active_view:
-                return _json(400, {"ok": False, "error": "chapter_id and active_view are required"})
-            if not director_session_id or not director_receipt_digest:
-                return _json(400, {"ok": False, "error": "director_session_id and director_receipt_digest are required"})
-            # Validate against P3-owned retained presentation state, not a
-            # freshly compiled projection from caller-supplied fields.
-            # Look up by composite key bound to the exact session+transition.
-            retained_map = getattr(state, "_p3_retained_presentation", None)
-            if retained_map is None or not retained_map:
-                return _json(409, {"ok": False, "error": "no retained P3 presentation state — call retain-presentation first"})
-            _retain_lookup_key = f"{director_session_id}:{director_receipt_digest}"
-            retained_presentation = retained_map.get(_retain_lookup_key)
-            if retained_presentation is None:
-                return _json(409, {"ok": False, "error": "no retained presentation record for this session and receipt digest"})
-            retained_view = retained_presentation.get("active_view")
-            if retained_view != active_view:
-                return _json(409, {"ok": False, "error": f"P3 retained view '{retained_view}' does not match requested '{active_view}'"})
-            # Resolve the identity digest from the caller-supplied
-            # bilateral identity_digest (passed by P4 from the resolved
-            # identity handle), not from the P3 projection.
-            identity_digest = str(body.get("identity_digest") or "")
-            if not identity_digest:
-                return _json(400, {"ok": False, "error": "identity_digest is required"})
-            # Validate ALL binding fields in the retained record match the
-            # issuance request — prevents a caller from using a retained
-            # record with different identity/chapter bindings.
-            if retained_presentation.get("director_session_id") != director_session_id:
-                return _json(409, {"ok": False, "error": "retained record director_session_id mismatch"})
-            if retained_presentation.get("director_receipt_digest") != director_receipt_digest:
-                return _json(409, {"ok": False, "error": "retained record director_receipt_digest mismatch"})
-            if retained_presentation.get("chapter_id") and retained_presentation.get("chapter_id") != chapter_id:
-                return _json(409, {"ok": False, "error": "retained record chapter_id mismatch"})
-            if retained_presentation.get("identity_digest") != identity_digest:
-                return _json(409, {"ok": False, "error": "retained record identity_digest mismatch"})
-            digest_input = f"{chapter_id}|{active_view}|{identity_digest}|{director_session_id}|{director_receipt_digest}"
-            receipt_digest = hashlib.sha256(digest_input.encode()).hexdigest()
-            receipt = {
-                "chapter_id": chapter_id,
-                "active_view": active_view,
-                "identity_digest": identity_digest,
-                "director_session_id": director_session_id,
-                "director_receipt_digest": director_receipt_digest,
-                "receipt_digest": receipt_digest,
-                "issued_by": "p3-presentation",
-            }
-            # Retain the receipt in P3 state keyed by a composite of
-            # director_session_id and chapter_id so receipts from different
-            # sessions or transitions cannot collide.
-            if not hasattr(state, "_p3_presentation_receipts"):
-                state._p3_presentation_receipts = {}
-            _receipt_key = f"{director_session_id}:{chapter_id}"
-            state._p3_presentation_receipts[_receipt_key] = receipt
-            return _json(200, {"ok": True, "presentation_receipt": receipt})
         if method == "POST" and route == "/api/construction/decision-lane/validate-presentation-receipt":
             # P3-owned receipt validation/lookup.  Called by P4 during
             # ack-p3-sync.  Returns the confirmed presentation record
@@ -550,20 +486,27 @@ def dispatch_p3_foundry_request(
             director_receipt_digest = str(body.get("director_receipt_digest") or "")
             identity_digest = str(body.get("identity_digest") or "")
             chapter_id = str(body.get("chapter_id") or "")
-            # Detect whether ANY Director binding field is present.  If so,
-            # require the complete binding group — no partial bindings allowed.
-            _director_bindings_present = any([
-                director_session_id, director_receipt_digest,
-                str(body.get("identity_digest") or ""),
-                str(body.get("chapter_id") or ""),
-                str(body.get("active_view") or ""),
-                str(body.get("sync_nonce") or ""),
-            ])
+            # Detect whether ANY Director binding key is present (by key
+            # existence, not truthiness — a null or empty-string value
+            # still signals intent to use the Director-bound path).
+            _DIRECTOR_BINDING_KEYS = (
+                "director_session_id",
+                "director_receipt_digest",
+                "identity_digest",
+                "chapter_id",
+                "active_view",
+                "sync_nonce",
+            )
+            _director_bindings_present = any(
+                key in body for key in _DIRECTOR_BINDING_KEYS
+            )
             if _director_bindings_present:
-                active_view = str(body.get("active_view") or "")
-                _bidentity_digest = str(body.get("identity_digest") or "")
-                _bchapter_id = str(body.get("chapter_id") or "")
-                _sync_nonce = str(body.get("sync_nonce") or "")
+                active_view = str(body.get("active_view") or "").strip()
+                _bidentity_digest = str(body.get("identity_digest") or "").strip()
+                _bchapter_id = str(body.get("chapter_id") or "").strip()
+                _sync_nonce = str(body.get("sync_nonce") or "").strip()
+                director_session_id = director_session_id.strip()
+                director_receipt_digest = director_receipt_digest.strip()
                 # When any Director binding is present, ALL five fields must be
                 # supplied.  Reject explicitly instead of falling through to
                 # a plain projection response that lacks projection_digest.

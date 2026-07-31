@@ -90,20 +90,21 @@ test("pacing is limited to non-consequential presentation chapters", () => {
   assert.equal(contract.shouldPaceAfterChapter(null), false);
 });
 
-test("control catches sync failure and reports it without swallowing", async () => {
-  // control() catches settleDirective errors and sets syncFailed + status.
-  // It resolves (not rejects) — the error is surfaced via the status DOM node.
-  // This test verifies control handles the missing-DOM case gracefully.
-  try {
-    await contract.control("NEXT");
-  } catch (err) {
-    // If it does throw, that's acceptable — the key is it doesn't
-    // silently succeed with syncFailed hidden.
-    assert.ok(err, "control should reject with a truthy error if it rejects");
-  }
-  // control may resolve or reject depending on DOM state — both are
-  // acceptable as long as the error is not silently swallowed.
-  assert.ok(true, "control completed without silent swallowing");
+test("settleDirective surfaces sync errors via render without swallowing", async () => {
+  // settleDirective wraps an effect and always calls render() in finally.
+  // When the effect throws, the error must propagate (not be swallowed)
+  // and render must still run.  This tests the actual contract that
+  // control() depends on for sync-failure visibility.
+  let renderCount = 0;
+  const render = () => { renderCount += 1; };
+  await assert.rejects(
+    contract.settleDirective(
+      async () => { throw new Error("P3 sync failed at prepare-p3-sync"); },
+      render,
+    ),
+    /P3 sync failed at prepare-p3-sync/,
+  );
+  assert.equal(renderCount, 1, "render must run even when the effect throws");
 });
 
 test("autoplay terminates on sync failure without issuing another NEXT", async () => {

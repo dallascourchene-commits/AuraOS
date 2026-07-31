@@ -36,6 +36,18 @@ The browser exposes Play, Pause, Previous, Next, Restart, and chapter selection.
 
 The Director bundle contains a testable synchronization contract that waits for P3 to retain both the selected view button receipt and the synchronized `presentationMode`; it fails closed on timeout, always re-renders the server-updated Director session in a `finally` path, and applies pacing only to non-consequential presentation chapters. A test-only early branch exposes these exact helpers before DOM initialization, while production exposes no test hooks. Node behavior tests exercise successful retention, timeout, render-on-failure reconciliation, and pacing without depending on source-string spelling.
 
+## Trust model (Trust Model A — trusted local browser)
+
+The P3 presentation synchronization protocol (prepare → project → confirm → acknowledge) provides:
+
+- **Ordering**: state transitions PREPARED → PROJECTED → RENDER_CONFIRMED → ACKNOWLEDGED in strict sequence.
+- **Anti-replay**: one-time nonce consumption and one-time state transitions prevent reuse.
+- **Receipt unpredictability**: the server-owned `render_capability` secret is included in the `receipt_digest` but never returned to any caller, preventing offline receipt forgery.
+
+It does **not** provide cryptographic proof that a human observed rendered pixels. Under Trust Model A, Aura's same-origin browser agent is trusted: `waitForP3View()` is the presentation-owner observation, and direct same-origin API use is not treated as an adversarial bypass. The `render_capability` prevents offline forgery but cannot prevent the trusted browser from asking the signing endpoint to sign the claim — because that browser IS the trusted agent.
+
+This is the correct and final trust model for this offline local demo. Achieving Trust Model B (hostile-browser attestation) would require a separate trusted renderer boundary and is out of scope for this PR.
+
 ## Exact identity
 
 The browser never declares itself current. The P4 server compiles a canonical bilateral confirmation against the current clean Git head and source tree, the exact existing Runtime Profile V2, the exact independent verifier source, the current CODEMAP digest, and the profile’s exact allowed paths. The full confirmation and runtime output remain outside the source checkout. The browser receives only a bounded identity handle and must also supply all five exact P3 identities for every stateful Director request.

@@ -602,9 +602,13 @@ class ConstructionFoundryDirector:
     ) -> dict[str, Any]:
         """Acknowledge that the P3 presentation sync has completed.
 
-        Requires a verifiable P3 presentation receipt bound to the session's
-        last committed chapter, including a P3-generated receipt digest,
-        the active_view, chapter_id, and identity digest.
+        Validates that the supplied receipt binds to the session's last
+        committed chapter, the manifest-required active_view, and the
+        session identity, and that receipt_digest is present.
+
+        Digest provenance is NOT verified here.  The caller must validate
+        the receipt against the P3-retained record before calling this
+        method; see the ack-p3-sync route.
         """
         session = self.require_session(session_id)
         with self._lock:
@@ -792,6 +796,18 @@ class ConstructionFoundryDirector:
             raise ValueError(f"unsupported Director control: {control}") from exc
         session = self.require_session(session_id)
         with self._lock:
+            # Guard: block PLAY, NEXT, and JUMP while P3 presentation sync
+            # is pending.  PAUSE and PREVIOUS are safe because they do not
+            # advance progression or execute effects.
+            if session.p3_sync_pending and action in (
+                DirectorControl.PLAY,
+                DirectorControl.NEXT,
+                DirectorControl.JUMP,
+            ):
+                raise ValueError(
+                    "Director control blocked: P3 presentation sync is "
+                    "pending — acknowledge the sync before advancing"
+                )
             if action is DirectorControl.PLAY:
                 if session.dissolved:
                     raise ValueError("a dissolved session must be restarted before Play")
@@ -819,6 +835,7 @@ class ConstructionFoundryDirector:
                 session.sequence = 0
                 session.playing = False
                 session.dissolved = False
+                session.p3_sync_pending = False
                 session.context.clear()
                 session.receipts.clear()
                 session.evidence = {
@@ -858,6 +875,7 @@ class ConstructionFoundryDirector:
                 session.playing = False
                 session.dissolved = True
             self._sessions.clear()
+            self._transition_claims.clear()
 
 
 __all__ = [

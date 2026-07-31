@@ -1136,10 +1136,12 @@ def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition:
             except Exception as cleanup_exc:
                 # Cleanup evidence must not be hidden.  Attach the cleanup
                 # failure to the re-raised error so it remains observable.
+                # Chain from the original commit failure so the full
+                # exception context is preserved.
                 raise RuntimeError(
-                    f"P4 Director commit failed and orphaned capture "
+                    f"P4 Director commit failed ({exc}) and orphaned capture "
                     f"{_pending_capture_id} could not be released: {cleanup_exc}"
-                ) from cleanup_exc
+                ) from exc
         raise
 
 
@@ -1351,7 +1353,7 @@ def dispatch_p4_foundry_request(
                     return _json(409, {"ok": False, "error": "P4 transition is blocked", "transition": transition})
                 try:
                     return _json(200, _execute_chapter(state, session_id, transition))
-                except Exception as exc:
+                except Exception:
                     # Release the claim if the effect itself threw before
                     # commit_next could run, so the session is not stuck.
                     # Pass the claim_token so we only release OUR claim, not

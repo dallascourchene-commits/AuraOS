@@ -428,8 +428,7 @@ def test_rejected_ack_stays_pending():
         claim_token=claimed["claim_token"],
     )
     session_obj = director.require_session(session_id)
-    if not session_obj.p3_sync_pending:
-        return  # First chapter may not be a presentation chapter.
+    assert session_obj.p3_sync_pending is True, "first chapter must create the P3 sync gate"
     # Try to acknowledge with a wrong chapter_id.
     with pytest.raises(ValueError):
         director.acknowledge_p3_sync(
@@ -527,7 +526,8 @@ def test_construction_state_and_authority_remain_unchanged():
         assert result["receipt"]["construction_state_unchanged"] is True
         # Verify authority fields are all False.
         authority = result["receipt"]["authority"]
-        assert authority["construction_truth"] is False
+        assert authority, "receipt must carry the authority matrix"
+        assert all(value is False for value in authority.values()), authority
         if director.require_session(session_id).p3_sync_pending:
             _ack_p3_sync(director, session_id)
     # Final state digest should match the original (unchanged).
@@ -552,8 +552,7 @@ def test_acknowledge_rejects_missing_identity_digest():
         claim_token=claimed["claim_token"],
     )
     sess = director.require_session(session_id)
-    if not sess.p3_sync_pending:
-        return
+    assert sess.p3_sync_pending is True, "first chapter must create the P3 sync gate"
     last_receipt = sess.receipts[-1]
     chapter_id = last_receipt.get("chapter_id")
     manifest_chapter = director.manifest.chapter(chapter_id)
@@ -600,8 +599,7 @@ def test_acknowledge_rejects_missing_receipt_digest():
         claim_token=claimed["claim_token"],
     )
     sess = director.require_session(session_id)
-    if not sess.p3_sync_pending:
-        return
+    assert sess.p3_sync_pending is True, "first chapter must create the P3 sync gate"
     last_receipt = sess.receipts[-1]
     chapter_id = last_receipt.get("chapter_id")
     manifest_chapter = director.manifest.chapter(chapter_id)

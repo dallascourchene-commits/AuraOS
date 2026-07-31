@@ -69,7 +69,6 @@
       settleDirective,
       shouldPaceAfterChapter,
       waitForP3View,
-      control,
     });
     return;
   }
@@ -233,6 +232,98 @@
     render();
   }
 
+  async function syncP3Presentation(receipt) {
+    // Runs the full prepare → project → confirm → acknowledge sequence
+    // using jsonRequest for consistent error handling and response validation.
+    // Under Trust Model A, the browser is the trusted presentation agent.
+    const chapter = chapterById(receipt.chapter_id);
+    const chapterId = receipt?.chapter_id || null;
+    const activeView = chapter?.ui_directive?.active_view || null;
+
+    // Step 1: Ask P4 to resolve the bilateral identity and return the
+    // binding values needed for P3 presentation retention.
+    const prepareResult = await jsonRequest(
+      `/api/construction/director/session/${encodeURIComponent(session.session_id)}/prepare-p3-sync`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...exactIdentityBody(projection),
+          identity_handle: identityHandle,
+        }),
+      },
+    );
+
+    // Step 2: Call P3 project with the resolved bindings + nonce.
+    // P3 records the retained presentation state as a side effect.
+    const projectResult = await jsonRequest(
+      "/api/construction/decision-lane/project",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...exactIdentityBody(projection),
+          identity_handle: identityHandle,
+          identity_digest: prepareResult.identity_digest,
+          active_view: prepareResult.active_view,
+          director_session_id: prepareResult.director_session_id,
+          director_receipt_digest: prepareResult.director_receipt_digest,
+          chapter_id: prepareResult.chapter_id,
+          sync_nonce: prepareResult.sync_nonce,
+        }),
+      },
+    );
+
+    const projectionDigest = projectResult.projection_digest || null;
+    const presentationRevision = projectResult.presentation_revision || null;
+
+    // Step 3: Call confirm-presentation to transition PROJECTED →
+    // RENDER_CONFIRMED.  The render_capability is NOT accepted from
+    // the request body — P3 looks it up from the server-side sync
+    // record and uses it internally to bind the receipt_digest.
+    const confirmResult = await jsonRequest(
+      "/api/construction/decision-lane/confirm-presentation",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          director_session_id: prepareResult.director_session_id,
+          director_receipt_digest: prepareResult.director_receipt_digest,
+          chapter_id: prepareResult.chapter_id,
+          active_view: prepareResult.active_view,
+          identity_digest: prepareResult.identity_digest,
+          projection_digest: projectionDigest,
+          presentation_revision: presentationRevision,
+        }),
+      },
+    );
+
+    const presentationReceiptDigest = confirmResult.presentation_receipt_digest || null;
+
+    // Step 4: Request P4 acknowledgement — validates the confirmed
+    // P3 record via lookup only (does NOT create it).
+    const ackResult = await jsonRequest(
+      `/api/construction/director/session/${encodeURIComponent(session.session_id)}/ack-p3-sync`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...exactIdentityBody(projection),
+          identity_handle: identityHandle,
+          presentation_receipt: {
+            chapter_id: prepareResult.chapter_id,
+            active_view: prepareResult.active_view,
+            receipt_digest: presentationReceiptDigest,
+          },
+        }),
+      },
+    );
+
+    if (ackResult.session) {
+      session = ackResult.session;
+    }
+  }
+
   async function control(action, chapterId = "") {
     if (!session) throw new Error("P4 Director session is not active");
     const result = await jsonRequest(
@@ -266,101 +357,7 @@
         await applyDirective(chapter, result.receipt);
         // Acknowledge P3 sync to the server so progression is unblocked.
         if (result.session && result.session.p3_sync_pending) {
-          const chapterId = result.receipt?.chapter_id || null;
-          const activeView = chapter?.ui_directive?.active_view || null;
-          // Step 1: Ask P4 to resolve the bilateral identity and return
-          // the binding values needed for P3 presentation retention.
-          const prepareResponse = await fetch(`/api/construction/director/session/${encodeURIComponent(session.session_id)}/prepare-p3-sync`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "same-origin",
-            cache: "no-store",
-            body: JSON.stringify({
-              ...exactIdentityBody(projection),
-              identity_handle: identityHandle,
-            }),
-          });
-          const prepareResult = await prepareResponse.json().catch(() => ({}));
-          if (!prepareResponse.ok || !prepareResult.ok) {
-            throw new Error(`P4 prepare-p3-sync failed: ${prepareResult.error || prepareResponse.status}`);
-          }
-          // Step 2: Call P3 project with the resolved bindings + nonce.
-          // P3 records the retained presentation state as a side effect of
-          // compilation, consuming the one-time nonce from prepare-p3-sync.
-          // This happens AFTER waitForP3View has confirmed the actual DOM
-          // state, so P3's compilation is bound to a real presentation event.
-          const projectResponse = await fetch("/api/construction/decision-lane/project", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "same-origin",
-            cache: "no-store",
-            body: JSON.stringify({
-              ...exactIdentityBody(projection),
-              identity_handle: identityHandle,
-              identity_digest: prepareResult.identity_digest,
-              active_view: prepareResult.active_view,
-              director_session_id: prepareResult.director_session_id,
-              director_receipt_digest: prepareResult.director_receipt_digest,
-              chapter_id: prepareResult.chapter_id,
-              sync_nonce: prepareResult.sync_nonce,
-            }),
-          });
-          const projectResult = await projectResponse.json().catch(() => ({}));
-          if (!projectResponse.ok || !projectResult.ok) {
-            throw new Error(`P3 project for presentation sync failed: ${projectResult.error || projectResponse.status}`);
-          }
-          const projectionDigest = projectResult.projection_digest || null;
-          const presentationRevision = projectResult.presentation_revision || null;
-          // Step 3: Call confirm-presentation to transition PROJECTED →
-          // RENDER_CONFIRMED.  The render_capability is NOT accepted from
-          // the request body — P3 looks it up from the server-side sync
-          // record and uses it internally to bind the receipt_digest.
-          // The caller cannot forge the receipt_digest because it includes
-          // the server-owned render_capability which is never returned.
-          const confirmResponse = await fetch("/api/construction/decision-lane/confirm-presentation", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "same-origin",
-            cache: "no-store",
-            body: JSON.stringify({
-              director_session_id: prepareResult.director_session_id,
-              director_receipt_digest: prepareResult.director_receipt_digest,
-              chapter_id: prepareResult.chapter_id,
-              active_view: prepareResult.active_view,
-              identity_digest: prepareResult.identity_digest,
-              projection_digest: projectionDigest,
-              presentation_revision: presentationRevision,
-            }),
-          });
-          const confirmResult = await confirmResponse.json().catch(() => ({}));
-          if (!confirmResponse.ok || !confirmResult.ok) {
-            throw new Error(`P3 confirm-presentation failed: ${confirmResult.error || confirmResponse.status}`);
-          }
-          const presentationReceiptDigest = confirmResult.presentation_receipt_digest || null;
-          // Step 4: Request P4 acknowledgement — validates the confirmed
-          // P3 record via lookup only (does NOT create it).
-          const ackResponse = await fetch(`/api/construction/director/session/${encodeURIComponent(session.session_id)}/ack-p3-sync`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "same-origin",
-            cache: "no-store",
-            body: JSON.stringify({
-              ...exactIdentityBody(projection),
-              identity_handle: identityHandle,
-              presentation_receipt: {
-                chapter_id: prepareResult.chapter_id,
-                active_view: prepareResult.active_view,
-                receipt_digest: presentationReceiptDigest,
-              },
-            }),
-          });
-          const ackResult = await ackResponse.json().catch(() => ({}));
-          if (!ackResponse.ok || ackResult.ok !== true) {
-            throw new Error(`P3 sync acknowledgement failed: ${ackResult.error || ackResponse.status}`);
-          }
-          if (ackResult.session) {
-            session = ackResult.session;
-          }
+          await syncP3Presentation(result.receipt);
         }
       } else {
         await applyDirective(selectedChapter());

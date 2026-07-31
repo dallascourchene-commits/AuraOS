@@ -53,6 +53,63 @@ def _manifest():
     )
 
 
+# Shared fixture for tests that need a P3 state with P4 members attached.
+# This is NOT a real P4FoundryShowcaseState — it uses a P3FoundryShowcaseState
+# with P4 attributes grafted on, mirroring the inheritance that P4 applies
+# in production but without the full P4 lifecycle.
+_P4_INITIAL_EVIDENCE = {
+    "p3_available": True, "construction_identity_bound": True,
+    "pascal_artifact_bound": True, "coordinate_receipt_bound": True,
+    "as_built_scene_bound": True, "compare_receipt_bound": True,
+    "construction_candidates_bound": True, "domain_decision_bound": True,
+    "identity_current": True, "operator_authorized": True,
+    "fault_fixture_bound": True, "required_assets_bound": True,
+    "rollback_adapter_ready": True, "u7_bridge_ready": True,
+    "construction_state_unchanged": True, "capture_resources_dissolved": True,
+}
+
+
+@pytest.fixture
+def p4_test_state(monkeypatch):
+    """Return (state, director, ident_digest) for P3+P4 sync tests.
+
+    Uses a P3FoundryShowcaseState with P4 members attached — NOT a real
+    P4FoundryShowcaseState.  The _p4_runtime_lock is not created, so
+    routes that acquire it are not reachable from this fixture.
+    """
+    monkeypatch.setattr(p4, "_validate_request_context", lambda *_args, **_kwargs: None)
+    import aura_construction_pascal_spatial_foundry_p3_server as p3mod
+    monkeypatch.setattr(p3mod, "_validate_request_context", lambda *_args, **_kwargs: None)
+
+    director = ConstructionFoundryDirector(_manifest())
+    from collections import namedtuple
+    FakeIdentity = namedtuple("FakeIdentity", ["identity_digest"])
+    ident_digest = hashlib.sha256(b"fixture-identity").hexdigest()
+    fake_identity = FakeIdentity(identity_digest=ident_digest)
+
+    def fake_proj_identity(_state, _body, require_all=True):
+        return ({}, fake_identity)
+    monkeypatch.setattr(p4, "_projection_and_identity", fake_proj_identity)
+
+    state = p3mod.P3FoundryShowcaseState(
+        Path(__file__).resolve().parents[1],
+        demo_project="winnipeg_pathways",
+        auto_start=False,
+        presentation_origin="http://127.0.0.1:8765",
+    )
+    state.p4_available = True
+    state.p4_load_error = ""
+    state.p4_director = director
+    state.presentation_origin = "http://127.0.0.1:8765"
+    state.presentation_netloc = "127.0.0.1:8765"
+    state.require_p4 = lambda: director
+
+    try:
+        yield state, director, ident_digest
+    finally:
+        state.close()
+
+
 def test_status_preserves_p3_fallback_when_p4_is_unavailable(monkeypatch):
     monkeypatch.setattr(p4, "_validate_request_context", lambda *_args, **_kwargs: None)
     state = SimpleNamespace(
@@ -583,7 +640,7 @@ def test_p3_sync_protocol_rejects_ack_without_render_confirmation(monkeypatch):
                 },
             },
         )
-        assert ack_status != 200, "ack must fail when state is PROJECTED, not RENDER_CONFIRMED"
+        assert ack_status == 409, f"ack must fail with 409 when state is PROJECTED, not RENDER_CONFIRMED: {ack_resp.decode()[:200]}"
         assert director.require_session(session_id).p3_sync_pending is True
         assert state._p3_sync_nonces[sync_key]["state"] == "PROJECTED"
     finally:
@@ -670,7 +727,7 @@ def test_confirm_presentation_rejects_without_project(monkeypatch):
             request_origin="http://127.0.0.1:8765",
             request_host="127.0.0.1:8765",
         )
-        assert confirm_status != 200, "confirm must fail when state is PREPARED, not PROJECTED"
+        assert confirm_status == 409, f"confirm must fail with 409 when state is PREPARED, not PROJECTED: {confirm_resp.decode()[:200]}"
         assert director.require_session(session_id).p3_sync_pending is True
         sync_key = f"{session_id}:{prep['director_receipt_digest']}"
         assert state._p3_sync_nonces[sync_key]["state"] == "PREPARED"
@@ -788,27 +845,39 @@ def test_confirm_presentation_rejects_duplicate(monkeypatch):
             state, "POST", "/api/construction/decision-lane/confirm-presentation",
             confirm_body, request_origin="http://127.0.0.1:8765", request_host="127.0.0.1:8765",
         )
-        assert c2_status != 200, "duplicate confirm must fail"
+        assert c2_status == 409, f"duplicate confirm must return 409: {c2_resp.decode()[:200]}"
+        assert "RENDER_CONFIRMED" in c2_resp.decode()
         assert director.require_session(session_id).p3_sync_pending is True
     finally:
         state.close()
 
 
 def test_anti_replay_ordering_allows_direct_sequence_without_renderer_proof(monkeypatch):
-    """Documented behavior: prepare→project→confirm→ack succeeds via direct API.
+    """Trust Model A: prepare→project→confirm→ack succeeds via direct API.
 
-    This is NOT a security regression.  The protocol provides:
+    The synchronization protocol proves ordered, non-replayable completion
+    by Aura's trusted same-origin presentation agent.  It does NOT
+    independently attest against a malicious client controlling that agent.
+
+    The protocol provides:
     - Ordering (PREPARED → PROJECTED → RENDER_CONFIRMED → ACKNOWLEDGED)
     - Anti-replay (one-time nonce, one-time state transitions)
-    - Server-generated receipt (non-deterministic from caller's view)
+    - Receipt unpredictability (render_capability is server-owned and
+      never returned to any caller, making receipt_digest non-deterministic
+      from the caller's perspective — this is anti-forgery, NOT renderer
+      attestation)
 
     It does NOT provide cryptographic proof that a human observed pixels.
-    The render_capability is server-owned and never returned to any caller.
-    The receipt_digest includes it, making the receipt unpredictable.
+    The render_capability prevents offline receipt forgery but cannot
+    prevent the same trusted browser from asking the signing endpoint
+    to sign the claim — because under Trust Model A that browser IS
+    the trusted agent.
 
     This test documents the achievable guarantee: a caller who is the
     browser's agent CAN transition the state machine.  The receipt is
-    bound to server-owned values the caller cannot predict or forge.
+    bound to server-owned values the caller cannot predict or forge
+    offline.  This is the correct and final trust model for this
+    offline local demo.
     """
     monkeypatch.setattr(p4, "_validate_request_context", lambda *_args, **_kwargs: None)
     import aura_construction_pascal_spatial_foundry_p3_server as p3mod
