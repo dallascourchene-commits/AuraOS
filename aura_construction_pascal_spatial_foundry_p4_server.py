@@ -831,22 +831,37 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
             _nested_port = _sock.getsockname()[1]
             _sock.close()
 
-            # Issue a sealed nested-replay capability. This can only be
-            # created here — the seal object is module-private to the
-            # V1 harness, so public API callers cannot forge it.
-            from scripts.aura_runtime_refactor_harness import _issue_nested_replay_capability
-            from scripts.aura_runtime_profile_v2_adapter import _run_runtime_profile_v2_nested
-            _capability = _issue_nested_replay_capability(_nested_port)
+            # Issue a one-time nonce for nested replay. The nonce is
+            # generated with secrets.token_hex and stored in the V1
+            # harness's pending set. The child P4 server validates it
+            # via AURA_NESTED_REPLAY_NONCE env var.
+            from scripts.aura_runtime_refactor_harness import _issue_nested_replay_nonce
+            _nested_nonce = _issue_nested_replay_nonce()
 
-            # Install a private nested runner closure. The public
-            # execute_replay() method needs no nested argument — it
-            # calls self.runtime_runner which is temporarily replaced.
+            # Install a private nested runner closure that sets the
+            # nonce and port env vars before calling the V2 adapter.
+            # The public execute_replay() needs no nested argument —
+            # it calls self.runtime_runner which is temporarily replaced.
             def adapted_runner(root: Path, **kwargs: Any) -> Mapping[str, Any]:
-                canonical_proof = _run_runtime_profile_v2_nested(
-                    root,
-                    nested_capability=_capability,
-                    **kwargs,
-                )
+                _saved_nonce = os.environ.get("AURA_NESTED_REPLAY_NONCE")
+                _saved_mode = os.environ.get("AURA_NESTED_REPLAY_MODE")
+                _saved_port = os.environ.get("AURA_RUNTIME_SERVER_PORT")
+                os.environ["AURA_NESTED_REPLAY_NONCE"] = _nested_nonce
+                os.environ["AURA_NESTED_REPLAY_MODE"] = "1"
+                os.environ["AURA_RUNTIME_SERVER_PORT"] = str(_nested_port)
+                try:
+                    canonical_proof = canonical_runner(root, **kwargs)
+                finally:
+                    # Restore parent env — do not leak nested mode.
+                    for _key, _val in [
+                        ("AURA_NESTED_REPLAY_NONCE", _saved_nonce),
+                        ("AURA_NESTED_REPLAY_MODE", _saved_mode),
+                        ("AURA_RUNTIME_SERVER_PORT", _saved_port),
+                    ]:
+                        if _val is not None:
+                            os.environ[_key] = _val
+                        else:
+                            os.environ.pop(_key, None)
                 return _adapt_runtime_proof_identity(
                     canonical_proof,
                     identity=identity,

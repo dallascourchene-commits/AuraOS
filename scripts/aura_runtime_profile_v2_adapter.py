@@ -905,59 +905,7 @@ def run_runtime_profile_v2(
     allow_dirty: bool = False,
     baseline_receipt: str | Path | None = None,
 ) -> dict[str, Any]:
-    """Public V2 runtime profile runner. Nested replay mode is NOT accepted."""
-    return _run_runtime_profile_v2_impl(
-        root,
-        profile_path=profile_path,
-        confirmation_packet=confirmation_packet,
-        output_dir=output_dir,
-        venv_path=venv_path,
-        install_requirements=install_requirements,
-        allow_dirty=allow_dirty,
-        baseline_receipt=baseline_receipt,
-        nested_capability=None,
-    )
-
-
-def _run_runtime_profile_v2_nested(
-    root: Path,
-    *,
-    profile_path: str | Path,
-    confirmation_packet: str | Path,
-    output_dir: str | Path,
-    venv_path: str | Path | None = None,
-    install_requirements: bool = False,
-    allow_dirty: bool = False,
-    baseline_receipt: str | Path | None = None,
-    nested_capability: _v1._NestedReplayCapability,
-) -> dict[str, Any]:
-    """Private nested V2 runner. Requires a sealed _NestedReplayCapability."""
-    _v1._validate_nested_replay_capability(nested_capability)
-    return _run_runtime_profile_v2_impl(
-        root,
-        profile_path=profile_path,
-        confirmation_packet=confirmation_packet,
-        output_dir=output_dir,
-        venv_path=venv_path,
-        install_requirements=install_requirements,
-        allow_dirty=allow_dirty,
-        baseline_receipt=baseline_receipt,
-        nested_capability=nested_capability,
-    )
-
-
-def _run_runtime_profile_v2_impl(
-    root: Path,
-    *,
-    profile_path: str | Path,
-    confirmation_packet: str | Path,
-    output_dir: str | Path,
-    venv_path: str | Path | None = None,
-    install_requirements: bool = False,
-    allow_dirty: bool = False,
-    baseline_receipt: str | Path | None = None,
-    nested_capability: _v1._NestedReplayCapability | None = None,
-) -> dict[str, Any]:
+    """Public V2 runtime profile runner. No nested parameters."""
     root = root.expanduser().resolve()
     before = _repo_identity(root)
     if allow_dirty:
@@ -979,27 +927,15 @@ def _run_runtime_profile_v2_impl(
     )
     consumption = _consume_confirmation(root, confirmation)
 
-    if nested_capability is not None:
-        base = _v1._run_runtime_profile_nested(
-            root,
-            profile_path=profile["base_profile"],
-            output_dir=output,
-            venv_path=venv_path,
-            install_requirements=install_requirements,
-            allow_dirty=False,
-            baseline_receipt=baseline_receipt,
-            nested_capability=nested_capability,
-        )
-    else:
-        base = _v1.run_runtime_profile(
-            root,
-            profile_path=profile["base_profile"],
-            output_dir=output,
-            venv_path=venv_path,
-            install_requirements=install_requirements,
-            allow_dirty=False,
-            baseline_receipt=baseline_receipt,
-        )
+    base = _v1.run_runtime_profile(
+        root,
+        profile_path=profile["base_profile"],
+        output_dir=output,
+        venv_path=venv_path,
+        install_requirements=install_requirements,
+        allow_dirty=False,
+        baseline_receipt=baseline_receipt,
+    )
     pre_waboose_trace_names = tuple(
         name
         for name in profile["required_trace_artifacts"]
