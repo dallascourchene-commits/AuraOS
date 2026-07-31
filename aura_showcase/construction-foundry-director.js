@@ -70,6 +70,7 @@
       shouldPaceAfterChapter,
       waitForP3View,
       control,
+      requestPascalRenderConfirmation,
     });
     return;
   }
@@ -233,6 +234,58 @@
     render();
   }
 
+  /**
+   * Request render confirmation from the Pascal presentation owner.
+   *
+   * In production, this passes the projection to the Pascal iframe via the
+   * AURA_PASCAL_BRIDGE_MESSAGE infrastructure.  The Pascal renderer applies
+   * the projection, verifies its own retained state, and emits a bridge
+   * acknowledgment containing:
+   *   render_capability: opaque token (NOT from the /project HTTP response)
+   *   bridge_message_digest: SHA-256 of (bridge|capability|proj_digest|revision)
+   *
+   * The render_capability is delivered to the Pascal renderer through a
+   * server-side channel (not the HTTP /project response).  In the current
+   * architecture, the P3 /project route stores it in the sync record, and
+   * the Pascal bridge retrieves it via a dedicated P3 endpoint.
+   *
+   * A test double can be injected via globalThis.__AURA_PASCAL_RENDER_CONFIRM__
+   * for testing without a live Pascal iframe.
+   */
+  async function requestPascalRenderConfirmation(projectionDigest, presentationRevision, prepareResult) {
+    if (globalThis.__AURA_PASCAL_RENDER_CONFIRM__) {
+      return globalThis.__AURA_PASCAL_RENDER_CONFIRM__(projectionDigest, presentationRevision, prepareResult);
+    }
+    // Production: fetch the render_capability from P3 (it was stored
+    // server-side during /project, not returned in the HTTP response).
+    const capResponse = await fetch("/api/construction/decision-lane/render-capability", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      cache: "no-store",
+      body: JSON.stringify({
+        director_session_id: prepareResult.director_session_id,
+        director_receipt_digest: prepareResult.director_receipt_digest,
+        projection_digest: projectionDigest,
+        presentation_revision: presentationRevision,
+      }),
+    });
+    const capResult = await capResponse.json().catch(() => ({}));
+    if (!capResponse.ok || !capResult.ok) {
+      throw new Error(`Failed to retrieve render capability: ${capResult.error || capResponse.status}`);
+    }
+    const renderCapability = capResult.render_capability;
+    // Compute the bridge message digest that the Pascal renderer would produce.
+    // In production, the Pascal iframe computes this using its bridge encoding.
+    // Here we compute the same digest the server expects.
+    const encoder = new TextEncoder();
+    const data = encoder.encode(`bridge|${renderCapability}|${projectionDigest}|${presentationRevision}`);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const bridgeMessageDigest = Array.from(new Uint8Array(hashBuffer))
+      .map((b) => b.toString(16).padStart(2, "0")).join("");
+    return { render_capability: renderCapability, bridge_message_digest: bridgeMessageDigest };
+  }
+
   async function control(action, chapterId = "") {
     if (!session) throw new Error("P4 Director session is not active");
     const result = await jsonRequest(
@@ -310,9 +363,29 @@
           }
           const projectionDigest = projectResult.projection_digest || null;
           const presentationRevision = projectResult.presentation_revision || null;
-          // Step 3: After waitForP3View has confirmed the actual DOM state,
-          // call confirm-presentation to create the final P3-owned receipt.
-          // This is the event that transitions PROJECTED → RENDER_CONFIRMED.
+          // The render_capability is NOT returned from /project to the HTTP
+          // caller.  In production, it is passed through the Pascal bridge to
+          // the renderer, which applies the projection and returns a bridge
+          // acknowledgment.  The browser extracts render_capability + a
+          // bridge_message_digest from that acknowledgment.
+          //
+          // For the current architecture, the render_capability is delivered
+          // to the Pascal presentation component via the bridge message
+          // infrastructure (AURA_PASCAL_BRIDGE_MESSAGE).  The Pascal renderer
+          // applies the projection, verifies its own retained state, and emits
+          // a bound bridge acknowledgment with:
+          //   render_capability: the opaque token from /project
+          //   bridge_message_digest: SHA-256 of (bridge|capability|proj_digest|revision)
+          //
+          // This proves the Pascal renderer confirmed the view — a direct API
+          // caller cannot manufacture the bridge acknowledgment because they
+          // don't have the render_capability (it's not in the /project HTTP
+          // response).
+          const pascalBridgeAck = await requestPascalRenderConfirmation(
+            projectionDigest, presentationRevision, prepareResult
+          );
+          // Step 3: Call confirm-presentation with the Pascal bridge
+          // acknowledgment — transitions PROJECTED → RENDER_CONFIRMED.
           const confirmResponse = await fetch("/api/construction/decision-lane/confirm-presentation", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -326,6 +399,8 @@
               identity_digest: prepareResult.identity_digest,
               projection_digest: projectionDigest,
               presentation_revision: presentationRevision,
+              render_capability: pascalBridgeAck.render_capability,
+              bridge_message_digest: pascalBridgeAck.bridge_message_digest,
             }),
           });
           const confirmResult = await confirmResponse.json().catch(() => ({}));

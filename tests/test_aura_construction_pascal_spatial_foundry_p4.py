@@ -420,7 +420,30 @@ def test_p3_sync_protocol_end_to_end(monkeypatch):
         # Verify state transitioned to PROJECTED.
         assert sync_map[sync_key]["state"] == "PROJECTED"
 
-        # Step 3: confirm-presentation.
+        # Step 2b: Retrieve the render_capability from P3 (server-side,
+        # not returned from /project HTTP response).
+        cap_status, _, cap_resp = p3mod.dispatch_p3_foundry_request(
+            state, "POST",
+            "/api/construction/decision-lane/render-capability",
+            {
+                "director_session_id": prep["director_session_id"],
+                "director_receipt_digest": prep["director_receipt_digest"],
+                "projection_digest": proj["projection_digest"],
+                "presentation_revision": proj["presentation_revision"],
+            },
+            request_origin="http://127.0.0.1:8765",
+            request_host="127.0.0.1:8765",
+        )
+        assert cap_status == 200, f"render-capability failed: {cap_resp.decode()[:200]}"
+        cap = json.loads(cap_resp.decode())
+        assert cap["ok"] is True
+        assert cap["render_capability"], "render-capability must return a non-empty token"
+
+        # Compute the bridge message digest (what the Pascal renderer would produce).
+        _bridge_input = f"bridge|{cap['render_capability']}|{proj['projection_digest']}|{proj['presentation_revision']}"
+        _bridge_digest = _hl.sha256(_bridge_input.encode()).hexdigest()
+
+        # Step 3: confirm-presentation with the render_capability + bridge digest.
         confirm_status, _, confirm_resp = p3mod.dispatch_p3_foundry_request(
             state, "POST",
             "/api/construction/decision-lane/confirm-presentation",
@@ -432,6 +455,8 @@ def test_p3_sync_protocol_end_to_end(monkeypatch):
                 "identity_digest": prep["identity_digest"],
                 "projection_digest": proj["projection_digest"],
                 "presentation_revision": proj["presentation_revision"],
+                "render_capability": cap["render_capability"],
+                "bridge_message_digest": _bridge_digest,
             },
             request_origin="http://127.0.0.1:8765",
             request_host="127.0.0.1:8765",
@@ -766,7 +791,22 @@ def test_confirm_presentation_rejects_duplicate(monkeypatch):
         assert proj_status == 200
         proj = json.loads(proj_resp.decode())
 
-        # First confirm — should succeed.
+        # First confirm — retrieve render_capability and compute bridge digest.
+        cap_status, _, cap_resp = p3mod.dispatch_p3_foundry_request(
+            state, "POST", "/api/construction/decision-lane/render-capability",
+            {
+                "director_session_id": prep["director_session_id"],
+                "director_receipt_digest": prep["director_receipt_digest"],
+                "projection_digest": proj["projection_digest"],
+                "presentation_revision": proj["presentation_revision"],
+            },
+            request_origin="http://127.0.0.1:8765", request_host="127.0.0.1:8765",
+        )
+        assert cap_status == 200
+        cap = json.loads(cap_resp.decode())
+        _bridge_input = f"bridge|{cap['render_capability']}|{proj['projection_digest']}|{proj['presentation_revision']}"
+        _bridge_digest = _hl.sha256(_bridge_input.encode()).hexdigest()
+
         confirm_body = {
             "director_session_id": prep["director_session_id"],
             "director_receipt_digest": prep["director_receipt_digest"],
@@ -775,6 +815,8 @@ def test_confirm_presentation_rejects_duplicate(monkeypatch):
             "identity_digest": prep["identity_digest"],
             "projection_digest": proj["projection_digest"],
             "presentation_revision": proj["presentation_revision"],
+            "render_capability": cap["render_capability"],
+            "bridge_message_digest": _bridge_digest,
         }
         c1_status, _, _ = p3mod.dispatch_p3_foundry_request(
             state, "POST", "/api/construction/decision-lane/confirm-presentation",
@@ -789,5 +831,129 @@ def test_confirm_presentation_rejects_duplicate(monkeypatch):
         )
         assert c2_status != 200, "duplicate confirm must fail"
         assert director.require_session(session_id).p3_sync_pending is True
+    finally:
+        state.close()
+
+
+def test_confirm_rejects_without_render_capability(monkeypatch):
+    """Decisive negative: prepare→project→confirm WITHOUT render_capability must fail.
+
+    A direct API caller who knows the /project response values cannot
+    manufacture a render_capability.  The confirm-presentation route
+    must reject the request and keep p3_sync_pending True.
+    """
+    monkeypatch.setattr(p4, "_validate_request_context", lambda *_args, **_kwargs: None)
+    import aura_construction_pascal_spatial_foundry_p3_server as p3mod
+    monkeypatch.setattr(p3mod, "_validate_request_context", lambda *_args, **_kwargs: None)
+
+    director = ConstructionFoundryDirector(_manifest())
+    import hashlib as _hl
+    from collections import namedtuple
+    FakeIdentity = namedtuple("FakeIdentity", ["identity_digest"])
+    ident_digest = _hl.sha256(b"e2e-no-cap").hexdigest()
+    fake_identity = FakeIdentity(identity_digest=ident_digest)
+
+    def fake_proj_identity(_state, _body, require_all=True):
+        return ({}, fake_identity)
+    monkeypatch.setattr(p4, "_projection_and_identity", fake_proj_identity)
+
+    state = p3mod.P3FoundryShowcaseState(
+        Path(__file__).resolve().parents[1],
+        demo_project="winnipeg_pathways",
+        auto_start=False,
+        presentation_origin="http://127.0.0.1:8765",
+    )
+    state.p4_available = True
+    state.p4_load_error = ""
+    state.p4_director = director
+    state.presentation_origin = "http://127.0.0.1:8765"
+    state.presentation_netloc = "127.0.0.1:8765"
+    state.require_p4 = lambda: director
+
+    try:
+        session = director.start_session(
+            identity_digest=ident_digest,
+            construction_state_digest=_hl.sha256(b"e2e-no-cap-state").hexdigest(),
+            initial_evidence={
+                "p3_available": True, "construction_identity_bound": True,
+                "pascal_artifact_bound": True, "coordinate_receipt_bound": True,
+                "as_built_scene_bound": True, "compare_receipt_bound": True,
+                "construction_candidates_bound": True, "domain_decision_bound": True,
+                "identity_current": True, "operator_authorized": True,
+                "fault_fixture_bound": True, "required_assets_bound": True,
+                "rollback_adapter_ready": True, "u7_bridge_ready": True,
+                "construction_state_unchanged": True, "capture_resources_dissolved": True,
+            },
+        )
+        session_id = session["session_id"]
+        claimed = director.claim_next(session_id)
+        director.commit_next(
+            session_id,
+            transition_digest=claimed["transition_digest"],
+            effect_receipt={"ok": True},
+            claim_token=claimed["claim_token"],
+        )
+        assert director.require_session(session_id).p3_sync_pending is True
+
+        # prepare + project
+        prep_status, _, prep_resp = p4.dispatch_p4_foundry_request(
+            state, "POST",
+            f"/api/construction/director/session/{session_id}/prepare-p3-sync",
+            {"identity_handle": "e2e-no-cap"},
+        )
+        assert prep_status == 200
+        prep = json.loads(prep_resp.decode())
+
+        sess = director.require_session(session_id)
+        chapter_id = sess.receipts[-1].get("chapter_id")
+        active_view = dict(director.manifest.chapter(chapter_id).ui_directive or {}).get("active_view")
+        projection = state.require_p3().compile(active_view=active_view, timeline_day=14.0)
+        exact_identity = {
+            "state_digest": projection["domain"]["state_digest"],
+            "runtime_packet_digest": projection["domain"]["runtime_packet_digest"],
+            "pascal_artifact_digest": projection["artifacts"]["pascal_artifact_digest"],
+            "coordinate_receipt_digest": projection["artifacts"]["coordinate_receipt_digest"],
+            "as_built_scene_digest": projection["artifacts"]["as_built_scene_digest"],
+        }
+        proj_status, _, proj_resp = p3mod.dispatch_p3_foundry_request(
+            state, "POST", "/api/construction/decision-lane/project",
+            {
+                **exact_identity, "active_view": active_view, "timeline_day": 14.0,
+                "identity_handle": "e2e-no-cap", "identity_digest": prep["identity_digest"],
+                "director_session_id": prep["director_session_id"],
+                "director_receipt_digest": prep["director_receipt_digest"],
+                "chapter_id": prep["chapter_id"], "sync_nonce": prep["sync_nonce"],
+            },
+            request_origin="http://127.0.0.1:8765", request_host="127.0.0.1:8765",
+        )
+        assert proj_status == 200
+        proj = json.loads(proj_resp.decode())
+        assert proj["projection_digest"]
+
+        sync_key = f"{session_id}:{prep['director_receipt_digest']}"
+        assert state._p3_sync_nonces[sync_key]["state"] == "PROJECTED"
+
+        # Try confirm WITHOUT render_capability or bridge_message_digest.
+        # A direct API caller who only knows the /project response cannot
+        # supply these values.
+        confirm_status, _, confirm_resp = p3mod.dispatch_p3_foundry_request(
+            state, "POST",
+            "/api/construction/decision-lane/confirm-presentation",
+            {
+                "director_session_id": prep["director_session_id"],
+                "director_receipt_digest": prep["director_receipt_digest"],
+                "chapter_id": prep["chapter_id"],
+                "active_view": active_view,
+                "identity_digest": prep["identity_digest"],
+                "projection_digest": proj["projection_digest"],
+                "presentation_revision": proj["presentation_revision"],
+                # Missing: render_capability, bridge_message_digest
+            },
+            request_origin="http://127.0.0.1:8765",
+            request_host="127.0.0.1:8765",
+        )
+        assert confirm_status != 200, "confirm must fail without render_capability"
+        assert director.require_session(session_id).p3_sync_pending is True
+        assert state._p3_sync_nonces[sync_key]["state"] == "PROJECTED"
     finally:
         state.close()

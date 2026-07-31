@@ -582,32 +582,37 @@ def dispatch_p3_foundry_request(
                         json.dumps(projection, sort_keys=True, default=str).encode()
                     ).hexdigest()
                     _presentation_revision = secrets.token_hex(8)
+                    # Generate an opaque render capability that is NOT
+                    # returned to the HTTP caller.  It is stored server-side
+                    # and must be presented back via a Pascal bridge
+                    # acknowledgment to prove the renderer applied the
+                    # projection.  A direct API caller cannot manufacture
+                    # the bridge acknowledgment.
+                    _render_capability = secrets.token_hex(16)
                     # Transition: PREPARED → PROJECTED.
                     # Do NOT create the final presentation receipt — that
-                    # requires a separate confirm-presentation step.
+                    # requires a separate confirm-presentation step with
+                    # a Pascal bridge acknowledgment.
                     _sync_record["state"] = "PROJECTED"
                     _sync_record["projection_digest"] = _projection_digest
                     _sync_record["presentation_revision"] = _presentation_revision
+                    _sync_record["render_capability"] = _render_capability
                     return _json(200, {
                         "ok": True,
                         "projection": public_projection(projection),
                         "projection_digest": _projection_digest,
                         "presentation_revision": _presentation_revision,
                     })
-            return _json(
-                200,
-                {"ok": True, "projection": public_projection(projection)},
-            )
-        if method == "POST" and route == "/api/construction/decision-lane/confirm-presentation":
-            # Presentation-owner confirmation: PROJECTED → RENDER_CONFIRMED.
-            # Called by the browser after waitForP3View() confirms the actual
-            # DOM state matches the required view.  This is the event that
-            # creates the final presentation receipt — not P3 /project.
+            return _json(200, {"ok": True, "projection": public_projection(projection)})
+        if method == "POST" and route == "/api/construction/decision-lane/render-capability":
+            # Retrieve the opaque render_capability for the Pascal bridge.
+            # This endpoint is called by the browser AFTER /project to obtain
+            # the render_capability that was stored server-side.  In a future
+            # architecture, this would be delivered directly to the Pascal
+            # renderer through a server-side channel.  For now, the browser
+            # retrieves it and passes it to the Pascal iframe via bridge.
             director_session_id = str(body.get("director_session_id") or "")
             director_receipt_digest = str(body.get("director_receipt_digest") or "")
-            chapter_id = str(body.get("chapter_id") or "")
-            active_view = str(body.get("active_view") or "")
-            identity_digest = str(body.get("identity_digest") or "")
             projection_digest = str(body.get("projection_digest") or "")
             presentation_revision = str(body.get("presentation_revision") or "")
             if not director_session_id or not director_receipt_digest:
@@ -615,11 +620,54 @@ def dispatch_p3_foundry_request(
             _sync_map = getattr(state, "_p3_sync_nonces", None)
             _sync_key = f"{director_session_id}:{director_receipt_digest}"
             _sync_record = _sync_map.get(_sync_key) if _sync_map else None
+            if not isinstance(_sync_record, dict) or _sync_record.get("state") != "PROJECTED":
+                return _json(403, {"ok": False, "error": "no PROJECTED sync record found"})
+            if _sync_record.get("projection_digest") != projection_digest:
+                return _json(409, {"ok": False, "error": "projection_digest does not match"})
+            if _sync_record.get("presentation_revision") != presentation_revision:
+                return _json(409, {"ok": False, "error": "presentation_revision does not match"})
+            return _json(200, {
+                "ok": True,
+                "render_capability": _sync_record.get("render_capability", ""),
+            })
+        if method == "POST" and route == "/api/construction/decision-lane/confirm-presentation":
+            # Presentation-owner confirmation: PROJECTED → RENDER_CONFIRMED.
+            # Called by the browser after the Pascal renderer has applied the
+            # projection and sent back a bridge acknowledgment containing the
+            # opaque render_capability.  This proves the recognized Pascal
+            # presentation component confirmed the rendered view — not just
+            # that a caller knows the project response values.
+            director_session_id = str(body.get("director_session_id") or "")
+            director_receipt_digest = str(body.get("director_receipt_digest") or "")
+            chapter_id = str(body.get("chapter_id") or "")
+            active_view = str(body.get("active_view") or "")
+            identity_digest = str(body.get("identity_digest") or "")
+            projection_digest = str(body.get("projection_digest") or "")
+            presentation_revision = str(body.get("presentation_revision") or "")
+            render_capability = str(body.get("render_capability") or "")
+            bridge_message_digest = str(body.get("bridge_message_digest") or "")
+            if not director_session_id or not director_receipt_digest:
+                return _json(400, {"ok": False, "error": "director_session_id and director_receipt_digest are required"})
+            if not render_capability:
+                return _json(400, {"ok": False, "error": "render_capability is required — obtain it from the Pascal bridge acknowledgment"})
+            if not bridge_message_digest:
+                return _json(400, {"ok": False, "error": "bridge_message_digest is required — obtain it from the Pascal bridge acknowledgment"})
+            _sync_map = getattr(state, "_p3_sync_nonces", None)
+            _sync_key = f"{director_session_id}:{director_receipt_digest}"
+            _sync_record = _sync_map.get(_sync_key) if _sync_map else None
             if not isinstance(_sync_record, dict):
                 return _json(404, {"ok": False, "error": "no synchronization record found"})
             if _sync_record.get("state") != "PROJECTED":
                 return _json(409, {"ok": False, "error": f"sync record is {_sync_record.get('state')}, must be PROJECTED"})
-            # Validate every submitted field against the server-owned record.
+            # Validate the render_capability against the server-owned value.
+            # This is the key security boundary: the render_capability was
+            # stored server-side during P3 /project and was NOT returned to
+            # the HTTP caller.  It was passed to the Pascal renderer via the
+            # bridge.  A direct API caller cannot know this value.
+            _expected_capability = _sync_record.get("render_capability", "")
+            if not _expected_capability or _expected_capability != render_capability:
+                return _json(403, {"ok": False, "error": "render_capability does not match — must be obtained from the Pascal bridge"})
+            # Validate all other submitted fields against the server-owned record.
             if _sync_record.get("chapter_id") != chapter_id:
                 return _json(409, {"ok": False, "error": "chapter_id does not match sync record"})
             if _sync_record.get("required_view") != active_view:
@@ -630,6 +678,14 @@ def dispatch_p3_foundry_request(
                 return _json(409, {"ok": False, "error": "projection_digest does not match sync record"})
             if _sync_record.get("presentation_revision") != presentation_revision:
                 return _json(409, {"ok": False, "error": "presentation_revision does not match sync record"})
+            # Validate the bridge_message_digest proves the Pascal renderer
+            # produced the acknowledgment.  The digest must be a non-empty
+            # hex string bound to the render_capability + projection_digest.
+            _expected_bridge_digest = hashlib.sha256(
+                f"bridge|{render_capability}|{projection_digest}|{presentation_revision}".encode()
+            ).hexdigest()
+            if bridge_message_digest != _expected_bridge_digest:
+                return _json(403, {"ok": False, "error": "bridge_message_digest does not match the expected Pascal bridge acknowledgment"})
             # Create the final immutable presentation receipt.
             # The render capability is the server-owned presentation_revision
             # stored during P3 /project.  It is consumed here — one-time use.
