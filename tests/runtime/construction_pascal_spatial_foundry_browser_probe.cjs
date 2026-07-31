@@ -8,6 +8,13 @@ const BASE_URL = process.env.AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL || "http://127
 const OUTPUT_DIR = process.env.AURA_RUNTIME_EVIDENCE_DIR || "/tmp/aura-construction-pascal-foundry-runtime";
 const CHAPTER_TIMEOUT_MS = Number(process.env.AURA_P4_CHAPTER_TIMEOUT_MS || 240000);
 
+// Validate BASE_URL is loopback only — reject any non-loopback origin.
+const _parsedBaseUrl = new URL(BASE_URL);
+const _loopbackHosts = new Set(["127.0.0.1", "localhost", "::1", "0.0.0.0"]);
+if (!_loopbackHosts.has(_parsedBaseUrl.hostname)) {
+  throw new Error(`BASE_URL must be loopback only, got: ${_parsedBaseUrl.hostname}`);
+}
+
 const SCREENSHOTS = Object.freeze({
   INITIAL: "00-bilateral-intent.png",
   FRAME_CONSTRUCTION: "01-design-3d.png",
@@ -133,6 +140,9 @@ async function advance(page, chapterId) {
   }, { expected: chapterId, previous: before || "" }, { timeout: CHAPTER_TIMEOUT_MS });
   await page.waitForFunction(() => {
     const status = document.getElementById("construction-director-status")?.textContent || "";
+    // If the session is dissolved, the tour is complete — return success
+    // immediately rather than waiting for NEXT to become enabled.
+    if (status.toLowerCase().includes("dissolved")) return true;
     return !status.includes("sync failed") && !status.includes("stopped safely") &&
       !document.querySelector("[data-director-control='NEXT']")?.disabled;
   }, null, { timeout: CHAPTER_TIMEOUT_MS }).catch(async () => {
@@ -174,6 +184,7 @@ async function main() {
   const consoleMessages = [];
   const pageErrors = [];
   const requestFailures = [];
+  const externalRequests = [];
   const chapterReceipts = [];
   let browser = null;
   let page = null;
@@ -190,6 +201,15 @@ async function main() {
     page.on("console", (message) => consoleMessages.push({ type: message.type(), text: message.text() }));
     page.on("pageerror", (error) => pageErrors.push({ name: error.name, message: error.message, stack: error.stack }));
     page.on("requestfailed", (request) => requestFailures.push({ url: request.url(), failure: request.failure() }));
+    // Record any request whose origin differs from the declared loopback origin.
+    page.on("request", (request) => {
+      try {
+        const reqUrl = new URL(request.url());
+        if (!_loopbackHosts.has(reqUrl.hostname)) {
+          externalRequests.push({ url: request.url(), method: request.method() });
+        }
+      } catch (_) { /* ignore non-URL entries */ }
+    });
     await page.goto(BASE_URL, { waitUntil: "networkidle", timeout: 90000 });
     await waitForDirector(page);
 
@@ -199,6 +219,14 @@ async function main() {
     await capture(page, SCREENSHOTS.INITIAL);
     const initial = await inspect(page, "initial");
     if (!initial.p3Present || initial.chapterOptionCount !== 15) throw new Error("P4 Director or P3 lane did not initialize");
+    // Validate manifest chapter count matches DOM option count and is exactly 15.
+    const manifestChapters = manifest.manifest.chapters;
+    if (manifestChapters.length !== 15) {
+      throw new Error(`manifest has ${manifestChapters.length} chapters, expected 15`);
+    }
+    if (manifestChapters.length !== initial.chapterOptionCount) {
+      throw new Error(`manifest chapter count (${manifestChapters.length}) does not match DOM option count (${initial.chapterOptionCount})`);
+    }
 
     for (const chapter of manifest.manifest.chapters) {
       const state = await advance(page, chapter.chapter_id);
@@ -259,6 +287,7 @@ async function main() {
       consoleMessages,
       pageErrors,
       requestFailures,
+      externalRequests,
       allAuthorityFalse,
       sourceMutation: false,
       productionMutation: false,
@@ -267,7 +296,7 @@ async function main() {
       professionalAuthority: false,
       humanReviewRequired: true,
       ok: exactOrder && finalState.dissolved && relaunchSucceeded && allAuthorityFalse && pageErrors.length === 0 &&
-        requestFailures.length === 0 && !consoleMessages.some((item) => item.type === "error"),
+        requestFailures.length === 0 && externalRequests.length === 0 && !consoleMessages.some((item) => item.type === "error"),
     };
     writeJson("browser-evidence.json", evidence);
     process.stdout.write(`${JSON.stringify(evidence, null, 2)}\n`);
@@ -285,6 +314,7 @@ async function main() {
       consoleMessages,
       pageErrors,
       requestFailures,
+      externalRequests,
       sourceMutation: false,
       productionMutation: false,
       automaticMerge: false,

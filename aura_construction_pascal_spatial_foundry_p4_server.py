@@ -264,6 +264,28 @@ def _compile_confirmation_bundle(
     return identity, confirmation_path, output_dir
 
 
+def compile_confirmation_bundle(
+    root: Path,
+    *,
+    runtime_profile_path: str = _RUNTIME_PROFILE,
+    positive_requirements: tuple[str, ...] = _POSITIVE,
+    negative_requirements: tuple[str, ...] = _NEGATIVE,
+    human_reviewer: str = "Dallas Courchene - deterministic P4 recording fixture",
+) -> tuple[BilateralIdentity, Path, Path]:
+    """Public wrapper for _compile_confirmation_bundle.
+
+    Exposes the confirmation compiler as a supported entry point so
+    external adapters do not depend on a private symbol.
+    """
+    return _compile_confirmation_bundle(
+        root,
+        runtime_profile_path=runtime_profile_path,
+        positive_requirements=positive_requirements,
+        negative_requirements=negative_requirements,
+        human_reviewer=human_reviewer,
+    )
+
+
 def _confirmation_intent_contract(path: Path) -> dict[str, str]:
     if not path.is_file() or path.is_symlink():
         raise PascalPresentationError("P4 canonical confirmation packet is unavailable")

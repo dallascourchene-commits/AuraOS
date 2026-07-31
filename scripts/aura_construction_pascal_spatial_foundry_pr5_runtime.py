@@ -20,7 +20,7 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from aura_construction_pascal_spatial_foundry_p4_server import _compile_confirmation_bundle
+from aura_construction_pascal_spatial_foundry_p4_server import compile_confirmation_bundle
 from scripts.aura_runtime_profile_v2_adapter import run_runtime_profile_v2
 
 PROFILE = ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json"
@@ -44,7 +44,13 @@ def run(
     baseline_receipt: str | Path | None = None,
 ) -> dict[str, object]:
     root = Path(repo_root).expanduser().resolve()
-    _identity, confirmation_path, _unused_output = _compile_confirmation_bundle(
+    codemap_md = root / ".aura" / "CODEMAP.md"
+    if not codemap_md.is_file():
+        raise RuntimeError(
+            ".aura/CODEMAP.md is missing — generate it with: "
+            "python aura_codebase_navigator.py --root . --index .aura/CODEMAP.json --markdown .aura/CODEMAP.md"
+        )
+    _identity, confirmation_path, _unused_output = compile_confirmation_bundle(
         root,
         runtime_profile_path=PROFILE,
         positive_requirements=POSITIVE_REQUIREMENTS,
@@ -52,6 +58,14 @@ def run(
         human_reviewer="Dallas Courchene - PR5 Construction + Pascal full-MVP runtime fixture",
     )
     temporary_root = confirmation_path.parent
+    # Safety: assert the temporary root is under the system temp directory
+    # to prevent accidental deletion if the layout ever changes.
+    import tempfile as _tempfile
+    _temp_root = Path(_tempfile.gettempdir()).resolve()
+    if not temporary_root.resolve().is_relative_to(_temp_root):
+        raise RuntimeError(
+            f"confirmation temp root {temporary_root} is not under the system temp directory — refusing to rmtree"
+        )
     try:
         return run_runtime_profile_v2(
             root,

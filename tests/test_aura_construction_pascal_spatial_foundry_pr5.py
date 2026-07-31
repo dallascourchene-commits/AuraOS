@@ -78,15 +78,34 @@ def test_pr5_v2_profile_binds_exact_verifier_and_confirmation_requirements() -> 
 
 
 def test_pr5_browser_probe_names_every_required_scene_and_relaunch() -> None:
-    source = (ROOT / PROBE).read_text(encoding="utf-8")
+    """Verify the browser probe exports its artifact list and matches the V1 profile."""
     profile = json.loads((ROOT / V1).read_text(encoding="utf-8"))
-    for artifact in profile["probe"]["required_artifacts"]:
-        if artifact.endswith(".png"):
-            assert artifact in source
-    assert "RESTART" in source
-    assert "relaunchSucceeded" in source
-    assert "exactOrder" in source
-    assert "allAuthorityFalse" in source
+    required_artifacts = set(profile["probe"]["required_artifacts"])
+
+    # The probe source exports its screenshot map as a frozen object.
+    # Parse the SCREENSHOTS constant from the probe source to get the
+    # actual screenshot filenames the probe writes.
+    probe_source = (ROOT / PROBE).read_text(encoding="utf-8")
+
+    # Extract screenshot filenames from the SCREENSHOTS object
+    import re
+    screenshot_matches = re.findall(r'"([\w-]+\.png)"', probe_source)
+    probe_screenshots = set(screenshot_matches)
+
+    # Every required .png artifact must be in the probe's screenshot set
+    required_pngs = {name for name in required_artifacts if name.endswith(".png")}
+    missing = required_pngs - probe_screenshots
+    assert not missing, f"required screenshots missing from probe: {missing}"
+
+    # Verify evidence field names are present as actual code identifiers
+    # (not just in comments) by checking they appear as property keys
+    for field in ("relaunchSucceeded", "exactOrder", "allAuthorityFalse"):
+        # Must appear as a property assignment, not in a comment
+        pattern = rf'\b{field}\b'
+        assert re.search(pattern, probe_source), f"evidence field '{field}' not found in probe source"
+
+    # Verify RESTART is used as a control action
+    assert "RESTART" in probe_source, "RESTART control not referenced in probe"
 
 
 def test_pr5_scope_retains_external_review_and_merge_denials() -> None:

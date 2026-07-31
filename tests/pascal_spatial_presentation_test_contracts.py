@@ -1,4 +1,30 @@
-from pascal_spatial_presentation_test_support import *  # noqa: F401,F403
+from pascal_spatial_presentation_test_support import (
+    ROOT,
+    FIXTURE_DIGESTS,
+    PASCAL_COMMIT,
+    PASCAL_LICENSE,
+    PASCAL_REPOSITORY,
+    fixture,
+    session,
+    child_message,
+    ready,
+)
+from aura_pascal_spatial_presentation import (
+    AuraPascalBridgeMessage,
+    BridgeDirection,
+    MAX_BRIDGE_DEPTH,
+    MAX_BRIDGE_PAYLOAD_BYTES,
+    PascalBridgeAction,
+    PascalPresentationError,
+    PascalSceneArtifactManifest,
+    PascalSourceLock,
+    bridge_sha256,
+    canonical_json,
+    load_pascal_compatibility_fixture,
+)
+from jsonschema import Draft202012Validator
+
+import pytest
 
 
 def test_exact_pinned_pascal_fixture_and_spatial_scene_are_valid():
