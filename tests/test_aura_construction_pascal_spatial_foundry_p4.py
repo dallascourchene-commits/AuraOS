@@ -1105,6 +1105,7 @@ def test_p4_runtime_runner_replacement_and_restoration():
     _confirmation = "e" * 64
     _repo_head = "f" * 64
     _source_tree = "1" * 64
+    _allowed_paths = "2" * 64
 
     # Build a valid confirmation packet that _confirmation_intent_contract can parse.
     confirmation_data = {
@@ -1145,6 +1146,7 @@ def test_p4_runtime_runner_replacement_and_restoration():
                     "intent_revision_status": "P0",
                     "expected_repository_head": _repo_head,
                     "expected_source_tree": _source_tree,
+                    "allowed_path_set_digest": _allowed_paths,
                 },
                 "requirement_bindings": {
                     "positive_assertions": [],
@@ -1228,6 +1230,7 @@ def test_p4_runtime_runner_replacement_and_restoration():
         "intent_revision_status": "P0",
         "expected_repository_head": _repo_head,
         "expected_source_tree": _source_tree,
+        "allowed_path_set_digest": _allowed_paths,
     }
     assert result.get("canonical_intent_contract") == expected_canonical_contract, \
         "canonical_intent_contract does not match exact expected object"
@@ -1242,6 +1245,7 @@ def test_p4_runtime_runner_replacement_and_restoration():
         "intent_revision_status": identity.intent_revision_id,
         "expected_repository_head": identity.repository_head,
         "expected_source_tree": identity.source_tree_digest,
+        "allowed_path_set_digest": _allowed_paths,
     }
     assert result.get("intent_contract") == expected_adapted_contract, \
         "adapted intent_contract does not match exact expected object"
