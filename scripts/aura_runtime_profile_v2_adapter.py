@@ -904,6 +904,7 @@ def run_runtime_profile_v2(
     install_requirements: bool = False,
     allow_dirty: bool = False,
     baseline_receipt: str | Path | None = None,
+    nested_replay_context: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     root = root.expanduser().resolve()
     before = _repo_identity(root)
@@ -934,6 +935,7 @@ def run_runtime_profile_v2(
         install_requirements=install_requirements,
         allow_dirty=False,
         baseline_receipt=baseline_receipt,
+        nested_replay_context=nested_replay_context,
     )
     pre_waboose_trace_names = tuple(
         name

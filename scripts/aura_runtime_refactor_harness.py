@@ -662,10 +662,18 @@ def run_runtime_profile(
     install_requirements: bool = False,
     allow_dirty: bool = False,
     baseline_receipt: str | Path | None = None,
+    nested_replay_context: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     root = root.expanduser().resolve()
     if not root.is_dir():
         raise RuntimeHarnessError("repository root is missing")
+    # Reject externally supplied nested replay mode — it must come from
+    # the internal nested_replay_context parameter, not from the environment.
+    if os.environ.get("AURA_NESTED_REPLAY_MODE") and nested_replay_context is None:
+        raise RuntimeHarnessError(
+            "AURA_NESTED_REPLAY_MODE is set in the external environment — "
+            "this variable is internal-only; unset it before running a top-level proof"
+        )
     profile = load_runtime_profile(root, profile_path)
     output = _external_output_path(root, output_dir)
     # Reject non-empty output directories to prevent stale artifact reuse.
@@ -697,13 +705,13 @@ def run_runtime_profile(
         python = Path(sys.executable).resolve()
 
     base_env = _safe_environment(root)
-    # Propagate nested replay mode and port override to child processes.
-    # _safe_environment only passes SAFE_ENV_KEYS, so these must be added
-    # explicitly or the nested P4 server and browser probe won't see them.
-    for _propagated_key in ("AURA_NESTED_REPLAY_MODE", "AURA_RUNTIME_SERVER_PORT"):
-        _propagated_val = os.environ.get(_propagated_key)
-        if _propagated_val is not None:
-            base_env[_propagated_key] = _propagated_val
+    # Propagate nested replay context to child processes when provided
+    # internally. This is NOT inherited from the external environment —
+    # it comes from the nested_replay_context parameter set by
+    # execute_exact_runtime_replay in the P4 server.
+    if nested_replay_context:
+        for _key, _val in nested_replay_context.items():
+            base_env[_key] = _val
     if install_requirements:
         for index, requirement in enumerate(profile["environment"]["requirements"]):
             result = _run_command(
@@ -793,11 +801,10 @@ def run_runtime_profile(
                 key: _substitute(value, root=root, output=output, python=python)
                 for key, value in profile["probe"]["env"].items()
             }
-            # Also propagate nested replay mode to the browser probe.
-            for _propagated_key in ("AURA_NESTED_REPLAY_MODE", "AURA_RUNTIME_SERVER_PORT"):
-                _propagated_val = os.environ.get(_propagated_key)
-                if _propagated_val is not None:
-                    probe_env_values[_propagated_key] = _propagated_val
+            # Also propagate nested replay context to the browser probe.
+            if nested_replay_context:
+                for _key, _val in nested_replay_context.items():
+                    probe_env_values[_key] = _val
             probe_env = _safe_environment(root, probe_env_values)
             probe_receipt = _run_command(
                 profile["probe"]["command"],

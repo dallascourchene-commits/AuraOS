@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -44,6 +45,12 @@ def run(
     baseline_receipt: str | Path | None = None,
 ) -> dict[str, object]:
     root = Path(repo_root).expanduser().resolve()
+    # Reject externally supplied nested replay mode at the top-level entry point.
+    if os.environ.get("AURA_NESTED_REPLAY_MODE") == "1":
+        raise RuntimeError(
+            "AURA_NESTED_REPLAY_MODE=1 is set in the external environment — "
+            "this variable is internal-only; unset it before running a top-level proof"
+        )
     codemap_md = root / ".aura" / "CODEMAP.md"
     if not codemap_md.is_file():
         raise RuntimeError(

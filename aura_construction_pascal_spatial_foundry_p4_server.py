@@ -842,30 +842,24 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
             _sock.bind(("127.0.0.1", 0))
             _nested_port = _sock.getsockname()[1]
             _sock.close()
-            _saved_port = os.environ.get("AURA_RUNTIME_SERVER_PORT")
-            os.environ["AURA_RUNTIME_SERVER_PORT"] = str(_nested_port)
-            # Set nested replay mode so the inner Director's
-            # RUN_RUNTIME_V2 chapter produces a no-recursion receipt
-            # instead of starting another V2 proof.
-            _saved_nested = os.environ.get("AURA_NESTED_REPLAY_MODE")
-            os.environ["AURA_NESTED_REPLAY_MODE"] = "1"
+            # Build an internal nested replay context — NOT an env var that
+            # can be spoofed from outside. This is passed through the Python
+            # call chain to the V1 harness which propagates it to child
+            # processes as explicit env additions.
+            _nested_context = {
+                "AURA_NESTED_REPLAY_MODE": "1",
+                "AURA_RUNTIME_SERVER_PORT": str(_nested_port),
+            }
             try:
                 result = service.execute_replay(
                     packet_id=packet_id,
                     profile_path=_RUNTIME_PROFILE,
                     confirmation_packet=confirmation_path,
                     output_dir=runtime_output_dir,
+                    nested_replay_context=_nested_context,
                 )
             finally:
                 service.runtime_runner = canonical_runner
-                if _saved_port is not None:
-                    os.environ["AURA_RUNTIME_SERVER_PORT"] = _saved_port
-                else:
-                    os.environ.pop("AURA_RUNTIME_SERVER_PORT", None)
-                if _saved_nested is not None:
-                    os.environ["AURA_NESTED_REPLAY_MODE"] = _saved_nested
-                else:
-                    os.environ.pop("AURA_NESTED_REPLAY_MODE", None)
             if result.get("ok") is not True:
                 raise PascalPresentationError("P4 Runtime Profile V2 proof did not satisfy every obligation")
             self.p4_confirmation_consumed = True
