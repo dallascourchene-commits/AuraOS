@@ -118,7 +118,7 @@ _POSITIVE = (
     "The selected Construction storey, issue, blueprint, annotations, and inspector identity remain stable across Mesh, Splats, Hybrid, isolate, show-all, and relaunch transitions.",
 )
 _AUTHORITY_NEGATIVE = "Do not grant production mutation, automatic merge, physical-work, or professional authority."
-_PRESERVATION = "Do not mutate canonical Construction source geometry or lose the selected inspector state."
+_PRESERVATION = "Do not mutate canonical Construction source geometry."
 _FAULT_NEGATIVES = (
     "Do not make hidden storeys pickable or focusable.",
     "Do not silently substitute a missing or ambiguous blueprint.",
@@ -178,12 +178,19 @@ def _safe_repo_file(root: Path, relative: str) -> Path:
     return path
 
 
-def _compile_confirmation_bundle(root: Path) -> tuple[BilateralIdentity, Path, Path]:
+def _compile_confirmation_bundle(
+    root: Path,
+    *,
+    runtime_profile_path: str = _RUNTIME_PROFILE,
+    positive_requirements: tuple[str, ...] = _POSITIVE,
+    negative_requirements: tuple[str, ...] = _NEGATIVE,
+    human_reviewer: str = "Dallas Courchene - deterministic P4 recording fixture",
+) -> tuple[BilateralIdentity, Path, Path]:
     head = _git(root, "rev-parse", "HEAD")
     tree = _git(root, "rev-parse", "HEAD^{tree}")
     if _git(root, "status", "--porcelain"):
         raise PascalPresentationError("P4 deterministic demo requires a clean exact-head checkout")
-    profile_path = _safe_repo_file(root, _RUNTIME_PROFILE)
+    profile_path = _safe_repo_file(root, runtime_profile_path)
     profile_bytes = profile_path.read_bytes()
     profile = json.loads(profile_bytes)
     if not isinstance(profile, Mapping):
@@ -195,13 +202,13 @@ def _compile_confirmation_bundle(root: Path) -> tuple[BilateralIdentity, Path, P
     verifier_digest = _sha256_bytes(verifier_path.read_bytes())
     if verifier_digest != verifier.get("source_sha256"):
         raise PascalPresentationError("P4 runtime verifier source differs from the exact profile identity")
-    source_request = " ".join((*_POSITIVE, *_NEGATIVE))
+    source_request = " ".join((*positive_requirements, *negative_requirements))
     analysis = analyze_bilateral_request(
         source_request,
         arena="CONSTRUCTION",
         affected_files=tuple(str(item) for item in profile.get("allowed_paths") or ()),
-        supplied_positive_requirements=_POSITIVE,
-        supplied_negative_requirements=_NEGATIVE,
+        supplied_positive_requirements=positive_requirements,
+        supplied_negative_requirements=negative_requirements,
     )
     if analysis.questions or analysis.teach_back is None:
         raise PascalPresentationError("P4 deterministic confirmation unexpectedly requires clarification")
@@ -227,7 +234,7 @@ def _compile_confirmation_bundle(root: Path) -> tuple[BilateralIdentity, Path, P
         topology_evidence_digest=stable_digest({"manifest": "P4", "profile": profile.get("profile_id")}),
         topology_selected=True,
         codemap_digest=_sha256_bytes(codemap_path.read_bytes()),
-        human_reviewer="Dallas Courchene - deterministic P4 recording fixture",
+        human_reviewer=human_reviewer,
         confirmed_at=now,
         expires_at=now + 86_400,
         arena="Construction",
@@ -480,7 +487,16 @@ class _P4U7Bridge:
                         "does_not_mean": [f"automatic {term} authority"],
                         "source_refs": [f"p4:{term}"],
                     }
-                    for term in ("repair", "current reproof", "human disposition", "Construction truth")
+                    for term in (
+                        "repair",
+                        "current reproof",
+                        "human disposition",
+                        "Construction truth",
+                        "memory",
+                        "continuity",
+                        "verified",
+                        "authority",
+                    )
                 ],
                 "model_profile": {
                     "endpoint_identity": endpoint.to_dict(),
