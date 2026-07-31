@@ -1,0 +1,223 @@
+name: Construction Pascal demo docs one-shot
+
+on:
+  push:
+    branches:
+      - docs/construction-pascal-demo-operations
+
+permissions:
+  contents: write
+
+jobs:
+  synchronize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out documentation branch
+        uses: actions/checkout@v4
+        with:
+          ref: docs/construction-pascal-demo-operations
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Patch README and canonical architecture
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          README_START = '<!-- AURA_CONSTRUCTION_PASCAL_DEMO_OPERATIONS:START -->'
+          README_END = '<!-- AURA_CONSTRUCTION_PASCAL_DEMO_OPERATIONS:END -->'
+          README_ANCHOR = '## AI-safe architecture handoff'
+          README_BLOCK = '''<!-- AURA_CONSTRUCTION_PASCAL_DEMO_OPERATIONS:START -->
+          ## Construction + Pascal Spatial Foundry demo
+
+          The merged PR1–PR5 MVP combines Aura's canonical Construction state, bilateral intent, evidence, verification, guarded repair, U7 reproof, and authority boundaries with a pinned disposable Pascal 2D/3D presentation organ.
+
+          Two operating modes are supported:
+
+          **Manual presenter mode** — recommended for a narrated recording:
+
+          ```bash
+          python aura_construction_pascal_spatial_foundry_p4_server.py \\
+            --repo-root . \\
+            --host 127.0.0.1 \\
+            --port 8768
+          ```
+
+          Open `http://127.0.0.1:8768/` and use the Director's **Next** control to present the exact fifteen-chapter sequence at your own pace.
+
+          **Full bilateral proof mode** — automatically drives real Chromium, captures the seventeen required screenshots and JSON evidence, runs retained verification and Coding Waboose, proves cleanup/relaunch, and stops at human review:
+
+          ```bash
+          python scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py \\
+            --repo-root . \\
+            --venv ../.AuraOS-pr5-runtime-venv \\
+            --output-dir ../AuraOS-pr5-runtime-evidence/<fresh-run-id> \\
+            --install-requirements
+          ```
+
+          The output directory must not already exist. Both modes are loopback-only and retain false authority for Construction truth mutation, professional approval, physical work, payment, access, deployment, merge, and learning promotion.
+
+          Operational documentation:
+
+          - [`docs/AURA_CONSTRUCTION_FOUNDRY_OPERATOR_GUIDE.md`](docs/AURA_CONSTRUCTION_FOUNDRY_OPERATOR_GUIDE.md) — Ubuntu setup, rehearsal, manual presentation, full proof, reset, and troubleshooting;
+          - [`docs/AURA_CONSTRUCTION_FOUNDRY_VIDEO_SCRIPT.md`](docs/AURA_CONSTRUCTION_FOUNDRY_VIDEO_SCRIPT.md) — narrated shot list, timing, edit points, and authority-safe wording;
+          - [`docs/AURA_CONSTRUCTION_FOUNDRY_EVIDENCE_GUIDE.md`](docs/AURA_CONSTRUCTION_FOUNDRY_EVIDENCE_GUIDE.md) — artifact verdict, archival, failure classification, and publication handling;
+          - [`docs/AURA_PASCAL_CONSTRUCTION_SPATIAL_FOUNDRY_MVP.md`](docs/AURA_PASCAL_CONSTRUCTION_SPATIAL_FOUNDRY_MVP.md) — canonical merged integration narrative.
+          <!-- AURA_CONSTRUCTION_PASCAL_DEMO_OPERATIONS:END -->'''
+
+          ARCH_START = '<!-- AURA_CONSTRUCTION_PASCAL_DEMO_OPERATIONS:START -->'
+          ARCH_END = '<!-- AURA_CONSTRUCTION_PASCAL_DEMO_OPERATIONS:END -->'
+          ARCH_ANCHOR = '## 4. Constitutional invariants'
+          ARCH_BLOCK = '''<!-- AURA_CONSTRUCTION_PASCAL_DEMO_OPERATIONS:START -->
+          ## 3C. Construction + Pascal Spatial Foundry demonstration boundary
+
+          The merged PR1–PR5 Construction + Pascal Spatial Foundry is one governed demonstration path over existing owners. It does not add another Construction truth store, renderer truth store, runtime verifier, archive, rollback authority, policy plane, persistence plane, routing plane, or learning owner.
+
+          ```text
+          clean exact repository head + bilateral confirmation
+            → canonical Construction state and identity
+            → P4 loopback server on 127.0.0.1:8768
+            → pinned Pascal 2D/3D presentation organ
+            → P3 synchronized Design / Floor Plan / As-built / Compare views
+            → deterministic fifteen-chapter Director
+            → explicit bounded incident capture
+            → retained replay and Construction Demo Runtime Profile V2 on 127.0.0.1:8767
+            → isolated repair route, degraded preview, exact rollback, successful preview
+            → canonical U7 P0 → P1 → current reproof and human disposition
+            → terminal dissolution and fresh relaunch
+            → current-run screenshots, JSON receipts, Runtime Harness proof, and bilateral Waboose review
+          ```
+
+          Ownership remains explicit:
+
+          - **Aura** owns bilateral intent, canonical Construction state, evidence, obligations, candidate roles, authority, Director admission, capture/replay, Runtime Profile V2 delegation, Attempt Archive references, rollback proof, U7 reproof, cleanup, and human-review disposition.
+          - **Pascal** is the pinned local disposable geometry/presentation organ for storey, node, dimensions, selection, and 2D/3D visual working state.
+          - **The local browser** is the trusted same-origin presentation agent under Trust Model A. The protocol proves ordering, anti-replay, current-run receipt binding, and retained browser/runtime evidence; it does not claim hostile-browser pixel attestation.
+
+          There are two operator surfaces:
+
+          1. manual presenter mode for a narrated recording, controlled through the Director UI;
+          2. full bilateral proof mode through `scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py`, which owns an exclusive fresh external evidence directory, drives headless Chromium, captures seventeen screenshots and exact JSON evidence, runs focused JavaScript/Python/CODEMAP checks, terminates the server, runs bilateral Waboose, verifies source preservation, and stops at human review.
+
+          Primary implementation owners:
+
+          - `aura_construction_foundry_director.py`;
+          - `aura_construction_pascal_spatial_foundry_p4_server.py`;
+          - `aura_construction_pascal_spatial_foundry_p3_server.py`;
+          - `aura_pascal_spatial_presentation_part1.py` through `aura_pascal_spatial_presentation_part5.py`;
+          - `scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py`;
+          - `scripts/aura_runtime_refactor_harness.py`;
+          - `scripts/aura_runtime_profile_v2_adapter.py`;
+          - `.aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json`;
+          - `.aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json`;
+          - `tests/runtime/construction_pascal_spatial_foundry_browser_probe.cjs`;
+          - `tests/runtime/construction_pascal_spatial_foundry_probe_contract.cjs`.
+
+          Operational documentation is canonicalized in:
+
+          - `docs/AURA_CONSTRUCTION_FOUNDRY_OPERATOR_GUIDE.md`;
+          - `docs/AURA_CONSTRUCTION_FOUNDRY_VIDEO_SCRIPT.md`;
+          - `docs/AURA_CONSTRUCTION_FOUNDRY_EVIDENCE_GUIDE.md`;
+          - `docs/AURA_PASCAL_CONSTRUCTION_SPATIAL_FOUNDRY_MVP.md`.
+
+          Authority remains:
+
+          ```yaml
+          projection_only: true
+          runtime_evidence_authority: false
+          construction_truth_mutation: false
+          professional_authority: false
+          physical_work_authority: false
+          payment_release: false
+          access_control: false
+          automatic_patch: false
+          automatic_commit: false
+          automatic_push: false
+          automatic_pull_request: false
+          automatic_merge: false
+          automatic_deployment: false
+          automatic_learning_promotion: false
+          human_review_required: true
+          ```
+          <!-- AURA_CONSTRUCTION_PASCAL_DEMO_OPERATIONS:END -->'''
+
+          def replace_or_insert(path: Path, start: str, end: str, anchor: str, block: str) -> None:
+              text = path.read_text(encoding='utf-8')
+              if start in text or end in text:
+                  if text.count(start) != 1 or text.count(end) != 1:
+                      raise SystemExit(f'{path}: malformed generated marker pair')
+                  begin = text.index(start)
+                  finish = text.index(end, begin) + len(end)
+                  text = text[:begin] + block + text[finish:]
+              else:
+                  if text.count(anchor) != 1:
+                      raise SystemExit(f'{path}: expected one insertion anchor {anchor!r}')
+                  text = text.replace(anchor, block + '\n\n' + anchor, 1)
+              path.write_text(text, encoding='utf-8')
+
+          readme = Path('README.md')
+          replace_or_insert(readme, README_START, README_END, README_ANCHOR, README_BLOCK)
+
+          architecture = Path('.aura/ARCHITECTURE.md')
+          text = architecture.read_text(encoding='utf-8')
+          audit_pattern = re.compile(r'^\*\*Architecture audit:\*\*.*$', re.MULTILINE)
+          replacement = (
+              '**Architecture audit:** reviewed through July 31, 2026 and the preceding merged development, '
+              'including Relational Synthesis R2, Gate Phase 2, Spatial S0–S6, Construction Arena G0–G8, '
+              'the merged Construction + Pascal Spatial Foundry PR1–PR5 path through PR #252, Coding Relationship '
+              'Compass C0–C9, typed Coding Waboose review learning, source-integrity and Crucible ancestry hardening, '
+              'bounded browser/interchange/Gaussian representation support, the Runtime Refactor Harness, and the '
+              'atomic Agent Bridge GitHub publication lane.'
+          )
+          text, count = audit_pattern.subn(replacement, text, count=1)
+          if count != 1:
+              raise SystemExit('.aura/ARCHITECTURE.md: architecture audit line not found exactly once')
+          architecture.write_text(text, encoding='utf-8')
+          replace_or_insert(architecture, ARCH_START, ARCH_END, ARCH_ANCHOR, ARCH_BLOCK)
+          PY
+
+      - name: Regenerate and verify CODEMAP and topology once
+        shell: bash
+        run: |
+          set -euo pipefail
+          python aura_codebase_navigator.py \
+            --root . \
+            --index .aura/CODEMAP.json \
+            --markdown .aura/CODEMAP.md
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+
+      - name: Publish final documentation and navigation artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # The live topology AST is runtime memory, not a source/documentation artifact.
+          git restore --source=HEAD -- Aura_Memory/live_topology_ast.json 2>/dev/null || true
+
+          # Delete this trigger in the same bot commit so it cannot loop.
+          rm -f .github/workflows/construction-pascal-demo-docs-one-shot.yml
+
+          git config user.name 'AuraOS Documentation Bot'
+          git config user.email 'actions@users.noreply.github.com'
+
+          git add README.md .aura/ARCHITECTURE.md .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
+          git add -u .github/workflows/construction-pascal-demo-docs-one-shot.yml
+
+          echo 'Final staged documentation/map changes:'
+          git diff --cached --stat
+
+          if git diff --cached --quiet; then
+            echo 'No documentation or navigation changes to publish.'
+            exit 0
+          fi
+
+          git commit -m 'docs: publish Construction Pascal demo operations'
+          git push origin HEAD:docs/construction-pascal-demo-operations
