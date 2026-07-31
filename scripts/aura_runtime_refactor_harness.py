@@ -35,34 +35,6 @@ PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 MAX_PROFILE_BYTES = 256 * 1024
 MAX_RECEIPT_BYTES = 2 * 1024 * 1024
 
-# --- One-time nested-replay nonce registry ---
-# The P4 server issues a nonce, passes it to the nested child process,
-# and the child's execute_exact_runtime_replay validates it against this
-# set. After one use, the nonce is consumed (removed). This prevents
-# replay and cannot be forged by external callers because the nonce is
-# generated server-side with secrets.token_hex and only stored here.
-import secrets as _secrets
-
-_consumed_nested_nonces: set[str] = set()
-_pending_nested_nonces: set[str] = set()
-
-
-def _issue_nested_replay_nonce() -> str:
-    """Issue a one-time nested-replay nonce. Called only by P4 server."""
-    _nonce = _secrets.token_hex(32)
-    _pending_nested_nonces.add(_nonce)
-    return _nonce
-
-
-def _consume_nested_replay_nonce(nonce: str) -> bool:
-    """Validate and consume a one-time nested-replay nonce. Returns True if valid."""
-    if nonce in _pending_nested_nonces:
-        _pending_nested_nonces.discard(nonce)
-        _consumed_nested_nonces.add(nonce)
-        return True
-    return False
-
-
 MAX_COMMANDS = 32
 MAX_COMMAND_ARGS = 96
 MAX_ARG_BYTES = 16 * 1024
@@ -692,46 +664,7 @@ def run_runtime_profile(
     allow_dirty: bool = False,
     baseline_receipt: str | Path | None = None,
 ) -> dict[str, Any]:
-    """Public V1 runtime profile runner. Nested replay mode is NOT accepted
-    from external callers. A one-time nonce passed via env var activates
-    nested mode; the nonce is validated and consumed."""
-    # Reject externally supplied nested replay mode env vars.
-    if os.environ.get("AURA_NESTED_REPLAY_MODE"):
-        raise RuntimeHarnessError(
-            "AURA_NESTED_REPLAY_MODE is set in the external environment — "
-            "this variable is internal-only; unset it before running a top-level proof"
-        )
-    _nested_nonce = os.environ.get("AURA_NESTED_REPLAY_NONCE")
-    _nested_port = None
-    if _nested_nonce:
-        if not _consume_nested_replay_nonce(_nested_nonce):
-            raise RuntimeHarnessError("invalid or already-consumed nested replay nonce")
-        _nested_port = os.environ.get("AURA_RUNTIME_SERVER_PORT")
-        if not _nested_port:
-            raise RuntimeHarnessError("nested replay nonce present but no port override")
-    return _run_runtime_profile_impl(
-        root,
-        profile_path=profile_path,
-        output_dir=output_dir,
-        venv_path=venv_path,
-        install_requirements=install_requirements,
-        allow_dirty=allow_dirty,
-        baseline_receipt=baseline_receipt,
-        nested_port=_nested_port,
-    )
-
-
-def _run_runtime_profile_impl(
-    root: Path,
-    *,
-    profile_path: str | Path,
-    output_dir: str | Path,
-    venv_path: str | Path | None = None,
-    install_requirements: bool = False,
-    allow_dirty: bool = False,
-    baseline_receipt: str | Path | None = None,
-    nested_port: str | None = None,
-) -> dict[str, Any]:
+    """Public V1 runtime profile runner."""
     root = root.expanduser().resolve()
     if not root.is_dir():
         raise RuntimeHarnessError("repository root is missing")
@@ -766,11 +699,6 @@ def _run_runtime_profile_impl(
         python = Path(sys.executable).resolve()
 
     base_env = _safe_environment(root)
-    # When a nested port is present, propagate nested mode and port
-    # to child processes as explicit env additions.
-    if nested_port is not None:
-        base_env["AURA_NESTED_REPLAY_MODE"] = "1"
-        base_env["AURA_RUNTIME_SERVER_PORT"] = str(nested_port)
     if install_requirements:
         for index, requirement in enumerate(profile["environment"]["requirements"]):
             result = _run_command(
@@ -799,21 +727,6 @@ def _run_runtime_profile_impl(
         output=output,
         python=python,
     )
-    # Apply port override from the nested port (not from os.environ).
-    if nested_port is not None:
-        _port_str = str(nested_port)
-        server_command = [
-            arg if arg != "8768" else _port_str
-            for arg in server_command
-        ]
-        readiness_url = profile["server"].get("readiness_url", "")
-        if "8768" in readiness_url:
-            profile["server"]["readiness_url"] = readiness_url.replace("8768", _port_str)
-        probe_env = profile.get("probe", {}).get("env", {})
-        if "AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL" in probe_env:
-            probe_env["AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL"] = (
-                probe_env["AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL"].replace("8768", _port_str)
-            )
     process: subprocess.Popen[Any] | None = None
     server_capture: (
         tuple[
@@ -856,10 +769,6 @@ def _run_runtime_profile_impl(
                 key: _substitute(value, root=root, output=output, python=python)
                 for key, value in profile["probe"]["env"].items()
             }
-            # Also propagate nested replay mode to the browser probe.
-            if nested_port is not None:
-                probe_env_values["AURA_NESTED_REPLAY_MODE"] = "1"
-                probe_env_values["AURA_RUNTIME_SERVER_PORT"] = str(nested_port)
             probe_env = _safe_environment(root, probe_env_values)
             probe_receipt = _run_command(
                 profile["probe"]["command"],

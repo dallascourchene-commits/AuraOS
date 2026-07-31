@@ -9,7 +9,6 @@ service; and exposes only presentation directives plus exact receipts.
 from __future__ import annotations
 
 import argparse
-import os
 from collections.abc import Callable, Mapping
 from dataclasses import asdict
 import hashlib
@@ -798,70 +797,19 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
                 raise PascalPresentationError(
                     "P4 confirmation was already consumed; dissolve and Restart for a fresh exact confirmation"
                 )
-
-            # Nested replay mode: produce a bounded no-recursion receipt.
-            # When the V2 adapter re-runs V1 inside an already-running P4
-            # server, the Director's RUN_RUNTIME_V2 chapter calls this
-            # method again. Instead of starting another V2 proof (which
-            # would recurse infinitely), produce a bounded receipt that
-            # records the already-owned proof reference.
-            if os.environ.get("AURA_NESTED_REPLAY_MODE") == "1":
-                result = {
-                    "ok": True,
-                    "runtime_proof_ref": "nested-no-recursion-receipt",
-                    "nested_replay_mode": True,
-                    "construction_state_unchanged": True,
-                    "human_review_required": True,
-                    "production_mutation": False,
-                    "automatic_merge": False,
-                }
-                self.p4_confirmation_consumed = True
-                return result
-
             # Capture immutable local references inside the lock.
             confirmation_path = self.p4_confirmation_path
             runtime_output_dir = self.p4_runtime_output_dir
             service = self.live_repair
             canonical_runner = service.runtime_runner
 
-            # Allocate a dynamic port for the nested V1 server.
-            import socket as _socket
-            _sock = _socket.socket(_socket.AF_INET, _socket.SOCK_STREAM)
-            _sock.bind(("127.0.0.1", 0))
-            _nested_port = _sock.getsockname()[1]
-            _sock.close()
-
-            # Issue a one-time nonce for nested replay. The nonce is
-            # generated with secrets.token_hex and stored in the V1
-            # harness's pending set. The child P4 server validates it
-            # via AURA_NESTED_REPLAY_NONCE env var.
-            from scripts.aura_runtime_refactor_harness import _issue_nested_replay_nonce
-            _nested_nonce = _issue_nested_replay_nonce()
-
-            # Install a private nested runner closure that sets the
-            # nonce and port env vars before calling the V2 adapter.
-            # The public execute_replay() needs no nested argument —
-            # it calls self.runtime_runner which is temporarily replaced.
+            # Install an identity-adapting runner that wraps the canonical
+            # Runtime V2 proof with P4's bilateral identity. The canonical
+            # runner uses the Construction Demo V2 profile (port 8767),
+            # which is distinct from the outer PR5 P4 server (port 8768).
+            # There is no recursion: the inner profile is not the PR5 profile.
             def adapted_runner(root: Path, **kwargs: Any) -> Mapping[str, Any]:
-                _saved_nonce = os.environ.get("AURA_NESTED_REPLAY_NONCE")
-                _saved_mode = os.environ.get("AURA_NESTED_REPLAY_MODE")
-                _saved_port = os.environ.get("AURA_RUNTIME_SERVER_PORT")
-                os.environ["AURA_NESTED_REPLAY_NONCE"] = _nested_nonce
-                os.environ["AURA_NESTED_REPLAY_MODE"] = "1"
-                os.environ["AURA_RUNTIME_SERVER_PORT"] = str(_nested_port)
-                try:
-                    canonical_proof = canonical_runner(root, **kwargs)
-                finally:
-                    # Restore parent env — do not leak nested mode.
-                    for _key, _val in [
-                        ("AURA_NESTED_REPLAY_NONCE", _saved_nonce),
-                        ("AURA_NESTED_REPLAY_MODE", _saved_mode),
-                        ("AURA_RUNTIME_SERVER_PORT", _saved_port),
-                    ]:
-                        if _val is not None:
-                            os.environ[_key] = _val
-                        else:
-                            os.environ.pop(_key, None)
+                canonical_proof = canonical_runner(root, **kwargs)
                 return _adapt_runtime_proof_identity(
                     canonical_proof,
                     identity=identity,

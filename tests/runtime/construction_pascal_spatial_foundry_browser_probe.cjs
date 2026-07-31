@@ -7,10 +7,6 @@ const { chromium } = require("playwright-core");
 const BASE_URL = process.env.AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL || "http://127.0.0.1:8768/";
 const OUTPUT_DIR = process.env.AURA_RUNTIME_EVIDENCE_DIR || "/tmp/aura-construction-pascal-foundry-runtime";
 const CHAPTER_TIMEOUT_MS = Number(process.env.AURA_P4_CHAPTER_TIMEOUT_MS || 240000);
-// During an internally authorized nested proof, the inner P4 server returns
-// a bounded no-recursion receipt for RUN_RUNTIME_V2. The probe still advances
-// and verifies all fifteen manifest chapters.
-const NESTED_REPLAY_MODE = process.env.AURA_NESTED_REPLAY_MODE === "1";
 
 // Validate BASE_URL is loopback only — reject any non-loopback origin.
 const _parsedBaseUrl = new URL(BASE_URL);
@@ -293,7 +289,6 @@ async function main() {
       requestFailures,
       externalRequests,
       allAuthorityFalse,
-      nestedReplayMode: NESTED_REPLAY_MODE,
       sourceMutation: false,
       productionMutation: false,
       automaticMerge: false,
