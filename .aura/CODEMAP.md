@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1533
-- **total_bytes**: 58380935
-- **text_tokens_est**: 5139473
+- **total_bytes**: 58382864
+- **text_tokens_est**: 5139956
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 191, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 966, 'schema_or_lexicon': 217, 'support_file': 79}
 - **topology_nodes**: 11210
 - **topology_edges**: 27098
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 26314.17
+- **elapsed_ms**: 24342.14
 
 ## Coverage
 
@@ -61,7 +61,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!String` -> `aura_showcase/attempt-archive.js:187`, `aura_showcase/gate-dialogue.js:315`, `aura_showcase/human.js:657`
 - `!TRUTH_CLASSES` -> `aura_spatial_web/renderer_adapter.js:333`
 - `!UP_AXES` -> `aura_spatial_web/renderer_adapter.js:324`
-- `!ackResponse` -> `aura_showcase/construction-foundry-director.js:301`
+- `!ackResponse` -> `aura_showcase/construction-foundry-director.js:308`
 - `!action` -> `aura_showcase/civic.js:77`
 - `!actionForEffect` -> `aura_showcase/civic.js:108`
 - `!actionId` -> `aura_human_agent_arena/wfst.js:45`
@@ -246,6 +246,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!research` -> `AURA_FINAL_REPORT.md:142`, `aura_affordance_directory.py:597`, `aura_capability_lane_registry.py:120`, `aura_coding_arena_workflow.py:743`
 - `!response` -> `aura_human_agent_arena/construction.js:18`, `aura_showcase/construction-decision-as-built-sync.js:223`, `aura_showcase/construction-decision-foundry.js:107`, `aura_showcase/construction-foundry-director.js:115`
 - `!result` -> `aura_human_agent_arena/emergent.js:131`, `aura_human_agent_arena/jarvis.js:334`, `aura_showcase/app.js:67`, `aura_showcase/attempt-archive.js:142`
+- `!retainResponse` -> `aura_showcase/construction-foundry-director.js:286`
+- `!retainResult` -> `aura_showcase/construction-foundry-director.js:286`
 - `!review` -> `aura_node.py:6781`, `mistral_gate.py:93`
 - `!rollback` -> `aura_node.py:6766`
 - `!root` -> `aura_showcase/construction-decision-foundry.js:5`, `aura_showcase/construction-foundry-director.js:77`, `aura_showcase/pascal-construction-foundry.js:5`
