@@ -555,8 +555,20 @@ def dispatch_p3_foundry_request(
                     # prior prepare-p3-sync call and prevents replay.
                     _nonce_map = getattr(state, "_p3_sync_nonces", None)
                     _nonce_key = f"{director_session_id}:{director_receipt_digest}"
-                    if not _nonce_map or _nonce_map.get(_nonce_key) != _sync_nonce:
+                    _nonce_entry = _nonce_map.get(_nonce_key) if _nonce_map else None
+                    # Nonce entry is now a dict with nonce + active_view.
+                    if isinstance(_nonce_entry, dict):
+                        _expected_nonce = _nonce_entry.get("nonce", "")
+                        _expected_view = _nonce_entry.get("active_view", "")
+                    else:
+                        _expected_nonce = _nonce_entry or ""
+                        _expected_view = ""
+                    if not _expected_nonce or _expected_nonce != _sync_nonce:
                         return _json(403, {"ok": False, "error": "invalid or missing sync_nonce — call prepare-p3-sync first"})
+                    # Validate the caller's active_view matches the
+                    # server-derived view from prepare-p3-sync.
+                    if _expected_view and active_view != _expected_view:
+                        return _json(403, {"ok": False, "error": "active_view does not match the server-derived presentation view"})
                     # One-time use: consume the nonce.
                     del _nonce_map[_nonce_key]
                     if not hasattr(state, "_p3_retained_presentation"):

@@ -1226,7 +1226,13 @@ def dispatch_p4_foundry_request(
                 _sync_nonce = secrets.token_hex(16)
                 if not hasattr(state, "_p3_sync_nonces"):
                     state._p3_sync_nonces = {}
-                state._p3_sync_nonces[f"{session_id}:{_director_receipt_digest}"] = _sync_nonce
+                # Store the nonce AND the server-derived active_view so P3
+                # project can validate the caller didn't substitute a
+                # different view than the manifest requires.
+                state._p3_sync_nonces[f"{session_id}:{_director_receipt_digest}"] = {
+                    "nonce": _sync_nonce,
+                    "active_view": _required_view,
+                }
                 return _json(200, {
                     "ok": True,
                     "identity_digest": resolved_identity.identity_digest,
