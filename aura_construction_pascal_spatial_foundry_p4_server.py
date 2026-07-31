@@ -52,6 +52,7 @@ from aura_construction_pascal_spatial_foundry_p3_server import (
     _loopback_origin,
     _validate_request_context,
     _static_response as p3_static_response,
+    _query_projection_body,
     dispatch_p3_foundry_request,
 )
 from aura_event_contracts import stable_digest
@@ -1300,17 +1301,22 @@ def dispatch_p4_foundry_request(
                     raise PascalPresentationError("P3 receipt identity does not match resolved identity")
                 if _p3_retained.get("director_receipt_digest") != _director_receipt_digest:
                     raise PascalPresentationError("P3 receipt director_receipt_digest does not match last committed receipt digest")
+                # Use the P3-retained receipt as authoritative.
+                _presentation_receipt = dict(_p3_retained)
+                # Perform the Director acknowledgement FIRST — it can raise
+                # if the receipt is invalid, the session identity doesn't
+                # match, or the manifest-required view is wrong.  Only
+                # after it succeeds do we transition the sync record.
+                _ack_result = director.acknowledge_p3_sync(
+                    session_id,
+                    presentation_receipt=_presentation_receipt,
+                )
                 # Transition: RENDER_CONFIRMED → ACKNOWLEDGED.
                 _sync_map = getattr(state, "_p3_sync_nonces", None)
                 _sync_key = f"{session_id}:{_director_receipt_digest}"
                 if _sync_map and _sync_key in _sync_map:
                     _sync_map[_sync_key]["state"] = "ACKNOWLEDGED"
-                # Use the P3-retained receipt as authoritative.
-                _presentation_receipt = dict(_p3_retained)
-                return _json(200, director.acknowledge_p3_sync(
-                    session_id,
-                    presentation_receipt=_presentation_receipt,
-                ))
+                return _json(200, _ack_result)
             if method == "POST" and len(parts) == 2 and parts[1] == "control":
                 allowed = {"control", "chapter_id", "identity_handle", *_IDENTITY_KEYS}
                 unknown = sorted(set(body) - allowed)

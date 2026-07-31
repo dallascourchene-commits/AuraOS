@@ -479,7 +479,7 @@ class ConstructionFoundryDirector:
         self.manifest = manifest
         self._lock = threading.RLock()
         self._sessions: dict[str, DirectorSession] = {}
-        self._transition_claims: dict[str, str] = {}  # session_id → transition_digest
+        self._transition_claims: dict[str, tuple[str, str]] = {}  # session_id → (transition_digest, claim_token)
 
     def start_session(
         self,

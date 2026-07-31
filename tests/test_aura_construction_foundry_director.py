@@ -289,7 +289,7 @@ def test_stale_transition_digest_cannot_claim():
     claimed = director.claim_next(session_id)
     assert claimed["admitted"] is True
     # Try to commit with a wrong digest.
-    with pytest.raises((ValueError, Exception)):
+    with pytest.raises(ValueError):
         director.commit_next(
             session_id,
             transition_digest="deadbeef" * 8,
@@ -369,7 +369,7 @@ def test_failed_effect_releases_claim():
     claimed = director.claim_next(session_id)
     assert claimed["admitted"] is True
     # Try to commit with a wrong claim token — should fail.
-    with pytest.raises((ValueError, Exception)):
+    with pytest.raises(ValueError):
         director.commit_next(
             session_id,
             transition_digest=claimed["transition_digest"],
