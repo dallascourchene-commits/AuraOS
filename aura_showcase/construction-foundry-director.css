@@ -1,0 +1,37 @@
+.construction-director {
+  display: grid;
+  gap: 0.8rem;
+  border: 1px solid color-mix(in srgb, currentcolor 24%, transparent);
+}
+
+.construction-director-heading,
+.construction-director-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.construction-director-controls button {
+  min-width: 6.5rem;
+}
+
+#construction-director-current,
+#construction-director-notes {
+  padding: 0.75rem;
+  border: 1px solid color-mix(in srgb, currentcolor 16%, transparent);
+  border-radius: 0.55rem;
+}
+
+#construction-director-current code {
+  display: block;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+#construction-director-receipt {
+  max-height: 24rem;
+  overflow: auto;
+  white-space: pre-wrap;
+}
