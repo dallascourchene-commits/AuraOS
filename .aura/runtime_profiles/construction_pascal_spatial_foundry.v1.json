@@ -126,6 +126,19 @@
     {
       "command": [
         "{python}",
+        "aura_codebase_navigator.py",
+        "--root",
+        "{repo}",
+        "--index",
+        ".aura/CODEMAP.json",
+        "--markdown",
+        ".aura/CODEMAP.md"
+      ],
+      "timeout_seconds": 240
+    },
+    {
+      "command": [
+        "{python}",
         "-m",
         "aura_codemap_verify",
         "--compare-json",

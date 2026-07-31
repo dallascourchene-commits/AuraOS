@@ -30,7 +30,12 @@ function ensureDirectory(directory) {
 }
 
 function writeJson(name, value) {
-  fs.writeFileSync(path.join(OUTPUT_DIR, name), `${JSON.stringify(value, null, 2)}\n`);
+  const resolvedOutputDir = path.resolve(OUTPUT_DIR);
+  const targetPath = path.resolve(path.join(OUTPUT_DIR, name));
+  if (!targetPath.startsWith(resolvedOutputDir + path.sep) && targetPath !== resolvedOutputDir) {
+    throw new Error(`Path traversal detected: ${name} resolves outside OUTPUT_DIR`);
+  }
+  fs.writeFileSync(targetPath, `${JSON.stringify(value, null, 2)}\n`);
 }
 
 function resolveChromiumExecutable() {
