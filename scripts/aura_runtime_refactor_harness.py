@@ -725,6 +725,25 @@ def run_runtime_profile(
         output=output,
         python=python,
     )
+    # Allow port override via environment variable for nested runtime proofs.
+    # When the V2 adapter re-runs the V1 profile inside an already-running
+    # P4 server, the nested server must use a different port.
+    _port_override = os.environ.get("AURA_RUNTIME_SERVER_PORT")
+    if _port_override:
+        server_command = [
+            arg if arg != "8768" else _port_override
+            for arg in server_command
+        ]
+        # Also update the readiness URL if it references the old port.
+        readiness_url = profile["server"].get("readiness_url", "")
+        if "8768" in readiness_url:
+            profile["server"]["readiness_url"] = readiness_url.replace("8768", _port_override)
+        # Update probe environment to point at the nested server port.
+        probe_env = profile.get("probe", {}).get("env", {})
+        if "AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL" in probe_env:
+            probe_env["AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL"] = (
+                probe_env["AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL"].replace("8768", _port_override)
+            )
     process: subprocess.Popen[Any] | None = None
     server_capture: (
         tuple[

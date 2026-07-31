@@ -9,6 +9,7 @@ service; and exposes only presentation directives plus exact receipts.
 from __future__ import annotations
 
 import argparse
+import os
 from collections.abc import Callable, Mapping
 from dataclasses import asdict
 import hashlib
@@ -814,6 +815,15 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
                 )
 
             service.runtime_runner = adapted_runner
+            # Use a dynamic port for the nested V1 server to avoid conflict
+            # with the outer P4 server that is already bound to port 8768.
+            import socket as _socket
+            _sock = _socket.socket(_socket.AF_INET, _socket.SOCK_STREAM)
+            _sock.bind(("127.0.0.1", 0))
+            _nested_port = _sock.getsockname()[1]
+            _sock.close()
+            _saved_port = os.environ.get("AURA_RUNTIME_SERVER_PORT")
+            os.environ["AURA_RUNTIME_SERVER_PORT"] = str(_nested_port)
             try:
                 result = service.execute_replay(
                     packet_id=packet_id,
@@ -823,6 +833,10 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
                 )
             finally:
                 service.runtime_runner = canonical_runner
+                if _saved_port is not None:
+                    os.environ["AURA_RUNTIME_SERVER_PORT"] = _saved_port
+                else:
+                    os.environ.pop("AURA_RUNTIME_SERVER_PORT", None)
             if result.get("ok") is not True:
                 raise PascalPresentationError("P4 Runtime Profile V2 proof did not satisfy every obligation")
             self.p4_confirmation_consumed = True
