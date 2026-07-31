@@ -203,6 +203,10 @@ def load_pascal_compatibility_fixture(
         raise PascalPresentationError(
             "coordinate receipt node mapping digest is invalid"
         )
+    if coordinate.pascal_artifact_digest != manifest.artifact_digest:
+        raise PascalPresentationError(
+            "coordinate receipt pascal_artifact_digest does not match manifest artifact_digest"
+        )
     return lock, manifest, coordinate, scene
 
 

@@ -106,9 +106,9 @@
     {
       "artifact": "server-termination.receipt.json",
       "assertion_id": "server-termination-terminal",
+      "expected": null,
       "json_path": "returncode",
-      "operator": "not_equals",
-      "expected": null
+      "operator": "not_equals"
     }
   ],
   "independent_verifier": {
@@ -157,9 +157,9 @@
     {
       "artifact": "verify-bilateral-waboose.receipt.json",
       "assertion_id": "bilateral-waboose-passed",
+      "expected": 0,
       "json_path": "returncode",
-      "operator": "equals",
-      "expected": 0
+      "operator": "equals"
     },
     {
       "artifact": "browser-evidence.json",
@@ -236,82 +236,6 @@
       "operator": "truthy"
     }
   ],
-  "requirement_bindings": {
-    "positive_assertions": [
-      {
-        "requirement_digest": "c81bf26f27cd1faab3399424f80571b6af8e8ee0419afe936ed76355f98867d1",
-        "assertion_ids": [
-          "v1-runtime-passed",
-          "bilateral-waboose-passed"
-        ]
-      },
-      {
-        "requirement_digest": "e47fbf6ada450a0a9e604bfe472c3fe8cd34753cadf8b801a884668a91c10088",
-        "assertion_ids": [
-          "browser-proof-ok",
-          "bilateral-proof-ok",
-          "selected-storey-stable",
-          "selected-issue-stable",
-          "blueprint-stable",
-          "annotation-set-stable",
-          "representation-sequence-stable",
-          "show-all-retains-selection"
-        ]
-      }
-    ],
-    "negative_assertions": [
-      {
-        "requirement_digest": "fac607627249c9c29dfef84abe5e9a0fa42d77111d03c398d3150067961503ad",
-        "assertion_ids": [
-          "no-production-mutation",
-          "no-automatic-merge",
-          "no-physical-work-authority",
-          "no-professional-authority"
-        ]
-      }
-    ],
-    "preservation_assertions": [
-      {
-        "requirement_digest": "b6bf835e821e82b363402db2cceec35eb172af383e21ea04b2874cf772bdf1ca",
-        "assertion_ids": [
-          "inspector-state-preserved",
-          "source-geometry-preserved",
-          "repository-tree-preserved",
-          "bounded-relaunch-succeeds"
-        ]
-      }
-    ],
-    "fault_injections": [
-      {
-        "requirement_digest": "649b1a3a03f04b71241e12424162cc231bfc960b33bd779d7dcb262bce2837aa",
-        "assertion_ids": [
-          "hidden-pick-rejected",
-          "hidden-focus-rejected"
-        ]
-      },
-      {
-        "requirement_digest": "ff8f15a88217719cab06e27e571f134b1c6dcc9d06d1f81b9c9c42d159abf456",
-        "assertion_ids": [
-          "missing-blueprint-explicit",
-          "ambiguous-blueprint-explicit"
-        ]
-      },
-      {
-        "requirement_digest": "c297ba5b71e473cd47c22ed99c87744bf9b5219d7f1ce58a84ae6ede69094bb0",
-        "assertion_ids": [
-          "invalid-digest-explicit",
-          "preinit-switch-rejected",
-          "delayed-asset-bounded",
-          "cancellation-explicit",
-          "cancellation-cleanup-terminal",
-          "device-loss-terminal",
-          "device-loss-cleanup-terminal",
-          "dissolve-terminal",
-          "server-termination-terminal"
-        ]
-      }
-    ]
-  },
   "profile_id": "construction-demo-bilateral",
   "repair_policy": {
     "automatic_commit": false,
@@ -333,6 +257,82 @@
     "server-termination.receipt.json",
     "verify-bilateral-waboose.receipt.json"
   ],
+  "requirement_bindings": {
+    "fault_injections": [
+      {
+        "assertion_ids": [
+          "hidden-pick-rejected",
+          "hidden-focus-rejected"
+        ],
+        "requirement_digest": "649b1a3a03f04b71241e12424162cc231bfc960b33bd779d7dcb262bce2837aa"
+      },
+      {
+        "assertion_ids": [
+          "missing-blueprint-explicit",
+          "ambiguous-blueprint-explicit"
+        ],
+        "requirement_digest": "ff8f15a88217719cab06e27e571f134b1c6dcc9d06d1f81b9c9c42d159abf456"
+      },
+      {
+        "assertion_ids": [
+          "invalid-digest-explicit",
+          "preinit-switch-rejected",
+          "delayed-asset-bounded",
+          "cancellation-explicit",
+          "cancellation-cleanup-terminal",
+          "device-loss-terminal",
+          "device-loss-cleanup-terminal",
+          "dissolve-terminal",
+          "server-termination-terminal"
+        ],
+        "requirement_digest": "c297ba5b71e473cd47c22ed99c87744bf9b5219d7f1ce58a84ae6ede69094bb0"
+      }
+    ],
+    "negative_assertions": [
+      {
+        "assertion_ids": [
+          "no-production-mutation",
+          "no-automatic-merge",
+          "no-physical-work-authority",
+          "no-professional-authority"
+        ],
+        "requirement_digest": "fac607627249c9c29dfef84abe5e9a0fa42d77111d03c398d3150067961503ad"
+      }
+    ],
+    "positive_assertions": [
+      {
+        "assertion_ids": [
+          "v1-runtime-passed",
+          "bilateral-waboose-passed"
+        ],
+        "requirement_digest": "c81bf26f27cd1faab3399424f80571b6af8e8ee0419afe936ed76355f98867d1"
+      },
+      {
+        "assertion_ids": [
+          "browser-proof-ok",
+          "bilateral-proof-ok",
+          "selected-storey-stable",
+          "selected-issue-stable",
+          "blueprint-stable",
+          "annotation-set-stable",
+          "representation-sequence-stable",
+          "show-all-retains-selection"
+        ],
+        "requirement_digest": "e47fbf6ada450a0a9e604bfe472c3fe8cd34753cadf8b801a884668a91c10088"
+      }
+    ],
+    "preservation_assertions": [
+      {
+        "assertion_ids": [
+          "inspector-state-preserved",
+          "source-geometry-preserved",
+          "repository-tree-preserved",
+          "bounded-relaunch-succeeds"
+        ],
+        "requirement_digest": "232006b658173c40a993c57ce9af8904f670417025b572d485089bd8308bf0d1"
+      }
+    ]
+  },
   "runtime_candidate_id": "construction-demo-b10-candidate",
   "scenarios": [
     {

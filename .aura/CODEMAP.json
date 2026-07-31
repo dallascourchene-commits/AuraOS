@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1785475965,
+  "generated_at_unix": 1785514113,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1533,
+    "included_file_count": 1546,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,7 +13,7 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 210,
+      ".git": 25,
       "Aura_Memory": 6,
       "Aura_Sandbox": 2,
       "__pycache__": 8
@@ -68,6 +68,7 @@
       ".aura/refactor_objectives/construction_pascal_spatial_foundry_p4.v1.json",
       ".aura/refactor_objectives/construction_pascal_spatial_foundry_pr2.v1.json",
       ".aura/refactor_objectives/construction_pascal_spatial_foundry_pr3.v1.json",
+      ".aura/refactor_objectives/construction_pascal_spatial_foundry_pr5.v1.json",
       ".aura/refactor_objectives/construction_spatial_foundry_pr1.v1.json",
       ".aura/refactor_payloads/umc_main_publish.trigger",
       ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
@@ -80,6 +81,8 @@
       ".aura/runtime_profiles/construction_demo.v1.json",
       ".aura/runtime_profiles/construction_demo_bilateral.v2.json",
       ".aura/runtime_profiles/construction_foundry_p4.confirmation.template.json",
+      ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
+      ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json",
       ".aura/tool_bundles/coding_localize.v1.json",
       ".aura/topology_baseline.json",
       ".aura/understand_graph.json",
@@ -97,6 +100,7 @@
       ".aura/waboose_requests/construction_pascal_spatial_foundry_p4.v1.json",
       ".aura/waboose_requests/construction_pascal_spatial_foundry_pr2.json",
       ".aura/waboose_requests/construction_pascal_spatial_foundry_pr3.json",
+      ".aura/waboose_requests/construction_pascal_spatial_foundry_pr5.v1.json",
       ".aura/waboose_requests/construction_spatial_foundry_pr1.v1.json",
       ".aura/waboose_requests/issue_200_exact_head_harness.v1.json",
       ".aura/waboose_requests/unified_memory_continuity.v1.json",
@@ -949,6 +953,9 @@
       "docs/AURA_CONSTRUCTION_ARENA_G7_G8_SECURITY.md",
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_CONSTRUCTION_FOUNDRY_DECISION_PR3.md",
+      "docs/AURA_CONSTRUCTION_FOUNDRY_EVIDENCE_GUIDE.md",
+      "docs/AURA_CONSTRUCTION_FOUNDRY_OPERATOR_GUIDE.md",
+      "docs/AURA_CONSTRUCTION_FOUNDRY_VIDEO_SCRIPT.md",
       "docs/AURA_CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY_P4.md",
       "docs/AURA_CONSTRUCTION_SPATIAL_FOUNDRY_PR1.md",
       "docs/AURA_COUNCIL_V3_EFFICIENCY_AND_SCALE_ENHANCEMENT_PROPOSAL.md",
@@ -978,6 +985,7 @@
       "docs/AURA_NATIVE_COCKPIT.md",
       "docs/AURA_NODE_INSPECTOR.md",
       "docs/AURA_OBSERVATORY_CRUCIBLE_HANDOFF.md",
+      "docs/AURA_PASCAL_CONSTRUCTION_SPATIAL_FOUNDRY_MVP.md",
       "docs/AURA_PASCAL_SPATIAL_PRESENTATION_PR2.md",
       "docs/AURA_PHASE_AND_AUDIT_COCKPIT.md",
       "docs/AURA_PHASE_C2_IMPLEMENTATION_STATUS.md",
@@ -1134,6 +1142,7 @@
       "scripts/aura-agent-arena",
       "scripts/aura_architecture_harness.py",
       "scripts/aura_architecture_harness_core.py",
+      "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
       "scripts/aura_exact_head_transport.py",
       "scripts/aura_fetch_construction_demo_source.py",
       "scripts/aura_ifc_storey_index.py",
@@ -1244,6 +1253,9 @@
       "tests/js/spatial-webgl2.test.mjs",
       "tests/js/spatial-webgpu.test.mjs",
       "tests/js/spatial-webxr.test.mjs",
+      "tests/pascal_spatial_presentation_test_contracts.py",
+      "tests/pascal_spatial_presentation_test_lifecycle.py",
+      "tests/pascal_spatial_presentation_test_support.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -1344,6 +1356,7 @@
       "tests/test_aura_construction_learning.py",
       "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py",
       "tests/test_aura_construction_pascal_spatial_foundry_p4.py",
+      "tests/test_aura_construction_pascal_spatial_foundry_pr5.py",
       "tests/test_aura_construction_pascal_spatial_foundry_server.py",
       "tests/test_aura_construction_refactor_completion.py",
       "tests/test_aura_construction_refactor_plan.py",
@@ -1555,23 +1568,23 @@
     ]
   },
   "summary": {
-    "file_count": 1533,
-    "total_bytes": 58453860,
-    "text_tokens_est": 5157108,
+    "file_count": 1546,
+    "total_bytes": 58524481,
+    "text_tokens_est": 5174419,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 64,
-      "knowledge_artifact": 191,
+      "knowledge_artifact": 195,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 966,
-      "schema_or_lexicon": 217,
+      "python_module": 971,
+      "schema_or_lexicon": 221,
       "support_file": 79
     },
-    "topology_nodes": 11210,
-    "topology_edges": 27099,
+    "topology_nodes": 11211,
+    "topology_edges": 27102,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 32356.16
+    "elapsed_ms": 35135.33
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1839,6 +1852,7 @@
       ".aura/refactor_objectives/construction_pascal_spatial_foundry_p4.v1.json",
       ".aura/refactor_objectives/construction_pascal_spatial_foundry_pr2.v1.json",
       ".aura/refactor_objectives/construction_pascal_spatial_foundry_pr3.v1.json",
+      ".aura/refactor_objectives/construction_pascal_spatial_foundry_pr5.v1.json",
       ".aura/refactor_objectives/construction_spatial_foundry_pr1.v1.json",
       ".aura/refactor_payloads/umc_main_publish.trigger",
       ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
@@ -1851,6 +1865,8 @@
       ".aura/runtime_profiles/construction_demo.v1.json",
       ".aura/runtime_profiles/construction_demo_bilateral.v2.json",
       ".aura/runtime_profiles/construction_foundry_p4.confirmation.template.json",
+      ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
+      ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json",
       ".aura/tool_bundles/coding_localize.v1.json",
       ".aura/understand_graph.json",
       ".aura/understand_graph_diff.json",
@@ -1861,6 +1877,7 @@
       ".aura/waboose_requests/construction_pascal_spatial_foundry_p4.v1.json",
       ".aura/waboose_requests/construction_pascal_spatial_foundry_pr2.json",
       ".aura/waboose_requests/construction_pascal_spatial_foundry_pr3.json",
+      ".aura/waboose_requests/construction_pascal_spatial_foundry_pr5.v1.json",
       ".aura/waboose_requests/construction_spatial_foundry_pr1.v1.json",
       ".aura/waboose_requests/issue_200_exact_head_harness.v1.json",
       ".codacy.yaml",
@@ -2599,6 +2616,9 @@
       "docs/AURA_CONSTRUCTION_ARENA_G7_G8_REVIEW_SCOPE.md",
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_CONSTRUCTION_FOUNDRY_DECISION_PR3.md",
+      "docs/AURA_CONSTRUCTION_FOUNDRY_EVIDENCE_GUIDE.md",
+      "docs/AURA_CONSTRUCTION_FOUNDRY_OPERATOR_GUIDE.md",
+      "docs/AURA_CONSTRUCTION_FOUNDRY_VIDEO_SCRIPT.md",
       "docs/AURA_CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY_P4.md",
       "docs/AURA_CONSTRUCTION_SPATIAL_FOUNDRY_PR1.md",
       "docs/AURA_COUNCIL_V3_EFFICIENCY_AND_SCALE_ENHANCEMENT_PROPOSAL.md",
@@ -2625,6 +2645,7 @@
       "docs/AURA_NATIVE_COCKPIT.md",
       "docs/AURA_NODE_INSPECTOR.md",
       "docs/AURA_OBSERVATORY_CRUCIBLE_HANDOFF.md",
+      "docs/AURA_PASCAL_CONSTRUCTION_SPATIAL_FOUNDRY_MVP.md",
       "docs/AURA_PASCAL_SPATIAL_PRESENTATION_PR2.md",
       "docs/AURA_PHASE_C2_IMPLEMENTATION_STATUS.md",
       "docs/AURA_PHASE_C2_LIVE_ROUTE_CAPSULES.md",
@@ -2752,6 +2773,7 @@
       "scripts/aura-agent-arena",
       "scripts/aura_architecture_harness.py",
       "scripts/aura_architecture_harness_core.py",
+      "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
       "scripts/aura_exact_head_transport.py",
       "scripts/aura_fetch_construction_demo_source.py",
       "scripts/aura_ifc_storey_index.py",
@@ -2847,6 +2869,9 @@
       "tests/js/spatial-webgl2.test.mjs",
       "tests/js/spatial-webgpu.test.mjs",
       "tests/js/spatial-webxr.test.mjs",
+      "tests/pascal_spatial_presentation_test_contracts.py",
+      "tests/pascal_spatial_presentation_test_lifecycle.py",
+      "tests/pascal_spatial_presentation_test_support.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -2939,6 +2964,7 @@
       "tests/test_aura_construction_learning.py",
       "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py",
       "tests/test_aura_construction_pascal_spatial_foundry_p4.py",
+      "tests/test_aura_construction_pascal_spatial_foundry_pr5.py",
       "tests/test_aura_construction_pascal_spatial_foundry_server.py",
       "tests/test_aura_construction_refactor_completion.py",
       "tests/test_aura_construction_refactor_plan.py",
@@ -3545,7 +3571,7 @@
       "test_aura_functions.py:920"
     ],
     "!chapter": [
-      "aura_showcase/construction-foundry-director.js:168"
+      "aura_showcase/construction-foundry-director.js:85"
     ],
     "!children": [
       "aura_showcase/live-repair-foundry.js:196"
@@ -3833,7 +3859,7 @@
       "aura_spatial_web/gaussian_renderer.js:559"
     ],
     "!lastCommittedReceipt": [
-      "aura_showcase/construction-foundry-director.js:390"
+      "aura_showcase/construction-foundry-director.js:400"
     ],
     "!lastPointer": [
       "aura_coding_arena/main.js:217",
@@ -3862,7 +3888,7 @@
     "!manifest": [
       "AURA_FINAL_REPORT.md:138",
       "aura_node.py:7740",
-      "aura_showcase/construction-foundry-director.js:191",
+      "aura_showcase/construction-foundry-director.js:215",
       "aura_showcase/pascal-workbench/pascal-workbench.js:557",
       "aura_spatial_web/construction_mesh_pass.js:144",
       "aura_spatial_web/gaussian_renderer.js:484"
@@ -4004,7 +4030,7 @@
     ],
     "!projection": [
       "aura_showcase/construction-decision-foundry.js:242",
-      "aura_showcase/construction-foundry-director.js:98"
+      "aura_showcase/construction-foundry-director.js:122"
     ],
     "!proposal": [
       "aura_human_agent_arena/jarvis.js:63"
@@ -4113,7 +4139,7 @@
       "aura_human_agent_arena/construction.js:18",
       "aura_showcase/construction-decision-as-built-sync.js:223",
       "aura_showcase/construction-decision-foundry.js:107",
-      "aura_showcase/construction-foundry-director.js:115",
+      "aura_showcase/construction-foundry-director.js:139",
       "aura_showcase/pascal-construction-foundry.js:55",
       "aura_spatial_web/bootstrap.js:26",
       "aura_spatial_web/construction_demo_app.js:394"
@@ -4125,7 +4151,7 @@
       "aura_showcase/attempt-archive.js:142",
       "aura_showcase/civic.js:140",
       "aura_showcase/construction-decision-foundry.js:107",
-      "aura_showcase/construction-foundry-director.js:123",
+      "aura_showcase/construction-foundry-director.js:147",
       "aura_showcase/construction-spatial-foundry.js:37",
       "aura_showcase/crucible.js:161",
       "aura_showcase/gate-dialogue.js:357",
@@ -4143,7 +4169,7 @@
     ],
     "!root": [
       "aura_showcase/construction-decision-foundry.js:5",
-      "aura_showcase/construction-foundry-director.js:77",
+      "aura_showcase/construction-foundry-director.js:101",
       "aura_showcase/pascal-construction-foundry.js:5"
     ],
     "!route": [
@@ -4218,7 +4244,7 @@
       "aura_node.py:5822"
     ],
     "!session": [
-      "aura_showcase/construction-foundry-director.js:191",
+      "aura_showcase/construction-foundry-director.js:73",
       "aura_showcase/pascal-construction-foundry.js:121"
     ],
     "!sessionId": [
@@ -4323,7 +4349,7 @@
     "!target": [
       "aura_coding_arena/main.js:143",
       "aura_human_agent_arena/main.js:441",
-      "aura_showcase/construction-foundry-director.js:148",
+      "aura_showcase/construction-foundry-director.js:172",
       "aura_showcase/gate-dialogue.js:575",
       "aura_showcase/human.js:672",
       "aura_showcase/intent.js:301",
@@ -6511,7 +6537,7 @@
         "file": "aura_bilateral_live_repair_foundry_service.py",
         "kind": "class",
         "line": 39,
-        "end_line": 312,
+        "end_line": 313,
         "semantic_id": "aura_bilateral_live_repair_foundry_service.py#class:BilateralLiveRepairService:ce88a38f27523fd4",
         "signature_hash": "e29637ec505f592b"
       }
@@ -12362,8 +12388,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "class",
-        "line": 640,
-        "end_line": 851,
+        "line": 678,
+        "end_line": 894,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#class:P4FoundryShowcaseState:4dca928ece45b42b",
         "signature_hash": "c7ba9604a0ff26a1"
       }
@@ -14332,8 +14358,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "class",
-        "line": 86,
-        "end_line": 87,
+        "line": 87,
+        "end_line": 88,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#class:RuntimeHarnessError:baa23789f1662718",
         "signature_hash": "456b901a30087dd5"
       }
@@ -19214,8 +19240,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "class",
-        "line": 113,
-        "end_line": 149,
+        "line": 114,
+        "end_line": 150,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#class:_BoundedStreamCapture:8426c5dfac1197d2",
         "signature_hash": "f090136f18b1432f"
       }
@@ -19534,8 +19560,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "class",
-        "line": 518,
-        "end_line": 520,
+        "line": 519,
+        "end_line": 521,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#class:_NoRedirectHandler:065a5fc87ef3fb0f",
         "signature_hash": "421b8116ba039f9c"
       }
@@ -19564,8 +19590,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "class",
-        "line": 398,
-        "end_line": 535,
+        "line": 427,
+        "end_line": 573,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#class:_P4U7Bridge:154149aceb11e3d3",
         "signature_hash": "2f10e68486651e00"
       }
@@ -20736,16 +20762,16 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "method",
-        "line": 401,
-        "end_line": 403,
+        "line": 430,
+        "end_line": 432,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#method:_P4U7Bridge.__init__:f19dfe1f79f40b4d",
         "signature_hash": "23625c7dd6569fe8"
       },
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "method",
-        "line": 643,
-        "end_line": 701,
+        "line": 681,
+        "end_line": 739,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#method:P4FoundryShowcaseState.__init__:0a7575ca692c37e1",
         "signature_hash": "9be114a0c8cf0892"
       },
@@ -22920,8 +22946,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "method",
-        "line": 116,
-        "end_line": 120,
+        "line": 117,
+        "end_line": 121,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#method:_BoundedStreamCapture.__init__:429dc9ecc1b715bd",
         "signature_hash": "8d0ccfc441d9188f"
       },
@@ -25554,8 +25580,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 282,
-        "end_line": 395,
+        "line": 311,
+        "end_line": 424,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_adapt_runtime_proof_identity:cf8fd9041df7cf32",
         "signature_hash": "c03f3e4888c3abc2"
       }
@@ -26590,8 +26616,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 611,
-        "end_line": 633,
+        "line": 612,
+        "end_line": 634,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_artifact_inventory:e59c2ab7e74a8e89",
         "signature_hash": "cb8c7c6136149bde"
       }
@@ -31066,8 +31092,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "method",
-        "line": 724,
-        "end_line": 737,
+        "line": 762,
+        "end_line": 775,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#method:P4FoundryShowcaseState._cleanup_external_roots:a15cea6b29242055",
         "signature_hash": "8219c3be3a89ddb4"
       }
@@ -32065,9 +32091,9 @@
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
         "line": 181,
-        "end_line": 257,
-        "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_compile_confirmation_bundle:d7beb6263dda1e46",
-        "signature_hash": "067236b707e2dcb5"
+        "end_line": 264,
+        "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_compile_confirmation_bundle:f91213459b2d75b8",
+        "signature_hash": "f9a08b0e761ddd22"
       }
     ],
     "_compile_contract": [
@@ -32548,8 +32574,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 260,
-        "end_line": 279,
+        "line": 289,
+        "end_line": 308,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_confirmation_intent_contract:4d75b39017e00fc3",
         "signature_hash": "18873ee748bbf21c"
       }
@@ -32816,8 +32842,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 1404,
-        "end_line": 1410,
+        "line": 1447,
+        "end_line": 1453,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_content_security_policy:53df8cd48c1e9100",
         "signature_hash": "0e50807ccf742a87"
       },
@@ -33330,8 +33356,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "method",
-        "line": 703,
-        "end_line": 706,
+        "line": 741,
+        "end_line": 744,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#method:P4FoundryShowcaseState._current_demo_identity:f4711eedaddfe75d",
         "signature_hash": "130baa8a106c78ec"
       }
@@ -36298,8 +36324,8 @@
       {
         "file": "scripts/aura_runtime_profile_v2_adapter.py",
         "kind": "function",
-        "line": 847,
-        "end_line": 860,
+        "line": 862,
+        "end_line": 875,
         "semantic_id": "scripts/aura_runtime_profile_v2_adapter.py#function:_evaluate:5a341d413afb1f3a",
         "signature_hash": "1ca6f5e03ff60f26"
       }
@@ -36782,8 +36808,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 964,
-        "end_line": 1146,
+        "line": 1007,
+        "end_line": 1189,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_execute_chapter:66525e2b83584fd2",
         "signature_hash": "2a9309a576520e0a"
       }
@@ -37118,8 +37144,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 207,
-        "end_line": 213,
+        "line": 208,
+        "end_line": 214,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_external_output_path:51daa897c9a225bd",
         "signature_hash": "192a007f869d0154"
       }
@@ -38192,8 +38218,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 168,
-        "end_line": 185,
+        "line": 169,
+        "end_line": 186,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_finish_bounded_capture:2d2a223c74a2169d",
         "signature_hash": "44cec14d2b9a68fb"
       }
@@ -39652,8 +39678,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 404,
-        "end_line": 432,
+        "line": 405,
+        "end_line": 433,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_git_identity:b58b776cf5695b58",
         "signature_hash": "9f4b9f07dbfa2817"
       }
@@ -42318,8 +42344,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 861,
-        "end_line": 933,
+        "line": 904,
+        "end_line": 976,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_initial_evidence:577fe713e02ebd35",
         "signature_hash": "1a5680f7a37853bb"
       }
@@ -43276,8 +43302,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 90,
-        "end_line": 92,
+        "line": 91,
+        "end_line": 93,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_json_digest:3b28796edf8b1a8a",
         "signature_hash": "25e61b3e4ceecba2"
       }
@@ -44206,8 +44232,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 636,
-        "end_line": 653,
+        "line": 637,
+        "end_line": 654,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_load_baseline:8611775a925e3082",
         "signature_hash": "824e9501f65dde68"
       }
@@ -48212,8 +48238,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 591,
-        "end_line": 637,
+        "line": 629,
+        "end_line": 675,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_p4_finalization_contract:434c9810bfe34d5d",
         "signature_hash": "9bc547c2113b7aeb"
       }
@@ -48222,8 +48248,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 580,
-        "end_line": 588,
+        "line": 618,
+        "end_line": 626,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_p4_observation_contract:73fd4ff22231e483",
         "signature_hash": "6ae4ea4062ba7114"
       }
@@ -48232,8 +48258,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 538,
-        "end_line": 577,
+        "line": 576,
+        "end_line": 615,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_p4_prediction_contract:7e89fef5584be7f1",
         "signature_hash": "b7a8d7d5b7cf0aca"
       }
@@ -48646,8 +48672,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 883,
-        "end_line": 892,
+        "line": 891,
+        "end_line": 900,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_parser:46109e577bc29fc0",
         "signature_hash": "cee2a7bb613f105d"
       },
@@ -49528,8 +49554,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 216,
-        "end_line": 219,
+        "line": 217,
+        "end_line": 220,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_positive_number:37ebdf495a872e77",
         "signature_hash": "89b9184ddd71d2eb"
       }
@@ -50258,8 +50284,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 854,
-        "end_line": 858,
+        "line": 897,
+        "end_line": 901,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_projection_and_identity:945a28fe71d7ea7d",
         "signature_hash": "a45d44741017b58d"
       }
@@ -51164,8 +51190,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 596,
-        "end_line": 608,
+        "line": 597,
+        "end_line": 609,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_read_success_field:fbc2c797c108aa5d",
         "signature_hash": "690b6c5bb73bd183"
       }
@@ -51224,8 +51250,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 523,
-        "end_line": 558,
+        "line": 524,
+        "end_line": 559,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_readiness:413527475ff4b3e2",
         "signature_hash": "6db3f7c0f959d4b1"
       }
@@ -53404,8 +53430,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "method",
-        "line": 498,
-        "end_line": 502,
+        "line": 536,
+        "end_line": 540,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#method:_P4U7Bridge._require_session:aa1de4c9b4bbdeae",
         "signature_hash": "2bd8b5072a466a27"
       },
@@ -53962,8 +53988,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 447,
-        "end_line": 467,
+        "line": 448,
+        "end_line": 468,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_resolve_command:cc2f47b75fd2883b",
         "signature_hash": "8817de8a00466c05"
       }
@@ -54008,8 +54034,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "method",
-        "line": 708,
-        "end_line": 722,
+        "line": 746,
+        "end_line": 760,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#method:P4FoundryShowcaseState._resolve_demo_identity:243994ebf52c3a1e",
         "signature_hash": "221fd76e5ff47857"
       }
@@ -55278,8 +55304,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 470,
-        "end_line": 515,
+        "line": 471,
+        "end_line": 516,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_run_command:89ace0aa502d8d74",
         "signature_hash": "30196aa00befd026"
       }
@@ -55658,8 +55684,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 435,
-        "end_line": 440,
+        "line": 436,
+        "end_line": 441,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_safe_environment:e74d73afdfb73b75",
         "signature_hash": "bdc66390014f4b8f"
       }
@@ -55968,8 +55994,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 188,
-        "end_line": 204,
+        "line": 189,
+        "end_line": 205,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_safe_repo_path:dda9a2e95ddf29cf",
         "signature_hash": "8a8dcbecd5aeebc5"
       }
@@ -57362,8 +57388,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 950,
-        "end_line": 961,
+        "line": 993,
+        "end_line": 1004,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_session_start:a80b86123aafccba",
         "signature_hash": "6aeea0a0f7fde506"
       }
@@ -57464,8 +57490,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 95,
-        "end_line": 100,
+        "line": 96,
+        "end_line": 101,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_sha256:8cfb36f112a00cf1",
         "signature_hash": "8b2fe119650f5918"
       },
@@ -58027,7 +58053,7 @@
         "file": "scripts/aura_runtime_profile_v2_adapter.py",
         "kind": "function",
         "line": 819,
-        "end_line": 844,
+        "end_line": 859,
         "semantic_id": "scripts/aura_runtime_profile_v2_adapter.py#function:_snapshot_traces:0e295539f0e1ec64",
         "signature_hash": "c98c90d151aad512"
       }
@@ -58744,8 +58770,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 152,
-        "end_line": 165,
+        "line": 153,
+        "end_line": 166,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_start_bounded_capture:4ebf46f76ec15c6d",
         "signature_hash": "1f2f98ea9d664c3b"
       }
@@ -58754,8 +58780,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 936,
-        "end_line": 947,
+        "line": 979,
+        "end_line": 990,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_start_exact_session:f1b5572cb366a2b9",
         "signature_hash": "7c3ebe972e387a92"
       }
@@ -58878,8 +58904,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 1369,
-        "end_line": 1401,
+        "line": 1412,
+        "end_line": 1444,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_static_response:7f51ddfe22d03d8e",
         "signature_hash": "3b33593b45f1d660"
       },
@@ -59248,8 +59274,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 225,
-        "end_line": 230,
+        "line": 226,
+        "end_line": 231,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_strict_bool:067556175e0ce7cf",
         "signature_hash": "5783a317e3383652"
       }
@@ -59762,8 +59788,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 443,
-        "end_line": 444,
+        "line": 444,
+        "end_line": 445,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_substitute:23a7b26b8957bc63",
         "signature_hash": "80d76c518c2b82ad"
       }
@@ -60394,8 +60420,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 561,
-        "end_line": 593,
+        "line": 562,
+        "end_line": 594,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_terminate_process:a3306842b6789628",
         "signature_hash": "d04f387b6df5a2c0"
       }
@@ -62218,8 +62244,8 @@
       {
         "file": "scripts/aura_runtime_profile_v2_adapter.py",
         "kind": "function",
-        "line": 863,
-        "end_line": 879,
+        "line": 878,
+        "end_line": 894,
         "semantic_id": "scripts/aura_runtime_profile_v2_adapter.py#function:_trace_inventory:a6ed81f504129aff",
         "signature_hash": "f4360c4f35d5d64d"
       }
@@ -63270,8 +63296,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 247,
-        "end_line": 257,
+        "line": 248,
+        "end_line": 258,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_validate_command:48bfd82ab9c6017e",
         "signature_hash": "8c4b1b7a13626d70"
       }
@@ -63410,8 +63436,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 260,
-        "end_line": 274,
+        "line": 261,
+        "end_line": 275,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_validate_env:e68f2e20983dcf55",
         "signature_hash": "5217c6f6884f5ea8"
       }
@@ -63676,8 +63702,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 233,
-        "end_line": 244,
+        "line": 234,
+        "end_line": 245,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_validate_loopback_url:1f72419520a2c4ed",
         "signature_hash": "c45b655672f896fa"
       }
@@ -64232,8 +64258,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 400,
-        "end_line": 401,
+        "line": 401,
+        "end_line": 402,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_venv_python:086aeab17e1d194b",
         "signature_hash": "9cd5330030aa00e1"
       }
@@ -65124,8 +65150,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 103,
-        "end_line": 110,
+        "line": 104,
+        "end_line": 111,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_write_json:cb536046f55fcafe",
         "signature_hash": "dfe2399e28d5b17f"
       }
@@ -67396,8 +67422,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "method",
-        "line": 504,
-        "end_line": 535,
+        "line": 542,
+        "end_line": 573,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#method:_P4U7Bridge.aura_get_micro_context:f0ac47951773a344",
         "signature_hash": "82bfdc65dac75d6b"
       },
@@ -71618,20 +71644,20 @@
     ],
     "child_message": [
       {
+        "file": "tests/pascal_spatial_presentation_test_support.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 73,
+        "semantic_id": "tests/pascal_spatial_presentation_test_support.py#function:child_message:d03fb40508d76ff3",
+        "signature_hash": "bfa84ad4fe2335b2"
+      },
+      {
         "file": "tests/test_aura_construction_pascal_spatial_foundry_server.py",
         "kind": "function",
         "line": 61,
         "end_line": 75,
         "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_server.py#function:child_message:b695c896fcb26418",
         "signature_hash": "3152a9f6bb2dbedf"
-      },
-      {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
-        "kind": "function",
-        "line": 59,
-        "end_line": 73,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:child_message:decc28de1d8b6186",
-        "signature_hash": "bfa84ad4fe2335b2"
       }
     ],
     "choose_profile_for_phase": [
@@ -72032,8 +72058,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "method",
-        "line": 842,
-        "end_line": 851,
+        "line": 885,
+        "end_line": 894,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#method:P4FoundryShowcaseState.close:137416512d5ffdf8",
         "signature_hash": "818fdb66f3084fa5"
       },
@@ -73508,6 +73534,16 @@
         "signature_hash": "d907680eb22f8c8c"
       }
     ],
+    "compile_confirmation_bundle": [
+      {
+        "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
+        "kind": "function",
+        "line": 267,
+        "end_line": 286,
+        "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:compile_confirmation_bundle:d838b8e8bb8be4d7",
+        "signature_hash": "dc98982098f5ec11"
+      }
+    ],
     "compile_confirmed_bilateral_intent": [
       {
         "file": "aura_bilateral_intent_compiler.py",
@@ -74508,8 +74544,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "method",
-        "line": 122,
-        "end_line": 135,
+        "line": 123,
+        "end_line": 136,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#method:_BoundedStreamCapture.consume:5195bf57b5ca4602",
         "signature_hash": "ac9e4efd878fd8cc"
       }
@@ -77042,8 +77078,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 1149,
-        "end_line": 1366,
+        "line": 1192,
+        "end_line": 1409,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:dispatch_p4_foundry_request:25140953b5709abf",
         "signature_hash": "87e80705c4cbe0ca"
       }
@@ -77158,8 +77194,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "method",
-        "line": 793,
-        "end_line": 823,
+        "line": 836,
+        "end_line": 866,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#method:P4FoundryShowcaseState.dissolve_p4_runtime:1aeed4bc49740294",
         "signature_hash": "2355f86a28df83f7"
       }
@@ -78516,8 +78552,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "method",
-        "line": 752,
-        "end_line": 791,
+        "line": 790,
+        "end_line": 834,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#method:P4FoundryShowcaseState.execute_exact_runtime_replay:ceb15a719489678b",
         "signature_hash": "620e8757fe9c671c"
       }
@@ -78691,7 +78727,7 @@
         "file": "aura_bilateral_live_repair_foundry_service.py",
         "kind": "method",
         "line": 233,
-        "end_line": 312,
+        "end_line": 313,
         "semantic_id": "aura_bilateral_live_repair_foundry_service.py#method:BilateralLiveRepairService.execute_replay:24f49685c02b4581",
         "signature_hash": "68e8ecbd2d27dce6"
       }
@@ -79826,19 +79862,19 @@
     ],
     "fixture": [
       {
+        "file": "tests/pascal_spatial_presentation_test_support.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "tests/pascal_spatial_presentation_test_support.py#function:fixture:82f0d49c537a7397",
+        "signature_hash": "c73d3075455b50af"
+      },
+      {
         "file": "tests/test_aura_construction_adapter.py",
         "kind": "function",
         "line": 23,
         "end_line": 24,
         "semantic_id": "tests/test_aura_construction_adapter.py#function:fixture:5dd48d21b2036ac3",
-        "signature_hash": "c73d3075455b50af"
-      },
-      {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
-        "kind": "function",
-        "line": 43,
-        "end_line": 44,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:fixture:9c856a60264a6146",
         "signature_hash": "c73d3075455b50af"
       }
     ],
@@ -86212,11 +86248,11 @@
         "signature_hash": "ad6ded087560c269"
       },
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_support.py",
         "kind": "function",
         "line": 93,
         "end_line": 120,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:load:039441f846b5ee53",
+        "semantic_id": "tests/pascal_spatial_presentation_test_support.py#function:load:509d7da1c5b4b2d8",
         "signature_hash": "901e6f55c33cb73f"
       }
     ],
@@ -86545,7 +86581,7 @@
         "file": "aura_pascal_spatial_presentation_part5.py",
         "kind": "function",
         "line": 133,
-        "end_line": 206,
+        "end_line": 210,
         "semantic_id": "aura_pascal_spatial_presentation_part5.py#function:load_pascal_compatibility_fixture:2efc63bb3308ddcb",
         "signature_hash": "a4806023f39b13ae"
       }
@@ -86676,8 +86712,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 277,
-        "end_line": 397,
+        "line": 278,
+        "end_line": 398,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:load_runtime_profile:8f14712275ced2f5",
         "signature_hash": "7435c0fc92812035"
       }
@@ -87334,8 +87370,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 1500,
-        "end_line": 1510,
+        "line": 1543,
+        "end_line": 1553,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:main:7f1ca301d0f84ae2",
         "signature_hash": "1107cedc597d81be"
       },
@@ -87852,6 +87888,14 @@
         "signature_hash": "d5857061120d68cd"
       },
       {
+        "file": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
+        "kind": "function",
+        "line": 84,
+        "end_line": 111,
+        "semantic_id": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py#function:main:cd2d8a7ac706963d",
+        "signature_hash": "d5857061120d68cd"
+      },
+      {
         "file": "scripts/aura_exact_head_transport.py",
         "kind": "function",
         "line": 369,
@@ -87910,16 +87954,16 @@
       {
         "file": "scripts/aura_runtime_profile_v2_adapter.py",
         "kind": "function",
-        "line": 1080,
-        "end_line": 1123,
+        "line": 1096,
+        "end_line": 1139,
         "semantic_id": "scripts/aura_runtime_profile_v2_adapter.py#function:main:173fc50c8299b22a",
         "signature_hash": "d5857061120d68cd"
       },
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 895,
-        "end_line": 923,
+        "line": 903,
+        "end_line": 931,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:main:957bc05c7d82a5a8",
         "signature_hash": "d5857061120d68cd"
       },
@@ -88064,8 +88108,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 1413,
-        "end_line": 1477,
+        "line": 1456,
+        "end_line": 1520,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:make_handler:dfc23c48cf01dece",
         "signature_hash": "599e8071fc775139"
       },
@@ -89574,8 +89618,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "method",
-        "line": 826,
-        "end_line": 835,
+        "line": 869,
+        "end_line": 878,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#method:P4FoundryShowcaseState.p4_available:3ea90e17c9cc7709",
         "signature_hash": "2b578748b3c86d2c"
       }
@@ -90642,8 +90686,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "method",
-        "line": 405,
-        "end_line": 496,
+        "line": 434,
+        "end_line": 534,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#method:_P4U7Bridge.prepare:a83e8bea790d6c52",
         "signature_hash": "2ecb75bd29115947"
       },
@@ -92196,11 +92240,11 @@
     ],
     "ready": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_support.py",
         "kind": "function",
         "line": 76,
         "end_line": 90,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:ready:ceb2755ab8d9afad",
+        "semantic_id": "tests/pascal_spatial_presentation_test_support.py#function:ready:39f479a62758b8cf",
         "signature_hash": "d7667134c1df9820"
       }
     ],
@@ -92276,8 +92320,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "method",
-        "line": 137,
-        "end_line": 146,
+        "line": 138,
+        "end_line": 147,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#method:_BoundedStreamCapture.receipt:21b8067954a0747c",
         "signature_hash": "c724ebd1d568bc4d"
       }
@@ -93334,8 +93378,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "method",
-        "line": 519,
-        "end_line": 520,
+        "line": 520,
+        "end_line": 521,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#method:_NoRedirectHandler.redirect_request:2a9fd22c0e89157d",
         "signature_hash": "8b782565eb7ca2de"
       }
@@ -93384,8 +93428,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "method",
-        "line": 739,
-        "end_line": 750,
+        "line": 777,
+        "end_line": 788,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#method:P4FoundryShowcaseState.refresh_demo_identity:d72e8d1d2910a38e",
         "signature_hash": "69f974f6a8a37b67"
       }
@@ -94370,8 +94414,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "method",
-        "line": 837,
-        "end_line": 840,
+        "line": 880,
+        "end_line": 883,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#method:P4FoundryShowcaseState.require_p4:5e415e9a89c37af7",
         "signature_hash": "1da043420516dac2"
       }
@@ -95586,6 +95630,14 @@
         "signature_hash": "059588ce65dc390d"
       },
       {
+        "file": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 81,
+        "semantic_id": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py#function:run:829f261652abefae",
+        "signature_hash": "c36bb494ce657c4a"
+      },
+      {
         "file": "scripts/aura_review_learning_architect_harness.py",
         "kind": "function",
         "line": 179,
@@ -96214,8 +96266,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "function",
-        "line": 656,
-        "end_line": 880,
+        "line": 657,
+        "end_line": 888,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:run_runtime_profile:57c0c3add09b77dd",
         "signature_hash": "291b451194cc4a46"
       }
@@ -96224,8 +96276,8 @@
       {
         "file": "scripts/aura_runtime_profile_v2_adapter.py",
         "kind": "function",
-        "line": 882,
-        "end_line": 1077,
+        "line": 897,
+        "end_line": 1093,
         "semantic_id": "scripts/aura_runtime_profile_v2_adapter.py#function:run_runtime_profile_v2:f593212b42033d53",
         "signature_hash": "9b4e4f120396a97a"
       }
@@ -97468,8 +97520,8 @@
       {
         "file": "aura_construction_pascal_spatial_foundry_p4_server.py",
         "kind": "function",
-        "line": 1480,
-        "end_line": 1497,
+        "line": 1523,
+        "end_line": 1540,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:serve:312814f7e869d202",
         "signature_hash": "ecd4a9029ef38f8e"
       },
@@ -97582,11 +97634,11 @@
     ],
     "session": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_support.py",
         "kind": "function",
         "line": 47,
         "end_line": 56,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:session:e7305bde81c967ad",
+        "semantic_id": "tests/pascal_spatial_presentation_test_support.py#function:session:2272be4e81ff22d5",
         "signature_hash": "3d813af4243cdf9a"
       }
     ],
@@ -100608,11 +100660,11 @@
     ],
     "test_all_canonical_authority_aliases_fail_closed": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_lifecycle.py",
         "kind": "function",
-        "line": 397,
-        "end_line": 404,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_all_canonical_authority_aliases_fail_closed:0340e457fe13add1",
+        "line": 68,
+        "end_line": 75,
+        "semantic_id": "tests/pascal_spatial_presentation_test_lifecycle.py#function:test_all_canonical_authority_aliases_fail_closed:4d0d04cf94602de9",
         "signature_hash": "2c33e1230a89f672"
       }
     ],
@@ -103224,21 +103276,21 @@
     ],
     "test_bridge_payload_byte_ceiling_is_enforced": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 228,
-        "end_line": 242,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_bridge_payload_byte_ceiling_is_enforced:ff7d42dc5b70a5db",
+        "line": 138,
+        "end_line": 152,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_bridge_payload_byte_ceiling_is_enforced:6e19cae7c274b611",
         "signature_hash": "40924d3fe7a9f86a"
       }
     ],
     "test_bridge_payload_depth_and_non_mapping_are_rejected": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 245,
-        "end_line": 277,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_bridge_payload_depth_and_non_mapping_are_rejected:a2e52af00c829875",
+        "line": 155,
+        "end_line": 187,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_bridge_payload_depth_and_non_mapping_are_rejected:0072208478ca2963",
         "signature_hash": "e2d6487ef5f8f625"
       }
     ],
@@ -105662,11 +105714,11 @@
     ],
     "test_committed_pascal_contracts_validate_against_schemas": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 158,
-        "end_line": 164,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_committed_pascal_contracts_validate_against_schemas:421320cf25d9bdcb",
+        "line": 68,
+        "end_line": 74,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_committed_pascal_contracts_validate_against_schemas:e30dc3986b06e535",
         "signature_hash": "4642d2345f7ffaa1"
       }
     ],
@@ -108004,11 +108056,11 @@
     ],
     "test_cross_runtime_bridge_number_digest_vector_is_stable": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 214,
-        "end_line": 224,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_cross_runtime_bridge_number_digest_vector_is_stable:ae6b14fd0ab09ff9",
+        "line": 124,
+        "end_line": 134,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_cross_runtime_bridge_number_digest_vector_is_stable:237e092dfae7a6b4",
         "signature_hash": "4a74e63edf186f2c"
       }
     ],
@@ -109502,11 +109554,11 @@
     ],
     "test_dissolution_requires_exact_cleanup_and_iframe_finalization": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_lifecycle.py",
         "kind": "function",
-        "line": 543,
-        "end_line": 583,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_dissolution_requires_exact_cleanup_and_iframe_finalization:37ed21e30ef35b60",
+        "line": 214,
+        "end_line": 254,
+        "semantic_id": "tests/pascal_spatial_presentation_test_lifecycle.py#function:test_dissolution_requires_exact_cleanup_and_iframe_finalization:e4a4881a266f1b45",
         "signature_hash": "4f57da6505900889"
       }
     ],
@@ -111120,11 +111172,11 @@
     ],
     "test_exact_pinned_pascal_fixture_and_spatial_scene_are_valid": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 123,
-        "end_line": 141,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_exact_pinned_pascal_fixture_and_spatial_scene_are_valid:a1f36eb87ee08f20",
+        "line": 33,
+        "end_line": 51,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_exact_pinned_pascal_fixture_and_spatial_scene_are_valid:efd71dbd20bcd6e8",
         "signature_hash": "172a439e70833401"
       }
     ],
@@ -118622,11 +118674,11 @@
     ],
     "test_manifest_structural_type_errors_fail_as_contract_errors": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 205,
-        "end_line": 211,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_manifest_structural_type_errors_fail_as_contract_errors:37fec19d80ee8d28",
+        "line": 115,
+        "end_line": 121,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_manifest_structural_type_errors_fail_as_contract_errors:7028a3aad4b81383",
         "signature_hash": "73b5c5f83187776d"
       }
     ],
@@ -120996,11 +121048,11 @@
     ],
     "test_nonce_history_is_not_evicted_and_session_is_bounded": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_lifecycle.py",
         "kind": "function",
-        "line": 447,
-        "end_line": 494,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_nonce_history_is_not_evicted_and_session_is_bounded:6c218ea0eb59e39e",
+        "line": 118,
+        "end_line": 165,
+        "semantic_id": "tests/pascal_spatial_presentation_test_lifecycle.py#function:test_nonce_history_is_not_evicted_and_session_is_bounded:b2e6a86906a0013b",
         "signature_hash": "87edf77935884b96"
       }
     ],
@@ -122100,6 +122152,26 @@
         "signature_hash": "389a6cbd76e9ed74"
       }
     ],
+    "test_p4_runtime_profile_is_construction_demo_not_pr5": [
+      {
+        "file": "tests/test_aura_construction_pascal_spatial_foundry_p4.py",
+        "kind": "function",
+        "line": 1310,
+        "end_line": 1321,
+        "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_p4.py#function:test_p4_runtime_profile_is_construction_demo_not_pr5:262350106ce41434",
+        "signature_hash": "13ce1fc2293fd939"
+      }
+    ],
+    "test_p4_runtime_runner_replacement_and_restoration": [
+      {
+        "file": "tests/test_aura_construction_pascal_spatial_foundry_p4.py",
+        "kind": "function",
+        "line": 1069,
+        "end_line": 1307,
+        "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_p4.py#function:test_p4_runtime_runner_replacement_and_restoration:bac40a96671efc2f",
+        "signature_hash": "ab3693dd94b082f6"
+      }
+    ],
     "test_p5_3_explicitly_retains_v1": [
       {
         "file": "tests/test_aura_st3gg_compatibility.py",
@@ -122402,11 +122474,11 @@
     ],
     "test_parent_sequence_advances_only_after_exact_postcondition": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 300,
-        "end_line": 347,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_parent_sequence_advances_only_after_exact_postcondition:654f1af3f2727445",
+        "line": 210,
+        "end_line": 257,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_parent_sequence_advances_only_after_exact_postcondition:9579a9c992e71e6c",
         "signature_hash": "d173c0e26b0c0518"
       }
     ],
@@ -123358,6 +123430,66 @@
         "end_line": 178,
         "semantic_id": "tests/test_aura_phase_c3_trial_crucible.py#function:test_postprocessing_failure_denies_and_always_dissolves:e1d5091ac19289f7",
         "signature_hash": "94e355344b10b8de"
+      }
+    ],
+    "test_pr5_browser_probe_names_every_required_scene_and_relaunch": [
+      {
+        "file": "tests/test_aura_construction_pascal_spatial_foundry_pr5.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 110,
+        "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_pr5.py#function:test_pr5_browser_probe_names_every_required_scene_and_relaunch:9f3df2fb311cfaf0",
+        "signature_hash": "0ed708848329e1c9"
+      }
+    ],
+    "test_pr5_coordinate_receipt_mismatched_artifact_digest_fails_closed": [
+      {
+        "file": "tests/test_aura_construction_pascal_spatial_foundry_pr5.py",
+        "kind": "function",
+        "line": 133,
+        "end_line": 171,
+        "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_pr5.py#function:test_pr5_coordinate_receipt_mismatched_artifact_digest_fails_closed:4e028de5d2f699bd",
+        "signature_hash": "16608589d15e2146"
+      }
+    ],
+    "test_pr5_pascal_identity_chain_is_exact_and_current": [
+      {
+        "file": "tests/test_aura_construction_pascal_spatial_foundry_pr5.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 34,
+        "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_pr5.py#function:test_pr5_pascal_identity_chain_is_exact_and_current:8976bd67057f69f4",
+        "signature_hash": "526351916363216e"
+      }
+    ],
+    "test_pr5_scope_retains_external_review_and_merge_denials": [
+      {
+        "file": "tests/test_aura_construction_pascal_spatial_foundry_pr5.py",
+        "kind": "function",
+        "line": 113,
+        "end_line": 130,
+        "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_pr5.py#function:test_pr5_scope_retains_external_review_and_merge_denials:202345c21b257c35",
+        "signature_hash": "90cb32967df4ff74"
+      }
+    ],
+    "test_pr5_v1_profile_requires_complete_current_run_artifact_set": [
+      {
+        "file": "tests/test_aura_construction_pascal_spatial_foundry_pr5.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 53,
+        "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_pr5.py#function:test_pr5_v1_profile_requires_complete_current_run_artifact_set:5db61f733dc28761",
+        "signature_hash": "8cc49b87f5c7a2d3"
+      }
+    ],
+    "test_pr5_v2_profile_binds_exact_verifier_and_confirmation_requirements": [
+      {
+        "file": "tests/test_aura_construction_pascal_spatial_foundry_pr5.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 79,
+        "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_pr5.py#function:test_pr5_v2_profile_binds_exact_verifier_and_confirmation_requirements:ce3ce49bfb98ec64",
+        "signature_hash": "ae62e0e126ba0382"
       }
     ],
     "test_pr_ready_requires_commit_approval": [
@@ -125282,11 +125414,11 @@
     ],
     "test_ready_is_required_and_actual_origin_is_exact": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 280,
-        "end_line": 297,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_ready_is_required_and_actual_origin_is_exact:bec4674efe304679",
+        "line": 190,
+        "end_line": 207,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_ready_is_required_and_actual_origin_is_exact:49b958c58777e418",
         "signature_hash": "eab245fcc0d0c0fd"
       }
     ],
@@ -126082,11 +126214,11 @@
     ],
     "test_registry_never_evicts_active_or_incomplete_dissolution": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_lifecycle.py",
         "kind": "function",
-        "line": 497,
-        "end_line": 529,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_registry_never_evicts_active_or_incomplete_dissolution:c97c0319092b9e04",
+        "line": 168,
+        "end_line": 200,
+        "semantic_id": "tests/pascal_spatial_presentation_test_lifecycle.py#function:test_registry_never_evicts_active_or_incomplete_dissolution:c43c3c0646c93a00",
         "signature_hash": "85547c31d7706b59"
       }
     ],
@@ -126252,11 +126384,11 @@
     ],
     "test_rejected_parent_command_can_retry_without_sequence_desynchronization": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_lifecycle.py",
         "kind": "function",
-        "line": 350,
-        "end_line": 384,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_rejected_parent_command_can_retry_without_sequence_desynchronization:fd059f80afd19c0a",
+        "line": 21,
+        "end_line": 55,
+        "semantic_id": "tests/pascal_spatial_presentation_test_lifecycle.py#function:test_rejected_parent_command_can_retry_without_sequence_desynchronization:7fc7be0da4687732",
         "signature_hash": "49a0c3c4618793f2"
       }
     ],
@@ -129298,11 +129430,11 @@
     ],
     "test_scene_asset_tampering_fails_closed": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 167,
-        "end_line": 186,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_scene_asset_tampering_fails_closed:330b8e33ba466671",
+        "line": 77,
+        "end_line": 96,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_scene_asset_tampering_fails_closed:7c12171a869cd193",
         "signature_hash": "4831e24b0306d1fe"
       }
     ],
@@ -131006,11 +131138,11 @@
     ],
     "test_source_lock_rejects_recomputed_but_unapproved_package_identity": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_contracts.py",
         "kind": "function",
-        "line": 189,
-        "end_line": 195,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_source_lock_rejects_recomputed_but_unapproved_package_identity:fbf86df0565669d7",
+        "line": 99,
+        "end_line": 105,
+        "semantic_id": "tests/pascal_spatial_presentation_test_contracts.py#function:test_source_lock_rejects_recomputed_but_unapproved_package_identity:390b0411f0fe549f",
         "signature_hash": "7c50f910fb0d258a"
       }
     ],
@@ -132312,11 +132444,11 @@
     ],
     "test_static_workbench_has_exact_cleanup_3d_dimensions_and_no_remote_dependencies": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_lifecycle.py",
         "kind": "function",
-        "line": 586,
-        "end_line": 597,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_static_workbench_has_exact_cleanup_3d_dimensions_and_no_remote_dependencies:44fb127f6503b16e",
+        "line": 257,
+        "end_line": 268,
+        "semantic_id": "tests/pascal_spatial_presentation_test_lifecycle.py#function:test_static_workbench_has_exact_cleanup_3d_dimensions_and_no_remote_dependencies:9735ede91538ae9e",
         "signature_hash": "b14180ead217c8d5"
       }
     ],
@@ -136260,11 +136392,11 @@
     ],
     "test_view_storey_selection_and_dimension_postconditions_are_exact": [
       {
-        "file": "tests/test_aura_pascal_spatial_presentation.py",
+        "file": "tests/pascal_spatial_presentation_test_lifecycle.py",
         "kind": "function",
-        "line": 407,
-        "end_line": 444,
-        "semantic_id": "tests/test_aura_pascal_spatial_presentation.py#function:test_view_storey_selection_and_dimension_postconditions_are_exact:214a1cef78b9fc42",
+        "line": 78,
+        "end_line": 115,
+        "semantic_id": "tests/pascal_spatial_presentation_test_lifecycle.py#function:test_view_storey_selection_and_dimension_postconditions_are_exact:ccc72724771fb5c6",
         "signature_hash": "77c51a40c9e51c8d"
       }
     ],
@@ -143866,8 +143998,8 @@
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
         "kind": "method",
-        "line": 148,
-        "end_line": 149,
+        "line": 149,
+        "end_line": 150,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#method:_BoundedStreamCapture.write_log:cb5d054ec86d0122",
         "signature_hash": "8acff981f17e6adf"
       }
@@ -144213,9 +144345,9 @@
     {
       "path": ".gitignore",
       "role": "support_file",
-      "bytes": 1804,
-      "lines": 92,
-      "tokens_est": 451,
+      "bytes": 1893,
+      "lines": 95,
+      "tokens_est": 474,
       "symbol_count": 0,
       "commands": [
         "!Aura_Sandbox"
@@ -144226,40 +144358,40 @@
         ]
       },
       "topology": {},
-      "digest8": "02bd391e34ea504c",
+      "digest8": "32592f8b14388d4c",
       "vector": [
-        -0.063992,
-        -0.043784,
-        -0.232391,
-        -0.194221,
-        -0.153805,
-        0.268317,
-        0.111144,
-        -0.284034,
-        -0.070728,
-        -0.055011,
-        0.097672,
-        0.057256,
-        0.081954,
-        -0.180749,
-        0.205447,
-        -0.104408,
-        -0.232391,
-        0.259335,
-        0.102162,
-        0.239127,
-        -0.111144,
-        -0.263826,
-        -0.023576,
-        0.182994,
-        0.205447,
-        -0.232391,
-        0.160541,
-        -0.281788,
-        0.030312,
-        0.115634,
-        0.243618,
-        0.142578
+        0.019214,
+        -0.216476,
+        -0.27796,
+        0.137059,
+        0.134497,
+        0.065327,
+        -0.01409,
+        -0.034585,
+        -0.203667,
+        0.224162,
+        -0.12425,
+        0.231847,
+        -0.303579,
+        -0.106317,
+        -0.034585,
+        0.021776,
+        -0.157554,
+        0.206229,
+        -0.298455,
+        0.073013,
+        0.162677,
+        -0.090946,
+        -0.11144,
+        0.326635,
+        -0.29077,
+        -0.024338,
+        -0.070451,
+        -0.257466,
+        0.162677,
+        -0.026899,
+        0.052518,
+        0.254904
       ]
     },
     {
@@ -150647,7 +150779,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 309,
+        "hub_rank": 310,
         "node_count": 11,
         "edge_count": 49,
         "degree": 49,
@@ -153033,9 +153165,9 @@
     {
       "path": "aura_bilateral_live_repair_foundry_service.py",
       "role": "python_module",
-      "bytes": 14527,
-      "lines": 316,
-      "tokens_est": 3632,
+      "bytes": 14600,
+      "lines": 317,
+      "tokens_est": 3650,
       "symbol_count": 9,
       "commands": [],
       "command_lines": {},
@@ -153071,40 +153203,40 @@
           "import_module": 5
         }
       },
-      "digest8": "bda79a9cde07c5f9",
+      "digest8": "d14fe0772bf01140",
       "vector": [
-        -0.148437,
-        -0.168526,
-        -0.251115,
-        0.193079,
-        -0.271204,
-        -0.273436,
-        0.208704,
-        0.003348,
-        -0.222097,
-        0.206472,
-        -0.179687,
-        -0.202008,
-        0.146205,
-        -0.085937,
-        -0.023437,
-        -0.16183,
-        0.282365,
-        -0.007812,
-        -0.103794,
-        0.112723,
-        0.014509,
-        0.088169,
-        0.143972,
-        0.226561,
-        0.257811,
-        0.253347,
-        0.159597,
-        0.088169,
-        0.186383,
-        0.003348,
-        -0.226561,
-        0.059151
+        0.00832,
+        -0.074878,
+        0.082009,
+        0.153321,
+        0.172338,
+        0.255536,
+        -0.224634,
+        -0.303077,
+        0.16283,
+        0.158075,
+        0.124796,
+        -0.108157,
+        0.020205,
+        0.212748,
+        0.165207,
+        0.103403,
+        -0.108157,
+        0.3007,
+        -0.174715,
+        -0.079632,
+        0.246027,
+        0.129551,
+        0.26029,
+        -0.06537,
+        -0.041599,
+        -0.241273,
+        0.184223,
+        0.191355,
+        -0.070124,
+        0.207994,
+        0.139059,
+        0.279306
       ]
     },
     {
@@ -158405,7 +158537,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 37,
+        "hub_rank": 38,
         "node_count": 36,
         "edge_count": 267,
         "degree": 267,
@@ -160943,17 +161075,17 @@
     {
       "path": "aura_construction_pascal_spatial_foundry_p4_server.py",
       "role": "python_module",
-      "bytes": 75112,
-      "lines": 1524,
-      "tokens_est": 18775,
-      "symbol_count": 37,
+      "bytes": 76777,
+      "lines": 1567,
+      "tokens_est": 19191,
+      "symbol_count": 38,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 39,
-        "node_count": 45,
-        "edge_count": 266,
-        "degree": 266,
+        "hub_rank": 37,
+        "node_count": 46,
+        "edge_count": 270,
+        "degree": 270,
         "symbols": [
           "Handler",
           "P4FoundryShowcaseState",
@@ -160995,45 +161127,45 @@
           "aura_unified_memory_continuity_toolchain.py"
         ],
         "edge_kinds": {
-          "call": 168,
-          "defines": 88,
+          "call": 170,
+          "defines": 90,
           "import_module": 10
         }
       },
-      "digest8": "0c75fc4494eafeb4",
+      "digest8": "3855adf036e1844e",
       "vector": [
-        0.014023,
-        0.17975,
-        -0.207796,
-        -0.077764,
-        -0.205246,
-        0.223094,
-        0.223094,
-        0.200147,
-        0.274087,
-        0.136406,
-        -0.042069,
-        0.266438,
-        -0.220544,
-        -0.090512,
-        0.047168,
-        0.161902,
-        -0.03442,
-        -0.146605,
-        -0.029321,
-        0.098161,
-        0.077764,
-        0.31998,
-        0.184849,
-        -0.17975,
-        -0.03697,
-        -0.230743,
-        -0.077764,
-        -0.174651,
-        0.297033,
-        -0.087963,
-        -0.210346,
-        -0.212895
+        -0.032203,
+        0.17294,
+        0.194408,
+        -0.242116,
+        0.058442,
+        -0.075139,
+        -0.015505,
+        0.125232,
+        -0.275511,
+        0.082296,
+        -0.285053,
+        -0.294594,
+        -0.115691,
+        0.175325,
+        0.060827,
+        -0.218262,
+        -0.134774,
+        0.113305,
+        0.29698,
+        -0.082296,
+        -0.065598,
+        0.23496,
+        0.027432,
+        -0.118076,
+        -0.118076,
+        -0.244501,
+        0.239731,
+        -0.187252,
+        0.239731,
+        0.084681,
+        -0.058442,
+        -0.258814
       ]
     },
     {
@@ -162197,7 +162329,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 308,
+        "hub_rank": 309,
         "node_count": 13,
         "edge_count": 49,
         "degree": 49,
@@ -164926,7 +165058,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 306,
+        "hub_rank": 307,
         "node_count": 24,
         "edge_count": 49,
         "degree": 49,
@@ -166151,7 +166283,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 38,
+        "hub_rank": 39,
         "node_count": 52,
         "edge_count": 266,
         "degree": 266,
@@ -168179,7 +168311,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 27,
+        "hub_rank": 28,
         "node_count": 73,
         "edge_count": 333,
         "degree": 333,
@@ -175369,10 +175501,10 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 28,
+        "hub_rank": 27,
         "node_count": 27,
-        "edge_count": 333,
-        "degree": 333,
+        "edge_count": 334,
+        "degree": 334,
         "symbols": [
           "BridgeDirection",
           "PascalBridgeAction",
@@ -175402,45 +175534,45 @@
           "aura_pascal_spatial_presentation_part5.py"
         ],
         "edge_kinds": {
-          "call": 277,
+          "call": 278,
           "defines": 52,
           "import_module": 4
         }
       },
-      "digest8": "2372ccb4d9afc4ce",
+      "digest8": "afda6262b402f591",
       "vector": [
-        0.05655,
-        0.023285,
-        -0.267227,
-        -0.220656,
-        -0.214003,
-        0.143038,
-        0.265009,
-        -0.116427,
-        -0.143038,
-        -0.032156,
-        0.202915,
-        0.118644,
-        -0.134168,
-        -0.189609,
-        0.185174,
-        0.007762,
-        -0.149691,
-        -0.278315,
-        0.260574,
-        0.083162,
-        0.253921,
-        0.24505,
-        -0.085379,
-        -0.023285,
-        -0.165215,
-        -0.096468,
-        -0.136385,
-        -0.256138,
-        0.28275,
-        0.003326,
-        -0.220656,
-        -0.067638
+        0.226566,
+        -0.069628,
+        0.127098,
+        -0.219935,
+        -0.19562,
+        -0.24867,
+        0.259722,
+        -0.19341,
+        -0.197831,
+        0.228776,
+        -0.129308,
+        0.069628,
+        -0.151412,
+        -0.124888,
+        0.023209,
+        -0.0851,
+        0.162464,
+        0.023209,
+        0.13815,
+        -0.268564,
+        -0.264143,
+        -0.124888,
+        -0.175727,
+        0.120467,
+        -0.0851,
+        0.272984,
+        -0.222145,
+        0.049734,
+        0.219935,
+        -0.177937,
+        0.208883,
+        0.093942
       ]
     },
     {
@@ -175673,17 +175805,17 @@
     {
       "path": "aura_pascal_spatial_presentation_part5.py",
       "role": "python_module",
-      "bytes": 8436,
-      "lines": 241,
-      "tokens_est": 2109,
+      "bytes": 8651,
+      "lines": 245,
+      "tokens_est": 2163,
       "symbol_count": 8,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 310,
+        "hub_rank": 306,
         "node_count": 9,
-        "edge_count": 49,
-        "degree": 49,
+        "edge_count": 50,
+        "degree": 50,
         "symbols": [
           "PascalPresentationRegistry",
           "__init__",
@@ -175703,45 +175835,45 @@
           "aura_pascal_spatial_presentation_part4.py"
         ],
         "edge_kinds": {
-          "call": 29,
+          "call": 30,
           "defines": 16,
           "import_module": 4
         }
       },
-      "digest8": "fe5cd881f6a52fa2",
+      "digest8": "09849bc16f70230c",
       "vector": [
-        0.028573,
-        0.274548,
-        -0.122988,
-        0.207464,
-        -0.10808,
-        -0.182618,
-        0.195041,
-        -0.137895,
-        -0.204979,
-        0.023604,
-        -0.187587,
-        0.033542,
-        -0.125472,
-        -0.304363,
-        -0.195041,
-        0.095657,
-        0.214918,
-        -0.175164,
-        -0.177649,
-        0.013665,
-        -0.100626,
-        -0.182618,
-        0.177649,
-        0.098142,
-        0.25964,
-        -0.284486,
-        -0.095657,
-        0.299394,
-        -0.162741,
-        -0.214918,
-        -0.125472,
-        0.01615
+        -0.050073,
+        0.219553,
+        0.196442,
+        -0.121974,
+        0.101431,
+        -0.211849,
+        -0.073184,
+        -0.039802,
+        -0.232392,
+        -0.062913,
+        0.258071,
+        0.299157,
+        0.191306,
+        -0.240096,
+        -0.032098,
+        0.247799,
+        0.001284,
+        -0.178467,
+        -0.170763,
+        0.250367,
+        -0.160492,
+        0.026963,
+        0.181035,
+        0.311996,
+        -0.304293,
+        0.098863,
+        0.019259,
+        -0.101431,
+        -0.121974,
+        0.070616,
+        -0.039802,
+        -0.219553
       ]
     },
     {
@@ -183537,7 +183669,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 307,
+        "hub_rank": 308,
         "node_count": 14,
         "edge_count": 49,
         "degree": 49,
@@ -191165,47 +191297,47 @@
     {
       "path": "package.json",
       "role": "schema_or_lexicon",
-      "bytes": 138,
+      "bytes": 186,
       "lines": 2,
-      "tokens_est": 35,
+      "tokens_est": 47,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "10f3e549a4e13c45",
+      "digest8": "56720eae9802571b",
       "vector": [
-        0.011021,
-        -0.202045,
-        0.135921,
-        -0.28776,
-        -0.23878,
-        -0.055103,
-        0.106533,
-        -0.089389,
-        0.150615,
-        -0.273066,
-        -0.035511,
-        0.275515,
-        0.06245,
-        0.094287,
-        0.135921,
-        0.035511,
-        0.143268,
-        -0.260821,
-        0.133472,
-        0.145717,
-        0.224086,
-        -0.057552,
-        -0.297556,
-        0.047756,
-        0.199595,
-        -0.011021,
-        0.260821,
-        -0.167758,
-        0.204494,
-        0.275515,
-        0.177554,
-        0.118778
+        -0.252237,
+        -0.148616,
+        -0.164977,
+        0.064082,
+        0.192246,
+        0.211334,
+        -0.088624,
+        -0.189519,
+        -0.107712,
+        0.143162,
+        -0.238603,
+        0.094078,
+        0.107712,
+        0.034086,
+        -0.1977,
+        0.025905,
+        -0.110439,
+        0.211334,
+        -0.189519,
+        0.189519,
+        -0.110439,
+        -0.20588,
+        -0.339498,
+        -0.222242,
+        -0.222242,
+        -0.140435,
+        -0.137708,
+        0.145889,
+        -0.235876,
+        -0.055901,
+        -0.181338,
+        -0.24133
       ]
     },
     {
@@ -192400,47 +192532,47 @@
     {
       "path": "requirements.txt",
       "role": "support_file",
-      "bytes": 424,
-      "lines": 20,
-      "tokens_est": 106,
+      "bytes": 442,
+      "lines": 21,
+      "tokens_est": 110,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "4a52f6ba36d65599",
+      "digest8": "0c89ac55dd8956e3",
       "vector": [
-        0.226811,
-        -0.15307,
-        -0.264799,
-        -0.09497,
-        -0.222342,
-        -0.09497,
-        -0.193292,
-        -0.204465,
-        0.137428,
-        0.204465,
-        0.048044,
-        0.186589,
-        0.144131,
-        -0.132958,
-        0.222342,
-        0.09497,
-        -0.244688,
-        0.083797,
-        -0.208935,
-        0.188823,
-        -0.2067,
-        -0.182119,
-        0.229046,
-        -0.141897,
-        0.001117,
-        0.110612,
-        -0.072624,
-        0.193292,
-        -0.224577,
-        -0.213404,
-        -0.061451,
-        -0.253626
+        -0.126914,
+        0.054033,
+        0.255085,
+        -0.119375,
+        0.081677,
+        -0.22744,
+        0.177177,
+        0.084191,
+        -0.046493,
+        0.255085,
+        0.245032,
+        0.3154,
+        0.136967,
+        0.290269,
+        0.089217,
+        -0.126914,
+        -0.285243,
+        -0.008796,
+        0.059059,
+        0.126914,
+        0.285243,
+        -0.041467,
+        0.272677,
+        0.136967,
+        0.094243,
+        -0.202309,
+        -0.028901,
+        -0.09173,
+        0.177177,
+        -0.109322,
+        0.086704,
+        -0.252572
       ]
     },
     {
@@ -200679,6 +200811,52 @@
       ]
     },
     {
+      "path": ".aura/refactor_objectives/construction_pascal_spatial_foundry_pr5.v1.json",
+      "role": "schema_or_lexicon",
+      "bytes": 6107,
+      "lines": 105,
+      "tokens_est": 1527,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "59fbe9375b3d286b",
+      "vector": [
+        0.179977,
+        0.095777,
+        0.177872,
+        0.245232,
+        -0.102092,
+        0.152612,
+        0.224182,
+        -0.144192,
+        -0.150507,
+        0.154717,
+        0.255757,
+        -0.222077,
+        0.154717,
+        -0.259967,
+        -0.173662,
+        -0.163137,
+        -0.121037,
+        0.091567,
+        0.249442,
+        -0.226287,
+        0.169452,
+        -0.268387,
+        0.034732,
+        0.152612,
+        0.169452,
+        -0.249442,
+        -0.083147,
+        -0.154717,
+        0.070517,
+        -0.036837,
+        -0.057887,
+        -0.243127
+      ]
+    },
+    {
       "path": ".aura/refactor_objectives/construction_spatial_foundry_pr1.v1.json",
       "role": "schema_or_lexicon",
       "bytes": 3097,
@@ -201056,86 +201234,178 @@
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "9bde25d982006268",
+      "digest8": "b3fbf96a3003eb9a",
       "vector": [
-        -0.242696,
-        0.159634,
-        -0.157039,
-        0.253079,
-        -0.003894,
-        0.027255,
-        0.12589,
-        -0.086955,
-        0.170017,
-        0.110316,
-        0.206356,
-        -0.001298,
-        0.131082,
-        0.060998,
-        -0.299801,
-        -0.003894,
-        0.198569,
-        -0.253079,
-        -0.06619,
-        0.25827,
-        -0.175208,
-        0.190782,
-        0.310184,
-        0.133677,
-        0.198569,
-        -0.304992,
-        0.266057,
-        -0.203761,
-        -0.014276,
-        0.024659,
-        -0.081764,
-        -0.016872
+        0.091997,
+        0.226375,
+        0.003101,
+        0.108536,
+        -0.197432,
+        0.032044,
+        0.100267,
+        -0.166422,
+        -0.255318,
+        0.209836,
+        0.015505,
+        0.19123,
+        -0.218106,
+        -0.257385,
+        0.069256,
+        -0.244981,
+        0.100267,
+        0.203634,
+        -0.01137,
+        0.149883,
+        -0.26152,
+        -0.044448,
+        -0.253251,
+        -0.244981,
+        0.056852,
+        0.236712,
+        0.226375,
+        0.201567,
+        0.23051,
+        0.040313,
+        -0.046515,
+        0.22224
       ]
     },
     {
       "path": ".aura/runtime_profiles/construction_foundry_p4.confirmation.template.json",
       "role": "schema_or_lexicon",
-      "bytes": 1360,
+      "bytes": 1323,
       "lines": 25,
-      "tokens_est": 340,
+      "tokens_est": 331,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "e9dbf19b283952ac",
+      "digest8": "78295cd439417790",
       "vector": [
-        -0.091227,
-        0.281852,
-        -0.104844,
-        -0.183817,
-        0.219218,
-        -0.03404,
-        0.031317,
-        -0.211049,
-        -0.279129,
-        0.080335,
-        -0.181093,
-        0.170201,
-        -0.123906,
-        0.074888,
-        -0.104844,
-        -0.140245,
-        -0.230111,
-        -0.25462,
-        0.055826,
-        0.3227,
-        -0.333593,
-        0.03404,
-        -0.175647,
-        -0.058549,
-        0.208325,
-        -0.129352,
-        0.069442,
-        -0.004085,
-        -0.069442,
-        0.24645,
-        -0.191986,
-        0.189263
+        -0.085883,
+        -0.088302,
+        0.146363,
+        -0.112494,
+        -0.071367,
+        -0.192329,
+        0.267325,
+        -0.165717,
+        0.277002,
+        -0.03024,
+        0.168137,
+        0.027821,
+        0.272163,
+        0.049594,
+        -0.105237,
+        -0.042337,
+        -0.168137,
+        0.15604,
+        -0.214102,
+        0.214102,
+        -0.151202,
+        0.289098,
+        0.163298,
+        -0.073787,
+        -0.165717,
+        0.136687,
+        0.277002,
+        0.279421,
+        -0.076206,
+        -0.262487,
+        0.119752,
+        0.202006
+      ]
+    },
+    {
+      "path": ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
+      "role": "schema_or_lexicon",
+      "bytes": 4156,
+      "lines": 147,
+      "tokens_est": 1039,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "092754d131b957aa",
+      "vector": [
+        0.232275,
+        0.060132,
+        -0.279438,
+        0.185113,
+        -0.140308,
+        0.057774,
+        0.078997,
+        0.130876,
+        -0.145025,
+        0.081355,
+        0.142666,
+        0.255856,
+        0.140308,
+        -0.076639,
+        0.170964,
+        -0.286512,
+        -0.008253,
+        -0.112011,
+        0.187471,
+        0.060132,
+        0.218126,
+        0.232275,
+        -0.086072,
+        0.149741,
+        0.038909,
+        -0.248782,
+        0.267647,
+        -0.300661,
+        -0.156815,
+        0.23935,
+        -0.067207,
+        -0.196903
+      ]
+    },
+    {
+      "path": ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json",
+      "role": "schema_or_lexicon",
+      "bytes": 10465,
+      "lines": 301,
+      "tokens_est": 2617,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1fd2021ba9a3ab5e",
+      "vector": [
+        -0.110987,
+        -0.162391,
+        0.218469,
+        -0.132016,
+        -0.234825,
+        0.230151,
+        0.150708,
+        -0.297912,
+        -0.286229,
+        0.078275,
+        -0.274546,
+        0.038553,
+        -0.239498,
+        0.213796,
+        -0.073602,
+        -0.234825,
+        0.012851,
+        0.241834,
+        -0.146035,
+        -0.160055,
+        0.141362,
+        -0.099304,
+        -0.178747,
+        0.085285,
+        0.110987,
+        0.050236,
+        0.232488,
+        -0.171737,
+        0.141362,
+        -0.19744,
+        0.019861,
+        0.125006
       ]
     },
     {
@@ -201734,6 +202004,52 @@
         0.21582,
         0.023432,
         -0.262684
+      ]
+    },
+    {
+      "path": ".aura/waboose_requests/construction_pascal_spatial_foundry_pr5.v1.json",
+      "role": "schema_or_lexicon",
+      "bytes": 6304,
+      "lines": 127,
+      "tokens_est": 1576,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7bce841098e8f474",
+      "vector": [
+        -0.094171,
+        -0.003979,
+        -0.271901,
+        -0.017243,
+        -0.064991,
+        -0.107434,
+        -0.322303,
+        -0.229458,
+        -0.006632,
+        0.15253,
+        0.226806,
+        -0.165794,
+        -0.128656,
+        0.094171,
+        0.27986,
+        -0.301081,
+        -0.248027,
+        -0.184362,
+        0.072949,
+        -0.001326,
+        0.210889,
+        -0.011937,
+        0.035811,
+        -0.041117,
+        0.171099,
+        -0.144572,
+        0.168446,
+        0.240069,
+        -0.194973,
+        -0.29047,
+        -0.197626,
+        0.04377
       ]
     },
     {
@@ -208256,9 +208572,9 @@
     {
       "path": "aura_showcase/construction-foundry-director.js",
       "role": "interface_surface",
-      "bytes": 17559,
-      "lines": 468,
-      "tokens_est": 4384,
+      "bytes": 17762,
+      "lines": 478,
+      "tokens_est": 4435,
       "symbol_count": 0,
       "commands": [
         "!Number",
@@ -208282,78 +208598,80 @@
           9
         ],
         "!chapter": [
-          168,
-          204
+          85,
+          192
         ],
         "!lastCommittedReceipt": [
-          390
+          400
         ],
         "!manifest": [
-          191,
-          209
+          215,
+          231
         ],
         "!projection": [
-          98
+          122
         ],
         "!response": [
-          115
+          139
         ],
         "!result": [
-          123,
-          129
+          147,
+          153
         ],
         "!root": [
-          77
+          101
         ],
         "!session": [
-          191,
-          209,
-          220,
-          222,
-          337,
-          385,
-          386,
-          408
+          73,
+          74,
+          75,
+          85,
+          215,
+          231,
+          347,
+          395,
+          396,
+          418
         ],
         "!target": [
-          148
+          172
         ]
       },
       "topology": {},
-      "digest8": "4eef42a2714a1b57",
+      "digest8": "9c09f63c30502702",
       "vector": [
-        -0.046952,
-        -0.021572,
-        0.29313,
-        -0.229682,
-        -0.29313,
-        -0.118013,
-        0.013959,
-        -0.102786,
-        0.074869,
-        -0.318509,
-        0.255061,
-        0.189075,
-        0.011421,
-        -0.04949,
-        -0.227144,
-        0.072331,
-        -0.239834,
-        0.176386,
-        -0.031724,
-        0.216992,
-        0.016497,
-        0.206841,
-        -0.272827,
-        0.229682,
-        0.1104,
-        -0.178924,
-        -0.166234,
-        0.257599,
-        0.046952,
-        0.161158,
-        -0.046952,
-        0.072331
+        0.245892,
+        -0.023796,
+        -0.152974,
+        -0.173371,
+        0.225495,
+        0.1983,
+        -0.234561,
+        0.139377,
+        0.248158,
+        0.028329,
+        -0.112181,
+        -0.157507,
+        0.028329,
+        0.261756,
+        -0.214164,
+        0.032861,
+        0.288952,
+        0.125779,
+        -0.096317,
+        -0.279886,
+        -0.064589,
+        0.030595,
+        -0.27762,
+        0.123513,
+        -0.243626,
+        0.139377,
+        -0.236827,
+        -0.236827,
+        -0.121246,
+        -0.03966,
+        0.112181,
+        0.026062
       ]
     },
     {
@@ -209562,40 +209880,40 @@
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "7ad7df6300e21842",
+      "digest8": "ac584e82e55edb1d",
       "vector": [
-        0.141301,
-        0.233995,
-        -0.035043,
-        -0.053129,
-        0.010174,
-        -0.08252,
-        -0.084781,
-        0.019217,
-        -0.22043,
-        -0.249821,
-        0.039564,
-        0.148084,
-        0.152606,
-        -0.283733,
-        -0.281473,
-        -0.265647,
-        -0.263386,
-        0.21817,
-        0.200083,
-        -0.046347,
-        -0.041825,
-        0.091563,
-        0.071216,
-        0.091563,
-        -0.170692,
-        0.170692,
-        0.229474,
-        0.229474,
-        -0.066694,
-        -0.288255,
-        -0.145823,
-        0.252082
+        0.037025,
+        -0.20555,
+        0.021704,
+        0.075326,
+        -0.029364,
+        0.049792,
+        -0.31024,
+        -0.19789,
+        -0.297473,
+        0.10852,
+        -0.167249,
+        -0.315347,
+        0.121287,
+        -0.141714,
+        -0.256618,
+        -0.151928,
+        0.098306,
+        0.060005,
+        -0.215764,
+        0.259172,
+        -0.016597,
+        0.016597,
+        -0.287259,
+        -0.238744,
+        0.062559,
+        0.131501,
+        0.238744,
+        0.105967,
+        -0.182569,
+        -0.149375,
+        -0.049792,
+        -0.21321
       ]
     },
     {
@@ -209608,40 +209926,40 @@
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "e693519ea8e7ba05",
+      "digest8": "c9d5bee6c2a5fdbd",
       "vector": [
-        0.011657,
-        -0.301781,
-        0.094549,
-        -0.167081,
-        0.262925,
-        0.011657,
-        -0.03238,
-        0.089369,
-        -0.286239,
-        0.221479,
-        -0.009066,
-        -0.024609,
-        0.159309,
-        -0.076417,
-        -0.213708,
-        -0.110092,
-        -0.09973,
-        -0.094549,
-        -0.180032,
-        -0.216298,
-        -0.29401,
-        -0.247383,
-        -0.190394,
-        -0.255154,
-        -0.110092,
-        -0.110092,
-        0.198165,
-        -0.172261,
-        -0.270696,
-        -0.107501,
-        -0.182623,
-        -0.120453
+        -0.092533,
+        0.172802,
+        -0.208477,
+        -0.177261,
+        -0.248612,
+        -0.199558,
+        -0.030101,
+        -0.052398,
+        -0.130437,
+        0.072465,
+        -0.074695,
+        0.25753,
+        -0.195099,
+        0.26199,
+        0.068006,
+        0.208477,
+        -0.273138,
+        0.219625,
+        0.208477,
+        -0.132667,
+        -0.253071,
+        -0.099222,
+        -0.18395,
+        -0.250841,
+        -0.03456,
+        0.277598,
+        0.181721,
+        0.030101,
+        -0.146045,
+        0.012263,
+        0.105911,
+        0.181721
       ]
     },
     {
@@ -214585,6 +214903,144 @@
       ]
     },
     {
+      "path": "docs/AURA_CONSTRUCTION_FOUNDRY_EVIDENCE_GUIDE.md",
+      "role": "knowledge_artifact",
+      "bytes": 2663,
+      "lines": 51,
+      "tokens_est": 666,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6386213ae8e7b76f",
+      "vector": [
+        0.130904,
+        -0.283066,
+        0.054823,
+        0.189084,
+        0.211461,
+        -0.189084,
+        0.233838,
+        0.215936,
+        -0.139855,
+        0.032446,
+        -0.095101,
+        0.057061,
+        0.206985,
+        0.074962,
+        0.025733,
+        0.236075,
+        0.119716,
+        -0.204748,
+        0.057061,
+        0.10629,
+        0.253977,
+        -0.13538,
+        -0.245026,
+        -0.213698,
+        0.155519,
+        -0.117478,
+        -0.220411,
+        0.079438,
+        -0.278591,
+        0.191322,
+        -0.072725,
+        0.26964
+      ]
+    },
+    {
+      "path": "docs/AURA_CONSTRUCTION_FOUNDRY_OPERATOR_GUIDE.md",
+      "role": "knowledge_artifact",
+      "bytes": 2992,
+      "lines": 70,
+      "tokens_est": 748,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3eb8f454def671d4",
+      "vector": [
+        -0.049246,
+        -0.0777,
+        0.261552,
+        0.254986,
+        -0.174004,
+        0.189325,
+        0.254986,
+        0.24842,
+        0.027359,
+        -0.259364,
+        -0.244043,
+        -0.027359,
+        0.215589,
+        0.252798,
+        -0.235288,
+        0.123663,
+        0.228722,
+        0.174004,
+        -0.233099,
+        0.062379,
+        -0.114908,
+        -0.007661,
+        0.012038,
+        0.044869,
+        -0.213401,
+        0.088643,
+        0.160871,
+        -0.147739,
+        -0.169626,
+        0.246231,
+        -0.0777,
+        0.055812
+      ]
+    },
+    {
+      "path": "docs/AURA_CONSTRUCTION_FOUNDRY_VIDEO_SCRIPT.md",
+      "role": "knowledge_artifact",
+      "bytes": 2480,
+      "lines": 37,
+      "tokens_est": 616,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e29b22a40e6984b5",
+      "vector": [
+        0.213666,
+        0.142825,
+        -0.172533,
+        -0.007998,
+        -0.266226,
+        0.071984,
+        -0.039991,
+        -0.021709,
+        0.188529,
+        -0.268511,
+        0.222807,
+        -0.229663,
+        -0.044561,
+        0.213666,
+        0.131399,
+        -0.046847,
+        0.229663,
+        -0.234233,
+        0.225092,
+        0.206811,
+        0.170248,
+        -0.017139,
+        -0.245659,
+        0.131399,
+        0.053702,
+        -0.13597,
+        -0.231948,
+        0.154251,
+        0.172533,
+        0.275367,
+        0.028565,
+        0.188529
+      ]
+    },
+    {
       "path": "docs/AURA_CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY_P4.md",
       "role": "knowledge_artifact",
       "bytes": 7438,
@@ -215925,6 +216381,52 @@
       ]
     },
     {
+      "path": "docs/AURA_PASCAL_CONSTRUCTION_SPATIAL_FOUNDRY_MVP.md",
+      "role": "knowledge_artifact",
+      "bytes": 4761,
+      "lines": 86,
+      "tokens_est": 1188,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "361e1019d60413b0",
+      "vector": [
+        0.252132,
+        0.135201,
+        0.013398,
+        -0.235079,
+        0.144945,
+        -0.037759,
+        0.115713,
+        -0.264312,
+        -0.2838,
+        0.130329,
+        -0.062119,
+        -0.169306,
+        -0.208283,
+        0.132765,
+        0.054811,
+        -0.152253,
+        -0.115713,
+        0.278928,
+        -0.16687,
+        0.278928,
+        0.291109,
+        -0.013398,
+        0.130329,
+        -0.096224,
+        -0.181486,
+        -0.08648,
+        0.242388,
+        0.103532,
+        0.176614,
+        0.079172,
+        0.254568,
+        -0.140073
+      ]
+    },
+    {
       "path": "docs/AURA_PASCAL_SPATIAL_PRESENTATION_PR2.md",
       "role": "knowledge_artifact",
       "bytes": 7435,
@@ -215934,40 +216436,40 @@
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "ba82d8dad436a723",
+      "digest8": "5f465f6958404906",
       "vector": [
-        -0.037294,
-        -0.267842,
-        -0.068938,
-        0.08476,
-        0.279143,
-        0.202294,
-        -0.206815,
-        0.242979,
-        -0.261061,
-        -0.186472,
-        -0.145787,
-        0.129965,
-        0.089281,
-        -0.213595,
-        -0.159349,
-        -0.066678,
-        0.050856,
-        -0.005651,
-        0.236198,
-        0.161609,
-        0.209075,
-        -0.231678,
-        -0.035034,
-        -0.0825,
-        -0.071198,
-        0.068938,
-        0.263321,
-        0.193253,
-        -0.276883,
-        0.059897,
-        0.100582,
-        0.270102
+        -0.16435,
+        0.094414,
+        -0.201649,
+        0.255266,
+        0.054783,
+        -0.178337,
+        -0.162018,
+        -0.217967,
+        -0.227292,
+        -0.071102,
+        -0.229623,
+        0.297228,
+        -0.04779,
+        -0.001166,
+        0.101407,
+        -0.169012,
+        -0.075764,
+        0.266922,
+        -0.189993,
+        -0.12705,
+        -0.18533,
+        0.192324,
+        0.283241,
+        0.208642,
+        -0.017484,
+        -0.259929,
+        0.040796,
+        -0.099076,
+        -0.192324,
+        -0.24361,
+        0.04779,
+        0.092082
       ]
     },
     {
@@ -219798,40 +220300,40 @@
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "b4a8e54fd831eacc",
+      "digest8": "852af6d7f1734e9e",
       "vector": [
-        0.232442,
-        -0.17154,
-        0.098458,
-        -0.246653,
-        -0.051767,
-        -0.220262,
-        -0.214172,
-        -0.244623,
-        -0.078157,
-        0.096428,
-        0.250713,
-        -0.16951,
-        -0.244623,
-        -0.179661,
-        0.16748,
-        0.049737,
-        -0.199961,
-        0.057857,
-        -0.232442,
-        0.181691,
-        0.057857,
-        -0.134999,
-        -0.072067,
-        -0.204021,
-        0.183721,
-        0.250713,
-        -0.137029,
-        0.197931,
-        -0.212142,
-        0.175601,
-        -0.013195,
-        0.173571
+        0.227782,
+        -0.284432,
+        0.232503,
+        0.081435,
+        -0.185294,
+        0.171132,
+        0.230142,
+        0.180573,
+        -0.024785,
+        0.105039,
+        0.114481,
+        0.154608,
+        -0.206538,
+        0.249026,
+        0.128644,
+        -0.154608,
+        -0.166411,
+        0.121562,
+        0.253747,
+        0.213619,
+        0.260828,
+        -0.138085,
+        -0.128644,
+        -0.076714,
+        -0.265549,
+        -0.211259,
+        0.206538,
+        0.133365,
+        -0.081435,
+        0.093237,
+        0.008262,
+        0.102679
       ]
     },
     {
@@ -221087,6 +221589,52 @@
       ]
     },
     {
+      "path": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
+      "role": "python_module",
+      "bytes": 4923,
+      "lines": 116,
+      "tokens_est": 1230,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a7c34c16e1456e99",
+      "vector": [
+        -0.247257,
+        -0.156889,
+        0.299971,
+        0.094133,
+        0.011296,
+        0.028868,
+        -0.05899,
+        -0.154378,
+        0.274869,
+        -0.026357,
+        0.149358,
+        -0.144338,
+        -0.05648,
+        -0.006276,
+        -0.136807,
+        -0.217134,
+        0.194542,
+        0.17195,
+        0.209603,
+        0.036398,
+        -0.149358,
+        -0.146848,
+        0.006276,
+        -0.277379,
+        0.023847,
+        0.212113,
+        0.272359,
+        -0.28491,
+        -0.101664,
+        0.202073,
+        0.299971,
+        -0.151868
+      ]
+    },
+    {
       "path": "scripts/aura_exact_head_transport.py",
       "role": "python_module",
       "bytes": 14654,
@@ -221419,9 +221967,9 @@
     {
       "path": "scripts/aura_runtime_profile_v2_adapter.py",
       "role": "python_module",
-      "bytes": 48094,
-      "lines": 1128,
-      "tokens_est": 12024,
+      "bytes": 48852,
+      "lines": 1144,
+      "tokens_est": 12213,
       "symbol_count": 32,
       "commands": [
         "!r"
@@ -221432,86 +221980,86 @@
         ]
       },
       "topology": {},
-      "digest8": "48edfede1e356b44",
+      "digest8": "31e2065a40505393",
       "vector": [
-        0.264657,
-        0.176813,
-        -0.154289,
-        -0.097979,
-        0.154289,
-        -0.197085,
-        0.106989,
-        -0.102484,
-        -0.102484,
-        0.012388,
-        -0.125008,
-        0.055184,
-        0.224114,
-        -0.264657,
-        0.041669,
-        -0.239881,
-        0.233123,
-        -0.181318,
-        -0.122756,
-        -0.215104,
-        -0.07996,
-        0.24889,
-        0.034912,
-        0.235376,
-        0.282676,
-        -0.068698,
-        -0.050679,
-        -0.167804,
-        -0.244385,
-        -0.239881,
-        -0.161047,
-        0.199337
+        0.001293,
+        -0.01939,
+        0.14866,
+        0.153831,
+        -0.08144,
+        -0.089196,
+        -0.221051,
+        0.241734,
+        -0.11505,
+        0.109879,
+        -0.21588,
+        0.112464,
+        0.265002,
+        -0.159001,
+        -0.125391,
+        0.324466,
+        0.138318,
+        0.267588,
+        0.042659,
+        0.055586,
+        0.265002,
+        0.029732,
+        0.042659,
+        -0.290856,
+        -0.006463,
+        0.009049,
+        -0.135733,
+        0.171928,
+        -0.301198,
+        0.089196,
+        0.208124,
+        0.296027
       ]
     },
     {
       "path": "scripts/aura_runtime_refactor_harness.py",
       "role": "python_module",
-      "bytes": 34738,
-      "lines": 928,
-      "tokens_est": 8685,
+      "bytes": 35070,
+      "lines": 936,
+      "tokens_est": 8767,
       "symbol_count": 35,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "c2924a09174e8352",
+      "digest8": "f69cceef51fa555c",
       "vector": [
-        -0.312235,
-        -0.147626,
-        -0.092756,
-        -0.113659,
-        -0.205108,
-        0.278268,
-        0.226011,
-        -0.158077,
-        -0.165916,
-        0.048338,
-        -0.066628,
-        0.320074,
-        0.192044,
-        -0.100595,
-        -0.173754,
-        0.116272,
-        0.116272,
-        0.077079,
-        0.074466,
-        0.045725,
-        0.121497,
-        0.265204,
-        -0.1424,
-        -0.165916,
-        -0.223398,
-        0.296558,
-        -0.113659,
-        -0.257365,
-        0.158077,
-        0.139787,
-        -0.053563,
-        -0.108433
+        0.215651,
+        0.029786,
+        0.208502,
+        0.044083,
+        -0.096507,
+        -0.282372,
+        0.234714,
+        -0.232331,
+        -0.001191,
+        -0.010723,
+        0.075061,
+        0.198971,
+        -0.14893,
+        -0.253777,
+        0.017872,
+        0.301435,
+        -0.072678,
+        -0.175142,
+        -0.296669,
+        -0.11557,
+        -0.144165,
+        -0.153696,
+        0.129867,
+        0.134633,
+        0.048849,
+        -0.275223,
+        -0.070295,
+        0.275223,
+        -0.077444,
+        -0.301435,
+        0.113187,
+        -0.027403
       ]
     },
     {
@@ -222028,6 +222576,144 @@
         -0.032673,
         0.107031,
         0.059712
+      ]
+    },
+    {
+      "path": "tests/pascal_spatial_presentation_test_contracts.py",
+      "role": "python_module",
+      "bytes": 9074,
+      "lines": 258,
+      "tokens_est": 2269,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "787dc55b22664d13",
+      "vector": [
+        0.074085,
+        0.048214,
+        0.295163,
+        -0.118771,
+        0.292811,
+        -0.210494,
+        0.184624,
+        -0.055269,
+        -0.215198,
+        0.097604,
+        -0.194031,
+        0.050566,
+        0.139938,
+        0.278699,
+        -0.236365,
+        0.099955,
+        0.048214,
+        0.219902,
+        -0.252829,
+        -0.13053,
+        -0.008232,
+        0.196383,
+        0.064677,
+        -0.245773,
+        -0.224606,
+        0.182272,
+        -0.107011,
+        -0.283403,
+        0.034102,
+        0.161105,
+        -0.151697,
+        0.064677
+      ]
+    },
+    {
+      "path": "tests/pascal_spatial_presentation_test_lifecycle.py",
+      "role": "python_module",
+      "bytes": 8780,
+      "lines": 269,
+      "tokens_est": 2195,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cfb69c0303cda4b0",
+      "vector": [
+        -0.134149,
+        0.185839,
+        -0.274451,
+        -0.025845,
+        0.193223,
+        0.139071,
+        -0.089843,
+        0.11938,
+        0.286758,
+        -0.052921,
+        0.257221,
+        0.215376,
+        0.195685,
+        0.094766,
+        -0.070151,
+        0.183377,
+        0.178455,
+        -0.252298,
+        -0.08492,
+        -0.180916,
+        -0.207992,
+        -0.055382,
+        0.023384,
+        -0.185839,
+        0.259682,
+        -0.070151,
+        -0.200608,
+        0.22276,
+        -0.11938,
+        -0.033229,
+        0.30645,
+        0.143994
+      ]
+    },
+    {
+      "path": "tests/pascal_spatial_presentation_test_support.py",
+      "role": "python_module",
+      "bytes": 3619,
+      "lines": 121,
+      "tokens_est": 905,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6688cbcc0e635cdf",
+      "vector": [
+        0.196069,
+        0.174679,
+        -0.046344,
+        0.215082,
+        -0.196069,
+        0.089122,
+        0.243601,
+        0.253107,
+        0.174679,
+        -0.267367,
+        -0.032084,
+        0.243601,
+        0.169926,
+        -0.15329,
+        -0.074863,
+        -0.25073,
+        0.093875,
+        -0.184186,
+        0.174679,
+        -0.262613,
+        -0.005941,
+        0.089122,
+        -0.124771,
+        0.303015,
+        0.16755,
+        -0.108135,
+        -0.300639,
+        0.136654,
+        -0.036837,
+        -0.067733,
+        0.129524,
+        -0.022578
       ]
     },
     {
@@ -226593,47 +227279,93 @@
     {
       "path": "tests/test_aura_construction_pascal_spatial_foundry_p4.py",
       "role": "python_module",
-      "bytes": 49077,
-      "lines": 1067,
-      "tokens_est": 12257,
-      "symbol_count": 19,
+      "bytes": 60603,
+      "lines": 1322,
+      "tokens_est": 15133,
+      "symbol_count": 21,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "b6cffb173414e983",
+      "digest8": "81db0a24c1290c97",
       "vector": [
-        0.184964,
-        0.334509,
-        0.061655,
-        -0.053784,
-        -0.224318,
-        0.08002,
-        -0.31352,
-        -0.011806,
-        -0.276789,
-        0.08002,
-        -0.297778,
-        -0.166598,
-        0.098385,
-        0.129868,
-        0.05116,
-        -0.106256,
-        -0.24793,
-        -0.027548,
-        0.061655,
-        0.132492,
-        -0.132492,
-        0.208576,
-        0.142986,
-        0.187587,
-        -0.224318,
-        -0.003935,
-        -0.098385,
-        -0.213823,
-        -0.200705,
-        -0.198082,
-        -0.174469,
-        0.190211
+        0.137356,
+        -0.034046,
+        -0.04109,
+        -0.186664,
+        0.212492,
+        0.289975,
+        0.257103,
+        0.015262,
+        0.224232,
+        -0.160836,
+        0.254755,
+        0.254755,
+        -0.174924,
+        -0.069265,
+        -0.003522,
+        0.17962,
+        0.102137,
+        -0.045785,
+        -0.064569,
+        -0.196056,
+        0.15614,
+        -0.1444,
+        -0.200752,
+        -0.259451,
+        -0.299367,
+        -0.003522,
+        -0.015262,
+        0.073961,
+        0.238319,
+        -0.153792,
+        -0.221884,
+        -0.2031
+      ]
+    },
+    {
+      "path": "tests/test_aura_construction_pascal_spatial_foundry_pr5.py",
+      "role": "python_module",
+      "bytes": 8084,
+      "lines": 172,
+      "tokens_est": 2021,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9b3fb60ecc9f89c7",
+      "vector": [
+        0.259015,
+        0.029639,
+        -0.315715,
+        0.266747,
+        -0.01933,
+        0.001289,
+        0.029639,
+        0.101802,
+        0.00902,
+        0.016752,
+        0.003866,
+        0.181697,
+        0.284788,
+        0.233243,
+        0.266747,
+        -0.184275,
+        0.081184,
+        -0.153347,
+        0.222934,
+        0.176543,
+        0.114688,
+        -0.081184,
+        -0.256438,
+        -0.310561,
+        -0.063143,
+        -0.222934,
+        0.076029,
+        -0.109534,
+        0.063143,
+        -0.225511,
+        -0.189429,
+        0.143038
       ]
     },
     {
@@ -229867,47 +230599,47 @@
     {
       "path": "tests/test_aura_pascal_spatial_presentation.py",
       "role": "python_module",
-      "bytes": 20443,
-      "lines": 598,
-      "tokens_est": 5111,
-      "symbol_count": 22,
+      "bytes": 436,
+      "lines": 13,
+      "tokens_est": 109,
+      "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "53ddd23a1466f3f6",
+      "digest8": "043b979ff581c3cf",
       "vector": [
-        0.117295,
-        -0.085855,
-        0.09311,
-        0.122132,
-        0.303516,
-        -0.160827,
-        -0.168082,
-        0.206778,
-        -0.100366,
-        -0.030231,
-        -0.09311,
-        -0.272076,
-        0.056834,
-        -0.141479,
-        -0.228544,
-        0.158409,
-        0.117295,
-        0.214033,
-        -0.264821,
-        -0.230962,
-        -0.073763,
-        0.095529,
-        -0.160827,
-        0.303516,
-        0.107621,
-        0.293842,
-        0.279331,
-        -0.180175,
-        -0.105203,
-        -0.189848,
-        0.030231,
-        -0.001209
+        -0.216167,
+        0.142244,
+        -0.200486,
+        -0.086243,
+        0.142244,
+        -0.178086,
+        0.238567,
+        0.01232,
+        -0.00112,
+        -0.216167,
+        0.128804,
+        -0.225127,
+        -0.153445,
+        -0.204966,
+        -0.245288,
+        -0.249768,
+        0.249768,
+        0.245288,
+        -0.128804,
+        0.276649,
+        0.061602,
+        -0.122084,
+        -0.274409,
+        -0.01232,
+        0.238567,
+        -0.039201,
+        0.148965,
+        -0.153445,
+        0.153445,
+        -0.184806,
+        -0.025761,
+        -0.043681
       ]
     },
     {
@@ -235541,47 +236273,47 @@
     {
       "path": "tests/js/construction-foundry-director-contract.test.mjs",
       "role": "support_file",
-      "bytes": 4854,
+      "bytes": 6184,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "5f133ad2d9b9fde5",
+      "digest8": "ae95bf619af021e1",
       "vector": [
-        0.134202,
-        0.172546,
-        -0.177057,
-        -0.149991,
-        0.168035,
-        0.084581,
-        -0.224423,
-        -0.154502,
-        0.183824,
-        0.199612,
-        -0.237956,
-        -0.127436,
-        -0.005639,
-        0.084581,
-        -0.109392,
-        0.152247,
-        0.256,
-        0.197357,
-        -0.127436,
-        0.213145,
-        0.201868,
-        0.249233,
-        -0.271788,
-        0.204123,
-        0.168035,
-        -0.172546,
-        -0.253744,
-        0.127436,
-        0.163524,
-        -0.213145,
-        -0.053004,
-        -0.041727
+        -0.157671,
+        -0.253007,
+        -0.235895,
+        0.167449,
+        -0.172338,
+        -0.209006,
+        0.128337,
+        -0.262785,
+        -0.194339,
+        -0.147893,
+        -0.145449,
+        0.050113,
+        0.277452,
+        0.267674,
+        -0.020778,
+        0.233451,
+        0.030556,
+        -0.074558,
+        0.140559,
+        0.282341,
+        -0.257896,
+        -0.209006,
+        -0.015889,
+        -0.160116,
+        0.121003,
+        0.08678,
+        -0.055002,
+        0.233451,
+        0.140559,
+        -0.182116,
+        -0.03789,
+        -0.074558
       ]
     },
     {
@@ -236330,40 +237062,40 @@
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "42878936f2d5ecc6",
+      "digest8": "6de8c9673f700f87",
       "vector": [
-        -0.232105,
-        -0.204391,
-        0.218248,
-        -0.245962,
-        0.269057,
-        -0.072749,
-        0.248271,
-        -0.019631,
-        -0.234414,
-        0.269057,
-        0.012702,
-        0.262128,
-        0.063511,
-        -0.144344,
-        0.081987,
-        -0.072749,
-        0.239033,
-        -0.054273,
-        -0.112011,
-        -0.213629,
-        0.245962,
-        -0.139725,
-        0.172058,
-        -0.132796,
-        0.123558,
-        -0.199772,
-        0.035797,
-        0.015012,
-        0.158201,
-        -0.2552,
-        -0.072749,
-        -0.16051
+        0.198646,
+        -0.149278,
+        -0.109314,
+        0.090507,
+        -0.043491,
+        0.102262,
+        -0.245663,
+        0.088157,
+        0.198646,
+        -0.226856,
+        0.259768,
+        0.283276,
+        0.099911,
+        -0.081104,
+        -0.062297,
+        0.222154,
+        -0.168085,
+        0.257417,
+        -0.111665,
+        -0.29503,
+        -0.01528,
+        -0.01293,
+        0.081104,
+        0.191593,
+        0.280925,
+        0.273873,
+        0.146928,
+        0.165734,
+        0.059946,
+        -0.179839,
+        0.132822,
+        -0.186892
       ]
     },
     {
@@ -236752,7 +237484,7 @@
         },
         {
           "id": "aura_pascal_spatial_presentation_part1.py::PascalPresentationError",
-          "degree": 153
+          "degree": 154
         },
         {
           "id": "aura_node.py::main",
@@ -236839,11 +237571,11 @@
       "generated_by": "aura_topology_manager",
       "root": ".",
       "module_count": 637,
-      "node_count": 11210,
-      "edge_count": 27099,
+      "node_count": 11211,
+      "edge_count": 27102,
       "spectral_layout": true,
-      "spectral_sparsity": 0.053172,
-      "global_health": 0.971162
+      "spectral_sparsity": 0.053167,
+      "global_health": 0.971165
     },
     "file_index": {
       "aura_node.py": {
@@ -238028,8 +238760,47 @@
           "import_module": 9
         }
       },
-      "aura_human_agent_arena.py": {
+      "aura_pascal_spatial_presentation_part1.py": {
         "hub_rank": 27,
+        "node_count": 27,
+        "edge_count": 334,
+        "degree": 334,
+        "symbols": [
+          "BridgeDirection",
+          "PascalBridgeAction",
+          "PascalPackagePin",
+          "PascalPresentationError",
+          "PascalPresentationState",
+          "PascalSourceLock",
+          "__post_init__",
+          "_authority_path",
+          "_body",
+          "_bridge_encode",
+          "_clean_payload",
+          "_hex40",
+          "_hex64",
+          "_identifier",
+          "_required_text",
+          "_strict_bool",
+          "_strict_keys",
+          "_timestamp",
+          "_utc_timestamp",
+          "bridge_sha256"
+        ],
+        "neighbor_files": [
+          "aura_pascal_spatial_presentation_part2.py",
+          "aura_pascal_spatial_presentation_part3.py",
+          "aura_pascal_spatial_presentation_part4.py",
+          "aura_pascal_spatial_presentation_part5.py"
+        ],
+        "edge_kinds": {
+          "call": 278,
+          "defines": 52,
+          "import_module": 4
+        }
+      },
+      "aura_human_agent_arena.py": {
+        "hub_rank": 28,
         "node_count": 73,
         "edge_count": 333,
         "degree": 333,
@@ -238071,45 +238842,6 @@
           "call": 186,
           "defines": 144,
           "import_module": 3
-        }
-      },
-      "aura_pascal_spatial_presentation_part1.py": {
-        "hub_rank": 28,
-        "node_count": 27,
-        "edge_count": 333,
-        "degree": 333,
-        "symbols": [
-          "BridgeDirection",
-          "PascalBridgeAction",
-          "PascalPackagePin",
-          "PascalPresentationError",
-          "PascalPresentationState",
-          "PascalSourceLock",
-          "__post_init__",
-          "_authority_path",
-          "_body",
-          "_bridge_encode",
-          "_clean_payload",
-          "_hex40",
-          "_hex64",
-          "_identifier",
-          "_required_text",
-          "_strict_bool",
-          "_strict_keys",
-          "_timestamp",
-          "_utc_timestamp",
-          "bridge_sha256"
-        ],
-        "neighbor_files": [
-          "aura_pascal_spatial_presentation_part2.py",
-          "aura_pascal_spatial_presentation_part3.py",
-          "aura_pascal_spatial_presentation_part4.py",
-          "aura_pascal_spatial_presentation_part5.py"
-        ],
-        "edge_kinds": {
-          "call": 277,
-          "defines": 52,
-          "import_module": 4
         }
       },
       "aura_gate_audit.py": {
@@ -238448,8 +239180,59 @@
           "defines": 128
         }
       },
-      "aura_coding_relationship_compass.py": {
+      "aura_construction_pascal_spatial_foundry_p4_server.py": {
         "hub_rank": 37,
+        "node_count": 46,
+        "edge_count": 270,
+        "degree": 270,
+        "symbols": [
+          "Handler",
+          "P4FoundryShowcaseState",
+          "_P4U7Bridge",
+          "__init__",
+          "_adapt_runtime_proof_identity",
+          "_bilateral_identity_digest",
+          "_cleanup_external_roots",
+          "_compile_confirmation_bundle",
+          "_confirmation_intent_contract",
+          "_content_security_policy",
+          "_current_demo_identity",
+          "_execute_chapter",
+          "_git",
+          "_initial_evidence",
+          "_p4_finalization_contract",
+          "_p4_observation_contract",
+          "_p4_prediction_contract",
+          "_payload",
+          "_projection_and_identity",
+          "_require_session"
+        ],
+        "neighbor_files": [
+          "aura_architect_council_calling_benchmark.py",
+          "aura_architect_loop.py",
+          "aura_bilateral_intent_compiler.py",
+          "aura_bilateral_live_repair_foundry.py",
+          "aura_bilateral_live_repair_foundry_contracts.py",
+          "aura_bilateral_live_repair_foundry_service.py",
+          "aura_bilateral_live_repair_foundry_service_capture.py",
+          "aura_bilateral_live_repair_foundry_service_preview.py",
+          "aura_coding_relationship_compass.py",
+          "aura_construction_foundry_director.py",
+          "aura_construction_pascal_spatial_foundry_p3_server.py",
+          "aura_event_contracts.py",
+          "aura_model_cognome.py",
+          "aura_pascal_spatial_presentation.py",
+          "aura_showcase_live_repair_server.py",
+          "aura_unified_memory_continuity_toolchain.py"
+        ],
+        "edge_kinds": {
+          "call": 170,
+          "defines": 90,
+          "import_module": 10
+        }
+      },
+      "aura_coding_relationship_compass.py": {
+        "hub_rank": 38,
         "node_count": 36,
         "edge_count": 267,
         "degree": 267,
@@ -238504,7 +239287,7 @@
         }
       },
       "aura_financial_contracts.py": {
-        "hub_rank": 38,
+        "hub_rank": 39,
         "node_count": 52,
         "edge_count": 266,
         "degree": 266,
@@ -238537,57 +239320,6 @@
           "call": 163,
           "defines": 102,
           "import_module": 1
-        }
-      },
-      "aura_construction_pascal_spatial_foundry_p4_server.py": {
-        "hub_rank": 39,
-        "node_count": 45,
-        "edge_count": 266,
-        "degree": 266,
-        "symbols": [
-          "Handler",
-          "P4FoundryShowcaseState",
-          "_P4U7Bridge",
-          "__init__",
-          "_adapt_runtime_proof_identity",
-          "_bilateral_identity_digest",
-          "_cleanup_external_roots",
-          "_compile_confirmation_bundle",
-          "_confirmation_intent_contract",
-          "_content_security_policy",
-          "_current_demo_identity",
-          "_execute_chapter",
-          "_git",
-          "_initial_evidence",
-          "_p4_finalization_contract",
-          "_p4_observation_contract",
-          "_p4_prediction_contract",
-          "_payload",
-          "_projection_and_identity",
-          "_require_session"
-        ],
-        "neighbor_files": [
-          "aura_architect_council_calling_benchmark.py",
-          "aura_architect_loop.py",
-          "aura_bilateral_intent_compiler.py",
-          "aura_bilateral_live_repair_foundry.py",
-          "aura_bilateral_live_repair_foundry_contracts.py",
-          "aura_bilateral_live_repair_foundry_service.py",
-          "aura_bilateral_live_repair_foundry_service_capture.py",
-          "aura_bilateral_live_repair_foundry_service_preview.py",
-          "aura_coding_relationship_compass.py",
-          "aura_construction_foundry_director.py",
-          "aura_construction_pascal_spatial_foundry_p3_server.py",
-          "aura_event_contracts.py",
-          "aura_model_cognome.py",
-          "aura_pascal_spatial_presentation.py",
-          "aura_showcase_live_repair_server.py",
-          "aura_unified_memory_continuity_toolchain.py"
-        ],
-        "edge_kinds": {
-          "call": 168,
-          "defines": 88,
-          "import_module": 10
         }
       },
       "aura_construction_authority.py": {
@@ -248703,8 +249435,37 @@
           "import_module": 6
         }
       },
-      "aura_ephemeral_registry_store.py": {
+      "aura_pascal_spatial_presentation_part5.py": {
         "hub_rank": 306,
+        "node_count": 9,
+        "edge_count": 50,
+        "degree": 50,
+        "symbols": [
+          "PascalPresentationRegistry",
+          "__init__",
+          "_load_json_object",
+          "create",
+          "dissolve_all",
+          "get",
+          "load_pascal_compatibility_fixture",
+          "status"
+        ],
+        "neighbor_files": [
+          "aura_cost_telemetry_events.py",
+          "aura_fst_routing.py",
+          "aura_pascal_spatial_presentation.py",
+          "aura_pascal_spatial_presentation_part1.py",
+          "aura_pascal_spatial_presentation_part2.py",
+          "aura_pascal_spatial_presentation_part4.py"
+        ],
+        "edge_kinds": {
+          "call": 30,
+          "defines": 16,
+          "import_module": 4
+        }
+      },
+      "aura_ephemeral_registry_store.py": {
+        "hub_rank": 307,
         "node_count": 24,
         "edge_count": 49,
         "degree": 49,
@@ -248739,7 +249500,7 @@
         }
       },
       "aura_spatial_construction.py": {
-        "hub_rank": 307,
+        "hub_rank": 308,
         "node_count": 14,
         "edge_count": 49,
         "degree": 49,
@@ -248776,7 +249537,7 @@
         }
       },
       "aura_cost_experiment_runner.py": {
-        "hub_rank": 308,
+        "hub_rank": 309,
         "node_count": 13,
         "edge_count": 49,
         "degree": 49,
@@ -248806,7 +249567,7 @@
         }
       },
       "aura_arena_crucible.py": {
-        "hub_rank": 309,
+        "hub_rank": 310,
         "node_count": 11,
         "edge_count": 49,
         "degree": 49,
@@ -248838,35 +249599,6 @@
           "defines": 20,
           "call": 20,
           "import_module": 9
-        }
-      },
-      "aura_pascal_spatial_presentation_part5.py": {
-        "hub_rank": 310,
-        "node_count": 9,
-        "edge_count": 49,
-        "degree": 49,
-        "symbols": [
-          "PascalPresentationRegistry",
-          "__init__",
-          "_load_json_object",
-          "create",
-          "dissolve_all",
-          "get",
-          "load_pascal_compatibility_fixture",
-          "status"
-        ],
-        "neighbor_files": [
-          "aura_cost_telemetry_events.py",
-          "aura_fst_routing.py",
-          "aura_pascal_spatial_presentation.py",
-          "aura_pascal_spatial_presentation_part1.py",
-          "aura_pascal_spatial_presentation_part2.py",
-          "aura_pascal_spatial_presentation_part4.py"
-        ],
-        "edge_kinds": {
-          "call": 29,
-          "defines": 16,
-          "import_module": 4
         }
       },
       "aura_spvm.py": {
@@ -257674,8 +258406,48 @@
         }
       },
       {
-        "file": "aura_human_agent_arena.py",
+        "file": "aura_pascal_spatial_presentation_part1.py",
         "hub_rank": 27,
+        "node_count": 27,
+        "edge_count": 334,
+        "degree": 334,
+        "symbols": [
+          "BridgeDirection",
+          "PascalBridgeAction",
+          "PascalPackagePin",
+          "PascalPresentationError",
+          "PascalPresentationState",
+          "PascalSourceLock",
+          "__post_init__",
+          "_authority_path",
+          "_body",
+          "_bridge_encode",
+          "_clean_payload",
+          "_hex40",
+          "_hex64",
+          "_identifier",
+          "_required_text",
+          "_strict_bool",
+          "_strict_keys",
+          "_timestamp",
+          "_utc_timestamp",
+          "bridge_sha256"
+        ],
+        "neighbor_files": [
+          "aura_pascal_spatial_presentation_part2.py",
+          "aura_pascal_spatial_presentation_part3.py",
+          "aura_pascal_spatial_presentation_part4.py",
+          "aura_pascal_spatial_presentation_part5.py"
+        ],
+        "edge_kinds": {
+          "call": 278,
+          "defines": 52,
+          "import_module": 4
+        }
+      },
+      {
+        "file": "aura_human_agent_arena.py",
+        "hub_rank": 28,
         "node_count": 73,
         "edge_count": 333,
         "degree": 333,
@@ -257717,46 +258489,6 @@
           "call": 186,
           "defines": 144,
           "import_module": 3
-        }
-      },
-      {
-        "file": "aura_pascal_spatial_presentation_part1.py",
-        "hub_rank": 28,
-        "node_count": 27,
-        "edge_count": 333,
-        "degree": 333,
-        "symbols": [
-          "BridgeDirection",
-          "PascalBridgeAction",
-          "PascalPackagePin",
-          "PascalPresentationError",
-          "PascalPresentationState",
-          "PascalSourceLock",
-          "__post_init__",
-          "_authority_path",
-          "_body",
-          "_bridge_encode",
-          "_clean_payload",
-          "_hex40",
-          "_hex64",
-          "_identifier",
-          "_required_text",
-          "_strict_bool",
-          "_strict_keys",
-          "_timestamp",
-          "_utc_timestamp",
-          "bridge_sha256"
-        ],
-        "neighbor_files": [
-          "aura_pascal_spatial_presentation_part2.py",
-          "aura_pascal_spatial_presentation_part3.py",
-          "aura_pascal_spatial_presentation_part4.py",
-          "aura_pascal_spatial_presentation_part5.py"
-        ],
-        "edge_kinds": {
-          "call": 277,
-          "defines": 52,
-          "import_module": 4
         }
       },
       {

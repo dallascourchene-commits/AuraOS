@@ -1064,3 +1064,440 @@ def test_p3_project_rejects_partial_director_bindings(monkeypatch):
         assert not hasattr(state, "_p3_sync_nonces") or not state._p3_sync_nonces
     finally:
         state.close()
+
+
+def test_p4_runtime_runner_replacement_and_restoration():
+    """Verify that execute_exact_runtime_replay replaces and restores runtime_runner.
+
+    Tests:
+    - adapted_runner is installed during execution
+    - canonical runner is restored after success
+    - canonical runner is restored after failure
+    - _RUNTIME_PROFILE (Construction Demo V2) is passed to execute_replay
+    - confirmation is consumed exactly once on success
+    - second replay attempt is rejected
+    - adapted proof retains complete P4 identity binding including:
+      - canonical_intent_contract
+      - identity_adapter metadata
+      - canonical_runtime_proof_digest
+      - proof_digest == recomputed runtime_binding_digest
+      - required_trace_artifacts with real asset traces
+    """
+    from aura_bilateral_live_repair_foundry import BilateralIdentity
+    from aura_construction_pascal_spatial_foundry_p4_server import (
+        P4FoundryShowcaseState,
+        PascalPresentationError,
+        _RUNTIME_PROFILE,
+        runtime_binding_digest,
+    )
+    from aura_construction_foundry_director import RequiredAsset
+    from pathlib import Path
+    from tempfile import mkdtemp
+    import json as _json
+    import hashlib as _hashlib
+    import shutil as _shutil
+
+    # Use 64-char hex digests so they pass _EXACT_DIGEST (40-64 hex) and
+    # are returned as-is by _bilateral_identity_digest (no projection).
+    _intent = "a" * 64
+    _ledger = "b" * 64
+    _guardrail = "d" * 64
+    _confirmation = "e" * 64
+    _repo_head = "f" * 64
+    _source_tree = "1" * 64
+    _allowed_paths = "2" * 64
+
+    # Build a valid confirmation packet that _confirmation_intent_contract can parse.
+    confirmation_data = {
+        "intent_packet": {"intent_digest": _intent},
+        "semantic_ledger": {"ledger_digest": _ledger},
+        "confirmation_receipt": {
+            "confirmation_id": _confirmation,
+            "guardrail_set_digest": _guardrail,
+            "repository_head": _repo_head,
+            "source_tree_digest": _source_tree,
+        },
+        "u7_references": {"intent_revision_status": "P0"},
+    }
+
+    # Create a real temporary required asset file inside the repo root.
+    _asset_dir = Path(mkdtemp())
+    _asset_file = _asset_dir / "required-asset.txt"
+    _asset_content = b"P4 required asset test content"
+    _asset_file.write_bytes(_asset_content)
+    _asset_sha = _hashlib.sha256(_asset_content).hexdigest()
+
+    class MockService:
+        def __init__(self):
+            self.runtime_runner = self._canonical_runner
+            self.execute_replay_called = 0
+            self.profile_path_received = None
+
+        def _canonical_runner(self, root, **kwargs):
+            return {
+                "ok": True,
+                "proof": "canonical",
+                "proof_digest": "c" * 64,
+                "intent_contract": {
+                    "intent_digest": _intent,
+                    "semantic_ledger_digest": _ledger,
+                    "guardrail_set_digest": _guardrail,
+                    "confirmation_digest": _confirmation,
+                    "intent_revision_status": "P0",
+                    "expected_repository_head": _repo_head,
+                    "expected_source_tree": _source_tree,
+                    "allowed_path_set_digest": _allowed_paths,
+                },
+                "requirement_bindings": {
+                    "positive_assertions": [],
+                    "negative_assertions": [],
+                    "preservation_assertions": [],
+                    "fault_injections": [],
+                },
+                "repair_policy": {"human_review_required": True},
+                "required_trace_artifacts": [],
+                "base_profile": "test",
+                "base_environment_create_venv": False,
+                "bilateral_waboose_request": "test",
+            }
+
+        def execute_replay(self, *, packet_id, profile_path, confirmation_packet, output_dir, **kwargs):
+            self.execute_replay_called += 1
+            self.profile_path_received = profile_path
+            assert self.runtime_runner is not self._canonical_runner, "runner not replaced"
+            result = self.runtime_runner(Path("."), profile_path=profile_path, confirmation_packet=confirmation_packet, output_dir=output_dir, **kwargs)
+            return result
+
+    class MockState:
+        def __init__(self, required_assets):
+            self.p4_confirmation_path = Path(mkdtemp()) / "confirmation.json"
+            self.p4_confirmation_path.parent.mkdir(parents=True, exist_ok=True)
+            self.p4_confirmation_path.write_text(_json.dumps(confirmation_data))
+            self.p4_runtime_output_dir = Path(mkdtemp()) / "output"
+            self.p4_confirmation_consumed = False
+            self.p4_required_assets = required_assets
+            self.repo_root = _asset_dir
+            self._p4_runtime_lock = __import__("threading").RLock()
+            self._live_repair = MockService()
+
+        @property
+        def live_repair(self):
+            return self._live_repair
+
+        def close(self):
+            pass
+
+    # Build required asset pointing to the real temporary file.
+    # RequiredAsset.path must be a repo-relative POSIX path (no / prefix, no ..).
+    _asset_rel = "required-asset.txt"
+    required_assets = (RequiredAsset(path=_asset_rel, sha256=_asset_sha),)
+
+    state = MockState(required_assets)
+    identity = BilateralIdentity(
+        intent_digest=_intent,
+        confirmation_digest=_confirmation,
+        semantic_ledger_digest=_ledger,
+        guardrail_set_digest=_guardrail,
+        intent_revision_id="P0",
+        repository_head=_repo_head,
+        source_tree_digest=_source_tree,
+        runtime_profile_digest="0" * 64,
+        verifier_id="test-verifier",
+        verifier_source_digest="1" * 64,
+    )
+
+    service = state._live_repair
+    original_runner = service.runtime_runner
+
+    # Test 1: successful execution — do NOT mock _adapt_runtime_proof_identity
+    result = P4FoundryShowcaseState.execute_exact_runtime_replay(
+        state, packet_id="test-packet", identity=identity
+    )
+    assert service.execute_replay_called == 1, "execute_replay was not called"
+    assert service.profile_path_received == _RUNTIME_PROFILE, "wrong profile passed"
+    assert service.runtime_runner is original_runner, "runner not restored after success"
+    assert state.p4_confirmation_consumed, "confirmation not consumed"
+    assert result.get("ok") is True, "result should be ok"
+
+    # Canonical intent contract — exact-object equality (catches missing,
+    # changed, renamed, extra, and partial retention in one assertion).
+    expected_canonical_contract = {
+        "intent_digest": _intent,
+        "semantic_ledger_digest": _ledger,
+        "confirmation_digest": _confirmation,
+        "guardrail_set_digest": _guardrail,
+        "intent_revision_status": "P0",
+        "expected_repository_head": _repo_head,
+        "expected_source_tree": _source_tree,
+        "allowed_path_set_digest": _allowed_paths,
+    }
+    assert result.get("canonical_intent_contract") == expected_canonical_contract, \
+        "canonical_intent_contract does not match exact expected object"
+
+    # Adapted intent contract — exact-object equality mirroring the
+    # adapter's expected_adapted invariant.
+    expected_adapted_contract = {
+        "intent_digest": identity.intent_digest,
+        "semantic_ledger_digest": identity.semantic_ledger_digest,
+        "confirmation_digest": identity.confirmation_digest,
+        "guardrail_set_digest": identity.guardrail_set_digest,
+        "intent_revision_status": identity.intent_revision_id,
+        "expected_repository_head": identity.repository_head,
+        "expected_source_tree": identity.source_tree_digest,
+        "allowed_path_set_digest": _allowed_paths,
+    }
+    assert result.get("intent_contract") == expected_adapted_contract, \
+        "adapted intent_contract does not match exact expected object"
+
+    # identity_adapter metadata
+    adapter = result.get("identity_adapter", {})
+    assert adapter.get("version") == "AURA_P4_RUNTIME_PROOF_IDENTITY_ADAPTER_V1", "wrong adapter version"
+    assert adapter.get("verification_owner_changed") is False, "owner changed"
+    assert adapter.get("production_mutation") is False, "production mutation"
+    assert adapter.get("human_review_required") is True, "human review not required"
+    assert adapter.get("required_asset_count") == 1, "required asset count wrong"
+
+    # canonical_runtime_proof_digest retained
+    assert result.get("canonical_runtime_proof_digest") == "c" * 64, "canonical proof digest lost"
+
+    # required_trace_artifacts contains the P4 required-asset trace
+    traces = result.get("required_trace_artifacts", [])
+    asset_traces = [t for t in traces if t.get("evidence_class") == "EXACT_REPOSITORY_ASSET"]
+    assert len(asset_traces) == 1, "expected 1 asset trace"
+    assert asset_traces[0]["path"] == _asset_rel, "asset path mismatch"
+    assert asset_traces[0]["sha256"] == _asset_sha, "asset sha256 mismatch"
+    assert asset_traces[0]["present"] is True, "asset not present"
+
+    # proof_digest equals recomputed runtime_binding_digest of adapted proof
+    canonical_for_recompute = {
+        k: v for k, v in result.items() if k not in {"proof_digest", "proof_path", "output_dir"}
+    }
+    expected_proof_digest = runtime_binding_digest(canonical_for_recompute)
+    assert result.get("proof_digest") == expected_proof_digest, "proof_digest does not match recomputed binding"
+
+    # Test 2: second replay attempt is rejected (one-time consumption)
+    with pytest.raises(PascalPresentationError, match="already consumed"):
+        P4FoundryShowcaseState.execute_exact_runtime_replay(
+            state, packet_id="test-packet", identity=identity
+        )
+    assert service.execute_replay_called == 1, "execute_replay should not be called again"
+
+    # Test 3: runner restored after failure
+    state2 = MockState(required_assets)
+    service2 = state2._live_repair
+    original_runner2 = service2.runtime_runner
+
+    def failing_execute(**kw):
+        raise RuntimeError("intentional failure")
+
+    service2.execute_replay = failing_execute
+
+    with pytest.raises((RuntimeError, PascalPresentationError)):
+        P4FoundryShowcaseState.execute_exact_runtime_replay(
+            state2, packet_id="test-packet", identity=identity
+        )
+    assert service2.runtime_runner is original_runner2, "runner not restored after failure"
+    assert not state2.p4_confirmation_consumed, "confirmation consumed despite failure"
+
+    # Cleanup
+    for s in (state, state2):
+        _shutil.rmtree(s.p4_confirmation_path.parent, ignore_errors=True)
+        _shutil.rmtree(s.p4_runtime_output_dir, ignore_errors=True)
+    _shutil.rmtree(_asset_dir, ignore_errors=True)
+
+
+def test_p4_runtime_profile_is_construction_demo_not_pr5():
+    """Verify _RUNTIME_PROFILE is the Construction Demo V2, not the PR5 V2.
+
+    This confirms the profile graph is non-recursive:
+    PR5 V2 → PR5 V1 → P4 :8768
+      └── RUN_RUNTIME_V2
+          └── Construction Demo V2 → Construction Demo V1 :8767
+    """
+    from aura_construction_pascal_spatial_foundry_p4_server import _RUNTIME_PROFILE
+    assert _RUNTIME_PROFILE == ".aura/runtime_profiles/construction_demo_bilateral.v2.json"
+    assert "construction_pascal_spatial_foundry" not in _RUNTIME_PROFILE, \
+        "P4 runtime profile must NOT be the PR5 profile (would cause recursion)"
+
+
+def test_p4_concurrent_replay_attempts_are_serialized():
+    """Verify that concurrent execute_exact_runtime_replay calls are serialized
+    by the P4 runtime lock — only one can proceed, the other must block or fail.
+    """
+    import threading
+    from aura_bilateral_live_repair_foundry import BilateralIdentity
+    from aura_construction_pascal_spatial_foundry_p4_server import P4FoundryShowcaseState
+    from pathlib import Path
+    from tempfile import mkdtemp
+    import json as _json
+    import shutil as _shutil
+
+    _intent = "a" * 64
+    _ledger = "b" * 64
+    _guardrail = "d" * 64
+    _confirmation = "e" * 64
+    _repo_head = "f" * 64
+    _source_tree = "1" * 64
+    _allowed_paths = "2" * 64
+
+    confirmation_data = {
+        "intent_packet": {"intent_digest": _intent},
+        "semantic_ledger": {"ledger_digest": _ledger},
+        "confirmation_receipt": {
+            "confirmation_id": _confirmation,
+            "guardrail_set_digest": _guardrail,
+            "repository_head": _repo_head,
+            "source_tree_digest": _source_tree,
+        },
+        "u7_references": {"intent_revision_status": "P0"},
+    }
+
+    results = []
+
+    class SlowService:
+        def __init__(self):
+            self.runtime_runner = self._canonical
+            self.call_count = 0
+
+        def _canonical(self, root, **kwargs):
+            return {
+                "ok": True, "proof": "canonical", "proof_digest": "c" * 64,
+                "intent_contract": {
+                    "intent_digest": _intent, "semantic_ledger_digest": _ledger,
+                    "guardrail_set_digest": _guardrail, "confirmation_digest": _confirmation,
+                    "intent_revision_status": "P0", "expected_repository_head": _repo_head,
+                    "expected_source_tree": _source_tree, "allowed_path_set_digest": _allowed_paths,
+                },
+                "requirement_bindings": {"positive_assertions": [], "negative_assertions": [], "preservation_assertions": [], "fault_injections": []},
+                "repair_policy": {"human_review_required": True},
+                "required_trace_artifacts": [], "base_profile": "test",
+                "base_environment_create_venv": False, "bilateral_waboose_request": "test",
+            }
+
+        def execute_replay(self, *, packet_id, profile_path, confirmation_packet, output_dir, **kwargs):
+            self.call_count += 1
+            return self.runtime_runner(Path("."), **kwargs)
+
+    class MockState:
+        def __init__(self):
+            self.p4_confirmation_path = Path(mkdtemp()) / "confirmation.json"
+            self.p4_confirmation_path.parent.mkdir(parents=True, exist_ok=True)
+            self.p4_confirmation_path.write_text(_json.dumps(confirmation_data))
+            self.p4_runtime_output_dir = Path(mkdtemp()) / "output"
+            self.p4_confirmation_consumed = False
+            self.p4_required_assets = ()
+            self.repo_root = Path(".")
+            self._p4_runtime_lock = threading.RLock()
+            self._live_repair = SlowService()
+
+        @property
+        def live_repair(self):
+            return self._live_repair
+
+    state = MockState()
+    identity = BilateralIdentity(
+        intent_digest=_intent, confirmation_digest=_confirmation,
+        semantic_ledger_digest=_ledger, guardrail_set_digest=_guardrail,
+        intent_revision_id="P0", repository_head=_repo_head, source_tree_digest=_source_tree,
+        runtime_profile_digest="0" * 64, verifier_id="test", verifier_source_digest="1" * 64,
+    )
+
+    def attempt():
+        try:
+            P4FoundryShowcaseState.execute_exact_runtime_replay(
+                state, packet_id="concurrent", identity=identity
+            )
+            results.append("ok")
+        except Exception as e:
+            results.append(str(e))
+
+    t1 = threading.Thread(target=attempt)
+    t2 = threading.Thread(target=attempt)
+    t1.start()
+    t2.start()
+    t1.join(timeout=10)
+    t2.join(timeout=10)
+
+    # The lock serializes — only one call should succeed, the other
+    # should fail because confirmation was already consumed or output dir exists.
+    assert len(results) == 2, f"expected 2 results, got {results}"
+    assert "ok" in results, f"at least one call should succeed: {results}"
+    assert state._live_repair.call_count == 1, \
+        f"execute_replay should be called once, got {state._live_repair.call_count}"
+
+    _shutil.rmtree(state.p4_confirmation_path.parent, ignore_errors=True)
+    _shutil.rmtree(state.p4_runtime_output_dir, ignore_errors=True)
+
+
+def test_p4_output_dir_already_exists_fails_closed():
+    """Verify that execute_exact_runtime_replay fails when the output
+    directory already exists — preventing stale artifact reuse.
+    """
+    from aura_bilateral_live_repair_foundry import BilateralIdentity
+    from aura_construction_pascal_spatial_foundry_p4_server import (
+        P4FoundryShowcaseState, PascalPresentationError,
+    )
+    from pathlib import Path
+    from tempfile import mkdtemp
+    import json as _json
+    import shutil as _shutil
+
+    _intent = "a" * 64
+    _ledger = "b" * 64
+    _guardrail = "d" * 64
+    _confirmation = "e" * 64
+    _repo_head = "f" * 64
+    _source_tree = "1" * 64
+
+    confirmation_data = {
+        "intent_packet": {"intent_digest": _intent},
+        "semantic_ledger": {"ledger_digest": _ledger},
+        "confirmation_receipt": {
+            "confirmation_id": _confirmation, "guardrail_set_digest": _guardrail,
+            "repository_head": _repo_head, "source_tree_digest": _source_tree,
+        },
+        "u7_references": {"intent_revision_status": "P0"},
+    }
+
+    output_dir = Path(mkdtemp()) / "output"
+    output_dir.mkdir(parents=True, exist_ok=True)  # Pre-create to trigger failure
+
+    class MockService:
+        def __init__(self):
+            self.runtime_runner = lambda root, **kw: {"ok": True}
+
+        def execute_replay(self, **kwargs):
+            raise AssertionError("execute_replay should not be called when output dir exists")
+
+    class MockState:
+        def __init__(self):
+            self.p4_confirmation_path = Path(mkdtemp()) / "confirmation.json"
+            self.p4_confirmation_path.parent.mkdir(parents=True, exist_ok=True)
+            self.p4_confirmation_path.write_text(_json.dumps(confirmation_data))
+            self.p4_runtime_output_dir = output_dir
+            self.p4_confirmation_consumed = False
+            self.p4_required_assets = ()
+            self.repo_root = Path(".")
+            self._p4_runtime_lock = __import__("threading").RLock()
+            self._live_repair = MockService()
+
+        @property
+        def live_repair(self):
+            return self._live_repair
+
+    state = MockState()
+    identity = BilateralIdentity(
+        intent_digest=_intent, confirmation_digest=_confirmation,
+        semantic_ledger_digest=_ledger, guardrail_set_digest=_guardrail,
+        intent_revision_id="P0", repository_head=_repo_head, source_tree_digest=_source_tree,
+        runtime_profile_digest="0" * 64, verifier_id="test", verifier_source_digest="1" * 64,
+    )
+
+    with pytest.raises(PascalPresentationError, match="already exists"):
+        P4FoundryShowcaseState.execute_exact_runtime_replay(
+            state, packet_id="test", identity=identity
+        )
+    assert not state.p4_confirmation_consumed, "confirmation should not be consumed"
+
+    _shutil.rmtree(state.p4_confirmation_path.parent, ignore_errors=True)
+    _shutil.rmtree(output_dir, ignore_errors=True)

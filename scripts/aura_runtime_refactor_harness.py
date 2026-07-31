@@ -34,6 +34,7 @@ PROFILE_VERSION = "AURA_RUNTIME_PROFILE_V1"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 MAX_PROFILE_BYTES = 256 * 1024
 MAX_RECEIPT_BYTES = 2 * 1024 * 1024
+
 MAX_COMMANDS = 32
 MAX_COMMAND_ARGS = 96
 MAX_ARG_BYTES = 16 * 1024
@@ -663,11 +664,18 @@ def run_runtime_profile(
     allow_dirty: bool = False,
     baseline_receipt: str | Path | None = None,
 ) -> dict[str, Any]:
+    """Public V1 runtime profile runner."""
     root = root.expanduser().resolve()
     if not root.is_dir():
         raise RuntimeHarnessError("repository root is missing")
     profile = load_runtime_profile(root, profile_path)
     output = _external_output_path(root, output_dir)
+    # Reject non-empty output directories to prevent stale artifact reuse.
+    if output.exists() and any(output.iterdir()):
+        raise RuntimeHarnessError(
+            f"runtime output directory is not empty: {output} — "
+            "use a fresh directory for each run"
+        )
     output.mkdir(parents=True, exist_ok=True)
     before = _git_identity(root)
     if before.get("available") and before.get("status") and not allow_dirty:

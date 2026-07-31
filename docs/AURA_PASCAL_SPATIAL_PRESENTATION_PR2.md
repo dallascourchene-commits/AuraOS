@@ -18,10 +18,10 @@ The Pascal organ is optional. If any lock, package identity, asset, manifest, co
 
 Trusted local identities after review repair:
 
-- source-lock digest: `7c0830edc42139cf43b61c7365996b33abb86ccb54b3389761418b73b9fced08`
-- scene-artifact digest: `fd4b7ba44de4394cc7670c98be8f46885c7b0f7788d57d025cae4e09f4e10ce7`
-- canonical Spatial scene digest: `ec57cec9cfac1c6d2dc8d3206e9479bad54bcb5161d852d21e357b5d90c623db`
-- coordinate-receipt digest: `5597b217243c5cdbbcc473b5ac673d478ef264b28d346c8f77fc0a8db1c80157`
+- source-lock digest: `672611b98aca61e3ad7a4ebcb32f278916d09d876e663452bb654610562d2e87`
+- scene-artifact digest: `3a007f69349cbb78966d8deedb43326a2c236112066298b59b245435a950cbbe`
+- canonical Spatial scene digest: `56824f5cf1e38a1ed82591448c111859a79a277d396df8f030730ef8031f510c`
+- coordinate-receipt digest: `4dd3767ab948b3627dc0674c5f02d5ac8ee3f9745b052d1864fb44f7589b084a`
 
 `PascalSourceLock` compares the parsed package set, local-asset path set, and computed lock digest against code-owned approved constants. A self-consistent but unapproved lock file therefore fails closed.
 

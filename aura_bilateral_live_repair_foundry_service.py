@@ -240,6 +240,7 @@ class BilateralLiveRepairService(
         venv_path: str | Path | None = None,
         baseline_receipt: str | Path | None = None,
     ) -> dict[str, Any]:
+        """Public execute_replay. Nested replay mode is NOT accepted."""
         packet = self._packet(packet_id)
         runner_result = dict(
             self.runtime_runner(

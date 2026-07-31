@@ -827,20 +827,35 @@ def _snapshot_traces(
         if not path.is_file() or path.is_symlink():
             raise BilateralRuntimeProfileError(f"runtime trace {name} was not produced by the current run")
         size = path.stat().st_size
-        if size > maximum or size > MAX_JSON_BYTES:
-            raise BilateralRuntimeProfileError(f"runtime trace {name} is oversized")
-        try:
-            body = path.read_bytes()
-            value = _strict_json_loads(body.decode("utf-8"))
-        except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
-            raise BilateralRuntimeProfileError(f"runtime trace {name} is not immutable canonical JSON: {exc}") from exc
+        # Binary artifacts (PNGs) use the larger MAX_ARTIFACT_BYTES limit;
+        # JSON artifacts use the stricter MAX_JSON_BYTES limit.
+        if name.endswith(".json"):
+            if size > maximum or size > MAX_JSON_BYTES:
+                raise BilateralRuntimeProfileError(f"runtime trace {name} is oversized")
+        else:
+            if size > maximum:
+                raise BilateralRuntimeProfileError(f"runtime trace {name} is oversized")
+        body = path.read_bytes()
         if len(body) != size:
             raise BilateralRuntimeProfileError(f"runtime trace {name} changed while it was being snapshotted")
-        snapshots[name] = {
-            "value": value,
-            "size_bytes": len(body),
-            "sha256": hashlib.sha256(body).hexdigest(),
-        }
+        sha256 = hashlib.sha256(body).hexdigest()
+        # Binary artifacts (e.g. PNG screenshots) are snapshot by size +
+        # SHA-256 only.  JSON artifacts are also parsed for path assertions.
+        if name.endswith(".json"):
+            try:
+                value = _strict_json_loads(body.decode("utf-8"))
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
+                raise BilateralRuntimeProfileError(f"runtime trace {name} is not immutable canonical JSON: {exc}") from exc
+            snapshots[name] = {
+                "value": value,
+                "size_bytes": len(body),
+                "sha256": sha256,
+            }
+        else:
+            snapshots[name] = {
+                "size_bytes": len(body),
+                "sha256": sha256,
+            }
     return snapshots
 
 
@@ -890,6 +905,7 @@ def run_runtime_profile_v2(
     allow_dirty: bool = False,
     baseline_receipt: str | Path | None = None,
 ) -> dict[str, Any]:
+    """Public V2 runtime profile runner. No nested parameters."""
     root = root.expanduser().resolve()
     before = _repo_identity(root)
     if allow_dirty:

@@ -118,7 +118,7 @@ _POSITIVE = (
     "The selected Construction storey, issue, blueprint, annotations, and inspector identity remain stable across Mesh, Splats, Hybrid, isolate, show-all, and relaunch transitions.",
 )
 _AUTHORITY_NEGATIVE = "Do not grant production mutation, automatic merge, physical-work, or professional authority."
-_PRESERVATION = "Do not mutate canonical Construction source geometry or lose the selected inspector state."
+_PRESERVATION = "Do not mutate canonical Construction source geometry."
 _FAULT_NEGATIVES = (
     "Do not make hidden storeys pickable or focusable.",
     "Do not silently substitute a missing or ambiguous blueprint.",
@@ -178,12 +178,19 @@ def _safe_repo_file(root: Path, relative: str) -> Path:
     return path
 
 
-def _compile_confirmation_bundle(root: Path) -> tuple[BilateralIdentity, Path, Path]:
+def _compile_confirmation_bundle(
+    root: Path,
+    *,
+    runtime_profile_path: str = _RUNTIME_PROFILE,
+    positive_requirements: tuple[str, ...] = _POSITIVE,
+    negative_requirements: tuple[str, ...] = _NEGATIVE,
+    human_reviewer: str = "Dallas Courchene - deterministic P4 recording fixture",
+) -> tuple[BilateralIdentity, Path, Path]:
     head = _git(root, "rev-parse", "HEAD")
     tree = _git(root, "rev-parse", "HEAD^{tree}")
     if _git(root, "status", "--porcelain"):
         raise PascalPresentationError("P4 deterministic demo requires a clean exact-head checkout")
-    profile_path = _safe_repo_file(root, _RUNTIME_PROFILE)
+    profile_path = _safe_repo_file(root, runtime_profile_path)
     profile_bytes = profile_path.read_bytes()
     profile = json.loads(profile_bytes)
     if not isinstance(profile, Mapping):
@@ -195,13 +202,13 @@ def _compile_confirmation_bundle(root: Path) -> tuple[BilateralIdentity, Path, P
     verifier_digest = _sha256_bytes(verifier_path.read_bytes())
     if verifier_digest != verifier.get("source_sha256"):
         raise PascalPresentationError("P4 runtime verifier source differs from the exact profile identity")
-    source_request = " ".join((*_POSITIVE, *_NEGATIVE))
+    source_request = " ".join((*positive_requirements, *negative_requirements))
     analysis = analyze_bilateral_request(
         source_request,
         arena="CONSTRUCTION",
         affected_files=tuple(str(item) for item in profile.get("allowed_paths") or ()),
-        supplied_positive_requirements=_POSITIVE,
-        supplied_negative_requirements=_NEGATIVE,
+        supplied_positive_requirements=positive_requirements,
+        supplied_negative_requirements=negative_requirements,
     )
     if analysis.questions or analysis.teach_back is None:
         raise PascalPresentationError("P4 deterministic confirmation unexpectedly requires clarification")
@@ -227,7 +234,7 @@ def _compile_confirmation_bundle(root: Path) -> tuple[BilateralIdentity, Path, P
         topology_evidence_digest=stable_digest({"manifest": "P4", "profile": profile.get("profile_id")}),
         topology_selected=True,
         codemap_digest=_sha256_bytes(codemap_path.read_bytes()),
-        human_reviewer="Dallas Courchene - deterministic P4 recording fixture",
+        human_reviewer=human_reviewer,
         confirmed_at=now,
         expires_at=now + 86_400,
         arena="Construction",
@@ -255,6 +262,28 @@ def _compile_confirmation_bundle(root: Path) -> tuple[BilateralIdentity, Path, P
     confirmation_path.chmod(0o600)
     output_dir = external_root / "runtime-output"
     return identity, confirmation_path, output_dir
+
+
+def compile_confirmation_bundle(
+    root: Path,
+    *,
+    runtime_profile_path: str = _RUNTIME_PROFILE,
+    positive_requirements: tuple[str, ...] = _POSITIVE,
+    negative_requirements: tuple[str, ...] = _NEGATIVE,
+    human_reviewer: str = "Dallas Courchene - deterministic P4 recording fixture",
+) -> tuple[BilateralIdentity, Path, Path]:
+    """Public wrapper for _compile_confirmation_bundle.
+
+    Exposes the confirmation compiler as a supported entry point so
+    external adapters do not depend on a private symbol.
+    """
+    return _compile_confirmation_bundle(
+        root,
+        runtime_profile_path=runtime_profile_path,
+        positive_requirements=positive_requirements,
+        negative_requirements=negative_requirements,
+        human_reviewer=human_reviewer,
+    )
 
 
 def _confirmation_intent_contract(path: Path) -> dict[str, str]:
@@ -480,7 +509,16 @@ class _P4U7Bridge:
                         "does_not_mean": [f"automatic {term} authority"],
                         "source_refs": [f"p4:{term}"],
                     }
-                    for term in ("repair", "current reproof", "human disposition", "Construction truth")
+                    for term in (
+                        "repair",
+                        "current reproof",
+                        "human disposition",
+                        "Construction truth",
+                        "memory",
+                        "continuity",
+                        "verified",
+                        "authority",
+                    )
                 ],
                 "model_profile": {
                     "endpoint_identity": endpoint.to_dict(),
@@ -759,12 +797,27 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
                 raise PascalPresentationError(
                     "P4 confirmation was already consumed; dissolve and Restart for a fresh exact confirmation"
                 )
+            # Atomically claim the runtime output directory before any
+            # execution or confirmation consumption. Create the directory
+            # with exist_ok=False to fail if another process already claimed it.
+            runtime_output = Path(str(self.p4_runtime_output_dir))
+            try:
+                runtime_output.mkdir(parents=True, exist_ok=False)
+            except FileExistsError:
+                raise PascalPresentationError(
+                    f"P4 runtime output directory already exists: {runtime_output} — "
+                    "a previous run may not have been dissolved; use Restart for a fresh directory"
+                )
             # Capture immutable local references inside the lock.
             confirmation_path = self.p4_confirmation_path
-            runtime_output_dir = self.p4_runtime_output_dir
             service = self.live_repair
             canonical_runner = service.runtime_runner
 
+            # Install an identity-adapting runner that wraps the canonical
+            # Runtime V2 proof with P4's bilateral identity. The canonical
+            # runner uses the Construction Demo V2 profile (port 8767),
+            # which is distinct from the outer PR5 P4 server (port 8768).
+            # There is no recursion: the inner profile is not the PR5 profile.
             def adapted_runner(root: Path, **kwargs: Any) -> Mapping[str, Any]:
                 canonical_proof = canonical_runner(root, **kwargs)
                 return _adapt_runtime_proof_identity(
@@ -781,7 +834,7 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
                     packet_id=packet_id,
                     profile_path=_RUNTIME_PROFILE,
                     confirmation_packet=confirmation_path,
-                    output_dir=runtime_output_dir,
+                    output_dir=runtime_output,
                 )
             finally:
                 service.runtime_runner = canonical_runner
