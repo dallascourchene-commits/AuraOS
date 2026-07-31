@@ -587,3 +587,207 @@ def test_p3_sync_protocol_rejects_ack_without_render_confirmation(monkeypatch):
         assert state._p3_sync_nonces[sync_key]["state"] == "PROJECTED"
     finally:
         state.close()
+
+
+def test_confirm_presentation_rejects_without_project(monkeypatch):
+    """Negative: confirm-presentation without prior P3 /project must fail."""
+    monkeypatch.setattr(p4, "_validate_request_context", lambda *_args, **_kwargs: None)
+    import aura_construction_pascal_spatial_foundry_p3_server as p3mod
+    monkeypatch.setattr(p3mod, "_validate_request_context", lambda *_args, **_kwargs: None)
+
+    director = ConstructionFoundryDirector(_manifest())
+    import hashlib as _hl
+    from collections import namedtuple
+    FakeIdentity = namedtuple("FakeIdentity", ["identity_digest"])
+    ident_digest = _hl.sha256(b"e2e-no-project").hexdigest()
+    fake_identity = FakeIdentity(identity_digest=ident_digest)
+
+    def fake_proj_identity(_state, _body, require_all=True):
+        return ({}, fake_identity)
+    monkeypatch.setattr(p4, "_projection_and_identity", fake_proj_identity)
+
+    state = p3mod.P3FoundryShowcaseState(
+        Path(__file__).resolve().parents[1],
+        demo_project="winnipeg_pathways",
+        auto_start=False,
+        presentation_origin="http://127.0.0.1:8765",
+    )
+    state.p4_available = True
+    state.p4_load_error = ""
+    state.p4_director = director
+    state.presentation_origin = "http://127.0.0.1:8765"
+    state.presentation_netloc = "127.0.0.1:8765"
+    state.require_p4 = lambda: director
+
+    try:
+        session = director.start_session(
+            identity_digest=ident_digest,
+            construction_state_digest=_hl.sha256(b"e2e-no-project-state").hexdigest(),
+            initial_evidence={
+                "p3_available": True, "construction_identity_bound": True,
+                "pascal_artifact_bound": True, "coordinate_receipt_bound": True,
+                "as_built_scene_bound": True, "compare_receipt_bound": True,
+                "construction_candidates_bound": True, "domain_decision_bound": True,
+                "identity_current": True, "operator_authorized": True,
+                "fault_fixture_bound": True, "required_assets_bound": True,
+                "rollback_adapter_ready": True, "u7_bridge_ready": True,
+                "construction_state_unchanged": True, "capture_resources_dissolved": True,
+            },
+        )
+        session_id = session["session_id"]
+        claimed = director.claim_next(session_id)
+        director.commit_next(
+            session_id,
+            transition_digest=claimed["transition_digest"],
+            effect_receipt={"ok": True},
+            claim_token=claimed["claim_token"],
+        )
+        assert director.require_session(session_id).p3_sync_pending is True
+
+        # prepare only — no project.
+        prep_status, _, prep_resp = p4.dispatch_p4_foundry_request(
+            state, "POST",
+            f"/api/construction/director/session/{session_id}/prepare-p3-sync",
+            {"identity_handle": "e2e-no-project"},
+        )
+        assert prep_status == 200
+        prep = json.loads(prep_resp.decode())
+
+        # Try confirm-presentation without project — sync record is PREPARED.
+        confirm_status, _, confirm_resp = p3mod.dispatch_p3_foundry_request(
+            state, "POST",
+            "/api/construction/decision-lane/confirm-presentation",
+            {
+                "director_session_id": prep["director_session_id"],
+                "director_receipt_digest": prep["director_receipt_digest"],
+                "chapter_id": prep["chapter_id"],
+                "active_view": prep["active_view"],
+                "identity_digest": prep["identity_digest"],
+                "projection_digest": "forged",
+                "presentation_revision": "forged",
+            },
+            request_origin="http://127.0.0.1:8765",
+            request_host="127.0.0.1:8765",
+        )
+        assert confirm_status != 200, "confirm must fail when state is PREPARED, not PROJECTED"
+        assert director.require_session(session_id).p3_sync_pending is True
+        sync_key = f"{session_id}:{prep['director_receipt_digest']}"
+        assert state._p3_sync_nonces[sync_key]["state"] == "PREPARED"
+    finally:
+        state.close()
+
+
+def test_confirm_presentation_rejects_duplicate(monkeypatch):
+    """Negative: double confirm-presentation must fail on second call."""
+    monkeypatch.setattr(p4, "_validate_request_context", lambda *_args, **_kwargs: None)
+    import aura_construction_pascal_spatial_foundry_p3_server as p3mod
+    monkeypatch.setattr(p3mod, "_validate_request_context", lambda *_args, **_kwargs: None)
+
+    director = ConstructionFoundryDirector(_manifest())
+    import hashlib as _hl
+    from collections import namedtuple
+    FakeIdentity = namedtuple("FakeIdentity", ["identity_digest"])
+    ident_digest = _hl.sha256(b"e2e-double-confirm").hexdigest()
+    fake_identity = FakeIdentity(identity_digest=ident_digest)
+
+    def fake_proj_identity(_state, _body, require_all=True):
+        return ({}, fake_identity)
+    monkeypatch.setattr(p4, "_projection_and_identity", fake_proj_identity)
+
+    state = p3mod.P3FoundryShowcaseState(
+        Path(__file__).resolve().parents[1],
+        demo_project="winnipeg_pathways",
+        auto_start=False,
+        presentation_origin="http://127.0.0.1:8765",
+    )
+    state.p4_available = True
+    state.p4_load_error = ""
+    state.p4_director = director
+    state.presentation_origin = "http://127.0.0.1:8765"
+    state.presentation_netloc = "127.0.0.1:8765"
+    state.require_p4 = lambda: director
+
+    try:
+        session = director.start_session(
+            identity_digest=ident_digest,
+            construction_state_digest=_hl.sha256(b"e2e-double-confirm-state").hexdigest(),
+            initial_evidence={
+                "p3_available": True, "construction_identity_bound": True,
+                "pascal_artifact_bound": True, "coordinate_receipt_bound": True,
+                "as_built_scene_bound": True, "compare_receipt_bound": True,
+                "construction_candidates_bound": True, "domain_decision_bound": True,
+                "identity_current": True, "operator_authorized": True,
+                "fault_fixture_bound": True, "required_assets_bound": True,
+                "rollback_adapter_ready": True, "u7_bridge_ready": True,
+                "construction_state_unchanged": True, "capture_resources_dissolved": True,
+            },
+        )
+        session_id = session["session_id"]
+        claimed = director.claim_next(session_id)
+        director.commit_next(
+            session_id,
+            transition_digest=claimed["transition_digest"],
+            effect_receipt={"ok": True},
+            claim_token=claimed["claim_token"],
+        )
+        assert director.require_session(session_id).p3_sync_pending is True
+
+        # prepare + project
+        prep_status, _, prep_resp = p4.dispatch_p4_foundry_request(
+            state, "POST",
+            f"/api/construction/director/session/{session_id}/prepare-p3-sync",
+            {"identity_handle": "e2e-double-confirm"},
+        )
+        assert prep_status == 200
+        prep = json.loads(prep_resp.decode())
+
+        sess = director.require_session(session_id)
+        chapter_id = sess.receipts[-1].get("chapter_id")
+        active_view = dict(director.manifest.chapter(chapter_id).ui_directive or {}).get("active_view")
+        projection = state.require_p3().compile(active_view=active_view, timeline_day=14.0)
+        exact_identity = {
+            "state_digest": projection["domain"]["state_digest"],
+            "runtime_packet_digest": projection["domain"]["runtime_packet_digest"],
+            "pascal_artifact_digest": projection["artifacts"]["pascal_artifact_digest"],
+            "coordinate_receipt_digest": projection["artifacts"]["coordinate_receipt_digest"],
+            "as_built_scene_digest": projection["artifacts"]["as_built_scene_digest"],
+        }
+        proj_status, _, proj_resp = p3mod.dispatch_p3_foundry_request(
+            state, "POST", "/api/construction/decision-lane/project",
+            {
+                **exact_identity, "active_view": active_view, "timeline_day": 14.0,
+                "identity_handle": "e2e-double-confirm", "identity_digest": prep["identity_digest"],
+                "director_session_id": prep["director_session_id"],
+                "director_receipt_digest": prep["director_receipt_digest"],
+                "chapter_id": prep["chapter_id"], "sync_nonce": prep["sync_nonce"],
+            },
+            request_origin="http://127.0.0.1:8765", request_host="127.0.0.1:8765",
+        )
+        assert proj_status == 200
+        proj = json.loads(proj_resp.decode())
+
+        # First confirm — should succeed.
+        confirm_body = {
+            "director_session_id": prep["director_session_id"],
+            "director_receipt_digest": prep["director_receipt_digest"],
+            "chapter_id": prep["chapter_id"],
+            "active_view": active_view,
+            "identity_digest": prep["identity_digest"],
+            "projection_digest": proj["projection_digest"],
+            "presentation_revision": proj["presentation_revision"],
+        }
+        c1_status, _, _ = p3mod.dispatch_p3_foundry_request(
+            state, "POST", "/api/construction/decision-lane/confirm-presentation",
+            confirm_body, request_origin="http://127.0.0.1:8765", request_host="127.0.0.1:8765",
+        )
+        assert c1_status == 200
+
+        # Second confirm — must fail (state is RENDER_CONFIRMED, not PROJECTED).
+        c2_status, _, c2_resp = p3mod.dispatch_p3_foundry_request(
+            state, "POST", "/api/construction/decision-lane/confirm-presentation",
+            confirm_body, request_origin="http://127.0.0.1:8765", request_host="127.0.0.1:8765",
+        )
+        assert c2_status != 200, "duplicate confirm must fail"
+        assert director.require_session(session_id).p3_sync_pending is True
+    finally:
+        state.close()

@@ -631,6 +631,11 @@ def dispatch_p3_foundry_request(
             if _sync_record.get("presentation_revision") != presentation_revision:
                 return _json(409, {"ok": False, "error": "presentation_revision does not match sync record"})
             # Create the final immutable presentation receipt.
+            # The render capability is the server-owned presentation_revision
+            # stored during P3 /project.  It is consumed here — one-time use.
+            # This proves the caller received the project response (which
+            # contains the revision) and that the sync record transitioned
+            # through PROJECTED before confirmation.
             _receipt_input = "|".join([
                 "v1", director_session_id, director_receipt_digest,
                 chapter_id, active_view, identity_digest,
