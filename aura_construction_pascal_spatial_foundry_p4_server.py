@@ -798,6 +798,26 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
                 raise PascalPresentationError(
                     "P4 confirmation was already consumed; dissolve and Restart for a fresh exact confirmation"
                 )
+
+            # Nested replay mode: produce a bounded no-recursion receipt.
+            # When the V2 adapter re-runs V1 inside an already-running P4
+            # server, the Director's RUN_RUNTIME_V2 chapter calls this
+            # method again. Instead of starting another V2 proof (which
+            # would recurse infinitely), produce a bounded receipt that
+            # records the already-owned proof reference.
+            if os.environ.get("AURA_NESTED_REPLAY_MODE") == "1":
+                result = {
+                    "ok": True,
+                    "runtime_proof_ref": "nested-no-recursion-receipt",
+                    "nested_replay_mode": True,
+                    "construction_state_unchanged": True,
+                    "human_review_required": True,
+                    "production_mutation": False,
+                    "automatic_merge": False,
+                }
+                self.p4_confirmation_consumed = True
+                return result
+
             # Capture immutable local references inside the lock.
             confirmation_path = self.p4_confirmation_path
             runtime_output_dir = self.p4_runtime_output_dir
@@ -824,9 +844,9 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
             _sock.close()
             _saved_port = os.environ.get("AURA_RUNTIME_SERVER_PORT")
             os.environ["AURA_RUNTIME_SERVER_PORT"] = str(_nested_port)
-            # Break the V2→V1→Director→V2 recursion: tell the nested browser
-            # probe to skip RUN_RUNTIME_REPLAY since the outer proof already
-            # covers that obligation.
+            # Set nested replay mode so the inner Director's
+            # RUN_RUNTIME_V2 chapter produces a no-recursion receipt
+            # instead of starting another V2 proof.
             _saved_nested = os.environ.get("AURA_NESTED_REPLAY_MODE")
             os.environ["AURA_NESTED_REPLAY_MODE"] = "1"
             try:
