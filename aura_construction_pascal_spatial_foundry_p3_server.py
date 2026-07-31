@@ -498,21 +498,25 @@ def dispatch_p3_foundry_request(
             return _json(200, {"ok": True, "presentation_receipt": receipt})
         if method == "POST" and route == "/api/construction/decision-lane/validate-presentation-receipt":
             # P3-owned receipt validation/lookup.  Called by P4 during
-            # ack-p3-sync.  Returns the already-retained receipt only if
-            # it matches — does NOT issue a new receipt.
+            # ack-p3-sync.  Returns the already-retained presentation record
+            # only if it matches — does NOT issue a new receipt.
             chapter_id = str(body.get("chapter_id") or "")
             receipt_digest = str(body.get("receipt_digest") or "")
             director_session_id = str(body.get("director_session_id") or "")
-            if not chapter_id or not receipt_digest:
-                return _json(400, {"ok": False, "error": "chapter_id and receipt_digest are required"})
-            if not hasattr(state, "_p3_presentation_receipts"):
-                return _json(404, {"ok": False, "error": "no retained presentation receipts"})
-            _lookup_key = f"{director_session_id}:{chapter_id}"
-            retained = state._p3_presentation_receipts.get(_lookup_key)
+            director_receipt_digest = str(body.get("director_receipt_digest") or "")
+            if not director_session_id or not director_receipt_digest:
+                return _json(400, {"ok": False, "error": "director_session_id and director_receipt_digest are required"})
+            # Look up from _p3_retained_presentation (written by the project
+            # route as a side effect of compilation).
+            retained_map = getattr(state, "_p3_retained_presentation", None)
+            if retained_map is None or not retained_map:
+                return _json(404, {"ok": False, "error": "no retained P3 presentation state"})
+            _retain_key = f"{director_session_id}:{director_receipt_digest}"
+            retained = retained_map.get(_retain_key)
             if retained is None:
-                return _json(404, {"ok": False, "error": "no retained receipt for this session and chapter"})
-            if retained.get("receipt_digest") != receipt_digest:
-                return _json(409, {"ok": False, "error": "receipt digest does not match retained receipt"})
+                return _json(404, {"ok": False, "error": "no retained presentation record for this session and receipt digest"})
+            if receipt_digest and retained.get("receipt_digest") != receipt_digest:
+                return _json(409, {"ok": False, "error": "receipt digest does not match retained record"})
             return _json(200, {"ok": True, "presentation_receipt": retained})
         if method == "POST" and route == "/api/construction/decision-lane/project":
             # Filter to only P3-allowed fields before compilation — Director
@@ -531,21 +535,29 @@ def dispatch_p3_foundry_request(
             if director_session_id and director_receipt_digest:
                 active_view = str(body.get("active_view") or "")
                 _bidentity_digest = str(body.get("identity_digest") or "")
+                _bchapter_id = str(body.get("chapter_id") or "")
                 # Require all 5 binding fields as an all-or-nothing group.
-                if active_view and _bidentity_digest and str(body.get("chapter_id") or ""):
+                if active_view and _bidentity_digest and _bchapter_id:
                     if not hasattr(state, "_p3_retained_presentation"):
                         state._p3_retained_presentation = {}
                     _retain_key = f"{director_session_id}:{director_receipt_digest}"
                     # Immutable: reject overwrite of an existing record.
                     if _retain_key not in state._p3_retained_presentation:
+                        _digest_input = f"{_bchapter_id}|{active_view}|{_bidentity_digest}|{director_session_id}|{director_receipt_digest}"
+                        _receipt_digest = hashlib.sha256(_digest_input.encode()).hexdigest()
                         state._p3_retained_presentation[_retain_key] = {
                             "active_view": active_view,
                             "director_session_id": director_session_id,
                             "director_receipt_digest": director_receipt_digest,
                             "identity_digest": _bidentity_digest,
-                            "chapter_id": str(body.get("chapter_id") or ""),
+                            "chapter_id": _bchapter_id,
                             "projection_digest": hashlib.sha256(json.dumps(projection, sort_keys=True, default=str).encode()).hexdigest(),
+                            "receipt_digest": _receipt_digest,
                         }
+                        return _json(
+                            200,
+                            {"ok": True, "projection": public_projection(projection), "presentation_receipt_digest": _receipt_digest},
+                        )
             return _json(
                 200,
                 {"ok": True, "projection": public_projection(projection)},

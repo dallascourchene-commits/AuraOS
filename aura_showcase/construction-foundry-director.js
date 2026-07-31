@@ -305,6 +305,7 @@
           if (!projectResponse.ok || !projectResult.ok) {
             throw new Error(`P3 project for presentation sync failed: ${projectResult.error || projectResponse.status}`);
           }
+          const presentationReceiptDigest = projectResult.presentation_receipt_digest || null;
           // Step 3: Request P4 acknowledgement — validates the retained
           // P3 record via lookup only (does NOT create it).
           const ackResponse = await fetch(`/api/construction/director/session/${encodeURIComponent(session.session_id)}/ack-p3-sync`, {
@@ -316,10 +317,9 @@
               ...exactIdentityBody(projection),
               identity_handle: identityHandle,
               presentation_receipt: {
-                chapter_id: chapterId,
-                active_view: activeView,
-                director_session_id: session.session_id,
-                director_receipt_digest: result.receipt?.receipt_digest || result.receipt?.transition_digest || "",
+                chapter_id: prepareResult.chapter_id,
+                active_view: prepareResult.active_view,
+                receipt_digest: presentationReceiptDigest,
               },
             }),
           });

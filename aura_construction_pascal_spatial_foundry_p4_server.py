@@ -1249,6 +1249,7 @@ def dispatch_p4_foundry_request(
                 # Call P3 validate ONLY — lookup of an already-retained record.
                 _p3_validate_body = {
                     "chapter_id": _presentation_receipt.get("chapter_id", _last_chapter_id),
+                    "receipt_digest": _presentation_receipt.get("receipt_digest", ""),
                     "director_session_id": session_id,
                     "director_receipt_digest": _director_receipt_digest,
                 }
