@@ -215,7 +215,13 @@
     chapterSelect.value = session.selected_chapter_id || "";
     controls.forEach((button) => {
       const action = button.dataset.directorControl;
-      button.disabled = action === "RESTART" ? !session.dissolved : false;
+      if (action === "RESTART") {
+        button.disabled = !session.dissolved;
+      } else if (action === "RESYNC") {
+        button.disabled = !session.p3_sync_pending;
+      } else {
+        button.disabled = false;
+      }
     });
   }
 
@@ -353,6 +359,7 @@
     await settleDirective(async () => {
       if (result.receipt) {
         receiptNode.textContent = JSON.stringify(result.receipt, null, 2);
+        lastCommittedReceipt = result.receipt;
         const chapter = chapterById(result.receipt.chapter_id);
         await applyDirective(chapter, result.receipt);
         // Acknowledge P3 sync to the server so progression is unblocked.
@@ -364,16 +371,51 @@
       }
     }, render).catch((err) => { syncFailed = true; syncError = String(err?.message || err); });
     if (syncFailed) {
-      statusNode.textContent = `P3 presentation sync failed: ${syncError || "unknown error"}. Retry or re-sync before continuing.`;
+      statusNode.textContent = `P3 presentation sync failed: ${syncError || "unknown error"}. Click RESYNC to retry without losing progress.`;
     }
     return result;
+  }
+
+  let lastCommittedReceipt = null;
+
+  async function resync() {
+    if (!session) throw new Error("P4 Director session is not active");
+    if (!session.p3_sync_pending) {
+      statusNode.textContent = "No pending P3 sync — resync not needed.";
+      return;
+    }
+    if (!lastCommittedReceipt) {
+      throw new Error("No committed receipt available to re-sync against");
+    }
+    statusNode.textContent = "Re-syncing P3 presentation…";
+    let syncError = "";
+    await settleDirective(async () => {
+      await syncP3Presentation(lastCommittedReceipt);
+    }, render).catch((err) => { syncError = String(err?.message || err); });
+    if (syncError) {
+      statusNode.textContent = `P3 re-sync failed: ${syncError}. Click RESYNC to retry.`;
+    } else {
+      statusNode.textContent = "P3 presentation sync completed.";
+    }
   }
 
   async function play() {
     const generation = ++playGeneration;
     await control("PLAY");
     while (generation === playGeneration && session && !session.dissolved) {
+      // Halt autoplay if P3 sync is pending — the sync-failure message
+      // in the status node must not be clobbered by a doomed NEXT.
+      if (session.p3_sync_pending) {
+        playGeneration += 1;  // stop the loop
+        break;
+      }
       const result = await control("NEXT");
+      // Check again after control returns — a presentation chapter may
+      // have set p3_sync_pending during this call.
+      if (session && session.p3_sync_pending) {
+        playGeneration += 1;
+        break;
+      }
       const chapter = result.receipt ? chapterById(result.receipt.chapter_id) : null;
       if (shouldPaceAfterChapter(chapter)) {
         await new Promise((resolve) => setTimeout(resolve, 650));
@@ -399,6 +441,9 @@
       else if (action === "PAUSE") {
         playGeneration += 1;
         enqueue(() => control("PAUSE"));
+      } else if (action === "RESYNC") {
+        playGeneration += 1;
+        enqueue(resync);
       } else {
         playGeneration += 1;
         enqueue(() => control(action));

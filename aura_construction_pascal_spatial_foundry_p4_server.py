@@ -100,6 +100,7 @@ _P4_MARKUP = b"""
     <button type="button" data-director-control="PAUSE">Pause</button>
     <button type="button" data-director-control="PREVIOUS">Previous</button>
     <button type="button" data-director-control="NEXT">Next</button>
+    <button type="button" data-director-control="RESYNC">Re-sync P3</button>
     <button type="button" data-director-control="RESTART">Restart</button>
   </div>
   <label>Chapter <select id="construction-director-chapters"></select></label>
