@@ -10,7 +10,7 @@ const CHAPTER_TIMEOUT_MS = Number(process.env.AURA_P4_CHAPTER_TIMEOUT_MS || 2400
 
 // Validate BASE_URL is loopback only — reject any non-loopback origin.
 const _parsedBaseUrl = new URL(BASE_URL);
-const _loopbackHosts = new Set(["127.0.0.1", "localhost", "::1"]);
+const _loopbackHosts = new Set(["127.0.0.1", "localhost", "::1", "[::1]"]);
 if (!_loopbackHosts.has(_parsedBaseUrl.hostname)) {
   throw new Error(`BASE_URL must be loopback only, got: ${_parsedBaseUrl.hostname}`);
 }
