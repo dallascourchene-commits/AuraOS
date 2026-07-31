@@ -445,16 +445,19 @@ def dispatch_p3_foundry_request(
             director_receipt_digest = str(body.get("director_receipt_digest") or "")
             identity_digest = str(body.get("identity_digest") or "")
             chapter_id = str(body.get("chapter_id") or "")
-            if not active_view or not director_session_id or not director_receipt_digest:
-                return _json(400, {"ok": False, "error": "active_view, director_session_id, and director_receipt_digest are required"})
+            if not active_view or not director_session_id or not director_receipt_digest or not identity_digest or not chapter_id:
+                return _json(400, {"ok": False, "error": "active_view, director_session_id, director_receipt_digest, identity_digest, and chapter_id are required"})
             compiled_view = projection.get("presentation", {}).get("active_view") or projection.get("active_view", "")
             if compiled_view != active_view:
                 return _json(409, {"ok": False, "error": f"compiled view '{compiled_view}' does not match retained '{active_view}'"})
             # Store under a composite key so the record is bound to the
             # exact Director session and transition, not a global singleton.
+            # Reject overwrite of an existing record (immutability).
             if not hasattr(state, "_p3_retained_presentation"):
                 state._p3_retained_presentation = {}
             _retain_key = f"{director_session_id}:{director_receipt_digest}"
+            if _retain_key in state._p3_retained_presentation:
+                return _json(409, {"ok": False, "error": "retained presentation record already exists for this session and receipt digest"})
             state._p3_retained_presentation[_retain_key] = {
                 "active_view": active_view,
                 "director_session_id": director_session_id,
@@ -492,6 +495,15 @@ def dispatch_p3_foundry_request(
             retained_view = retained_presentation.get("active_view")
             if retained_view != active_view:
                 return _json(409, {"ok": False, "error": f"P3 retained view '{retained_view}' does not match requested '{active_view}'"})
+            # Validate ALL binding fields in the retained record match the
+            # issuance request — prevents a caller from using a retained
+            # record with different identity/chapter bindings.
+            if retained_presentation.get("director_session_id") != director_session_id:
+                return _json(409, {"ok": False, "error": "retained record director_session_id mismatch"})
+            if retained_presentation.get("director_receipt_digest") != director_receipt_digest:
+                return _json(409, {"ok": False, "error": "retained record director_receipt_digest mismatch"})
+            if retained_presentation.get("chapter_id") and retained_presentation.get("chapter_id") != chapter_id:
+                return _json(409, {"ok": False, "error": "retained record chapter_id mismatch"})
             # Resolve the identity digest from the caller-supplied
             # bilateral identity_digest (passed by P4 from the resolved
             # identity handle), not from the P3 projection.
