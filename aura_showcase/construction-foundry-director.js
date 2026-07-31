@@ -200,7 +200,8 @@
     }
     Array.from(chapterSelect.options).forEach((option) => {
       const chapter = chapterById(option.value);
-      option.disabled = !chapter || chapter.order > session.executed_index;
+      // Disable unproven chapters and all jumps while P3 sync is pending.
+      option.disabled = !chapter || chapter.order > session.executed_index || Boolean(session.p3_sync_pending);
     });
   }
 
@@ -219,6 +220,10 @@
         button.disabled = !session.dissolved;
       } else if (action === "RESYNC") {
         button.disabled = !session.p3_sync_pending;
+      } else if (action === "PLAY" || action === "NEXT") {
+        // Block progression controls while P3 sync is pending so the
+        // RESYNC guidance message is not clobbered by a backend rejection.
+        button.disabled = Boolean(session.p3_sync_pending);
       } else {
         button.disabled = false;
       }
@@ -243,8 +248,6 @@
     // using jsonRequest for consistent error handling and response validation.
     // Under Trust Model A, the browser is the trusted presentation agent.
     const chapter = chapterById(receipt.chapter_id);
-    const chapterId = receipt?.chapter_id || null;
-    const activeView = chapter?.ui_directive?.active_view || null;
 
     // Step 1: Ask P4 to resolve the bilateral identity and return the
     // binding values needed for P3 presentation retention.

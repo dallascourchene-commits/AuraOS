@@ -128,3 +128,24 @@ test("autoplay terminates on sync failure without issuing another NEXT", async (
   assert.equal(nextCount, 1);
   assert.equal(renderCount, 1);
 });
+
+test("source contains UI-level sync-pending guards for PLAY/NEXT and chapter select", async () => {
+  // The render() function disables PLAY, NEXT, and chapter-select options
+  // when p3_sync_pending is true.  This is a source-level assertion since
+  // render() depends on DOM state not available in the test hook.
+  assert.match(
+    source,
+    /action === "PLAY" \|\| action === "NEXT"/,
+    "render() must disable PLAY and NEXT when p3_sync_pending",
+  );
+  assert.match(
+    source,
+    /Boolean\(session\.p3_sync_pending\)/,
+    "render() must use Boolean(session.p3_sync_pending) for disabling",
+  );
+  assert.match(
+    source,
+    /chapter\.order > session\.executed_index \|\| Boolean\(session\.p3_sync_pending\)/,
+    "chapter-select options must be disabled when p3_sync_pending",
+  );
+});
