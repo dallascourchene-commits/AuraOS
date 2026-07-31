@@ -93,8 +93,8 @@ def _build_standalone_html() -> bytes:
         <p class="construction-lede">
           Aura retains Construction truth, evidence, authority, verification, rollback,
           and human disposition. Pascal supplies the pinned disposable 2D/3D building
-          workbench. This page contains no Civic Arena, Winnipeg map, Human Agent Arena,
-          Observatory, or Crucible surface.
+          workbench. This page is isolated from every non-Construction showcase
+          surface.
         </p>
       </div>
       <dl class="construction-boundary">
