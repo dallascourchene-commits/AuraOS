@@ -77,6 +77,10 @@ Use the P3 view controls to inspect the product directly:
 
 Use the Director’s **Next** control for the guided fifteen-chapter demonstration. The Director remains responsible for consequential chapter order; the view controls are presentation controls only.
 
+## Generated navigation
+
+Changes to the standalone server, presentation stylesheet, runtime profiles, tests, or this guide require the trusted CODEMAP and topology synchronization lane before merge. Generated navigation artifacts are not hand-edited.
+
 ## Authority boundary
 
 The standalone page remains projection-only. It does not authorize physical work, professional approval, payment, access, deployment, merge, or automatic learning promotion. Human review remains required.
