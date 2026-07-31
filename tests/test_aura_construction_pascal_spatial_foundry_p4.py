@@ -855,6 +855,9 @@ def test_confirm_presentation_rejects_duplicate(monkeypatch):
 def test_anti_replay_ordering_allows_direct_sequence_without_renderer_proof(monkeypatch):
     """Trust Model A: prepare→project→confirm→ack succeeds via direct API.
 
+    See docs/AURA_CONSTRUCTION_PASCAL_SPATIAL_FOUNDRY_P4.md § "Trust model"
+    for the canonical statement of this trust boundary.
+
     The synchronization protocol proves ordered, non-replayable completion
     by Aura's trusted same-origin presentation agent.  It does NOT
     independently attest against a malicious client controlling that agent.
