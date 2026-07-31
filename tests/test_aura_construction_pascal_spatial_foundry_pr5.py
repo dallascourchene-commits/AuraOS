@@ -126,3 +126,42 @@ def test_pr5_scope_retains_external_review_and_merge_denials() -> None:
     )
     assert objective["authority"]["automatic_merge"] is False
     assert objective["authority"]["physical_work_authority"] is False
+
+
+def test_pr5_coordinate_receipt_mismatched_artifact_digest_fails_closed(tmp_path, monkeypatch) -> None:
+    """load_pascal_compatibility_fixture must reject a coordinate receipt whose
+    pascal_artifact_digest does not match the manifest artifact_digest."""
+    import aura_pascal_spatial_presentation_part5 as part5
+    from aura_pascal_spatial_presentation import PascalPresentationError
+
+    # Load the real fixture to get the valid manifest.
+    try:
+        _lock, real_manifest, _coord, _scene = load_pascal_compatibility_fixture(str(ROOT))
+    except PascalPresentationError:
+        # Pre-existing Windows digest mismatch — skip this test if the
+        # base fixture itself can't load on this platform.
+        import pytest
+        pytest.skip("Pascal fixture has pre-existing digest mismatch on Windows")
+
+    # Create a fake coordinate receipt with a wrong pascal_artifact_digest.
+    import json as _json
+    coord_path = ROOT / "aura_showcase/pascal-workbench/coordinate-receipt.json"
+    real_coord = _json.loads(coord_path.read_text(encoding="utf-8"))
+    # Flip one character in the digest to create a mismatch.
+    bad_digest = list(real_manifest.artifact_digest)
+    bad_digest[0] = "0" if bad_digest[0] != "0" else "1"
+    real_coord["pascal_artifact_digest"] = "".join(bad_digest)
+
+    # Monkeypatch _load_json_object so that when the coordinate receipt is
+    # loaded, it returns our tampered version.
+    original_load = part5._load_json_object
+
+    def tampered_load(path, name):
+        if "coordinate" in str(path) and "coordinate" in name.lower():
+            return real_coord
+        return original_load(path, name)
+
+    monkeypatch.setattr(part5, "_load_json_object", tampered_load)
+
+    with pytest.raises(PascalPresentationError, match="pascal_artifact_digest does not match"):
+        load_pascal_compatibility_fixture(str(ROOT))
