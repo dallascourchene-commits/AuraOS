@@ -1174,7 +1174,6 @@ def test_p4_runtime_runner_replacement_and_restoration():
             self.p4_confirmation_path.parent.mkdir(parents=True, exist_ok=True)
             self.p4_confirmation_path.write_text(_json.dumps(confirmation_data))
             self.p4_runtime_output_dir = Path(mkdtemp()) / "output"
-            self.p4_runtime_output_dir.mkdir(parents=True, exist_ok=True)
             self.p4_confirmation_consumed = False
             self.p4_required_assets = required_assets
             self.repo_root = _asset_dir
@@ -1319,3 +1318,186 @@ def test_p4_runtime_profile_is_construction_demo_not_pr5():
     assert _RUNTIME_PROFILE == ".aura/runtime_profiles/construction_demo_bilateral.v2.json"
     assert "construction_pascal_spatial_foundry" not in _RUNTIME_PROFILE, \
         "P4 runtime profile must NOT be the PR5 profile (would cause recursion)"
+
+
+def test_p4_concurrent_replay_attempts_are_serialized():
+    """Verify that concurrent execute_exact_runtime_replay calls are serialized
+    by the P4 runtime lock — only one can proceed, the other must block or fail.
+    """
+    import threading
+    from aura_bilateral_live_repair_foundry import BilateralIdentity
+    from aura_construction_pascal_spatial_foundry_p4_server import P4FoundryShowcaseState
+    from pathlib import Path
+    from tempfile import mkdtemp
+    import json as _json
+    import shutil as _shutil
+
+    _intent = "a" * 64
+    _ledger = "b" * 64
+    _guardrail = "d" * 64
+    _confirmation = "e" * 64
+    _repo_head = "f" * 64
+    _source_tree = "1" * 64
+    _allowed_paths = "2" * 64
+
+    confirmation_data = {
+        "intent_packet": {"intent_digest": _intent},
+        "semantic_ledger": {"ledger_digest": _ledger},
+        "confirmation_receipt": {
+            "confirmation_id": _confirmation,
+            "guardrail_set_digest": _guardrail,
+            "repository_head": _repo_head,
+            "source_tree_digest": _source_tree,
+        },
+        "u7_references": {"intent_revision_status": "P0"},
+    }
+
+    results = []
+
+    class SlowService:
+        def __init__(self):
+            self.runtime_runner = self._canonical
+            self.call_count = 0
+
+        def _canonical(self, root, **kwargs):
+            return {
+                "ok": True, "proof": "canonical", "proof_digest": "c" * 64,
+                "intent_contract": {
+                    "intent_digest": _intent, "semantic_ledger_digest": _ledger,
+                    "guardrail_set_digest": _guardrail, "confirmation_digest": _confirmation,
+                    "intent_revision_status": "P0", "expected_repository_head": _repo_head,
+                    "expected_source_tree": _source_tree, "allowed_path_set_digest": _allowed_paths,
+                },
+                "requirement_bindings": {"positive_assertions": [], "negative_assertions": [], "preservation_assertions": [], "fault_injections": []},
+                "repair_policy": {"human_review_required": True},
+                "required_trace_artifacts": [], "base_profile": "test",
+                "base_environment_create_venv": False, "bilateral_waboose_request": "test",
+            }
+
+        def execute_replay(self, *, packet_id, profile_path, confirmation_packet, output_dir, **kwargs):
+            self.call_count += 1
+            return self.runtime_runner(Path("."), **kwargs)
+
+    class MockState:
+        def __init__(self):
+            self.p4_confirmation_path = Path(mkdtemp()) / "confirmation.json"
+            self.p4_confirmation_path.parent.mkdir(parents=True, exist_ok=True)
+            self.p4_confirmation_path.write_text(_json.dumps(confirmation_data))
+            self.p4_runtime_output_dir = Path(mkdtemp()) / "output"
+            self.p4_confirmation_consumed = False
+            self.p4_required_assets = ()
+            self.repo_root = Path(".")
+            self._p4_runtime_lock = threading.RLock()
+            self._live_repair = SlowService()
+
+        @property
+        def live_repair(self):
+            return self._live_repair
+
+    state = MockState()
+    identity = BilateralIdentity(
+        intent_digest=_intent, confirmation_digest=_confirmation,
+        semantic_ledger_digest=_ledger, guardrail_set_digest=_guardrail,
+        intent_revision_id="P0", repository_head=_repo_head, source_tree_digest=_source_tree,
+        runtime_profile_digest="0" * 64, verifier_id="test", verifier_source_digest="1" * 64,
+    )
+
+    def attempt():
+        try:
+            P4FoundryShowcaseState.execute_exact_runtime_replay(
+                state, packet_id="concurrent", identity=identity
+            )
+            results.append("ok")
+        except Exception as e:
+            results.append(str(e))
+
+    t1 = threading.Thread(target=attempt)
+    t2 = threading.Thread(target=attempt)
+    t1.start()
+    t2.start()
+    t1.join(timeout=10)
+    t2.join(timeout=10)
+
+    # The lock serializes — only one call should succeed, the other
+    # should fail because confirmation was already consumed or output dir exists.
+    assert len(results) == 2, f"expected 2 results, got {results}"
+    assert "ok" in results, f"at least one call should succeed: {results}"
+    assert state._live_repair.call_count == 1, \
+        f"execute_replay should be called once, got {state._live_repair.call_count}"
+
+    _shutil.rmtree(state.p4_confirmation_path.parent, ignore_errors=True)
+    _shutil.rmtree(state.p4_runtime_output_dir, ignore_errors=True)
+
+
+def test_p4_output_dir_already_exists_fails_closed():
+    """Verify that execute_exact_runtime_replay fails when the output
+    directory already exists — preventing stale artifact reuse.
+    """
+    from aura_bilateral_live_repair_foundry import BilateralIdentity
+    from aura_construction_pascal_spatial_foundry_p4_server import (
+        P4FoundryShowcaseState, PascalPresentationError,
+    )
+    from pathlib import Path
+    from tempfile import mkdtemp
+    import json as _json
+    import shutil as _shutil
+
+    _intent = "a" * 64
+    _ledger = "b" * 64
+    _guardrail = "d" * 64
+    _confirmation = "e" * 64
+    _repo_head = "f" * 64
+    _source_tree = "1" * 64
+
+    confirmation_data = {
+        "intent_packet": {"intent_digest": _intent},
+        "semantic_ledger": {"ledger_digest": _ledger},
+        "confirmation_receipt": {
+            "confirmation_id": _confirmation, "guardrail_set_digest": _guardrail,
+            "repository_head": _repo_head, "source_tree_digest": _source_tree,
+        },
+        "u7_references": {"intent_revision_status": "P0"},
+    }
+
+    output_dir = Path(mkdtemp()) / "output"
+    output_dir.mkdir(parents=True, exist_ok=True)  # Pre-create to trigger failure
+
+    class MockService:
+        def __init__(self):
+            self.runtime_runner = lambda root, **kw: {"ok": True}
+
+        def execute_replay(self, **kwargs):
+            raise AssertionError("execute_replay should not be called when output dir exists")
+
+    class MockState:
+        def __init__(self):
+            self.p4_confirmation_path = Path(mkdtemp()) / "confirmation.json"
+            self.p4_confirmation_path.parent.mkdir(parents=True, exist_ok=True)
+            self.p4_confirmation_path.write_text(_json.dumps(confirmation_data))
+            self.p4_runtime_output_dir = output_dir
+            self.p4_confirmation_consumed = False
+            self.p4_required_assets = ()
+            self.repo_root = Path(".")
+            self._p4_runtime_lock = __import__("threading").RLock()
+            self._live_repair = MockService()
+
+        @property
+        def live_repair(self):
+            return self._live_repair
+
+    state = MockState()
+    identity = BilateralIdentity(
+        intent_digest=_intent, confirmation_digest=_confirmation,
+        semantic_ledger_digest=_ledger, guardrail_set_digest=_guardrail,
+        intent_revision_id="P0", repository_head=_repo_head, source_tree_digest=_source_tree,
+        runtime_profile_digest="0" * 64, verifier_id="test", verifier_source_digest="1" * 64,
+    )
+
+    with pytest.raises(PascalPresentationError, match="already exists"):
+        P4FoundryShowcaseState.execute_exact_runtime_replay(
+            state, packet_id="test", identity=identity
+        )
+    assert not state.p4_confirmation_consumed, "confirmation should not be consumed"
+
+    _shutil.rmtree(state.p4_confirmation_path.parent, ignore_errors=True)
+    _shutil.rmtree(output_dir, ignore_errors=True)

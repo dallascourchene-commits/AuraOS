@@ -79,35 +79,80 @@ def test_pr5_v2_profile_binds_exact_verifier_and_confirmation_requirements() -> 
             assert value is False
 
 
-def test_pr5_browser_probe_names_every_required_scene_and_relaunch() -> None:
-    """Verify the browser probe exports its artifact list and matches the V1 profile."""
-    profile = json.loads((ROOT / V1).read_text(encoding="utf-8"))
+def test_pr5_browser_probe_contract_module_exports_exact_screenshot_set() -> None:
+    """Verify the exported contract module exports the exact screenshot set
+    and that the V1 profile's required .png artifacts match it exactly.
+
+    This replaces the old source-regex test that scanned JavaScript source
+    text for quoted filenames. The contract module is the canonical source.
+    """
+    import subprocess
+    import json as _json
+
+    profile = _json.loads((ROOT / V1).read_text(encoding="utf-8"))
     required_artifacts = set(profile["probe"]["required_artifacts"])
+    required_pngs = sorted(name for name in required_artifacts if name.endswith(".png"))
 
-    # The probe source exports its screenshot map as a frozen object.
-    # Parse the SCREENSHOTS constant from the probe source to get the
-    # actual screenshot filenames the probe writes.
-    probe_source = (ROOT / PROBE).read_text(encoding="utf-8")
+    # Run the Node contract test to get the exported screenshot values.
+    result = subprocess.run(
+        ["node", "-e", """
+const c = require("./tests/runtime/construction_pascal_spatial_foundry_probe_contract.cjs");
+const fs = require("node:fs");
+const path = require("node:path");
 
-    # Extract screenshot filenames from the SCREENSHOTS object
-    import re
-    screenshot_matches = re.findall(r'"([\w-]+\.png)"', probe_source)
-    probe_screenshots = set(screenshot_matches)
+// Verify exactly the required PNGs are exported
+const screenshots = c.SCREENSHOT_VALUES;
+console.log(JSON.stringify(screenshots));
 
-    # Every required .png artifact must be in the probe's screenshot set
-    required_pngs = {name for name in required_artifacts if name.endswith(".png")}
-    missing = required_pngs - probe_screenshots
-    assert not missing, f"required screenshots missing from probe: {missing}"
+// Verify chapter order has 15 entries
+console.log(JSON.stringify(c.EXPECTED_CHAPTER_ORDER));
 
-    # Verify evidence field names are present as actual code identifiers
-    # (not just in comments) by checking they appear as property keys
+// Verify required evidence fields
+console.log(JSON.stringify(c.REQUIRED_EVIDENCE_FIELDS));
+
+// Verify validateEvidence rejects missing fields
+const bad = c.validateEvidence({});
+if (bad.valid) { console.error("FAIL: empty evidence should be invalid"); process.exit(1); }
+
+// Verify validateEvidence accepts valid evidence
+const good = c.validateEvidence({
+  relaunchSucceeded: true,
+  exactOrder: c.EXPECTED_CHAPTER_ORDER,
+  allAuthorityFalse: true,
+  requestFailures: [],
+  externalRequests: [],
+  pageErrors: [],
+  sourceMutation: false,
+  productionMutation: false,
+  automaticMerge: false,
+  humanReviewRequired: true,
+});
+if (!good.valid) { console.error("FAIL: valid evidence rejected: " + JSON.stringify(good.errors)); process.exit(1); }
+"""],
+        capture_output=True, text=True, cwd=str(ROOT), timeout=30,
+    )
+    assert result.returncode == 0, f"Node contract test failed: {result.stderr}"
+
+    lines = result.stdout.strip().split("\n")
+    exported_screenshots = sorted(_json.loads(lines[0]))
+    chapter_order = _json.loads(lines[1])
+    evidence_fields = _json.loads(lines[2])
+
+    # The exported screenshot set must exactly match the required PNGs
+    assert exported_screenshots == required_pngs, (
+        f"screenshot mismatch: exported has {set(exported_screenshots) - set(required_pngs)} extra, "
+        f"required has {set(required_pngs) - set(exported_screenshots)} missing"
+    )
+
+    # Chapter order must have exactly 18 entries (17 screenshots + RESTART)
+    assert len(chapter_order) == 18, f"expected 18 chapters, got {len(chapter_order)}"
+
+    # RESTART must be the last chapter
+    assert chapter_order[-1] == "RESTART", f"last chapter should be RESTART, got {chapter_order[-1]}"
+
+    # Required evidence fields must include the terminal fields
     for field in ("relaunchSucceeded", "exactOrder", "allAuthorityFalse"):
-        # Must appear as a property assignment, not in a comment
-        pattern = rf'\b{field}\b'
-        assert re.search(pattern, probe_source), f"evidence field '{field}' not found in probe source"
-
-    # Verify RESTART is used as a control action
-    assert "RESTART" in probe_source, "RESTART control not referenced in probe"
+        assert field in evidence_fields, f"required field {field} not in contract exports"
 
 
 def test_pr5_scope_retains_external_review_and_merge_denials() -> None:

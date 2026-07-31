@@ -797,9 +797,19 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
                 raise PascalPresentationError(
                     "P4 confirmation was already consumed; dissolve and Restart for a fresh exact confirmation"
                 )
+            # Atomically claim the runtime output directory before any
+            # execution or confirmation consumption. Create the directory
+            # with exist_ok=False to fail if another process already claimed it.
+            runtime_output = Path(str(self.p4_runtime_output_dir))
+            try:
+                runtime_output.mkdir(parents=True, exist_ok=False)
+            except FileExistsError:
+                raise PascalPresentationError(
+                    f"P4 runtime output directory already exists: {runtime_output} — "
+                    "a previous run may not have been dissolved; use Restart for a fresh directory"
+                )
             # Capture immutable local references inside the lock.
             confirmation_path = self.p4_confirmation_path
-            runtime_output_dir = self.p4_runtime_output_dir
             service = self.live_repair
             canonical_runner = service.runtime_runner
 
@@ -824,7 +834,7 @@ class P4FoundryShowcaseState(P3FoundryShowcaseState):
                     packet_id=packet_id,
                     profile_path=_RUNTIME_PROFILE,
                     confirmation_packet=confirmation_path,
-                    output_dir=runtime_output_dir,
+                    output_dir=runtime_output,
                 )
             finally:
                 service.runtime_runner = canonical_runner

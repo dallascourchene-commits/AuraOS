@@ -4,6 +4,13 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { chromium } = require("playwright-core");
 
+// Consume the canonical contract module instead of duplicating constants.
+const {
+  SCREENSHOTS,
+  EXPECTED_CHAPTER_ORDER,
+  REQUIRED_EVIDENCE_FIELDS,
+} = require("./construction_pascal_spatial_foundry_probe_contract.cjs");
+
 const BASE_URL = process.env.AURA_CONSTRUCTION_PASCAL_FOUNDRY_URL || "http://127.0.0.1:8768/";
 const OUTPUT_DIR = process.env.AURA_RUNTIME_EVIDENCE_DIR || "/tmp/aura-construction-pascal-foundry-runtime";
 const CHAPTER_TIMEOUT_MS = Number(process.env.AURA_P4_CHAPTER_TIMEOUT_MS || 240000);
@@ -14,23 +21,6 @@ const _loopbackHosts = new Set(["127.0.0.1", "localhost", "::1", "[::1]"]);
 if (!_loopbackHosts.has(_parsedBaseUrl.hostname)) {
   throw new Error(`BASE_URL must be loopback only, got: ${_parsedBaseUrl.hostname}`);
 }
-
-const SCREENSHOTS = Object.freeze({
-  INITIAL: "00-bilateral-intent.png",
-  FRAME_CONSTRUCTION: "01-design-3d.png",
-  SHOW_FLOOR_PLAN: "02-floorplan-2d.png",
-  SHOW_AS_BUILT: "03-as-built.png",
-  COMPARE_REPRESENTATIONS: "04-compare.png",
-  REVIEW_CANDIDATES: "07-construction-candidates.png",
-  AURA_WATCH_THIS: "09-capture-started.png",
-  MARK_INCIDENT: "10-incident-marked.png",
-  FINALIZE_REPLAY: "11-replay-proof.png",
-  RUN_RUNTIME_V2: "12-repair-route.png",
-  DEGRADED_PREVIEW: "13-preview-rollback.png",
-  CURRENT_REPROOF: "14-current-reproof.png",
-  RETURN_TO_CONSTRUCTION: "15-observatory.png",
-  DISSOLVE: "16-dissolved.png",
-});
 
 function ensureDirectory(directory) {
   fs.mkdirSync(directory, { recursive: true });
