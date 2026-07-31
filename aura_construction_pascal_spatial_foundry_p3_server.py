@@ -460,6 +460,12 @@ def dispatch_p3_foundry_request(
             retained_view = retained_presentation.get("active_view")
             if retained_view != active_view:
                 return _json(409, {"ok": False, "error": f"P3 retained view '{retained_view}' does not match requested '{active_view}'"})
+            # Resolve the identity digest from the caller-supplied
+            # bilateral identity_digest (passed by P4 from the resolved
+            # identity handle), not from the P3 projection.
+            identity_digest = str(body.get("identity_digest") or "")
+            if not identity_digest:
+                return _json(400, {"ok": False, "error": "identity_digest is required"})
             # Validate ALL binding fields in the retained record match the
             # issuance request — prevents a caller from using a retained
             # record with different identity/chapter bindings.
@@ -469,14 +475,8 @@ def dispatch_p3_foundry_request(
                 return _json(409, {"ok": False, "error": "retained record director_receipt_digest mismatch"})
             if retained_presentation.get("chapter_id") and retained_presentation.get("chapter_id") != chapter_id:
                 return _json(409, {"ok": False, "error": "retained record chapter_id mismatch"})
-            if retained_presentation.get("identity_digest") and retained_presentation.get("identity_digest") != identity_digest:
+            if retained_presentation.get("identity_digest") != identity_digest:
                 return _json(409, {"ok": False, "error": "retained record identity_digest mismatch"})
-            # Resolve the identity digest from the caller-supplied
-            # bilateral identity_digest (passed by P4 from the resolved
-            # identity handle), not from the P3 projection.
-            identity_digest = str(body.get("identity_digest") or "")
-            if not identity_digest:
-                return _json(400, {"ok": False, "error": "identity_digest is required"})
             digest_input = f"{chapter_id}|{active_view}|{identity_digest}|{director_session_id}|{director_receipt_digest}"
             receipt_digest = hashlib.sha256(digest_input.encode()).hexdigest()
             receipt = {
@@ -515,7 +515,10 @@ def dispatch_p3_foundry_request(
                 return _json(409, {"ok": False, "error": "receipt digest does not match retained receipt"})
             return _json(200, {"ok": True, "presentation_receipt": retained})
         if method == "POST" and route == "/api/construction/decision-lane/project":
-            projection = _compile_from_request(state, body, require_identities=True)
+            # Filter to only P3-allowed fields before compilation — Director
+            # binding fields are extracted separately after compilation.
+            _proj_body = {k: v for k, v in body.items() if k in (*_IDENTITY_KEYS, *_SELECTION_KEYS, "timeline_day")}
+            projection = _compile_from_request(state, _proj_body, require_identities=True)
             # When Director session bindings are present, P3 records the
             # retained presentation state as a side effect of compilation —
             # not from a separate client-authored assertion.  This is the

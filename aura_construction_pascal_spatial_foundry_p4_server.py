@@ -945,16 +945,17 @@ def _start_exact_session(
 
 
 def _session_start(state: P4FoundryShowcaseState, body: Mapping[str, Any]) -> dict[str, Any]:
-    if state.p4_confirmation_consumed:
-        raise PascalPresentationError(
-            "P4 confirmation was already consumed; use Restart after dissolution"
-        )
-    allowed = frozenset({"identity_handle", *_IDENTITY_KEYS})
-    unknown = sorted(set(body) - allowed)
-    if unknown:
-        raise PascalPresentationError(f"P4 session start contains unknown fields: {unknown}")
-    projection, identity = _projection_and_identity(state, body, require_all=True)
-    return _start_exact_session(state, projection, identity)
+    with state._p4_runtime_lock:
+        if state.p4_confirmation_consumed:
+            raise PascalPresentationError(
+                "P4 confirmation was already consumed; use Restart after dissolution"
+            )
+        allowed = frozenset({"identity_handle", *_IDENTITY_KEYS})
+        unknown = sorted(set(body) - allowed)
+        if unknown:
+            raise PascalPresentationError(f"P4 session start contains unknown fields: {unknown}")
+        projection, identity = _projection_and_identity(state, body, require_all=True)
+        return _start_exact_session(state, projection, identity)
 
 
 def _execute_chapter(state: P4FoundryShowcaseState, session_id: str, transition: Mapping[str, Any]) -> dict[str, Any]:
