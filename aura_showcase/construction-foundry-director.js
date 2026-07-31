@@ -282,8 +282,9 @@
           if (!prepareResponse.ok || !prepareResult.ok) {
             throw new Error(`P4 prepare-p3-sync failed: ${prepareResult.error || prepareResponse.status}`);
           }
-          // Step 2: Call P3 project with the resolved bindings.  P3 records
-          // the retained presentation state as a side effect of compilation.
+          // Step 2: Call P3 project with the resolved bindings + nonce.
+          // P3 records the retained presentation state as a side effect of
+          // compilation, consuming the one-time nonce from prepare-p3-sync.
           // This happens AFTER waitForP3View has confirmed the actual DOM
           // state, so P3's compilation is bound to a real presentation event.
           const projectResponse = await fetch("/api/construction/decision-lane/project", {
@@ -299,6 +300,7 @@
               director_session_id: prepareResult.director_session_id,
               director_receipt_digest: prepareResult.director_receipt_digest,
               chapter_id: prepareResult.chapter_id,
+              sync_nonce: prepareResult.sync_nonce,
             }),
           });
           const projectResult = await projectResponse.json().catch(() => ({}));

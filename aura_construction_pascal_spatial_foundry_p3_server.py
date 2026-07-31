@@ -517,6 +517,8 @@ def dispatch_p3_foundry_request(
                 return _json(404, {"ok": False, "error": "no retained presentation record for this session and receipt digest"})
             if receipt_digest and retained.get("receipt_digest") != receipt_digest:
                 return _json(409, {"ok": False, "error": "receipt digest does not match retained record"})
+            if not receipt_digest:
+                return _json(400, {"ok": False, "error": "receipt_digest is required"})
             return _json(200, {"ok": True, "presentation_receipt": retained})
         if method == "POST" and route == "/api/construction/decision-lane/project":
             # Filter to only P3-allowed fields before compilation — Director
@@ -536,28 +538,44 @@ def dispatch_p3_foundry_request(
                 active_view = str(body.get("active_view") or "")
                 _bidentity_digest = str(body.get("identity_digest") or "")
                 _bchapter_id = str(body.get("chapter_id") or "")
-                # Require all 5 binding fields as an all-or-nothing group.
-                if active_view and _bidentity_digest and _bchapter_id:
+                _sync_nonce = str(body.get("sync_nonce") or "")
+                # Require all 5 binding fields + a valid one-time nonce.
+                if active_view and _bidentity_digest and _bchapter_id and _sync_nonce:
+                    # Consume the one-time nonce — ties retention to a
+                    # prior prepare-p3-sync call and prevents replay.
+                    _nonce_map = getattr(state, "_p3_sync_nonces", None)
+                    _nonce_key = f"{director_session_id}:{director_receipt_digest}"
+                    if not _nonce_map or _nonce_map.get(_nonce_key) != _sync_nonce:
+                        return _json(403, {"ok": False, "error": "invalid or missing sync_nonce — call prepare-p3-sync first"})
+                    # One-time use: consume the nonce.
+                    del _nonce_map[_nonce_key]
                     if not hasattr(state, "_p3_retained_presentation"):
                         state._p3_retained_presentation = {}
                     _retain_key = f"{director_session_id}:{director_receipt_digest}"
-                    # Immutable: reject overwrite of an existing record.
-                    if _retain_key not in state._p3_retained_presentation:
-                        _digest_input = f"{_bchapter_id}|{active_view}|{_bidentity_digest}|{director_session_id}|{director_receipt_digest}"
-                        _receipt_digest = hashlib.sha256(_digest_input.encode()).hexdigest()
-                        state._p3_retained_presentation[_retain_key] = {
-                            "active_view": active_view,
-                            "director_session_id": director_session_id,
-                            "director_receipt_digest": director_receipt_digest,
-                            "identity_digest": _bidentity_digest,
-                            "chapter_id": _bchapter_id,
-                            "projection_digest": hashlib.sha256(json.dumps(projection, sort_keys=True, default=str).encode()).hexdigest(),
-                            "receipt_digest": _receipt_digest,
-                        }
+                    # If a record already exists (idempotent re-request),
+                    # return the existing receipt digest rather than a
+                    # generic projection response.
+                    if _retain_key in state._p3_retained_presentation:
+                        _existing = state._p3_retained_presentation[_retain_key]
                         return _json(
                             200,
-                            {"ok": True, "projection": public_projection(projection), "presentation_receipt_digest": _receipt_digest},
+                            {"ok": True, "projection": public_projection(projection), "presentation_receipt_digest": _existing.get("receipt_digest")},
                         )
+                    _digest_input = f"{_bchapter_id}|{active_view}|{_bidentity_digest}|{director_session_id}|{director_receipt_digest}"
+                    _receipt_digest = hashlib.sha256(_digest_input.encode()).hexdigest()
+                    state._p3_retained_presentation[_retain_key] = {
+                        "active_view": active_view,
+                        "director_session_id": director_session_id,
+                        "director_receipt_digest": director_receipt_digest,
+                        "identity_digest": _bidentity_digest,
+                        "chapter_id": _bchapter_id,
+                        "projection_digest": hashlib.sha256(json.dumps(projection, sort_keys=True, default=str).encode()).hexdigest(),
+                        "receipt_digest": _receipt_digest,
+                    }
+                    return _json(
+                        200,
+                        {"ok": True, "projection": public_projection(projection), "presentation_receipt_digest": _receipt_digest},
+                    )
             return _json(
                 200,
                 {"ok": True, "projection": public_projection(projection)},

@@ -16,6 +16,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from pathlib import Path
 import re
+import secrets
 import shutil
 import subprocess
 import tempfile
@@ -1218,6 +1219,14 @@ def dispatch_p4_foundry_request(
                 _required_chapter = director.manifest.chapter(_last_chapter_id)
                 _required_view = dict(_required_chapter.ui_directive or {}).get("active_view")
                 _director_receipt_digest = str(_last_receipt.get("receipt_digest") or _last_receipt.get("transition_digest") or "")
+                # Write a one-time nonce to P3 state that the project route
+                # must consume.  This ties retention to a prepare-p3-sync call
+                # and makes the project route's retention a consumed, one-time
+                # server event rather than a replayable caller assertion.
+                _sync_nonce = secrets.token_hex(16)
+                if not hasattr(state, "_p3_sync_nonces"):
+                    state._p3_sync_nonces = {}
+                state._p3_sync_nonces[f"{session_id}:{_director_receipt_digest}"] = _sync_nonce
                 return _json(200, {
                     "ok": True,
                     "identity_digest": resolved_identity.identity_digest,
@@ -1225,6 +1234,7 @@ def dispatch_p4_foundry_request(
                     "director_receipt_digest": _director_receipt_digest,
                     "chapter_id": _last_chapter_id,
                     "active_view": _required_view,
+                    "sync_nonce": _sync_nonce,
                 })
             if method == "POST" and len(parts) == 2 and parts[1] == "ack-p3-sync":
                 _resolved, resolved_identity = _projection_and_identity(state, body, require_all=True)
