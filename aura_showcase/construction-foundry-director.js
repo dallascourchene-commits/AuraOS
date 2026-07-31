@@ -64,11 +64,35 @@
     }
   }
 
+  /**
+   * Pure helper: compute whether a Director control button should be
+   * disabled given the current session state.  Extracted from render()
+   * so it can be tested without a DOM.
+   */
+  function controlDisabled(action, session) {
+    if (!session) return true;
+    if (action === "RESTART") return !session.dissolved;
+    if (action === "RESYNC") return !session.p3_sync_pending;
+    if (action === "PLAY" || action === "NEXT") return Boolean(session.p3_sync_pending);
+    return false;
+  }
+
+  /**
+   * Pure helper: compute whether a chapter-select option should be
+   * disabled given the chapter and session state.
+   */
+  function chapterOptionDisabled(chapter, session) {
+    if (!chapter || !session) return true;
+    return chapter.order > session.executed_index || Boolean(session.p3_sync_pending);
+  }
+
   if (globalThis.__AURA_CONSTRUCTION_DIRECTOR_TEST__ === true) {
     globalThis.AuraConstructionDirectorTestHooks = Object.freeze({
       settleDirective,
       shouldPaceAfterChapter,
       waitForP3View,
+      controlDisabled,
+      chapterOptionDisabled,
     });
     return;
   }
@@ -199,9 +223,7 @@
       });
     }
     Array.from(chapterSelect.options).forEach((option) => {
-      const chapter = chapterById(option.value);
-      // Disable unproven chapters and all jumps while P3 sync is pending.
-      option.disabled = !chapter || chapter.order > session.executed_index || Boolean(session.p3_sync_pending);
+      option.disabled = chapterOptionDisabled(chapterById(option.value), session);
     });
   }
 
@@ -215,18 +237,7 @@
     renderChapterOptions();
     chapterSelect.value = session.selected_chapter_id || "";
     controls.forEach((button) => {
-      const action = button.dataset.directorControl;
-      if (action === "RESTART") {
-        button.disabled = !session.dissolved;
-      } else if (action === "RESYNC") {
-        button.disabled = !session.p3_sync_pending;
-      } else if (action === "PLAY" || action === "NEXT") {
-        // Block progression controls while P3 sync is pending so the
-        // RESYNC guidance message is not clobbered by a backend rejection.
-        button.disabled = Boolean(session.p3_sync_pending);
-      } else {
-        button.disabled = false;
-      }
+      button.disabled = controlDisabled(button.dataset.directorControl, session);
     });
   }
 
@@ -247,7 +258,6 @@
     // Runs the full prepare → project → confirm → acknowledge sequence
     // using jsonRequest for consistent error handling and response validation.
     // Under Trust Model A, the browser is the trusted presentation agent.
-    const chapter = chapterById(receipt.chapter_id);
 
     // Step 1: Ask P4 to resolve the bilateral identity and return the
     // binding values needed for P3 presentation retention.

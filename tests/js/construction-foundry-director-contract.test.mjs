@@ -129,23 +129,39 @@ test("autoplay terminates on sync failure without issuing another NEXT", async (
   assert.equal(renderCount, 1);
 });
 
-test("source contains UI-level sync-pending guards for PLAY/NEXT and chapter select", async () => {
-  // The render() function disables PLAY, NEXT, and chapter-select options
-  // when p3_sync_pending is true.  This is a source-level assertion since
-  // render() depends on DOM state not available in the test hook.
-  assert.match(
-    source,
-    /action === "PLAY" \|\| action === "NEXT"/,
-    "render() must disable PLAY and NEXT when p3_sync_pending",
-  );
-  assert.match(
-    source,
-    /Boolean\(session\.p3_sync_pending\)/,
-    "render() must use Boolean(session.p3_sync_pending) for disabling",
-  );
-  assert.match(
-    source,
-    /chapter\.order > session\.executed_index \|\| Boolean\(session\.p3_sync_pending\)/,
-    "chapter-select options must be disabled when p3_sync_pending",
-  );
+test("controlDisabled and chapterOptionDisabled block controls during pending sync", () => {
+  const syncPendingSession = { dissolved: false, p3_sync_pending: true, executed_index: 3 };
+  const normalSession = { dissolved: false, p3_sync_pending: false, executed_index: 3 };
+  const dissolvedSession = { dissolved: true, p3_sync_pending: false, executed_index: 3 };
+
+  // PLAY and NEXT disabled when sync pending
+  assert.equal(contract.controlDisabled("PLAY", syncPendingSession), true);
+  assert.equal(contract.controlDisabled("NEXT", syncPendingSession), true);
+  // RESYNC enabled when sync pending
+  assert.equal(contract.controlDisabled("RESYNC", syncPendingSession), false);
+  // PAUSE and PREVIOUS always enabled (not blocked by sync)
+  assert.equal(contract.controlDisabled("PAUSE", syncPendingSession), false);
+  assert.equal(contract.controlDisabled("PREVIOUS", syncPendingSession), false);
+
+  // After sync clears: PLAY/NEXT re-enabled, RESYNC disabled
+  assert.equal(contract.controlDisabled("PLAY", normalSession), false);
+  assert.equal(contract.controlDisabled("NEXT", normalSession), false);
+  assert.equal(contract.controlDisabled("RESYNC", normalSession), true);
+
+  // RESTART only enabled when dissolved
+  assert.equal(contract.controlDisabled("RESTART", normalSession), true);
+  assert.equal(contract.controlDisabled("RESTART", dissolvedSession), false);
+
+  // No session: everything disabled
+  assert.equal(contract.controlDisabled("PLAY", null), true);
+  assert.equal(contract.controlDisabled("NEXT", null), true);
+
+  // Chapter options disabled when sync pending, enabled for proven chapters otherwise
+  const provenChapter = { order: 2 };
+  const unprovenChapter = { order: 5 };
+  assert.equal(contract.chapterOptionDisabled(provenChapter, syncPendingSession), true);
+  assert.equal(contract.chapterOptionDisabled(unprovenChapter, syncPendingSession), true);
+  assert.equal(contract.chapterOptionDisabled(provenChapter, normalSession), false);
+  assert.equal(contract.chapterOptionDisabled(unprovenChapter, normalSession), true);
+  assert.equal(contract.chapterOptionDisabled(null, normalSession), true);
 });
