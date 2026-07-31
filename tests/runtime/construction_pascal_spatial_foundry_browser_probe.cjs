@@ -10,7 +10,7 @@ const CHAPTER_TIMEOUT_MS = Number(process.env.AURA_P4_CHAPTER_TIMEOUT_MS || 2400
 
 // Validate BASE_URL is loopback only — reject any non-loopback origin.
 const _parsedBaseUrl = new URL(BASE_URL);
-const _loopbackHosts = new Set(["127.0.0.1", "localhost", "::1", "0.0.0.0"]);
+const _loopbackHosts = new Set(["127.0.0.1", "localhost", "::1"]);
 if (!_loopbackHosts.has(_parsedBaseUrl.hostname)) {
   throw new Error(`BASE_URL must be loopback only, got: ${_parsedBaseUrl.hostname}`);
 }
@@ -204,9 +204,9 @@ async function main() {
     // Record any request whose origin differs from the declared loopback origin.
     page.on("request", (request) => {
       try {
-        const reqUrl = new URL(request.url());
-        if (!_loopbackHosts.has(reqUrl.hostname)) {
-          externalRequests.push({ url: request.url(), method: request.method() });
+        const reqOrigin = new URL(request.url()).origin;
+        if (reqOrigin !== _parsedBaseUrl.origin) {
+          externalRequests.push({ url: request.url(), method: request.method(), origin: reqOrigin });
         }
       } catch (_) { /* ignore non-URL entries */ }
     });

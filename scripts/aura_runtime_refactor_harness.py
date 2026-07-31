@@ -668,6 +668,12 @@ def run_runtime_profile(
         raise RuntimeHarnessError("repository root is missing")
     profile = load_runtime_profile(root, profile_path)
     output = _external_output_path(root, output_dir)
+    # Reject non-empty output directories to prevent stale artifact reuse.
+    if output.exists() and any(output.iterdir()):
+        raise RuntimeHarnessError(
+            f"runtime output directory is not empty: {output} — "
+            "use a fresh directory for each run"
+        )
     output.mkdir(parents=True, exist_ok=True)
     before = _git_identity(root)
     if before.get("available") and before.get("status") and not allow_dirty:

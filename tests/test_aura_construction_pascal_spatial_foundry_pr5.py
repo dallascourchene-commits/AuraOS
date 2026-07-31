@@ -138,10 +138,13 @@ def test_pr5_coordinate_receipt_mismatched_artifact_digest_fails_closed(tmp_path
     try:
         _lock, real_manifest, _coord, _scene = load_pascal_compatibility_fixture(str(ROOT))
     except PascalPresentationError:
-        # Pre-existing Windows digest mismatch — skip this test if the
-        # base fixture itself can't load on this platform.
-        import pytest
-        pytest.skip("Pascal fixture has pre-existing digest mismatch on Windows")
+        # Pre-existing Windows digest mismatch — skip only on Windows.
+        # On Linux/macOS, re-raise so a regression is not hidden.
+        import platform
+        if platform.system() == "Windows":
+            import pytest
+            pytest.skip("Pascal fixture has pre-existing digest mismatch on Windows")
+        raise
 
     # Create a fake coordinate receipt with a wrong pascal_artifact_digest.
     import json as _json
