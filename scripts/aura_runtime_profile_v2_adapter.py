@@ -827,8 +827,14 @@ def _snapshot_traces(
         if not path.is_file() or path.is_symlink():
             raise BilateralRuntimeProfileError(f"runtime trace {name} was not produced by the current run")
         size = path.stat().st_size
-        if size > maximum or size > MAX_JSON_BYTES:
-            raise BilateralRuntimeProfileError(f"runtime trace {name} is oversized")
+        # Binary artifacts (PNGs) use the larger MAX_ARTIFACT_BYTES limit;
+        # JSON artifacts use the stricter MAX_JSON_BYTES limit.
+        if name.endswith(".json"):
+            if size > maximum or size > MAX_JSON_BYTES:
+                raise BilateralRuntimeProfileError(f"runtime trace {name} is oversized")
+        else:
+            if size > maximum:
+                raise BilateralRuntimeProfileError(f"runtime trace {name} is oversized")
         body = path.read_bytes()
         if len(body) != size:
             raise BilateralRuntimeProfileError(f"runtime trace {name} changed while it was being snapshotted")

@@ -24,6 +24,9 @@ from aura_pascal_spatial_presentation import (
 )
 from jsonschema import Draft202012Validator
 
+import hashlib
+import json
+import shutil
 import pytest
 
 
