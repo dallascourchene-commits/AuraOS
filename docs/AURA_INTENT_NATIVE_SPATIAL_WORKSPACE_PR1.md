@@ -96,16 +96,16 @@ No direct source-write or execution capability is present. Consequential code wo
 
 ## Schema and semantic validation boundary
 
-The three Draft 2020-12 schemas enforce exact record shape, fixed authority and policy constants, closed metadata, exact digest formats, bounded arrays/numbers, and structural types. Because PR1 freezes one demonstration, the recipe schema also fixes its complete capability graph, owner map, actions, renderer/device requirements, and verification gates as constants.
+The three Draft 2020-12 schemas enforce exact record shape, fixed authority and policy constants, closed metadata, exact digest formats, bounded arrays/numbers, and structural types.
 
 Some invariants cannot be expressed portably in standard Draft 2020-12 JSON Schema, including:
 
+- membership of dependency-edge endpoints in a sibling `capability_ids` array;
+- graph cycle detection;
 - uniqueness of reference IDs across separate arrays;
 - arithmetic relationships between timestamps;
 - equality of transcript text and its digest;
-- scene/session equality between a parent observation and nested targets;
-- canonical record digest recomputation;
-- UTF-8 byte ceilings where JSON Schema counts characters.
+- scene/session equality between a parent observation and nested targets.
 
 Each schema therefore names a mandatory executable semantic validator through `x-aura-semantic-validator`:
 
@@ -113,7 +113,7 @@ Each schema therefore names a mandatory executable semantic validator through `x
 - `validate_recipe_semantics`
 - `validate_observation_semantics`
 
-A consumer must run both Draft 2020-12 validation and the named semantic validator. The documentation does not claim that JSON Schema alone proves cross-field identity, digest, arithmetic, or byte-level invariants.
+A consumer must run both Draft 2020-12 validation and the named semantic validator. The documentation no longer claims that JSON Schema alone proves cross-field graph or identity invariants.
 
 ## Review-repair verification
 

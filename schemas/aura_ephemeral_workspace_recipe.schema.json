@@ -1,0 +1,855 @@
+{
+  "$defs": {
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "automatic_commit": {
+          "const": false
+        },
+        "automatic_merge": {
+          "const": false
+        },
+        "automatic_persistence": {
+          "const": false
+        },
+        "automatic_promotion": {
+          "const": false
+        },
+        "automatic_pull_request": {
+          "const": false
+        },
+        "automatic_push": {
+          "const": false
+        },
+        "automatic_resume": {
+          "const": false
+        },
+        "deployment_authority": {
+          "const": false
+        },
+        "domain_mutation": {
+          "const": false
+        },
+        "execution_authority": {
+          "const": false
+        },
+        "human_review_required": {
+          "const": true
+        },
+        "model_authority": {
+          "const": false
+        },
+        "patch_authority": {
+          "const": false
+        },
+        "payment_authority": {
+          "const": false
+        },
+        "persistence_authority": {
+          "const": false
+        },
+        "physical_work_authority": {
+          "const": false
+        },
+        "production_mutation": {
+          "const": false
+        },
+        "professional_authority": {
+          "const": false
+        },
+        "projection_only": {
+          "const": true
+        },
+        "renderer_authority": {
+          "const": false
+        },
+        "review_only": {
+          "const": true
+        },
+        "sensor_authority": {
+          "const": false
+        },
+        "source_mutation": {
+          "const": false
+        },
+        "version": {
+          "const": "AURA_WORKSPACE_AUTHORITY_ENVELOPE_V1"
+        },
+        "vsa_patch_authority": {
+          "const": false
+        }
+      },
+      "required": [
+        "version",
+        "projection_only",
+        "review_only",
+        "human_review_required",
+        "source_mutation",
+        "domain_mutation",
+        "production_mutation",
+        "renderer_authority",
+        "sensor_authority",
+        "model_authority",
+        "execution_authority",
+        "persistence_authority",
+        "deployment_authority",
+        "physical_work_authority",
+        "payment_authority",
+        "professional_authority",
+        "patch_authority",
+        "vsa_patch_authority",
+        "automatic_persistence",
+        "automatic_resume",
+        "automatic_promotion",
+        "automatic_commit",
+        "automatic_push",
+        "automatic_pull_request",
+        "automatic_merge"
+      ],
+      "type": "object"
+    },
+    "budget": {
+      "additionalProperties": false,
+      "properties": {
+        "context_tokens": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "cost_microusd": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "device_events": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "memory_mb": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "model_calls": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "network_calls": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "output_bytes": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "tool_calls": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "wall_time_ms": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "wall_time_ms",
+        "memory_mb",
+        "context_tokens",
+        "output_bytes",
+        "tool_calls",
+        "model_calls",
+        "cost_microusd",
+        "network_calls",
+        "device_events"
+      ],
+      "type": "object"
+    },
+    "current_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_ref": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "freshness_class": {
+          "enum": [
+            "CURRENT",
+            "BOUNDED"
+          ]
+        },
+        "metadata": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "byte_length": {
+              "maximum": 10000000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "content_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "description": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "evidence_class": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "legacy_manifest_digest": {
+              "pattern": "^[0-9a-f]{32}$",
+              "type": "string"
+            },
+            "line_end": {
+              "maximum": 10000000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "line_start": {
+              "maximum": 10000000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "manifest_version": {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+              "type": "string"
+            },
+            "media_type": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "note": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "relation": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "source_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "source_path": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "source_span": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "symbol": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "wrapped_not_replaced": {
+              "const": true
+            }
+          },
+          "type": "object"
+        },
+        "owner": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "reference_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "truth_class": {
+          "enum": [
+            "EXACT",
+            "DERIVED",
+            "PRESENTATION",
+            "HYPOTHESIS"
+          ]
+        },
+        "version": {
+          "const": "AURA_CANONICAL_REFERENCE_V1"
+        }
+      },
+      "required": [
+        "version",
+        "reference_id",
+        "owner",
+        "canonical_ref",
+        "digest",
+        "truth_class",
+        "freshness_class",
+        "metadata"
+      ],
+      "type": "object"
+    },
+    "manifest_metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "legacy_manifest_digest": {
+          "pattern": "^[0-9a-f]{32}$",
+          "type": "string"
+        },
+        "manifest_version": {
+          "const": "AURA_EPHEMERAL_ORGAN_V1"
+        },
+        "wrapped_not_replaced": {
+          "const": true
+        }
+      },
+      "required": [
+        "manifest_version",
+        "legacy_manifest_digest",
+        "wrapped_not_replaced"
+      ],
+      "type": "object"
+    },
+    "manifest_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_ref": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "freshness_class": {
+          "enum": [
+            "CURRENT",
+            "BOUNDED"
+          ]
+        },
+        "metadata": {
+          "additionalProperties": false,
+          "properties": {
+            "legacy_manifest_digest": {
+              "pattern": "^[0-9a-f]{32}$",
+              "type": "string"
+            },
+            "manifest_version": {
+              "const": "AURA_EPHEMERAL_ORGAN_V1"
+            },
+            "wrapped_not_replaced": {
+              "const": true
+            }
+          },
+          "required": [
+            "manifest_version",
+            "legacy_manifest_digest",
+            "wrapped_not_replaced"
+          ],
+          "type": "object"
+        },
+        "owner": {
+          "const": "aura_ephemeral_manifest"
+        },
+        "reference_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "truth_class": {
+          "const": "EXACT"
+        },
+        "version": {
+          "const": "AURA_CANONICAL_REFERENCE_V1"
+        }
+      },
+      "required": [
+        "version",
+        "reference_id",
+        "owner",
+        "canonical_ref",
+        "digest",
+        "truth_class",
+        "freshness_class",
+        "metadata"
+      ],
+      "type": "object"
+    },
+    "metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "byte_length": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "content_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "description": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "evidence_class": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "legacy_manifest_digest": {
+          "pattern": "^[0-9a-f]{32}$",
+          "type": "string"
+        },
+        "line_end": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "line_start": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "manifest_version": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "media_type": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "note": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "relation": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "source_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "source_path": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "source_span": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "symbol": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "wrapped_not_replaced": {
+          "const": true
+        }
+      },
+      "type": "object"
+    },
+    "reference": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_ref": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "freshness_class": {
+          "enum": [
+            "CURRENT",
+            "BOUNDED",
+            "STALE",
+            "UNKNOWN"
+          ]
+        },
+        "metadata": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "byte_length": {
+              "maximum": 10000000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "content_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "description": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "evidence_class": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "legacy_manifest_digest": {
+              "pattern": "^[0-9a-f]{32}$",
+              "type": "string"
+            },
+            "line_end": {
+              "maximum": 10000000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "line_start": {
+              "maximum": 10000000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "manifest_version": {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+              "type": "string"
+            },
+            "media_type": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "note": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "relation": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "source_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "source_path": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "source_span": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "symbol": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "wrapped_not_replaced": {
+              "const": true
+            }
+          },
+          "type": "object"
+        },
+        "owner": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "reference_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "truth_class": {
+          "enum": [
+            "EXACT",
+            "DERIVED",
+            "PRESENTATION",
+            "HYPOTHESIS"
+          ]
+        },
+        "version": {
+          "const": "AURA_CANONICAL_REFERENCE_V1"
+        }
+      },
+      "required": [
+        "version",
+        "reference_id",
+        "owner",
+        "canonical_ref",
+        "digest",
+        "truth_class",
+        "freshness_class",
+        "metadata"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://auraos.local/schemas/aura_ephemeral_workspace_recipe.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adapter_refs": {
+      "items": {
+        "$ref": "#/$defs/current_reference"
+      },
+      "maxItems": 512,
+      "minItems": 1,
+      "type": "array"
+    },
+    "allowed_interaction_actions": {
+      "const": [
+        "SELECT",
+        "DESELECT",
+        "EXPAND",
+        "CONTRACT",
+        "FOCUS",
+        "OPEN_SOURCE",
+        "ISOLATE",
+        "COMPARE",
+        "REQUEST_RELATIONAL_SYNTHESIS",
+        "REQUEST_SIMULATION",
+        "DISMISS_CANDIDATE",
+        "PREPARE_REPAIR_REQUEST",
+        "PREPARE_DOMAIN_HANDOFF",
+        "CONFIRM_HANDOFF"
+      ]
+    },
+    "authority": {
+      "$ref": "#/$defs/authority"
+    },
+    "automatic_persistence": {
+      "const": false
+    },
+    "automatic_promotion": {
+      "const": false
+    },
+    "automatic_resume": {
+      "const": false
+    },
+    "base_manifest_ref": {
+      "$ref": "#/$defs/manifest_reference"
+    },
+    "budgets": {
+      "$ref": "#/$defs/budget"
+    },
+    "canonical_intent_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "capability_ids": {
+      "const": [
+        "compile_compass_packet",
+        "fetch_bounded_neighborhood",
+        "open_exact_source_slice",
+        "display_tests_and_schemas",
+        "compile_candidate_change_graph",
+        "prepare_forge_handoff",
+        "read_verification_status",
+        "display_attempt_archive_evidence",
+        "dissolve_workspace"
+      ]
+    },
+    "demonstration_id": {
+      "const": "CODING_SPATIAL_WORKSPACE_V1"
+    },
+    "dependency_edges": {
+      "const": [
+        {
+          "source_capability_id": "compile_candidate_change_graph",
+          "target_capability_id": "prepare_forge_handoff"
+        },
+        {
+          "source_capability_id": "compile_compass_packet",
+          "target_capability_id": "fetch_bounded_neighborhood"
+        },
+        {
+          "source_capability_id": "display_attempt_archive_evidence",
+          "target_capability_id": "dissolve_workspace"
+        },
+        {
+          "source_capability_id": "fetch_bounded_neighborhood",
+          "target_capability_id": "compile_candidate_change_graph"
+        },
+        {
+          "source_capability_id": "fetch_bounded_neighborhood",
+          "target_capability_id": "display_tests_and_schemas"
+        },
+        {
+          "source_capability_id": "fetch_bounded_neighborhood",
+          "target_capability_id": "open_exact_source_slice"
+        },
+        {
+          "source_capability_id": "prepare_forge_handoff",
+          "target_capability_id": "read_verification_status"
+        },
+        {
+          "source_capability_id": "read_verification_status",
+          "target_capability_id": "display_attempt_archive_evidence"
+        }
+      ]
+    },
+    "device_requirements": {
+      "const": [
+        "KEYBOARD_REQUIRED",
+        "POINTER_OPTIONAL",
+        "XR_OPTIONAL"
+      ]
+    },
+    "dissolution_policy": {
+      "const": "MANDATORY_REVOKE_AND_REMOVE_TEMP_STATE"
+    },
+    "domain_owner_handoff_map": {
+      "const": {
+        "architecture": "aura_coding_relationship_compass",
+        "code_candidate": "aura_forge",
+        "continuity": "aura_unified_memory_continuity",
+        "dissolution": "aura_ephemeral_runtime",
+        "runtime_proof": "aura_runtime_refactor_harness",
+        "semantic_review": "aura_coding_waboose"
+      }
+    },
+    "evidence_refs": {
+      "items": {
+        "$ref": "#/$defs/current_reference"
+      },
+      "maxItems": 512,
+      "minItems": 1,
+      "type": "array"
+    },
+    "lifecycle_policy": {
+      "const": "EXPLICIT_COMPLETE_CANCEL_FAILURE_OR_TTL"
+    },
+    "project_projection_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "project_projection_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "recipe_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "recipe_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "renderer_requirements": {
+      "const": [
+        "ACCESSIBLE_2D_REQUIRED",
+        "WEBGL2_OPTIONAL",
+        "WEBXR_OPTIONAL"
+      ]
+    },
+    "required_verification_gates": {
+      "const": [
+        "EXACT_REPOSITORY_IDENTITY",
+        "EXACT_PROJECT_PROJECTION",
+        "ADAPTER_IDENTITY",
+        "EVIDENCE_FRESHNESS",
+        "AUTHORITY_NON_ESCALATION",
+        "NO_PRODUCTION_MUTATION",
+        "MANDATORY_DISSOLUTION"
+      ]
+    },
+    "ttl_seconds": {
+      "maximum": 86400,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "version": {
+      "const": "AURA_EPHEMERAL_WORKSPACE_RECIPE_V1"
+    }
+  },
+  "required": [
+    "version",
+    "recipe_id",
+    "demonstration_id",
+    "base_manifest_ref",
+    "canonical_intent_digest",
+    "project_projection_id",
+    "project_projection_digest",
+    "capability_ids",
+    "dependency_edges",
+    "adapter_refs",
+    "evidence_refs",
+    "domain_owner_handoff_map",
+    "budgets",
+    "renderer_requirements",
+    "device_requirements",
+    "allowed_interaction_actions",
+    "required_verification_gates",
+    "ttl_seconds",
+    "lifecycle_policy",
+    "dissolution_policy",
+    "automatic_persistence",
+    "automatic_resume",
+    "automatic_promotion",
+    "authority",
+    "recipe_digest"
+  ],
+  "title": "Aura Ephemeral Workspace Recipe V1",
+  "type": "object",
+  "x-aura-semantic-invariants": [
+    "record digest verification",
+    "global adapter/evidence reference ID uniqueness",
+    "wall time does not exceed TTL",
+    "UTF-8 byte ceilings"
+  ],
+  "x-aura-semantic-validator": "aura_ephemeral_workspace_contracts.validate_recipe_semantics"
+}

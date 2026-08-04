@@ -1,0 +1,568 @@
+{
+  "$defs": {
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "automatic_commit": {
+          "const": false
+        },
+        "automatic_merge": {
+          "const": false
+        },
+        "automatic_persistence": {
+          "const": false
+        },
+        "automatic_promotion": {
+          "const": false
+        },
+        "automatic_pull_request": {
+          "const": false
+        },
+        "automatic_push": {
+          "const": false
+        },
+        "automatic_resume": {
+          "const": false
+        },
+        "deployment_authority": {
+          "const": false
+        },
+        "domain_mutation": {
+          "const": false
+        },
+        "execution_authority": {
+          "const": false
+        },
+        "human_review_required": {
+          "const": true
+        },
+        "model_authority": {
+          "const": false
+        },
+        "patch_authority": {
+          "const": false
+        },
+        "payment_authority": {
+          "const": false
+        },
+        "persistence_authority": {
+          "const": false
+        },
+        "physical_work_authority": {
+          "const": false
+        },
+        "production_mutation": {
+          "const": false
+        },
+        "professional_authority": {
+          "const": false
+        },
+        "projection_only": {
+          "const": true
+        },
+        "renderer_authority": {
+          "const": false
+        },
+        "review_only": {
+          "const": true
+        },
+        "sensor_authority": {
+          "const": false
+        },
+        "source_mutation": {
+          "const": false
+        },
+        "version": {
+          "const": "AURA_WORKSPACE_AUTHORITY_ENVELOPE_V1"
+        },
+        "vsa_patch_authority": {
+          "const": false
+        }
+      },
+      "required": [
+        "version",
+        "projection_only",
+        "review_only",
+        "human_review_required",
+        "source_mutation",
+        "domain_mutation",
+        "production_mutation",
+        "renderer_authority",
+        "sensor_authority",
+        "model_authority",
+        "execution_authority",
+        "persistence_authority",
+        "deployment_authority",
+        "physical_work_authority",
+        "payment_authority",
+        "professional_authority",
+        "patch_authority",
+        "vsa_patch_authority",
+        "automatic_persistence",
+        "automatic_resume",
+        "automatic_promotion",
+        "automatic_commit",
+        "automatic_push",
+        "automatic_pull_request",
+        "automatic_merge"
+      ],
+      "type": "object"
+    },
+    "metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "byte_length": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "content_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "description": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "evidence_class": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "legacy_manifest_digest": {
+          "pattern": "^[0-9a-f]{32}$",
+          "type": "string"
+        },
+        "line_end": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "line_start": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "manifest_version": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "media_type": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "note": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "relation": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "source_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "source_path": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "source_span": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "symbol": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "wrapped_not_replaced": {
+          "const": true
+        }
+      },
+      "type": "object"
+    },
+    "reference": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_ref": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "freshness_class": {
+          "enum": [
+            "CURRENT",
+            "BOUNDED",
+            "STALE",
+            "UNKNOWN"
+          ]
+        },
+        "metadata": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "byte_length": {
+              "maximum": 10000000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "content_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "description": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "evidence_class": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "legacy_manifest_digest": {
+              "pattern": "^[0-9a-f]{32}$",
+              "type": "string"
+            },
+            "line_end": {
+              "maximum": 10000000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "line_start": {
+              "maximum": 10000000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "manifest_version": {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+              "type": "string"
+            },
+            "media_type": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "note": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "relation": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "source_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "source_path": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "source_span": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "symbol": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "wrapped_not_replaced": {
+              "const": true
+            }
+          },
+          "type": "object"
+        },
+        "owner": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "reference_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "truth_class": {
+          "enum": [
+            "EXACT",
+            "DERIVED",
+            "PRESENTATION",
+            "HYPOTHESIS"
+          ]
+        },
+        "version": {
+          "const": "AURA_CANONICAL_REFERENCE_V1"
+        }
+      },
+      "required": [
+        "version",
+        "reference_id",
+        "owner",
+        "canonical_ref",
+        "digest",
+        "truth_class",
+        "freshness_class",
+        "metadata"
+      ],
+      "type": "object"
+    },
+    "repository_identity": {
+      "additionalProperties": false,
+      "properties": {
+        "commit_sha": {
+          "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$",
+          "type": "string"
+        },
+        "identity_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "ref": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "repository": {
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+          "type": "string"
+        },
+        "source_tree_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "version": {
+          "const": "AURA_REPOSITORY_IDENTITY_V1"
+        }
+      },
+      "required": [
+        "version",
+        "repository",
+        "ref",
+        "commit_sha",
+        "source_tree_digest",
+        "identity_digest"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://auraos.local/schemas/aura_project_context_projection.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifact_evidence_refs": {
+      "items": {
+        "$ref": "#/$defs/reference"
+      },
+      "maxItems": 512,
+      "minItems": 1,
+      "type": "array"
+    },
+    "assumption_refs": {
+      "items": {
+        "$ref": "#/$defs/reference"
+      },
+      "maxItems": 512,
+      "minItems": 0,
+      "type": "array"
+    },
+    "authority": {
+      "$ref": "#/$defs/authority"
+    },
+    "blocker_refs": {
+      "items": {
+        "$ref": "#/$defs/reference"
+      },
+      "maxItems": 512,
+      "minItems": 0,
+      "type": "array"
+    },
+    "canonical_owner": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "capability_refs": {
+      "items": {
+        "$ref": "#/$defs/reference"
+      },
+      "maxItems": 512,
+      "minItems": 0,
+      "type": "array"
+    },
+    "completeness_warnings": {
+      "items": {
+        "maxLength": 4096,
+        "minLength": 1,
+        "pattern": "^[^\\u0000-\\u001f]*$",
+        "type": "string"
+      },
+      "maxItems": 128,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "decision_refs": {
+      "items": {
+        "$ref": "#/$defs/reference"
+      },
+      "maxItems": 512,
+      "minItems": 0,
+      "type": "array"
+    },
+    "egress_class": {
+      "const": "LOCAL_ONLY"
+    },
+    "freshness_class": {
+      "enum": [
+        "CURRENT",
+        "BOUNDED",
+        "STALE",
+        "UNKNOWN"
+      ]
+    },
+    "freshness_timestamp_ms": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "next_action_refs": {
+      "items": {
+        "$ref": "#/$defs/reference"
+      },
+      "maxItems": 512,
+      "minItems": 0,
+      "type": "array"
+    },
+    "objective_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "privacy_class": {
+      "const": "MINIMUM_SUFFICIENT"
+    },
+    "project_ref": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "pattern": "^[^\\u0000-\\u001f]*$",
+      "type": "string"
+    },
+    "projection_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "projection_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "projection_only": {
+      "const": true
+    },
+    "purpose_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "rejected_alternative_refs": {
+      "items": {
+        "$ref": "#/$defs/reference"
+      },
+      "maxItems": 512,
+      "minItems": 0,
+      "type": "array"
+    },
+    "relationship_refs": {
+      "items": {
+        "$ref": "#/$defs/reference"
+      },
+      "maxItems": 512,
+      "minItems": 0,
+      "type": "array"
+    },
+    "repository_identity": {
+      "$ref": "#/$defs/repository_identity"
+    },
+    "unresolved_question_refs": {
+      "items": {
+        "$ref": "#/$defs/reference"
+      },
+      "maxItems": 512,
+      "minItems": 0,
+      "type": "array"
+    },
+    "version": {
+      "const": "AURA_PROJECT_CONTEXT_PROJECTION_V1"
+    }
+  },
+  "required": [
+    "version",
+    "projection_id",
+    "project_ref",
+    "canonical_owner",
+    "objective_digest",
+    "purpose_digest",
+    "repository_identity",
+    "freshness_timestamp_ms",
+    "freshness_class",
+    "completeness_warnings",
+    "privacy_class",
+    "egress_class",
+    "projection_only",
+    "authority",
+    "projection_digest",
+    "artifact_evidence_refs",
+    "decision_refs",
+    "rejected_alternative_refs",
+    "unresolved_question_refs",
+    "assumption_refs",
+    "capability_refs",
+    "relationship_refs",
+    "blocker_refs",
+    "next_action_refs"
+  ],
+  "title": "Aura Project Context Projection V1",
+  "type": "object",
+  "x-aura-semantic-invariants": [
+    "reference_id uniqueness across all reference arrays",
+    "record digest verification",
+    "UTF-8 byte ceilings"
+  ],
+  "x-aura-semantic-validator": "aura_ephemeral_workspace_contracts.validate_project_semantics"
+}
