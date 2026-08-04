@@ -1,0 +1,90 @@
+{
+  "version": "AURA_REFACTOR_OBJECTIVE_V1",
+  "objective_id": "intent-native-spatial-workspace-pr1",
+  "base_commit": "879b5fb056b70d150b1646e082223330a36c2912",
+  "goal": "Establish strict deterministic compatibility contracts for an intent-compiled ephemeral spatial workspace and freeze the Coding Spatial Workspace vertical slice without operational behavior.",
+  "six_slot_intent": {
+    "DIR": "repository",
+    "ASP": "refactor",
+    "CLASS": "strict_contract_only_compatibility_layer",
+    "SUBJ": "intent_native_spatial_workspace",
+    "VOICE": "harden",
+    "STEM": "bind_exact_workspace_contracts"
+  },
+  "canonical_owners": {
+    "base_ephemeral_manifest": "aura_ephemeral_manifest",
+    "temporary_capability_lifecycle": "aura_ephemeral_runtime",
+    "project_continuity": "aura_unified_memory_continuity",
+    "spatial_projection": "aura_spatial_contracts",
+    "code_intelligence": "aura_coding_relationship_compass",
+    "code_candidate_handoff": "aura_forge",
+    "semantic_review": "aura_coding_waboose",
+    "runtime_proof": "aura_runtime_refactor_harness"
+  },
+  "positive_requirements": [
+    "Wrap and independently verify, but never replace, AURA_EPHEMERAL_ORGAN_V1.",
+    "Require lossless JSON canonicalization and non-empty serialized record digests.",
+    "Retain only closed scalar metadata and exact references to canonical truth owners.",
+    "Require complete current project, adapter, evidence, scene, session, and entity bindings.",
+    "Freeze CODING_SPATIAL_WORKSPACE_V1 capabilities, graph, handoff owners, gates, actions, lifecycle, and dissolution policy.",
+    "Publish Draft 2020-12 structural schemas plus named mandatory semantic validators.",
+    "Cover every accepted external review finding with a regression test."
+  ],
+  "negative_requirements": [
+    "Do not modify existing V1 manifest, Spatial, Compass, Forge, memory, runtime, renderer, or domain-owner source.",
+    "Do not create a project database, persistence store, second router, second renderer, second verifier, or second execution plane.",
+    "Do not coerce malformed keys, text, numbers, sets, digests, or Git identities into valid records.",
+    "Do not retain unknown, nested, authority-bearing, or raw-sensor metadata.",
+    "Do not grant patch, execution, persistence, deployment, physical-work, payment, professional, model, sensor, renderer, commit, push, pull-request, or merge authority.",
+    "Do not regenerate or retain CODEMAP/topology changes in this substantive PR."
+  ],
+  "allowed_paths": [
+    "aura_ephemeral_workspace_contracts.py",
+    "schemas/aura_project_context_projection.schema.json",
+    "schemas/aura_ephemeral_workspace_recipe.schema.json",
+    "schemas/aura_multimodal_spatial_observation.schema.json",
+    "tests/test_aura_ephemeral_workspace_contracts.py",
+    "docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md",
+    ".aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json",
+    ".aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json"
+  ],
+  "allowed_path_set_digest": "903d3ac371968dfff15ff57eb406bf960fd9bb483660cd983ce25c87c2652d81",
+  "change_graph": [
+    {"from": "aura_ephemeral_manifest.EphemeralOrganManifest", "relation": "verified_and_wrapped_by_reference", "to": "aura_ephemeral_workspace_contracts.EphemeralWorkspaceRecipe"},
+    {"from": "canonical_project_owners", "relation": "minimum_sufficient_exact_references", "to": "aura_ephemeral_workspace_contracts.ProjectContextProjection"},
+    {"from": "normalized_multimodal_providers", "relation": "closed_privacy_minimized_observation", "to": "aura_ephemeral_workspace_contracts.MultimodalSpatialObservation"},
+    {"from": "scene_session_entity_and_evidence_identity", "relation": "complete_digest_binding", "to": "aura_ephemeral_workspace_contracts.SpatialReferentBinding"},
+    {"from": "Draft_2020_12_schema", "relation": "followed_by_mandatory_semantic_validator", "to": "exact_cross_field_contract"},
+    {"from": "CODING_SPATIAL_WORKSPACE_V1", "relation": "hands_off_only", "to": "Compass/Forge/Waboose/Runtime Harness canonical owners"}
+  ],
+  "exit_gates": [
+    "Existing V1 manifest object and digest remain unchanged when wrapped.",
+    "Serialized V1 manifest content is independently recomputed and verified.",
+    "Every serialized new record requires and verifies its original 64-character digest.",
+    "Unknown metadata, non-string keys, sets, malformed types, and raw-sensor aliases fail closed.",
+    "Project and observation validators require complete expected identity sets.",
+    "The frozen capability graph, owners, gates, lifecycle, and dissolution policy cannot be substituted.",
+    "Recipe TTL and wall-time budget cannot outlive the wrapped V1 manifest.",
+    "All schemas meta-validate and name mandatory semantic validators for cross-field invariants.",
+    "Focused review-repair tests pass.",
+    "Generated navigation artifacts are identical to the exact base."
+  ],
+  "verification_commands": [
+    "python -m py_compile aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py",
+    "python -m pytest -q tests/test_aura_ephemeral_workspace_contracts.py",
+    "python -m json.tool schemas/aura_project_context_projection.schema.json",
+    "python -m json.tool schemas/aura_ephemeral_workspace_recipe.schema.json",
+    "python -m json.tool schemas/aura_multimodal_spatial_observation.schema.json",
+    "Draft202012Validator.check_schema for all three schemas"
+  ],
+  "external_review_policy": {
+    "authorized_reviewers": ["CodeRabbit", "Codex", "Gitar", "Kilo Code Bot", "Sourcery", "Codacy"],
+    "trigger_only_after_implementation_and_focused_verification": true,
+    "findings_only": true,
+    "deep_scan": true,
+    "ignore_paths": [".aura/CODEMAP.json", ".aura/CODEMAP.md", "topology_map.json", "Aura_Memory/live_topology_ast.json"],
+    "automatic_fix": false,
+    "merge_authority": false
+  },
+  "required_terminal_state": "READY_FOR_HUMAN_REVIEW"
+}
