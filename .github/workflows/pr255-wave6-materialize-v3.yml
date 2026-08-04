@@ -64,7 +64,7 @@ jobs:
           ruff check --select F401,F821 aura_ephemeral_manifest.py aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
 
       - name: Run complete focused regression suite
-        run: pytest -q tests/test_aura_ephemeral_workspace_contracts.py
+        run: python -m pytest -q tests/test_aura_ephemeral_workspace_contracts.py
 
       - name: Validate schemas and Waboose scope
         run: |
