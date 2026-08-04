@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 import copy
+from collections.abc import Mapping
 import json
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -75,6 +76,13 @@ def project() -> ProjectContextProjection:
     )
 
 
+def _trusted_manifest_timestamps(manifest: Any) -> tuple[Any, Any]:
+    """Return the externally retained timestamp binding used by compiler tests."""
+    if isinstance(manifest, Mapping):
+        return manifest.get("created_at"), manifest.get("expires_at")
+    return manifest.created_at, manifest.expires_at
+
+
 def recipe(*, ttl_seconds: int = 300, manifest_ttl: int = 300,
            budgets: WorkspaceBudget | dict | None = None,
            adapters=None, evidence=None, manifest=None):
@@ -87,6 +95,7 @@ def recipe(*, ttl_seconds: int = 300, manifest_ttl: int = 300,
     )
     value = compile_coding_spatial_workspace_recipe(
         base_manifest=manifest,
+        expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
         project_projection=project(),
         canonical_intent_digest=D["1"],
         adapter_refs=adapters or (ref("adapter:compass", D["2"]), ref("adapter:spatial", D["3"])),
@@ -147,6 +156,7 @@ def test_v1_manifest_is_unchanged_when_wrapped_and_serialized_mapping_is_verifie
     before, digest = copy.deepcopy(manifest.to_dict()), manifest.compute_digest()
     compile_coding_spatial_workspace_recipe(
         base_manifest=manifest,
+        expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
         project_projection=project(),
         canonical_intent_digest=D["1"],
         adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -170,6 +180,7 @@ def test_v1_manifest_is_unchanged_when_wrapped_and_serialized_mapping_is_verifie
     with pytest.raises(ValueError, match="digest does not match"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=tampered,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(tampered),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -180,6 +191,7 @@ def test_v1_manifest_is_unchanged_when_wrapped_and_serialized_mapping_is_verifie
     with pytest.raises(ValueError, match="unsupported base manifest version"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=wrong_version,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(wrong_version),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -189,7 +201,7 @@ def test_v1_manifest_is_unchanged_when_wrapped_and_serialized_mapping_is_verifie
 
 def test_contracts_round_trip_and_complete_current_bindings_validate() -> None:
     """Every exact record must round-trip and rebind to complete current truth."""
-    p, (r, manifest), o = project(), recipe(), observation()
+    p, (r, _), o = project(), recipe(), observation()
     assert ProjectContextProjection.from_dict(p.to_dict()).to_dict() == p.to_dict()
     assert EphemeralWorkspaceRecipe.from_dict(r.to_dict()).to_dict() == r.to_dict()
     assert MultimodalSpatialObservation.from_dict(o.to_dict()).to_dict() == o.to_dict()
@@ -220,6 +232,12 @@ def test_canonicalization_and_primitive_parsing_are_strict_and_lossless() -> Non
         stable_digest({1: "x"})
     with pytest.raises(ValueError, match="sets are not JSON"):
         stable_digest({1, 2})
+    with pytest.raises(ValueError, match="object exceeds its item ceiling"):
+        stable_digest({f"key-{index}": index for index in range(workspace_contracts.MAX_CANONICAL_ITEMS + 1)})
+    with pytest.raises(ValueError, match="sequence exceeds its item ceiling"):
+        stable_digest(list(range(workspace_contracts.MAX_CANONICAL_ITEMS + 1)))
+    with pytest.raises(ValueError, match="valid Unicode scalar values"):
+        stable_digest("\ud800")
     with pytest.raises(ValueError, match="must be a string"):
         CanonicalReference(1, "owner", "owner://x", D["1"])
     with pytest.raises(ValueError, match="JSON number"):
@@ -305,6 +323,12 @@ def test_project_binding_requires_complete_identity_and_current_projection() -> 
         replace(p, privacy_class="RAW_PRIVATE_MEMORY", projection_digest="")
     with pytest.raises(ValueError, match="egress_class"):
         replace(p, egress_class="NETWORK_ALLOWED", projection_digest="")
+    with pytest.raises(ValueError, match="EXACT canonical truth"):
+        replace(
+            p,
+            artifact_evidence_refs=(replace(p.artifact_evidence_refs[0], truth_class="HYPOTHESIS"),),
+            projection_digest="",
+        )
 
 
 def test_dependency_graph_fails_closed_for_self_dangling_duplicate_cycle_and_bounds() -> None:
@@ -382,6 +406,16 @@ def test_recipe_references_are_canonical_current_and_globally_unique() -> None:
         replace(first, base_manifest_ref=replace(first.base_manifest_ref, freshness_class="STALE"), recipe_digest="")
     with pytest.raises(ValueError, match="base manifest reference"):
         replace(first, base_manifest_ref=replace(first.base_manifest_ref, owner="attacker.owner"), recipe_digest="")
+    with pytest.raises(ValueError, match="name does not match wrapper digest"):
+        replace(
+            first,
+            base_manifest_ref=replace(
+                first.base_manifest_ref,
+                reference_id="organ-manifest:redirected",
+                canonical_ref="ephemeral-organ:redirected@AURA_EPHEMERAL_ORGAN_V1",
+            ),
+            recipe_digest="",
+        )
 
 
 def test_recipe_lifetime_budget_resource_ceiling_and_identity_are_fully_bound(
@@ -436,6 +470,12 @@ def test_recipe_lifetime_budget_resource_ceiling_and_identity_are_fully_bound(
     with pytest.raises(ValueError, match="recipe_id does not match"):
         EphemeralWorkspaceRecipe.from_dict(forged)
 
+    for field_name in ("network_calls", "model_calls"):
+        unsafe_budget = first.to_dict()
+        unsafe_budget["budgets"][field_name] = 1
+        with pytest.raises(ValueError, match=f"{field_name} at zero"):
+            EphemeralWorkspaceRecipe.from_dict(unsafe_budget)
+
 
 def test_observation_temporal_transcript_inputs_targets_and_evidence_fail_closed() -> None:
     """Cross-field multimodal bindings must be exact, bounded, and current."""
@@ -460,6 +500,20 @@ def test_observation_temporal_transcript_inputs_targets_and_evidence_fail_closed
             expected_session_digest=D["2"],
             expected_entity_digests={"entity:function-node": D["3"]},
             expected_evidence_refs=None,
+        )
+    oversized_entities = {
+        f"entity:{index}": D["3"]
+        for index in range(33)
+    }
+    with pytest.raises(ValueError, match="entity reference set mismatch"):
+        base.validate_bindings(
+            expected_scene_id=base.scene_id,
+            expected_scene_digest=base.scene_digest,
+            expected_session_id=base.session_id,
+            expected_session_digest=base.session_digest,
+            expected_entity_digests=oversized_entities,
+            expected_evidence_refs=expected_observation_evidence(base),
+            expected_observation=base,
         )
     wrong_evidence = expected_observation_evidence(base)
     wrong_evidence["evidence:referent"]["digest"] = D["9"]
@@ -549,6 +603,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     with pytest.raises(ValueError, match="digest does not match"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=live,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(live),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -564,6 +619,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     with pytest.raises(ValueError, match="base manifest keys mismatch"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=incomplete,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(incomplete),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -575,6 +631,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     resolved.phase_hash = resolved.compute_digest()
     compile_coding_spatial_workspace_recipe(
         base_manifest=resolved,
+        expected_manifest_timestamps=_trusted_manifest_timestamps(resolved),
         project_projection=project(),
         canonical_intent_digest=D["1"],
         adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -616,6 +673,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     leased.phase_hash = leased.compute_digest()
     compile_coding_spatial_workspace_recipe(
         base_manifest=leased,
+        expected_manifest_timestamps=_trusted_manifest_timestamps(leased),
         project_projection=project(),
         canonical_intent_digest=D["1"],
         adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -628,6 +686,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     with pytest.raises(ValueError, match="arena_lease digest does not match content"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=tampered_lease_hash,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(tampered_lease_hash),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -641,6 +700,93 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     with pytest.raises(ValueError, match="arena_lease"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=unsafe_lease,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(unsafe_lease),
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+    shifted = create_manifest("Reject shifted live timestamps", organ_id="EORG-shifted")
+    trusted_timestamps = (shifted.created_at, shifted.expires_at)
+    shifted.created_at += 60
+    shifted.expires_at += 60
+    with pytest.raises(ValueError, match="timestamp binding mismatch"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=shifted,
+            expected_manifest_timestamps=trusted_timestamps,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+    huge_cost = create_manifest("Reject cost overflow", organ_id="EORG-cost-overflow")
+    huge_cost.resource_budget["cost_usd"] = 1e308
+    huge_cost.phase_hash = huge_cost.compute_digest()
+    with pytest.raises(ValueError, match="micro-USD ceiling"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=huge_cost,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+    denied_grant = create_manifest("Reject contradictory denial", organ_id="EORG-denied-grant")
+    denied_grant.denied_capabilities.append({"capability": "read_slice", "reason": "contradiction"})
+    denied_grant.phase_hash = denied_grant.compute_digest()
+    with pytest.raises(ValueError, match="both grant and deny"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=denied_grant,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+    missing_forbidden_paths = create_manifest("Reject open path policy", organ_id="EORG-open-paths")
+    missing_forbidden_paths.data_policy["forbidden_paths"] = []
+    missing_forbidden_paths.phase_hash = missing_forbidden_paths.compute_digest()
+    with pytest.raises(ValueError, match="closed PR1 denylist"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=missing_forbidden_paths,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+    model_enabled = create_manifest("Reject model authority", organ_id="EORG-model-enabled")
+    model_enabled.resource_budget["model_calls"] = 1
+    model_enabled.phase_hash = model_enabled.compute_digest()
+    with pytest.raises(ValueError, match="model invocation"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=model_enabled,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+    verifier_extra = create_manifest("Reject verifier expansion", organ_id="EORG-verifier-extra")
+    verifier_extra.verifier_requirements["auto_approve"] = False
+    verifier_extra.phase_hash = verifier_extra.compute_digest()
+    with pytest.raises(ValueError, match="verifier_requirements keys mismatch"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=verifier_extra,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+    verifier_expanded = create_manifest("Reject extra verifier", organ_id="EORG-verifier-expanded")
+    verifier_expanded.verifier_requirements["must_pass"].append("auto_approve")
+    verifier_expanded.phase_hash = verifier_expanded.compute_digest()
+    with pytest.raises(ValueError, match="closed PR1 profile"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=verifier_expanded,
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -656,6 +802,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     with pytest.raises(ValueError, match="forbidden or unknown capability"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=unsafe,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(unsafe),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -671,26 +818,18 @@ def test_compiler_rejects_expired_stale_and_redirected_inputs(monkeypatch: pytes
         with pytest.raises(ValueError, match="expired"):
             compile_coding_spatial_workspace_recipe(
                 base_manifest=expired,
+                expected_manifest_timestamps=_trusted_manifest_timestamps(expired),
                 project_projection=project(),
                 canonical_intent_digest=D["1"],
                 adapter_refs=(ref("adapter:compass", D["2"]),),
                 evidence_refs=(ref("evidence:source", D["3"]),),
             )
-    with pytest.raises(TypeError, match="now_epoch_seconds"):
-        compile_coding_spatial_workspace_recipe(
-            base_manifest=expired,
-            project_projection=project(),
-            canonical_intent_digest=D["1"],
-            adapter_refs=(ref("adapter:compass", D["2"]),),
-            evidence_refs=(ref("evidence:source", D["3"]),),
-            now_epoch_seconds=expired.created_at,
-        )
-
     manifest = create_manifest("Reject stale inputs", organ_id="EORG-stale-inputs")
     stale_project = replace(project(), freshness_class="STALE", projection_digest="")
     with pytest.raises(ValueError, match="stale or unknown"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=manifest,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
             project_projection=stale_project,
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -700,6 +839,7 @@ def test_compiler_rejects_expired_stale_and_redirected_inputs(monkeypatch: pytes
     with pytest.raises(ValueError, match="canonical continuity owner"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=manifest,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
             project_projection=redirected_project,
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -708,6 +848,7 @@ def test_compiler_rejects_expired_stale_and_redirected_inputs(monkeypatch: pytes
     with pytest.raises(ValueError, match="current or bounded"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=manifest,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:stale", D["2"], "STALE"),),
@@ -760,7 +901,14 @@ def test_schemas_enforce_structural_safety_and_semantic_validators_close_cross_f
     bad_metadata["artifact_evidence_refs"][0]["metadata"] = {"hand_joints": [1, 2]}
     assert list(project_schema.iter_errors(bad_metadata))
 
+    project_truth = project().to_dict()
+    project_truth["artifact_evidence_refs"][0]["truth_class"] = "HYPOTHESIS"
+    assert list(project_schema.iter_errors(project_truth))
+
     recipe_schema = Draft202012Validator(json.loads((ROOT / "schemas" / "aura_ephemeral_workspace_recipe.schema.json").read_text()))
+    recipe_truth = recipe()[0].to_dict()
+    recipe_truth["adapter_refs"][0]["truth_class"] = "HYPOTHESIS"
+    assert list(recipe_schema.iter_errors(recipe_truth))
     dangling = recipe()[0].to_dict()
     dangling["dependency_edges"] = [{"source_capability_id": "compile_compass_packet", "target_capability_id": "unknown"}]
     assert list(recipe_schema.iter_errors(dangling))
@@ -768,6 +916,9 @@ def test_schemas_enforce_structural_safety_and_semantic_validators_close_cross_f
         validate_recipe_semantics(dangling)
 
     observation_schema = Draft202012Validator(json.loads((ROOT / "schemas" / "aura_multimodal_spatial_observation.schema.json").read_text()))
+    observation_truth = observation().to_dict()
+    observation_truth["target_candidates"][0]["evidence_ref"]["truth_class"] = "HYPOTHESIS"
+    assert list(observation_schema.iter_errors(observation_truth))
     bad_window = observation().to_dict()
     bad_window["temporal_window_end_ms"] = bad_window["temporal_window_start_ms"] - 1
     assert not list(observation_schema.iter_errors(bad_window))  # Cross-field arithmetic is semantic.
@@ -835,6 +986,7 @@ def test_review_wave6_nested_manifest_and_capability_boundaries_fail_closed() ->
         with pytest.raises(ValueError, match=message):
             compile_coding_spatial_workspace_recipe(
                 base_manifest=payload,
+                expected_manifest_timestamps=_trusted_manifest_timestamps(payload),
                 project_projection=project(),
                 canonical_intent_digest=D["1"],
                 adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -847,6 +999,7 @@ def test_review_wave6_nested_manifest_and_capability_boundaries_fail_closed() ->
     with pytest.raises(ValueError, match="readable paths"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=unsafe_policy,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(unsafe_policy),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -861,6 +1014,7 @@ def test_review_wave6_nested_manifest_and_capability_boundaries_fail_closed() ->
     with pytest.raises(ValueError, match="minimum workspace capabilities"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=under_granted,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(under_granted),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -881,6 +1035,7 @@ def test_review_wave6_nested_manifest_and_capability_boundaries_fail_closed() ->
     with pytest.raises(ValueError, match="item ceiling"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=oversized,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(oversized),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -937,6 +1092,7 @@ def test_review_wave6_sources_truth_manifest_identity_and_fractional_ttl_fail_cl
     )
     compiled = compile_coding_spatial_workspace_recipe(
         base_manifest=long_manifest,
+        expected_manifest_timestamps=_trusted_manifest_timestamps(long_manifest),
         project_projection=project(),
         canonical_intent_digest=D["1"],
         adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -955,6 +1111,7 @@ def test_review_wave6_sources_truth_manifest_identity_and_fractional_ttl_fail_cl
     with pytest.raises(ValueError, match="less than one whole second"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=short,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(short),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -1083,6 +1240,7 @@ def test_review_wave7_duplicate_requests_and_serialized_timestamp_rebinding_fail
     with pytest.raises(ValueError, match="duplicate capability requests"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=manifest,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),

@@ -117,7 +117,7 @@ A consumer must run both Draft 2020-12 validation and the named semantic validat
 
 ## Review-repair verification
 
-The focused suite now contains 18 tests covering:
+The focused suite now contains 25 tests covering:
 
 1. exact V1 object and serialized-snapshot compatibility;
 2. manifest-version, body, and legacy-digest tampering;
@@ -136,7 +136,7 @@ The focused suite now contains 18 tests covering:
 Local focused verification completed:
 
 - Python compilation: passed;
-- focused tests: **18 passed**;
+- focused tests: **25 passed**;
 - all JSON documents parsed successfully;
 - all three schemas passed Draft 2020-12 meta-validation;
 - the contract module imports only Python standard-library modules and contains no operational or persistence invocation.

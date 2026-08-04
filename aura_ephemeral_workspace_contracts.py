@@ -35,6 +35,7 @@ MAX_INTEGER = 10_000_000_000
 MAX_TIMESTAMP = 2**63 - 1
 MAX_DEPENDENCY_EDGES = 512
 MAX_CANONICAL_DEPTH = 64
+MAX_CANONICAL_ITEMS = MAX_ITEMS
 
 _ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$")
 _DIGEST = re.compile(r"^[0-9a-f]{64}$")
@@ -78,6 +79,9 @@ _LEGACY_REQUIRED_WORKSPACE_CAPABILITIES = frozenset({
 _LEGACY_SAFE_READABLE_PATHS = frozenset({
     ".aura/CODEMAP.json", ".aura/CODEMAP.md", ".aura/MODULE_MANIFEST.json",
 })
+_LEGACY_REQUIRED_FORBIDDEN_PATHS = frozenset({
+    ".env", ".git/credentials", "*/secrets*", "*/.key",
+})
 _LEGACY_FORBIDDEN_CAPABILITIES = frozenset({
     "external_network", "package_install", "shell", "arbitrary_subprocess",
     "host_write_outside_temp", "production_mutation", "secret_access",
@@ -102,6 +106,8 @@ def _canonical(value: Any, *, _depth: int = 0) -> Any:
             return _canonical(value.to_dict(), _depth=next_depth)
         return _canonical(asdict(value), _depth=next_depth)
     if isinstance(value, Mapping):
+        if len(value) > MAX_CANONICAL_ITEMS:
+            raise ValueError("canonical JSON object exceeds its item ceiling")
         if any(not isinstance(key, str) for key in value):
             raise ValueError("JSON object keys must be strings")
         return {
@@ -109,12 +115,20 @@ def _canonical(value: Any, *, _depth: int = 0) -> Any:
             for key in sorted(value)
         }
     if isinstance(value, (list, tuple)):
+        if len(value) > MAX_CANONICAL_ITEMS:
+            raise ValueError("canonical JSON sequence exceeds its item ceiling")
         return [_canonical(item, _depth=next_depth) for item in value]
     if isinstance(value, (set, frozenset)):
         raise ValueError("sets are not JSON values")
     if isinstance(value, float) and not math.isfinite(value):
         raise ValueError("non-finite floats are prohibited")
-    if value is None or isinstance(value, (bool, int, float, str)):
+    if isinstance(value, str):
+        try:
+            value.encode("utf-8")
+        except UnicodeEncodeError as exc:
+            raise ValueError("canonical JSON strings must contain valid Unicode scalar values") from exc
+        return value
+    if value is None or isinstance(value, (bool, int, float)):
         return value
     raise ValueError(f"non-JSON value: {type(value).__name__}")
 
@@ -544,6 +558,8 @@ class ProjectContextProjection:
                 raise ValueError(f"project.{name} must be a bounded sequence")
             refs = tuple(item if isinstance(item, CanonicalReference) else CanonicalReference.from_dict(item) for item in raw)
             for reference in refs:
+                if reference.truth_class != "EXACT":
+                    raise ValueError("project references must use EXACT canonical truth")
                 if reference.reference_id in seen:
                     raise ValueError(f"duplicate project reference: {reference.reference_id}")
                 seen.add(reference.reference_id)
@@ -629,7 +645,7 @@ class WorkspaceBudget:
     context_tokens: int = 64_000
     output_bytes: int = 4_000_000
     tool_calls: int = 64
-    model_calls: int = 8
+    model_calls: int = 0
     cost_microusd: int = 0
     network_calls: int = 0
     device_events: int = 100_000
@@ -764,6 +780,16 @@ def _validate_manifest_reference_metadata(reference: CanonicalReference) -> None
         "base manifest reference metadata wrapped_not_replaced",
         True,
     )
+    manifest_identity = reference.digest[:32]
+    expected_reference_id = f"organ-manifest:{manifest_identity}"
+    expected_canonical_ref = (
+        f"ephemeral-organ:{manifest_identity}@{metadata['manifest_version']}"
+    )
+    if (
+        reference.reference_id != expected_reference_id
+        or reference.canonical_ref != expected_canonical_ref
+    ):
+        raise ValueError("base manifest reference name does not match wrapper digest")
 
 
 @dataclass(frozen=True)
@@ -828,6 +854,10 @@ class EphemeralWorkspaceRecipe:
         object.__setattr__(self, "domain_owner_handoff_map", _owner_map(self.domain_owner_handoff_map))
         if not isinstance(self.budgets, WorkspaceBudget):
             object.__setattr__(self, "budgets", WorkspaceBudget.from_dict(self.budgets))
+        if self.budgets.network_calls != 0:
+            raise ValueError("recipe budget must keep network_calls at zero")
+        if self.budgets.model_calls != 0:
+            raise ValueError("recipe budget must keep model_calls at zero")
         for name, ids, limit, sort_values in (("renderer_requirements", False, 32, True), ("device_requirements", False, 32, True), ("allowed_interaction_actions", True, 64, False), ("required_verification_gates", True, 64, False)):
             object.__setattr__(self, name, _seq(getattr(self, name), f"recipe.{name}", ids=ids, max_items=limit, sort=sort_values))
         object.__setattr__(self, "ttl_seconds", _int(self.ttl_seconds, "recipe.ttl", 1, MAX_TTL_SECONDS))
@@ -1119,6 +1149,10 @@ class MultimodalSpatialObservation:
             raise ValueError("stale session digest")
         if not isinstance(expected_entity_digests, Mapping):
             raise ValueError("expected_entity_digests is required")
+        if len(expected_entity_digests) != len(self.target_candidates) or len(expected_entity_digests) > 32:
+            raise ValueError("entity reference set mismatch")
+        if any(not isinstance(key, str) for key in expected_entity_digests):
+            raise ValueError("expected entity identifiers must be strings")
         entity_ids = {target.entity_id for target in self.target_candidates}
         if entity_ids != set(expected_entity_digests):
             raise ValueError("entity reference set mismatch")
@@ -1176,6 +1210,11 @@ def _manifest_resource_limits(body: Mapping[str, Any]) -> dict[str, int]:
     integer_fields = ("wall_time_ms", "memory_mb", "output_bytes", "tool_calls", "model_calls", "network_calls")
     limits = {name: _int(raw.get(name), f"base manifest resource_budget.{name}", 0, MAX_INTEGER) for name in integer_fields}
     cost_usd = _finite_number(raw.get("cost_usd"), "base manifest resource_budget.cost_usd")
+    maximum_cost_usd = MAX_INTEGER / 1_000_000
+    if cost_usd > maximum_cost_usd:
+        raise ValueError(
+            "base manifest resource_budget.cost_usd exceeds the micro-USD ceiling"
+        )
     limits["cost_microusd"] = int(math.floor(cost_usd * 1_000_000))
     return limits
 
@@ -1322,6 +1361,7 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
         raise ValueError("base manifest does not grant the minimum workspace capabilities")
     requested = _require_sequence(body.get("requested_capabilities"), "base manifest requested_capabilities")
     requested_grants: set[str] = set()
+    requested_denials: dict[str, str] = {}
     requested_names: set[str] = set()
     for index, raw_request in enumerate(requested):
         request = _require_mapping(raw_request, f"base manifest requested_capabilities[{index}]")
@@ -1333,11 +1373,21 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
         _bool(request.get("requested"), f"base manifest requested_capabilities[{index}].requested", True)
         if not isinstance(request.get("granted"), bool):
             raise ValueError(f"base manifest requested_capabilities[{index}].granted must be boolean")
-        _text(request.get("denied_reason"), f"base manifest requested_capabilities[{index}].denied_reason", optional=True)
+        denied_reason = _text(
+            request.get("denied_reason"),
+            f"base manifest requested_capabilities[{index}].denied_reason",
+            optional=True,
+        )
         if request["granted"]:
+            if denied_reason:
+                raise ValueError("granted capability requests must not carry denial reasons")
             if capability not in _LEGACY_ALLOWED_CAPABILITIES:
                 raise ValueError("base manifest request grants a forbidden or unknown capability")
             requested_grants.add(capability)
+        else:
+            if not denied_reason:
+                raise ValueError("denied capability requests require a denial reason")
+            requested_denials[capability] = denied_reason
     if requested_grants != granted:
         raise ValueError("base manifest granted_capabilities disagree with capability requests")
     _validate_v1_arena_lease(
@@ -1346,11 +1396,25 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
         granted_capabilities=granted,
     )
 
+    denial_rows: dict[str, str] = {}
     for index, raw_denial in enumerate(_require_sequence(body.get("denied_capabilities"), "base manifest denied_capabilities")):
         denial = _require_mapping(raw_denial, f"base manifest denied_capabilities[{index}]")
         _strict(denial, {"capability", "reason"}, f"base manifest denied_capabilities[{index}]")
-        _id(denial.get("capability"), f"base manifest denied_capabilities[{index}].capability")
-        _id(denial.get("reason"), f"base manifest denied_capabilities[{index}].reason")
+        capability = _id(
+            denial.get("capability"),
+            f"base manifest denied_capabilities[{index}].capability",
+        )
+        reason = _id(
+            denial.get("reason"),
+            f"base manifest denied_capabilities[{index}].reason",
+        )
+        if capability in denial_rows:
+            raise ValueError("base manifest contains duplicate capability denials")
+        if capability in granted:
+            raise ValueError("base manifest cannot both grant and deny a capability")
+        denial_rows[capability] = reason
+    if denial_rows != requested_denials:
+        raise ValueError("base manifest denied_capabilities disagree with denied requests")
 
     if body.get("components"):
         raise ValueError("base manifest components must be empty for the non-operational PR1 wrapper")
@@ -1379,12 +1443,14 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
     )
     if writable_paths:
         raise ValueError("base manifest writable temp paths must be empty in PR1")
-    _seq(
+    forbidden_paths = frozenset(_seq(
         data_policy.get("forbidden_paths"),
         "base manifest data_policy.forbidden_paths",
         max_items=32,
         sort=True,
-    )
+    ))
+    if forbidden_paths != _LEGACY_REQUIRED_FORBIDDEN_PATHS:
+        raise ValueError("base manifest forbidden paths do not match the closed PR1 denylist")
     for name in ("private_memory_export", "raw_sidecar_dump", "secrets_access"):
         _bool(data_policy.get(name), f"base manifest data_policy.{name}", False)
     ui_manifest = _require_mapping(body.get("ui_manifest"), "base manifest ui_manifest")
@@ -1403,11 +1469,18 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
     limits = _manifest_resource_limits(body)
     if limits["network_calls"] != 0:
         raise ValueError("base manifest network access must remain disabled")
+    if limits["model_calls"] != 0:
+        raise ValueError("base manifest model invocation must remain disabled")
     verifier = _require_mapping(body.get("verifier_requirements"), "base manifest verifier_requirements")
+    _strict(
+        verifier,
+        {"must_pass", "quality_gate"},
+        "base manifest verifier_requirements",
+    )
     required_verifiers = {"no_production_mutation", "no_secret_access", "no_network_access"}
     must_pass = set(_seq(verifier.get("must_pass"), "base manifest verifier_requirements.must_pass", ids=True, sort=True))
-    if not required_verifiers <= must_pass:
-        raise ValueError("base manifest verifier requirements are incomplete")
+    if must_pass != required_verifiers:
+        raise ValueError("base manifest verifier requirements do not match the closed PR1 profile")
     quality_gate = _id(verifier.get("quality_gate"), "base manifest verifier_requirements.quality_gate")
     if quality_gate != "advisory_for_read_only":
         raise ValueError("base manifest verifier quality gate is unsafe")
@@ -1456,7 +1529,6 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
                                              ttl_seconds: int = 300,
                                              expected_manifest_timestamps: Sequence[int | float] | None = None) -> EphemeralWorkspaceRecipe:
     """Compile the frozen recipe without invoking any canonical owner."""
-    serialized_manifest = isinstance(base_manifest, Mapping)
     raw_before = base_manifest.to_dict() if hasattr(base_manifest, "to_dict") else base_manifest
     before = canonical_json(raw_before)
     body, legacy_digest, wrapper_digest = _manifest_snapshot(base_manifest)
@@ -1481,25 +1553,22 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
     manifest_ttl = _int(body.get("ttl_seconds"), "base manifest ttl", 1, MAX_TTL_SECONDS)
     created_at = _finite_number(body.get("created_at"), "base manifest created_at")
     expires_at = _finite_number(body.get("expires_at"), "base manifest expires_at")
-    if serialized_manifest:
-        if (
-            isinstance(expected_manifest_timestamps, (str, bytes, bytearray))
-            or not isinstance(expected_manifest_timestamps, Sequence)
-            or len(expected_manifest_timestamps) != 2
-        ):
-            raise ValueError("serialized base manifest requires trusted timestamp bindings")
-        expected_created_at = _finite_number(
-            expected_manifest_timestamps[0],
-            "expected base manifest created_at",
-        )
-        expected_expires_at = _finite_number(
-            expected_manifest_timestamps[1],
-            "expected base manifest expires_at",
-        )
-        if (created_at, expires_at) != (expected_created_at, expected_expires_at):
-            raise ValueError("serialized base manifest timestamp binding mismatch")
-    elif expected_manifest_timestamps is not None:
-        raise ValueError("timestamp bindings are only accepted for serialized base manifests")
+    if (
+        isinstance(expected_manifest_timestamps, (str, bytes, bytearray))
+        or not isinstance(expected_manifest_timestamps, Sequence)
+        or len(expected_manifest_timestamps) != 2
+    ):
+        raise ValueError("base manifest requires trusted timestamp bindings")
+    expected_created_at = _finite_number(
+        expected_manifest_timestamps[0],
+        "expected base manifest created_at",
+    )
+    expected_expires_at = _finite_number(
+        expected_manifest_timestamps[1],
+        "expected base manifest expires_at",
+    )
+    if (created_at, expires_at) != (expected_created_at, expected_expires_at):
+        raise ValueError("base manifest timestamp binding mismatch")
     now = time.time()
     if now < created_at:
         raise ValueError("compile time precedes base manifest creation")
