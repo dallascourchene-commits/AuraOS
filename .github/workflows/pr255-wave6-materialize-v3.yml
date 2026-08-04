@@ -50,13 +50,18 @@ jobs:
       - name: Apply review wave 6 patch
         run: python /tmp/pr255_wave6_patch.py
 
+      - name: Restore canonical V1 manifest test owner without expanding PR scope
+        run: |
+          git show origin/main:aura_ephemeral_manifest.py > aura_ephemeral_manifest.py
+          test "$(git hash-object aura_ephemeral_manifest.py)" = "7a43cfdf9a470cf7ec370158373c2a6d4c3ae8c9"
+
       - name: Install focused verification tools
         run: python -m pip install --disable-pip-version-check pytest jsonschema ruff
 
       - name: Compile and lint
         run: |
-          python -m py_compile aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
-          ruff check --select F401,F821 aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+          python -m py_compile aura_ephemeral_manifest.py aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+          ruff check --select F401,F821 aura_ephemeral_manifest.py aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
 
       - name: Run complete focused regression suite
         run: pytest -q tests/test_aura_ephemeral_workspace_contracts.py
