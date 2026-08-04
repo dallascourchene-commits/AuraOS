@@ -5,6 +5,7 @@ import copy
 import json
 from dataclasses import dataclass, replace
 from pathlib import Path
+from typing import Any
 
 import pytest
 from jsonschema import Draft202012Validator
@@ -231,7 +232,7 @@ def test_canonicalization_and_primitive_parsing_are_strict_and_lossless() -> Non
     zero_payload["confidence"] = 0
     with pytest.raises(ValueError, match="binding_digest does not match"):
         SpatialReferentBinding.from_dict(zero_payload)
-    malformed_keys = ref("artifact:keys", D["1"]).to_dict()
+    malformed_keys: dict[Any, Any] = dict(ref("artifact:keys", D["1"]).to_dict())
     malformed_keys[1] = "integer"
     malformed_keys[(2,)] = "tuple"
     with pytest.raises(ValueError, match="reference keys must be strings"):
