@@ -1,0 +1,48 @@
+{
+  "version": "AURA_CODING_WABOOSE_REQUEST_V1",
+  "request_id": "intent-native-spatial-workspace-pr1",
+  "base_commit": "879b5fb056b70d150b1646e082223330a36c2912",
+  "objective_ref": ".aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json",
+  "review_files": [
+    "aura_ephemeral_workspace_contracts.py",
+    "schemas/aura_project_context_projection.schema.json",
+    "schemas/aura_ephemeral_workspace_recipe.schema.json",
+    "schemas/aura_multimodal_spatial_observation.schema.json",
+    "tests/test_aura_ephemeral_workspace_contracts.py",
+    "docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md",
+    ".aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json"
+  ],
+  "required_checks": [
+    "canonical_owner_reuse",
+    "v1_manifest_byte_and_behavior_compatibility",
+    "deterministic_canonical_round_trip",
+    "nested_authority_alias_rejection",
+    "raw_sensor_payload_rejection",
+    "repository_project_recipe_adapter_evidence_scene_session_entity_staleness",
+    "dependency_cycle_rejection",
+    "coding_spatial_workspace_v1_contract",
+    "schema_validation",
+    "no_operational_invocation",
+    "no_persistence_store",
+    "authority_non_escalation",
+    "allowed_path_set_unchanged"
+  ],
+  "semantic_questions": [
+    "Does the new module remain a compatibility contract rather than a second runtime, planner, router, renderer, verifier, memory, persistence, or authority plane?",
+    "Can any nested alias, malformed mapping, stale digest, or raw sensor field bypass the fail-closed boundaries?",
+    "Does CODING_SPATIAL_WORKSPACE_V1 hand off consequential work only to existing canonical owners?"
+  ],
+  "ignored_generated_navigation": [
+    ".aura/CODEMAP.json",
+    ".aura/CODEMAP.md",
+    "topology_map.json",
+    "Aura_Memory/live_topology_ast.json"
+  ],
+  "patch_authority": false,
+  "automatic_fix": false,
+  "automatic_commit": false,
+  "automatic_push": false,
+  "automatic_pull_request": false,
+  "automatic_merge": false,
+  "human_review_required": true
+}
