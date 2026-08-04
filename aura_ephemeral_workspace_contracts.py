@@ -34,6 +34,7 @@ MAX_TTL_SECONDS = 86_400
 MAX_INTEGER = 10_000_000_000
 MAX_TIMESTAMP = 2**63 - 1
 MAX_DEPENDENCY_EDGES = 512
+MAX_CANONICAL_DEPTH = 64
 
 _ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$")
 _DIGEST = re.compile(r"^[0-9a-f]{64}$")
@@ -89,20 +90,26 @@ _LEGACY_RESOURCE_FIELDS = frozenset({
 })
 
 
-def _canonical(value: Any) -> Any:
-    """Return a lossless canonical JSON value or reject ambiguous input."""
+def _canonical(value: Any, *, _depth: int = 0) -> Any:
+    """Return a lossless bounded canonical JSON value or reject ambiguous input."""
+    if _depth > MAX_CANONICAL_DEPTH:
+        raise ValueError("canonical JSON nesting exceeds its depth ceiling")
+    next_depth = _depth + 1
     if isinstance(value, Enum):
         return value.value
     if is_dataclass(value):
         if hasattr(value, "to_dict") and callable(value.to_dict):
-            return _canonical(value.to_dict())
-        return _canonical(asdict(value))
+            return _canonical(value.to_dict(), _depth=next_depth)
+        return _canonical(asdict(value), _depth=next_depth)
     if isinstance(value, Mapping):
         if any(not isinstance(key, str) for key in value):
             raise ValueError("JSON object keys must be strings")
-        return {key: _canonical(value[key]) for key in sorted(value)}
+        return {
+            key: _canonical(value[key], _depth=next_depth)
+            for key in sorted(value)
+        }
     if isinstance(value, (list, tuple)):
-        return [_canonical(item) for item in value]
+        return [_canonical(item, _depth=next_depth) for item in value]
     if isinstance(value, (set, frozenset)):
         raise ValueError("sets are not JSON values")
     if isinstance(value, float) and not math.isfinite(value):
@@ -725,7 +732,7 @@ def _owner_map(value: Any) -> tuple[tuple[str, str], ...]:
     return result
 
 
-_FROZEN_DEFINITION = {
+_FROZEN_DEFINITION = MappingProxyType({
     "demonstration_id": CODING_SPATIAL_WORKSPACE_V1,
     "capability_ids": ("compile_compass_packet", "fetch_bounded_neighborhood", "open_exact_source_slice", "display_tests_and_schemas", "compile_candidate_change_graph", "prepare_forge_handoff", "read_verification_status", "display_attempt_archive_evidence", "dissolve_workspace"),
     "dependency_edges": (("compile_compass_packet", "fetch_bounded_neighborhood"), ("fetch_bounded_neighborhood", "open_exact_source_slice"), ("fetch_bounded_neighborhood", "display_tests_and_schemas"), ("fetch_bounded_neighborhood", "compile_candidate_change_graph"), ("compile_candidate_change_graph", "prepare_forge_handoff"), ("prepare_forge_handoff", "read_verification_status"), ("read_verification_status", "display_attempt_archive_evidence"), ("display_attempt_archive_evidence", "dissolve_workspace")),
@@ -734,8 +741,29 @@ _FROZEN_DEFINITION = {
     "device_requirements": ("KEYBOARD_REQUIRED", "POINTER_OPTIONAL", "XR_OPTIONAL"),
     "allowed_interaction_actions": ("SELECT", "DESELECT", "EXPAND", "CONTRACT", "FOCUS", "OPEN_SOURCE", "ISOLATE", "COMPARE", "REQUEST_RELATIONAL_SYNTHESIS", "REQUEST_SIMULATION", "DISMISS_CANDIDATE", "PREPARE_REPAIR_REQUEST", "PREPARE_DOMAIN_HANDOFF", "CONFIRM_HANDOFF"),
     "required_verification_gates": ("EXACT_REPOSITORY_IDENTITY", "EXACT_PROJECT_PROJECTION", "ADAPTER_IDENTITY", "EVIDENCE_FRESHNESS", "AUTHORITY_NON_ESCALATION", "NO_PRODUCTION_MUTATION", "MANDATORY_DISSOLUTION"),
-}
-CODING_SPATIAL_WORKSPACE_V1_DEFINITION = MappingProxyType(_FROZEN_DEFINITION)
+})
+CODING_SPATIAL_WORKSPACE_V1_DEFINITION = _FROZEN_DEFINITION
+
+
+def _validate_manifest_reference_metadata(reference: CanonicalReference) -> None:
+    """Require the exact V1 wrapper metadata carried by a manifest reference."""
+    metadata = dict(reference.metadata)
+    expected_fields = {
+        "manifest_version", "legacy_manifest_digest", "wrapped_not_replaced",
+    }
+    if set(metadata) != expected_fields:
+        raise ValueError("base manifest reference metadata is incomplete")
+    if metadata["manifest_version"] != LEGACY_EPHEMERAL_MANIFEST_VERSION:
+        raise ValueError("base manifest reference metadata version is invalid")
+    _legacy_digest(
+        metadata["legacy_manifest_digest"],
+        "base manifest reference metadata legacy_manifest_digest",
+    )
+    _bool(
+        metadata["wrapped_not_replaced"],
+        "base manifest reference metadata wrapped_not_replaced",
+        True,
+    )
 
 
 @dataclass(frozen=True)
@@ -775,6 +803,7 @@ class EphemeralWorkspaceRecipe:
             object.__setattr__(self, "base_manifest_ref", CanonicalReference.from_dict(self.base_manifest_ref))
         if self.base_manifest_ref.owner != "aura_ephemeral_manifest" or self.base_manifest_ref.truth_class != "EXACT" or self.base_manifest_ref.freshness_class not in _CURRENT_FRESHNESS:
             raise ValueError("base manifest reference must be exact, current, and canonically owned")
+        _validate_manifest_reference_metadata(self.base_manifest_ref)
         object.__setattr__(self, "canonical_intent_digest", _digest(self.canonical_intent_digest, "recipe.intent"))
         object.__setattr__(self, "project_projection_id", _id(self.project_projection_id, "recipe.project_id"))
         object.__setattr__(self, "project_projection_digest", _digest(self.project_projection_digest, "recipe.project_digest"))
@@ -880,7 +909,8 @@ class EphemeralWorkspaceRecipe:
                           expected_project_projection_digest: str,
                           expected_base_manifest_ref: CanonicalReference | Mapping[str, Any],
                           expected_adapter_refs: Mapping[str, CanonicalReference | Mapping[str, Any]],
-                          expected_evidence_refs: Mapping[str, CanonicalReference | Mapping[str, Any]]) -> None:
+                          expected_evidence_refs: Mapping[str, CanonicalReference | Mapping[str, Any]],
+                          expected_recipe: "EphemeralWorkspaceRecipe" | Mapping[str, Any] | None = None) -> None:
         """Rebind the complete recipe to current manifest, project, and dependencies."""
         if self.canonical_intent_digest != _digest(expected_intent_digest, "expected intent"):
             raise ValueError("stale canonical intent digest")
@@ -895,6 +925,15 @@ class EphemeralWorkspaceRecipe:
             raise ValueError("stale base manifest canonical reference")
         _validate_reference_set(self.adapter_refs, expected_adapter_refs, "adapter")
         _validate_reference_set(self.evidence_refs, expected_evidence_refs, "evidence")
+        if expected_recipe is None:
+            raise ValueError("expected_recipe is required")
+        expected = (
+            expected_recipe
+            if isinstance(expected_recipe, EphemeralWorkspaceRecipe)
+            else EphemeralWorkspaceRecipe.from_dict(expected_recipe)
+        )
+        if self.to_dict() != expected.to_dict():
+            raise ValueError("stale complete recipe identity")
 
 
 @dataclass(frozen=True)
@@ -922,8 +961,11 @@ class SpatialReferentBinding:
         object.__setattr__(self, "confidence", _prob(self.confidence, "referent.confidence"))
         if not isinstance(self.evidence_ref, CanonicalReference):
             object.__setattr__(self, "evidence_ref", CanonicalReference.from_dict(self.evidence_ref))
-        if self.evidence_ref.freshness_class not in _CURRENT_FRESHNESS:
-            raise ValueError("referent evidence must be current or bounded")
+        if (
+            self.evidence_ref.truth_class != "EXACT"
+            or self.evidence_ref.freshness_class not in _CURRENT_FRESHNESS
+        ):
+            raise ValueError("referent evidence must be current or bounded and EXACT")
         sources = _seq(self.input_sources, "referent.input_sources", max_items=7, sort=True, upper=True)
         if not sources or not set(sources) <= _INPUTS:
             raise ValueError("unsupported referent input source")
@@ -1064,7 +1106,8 @@ class MultimodalSpatialObservation:
     def validate_bindings(self, *, expected_scene_id: str, expected_scene_digest: str,
                           expected_session_id: str, expected_session_digest: str,
                           expected_entity_digests: Mapping[str, str] | None = None,
-                          expected_evidence_refs: Mapping[str, CanonicalReference | Mapping[str, Any]] | None = None) -> None:
+                          expected_evidence_refs: Mapping[str, CanonicalReference | Mapping[str, Any]] | None = None,
+                          expected_observation: "MultimodalSpatialObservation" | Mapping[str, Any] | None = None) -> None:
         """Rebind all scene, session, entity, and complete evidence identities."""
         if self.scene_id != _id(expected_scene_id, "expected scene id"):
             raise ValueError("stale scene id")
@@ -1087,6 +1130,15 @@ class MultimodalSpatialObservation:
             expected_evidence_refs,
             "referent evidence",
         )
+        if expected_observation is None:
+            raise ValueError("expected_observation is required")
+        expected = (
+            expected_observation
+            if isinstance(expected_observation, MultimodalSpatialObservation)
+            else MultimodalSpatialObservation.from_dict(expected_observation)
+        )
+        if self.to_dict() != expected.to_dict():
+            raise ValueError("stale complete observation identity")
 
 
 def _legacy_manifest_body(body: Mapping[str, Any]) -> dict[str, Any]:
@@ -1270,10 +1322,14 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
         raise ValueError("base manifest does not grant the minimum workspace capabilities")
     requested = _require_sequence(body.get("requested_capabilities"), "base manifest requested_capabilities")
     requested_grants: set[str] = set()
+    requested_names: set[str] = set()
     for index, raw_request in enumerate(requested):
         request = _require_mapping(raw_request, f"base manifest requested_capabilities[{index}]")
         _strict(request, {"capability", "requested", "granted", "denied_reason"}, f"base manifest requested_capabilities[{index}]")
         capability = _id(request.get("capability"), f"base manifest requested_capabilities[{index}].capability")
+        if capability in requested_names:
+            raise ValueError("base manifest contains duplicate capability requests")
+        requested_names.add(capability)
         _bool(request.get("requested"), f"base manifest requested_capabilities[{index}].requested", True)
         if not isinstance(request.get("granted"), bool):
             raise ValueError(f"base manifest requested_capabilities[{index}].granted must be boolean")
@@ -1397,8 +1453,10 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
                                              adapter_refs: Sequence[CanonicalReference | Mapping[str, Any]],
                                              evidence_refs: Sequence[CanonicalReference | Mapping[str, Any]],
                                              budgets: WorkspaceBudget | Mapping[str, Any] | None = None,
-                                             ttl_seconds: int = 300) -> EphemeralWorkspaceRecipe:
+                                             ttl_seconds: int = 300,
+                                             expected_manifest_timestamps: Sequence[int | float] | None = None) -> EphemeralWorkspaceRecipe:
     """Compile the frozen recipe without invoking any canonical owner."""
+    serialized_manifest = isinstance(base_manifest, Mapping)
     raw_before = base_manifest.to_dict() if hasattr(base_manifest, "to_dict") else base_manifest
     before = canonical_json(raw_before)
     body, legacy_digest, wrapper_digest = _manifest_snapshot(base_manifest)
@@ -1423,6 +1481,25 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
     manifest_ttl = _int(body.get("ttl_seconds"), "base manifest ttl", 1, MAX_TTL_SECONDS)
     created_at = _finite_number(body.get("created_at"), "base manifest created_at")
     expires_at = _finite_number(body.get("expires_at"), "base manifest expires_at")
+    if serialized_manifest:
+        if (
+            isinstance(expected_manifest_timestamps, (str, bytes, bytearray))
+            or not isinstance(expected_manifest_timestamps, Sequence)
+            or len(expected_manifest_timestamps) != 2
+        ):
+            raise ValueError("serialized base manifest requires trusted timestamp bindings")
+        expected_created_at = _finite_number(
+            expected_manifest_timestamps[0],
+            "expected base manifest created_at",
+        )
+        expected_expires_at = _finite_number(
+            expected_manifest_timestamps[1],
+            "expected base manifest expires_at",
+        )
+        if (created_at, expires_at) != (expected_created_at, expected_expires_at):
+            raise ValueError("serialized base manifest timestamp binding mismatch")
+    elif expected_manifest_timestamps is not None:
+        raise ValueError("timestamp bindings are only accepted for serialized base manifests")
     now = time.time()
     if now < created_at:
         raise ValueError("compile time precedes base manifest creation")
@@ -1453,7 +1530,7 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
         raise ValueError("budget.wall_time_ms cannot exceed effective workspace TTL")
     adapters = _refs(adapter_refs, "adapter_refs", require_current=True)
     evidence = _refs(evidence_refs, "evidence_refs", require_current=True)
-    definition = _FROZEN_DEFINITION
+    definition = CODING_SPATIAL_WORKSPACE_V1_DEFINITION
     provisional = EphemeralWorkspaceRecipe(
         recipe_id="workspace-recipe:pending",
         demonstration_id=CODING_SPATIAL_WORKSPACE_V1,

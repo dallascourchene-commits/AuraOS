@@ -163,6 +163,7 @@ def test_v1_manifest_is_unchanged_when_wrapped_and_serialized_mapping_is_verifie
         canonical_intent_digest=D["1"],
         adapter_refs=(ref("adapter:compass", D["2"]),),
         evidence_refs=(ref("evidence:source", D["3"]),),
+        expected_manifest_timestamps=(serialized["created_at"], serialized["expires_at"]),
     )
     tampered = copy.deepcopy(serialized)
     tampered["objective"] = "tampered while retaining phase_hash"
@@ -200,6 +201,7 @@ def test_contracts_round_trip_and_complete_current_bindings_validate() -> None:
         expected_base_manifest_ref=r.base_manifest_ref,
         expected_adapter_refs={item.reference_id: item.to_dict() for item in r.adapter_refs},
         expected_evidence_refs={item.reference_id: item.to_dict() for item in r.evidence_refs},
+        expected_recipe=r,
     )
     o.validate_bindings(
         expected_scene_id="scene:coding-workspace",
@@ -208,6 +210,7 @@ def test_contracts_round_trip_and_complete_current_bindings_validate() -> None:
         expected_session_digest=D["2"],
         expected_entity_digests={"entity:function-node": D["3"]},
         expected_evidence_refs=expected_observation_evidence(o),
+        expected_observation=o,
     )
 
 
@@ -936,3 +939,155 @@ def test_waboose_request_reviews_itself() -> None:
     request_path = ROOT / ".aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json"
     payload = json.loads(request_path.read_text(encoding="utf-8"))
     assert ".aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json" in payload["review_files"]
+
+
+
+def test_review_wave7_recursion_frozen_profile_and_wrapper_metadata_fail_closed() -> None:
+    """Depth, immutable demonstration state, and wrapper metadata stay exact."""
+    nested: Any = "leaf"
+    for _ in range(workspace_contracts.MAX_CANONICAL_DEPTH + 2):
+        nested = [nested]
+    with pytest.raises(ValueError, match="depth ceiling"):
+        stable_digest(nested)
+
+    with pytest.raises(TypeError):
+        workspace_contracts._FROZEN_DEFINITION["capability_ids"] = ("shell",)
+    with pytest.raises(TypeError):
+        CODING_SPATIAL_WORKSPACE_V1_DEFINITION["capability_ids"] = ("shell",)
+
+    r, _ = recipe()
+    with pytest.raises(ValueError, match="metadata is incomplete"):
+        replace(
+            r,
+            base_manifest_ref=replace(r.base_manifest_ref, metadata={}),
+            recipe_digest="",
+        )
+
+
+def test_review_wave7_exact_referent_and_complete_recipe_observation_bindings() -> None:
+    """Rebinding authenticates complete lifecycle, parent, target, and evidence records."""
+    r, _ = recipe()
+    changed_budget = replace(
+        r.budgets,
+        output_bytes=max(0, r.budgets.output_bytes - 1),
+    )
+    changed_recipe = replace(r, budgets=changed_budget, recipe_digest="")
+    with pytest.raises(ValueError, match="complete recipe identity"):
+        changed_recipe.validate_bindings(
+            expected_intent_digest=r.canonical_intent_digest,
+            expected_project_projection_id=r.project_projection_id,
+            expected_project_projection_digest=r.project_projection_digest,
+            expected_base_manifest_ref=r.base_manifest_ref,
+            expected_adapter_refs={item.reference_id: item.to_dict() for item in r.adapter_refs},
+            expected_evidence_refs={item.reference_id: item.to_dict() for item in r.evidence_refs},
+            expected_recipe=r,
+        )
+
+    o = observation()
+    weak_evidence = replace(
+        o.target_candidates[0].evidence_ref,
+        truth_class="HYPOTHESIS",
+    )
+    with pytest.raises(ValueError, match="EXACT"):
+        replace(
+            o.target_candidates[0],
+            evidence_ref=weak_evidence,
+            binding_digest="",
+        )
+
+    changed_parent = replace(
+        o,
+        normalized_action="COMPARE",
+        observation_digest="",
+    )
+    with pytest.raises(ValueError, match="complete observation identity"):
+        changed_parent.validate_bindings(
+            expected_scene_id=o.scene_id,
+            expected_scene_digest=o.scene_digest,
+            expected_session_id=o.session_id,
+            expected_session_digest=o.session_digest,
+            expected_entity_digests={
+                target.entity_id: target.entity_digest
+                for target in changed_parent.target_candidates
+            },
+            expected_evidence_refs=expected_observation_evidence(changed_parent),
+            expected_observation=o,
+        )
+
+    changed_target = replace(
+        o.target_candidates[0],
+        confidence=0.5,
+        binding_digest="",
+    )
+    changed_targets_observation = replace(
+        o,
+        target_candidates=(changed_target,),
+        observation_digest="",
+    )
+    with pytest.raises(ValueError, match="complete observation identity"):
+        changed_targets_observation.validate_bindings(
+            expected_scene_id=o.scene_id,
+            expected_scene_digest=o.scene_digest,
+            expected_session_id=o.session_id,
+            expected_session_digest=o.session_digest,
+            expected_entity_digests={
+                target.entity_id: target.entity_digest
+                for target in changed_targets_observation.target_candidates
+            },
+            expected_evidence_refs=expected_observation_evidence(
+                changed_targets_observation
+            ),
+            expected_observation=o,
+        )
+
+
+def test_review_wave7_duplicate_requests_and_serialized_timestamp_rebinding_fail_closed() -> None:
+    """Ambiguous capability requests and unauthenticated serialized clocks are rejected."""
+    manifest = create_manifest(
+        "Reject duplicate capability requests",
+        organ_id="EORG-wave7-duplicates",
+        requested_capabilities=["resolve_capabilities", "read_slice", "dissolve"],
+    )
+    manifest.requested_capabilities.append(
+        dict(manifest.requested_capabilities[0])
+    )
+    manifest.phase_hash = manifest.compute_digest()
+    with pytest.raises(ValueError, match="duplicate capability requests"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=manifest,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+    serialized_manifest = create_manifest(
+        "Bind serialized timestamps",
+        organ_id="EORG-wave7-timestamps",
+        requested_capabilities=["resolve_capabilities", "read_slice", "dissolve"],
+    ).to_dict()
+    with pytest.raises(ValueError, match="requires trusted timestamp bindings"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=serialized_manifest,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+    original_timestamps = (
+        serialized_manifest["created_at"],
+        serialized_manifest["expires_at"],
+    )
+    resurrected = copy.deepcopy(serialized_manifest)
+    resurrected["created_at"] += 3600
+    resurrected["expires_at"] += 3600
+    with pytest.raises(ValueError, match="timestamp binding mismatch"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=resurrected,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+            expected_manifest_timestamps=original_timestamps,
+        )
