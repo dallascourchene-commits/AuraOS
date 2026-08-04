@@ -32,7 +32,7 @@ jobs:
       - name: Compile and run focused regressions
         run: |
           python -m py_compile aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
-          pytest -q tests/test_aura_ephemeral_workspace_contracts.py
+          PYTHONPATH=. pytest -q tests/test_aura_ephemeral_workspace_contracts.py
 
       - name: Run focused lint and schema gates
         run: |
