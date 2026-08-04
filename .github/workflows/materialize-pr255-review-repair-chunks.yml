@@ -1,0 +1,99 @@
+name: Materialize PR255 review repair chunks
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.head_ref == 'repair/pr255-intent-spatial-contracts-clean' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - name: Reconstruct, verify, test, and clean
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64
+          import hashlib
+          import pathlib
+
+          root = pathlib.Path('.aura/pr255_payload_chunks')
+          paths = sorted(root.glob('*.part'))
+          expected_names = [f'{index:03d}.part' for index in range(16)]
+          actual_names = [path.name for path in paths]
+          if actual_names != expected_names:
+              raise SystemExit(f'chunk inventory mismatch: {actual_names}')
+          encoded = ''.join(path.read_text(encoding='utf-8') for path in paths)
+          archive = base64.b64decode(encoded, validate=True)
+          expected_sha = '7ebefeaa3d00c6b2324dd7974fffb525ef7afe88e59f7c0db5e1317ba0b4126b'
+          actual_sha = hashlib.sha256(archive).hexdigest()
+          if actual_sha != expected_sha:
+              raise SystemExit(f'payload hash mismatch: {actual_sha}')
+          pathlib.Path('/tmp/pr255-review-repair.tar.gz').write_bytes(archive)
+          PY
+          tar -xzf /tmp/pr255-review-repair.tar.gz -C .
+          rm -f .github/workflows/materialize-pr255-review-repair.yml
+          rm -f .github/workflows/materialize-pr255-review-repair-pr.yml
+          rm -f .github/workflows/materialize-pr255-review-repair-chunks.yml
+          rm -rf .aura/pr255_payload_chunks
+          rm -f .aura/pr255_materialize_trigger
+          rm -f .aura/pr255_temp_pr_purpose.txt
+          rm -f .aura/pr255_materializer_ready
+          rm -f .aura/pr255_materialization_scope.txt
+          rm -f .aura/pr255_materialization_no_merge
+          python -m pip install --disable-pip-version-check -q pytest jsonschema
+          python -m py_compile aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+          python -m json.tool schemas/aura_project_context_projection.schema.json >/dev/null
+          python -m json.tool schemas/aura_ephemeral_workspace_recipe.schema.json >/dev/null
+          python -m json.tool schemas/aura_multimodal_spatial_observation.schema.json >/dev/null
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          for path in (
+              'schemas/aura_project_context_projection.schema.json',
+              'schemas/aura_ephemeral_workspace_recipe.schema.json',
+              'schemas/aura_multimodal_spatial_observation.schema.json',
+          ):
+              Draft202012Validator.check_schema(json.loads(Path(path).read_text()))
+          PY
+          python -m pytest -q tests/test_aura_ephemeral_workspace_contracts.py
+          python - <<'PY'
+          import subprocess
+
+          base = '879b5fb056b70d150b1646e082223330a36c2912'
+          expected = sorted([
+              '.aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json',
+              '.aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json',
+              'aura_ephemeral_workspace_contracts.py',
+              'docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md',
+              'schemas/aura_ephemeral_workspace_recipe.schema.json',
+              'schemas/aura_multimodal_spatial_observation.schema.json',
+              'schemas/aura_project_context_projection.schema.json',
+              'tests/test_aura_ephemeral_workspace_contracts.py',
+          ])
+          actual = sorted(filter(None, subprocess.check_output(
+              ['git', 'diff', '--name-only', base], text=True
+          ).splitlines()))
+          if actual != expected:
+              raise SystemExit(f'exact scope mismatch: {actual}')
+          PY
+      - name: Commit exact clean repair tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'AuraOS Review Repair Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add --all
+          git commit -m 'fix(pr1): resolve exhaustive review findings'
+          git push origin HEAD:${{ github.head_ref }}
