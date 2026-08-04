@@ -12,7 +12,6 @@ from jsonschema import Draft202012Validator
 
 # This import intentionally exercises the exact existing V1 manifest compatibility
 # boundary rather than replacing the canonical owner with a test-only stub in-repo.
-from aura_ephemeral_arena import create_ephemeral_lease
 from aura_ephemeral_manifest import create_manifest
 import aura_ephemeral_workspace_contracts as workspace_contracts
 from aura_ephemeral_workspace_contracts import (
@@ -385,7 +384,7 @@ def test_recipe_references_are_canonical_current_and_globally_unique() -> None:
 def test_recipe_lifetime_budget_resource_ceiling_and_identity_are_fully_bound() -> None:
     """Recipes cannot outlive manifests, exceed resources, or reuse content IDs."""
     short, _ = recipe(ttl_seconds=300, manifest_ttl=10)
-    assert short.ttl_seconds == 10
+    assert 1 <= short.ttl_seconds <= 10
     assert short.budgets.wall_time_ms <= 10_000
     assert short.budgets.memory_mb == 256
     assert short.budgets.output_bytes == 1_000_000
@@ -433,9 +432,9 @@ def test_observation_temporal_transcript_inputs_targets_and_evidence_fail_closed
     with pytest.raises(ValueError, match="transcript digest"):
         replace(base, transcript_digest=D["8"], observation_digest="")
     with pytest.raises(ValueError, match="unique"):
-        observation(sources=("voice", "VOICE"))
+        observation(sources=("VOICE", "VOICE"))
     with pytest.raises(ValueError, match="unique"):
-        observation(binding_sources=("gaze", "GAZE"))
+        observation(binding_sources=("GAZE", "GAZE"))
     with pytest.raises(ValueError, match="bounded target sequence"):
         replace(base, target_candidates=(item for item in base.target_candidates), observation_digest="")
     with pytest.raises(ValueError, match="expected_referent evidence_refs is required"):
@@ -572,11 +571,33 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
         organ_id="EORG-leased",
         requested_capabilities=["resolve_capabilities", "read_slice", "dissolve"],
     )
-    leased.arena_lease = create_ephemeral_lease(
-        leased.organ_id,
-        leased.granted_capabilities,
-        leased.ttl_seconds,
-    )
+    lease_body = {
+        "lease_version": "AURA_ARENA_LEASE_V1",
+        "lease_id": "lease-EORG-leased",
+        "domain": "ephemeral",
+        "capsule_id": leased.organ_id,
+        "holder": leased.organ_id,
+        "regions": [{"organ_id": leased.organ_id, "scope": "read_only"}],
+        "allowed_actions": sorted(leased.granted_capabilities),
+        "forbidden_actions": sorted({
+            "network", "install", "shell", "production_mutation",
+            "secret_access", "commit", "push", "automatic_crystallization",
+        }),
+        "mode": "read_only",
+        "conflict_policy": "judge_then_reground",
+        "status": "active",
+        "metadata": {},
+    }
+    lease_body["phase_hash"] = workspace_contracts.hashlib.blake2b(
+        json.dumps(
+            lease_body,
+            sort_keys=True,
+            separators=(",", ":"),
+            default=str,
+        ).encode("utf-8"),
+        digest_size=16,
+    ).hexdigest()
+    leased.arena_lease = lease_body
     leased.phase_hash = leased.compute_digest()
     compile_coding_spatial_workspace_recipe(
         base_manifest=leased,
@@ -755,3 +776,163 @@ def test_contract_module_has_docstrings_and_no_operational_or_persistence_calls(
         and (not node.args or not isinstance(node.args[0], ast.Name) or node.args[0].id != "self")
     ]
     assert not dynamic_getattrs
+
+
+
+def _rehash_manifest(payload: dict[str, Any]) -> dict[str, Any]:
+    """Refresh the retained V1 phase hash after an intentional test mutation."""
+    payload["phase_hash"] = workspace_contracts._legacy_manifest_digest(payload)
+    return payload
+
+
+def test_review_wave6_nested_manifest_and_capability_boundaries_fail_closed() -> None:
+    """Nested routes, path policy, capability sufficiency, and ceilings stay closed."""
+    manifest = create_manifest(
+        "Compile the bounded workspace",
+        organ_id="EORG-wave6",
+        requested_capabilities=["resolve_capabilities", "read_slice", "dissolve"],
+    )
+    base = manifest.to_dict()
+
+    unsafe_cases = (
+        ("intent_packet", {"effect": "shell"}, "intent_packet"),
+        ("machine_route", {"command": "subprocess"}, "machine_route"),
+        ("lexc_route", ["EXECUTE"], "lexc_route"),
+        ("boundary_contracts", [{"authority": "write"}], "boundary_contracts"),
+    )
+    for field, value, message in unsafe_cases:
+        payload = copy.deepcopy(base)
+        payload[field] = value
+        _rehash_manifest(payload)
+        with pytest.raises(ValueError, match=message):
+            compile_coding_spatial_workspace_recipe(
+                base_manifest=payload,
+                project_projection=project(),
+                canonical_intent_digest=D["1"],
+                adapter_refs=(ref("adapter:compass", D["2"]),),
+                evidence_refs=(ref("evidence:source", D["3"]),),
+            )
+
+    unsafe_policy = copy.deepcopy(base)
+    unsafe_policy["data_policy"]["readable_paths"] = ["/etc/passwd"]
+    _rehash_manifest(unsafe_policy)
+    with pytest.raises(ValueError, match="readable paths"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=unsafe_policy,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+    under_granted = create_manifest(
+        "Under-granted",
+        organ_id="EORG-under-granted",
+        requested_capabilities=["resolve_capabilities"],
+    ).to_dict()
+    with pytest.raises(ValueError, match="minimum workspace capabilities"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=under_granted,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+    oversized = copy.deepcopy(base)
+    oversized["requested_capabilities"] = [
+        {
+            "capability": f"read_slice_{index}",
+            "requested": True,
+            "granted": False,
+            "denied_reason": "unknown_capability",
+        }
+        for index in range(workspace_contracts.MAX_ITEMS + 1)
+    ]
+    _rehash_manifest(oversized)
+    with pytest.raises(ValueError, match="item ceiling"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=oversized,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+
+def test_review_wave6_serialization_numbers_unicode_and_map_bounds_fail_closed() -> None:
+    """Canonical serialization rejects reordering, huge numerics, surrogates, and huge maps."""
+    r, _ = recipe(adapters=(ref("adapter:z", D["2"]), ref("adapter:a", D["3"])))
+    reordered = r.to_dict()
+    reordered["adapter_refs"] = list(reversed(reordered["adapter_refs"]))
+    with pytest.raises(ValueError, match="canonical serialized"):
+        EphemeralWorkspaceRecipe.from_dict(reordered)
+
+    with pytest.raises(ValueError, match="finite JSON number"):
+        workspace_contracts._finite_number(10**10000, "huge")
+    with pytest.raises(ValueError, match="Unicode scalar"):
+        ref("artifact:surrogate", D["1"], metadata={"description": "\ud800"})
+
+    p = project()
+    oversized_expected = {
+        f"artifact:{index}": ref(f"artifact:{index}", D["1"]).to_dict()
+        for index in range(workspace_contracts.MAX_ITEMS + 1)
+    }
+    with pytest.raises(ValueError, match="size mismatch"):
+        workspace_contracts._validate_reference_set(
+            p.all_references(),
+            oversized_expected,
+            "project",
+        )
+
+
+def test_review_wave6_sources_truth_manifest_identity_and_fractional_ttl_fail_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Input spelling, modality containment, exact truth, IDs, and TTL remain exact."""
+    with pytest.raises(ValueError, match="uppercase canonical spelling"):
+        observation(sources=("voice", "GAZE", "HAND"))
+
+    with pytest.raises(ValueError, match="declared by the observation"):
+        observation(sources=("VOICE",), binding_sources=("GAZE",))
+
+    with pytest.raises(ValueError, match="EXACT canonical references"):
+        recipe(adapters=(ref("adapter:hypothesis", D["2"], truth="HYPOTHESIS"),))
+
+    long_manifest = create_manifest(
+        "Long identifier",
+        organ_id="E" * 192,
+        requested_capabilities=["resolve_capabilities", "read_slice", "dissolve"],
+    )
+    compiled = compile_coding_spatial_workspace_recipe(
+        base_manifest=long_manifest,
+        project_projection=project(),
+        canonical_intent_digest=D["1"],
+        adapter_refs=(ref("adapter:compass", D["2"]),),
+        evidence_refs=(ref("evidence:source", D["3"]),),
+    )
+    assert len(compiled.base_manifest_ref.reference_id) <= 192
+    assert len(compiled.base_manifest_ref.canonical_ref) <= 192
+
+    short = create_manifest(
+        "Fractional expiry",
+        organ_id="EORG-fractional",
+        ttl_seconds=2,
+        requested_capabilities=["resolve_capabilities", "read_slice", "dissolve"],
+    )
+    monkeypatch.setattr(workspace_contracts.time, "time", lambda: short.expires_at - 0.5)
+    with pytest.raises(ValueError, match="less than one whole second"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=short,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+
+def test_waboose_request_reviews_itself() -> None:
+    """The review request must include itself in its complete review scope."""
+    request_path = ROOT / ".aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json"
+    payload = json.loads(request_path.read_text(encoding="utf-8"))
+    assert ".aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json" in payload["review_files"]

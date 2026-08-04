@@ -71,6 +71,12 @@ _LEGACY_ALLOWED_CAPABILITIES = frozenset({
     "rank_regions", "build_change_graph", "show_tests", "show_docs",
     "render_ui_schema", "write_temp_audit", "emit_telemetry", "dissolve",
 })
+_LEGACY_REQUIRED_WORKSPACE_CAPABILITIES = frozenset({
+    "resolve_capabilities", "read_slice", "dissolve",
+})
+_LEGACY_SAFE_READABLE_PATHS = frozenset({
+    ".aura/CODEMAP.json", ".aura/CODEMAP.md", ".aura/MODULE_MANIFEST.json",
+})
 _LEGACY_FORBIDDEN_CAPABILITIES = frozenset({
     "external_network", "package_install", "shell", "arbitrary_subprocess",
     "host_write_outside_temp", "production_mutation", "secret_access",
@@ -124,7 +130,11 @@ def _text(value: Any, name: str, *, optional: bool = False, maximum: int = MAX_T
         raise ValueError(f"{name} must not contain surrounding whitespace")
     if not value and not optional:
         raise ValueError(f"{name} is required")
-    if len(value.encode("utf-8")) > maximum or any(ord(char) < 32 for char in value):
+    try:
+        encoded = value.encode("utf-8")
+    except UnicodeEncodeError as exc:
+        raise ValueError(f"{name} must contain valid Unicode scalar values") from exc
+    if len(encoded) > maximum or any(ord(char) < 32 for char in value):
         raise ValueError(f"{name} exceeds its bounded text contract")
     return value
 
@@ -173,7 +183,10 @@ def _finite_number(value: Any, name: str, *, minimum: float = 0.0) -> float:
     """Validate a finite non-boolean numeric value at or above a minimum."""
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"{name} must be a finite JSON number")
-    number = float(value)
+    try:
+        number = float(value)
+    except (OverflowError, ValueError) as exc:
+        raise ValueError(f"{name} must be a finite JSON number") from exc
     if not math.isfinite(number) or number < minimum:
         raise ValueError(f"{name} must be a finite number >= {minimum}")
     return number
@@ -213,7 +226,9 @@ def _seq(value: Any, name: str, *, ids: bool = False, max_items: int = MAX_ITEMS
     normalized = []
     for item in value:
         text = _id(item, f"{name}[]") if ids else _text(item, f"{name}[]")
-        normalized.append(text.upper() if upper else text)
+        if upper and text != text.upper():
+            raise ValueError(f"{name} values must already use uppercase canonical spelling")
+        normalized.append(text)
     if len(set(normalized)) != len(normalized):
         raise ValueError(f"{name} values must be unique")
     result = tuple(normalized)
@@ -297,6 +312,15 @@ def _require_serialized_digest(payload: Mapping[str, Any], field_name: str, name
         raise ValueError(f"{name} must be an object")
     _digest(payload.get(field_name), f"{name}.{field_name}")
 
+
+def _require_exact_serialized_form(record: Any, payload: Mapping[str, Any]) -> None:
+    """Reject payloads that normalize to a different public serialized record."""
+    if record.to_dict() != dict(payload):
+        raise ValueError(
+            f"{type(record).__name__} must use canonical serialized ordering and spelling"
+        )
+
+
 @dataclass(frozen=True)
 class AuthorityEnvelope:
     """A fixed false-authority envelope for projection-only records."""
@@ -343,7 +367,9 @@ class AuthorityEnvelope:
     def from_dict(cls, payload: Mapping[str, Any]) -> "AuthorityEnvelope":
         """Parse an exact serialized authority envelope."""
         _strict(payload, {field.name for field in fields(cls)}, "authority")
-        return cls(**dict(payload))
+        record = cls(**dict(payload))
+        _require_exact_serialized_form(record, payload)
+        return record
 
 
 @dataclass(frozen=True)
@@ -381,7 +407,9 @@ class CanonicalReference:
     def from_dict(cls, payload: Mapping[str, Any]) -> "CanonicalReference":
         """Parse an exact serialized canonical reference."""
         _strict(payload, {"version", "reference_id", "owner", "canonical_ref", "digest", "truth_class", "freshness_class", "metadata"}, "reference")
-        return cls(**dict(payload))
+        record = cls(**dict(payload))
+        _require_exact_serialized_form(record, payload)
+        return record
 
 
 def _reference_map(value: Any, name: str) -> dict[str, CanonicalReference]:
@@ -403,6 +431,10 @@ def _reference_map(value: Any, name: str) -> dict[str, CanonicalReference]:
 def _validate_reference_set(actual: Sequence[CanonicalReference], expected_value: Any,
                             name: str, *, require_current: bool = True) -> None:
     """Rebind a complete reference set, including owner and metadata identity."""
+    if not isinstance(expected_value, Mapping):
+        raise ValueError(f"expected_{name}_refs is required")
+    if len(expected_value) != len(actual) or len(expected_value) > MAX_ITEMS:
+        raise ValueError(f"{name} reference set size mismatch")
     expected = _reference_map(expected_value, f"expected_{name}_refs")
     actual_ids = [reference.reference_id for reference in actual]
     if len(set(actual_ids)) != len(actual_ids):
@@ -451,7 +483,9 @@ class RepositoryIdentity:
         """Parse and verify an exact serialized repository identity."""
         _strict(payload, {"version", "repository", "ref", "commit_sha", "source_tree_digest", "identity_digest"}, "repository")
         _require_serialized_digest(payload, "identity_digest", "repository")
-        return cls(**dict(payload))
+        record = cls(**dict(payload))
+        _require_exact_serialized_form(record, payload)
+        return record
 
 
 _REFERENCE_FIELDS = ("artifact_evidence_refs", "decision_refs", "rejected_alternative_refs",
@@ -552,7 +586,9 @@ class ProjectContextProjection:
                           "privacy_class", "egress_class", "projection_only", "authority",
                           "projection_digest", *_REFERENCE_FIELDS}, "project")
         _require_serialized_digest(payload, "projection_digest", "project")
-        return cls(**dict(payload))
+        record = cls(**dict(payload))
+        _require_exact_serialized_form(record, payload)
+        return record
 
     def validate_bindings(
         self,
@@ -604,7 +640,9 @@ class WorkspaceBudget:
     def from_dict(cls, payload: Mapping[str, Any]) -> "WorkspaceBudget":
         """Parse an exact serialized workspace budget."""
         _strict(payload, {field.name for field in fields(cls)}, "budget")
-        return cls(**dict(payload))
+        record = cls(**dict(payload))
+        _require_exact_serialized_form(record, payload)
+        return record
 
 
 @dataclass(frozen=True)
@@ -628,7 +666,9 @@ class DependencyEdge:
     def from_dict(cls, payload: Mapping[str, Any]) -> "DependencyEdge":
         """Parse an exact serialized dependency edge."""
         _strict(payload, {"source_capability_id", "target_capability_id"}, "dependency")
-        return cls(**dict(payload))
+        record = cls(**dict(payload))
+        _require_exact_serialized_form(record, payload)
+        return record
 
 
 def _acyclic(nodes: Sequence[str], edges: Sequence[DependencyEdge]) -> None:
@@ -659,6 +699,8 @@ def _refs(value: Any, name: str, *, require_current: bool = False) -> tuple[Cano
     result = tuple(item if isinstance(item, CanonicalReference) else CanonicalReference.from_dict(item) for item in value)
     if len({item.reference_id for item in result}) != len(result):
         raise ValueError(f"duplicate {name} IDs")
+    if any(item.truth_class != "EXACT" for item in result):
+        raise ValueError(f"{name} must contain only EXACT canonical references")
     if require_current and any(item.freshness_class not in _CURRENT_FRESHNESS for item in result):
         raise ValueError(f"{name} must contain only current or bounded references")
     return tuple(sorted(result, key=lambda item: (item.reference_id, item.owner, item.digest)))
@@ -825,6 +867,7 @@ class EphemeralWorkspaceRecipe:
         _strict(payload, expected, "recipe")
         _require_serialized_digest(payload, "recipe_digest", "recipe")
         record = cls(**dict(payload))
+        _require_exact_serialized_form(record, payload)
         identity_body = record.to_dict()
         identity_body.pop("recipe_id")
         identity_body.pop("recipe_digest")
@@ -905,7 +948,9 @@ class SpatialReferentBinding:
                           "session_digest", "entity_id", "entity_digest", "confidence",
                           "evidence_ref", "input_sources", "binding_digest"}, "referent")
         _require_serialized_digest(payload, "binding_digest", "referent")
-        return cls(**dict(payload))
+        record = cls(**dict(payload))
+        _require_exact_serialized_form(record, payload)
+        return record
 
 
 @dataclass(frozen=True)
@@ -952,9 +997,12 @@ class MultimodalSpatialObservation:
         evidence_ids = [target.evidence_ref.reference_id for target in targets]
         if len(set(evidence_ids)) != len(evidence_ids):
             raise ValueError("observation requires unique evidence reference IDs")
+        declared_sources = set(sources)
         for target in targets:
             if (target.scene_id, target.scene_digest, target.session_id, target.session_digest) != (self.scene_id, self.scene_digest, self.session_id, self.session_digest):
                 raise ValueError("stale referent scene/session")
+            if not set(target.input_sources) <= declared_sources:
+                raise ValueError("referent input sources must be declared by the observation")
         object.__setattr__(self, "target_candidates", tuple(sorted(targets, key=lambda target: (-target.confidence, target.binding_id))))
         speech = _text(self.speech_text, "observation.speech", optional=True, maximum=512)
         transcript = _digest(self.transcript_digest, "observation.transcript", optional=True)
@@ -1009,7 +1057,9 @@ class MultimodalSpatialObservation:
                           "evidence_class", "tracking_quality", "raw_sensor_retained", "authority",
                           "observation_digest"}, "observation")
         _require_serialized_digest(payload, "observation_digest", "observation")
-        return cls(**dict(payload))
+        record = cls(**dict(payload))
+        _require_exact_serialized_form(record, payload)
+        return record
 
     def validate_bindings(self, *, expected_scene_id: str, expected_scene_digest: str,
                           expected_session_id: str, expected_session_digest: str,
@@ -1197,7 +1247,15 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
     for name in ("intent_packet", "machine_route", "arena_lease", "data_policy", "ui_manifest", "verifier_requirements"):
         _require_mapping(body.get(name), f"base manifest {name}")
     for name in ("lexc_route", "requested_capabilities", "granted_capabilities", "denied_capabilities", "boundary_contracts", "components"):
-        _require_sequence(body.get(name), f"base manifest {name}")
+        sequence = _require_sequence(body.get(name), f"base manifest {name}")
+        if len(sequence) > MAX_ITEMS:
+            raise ValueError(f"base manifest {name} exceeds its item ceiling")
+    for name in ("intent_packet", "machine_route"):
+        if body.get(name):
+            raise ValueError(f"base manifest {name} must be empty in the non-operational PR1 wrapper")
+    for name in ("lexc_route", "boundary_contracts"):
+        if body.get(name):
+            raise ValueError(f"base manifest {name} must be empty in the non-operational PR1 wrapper")
     _text(body.get("capability_resolution_ref"), "base manifest capability_resolution_ref", optional=True)
     _capability_resolution_digest(
         body.get("capability_resolution_digest"),
@@ -1205,9 +1263,11 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
     )
     _text(body.get("signature_or_digest"), "base manifest signature_or_digest", optional=True)
 
-    granted = set(_seq(body.get("granted_capabilities"), "base manifest granted_capabilities", ids=True, sort=True))
+    granted = set(_seq(body.get("granted_capabilities"), "base manifest granted_capabilities", ids=True, max_items=MAX_ITEMS, sort=True))
     if granted & _LEGACY_FORBIDDEN_CAPABILITIES or not granted <= _LEGACY_ALLOWED_CAPABILITIES:
         raise ValueError("base manifest grants a forbidden or unknown capability")
+    if not _LEGACY_REQUIRED_WORKSPACE_CAPABILITIES <= granted:
+        raise ValueError("base manifest does not grant the minimum workspace capabilities")
     requested = _require_sequence(body.get("requested_capabilities"), "base manifest requested_capabilities")
     requested_grants: set[str] = set()
     for index, raw_request in enumerate(requested):
@@ -1239,12 +1299,50 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
     if body.get("components"):
         raise ValueError("base manifest components must be empty for the non-operational PR1 wrapper")
     data_policy = _require_mapping(body.get("data_policy"), "base manifest data_policy")
+    _strict(
+        data_policy,
+        {
+            "readable_paths", "writable_temp_paths", "forbidden_paths",
+            "private_memory_export", "raw_sidecar_dump", "secrets_access",
+        },
+        "base manifest data_policy",
+    )
+    readable_paths = set(_seq(
+        data_policy.get("readable_paths"),
+        "base manifest data_policy.readable_paths",
+        max_items=16,
+        sort=True,
+    ))
+    if not readable_paths or not readable_paths <= _LEGACY_SAFE_READABLE_PATHS:
+        raise ValueError("base manifest readable paths exceed the closed PR1 allowlist")
+    writable_paths = _seq(
+        data_policy.get("writable_temp_paths"),
+        "base manifest data_policy.writable_temp_paths",
+        max_items=16,
+        sort=True,
+    )
+    if writable_paths:
+        raise ValueError("base manifest writable temp paths must be empty in PR1")
+    _seq(
+        data_policy.get("forbidden_paths"),
+        "base manifest data_policy.forbidden_paths",
+        max_items=32,
+        sort=True,
+    )
     for name in ("private_memory_export", "raw_sidecar_dump", "secrets_access"):
         _bool(data_policy.get(name), f"base manifest data_policy.{name}", False)
     ui_manifest = _require_mapping(body.get("ui_manifest"), "base manifest ui_manifest")
     _strict(ui_manifest, {"component_types", "schema", "executable"}, "base manifest ui_manifest")
-    _require_sequence(ui_manifest.get("component_types"), "base manifest ui_manifest.component_types")
-    _require_mapping(ui_manifest.get("schema"), "base manifest ui_manifest.schema")
+    _seq(
+        ui_manifest.get("component_types"),
+        "base manifest ui_manifest.component_types",
+        ids=True,
+        max_items=32,
+        sort=True,
+    )
+    ui_schema = _require_mapping(ui_manifest.get("schema"), "base manifest ui_manifest.schema")
+    if ui_schema:
+        raise ValueError("base manifest UI schema must be empty in the non-operational PR1 wrapper")
     _bool(ui_manifest.get("executable"), "base manifest ui_manifest.executable", False)
     limits = _manifest_resource_limits(body)
     if limits["network_calls"] != 0:
@@ -1254,7 +1352,9 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
     must_pass = set(_seq(verifier.get("must_pass"), "base manifest verifier_requirements.must_pass", ids=True, sort=True))
     if not required_verifiers <= must_pass:
         raise ValueError("base manifest verifier requirements are incomplete")
-    _id(verifier.get("quality_gate"), "base manifest verifier_requirements.quality_gate")
+    quality_gate = _id(verifier.get("quality_gate"), "base manifest verifier_requirements.quality_gate")
+    if quality_gate != "advisory_for_read_only":
+        raise ValueError("base manifest verifier quality gate is unsafe")
     if body.get("human_approval_policy") != "required_for_consequential":
         raise ValueError("base manifest human approval policy is unsafe")
     if body.get("dissolution_policy") != "mandatory":
@@ -1310,9 +1410,10 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
         raise ValueError("project projection is not owned by the canonical continuity owner")
     if project.freshness_class not in _CURRENT_FRESHNESS or any(reference.freshness_class not in _CURRENT_FRESHNESS for reference in project.all_references()):
         raise ValueError("project projection or references are stale or unknown")
-    manifest_ref = CanonicalReference(f"organ-manifest:{body['organ_id']}",
+    manifest_identity = wrapper_digest[:32]
+    manifest_ref = CanonicalReference(f"organ-manifest:{manifest_identity}",
                                       "aura_ephemeral_manifest",
-                                      f"ephemeral-organ:{body['organ_id']}@{body['manifest_version']}",
+                                      f"ephemeral-organ:{manifest_identity}@{body['manifest_version']}",
                                       wrapper_digest,
                                       metadata={"manifest_version": body["manifest_version"],
                                                 "legacy_manifest_digest": legacy_digest,
@@ -1325,9 +1426,12 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
     now = time.time()
     if now < created_at:
         raise ValueError("compile time precedes base manifest creation")
-    remaining_ttl = math.ceil(expires_at - now)
-    if remaining_ttl < 1:
+    remaining_seconds = expires_at - now
+    if remaining_seconds <= 0:
         raise ValueError("base manifest is expired")
+    if remaining_seconds < 1:
+        raise ValueError("base manifest has less than one whole second remaining")
+    remaining_ttl = math.floor(remaining_seconds)
     effective_ttl = min(requested_ttl, manifest_ttl, remaining_ttl)
 
     manifest_limits = _manifest_resource_limits(body)
