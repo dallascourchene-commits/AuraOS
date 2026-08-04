@@ -1,0 +1,107 @@
+name: PR255 Wave6 Materialize V2
+
+on:
+  push:
+    branches:
+      - repair/pr255-review-wave6
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Decode patch chunks independently
+        run: |
+          mkdir -p /tmp/pr255-wave6-parts
+          for file in .github/pr255-wave6/chunk*.b64; do
+            name="$(basename "$file" .b64)"
+            echo "$file bytes=$(wc -c < "$file")"
+            base64 -d "$file" > "/tmp/pr255-wave6-parts/${name}.part"
+          done
+          cat /tmp/pr255-wave6-parts/*.part > /tmp/pr255_wave6_patch.py
+          python -m py_compile /tmp/pr255_wave6_patch.py
+
+      - name: Validate current PR head and checkout exact clean source
+        run: |
+          git fetch origin refactor/intent-native-spatial-workspace-pr1
+          current="$(git rev-parse FETCH_HEAD)"
+          echo "$current" > /tmp/pr255-current-head
+          git diff --name-only e71eaaca1ccf5635a847211ccf505a86e8999deb "$current" | sort > /tmp/current-drift.txt
+          cat > /tmp/allowed-drift.txt <<'EOF'
+          .aura/CODEMAP.json
+          .aura/CODEMAP.md
+          topology_map.json
+          EOF
+          sort -o /tmp/allowed-drift.txt /tmp/allowed-drift.txt
+          if test -s /tmp/current-drift.txt; then
+            diff -u /tmp/allowed-drift.txt /tmp/current-drift.txt
+          fi
+          git checkout -B refactor/intent-native-spatial-workspace-pr1 e71eaaca1ccf5635a847211ccf505a86e8999deb
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Apply review wave 6 patch
+        run: python /tmp/pr255_wave6_patch.py
+
+      - name: Install focused verification tools
+        run: python -m pip install --disable-pip-version-check pytest jsonschema ruff
+
+      - name: Compile and lint
+        run: |
+          python -m py_compile aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+          ruff check --select F401,F821 aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+
+      - name: Run complete focused regression suite
+        run: pytest -q tests/test_aura_ephemeral_workspace_contracts.py
+
+      - name: Validate schemas and Waboose scope
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          for path in (
+              "schemas/aura_project_context_projection.schema.json",
+              "schemas/aura_ephemeral_workspace_recipe.schema.json",
+              "schemas/aura_multimodal_spatial_observation.schema.json",
+          ):
+              Draft202012Validator.check_schema(json.loads(Path(path).read_text()))
+
+          request = json.loads(Path(".aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json").read_text())
+          required = ".aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json"
+          assert required in request["review_files"]
+          print("schema and Waboose validation passed")
+          PY
+
+      - name: Audit exact repair scope
+        run: |
+          git diff --name-only e71eaaca1ccf5635a847211ccf505a86e8999deb | sort > /tmp/actual.txt
+          cat > /tmp/expected.txt <<'EOF'
+          .aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json
+          aura_ephemeral_workspace_contracts.py
+          tests/test_aura_ephemeral_workspace_contracts.py
+          EOF
+          sort -o /tmp/expected.txt /tmp/expected.txt
+          diff -u /tmp/expected.txt /tmp/actual.txt
+          git diff --exit-code 879b5fb056b70d150b1646e082223330a36c2912 -- \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json \
+            Aura_Memory/live_topology_ast.json
+
+      - name: Publish one clean repair commit
+        run: |
+          git add aura_ephemeral_workspace_contracts.py \
+            tests/test_aura_ephemeral_workspace_contracts.py \
+            .aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json
+          git commit -m "fix(pr1): close wave6 review findings"
+          current="$(cat /tmp/pr255-current-head)"
+          git push origin HEAD:refs/heads/refactor/intent-native-spatial-workspace-pr1 \
+            --force-with-lease=refs/heads/refactor/intent-native-spatial-workspace-pr1:"$current"
