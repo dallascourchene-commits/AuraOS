@@ -33,7 +33,8 @@ jobs:
           test "$current" = "cc61fdcf971f5cec626a0bc4236d66cc9d69d8ae"
           echo "$current" > /tmp/pr255-current-head
           git fetch --no-tags --depth=1 origin cc61fdcf971f5cec626a0bc4236d66cc9d69d8ae
-          git checkout -B refactor/intent-native-spatial-workspace-pr1 FETCH_HEAD
+          git fetch --no-tags --depth=1 origin 879b5fb056b70d150b1646e082223330a36c2912
+          git checkout -B refactor/intent-native-spatial-workspace-pr1 cc61fdcf971f5cec626a0bc4236d66cc9d69d8ae
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
