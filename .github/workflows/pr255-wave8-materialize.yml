@@ -1,0 +1,85 @@
+name: PR255 Wave8 Materialize
+
+on:
+  push:
+    branches:
+      - repair/pr255-review-wave8
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Preserve and verify patch script
+        run: |
+          cp .github/pr255-wave8/apply.py /tmp/pr255_wave8_apply.py
+          python -m py_compile /tmp/pr255_wave8_apply.py
+
+      - name: Checkout exact validated PR head
+        run: |
+          current="$(git ls-remote origin refs/heads/refactor/intent-native-spatial-workspace-pr1 | cut -f1)"
+          test "$current" = "a588f26b0011a5d3230444392bedcb0edd48f9f1"
+          echo "$current" > /tmp/pr255-current-head
+          git fetch --no-tags --depth=1 origin a588f26b0011a5d3230444392bedcb0edd48f9f1
+          git checkout -B refactor/intent-native-spatial-workspace-pr1 FETCH_HEAD
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Apply test-coverage hardening
+        run: python /tmp/pr255_wave8_apply.py
+
+      - name: Restore canonical V1 manifest test owner without PR scope expansion
+        run: |
+          curl --fail --silent --show-error --location \
+            https://raw.githubusercontent.com/dallascourchene-commits/AuraOS/main/aura_ephemeral_manifest.py \
+            --output aura_ephemeral_manifest.py
+          test "$(git hash-object aura_ephemeral_manifest.py)" = "7a43cfdf9a470cf7ec370158373c2a6d4c3ae8c9"
+
+      - name: Install verification tools
+        run: python -m pip install --disable-pip-version-check pytest jsonschema ruff
+
+      - name: Compile and lint
+        run: |
+          python -m py_compile aura_ephemeral_manifest.py aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+          ruff check --select F401,F821 aura_ephemeral_manifest.py aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+
+      - name: Run complete focused regression suite
+        run: python -m pytest -q tests/test_aura_ephemeral_workspace_contracts.py
+
+      - name: Validate all three schemas
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          for path in (
+              "schemas/aura_project_context_projection.schema.json",
+              "schemas/aura_ephemeral_workspace_recipe.schema.json",
+              "schemas/aura_multimodal_spatial_observation.schema.json",
+          ):
+              Draft202012Validator.check_schema(json.loads(Path(path).read_text()))
+          print("all schema meta-validation passed")
+          PY
+
+      - name: Audit exact repair scope
+        run: |
+          test "$(git diff --name-only a588f26b0011a5d3230444392bedcb0edd48f9f1 | tr -d '\r')" = "tests/test_aura_ephemeral_workspace_contracts.py"
+          git diff --exit-code a588f26b0011a5d3230444392bedcb0edd48f9f1 -- \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json \
+            Aura_Memory/live_topology_ast.json
+
+      - name: Publish one clean test-hardening commit
+        run: |
+          git add tests/test_aura_ephemeral_workspace_contracts.py
+          git commit -m "test(pr1): strengthen final review regressions"
+          current="$(cat /tmp/pr255-current-head)"
+          git push origin HEAD:refs/heads/refactor/intent-native-spatial-workspace-pr1 \
+            --force-with-lease=refs/heads/refactor/intent-native-spatial-workspace-pr1:"$current"
