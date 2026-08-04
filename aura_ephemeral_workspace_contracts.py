@@ -38,6 +38,7 @@ MAX_DEPENDENCY_EDGES = 512
 _ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$")
 _DIGEST = re.compile(r"^[0-9a-f]{64}$")
 _LEGACY_DIGEST = re.compile(r"^[0-9a-f]{32}$")
+_CAPABILITY_RESOLUTION_DIGEST = re.compile(r"^[0-9a-f]{16}$")
 _COMMIT_SHA = re.compile(r"^(?:[0-9a-f]{40}|[0-9a-f]{64})$")
 _REPO = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 _TRUTH = frozenset({"EXACT", "DERIVED", "PRESENTATION", "HYPOTHESIS"})
@@ -160,6 +161,14 @@ def _commit_sha(value: Any, name: str) -> str:
     return result
 
 
+def _capability_resolution_digest(value: Any, name: str) -> str:
+    """Validate the canonical resolver's optional BLAKE2b-64 CODEMAP digest."""
+    result = _text(value, name, optional=True, maximum=16)
+    if result and not _CAPABILITY_RESOLUTION_DIGEST.fullmatch(result):
+        raise ValueError(f"{name} must be a 16-character lowercase resolver digest")
+    return result
+
+
 def _finite_number(value: Any, name: str, *, minimum: float = 0.0) -> float:
     """Validate a finite non-boolean numeric value at or above a minimum."""
     if isinstance(value, bool) or not isinstance(value, (int, float)):
@@ -184,14 +193,15 @@ def _int(value: Any, name: str, low: int, high: int) -> int:
     return value
 
 
-def _prob(value: Any, name: str) -> float:
-    """Validate an explicit JSON number in the inclusive unit interval."""
+def _prob(value: Any, name: str) -> int | float:
+    """Validate an exact JSON numeric spelling in the inclusive unit interval."""
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"{name} must be a JSON number")
-    number = float(value)
-    if not math.isfinite(number) or not 0.0 <= number <= 1.0:
+    if isinstance(value, float) and not math.isfinite(value):
         raise ValueError(f"{name} must be between 0 and 1")
-    return number
+    if not 0 <= value <= 1:
+        raise ValueError(f"{name} must be between 0 and 1")
+    return value
 
 
 def _seq(value: Any, name: str, *, ids: bool = False, max_items: int = MAX_ITEMS, sort: bool = False, upper: bool = False) -> tuple[str, ...]:
@@ -215,10 +225,21 @@ def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
     if value is None or value == ():
         return ()
     if isinstance(value, tuple):
-        try:
-            candidate = dict(value)
-        except (TypeError, ValueError) as exc:
-            raise ValueError(f"{name} must be an object") from exc
+        pairs: list[tuple[str, Any]] = []
+        for item in value:
+            if (
+                isinstance(item, (str, bytes, bytearray))
+                or not isinstance(item, Sequence)
+                or len(item) != 2
+            ):
+                raise ValueError(f"{name} entries must be key/value pairs")
+            key = item[0]
+            if not isinstance(key, str):
+                raise ValueError(f"{name} keys must be strings")
+            pairs.append((key, item[1]))
+        if len({key for key, _ in pairs}) != len(pairs):
+            raise ValueError(f"{name} keys must be unique")
+        candidate = dict(pairs)
     elif isinstance(value, Mapping):
         candidate = dict(value)
     else:
@@ -252,7 +273,10 @@ def _strict(payload: Mapping[str, Any], expected: set[str], name: str) -> None:
     """Require an exact mapping key set."""
     if not isinstance(payload, Mapping):
         raise ValueError(f"{name} must be an object")
-    supplied = set(payload)
+    keys = tuple(payload)
+    if any(not isinstance(key, str) for key in keys):
+        raise ValueError(f"{name} keys must be strings")
+    supplied = set(keys)
     if supplied != expected:
         raise ValueError(f"{name} keys mismatch: missing={sorted(expected-supplied)}, extra={sorted(supplied-expected)}")
 
@@ -380,6 +404,9 @@ def _validate_reference_set(actual: Sequence[CanonicalReference], expected_value
                             name: str, *, require_current: bool = True) -> None:
     """Rebind a complete reference set, including owner and metadata identity."""
     expected = _reference_map(expected_value, f"expected_{name}_refs")
+    actual_ids = [reference.reference_id for reference in actual]
+    if len(set(actual_ids)) != len(actual_ids):
+        raise ValueError(f"duplicate {name} reference IDs")
     current = {reference.reference_id: reference for reference in actual}
     if set(current) != set(expected):
         raise ValueError(f"{name} reference set mismatch")
@@ -527,22 +554,28 @@ class ProjectContextProjection:
         _require_serialized_digest(payload, "projection_digest", "project")
         return cls(**dict(payload))
 
-    def validate_bindings(self, *, expected_repository_identity_digest: str,
-                          expected_project_ref: str,
-                          expected_canonical_owner: str,
-                          expected_references: Mapping[str, CanonicalReference | Mapping[str, Any]],
-                          reject_stale: bool = True) -> None:
-        """Rebind the complete projection to current canonical identities."""
-        if self.repository_identity.identity_digest != _digest(expected_repository_identity_digest, "expected repository digest"):
-            raise ValueError("stale repository identity digest")
-        if self.project_ref != _text(expected_project_ref, "expected project ref"):
-            raise ValueError("stale project reference")
-        if self.canonical_owner != _id(expected_canonical_owner, "expected project owner"):
-            raise ValueError("stale project canonical owner")
-        references = self.all_references()
-        _validate_reference_set(references, expected_references, "project", require_current=reject_stale)
-        if reject_stale and self.freshness_class not in _CURRENT_FRESHNESS:
+    def validate_bindings(
+        self,
+        *,
+        expected_projection: "ProjectContextProjection" | Mapping[str, Any],
+        reject_stale: bool = True,
+    ) -> None:
+        """Rebind every projection field to one complete canonical expectation."""
+        if reject_stale and (
+            self.freshness_class not in _CURRENT_FRESHNESS
+            or any(
+                reference.freshness_class not in _CURRENT_FRESHNESS
+                for reference in self.all_references()
+            )
+        ):
             raise ValueError("stale or unknown project projection")
+        expected = (
+            expected_projection
+            if isinstance(expected_projection, ProjectContextProjection)
+            else ProjectContextProjection.from_dict(expected_projection)
+        )
+        if self.to_dict() != expected.to_dict():
+            raise ValueError("stale project projection identity")
 
 
 @dataclass(frozen=True)
@@ -831,7 +864,7 @@ class SpatialReferentBinding:
     session_digest: str
     entity_id: str
     entity_digest: str
-    confidence: float
+    confidence: int | float
     evidence_ref: CanonicalReference
     input_sources: tuple[str, ...]
     binding_digest: str = ""
@@ -893,7 +926,7 @@ class MultimodalSpatialObservation:
     temporal_window_end_ms: int = 0
     provider_class: str = "LOCAL_NORMALIZED_PROVIDER"
     evidence_class: str = "DERIVED"
-    tracking_quality: float = 0.0
+    tracking_quality: int | float = 0.0
     raw_sensor_retained: bool = False
     authority: AuthorityEnvelope = AuthorityEnvelope()
     observation_digest: str = ""
@@ -916,6 +949,9 @@ class MultimodalSpatialObservation:
         targets = tuple(item if isinstance(item, SpatialReferentBinding) else SpatialReferentBinding.from_dict(item) for item in self.target_candidates)
         if len({target.binding_id for target in targets}) != len(targets):
             raise ValueError("observation requires unique target binding IDs")
+        evidence_ids = [target.evidence_ref.reference_id for target in targets]
+        if len(set(evidence_ids)) != len(evidence_ids):
+            raise ValueError("observation requires unique evidence reference IDs")
         for target in targets:
             if (target.scene_id, target.scene_digest, target.session_id, target.session_digest) != (self.scene_id, self.scene_digest, self.session_id, self.session_digest):
                 raise ValueError("stale referent scene/session")
@@ -975,13 +1011,17 @@ class MultimodalSpatialObservation:
         _require_serialized_digest(payload, "observation_digest", "observation")
         return cls(**dict(payload))
 
-    def validate_bindings(self, *, expected_scene_digest: str,
-                          expected_session_digest: str,
+    def validate_bindings(self, *, expected_scene_id: str, expected_scene_digest: str,
+                          expected_session_id: str, expected_session_digest: str,
                           expected_entity_digests: Mapping[str, str] | None = None,
                           expected_evidence_refs: Mapping[str, CanonicalReference | Mapping[str, Any]] | None = None) -> None:
         """Rebind all scene, session, entity, and complete evidence identities."""
+        if self.scene_id != _id(expected_scene_id, "expected scene id"):
+            raise ValueError("stale scene id")
         if self.scene_digest != _digest(expected_scene_digest, "expected scene"):
             raise ValueError("stale scene digest")
+        if self.session_id != _id(expected_session_id, "expected session id"):
+            raise ValueError("stale session id")
         if self.session_digest != _digest(expected_session_digest, "expected session"):
             raise ValueError("stale session digest")
         if not isinstance(expected_entity_digests, Mapping):
@@ -1038,6 +1078,85 @@ def _manifest_resource_limits(body: Mapping[str, Any]) -> dict[str, int]:
     return limits
 
 
+def _validate_v1_arena_lease(
+    lease_value: Any,
+    *,
+    organ_id: str,
+    granted_capabilities: set[str],
+) -> None:
+    """Verify that a retained V1 arena lease grants only canonical read authority."""
+    lease = _require_mapping(lease_value, "base manifest arena_lease")
+    if not lease:
+        return
+    expected_fields = {
+        "lease_version", "lease_id", "domain", "capsule_id", "holder",
+        "regions", "allowed_actions", "forbidden_actions", "mode",
+        "conflict_policy", "status", "metadata", "phase_hash",
+    }
+    _strict(lease, expected_fields, "base manifest arena_lease")
+    if lease.get("lease_version") != "AURA_ARENA_LEASE_V1":
+        raise ValueError("base manifest arena_lease version is unsafe")
+    _id(lease.get("lease_id"), "base manifest arena_lease.lease_id")
+    if lease.get("domain") != "ephemeral":
+        raise ValueError("base manifest arena_lease domain is unsafe")
+    if lease.get("capsule_id") != organ_id or lease.get("holder") != organ_id:
+        raise ValueError("base manifest arena_lease holder identity is unsafe")
+    regions = _require_sequence(lease.get("regions"), "base manifest arena_lease.regions")
+    if not regions or len(regions) > 16:
+        raise ValueError("base manifest arena_lease regions must be bounded")
+    for index, raw_region in enumerate(regions):
+        region = _require_mapping(raw_region, f"base manifest arena_lease.regions[{index}]")
+        _strict(region, {"organ_id", "scope"}, f"base manifest arena_lease.regions[{index}]")
+        if region.get("organ_id") != organ_id or region.get("scope") != "read_only":
+            raise ValueError("base manifest arena_lease region is not read-only")
+    allowed = set(_seq(
+        lease.get("allowed_actions"),
+        "base manifest arena_lease.allowed_actions",
+        ids=True,
+        sort=True,
+    ))
+    if allowed != granted_capabilities:
+        raise ValueError("base manifest arena_lease allowed actions disagree with grants")
+    forbidden = set(_seq(
+        lease.get("forbidden_actions"),
+        "base manifest arena_lease.forbidden_actions",
+        ids=True,
+        sort=True,
+    ))
+    required_forbidden = {
+        "network", "install", "shell", "production_mutation", "secret_access",
+        "commit", "push", "automatic_crystallization",
+    }
+    if not required_forbidden <= forbidden or forbidden & allowed:
+        raise ValueError("base manifest arena_lease forbidden actions are incomplete")
+    if lease.get("mode") != "read_only":
+        raise ValueError("base manifest arena_lease mode is unsafe")
+    if lease.get("conflict_policy") != "judge_then_reground":
+        raise ValueError("base manifest arena_lease conflict policy is unsafe")
+    if lease.get("status") != "active":
+        raise ValueError("base manifest arena_lease status is unsafe")
+    metadata = _require_mapping(lease.get("metadata"), "base manifest arena_lease.metadata")
+    if metadata:
+        raise ValueError("base manifest arena_lease metadata must be empty")
+    supplied_hash = _legacy_digest(
+        lease.get("phase_hash"),
+        "base manifest arena_lease.phase_hash",
+    )
+    hashed_body = dict(lease)
+    hashed_body.pop("phase_hash")
+    expected_hash = hashlib.blake2b(
+        json.dumps(
+            hashed_body,
+            sort_keys=True,
+            separators=(",", ":"),
+            default=str,
+        ).encode("utf-8"),
+        digest_size=16,
+    ).hexdigest()
+    if supplied_hash != expected_hash:
+        raise ValueError("base manifest arena_lease digest does not match content")
+
+
 def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
     """Require the complete safe V1 manifest shape and authority profile."""
     _strict(body, set(_LEGACY_MANIFEST_FIELDS), "base manifest")
@@ -1061,11 +1180,10 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
     for name in ("lexc_route", "requested_capabilities", "granted_capabilities", "denied_capabilities", "boundary_contracts", "components"):
         _require_sequence(body.get(name), f"base manifest {name}")
     _text(body.get("capability_resolution_ref"), "base manifest capability_resolution_ref", optional=True)
-    resolution_digest = body.get("capability_resolution_digest")
-    if resolution_digest:
-        _digest(resolution_digest, "base manifest capability_resolution_digest")
-    elif resolution_digest != "":
-        raise ValueError("base manifest capability_resolution_digest must be a string")
+    _capability_resolution_digest(
+        body.get("capability_resolution_digest"),
+        "base manifest capability_resolution_digest",
+    )
     _text(body.get("signature_or_digest"), "base manifest signature_or_digest", optional=True)
 
     granted = set(_seq(body.get("granted_capabilities"), "base manifest granted_capabilities", ids=True, sort=True))
@@ -1087,6 +1205,11 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
             requested_grants.add(capability)
     if requested_grants != granted:
         raise ValueError("base manifest granted_capabilities disagree with capability requests")
+    _validate_v1_arena_lease(
+        body.get("arena_lease"),
+        organ_id=body["organ_id"],
+        granted_capabilities=granted,
+    )
 
     for index, raw_denial in enumerate(_require_sequence(body.get("denied_capabilities"), "base manifest denied_capabilities")):
         denial = _require_mapping(raw_denial, f"base manifest denied_capabilities[{index}]")
@@ -1155,8 +1278,7 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
                                              adapter_refs: Sequence[CanonicalReference | Mapping[str, Any]],
                                              evidence_refs: Sequence[CanonicalReference | Mapping[str, Any]],
                                              budgets: WorkspaceBudget | Mapping[str, Any] | None = None,
-                                             ttl_seconds: int = 300,
-                                             now_epoch_seconds: float | None = None) -> EphemeralWorkspaceRecipe:
+                                             ttl_seconds: int = 300) -> EphemeralWorkspaceRecipe:
     """Compile the frozen recipe without invoking any canonical owner."""
     raw_before = base_manifest.to_dict() if hasattr(base_manifest, "to_dict") else base_manifest
     before = canonical_json(raw_before)
@@ -1181,10 +1303,10 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
     manifest_ttl = _int(body.get("ttl_seconds"), "base manifest ttl", 1, MAX_TTL_SECONDS)
     created_at = _finite_number(body.get("created_at"), "base manifest created_at")
     expires_at = _finite_number(body.get("expires_at"), "base manifest expires_at")
-    now = time.time() if now_epoch_seconds is None else _finite_number(now_epoch_seconds, "compile now_epoch_seconds")
+    now = time.time()
     if now < created_at:
         raise ValueError("compile time precedes base manifest creation")
-    remaining_ttl = math.floor(expires_at - now)
+    remaining_ttl = math.ceil(expires_at - now)
     if remaining_ttl < 1:
         raise ValueError("base manifest is expired")
     effective_ttl = min(requested_ttl, manifest_ttl, remaining_ttl)
