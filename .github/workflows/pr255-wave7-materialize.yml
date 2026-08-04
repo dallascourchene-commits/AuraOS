@@ -31,6 +31,7 @@ jobs:
           test "$(wc -c < /tmp/pr255_wave7_patch.py)" = "20257"
           echo "08138adf33323342f5f513d8d42cfffe2ccffaa8dd0419651296d97646a650cc  /tmp/pr255_wave7_patch.py" | sha256sum -c -
           python -m py_compile /tmp/pr255_wave7_patch.py
+          python -m py_compile .github/pr255-wave7/reconcile_message.py
 
       - name: Fetch exact verification inputs
         run: |
@@ -52,12 +53,15 @@ jobs:
           if test -s /tmp/current-drift.txt; then
             diff -u /tmp/allowed-drift.txt /tmp/current-drift.txt
           fi
+          cp .github/pr255-wave7/reconcile_message.py /tmp/reconcile_message.py
           git checkout -B refactor/intent-native-spatial-workspace-pr1 fe2299b36f7b49a9bc12e2951bb0e69366e7bbe2
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Apply all remaining review findings
-        run: python /tmp/pr255_wave7_patch.py
+        run: |
+          python /tmp/pr255_wave7_patch.py
+          python /tmp/reconcile_message.py
 
       - name: Restore canonical V1 test owner without expanding PR scope
         run: |
