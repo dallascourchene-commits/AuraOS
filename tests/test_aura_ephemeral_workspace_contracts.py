@@ -13,7 +13,6 @@ from jsonschema import Draft202012Validator
 # boundary rather than replacing the canonical owner with a test-only stub in-repo.
 from aura_ephemeral_manifest import create_manifest
 from aura_ephemeral_workspace_contracts import (
-    AuthorityEnvelope,
     CanonicalReference,
     CODING_SPATIAL_WORKSPACE_V1_DEFINITION,
     DependencyEdge,
@@ -330,6 +329,17 @@ def test_frozen_recipe_profile_owner_gates_and_lifecycle_cannot_be_redirected() 
             EphemeralWorkspaceRecipe.from_dict(payload)
     with pytest.raises(TypeError):
         CODING_SPATIAL_WORKSPACE_V1_DEFINITION["capability_ids"] = ("shell",)
+
+
+def test_owner_map_malformed_pair_sequences_fail_with_value_error() -> None:
+    """Malformed handoff entries preserve the public ValueError parse contract."""
+    r, _ = recipe()
+    malformed_maps = ([1, 2], ["a"], [["architecture"]], [["architecture", "owner", "extra"]])
+    for malformed in malformed_maps:
+        payload = r.to_dict()
+        payload["domain_owner_handoff_map"] = malformed
+        with pytest.raises(ValueError, match="handoff map entries must be key/owner pairs"):
+            EphemeralWorkspaceRecipe.from_dict(payload)
 
 
 def test_recipe_references_are_canonical_current_and_globally_unique() -> None:

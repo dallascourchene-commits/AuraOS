@@ -7,7 +7,7 @@ publication, deployment, professional, payment, or merge authority.
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass, fields, is_dataclass, replace
+from dataclasses import asdict, dataclass, fields, is_dataclass, replace
 from enum import Enum
 import hashlib
 import json
@@ -60,7 +60,7 @@ def _canonical(value: Any) -> Any:
     if isinstance(value, Enum):
         return value.value
     if is_dataclass(value):
-        return _canonical(value.to_dict())
+        return _canonical(asdict(value))
     if isinstance(value, Mapping):
         if any(not isinstance(key, str) for key in value):
             raise ValueError("JSON object keys must be strings")
@@ -132,14 +132,14 @@ def _commit_sha(value: Any, name: str) -> str:
 
 def _bool(value: Any, name: str, required: bool) -> bool:
     """Require an exact boolean value."""
-    if type(value) is not bool or value is not required:
+    if not isinstance(value, bool) or value is not required:
         raise ValueError(f"{name} must be {str(required).lower()}")
     return value
 
 
 def _int(value: Any, name: str, low: int, high: int) -> int:
     """Validate a bounded integer while rejecting booleans."""
-    if type(value) is not int or not low <= value <= high:
+    if not isinstance(value, int) or isinstance(value, bool) or not low <= value <= high:
         raise ValueError(f"{name} must be an integer in {low}..{high}")
     return value
 
@@ -289,7 +289,7 @@ class CanonicalReference:
     digest: str
     truth_class: str = "EXACT"
     freshness_class: str = "CURRENT"
-    metadata: tuple[tuple[str, Any], ...] = ()
+    metadata: Mapping[str, Any] | tuple[tuple[str, Any], ...] = ()
     version: str = CANONICAL_REFERENCE_VERSION
 
     def __post_init__(self) -> None:
@@ -570,7 +570,12 @@ def _owner_map(value: Any) -> tuple[tuple[str, str], ...]:
         items = value
     else:
         raise ValueError("handoff map must be an object or pair sequence")
-    result = tuple(sorted((_id(key, "handoff key"), _id(owner, "handoff owner")) for key, owner in items))
+    pairs = []
+    for item in items:
+        if isinstance(item, (str, bytes, bytearray)) or not isinstance(item, Sequence) or len(item) != 2:
+            raise ValueError("handoff map entries must be key/owner pairs")
+        pairs.append((_id(item[0], "handoff key"), _id(item[1], "handoff owner")))
+    result = tuple(sorted(pairs))
     if not result or len({key for key, _ in result}) != len(result):
         raise ValueError("handoff map must be non-empty and unique")
     return result
