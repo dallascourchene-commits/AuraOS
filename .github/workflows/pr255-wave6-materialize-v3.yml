@@ -27,6 +27,7 @@ jobs:
             | base64 -d | gzip -d > /tmp/pr255_wave6_patch.py
           test "$(wc -c < /tmp/pr255_wave6_patch.py)" = "22105"
           python -m py_compile /tmp/pr255_wave6_patch.py
+          python -m py_compile .github/pr255-wave6/reconcile_wave6_semantics.py
 
       - name: Validate current PR head and checkout exact clean source
         run: |
@@ -43,12 +44,15 @@ jobs:
           if test -s /tmp/current-drift.txt; then
             diff -u /tmp/allowed-drift.txt /tmp/current-drift.txt
           fi
+          cp .github/pr255-wave6/reconcile_wave6_semantics.py /tmp/reconcile_wave6_semantics.py
           git checkout -B refactor/intent-native-spatial-workspace-pr1 e71eaaca1ccf5635a847211ccf505a86e8999deb
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Apply review wave 6 patch
-        run: python /tmp/pr255_wave6_patch.py
+        run: |
+          python /tmp/pr255_wave6_patch.py
+          python /tmp/reconcile_wave6_semantics.py
 
       - name: Restore canonical V1 manifest test owner without expanding PR scope
         run: |
