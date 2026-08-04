@@ -1,0 +1,102 @@
+name: Materialize PR255 second-wave final
+
+on:
+  pull_request:
+    branches: [main]
+    types: [synchronize]
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.head_ref == 'repair/pr255-second-wave-materialize-final'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact temporary head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Reconstruct and verify exact payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t chunks < <(find .aura/pr255_second_wave_payload/archive -maxdepth 1 -type f -name '*.part' | sort)
+          test "${#chunks[@]}" -eq 8
+          for i in $(seq -w 0 7); do
+            test -f ".aura/pr255_second_wave_payload/archive/00${i}.part" || test -f ".aura/pr255_second_wave_payload/archive/${i}.part"
+          done
+          cat "${chunks[@]}" | base64 --decode > /tmp/pr255_second_wave.tar.gz
+          echo '44b628b0164d84f5c578362885b80e7b0566394d88c45d5f64d0a983d83482e6  /tmp/pr255_second_wave.tar.gz' | sha256sum --check --strict
+          rm -rf /tmp/pr255_second_wave
+          mkdir -p /tmp/pr255_second_wave
+          tar -xzf /tmp/pr255_second_wave.tar.gz -C /tmp/pr255_second_wave
+          test "$(git hash-object /tmp/pr255_second_wave/aura_ephemeral_workspace_contracts.py)" = '58d93068cdd663bba4b348e70c24cc3dae8a4763'
+          test "$(git hash-object /tmp/pr255_second_wave/tests/test_aura_ephemeral_workspace_contracts.py)" = '3153b86e9a1574322a99abf778bb190f106b996c'
+          cp /tmp/pr255_second_wave/aura_ephemeral_workspace_contracts.py aura_ephemeral_workspace_contracts.py
+          cp /tmp/pr255_second_wave/tests/test_aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+
+      - name: Install focused verification dependencies
+        run: python -m pip install --disable-pip-version-check pytest jsonschema ruff
+
+      - name: Run focused verification gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+          python -m pytest -q tests/test_aura_ephemeral_workspace_contracts.py
+          python -m ruff check aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py --select F401,F821,E999
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          for path in (
+              Path('schemas/aura_project_context_projection.schema.json'),
+              Path('schemas/aura_ephemeral_workspace_recipe.schema.json'),
+              Path('schemas/aura_multimodal_spatial_observation.schema.json'),
+          ):
+              Draft202012Validator.check_schema(json.loads(path.read_text()))
+          print('schema meta-validation passed')
+          PY
+
+      - name: Remove temporary transport and prove exact scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .aura/pr255_second_wave_payload
+          rm -f .aura/pr255-second-wave-materialize-marker
+          rm -f .github/workflows/materialize-pr255-second-wave-final.yml
+          git add -A
+          python - <<'PY'
+          import subprocess
+          expected = sorted([
+              '.aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json',
+              '.aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json',
+              'aura_ephemeral_workspace_contracts.py',
+              'docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md',
+              'schemas/aura_ephemeral_workspace_recipe.schema.json',
+              'schemas/aura_multimodal_spatial_observation.schema.json',
+              'schemas/aura_project_context_projection.schema.json',
+              'tests/test_aura_ephemeral_workspace_contracts.py',
+          ])
+          actual = sorted(subprocess.check_output(
+              ['git', 'diff', '--cached', '--name-only', '879b5fb056b70d150b1646e082223330a36c2912'],
+              text=True,
+          ).splitlines())
+          if actual != expected:
+              raise SystemExit(f'exact scope mismatch: {actual}')
+          PY
+          test "$(git hash-object aura_ephemeral_workspace_contracts.py)" = '58d93068cdd663bba4b348e70c24cc3dae8a4763'
+          test "$(git hash-object tests/test_aura_ephemeral_workspace_contracts.py)" = '3153b86e9a1574322a99abf778bb190f106b996c'
+
+      - name: Commit exact clean second-wave repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'AuraOS Review Repair Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m 'fix(pr1): close second review wave'
+          git push origin "HEAD:${{ github.head_ref }}"
