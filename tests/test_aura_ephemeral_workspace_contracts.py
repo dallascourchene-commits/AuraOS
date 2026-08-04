@@ -3,7 +3,7 @@ from __future__ import annotations
 import ast
 import copy
 import json
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 import pytest
@@ -75,9 +75,9 @@ def project() -> ProjectContextProjection:
 
 def recipe(*, ttl_seconds: int = 300, manifest_ttl: int = 300,
            budgets: WorkspaceBudget | dict | None = None,
-           adapters=None, evidence=None):
+           adapters=None, evidence=None, manifest=None):
     """Build the frozen coding-workspace recipe and V1 manifest."""
-    manifest = create_manifest(
+    manifest = manifest or create_manifest(
         "Compile an intent-native coding spatial workspace without operational invocation.",
         organ_id="EORG-intent-spatial-pr1",
         ttl_seconds=manifest_ttl,
@@ -91,6 +91,7 @@ def recipe(*, ttl_seconds: int = 300, manifest_ttl: int = 300,
         evidence_refs=evidence or (ref("evidence:source", D["4"]), ref("evidence:tests", D["5"])),
         budgets=budgets,
         ttl_seconds=ttl_seconds,
+        now_epoch_seconds=manifest.created_at,
     )
     return value, manifest
 
@@ -129,14 +130,14 @@ def observation(*, sources=("VOICE", "GAZE", "HAND"), binding_sources=("GAZE", "
     )
 
 
-def expected_project_refs(value: ProjectContextProjection) -> dict[str, str]:
-    """Return the complete project reference identity map."""
-    return {item.reference_id: item.digest for item in value.all_references()}
+def expected_project_refs(value: ProjectContextProjection) -> dict[str, dict]:
+    """Return the complete project canonical-reference identity map."""
+    return {item.reference_id: item.to_dict() for item in value.all_references()}
 
 
-def expected_observation_evidence(value: MultimodalSpatialObservation) -> dict[str, str]:
-    """Return the complete referent-evidence identity map."""
-    return {item.evidence_ref.reference_id: item.evidence_ref.digest for item in value.target_candidates}
+def expected_observation_evidence(value: MultimodalSpatialObservation) -> dict[str, dict]:
+    """Return the complete referent-evidence canonical-reference identity map."""
+    return {item.evidence_ref.reference_id: item.evidence_ref.to_dict() for item in value.target_candidates}
 
 
 def test_v1_manifest_is_unchanged_when_wrapped_and_serialized_mapping_is_verified() -> None:
@@ -193,20 +194,22 @@ def test_contracts_round_trip_and_complete_current_bindings_validate() -> None:
     p.validate_bindings(
         expected_repository_identity_digest=p.repository_identity.identity_digest,
         expected_project_ref=p.project_ref,
-        expected_reference_digests=expected_project_refs(p),
+        expected_canonical_owner=p.canonical_owner,
+        expected_references=expected_project_refs(p),
     )
     r.validate_bindings(
         expected_intent_digest=D["1"],
+        expected_project_projection_id=p.projection_id,
         expected_project_projection_digest=p.projection_digest,
-        expected_base_manifest_digest=manifest.compute_digest(),
-        expected_adapter_digests={item.reference_id: item.digest for item in r.adapter_refs},
-        expected_evidence_digests={item.reference_id: item.digest for item in r.evidence_refs},
+        expected_base_manifest_ref=r.base_manifest_ref,
+        expected_adapter_refs={item.reference_id: item.to_dict() for item in r.adapter_refs},
+        expected_evidence_refs={item.reference_id: item.to_dict() for item in r.evidence_refs},
     )
     o.validate_bindings(
         expected_scene_digest=D["1"],
         expected_session_digest=D["2"],
         expected_entity_digests={"entity:function-node": D["3"]},
-        expected_evidence_digests=expected_observation_evidence(o),
+        expected_evidence_refs=expected_observation_evidence(o),
     )
 
 
@@ -260,23 +263,52 @@ def test_serialized_records_require_nonempty_matching_digests() -> None:
             record_type.from_dict(payload)
 
 
-def test_project_binding_requires_complete_reference_set_and_current_projection() -> None:
-    """Partial maps and stale projection-level freshness must be rejected."""
+def test_project_binding_requires_complete_reference_set_owner_and_current_projection() -> None:
+    """Partial identities, redirected owners, and stale projections must be rejected."""
     p = project()
-    with pytest.raises(ValueError, match="expected_reference_digests is required"):
-        p.validate_bindings(expected_repository_identity_digest=p.repository_identity.identity_digest)
+    with pytest.raises(ValueError, match="expected_project_refs is required"):
+        p.validate_bindings(
+            expected_repository_identity_digest=p.repository_identity.identity_digest,
+            expected_project_ref=p.project_ref,
+            expected_canonical_owner=p.canonical_owner,
+            expected_references=None,
+        )
     partial = expected_project_refs(p)
     partial.pop(next(iter(partial)))
     with pytest.raises(ValueError, match="reference set mismatch"):
         p.validate_bindings(
             expected_repository_identity_digest=p.repository_identity.identity_digest,
-            expected_reference_digests=partial,
+            expected_project_ref=p.project_ref,
+            expected_canonical_owner=p.canonical_owner,
+            expected_references=partial,
         )
     stale = replace(p, freshness_class="STALE", projection_digest="")
     with pytest.raises(ValueError, match="stale or unknown project projection"):
         stale.validate_bindings(
             expected_repository_identity_digest=stale.repository_identity.identity_digest,
-            expected_reference_digests=expected_project_refs(stale),
+            expected_project_ref=stale.project_ref,
+            expected_canonical_owner=stale.canonical_owner,
+            expected_references=expected_project_refs(stale),
+        )
+    redirected = replace(p, canonical_owner="attacker.owner", projection_digest="")
+    with pytest.raises(ValueError, match="canonical owner"):
+        redirected.validate_bindings(
+            expected_repository_identity_digest=redirected.repository_identity.identity_digest,
+            expected_project_ref=redirected.project_ref,
+            expected_canonical_owner=p.canonical_owner,
+            expected_references=expected_project_refs(redirected),
+        )
+    altered_reference = replace(
+        p,
+        artifact_evidence_refs=(replace(p.artifact_evidence_refs[0], owner="attacker.owner"),),
+        projection_digest="",
+    )
+    with pytest.raises(ValueError, match="canonical reference"):
+        altered_reference.validate_bindings(
+            expected_repository_identity_digest=altered_reference.repository_identity.identity_digest,
+            expected_project_ref=altered_reference.project_ref,
+            expected_canonical_owner=altered_reference.canonical_owner,
+            expected_references=expected_project_refs(p),
         )
     with pytest.raises(ValueError, match="privacy_class"):
         replace(p, privacy_class="RAW_PRIVATE_MEMORY", projection_digest="")
@@ -346,8 +378,8 @@ def test_recipe_references_are_canonical_current_and_globally_unique() -> None:
     """Reference ordering, role uniqueness, owner, and freshness are deterministic."""
     adapters = (ref("adapter:z", D["2"]), ref("adapter:a", D["3"]))
     evidence = (ref("evidence:z", D["4"]), ref("evidence:a", D["5"]))
-    first, _ = recipe(adapters=adapters, evidence=evidence)
-    second, _ = recipe(adapters=tuple(reversed(adapters)), evidence=tuple(reversed(evidence)))
+    first, manifest = recipe(adapters=adapters, evidence=evidence)
+    second, _ = recipe(manifest=manifest, adapters=tuple(reversed(adapters)), evidence=tuple(reversed(evidence)))
     assert first.recipe_digest == second.recipe_digest
     assert first.recipe_id == second.recipe_id
 
@@ -361,23 +393,45 @@ def test_recipe_references_are_canonical_current_and_globally_unique() -> None:
         replace(first, base_manifest_ref=replace(first.base_manifest_ref, owner="attacker.owner"), recipe_digest="")
 
 
-def test_recipe_lifetime_budget_and_identity_are_fully_bound() -> None:
-    """Recipes cannot outlive manifests and IDs change with behavior-defining inputs."""
+def test_recipe_lifetime_budget_resource_ceiling_and_identity_are_fully_bound() -> None:
+    """Recipes cannot outlive manifests, exceed resources, or reuse content IDs."""
     short, _ = recipe(ttl_seconds=300, manifest_ttl=10)
     assert short.ttl_seconds == 10
     assert short.budgets.wall_time_ms <= 10_000
+    assert short.budgets.memory_mb == 256
+    assert short.budgets.output_bytes == 1_000_000
+    assert short.budgets.tool_calls == 20
+    assert short.budgets.model_calls == 0
     with pytest.raises(ValueError, match="budget keys mismatch"):
         recipe(budgets={})
+    ttl_budget = WorkspaceBudget(
+        wall_time_ms=10_001, memory_mb=256, output_bytes=1_000_000,
+        tool_calls=20, model_calls=0, cost_microusd=0, network_calls=0,
+    )
     with pytest.raises(ValueError, match="effective workspace TTL"):
-        recipe(ttl_seconds=10, manifest_ttl=10, budgets=WorkspaceBudget(wall_time_ms=10_001))
+        recipe(ttl_seconds=10, manifest_ttl=10, budgets=ttl_budget)
+    oversized = WorkspaceBudget(
+        wall_time_ms=30_000, memory_mb=257, output_bytes=1_000_000,
+        tool_calls=20, model_calls=0, cost_microusd=0, network_calls=0,
+    )
+    with pytest.raises(ValueError, match="memory_mb exceeds base manifest resource ceiling"):
+        recipe(budgets=oversized)
     with pytest.raises(ValueError, match="integer in 1"):
         recipe(ttl_seconds=0)
     with pytest.raises(ValueError, match="integer in 1"):
         recipe(ttl_seconds=MAX_TTL_SECONDS + 1)
-    first, _ = recipe()
-    changed, _ = recipe(adapters=(ref("adapter:other", D["7"]),))
+    first, manifest = recipe()
+    changed, _ = recipe(manifest=manifest, adapters=(ref("adapter:other", D["7"]),))
     assert first.recipe_id != changed.recipe_id
     assert first.recipe_digest != changed.recipe_digest
+
+    forged = first.to_dict()
+    forged["recipe_id"] = "workspace-recipe:forged-identity"
+    digest_body = dict(forged)
+    digest_body.pop("recipe_digest")
+    forged["recipe_digest"] = stable_digest(digest_body)
+    with pytest.raises(ValueError, match="recipe_id does not match"):
+        EphemeralWorkspaceRecipe.from_dict(forged)
 
 
 def test_observation_temporal_transcript_inputs_targets_and_evidence_fail_closed() -> None:
@@ -395,27 +449,162 @@ def test_observation_temporal_transcript_inputs_targets_and_evidence_fail_closed
         observation(binding_sources=("gaze", "GAZE"))
     with pytest.raises(ValueError, match="bounded target sequence"):
         replace(base, target_candidates=(item for item in base.target_candidates), observation_digest="")
-    with pytest.raises(ValueError, match="expected_evidence_digests is required"):
+    with pytest.raises(ValueError, match="expected_referent evidence_refs is required"):
         base.validate_bindings(
             expected_scene_digest=D["1"],
             expected_session_digest=D["2"],
             expected_entity_digests={"entity:function-node": D["3"]},
-            expected_evidence_digests=None,
+            expected_evidence_refs=None,
         )
     wrong_evidence = expected_observation_evidence(base)
-    wrong_evidence["evidence:referent"] = D["9"]
+    wrong_evidence["evidence:referent"]["digest"] = D["9"]
     with pytest.raises(ValueError, match="stale referent evidence"):
         base.validate_bindings(
             expected_scene_digest=D["1"],
             expected_session_digest=D["2"],
             expected_entity_digests={"entity:function-node": D["3"]},
-            expected_evidence_digests=wrong_evidence,
+            expected_evidence_refs=wrong_evidence,
         )
     with pytest.raises(ValueError, match="referent evidence must be current"):
         replace(
             base.target_candidates[0],
             evidence_ref=replace(base.target_candidates[0].evidence_ref, freshness_class="UNKNOWN"),
             binding_digest="",
+        )
+
+
+
+def test_contract_dataclass_canonicalization_whitespace_digest_and_metadata_are_exact() -> None:
+    """Public serializers and exact spellings must define one canonical identity."""
+    reference = ref("artifact:canonical", D["1"], metadata={"manifest_version": "AURA_EPHEMERAL_ORGAN_V1"})
+    assert stable_digest(reference) == stable_digest(reference.to_dict())
+
+    @dataclass
+    class PlainDataclass:
+        value: int
+
+    assert canonical_json(PlainDataclass(1)) == '{"value":1}'
+    with pytest.raises(ValueError, match="surrounding whitespace"):
+        CanonicalReference("artifact:space", "owner", " owner://artifact ", D["1"])
+    with pytest.raises(ValueError, match="lowercase"):
+        CanonicalReference("artifact:upper", "owner", "owner://artifact", "A" * 64)
+    with pytest.raises(ValueError, match="lowercase"):
+        RepositoryIdentity("owner/repo", "main", "A" * 40, D["1"])
+    with pytest.raises(ValueError, match="unsupported characters"):
+        ref("artifact:bad-version", D["1"], metadata={"manifest_version": "bad version"})
+
+
+def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy() -> None:
+    """Live and serialized V1 manifests must preserve their stored safe identity."""
+    live = create_manifest("Verify stored phase hash", organ_id="EORG-stored-hash")
+    live.creator = "attacker"
+    with pytest.raises(ValueError, match="digest does not match"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=live,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+            now_epoch_seconds=live.created_at,
+        )
+
+    incomplete = {
+        "manifest_version": "AURA_EPHEMERAL_ORGAN_V1",
+        "organ_id": "EORG-incomplete",
+        "ttl_seconds": 300,
+        "phase_hash": "0" * 32,
+    }
+    with pytest.raises(ValueError, match="base manifest keys mismatch"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=incomplete,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+            now_epoch_seconds=0.0,
+        )
+
+    unsafe = create_manifest("Reject unsafe policy", organ_id="EORG-unsafe")
+    unsafe.granted_capabilities.append("shell")
+    unsafe.requested_capabilities.append({
+        "capability": "shell", "requested": True, "granted": True, "denied_reason": "",
+    })
+    unsafe.phase_hash = unsafe.compute_digest()
+    with pytest.raises(ValueError, match="forbidden or unknown capability"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=unsafe,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+            now_epoch_seconds=unsafe.created_at,
+        )
+
+
+def test_compiler_rejects_expired_stale_and_redirected_inputs() -> None:
+    """Compilation must fail before emitting wrappers over expired or stale truth."""
+    expired = create_manifest("Expired organ", organ_id="EORG-expired", ttl_seconds=10)
+    with pytest.raises(ValueError, match="expired"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=expired,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+            now_epoch_seconds=expired.expires_at,
+        )
+
+    manifest = create_manifest("Reject stale inputs", organ_id="EORG-stale-inputs")
+    stale_project = replace(project(), freshness_class="STALE", projection_digest="")
+    with pytest.raises(ValueError, match="stale or unknown"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=manifest,
+            project_projection=stale_project,
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+            now_epoch_seconds=manifest.created_at,
+        )
+    redirected_project = replace(project(), canonical_owner="attacker.owner", projection_digest="")
+    with pytest.raises(ValueError, match="canonical continuity owner"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=manifest,
+            project_projection=redirected_project,
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+            now_epoch_seconds=manifest.created_at,
+        )
+    with pytest.raises(ValueError, match="current or bounded"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=manifest,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:stale", D["2"], "STALE"),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+            now_epoch_seconds=manifest.created_at,
+        )
+
+
+def test_recipe_binding_revalidates_complete_manifest_and_dependency_identities() -> None:
+    """Digest-only equality cannot redirect canonical owners or wrapper identity."""
+    original, _ = recipe()
+    altered_payload = original.to_dict()
+    altered_payload["adapter_refs"][0]["owner"] = "attacker.owner"
+    identity_body = {key: value for key, value in altered_payload.items() if key not in {"recipe_id", "recipe_digest"}}
+    altered_payload["recipe_id"] = f"workspace-recipe:{stable_digest(identity_body)[:24]}"
+    digest_body = dict(altered_payload)
+    digest_body.pop("recipe_digest")
+    altered_payload["recipe_digest"] = stable_digest(digest_body)
+    altered = EphemeralWorkspaceRecipe.from_dict(altered_payload)
+    with pytest.raises(ValueError, match="adapter canonical reference"):
+        altered.validate_bindings(
+            expected_intent_digest=original.canonical_intent_digest,
+            expected_project_projection_id=original.project_projection_id,
+            expected_project_projection_digest=original.project_projection_digest,
+            expected_base_manifest_ref=original.base_manifest_ref,
+            expected_adapter_refs={item.reference_id: item.to_dict() for item in original.adapter_refs},
+            expected_evidence_refs={item.reference_id: item.to_dict() for item in original.evidence_refs},
         )
 
 
@@ -470,7 +659,7 @@ def test_contract_module_has_docstrings_and_no_operational_or_persistence_calls(
             imports.add(node.module.split(".")[0])
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
             definitions.append(node)
-    assert imports <= {"__future__", "collections", "dataclasses", "enum", "hashlib", "json", "math", "re", "types", "typing"}
+    assert imports <= {"__future__", "collections", "dataclasses", "enum", "hashlib", "json", "math", "re", "time", "types", "typing"}
     assert all(ast.get_docstring(node) for node in definitions)
     prohibited_names = {"open", "exec", "eval", "compile", "__import__", "Popen"}
     prohibited_attributes = {"connect", "run", "Popen", "system", "unlink", "write_text", "write_bytes"}

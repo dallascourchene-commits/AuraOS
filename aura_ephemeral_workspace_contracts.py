@@ -13,6 +13,7 @@ import hashlib
 import json
 import math
 import re
+import time
 from types import MappingProxyType
 from typing import Any
 
@@ -53,6 +54,32 @@ _METADATA_BOOL_FIELDS = frozenset({"wrapped_not_replaced"})
 _METADATA_INT_FIELDS = frozenset({"line_start", "line_end", "byte_length"})
 _METADATA_DIGEST_FIELDS = frozenset({"content_digest", "source_digest", "artifact_digest", "legacy_manifest_digest"})
 _METADATA_FIELDS = _METADATA_TEXT_FIELDS | _METADATA_BOOL_FIELDS | _METADATA_INT_FIELDS | _METADATA_DIGEST_FIELDS
+_PROJECT_CANONICAL_OWNER = "aura_unified_memory_continuity"
+_LEGACY_MANIFEST_FIELDS = frozenset({
+    "manifest_version", "organ_id", "objective", "objective_hash", "creator",
+    "created_at", "ttl_seconds", "expires_at", "intent_packet", "lexc_route",
+    "machine_route", "capability_resolution_ref", "capability_resolution_digest",
+    "requested_capabilities", "granted_capabilities", "denied_capabilities",
+    "boundary_contracts", "arena_lease", "components", "resource_budget",
+    "data_policy", "ui_manifest", "verifier_requirements", "human_approval_policy",
+    "dissolution_policy", "crystallization_policy", "phase_hash",
+    "signature_or_digest", "patch_authority", "vsa_patch_authority",
+})
+_LEGACY_ALLOWED_CAPABILITIES = frozenset({
+    "resolve_capabilities", "search_code", "inspect_symbol", "read_slice",
+    "rank_regions", "build_change_graph", "show_tests", "show_docs",
+    "render_ui_schema", "write_temp_audit", "emit_telemetry", "dissolve",
+})
+_LEGACY_FORBIDDEN_CAPABILITIES = frozenset({
+    "external_network", "package_install", "shell", "arbitrary_subprocess",
+    "host_write_outside_temp", "production_mutation", "secret_access",
+    "raw_private_memory", "commit", "push", "pr", "booking_payment",
+    "permanent_plugin_install", "automatic_crystallization",
+})
+_LEGACY_RESOURCE_FIELDS = frozenset({
+    "wall_time_ms", "memory_mb", "output_bytes", "tool_calls", "model_calls",
+    "cost_usd", "network_calls",
+})
 
 
 def _canonical(value: Any) -> Any:
@@ -60,6 +87,8 @@ def _canonical(value: Any) -> Any:
     if isinstance(value, Enum):
         return value.value
     if is_dataclass(value):
+        if hasattr(value, "to_dict") and callable(value.to_dict):
+            return _canonical(value.to_dict())
         return _canonical(asdict(value))
     if isinstance(value, Mapping):
         if any(not isinstance(key, str) for key in value):
@@ -87,15 +116,16 @@ def stable_digest(value: Any) -> str:
 
 
 def _text(value: Any, name: str, *, optional: bool = False, maximum: int = MAX_TEXT_BYTES) -> str:
-    """Validate a bounded textual field without coercing malformed values."""
+    """Validate canonical bounded text without coercion or whitespace folding."""
     if not isinstance(value, str):
         raise ValueError(f"{name} must be a string")
-    result = value.strip()
-    if not result and not optional:
+    if value != value.strip():
+        raise ValueError(f"{name} must not contain surrounding whitespace")
+    if not value and not optional:
         raise ValueError(f"{name} is required")
-    if len(result.encode("utf-8")) > maximum or any(ord(char) < 32 for char in result):
+    if len(value.encode("utf-8")) > maximum or any(ord(char) < 32 for char in value):
         raise ValueError(f"{name} exceeds its bounded text contract")
-    return result
+    return value
 
 
 def _id(value: Any, name: str) -> str:
@@ -108,26 +138,36 @@ def _id(value: Any, name: str) -> str:
 
 def _digest(value: Any, name: str, *, optional: bool = False) -> str:
     """Validate an exact lowercase BLAKE2b-256 digest."""
-    result = _text(value, name, optional=optional, maximum=64).lower()
+    result = _text(value, name, optional=optional, maximum=64)
     if result and not _DIGEST.fullmatch(result):
         raise ValueError(f"{name} must be 64 lowercase hex characters")
     return result
 
 
 def _legacy_digest(value: Any, name: str) -> str:
-    """Validate the retained 32-character V1 manifest digest."""
-    result = _text(value, name, maximum=32).lower()
+    """Validate the retained lowercase 32-character V1 manifest digest."""
+    result = _text(value, name, maximum=32)
     if not _LEGACY_DIGEST.fullmatch(result):
-        raise ValueError(f"{name} must be a 32-character V1 digest")
+        raise ValueError(f"{name} must be a 32-character lowercase V1 digest")
     return result
 
 
 def _commit_sha(value: Any, name: str) -> str:
-    """Validate a complete Git SHA-1 or SHA-256 object identifier."""
-    result = _text(value, name, maximum=64).lower()
+    """Validate a complete lowercase Git SHA-1 or SHA-256 object identifier."""
+    result = _text(value, name, maximum=64)
     if not _COMMIT_SHA.fullmatch(result):
-        raise ValueError(f"{name} must be a complete 40- or 64-character Git object ID")
+        raise ValueError(f"{name} must be a complete 40- or 64-character lowercase Git object ID")
     return result
+
+
+def _finite_number(value: Any, name: str, *, minimum: float = 0.0) -> float:
+    """Validate a finite non-boolean numeric value at or above a minimum."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"{name} must be a finite JSON number")
+    number = float(value)
+    if not math.isfinite(number) or number < minimum:
+        raise ValueError(f"{name} must be a finite number >= {minimum}")
+    return number
 
 
 def _bool(value: Any, name: str, required: bool) -> bool:
@@ -191,7 +231,9 @@ def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
     validated = {}
     for key, item in candidate.items():
         field_name = f"{name}.{key}"
-        if key in _METADATA_TEXT_FIELDS:
+        if key == "manifest_version":
+            validated[key] = _id(item, field_name)
+        elif key in _METADATA_TEXT_FIELDS:
             validated[key] = _text(item, field_name, maximum=4096)
         elif key in _METADATA_BOOL_FIELDS:
             validated[key] = _bool(item, field_name, True)
@@ -316,6 +358,36 @@ class CanonicalReference:
         """Parse an exact serialized canonical reference."""
         _strict(payload, {"version", "reference_id", "owner", "canonical_ref", "digest", "truth_class", "freshness_class", "metadata"}, "reference")
         return cls(**dict(payload))
+
+
+def _reference_map(value: Any, name: str) -> dict[str, CanonicalReference]:
+    """Parse a complete identifier-to-canonical-reference mapping."""
+    if not isinstance(value, Mapping):
+        raise ValueError(f"{name} is required")
+    result: dict[str, CanonicalReference] = {}
+    for supplied_id, raw_reference in value.items():
+        reference_id = _id(supplied_id, f"{name} key")
+        reference = raw_reference if isinstance(raw_reference, CanonicalReference) else CanonicalReference.from_dict(raw_reference)
+        if reference_id != reference.reference_id:
+            raise ValueError(f"{name} key/reference mismatch: {reference_id}")
+        if reference_id in result:
+            raise ValueError(f"duplicate {name} reference: {reference_id}")
+        result[reference_id] = reference
+    return result
+
+
+def _validate_reference_set(actual: Sequence[CanonicalReference], expected_value: Any,
+                            name: str, *, require_current: bool = True) -> None:
+    """Rebind a complete reference set, including owner and metadata identity."""
+    expected = _reference_map(expected_value, f"expected_{name}_refs")
+    current = {reference.reference_id: reference for reference in actual}
+    if set(current) != set(expected):
+        raise ValueError(f"{name} reference set mismatch")
+    for reference_id in sorted(current):
+        if current[reference_id].to_dict() != expected[reference_id].to_dict():
+            raise ValueError(f"stale {name} canonical reference: {reference_id}")
+        if require_current and current[reference_id].freshness_class not in _CURRENT_FRESHNESS:
+            raise ValueError(f"stale {name} canonical reference: {reference_id}")
 
 
 @dataclass(frozen=True)
@@ -456,27 +528,22 @@ class ProjectContextProjection:
         return cls(**dict(payload))
 
     def validate_bindings(self, *, expected_repository_identity_digest: str,
-                          expected_project_ref: str | None = None,
-                          expected_reference_digests: Mapping[str, str] | None = None,
+                          expected_project_ref: str,
+                          expected_canonical_owner: str,
+                          expected_references: Mapping[str, CanonicalReference | Mapping[str, Any]],
                           reject_stale: bool = True) -> None:
         """Rebind the complete projection to current canonical identities."""
         if self.repository_identity.identity_digest != _digest(expected_repository_identity_digest, "expected repository digest"):
             raise ValueError("stale repository identity digest")
-        if expected_project_ref is not None and self.project_ref != _text(expected_project_ref, "expected project ref"):
+        if self.project_ref != _text(expected_project_ref, "expected project ref"):
             raise ValueError("stale project reference")
-        if not isinstance(expected_reference_digests, Mapping):
-            raise ValueError("expected_reference_digests is required")
-        references = {item.reference_id: item for item in self.all_references()}
-        if set(references) != set(expected_reference_digests):
-            raise ValueError("project reference set mismatch")
-        for key, value in expected_reference_digests.items():
-            if references[key].digest != _digest(value, f"expected reference {key}"):
-                raise ValueError(f"stale evidence digest: {key}")
-        if reject_stale:
-            if self.freshness_class not in _CURRENT_FRESHNESS:
-                raise ValueError("stale or unknown project projection")
-            if any(item.freshness_class not in _CURRENT_FRESHNESS for item in references.values()):
-                raise ValueError("stale or unknown project references")
+        if self.canonical_owner != _id(expected_canonical_owner, "expected project owner"):
+            raise ValueError("stale project canonical owner")
+        references = self.all_references()
+        _validate_reference_set(references, expected_references, "project", require_current=reject_stale)
+        if reject_stale and self.freshness_class not in _CURRENT_FRESHNESS:
+            raise ValueError("stale or unknown project projection")
+
 
 @dataclass(frozen=True)
 class WorkspaceBudget:
@@ -552,13 +619,15 @@ def _acyclic(nodes: Sequence[str], edges: Sequence[DependencyEdge]) -> None:
         raise ValueError("recipe dependency graph contains a cycle")
 
 
-def _refs(value: Any, name: str) -> tuple[CanonicalReference, ...]:
+def _refs(value: Any, name: str, *, require_current: bool = False) -> tuple[CanonicalReference, ...]:
     """Validate and canonicalize a non-empty reference set."""
     if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence) or not value or len(value) > MAX_ITEMS:
         raise ValueError(f"{name} must be a non-empty bounded sequence")
     result = tuple(item if isinstance(item, CanonicalReference) else CanonicalReference.from_dict(item) for item in value)
     if len({item.reference_id for item in result}) != len(result):
         raise ValueError(f"duplicate {name} IDs")
+    if require_current and any(item.freshness_class not in _CURRENT_FRESHNESS for item in result):
+        raise ValueError(f"{name} must contain only current or bounded references")
     return tuple(sorted(result, key=lambda item: (item.reference_id, item.owner, item.digest)))
 
 
@@ -646,8 +715,8 @@ class EphemeralWorkspaceRecipe:
             raise ValueError("invalid recipe dependency")
         _acyclic(capabilities, edges)
         object.__setattr__(self, "dependency_edges", tuple(sorted(edges, key=lambda edge: (edge.source_capability_id, edge.target_capability_id))))
-        adapters = _refs(self.adapter_refs, "adapter_refs")
-        evidence = _refs(self.evidence_refs, "evidence_refs")
+        adapters = _refs(self.adapter_refs, "adapter_refs", require_current=True)
+        evidence = _refs(self.evidence_refs, "evidence_refs", require_current=True)
         if {item.reference_id for item in adapters} & {item.reference_id for item in evidence}:
             raise ValueError("duplicate recipe reference IDs across adapter and evidence roles")
         object.__setattr__(self, "adapter_refs", adapters)
@@ -722,35 +791,34 @@ class EphemeralWorkspaceRecipe:
                     "automatic_promotion", "authority", "recipe_digest"}
         _strict(payload, expected, "recipe")
         _require_serialized_digest(payload, "recipe_digest", "recipe")
-        return cls(**dict(payload))
+        record = cls(**dict(payload))
+        identity_body = record.to_dict()
+        identity_body.pop("recipe_id")
+        identity_body.pop("recipe_digest")
+        if record.recipe_id != _compiled_recipe_id(identity_body):
+            raise ValueError("recipe.recipe_id does not match behavior-defining content")
+        return record
 
     def validate_bindings(self, *, expected_intent_digest: str,
+                          expected_project_projection_id: str,
                           expected_project_projection_digest: str,
-                          expected_base_manifest_digest: str,
-                          expected_adapter_digests: Mapping[str, str],
-                          expected_evidence_digests: Mapping[str, str]) -> None:
-        """Rebind the complete recipe to current manifest, intent, and evidence."""
+                          expected_base_manifest_ref: CanonicalReference | Mapping[str, Any],
+                          expected_adapter_refs: Mapping[str, CanonicalReference | Mapping[str, Any]],
+                          expected_evidence_refs: Mapping[str, CanonicalReference | Mapping[str, Any]]) -> None:
+        """Rebind the complete recipe to current manifest, project, and dependencies."""
         if self.canonical_intent_digest != _digest(expected_intent_digest, "expected intent"):
             raise ValueError("stale canonical intent digest")
+        if self.project_projection_id != _id(expected_project_projection_id, "expected project projection id"):
+            raise ValueError("stale project projection id")
         if self.project_projection_digest != _digest(expected_project_projection_digest, "expected project projection"):
             raise ValueError("stale project projection digest")
-        legacy = dict(self.base_manifest_ref.metadata).get("legacy_manifest_digest")
-        expected_manifest = _text(expected_base_manifest_digest, "expected base manifest digest", maximum=64).lower()
-        if _LEGACY_DIGEST.fullmatch(expected_manifest):
-            if legacy != expected_manifest:
-                raise ValueError("stale base manifest digest")
-        elif self.base_manifest_ref.digest != _digest(expected_manifest, "expected base manifest digest"):
-            raise ValueError("stale base manifest digest")
+        expected_manifest = expected_base_manifest_ref if isinstance(expected_base_manifest_ref, CanonicalReference) else CanonicalReference.from_dict(expected_base_manifest_ref)
+        if self.base_manifest_ref.to_dict() != expected_manifest.to_dict():
+            raise ValueError("stale base manifest canonical reference")
         if self.base_manifest_ref.freshness_class not in _CURRENT_FRESHNESS:
-            raise ValueError("stale base manifest reference")
-        for references, expected, kind in ((self.adapter_refs, expected_adapter_digests, "adapter"), (self.evidence_refs, expected_evidence_digests, "evidence")):
-            if not isinstance(expected, Mapping):
-                raise ValueError(f"expected_{kind}_digests is required")
-            current = {reference.reference_id: reference for reference in references}
-            if set(current) != set(expected):
-                raise ValueError(f"{kind} reference set mismatch")
-            if any(current[key].digest != _digest(value, f"expected {kind} {key}") or current[key].freshness_class not in _CURRENT_FRESHNESS for key, value in expected.items()):
-                raise ValueError(f"stale {kind} digest")
+            raise ValueError("stale base manifest canonical reference")
+        _validate_reference_set(self.adapter_refs, expected_adapter_refs, "adapter")
+        _validate_reference_set(self.evidence_refs, expected_evidence_refs, "evidence")
 
 
 @dataclass(frozen=True)
@@ -910,28 +978,25 @@ class MultimodalSpatialObservation:
     def validate_bindings(self, *, expected_scene_digest: str,
                           expected_session_digest: str,
                           expected_entity_digests: Mapping[str, str] | None = None,
-                          expected_evidence_digests: Mapping[str, str] | None = None) -> None:
-        """Rebind all scene, session, entity, and evidence identities."""
+                          expected_evidence_refs: Mapping[str, CanonicalReference | Mapping[str, Any]] | None = None) -> None:
+        """Rebind all scene, session, entity, and complete evidence identities."""
         if self.scene_digest != _digest(expected_scene_digest, "expected scene"):
             raise ValueError("stale scene digest")
         if self.session_digest != _digest(expected_session_digest, "expected session"):
             raise ValueError("stale session digest")
         if not isinstance(expected_entity_digests, Mapping):
             raise ValueError("expected_entity_digests is required")
-        if not isinstance(expected_evidence_digests, Mapping):
-            raise ValueError("expected_evidence_digests is required")
         entity_ids = {target.entity_id for target in self.target_candidates}
-        evidence_ids = {target.evidence_ref.reference_id for target in self.target_candidates}
         if entity_ids != set(expected_entity_digests):
             raise ValueError("entity reference set mismatch")
-        if evidence_ids != set(expected_evidence_digests):
-            raise ValueError("evidence reference set mismatch")
         for target in self.target_candidates:
             if target.entity_digest != _digest(expected_entity_digests[target.entity_id], "expected entity"):
                 raise ValueError(f"stale scene entity: {target.entity_id}")
-            expected = expected_evidence_digests[target.evidence_ref.reference_id]
-            if target.evidence_ref.digest != _digest(expected, "expected referent evidence") or target.evidence_ref.freshness_class not in _CURRENT_FRESHNESS:
-                raise ValueError(f"stale referent evidence: {target.evidence_ref.reference_id}")
+        _validate_reference_set(
+            tuple(target.evidence_ref for target in self.target_candidates),
+            expected_evidence_refs,
+            "referent evidence",
+        )
 
 
 def _legacy_manifest_body(body: Mapping[str, Any]) -> dict[str, Any]:
@@ -948,26 +1013,134 @@ def _legacy_manifest_digest(body: Mapping[str, Any]) -> str:
     return hashlib.blake2b(payload.encode("utf-8"), digest_size=16).hexdigest()
 
 
+def _require_mapping(value: Any, name: str) -> Mapping[str, Any]:
+    """Require a mapping at a nested V1 manifest boundary."""
+    if not isinstance(value, Mapping):
+        raise ValueError(f"{name} must be an object")
+    return value
+
+
+def _require_sequence(value: Any, name: str) -> Sequence[Any]:
+    """Require a non-string sequence at a nested V1 manifest boundary."""
+    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
+        raise ValueError(f"{name} must be a sequence")
+    return value
+
+
+def _manifest_resource_limits(body: Mapping[str, Any]) -> dict[str, int]:
+    """Return wrapper-compatible ceilings from the canonical V1 resource budget."""
+    raw = _require_mapping(body.get("resource_budget"), "base manifest resource_budget")
+    _strict(raw, set(_LEGACY_RESOURCE_FIELDS), "base manifest resource_budget")
+    integer_fields = ("wall_time_ms", "memory_mb", "output_bytes", "tool_calls", "model_calls", "network_calls")
+    limits = {name: _int(raw.get(name), f"base manifest resource_budget.{name}", 0, MAX_INTEGER) for name in integer_fields}
+    cost_usd = _finite_number(raw.get("cost_usd"), "base manifest resource_budget.cost_usd")
+    limits["cost_microusd"] = int(math.floor(cost_usd * 1_000_000))
+    return limits
+
+
+def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
+    """Require the complete safe V1 manifest shape and authority profile."""
+    _strict(body, set(_LEGACY_MANIFEST_FIELDS), "base manifest")
+    if body.get("manifest_version") != LEGACY_EPHEMERAL_MANIFEST_VERSION:
+        raise ValueError("unsupported base manifest version")
+    _id(body.get("organ_id"), "base organ id")
+    objective = _text(body.get("objective"), "base manifest objective")
+    objective_hash = _text(body.get("objective_hash"), "base manifest objective_hash", maximum=24)
+    expected_objective_hash = hashlib.blake2b(objective.encode("utf-8"), digest_size=12).hexdigest()
+    if objective_hash != expected_objective_hash:
+        raise ValueError("base manifest digest does not match objective/objective_hash binding")
+    _id(body.get("creator"), "base manifest creator")
+    ttl_seconds = _int(body.get("ttl_seconds"), "base manifest ttl", 1, MAX_TTL_SECONDS)
+    created_at = _finite_number(body.get("created_at"), "base manifest created_at")
+    expires_at = _finite_number(body.get("expires_at"), "base manifest expires_at")
+    if expires_at <= created_at or abs((created_at + ttl_seconds) - expires_at) > 1e-6:
+        raise ValueError("base manifest expiry is inconsistent with creation time and TTL")
+
+    for name in ("intent_packet", "machine_route", "arena_lease", "data_policy", "ui_manifest", "verifier_requirements"):
+        _require_mapping(body.get(name), f"base manifest {name}")
+    for name in ("lexc_route", "requested_capabilities", "granted_capabilities", "denied_capabilities", "boundary_contracts", "components"):
+        _require_sequence(body.get(name), f"base manifest {name}")
+    _text(body.get("capability_resolution_ref"), "base manifest capability_resolution_ref", optional=True)
+    resolution_digest = body.get("capability_resolution_digest")
+    if resolution_digest:
+        _digest(resolution_digest, "base manifest capability_resolution_digest")
+    elif resolution_digest != "":
+        raise ValueError("base manifest capability_resolution_digest must be a string")
+    _text(body.get("signature_or_digest"), "base manifest signature_or_digest", optional=True)
+
+    granted = set(_seq(body.get("granted_capabilities"), "base manifest granted_capabilities", ids=True, sort=True))
+    if granted & _LEGACY_FORBIDDEN_CAPABILITIES or not granted <= _LEGACY_ALLOWED_CAPABILITIES:
+        raise ValueError("base manifest grants a forbidden or unknown capability")
+    requested = _require_sequence(body.get("requested_capabilities"), "base manifest requested_capabilities")
+    requested_grants: set[str] = set()
+    for index, raw_request in enumerate(requested):
+        request = _require_mapping(raw_request, f"base manifest requested_capabilities[{index}]")
+        _strict(request, {"capability", "requested", "granted", "denied_reason"}, f"base manifest requested_capabilities[{index}]")
+        capability = _id(request.get("capability"), f"base manifest requested_capabilities[{index}].capability")
+        _bool(request.get("requested"), f"base manifest requested_capabilities[{index}].requested", True)
+        if not isinstance(request.get("granted"), bool):
+            raise ValueError(f"base manifest requested_capabilities[{index}].granted must be boolean")
+        _text(request.get("denied_reason"), f"base manifest requested_capabilities[{index}].denied_reason", optional=True)
+        if request["granted"]:
+            if capability not in _LEGACY_ALLOWED_CAPABILITIES:
+                raise ValueError("base manifest request grants a forbidden or unknown capability")
+            requested_grants.add(capability)
+    if requested_grants != granted:
+        raise ValueError("base manifest granted_capabilities disagree with capability requests")
+
+    for index, raw_denial in enumerate(_require_sequence(body.get("denied_capabilities"), "base manifest denied_capabilities")):
+        denial = _require_mapping(raw_denial, f"base manifest denied_capabilities[{index}]")
+        _strict(denial, {"capability", "reason"}, f"base manifest denied_capabilities[{index}]")
+        _id(denial.get("capability"), f"base manifest denied_capabilities[{index}].capability")
+        _id(denial.get("reason"), f"base manifest denied_capabilities[{index}].reason")
+
+    if body.get("components"):
+        raise ValueError("base manifest components must be empty for the non-operational PR1 wrapper")
+    data_policy = _require_mapping(body.get("data_policy"), "base manifest data_policy")
+    for name in ("private_memory_export", "raw_sidecar_dump", "secrets_access"):
+        _bool(data_policy.get(name), f"base manifest data_policy.{name}", False)
+    ui_manifest = _require_mapping(body.get("ui_manifest"), "base manifest ui_manifest")
+    _strict(ui_manifest, {"component_types", "schema", "executable"}, "base manifest ui_manifest")
+    _require_sequence(ui_manifest.get("component_types"), "base manifest ui_manifest.component_types")
+    _require_mapping(ui_manifest.get("schema"), "base manifest ui_manifest.schema")
+    _bool(ui_manifest.get("executable"), "base manifest ui_manifest.executable", False)
+    limits = _manifest_resource_limits(body)
+    if limits["network_calls"] != 0:
+        raise ValueError("base manifest network access must remain disabled")
+    verifier = _require_mapping(body.get("verifier_requirements"), "base manifest verifier_requirements")
+    required_verifiers = {"no_production_mutation", "no_secret_access", "no_network_access"}
+    must_pass = set(_seq(verifier.get("must_pass"), "base manifest verifier_requirements.must_pass", ids=True, sort=True))
+    if not required_verifiers <= must_pass:
+        raise ValueError("base manifest verifier requirements are incomplete")
+    _id(verifier.get("quality_gate"), "base manifest verifier_requirements.quality_gate")
+    if body.get("human_approval_policy") != "required_for_consequential":
+        raise ValueError("base manifest human approval policy is unsafe")
+    if body.get("dissolution_policy") != "mandatory":
+        raise ValueError("base manifest dissolution policy is unsafe")
+    if body.get("crystallization_policy") != "proposal_only":
+        raise ValueError("base manifest crystallization policy is unsafe")
+    if body.get("patch_authority") != "exact_source_spans_and_hashes_only":
+        raise ValueError("base manifest patch authority is unsafe")
+    _bool(body.get("vsa_patch_authority"), "base manifest vsa_patch_authority", False)
+
+
 def _manifest_snapshot(manifest: Any) -> tuple[dict[str, Any], str, str]:
-    """Verify and snapshot an exact V1 manifest into a 256-bit wrapper identity."""
+    """Verify and snapshot an exact safe V1 manifest into a wrapper identity."""
     raw = manifest.to_dict() if hasattr(manifest, "to_dict") else manifest
     body = _canonical(raw)
     if not isinstance(body, dict):
         raise ValueError("base manifest must be an object")
-    if body.get("manifest_version") != LEGACY_EPHEMERAL_MANIFEST_VERSION:
-        raise ValueError("unsupported base manifest version")
-    _id(body.get("organ_id"), "base organ id")
+    _validate_v1_manifest(body)
     recomputed_legacy = _legacy_manifest_digest(body)
-    if hasattr(manifest, "compute_digest"):
-        supplied_legacy = _legacy_digest(manifest.compute_digest(), "base manifest digest")
-    else:
-        supplied_legacy = _legacy_digest(body.get("phase_hash"), "base manifest phase_hash")
+    supplied_legacy = _legacy_digest(body.get("phase_hash"), "base manifest phase_hash")
     if supplied_legacy != recomputed_legacy:
         raise ValueError("base manifest digest does not match serialized content")
-    wrapper_digest = stable_digest({"manifest_version": body["manifest_version"],
-                                    "organ_id": body["organ_id"],
-                                    "legacy_manifest_digest": recomputed_legacy,
-                                    "snapshot": _legacy_manifest_body(body)})
+    wrapper_digest = stable_digest({
+        "manifest_version": body["manifest_version"],
+        "organ_id": body["organ_id"],
+        "legacy_manifest_digest": recomputed_legacy,
+        "snapshot": body,
+    })
     return body, recomputed_legacy, wrapper_digest
 
 
@@ -982,7 +1155,8 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
                                              adapter_refs: Sequence[CanonicalReference | Mapping[str, Any]],
                                              evidence_refs: Sequence[CanonicalReference | Mapping[str, Any]],
                                              budgets: WorkspaceBudget | Mapping[str, Any] | None = None,
-                                             ttl_seconds: int = 300) -> EphemeralWorkspaceRecipe:
+                                             ttl_seconds: int = 300,
+                                             now_epoch_seconds: float | None = None) -> EphemeralWorkspaceRecipe:
     """Compile the frozen recipe without invoking any canonical owner."""
     raw_before = base_manifest.to_dict() if hasattr(base_manifest, "to_dict") else base_manifest
     before = canonical_json(raw_before)
@@ -991,6 +1165,10 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
     if before != canonical_json(raw_after):
         raise ValueError("base V1 manifest changed while wrapping")
     project = project_projection if isinstance(project_projection, ProjectContextProjection) else ProjectContextProjection.from_dict(project_projection)
+    if project.canonical_owner != _PROJECT_CANONICAL_OWNER:
+        raise ValueError("project projection is not owned by the canonical continuity owner")
+    if project.freshness_class not in _CURRENT_FRESHNESS or any(reference.freshness_class not in _CURRENT_FRESHNESS for reference in project.all_references()):
+        raise ValueError("project projection or references are stale or unknown")
     manifest_ref = CanonicalReference(f"organ-manifest:{body['organ_id']}",
                                       "aura_ephemeral_manifest",
                                       f"ephemeral-organ:{body['organ_id']}@{body['manifest_version']}",
@@ -1001,50 +1179,66 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
     intent = _digest(canonical_intent_digest, "canonical intent")
     requested_ttl = _int(ttl_seconds, "recipe.ttl", 1, MAX_TTL_SECONDS)
     manifest_ttl = _int(body.get("ttl_seconds"), "base manifest ttl", 1, MAX_TTL_SECONDS)
-    effective_ttl = min(requested_ttl, manifest_ttl)
+    created_at = _finite_number(body.get("created_at"), "base manifest created_at")
+    expires_at = _finite_number(body.get("expires_at"), "base manifest expires_at")
+    now = time.time() if now_epoch_seconds is None else _finite_number(now_epoch_seconds, "compile now_epoch_seconds")
+    if now < created_at:
+        raise ValueError("compile time precedes base manifest creation")
+    remaining_ttl = math.floor(expires_at - now)
+    if remaining_ttl < 1:
+        raise ValueError("base manifest is expired")
+    effective_ttl = min(requested_ttl, manifest_ttl, remaining_ttl)
+
+    manifest_limits = _manifest_resource_limits(body)
     if budgets is None:
-        default_budget = WorkspaceBudget()
-        budget = replace(default_budget, wall_time_ms=min(default_budget.wall_time_ms, effective_ttl * 1000))
+        default_values = WorkspaceBudget().to_dict()
+        for name, ceiling in manifest_limits.items():
+            default_values[name] = min(default_values[name], ceiling)
+        default_values["wall_time_ms"] = min(default_values["wall_time_ms"], effective_ttl * 1000)
+        budget = WorkspaceBudget.from_dict(default_values)
     elif isinstance(budgets, WorkspaceBudget):
         budget = budgets
     else:
         budget = WorkspaceBudget.from_dict(budgets)
+    budget_values = budget.to_dict()
+    for name, ceiling in manifest_limits.items():
+        if budget_values[name] > ceiling:
+            raise ValueError(f"budget.{name} exceeds base manifest resource ceiling")
     if budget.wall_time_ms > effective_ttl * 1000:
         raise ValueError("budget.wall_time_ms cannot exceed effective workspace TTL")
-    adapters = _refs(adapter_refs, "adapter_refs")
-    evidence = _refs(evidence_refs, "evidence_refs")
+    adapters = _refs(adapter_refs, "adapter_refs", require_current=True)
+    evidence = _refs(evidence_refs, "evidence_refs", require_current=True)
     definition = _FROZEN_DEFINITION
-    recipe_body = {"demonstration_id": CODING_SPATIAL_WORKSPACE_V1,
-                   "base_manifest_ref": manifest_ref.to_dict(),
-                   "canonical_intent_digest": intent,
-                   "project_projection_id": project.projection_id,
-                   "project_projection_digest": project.projection_digest,
-                   "capability_ids": list(definition["capability_ids"]),
-                   "dependency_edges": [{"source_capability_id": source, "target_capability_id": target} for source, target in definition["dependency_edges"]],
-                   "adapter_refs": [reference.to_dict() for reference in adapters],
-                   "evidence_refs": [reference.to_dict() for reference in evidence],
-                   "domain_owner_handoff_map": dict(definition["domain_owner_handoff_map"]),
-                   "budgets": budget.to_dict(),
-                   "renderer_requirements": list(definition["renderer_requirements"]),
-                   "device_requirements": list(definition["device_requirements"]),
-                   "allowed_interaction_actions": list(definition["allowed_interaction_actions"]),
-                   "required_verification_gates": list(definition["required_verification_gates"]),
-                   "ttl_seconds": effective_ttl,
-                   "lifecycle_policy": _LIFECYCLE_POLICY,
-                   "dissolution_policy": _DISSOLUTION_POLICY,
-                   "automatic_persistence": False, "automatic_resume": False,
-                   "automatic_promotion": False, "authority": AuthorityEnvelope().to_dict(),
-                   "version": EPHEMERAL_WORKSPACE_RECIPE_VERSION}
-    recipe_id = _compiled_recipe_id(recipe_body)
-    return EphemeralWorkspaceRecipe(recipe_id, CODING_SPATIAL_WORKSPACE_V1, manifest_ref,
-                                    intent, project.projection_id, project.projection_digest,
-                                    tuple(definition["capability_ids"]),
-                                    tuple(DependencyEdge(source, target) for source, target in definition["dependency_edges"]),
-                                    adapters, evidence, definition["domain_owner_handoff_map"],
-                                    budget, tuple(definition["renderer_requirements"]),
-                                    tuple(definition["device_requirements"]),
-                                    tuple(definition["allowed_interaction_actions"]),
-                                    tuple(definition["required_verification_gates"]), effective_ttl)
+    provisional = EphemeralWorkspaceRecipe(
+        recipe_id="workspace-recipe:pending",
+        demonstration_id=CODING_SPATIAL_WORKSPACE_V1,
+        base_manifest_ref=manifest_ref,
+        canonical_intent_digest=intent,
+        project_projection_id=project.projection_id,
+        project_projection_digest=project.projection_digest,
+        capability_ids=tuple(definition["capability_ids"]),
+        dependency_edges=tuple(
+            DependencyEdge(source, target)
+            for source, target in definition["dependency_edges"]
+        ),
+        adapter_refs=adapters,
+        evidence_refs=evidence,
+        domain_owner_handoff_map=definition["domain_owner_handoff_map"],
+        budgets=budget,
+        renderer_requirements=tuple(definition["renderer_requirements"]),
+        device_requirements=tuple(definition["device_requirements"]),
+        allowed_interaction_actions=tuple(definition["allowed_interaction_actions"]),
+        required_verification_gates=tuple(definition["required_verification_gates"]),
+        ttl_seconds=effective_ttl,
+    )
+    identity_body = provisional.to_dict()
+    identity_body.pop("recipe_id")
+    identity_body.pop("recipe_digest")
+    return replace(
+        provisional,
+        recipe_id=_compiled_recipe_id(identity_body),
+        recipe_digest="",
+    )
 
 
 def validate_recipe_semantics(payload: Mapping[str, Any]) -> EphemeralWorkspaceRecipe:
