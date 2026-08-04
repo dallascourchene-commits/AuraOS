@@ -48,7 +48,7 @@ jobs:
           set -euo pipefail
           python -m py_compile aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
           python -m pytest -q tests/test_aura_ephemeral_workspace_contracts.py
-          python -m ruff check aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py --select F401,F821,E999
+          python -m ruff check aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py --select F401,F821
           python - <<'PY'
           import json
           from pathlib import Path
