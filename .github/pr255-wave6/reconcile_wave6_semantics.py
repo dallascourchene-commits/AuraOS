@@ -28,6 +28,17 @@ source = replace_once(
 ''',
     "expired versus fractional TTL",
 )
+source = replace_once(
+    source,
+    '''        record = cls(**dict(payload))
+        identity_body = record.to_dict()
+''',
+    '''        record = cls(**dict(payload))
+        _require_exact_serialized_form(record, payload)
+        identity_body = record.to_dict()
+''',
+    "recipe exact serialized form",
+)
 SOURCE.write_text(source, encoding="utf-8")
 
 tests = TESTS.read_text(encoding="utf-8")
@@ -63,4 +74,4 @@ tests = replace_once(
 )
 TESTS.write_text(tests, encoding="utf-8")
 
-print("reconciled wave-6 test ordering and TTL semantics")
+print("reconciled wave-6 exact parsing, test ordering, and TTL semantics")
