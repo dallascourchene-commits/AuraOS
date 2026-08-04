@@ -20,8 +20,14 @@ jobs:
         run: |
           test "$(wc -c < .github/pr255-wave7/payload00.b64)" = "2000"
           test "$(wc -c < .github/pr255-wave7/payload01.b64)" = "2000"
-          test "$(wc -c < .github/pr255-wave7/payload02.b64)" = "1364"
-          cat .github/pr255-wave7/payload*.b64 | base64 -d | gzip -d > /tmp/pr255_wave7_patch.py
+          test "$(wc -c < .github/pr255-wave7/payload02a.b64)" = "682"
+          test "$(wc -c < .github/pr255-wave7/payload02b.b64)" = "682"
+          cat \
+            .github/pr255-wave7/payload00.b64 \
+            .github/pr255-wave7/payload01.b64 \
+            .github/pr255-wave7/payload02a.b64 \
+            .github/pr255-wave7/payload02b.b64 \
+            | base64 -d | gzip -d > /tmp/pr255_wave7_patch.py
           test "$(wc -c < /tmp/pr255_wave7_patch.py)" = "20257"
           echo "08138adf33323342f5f513d8d42cfffe2ccffaa8dd0419651296d97646a650cc  /tmp/pr255_wave7_patch.py" | sha256sum -c -
           python -m py_compile /tmp/pr255_wave7_patch.py
