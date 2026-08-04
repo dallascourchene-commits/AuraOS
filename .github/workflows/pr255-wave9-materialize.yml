@@ -24,7 +24,8 @@ jobs:
           cat .github/pr255-wave9/payload*.b64 | base64 -d | gzip -d > /tmp/pr255_wave9_apply.py
           test "$(wc -c < /tmp/pr255_wave9_apply.py)" = "29528"
           echo "806969ffcb51e6275017b71cdeefdde12d063692d9446dcf6e6078f2c0081b0b  /tmp/pr255_wave9_apply.py" | sha256sum -c -
-          python -m py_compile /tmp/pr255_wave9_apply.py
+          cp .github/pr255-wave9/reconcile.py /tmp/pr255_wave9_reconcile.py
+          python -m py_compile /tmp/pr255_wave9_apply.py /tmp/pr255_wave9_reconcile.py
 
       - name: Checkout exact protected PR head
         run: |
@@ -37,7 +38,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Apply all new review findings
-        run: python /tmp/pr255_wave9_apply.py
+        run: |
+          python /tmp/pr255_wave9_apply.py
+          python /tmp/pr255_wave9_reconcile.py
 
       - name: Restore canonical V1 test owner without expanding PR scope
         run: |
