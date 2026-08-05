@@ -1,0 +1,52 @@
+name: PR255 Architecture Export
+
+on:
+  push:
+    branches:
+      - repair/pr255-architectural-wave12
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Verify source head ancestry
+        run: |
+          git cat-file -e 83f02b2624a61f4be6e87cc9c4e3e625607f08aa^{commit}
+          test "$(git rev-parse HEAD^)" = "83f02b2624a61f4be6e87cc9c4e3e625607f08aa"
+
+      - name: Build bounded architecture slice
+        run: |
+          mkdir -p /tmp/pr255-architecture/.aura /tmp/pr255-architecture/docs /tmp/pr255-architecture/schemas /tmp/pr255-architecture/tests
+          cp README.md /tmp/pr255-architecture/
+          cp .aura/ARCHITECTURE.md /tmp/pr255-architecture/.aura/
+          cp aura_ephemeral_path_policy.py /tmp/pr255-architecture/
+          cp aura_ephemeral_manifest.py /tmp/pr255-architecture/
+          cp aura_ephemeral_runtime.py /tmp/pr255-architecture/
+          cp aura_ephemeral_arena.py /tmp/pr255-architecture/
+          cp aura_ephemeral_lifecycle.py /tmp/pr255-architecture/
+          cp aura_ephemeral_registry.py /tmp/pr255-architecture/
+          cp aura_capability_resolver.py /tmp/pr255-architecture/
+          cp aura_unified_memory_continuity.py /tmp/pr255-architecture/
+          cp aura_ephemeral_workspace_contracts.py /tmp/pr255-architecture/
+          cp docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md /tmp/pr255-architecture/docs/
+          cp schemas/aura_project_context_projection.schema.json /tmp/pr255-architecture/schemas/
+          cp schemas/aura_ephemeral_workspace_recipe.schema.json /tmp/pr255-architecture/schemas/
+          cp schemas/aura_multimodal_spatial_observation.schema.json /tmp/pr255-architecture/schemas/
+          cp tests/test_aura_ephemeral_workspace_contracts.py /tmp/pr255-architecture/tests/
+          cp .aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json /tmp/pr255-architecture/.aura/
+          cp .aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json /tmp/pr255-architecture/.aura/
+          find /tmp/pr255-architecture -type f -print0 | sort -z | xargs -0 sha256sum > /tmp/pr255-architecture/SHA256SUMS
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr255-architecture-slice
+          path: /tmp/pr255-architecture
+          if-no-files-found: error
+          retention-days: 1
