@@ -194,7 +194,7 @@
         "canonical_ref": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001f]*$",
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
           "type": "string"
         },
         "digest": {
@@ -236,13 +236,13 @@
             "description": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
+              "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
               "type": "string"
             },
             "evidence_class": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
+              "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
               "type": "string"
             },
             "legacy_manifest_digest": {
@@ -266,19 +266,19 @@
             "media_type": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
+              "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
               "type": "string"
             },
             "note": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
+              "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
               "type": "string"
             },
             "relation": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
+              "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
               "type": "string"
             },
             "source_digest": {
@@ -288,19 +288,19 @@
             "source_path": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\.[eE][nN][vV])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS])(?!.*\\.[kK][eE][yY])(?!.*\\.[pP][eE][mM])(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[sS][sS][hH])[^\\u0000-\\u001f]+$",
+              "pattern": "^(?!\\s)(?!.*\\s$)(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\.[eE][nN][vV])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS])(?!.*\\.[kK][eE][yY])(?!.*\\.[pP][eE][mM])(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[sS][sS][hH])[^\\u0000-\\u001f]+$",
               "type": "string"
             },
             "source_span": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
+              "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
               "type": "string"
             },
             "symbol": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
+              "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
               "type": "string"
             },
             "wrapped_not_replaced": {
@@ -365,13 +365,13 @@
         "description": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001f]*$",
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
           "type": "string"
         },
         "evidence_class": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001f]*$",
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
           "type": "string"
         },
         "legacy_manifest_digest": {
@@ -395,19 +395,19 @@
         "media_type": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001f]*$",
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
           "type": "string"
         },
         "note": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001f]*$",
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
           "type": "string"
         },
         "relation": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001f]*$",
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
           "type": "string"
         },
         "source_digest": {
@@ -417,19 +417,19 @@
         "source_path": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\.[eE][nN][vV])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS])(?!.*\\.[kK][eE][yY])(?!.*\\.[pP][eE][mM])(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[sS][sS][hH])[^\\u0000-\\u001f]+$",
+          "pattern": "^(?!\\s)(?!.*\\s$)(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\.[eE][nN][vV])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS])(?!.*\\.[kK][eE][yY])(?!.*\\.[pP][eE][mM])(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[sS][sS][hH])[^\\u0000-\\u001f]+$",
           "type": "string"
         },
         "source_span": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001f]*$",
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
           "type": "string"
         },
         "symbol": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001f]*$",
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
           "type": "string"
         },
         "wrapped_not_replaced": {
@@ -553,7 +553,7 @@
     },
     "speech_text": {
       "maxLength": 512,
-      "pattern": "^[^\\u0000-\\u001f]*$",
+      "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
       "type": "string"
     },
     "target_candidates": {
@@ -613,7 +613,8 @@
   "type": "object",
   "x-aura-semantic-delegations": {
     "source_span_ordering": "mandatory semantic validator",
-    "utf8_byte_ceilings": "mandatory semantic validator"
+    "utf8_byte_ceilings": "mandatory semantic validator",
+    "canonical_serialized_ordering": "mandatory semantic validator"
   },
   "x-aura-semantic-invariants": [
     "record digest verification",
@@ -622,7 +623,8 @@
     "complete observation rebinding",
     "UTF-8 byte ceilings",
     "source span ordering delegated to mandatory semantic validation",
-    "independently trusted complete-record rebinding"
+    "independently trusted complete-record rebinding",
+    "canonical serialized ordering delegated to mandatory semantic validation"
   ],
   "x-aura-semantic-requires-independent-binding": true,
   "x-aura-semantic-validator": "aura_ephemeral_workspace_contracts.validate_observation_semantics"

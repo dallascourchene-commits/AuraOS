@@ -37,7 +37,7 @@ A digest proves that a body is internally self-consistent. It does not prove tha
 
 Mappings, nested mappings, nested sequences, dataclasses, enums, and live manifest exports are recursively detached exactly once before validation. The canonicalizer:
 
-- rechecks observed breadth after iteration rather than trusting a custom `len()`;
+- rechecks observed breadth after iteration rather than trusting a custom `len()`, and normalizes malformed mapping-entry length/index protocols to `ValueError`;
 - recursively validates enum values;
 - walks dataclass fields without unbounded `asdict()` recursion;
 - detects recursive/cyclic values and normalizes failures to `ValueError`;
@@ -56,7 +56,7 @@ The recipe does **not** treat that complete legacy body as workspace authority. 
 - source snapshot digest and retained legacy digest;
 - the exact minimal read-only capability basis needed by PR1;
 - empty effective UI capability;
-- effective bounded resource ceilings;
+- effective bounded resource ceilings, with positive legacy `cost_usd` rejected rather than clamped into a zero-cost projection;
 - explicit authority non-escalation.
 
 The resulting `base_manifest_ref` is named `organ-manifest-projection:<digest-prefix>` and carries `source_digest`, `legacy_manifest_digest`, `manifest_version`, and `wrapped_not_replaced: true` metadata. Legacy renderer, audit, telemetry, or other broader V1 grants cannot silently become PR1 authority.
@@ -79,7 +79,7 @@ Serialized adapter/evidence references are structurally exact and current, but t
 
 ### `SpatialReferentBinding` and `MultimodalSpatialObservation`
 
-Referents and observations bind complete scene, session, entity, evidence, target, parent-event, modality, transcript, and temporal identities. Raw sensor payloads are not representable in the metadata contract. Temporal windows are ordered and limited to 60 seconds.
+Referents and observations bind complete scene, session, entity, evidence, target, parent-event, modality, transcript, and temporal identities. Target binding IDs, entity IDs, and evidence-reference IDs must each be unique before an observation digest is signed. Raw sensor payloads are not representable in the metadata contract. Temporal windows are ordered and limited to 60 seconds.
 
 ### `AuthorityEnvelope`
 
@@ -100,9 +100,9 @@ Unknown keys, nested structures, authority aliases, raw camera/audio/joint/gaze/
 
 ## Schema and semantic boundary
 
-The three Draft 2020-12 schemas enforce exact local shape, fixed authority and owner constants, closed metadata, exact digest formats, bounded arrays/numbers, source-path restrictions, and frozen recipe constants.
+The three Draft 2020-12 schemas enforce exact local shape, fixed authority and owner constants, closed metadata, exact digest formats, bounded arrays/numbers, no surrounding whitespace in bounded text, source-path restrictions, and frozen recipe constants.
 
-Cross-record identity, graph, digest equality, timestamp arithmetic, transcript binding, and complete admission require executable semantic validation. All three schemas declare `x-aura-semantic-requires-independent-binding: true`. UTF-8 byte ceilings and source-span ordering (`line_start <= line_end`) are explicitly delegated to the named mandatory semantic validator because Draft 2020-12 counts code points and cannot compare sibling numeric fields.
+Cross-record identity, graph, digest equality, timestamp arithmetic, transcript binding, canonical serialized array ordering, and complete admission require executable semantic validation. All three schemas declare `x-aura-semantic-requires-independent-binding: true`. UTF-8 byte ceilings, source-span ordering (`line_start <= line_end`), and canonical serialized ordering are explicitly delegated to the named mandatory semantic validator because Draft 2020-12 counts code points, cannot compare sibling numeric fields, and cannot express deterministic ordering across independently identified records.
 
 Consumers must run both schema validation and the named validator:
 

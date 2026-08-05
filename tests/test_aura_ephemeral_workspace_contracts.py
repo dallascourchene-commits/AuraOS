@@ -152,6 +152,21 @@ def expected_observation_evidence(value: MultimodalSpatialObservation) -> dict[s
     return {item.evidence_ref.reference_id: item.evidence_ref.to_dict() for item in value.target_candidates}
 
 
+def _reidentified_recipe_payload(payload: Mapping[str, Any]) -> dict[str, Any]:
+    """Recompute one mutated recipe's behavior-derived ID and integrity digest."""
+    result = copy.deepcopy(dict(payload))
+    identity_body = {
+        key: value
+        for key, value in result.items()
+        if key not in {"recipe_id", "recipe_digest"}
+    }
+    result["recipe_id"] = workspace_contracts._compiled_recipe_id(identity_body)
+    digest_body = dict(result)
+    digest_body.pop("recipe_digest")
+    result["recipe_digest"] = stable_digest(digest_body)
+    return result
+
+
 def test_v1_manifest_is_unchanged_when_wrapped_and_serialized_mapping_is_verified() -> None:
     """Wrapping must preserve V1 bytes and reject altered serialized snapshots."""
     manifest = create_manifest("Inspect the exact bounded project", organ_id="EORG-v1-compat")
@@ -434,11 +449,8 @@ def test_recipe_lifetime_budget_resource_ceiling_and_identity_are_fully_bound(
         organ_id="EORG-bound-lifetime",
         ttl_seconds=10,
     )
-    monkeypatch.setattr(
-        workspace_contracts.time,
-        "time",
-        lambda: manifest.expires_at - 2.5,
-    )
+    fixed_now = manifest.expires_at - 2.5
+    monkeypatch.setattr(workspace_contracts.time, "time", lambda: fixed_now)
     short, _ = recipe(ttl_seconds=300, manifest=manifest)
     assert short.ttl_seconds == 2
     assert short.budgets.wall_time_ms <= 2_000
@@ -482,6 +494,18 @@ def test_recipe_lifetime_budget_resource_ceiling_and_identity_are_fully_bound(
 def test_observation_temporal_transcript_inputs_targets_and_evidence_fail_closed() -> None:
     """Cross-field multimodal bindings must be exact, bounded, and current."""
     base = observation()
+    duplicate_entity_target = replace(
+        base.target_candidates[0],
+        binding_id="binding:duplicate-entity",
+        evidence_ref=ref("evidence:duplicate-entity", D["5"]),
+        binding_digest="",
+    )
+    with pytest.raises(ValueError, match="unique target entity IDs"):
+        replace(
+            base,
+            target_candidates=(base.target_candidates[0], duplicate_entity_target),
+            observation_digest="",
+        )
     with pytest.raises(ValueError, match="invalid temporal"):
         replace(base, temporal_window_start_ms=1000, temporal_window_end_ms=999, observation_digest="")
     with pytest.raises(ValueError, match="invalid temporal"):
@@ -703,7 +727,10 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     unsafe_lease.arena_lease["allowed_actions"] = ["shell"]
     unsafe_lease.arena_lease["mode"] = "read_write"
     unsafe_lease.phase_hash = unsafe_lease.compute_digest()
-    with pytest.raises(ValueError, match="arena_lease"):
+    with pytest.raises(
+        ValueError,
+        match="arena_lease allowed actions disagree with grants",
+    ):
         compile_coding_spatial_workspace_recipe(
             base_manifest=unsafe_lease,
             expected_manifest_timestamps=_trusted_manifest_timestamps(unsafe_lease),
@@ -736,6 +763,20 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
         compile_coding_spatial_workspace_recipe(
             base_manifest=huge_cost,
             expected_manifest_timestamps=_trusted_manifest_timestamps(huge_cost),
+            project_projection=project(),
+            expected_project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+    paid_cost = create_manifest("Reject paid legacy budget", organ_id="EORG-paid-cost")
+    paid_cost.resource_budget["cost_usd"] = 0.01
+    paid_cost.phase_hash = paid_cost.compute_digest()
+    with pytest.raises(ValueError, match="paid cost authority must remain disabled"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=paid_cost,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(paid_cost),
             project_projection=project(),
             expected_project_projection=project(),
             canonical_intent_digest=D["1"],
@@ -877,11 +918,7 @@ def test_recipe_binding_revalidates_complete_manifest_and_dependency_identities(
     original, _ = recipe()
     altered_payload = original.to_dict()
     altered_payload["adapter_refs"][0]["owner"] = "attacker.owner"
-    identity_body = {key: value for key, value in altered_payload.items() if key not in {"recipe_id", "recipe_digest"}}
-    altered_payload["recipe_id"] = f"workspace-recipe:{stable_digest(identity_body)[:24]}"
-    digest_body = dict(altered_payload)
-    digest_body.pop("recipe_digest")
-    altered_payload["recipe_digest"] = stable_digest(digest_body)
+    altered_payload = _reidentified_recipe_payload(altered_payload)
     altered = EphemeralWorkspaceRecipe.from_dict(altered_payload)
     with pytest.raises(ValueError, match="stale adapter reference"):
         altered.validate_bindings(
@@ -1175,14 +1212,7 @@ def test_review_wave7_exact_referent_and_complete_recipe_observation_bindings() 
     )
     changed_payload = r.to_dict()
     changed_payload["budgets"] = changed_budget.to_dict()
-    identity_body = {
-        key: value for key, value in changed_payload.items()
-        if key not in {"recipe_id", "recipe_digest"}
-    }
-    changed_payload["recipe_id"] = f"workspace-recipe:{stable_digest(identity_body)[:24]}"
-    digest_body = dict(changed_payload)
-    digest_body.pop("recipe_digest")
-    changed_payload["recipe_digest"] = stable_digest(digest_body)
+    changed_payload = _reidentified_recipe_payload(changed_payload)
     changed_recipe = EphemeralWorkspaceRecipe.from_dict(changed_payload)
     with pytest.raises(ValueError, match="complete recipe identity"):
         changed_recipe.validate_bindings(
@@ -1422,7 +1452,13 @@ def test_review_wave10_bounded_policy_parity_fail_closed() -> None:
         "config/passwords.txt",
         "config/client.pem",
     ):
-        with pytest.raises(ValueError):
+        with pytest.raises(
+            ValueError,
+            match=(
+                "repository-relative POSIX path|unsafe path segment|"
+                "targets a path forbidden"
+            ),
+        ):
             ref(
                 f"artifact:unsafe-source-{stable_digest(unsafe_path)[:12]}",
                 D["1"],
@@ -1616,15 +1652,7 @@ def test_structural_trust_boundary_parse_bind_admit_is_explicit() -> None:
 
     redirected_payload = admitted.to_dict()
     redirected_payload["adapter_refs"][0]["owner"] = "attacker.owner"
-    identity_body = {
-        key: value
-        for key, value in redirected_payload.items()
-        if key not in {"recipe_id", "recipe_digest"}
-    }
-    redirected_payload["recipe_id"] = f"workspace-recipe:{stable_digest(identity_body)[:24]}"
-    digest_body = dict(redirected_payload)
-    digest_body.pop("recipe_digest")
-    redirected_payload["recipe_digest"] = stable_digest(digest_body)
+    redirected_payload = _reidentified_recipe_payload(redirected_payload)
     redirected = EphemeralWorkspaceRecipe.from_dict(redirected_payload)
     with pytest.raises(ValueError, match="complete recipe identity"):
         validate_recipe_semantics(
@@ -1786,6 +1814,31 @@ def test_observed_breadth_and_hostile_metadata_protocols_fail_closed() -> None:
     with pytest.raises(ValueError, match="invalid item count"):
         workspace_contracts._metadata(BrokenLengthMapping(), "metadata")
 
+    class BrokenPair(Sequence[Any]):
+        def __getitem__(self, index: int) -> Any:
+            return ("key", "value")[index]
+
+        def __len__(self) -> int:
+            raise TypeError("hostile pair length")
+
+    class BrokenPairMapping(Mapping[str, Any]):
+        def __getitem__(self, key: str) -> Any:
+            raise KeyError(key)
+
+        def __iter__(self):
+            return iter(())
+
+        def __len__(self) -> int:
+            return 1
+
+        def items(self):
+            return (BrokenPair(),)
+
+    with pytest.raises(ValueError, match="entries must be key/value pairs"):
+        workspace_contracts._bounded_mapping_snapshot(
+            BrokenPairMapping(), "hostile mapping", 1
+        )
+
 
 def test_schema_delegation_matches_canonical_path_and_text_policy() -> None:
     """Schemas mirror local constraints and explicitly delegate cross-field ordering."""
@@ -1800,6 +1853,7 @@ def test_schema_delegation_matches_canonical_path_and_text_policy() -> None:
         invariants = schema["x-aura-semantic-invariants"]
         assert "UTF-8 byte ceilings" in invariants
         assert "source span ordering delegated to mandatory semantic validation" in invariants
+        assert "canonical serialized ordering delegated to mandatory semantic validation" in invariants
         patterns: list[str] = []
 
         def collect(value: Any) -> None:
@@ -1824,13 +1878,46 @@ def test_schema_delegation_matches_canonical_path_and_text_policy() -> None:
     project_schema = json.loads(
         (ROOT / "schemas" / "aura_project_context_projection.schema.json").read_text()
     )
-    malformed_ref = copy.deepcopy(p.to_dict())
-    malformed_ref["repository_identity"]["ref"] = "main\nredirect"
-    error_paths = {
-        tuple(error.absolute_path)
-        for error in Draft202012Validator(project_schema).iter_errors(malformed_ref)
-    }
-    assert ("repository_identity", "ref") in error_paths
+    for malformed_value in ("main\nredirect", " refs/heads/main", "refs/heads/main "):
+        malformed_ref = copy.deepcopy(p.to_dict())
+        malformed_ref["repository_identity"]["ref"] = malformed_value
+        error_paths = {
+            tuple(error.absolute_path)
+            for error in Draft202012Validator(project_schema).iter_errors(malformed_ref)
+        }
+        assert ("repository_identity", "ref") in error_paths
+
+    text_schema_cases = (
+        (
+            project_schema,
+            p.to_dict(),
+            ("project_ref",),
+        ),
+        (
+            json.loads(
+                (ROOT / "schemas/aura_ephemeral_workspace_recipe.schema.json").read_text()
+            ),
+            recipe()[0].to_dict(),
+            ("adapter_refs", 0, "canonical_ref"),
+        ),
+        (
+            json.loads(
+                (ROOT / "schemas/aura_multimodal_spatial_observation.schema.json").read_text()
+            ),
+            observation().to_dict(),
+            ("speech_text",),
+        ),
+    )
+    for validator_schema, payload, path in text_schema_cases:
+        current: Any = payload
+        for part in path[:-1]:
+            current = current[part]
+        current[path[-1]] = f" {current[path[-1]]}"
+        error_paths = {
+            tuple(error.absolute_path)
+            for error in Draft202012Validator(validator_schema).iter_errors(payload)
+        }
+        assert path in error_paths
 
     reversed_span = p.to_dict()
     reversed_span["artifact_evidence_refs"][0]["metadata"] = {
@@ -1841,6 +1928,16 @@ def test_schema_delegation_matches_canonical_path_and_text_policy() -> None:
     assert not list(Draft202012Validator(project_schema).iter_errors(reversed_span))
     with pytest.raises(ValueError, match="source line range is reversed"):
         validate_project_semantics(reversed_span, expected_projection=p)
+
+    canonical_recipe, _ = recipe()
+    reversed_recipe = canonical_recipe.to_dict()
+    reversed_recipe["adapter_refs"] = list(reversed(reversed_recipe["adapter_refs"]))
+    recipe_schema = json.loads(
+        (ROOT / "schemas/aura_ephemeral_workspace_recipe.schema.json").read_text()
+    )
+    assert not list(Draft202012Validator(recipe_schema).iter_errors(reversed_recipe))
+    with pytest.raises(ValueError, match="canonical serialized"):
+        EphemeralWorkspaceRecipe.from_dict(reversed_recipe)
 
 
 def test_enum_unicode_failures_are_normalized_to_value_error() -> None:

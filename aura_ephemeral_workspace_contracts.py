@@ -145,13 +145,19 @@ def _bounded_mapping_snapshot(value: Any, name: str, max_items: int) -> tuple[tu
     result: list[tuple[Any, Any]] = []
     try:
         for item in value.items():
-            if (
-                isinstance(item, (str, bytes, bytearray))
-                or not isinstance(item, Sequence)
-                or len(item) != 2
-            ):
+            if isinstance(item, (str, bytes, bytearray)) or not isinstance(item, Sequence):
                 raise ValueError(f"{name} entries must be key/value pairs")
-            result.append((item[0], item[1]))
+            try:
+                pair_length = len(item)
+            except (TypeError, OverflowError) as exc:
+                raise ValueError(f"{name} entries must be key/value pairs") from exc
+            if pair_length != 2:
+                raise ValueError(f"{name} entries must be key/value pairs")
+            try:
+                key, item_value = item[0], item[1]
+            except (IndexError, KeyError, TypeError, OverflowError) as exc:
+                raise ValueError(f"{name} entries must be key/value pairs") from exc
+            result.append((key, item_value))
             if len(result) > max_items:
                 raise ValueError(f"{name} exceeds its item ceiling")
     except RecursionError as exc:
@@ -1363,6 +1369,9 @@ class MultimodalSpatialObservation:
         )
         if len({target.binding_id for target in targets}) != len(targets):
             raise ValueError("observation requires unique target binding IDs")
+        entity_ids = [target.entity_id for target in targets]
+        if len(set(entity_ids)) != len(entity_ids):
+            raise ValueError("observation requires unique target entity IDs")
         evidence_ids = [target.evidence_ref.reference_id for target in targets]
         if len(set(evidence_ids)) != len(evidence_ids):
             raise ValueError("observation requires unique evidence reference IDs")
@@ -1517,6 +1526,8 @@ def _manifest_resource_limits(body: Mapping[str, Any]) -> dict[str, int]:
     integer_fields = ("wall_time_ms", "memory_mb", "output_bytes", "tool_calls", "model_calls", "network_calls")
     limits = {name: _int(raw.get(name), f"base manifest resource_budget.{name}", 0, MAX_INTEGER) for name in integer_fields}
     cost_usd = _finite_number(raw.get("cost_usd"), "base manifest resource_budget.cost_usd")
+    if cost_usd > 0:
+        raise ValueError("base manifest paid cost authority must remain disabled")
     maximum_cost_usd = MAX_INTEGER / 1_000_000
     if cost_usd > maximum_cost_usd:
         raise ValueError(
