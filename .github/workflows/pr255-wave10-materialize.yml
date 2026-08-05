@@ -1,0 +1,110 @@
+name: PR255 Wave10 Materialize
+
+on:
+  push:
+    branches:
+      - repair/pr255-review-wave10
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Preserve and compile repair payload
+        run: |
+          cp .github/pr255-wave10/apply.py /tmp/pr255_wave10_apply.py
+          python -m py_compile /tmp/pr255_wave10_apply.py
+
+      - name: Checkout exact protected PR head
+        run: |
+          current="$(git ls-remote origin refs/heads/refactor/intent-native-spatial-workspace-pr1 | cut -f1)"
+          test "$current" = "e10c7d45ee33353ed9c3e9a18eb60a4d72ddb40e"
+          echo "$current" > /tmp/pr255-current-head
+          git fetch --no-tags --depth=1 origin e10c7d45ee33353ed9c3e9a18eb60a4d72ddb40e
+          git checkout -B refactor/intent-native-spatial-workspace-pr1 FETCH_HEAD
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Apply all new review findings
+        run: python /tmp/pr255_wave10_apply.py
+
+      - name: Restore canonical V1 test owner without expanding PR scope
+        run: |
+          curl --fail --silent --show-error --location \
+            https://raw.githubusercontent.com/dallascourchene-commits/AuraOS/main/aura_ephemeral_manifest.py \
+            --output aura_ephemeral_manifest.py
+          test "$(git hash-object aura_ephemeral_manifest.py)" = "7a43cfdf9a470cf7ec370158373c2a6d4c3ae8c9"
+
+      - name: Install focused verification tools
+        run: python -m pip install --disable-pip-version-check pytest jsonschema ruff
+
+      - name: Compile and lint
+        run: |
+          python -m py_compile aura_ephemeral_manifest.py aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+          ruff check --select F401,F821,F841 aura_ephemeral_manifest.py aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+
+      - name: Run complete focused regression suite
+        run: |
+          python -m pytest -q tests/test_aura_ephemeral_workspace_contracts.py | tee /tmp/pytest.txt
+          grep -Eq '26 passed' /tmp/pytest.txt
+
+      - name: Validate schemas and JSON documents
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          for path in (
+              "schemas/aura_project_context_projection.schema.json",
+              "schemas/aura_ephemeral_workspace_recipe.schema.json",
+              "schemas/aura_multimodal_spatial_observation.schema.json",
+          ):
+              Draft202012Validator.check_schema(json.loads(Path(path).read_text()))
+          for path in (
+              ".aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json",
+              ".aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json",
+          ):
+              json.loads(Path(path).read_text())
+          print("schemas and JSON documents validated")
+          PY
+
+      - name: Audit exact repair and PR scope
+        run: |
+          git diff --name-only e10c7d45ee33353ed9c3e9a18eb60a4d72ddb40e | sort > /tmp/actual.txt
+          cat > /tmp/expected.txt <<'EOF'
+          aura_ephemeral_workspace_contracts.py
+          docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md
+          schemas/aura_ephemeral_workspace_recipe.schema.json
+          schemas/aura_multimodal_spatial_observation.schema.json
+          schemas/aura_project_context_projection.schema.json
+          tests/test_aura_ephemeral_workspace_contracts.py
+          EOF
+          diff -u /tmp/expected.txt /tmp/actual.txt
+          git fetch --no-tags --depth=1 origin 879b5fb056b70d150b1646e082223330a36c2912
+          git diff --exit-code 879b5fb056b70d150b1646e082223330a36c2912 -- \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json \
+            Aura_Memory/live_topology_ast.json
+          test "$(git diff --name-only 879b5fb056b70d150b1646e082223330a36c2912 | wc -l)" = "8"
+
+      - name: Publish one clean repair commit
+        run: |
+          git add \
+            aura_ephemeral_workspace_contracts.py \
+            docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md \
+            schemas/aura_ephemeral_workspace_recipe.schema.json \
+            schemas/aura_multimodal_spatial_observation.schema.json \
+            schemas/aura_project_context_projection.schema.json \
+            tests/test_aura_ephemeral_workspace_contracts.py
+          git commit -m "fix(pr1): close wave10 review findings"
+          current="$(cat /tmp/pr255-current-head)"
+          git push origin HEAD:refs/heads/refactor/intent-native-spatial-workspace-pr1 \
+            --force-with-lease=refs/heads/refactor/intent-native-spatial-workspace-pr1:"$current"
