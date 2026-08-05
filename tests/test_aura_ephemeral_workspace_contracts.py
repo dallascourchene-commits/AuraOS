@@ -1944,3 +1944,132 @@ def test_enum_unicode_failures_are_normalized_to_value_error() -> None:
     """Recursive Enum canonicalization preserves the public fail-closed exception type."""
     with pytest.raises(ValueError, match="valid Unicode scalar values"):
         stable_digest(_SurrogateEnum.BAD)
+
+
+def test_hostile_container_protocol_callbacks_fail_closed_at_shared_boundaries() -> None:
+    """Accepted hostile containers must not leak protocol-specific exceptions."""
+    class ItemsRaisesMapping(Mapping[str, Any]):
+        def __getitem__(self, key: str) -> Any:
+            raise KeyError(key)
+
+        def __iter__(self):
+            return iter(())
+
+        def __len__(self) -> int:
+            return 0
+
+        def items(self):
+            raise TypeError("hostile items export")
+
+    class ItemsIteratorRaisesMapping(Mapping[str, Any]):
+        def __getitem__(self, key: str) -> Any:
+            raise KeyError(key)
+
+        def __iter__(self):
+            return iter(())
+
+        def __len__(self) -> int:
+            return 1
+
+        def items(self):
+            class BrokenIterator:
+                def __iter__(self):
+                    return self
+
+                def __next__(self):
+                    raise OverflowError("hostile items iterator")
+
+            return BrokenIterator()
+
+    class SequenceIteratorRaises(Sequence[Any]):
+        def __getitem__(self, index: int) -> Any:
+            raise OverflowError("hostile sequence iterator")
+
+        def __len__(self) -> int:
+            return 1
+
+    class PairLengthRaises(Sequence[Any]):
+        def __getitem__(self, index: int) -> Any:
+            return ("architecture", "aura_coding_relationship_compass")[index]
+
+        def __len__(self) -> int:
+            raise TypeError("hostile pair length")
+
+    for mapping in (ItemsRaisesMapping(), ItemsIteratorRaisesMapping()):
+        with pytest.raises(ValueError, match="mapping export protocol"):
+            workspace_contracts._bounded_mapping_snapshot(mapping, "hostile mapping", 2)
+    with pytest.raises(ValueError, match="sequence protocol"):
+        workspace_contracts._bounded_sequence_snapshot(
+            SequenceIteratorRaises(), "hostile sequence", 2
+        )
+    with pytest.raises(ValueError, match="key/value pair"):
+        workspace_contracts._bounded_pair_snapshot(PairLengthRaises(), "hostile pair")
+    with pytest.raises(ValueError, match="metadata entries must be key/value pairs"):
+        workspace_contracts._metadata((PairLengthRaises(),), "metadata")
+    with pytest.raises(ValueError, match="handoff map entries must be key/owner pairs"):
+        workspace_contracts._owner_map((PairLengthRaises(),))
+
+
+def test_compiler_timestamp_binding_is_a_bounded_detached_sequence() -> None:
+    """Trusted timestamp protocols must fail closed before indexed access."""
+    class TimestampIndexRaises(Sequence[Any]):
+        def __getitem__(self, index: int) -> Any:
+            raise TypeError("hostile timestamp index")
+
+        def __len__(self) -> int:
+            return 2
+
+    manifest = create_manifest(
+        "Reject hostile trusted timestamp protocols",
+        organ_id="EORG-hostile-timestamp-binding",
+    )
+    with pytest.raises(ValueError, match="trusted timestamp bindings"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=manifest,
+            expected_manifest_timestamps=TimestampIndexRaises(),
+            project_projection=project(),
+            expected_project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+
+def test_detached_snapshot_bounds_object_keys_before_using_them_in_paths() -> None:
+    """Unknown object keys receive the same scalar/Unicode guard as values."""
+    oversized_key = "k" * (workspace_contracts.MAX_CANONICAL_SCALAR_BYTES + 1)
+    with pytest.raises(ValueError, match="key exceeds its scalar byte ceiling"):
+        workspace_contracts._detached_json_snapshot({oversized_key: 1}, "payload")
+    with pytest.raises(ValueError, match="valid Unicode scalar values"):
+        workspace_contracts._detached_json_snapshot({"\ud800": 1}, "payload")
+
+
+def test_schema_delegations_name_all_remaining_public_boundary_semantics() -> None:
+    """Schema-only consumers must be told which rejections require admission code."""
+    expected = {
+        "aura_project_context_projection.schema.json": {
+            "current_and_bounded_freshness_admission",
+            "unicode_scalar_validation",
+        },
+        "aura_ephemeral_workspace_recipe.schema.json": {
+            "reference_id_uniqueness_across_adapter_and_evidence_refs",
+            "manifest_reference_identity_digest_prefix_binding",
+            "unicode_scalar_validation",
+        },
+        "aura_multimodal_spatial_observation.schema.json": {
+            "transcript_digest_equality",
+            "target_binding_entity_evidence_id_uniqueness",
+            "unicode_scalar_validation",
+        },
+    }
+    for filename, required_delegations in expected.items():
+        schema = json.loads((ROOT / "schemas" / filename).read_text(encoding="utf-8"))
+        delegations = schema["x-aura-semantic-delegations"]
+        assert required_delegations <= set(delegations)
+        assert all(
+            delegations[name] == "mandatory semantic validator"
+            for name in required_delegations
+        )
+        invariants = "\n".join(schema["x-aura-semantic-invariants"])
+        assert "Unicode scalar validation delegated" in invariants
+

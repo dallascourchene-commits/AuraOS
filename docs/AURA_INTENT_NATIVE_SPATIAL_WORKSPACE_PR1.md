@@ -37,7 +37,7 @@ A digest proves that a body is internally self-consistent. It does not prove tha
 
 Mappings, nested mappings, nested sequences, dataclasses, enums, and live manifest exports are recursively detached exactly once before validation. The canonicalizer:
 
-- rechecks observed breadth after iteration rather than trusting a custom `len()`, and normalizes malformed mapping-entry length/index protocols to `ValueError`;
+- rechecks observed breadth after iteration rather than trusting a custom `len()`, and normalizes hostile sequence iteration, mapping export/iteration, and pair length/index protocols to `ValueError`;
 - recursively validates enum values;
 - walks dataclass fields without unbounded `asdict()` recursion;
 - detects recursive/cyclic values and normalizes failures to `ValueError`;
@@ -102,7 +102,7 @@ Unknown keys, nested structures, authority aliases, raw camera/audio/joint/gaze/
 
 The three Draft 2020-12 schemas enforce exact local shape, fixed authority and owner constants, closed metadata, exact digest formats, bounded arrays/numbers, no surrounding whitespace in bounded text, source-path restrictions, and frozen recipe constants.
 
-Cross-record identity, graph, digest equality, timestamp arithmetic, transcript binding, canonical serialized array ordering, and complete admission require executable semantic validation. All three schemas declare `x-aura-semantic-requires-independent-binding: true`. UTF-8 byte ceilings, source-span ordering (`line_start <= line_end`), and canonical serialized ordering are explicitly delegated to the named mandatory semantic validator because Draft 2020-12 counts code points, cannot compare sibling numeric fields, and cannot express deterministic ordering across independently identified records.
+Cross-record identity, graph, digest equality, timestamp arithmetic, transcript equality, freshness admission, reference-ID uniqueness, manifest digest-prefix identity, target identity uniqueness, canonical serialized array ordering, Unicode scalar validity, and complete admission require executable semantic validation. All three schemas declare `x-aura-semantic-requires-independent-binding: true`. Each non-structural rejection is named in `x-aura-semantic-delegations`; UTF-8 byte ceilings, Unicode scalar validity, source-span ordering (`line_start <= line_end`), cross-record uniqueness/equality, freshness, digest-prefix identity, and canonical ordering are enforced by the named mandatory semantic validator rather than falsely claimed as Draft 2020-12 structure.
 
 Consumers must run both schema validation and the named validator:
 
@@ -112,7 +112,7 @@ Consumers must run both schema validation and the named validator:
 
 ## Focused verification
 
-The focused suite contains **33 tests** covering the original review waves plus the structural repair:
+The focused suite contains **37 tests** covering the original review waves plus the structural repair:
 
 - exact V1 object and serialized compatibility;
 - recursive single-snapshot live/custom mapping and nested-sequence behavior;

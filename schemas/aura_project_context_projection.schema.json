@@ -576,7 +576,9 @@
   "x-aura-semantic-delegations": {
     "source_span_ordering": "mandatory semantic validator",
     "utf8_byte_ceilings": "mandatory semantic validator",
-    "canonical_serialized_ordering": "mandatory semantic validator"
+    "canonical_serialized_ordering": "mandatory semantic validator",
+    "current_and_bounded_freshness_admission": "mandatory semantic validator",
+    "unicode_scalar_validation": "mandatory semantic validator"
   },
   "x-aura-semantic-invariants": [
     "complete canonical continuity ownership",
@@ -586,7 +588,9 @@
     "UTF-8 byte ceilings",
     "source span ordering delegated to mandatory semantic validation",
     "independently trusted complete-record rebinding",
-    "canonical serialized ordering delegated to mandatory semantic validation"
+    "canonical serialized ordering delegated to mandatory semantic validation",
+    "project and nested reference current/bounded freshness delegated to mandatory semantic validation",
+    "Unicode scalar validation delegated to mandatory semantic validation"
   ],
   "x-aura-semantic-requires-independent-binding": true,
   "x-aura-semantic-validator": "aura_ephemeral_workspace_contracts.validate_project_semantics"

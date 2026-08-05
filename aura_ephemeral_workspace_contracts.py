@@ -119,7 +119,7 @@ _PR1_RESOURCE_CEILINGS = MappingProxyType({
 
 
 def _bounded_sequence_snapshot(value: Any, name: str, max_items: int) -> tuple[Any, ...]:
-    """Detach a sequence once and enforce the observed, not reported, item count."""
+    """Detach a sequence once and normalize hostile iterator protocol failures."""
     if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
         raise ValueError(f"{name} must be a sequence")
     result: list[Any] = []
@@ -128,13 +128,35 @@ def _bounded_sequence_snapshot(value: Any, name: str, max_items: int) -> tuple[A
             result.append(item)
             if len(result) > max_items:
                 raise ValueError(f"{name} exceeds its item ceiling")
+    except (TypeError, OverflowError) as exc:
+        raise ValueError(f"{name} has an invalid sequence protocol") from exc
     except RecursionError as exc:
         raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
     return tuple(result)
 
 
+def _bounded_pair_snapshot(value: Any, name: str) -> tuple[Any, Any]:
+    """Detach one pair-like sequence while normalizing hostile callbacks."""
+    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
+        raise ValueError(f"{name} must be a key/value pair")
+    try:
+        pair_length = len(value)
+    except (TypeError, OverflowError) as exc:
+        raise ValueError(f"{name} must be a key/value pair") from exc
+    except RecursionError as exc:
+        raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
+    if pair_length != 2:
+        raise ValueError(f"{name} must be a key/value pair")
+    try:
+        return value[0], value[1]
+    except (IndexError, KeyError, TypeError, OverflowError) as exc:
+        raise ValueError(f"{name} must be a key/value pair") from exc
+    except RecursionError as exc:
+        raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
+
+
 def _bounded_mapping_snapshot(value: Any, name: str, max_items: int) -> tuple[tuple[Any, Any], ...]:
-    """Detach a mapping once and enforce reported and observed item ceilings."""
+    """Detach a mapping once and normalize hostile export/iterator callbacks."""
     if not isinstance(value, Mapping):
         raise ValueError(f"{name} must be an object")
     try:
@@ -142,24 +164,26 @@ def _bounded_mapping_snapshot(value: Any, name: str, max_items: int) -> tuple[tu
             raise ValueError(f"{name} exceeds its item ceiling")
     except (TypeError, OverflowError) as exc:
         raise ValueError(f"{name} has an invalid item count") from exc
+    except RecursionError as exc:
+        raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
+    try:
+        exported_items = value.items()
+    except (TypeError, OverflowError) as exc:
+        raise ValueError(f"{name} has an invalid mapping export protocol") from exc
+    except RecursionError as exc:
+        raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
     result: list[tuple[Any, Any]] = []
     try:
-        for item in value.items():
-            if isinstance(item, (str, bytes, bytearray)) or not isinstance(item, Sequence):
-                raise ValueError(f"{name} entries must be key/value pairs")
+        for item in exported_items:
             try:
-                pair_length = len(item)
-            except (TypeError, OverflowError) as exc:
-                raise ValueError(f"{name} entries must be key/value pairs") from exc
-            if pair_length != 2:
-                raise ValueError(f"{name} entries must be key/value pairs")
-            try:
-                key, item_value = item[0], item[1]
-            except (IndexError, KeyError, TypeError, OverflowError) as exc:
+                key, item_value = _bounded_pair_snapshot(item, f"{name} entry")
+            except ValueError as exc:
                 raise ValueError(f"{name} entries must be key/value pairs") from exc
             result.append((key, item_value))
             if len(result) > max_items:
                 raise ValueError(f"{name} exceeds its item ceiling")
+    except (TypeError, OverflowError) as exc:
+        raise ValueError(f"{name} has an invalid mapping export protocol") from exc
     except RecursionError as exc:
         raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
     return tuple(result)
@@ -392,16 +416,13 @@ def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
         pairs = _bounded_sequence_snapshot(value, name, len(_METADATA_FIELDS))
         normalized_pairs: list[tuple[str, Any]] = []
         for item in pairs:
-            if (
-                isinstance(item, (str, bytes, bytearray))
-                or not isinstance(item, Sequence)
-                or len(item) != 2
-            ):
-                raise ValueError(f"{name} entries must be key/value pairs")
-            key = item[0]
+            try:
+                key, item_value = _bounded_pair_snapshot(item, f"{name} entry")
+            except ValueError as exc:
+                raise ValueError(f"{name} entries must be key/value pairs") from exc
             if not isinstance(key, str):
                 raise ValueError(f"{name} keys must be strings")
-            normalized_pairs.append((key, item[1]))
+            normalized_pairs.append((key, item_value))
         if len({key for key, _ in normalized_pairs}) != len(normalized_pairs):
             raise ValueError(f"{name} keys must be unique")
         candidate = dict(normalized_pairs)
@@ -514,6 +535,14 @@ def _detached_json_snapshot(
             for key, item in pairs:
                 if not isinstance(key, str):
                     raise ValueError(f"{name} keys must be strings")
+                try:
+                    encoded_key = key.encode("utf-8")
+                except UnicodeEncodeError as exc:
+                    raise ValueError(
+                        f"{name} keys must contain valid Unicode scalar values"
+                    ) from exc
+                if len(encoded_key) > MAX_CANONICAL_SCALAR_BYTES:
+                    raise ValueError(f"{name} key exceeds its scalar byte ceiling")
                 if key in result:
                     raise ValueError(f"{name} keys must be unique")
                 result[key] = _detached_json_snapshot(
@@ -1015,9 +1044,11 @@ def _owner_map(value: Any) -> tuple[tuple[str, str], ...]:
         items = _bounded_sequence_snapshot(value, "handoff map", MAX_HANDOFF_OWNERS)
     pairs = []
     for item in items:
-        if isinstance(item, (str, bytes, bytearray)) or not isinstance(item, Sequence) or len(item) != 2:
-            raise ValueError("handoff map entries must be key/owner pairs")
-        pairs.append((_id(item[0], "handoff key"), _id(item[1], "handoff owner")))
+        try:
+            key, owner = _bounded_pair_snapshot(item, "handoff map entry")
+        except ValueError as exc:
+            raise ValueError("handoff map entries must be key/owner pairs") from exc
+        pairs.append((_id(key, "handoff key"), _id(owner, "handoff owner")))
     result = tuple(sorted(pairs))
     if not result or len({key for key, _ in result}) != len(result):
         raise ValueError("handoff map must be non-empty and unique")
@@ -1904,18 +1935,22 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
     manifest_ttl = _int(body.get("ttl_seconds"), "base manifest ttl", 1, MAX_TTL_SECONDS)
     created_at = _finite_number(body.get("created_at"), "base manifest created_at")
     expires_at = _finite_number(body.get("expires_at"), "base manifest expires_at")
-    if (
-        isinstance(expected_manifest_timestamps, (str, bytes, bytearray))
-        or not isinstance(expected_manifest_timestamps, Sequence)
-        or len(expected_manifest_timestamps) != 2
-    ):
+    try:
+        timestamp_binding = _bounded_sequence_snapshot(
+            expected_manifest_timestamps,
+            "expected base manifest timestamps",
+            2,
+        )
+    except ValueError as exc:
+        raise ValueError("base manifest requires trusted timestamp bindings") from exc
+    if len(timestamp_binding) != 2:
         raise ValueError("base manifest requires trusted timestamp bindings")
     expected_created_at = _finite_number(
-        expected_manifest_timestamps[0],
+        timestamp_binding[0],
         "expected base manifest created_at",
     )
     expected_expires_at = _finite_number(
-        expected_manifest_timestamps[1],
+        timestamp_binding[1],
         "expected base manifest expires_at",
     )
     if (created_at, expires_at) != (expected_created_at, expected_expires_at):
