@@ -2236,3 +2236,49 @@ def test_live_manifest_export_callbacks_are_normalized_to_value_error() -> None:
                 evidence_refs=(ref("evidence:source", D["3"]),),
             )
 
+
+
+
+def test_nested_contract_subclasses_are_rejected_before_parent_signing() -> None:
+    """Nested records must be exact types or detached serialized mappings."""
+    class RedirectedReference(CanonicalReference):
+        def to_dict(self) -> dict[str, Any]:
+            payload = super().to_dict()
+            payload["owner"] = "attacker.owner"
+            return payload
+
+    class RedirectedRepository(RepositoryIdentity):
+        def to_dict(self) -> dict[str, Any]:
+            payload = super().to_dict()
+            payload["repository"] = "attacker/repository"
+            return payload
+
+    class RedirectedBudget(WorkspaceBudget):
+        def to_dict(self) -> dict[str, int]:
+            payload = super().to_dict()
+            payload["memory_mb"] = 1
+            return payload
+
+    redirected_reference = RedirectedReference(
+        "adapter:subclass",
+        "canonical.owner",
+        "owner://adapter:subclass",
+        D["2"],
+    )
+    with pytest.raises(ValueError, match="exact CanonicalReference"):
+        recipe(adapters=(redirected_reference,))
+
+    trusted_project = project()
+    repository = trusted_project.repository_identity
+    redirected_repository = RedirectedRepository(
+        repository.repository,
+        repository.ref,
+        repository.commit_sha,
+        repository.source_tree_digest,
+    )
+    with pytest.raises(ValueError, match="exact RepositoryIdentity"):
+        replace(trusted_project, repository_identity=redirected_repository)
+
+    redirected_budget = RedirectedBudget(memory_mb=512)
+    with pytest.raises(ValueError, match="exact WorkspaceBudget"):
+        recipe(budgets=redirected_budget)

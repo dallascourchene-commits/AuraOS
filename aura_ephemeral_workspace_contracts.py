@@ -713,6 +713,17 @@ def _exact_authority_envelope(value: Any, name: str) -> AuthorityEnvelope:
     raise ValueError(f"{name} must be an exact AuthorityEnvelope or serialized object")
 
 
+def _exact_contract_record(value: Any, record_type: type[Any], name: str) -> Any:
+    """Admit an exact contract record or parse one detached serialized mapping."""
+    if type(value) is record_type:
+        return value
+    if isinstance(value, Mapping):
+        return record_type.from_dict(value)
+    raise ValueError(
+        f"{name} must be an exact {record_type.__name__} or serialized object"
+    )
+
+
 @dataclass(frozen=True)
 class CanonicalReference:
     """A digest-bound reference to an existing canonical Aura owner."""
@@ -771,7 +782,9 @@ def _reference_map(value: Any, name: str) -> dict[str, CanonicalReference]:
     result: dict[str, CanonicalReference] = {}
     for supplied_id, raw_reference in _bounded_mapping_snapshot(value, name, MAX_ITEMS):
         reference_id = _id(supplied_id, f"{name} key")
-        reference = raw_reference if isinstance(raw_reference, CanonicalReference) else CanonicalReference.from_dict(raw_reference)
+        reference = _exact_contract_record(
+            raw_reference, CanonicalReference, f"{name} reference"
+        )
         if reference_id != reference.reference_id:
             raise ValueError(f"{name} key/reference mismatch")
         if reference_id in result:
@@ -902,13 +915,25 @@ class ProjectContextProjection:
         object.__setattr__(self, "canonical_owner", canonical_owner)
         object.__setattr__(self, "objective_digest", _digest(self.objective_digest, "project.objective_digest"))
         object.__setattr__(self, "purpose_digest", _digest(self.purpose_digest, "project.purpose_digest"))
-        if not isinstance(self.repository_identity, RepositoryIdentity):
-            object.__setattr__(self, "repository_identity", RepositoryIdentity.from_dict(self.repository_identity))
+        object.__setattr__(
+            self,
+            "repository_identity",
+            _exact_contract_record(
+                self.repository_identity,
+                RepositoryIdentity,
+                "project.repository_identity",
+            ),
+        )
         seen: set[str] = set()
         for name in _REFERENCE_FIELDS:
             raw = getattr(self, name)
             items = _bounded_sequence_snapshot(raw, f"project.{name}", MAX_ITEMS)
-            refs = tuple(item if isinstance(item, CanonicalReference) else CanonicalReference.from_dict(item) for item in items)
+            refs = tuple(
+                _exact_contract_record(
+                    item, CanonicalReference, f"project.{name} item"
+                )
+                for item in items
+            )
             for reference in refs:
                 if reference.truth_class != "EXACT":
                     raise ValueError("project references must use EXACT canonical truth")
@@ -1092,7 +1117,7 @@ def _refs(value: Any, name: str, *, require_current: bool = False) -> tuple[Cano
     if not items:
         raise ValueError(f"{name} must be a non-empty bounded sequence")
     result = tuple(
-        item if isinstance(item, CanonicalReference) else CanonicalReference.from_dict(item)
+        _exact_contract_record(item, CanonicalReference, f"{name} item")
         for item in items
     )
     if len({item.reference_id for item in result}) != len(result):
@@ -1201,8 +1226,15 @@ class EphemeralWorkspaceRecipe:
         """Validate graph, owners, lifecycle, resources, and frozen profile."""
         object.__setattr__(self, "recipe_id", _id(self.recipe_id, "recipe.recipe_id"))
         object.__setattr__(self, "demonstration_id", _id(self.demonstration_id, "recipe.demonstration_id"))
-        if not isinstance(self.base_manifest_ref, CanonicalReference):
-            object.__setattr__(self, "base_manifest_ref", CanonicalReference.from_dict(self.base_manifest_ref))
+        object.__setattr__(
+            self,
+            "base_manifest_ref",
+            _exact_contract_record(
+                self.base_manifest_ref,
+                CanonicalReference,
+                "recipe.base_manifest_ref",
+            ),
+        )
         if self.base_manifest_ref.owner != "aura_ephemeral_manifest" or self.base_manifest_ref.truth_class != "EXACT" or self.base_manifest_ref.freshness_class not in _CURRENT_FRESHNESS:
             raise ValueError("base manifest reference must be exact, current, and canonically owned")
         _validate_manifest_reference_metadata(self.base_manifest_ref)
@@ -1235,8 +1267,11 @@ class EphemeralWorkspaceRecipe:
         object.__setattr__(self, "adapter_refs", adapters)
         object.__setattr__(self, "evidence_refs", evidence)
         object.__setattr__(self, "domain_owner_handoff_map", _owner_map(self.domain_owner_handoff_map))
-        if not isinstance(self.budgets, WorkspaceBudget):
-            object.__setattr__(self, "budgets", WorkspaceBudget.from_dict(self.budgets))
+        object.__setattr__(
+            self,
+            "budgets",
+            _exact_contract_record(self.budgets, WorkspaceBudget, "recipe.budgets"),
+        )
         if self.budgets.network_calls != 0:
             raise ValueError("recipe budget must keep network_calls at zero")
         if self.budgets.model_calls != 0:
@@ -1351,7 +1386,11 @@ class EphemeralWorkspaceRecipe:
             raise ValueError("stale project projection id")
         if self.project_projection_digest != _digest(expected_project_projection_digest, "expected project projection"):
             raise ValueError("stale project projection digest")
-        expected_manifest = expected_base_manifest_ref if isinstance(expected_base_manifest_ref, CanonicalReference) else CanonicalReference.from_dict(expected_base_manifest_ref)
+        expected_manifest = _exact_contract_record(
+            expected_base_manifest_ref,
+            CanonicalReference,
+            "expected_base_manifest_ref",
+        )
         if self.base_manifest_ref.to_dict() != expected_manifest.to_dict():
             raise ValueError("stale base manifest canonical reference")
         if self.base_manifest_ref.freshness_class not in _CURRENT_FRESHNESS:
@@ -1392,8 +1431,15 @@ class SpatialReferentBinding:
         for name in ("scene_digest", "session_digest", "entity_digest"):
             object.__setattr__(self, name, _digest(getattr(self, name), f"referent.{name}"))
         object.__setattr__(self, "confidence", _prob(self.confidence, "referent.confidence"))
-        if not isinstance(self.evidence_ref, CanonicalReference):
-            object.__setattr__(self, "evidence_ref", CanonicalReference.from_dict(self.evidence_ref))
+        object.__setattr__(
+            self,
+            "evidence_ref",
+            _exact_contract_record(
+                self.evidence_ref,
+                CanonicalReference,
+                "referent.evidence_ref",
+            ),
+        )
         if (
             self.evidence_ref.truth_class != "EXACT"
             or self.evidence_ref.freshness_class not in _CURRENT_FRESHNESS
@@ -2079,10 +2125,8 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
             default_values[name] = min(default_values[name], ceiling)
         default_values["wall_time_ms"] = min(default_values["wall_time_ms"], effective_ttl * 1000)
         budget = WorkspaceBudget.from_dict(default_values)
-    elif isinstance(budgets, WorkspaceBudget):
-        budget = budgets
     else:
-        budget = WorkspaceBudget.from_dict(budgets)
+        budget = _exact_contract_record(budgets, WorkspaceBudget, "budgets")
     budget_values = budget.to_dict()
     for name, ceiling in manifest_limits.items():
         if budget_values[name] > ceiling:
