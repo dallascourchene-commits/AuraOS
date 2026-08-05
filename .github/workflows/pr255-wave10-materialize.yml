@@ -19,7 +19,8 @@ jobs:
       - name: Preserve and compile repair payload
         run: |
           cp .github/pr255-wave10/apply.py /tmp/pr255_wave10_apply.py
-          python -m py_compile /tmp/pr255_wave10_apply.py
+          cp .github/pr255-wave10/reconcile.py /tmp/pr255_wave10_reconcile.py
+          python -m py_compile /tmp/pr255_wave10_apply.py /tmp/pr255_wave10_reconcile.py
 
       - name: Checkout exact protected PR head
         run: |
@@ -32,7 +33,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Apply all new review findings
-        run: python /tmp/pr255_wave10_apply.py
+        run: |
+          python /tmp/pr255_wave10_apply.py
+          python /tmp/pr255_wave10_reconcile.py
 
       - name: Restore canonical V1 test owner without expanding PR scope
         run: |
