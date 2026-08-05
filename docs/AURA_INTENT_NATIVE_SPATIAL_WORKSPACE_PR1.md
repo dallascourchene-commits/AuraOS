@@ -130,7 +130,7 @@ The focused suite contains **37 tests** covering the original review waves plus 
 Verification completed in the exact-head focused workspace:
 
 - Python compilation: passed;
-- focused tests: **33 passed**;
+- focused tests: **37 passed**;
 - all JSON documents parse successfully;
 - all three schemas pass Draft 2020-12 meta-validation;
 - no operational or persistence invocation is introduced.
