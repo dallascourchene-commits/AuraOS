@@ -1,0 +1,45 @@
+name: PR255 Project Boundary Closure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/pr255-project-boundary-closure.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pr255-project-boundary-closure
+  cancel-in-progress: true
+
+jobs:
+  prove_and_promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout control files
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: control
+          fetch-depth: 1
+
+      - name: Checkout exact frozen PR head
+        uses: actions/checkout@v4
+        with:
+          ref: 6e7c0f2806ca65b14f9c2100bff301b2c0336e6c
+          path: work
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Prove and promote exact repair
+        working-directory: work
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash ../control/.github/pr255_project_boundary_closure_runner.sh
