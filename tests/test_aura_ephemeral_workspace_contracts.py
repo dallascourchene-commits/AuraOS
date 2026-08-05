@@ -277,7 +277,7 @@ def test_metadata_is_closed_scalar_and_detached() -> None:
             D["1"],
             metadata=(("source_path", "aura.py"), ("source_path", "other.py")),
         )
-    good = ref("artifact:good", D["1"], metadata={"source_path": "aura.py", "line_start": 1})
+    good = ref("artifact:good", D["1"], metadata={"source_path": "aura.py", "line_start": 1, "line_end": 1})
     detached = good.to_dict()
     detached["metadata"]["source_path"] = "changed.py"
     assert good.to_dict()["metadata"]["source_path"] == "aura.py"
@@ -724,7 +724,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     huge_cost = create_manifest("Reject cost overflow", organ_id="EORG-cost-overflow")
     huge_cost.resource_budget["cost_usd"] = 1e308
     huge_cost.phase_hash = huge_cost.compute_digest()
-    with pytest.raises(ValueError, match="micro-USD ceiling"):
+    with pytest.raises(ValueError, match="numeric ceiling|micro-USD ceiling"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=huge_cost,
             project_projection=project(),
@@ -1394,3 +1394,172 @@ def test_review_wave10_bounded_policy_parity_fail_closed() -> None:
                 D["1"],
                 metadata={"source_path": unsafe_path},
             )
+
+
+
+def test_review_wave11_complete_bounds_and_schema_parity_fail_closed() -> None:
+    """Every budget, key, metadata span, schema path, and live snapshot stays bounded."""
+    with pytest.raises(ValueError, match="numeric ceiling"):
+        canonical_json(1e308)
+    with pytest.raises(ValueError, match="object key exceeds its scalar byte ceiling"):
+        canonical_json({"x" * (workspace_contracts.MAX_CANONICAL_SCALAR_BYTES + 1): 1})
+    with pytest.raises(ValueError, match="object keys must contain valid Unicode"):
+        canonical_json({"\ud800": 1})
+
+    class OversizedMetadata(Mapping[str, Any]):
+        def __getitem__(self, key: str) -> Any:
+            raise KeyError(key)
+
+        def __iter__(self):
+            raise AssertionError("metadata must reject by length before copying")
+
+        def __len__(self) -> int:
+            return len(workspace_contracts._METADATA_FIELDS) + 1
+
+    with pytest.raises(ValueError, match="field ceiling"):
+        workspace_contracts._metadata(OversizedMetadata(), "reference.metadata")
+
+    for metadata, message in (
+        ({"source_path": "src/module.py", "line_start": 0, "line_end": 1}, "integer in 1"),
+        ({"source_path": "src/module.py", "line_start": 1}, "requires source_path"),
+        ({"source_path": "src/module.py", "line_start": 2, "line_end": 1}, "reversed"),
+    ):
+        with pytest.raises(ValueError, match=message):
+            ref(
+                f"artifact:bad-span-{stable_digest(metadata)[:12]}",
+                D["1"],
+                metadata=metadata,
+            )
+    valid_span = ref(
+        "artifact:valid-span",
+        D["1"],
+        metadata={"source_path": "src/module.py", "line_start": 1, "line_end": 2},
+    )
+    assert dict(valid_span.metadata)["line_end"] == 2
+
+    manifest = create_manifest(
+        "Reject unbounded context authority",
+        organ_id="EORG-wave11-context",
+        requested_capabilities=["resolve_capabilities", "read_slice", "dissolve"],
+    )
+    oversized_context = WorkspaceBudget(
+        wall_time_ms=1_000,
+        memory_mb=1,
+        context_tokens=64_001,
+        output_bytes=1,
+        tool_calls=0,
+        model_calls=0,
+        cost_microusd=0,
+        network_calls=0,
+        device_events=0,
+    )
+    with pytest.raises(ValueError, match="context_tokens exceeds (?:base manifest resource|the PR1 safe) ceiling"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=manifest,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+            budgets=oversized_context,
+        )
+
+    parsed_recipe, _ = recipe()
+    oversized_device = parsed_recipe.to_dict()
+    oversized_device["budgets"]["device_events"] = 100_001
+    with pytest.raises(ValueError, match="device_events exceeds the PR1 safe ceiling"):
+        EphemeralWorkspaceRecipe.from_dict(oversized_device)
+
+    schema_cases = (
+        (
+            "schemas/aura_project_context_projection.schema.json",
+            project().to_dict(),
+            ("artifact_evidence_refs", 0, "metadata"),
+        ),
+        (
+            "schemas/aura_ephemeral_workspace_recipe.schema.json",
+            parsed_recipe.to_dict(),
+            ("adapter_refs", 0, "metadata"),
+        ),
+        (
+            "schemas/aura_multimodal_spatial_observation.schema.json",
+            observation().to_dict(),
+            ("target_candidates", 0, "evidence_ref", "metadata"),
+        ),
+    )
+
+    def metadata_at(payload: dict[str, Any], path: tuple[Any, ...]) -> dict[str, Any]:
+        current: Any = payload
+        for part in path:
+            current = current[part]
+        return current
+
+    for schema_name, base_payload, metadata_path in schema_cases:
+        schema = json.loads((ROOT / schema_name).read_text())
+        validator = Draft202012Validator(schema)
+        for unsafe_path in ("src/.ENV.local", "SRC/Secrets-token", ".GIT/credentials"):
+            payload = copy.deepcopy(base_payload)
+            metadata_at(payload, metadata_path).clear()
+            metadata_at(payload, metadata_path)["source_path"] = unsafe_path
+            assert list(validator.iter_errors(payload)), (schema_name, unsafe_path)
+        bad_line = copy.deepcopy(base_payload)
+        metadata_at(bad_line, metadata_path).clear()
+        metadata_at(bad_line, metadata_path).update(
+            {"source_path": "src/module.py", "line_start": 0, "line_end": 1}
+        )
+        assert list(validator.iter_errors(bad_line)), schema_name
+
+    recipe_schema = json.loads(
+        (ROOT / "schemas/aura_ephemeral_workspace_recipe.schema.json").read_text()
+    )
+    unsafe_budget = parsed_recipe.to_dict()
+    unsafe_budget["budgets"]["context_tokens"] = 64_001
+    unsafe_budget["budgets"]["device_events"] = 100_001
+    budget_error_paths = {
+        tuple(error.absolute_path)
+        for error in Draft202012Validator(recipe_schema).iter_errors(unsafe_budget)
+    }
+    assert ("budgets", "context_tokens") in budget_error_paths
+    assert ("budgets", "device_events") in budget_error_paths
+
+    observation_schema = json.loads(
+        (ROOT / "schemas/aura_multimodal_spatial_observation.schema.json").read_text()
+    )
+    orphan_transcript = observation().to_dict()
+    orphan_transcript["speech_text"] = ""
+    orphan_transcript["transcript_digest"] = D["1"]
+    assert list(Draft202012Validator(observation_schema).iter_errors(orphan_transcript))
+
+    primary = create_manifest(
+        "Single snapshot A",
+        organ_id="EORG-wave11-single-snapshot",
+        requested_capabilities=["resolve_capabilities", "read_slice", "dissolve"],
+    ).to_dict()
+    alternate = copy.deepcopy(primary)
+    alternate["objective"] = "Single snapshot B"
+    alternate["objective_hash"] = workspace_contracts.hashlib.blake2b(
+        alternate["objective"].encode("utf-8"), digest_size=12
+    ).hexdigest()
+    alternate["phase_hash"] = workspace_contracts._legacy_manifest_digest(alternate)
+
+    class TogglingManifest:
+        def __init__(self) -> None:
+            self.calls = 0
+
+        def to_dict(self) -> dict[str, Any]:
+            snapshots = (primary, alternate, primary)
+            result = copy.deepcopy(snapshots[self.calls % len(snapshots)])
+            self.calls += 1
+            return result
+
+    toggling = TogglingManifest()
+    with pytest.raises(ValueError, match="changed while wrapping"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=toggling,
+            expected_manifest_timestamps=(primary["created_at"], primary["expires_at"]),
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+    assert toggling.calls == 2

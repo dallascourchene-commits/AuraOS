@@ -110,6 +110,16 @@
     },
     "metadata": {
       "additionalProperties": false,
+      "dependentRequired": {
+        "line_end": [
+          "line_start",
+          "source_path"
+        ],
+        "line_start": [
+          "line_end",
+          "source_path"
+        ]
+      },
       "properties": {
         "artifact_digest": {
           "pattern": "^[0-9a-f]{64}$",
@@ -142,12 +152,12 @@
         },
         "line_end": {
           "maximum": 10000000000,
-          "minimum": 0,
+          "minimum": 1,
           "type": "integer"
         },
         "line_start": {
           "maximum": 10000000000,
-          "minimum": 0,
+          "minimum": 1,
           "type": "integer"
         },
         "manifest_version": {
@@ -179,7 +189,7 @@
         "source_path": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.env[^/]*(?:/|$))(?!.*(?:^|/)secrets[^/]*(?:/|$))(?!.*(?:^|/)\\.key(?:/|$))(?!.*(?:^|/)\\.git/credentials(?:/|$))[^\\u0000-\\u001f]+$",
+          "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*(?:^|/)[sS][eE][cC][rR][eE][tT][sS][^/]*(?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))(?!.*(?:^|/)\\.[gG][iI][tT]/[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS](?:/|$))[^\\u0000-\\u001f]+$",
           "type": "string"
         },
         "source_span": {
@@ -223,6 +233,16 @@
         },
         "metadata": {
           "additionalProperties": false,
+          "dependentRequired": {
+            "line_end": [
+              "line_start",
+              "source_path"
+            ],
+            "line_start": [
+              "line_end",
+              "source_path"
+            ]
+          },
           "properties": {
             "artifact_digest": {
               "pattern": "^[0-9a-f]{64}$",
@@ -255,12 +275,12 @@
             },
             "line_end": {
               "maximum": 10000000000,
-              "minimum": 0,
+              "minimum": 1,
               "type": "integer"
             },
             "line_start": {
               "maximum": 10000000000,
-              "minimum": 0,
+              "minimum": 1,
               "type": "integer"
             },
             "manifest_version": {
@@ -292,7 +312,7 @@
             "source_path": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.env[^/]*(?:/|$))(?!.*(?:^|/)secrets[^/]*(?:/|$))(?!.*(?:^|/)\\.key(?:/|$))(?!.*(?:^|/)\\.git/credentials(?:/|$))[^\\u0000-\\u001f]+$",
+              "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*(?:^|/)[sS][eE][cC][rR][eE][tT][sS][^/]*(?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))(?!.*(?:^|/)\\.[gG][iI][tT]/[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS](?:/|$))[^\\u0000-\\u001f]+$",
               "type": "string"
             },
             "source_span": {
@@ -557,7 +577,8 @@
   "x-aura-semantic-invariants": [
     "reference_id uniqueness across all reference arrays",
     "record digest verification",
-    "UTF-8 byte ceilings"
+    "UTF-8 byte ceilings",
+    "source line ranges are positive, complete, and ordered"
   ],
   "x-aura-semantic-validator": "aura_ephemeral_workspace_contracts.validate_project_semantics"
 }

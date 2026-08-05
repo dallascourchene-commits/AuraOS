@@ -98,11 +98,13 @@ _LEGACY_RESOURCE_FIELDS = frozenset({
 _PR1_RESOURCE_CEILINGS = MappingProxyType({
     "wall_time_ms": 300_000,
     "memory_mb": 512,
+    "context_tokens": 64_000,
     "output_bytes": 4_000_000,
     "tool_calls": 64,
     "model_calls": 0,
     "cost_microusd": 0,
     "network_calls": 0,
+    "device_events": 100_000,
 })
 
 
@@ -120,11 +122,23 @@ def _canonical(value: Any, *, _depth: int = 0) -> Any:
     if isinstance(value, Mapping):
         if len(value) > MAX_CANONICAL_ITEMS:
             raise ValueError("canonical JSON object exceeds its item ceiling")
-        if any(not isinstance(key, str) for key in value):
+        keys = tuple(value)
+        if any(not isinstance(key, str) for key in keys):
             raise ValueError("JSON object keys must be strings")
+        for key in keys:
+            try:
+                encoded_key = key.encode("utf-8")
+            except UnicodeEncodeError as exc:
+                raise ValueError(
+                    "canonical JSON object keys must contain valid Unicode scalar values"
+                ) from exc
+            if len(encoded_key) > MAX_CANONICAL_SCALAR_BYTES:
+                raise ValueError(
+                    "canonical JSON object key exceeds its scalar byte ceiling"
+                )
         return {
             key: _canonical(value[key], _depth=next_depth)
-            for key in sorted(value)
+            for key in sorted(keys)
         }
     if isinstance(value, (list, tuple)):
         if len(value) > MAX_CANONICAL_ITEMS:
@@ -149,6 +163,8 @@ def _canonical(value: Any, *, _depth: int = 0) -> Any:
     if isinstance(value, float):
         if not math.isfinite(value):
             raise ValueError("non-finite floats are prohibited")
+        if abs(value) > MAX_CANONICAL_NUMBER_ABS:
+            raise ValueError("canonical JSON number exceeds its numeric ceiling")
         return value
     raise ValueError(f"non-JSON value: {type(value).__name__}")
 
@@ -302,6 +318,8 @@ def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
     if value is None or value == ():
         return ()
     if isinstance(value, tuple):
+        if len(value) > len(_METADATA_FIELDS):
+            raise ValueError(f"{name} exceeds its field ceiling")
         pairs: list[tuple[str, Any]] = []
         for item in value:
             if (
@@ -318,6 +336,8 @@ def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
             raise ValueError(f"{name} keys must be unique")
         candidate = dict(pairs)
     elif isinstance(value, Mapping):
+        if len(value) > len(_METADATA_FIELDS):
+            raise ValueError(f"{name} exceeds its field ceiling")
         candidate = dict(value)
     else:
         raise ValueError(f"{name} must be an object")
@@ -337,12 +357,22 @@ def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
             validated[key] = _text(item, field_name, maximum=4096)
         elif key in _METADATA_BOOL_FIELDS:
             validated[key] = _bool(item, field_name, True)
+        elif key in {"line_start", "line_end"}:
+            validated[key] = _int(item, field_name, 1, MAX_INTEGER)
         elif key in _METADATA_INT_FIELDS:
             validated[key] = _int(item, field_name, 0, MAX_INTEGER)
         elif key == "legacy_manifest_digest":
             validated[key] = _legacy_digest(item, field_name)
         else:
             validated[key] = _digest(item, field_name)
+    supplied_line_fields = {"line_start", "line_end"} & set(validated)
+    if supplied_line_fields:
+        if supplied_line_fields != {"line_start", "line_end"} or "source_path" not in validated:
+            raise ValueError(
+                f"{name} source line range requires source_path, line_start, and line_end"
+            )
+        if validated["line_start"] > validated["line_end"]:
+            raise ValueError(f"{name} source line range is reversed")
     if len(canonical_json(validated).encode("utf-8")) > MAX_METADATA_BYTES:
         raise ValueError(f"{name} exceeds its byte ceiling")
     return tuple(sorted(validated.items()))
@@ -915,6 +945,10 @@ class EphemeralWorkspaceRecipe:
             raise ValueError("recipe budget must keep network_calls at zero")
         if self.budgets.model_calls != 0:
             raise ValueError("recipe budget must keep model_calls at zero")
+        budget_values = self.budgets.to_dict()
+        for name, ceiling in _PR1_RESOURCE_CEILINGS.items():
+            if budget_values[name] > ceiling:
+                raise ValueError(f"budget.{name} exceeds the PR1 safe ceiling")
         for name, ids, limit, sort_values in (("renderer_requirements", False, 32, True), ("device_requirements", False, 32, True), ("allowed_interaction_actions", True, 64, False), ("required_verification_gates", True, 64, False)):
             object.__setattr__(self, name, _seq(getattr(self, name), f"recipe.{name}", ids=ids, max_items=limit, sort=sort_values))
         object.__setattr__(self, "ttl_seconds", _int(self.ttl_seconds, "recipe.ttl", 1, MAX_TTL_SECONDS))
@@ -1278,7 +1312,7 @@ def _manifest_resource_limits(body: Mapping[str, Any]) -> dict[str, int]:
     if limits["model_calls"] != 0:
         raise ValueError("base manifest model invocation must remain disabled")
     return {
-        name: min(limits[name], ceiling)
+        name: min(limits.get(name, ceiling), ceiling)
         for name, ceiling in _PR1_RESOURCE_CEILINGS.items()
     }
 
@@ -1569,9 +1603,9 @@ def _bounded_manifest_export(manifest: Any) -> Any:
         raise ValueError("base manifest nesting exceeds its depth ceiling") from exc
 
 
-def _manifest_snapshot(manifest: Any) -> tuple[dict[str, Any], str, str]:
-    """Verify and snapshot an exact safe V1 manifest into a wrapper identity."""
-    body = _canonical(_bounded_manifest_export(manifest))
+def _manifest_snapshot(raw_manifest: Any) -> tuple[dict[str, Any], str, str]:
+    """Verify one already-exported safe V1 manifest snapshot into a wrapper identity."""
+    body = _canonical(raw_manifest)
     if not isinstance(body, dict):
         raise ValueError("base manifest must be an object")
     _validate_v1_manifest(body)
@@ -1604,7 +1638,7 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
     """Compile the frozen recipe without invoking any canonical owner."""
     raw_before = _bounded_manifest_export(base_manifest)
     before = canonical_json(raw_before)
-    body, legacy_digest, wrapper_digest = _manifest_snapshot(base_manifest)
+    body, legacy_digest, wrapper_digest = _manifest_snapshot(raw_before)
     raw_after = _bounded_manifest_export(base_manifest)
     if before != canonical_json(raw_after):
         raise ValueError("base V1 manifest changed while wrapping")
