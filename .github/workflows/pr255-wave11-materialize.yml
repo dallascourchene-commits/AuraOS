@@ -19,7 +19,8 @@ jobs:
       - name: Preserve and compile repair payload
         run: |
           cp .github/pr255-wave11/apply.py /tmp/pr255_wave11_apply.py
-          python -m py_compile /tmp/pr255_wave11_apply.py
+          cp .github/pr255-wave11/reconcile.py /tmp/pr255_wave11_reconcile.py
+          python -m py_compile /tmp/pr255_wave11_apply.py /tmp/pr255_wave11_reconcile.py
 
       - name: Checkout exact protected PR head
         run: |
@@ -33,6 +34,9 @@ jobs:
 
       - name: Apply all new review findings
         run: python /tmp/pr255_wave11_apply.py
+
+      - name: Reconcile verification compatibility
+        run: python /tmp/pr255_wave11_reconcile.py
 
       - name: Restore canonical V1 test owner without expanding PR scope
         run: |
