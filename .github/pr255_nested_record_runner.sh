@@ -10,7 +10,11 @@ test "$current" = "$FROZEN"
 git fetch --no-tags origin "$BASE"
 test -z "$(git status --porcelain=v1 --untracked-files=all)"
 
-python ../control/.github/pr255_nested_record_patch.py
+sed "s/    '''))$/    ''')/" \
+  ../control/.github/pr255_nested_record_patch.py \
+  > /tmp/pr255_nested_record_patch.py
+python -m py_compile /tmp/pr255_nested_record_patch.py
+python /tmp/pr255_nested_record_patch.py
 git diff --check
 
 mapfile -t changed < <(git diff --name-only | sort)
