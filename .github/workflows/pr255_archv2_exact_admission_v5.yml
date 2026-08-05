@@ -1,0 +1,149 @@
+name: PR255 ARCH v2 Exact Admission Materializer V5
+
+on:
+  push:
+    branches:
+      - pr255-archv2-exact-admission-v5
+
+permissions:
+  contents: write
+
+jobs:
+  prove-and-promote:
+    name: Prove and promote exact frozen PR head
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      EXPECTED_HEAD: 76f02651f9b4aa0bbe6037bd3976d67947763493
+      EXACT_BASE: 879b5fb056b70d150b1646e082223330a36c2912
+      TARGET_BRANCH: refactor/intent-native-spatial-workspace-pr1
+    steps:
+      - name: Checkout transport branch with full ancestry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materialize exact frozen PR head
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp tools/pr255_archv2_exact_admission_v5.py /tmp/materialize.py
+          cp tools/pr255_archv2_exact_admission_v5_finish.py /tmp/finish.py
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('/tmp/materialize.py')
+          text = path.read_text(encoding='utf-8')
+          marker = '# Only exact AuthorityEnvelope records or detached serialized mappings are admitted.'
+          if text.count(marker) != 1:
+              raise SystemExit('materializer phase marker mismatch')
+          path.write_text(text.replace(marker, 'raise SystemExit(0)\n\n' + marker), encoding='utf-8')
+          PY
+          git checkout --detach "$EXPECTED_HEAD"
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          python /tmp/materialize.py
+          python /tmp/finish.py
+
+      - name: Prove candidate scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected=$(cat <<'EOF'
+          aura_ephemeral_workspace_contracts.py
+          docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md
+          schemas/aura_ephemeral_workspace_recipe.schema.json
+          tests/test_aura_ephemeral_workspace_contracts.py
+          EOF
+          )
+          actual=$(git diff --name-only | sort)
+          test "$actual" = "$(printf '%s\n' "$expected" | sort)"
+          git diff --check
+
+      - name: Install focused verification dependencies
+        run: python -m pip install --disable-pip-version-check pytest jsonschema ruff
+
+      - name: Compile exact repair surface
+        run: |
+          python -m py_compile \
+            aura_ephemeral_workspace_contracts.py \
+            tests/test_aura_ephemeral_workspace_contracts.py
+
+      - name: Run focused regression suite
+        run: pytest -q tests/test_aura_ephemeral_workspace_contracts.py
+
+      - name: Prove focused collection receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          pytest --collect-only -q tests/test_aura_ephemeral_workspace_contracts.py | tee /tmp/collect.txt
+          grep -Eq '43 tests collected' /tmp/collect.txt
+
+      - name: Run focused Ruff gates
+        run: ruff check --select F401,F821,F841 aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+
+      - name: Validate schemas and new delegation receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          schema_paths = (
+              Path('schemas/aura_project_context_projection.schema.json'),
+              Path('schemas/aura_ephemeral_workspace_recipe.schema.json'),
+              Path('schemas/aura_multimodal_spatial_observation.schema.json'),
+          )
+          for path in schema_paths:
+              Draft202012Validator.check_schema(json.loads(path.read_text(encoding='utf-8')))
+          recipe = json.loads(schema_paths[1].read_text(encoding='utf-8'))
+          assert recipe['x-aura-semantic-delegations']['base_manifest_resource_budget_binding'] == 'mandatory semantic validator'
+          assert 'base-manifest and trusted compiled-recipe resource ceilings delegated to mandatory semantic validation' in recipe['x-aura-semantic-invariants']
+          PY
+
+      - name: Commit proven four-file repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name dallascourchene-commits
+          git config user.email 281686929+dallascourchene-commits@users.noreply.github.com
+          git add \
+            aura_ephemeral_workspace_contracts.py \
+            docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md \
+            schemas/aura_ephemeral_workspace_recipe.schema.json \
+            tests/test_aura_ephemeral_workspace_contracts.py
+          test "$(git diff --cached --name-only | wc -l)" -eq 4
+          git commit -m 'fix(pr1): close exact scalar and authority admission gaps'
+
+      - name: Prove final PR scope and generated exclusions
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected=$(cat <<'EOF'
+          .aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json
+          .aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json
+          aura_ephemeral_workspace_contracts.py
+          docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md
+          schemas/aura_ephemeral_workspace_recipe.schema.json
+          schemas/aura_multimodal_spatial_observation.schema.json
+          schemas/aura_project_context_projection.schema.json
+          tests/test_aura_ephemeral_workspace_contracts.py
+          EOF
+          )
+          actual=$(git diff --name-only "$EXACT_BASE" HEAD | sort)
+          test "$actual" = "$(printf '%s\n' "$expected" | sort)"
+          git diff --exit-code "$EXACT_BASE" HEAD -- \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json \
+            Aura_Memory/live_topology_ast.json
+          test -z "$(git diff --name-only "$EXACT_BASE" HEAD -- '.github/workflows/*' 'tools/pr255_*')"
+
+      - name: Verify race guard and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          remote_head=$(git ls-remote origin "refs/heads/$TARGET_BRANCH" | awk '{print $1}')
+          test "$remote_head" = "$EXPECTED_HEAD"
+          git push origin "HEAD:refs/heads/$TARGET_BRANCH"
+          echo "Published head: $(git rev-parse HEAD)"
