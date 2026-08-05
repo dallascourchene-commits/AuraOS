@@ -1,4 +1,4 @@
-name: PR255 Nested Record Repair V3
+name: PR255 Nested Record Repair V4
 
 on:
   push:
@@ -12,7 +12,6 @@ permissions:
 
 jobs:
   prove_and_promote:
-    if: ${{ github.event.head_commit.message == 'ci(pr255): activate nested-record runner v3' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
