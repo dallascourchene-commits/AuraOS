@@ -36,6 +36,9 @@ MAX_TIMESTAMP = 2**63 - 1
 MAX_DEPENDENCY_EDGES = 512
 MAX_CANONICAL_DEPTH = 64
 MAX_CANONICAL_ITEMS = MAX_ITEMS
+MAX_CANONICAL_SCALAR_BYTES = MAX_METADATA_BYTES
+MAX_CANONICAL_NUMBER_ABS = MAX_TIMESTAMP
+MAX_HANDOFF_OWNERS = 6
 
 _ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$")
 _DIGEST = re.compile(r"^[0-9a-f]{64}$")
@@ -92,6 +95,15 @@ _LEGACY_RESOURCE_FIELDS = frozenset({
     "wall_time_ms", "memory_mb", "output_bytes", "tool_calls", "model_calls",
     "cost_usd", "network_calls",
 })
+_PR1_RESOURCE_CEILINGS = MappingProxyType({
+    "wall_time_ms": 300_000,
+    "memory_mb": 512,
+    "output_bytes": 4_000_000,
+    "tool_calls": 64,
+    "model_calls": 0,
+    "cost_microusd": 0,
+    "network_calls": 0,
+})
 
 
 def _canonical(value: Any, *, _depth: int = 0) -> Any:
@@ -120,15 +132,23 @@ def _canonical(value: Any, *, _depth: int = 0) -> Any:
         return [_canonical(item, _depth=next_depth) for item in value]
     if isinstance(value, (set, frozenset)):
         raise ValueError("sets are not JSON values")
-    if isinstance(value, float) and not math.isfinite(value):
-        raise ValueError("non-finite floats are prohibited")
     if isinstance(value, str):
         try:
-            value.encode("utf-8")
+            encoded = value.encode("utf-8")
         except UnicodeEncodeError as exc:
             raise ValueError("canonical JSON strings must contain valid Unicode scalar values") from exc
+        if len(encoded) > MAX_CANONICAL_SCALAR_BYTES:
+            raise ValueError("canonical JSON string exceeds its scalar byte ceiling")
         return value
-    if value is None or isinstance(value, (bool, int, float)):
+    if value is None or isinstance(value, bool):
+        return value
+    if isinstance(value, int):
+        if abs(value) > MAX_CANONICAL_NUMBER_ABS:
+            raise ValueError("canonical JSON integer exceeds its numeric ceiling")
+        return value
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise ValueError("non-finite floats are prohibited")
         return value
     raise ValueError(f"non-JSON value: {type(value).__name__}")
 
@@ -256,6 +276,27 @@ def _seq(value: Any, name: str, *, ids: bool = False, max_items: int = MAX_ITEMS
     return tuple(sorted(result)) if sort else result
 
 
+def _source_path(value: Any, name: str) -> str:
+    """Require a safe repository-relative source path outside the V1 denylist."""
+    path = _text(value, name, maximum=4096)
+    if "\\" in path or path.startswith("/") or re.match(r"^[A-Za-z]:/", path):
+        raise ValueError(f"{name} must be a repository-relative POSIX path")
+    parts = path.split("/")
+    if any(part in {"", ".", ".."} for part in parts):
+        raise ValueError(f"{name} contains an unsafe path segment")
+    lowered = tuple(part.lower() for part in parts)
+    if any(part.startswith(".env") for part in lowered):
+        raise ValueError(f"{name} targets a forbidden environment path")
+    if any(part.startswith("secrets") or part == ".key" for part in lowered):
+        raise ValueError(f"{name} targets a forbidden secret path")
+    if any(
+        lowered[index] == ".git" and lowered[index + 1] == "credentials"
+        for index in range(len(lowered) - 1)
+    ):
+        raise ValueError(f"{name} targets forbidden Git credentials")
+    return path
+
+
 def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
     """Validate and recursively freeze the closed scalar metadata contract."""
     if value is None or value == ():
@@ -290,6 +331,8 @@ def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
         field_name = f"{name}.{key}"
         if key == "manifest_version":
             validated[key] = _id(item, field_name)
+        elif key == "source_path":
+            validated[key] = _source_path(item, field_name)
         elif key in _METADATA_TEXT_FIELDS:
             validated[key] = _text(item, field_name, maximum=4096)
         elif key in _METADATA_BOOL_FIELDS:
@@ -309,6 +352,16 @@ def _strict(payload: Mapping[str, Any], expected: set[str], name: str) -> None:
     """Require an exact mapping key set."""
     if not isinstance(payload, Mapping):
         raise ValueError(f"{name} must be an object")
+    if len(payload) > len(expected):
+        if isinstance(payload, dict):
+            for index, key in enumerate(payload):
+                if index > len(expected):
+                    break
+                if not isinstance(key, str):
+                    raise ValueError(f"{name} keys must be strings")
+        raise ValueError(
+            f"{name} keys mismatch: expected at most {len(expected)} keys"
+        )
     keys = tuple(payload)
     if any(not isinstance(key, str) for key in keys):
         raise ValueError(f"{name} keys must be strings")
@@ -732,8 +785,12 @@ def _refs(value: Any, name: str, *, require_current: bool = False) -> tuple[Cano
 def _owner_map(value: Any) -> tuple[tuple[str, str], ...]:
     """Validate and canonicalize the domain-owner handoff map."""
     if isinstance(value, Mapping):
+        if len(value) > MAX_HANDOFF_OWNERS:
+            raise ValueError("handoff map exceeds its item ceiling")
         items = value.items()
     elif isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
+        if len(value) > MAX_HANDOFF_OWNERS:
+            raise ValueError("handoff map exceeds its item ceiling")
         items = value
     else:
         raise ValueError("handoff map must be an object or pair sequence")
@@ -1216,7 +1273,14 @@ def _manifest_resource_limits(body: Mapping[str, Any]) -> dict[str, int]:
             "base manifest resource_budget.cost_usd exceeds the micro-USD ceiling"
         )
     limits["cost_microusd"] = int(math.floor(cost_usd * 1_000_000))
-    return limits
+    if limits["network_calls"] != 0:
+        raise ValueError("base manifest network access must remain disabled")
+    if limits["model_calls"] != 0:
+        raise ValueError("base manifest model invocation must remain disabled")
+    return {
+        name: min(limits[name], ceiling)
+        for name, ceiling in _PR1_RESOURCE_CEILINGS.items()
+    }
 
 
 def _validate_v1_arena_lease_regions(lease: Mapping[str, Any], organ_id: str) -> None:
@@ -1495,10 +1559,19 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
     _bool(body.get("vsa_patch_authority"), "base manifest vsa_patch_authority", False)
 
 
+def _bounded_manifest_export(manifest: Any) -> Any:
+    """Export a live V1 manifest while normalizing recursive failures."""
+    if not hasattr(manifest, "to_dict"):
+        return manifest
+    try:
+        return manifest.to_dict()
+    except RecursionError as exc:
+        raise ValueError("base manifest nesting exceeds its depth ceiling") from exc
+
+
 def _manifest_snapshot(manifest: Any) -> tuple[dict[str, Any], str, str]:
     """Verify and snapshot an exact safe V1 manifest into a wrapper identity."""
-    raw = manifest.to_dict() if hasattr(manifest, "to_dict") else manifest
-    body = _canonical(raw)
+    body = _canonical(_bounded_manifest_export(manifest))
     if not isinstance(body, dict):
         raise ValueError("base manifest must be an object")
     _validate_v1_manifest(body)
@@ -1529,10 +1602,10 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
                                              ttl_seconds: int = 300,
                                              expected_manifest_timestamps: Sequence[int | float] | None = None) -> EphemeralWorkspaceRecipe:
     """Compile the frozen recipe without invoking any canonical owner."""
-    raw_before = base_manifest.to_dict() if hasattr(base_manifest, "to_dict") else base_manifest
+    raw_before = _bounded_manifest_export(base_manifest)
     before = canonical_json(raw_before)
     body, legacy_digest, wrapper_digest = _manifest_snapshot(base_manifest)
-    raw_after = base_manifest.to_dict() if hasattr(base_manifest, "to_dict") else base_manifest
+    raw_after = _bounded_manifest_export(base_manifest)
     if before != canonical_json(raw_after):
         raise ValueError("base V1 manifest changed while wrapping")
     project = project_projection if isinstance(project_projection, ProjectContextProjection) else ProjectContextProjection.from_dict(project_projection)

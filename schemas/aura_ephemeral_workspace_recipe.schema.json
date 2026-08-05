@@ -132,14 +132,10 @@
           "type": "integer"
         },
         "model_calls": {
-          "maximum": 10000000000,
-          "minimum": 0,
-          "type": "integer"
+          "const": 0
         },
         "network_calls": {
-          "maximum": 10000000000,
-          "minimum": 0,
-          "type": "integer"
+          "const": 0
         },
         "output_bytes": {
           "maximum": 10000000000,
@@ -260,7 +256,7 @@
             "source_path": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
+              "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.env[^/]*(?:/|$))(?!.*(?:^|/)secrets[^/]*(?:/|$))(?!.*(?:^|/)\\.key(?:/|$))(?!.*(?:^|/)\\.git/credentials(?:/|$))[^\\u0000-\\u001f]+$",
               "type": "string"
             },
             "source_span": {
@@ -466,7 +462,7 @@
         "source_path": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001f]*$",
+          "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.env[^/]*(?:/|$))(?!.*(?:^|/)secrets[^/]*(?:/|$))(?!.*(?:^|/)\\.key(?:/|$))(?!.*(?:^|/)\\.git/credentials(?:/|$))[^\\u0000-\\u001f]+$",
           "type": "string"
         },
         "source_span": {
@@ -579,7 +575,7 @@
             "source_path": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
+              "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.env[^/]*(?:/|$))(?!.*(?:^|/)secrets[^/]*(?:/|$))(?!.*(?:^|/)\\.key(?:/|$))(?!.*(?:^|/)\\.git/credentials(?:/|$))[^\\u0000-\\u001f]+$",
               "type": "string"
             },
             "source_span": {

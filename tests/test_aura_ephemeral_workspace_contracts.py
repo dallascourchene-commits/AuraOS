@@ -1277,3 +1277,120 @@ def test_review_wave7_duplicate_requests_and_serialized_timestamp_rebinding_fail
             evidence_refs=(ref("evidence:source", D["3"]),),
             expected_manifest_timestamps=original_timestamps,
         )
+
+
+
+def test_review_wave10_bounded_policy_parity_fail_closed() -> None:
+    """Live snapshots, scalar/path inputs, resource limits, and schemas stay bounded."""
+    live = create_manifest(
+        "Reject recursive live manifest snapshots",
+        organ_id="EORG-wave10-recursion",
+        requested_capabilities=["resolve_capabilities", "read_slice", "dissolve"],
+    )
+    trusted_live_timestamps = _trusted_manifest_timestamps(live)
+    nested: dict[str, Any] = {}
+    cursor = nested
+    for _ in range(2_000):
+        child: dict[str, Any] = {}
+        cursor["child"] = child
+        cursor = child
+    live.ui_manifest = {"schema": nested}
+    with pytest.raises(ValueError, match="nesting exceeds"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=live,
+            expected_manifest_timestamps=trusted_live_timestamps,
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
+    inflated = create_manifest(
+        "Cap inherited resource ceilings",
+        organ_id="EORG-wave10-resources",
+        requested_capabilities=["resolve_capabilities", "read_slice", "dissolve"],
+    )
+    inflated.resource_budget["memory_mb"] = workspace_contracts.MAX_INTEGER
+    inflated.phase_hash = inflated.compute_digest()
+    oversized_budget = WorkspaceBudget(
+        wall_time_ms=1_000,
+        memory_mb=513,
+        context_tokens=0,
+        output_bytes=1,
+        tool_calls=0,
+        model_calls=0,
+        cost_microusd=0,
+        network_calls=0,
+        device_events=0,
+    )
+    with pytest.raises(ValueError, match="memory_mb exceeds base manifest resource ceiling"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=inflated,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(inflated),
+            project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+            budgets=oversized_budget,
+        )
+
+    recipe_schema = json.loads(
+        (ROOT / "schemas/aura_ephemeral_workspace_recipe.schema.json").read_text()
+    )
+    recipe_payload, _ = recipe()
+    unsafe_calls = recipe_payload.to_dict()
+    unsafe_calls["budgets"]["model_calls"] = 1
+    unsafe_calls["budgets"]["network_calls"] = 1
+    error_paths = {
+        tuple(error.absolute_path)
+        for error in Draft202012Validator(recipe_schema).iter_errors(unsafe_calls)
+    }
+    assert ("budgets", "model_calls") in error_paths
+    assert ("budgets", "network_calls") in error_paths
+
+    with pytest.raises(ValueError, match="scalar byte ceiling"):
+        canonical_json("x" * (workspace_contracts.MAX_CANONICAL_SCALAR_BYTES + 1))
+    with pytest.raises(ValueError, match="numeric ceiling"):
+        canonical_json(workspace_contracts.MAX_CANONICAL_NUMBER_ABS + 1)
+
+    class OversizedMapping(Mapping[str, Any]):
+        def __getitem__(self, key: str) -> Any:
+            raise KeyError(key)
+
+        def __iter__(self):
+            raise AssertionError("_strict must reject by length before iterating")
+
+        def __len__(self) -> int:
+            return 1_000_000
+
+    with pytest.raises(ValueError, match="keys mismatch"):
+        workspace_contracts._strict(OversizedMapping(), {"version"}, "oversized")
+
+    with pytest.raises(ValueError, match="handoff map exceeds its item ceiling"):
+        workspace_contracts._owner_map(
+            {f"domain{index}": f"owner{index}" for index in range(7)}
+        )
+
+    safe = ref(
+        "artifact:safe-source-path",
+        D["1"],
+        metadata={"source_path": "src/module.py"},
+    )
+    assert dict(safe.metadata)["source_path"] == "src/module.py"
+    for unsafe_path in (
+        ".env",
+        ".env.local",
+        ".git/credentials",
+        "../secret",
+        "/absolute/path",
+        "C:/secret",
+        "src/secrets-token",
+        "src/.key",
+        "src\\secret.py",
+    ):
+        with pytest.raises(ValueError):
+            ref(
+                f"artifact:unsafe-source-{stable_digest(unsafe_path)[:12]}",
+                D["1"],
+                metadata={"source_path": unsafe_path},
+            )
