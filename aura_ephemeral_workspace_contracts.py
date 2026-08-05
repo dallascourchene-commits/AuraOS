@@ -451,7 +451,7 @@ def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
                 key, item_value = _bounded_pair_snapshot(item, f"{name} entry")
             except ValueError as exc:
                 raise ValueError(f"{name} entries must be key/value pairs") from exc
-            if not isinstance(key, str):
+            if type(key) is not str:
                 raise ValueError(f"{name} keys must be strings")
             normalized_pairs.append((key, item_value))
         if len({key for key, _ in normalized_pairs}) != len(normalized_pairs):
@@ -464,14 +464,14 @@ def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
             if "item ceiling" in str(exc):
                 raise ValueError(f"{name} exceeds its field ceiling") from exc
             raise
-        if any(not isinstance(key, str) for key, _ in pairs):
+        if any(type(key) is not str for key, _ in pairs):
             raise ValueError(f"{name} keys must be strings")
         if len({key for key, _ in pairs}) != len(pairs):
             raise ValueError(f"{name} keys must be unique")
         candidate = dict(pairs)
     else:
         raise ValueError(f"{name} must be an object")
-    if any(not isinstance(key, str) for key in candidate):
+    if any(type(key) is not str for key in candidate):
         raise ValueError(f"{name} keys must be strings")
     unknown = set(candidate) - _METADATA_FIELDS
     if unknown:
@@ -512,7 +512,7 @@ def _strict(payload: Mapping[str, Any], expected: set[str], name: str) -> None:
     """Require an exact mapping key set without trusting custom length reports."""
     if not isinstance(payload, Mapping):
         raise ValueError(f"{name} must be an object")
-    if isinstance(payload, dict) and any(not isinstance(key, str) for key in payload):
+    if isinstance(payload, dict) and any(type(key) is not str for key in payload):
         raise ValueError(f"{name} keys must be strings")
     try:
         if len(payload) > len(expected):
@@ -523,7 +523,7 @@ def _strict(payload: Mapping[str, Any], expected: set[str], name: str) -> None:
         raise ValueError(f"{name} has an invalid key count") from exc
     pairs = _bounded_mapping_snapshot(payload, name, len(expected))
     keys = tuple(key for key, _ in pairs)
-    if any(not isinstance(key, str) for key in keys):
+    if any(type(key) is not str for key in keys):
         raise ValueError(f"{name} keys must be strings")
     supplied = set(keys)
     if supplied != expected:
@@ -808,11 +808,12 @@ def _validate_reference_set(actual: Sequence[CanonicalReference], expected_value
         raise ValueError(f"{name} reference set size mismatch")
     expected_payload: dict[str, Any] = {}
     for key, value in expected_pairs:
-        if not isinstance(key, str):
-            raise ValueError(f"expected_{name}_refs keys must be strings")
-        if key in expected_payload:
-            raise ValueError(f"duplicate expected_{name}_refs reference: {key}")
-        expected_payload[key] = value
+        validated_key = _id(key, f"expected_{name}_refs key")
+        if validated_key in expected_payload:
+            raise ValueError(
+                f"duplicate expected_{name}_refs reference: {validated_key}"
+            )
+        expected_payload[validated_key] = value
     expected = _reference_map(expected_payload, f"expected_{name}_refs")
     actual_ids = [reference.reference_id for reference in actual]
     if len(set(actual_ids)) != len(actual_ids):
@@ -1020,10 +1021,8 @@ class ProjectContextProjection:
             )
         ):
             raise ValueError("stale or unknown project projection")
-        expected = (
-            expected_projection
-            if isinstance(expected_projection, ProjectContextProjection)
-            else ProjectContextProjection.from_dict(expected_projection)
+        expected = _exact_contract_record(
+            expected_projection, ProjectContextProjection, "expected_projection"
         )
         if self.to_dict() != expected.to_dict():
             raise ValueError("stale project projection identity")
@@ -1251,7 +1250,7 @@ class EphemeralWorkspaceRecipe:
         except ValueError as exc:
             raise ValueError("recipe.dependency_edges must be a bounded sequence") from exc
         edges = tuple(
-            edge if isinstance(edge, DependencyEdge) else DependencyEdge.from_dict(edge)
+            _exact_contract_record(edge, DependencyEdge, "recipe.dependency_edges item")
             for edge in edge_items
         )
         if len({(edge.source_capability_id, edge.target_capability_id) for edge in edges}) != len(edges):
@@ -1399,10 +1398,8 @@ class EphemeralWorkspaceRecipe:
         _validate_reference_set(self.evidence_refs, expected_evidence_refs, "evidence")
         if expected_recipe is None:
             raise ValueError("expected_recipe is required")
-        expected = (
-            expected_recipe
-            if isinstance(expected_recipe, EphemeralWorkspaceRecipe)
-            else EphemeralWorkspaceRecipe.from_dict(expected_recipe)
+        expected = _exact_contract_record(
+            expected_recipe, EphemeralWorkspaceRecipe, "expected_recipe"
         )
         if self.to_dict() != expected.to_dict():
             raise ValueError("stale complete recipe identity")
@@ -1524,7 +1521,7 @@ class MultimodalSpatialObservation:
         if not target_items:
             raise ValueError("observation requires a bounded target sequence")
         targets = tuple(
-            item if isinstance(item, SpatialReferentBinding) else SpatialReferentBinding.from_dict(item)
+            _exact_contract_record(item, SpatialReferentBinding, "observation.target_candidates item")
             for item in target_items
         )
         if len({target.binding_id for target in targets}) != len(targets):
@@ -1635,11 +1632,12 @@ class MultimodalSpatialObservation:
             raise ValueError("entity reference set mismatch") from exc
         expected_entities: dict[str, Any] = {}
         for key, value in entity_pairs:
-            if not isinstance(key, str):
-                raise ValueError("expected entity identifiers must be strings")
-            if key in expected_entities:
-                raise ValueError(f"duplicate expected entity identifier: {key}")
-            expected_entities[key] = value
+            entity_id = _id(key, "expected entity identifier")
+            if entity_id in expected_entities:
+                raise ValueError(
+                    f"duplicate expected entity identifier: {entity_id}"
+                )
+            expected_entities[entity_id] = value
         if len(expected_entities) != len(self.target_candidates):
             raise ValueError("entity reference set mismatch")
         entity_ids = {target.entity_id for target in self.target_candidates}
@@ -1655,10 +1653,8 @@ class MultimodalSpatialObservation:
         )
         if expected_observation is None:
             raise ValueError("expected_observation is required")
-        expected = (
-            expected_observation
-            if isinstance(expected_observation, MultimodalSpatialObservation)
-            else MultimodalSpatialObservation.from_dict(expected_observation)
+        expected = _exact_contract_record(
+            expected_observation, MultimodalSpatialObservation, "expected_observation"
         )
         if self.to_dict() != expected.to_dict():
             raise ValueError("stale complete observation identity")
@@ -2200,10 +2196,8 @@ def validate_recipe_semantics(
     record = EphemeralWorkspaceRecipe.from_dict(payload)
     if expected_recipe is None:
         raise ValueError("expected_recipe is required for bound recipe admission")
-    expected = (
-        expected_recipe
-        if isinstance(expected_recipe, EphemeralWorkspaceRecipe)
-        else EphemeralWorkspaceRecipe.from_dict(expected_recipe)
+    expected = _exact_contract_record(
+        expected_recipe, EphemeralWorkspaceRecipe, "expected_recipe"
     )
     if record.to_dict() != expected.to_dict():
         raise ValueError("stale complete recipe identity")
@@ -2219,10 +2213,8 @@ def validate_project_semantics(
     record = ProjectContextProjection.from_dict(payload)
     if expected_projection is None:
         raise ValueError("expected_projection is required for bound project admission")
-    expected = (
-        expected_projection
-        if isinstance(expected_projection, ProjectContextProjection)
-        else ProjectContextProjection.from_dict(expected_projection)
+    expected = _exact_contract_record(
+        expected_projection, ProjectContextProjection, "expected_projection"
     )
     record.validate_bindings(expected_projection=expected)
     return record
@@ -2237,10 +2229,8 @@ def validate_observation_semantics(
     record = MultimodalSpatialObservation.from_dict(payload)
     if expected_observation is None:
         raise ValueError("expected_observation is required for bound observation admission")
-    expected = (
-        expected_observation
-        if isinstance(expected_observation, MultimodalSpatialObservation)
-        else MultimodalSpatialObservation.from_dict(expected_observation)
+    expected = _exact_contract_record(
+        expected_observation, MultimodalSpatialObservation, "expected_observation"
     )
     expected_entities: dict[str, str] = {}
     for target in expected.target_candidates:

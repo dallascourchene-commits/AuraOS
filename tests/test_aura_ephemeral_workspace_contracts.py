@@ -4,7 +4,7 @@ import ast
 import copy
 from collections.abc import Mapping, Sequence
 import json
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, fields, replace
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -2282,3 +2282,171 @@ def test_nested_contract_subclasses_are_rejected_before_parent_signing() -> None
     redirected_budget = RedirectedBudget(memory_mb=512)
     with pytest.raises(ValueError, match="exact WorkspaceBudget"):
         recipe(budgets=redirected_budget)
+
+
+def test_remaining_exact_record_and_key_boundaries_fail_closed() -> None:
+    """Every nested/expected record and map key must cross an exact boundary."""
+    class RedirectedEdge(DependencyEdge):
+        def to_dict(self) -> dict[str, str]:
+            payload = super().to_dict()
+            payload["target_capability_id"] = "attacker_capability"
+            return payload
+
+    class RedirectedBinding(SpatialReferentBinding):
+        def to_dict(self) -> dict[str, Any]:
+            payload = super().to_dict()
+            payload["entity_id"] = "entity:attacker"
+            return payload
+
+    class RedirectedProject(ProjectContextProjection):
+        def to_dict(self) -> dict[str, Any]:
+            payload = super().to_dict()
+            payload["canonical_owner"] = "attacker.owner"
+            return payload
+
+    class RedirectedRecipe(EphemeralWorkspaceRecipe):
+        def to_dict(self) -> dict[str, Any]:
+            payload = super().to_dict()
+            payload["ttl_seconds"] += 1
+            return payload
+
+    class RedirectedObservation(MultimodalSpatialObservation):
+        def to_dict(self) -> dict[str, Any]:
+            payload = super().to_dict()
+            payload["normalized_action"] = "ATTACKER_ACTION"
+            return payload
+
+    class HashBombKey(str):
+        def __hash__(self) -> int:
+            raise TypeError("hostile key hash")
+
+    class DetachedKeyMapping(Mapping[Any, Any]):
+        def __init__(self, key: Any, value: Any) -> None:
+            self.key = key
+            self.value = value
+
+        def __getitem__(self, key: Any) -> Any:
+            if key is self.key:
+                return self.value
+            raise KeyError(key)
+
+        def __iter__(self):
+            return iter((self.key,))
+
+        def __len__(self) -> int:
+            return 1
+
+        def items(self):
+            return ((self.key, self.value),)
+
+    def clone_as_subclass(record: Any, record_type: type[Any]) -> Any:
+        clone = object.__new__(record_type)
+        for field in fields(record):
+            object.__setattr__(clone, field.name, getattr(record, field.name))
+        return clone
+
+    workspace_recipe, _ = recipe()
+    dependency = workspace_recipe.dependency_edges[0]
+    redirected_edge = RedirectedEdge(
+        dependency.source_capability_id,
+        dependency.target_capability_id,
+    )
+    with pytest.raises(ValueError, match="exact DependencyEdge"):
+        replace(
+            workspace_recipe,
+            dependency_edges=(redirected_edge, *workspace_recipe.dependency_edges[1:]),
+            recipe_digest="",
+        )
+
+    trusted_observation = observation()
+    redirected_binding = clone_as_subclass(
+        trusted_observation.target_candidates[0], RedirectedBinding
+    )
+    with pytest.raises(ValueError, match="exact SpatialReferentBinding"):
+        replace(
+            trusted_observation,
+            target_candidates=(redirected_binding,),
+            observation_digest="",
+        )
+
+    trusted_project = project()
+    redirected_project = clone_as_subclass(trusted_project, RedirectedProject)
+    with pytest.raises(ValueError, match="exact ProjectContextProjection"):
+        trusted_project.validate_bindings(expected_projection=redirected_project)
+    with pytest.raises(ValueError, match="exact ProjectContextProjection"):
+        validate_project_semantics(
+            trusted_project.to_dict(), expected_projection=redirected_project
+        )
+
+    redirected_recipe = clone_as_subclass(workspace_recipe, RedirectedRecipe)
+    expected_adapters = {
+        item.reference_id: item.to_dict() for item in workspace_recipe.adapter_refs
+    }
+    expected_evidence = {
+        item.reference_id: item.to_dict() for item in workspace_recipe.evidence_refs
+    }
+    with pytest.raises(ValueError, match="exact EphemeralWorkspaceRecipe"):
+        workspace_recipe.validate_bindings(
+            expected_intent_digest=workspace_recipe.canonical_intent_digest,
+            expected_project_projection_id=workspace_recipe.project_projection_id,
+            expected_project_projection_digest=workspace_recipe.project_projection_digest,
+            expected_base_manifest_ref=workspace_recipe.base_manifest_ref,
+            expected_adapter_refs=expected_adapters,
+            expected_evidence_refs=expected_evidence,
+            expected_recipe=redirected_recipe,
+        )
+    with pytest.raises(ValueError, match="exact EphemeralWorkspaceRecipe"):
+        validate_recipe_semantics(
+            workspace_recipe.to_dict(), expected_recipe=redirected_recipe
+        )
+
+    redirected_observation = clone_as_subclass(
+        trusted_observation, RedirectedObservation
+    )
+    expected_entities = {
+        target.entity_id: target.entity_digest
+        for target in trusted_observation.target_candidates
+    }
+    with pytest.raises(ValueError, match="exact MultimodalSpatialObservation"):
+        trusted_observation.validate_bindings(
+            expected_scene_id=trusted_observation.scene_id,
+            expected_scene_digest=trusted_observation.scene_digest,
+            expected_session_id=trusted_observation.session_id,
+            expected_session_digest=trusted_observation.session_digest,
+            expected_entity_digests=expected_entities,
+            expected_evidence_refs=expected_observation_evidence(trusted_observation),
+            expected_observation=redirected_observation,
+        )
+    with pytest.raises(ValueError, match="exact MultimodalSpatialObservation"):
+        validate_observation_semantics(
+            trusted_observation.to_dict(),
+            expected_observation=redirected_observation,
+        )
+
+    with pytest.raises(ValueError, match="metadata keys must be strings"):
+        workspace_contracts._metadata(((HashBombKey("note"), "retained"),), "metadata")
+
+    expected_reference = ref("adapter:hostile-key", D["2"])
+    with pytest.raises(ValueError, match="expected_adapter_refs key must be a string"):
+        workspace_contracts._validate_reference_set(
+            (expected_reference,),
+            DetachedKeyMapping(
+                HashBombKey(expected_reference.reference_id),
+                expected_reference.to_dict(),
+            ),
+            "adapter",
+        )
+
+    with pytest.raises(ValueError, match="expected entity identifier must be a string"):
+        trusted_observation.validate_bindings(
+            expected_scene_id=trusted_observation.scene_id,
+            expected_scene_digest=trusted_observation.scene_digest,
+            expected_session_id=trusted_observation.session_id,
+            expected_session_digest=trusted_observation.session_digest,
+            expected_entity_digests=DetachedKeyMapping(
+                HashBombKey(trusted_observation.target_candidates[0].entity_id),
+                trusted_observation.target_candidates[0].entity_digest,
+            ),
+            expected_evidence_refs=expected_observation_evidence(trusted_observation),
+            expected_observation=trusted_observation,
+        )
