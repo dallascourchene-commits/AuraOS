@@ -87,7 +87,4 @@ git commit -m 'fix(pr1): close nested record serialization gaps'
 
 remote_head="$(git ls-remote origin "refs/heads/$BRANCH" | awk '{print $1}')"
 test "$remote_head" = "$FROZEN"
-AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-  push origin HEAD:"refs/heads/$BRANCH"
-unset AUTH_HEADER
+git push origin HEAD:"refs/heads/$BRANCH"
