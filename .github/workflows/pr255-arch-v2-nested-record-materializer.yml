@@ -1,4 +1,4 @@
-name: PR255 Nested Record Repair V7
+name: PR255 Nested Record Repair V8
 
 on:
   push:
@@ -9,6 +9,10 @@ on:
 
 permissions:
   contents: write
+
+concurrency:
+  group: pr255-nested-record-repair
+  cancel-in-progress: true
 
 jobs:
   prove_and_promote:
@@ -22,12 +26,12 @@ jobs:
           path: control
           fetch-depth: 1
 
-      - name: Checkout frozen PR head
+      - name: Checkout exact frozen PR head
         uses: actions/checkout@v4
         with:
           ref: 9c179fcfb753752830415a525634ae02729ad59b
           path: work
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Set up Python
         uses: actions/setup-python@v5
