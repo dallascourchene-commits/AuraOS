@@ -4,7 +4,6 @@ import ast
 import copy
 from collections.abc import Mapping, Sequence
 import json
-import re
 from dataclasses import dataclass, replace
 from enum import Enum
 from pathlib import Path
@@ -99,6 +98,7 @@ def recipe(*, ttl_seconds: int = 300, manifest_ttl: int = 300,
         base_manifest=manifest,
         expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
         project_projection=project(),
+        expected_project_projection=project(),
         canonical_intent_digest=D["1"],
         adapter_refs=adapters or (ref("adapter:compass", D["2"]), ref("adapter:spatial", D["3"])),
         evidence_refs=evidence or (ref("evidence:source", D["4"]), ref("evidence:tests", D["5"])),
@@ -160,6 +160,7 @@ def test_v1_manifest_is_unchanged_when_wrapped_and_serialized_mapping_is_verifie
         base_manifest=manifest,
         expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
         project_projection=project(),
+        expected_project_projection=project(),
         canonical_intent_digest=D["1"],
         adapter_refs=(ref("adapter:compass", D["2"]),),
         evidence_refs=(ref("evidence:source", D["3"]),),
@@ -172,6 +173,7 @@ def test_v1_manifest_is_unchanged_when_wrapped_and_serialized_mapping_is_verifie
     compile_coding_spatial_workspace_recipe(
         base_manifest=serialized,
         project_projection=project(),
+        expected_project_projection=project(),
         canonical_intent_digest=D["1"],
         adapter_refs=(ref("adapter:compass", D["2"]),),
         evidence_refs=(ref("evidence:source", D["3"]),),
@@ -184,6 +186,7 @@ def test_v1_manifest_is_unchanged_when_wrapped_and_serialized_mapping_is_verifie
             base_manifest=tampered,
             expected_manifest_timestamps=_trusted_manifest_timestamps(tampered),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -195,6 +198,7 @@ def test_v1_manifest_is_unchanged_when_wrapped_and_serialized_mapping_is_verifie
             base_manifest=wrong_version,
             expected_manifest_timestamps=_trusted_manifest_timestamps(wrong_version),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -602,6 +606,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
             base_manifest=live,
             expected_manifest_timestamps=_trusted_manifest_timestamps(live),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -618,6 +623,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
             base_manifest=incomplete,
             expected_manifest_timestamps=_trusted_manifest_timestamps(incomplete),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -630,6 +636,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
         base_manifest=resolved,
         expected_manifest_timestamps=_trusted_manifest_timestamps(resolved),
         project_projection=project(),
+        expected_project_projection=project(),
         canonical_intent_digest=D["1"],
         adapter_refs=(ref("adapter:compass", D["2"]),),
         evidence_refs=(ref("evidence:source", D["3"]),),
@@ -672,6 +679,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
         base_manifest=leased,
         expected_manifest_timestamps=_trusted_manifest_timestamps(leased),
         project_projection=project(),
+        expected_project_projection=project(),
         canonical_intent_digest=D["1"],
         adapter_refs=(ref("adapter:compass", D["2"]),),
         evidence_refs=(ref("evidence:source", D["3"]),),
@@ -685,6 +693,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
             base_manifest=tampered_lease_hash,
             expected_manifest_timestamps=_trusted_manifest_timestamps(tampered_lease_hash),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -699,6 +708,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
             base_manifest=unsafe_lease,
             expected_manifest_timestamps=_trusted_manifest_timestamps(unsafe_lease),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -713,6 +723,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
             base_manifest=shifted,
             expected_manifest_timestamps=trusted_timestamps,
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -726,6 +737,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
             base_manifest=huge_cost,
             expected_manifest_timestamps=_trusted_manifest_timestamps(huge_cost),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -739,6 +751,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
             base_manifest=denied_grant,
             expected_manifest_timestamps=_trusted_manifest_timestamps(denied_grant),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -752,6 +765,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
             base_manifest=missing_forbidden_paths,
             expected_manifest_timestamps=_trusted_manifest_timestamps(missing_forbidden_paths),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -765,6 +779,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
             base_manifest=model_enabled,
             expected_manifest_timestamps=_trusted_manifest_timestamps(model_enabled),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -778,6 +793,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
             base_manifest=verifier_extra,
             expected_manifest_timestamps=_trusted_manifest_timestamps(verifier_extra),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -791,6 +807,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
             base_manifest=verifier_expanded,
             expected_manifest_timestamps=_trusted_manifest_timestamps(verifier_expanded),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -807,6 +824,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
             base_manifest=unsafe,
             expected_manifest_timestamps=_trusted_manifest_timestamps(unsafe),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -823,6 +841,7 @@ def test_compiler_rejects_expired_stale_and_redirected_inputs(monkeypatch: pytes
                 base_manifest=expired,
                 expected_manifest_timestamps=_trusted_manifest_timestamps(expired),
                 project_projection=project(),
+                expected_project_projection=project(),
                 canonical_intent_digest=D["1"],
                 adapter_refs=(ref("adapter:compass", D["2"]),),
                 evidence_refs=(ref("evidence:source", D["3"]),),
@@ -834,6 +853,7 @@ def test_compiler_rejects_expired_stale_and_redirected_inputs(monkeypatch: pytes
             base_manifest=manifest,
             expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
             project_projection=stale_project,
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -845,6 +865,7 @@ def test_compiler_rejects_expired_stale_and_redirected_inputs(monkeypatch: pytes
             base_manifest=manifest,
             expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:stale", D["2"], "STALE"),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -862,7 +883,7 @@ def test_recipe_binding_revalidates_complete_manifest_and_dependency_identities(
     digest_body.pop("recipe_digest")
     altered_payload["recipe_digest"] = stable_digest(digest_body)
     altered = EphemeralWorkspaceRecipe.from_dict(altered_payload)
-    with pytest.raises(ValueError, match="adapter canonical reference"):
+    with pytest.raises(ValueError, match="stale adapter reference"):
         altered.validate_bindings(
             expected_intent_digest=original.canonical_intent_digest,
             expected_project_projection_id=original.project_projection_id,
@@ -979,6 +1000,7 @@ def test_review_wave6_nested_manifest_and_capability_boundaries_fail_closed() ->
                 base_manifest=payload,
                 expected_manifest_timestamps=_trusted_manifest_timestamps(payload),
                 project_projection=project(),
+                expected_project_projection=project(),
                 canonical_intent_digest=D["1"],
                 adapter_refs=(ref("adapter:compass", D["2"]),),
                 evidence_refs=(ref("evidence:source", D["3"]),),
@@ -992,6 +1014,7 @@ def test_review_wave6_nested_manifest_and_capability_boundaries_fail_closed() ->
             base_manifest=unsafe_policy,
             expected_manifest_timestamps=_trusted_manifest_timestamps(unsafe_policy),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -1007,6 +1030,7 @@ def test_review_wave6_nested_manifest_and_capability_boundaries_fail_closed() ->
             base_manifest=under_granted,
             expected_manifest_timestamps=_trusted_manifest_timestamps(under_granted),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -1028,6 +1052,7 @@ def test_review_wave6_nested_manifest_and_capability_boundaries_fail_closed() ->
             base_manifest=oversized,
             expected_manifest_timestamps=_trusted_manifest_timestamps(oversized),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -1085,6 +1110,7 @@ def test_review_wave6_sources_truth_manifest_identity_and_fractional_ttl_fail_cl
         base_manifest=long_manifest,
         expected_manifest_timestamps=_trusted_manifest_timestamps(long_manifest),
         project_projection=project(),
+        expected_project_projection=project(),
         canonical_intent_digest=D["1"],
         adapter_refs=(ref("adapter:compass", D["2"]),),
         evidence_refs=(ref("evidence:source", D["3"]),),
@@ -1104,6 +1130,7 @@ def test_review_wave6_sources_truth_manifest_identity_and_fractional_ttl_fail_cl
             base_manifest=short,
             expected_manifest_timestamps=_trusted_manifest_timestamps(short),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -1242,6 +1269,7 @@ def test_review_wave7_duplicate_requests_and_serialized_timestamp_rebinding_fail
             base_manifest=manifest,
             expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -1256,6 +1284,7 @@ def test_review_wave7_duplicate_requests_and_serialized_timestamp_rebinding_fail
         compile_coding_spatial_workspace_recipe(
             base_manifest=serialized_manifest,
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -1272,6 +1301,7 @@ def test_review_wave7_duplicate_requests_and_serialized_timestamp_rebinding_fail
         compile_coding_spatial_workspace_recipe(
             base_manifest=resurrected,
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -1299,6 +1329,7 @@ def test_review_wave10_bounded_policy_parity_fail_closed() -> None:
             base_manifest=live,
             expected_manifest_timestamps=trusted_live_timestamps,
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -1327,6 +1358,7 @@ def test_review_wave10_bounded_policy_parity_fail_closed() -> None:
             base_manifest=inflated,
             expected_manifest_timestamps=_trusted_manifest_timestamps(inflated),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -1459,6 +1491,7 @@ def test_review_wave11_complete_bounds_and_schema_parity_fail_closed() -> None:
             base_manifest=manifest,
             expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
             project_projection=project(),
+            expected_project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
@@ -1561,6 +1594,7 @@ def test_review_wave11_complete_bounds_and_schema_parity_fail_closed() -> None:
         base_manifest=toggling,
         expected_manifest_timestamps=(primary["created_at"], primary["expires_at"]),
         project_projection=project(),
+        expected_project_projection=project(),
         canonical_intent_digest=D["1"],
         adapter_refs=(ref("adapter:compass", D["2"]),),
         evidence_refs=(ref("evidence:source", D["3"]),),
@@ -1626,6 +1660,7 @@ class _LyingSequence(Sequence):
 
     def __init__(self, values: Sequence[Any]) -> None:
         self._values = tuple(values)
+        self.iterations = 0
 
     def __getitem__(self, index):
         return self._values[index]
@@ -1633,13 +1668,17 @@ class _LyingSequence(Sequence):
     def __len__(self) -> int:
         return 1
 
+    def __iter__(self):
+        self.iterations += 1
+        return iter(self._values)
+
 
 class _SurrogateEnum(Enum):
     BAD = "\ud800"
 
 
-def test_all_serialized_records_use_one_detached_mapping_snapshot() -> None:
-    """Every public from_dict parser must consume hostile mapping content exactly once."""
+def test_all_serialized_records_use_one_deep_detached_snapshot() -> None:
+    """Every public parser consumes top-level and nested hostile containers once."""
     p, (r, _), o = project(), recipe(), observation()
     cases = (
         (workspace_contracts.AuthorityEnvelope, p.authority.to_dict()),
@@ -1657,27 +1696,46 @@ def test_all_serialized_records_use_one_detached_mapping_snapshot() -> None:
         assert record_type.from_dict(hostile).to_dict() == payload
         assert hostile.item_reads == 1
 
+    nested_payload = p.to_dict()
+    nested = _LyingSequence(nested_payload["artifact_evidence_refs"])
+    nested_payload["artifact_evidence_refs"] = nested
+    assert ProjectContextProjection.from_dict(nested_payload).to_dict() == p.to_dict()
+    assert nested.iterations == 1
 
-def test_semantic_validators_require_independent_complete_record_binding() -> None:
-    """Project and observation parsing must not be mistaken for admission."""
-    p, o = project(), observation()
+
+def test_semantic_validators_and_compiler_require_complete_trusted_binding() -> None:
+    """Parsing never becomes project, observation, recipe, or compiler admission."""
+    p, (r, manifest), o = project(), recipe(), observation()
     with pytest.raises(ValueError, match="expected_projection is required"):
         validate_project_semantics(p.to_dict())
     with pytest.raises(ValueError, match="expected_observation is required"):
         validate_observation_semantics(o.to_dict())
-    assert validate_project_semantics(
-        p.to_dict(), expected_projection=p
-    ).to_dict() == p.to_dict()
-    assert validate_observation_semantics(
-        o.to_dict(), expected_observation=o
-    ).to_dict() == o.to_dict()
-    redirected = replace(p, project_ref="repository:redirected", projection_digest="")
+    with pytest.raises(ValueError, match="expected_recipe is required"):
+        validate_recipe_semantics(r.to_dict())
+    assert validate_project_semantics(p.to_dict(), expected_projection=p) == p
+    assert validate_observation_semantics(o.to_dict(), expected_observation=o) == o
+    assert validate_recipe_semantics(r.to_dict(), expected_recipe=r) == r
+
+    redirected_payload = p.to_dict()
+    redirected_payload["artifact_evidence_refs"][0]["owner"] = "attacker.owner"
+    digest_body = dict(redirected_payload)
+    digest_body.pop("projection_digest")
+    redirected_payload["projection_digest"] = stable_digest(digest_body)
+    redirected = ProjectContextProjection.from_dict(redirected_payload)
     with pytest.raises(ValueError, match="stale project projection identity"):
-        validate_project_semantics(p.to_dict(), expected_projection=redirected)
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=manifest,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
+            project_projection=redirected,
+            expected_project_projection=p,
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
 
 
-def test_observed_breadth_limits_ignore_lying_sequence_lengths() -> None:
-    """References, dependency edges, and observation targets must use observed breadth."""
+def test_observed_breadth_and_hostile_metadata_protocols_fail_closed() -> None:
+    """Reported lengths, equality hooks, and broken counts cannot bypass bounds."""
     r, _ = recipe()
     with pytest.raises(ValueError, match="adapter_refs exceeds its item ceiling"):
         replace(
@@ -1704,39 +1762,88 @@ def test_observed_breadth_limits_ignore_lying_sequence_lengths() -> None:
             observation_digest="",
         )
 
+    class EqualityMapping(Mapping[str, Any]):
+        def __getitem__(self, key: str) -> Any:
+            return {"note": "retained"}[key]
 
-def test_path_policy_and_schemas_reject_drive_relative_and_substring_secrets() -> None:
-    """Python and every schema copy must mirror the canonical substring path policy."""
-    for unsafe in ("C:relative.py", "docs/example.env.txt", "src/key.pem.backup", "a//b", "a\\b"):
-        with pytest.raises(ValueError):
-            ref("artifact:unsafe", D["1"], metadata={"source_path": unsafe})
+        def __iter__(self):
+            return iter(("note",))
+
+        def __len__(self) -> int:
+            return 1
+
+        def __eq__(self, other: object) -> bool:
+            return True
+
+    assert dict(workspace_contracts._metadata(EqualityMapping(), "metadata")) == {
+        "note": "retained"
+    }
+
+    class BrokenLengthMapping(EqualityMapping):
+        def __len__(self) -> int:
+            raise TypeError("hostile length")
+
+    with pytest.raises(ValueError, match="invalid item count"):
+        workspace_contracts._metadata(BrokenLengthMapping(), "metadata")
+
+
+def test_schema_delegation_matches_canonical_path_and_text_policy() -> None:
+    """Schemas mirror local constraints and explicitly delegate cross-field ordering."""
     for schema_name in (
         "aura_project_context_projection.schema.json",
         "aura_ephemeral_workspace_recipe.schema.json",
         "aura_multimodal_spatial_observation.schema.json",
     ):
         schema = json.loads((ROOT / "schemas" / schema_name).read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        assert schema["x-aura-semantic-requires-independent-binding"] is True
+        invariants = schema["x-aura-semantic-invariants"]
+        assert "UTF-8 byte ceilings" in invariants
+        assert "source span ordering delegated to mandatory semantic validation" in invariants
         patterns: list[str] = []
+
         def collect(value: Any) -> None:
             if isinstance(value, dict):
-                source_path = value.get("source_path")
-                if isinstance(source_path, dict) and "pattern" in source_path:
-                    patterns.append(source_path["pattern"])
+                if "source_path" in value and isinstance(value["source_path"], dict):
+                    pattern = value["source_path"].get("pattern")
+                    if pattern:
+                        patterns.append(pattern)
                 for child in value.values():
                     collect(child)
             elif isinstance(value, list):
                 for child in value:
                     collect(child)
+
         collect(schema)
         assert patterns
-        assert schema["x-aura-semantic-requires-independent-binding"] is True
-        assert "UTF-8 byte ceilings" in schema["x-aura-semantic-invariants"]
         for pattern in patterns:
-            for unsafe in ("C:relative.py", "docs/example.env.txt", "src/key.pem.backup", "a//b", "a\\b"):
-                assert re.fullmatch(pattern, unsafe) is None
+            assert workspace_contracts.re.fullmatch(pattern, "src/credential.txt")
+            assert workspace_contracts.re.fullmatch(pattern, "src/credentials.txt") is None
+
+    p = project()
+    project_schema = json.loads(
+        (ROOT / "schemas" / "aura_project_context_projection.schema.json").read_text()
+    )
+    malformed_ref = copy.deepcopy(p.to_dict())
+    malformed_ref["repository_identity"]["ref"] = "main\nredirect"
+    error_paths = {
+        tuple(error.absolute_path)
+        for error in Draft202012Validator(project_schema).iter_errors(malformed_ref)
+    }
+    assert ("repository_identity", "ref") in error_paths
+
+    reversed_span = p.to_dict()
+    reversed_span["artifact_evidence_refs"][0]["metadata"] = {
+        "source_path": "src/module.py",
+        "line_start": 10,
+        "line_end": 1,
+    }
+    assert not list(Draft202012Validator(project_schema).iter_errors(reversed_span))
+    with pytest.raises(ValueError, match="source line range is reversed"):
+        validate_project_semantics(reversed_span, expected_projection=p)
 
 
 def test_enum_unicode_failures_are_normalized_to_value_error() -> None:
-    """Recursive Enum canonicalization must preserve the public fail-closed exception type."""
+    """Recursive Enum canonicalization preserves the public fail-closed exception type."""
     with pytest.raises(ValueError, match="valid Unicode scalar values"):
         stable_digest(_SurrogateEnum.BAD)

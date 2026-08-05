@@ -17,7 +17,7 @@ The repair separates three previously blurred trust states:
 2. **Bind:** the complete record is compared with independently trusted canonical expectations.
 3. **Admit:** only a successfully bound compiled record may be treated as the workspace recipe.
 
-A digest proves that a body is internally self-consistent. It does not prove that the body came from a canonical owner or matches an approved lifecycle/resource contract. Every named semantic validator therefore requires an independently trusted complete expected record (`expected_projection`, `expected_recipe`, or `expected_observation`); parsing alone is never admission.
+A digest proves that a body is internally self-consistent. It does not prove that the body came from a canonical owner or matches an approved lifecycle/resource contract. `validate_project_semantics()`, `validate_recipe_semantics()`, and `validate_observation_semantics()` therefore require independently trusted complete-record expectations; parsing alone is never admission. The compiler likewise requires `expected_project_projection` before it can emit a recipe.
 
 ## Canonical-owner matrix
 
@@ -35,7 +35,7 @@ A digest proves that a body is internally self-consistent. It does not prove tha
 
 ## Single-snapshot hostile-input boundary
 
-Mappings, sequences, dataclasses, enums, and live manifest exports are detached exactly once before validation. The canonicalizer:
+Mappings, nested mappings, nested sequences, dataclasses, enums, and live manifest exports are recursively detached exactly once before validation. The canonicalizer:
 
 - rechecks observed breadth after iteration rather than trusting a custom `len()`;
 - recursively validates enum values;
@@ -100,22 +100,22 @@ Unknown keys, nested structures, authority aliases, raw camera/audio/joint/gaze/
 
 ## Schema and semantic boundary
 
-The three Draft 2020-12 schemas enforce exact local shape, fixed authority and owner constants, closed metadata, exact digest formats, bounded arrays/numbers, source-path restrictions, and frozen recipe constants. JSON Schema `maxLength` counts Unicode code points rather than UTF-8 bytes, so every schema explicitly delegates byte ceilings to its mandatory executable validator.
+The three Draft 2020-12 schemas enforce exact local shape, fixed authority and owner constants, closed metadata, exact digest formats, bounded arrays/numbers, source-path restrictions, and frozen recipe constants.
 
-Cross-record identity, graph, digest equality, timestamp arithmetic, transcript binding, UTF-8 byte ceilings, and complete admission require executable semantic validation. All three schemas declare `x-aura-semantic-requires-independent-binding: true`.
+Cross-record identity, graph, digest equality, timestamp arithmetic, transcript binding, and complete admission require executable semantic validation. All three schemas declare `x-aura-semantic-requires-independent-binding: true`. UTF-8 byte ceilings and source-span ordering (`line_start <= line_end`) are explicitly delegated to the named mandatory semantic validator because Draft 2020-12 counts code points and cannot compare sibling numeric fields.
 
 Consumers must run both schema validation and the named validator:
 
-- `validate_project_semantics(..., expected_projection=<trusted canonical projection>)`
+- `validate_project_semantics(..., expected_projection=<trusted continuity projection>)`
 - `validate_recipe_semantics(..., expected_recipe=<trusted compiled recipe>)`
-- `validate_observation_semantics(..., expected_observation=<trusted normalized observation>)`
+- `validate_observation_semantics(..., expected_observation=<trusted observation>)`
 
 ## Focused verification
 
 The focused suite contains **33 tests** covering the original review waves plus the structural repair:
 
 - exact V1 object and serialized compatibility;
-- single-snapshot live/custom mapping behavior;
+- recursive single-snapshot live/custom mapping and nested-sequence behavior;
 - strict bounded canonicalization and recursion handling;
 - closed metadata and canonical path-policy delegation;
 - mandatory serialized digests;
@@ -124,7 +124,7 @@ The focused suite contains **33 tests** covering the original review waves plus 
 - complete graph/reference/observation bindings;
 - sanitized manifest-projection identity;
 - manifest/recipe TTL and budget ceilings;
-- schema parity;
+- schema parity, canonical path-policy equivalence, and explicit semantic delegation;
 - explicit parse-bind-admit separation.
 
 Verification completed in the exact-head focused workspace:
