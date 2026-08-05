@@ -2369,13 +2369,37 @@ def test_remaining_exact_record_and_key_boundaries_fail_closed() -> None:
             observation_digest="",
         )
 
+    class MasqueradingProject(ProjectContextProjection):
+        def to_dict(self) -> dict[str, Any]:
+            return project().to_dict()
+
     trusted_project = project()
     redirected_project = clone_as_subclass(trusted_project, RedirectedProject)
+    masquerading_project = clone_as_subclass(trusted_project, MasqueradingProject)
     with pytest.raises(ValueError, match="exact ProjectContextProjection"):
         trusted_project.validate_bindings(expected_projection=redirected_project)
     with pytest.raises(ValueError, match="exact ProjectContextProjection"):
         validate_project_semantics(
             trusted_project.to_dict(), expected_projection=redirected_project
+        )
+
+    manifest = create_manifest(
+        "Reject projection subclasses at the compiler boundary.",
+        organ_id="EORG-project-subclass-boundary",
+        requested_capabilities=["resolve_capabilities", "read_slice", "dissolve"],
+    )
+    with pytest.raises(
+        ValueError,
+        match="project_projection must be an exact ProjectContextProjection",
+    ):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=manifest,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
+            project_projection=masquerading_project,
+            expected_project_projection=trusted_project,
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
         )
 
     redirected_recipe = clone_as_subclass(workspace_recipe, RedirectedRecipe)

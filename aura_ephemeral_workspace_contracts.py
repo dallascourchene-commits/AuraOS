@@ -2045,13 +2045,11 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
     """Compile the frozen recipe without invoking any canonical owner."""
     exported = _bounded_manifest_export(base_manifest)
     body, legacy_digest, source_snapshot_digest = _manifest_snapshot(exported)
-    project_payload = (
-        project_projection.to_dict()
-        if isinstance(project_projection, ProjectContextProjection)
-        else project_projection
+    project_record = _exact_contract_record(
+        project_projection, ProjectContextProjection, "project_projection"
     )
     project = validate_project_semantics(
-        project_payload, expected_projection=expected_project_projection
+        project_record.to_dict(), expected_projection=expected_project_projection
     )
     projection_body = {
         "version": _MANIFEST_PROJECTION_VERSION,

@@ -69,6 +69,8 @@ A minimum-sufficient read-only projection containing exact repository identity a
 
 `canonical_owner` is fixed to `aura_unified_memory_continuity`; privacy is fixed to `MINIMUM_SUFFICIENT`; egress is fixed to `LOCAL_ONLY`. Hypothesis/presentation references, stale references, duplicate IDs, redirected owners, and incomplete rebinding fail closed.
 
+The compiler admits `project_projection` only as an exact `ProjectContextProjection` or a detached serialized mapping. Subclasses and other live objects are rejected before any overridable serializer can influence admission.
+
 ### `EphemeralWorkspaceRecipe`
 
 The frozen `CODING_SPATIAL_WORKSPACE_V1` recipe binds the manifest projection, canonical intent, project projection, capability graph, adapters, evidence, handoff owners, budgets, interactions, verification gates, TTL, and dissolution policy.
