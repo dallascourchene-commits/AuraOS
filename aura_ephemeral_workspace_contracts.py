@@ -368,7 +368,7 @@ def _seq(value: Any, name: str, *, ids: bool = False, max_items: int = MAX_ITEMS
 def _source_path(value: Any, name: str) -> str:
     """Require a safe repository-relative source path under the canonical path policy."""
     path = _text(value, name, maximum=4096)
-    if "\\" in path or path.startswith("/") or re.match(r"^[A-Za-z]:/", path):
+    if "\\" in path or path.startswith("/") or re.match(r"^[A-Za-z]:", path):
         raise ValueError(f"{name} must be a repository-relative POSIX path")
     parts = path.split("/")
     if any(part in {"", ".", ".."} for part in parts):
@@ -482,11 +482,30 @@ def _set_record_digest(record: Any, field_name: str) -> None:
     object.__setattr__(record, field_name, expected)
 
 
-def _require_serialized_digest(payload: Mapping[str, Any], field_name: str, name: str) -> None:
-    """Require deserialized records to carry their original integrity digest."""
-    if not isinstance(payload, Mapping):
-        raise ValueError(f"{name} must be an object")
-    _digest(payload.get(field_name), f"{name}.{field_name}")
+def _detached_serialized_record(
+    payload: Mapping[str, Any],
+    expected: set[str],
+    name: str,
+    *,
+    digest_field: str | None = None,
+) -> dict[str, Any]:
+    """Snapshot one hostile serialized mapping and validate only detached bytes."""
+    pairs = _bounded_mapping_snapshot(payload, name, MAX_ITEMS)
+    keys = tuple(key for key, _ in pairs)
+    if any(not isinstance(key, str) for key in keys):
+        raise ValueError(f"{name} keys must be strings")
+    if len(set(keys)) != len(keys):
+        raise ValueError(f"{name} keys must be unique")
+    supplied = set(keys)
+    if supplied != expected:
+        raise ValueError(
+            f"{name} keys mismatch: missing={sorted(expected-supplied)}, "
+            f"extra={sorted(supplied-expected)}"
+        )
+    detached = dict(pairs)
+    if digest_field is not None:
+        _digest(detached.get(digest_field), f"{name}.{digest_field}")
+    return detached
 
 
 def _require_exact_serialized_form(record: Any, payload: Mapping[str, Any]) -> None:
@@ -542,9 +561,13 @@ class AuthorityEnvelope:
     @classmethod
     def from_dict(cls, payload: Mapping[str, Any]) -> "AuthorityEnvelope":
         """Parse an exact serialized authority envelope."""
-        _strict(payload, {field.name for field in fields(cls)}, "authority")
-        record = cls(**dict(payload))
-        _require_exact_serialized_form(record, payload)
+        detached = _detached_serialized_record(
+            payload,
+            {field.name for field in fields(cls)},
+            'authority',
+        )
+        record = cls(**detached)
+        _require_exact_serialized_form(record, detached)
         return record
 
 
@@ -582,9 +605,13 @@ class CanonicalReference:
     @classmethod
     def from_dict(cls, payload: Mapping[str, Any]) -> "CanonicalReference":
         """Parse an exact serialized canonical reference."""
-        _strict(payload, {"version", "reference_id", "owner", "canonical_ref", "digest", "truth_class", "freshness_class", "metadata"}, "reference")
-        record = cls(**dict(payload))
-        _require_exact_serialized_form(record, payload)
+        detached = _detached_serialized_record(
+            payload,
+            {'version', 'reference_id', 'owner', 'canonical_ref', 'digest', 'truth_class', 'freshness_class', 'metadata'},
+            'reference',
+        )
+        record = cls(**detached)
+        _require_exact_serialized_form(record, detached)
         return record
 
 
@@ -593,7 +620,7 @@ def _reference_map(value: Any, name: str) -> dict[str, CanonicalReference]:
     if not isinstance(value, Mapping):
         raise ValueError(f"{name} is required")
     result: dict[str, CanonicalReference] = {}
-    for supplied_id, raw_reference in value.items():
+    for supplied_id, raw_reference in _bounded_mapping_snapshot(value, name, MAX_ITEMS):
         reference_id = _id(supplied_id, f"{name} key")
         reference = raw_reference if isinstance(raw_reference, CanonicalReference) else CanonicalReference.from_dict(raw_reference)
         if reference_id != reference.reference_id:
@@ -606,12 +633,27 @@ def _reference_map(value: Any, name: str) -> dict[str, CanonicalReference]:
 
 def _validate_reference_set(actual: Sequence[CanonicalReference], expected_value: Any,
                             name: str, *, require_current: bool = True) -> None:
-    """Rebind a complete reference set, including owner and metadata identity."""
+    """Rebind a complete reference set from one bounded expected snapshot."""
     if not isinstance(expected_value, Mapping):
         raise ValueError(f"expected_{name}_refs is required")
-    if len(expected_value) != len(actual) or len(expected_value) > MAX_ITEMS:
+    try:
+        expected_pairs = _bounded_mapping_snapshot(
+            expected_value,
+            f"expected_{name}_refs",
+            MAX_ITEMS,
+        )
+    except ValueError as exc:
+        raise ValueError(f"{name} reference set size mismatch") from exc
+    if len(expected_pairs) != len(actual):
         raise ValueError(f"{name} reference set size mismatch")
-    expected = _reference_map(expected_value, f"expected_{name}_refs")
+    expected_payload: dict[str, Any] = {}
+    for key, value in expected_pairs:
+        if not isinstance(key, str):
+            raise ValueError(f"expected_{name}_refs keys must be strings")
+        if key in expected_payload:
+            raise ValueError(f"duplicate expected_{name}_refs reference: {key}")
+        expected_payload[key] = value
+    expected = _reference_map(expected_payload, f"expected_{name}_refs")
     actual_ids = [reference.reference_id for reference in actual]
     if len(set(actual_ids)) != len(actual_ids):
         raise ValueError(f"duplicate {name} reference IDs")
@@ -657,10 +699,14 @@ class RepositoryIdentity:
     @classmethod
     def from_dict(cls, payload: Mapping[str, Any]) -> "RepositoryIdentity":
         """Parse and verify an exact serialized repository identity."""
-        _strict(payload, {"version", "repository", "ref", "commit_sha", "source_tree_digest", "identity_digest"}, "repository")
-        _require_serialized_digest(payload, "identity_digest", "repository")
-        record = cls(**dict(payload))
-        _require_exact_serialized_form(record, payload)
+        detached = _detached_serialized_record(
+            payload,
+            {'version', 'repository', 'ref', 'commit_sha', 'source_tree_digest', 'identity_digest'},
+            'repository',
+            digest_field='identity_digest',
+        )
+        record = cls(**detached)
+        _require_exact_serialized_form(record, detached)
         return record
 
 
@@ -760,14 +806,14 @@ class ProjectContextProjection:
     @classmethod
     def from_dict(cls, payload: Mapping[str, Any]) -> "ProjectContextProjection":
         """Parse and verify an exact serialized project projection."""
-        _strict(payload, {"version", "projection_id", "project_ref", "canonical_owner",
-                          "objective_digest", "purpose_digest", "repository_identity",
-                          "freshness_timestamp_ms", "freshness_class", "completeness_warnings",
-                          "privacy_class", "egress_class", "projection_only", "authority",
-                          "projection_digest", *_REFERENCE_FIELDS}, "project")
-        _require_serialized_digest(payload, "projection_digest", "project")
-        record = cls(**dict(payload))
-        _require_exact_serialized_form(record, payload)
+        detached = _detached_serialized_record(
+            payload,
+            {'version', 'projection_id', 'project_ref', 'canonical_owner', 'objective_digest', 'purpose_digest', 'repository_identity', 'freshness_timestamp_ms', 'freshness_class', 'completeness_warnings', 'privacy_class', 'egress_class', 'projection_only', 'authority', 'projection_digest', *_REFERENCE_FIELDS},
+            'project',
+            digest_field='projection_digest',
+        )
+        record = cls(**detached)
+        _require_exact_serialized_form(record, detached)
         return record
 
     def validate_bindings(
@@ -819,9 +865,13 @@ class WorkspaceBudget:
     @classmethod
     def from_dict(cls, payload: Mapping[str, Any]) -> "WorkspaceBudget":
         """Parse an exact serialized workspace budget."""
-        _strict(payload, {field.name for field in fields(cls)}, "budget")
-        record = cls(**dict(payload))
-        _require_exact_serialized_form(record, payload)
+        detached = _detached_serialized_record(
+            payload,
+            {field.name for field in fields(cls)},
+            'budget',
+        )
+        record = cls(**detached)
+        _require_exact_serialized_form(record, detached)
         return record
 
 
@@ -845,9 +895,13 @@ class DependencyEdge:
     @classmethod
     def from_dict(cls, payload: Mapping[str, Any]) -> "DependencyEdge":
         """Parse an exact serialized dependency edge."""
-        _strict(payload, {"source_capability_id", "target_capability_id"}, "dependency")
-        record = cls(**dict(payload))
-        _require_exact_serialized_form(record, payload)
+        detached = _detached_serialized_record(
+            payload,
+            {'source_capability_id', 'target_capability_id'},
+            'dependency',
+        )
+        record = cls(**detached)
+        _require_exact_serialized_form(record, detached)
         return record
 
 
@@ -873,10 +927,14 @@ def _acyclic(nodes: Sequence[str], edges: Sequence[DependencyEdge]) -> None:
 
 
 def _refs(value: Any, name: str, *, require_current: bool = False) -> tuple[CanonicalReference, ...]:
-    """Validate and canonicalize a non-empty reference set."""
-    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence) or not value or len(value) > MAX_ITEMS:
+    """Validate and canonicalize a non-empty reference set from one snapshot."""
+    items = _bounded_sequence_snapshot(value, name, MAX_ITEMS)
+    if not items:
         raise ValueError(f"{name} must be a non-empty bounded sequence")
-    result = tuple(item if isinstance(item, CanonicalReference) else CanonicalReference.from_dict(item) for item in value)
+    result = tuple(
+        item if isinstance(item, CanonicalReference) else CanonicalReference.from_dict(item)
+        for item in items
+    )
     if len({item.reference_id for item in result}) != len(result):
         raise ValueError(f"duplicate {name} IDs")
     if any(item.truth_class != "EXACT" for item in result):
@@ -992,9 +1050,18 @@ class EphemeralWorkspaceRecipe:
         capabilities = _seq(self.capability_ids, "recipe.capabilities", ids=True, max_items=128)
         object.__setattr__(self, "capability_ids", capabilities)
         allowed = set(capabilities)
-        if isinstance(self.dependency_edges, (str, bytes, bytearray)) or not isinstance(self.dependency_edges, Sequence) or len(self.dependency_edges) > MAX_DEPENDENCY_EDGES:
-            raise ValueError("recipe.dependency_edges must be a bounded sequence")
-        edges = tuple(edge if isinstance(edge, DependencyEdge) else DependencyEdge.from_dict(edge) for edge in self.dependency_edges)
+        try:
+            edge_items = _bounded_sequence_snapshot(
+                self.dependency_edges,
+                "recipe.dependency_edges",
+                MAX_DEPENDENCY_EDGES,
+            )
+        except ValueError as exc:
+            raise ValueError("recipe.dependency_edges must be a bounded sequence") from exc
+        edges = tuple(
+            edge if isinstance(edge, DependencyEdge) else DependencyEdge.from_dict(edge)
+            for edge in edge_items
+        )
         if len({(edge.source_capability_id, edge.target_capability_id) for edge in edges}) != len(edges):
             raise ValueError("duplicate recipe dependency")
         if any(edge.source_capability_id not in allowed or edge.target_capability_id not in allowed for edge in edges):
@@ -1091,10 +1158,14 @@ class EphemeralWorkspaceRecipe:
                     "required_verification_gates", "ttl_seconds", "lifecycle_policy",
                     "dissolution_policy", "automatic_persistence", "automatic_resume",
                     "automatic_promotion", "authority", "recipe_digest"}
-        _strict(payload, expected, "recipe")
-        _require_serialized_digest(payload, "recipe_digest", "recipe")
-        record = cls(**dict(payload))
-        _require_exact_serialized_form(record, payload)
+        detached = _detached_serialized_record(
+            payload,
+            expected,
+            'recipe',
+            digest_field='recipe_digest',
+        )
+        record = cls(**detached)
+        _require_exact_serialized_form(record, detached)
         return record
 
     def validate_bindings(self, *, expected_intent_digest: str,
@@ -1179,12 +1250,14 @@ class SpatialReferentBinding:
     @classmethod
     def from_dict(cls, payload: Mapping[str, Any]) -> "SpatialReferentBinding":
         """Parse and verify an exact serialized referent binding."""
-        _strict(payload, {"version", "binding_id", "scene_id", "scene_digest", "session_id",
-                          "session_digest", "entity_id", "entity_digest", "confidence",
-                          "evidence_ref", "input_sources", "binding_digest"}, "referent")
-        _require_serialized_digest(payload, "binding_digest", "referent")
-        record = cls(**dict(payload))
-        _require_exact_serialized_form(record, payload)
+        detached = _detached_serialized_record(
+            payload,
+            {'version', 'binding_id', 'scene_id', 'scene_digest', 'session_id', 'session_digest', 'entity_id', 'entity_digest', 'confidence', 'evidence_ref', 'input_sources', 'binding_digest'},
+            'referent',
+            digest_field='binding_digest',
+        )
+        record = cls(**detached)
+        _require_exact_serialized_form(record, detached)
         return record
 
 
@@ -1224,9 +1297,21 @@ class MultimodalSpatialObservation:
         object.__setattr__(self, "input_sources", sources)
         object.__setattr__(self, "normalized_event", _id(self.normalized_event, "observation.event"))
         object.__setattr__(self, "normalized_action", _id(self.normalized_action, "observation.action"))
-        if isinstance(self.target_candidates, (str, bytes, bytearray)) or not isinstance(self.target_candidates, Sequence) or not 1 <= len(self.target_candidates) <= 32:
+        try:
+            target_items = _bounded_sequence_snapshot(
+                self.target_candidates,
+                "observation.target_candidates",
+                32,
+            )
+        except ValueError as exc:
+            raise ValueError("observation requires a bounded target sequence") from exc
+        if not target_items:
             raise ValueError("observation requires a bounded target sequence")
-        targets = tuple(item if isinstance(item, SpatialReferentBinding) else SpatialReferentBinding.from_dict(item) for item in self.target_candidates)
+        targets = tuple(
+            item if isinstance(item, SpatialReferentBinding)
+            else SpatialReferentBinding.from_dict(item)
+            for item in target_items
+        )
         if len({target.binding_id for target in targets}) != len(targets):
             raise ValueError("observation requires unique target binding IDs")
         evidence_ids = [target.evidence_ref.reference_id for target in targets]
@@ -1285,15 +1370,14 @@ class MultimodalSpatialObservation:
     @classmethod
     def from_dict(cls, payload: Mapping[str, Any]) -> "MultimodalSpatialObservation":
         """Parse and verify an exact serialized normalized observation."""
-        _strict(payload, {"version", "observation_id", "scene_id", "scene_digest", "session_id",
-                          "session_digest", "input_sources", "normalized_event", "normalized_action",
-                          "target_candidates", "speech_text", "transcript_digest",
-                          "temporal_window_start_ms", "temporal_window_end_ms", "provider_class",
-                          "evidence_class", "tracking_quality", "raw_sensor_retained", "authority",
-                          "observation_digest"}, "observation")
-        _require_serialized_digest(payload, "observation_digest", "observation")
-        record = cls(**dict(payload))
-        _require_exact_serialized_form(record, payload)
+        detached = _detached_serialized_record(
+            payload,
+            {'version', 'observation_id', 'scene_id', 'scene_digest', 'session_id', 'session_digest', 'input_sources', 'normalized_event', 'normalized_action', 'target_candidates', 'speech_text', 'transcript_digest', 'temporal_window_start_ms', 'temporal_window_end_ms', 'provider_class', 'evidence_class', 'tracking_quality', 'raw_sensor_retained', 'authority', 'observation_digest'},
+            'observation',
+            digest_field='observation_digest',
+        )
+        record = cls(**detached)
+        _require_exact_serialized_form(record, detached)
         return record
 
     def validate_bindings(self, *, expected_scene_id: str, expected_scene_digest: str,
@@ -1312,15 +1396,28 @@ class MultimodalSpatialObservation:
             raise ValueError("stale session digest")
         if not isinstance(expected_entity_digests, Mapping):
             raise ValueError("expected_entity_digests is required")
-        if len(expected_entity_digests) != len(self.target_candidates) or len(expected_entity_digests) > 32:
+        try:
+            entity_pairs = _bounded_mapping_snapshot(
+                expected_entity_digests,
+                "expected_entity_digests",
+                32,
+            )
+        except ValueError as exc:
+            raise ValueError("entity reference set mismatch") from exc
+        expected_entities: dict[str, Any] = {}
+        for key, value in entity_pairs:
+            if not isinstance(key, str):
+                raise ValueError("expected entity identifiers must be strings")
+            if key in expected_entities:
+                raise ValueError(f"duplicate expected entity identifier: {key}")
+            expected_entities[key] = value
+        if len(expected_entities) != len(self.target_candidates):
             raise ValueError("entity reference set mismatch")
-        if any(not isinstance(key, str) for key in expected_entity_digests):
-            raise ValueError("expected entity identifiers must be strings")
         entity_ids = {target.entity_id for target in self.target_candidates}
-        if entity_ids != set(expected_entity_digests):
+        if entity_ids != set(expected_entities):
             raise ValueError("entity reference set mismatch")
         for target in self.target_candidates:
-            if target.entity_digest != _digest(expected_entity_digests[target.entity_id], "expected entity"):
+            if target.entity_digest != _digest(expected_entities[target.entity_id], "expected entity"):
                 raise ValueError(f"stale scene entity: {target.entity_id}")
         _validate_reference_set(
             tuple(target.evidence_ref for target in self.target_candidates),
@@ -1866,14 +1963,57 @@ def validate_recipe_semantics(
     return record
 
 
-def validate_project_semantics(payload: Mapping[str, Any]) -> ProjectContextProjection:
-    """Run combined-reference uniqueness validation after JSON Schema validation."""
-    return ProjectContextProjection.from_dict(payload)
+def validate_project_semantics(
+    payload: Mapping[str, Any],
+    *,
+    expected_projection: ProjectContextProjection | Mapping[str, Any] | None = None,
+) -> ProjectContextProjection:
+    """Parse then admit a project only against an independently trusted projection."""
+    record = ProjectContextProjection.from_dict(payload)
+    if expected_projection is None:
+        raise ValueError("expected_projection is required for bound project admission")
+    expected = (
+        expected_projection
+        if isinstance(expected_projection, ProjectContextProjection)
+        else ProjectContextProjection.from_dict(expected_projection)
+    )
+    record.validate_bindings(expected_projection=expected)
+    return record
 
 
-def validate_observation_semantics(payload: Mapping[str, Any]) -> MultimodalSpatialObservation:
-    """Run temporal, transcript, target, and scene/session semantic validation."""
-    return MultimodalSpatialObservation.from_dict(payload)
+def validate_observation_semantics(
+    payload: Mapping[str, Any],
+    *,
+    expected_observation: MultimodalSpatialObservation | Mapping[str, Any] | None = None,
+) -> MultimodalSpatialObservation:
+    """Parse then admit an observation only against independently trusted evidence."""
+    record = MultimodalSpatialObservation.from_dict(payload)
+    if expected_observation is None:
+        raise ValueError("expected_observation is required for bound observation admission")
+    expected = (
+        expected_observation
+        if isinstance(expected_observation, MultimodalSpatialObservation)
+        else MultimodalSpatialObservation.from_dict(expected_observation)
+    )
+    expected_entities: dict[str, str] = {}
+    for target in expected.target_candidates:
+        if target.entity_id in expected_entities:
+            raise ValueError("trusted observation contains duplicate entity identifiers")
+        expected_entities[target.entity_id] = target.entity_digest
+    expected_evidence = {
+        target.evidence_ref.reference_id: target.evidence_ref.to_dict()
+        for target in expected.target_candidates
+    }
+    record.validate_bindings(
+        expected_scene_id=expected.scene_id,
+        expected_scene_digest=expected.scene_digest,
+        expected_session_id=expected.session_id,
+        expected_session_digest=expected.session_digest,
+        expected_entity_digests=expected_entities,
+        expected_evidence_refs=expected_evidence,
+        expected_observation=expected,
+    )
+    return record
 
 
 __all__ = ["AUTHORITY_ENVELOPE_VERSION", "CANONICAL_REFERENCE_VERSION",

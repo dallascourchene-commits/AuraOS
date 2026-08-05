@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import ast
 import copy
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 import json
+import re
 from dataclasses import dataclass, replace
+from enum import Enum
 from pathlib import Path
 from typing import Any
 
@@ -886,8 +888,10 @@ def test_schemas_enforce_structural_safety_and_semantic_validators_close_cross_f
         assert schema["x-aura-semantic-validator"].endswith(semantic_validator.__name__)
         if semantic_validator is validate_recipe_semantics:
             assert semantic_validator(payload, expected_recipe=payload).to_dict() == payload
+        elif semantic_validator is validate_project_semantics:
+            assert semantic_validator(payload, expected_projection=payload).to_dict() == payload
         else:
-            assert semantic_validator(payload).to_dict() == payload
+            assert semantic_validator(payload, expected_observation=payload).to_dict() == payload
         tampered = copy.deepcopy(payload)
         tampered["authority"]["automatic_merge"] = True
         assert list(validator.iter_errors(tampered))
@@ -1592,3 +1596,147 @@ def test_structural_trust_boundary_parse_bind_admit_is_explicit() -> None:
         validate_recipe_semantics(
             redirected.to_dict(), expected_recipe=admitted
         )
+
+
+class _OneShotMapping(Mapping):
+    """A mapping that fails if record content is traversed more than once."""
+
+    def __init__(self, payload: Mapping[str, Any]) -> None:
+        self._payload = dict(payload)
+        self.item_reads = 0
+
+    def __getitem__(self, key: str) -> Any:
+        return self._payload[key]
+
+    def __iter__(self):
+        return iter(self._payload)
+
+    def __len__(self) -> int:
+        return len(self._payload)
+
+    def items(self):
+        self.item_reads += 1
+        if self.item_reads > 1:
+            raise AssertionError("serialized mapping content was read more than once")
+        return self._payload.items()
+
+
+class _LyingSequence(Sequence):
+    """A sequence whose reported length understates its observed breadth."""
+
+    def __init__(self, values: Sequence[Any]) -> None:
+        self._values = tuple(values)
+
+    def __getitem__(self, index):
+        return self._values[index]
+
+    def __len__(self) -> int:
+        return 1
+
+
+class _SurrogateEnum(Enum):
+    BAD = "\ud800"
+
+
+def test_all_serialized_records_use_one_detached_mapping_snapshot() -> None:
+    """Every public from_dict parser must consume hostile mapping content exactly once."""
+    p, (r, _), o = project(), recipe(), observation()
+    cases = (
+        (workspace_contracts.AuthorityEnvelope, p.authority.to_dict()),
+        (ProjectContextProjection, p.to_dict()),
+        (EphemeralWorkspaceRecipe, r.to_dict()),
+        (MultimodalSpatialObservation, o.to_dict()),
+        (RepositoryIdentity, p.repository_identity.to_dict()),
+        (CanonicalReference, p.artifact_evidence_refs[0].to_dict()),
+        (SpatialReferentBinding, o.target_candidates[0].to_dict()),
+        (WorkspaceBudget, r.budgets.to_dict()),
+        (DependencyEdge, r.dependency_edges[0].to_dict()),
+    )
+    for record_type, payload in cases:
+        hostile = _OneShotMapping(payload)
+        assert record_type.from_dict(hostile).to_dict() == payload
+        assert hostile.item_reads == 1
+
+
+def test_semantic_validators_require_independent_complete_record_binding() -> None:
+    """Project and observation parsing must not be mistaken for admission."""
+    p, o = project(), observation()
+    with pytest.raises(ValueError, match="expected_projection is required"):
+        validate_project_semantics(p.to_dict())
+    with pytest.raises(ValueError, match="expected_observation is required"):
+        validate_observation_semantics(o.to_dict())
+    assert validate_project_semantics(
+        p.to_dict(), expected_projection=p
+    ).to_dict() == p.to_dict()
+    assert validate_observation_semantics(
+        o.to_dict(), expected_observation=o
+    ).to_dict() == o.to_dict()
+    redirected = replace(p, project_ref="repository:redirected", projection_digest="")
+    with pytest.raises(ValueError, match="stale project projection identity"):
+        validate_project_semantics(p.to_dict(), expected_projection=redirected)
+
+
+def test_observed_breadth_limits_ignore_lying_sequence_lengths() -> None:
+    """References, dependency edges, and observation targets must use observed breadth."""
+    r, _ = recipe()
+    with pytest.raises(ValueError, match="adapter_refs exceeds its item ceiling"):
+        replace(
+            r,
+            adapter_refs=_LyingSequence(
+                [r.adapter_refs[0]] * (workspace_contracts.MAX_ITEMS + 1)
+            ),
+            recipe_digest="",
+        )
+    with pytest.raises(ValueError, match="bounded sequence"):
+        replace(
+            r,
+            dependency_edges=_LyingSequence(
+                [r.dependency_edges[0]]
+                * (workspace_contracts.MAX_DEPENDENCY_EDGES + 1)
+            ),
+            recipe_digest="",
+        )
+    o = observation()
+    with pytest.raises(ValueError, match="bounded target sequence"):
+        replace(
+            o,
+            target_candidates=_LyingSequence([o.target_candidates[0]] * 33),
+            observation_digest="",
+        )
+
+
+def test_path_policy_and_schemas_reject_drive_relative_and_substring_secrets() -> None:
+    """Python and every schema copy must mirror the canonical substring path policy."""
+    for unsafe in ("C:relative.py", "docs/example.env.txt", "src/key.pem.backup", "a//b", "a\\b"):
+        with pytest.raises(ValueError):
+            ref("artifact:unsafe", D["1"], metadata={"source_path": unsafe})
+    for schema_name in (
+        "aura_project_context_projection.schema.json",
+        "aura_ephemeral_workspace_recipe.schema.json",
+        "aura_multimodal_spatial_observation.schema.json",
+    ):
+        schema = json.loads((ROOT / "schemas" / schema_name).read_text(encoding="utf-8"))
+        patterns: list[str] = []
+        def collect(value: Any) -> None:
+            if isinstance(value, dict):
+                source_path = value.get("source_path")
+                if isinstance(source_path, dict) and "pattern" in source_path:
+                    patterns.append(source_path["pattern"])
+                for child in value.values():
+                    collect(child)
+            elif isinstance(value, list):
+                for child in value:
+                    collect(child)
+        collect(schema)
+        assert patterns
+        assert schema["x-aura-semantic-requires-independent-binding"] is True
+        assert "UTF-8 byte ceilings" in schema["x-aura-semantic-invariants"]
+        for pattern in patterns:
+            for unsafe in ("C:relative.py", "docs/example.env.txt", "src/key.pem.backup", "a//b", "a\\b"):
+                assert re.fullmatch(pattern, unsafe) is None
+
+
+def test_enum_unicode_failures_are_normalized_to_value_error() -> None:
+    """Recursive Enum canonicalization must preserve the public fail-closed exception type."""
+    with pytest.raises(ValueError, match="valid Unicode scalar values"):
+        stable_digest(_SurrogateEnum.BAD)

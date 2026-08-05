@@ -17,7 +17,7 @@ The repair separates three previously blurred trust states:
 2. **Bind:** the complete record is compared with independently trusted canonical expectations.
 3. **Admit:** only a successfully bound compiled record may be treated as the workspace recipe.
 
-A digest proves that a body is internally self-consistent. It does not prove that the body came from a canonical owner or matches an approved lifecycle/resource contract. `validate_recipe_semantics()` therefore requires an independently trusted `expected_recipe`; parsing alone is never admission.
+A digest proves that a body is internally self-consistent. It does not prove that the body came from a canonical owner or matches an approved lifecycle/resource contract. Every named semantic validator therefore requires an independently trusted complete expected record (`expected_projection`, `expected_recipe`, or `expected_observation`); parsing alone is never admission.
 
 ## Canonical-owner matrix
 
@@ -100,19 +100,19 @@ Unknown keys, nested structures, authority aliases, raw camera/audio/joint/gaze/
 
 ## Schema and semantic boundary
 
-The three Draft 2020-12 schemas enforce exact local shape, fixed authority and owner constants, closed metadata, exact digest formats, bounded arrays/numbers, source-path restrictions, and frozen recipe constants.
+The three Draft 2020-12 schemas enforce exact local shape, fixed authority and owner constants, closed metadata, exact digest formats, bounded arrays/numbers, source-path restrictions, and frozen recipe constants. JSON Schema `maxLength` counts Unicode code points rather than UTF-8 bytes, so every schema explicitly delegates byte ceilings to its mandatory executable validator.
 
-Cross-record identity, graph, digest equality, timestamp arithmetic, transcript binding, and complete admission require executable semantic validation. The recipe schema declares `x-aura-semantic-requires-independent-binding: true`.
+Cross-record identity, graph, digest equality, timestamp arithmetic, transcript binding, UTF-8 byte ceilings, and complete admission require executable semantic validation. All three schemas declare `x-aura-semantic-requires-independent-binding: true`.
 
 Consumers must run both schema validation and the named validator:
 
-- `validate_project_semantics`
+- `validate_project_semantics(..., expected_projection=<trusted canonical projection>)`
 - `validate_recipe_semantics(..., expected_recipe=<trusted compiled recipe>)`
-- `validate_observation_semantics`
+- `validate_observation_semantics(..., expected_observation=<trusted normalized observation>)`
 
 ## Focused verification
 
-The focused suite contains **28 tests** covering the original review waves plus the structural repair:
+The focused suite contains **33 tests** covering the original review waves plus the structural repair:
 
 - exact V1 object and serialized compatibility;
 - single-snapshot live/custom mapping behavior;
@@ -130,7 +130,7 @@ The focused suite contains **28 tests** covering the original review waves plus 
 Verification completed in the exact-head focused workspace:
 
 - Python compilation: passed;
-- focused tests: **28 passed**;
+- focused tests: **33 passed**;
 - all JSON documents parse successfully;
 - all three schemas pass Draft 2020-12 meta-validation;
 - no operational or persistence invocation is introduced.

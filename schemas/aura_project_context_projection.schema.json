@@ -1,4 +1,5 @@
 {
+  "$comment": "JSON Schema maxLength counts Unicode code points. The named Aura semantic validator is mandatory for UTF-8 byte ceilings, record digests, and independent binding.",
   "$defs": {
     "authority": {
       "additionalProperties": false,
@@ -189,7 +190,7 @@
         "source_path": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*(?:^|/)\\.[sS][sS][hH](?:/|$))(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[pP][eE][mM](?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))[^\\u0000-\\u001f]+$",
+          "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\.[eE][nN][vV])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS]?)(?!.*\\.[kK][eE][yY])(?!.*\\.[pP][eE][mM])(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[sS][sS][hH])[^\\u0000-\\u001f]+$",
           "type": "string"
         },
         "source_span": {
@@ -312,7 +313,7 @@
             "source_path": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*(?:^|/)\\.[sS][sS][hH](?:/|$))(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[pP][eE][mM](?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))[^\\u0000-\\u001f]+$",
+              "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\.[eE][nN][vV])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS]?)(?!.*\\.[kK][eE][yY])(?!.*\\.[pP][eE][mM])(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[sS][sS][hH])[^\\u0000-\\u001f]+$",
               "type": "string"
             },
             "source_span": {
@@ -576,7 +577,10 @@
     "complete canonical continuity ownership",
     "reference-ID uniqueness across arrays",
     "record digest verification",
-    "source span ordering"
+    "source span ordering",
+    "UTF-8 byte ceilings",
+    "independently trusted complete-record rebinding"
   ],
+  "x-aura-semantic-requires-independent-binding": true,
   "x-aura-semantic-validator": "aura_ephemeral_workspace_contracts.validate_project_semantics"
 }
