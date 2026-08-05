@@ -112,25 +112,25 @@ Consumers must run both schema validation and the named validator:
 
 ## Focused verification
 
-The focused suite contains **40 tests** covering the original review waves plus the structural repair:
+The focused suite contains **43 tests** covering the original review waves plus the structural repair:
 
 - exact V1 object and serialized compatibility;
 - recursive single-snapshot live/custom mapping and nested-sequence behavior;
-- strict bounded canonicalization and recursion handling;
+- strict bounded canonicalization, exact built-in scalar admission, and recursion handling;
 - closed metadata and canonical path-policy delegation;
 - mandatory serialized digests;
 - exact continuity ownership;
 - frozen capability/owner/gate/lifecycle profiles;
 - complete graph/reference/observation bindings;
 - sanitized manifest-projection identity;
-- manifest/recipe TTL and budget ceilings;
+- manifest/recipe TTL, complete resource-budget ceilings, and exact authority-record admission;
 - schema parity, canonical path-policy equivalence, and explicit semantic delegation;
 - explicit parse-bind-admit separation.
 
 Verification completed in the exact-head focused workspace:
 
 - Python compilation: passed;
-- focused tests: **40 passed**;
+- focused tests: **43 passed**;
 - all JSON documents parse successfully;
 - all three schemas pass Draft 2020-12 meta-validation;
 - no operational or persistence invocation is introduced.

@@ -277,13 +277,13 @@ def _canonical(value: Any, *, _depth: int = 0, _active: set[int] | None = None) 
         if len(encoded) > MAX_CANONICAL_SCALAR_BYTES:
             raise ValueError("canonical JSON string exceeds its scalar byte ceiling")
         return value
-    if value is None or isinstance(value, bool):
+    if value is None or type(value) is bool:
         return value
-    if isinstance(value, int):
+    if type(value) is int:
         if abs(value) > MAX_CANONICAL_NUMBER_ABS:
             raise ValueError("canonical JSON integer exceeds its numeric ceiling")
         return value
-    if isinstance(value, float):
+    if type(value) is float:
         if not math.isfinite(value):
             raise ValueError("non-finite floats are prohibited")
         if abs(value) > MAX_CANONICAL_NUMBER_ABS:
@@ -326,6 +326,22 @@ def _id(value: Any, name: str) -> str:
     return result
 
 
+def _fixed_text(value: Any, name: str, expected: str) -> str:
+    """Require one exact built-in string constant."""
+    result = _text(value, name, maximum=192)
+    if result != expected:
+        raise ValueError(f"{name} must be {expected}")
+    return result
+
+
+def _enum_text(value: Any, name: str, allowed: frozenset[str]) -> str:
+    """Require an exact built-in string from a closed enumeration."""
+    result = _text(value, name, maximum=64)
+    if result not in allowed:
+        raise ValueError(f"unsupported {name}")
+    return result
+
+
 def _digest(value: Any, name: str, *, optional: bool = False) -> str:
     """Validate an exact lowercase BLAKE2b-256 digest."""
     result = _text(value, name, optional=optional, maximum=64)
@@ -359,8 +375,8 @@ def _capability_resolution_digest(value: Any, name: str) -> str:
 
 
 def _finite_number(value: Any, name: str, *, minimum: float = 0.0) -> float:
-    """Validate a finite non-boolean numeric value at or above a minimum."""
-    if isinstance(value, bool) or not isinstance(value, (int, float)):
+    """Validate an exact finite JSON number at or above a minimum."""
+    if type(value) not in (int, float):
         raise ValueError(f"{name} must be a finite JSON number")
     try:
         number = float(value)
@@ -373,23 +389,23 @@ def _finite_number(value: Any, name: str, *, minimum: float = 0.0) -> float:
 
 def _bool(value: Any, name: str, required: bool) -> bool:
     """Require an exact boolean value."""
-    if not isinstance(value, bool) or value is not required:
+    if type(value) is not bool or value is not required:
         raise ValueError(f"{name} must be {str(required).lower()}")
     return value
 
 
 def _int(value: Any, name: str, low: int, high: int) -> int:
-    """Validate a bounded integer while rejecting booleans."""
-    if not isinstance(value, int) or isinstance(value, bool) or not low <= value <= high:
+    """Validate an exact bounded JSON integer."""
+    if type(value) is not int or not low <= value <= high:
         raise ValueError(f"{name} must be an integer in {low}..{high}")
     return value
 
 
 def _prob(value: Any, name: str) -> int | float:
     """Validate an exact JSON numeric spelling in the inclusive unit interval."""
-    if isinstance(value, bool) or not isinstance(value, (int, float)):
+    if type(value) not in (int, float):
         raise ValueError(f"{name} must be a JSON number")
-    if isinstance(value, float) and not math.isfinite(value):
+    if type(value) is float and not math.isfinite(value):
         raise ValueError(f"{name} must be between 0 and 1")
     if not 0 <= value <= 1:
         raise ValueError(f"{name} must be between 0 and 1")
@@ -589,13 +605,13 @@ def _detached_json_snapshot(
         if len(encoded) > MAX_CANONICAL_SCALAR_BYTES:
             raise ValueError(f"{name} exceeds its scalar byte ceiling")
         return value
-    if value is None or isinstance(value, bool):
+    if value is None or type(value) is bool:
         return value
-    if isinstance(value, int):
+    if type(value) is int:
         if abs(value) > MAX_CANONICAL_NUMBER_ABS:
             raise ValueError(f"{name} exceeds its numeric ceiling")
         return value
-    if isinstance(value, float):
+    if type(value) is float:
         if not math.isfinite(value) or abs(value) > MAX_CANONICAL_NUMBER_ABS:
             raise ValueError(f"{name} exceeds its numeric ceiling")
         return value
@@ -663,8 +679,11 @@ class AuthorityEnvelope:
 
     def __post_init__(self) -> None:
         """Validate every fixed authority bit."""
-        if self.version != AUTHORITY_ENVELOPE_VERSION:
-            raise ValueError("unsupported authority version")
+        object.__setattr__(
+            self,
+            "version",
+            _fixed_text(self.version, "authority.version", AUTHORITY_ENVELOPE_VERSION),
+        )
         true_fields = {"projection_only", "review_only", "human_review_required"}
         for field in fields(self):
             if field.name != "version":
@@ -683,6 +702,15 @@ class AuthorityEnvelope:
         record = cls(**detached)
         _require_exact_serialized_form(record, detached)
         return record
+
+
+def _exact_authority_envelope(value: Any, name: str) -> AuthorityEnvelope:
+    """Admit only the exact record type or one detached serialized mapping."""
+    if type(value) is AuthorityEnvelope:
+        return value
+    if isinstance(value, Mapping):
+        return AuthorityEnvelope.from_dict(value)
+    raise ValueError(f"{name} must be an exact AuthorityEnvelope or serialized object")
 
 
 @dataclass(frozen=True)
@@ -710,8 +738,11 @@ class CanonicalReference:
         object.__setattr__(self, "truth_class", truth_class)
         object.__setattr__(self, "freshness_class", freshness_class)
         object.__setattr__(self, "metadata", _metadata(self.metadata, "reference.metadata"))
-        if self.version != CANONICAL_REFERENCE_VERSION:
-            raise ValueError("unsupported reference version")
+        object.__setattr__(
+            self,
+            "version",
+            _fixed_text(self.version, "reference.version", CANONICAL_REFERENCE_VERSION),
+        )
 
     def to_dict(self) -> dict[str, Any]:
         """Return a detached JSON-compatible reference mapping."""
@@ -801,8 +832,11 @@ class RepositoryIdentity:
         object.__setattr__(self, "ref", _text(self.ref, "repository.ref", maximum=256))
         object.__setattr__(self, "commit_sha", _commit_sha(self.commit_sha, "repository.commit_sha"))
         object.__setattr__(self, "source_tree_digest", _digest(self.source_tree_digest, "repository.source_tree_digest"))
-        if self.version != REPOSITORY_IDENTITY_VERSION:
-            raise ValueError("unsupported repository identity version")
+        object.__setattr__(
+            self,
+            "version",
+            _fixed_text(self.version, "repository.version", REPOSITORY_IDENTITY_VERSION),
+        )
         _set_record_digest(self, "identity_digest")
 
     def to_dict(self) -> dict[str, Any]:
@@ -885,18 +919,33 @@ class ProjectContextProjection:
         if not self.artifact_evidence_refs:
             raise ValueError("artifact_evidence_refs must not be empty")
         object.__setattr__(self, "freshness_timestamp_ms", _int(self.freshness_timestamp_ms, "project.freshness_timestamp_ms", 0, MAX_TIMESTAMP))
-        if self.freshness_class not in _FRESHNESS:
-            raise ValueError("unsupported project freshness")
+        object.__setattr__(
+            self,
+            "freshness_class",
+            _enum_text(self.freshness_class, "project.freshness_class", _FRESHNESS),
+        )
         object.__setattr__(self, "completeness_warnings", _seq(self.completeness_warnings, "project.completeness_warnings", max_items=128, sort=True))
-        if self.privacy_class != _PROJECT_PRIVACY_CLASS:
-            raise ValueError(f"project.privacy_class must be {_PROJECT_PRIVACY_CLASS}")
-        if self.egress_class != _PROJECT_EGRESS_CLASS:
-            raise ValueError(f"project.egress_class must be {_PROJECT_EGRESS_CLASS}")
+        object.__setattr__(
+            self,
+            "privacy_class",
+            _fixed_text(self.privacy_class, "project.privacy_class", _PROJECT_PRIVACY_CLASS),
+        )
+        object.__setattr__(
+            self,
+            "egress_class",
+            _fixed_text(self.egress_class, "project.egress_class", _PROJECT_EGRESS_CLASS),
+        )
         _bool(self.projection_only, "project.projection_only", True)
-        if not isinstance(self.authority, AuthorityEnvelope):
-            object.__setattr__(self, "authority", AuthorityEnvelope.from_dict(self.authority))
-        if self.version != PROJECT_CONTEXT_PROJECTION_VERSION:
-            raise ValueError("unsupported project version")
+        object.__setattr__(
+            self,
+            "authority",
+            _exact_authority_envelope(self.authority, "project.authority"),
+        )
+        object.__setattr__(
+            self,
+            "version",
+            _fixed_text(self.version, "project.version", PROJECT_CONTEXT_PROJECTION_VERSION),
+        )
         _set_record_digest(self, "projection_digest")
 
     def all_references(self) -> tuple[CanonicalReference, ...]:
@@ -1201,16 +1250,28 @@ class EphemeralWorkspaceRecipe:
         object.__setattr__(self, "ttl_seconds", _int(self.ttl_seconds, "recipe.ttl", 1, MAX_TTL_SECONDS))
         if self.budgets.wall_time_ms > self.ttl_seconds * 1000:
             raise ValueError("budget.wall_time_ms cannot exceed recipe TTL")
-        if self.lifecycle_policy != _LIFECYCLE_POLICY:
-            raise ValueError(f"recipe.lifecycle_policy must be {_LIFECYCLE_POLICY}")
-        if self.dissolution_policy != _DISSOLUTION_POLICY:
-            raise ValueError(f"recipe.dissolution_policy must be {_DISSOLUTION_POLICY}")
+        object.__setattr__(
+            self,
+            "lifecycle_policy",
+            _fixed_text(self.lifecycle_policy, "recipe.lifecycle_policy", _LIFECYCLE_POLICY),
+        )
+        object.__setattr__(
+            self,
+            "dissolution_policy",
+            _fixed_text(self.dissolution_policy, "recipe.dissolution_policy", _DISSOLUTION_POLICY),
+        )
         for name in ("automatic_persistence", "automatic_resume", "automatic_promotion"):
             _bool(getattr(self, name), f"recipe.{name}", False)
-        if not isinstance(self.authority, AuthorityEnvelope):
-            object.__setattr__(self, "authority", AuthorityEnvelope.from_dict(self.authority))
-        if self.version != EPHEMERAL_WORKSPACE_RECIPE_VERSION:
-            raise ValueError("unsupported recipe version")
+        object.__setattr__(
+            self,
+            "authority",
+            _exact_authority_envelope(self.authority, "recipe.authority"),
+        )
+        object.__setattr__(
+            self,
+            "version",
+            _fixed_text(self.version, "recipe.version", EPHEMERAL_WORKSPACE_RECIPE_VERSION),
+        )
         self._validate_frozen_demonstration()
         identity_body = self.to_dict()
         identity_body.pop("recipe_id")
@@ -1342,8 +1403,11 @@ class SpatialReferentBinding:
         if not sources or not set(sources) <= _INPUTS:
             raise ValueError("unsupported referent input source")
         object.__setattr__(self, "input_sources", sources)
-        if self.version != SPATIAL_REFERENT_BINDING_VERSION:
-            raise ValueError("unsupported referent version")
+        object.__setattr__(
+            self,
+            "version",
+            _fixed_text(self.version, "referent.version", SPATIAL_REFERENT_BINDING_VERSION),
+        )
         _set_record_digest(self, "binding_digest")
 
     def to_dict(self) -> dict[str, Any]:
@@ -1447,14 +1511,27 @@ class MultimodalSpatialObservation:
         object.__setattr__(self, "temporal_window_start_ms", start)
         object.__setattr__(self, "temporal_window_end_ms", end)
         object.__setattr__(self, "provider_class", _id(self.provider_class, "observation.provider"))
-        if self.evidence_class not in _EVIDENCE:
-            raise ValueError("unsupported observation evidence class")
+        object.__setattr__(
+            self,
+            "evidence_class",
+            _enum_text(self.evidence_class, "observation.evidence_class", _EVIDENCE),
+        )
         object.__setattr__(self, "tracking_quality", _prob(self.tracking_quality, "observation.tracking_quality"))
         _bool(self.raw_sensor_retained, "observation.raw_sensor_retained", False)
-        if not isinstance(self.authority, AuthorityEnvelope):
-            object.__setattr__(self, "authority", AuthorityEnvelope.from_dict(self.authority))
-        if self.version != MULTIMODAL_SPATIAL_OBSERVATION_VERSION:
-            raise ValueError("unsupported observation version")
+        object.__setattr__(
+            self,
+            "authority",
+            _exact_authority_envelope(self.authority, "observation.authority"),
+        )
+        object.__setattr__(
+            self,
+            "version",
+            _fixed_text(
+                self.version,
+                "observation.version",
+                MULTIMODAL_SPATIAL_OBSERVATION_VERSION,
+            ),
+        )
         _set_record_digest(self, "observation_digest")
 
     def to_dict(self) -> dict[str, Any]:

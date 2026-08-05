@@ -1840,6 +1840,76 @@ def test_observed_breadth_and_hostile_metadata_protocols_fail_closed() -> None:
         )
 
 
+def test_enum_backed_strings_fail_before_record_signing() -> None:
+    """String-backed enums cannot survive as signed record fields."""
+    class Freshness(str, Enum):
+        CURRENT = "CURRENT"
+
+    class Evidence(str, Enum):
+        DERIVED = "DERIVED"
+
+    with pytest.raises(ValueError, match="project.freshness_class must be a string"):
+        replace(
+            project(),
+            freshness_class=Freshness.CURRENT,
+            projection_digest="",
+        )
+    with pytest.raises(ValueError, match="observation.evidence_class must be a string"):
+        replace(
+            observation(),
+            evidence_class=Evidence.DERIVED,
+            observation_digest="",
+        )
+
+
+def test_numeric_subclasses_cannot_spoof_json_or_budget_bounds() -> None:
+    """Overloaded numeric subclasses are rejected before comparisons or hashing."""
+    class SpoofInt(int):
+        def __abs__(self) -> int:
+            return 0
+
+        def __ge__(self, other: object) -> bool:
+            return True
+
+        def __le__(self, other: object) -> bool:
+            return True
+
+    class SpoofFloat(float):
+        pass
+
+    hostile = SpoofInt(workspace_contracts.MAX_INTEGER + 1)
+    with pytest.raises(ValueError, match="budget.memory_mb must be an integer"):
+        WorkspaceBudget(memory_mb=hostile)
+    with pytest.raises(ValueError, match="non-JSON value: SpoofInt"):
+        canonical_json(hostile)
+    with pytest.raises(ValueError, match="must be a finite JSON number"):
+        workspace_contracts._finite_number(SpoofFloat(0.5), "hostile.float")
+    with pytest.raises(ValueError, match="must be a JSON number"):
+        workspace_contracts._prob(SpoofFloat(0.5), "hostile.probability")
+
+
+def test_authority_subclasses_are_not_trusted_as_exact_records() -> None:
+    """Authority subclasses cannot override serialization and become signed."""
+    class ForgedAuthority(workspace_contracts.AuthorityEnvelope):
+        def to_dict(self) -> dict[str, Any]:
+            payload = super().to_dict()
+            payload["automatic_merge"] = True
+            return payload
+
+    forged = ForgedAuthority()
+    cases = (
+        (project(), "projection_digest", "project.authority"),
+        (recipe()[0], "recipe_digest", "recipe.authority"),
+        (observation(), "observation_digest", "observation.authority"),
+    )
+    for record, digest_field, authority_name in cases:
+        with pytest.raises(
+            ValueError,
+            match=rf"{authority_name} must be an exact AuthorityEnvelope",
+        ):
+            replace(record, authority=forged, **{digest_field: ""})
+
+
 def test_schema_delegation_matches_canonical_path_and_text_policy() -> None:
     """Schemas mirror local constraints and explicitly delegate cross-field ordering."""
     for schema_name in (
@@ -1873,6 +1943,17 @@ def test_schema_delegation_matches_canonical_path_and_text_policy() -> None:
         for pattern in patterns:
             assert workspace_contracts.re.fullmatch(pattern, "src/credential.txt")
             assert workspace_contracts.re.fullmatch(pattern, "src/credentials.txt") is None
+
+    recipe_schema = json.loads(
+        (ROOT / "schemas/aura_ephemeral_workspace_recipe.schema.json").read_text()
+    )
+    assert recipe_schema["x-aura-semantic-delegations"][
+        "base_manifest_resource_budget_binding"
+    ] == "mandatory semantic validator"
+    assert (
+        "base-manifest and trusted compiled-recipe resource ceilings delegated to mandatory semantic validation"
+        in recipe_schema["x-aura-semantic-invariants"]
+    )
 
     p = project()
     project_schema = json.loads(
