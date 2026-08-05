@@ -16,14 +16,17 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Verify source head ancestry
+      - name: Checkout exact protected PR head
         run: |
-          git cat-file -e 83f02b2624a61f4be6e87cc9c4e3e625607f08aa^{commit}
-          test "$(git rev-parse HEAD^)" = "83f02b2624a61f4be6e87cc9c4e3e625607f08aa"
+          current="$(git ls-remote origin refs/heads/refactor/intent-native-spatial-workspace-pr1 | cut -f1)"
+          test "$current" = "83f02b2624a61f4be6e87cc9c4e3e625607f08aa"
+          git fetch --no-tags --depth=1 origin 83f02b2624a61f4be6e87cc9c4e3e625607f08aa
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "83f02b2624a61f4be6e87cc9c4e3e625607f08aa"
 
       - name: Build bounded architecture slice
         run: |
-          mkdir -p /tmp/pr255-architecture/.aura /tmp/pr255-architecture/docs /tmp/pr255-architecture/schemas /tmp/pr255-architecture/tests
+          mkdir -p /tmp/pr255-architecture/.aura/refactor_objectives /tmp/pr255-architecture/.aura/waboose_requests /tmp/pr255-architecture/docs /tmp/pr255-architecture/schemas /tmp/pr255-architecture/tests
           cp README.md /tmp/pr255-architecture/
           cp .aura/ARCHITECTURE.md /tmp/pr255-architecture/.aura/
           cp aura_ephemeral_path_policy.py /tmp/pr255-architecture/
@@ -40,8 +43,8 @@ jobs:
           cp schemas/aura_ephemeral_workspace_recipe.schema.json /tmp/pr255-architecture/schemas/
           cp schemas/aura_multimodal_spatial_observation.schema.json /tmp/pr255-architecture/schemas/
           cp tests/test_aura_ephemeral_workspace_contracts.py /tmp/pr255-architecture/tests/
-          cp .aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json /tmp/pr255-architecture/.aura/
-          cp .aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json /tmp/pr255-architecture/.aura/
+          cp .aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json /tmp/pr255-architecture/.aura/refactor_objectives/
+          cp .aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json /tmp/pr255-architecture/.aura/waboose_requests/
           find /tmp/pr255-architecture -type f -print0 | sort -z | xargs -0 sha256sum > /tmp/pr255-architecture/SHA256SUMS
 
       - uses: actions/upload-artifact@v4
