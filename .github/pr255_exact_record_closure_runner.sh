@@ -10,8 +10,9 @@ test "$current" = "$FROZEN"
 git fetch --no-tags origin "$BASE"
 test -z "$(git status --porcelain=v1 --untracked-files=all)"
 
-python -m py_compile ../control/.github/pr255_exact_record_closure_patch.py
-python ../control/.github/pr255_exact_record_closure_patch.py
+python ../control/.github/pr255_exact_record_closure_patch_fix.py
+python -m py_compile /tmp/pr255_exact_record_closure_patch_fixed.py
+python /tmp/pr255_exact_record_closure_patch_fixed.py
 git diff --check
 
 mapfile -t changed < <(git diff --name-only | sort)
@@ -68,6 +69,7 @@ git diff --exit-code "$BASE" -- \
 
 test ! -e .github/workflows/pr255-exact-record-closure.yml
 test ! -e .github/pr255_exact_record_closure_patch.py
+test ! -e .github/pr255_exact_record_closure_patch_fix.py
 test ! -e .github/pr255_exact_record_closure_runner.sh
 test -z "$(git status --porcelain=v1 --untracked-files=all | grep -E 'CODEMAP|topology_map|live_topology_ast|pr255-exact-record-closure|pr255_exact_record_closure' || true)"
 
