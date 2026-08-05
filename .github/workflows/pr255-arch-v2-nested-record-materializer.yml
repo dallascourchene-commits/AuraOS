@@ -1,144 +1,42 @@
-name: PR255 ARCH v2 Nested Record Materializer V2
+name: PR255 Nested Record Repair V3
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - .github/workflows/pr255-arch-v2-nested-record-materializer.yml
-      - .github/pr255_nested_record_patch.py
 
 permissions:
   contents: write
 
-concurrency:
-  group: pr255-arch-v2-nested-record-materializer-v2
-  cancel-in-progress: false
-
 jobs:
-  prove-and-promote:
-    if: github.event.head_commit.message == 'ci(pr255): activate guarded nested-record repair'
+  prove_and_promote:
+    if: ${{ github.event.head_commit.message == 'ci(pr255): activate nested-record runner v3' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Checkout control plane
+      - name: Checkout control files
         uses: actions/checkout@v4
         with:
           ref: main
           path: control
           fetch-depth: 1
 
-      - name: Checkout immutable frozen PR head
+      - name: Checkout frozen PR head
         uses: actions/checkout@v4
         with:
           ref: 9c179fcfb753752830415a525634ae02729ad59b
           path: work
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Verify identity and apply exact transaction
-        shell: bash
-        run: |
-          set -euo pipefail
-          cd work
-          test "$(git rev-parse HEAD)" = "9c179fcfb753752830415a525634ae02729ad59b"
-          git fetch --no-tags origin 879b5fb056b70d150b1646e082223330a36c2912
-          test -z "$(git status --porcelain=v1 --untracked-files=all)"
-          python ../control/.github/pr255_nested_record_patch.py
-          git diff --check
-          mapfile -t changed < <(git diff --name-only | sort)
-          printf '%s\n' \
-            aura_ephemeral_workspace_contracts.py \
-            docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md \
-            tests/test_aura_ephemeral_workspace_contracts.py \
-            | sort > /tmp/pr255-expected.txt
-          printf '%s\n' "${changed[@]}" > /tmp/pr255-actual.txt
-          diff -u /tmp/pr255-expected.txt /tmp/pr255-actual.txt
-
-      - name: Install focused verification tools
-        run: |
-          set -euo pipefail
-          python -m pip install --upgrade pip
-          python -m pip install pytest jsonschema ruff
-
-      - name: Prove compilation tests lint and schemas
-        working-directory: work
-        env:
-          PYTHONPATH: .
-        run: |
-          set -euo pipefail
-          python -m py_compile aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
-          python -m pytest -q tests/test_aura_ephemeral_workspace_contracts.py | tee /tmp/pr255-pytest.txt
-          grep -Eq '^44 passed in ' /tmp/pr255-pytest.txt
-          python -m pytest --collect-only -q tests/test_aura_ephemeral_workspace_contracts.py | tee /tmp/pr255-collect.txt
-          grep -Eq '^44 tests collected in ' /tmp/pr255-collect.txt
-          ruff check --select F401,F821,F841 aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          from jsonschema import Draft202012Validator
-
-          for name in (
-              "aura_project_context_projection.schema.json",
-              "aura_ephemeral_workspace_recipe.schema.json",
-              "aura_multimodal_spatial_observation.schema.json",
-          ):
-              schema = json.loads((Path("schemas") / name).read_text(encoding="utf-8"))
-              Draft202012Validator.check_schema(schema)
-          PY
-
-      - name: Prove final PR scope and negative evidence
-        working-directory: work
-        run: |
-          set -euo pipefail
-          BASE=879b5fb056b70d150b1646e082223330a36c2912
-          mapfile -t final_changed < <(git diff --name-only "$BASE" -- | sort)
-          cat > /tmp/pr255-final-expected.txt <<'EOF'
-          .aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json
-          .aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json
-          aura_ephemeral_workspace_contracts.py
-          docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md
-          schemas/aura_ephemeral_workspace_recipe.schema.json
-          schemas/aura_multimodal_spatial_observation.schema.json
-          schemas/aura_project_context_projection.schema.json
-          tests/test_aura_ephemeral_workspace_contracts.py
-          EOF
-          sort -o /tmp/pr255-final-expected.txt /tmp/pr255-final-expected.txt
-          printf '%s\n' "${final_changed[@]}" > /tmp/pr255-final-actual.txt
-          diff -u /tmp/pr255-final-expected.txt /tmp/pr255-final-actual.txt
-          git diff --exit-code "$BASE" -- \
-            .aura/CODEMAP.json \
-            .aura/CODEMAP.md \
-            topology_map.json \
-            Aura_Memory/live_topology_ast.json
-          test ! -e .github/workflows/pr255-arch-v2-nested-record-materializer.yml
-          test ! -e .github/pr255_nested_record_patch.py
-          test -z "$(git status --porcelain=v1 --untracked-files=all | grep -E 'CODEMAP|topology_map|live_topology_ast|pr255-arch-v2-nested-record-materializer|pr255_nested_record_patch' || true)"
-
-      - name: Race guard commit and promote
+      - name: Prove and promote exact repair
         working-directory: work
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          BRANCH=refactor/intent-native-spatial-workspace-pr1
-          FROZEN=9c179fcfb753752830415a525634ae02729ad59b
-          remote_head="$(git ls-remote origin "refs/heads/$BRANCH" | awk '{print $1}')"
-          test "$remote_head" = "$FROZEN"
-          git config user.name 'AuraOS ARCH v2 Repair'
-          git config user.email 'actions@users.noreply.github.com'
-          git add \
-            aura_ephemeral_workspace_contracts.py \
-            docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md \
-            tests/test_aura_ephemeral_workspace_contracts.py
-          git diff --cached --check
-          test "$(git diff --cached --name-only | wc -l)" -eq 3
-          git commit -m 'fix(pr1): close nested record serialization gaps'
-          remote_head="$(git ls-remote origin "refs/heads/$BRANCH" | awk '{print $1}')"
-          test "$remote_head" = "$FROZEN"
-          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            push origin HEAD:"refs/heads/$BRANCH"
-          unset AUTH_HEADER
+        run: bash ../control/.github/pr255_nested_record_runner.sh
