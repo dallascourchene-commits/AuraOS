@@ -264,7 +264,7 @@
             "source_path": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*(?:^|/)[sS][eE][cC][rR][eE][tT][sS][^/]*(?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))(?!.*(?:^|/)\\.[gG][iI][tT]/[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS](?:/|$))[^\\u0000-\\u001f]+$",
+              "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*(?:^|/)\\.[sS][sS][hH](?:/|$))(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[pP][eE][mM](?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))[^\\u0000-\\u001f]+$",
               "type": "string"
             },
             "source_span": {
@@ -322,6 +322,10 @@
         "manifest_version": {
           "const": "AURA_EPHEMERAL_ORGAN_V1"
         },
+        "source_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
         "wrapped_not_replaced": {
           "const": true
         }
@@ -329,6 +333,7 @@
       "required": [
         "manifest_version",
         "legacy_manifest_digest",
+        "source_digest",
         "wrapped_not_replaced"
       ],
       "type": "object"
@@ -337,9 +342,7 @@
       "additionalProperties": false,
       "properties": {
         "canonical_ref": {
-          "maxLength": 4096,
-          "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001f]*$",
+          "pattern": "^ephemeral-organ-projection:[0-9a-f]{32}@AURA_EPHEMERAL_ORGAN_V1$",
           "type": "string"
         },
         "digest": {
@@ -362,6 +365,10 @@
             "manifest_version": {
               "const": "AURA_EPHEMERAL_ORGAN_V1"
             },
+            "source_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
             "wrapped_not_replaced": {
               "const": true
             }
@@ -369,6 +376,7 @@
           "required": [
             "manifest_version",
             "legacy_manifest_digest",
+            "source_digest",
             "wrapped_not_replaced"
           ],
           "type": "object"
@@ -377,7 +385,7 @@
           "const": "aura_ephemeral_manifest"
         },
         "reference_id": {
-          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "pattern": "^organ-manifest-projection:[0-9a-f]{32}$",
           "type": "string"
         },
         "truth_class": {
@@ -480,7 +488,7 @@
         "source_path": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*(?:^|/)[sS][eE][cC][rR][eE][tT][sS][^/]*(?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))(?!.*(?:^|/)\\.[gG][iI][tT]/[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS](?:/|$))[^\\u0000-\\u001f]+$",
+          "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*(?:^|/)\\.[sS][sS][hH](?:/|$))(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[pP][eE][mM](?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))[^\\u0000-\\u001f]+$",
           "type": "string"
         },
         "source_span": {
@@ -499,161 +507,6 @@
           "const": true
         }
       },
-      "type": "object"
-    },
-    "reference": {
-      "additionalProperties": false,
-      "properties": {
-        "canonical_ref": {
-          "maxLength": 4096,
-          "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001f]*$",
-          "type": "string"
-        },
-        "digest": {
-          "pattern": "^[0-9a-f]{64}$",
-          "type": "string"
-        },
-        "freshness_class": {
-          "enum": [
-            "CURRENT",
-            "BOUNDED",
-            "STALE",
-            "UNKNOWN"
-          ]
-        },
-        "metadata": {
-          "additionalProperties": false,
-          "dependentRequired": {
-            "line_end": [
-              "line_start",
-              "source_path"
-            ],
-            "line_start": [
-              "line_end",
-              "source_path"
-            ]
-          },
-          "properties": {
-            "artifact_digest": {
-              "pattern": "^[0-9a-f]{64}$",
-              "type": "string"
-            },
-            "byte_length": {
-              "maximum": 10000000000,
-              "minimum": 0,
-              "type": "integer"
-            },
-            "content_digest": {
-              "pattern": "^[0-9a-f]{64}$",
-              "type": "string"
-            },
-            "description": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
-              "type": "string"
-            },
-            "evidence_class": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
-              "type": "string"
-            },
-            "legacy_manifest_digest": {
-              "pattern": "^[0-9a-f]{32}$",
-              "type": "string"
-            },
-            "line_end": {
-              "maximum": 10000000000,
-              "minimum": 1,
-              "type": "integer"
-            },
-            "line_start": {
-              "maximum": 10000000000,
-              "minimum": 1,
-              "type": "integer"
-            },
-            "manifest_version": {
-              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
-              "type": "string"
-            },
-            "media_type": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
-              "type": "string"
-            },
-            "note": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
-              "type": "string"
-            },
-            "relation": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
-              "type": "string"
-            },
-            "source_digest": {
-              "pattern": "^[0-9a-f]{64}$",
-              "type": "string"
-            },
-            "source_path": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*(?:^|/)[sS][eE][cC][rR][eE][tT][sS][^/]*(?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))(?!.*(?:^|/)\\.[gG][iI][tT]/[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS](?:/|$))[^\\u0000-\\u001f]+$",
-              "type": "string"
-            },
-            "source_span": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
-              "type": "string"
-            },
-            "symbol": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
-              "type": "string"
-            },
-            "wrapped_not_replaced": {
-              "const": true
-            }
-          },
-          "type": "object"
-        },
-        "owner": {
-          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
-          "type": "string"
-        },
-        "reference_id": {
-          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
-          "type": "string"
-        },
-        "truth_class": {
-          "enum": [
-            "EXACT",
-            "DERIVED",
-            "PRESENTATION",
-            "HYPOTHESIS"
-          ]
-        },
-        "version": {
-          "const": "AURA_CANONICAL_REFERENCE_V1"
-        }
-      },
-      "required": [
-        "version",
-        "reference_id",
-        "owner",
-        "canonical_ref",
-        "digest",
-        "truth_class",
-        "freshness_class",
-        "metadata"
-      ],
       "type": "object"
     }
   },
@@ -866,10 +719,10 @@
   "type": "object",
   "x-aura-semantic-invariants": [
     "record digest verification",
-    "global adapter/evidence reference ID uniqueness",
-    "wall time does not exceed TTL",
-    "UTF-8 byte ceilings",
-    "source line ranges are positive, complete, and ordered"
+    "compiled recipe identity",
+    "independently trusted recipe rebinding",
+    "wall time does not exceed TTL"
   ],
+  "x-aura-semantic-requires-independent-binding": true,
   "x-aura-semantic-validator": "aura_ephemeral_workspace_contracts.validate_recipe_semantics"
 }

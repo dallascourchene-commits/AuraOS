@@ -108,6 +108,86 @@
       ],
       "type": "object"
     },
+    "binding": {
+      "additionalProperties": false,
+      "properties": {
+        "binding_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "binding_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "entity_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "entity_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "evidence_ref": {
+          "$ref": "#/$defs/current_reference"
+        },
+        "input_sources": {
+          "items": {
+            "enum": [
+              "VOICE",
+              "HAND",
+              "GAZE",
+              "RAY",
+              "TOUCH",
+              "KEYBOARD",
+              "CONTROLLER"
+            ]
+          },
+          "maxItems": 7,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "scene_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "scene_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "session_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "session_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "version": {
+          "const": "AURA_SPATIAL_REFERENT_BINDING_V1"
+        }
+      },
+      "required": [
+        "version",
+        "binding_id",
+        "scene_id",
+        "scene_digest",
+        "session_id",
+        "session_digest",
+        "entity_id",
+        "entity_digest",
+        "confidence",
+        "evidence_ref",
+        "input_sources",
+        "binding_digest"
+      ],
+      "type": "object"
+    },
     "current_reference": {
       "additionalProperties": false,
       "properties": {
@@ -208,7 +288,7 @@
             "source_path": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*(?:^|/)[sS][eE][cC][rR][eE][tT][sS][^/]*(?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))(?!.*(?:^|/)\\.[gG][iI][tT]/[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS](?:/|$))[^\\u0000-\\u001f]+$",
+              "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*(?:^|/)\\.[sS][sS][hH](?:/|$))(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[pP][eE][mM](?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))[^\\u0000-\\u001f]+$",
               "type": "string"
             },
             "source_span": {
@@ -337,7 +417,7 @@
         "source_path": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*(?:^|/)[sS][eE][cC][rR][eE][tT][sS][^/]*(?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))(?!.*(?:^|/)\\.[gG][iI][tT]/[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS](?:/|$))[^\\u0000-\\u001f]+$",
+          "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*(?:^|/)\\.[sS][sS][hH](?:/|$))(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[pP][eE][mM](?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))[^\\u0000-\\u001f]+$",
           "type": "string"
         },
         "source_span": {
@@ -357,247 +437,31 @@
         }
       },
       "type": "object"
-    },
-    "reference": {
-      "additionalProperties": false,
-      "properties": {
-        "canonical_ref": {
-          "maxLength": 4096,
-          "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001f]*$",
-          "type": "string"
-        },
-        "digest": {
-          "pattern": "^[0-9a-f]{64}$",
-          "type": "string"
-        },
-        "freshness_class": {
-          "enum": [
-            "CURRENT",
-            "BOUNDED",
-            "STALE",
-            "UNKNOWN"
-          ]
-        },
-        "metadata": {
-          "additionalProperties": false,
-          "dependentRequired": {
-            "line_end": [
-              "line_start",
-              "source_path"
-            ],
-            "line_start": [
-              "line_end",
-              "source_path"
-            ]
-          },
-          "properties": {
-            "artifact_digest": {
-              "pattern": "^[0-9a-f]{64}$",
-              "type": "string"
-            },
-            "byte_length": {
-              "maximum": 10000000000,
-              "minimum": 0,
-              "type": "integer"
-            },
-            "content_digest": {
-              "pattern": "^[0-9a-f]{64}$",
-              "type": "string"
-            },
-            "description": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
-              "type": "string"
-            },
-            "evidence_class": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
-              "type": "string"
-            },
-            "legacy_manifest_digest": {
-              "pattern": "^[0-9a-f]{32}$",
-              "type": "string"
-            },
-            "line_end": {
-              "maximum": 10000000000,
-              "minimum": 1,
-              "type": "integer"
-            },
-            "line_start": {
-              "maximum": 10000000000,
-              "minimum": 1,
-              "type": "integer"
-            },
-            "manifest_version": {
-              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
-              "type": "string"
-            },
-            "media_type": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
-              "type": "string"
-            },
-            "note": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
-              "type": "string"
-            },
-            "relation": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
-              "type": "string"
-            },
-            "source_digest": {
-              "pattern": "^[0-9a-f]{64}$",
-              "type": "string"
-            },
-            "source_path": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*(?:^|/)[sS][eE][cC][rR][eE][tT][sS][^/]*(?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))(?!.*(?:^|/)\\.[gG][iI][tT]/[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS](?:/|$))[^\\u0000-\\u001f]+$",
-              "type": "string"
-            },
-            "source_span": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
-              "type": "string"
-            },
-            "symbol": {
-              "maxLength": 4096,
-              "minLength": 1,
-              "pattern": "^[^\\u0000-\\u001f]*$",
-              "type": "string"
-            },
-            "wrapped_not_replaced": {
-              "const": true
-            }
-          },
-          "type": "object"
-        },
-        "owner": {
-          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
-          "type": "string"
-        },
-        "reference_id": {
-          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
-          "type": "string"
-        },
-        "truth_class": {
-          "enum": [
-            "EXACT",
-            "DERIVED",
-            "PRESENTATION",
-            "HYPOTHESIS"
-          ]
-        },
-        "version": {
-          "const": "AURA_CANONICAL_REFERENCE_V1"
-        }
-      },
-      "required": [
-        "version",
-        "reference_id",
-        "owner",
-        "canonical_ref",
-        "digest",
-        "truth_class",
-        "freshness_class",
-        "metadata"
-      ],
-      "type": "object"
-    },
-    "referent": {
-      "additionalProperties": false,
-      "properties": {
-        "binding_digest": {
-          "pattern": "^[0-9a-f]{64}$",
-          "type": "string"
-        },
-        "binding_id": {
-          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
-          "type": "string"
-        },
-        "confidence": {
-          "maximum": 1,
-          "minimum": 0,
-          "type": "number"
-        },
-        "entity_digest": {
-          "pattern": "^[0-9a-f]{64}$",
-          "type": "string"
-        },
-        "entity_id": {
-          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
-          "type": "string"
-        },
-        "evidence_ref": {
-          "$ref": "#/$defs/current_reference"
-        },
-        "input_sources": {
-          "items": {
-            "enum": [
-              "VOICE",
-              "HAND",
-              "GAZE",
-              "RAY",
-              "TOUCH",
-              "KEYBOARD",
-              "CONTROLLER"
-            ]
-          },
-          "maxItems": 7,
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": true
-        },
-        "scene_digest": {
-          "pattern": "^[0-9a-f]{64}$",
-          "type": "string"
-        },
-        "scene_id": {
-          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
-          "type": "string"
-        },
-        "session_digest": {
-          "pattern": "^[0-9a-f]{64}$",
-          "type": "string"
-        },
-        "session_id": {
-          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
-          "type": "string"
-        },
-        "version": {
-          "const": "AURA_SPATIAL_REFERENT_BINDING_V1"
-        }
-      },
-      "required": [
-        "version",
-        "binding_id",
-        "scene_id",
-        "scene_digest",
-        "session_id",
-        "session_digest",
-        "entity_id",
-        "entity_digest",
-        "confidence",
-        "evidence_ref",
-        "input_sources",
-        "binding_digest"
-      ],
-      "type": "object"
     }
   },
   "$id": "https://auraos.local/schemas/aura_multimodal_spatial_observation.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "allOf": [
+    {
+      "if": {
+        "properties": {
+          "speech_text": {
+            "const": ""
+          }
+        },
+        "required": [
+          "speech_text"
+        ]
+      },
+      "then": {
+        "properties": {
+          "transcript_digest": {
+            "const": ""
+          }
+        }
+      }
+    },
     {
       "if": {
         "properties": {
@@ -614,25 +478,6 @@
           "transcript_digest": {
             "pattern": "^[0-9a-f]{64}$",
             "type": "string"
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "speech_text": {
-            "maxLength": 0
-          }
-        },
-        "required": [
-          "speech_text"
-        ]
-      },
-      "then": {
-        "properties": {
-          "transcript_digest": {
-            "const": ""
           }
         }
       }
@@ -713,7 +558,7 @@
     },
     "target_candidates": {
       "items": {
-        "$ref": "#/$defs/referent"
+        "$ref": "#/$defs/binding"
       },
       "maxItems": 32,
       "minItems": 1,
@@ -735,7 +580,7 @@
       "type": "number"
     },
     "transcript_digest": {
-      "pattern": "^$|^[0-9a-f]{64}$",
+      "pattern": "^(?:|[0-9a-f]{64})$",
       "type": "string"
     },
     "version": {
@@ -767,13 +612,10 @@
   "title": "Aura Multimodal Spatial Observation V1",
   "type": "object",
   "x-aura-semantic-invariants": [
-    "transcript digest binds exact speech",
-    "end time is not before start and window is at most 60000ms",
-    "binding IDs are unique",
-    "target scene/session matches observation",
     "record digest verification",
-    "UTF-8 byte ceilings",
-    "source line ranges are positive, complete, and ordered"
+    "temporal ordering and 60-second ceiling",
+    "scene/session and modality containment",
+    "complete observation rebinding"
   ],
   "x-aura-semantic-validator": "aura_ephemeral_workspace_contracts.validate_observation_semantics"
 }

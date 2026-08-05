@@ -1,156 +1,141 @@
 # AuraOS Intent-Native Spatial Workspace — PR1
 
-## Contracts and frozen Coding Spatial Workspace vertical slice
+## Structural contract repair and frozen Coding Spatial Workspace vertical slice
 
 **Base:** `879b5fb056b70d150b1646e082223330a36c2912`  
 **Allowed-path-set digest:** `903d3ac371968dfff15ff57eb406bf960fd9bb483660cd983ce25c87c2652d81`  
+**Digest derivation:** lexicographically sort the eight allowed paths, join them with `\n`, append one trailing `\n`, encode as UTF-8, and compute SHA-256.  
 **Terminal state:** `READY_FOR_HUMAN_REVIEW`
 
-## Decision
+## Structural decision
 
-PR1 adds one contract-only compatibility module. It does **not** modify or replace the existing Ephemeral Organ V1 manifest, Spatial contracts, Compass, Forge, Unified Memory and Continuity, Waboose, Runtime Harness, renderer, or domain owners.
+PR1 remains a non-operational compatibility layer. It does not activate an organ, invoke a renderer or model, persist project truth, mutate source, publish, deploy, or merge.
 
-The new layer compiles and verifies immutable references. It does not activate a workspace, call an adapter, invoke a renderer or model, create a project store, mutate source or domain state, publish, deploy, or merge.
+The repair separates three previously blurred trust states:
+
+1. **Parse:** bounded structure, canonical spelling, and self-integrity are verified.
+2. **Bind:** the complete record is compared with independently trusted canonical expectations.
+3. **Admit:** only a successfully bound compiled record may be treated as the workspace recipe.
+
+A digest proves that a body is internally self-consistent. It does not prove that the body came from a canonical owner or matches an approved lifecycle/resource contract. `validate_recipe_semantics()` therefore requires an independently trusted `expected_recipe`; parsing alone is never admission.
 
 ## Canonical-owner matrix
 
 | Concern | Canonical owner preserved | PR1 action |
 |---|---|---|
-| Temporary-organ manifest | `aura_ephemeral_manifest` | Wrap an exact verified V1 snapshot by reference; never modify V1 |
-| Activation and dissolution | `aura_ephemeral_runtime` | Reference only; PR1 exposes no activation API |
-| Project evidence and continuity | Existing repository/domain owners and Unified Memory/Continuity | Compile minimum-sufficient references, never copied truth |
-| Spatial scene and interaction truth | Existing Spatial contracts and Arena | Bind exact scene, session, entity, and evidence identities |
-| Code intelligence | Coding Relationship Compass | Declare a capability/adapter reference only |
+| Source V1 manifest | `aura_ephemeral_manifest` | Export once, verify the complete V1 body and legacy digest, then derive a sanitized projection reference |
+| Activation and dissolution | `aura_ephemeral_runtime` | Reference only; no activation API is exposed |
+| Repository secret-path policy | `aura_ephemeral_path_policy` | Reuse its forbidden patterns; do not maintain a second local denylist |
+| Project evidence and continuity | `aura_unified_memory_continuity` | Require this exact owner during project parsing and binding |
+| Spatial scene and interaction truth | Existing Spatial contracts and Arena | Bind exact scene, session, entity, observation, and evidence identities |
+| Code intelligence | Coding Relationship Compass | Declare exact adapter references only |
 | Code candidate lifecycle | Forge | Prepare a governed handoff only; no direct edit capability |
-| Semantic review | Coding Waboose | Commit a bounded review request |
-| Runtime proof | Runtime Refactor Harness | Declare a required gate only; no runtime execution in this module |
+| Semantic review | Coding Waboose | Publish a bounded review request only |
+| Runtime proof | Runtime Refactor Harness | Declare a required gate; no runtime execution in this module |
+
+## Single-snapshot hostile-input boundary
+
+Mappings, sequences, dataclasses, enums, and live manifest exports are detached exactly once before validation. The canonicalizer:
+
+- rechecks observed breadth after iteration rather than trusting a custom `len()`;
+- recursively validates enum values;
+- walks dataclass fields without unbounded `asdict()` recursion;
+- detects recursive/cyclic values and normalizes failures to `ValueError`;
+- bounds depth, breadth, scalar bytes, and numeric magnitude;
+- rejects sets, non-string object keys, invalid Unicode scalars, and non-JSON values.
+
+This closes the repeated A/B/A snapshot, lying-container, enum bypass, and recursive-dataclass findings at one shared boundary.
+
+## Sanitized V1 manifest projection
+
+The source `AURA_EPHEMERAL_ORGAN_V1` record remains canonical and unchanged. PR1 verifies its full shape, legacy 32-character digest, timestamps, safe policy, closed grant profile, arena lease, verifier gates, resource ceilings, and non-executable UI.
+
+The recipe does **not** treat that complete legacy body as workspace authority. It derives a deterministic projection containing only:
+
+- source manifest version and organ identity;
+- source snapshot digest and retained legacy digest;
+- the exact minimal read-only capability basis needed by PR1;
+- empty effective UI capability;
+- effective bounded resource ceilings;
+- explicit authority non-escalation.
+
+The resulting `base_manifest_ref` is named `organ-manifest-projection:<digest-prefix>` and carries `source_digest`, `legacy_manifest_digest`, `manifest_version`, and `wrapped_not_replaced: true` metadata. Legacy renderer, audit, telemetry, or other broader V1 grants cannot silently become PR1 authority.
 
 ## Immutable contracts
 
 ### `ProjectContextProjection`
 
-A read-only project projection containing exact repository identity and complete canonical-reference sets for artifacts/evidence, decisions, rejected alternatives, unresolved questions, assumptions, capabilities, relationships, blockers, and next actions. Its privacy profile is fixed to `MINIMUM_SUFFICIENT`; egress is fixed to `LOCAL_ONLY`.
+A minimum-sufficient read-only projection containing exact repository identity and complete reference sets for artifacts/evidence, decisions, rejected alternatives, unresolved questions, assumptions, capabilities, relationships, blockers, and next actions.
 
-Binding validation requires the complete expected reference-ID set. Partial maps, stale projection-level freshness, stale references, duplicate IDs, and changed digests fail closed.
+`canonical_owner` is fixed to `aura_unified_memory_continuity`; privacy is fixed to `MINIMUM_SUFFICIENT`; egress is fixed to `LOCAL_ONLY`. Hypothesis/presentation references, stale references, duplicate IDs, redirected owners, and incomplete rebinding fail closed.
 
 ### `EphemeralWorkspaceRecipe`
 
-A versioned wrapper over an exact V1 manifest snapshot. It binds the complete canonical intent, project projection, capability graph, adapters, evidence, owner handoffs, budgets, interaction actions, verification gates, TTL, and dissolution policy.
+The frozen `CODING_SPATIAL_WORKSPACE_V1` recipe binds the manifest projection, canonical intent, project projection, capability graph, adapters, evidence, handoff owners, budgets, interactions, verification gates, TTL, and dissolution policy.
 
-For `CODING_SPATIAL_WORKSPACE_V1`, capability IDs, dependency edges, owners, renderer/device requirements, actions, verification gates, lifecycle policy, and dissolution policy are exact constants. Serialized recipes cannot substitute `shell`, redirect a canonical owner, remove a gate, make dissolution optional, or add automatic persistence or promotion.
+The behavior-derived `recipe_id` is enforced during direct construction, `dataclasses.replace()`, and deserialization. A caller cannot create a live forged identity and have the constructor sign it.
 
-The effective recipe TTL is capped by the V1 manifest TTL. Its wall-time budget cannot exceed that effective TTL. The public recipe ID is derived from every behavior-defining recipe field.
+Serialized adapter/evidence references are structurally exact and current, but their external ownership is authenticated only when the mandatory semantic admission path receives the independently trusted expected recipe. Documentation does not claim otherwise.
 
-### `SpatialReferentBinding`
+### `SpatialReferentBinding` and `MultimodalSpatialObservation`
 
-An exact scene/session/entity candidate bound to current canonical evidence. Evidence with `STALE` or `UNKNOWN` freshness is rejected before a binding can be constructed.
-
-### `MultimodalSpatialObservation`
-
-A privacy-minimized normalized event for voice, hand, gaze, ray, touch, keyboard, and controller input. Raw sensor payloads are not representable in the closed metadata contract. Temporal windows are ordered and limited to 60 seconds, speech is bound to its exact transcript digest, input sources are normalized before uniqueness checks, and every target is rebound to complete current entity and evidence sets.
+Referents and observations bind complete scene, session, entity, evidence, target, parent-event, modality, transcript, and temporal identities. Raw sensor payloads are not representable in the metadata contract. Temporal windows are ordered and limited to 60 seconds.
 
 ### `AuthorityEnvelope`
 
-Every source/domain/production mutation, renderer, sensor, model, execution, persistence, deployment, physical-work, payment, professional, patch, VSA patch, commit, push, pull-request, merge, automatic persistence, automatic resume, and automatic promotion authority remains false. Projection-only, review-only, and human-review-required remain true.
+Every mutation, renderer, sensor, model, execution, persistence, deployment, physical-work, payment, professional, patch, commit, push, pull-request, merge, and automatic-promotion authority remains false. Projection-only, review-only, and human-review-required remain true.
 
-## Canonicalization and integrity
+## Closed metadata and source paths
 
-Canonical JSON accepts only unambiguous JSON values:
+Canonical-reference metadata is a bounded flat scalar object. Accepted bounded text fields are:
 
-- object keys must already be strings;
-- sets and non-JSON objects are rejected;
-- text and probability fields are never coerced from malformed types;
-- non-finite numbers are rejected;
-- all new record digests are exact 64-character BLAKE2b-256 identities;
-- repository commits require complete 40-character SHA-1 or 64-character SHA-256 object IDs;
-- deserialization requires the original non-empty record digest and verifies it against canonical bytes.
+- `source_path`, `source_span`, `symbol`, `relation`, `evidence_class`, `media_type`, `description`, and `note`;
+- bounded line/byte integers;
+- exact content/source/artifact digests;
+- V1 projection metadata fields.
 
-The existing Ephemeral Organ V1 digest remains its canonical 32-character BLAKE2b-128 identity. PR1 recomputes that digest from a serialized V1 snapshot and then derives a 64-character wrapper digest. It never trusts `phase_hash` without recomputation.
+Unknown keys, nested structures, authority aliases, raw camera/audio/joint/gaze/room payloads, and non-string keys fail closed.
 
-## Closed metadata contract
+`source_path` must be repository-relative POSIX syntax and is checked against the exact forbidden patterns owned by `aura_ephemeral_path_policy`. PR1 intentionally does not invent additional unrelated path policy.
 
-Canonical-reference metadata is a bounded flat scalar object. Only explicitly approved navigation and evidence fields are accepted:
+## Schema and semantic boundary
 
-- bounded text such as `source_path`, `source_span`, `symbol`, `relation`, `media_type`, and `description`;
-- bounded integers such as line numbers and byte length;
-- exact digests;
-- `manifest_version`, the retained V1 manifest digest, and `wrapped_not_replaced: true` for the V1 wrapper.
+The three Draft 2020-12 schemas enforce exact local shape, fixed authority and owner constants, closed metadata, exact digest formats, bounded arrays/numbers, source-path restrictions, and frozen recipe constants.
 
-Unknown keys, nested arrays/objects, authority aliases, raw camera/audio/joint/gaze/room payload families, and non-string keys fail closed. This removes both key-alias and nested-value alias bypasses.
+Cross-record identity, graph, digest equality, timestamp arithmetic, transcript binding, and complete admission require executable semantic validation. The recipe schema declares `x-aura-semantic-requires-independent-binding: true`.
 
-## Frozen `CODING_SPATIAL_WORKSPACE_V1`
-
-The recipe exposes only bounded review capabilities:
-
-- compile an existing Compass packet;
-- fetch a bounded exact neighborhood;
-- open exact source slices;
-- display tests and schemas;
-- compile candidate Change Graphs;
-- prepare a governed Forge handoff;
-- read verification status;
-- display admitted Attempt Archive evidence;
-- dissolve the workspace.
-
-No direct source-write or execution capability is present. Consequential code work remains owned by Forge and exact-source verification lanes.
-
-## Schema and semantic validation boundary
-
-The three Draft 2020-12 schemas enforce exact record shape, fixed authority and policy constants, closed metadata, exact digest formats, bounded arrays/numbers, and structural types.
-
-Some invariants cannot be expressed portably in standard Draft 2020-12 JSON Schema, including:
-
-- membership of dependency-edge endpoints in a sibling `capability_ids` array;
-- graph cycle detection;
-- uniqueness of reference IDs across separate arrays;
-- arithmetic relationships between timestamps;
-- equality of transcript text and its digest;
-- scene/session equality between a parent observation and nested targets.
-
-Each schema therefore names a mandatory executable semantic validator through `x-aura-semantic-validator`:
+Consumers must run both schema validation and the named validator:
 
 - `validate_project_semantics`
-- `validate_recipe_semantics`
+- `validate_recipe_semantics(..., expected_recipe=<trusted compiled recipe>)`
 - `validate_observation_semantics`
 
-A consumer must run both Draft 2020-12 validation and the named semantic validator. The documentation no longer claims that JSON Schema alone proves cross-field graph or identity invariants.
+## Focused verification
 
-## Review-repair verification
+The focused suite contains **28 tests** covering the original review waves plus the structural repair:
 
-The focused suite now contains 27 tests covering:
+- exact V1 object and serialized compatibility;
+- single-snapshot live/custom mapping behavior;
+- strict bounded canonicalization and recursion handling;
+- closed metadata and canonical path-policy delegation;
+- mandatory serialized digests;
+- exact continuity ownership;
+- frozen capability/owner/gate/lifecycle profiles;
+- complete graph/reference/observation bindings;
+- sanitized manifest-projection identity;
+- manifest/recipe TTL and budget ceilings;
+- schema parity;
+- explicit parse-bind-admit separation.
 
-1. exact V1 object and serialized-snapshot compatibility;
-2. manifest-version, body, and legacy-digest tampering;
-3. strict non-coercive canonicalization;
-4. closed, detached metadata;
-5. mandatory serialized record digests;
-6. complete project rebinding and projection freshness;
-7. self, dangling, duplicate, cyclic, and oversized dependency graphs;
-8. exact frozen capabilities, owners, gates, and lifecycle policies;
-9. deterministic reference ordering and global recipe-reference uniqueness;
-10. manifest/recipe TTL and wall-time budget consistency;
-11. temporal, transcript, normalized-input, target, and evidence binding;
-12. Draft 2020-12 structural safety plus mandatory semantic validators;
-13. docstring coverage and proof of no operational or persistence calls;
-14. complete budget, canonical-key, source-path/span, transcript, and single-snapshot bounds.
-
-Local focused verification completed:
+Verification completed in the exact-head focused workspace:
 
 - Python compilation: passed;
-- focused tests: **27 passed**;
-- all JSON documents parsed successfully;
-- all three schemas passed Draft 2020-12 meta-validation;
-- the contract module imports only Python standard-library modules and contains no operational or persistence invocation.
+- focused tests: **28 passed**;
+- all JSON documents parse successfully;
+- all three schemas pass Draft 2020-12 meta-validation;
+- no operational or persistence invocation is introduced.
 
-## Review-finding disposition
-
-All substantive CodeRabbit and Codex findings were consolidated into the strict contract rewrite and regression suite. Sourcery's self-dependency, temporal-window, and TTL test requests are covered. Kilo's CODEMAP/topology scope finding is addressed by restoring those generated artifacts to the exact base tree. The test's import of `aura_ephemeral_manifest.create_manifest` is intentional: it is the compatibility boundary under test, not a hidden new dependency or replacement owner.
-
-## Harness evidence disclosure
-
-The implementation is bound to the exact GitHub base and canonical source blobs. This execution environment still cannot honestly claim a completed full-repository Harness `prepare`/`doctor` run, Compass packet, Council receipt, Waboose execution, or full repository regression suite. The owner matrix and Change Graph are exact-source-guided evidence, not fabricated runtime receipts. Repository CI and current-head external reviews remain separate evidence.
-
-## Exact substantive scope
+## Scope
 
 ```text
 aura_ephemeral_workspace_contracts.py
@@ -163,4 +148,4 @@ docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md
 .aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json
 ```
 
-`.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`, and runtime-memory artifacts must remain identical to the exact base in this substantive PR.
+`.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`, and `Aura_Memory/live_topology_ast.json` remain untouched.

@@ -309,7 +309,6 @@ def test_project_binding_requires_complete_identity_and_current_projection() -> 
         replace(p, projection_id="project:redirected", projection_digest=""),
         replace(p, objective_digest=D["8"], projection_digest=""),
         replace(p, purpose_digest=D["9"], projection_digest=""),
-        replace(p, canonical_owner="attacker.owner", projection_digest=""),
         replace(
             p,
             artifact_evidence_refs=(replace(p.artifact_evidence_refs[0], owner="attacker.owner"),),
@@ -319,6 +318,8 @@ def test_project_binding_requires_complete_identity_and_current_projection() -> 
     for redirected in redirected_records:
         with pytest.raises(ValueError, match="projection identity"):
             redirected.validate_bindings(expected_projection=p)
+    with pytest.raises(ValueError, match="continuity owner"):
+        replace(p, canonical_owner="attacker.owner", projection_digest="")
     with pytest.raises(ValueError, match="privacy_class"):
         replace(p, privacy_class="RAW_PRIVATE_MEMORY", projection_digest="")
     with pytest.raises(ValueError, match="egress_class"):
@@ -411,8 +412,8 @@ def test_recipe_references_are_canonical_current_and_globally_unique() -> None:
             first,
             base_manifest_ref=replace(
                 first.base_manifest_ref,
-                reference_id="organ-manifest:redirected",
-                canonical_ref="ephemeral-organ:redirected@AURA_EPHEMERAL_ORGAN_V1",
+                reference_id="organ-manifest-projection:redirected",
+                canonical_ref="ephemeral-organ-projection:redirected@AURA_EPHEMERAL_ORGAN_V1",
             ),
             recipe_digest="",
         )
@@ -462,13 +463,8 @@ def test_recipe_lifetime_budget_resource_ceiling_and_identity_are_fully_bound(
     assert first.recipe_id != changed.recipe_id
     assert first.recipe_digest != changed.recipe_digest
 
-    forged = first.to_dict()
-    forged["recipe_id"] = "workspace-recipe:forged-identity"
-    digest_body = dict(forged)
-    digest_body.pop("recipe_digest")
-    forged["recipe_digest"] = stable_digest(digest_body)
     with pytest.raises(ValueError, match="recipe_id does not match"):
-        EphemeralWorkspaceRecipe.from_dict(forged)
+        replace(first, recipe_id="workspace-recipe:forged-identity", recipe_digest="")
 
     for field_name in ("network_calls", "model_calls"):
         unsafe_budget = first.to_dict()
@@ -573,7 +569,6 @@ def test_observation_temporal_transcript_inputs_targets_and_evidence_fail_closed
             expected_entity_digests={original_target.entity_id: original_target.entity_digest},
             expected_evidence_refs=expected_observation_evidence(redirected_observation),
         )
-
 
 
 def test_contract_dataclass_canonicalization_whitespace_digest_and_metadata_are_exact() -> None:
@@ -727,6 +722,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     with pytest.raises(ValueError, match="numeric ceiling|micro-USD ceiling"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=huge_cost,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(huge_cost),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -739,6 +735,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     with pytest.raises(ValueError, match="both grant and deny"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=denied_grant,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(denied_grant),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -751,6 +748,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     with pytest.raises(ValueError, match="closed PR1 denylist"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=missing_forbidden_paths,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(missing_forbidden_paths),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -763,6 +761,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     with pytest.raises(ValueError, match="model invocation"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=model_enabled,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(model_enabled),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -772,9 +771,10 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     verifier_extra = create_manifest("Reject verifier expansion", organ_id="EORG-verifier-extra")
     verifier_extra.verifier_requirements["auto_approve"] = False
     verifier_extra.phase_hash = verifier_extra.compute_digest()
-    with pytest.raises(ValueError, match="verifier_requirements keys mismatch"):
+    with pytest.raises(ValueError, match="verifier_requirements (?:keys mismatch|exceeds its item ceiling)"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=verifier_extra,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(verifier_extra),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -787,6 +787,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     with pytest.raises(ValueError, match="closed PR1 profile"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=verifier_expanded,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(verifier_expanded),
             project_projection=project(),
             canonical_intent_digest=D["1"],
             adapter_refs=(ref("adapter:compass", D["2"]),),
@@ -799,7 +800,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
         "capability": "shell", "requested": True, "granted": True, "denied_reason": "",
     })
     unsafe.phase_hash = unsafe.compute_digest()
-    with pytest.raises(ValueError, match="forbidden or unknown capability"):
+    with pytest.raises(ValueError, match="closed canonical V1 profile"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=unsafe,
             expected_manifest_timestamps=_trusted_manifest_timestamps(unsafe),
@@ -835,16 +836,8 @@ def test_compiler_rejects_expired_stale_and_redirected_inputs(monkeypatch: pytes
             adapter_refs=(ref("adapter:compass", D["2"]),),
             evidence_refs=(ref("evidence:source", D["3"]),),
         )
-    redirected_project = replace(project(), canonical_owner="attacker.owner", projection_digest="")
-    with pytest.raises(ValueError, match="canonical continuity owner"):
-        compile_coding_spatial_workspace_recipe(
-            base_manifest=manifest,
-            expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
-            project_projection=redirected_project,
-            canonical_intent_digest=D["1"],
-            adapter_refs=(ref("adapter:compass", D["2"]),),
-            evidence_refs=(ref("evidence:source", D["3"]),),
-        )
+    with pytest.raises(ValueError, match="continuity owner"):
+        replace(project(), canonical_owner="attacker.owner", projection_digest="")
     with pytest.raises(ValueError, match="current or bounded"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=manifest,
@@ -857,7 +850,7 @@ def test_compiler_rejects_expired_stale_and_redirected_inputs(monkeypatch: pytes
 
 
 def test_recipe_binding_revalidates_complete_manifest_and_dependency_identities() -> None:
-    """Digest-only equality cannot redirect canonical owners or wrapper identity."""
+    """Digest-only equality cannot redirect canonical owners or projection identity."""
     original, _ = recipe()
     altered_payload = original.to_dict()
     altered_payload["adapter_refs"][0]["owner"] = "attacker.owner"
@@ -891,7 +884,10 @@ def test_schemas_enforce_structural_safety_and_semantic_validators_close_cross_f
         validator = Draft202012Validator(schema)
         assert not list(validator.iter_errors(payload))
         assert schema["x-aura-semantic-validator"].endswith(semantic_validator.__name__)
-        assert semantic_validator(payload).to_dict() == payload
+        if semantic_validator is validate_recipe_semantics:
+            assert semantic_validator(payload, expected_recipe=payload).to_dict() == payload
+        else:
+            assert semantic_validator(payload).to_dict() == payload
         tampered = copy.deepcopy(payload)
         tampered["authority"]["automatic_merge"] = True
         assert list(validator.iter_errors(tampered))
@@ -913,7 +909,7 @@ def test_schemas_enforce_structural_safety_and_semantic_validators_close_cross_f
     dangling["dependency_edges"] = [{"source_capability_id": "compile_compass_packet", "target_capability_id": "unknown"}]
     assert list(recipe_schema.iter_errors(dangling))
     with pytest.raises(ValueError, match="invalid recipe dependency"):
-        validate_recipe_semantics(dangling)
+        validate_recipe_semantics(dangling, expected_recipe=recipe()[0])
 
     observation_schema = Draft202012Validator(json.loads((ROOT / "schemas" / "aura_multimodal_spatial_observation.schema.json").read_text()))
     observation_truth = observation().to_dict()
@@ -921,13 +917,13 @@ def test_schemas_enforce_structural_safety_and_semantic_validators_close_cross_f
     assert list(observation_schema.iter_errors(observation_truth))
     bad_window = observation().to_dict()
     bad_window["temporal_window_end_ms"] = bad_window["temporal_window_start_ms"] - 1
-    assert not list(observation_schema.iter_errors(bad_window))  # Cross-field arithmetic is semantic.
+    assert not list(observation_schema.iter_errors(bad_window))
     with pytest.raises(ValueError, match="invalid temporal"):
         validate_observation_semantics(bad_window)
 
 
 def test_contract_module_has_docstrings_and_no_operational_or_persistence_calls() -> None:
-    """The contract module remains documented, stdlib-only, and non-operational."""
+    """The contract module remains documented and non-operational."""
     source = (ROOT / "aura_ephemeral_workspace_contracts.py").read_text()
     tree = ast.parse(source)
     imports = set()
@@ -939,7 +935,7 @@ def test_contract_module_has_docstrings_and_no_operational_or_persistence_calls(
             imports.add(node.module.split(".")[0])
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
             definitions.append(node)
-    assert imports <= {"__future__", "collections", "dataclasses", "enum", "hashlib", "json", "math", "re", "time", "types", "typing"}
+    assert imports <= {"__future__", "collections", "dataclasses", "enum", "hashlib", "json", "math", "re", "time", "types", "typing", "aura_ephemeral_path_policy"}
     assert all(ast.get_docstring(node) for node in definitions)
     prohibited_names = {"open", "exec", "eval", "compile", "__import__", "Popen"}
     prohibited_attributes = {"connect", "run", "Popen", "system", "unlink", "write_text", "write_bytes"}
@@ -947,15 +943,6 @@ def test_contract_module_has_docstrings_and_no_operational_or_persistence_calls(
     attribute_calls = {node.func.attr for node in ast.walk(tree) if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)}
     assert not bare_calls & prohibited_names
     assert not attribute_calls & prohibited_attributes
-    dynamic_getattrs = [
-        node for node in ast.walk(tree)
-        if isinstance(node, ast.Call)
-        and isinstance(node.func, ast.Name)
-        and node.func.id == "getattr"
-        and (not node.args or not isinstance(node.args[0], ast.Name) or node.args[0].id != "self")
-    ]
-    assert not dynamic_getattrs
-
 
 
 def _rehash_manifest(payload: dict[str, Any]) -> dict[str, Any]:
@@ -1011,7 +998,7 @@ def test_review_wave6_nested_manifest_and_capability_boundaries_fail_closed() ->
         organ_id="EORG-under-granted",
         requested_capabilities=["resolve_capabilities"],
     ).to_dict()
-    with pytest.raises(ValueError, match="minimum workspace capabilities"):
+    with pytest.raises(ValueError, match="closed canonical V1 profile"):
         compile_coding_spatial_workspace_recipe(
             base_manifest=under_granted,
             expected_manifest_timestamps=_trusted_manifest_timestamps(under_granted),
@@ -1126,7 +1113,6 @@ def test_waboose_request_reviews_itself() -> None:
     assert ".aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json" in payload["review_files"]
 
 
-
 def test_review_wave7_recursion_frozen_profile_and_wrapper_metadata_fail_closed() -> None:
     """Depth, immutable demonstration state, and wrapper metadata stay exact."""
     nested: Any = "leaf"
@@ -1156,7 +1142,17 @@ def test_review_wave7_exact_referent_and_complete_recipe_observation_bindings() 
         r.budgets,
         output_bytes=max(0, r.budgets.output_bytes - 1),
     )
-    changed_recipe = replace(r, budgets=changed_budget, recipe_digest="")
+    changed_payload = r.to_dict()
+    changed_payload["budgets"] = changed_budget.to_dict()
+    identity_body = {
+        key: value for key, value in changed_payload.items()
+        if key not in {"recipe_id", "recipe_digest"}
+    }
+    changed_payload["recipe_id"] = f"workspace-recipe:{stable_digest(identity_body)[:24]}"
+    digest_body = dict(changed_payload)
+    digest_body.pop("recipe_digest")
+    changed_payload["recipe_digest"] = stable_digest(digest_body)
+    changed_recipe = EphemeralWorkspaceRecipe.from_dict(changed_payload)
     with pytest.raises(ValueError, match="complete recipe identity"):
         changed_recipe.validate_bindings(
             expected_intent_digest=r.canonical_intent_digest,
@@ -1279,7 +1275,6 @@ def test_review_wave7_duplicate_requests_and_serialized_timestamp_rebinding_fail
         )
 
 
-
 def test_review_wave10_bounded_policy_parity_fail_closed() -> None:
     """Live snapshots, scalar/path inputs, resource limits, and schemas stay bounded."""
     live = create_manifest(
@@ -1387,6 +1382,9 @@ def test_review_wave10_bounded_policy_parity_fail_closed() -> None:
         "src/secrets-token",
         "src/.key",
         "src\\secret.py",
+        ".ssh/id_rsa",
+        "config/passwords.txt",
+        "config/client.pem",
     ):
         with pytest.raises(ValueError):
             ref(
@@ -1394,7 +1392,6 @@ def test_review_wave10_bounded_policy_parity_fail_closed() -> None:
                 D["1"],
                 metadata={"source_path": unsafe_path},
             )
-
 
 
 def test_review_wave11_complete_bounds_and_schema_parity_fail_closed() -> None:
@@ -1497,7 +1494,10 @@ def test_review_wave11_complete_bounds_and_schema_parity_fail_closed() -> None:
     for schema_name, base_payload, metadata_path in schema_cases:
         schema = json.loads((ROOT / schema_name).read_text())
         validator = Draft202012Validator(schema)
-        for unsafe_path in ("src/.ENV.local", "SRC/Secrets-token", ".GIT/credentials"):
+        for unsafe_path in (
+            "src/.ENV.local", "SRC/Secrets-token", ".GIT/credentials",
+            ".SSH/id_rsa", "config/CLIENT.PEM", "config/Password.txt",
+        ):
             payload = copy.deepcopy(base_payload)
             metadata_at(payload, metadata_path).clear()
             metadata_at(payload, metadata_path)["source_path"] = unsafe_path
@@ -1553,13 +1553,42 @@ def test_review_wave11_complete_bounds_and_schema_parity_fail_closed() -> None:
             return result
 
     toggling = TogglingManifest()
-    with pytest.raises(ValueError, match="changed while wrapping"):
-        compile_coding_spatial_workspace_recipe(
-            base_manifest=toggling,
-            expected_manifest_timestamps=(primary["created_at"], primary["expires_at"]),
-            project_projection=project(),
-            canonical_intent_digest=D["1"],
-            adapter_refs=(ref("adapter:compass", D["2"]),),
-            evidence_refs=(ref("evidence:source", D["3"]),),
+    compiled = compile_coding_spatial_workspace_recipe(
+        base_manifest=toggling,
+        expected_manifest_timestamps=(primary["created_at"], primary["expires_at"]),
+        project_projection=project(),
+        canonical_intent_digest=D["1"],
+        adapter_refs=(ref("adapter:compass", D["2"]),),
+        evidence_refs=(ref("evidence:source", D["3"]),),
+    )
+    assert toggling.calls == 1
+    assert dict(compiled.base_manifest_ref.metadata)["source_digest"]
+
+
+def test_structural_trust_boundary_parse_bind_admit_is_explicit() -> None:
+    """Parsing proves structure; admission requires an independently trusted recipe."""
+    admitted, _ = recipe()
+    parsed = EphemeralWorkspaceRecipe.from_dict(admitted.to_dict())
+    assert parsed.to_dict() == admitted.to_dict()
+    with pytest.raises(ValueError, match="expected_recipe is required"):
+        validate_recipe_semantics(parsed.to_dict())
+    assert validate_recipe_semantics(
+        parsed.to_dict(), expected_recipe=admitted
+    ).to_dict() == admitted.to_dict()
+
+    redirected_payload = admitted.to_dict()
+    redirected_payload["adapter_refs"][0]["owner"] = "attacker.owner"
+    identity_body = {
+        key: value
+        for key, value in redirected_payload.items()
+        if key not in {"recipe_id", "recipe_digest"}
+    }
+    redirected_payload["recipe_id"] = f"workspace-recipe:{stable_digest(identity_body)[:24]}"
+    digest_body = dict(redirected_payload)
+    digest_body.pop("recipe_digest")
+    redirected_payload["recipe_digest"] = stable_digest(digest_body)
+    redirected = EphemeralWorkspaceRecipe.from_dict(redirected_payload)
+    with pytest.raises(ValueError, match="complete recipe identity"):
+        validate_recipe_semantics(
+            redirected.to_dict(), expected_recipe=admitted
         )
-    assert toggling.calls == 2

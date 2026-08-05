@@ -2,7 +2,7 @@
   "version": "AURA_REFACTOR_OBJECTIVE_V1",
   "objective_id": "intent-native-spatial-workspace-pr1",
   "base_commit": "879b5fb056b70d150b1646e082223330a36c2912",
-  "goal": "Establish strict deterministic compatibility contracts for an intent-compiled ephemeral spatial workspace and freeze the Coding Spatial Workspace vertical slice without operational behavior.",
+  "goal": "Establish strict deterministic compatibility contracts for an intent-compiled ephemeral spatial workspace, with explicit parse-bind-admit trust states and a sanitized projection over the canonical V1 manifest.",
   "six_slot_intent": {
     "DIR": "repository",
     "ASP": "refactor",
@@ -14,6 +14,7 @@
   "canonical_owners": {
     "base_ephemeral_manifest": "aura_ephemeral_manifest",
     "temporary_capability_lifecycle": "aura_ephemeral_runtime",
+    "repository_path_policy": "aura_ephemeral_path_policy",
     "project_continuity": "aura_unified_memory_continuity",
     "spatial_projection": "aura_spatial_contracts",
     "code_intelligence": "aura_coding_relationship_compass",
@@ -22,18 +23,21 @@
     "runtime_proof": "aura_runtime_refactor_harness"
   },
   "positive_requirements": [
-    "Wrap and independently verify, but never replace, AURA_EPHEMERAL_ORGAN_V1.",
-    "Require lossless JSON canonicalization and non-empty serialized record digests.",
+    "Verify AURA_EPHEMERAL_ORGAN_V1 once, then derive a sanitized non-operational manifest projection reference without replacing the source manifest.",
+    "Separate bounded parsing from independently bound recipe admission.",
+    "Require lossless JSON canonicalization, single-snapshot hostile-input detachment, and non-empty serialized record digests.",
     "Retain only closed scalar metadata and exact references to canonical truth owners.",
-    "Require complete current project, adapter, evidence, scene, session, and entity bindings.",
+    "Require the canonical Unified Memory and Continuity owner during project parsing.",
+    "Delegate source-path denial to aura_ephemeral_path_policy instead of duplicating a local secret-path policy.",
     "Freeze CODING_SPATIAL_WORKSPACE_V1 capabilities, graph, handoff owners, gates, actions, lifecycle, and dissolution policy.",
     "Publish Draft 2020-12 structural schemas plus named mandatory semantic validators.",
-    "Cover every accepted external review finding with a regression test."
+    "Cover every accepted external review finding and every rejected overbroad assumption with regression evidence."
   ],
   "negative_requirements": [
-    "Do not modify existing V1 manifest, Spatial, Compass, Forge, memory, runtime, renderer, or domain-owner source.",
-    "Do not create a project database, persistence store, second router, second renderer, second verifier, or second execution plane.",
-    "Do not coerce malformed keys, text, numbers, sets, digests, or Git identities into valid records.",
+    "Do not modify or replace the existing V1 manifest, Spatial, Compass, Forge, memory, runtime, renderer, or path-policy owners.",
+    "Do not create a project database, persistence store, second router, second renderer, second verifier, second path-policy plane, or second execution plane.",
+    "Do not treat self-consistent hashing or parsing as independent authority admission.",
+    "Do not coerce malformed keys, text, numbers, sets, digests, Git identities, custom mappings, or custom sequences into valid records.",
     "Do not retain unknown, nested, authority-bearing, or raw-sensor metadata.",
     "Do not grant patch, execution, persistence, deployment, physical-work, payment, professional, model, sensor, renderer, commit, push, pull-request, or merge authority.",
     "Do not regenerate or retain CODEMAP/topology changes in this substantive PR."
@@ -49,22 +53,53 @@
     ".aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json"
   ],
   "allowed_path_set_digest": "903d3ac371968dfff15ff57eb406bf960fd9bb483660cd983ce25c87c2652d81",
+  "allowed_path_set_digest_derivation": {
+    "algorithm": "SHA-256",
+    "path_order": "lexicographic",
+    "serialization": "UTF-8 paths joined with newline characters plus one trailing newline"
+  },
   "change_graph": [
-    {"from": "aura_ephemeral_manifest.EphemeralOrganManifest", "relation": "verified_and_wrapped_by_reference", "to": "aura_ephemeral_workspace_contracts.EphemeralWorkspaceRecipe"},
-    {"from": "canonical_project_owners", "relation": "minimum_sufficient_exact_references", "to": "aura_ephemeral_workspace_contracts.ProjectContextProjection"},
-    {"from": "normalized_multimodal_providers", "relation": "closed_privacy_minimized_observation", "to": "aura_ephemeral_workspace_contracts.MultimodalSpatialObservation"},
-    {"from": "scene_session_entity_and_evidence_identity", "relation": "complete_digest_binding", "to": "aura_ephemeral_workspace_contracts.SpatialReferentBinding"},
-    {"from": "Draft_2020_12_schema", "relation": "followed_by_mandatory_semantic_validator", "to": "exact_cross_field_contract"},
-    {"from": "CODING_SPATIAL_WORKSPACE_V1", "relation": "hands_off_only", "to": "Compass/Forge/Waboose/Runtime Harness canonical owners"}
+    {
+      "from": "aura_ephemeral_manifest.EphemeralOrganManifest",
+      "relation": "single_snapshot_verified_then_sanitized",
+      "to": "aura_ephemeral_workspace_contracts.CanonicalReference(manifest_projection)"
+    },
+    {
+      "from": "aura_ephemeral_path_policy.FORBIDDEN_PATTERNS",
+      "relation": "delegated_source_path_guard",
+      "to": "aura_ephemeral_workspace_contracts.CanonicalReference.metadata.source_path"
+    },
+    {
+      "from": "aura_unified_memory_continuity",
+      "relation": "exact_canonical_owner",
+      "to": "aura_ephemeral_workspace_contracts.ProjectContextProjection"
+    },
+    {
+      "from": "bounded_untrusted_payload",
+      "relation": "parse_only",
+      "to": "aura_ephemeral_workspace_contracts.EphemeralWorkspaceRecipe"
+    },
+    {
+      "from": "independently_trusted_compiled_recipe",
+      "relation": "complete_identity_binding_required_for_admission",
+      "to": "aura_ephemeral_workspace_contracts.validate_recipe_semantics"
+    },
+    {
+      "from": "CODING_SPATIAL_WORKSPACE_V1",
+      "relation": "hands_off_only",
+      "to": "Compass/Forge/Waboose/Runtime Harness canonical owners"
+    }
   ],
   "exit_gates": [
-    "Existing V1 manifest object and digest remain unchanged when wrapped.",
+    "Existing V1 manifest object and digest remain unchanged when projected.",
+    "Live or custom manifest inputs are exported and detached exactly once.",
     "Serialized V1 manifest content is independently recomputed and verified.",
+    "Workspace authority is derived from a sanitized manifest projection rather than the complete legacy grant/UI surface.",
     "Every serialized new record requires and verifies its original 64-character digest.",
-    "Unknown metadata, non-string keys, sets, malformed types, and raw-sensor aliases fail closed.",
-    "Project and observation validators require complete expected identity sets.",
-    "The frozen capability graph, owners, gates, lifecycle, and dissolution policy cannot be substituted.",
-    "Recipe TTL and wall-time budget cannot outlive the wrapped V1 manifest.",
+    "Unknown metadata, non-string keys, sets, malformed types, recursion, lying container lengths, and raw-sensor aliases fail closed.",
+    "Project parsing requires the canonical continuity owner.",
+    "Recipe semantic admission requires a complete independently trusted expected recipe.",
+    "Recipe TTL and wall-time budget cannot outlive the source V1 manifest.",
     "All schemas meta-validate and name mandatory semantic validators for cross-field invariants.",
     "Focused review-repair tests pass.",
     "Generated navigation artifacts are identical to the exact base."
@@ -78,11 +113,16 @@
     "Draft202012Validator.check_schema for all three schemas"
   ],
   "external_review_policy": {
-    "authorized_reviewers": ["CodeRabbit", "Codex", "Gitar", "Kilo Code Bot", "Sourcery", "Codacy"],
+    "authorized_reviewers": ["CodeRabbit", "Codex"],
     "trigger_only_after_implementation_and_focused_verification": true,
     "findings_only": true,
     "deep_scan": true,
-    "ignore_paths": [".aura/CODEMAP.json", ".aura/CODEMAP.md", "topology_map.json", "Aura_Memory/live_topology_ast.json"],
+    "ignore_paths": [
+      ".aura/CODEMAP.json",
+      ".aura/CODEMAP.md",
+      "topology_map.json",
+      "Aura_Memory/live_topology_ast.json"
+    ],
     "automatic_fix": false,
     "merge_authority": false
   },

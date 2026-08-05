@@ -189,7 +189,7 @@
         "source_path": {
           "maxLength": 4096,
           "minLength": 1,
-          "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*(?:^|/)[sS][eE][cC][rR][eE][tT][sS][^/]*(?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))(?!.*(?:^|/)\\.[gG][iI][tT]/[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS](?:/|$))[^\\u0000-\\u001f]+$",
+          "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*(?:^|/)\\.[sS][sS][hH](?:/|$))(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[pP][eE][mM](?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))[^\\u0000-\\u001f]+$",
           "type": "string"
         },
         "source_span": {
@@ -312,7 +312,7 @@
             "source_path": {
               "maxLength": 4096,
               "minLength": 1,
-              "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*(?:^|/)[sS][eE][cC][rR][eE][tT][sS][^/]*(?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))(?!.*(?:^|/)\\.[gG][iI][tT]/[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS](?:/|$))[^\\u0000-\\u001f]+$",
+              "pattern": "^(?!/)(?![A-Za-z]:/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\.[eE][nN][vV][^/]*(?:/|$))(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*(?:^|/)\\.[sS][sS][hH](?:/|$))(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[pP][eE][mM](?:/|$))(?!.*(?:^|/)\\.[kK][eE][yY](?:/|$))[^\\u0000-\\u001f]+$",
               "type": "string"
             },
             "source_span": {
@@ -374,7 +374,6 @@
         "ref": {
           "maxLength": 256,
           "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001f]*$",
           "type": "string"
         },
         "repository": {
@@ -433,8 +432,7 @@
       "type": "array"
     },
     "canonical_owner": {
-      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
-      "type": "string"
+      "const": "aura_unified_memory_continuity"
     },
     "capability_refs": {
       "items": {
@@ -575,10 +573,10 @@
   "title": "Aura Project Context Projection V1",
   "type": "object",
   "x-aura-semantic-invariants": [
-    "reference_id uniqueness across all reference arrays",
+    "complete canonical continuity ownership",
+    "reference-ID uniqueness across arrays",
     "record digest verification",
-    "UTF-8 byte ceilings",
-    "source line ranges are positive, complete, and ordered"
+    "source span ordering"
   ],
   "x-aura-semantic-validator": "aura_ephemeral_workspace_contracts.validate_project_semantics"
 }

@@ -7,7 +7,7 @@ publication, deployment, professional, payment, or merge authority.
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import asdict, dataclass, fields, is_dataclass, replace
+from dataclasses import dataclass, fields, is_dataclass
 from enum import Enum
 import hashlib
 import json
@@ -16,6 +16,8 @@ import re
 import time
 from types import MappingProxyType
 from typing import Any
+
+from aura_ephemeral_path_policy import FORBIDDEN_PATTERNS
 
 WORKSPACE_CONTRACTS_VERSION = "AURA_INTENT_SPATIAL_WORKSPACE_CONTRACTS_V1"
 AUTHORITY_ENVELOPE_VERSION = "AURA_WORKSPACE_AUTHORITY_ENVELOPE_V1"
@@ -79,6 +81,14 @@ _LEGACY_ALLOWED_CAPABILITIES = frozenset({
 _LEGACY_REQUIRED_WORKSPACE_CAPABILITIES = frozenset({
     "resolve_capabilities", "read_slice", "dissolve",
 })
+_LEGACY_CLOSED_GRANT_PROFILES = frozenset({_LEGACY_ALLOWED_CAPABILITIES, _LEGACY_REQUIRED_WORKSPACE_CAPABILITIES})
+_LEGACY_CLOSED_UI_COMPONENT_TYPES = frozenset({
+    "objective_header", "existing_capability_cards", "exact_function_table",
+    "relationship_graph", "tests_and_docs_panel", "safety_constraints",
+    "missing_capability_panel", "cost_telemetry", "lifecycle_status",
+    "dissolve_control",
+})
+_MANIFEST_PROJECTION_VERSION = "AURA_EPHEMERAL_MANIFEST_PROJECTION_V1"
 _LEGACY_SAFE_READABLE_PATHS = frozenset({
     ".aura/CODEMAP.json", ".aura/CODEMAP.md", ".aura/MODULE_MANIFEST.json",
 })
@@ -108,42 +118,110 @@ _PR1_RESOURCE_CEILINGS = MappingProxyType({
 })
 
 
-def _canonical(value: Any, *, _depth: int = 0) -> Any:
-    """Return a lossless bounded canonical JSON value or reject ambiguous input."""
+def _bounded_sequence_snapshot(value: Any, name: str, max_items: int) -> tuple[Any, ...]:
+    """Detach a sequence once and enforce the observed, not reported, item count."""
+    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
+        raise ValueError(f"{name} must be a sequence")
+    result: list[Any] = []
+    try:
+        for item in value:
+            result.append(item)
+            if len(result) > max_items:
+                raise ValueError(f"{name} exceeds its item ceiling")
+    except RecursionError as exc:
+        raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
+    return tuple(result)
+
+
+def _bounded_mapping_snapshot(value: Any, name: str, max_items: int) -> tuple[tuple[Any, Any], ...]:
+    """Detach a mapping once and enforce reported and observed item ceilings."""
+    if not isinstance(value, Mapping):
+        raise ValueError(f"{name} must be an object")
+    try:
+        if len(value) > max_items:
+            raise ValueError(f"{name} exceeds its item ceiling")
+    except (TypeError, OverflowError) as exc:
+        raise ValueError(f"{name} has an invalid item count") from exc
+    result: list[tuple[Any, Any]] = []
+    try:
+        for item in value.items():
+            if (
+                isinstance(item, (str, bytes, bytearray))
+                or not isinstance(item, Sequence)
+                or len(item) != 2
+            ):
+                raise ValueError(f"{name} entries must be key/value pairs")
+            result.append((item[0], item[1]))
+            if len(result) > max_items:
+                raise ValueError(f"{name} exceeds its item ceiling")
+    except RecursionError as exc:
+        raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
+    return tuple(result)
+
+
+def _canonical(value: Any, *, _depth: int = 0, _active: set[int] | None = None) -> Any:
+    """Return a lossless bounded canonical JSON value from one detached traversal."""
     if _depth > MAX_CANONICAL_DEPTH:
         raise ValueError("canonical JSON nesting exceeds its depth ceiling")
+    active = set() if _active is None else _active
     next_depth = _depth + 1
     if isinstance(value, Enum):
-        return value.value
+        return _canonical(value.value, _depth=next_depth, _active=active)
     if is_dataclass(value):
-        if hasattr(value, "to_dict") and callable(value.to_dict):
-            return _canonical(value.to_dict(), _depth=next_depth)
-        return _canonical(asdict(value), _depth=next_depth)
+        marker = id(value)
+        if marker in active:
+            raise ValueError("canonical JSON contains a recursive dataclass")
+        active.add(marker)
+        try:
+            if hasattr(value, "to_dict") and callable(value.to_dict):
+                try:
+                    exported = value.to_dict()
+                except RecursionError as exc:
+                    raise ValueError("canonical JSON dataclass nesting exceeds its depth ceiling") from exc
+            else:
+                exported = {field.name: getattr(value, field.name) for field in fields(value)}
+            return _canonical(exported, _depth=next_depth, _active=active)
+        finally:
+            active.remove(marker)
     if isinstance(value, Mapping):
-        if len(value) > MAX_CANONICAL_ITEMS:
-            raise ValueError("canonical JSON object exceeds its item ceiling")
-        keys = tuple(value)
-        if any(not isinstance(key, str) for key in keys):
-            raise ValueError("JSON object keys must be strings")
-        for key in keys:
-            try:
-                encoded_key = key.encode("utf-8")
-            except UnicodeEncodeError as exc:
-                raise ValueError(
-                    "canonical JSON object keys must contain valid Unicode scalar values"
-                ) from exc
-            if len(encoded_key) > MAX_CANONICAL_SCALAR_BYTES:
-                raise ValueError(
-                    "canonical JSON object key exceeds its scalar byte ceiling"
-                )
-        return {
-            key: _canonical(value[key], _depth=next_depth)
-            for key in sorted(keys)
-        }
+        marker = id(value)
+        if marker in active:
+            raise ValueError("canonical JSON contains a recursive object")
+        active.add(marker)
+        try:
+            pairs = _bounded_mapping_snapshot(value, "canonical JSON object", MAX_CANONICAL_ITEMS)
+            keys = [key for key, _ in pairs]
+            if any(not isinstance(key, str) for key in keys):
+                raise ValueError("JSON object keys must be strings")
+            if len(set(keys)) != len(keys):
+                raise ValueError("canonical JSON object keys must be unique")
+            detached: dict[str, Any] = {}
+            for key, item in pairs:
+                try:
+                    encoded_key = key.encode("utf-8")
+                except UnicodeEncodeError as exc:
+                    raise ValueError(
+                        "canonical JSON object keys must contain valid Unicode scalar values"
+                    ) from exc
+                if len(encoded_key) > MAX_CANONICAL_SCALAR_BYTES:
+                    raise ValueError("canonical JSON object key exceeds its scalar byte ceiling")
+                detached[key] = item
+            return {
+                key: _canonical(detached[key], _depth=next_depth, _active=active)
+                for key in sorted(detached)
+            }
+        finally:
+            active.remove(marker)
     if isinstance(value, (list, tuple)):
-        if len(value) > MAX_CANONICAL_ITEMS:
-            raise ValueError("canonical JSON sequence exceeds its item ceiling")
-        return [_canonical(item, _depth=next_depth) for item in value]
+        marker = id(value)
+        if marker in active:
+            raise ValueError("canonical JSON contains a recursive sequence")
+        active.add(marker)
+        try:
+            items = _bounded_sequence_snapshot(value, "canonical JSON sequence", MAX_CANONICAL_ITEMS)
+            return [_canonical(item, _depth=next_depth, _active=active) for item in items]
+        finally:
+            active.remove(marker)
     if isinstance(value, (set, frozenset)):
         raise ValueError("sets are not JSON values")
     if isinstance(value, str):
@@ -167,7 +245,6 @@ def _canonical(value: Any, *, _depth: int = 0) -> Any:
             raise ValueError("canonical JSON number exceeds its numeric ceiling")
         return value
     raise ValueError(f"non-JSON value: {type(value).__name__}")
-
 
 def canonical_json(value: Any) -> str:
     """Serialize a value to deterministic compact JSON."""
@@ -275,13 +352,10 @@ def _prob(value: Any, name: str) -> int | float:
 
 
 def _seq(value: Any, name: str, *, ids: bool = False, max_items: int = MAX_ITEMS, sort: bool = False, upper: bool = False) -> tuple[str, ...]:
-    """Validate a bounded unique string sequence after normalization."""
-    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
-        raise ValueError(f"{name} must be a sequence")
-    if len(value) > max_items:
-        raise ValueError(f"{name} exceeds its item ceiling")
+    """Validate a bounded unique string sequence from one detached snapshot."""
+    items = _bounded_sequence_snapshot(value, name, max_items)
     normalized = []
-    for item in value:
+    for item in items:
         text = _id(item, f"{name}[]") if ids else _text(item, f"{name}[]")
         if upper and text != text.upper():
             raise ValueError(f"{name} values must already use uppercase canonical spelling")
@@ -291,37 +365,29 @@ def _seq(value: Any, name: str, *, ids: bool = False, max_items: int = MAX_ITEMS
     result = tuple(normalized)
     return tuple(sorted(result)) if sort else result
 
-
 def _source_path(value: Any, name: str) -> str:
-    """Require a safe repository-relative source path outside the V1 denylist."""
+    """Require a safe repository-relative source path under the canonical path policy."""
     path = _text(value, name, maximum=4096)
     if "\\" in path or path.startswith("/") or re.match(r"^[A-Za-z]:/", path):
         raise ValueError(f"{name} must be a repository-relative POSIX path")
     parts = path.split("/")
     if any(part in {"", ".", ".."} for part in parts):
         raise ValueError(f"{name} contains an unsafe path segment")
-    lowered = tuple(part.lower() for part in parts)
-    if any(part.startswith(".env") for part in lowered):
-        raise ValueError(f"{name} targets a forbidden environment path")
-    if any(part.startswith("secrets") or part == ".key" for part in lowered):
-        raise ValueError(f"{name} targets a forbidden secret path")
-    if any(
-        lowered[index] == ".git" and lowered[index + 1] == "credentials"
-        for index in range(len(lowered) - 1)
-    ):
-        raise ValueError(f"{name} targets forbidden Git credentials")
+    normalized = "/".join(parts).lower()
+    if any(pattern.lower() in normalized for pattern in FORBIDDEN_PATTERNS):
+        raise ValueError(f"{name} targets a path forbidden by aura_ephemeral_path_policy")
     return path
-
 
 def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
     """Validate and recursively freeze the closed scalar metadata contract."""
     if value is None or value == ():
         return ()
+    if isinstance(value, Mapping) and len(value) > len(_METADATA_FIELDS):
+        raise ValueError(f"{name} exceeds its field ceiling")
     if isinstance(value, tuple):
-        if len(value) > len(_METADATA_FIELDS):
-            raise ValueError(f"{name} exceeds its field ceiling")
-        pairs: list[tuple[str, Any]] = []
-        for item in value:
+        pairs = _bounded_sequence_snapshot(value, name, len(_METADATA_FIELDS))
+        normalized_pairs: list[tuple[str, Any]] = []
+        for item in pairs:
             if (
                 isinstance(item, (str, bytes, bytearray))
                 or not isinstance(item, Sequence)
@@ -331,14 +397,17 @@ def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
             key = item[0]
             if not isinstance(key, str):
                 raise ValueError(f"{name} keys must be strings")
-            pairs.append((key, item[1]))
+            normalized_pairs.append((key, item[1]))
+        if len({key for key, _ in normalized_pairs}) != len(normalized_pairs):
+            raise ValueError(f"{name} keys must be unique")
+        candidate = dict(normalized_pairs)
+    elif isinstance(value, Mapping):
+        pairs = _bounded_mapping_snapshot(value, name, len(_METADATA_FIELDS))
+        if any(not isinstance(key, str) for key, _ in pairs):
+            raise ValueError(f"{name} keys must be strings")
         if len({key for key, _ in pairs}) != len(pairs):
             raise ValueError(f"{name} keys must be unique")
         candidate = dict(pairs)
-    elif isinstance(value, Mapping):
-        if len(value) > len(_METADATA_FIELDS):
-            raise ValueError(f"{name} exceeds its field ceiling")
-        candidate = dict(value)
     else:
         raise ValueError(f"{name} must be an object")
     if any(not isinstance(key, str) for key in candidate):
@@ -379,25 +448,28 @@ def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
 
 
 def _strict(payload: Mapping[str, Any], expected: set[str], name: str) -> None:
-    """Require an exact mapping key set."""
+    """Require an exact mapping key set without trusting custom length reports."""
     if not isinstance(payload, Mapping):
         raise ValueError(f"{name} must be an object")
-    if len(payload) > len(expected):
-        if isinstance(payload, dict):
-            for index, key in enumerate(payload):
-                if index > len(expected):
-                    break
-                if not isinstance(key, str):
-                    raise ValueError(f"{name} keys must be strings")
-        raise ValueError(
-            f"{name} keys mismatch: expected at most {len(expected)} keys"
-        )
-    keys = tuple(payload)
+    if isinstance(payload, dict) and any(not isinstance(key, str) for key in payload):
+        raise ValueError(f"{name} keys must be strings")
+    try:
+        if len(payload) > len(expected):
+            raise ValueError(
+                f"{name} keys mismatch: expected at most {len(expected)} keys"
+            )
+    except (TypeError, OverflowError) as exc:
+        raise ValueError(f"{name} has an invalid key count") from exc
+    pairs = _bounded_mapping_snapshot(payload, name, len(expected))
+    keys = tuple(key for key, _ in pairs)
     if any(not isinstance(key, str) for key in keys):
         raise ValueError(f"{name} keys must be strings")
     supplied = set(keys)
     if supplied != expected:
-        raise ValueError(f"{name} keys mismatch: missing={sorted(expected-supplied)}, extra={sorted(supplied-expected)}")
+        raise ValueError(
+            f"{name} keys mismatch: missing={sorted(expected-supplied)}, "
+            f"extra={sorted(supplied-expected)}"
+        )
 
 
 def _set_record_digest(record: Any, field_name: str) -> None:
@@ -629,7 +701,10 @@ class ProjectContextProjection:
         """Validate bounded references and the fixed privacy profile."""
         object.__setattr__(self, "projection_id", _id(self.projection_id, "project.projection_id"))
         object.__setattr__(self, "project_ref", _text(self.project_ref, "project.project_ref"))
-        object.__setattr__(self, "canonical_owner", _id(self.canonical_owner, "project.canonical_owner"))
+        canonical_owner = _id(self.canonical_owner, "project.canonical_owner")
+        if canonical_owner != _PROJECT_CANONICAL_OWNER:
+            raise ValueError("project.canonical_owner must be the unified continuity owner")
+        object.__setattr__(self, "canonical_owner", canonical_owner)
         object.__setattr__(self, "objective_digest", _digest(self.objective_digest, "project.objective_digest"))
         object.__setattr__(self, "purpose_digest", _digest(self.purpose_digest, "project.purpose_digest"))
         if not isinstance(self.repository_identity, RepositoryIdentity):
@@ -637,9 +712,8 @@ class ProjectContextProjection:
         seen: set[str] = set()
         for name in _REFERENCE_FIELDS:
             raw = getattr(self, name)
-            if isinstance(raw, (str, bytes, bytearray)) or not isinstance(raw, Sequence) or len(raw) > MAX_ITEMS:
-                raise ValueError(f"project.{name} must be a bounded sequence")
-            refs = tuple(item if isinstance(item, CanonicalReference) else CanonicalReference.from_dict(item) for item in raw)
+            items = _bounded_sequence_snapshot(raw, f"project.{name}", MAX_ITEMS)
+            refs = tuple(item if isinstance(item, CanonicalReference) else CanonicalReference.from_dict(item) for item in items)
             for reference in refs:
                 if reference.truth_class != "EXACT":
                     raise ValueError("project references must use EXACT canonical truth")
@@ -813,17 +887,11 @@ def _refs(value: Any, name: str, *, require_current: bool = False) -> tuple[Cano
 
 
 def _owner_map(value: Any) -> tuple[tuple[str, str], ...]:
-    """Validate and canonicalize the domain-owner handoff map."""
+    """Validate and canonicalize the closed domain-owner handoff map."""
     if isinstance(value, Mapping):
-        if len(value) > MAX_HANDOFF_OWNERS:
-            raise ValueError("handoff map exceeds its item ceiling")
-        items = value.items()
-    elif isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
-        if len(value) > MAX_HANDOFF_OWNERS:
-            raise ValueError("handoff map exceeds its item ceiling")
-        items = value
+        items = _bounded_mapping_snapshot(value, "handoff map", MAX_HANDOFF_OWNERS)
     else:
-        raise ValueError("handoff map must be an object or pair sequence")
+        items = _bounded_sequence_snapshot(value, "handoff map", MAX_HANDOFF_OWNERS)
     pairs = []
     for item in items:
         if isinstance(item, (str, bytes, bytearray)) or not isinstance(item, Sequence) or len(item) != 2:
@@ -847,12 +915,12 @@ _FROZEN_DEFINITION = MappingProxyType({
 })
 CODING_SPATIAL_WORKSPACE_V1_DEFINITION = _FROZEN_DEFINITION
 
-
 def _validate_manifest_reference_metadata(reference: CanonicalReference) -> None:
     """Require the exact V1 wrapper metadata carried by a manifest reference."""
     metadata = dict(reference.metadata)
     expected_fields = {
-        "manifest_version", "legacy_manifest_digest", "wrapped_not_replaced",
+        "manifest_version", "legacy_manifest_digest", "source_digest",
+        "wrapped_not_replaced",
     }
     if set(metadata) != expected_fields:
         raise ValueError("base manifest reference metadata is incomplete")
@@ -867,10 +935,11 @@ def _validate_manifest_reference_metadata(reference: CanonicalReference) -> None
         "base manifest reference metadata wrapped_not_replaced",
         True,
     )
+    _digest(metadata["source_digest"], "base manifest reference metadata source_digest")
     manifest_identity = reference.digest[:32]
-    expected_reference_id = f"organ-manifest:{manifest_identity}"
+    expected_reference_id = f"organ-manifest-projection:{manifest_identity}"
     expected_canonical_ref = (
-        f"ephemeral-organ:{manifest_identity}@{metadata['manifest_version']}"
+        f"ephemeral-organ-projection:{manifest_identity}@{metadata['manifest_version']}"
     )
     if (
         reference.reference_id != expected_reference_id
@@ -965,6 +1034,14 @@ class EphemeralWorkspaceRecipe:
         if self.version != EPHEMERAL_WORKSPACE_RECIPE_VERSION:
             raise ValueError("unsupported recipe version")
         self._validate_frozen_demonstration()
+        identity_body = self.to_dict()
+        identity_body.pop("recipe_id")
+        identity_body.pop("recipe_digest")
+        expected_recipe_id = _compiled_recipe_id(identity_body)
+        if self.recipe_id != expected_recipe_id:
+            raise ValueError(
+                f"recipe.recipe_id does not match behavior-defining content: expected {expected_recipe_id}, got {self.recipe_id}"
+            )
         _set_record_digest(self, "recipe_digest")
 
     def _validate_frozen_demonstration(self) -> None:
@@ -1018,11 +1095,6 @@ class EphemeralWorkspaceRecipe:
         _require_serialized_digest(payload, "recipe_digest", "recipe")
         record = cls(**dict(payload))
         _require_exact_serialized_form(record, payload)
-        identity_body = record.to_dict()
-        identity_body.pop("recipe_id")
-        identity_body.pop("recipe_digest")
-        if record.recipe_id != _compiled_recipe_id(identity_body):
-            raise ValueError("recipe.recipe_id does not match behavior-defining content")
         return record
 
     def validate_bindings(self, *, expected_intent_digest: str,
@@ -1453,10 +1525,8 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
     _text(body.get("signature_or_digest"), "base manifest signature_or_digest", optional=True)
 
     granted = set(_seq(body.get("granted_capabilities"), "base manifest granted_capabilities", ids=True, max_items=MAX_ITEMS, sort=True))
-    if granted & _LEGACY_FORBIDDEN_CAPABILITIES or not granted <= _LEGACY_ALLOWED_CAPABILITIES:
-        raise ValueError("base manifest grants a forbidden or unknown capability")
-    if not _LEGACY_REQUIRED_WORKSPACE_CAPABILITIES <= granted:
-        raise ValueError("base manifest does not grant the minimum workspace capabilities")
+    if frozenset(granted) not in _LEGACY_CLOSED_GRANT_PROFILES:
+        raise ValueError("base manifest grants do not match the closed canonical V1 profile")
     requested = _require_sequence(body.get("requested_capabilities"), "base manifest requested_capabilities")
     requested_grants: set[str] = set()
     requested_denials: dict[str, str] = {}
@@ -1553,13 +1623,15 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
         _bool(data_policy.get(name), f"base manifest data_policy.{name}", False)
     ui_manifest = _require_mapping(body.get("ui_manifest"), "base manifest ui_manifest")
     _strict(ui_manifest, {"component_types", "schema", "executable"}, "base manifest ui_manifest")
-    _seq(
+    component_types = frozenset(_seq(
         ui_manifest.get("component_types"),
         "base manifest ui_manifest.component_types",
         ids=True,
         max_items=32,
         sort=True,
-    )
+    ))
+    if component_types != _LEGACY_CLOSED_UI_COMPONENT_TYPES:
+        raise ValueError("base manifest UI components do not match the closed canonical V1 profile")
     ui_schema = _require_mapping(ui_manifest.get("schema"), "base manifest ui_manifest.schema")
     if ui_schema:
         raise ValueError("base manifest UI schema must be empty in the non-operational PR1 wrapper")
@@ -1636,25 +1708,38 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
                                              ttl_seconds: int = 300,
                                              expected_manifest_timestamps: Sequence[int | float] | None = None) -> EphemeralWorkspaceRecipe:
     """Compile the frozen recipe without invoking any canonical owner."""
-    raw_before = _bounded_manifest_export(base_manifest)
-    before = canonical_json(raw_before)
-    body, legacy_digest, wrapper_digest = _manifest_snapshot(raw_before)
-    raw_after = _bounded_manifest_export(base_manifest)
-    if before != canonical_json(raw_after):
-        raise ValueError("base V1 manifest changed while wrapping")
+    exported = _bounded_manifest_export(base_manifest)
+    body, legacy_digest, source_snapshot_digest = _manifest_snapshot(exported)
     project = project_projection if isinstance(project_projection, ProjectContextProjection) else ProjectContextProjection.from_dict(project_projection)
     if project.canonical_owner != _PROJECT_CANONICAL_OWNER:
         raise ValueError("project projection is not owned by the canonical continuity owner")
     if project.freshness_class not in _CURRENT_FRESHNESS or any(reference.freshness_class not in _CURRENT_FRESHNESS for reference in project.all_references()):
         raise ValueError("project projection or references are stale or unknown")
-    manifest_identity = wrapper_digest[:32]
-    manifest_ref = CanonicalReference(f"organ-manifest:{manifest_identity}",
-                                      "aura_ephemeral_manifest",
-                                      f"ephemeral-organ:{manifest_identity}@{body['manifest_version']}",
-                                      wrapper_digest,
-                                      metadata={"manifest_version": body["manifest_version"],
-                                                "legacy_manifest_digest": legacy_digest,
-                                                "wrapped_not_replaced": True})
+    projection_body = {
+        "version": _MANIFEST_PROJECTION_VERSION,
+        "source_manifest_version": body["manifest_version"],
+        "source_organ_id": body["organ_id"],
+        "source_manifest_digest": source_snapshot_digest,
+        "source_legacy_manifest_digest": legacy_digest,
+        "effective_capability_ids": sorted(_LEGACY_REQUIRED_WORKSPACE_CAPABILITIES),
+        "effective_ui_component_types": [],
+        "effective_resource_ceilings": _manifest_resource_limits(body),
+        "authority_non_escalation": True,
+    }
+    projection_digest = stable_digest(projection_body)
+    manifest_identity = projection_digest[:32]
+    manifest_ref = CanonicalReference(
+        f"organ-manifest-projection:{manifest_identity}",
+        "aura_ephemeral_manifest",
+        f"ephemeral-organ-projection:{manifest_identity}@{body['manifest_version']}",
+        projection_digest,
+        metadata={
+            "manifest_version": body["manifest_version"],
+            "legacy_manifest_digest": legacy_digest,
+            "source_digest": source_snapshot_digest,
+            "wrapped_not_replaced": True,
+        },
+    )
     intent = _digest(canonical_intent_digest, "canonical intent")
     requested_ttl = _int(ttl_seconds, "recipe.ttl", 1, MAX_TTL_SECONDS)
     manifest_ttl = _int(body.get("ttl_seconds"), "base manifest ttl", 1, MAX_TTL_SECONDS)
@@ -1707,8 +1792,39 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
     adapters = _refs(adapter_refs, "adapter_refs", require_current=True)
     evidence = _refs(evidence_refs, "evidence_refs", require_current=True)
     definition = CODING_SPATIAL_WORKSPACE_V1_DEFINITION
-    provisional = EphemeralWorkspaceRecipe(
-        recipe_id="workspace-recipe:pending",
+    recipe_values = {
+        "version": EPHEMERAL_WORKSPACE_RECIPE_VERSION,
+        "demonstration_id": CODING_SPATIAL_WORKSPACE_V1,
+        "base_manifest_ref": manifest_ref.to_dict(),
+        "canonical_intent_digest": intent,
+        "project_projection_id": project.projection_id,
+        "project_projection_digest": project.projection_digest,
+        "capability_ids": list(definition["capability_ids"]),
+        "dependency_edges": [
+            edge.to_dict()
+            for edge in sorted(
+                (DependencyEdge(source, target) for source, target in definition["dependency_edges"]),
+                key=lambda edge: (edge.source_capability_id, edge.target_capability_id),
+            )
+        ],
+        "adapter_refs": [reference.to_dict() for reference in adapters],
+        "evidence_refs": [reference.to_dict() for reference in evidence],
+        "domain_owner_handoff_map": dict(definition["domain_owner_handoff_map"]),
+        "budgets": budget.to_dict(),
+        "renderer_requirements": sorted(definition["renderer_requirements"]),
+        "device_requirements": sorted(definition["device_requirements"]),
+        "allowed_interaction_actions": list(definition["allowed_interaction_actions"]),
+        "required_verification_gates": list(definition["required_verification_gates"]),
+        "ttl_seconds": effective_ttl,
+        "lifecycle_policy": _LIFECYCLE_POLICY,
+        "dissolution_policy": _DISSOLUTION_POLICY,
+        "automatic_persistence": False,
+        "automatic_resume": False,
+        "automatic_promotion": False,
+        "authority": AuthorityEnvelope().to_dict(),
+    }
+    return EphemeralWorkspaceRecipe(
+        recipe_id=_compiled_recipe_id(recipe_values),
         demonstration_id=CODING_SPATIAL_WORKSPACE_V1,
         base_manifest_ref=manifest_ref,
         canonical_intent_digest=intent,
@@ -1729,19 +1845,25 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
         required_verification_gates=tuple(definition["required_verification_gates"]),
         ttl_seconds=effective_ttl,
     )
-    identity_body = provisional.to_dict()
-    identity_body.pop("recipe_id")
-    identity_body.pop("recipe_digest")
-    return replace(
-        provisional,
-        recipe_id=_compiled_recipe_id(identity_body),
-        recipe_digest="",
+
+
+def validate_recipe_semantics(
+    payload: Mapping[str, Any],
+    *,
+    expected_recipe: EphemeralWorkspaceRecipe | Mapping[str, Any] | None = None,
+) -> EphemeralWorkspaceRecipe:
+    """Parse then admit a recipe only against an independently trusted expectation."""
+    record = EphemeralWorkspaceRecipe.from_dict(payload)
+    if expected_recipe is None:
+        raise ValueError("expected_recipe is required for bound recipe admission")
+    expected = (
+        expected_recipe
+        if isinstance(expected_recipe, EphemeralWorkspaceRecipe)
+        else EphemeralWorkspaceRecipe.from_dict(expected_recipe)
     )
-
-
-def validate_recipe_semantics(payload: Mapping[str, Any]) -> EphemeralWorkspaceRecipe:
-    """Run semantic graph and cross-field validation after JSON Schema validation."""
-    return EphemeralWorkspaceRecipe.from_dict(payload)
+    if record.to_dict() != expected.to_dict():
+        raise ValueError("stale complete recipe identity")
+    return record
 
 
 def validate_project_semantics(payload: Mapping[str, Any]) -> ProjectContextProjection:
