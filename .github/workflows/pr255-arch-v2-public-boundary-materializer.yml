@@ -18,21 +18,22 @@ jobs:
           path: transport
           fetch-depth: 1
 
-      - name: Checkout exact PR head
+      - name: Checkout frozen PR head shallowly
         uses: actions/checkout@v4
         with:
-          ref: refactor/intent-native-spatial-workspace-pr1
+          ref: 56f3ea8470d0ef3a5df394f644b5b99eb039d23f
           path: candidate
-          fetch-depth: 0
+          fetch-depth: 1
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Freeze exact head and base
+      - name: Fetch exact base tree and freeze identities
         working-directory: candidate
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "56f3ea8470d0ef3a5df394f644b5b99eb039d23f"
-          test "$(git merge-base 879b5fb056b70d150b1646e082223330a36c2912 HEAD)" = "879b5fb056b70d150b1646e082223330a36c2912"
+          git fetch --no-tags --depth=1 origin 879b5fb056b70d150b1646e082223330a36c2912
+          test "$(git cat-file -t 879b5fb056b70d150b1646e082223330a36c2912)" = "commit"
 
       - name: Apply one authorized root-cause transaction
         working-directory: candidate
@@ -74,12 +75,12 @@ jobs:
           EOF
           sort -o /tmp/expected_pr /tmp/expected_pr
           {
-            git diff --name-only 879b5fb056b70d150b1646e082223330a36c2912...HEAD
+            git diff --name-only 879b5fb056b70d150b1646e082223330a36c2912 HEAD
             git diff --name-only
           } | sort -u > /tmp/actual_pr
           diff -u /tmp/expected_pr /tmp/actual_pr
 
-          git diff --exit-code 879b5fb056b70d150b1646e082223330a36c2912 -- \
+          git diff --exit-code 879b5fb056b70d150b1646e082223330a36c2912 HEAD -- \
             .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json \
             Aura_Memory/live_topology_ast.json
 
@@ -138,7 +139,7 @@ jobs:
           git diff --cached --name-only | sort > /tmp/staged
           diff -u /tmp/expected_candidate /tmp/staged
           git commit -m "fix(pr1): close public-boundary honesty gaps"
-          git fetch origin refactor/intent-native-spatial-workspace-pr1
-          test "$(git rev-parse origin/refactor/intent-native-spatial-workspace-pr1)" = "56f3ea8470d0ef3a5df394f644b5b99eb039d23f"
+          git fetch --no-tags --depth=1 origin refactor/intent-native-spatial-workspace-pr1
+          test "$(git rev-parse FETCH_HEAD)" = "56f3ea8470d0ef3a5df394f644b5b99eb039d23f"
           git push origin HEAD:refactor/intent-native-spatial-workspace-pr1
           echo "PROMOTED_HEAD=$(git rev-parse HEAD)"
