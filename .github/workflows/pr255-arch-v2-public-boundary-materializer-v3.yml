@@ -1,0 +1,138 @@
+name: PR255 ARCH v2 Public Boundary Materializer V3
+
+on:
+  push:
+    branches:
+      - analysis/pr255-arch-v2-public-boundary-20260805
+
+permissions:
+  contents: write
+
+jobs:
+  prove-and-promote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout transaction tools
+        uses: actions/checkout@v4
+        with:
+          path: transport
+          fetch-depth: 1
+
+      - name: Checkout frozen PR head
+        uses: actions/checkout@v4
+        with:
+          ref: 56f3ea8470d0ef3a5df394f644b5b99eb039d23f
+          path: candidate
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Apply isolated transaction
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "56f3ea8470d0ef3a5df394f644b5b99eb039d23f"
+          git fetch --no-tags --depth=1 origin 879b5fb056b70d150b1646e082223330a36c2912
+          python ../transport/.github/scripts/pr255_arch_v2_public_boundary_patch.py
+          python ../transport/.github/scripts/pr255_arch_v2_preserve_error_contract.py
+
+      - name: Install verifier
+        working-directory: candidate
+        run: python -m pip install --disable-pip-version-check -q pytest jsonschema ruff
+
+      - name: Verify exact scope and generated-artifact exclusion
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/expected_candidate <<'EOF'
+          aura_ephemeral_workspace_contracts.py
+          docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md
+          schemas/aura_ephemeral_workspace_recipe.schema.json
+          schemas/aura_multimodal_spatial_observation.schema.json
+          schemas/aura_project_context_projection.schema.json
+          tests/test_aura_ephemeral_workspace_contracts.py
+          EOF
+          sort -o /tmp/expected_candidate /tmp/expected_candidate
+          git diff --name-only | sort > /tmp/actual_candidate
+          diff -u /tmp/expected_candidate /tmp/actual_candidate
+
+          cat > /tmp/expected_pr <<'EOF'
+          .aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json
+          .aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json
+          aura_ephemeral_workspace_contracts.py
+          docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md
+          schemas/aura_ephemeral_workspace_recipe.schema.json
+          schemas/aura_multimodal_spatial_observation.schema.json
+          schemas/aura_project_context_projection.schema.json
+          tests/test_aura_ephemeral_workspace_contracts.py
+          EOF
+          sort -o /tmp/expected_pr /tmp/expected_pr
+          {
+            git diff --name-only 879b5fb056b70d150b1646e082223330a36c2912 HEAD
+            git diff --name-only
+          } | sort -u > /tmp/actual_pr
+          diff -u /tmp/expected_pr /tmp/actual_pr
+          git diff --exit-code 879b5fb056b70d150b1646e082223330a36c2912 HEAD -- \
+            .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json \
+            Aura_Memory/live_topology_ast.json
+
+      - name: Run independent proof gates
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+          python -m pytest -q tests/test_aura_ephemeral_workspace_contracts.py
+          python -m pytest --collect-only -q tests/test_aura_ephemeral_workspace_contracts.py | tail -1 | grep -E '^37 tests collected'
+          python -m ruff check aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py --select F401,F821,F841
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          required = {
+              "aura_project_context_projection.schema.json": {
+                  "current_and_bounded_freshness_admission",
+                  "unicode_scalar_validation",
+              },
+              "aura_ephemeral_workspace_recipe.schema.json": {
+                  "reference_id_uniqueness_across_adapter_and_evidence_refs",
+                  "manifest_reference_identity_digest_prefix_binding",
+                  "unicode_scalar_validation",
+              },
+              "aura_multimodal_spatial_observation.schema.json": {
+                  "transcript_digest_equality",
+                  "target_binding_entity_evidence_id_uniqueness",
+                  "unicode_scalar_validation",
+              },
+          }
+          for name, expected in required.items():
+              schema = json.loads((Path("schemas") / name).read_text(encoding="utf-8"))
+              Draft202012Validator.check_schema(schema)
+              delegations = schema["x-aura-semantic-delegations"]
+              assert expected <= set(delegations)
+              assert all(delegations[key] == "mandatory semantic validator" for key in expected)
+          PY
+
+      - name: Promote only from unchanged green head
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "dallascourchene-commits"
+          git config user.email "281686929+dallascourchene-commits@users.noreply.github.com"
+          git add \
+            aura_ephemeral_workspace_contracts.py \
+            docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md \
+            schemas/aura_ephemeral_workspace_recipe.schema.json \
+            schemas/aura_multimodal_spatial_observation.schema.json \
+            schemas/aura_project_context_projection.schema.json \
+            tests/test_aura_ephemeral_workspace_contracts.py
+          git diff --cached --name-only | sort > /tmp/staged
+          diff -u /tmp/expected_candidate /tmp/staged
+          git commit -m "fix(pr1): close public-boundary honesty gaps"
+          git fetch --no-tags --depth=1 origin refactor/intent-native-spatial-workspace-pr1
+          test "$(git rev-parse FETCH_HEAD)" = "56f3ea8470d0ef3a5df394f644b5b99eb039d23f"
+          git push origin HEAD:refactor/intent-native-spatial-workspace-pr1
+          echo "PROMOTED_HEAD=$(git rev-parse HEAD)"
