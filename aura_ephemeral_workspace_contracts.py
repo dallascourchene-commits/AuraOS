@@ -203,13 +203,28 @@ def _canonical(value: Any, *, _depth: int = 0, _active: set[int] | None = None) 
             raise ValueError("canonical JSON contains a recursive dataclass")
         active.add(marker)
         try:
-            if hasattr(value, "to_dict") and callable(value.to_dict):
+            try:
+                exporter = getattr(value, "to_dict", None)
+            except (TypeError, OverflowError) as exc:
+                raise ValueError("canonical JSON dataclass has an invalid export protocol") from exc
+            except RecursionError as exc:
+                raise ValueError("canonical JSON dataclass nesting exceeds its depth ceiling") from exc
+            if exporter is not None:
+                if not callable(exporter):
+                    raise ValueError("canonical JSON dataclass has an invalid export protocol")
                 try:
-                    exported = value.to_dict()
+                    exported = exporter()
+                except (TypeError, OverflowError) as exc:
+                    raise ValueError("canonical JSON dataclass has an invalid export protocol") from exc
                 except RecursionError as exc:
                     raise ValueError("canonical JSON dataclass nesting exceeds its depth ceiling") from exc
             else:
-                exported = {field.name: getattr(value, field.name) for field in fields(value)}
+                try:
+                    exported = {field.name: getattr(value, field.name) for field in fields(value)}
+                except (AttributeError, TypeError, OverflowError) as exc:
+                    raise ValueError("canonical JSON dataclass has an invalid field export protocol") from exc
+                except RecursionError as exc:
+                    raise ValueError("canonical JSON dataclass nesting exceeds its depth ceiling") from exc
             return _canonical(exported, _depth=next_depth, _active=active)
         finally:
             active.remove(marker)
@@ -221,7 +236,7 @@ def _canonical(value: Any, *, _depth: int = 0, _active: set[int] | None = None) 
         try:
             pairs = _bounded_mapping_snapshot(value, "canonical JSON object", MAX_CANONICAL_ITEMS)
             keys = [key for key, _ in pairs]
-            if any(not isinstance(key, str) for key in keys):
+            if any(type(key) is not str for key in keys):
                 raise ValueError("JSON object keys must be strings")
             if len(set(keys)) != len(keys):
                 raise ValueError("canonical JSON object keys must be unique")
@@ -254,7 +269,7 @@ def _canonical(value: Any, *, _depth: int = 0, _active: set[int] | None = None) 
             active.remove(marker)
     if isinstance(value, (set, frozenset)):
         raise ValueError("sets are not JSON values")
-    if isinstance(value, str):
+    if type(value) is str:
         try:
             encoded = value.encode("utf-8")
         except UnicodeEncodeError as exc:
@@ -288,7 +303,7 @@ def stable_digest(value: Any) -> str:
 
 def _text(value: Any, name: str, *, optional: bool = False, maximum: int = MAX_TEXT_BYTES) -> str:
     """Validate canonical bounded text without coercion or whitespace folding."""
-    if not isinstance(value, str):
+    if type(value) is not str:
         raise ValueError(f"{name} must be a string")
     if value != value.strip():
         raise ValueError(f"{name} must not contain surrounding whitespace")
@@ -533,7 +548,7 @@ def _detached_json_snapshot(
             pairs = _bounded_mapping_snapshot(value, name, MAX_CANONICAL_ITEMS)
             result: dict[str, Any] = {}
             for key, item in pairs:
-                if not isinstance(key, str):
+                if type(key) is not str:
                     raise ValueError(f"{name} keys must be strings")
                 try:
                     encoded_key = key.encode("utf-8")
@@ -566,7 +581,7 @@ def _detached_json_snapshot(
             ]
         finally:
             active.remove(marker)
-    if isinstance(value, str):
+    if type(value) is str:
         try:
             encoded = value.encode("utf-8")
         except UnicodeEncodeError as exc:
@@ -688,8 +703,12 @@ class CanonicalReference:
         object.__setattr__(self, "owner", _id(self.owner, "reference.owner"))
         object.__setattr__(self, "canonical_ref", _text(self.canonical_ref, "reference.canonical_ref"))
         object.__setattr__(self, "digest", _digest(self.digest, "reference.digest"))
-        if self.truth_class not in _TRUTH or self.freshness_class not in _FRESHNESS:
+        truth_class = _text(self.truth_class, "reference.truth_class", maximum=32)
+        freshness_class = _text(self.freshness_class, "reference.freshness_class", maximum=32)
+        if truth_class not in _TRUTH or freshness_class not in _FRESHNESS:
             raise ValueError("unsupported reference class")
+        object.__setattr__(self, "truth_class", truth_class)
+        object.__setattr__(self, "freshness_class", freshness_class)
         object.__setattr__(self, "metadata", _metadata(self.metadata, "reference.metadata"))
         if self.version != CANONICAL_REFERENCE_VERSION:
             raise ValueError("unsupported reference version")
@@ -1852,11 +1871,21 @@ def _validate_v1_manifest(body: Mapping[str, Any]) -> None:
 
 
 def _bounded_manifest_export(manifest: Any) -> Any:
-    """Export a live V1 manifest while normalizing recursive failures."""
-    if not hasattr(manifest, "to_dict"):
-        return manifest
+    """Export a live V1 manifest while normalizing hostile export callbacks."""
     try:
-        return manifest.to_dict()
+        exporter = getattr(manifest, "to_dict", None)
+    except (TypeError, OverflowError) as exc:
+        raise ValueError("base manifest has an invalid export protocol") from exc
+    except RecursionError as exc:
+        raise ValueError("base manifest nesting exceeds its depth ceiling") from exc
+    if exporter is None:
+        return manifest
+    if not callable(exporter):
+        raise ValueError("base manifest has an invalid export protocol")
+    try:
+        return exporter()
+    except (TypeError, OverflowError) as exc:
+        raise ValueError("base manifest has an invalid export protocol") from exc
     except RecursionError as exc:
         raise ValueError("base manifest nesting exceeds its depth ceiling") from exc
 

@@ -723,7 +723,10 @@
     "canonical_serialized_ordering": "mandatory semantic validator",
     "reference_id_uniqueness_across_adapter_and_evidence_refs": "mandatory semantic validator",
     "manifest_reference_identity_digest_prefix_binding": "mandatory semantic validator",
-    "unicode_scalar_validation": "mandatory semantic validator"
+    "unicode_scalar_validation": "mandatory semantic validator",
+    "wall_time_ttl_binding": "mandatory semantic validator",
+    "recipe_digest_equality": "mandatory semantic validator",
+    "behavior_derived_recipe_id": "mandatory semantic validator"
   },
   "x-aura-semantic-invariants": [
     "record digest verification",
@@ -736,7 +739,10 @@
     "canonical serialized ordering delegated to mandatory semantic validation",
     "reference-ID uniqueness within and across adapter/evidence references delegated to mandatory semantic validation",
     "manifest reference ID and canonical-ref digest-prefix binding delegated to mandatory semantic validation",
-    "Unicode scalar validation delegated to mandatory semantic validation"
+    "Unicode scalar validation delegated to mandatory semantic validation",
+    "wall-time budget to TTL binding delegated to mandatory semantic validation",
+    "recipe digest equality delegated to mandatory semantic validation",
+    "behavior-derived recipe ID delegated to mandatory semantic validation"
   ],
   "x-aura-semantic-requires-independent-binding": true,
   "x-aura-semantic-validator": "aura_ephemeral_workspace_contracts.validate_recipe_semantics"

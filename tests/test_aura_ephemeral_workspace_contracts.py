@@ -2050,16 +2050,27 @@ def test_schema_delegations_name_all_remaining_public_boundary_semantics() -> No
         "aura_project_context_projection.schema.json": {
             "current_and_bounded_freshness_admission",
             "unicode_scalar_validation",
+            "reference_id_uniqueness_across_project_reference_arrays",
+            "repository_identity_digest_equality",
+            "project_projection_digest_equality",
         },
         "aura_ephemeral_workspace_recipe.schema.json": {
             "reference_id_uniqueness_across_adapter_and_evidence_refs",
             "manifest_reference_identity_digest_prefix_binding",
             "unicode_scalar_validation",
+            "wall_time_ttl_binding",
+            "recipe_digest_equality",
+            "behavior_derived_recipe_id",
         },
         "aura_multimodal_spatial_observation.schema.json": {
             "transcript_digest_equality",
             "target_binding_entity_evidence_id_uniqueness",
             "unicode_scalar_validation",
+            "target_scene_session_parent_binding",
+            "target_input_sources_subset_of_parent",
+            "temporal_window_ordering_and_duration_ceiling",
+            "binding_digest_equality",
+            "observation_digest_equality",
         },
     }
     for filename, required_delegations in expected.items():
@@ -2072,4 +2083,75 @@ def test_schema_delegations_name_all_remaining_public_boundary_semantics() -> No
         )
         invariants = "\n".join(schema["x-aura-semantic-invariants"])
         assert "Unicode scalar validation delegated" in invariants
+
+
+def test_exact_builtin_strings_are_required_at_public_scalar_boundaries() -> None:
+    """String subclasses and equality-spoof objects cannot become retained identity text."""
+    class SpoofedString(str):
+        def strip(self) -> str:
+            return "trusted"
+
+        def encode(self, *args: Any, **kwargs: Any) -> bytes:
+            return b"trusted"
+
+    class EqualitySpoof:
+        def __eq__(self, other: object) -> bool:
+            return True
+
+        def __hash__(self) -> int:
+            return hash("EXACT")
+
+    with pytest.raises(ValueError, match="repository.repository must be a string"):
+        RepositoryIdentity(SpoofedString("owner/repo"), "main", MAIN, D["1"])
+    with pytest.raises(ValueError, match="reference.truth_class must be a string"):
+        CanonicalReference(
+            "artifact:spoofed-class",
+            "canonical.owner",
+            "owner://spoofed",
+            D["1"],
+            truth_class=EqualitySpoof(),
+        )
+    with pytest.raises(ValueError, match="non-JSON value"):
+        stable_digest(SpoofedString("spoofed canonical scalar"))
+
+
+def test_dataclass_export_callbacks_are_normalized_to_value_error() -> None:
+    """Dataclass exporter lookup, callability, and callback failures fail closed."""
+    @dataclass
+    class NonCallableExport:
+        value: int = 1
+        to_dict: Any = 7
+
+    @dataclass
+    class RaisingExport:
+        value: int = 1
+
+        def to_dict(self) -> dict[str, Any]:
+            raise OverflowError("hostile dataclass export")
+
+    for value in (NonCallableExport(), RaisingExport()):
+        with pytest.raises(ValueError, match="dataclass has an invalid export protocol"):
+            stable_digest(value)
+
+
+def test_live_manifest_export_callbacks_are_normalized_to_value_error() -> None:
+    """Broken live-manifest exporters cannot leak callback-specific exceptions."""
+    class NonCallableManifest:
+        to_dict: Any = {}
+
+    class RaisingManifest:
+        def to_dict(self) -> dict[str, Any]:
+            raise TypeError("hostile manifest export")
+
+    for manifest in (NonCallableManifest(), RaisingManifest()):
+        with pytest.raises(ValueError, match="base manifest has an invalid export protocol"):
+            compile_coding_spatial_workspace_recipe(
+                base_manifest=manifest,
+                expected_manifest_timestamps=(0, 1),
+                project_projection=project(),
+                expected_project_projection=project(),
+                canonical_intent_digest=D["1"],
+                adapter_refs=(ref("adapter:compass", D["2"]),),
+                evidence_refs=(ref("evidence:source", D["3"]),),
+            )
 

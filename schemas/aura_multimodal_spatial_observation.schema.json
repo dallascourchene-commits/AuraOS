@@ -617,7 +617,12 @@
     "canonical_serialized_ordering": "mandatory semantic validator",
     "transcript_digest_equality": "mandatory semantic validator",
     "target_binding_entity_evidence_id_uniqueness": "mandatory semantic validator",
-    "unicode_scalar_validation": "mandatory semantic validator"
+    "unicode_scalar_validation": "mandatory semantic validator",
+    "target_scene_session_parent_binding": "mandatory semantic validator",
+    "target_input_sources_subset_of_parent": "mandatory semantic validator",
+    "temporal_window_ordering_and_duration_ceiling": "mandatory semantic validator",
+    "binding_digest_equality": "mandatory semantic validator",
+    "observation_digest_equality": "mandatory semantic validator"
   },
   "x-aura-semantic-invariants": [
     "record digest verification",
@@ -630,7 +635,12 @@
     "canonical serialized ordering delegated to mandatory semantic validation",
     "transcript digest equality delegated to mandatory semantic validation",
     "target binding, entity, and evidence-reference ID uniqueness delegated to mandatory semantic validation",
-    "Unicode scalar validation delegated to mandatory semantic validation"
+    "Unicode scalar validation delegated to mandatory semantic validation",
+    "target scene/session equality with the parent observation delegated to mandatory semantic validation",
+    "target input-source containment within the parent observation delegated to mandatory semantic validation",
+    "temporal ordering and 60-second duration ceiling delegated to mandatory semantic validation",
+    "referent binding digest equality delegated to mandatory semantic validation",
+    "observation digest equality delegated to mandatory semantic validation"
   ],
   "x-aura-semantic-requires-independent-binding": true,
   "x-aura-semantic-validator": "aura_ephemeral_workspace_contracts.validate_observation_semantics"

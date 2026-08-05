@@ -112,7 +112,7 @@ Consumers must run both schema validation and the named validator:
 
 ## Focused verification
 
-The focused suite contains **37 tests** covering the original review waves plus the structural repair:
+The focused suite contains **40 tests** covering the original review waves plus the structural repair:
 
 - exact V1 object and serialized compatibility;
 - recursive single-snapshot live/custom mapping and nested-sequence behavior;
@@ -130,7 +130,7 @@ The focused suite contains **37 tests** covering the original review waves plus 
 Verification completed in the exact-head focused workspace:
 
 - Python compilation: passed;
-- focused tests: **37 passed**;
+- focused tests: **40 passed**;
 - all JSON documents parse successfully;
 - all three schemas pass Draft 2020-12 meta-validation;
 - no operational or persistence invocation is introduced.
