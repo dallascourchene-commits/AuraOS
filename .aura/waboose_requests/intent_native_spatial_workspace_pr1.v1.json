@@ -1,0 +1,63 @@
+{
+  "version": "AURA_CODING_WABOOSE_REQUEST_V1",
+  "request_id": "intent-native-spatial-workspace-pr1-review-repair",
+  "base_commit": "879b5fb056b70d150b1646e082223330a36c2912",
+  "objective_ref": ".aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json",
+  "review_files": [
+    "aura_ephemeral_workspace_contracts.py",
+    "schemas/aura_project_context_projection.schema.json",
+    "schemas/aura_ephemeral_workspace_recipe.schema.json",
+    "schemas/aura_multimodal_spatial_observation.schema.json",
+    "tests/test_aura_ephemeral_workspace_contracts.py",
+    "docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md",
+    ".aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json",
+    ".aura/waboose_requests/intent_native_spatial_workspace_pr1.v1.json"
+  ],
+  "required_checks": [
+    "canonical_owner_reuse",
+    "single_snapshot_bounded_ingestion",
+    "v1_manifest_source_identity_and_sanitized_projection_binding",
+    "lossless_non_coercive_canonicalization",
+    "mandatory_serialized_record_digests",
+    "closed_scalar_metadata_and_detached_serialization",
+    "complete_project_and_observation_identity_rebinding",
+    "repository_full_object_identity",
+    "frozen_capability_graph_owner_gate_and_lifecycle_profile",
+    "parse_bind_admit_trust_state_separation",
+    "dependency_self_dangling_duplicate_cycle_and_ceiling_rejection",
+    "recipe_reference_global_uniqueness_and_order_invariance",
+    "manifest_recipe_ttl_and_wall_budget_consistency",
+    "transcript_temporal_target_and_evidence_binding",
+    "draft_2020_12_structural_validation",
+    "mandatory_semantic_validator_with_independent_expected_recipe",
+    "docstring_coverage",
+    "no_operational_invocation",
+    "no_persistence_store",
+    "authority_non_escalation",
+    "generated_navigation_restored_to_base"
+  ],
+  "semantic_questions": [
+    "Can a live or custom mapping be observed more than once or exceed a post-iteration ceiling?",
+    "Can parsing or self-consistent hashing be mistaken for independent admission?",
+    "Can the retained V1 source manifest grant authority that leaks into the sanitized workspace projection?",
+    "Can any malformed input be coerced into the same canonical identity as a different valid input?",
+    "Can any serialized record clear or replace its digest and be re-blessed?",
+    "Can any metadata representation retain unknown authority, raw-sensor content, or repository credential paths?",
+    "Can any recipe substitute capabilities, owners, gates, actions, lifecycle, dissolution, TTL, or budget constraints?",
+    "Are all cross-field invariants explicitly delegated from schema to a mandatory semantic validator with independent expected truth?",
+    "Does the module remain a compatibility contract rather than a runtime, planner, router, renderer, verifier, memory, persistence, or authority plane?"
+  ],
+  "ignored_generated_navigation": [
+    ".aura/CODEMAP.json",
+    ".aura/CODEMAP.md",
+    "topology_map.json",
+    "Aura_Memory/live_topology_ast.json"
+  ],
+  "patch_authority": false,
+  "automatic_fix": false,
+  "automatic_commit": false,
+  "automatic_push": false,
+  "automatic_pull_request": false,
+  "automatic_merge": false,
+  "human_review_required": true
+}

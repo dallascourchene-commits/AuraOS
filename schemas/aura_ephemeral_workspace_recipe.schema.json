@@ -1,0 +1,771 @@
+{
+  "$defs": {
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "automatic_commit": {
+          "const": false
+        },
+        "automatic_merge": {
+          "const": false
+        },
+        "automatic_persistence": {
+          "const": false
+        },
+        "automatic_promotion": {
+          "const": false
+        },
+        "automatic_pull_request": {
+          "const": false
+        },
+        "automatic_push": {
+          "const": false
+        },
+        "automatic_resume": {
+          "const": false
+        },
+        "deployment_authority": {
+          "const": false
+        },
+        "domain_mutation": {
+          "const": false
+        },
+        "execution_authority": {
+          "const": false
+        },
+        "human_review_required": {
+          "const": true
+        },
+        "model_authority": {
+          "const": false
+        },
+        "patch_authority": {
+          "const": false
+        },
+        "payment_authority": {
+          "const": false
+        },
+        "persistence_authority": {
+          "const": false
+        },
+        "physical_work_authority": {
+          "const": false
+        },
+        "production_mutation": {
+          "const": false
+        },
+        "professional_authority": {
+          "const": false
+        },
+        "projection_only": {
+          "const": true
+        },
+        "renderer_authority": {
+          "const": false
+        },
+        "review_only": {
+          "const": true
+        },
+        "sensor_authority": {
+          "const": false
+        },
+        "source_mutation": {
+          "const": false
+        },
+        "version": {
+          "const": "AURA_WORKSPACE_AUTHORITY_ENVELOPE_V1"
+        },
+        "vsa_patch_authority": {
+          "const": false
+        }
+      },
+      "required": [
+        "version",
+        "projection_only",
+        "review_only",
+        "human_review_required",
+        "source_mutation",
+        "domain_mutation",
+        "production_mutation",
+        "renderer_authority",
+        "sensor_authority",
+        "model_authority",
+        "execution_authority",
+        "persistence_authority",
+        "deployment_authority",
+        "physical_work_authority",
+        "payment_authority",
+        "professional_authority",
+        "patch_authority",
+        "vsa_patch_authority",
+        "automatic_persistence",
+        "automatic_resume",
+        "automatic_promotion",
+        "automatic_commit",
+        "automatic_push",
+        "automatic_pull_request",
+        "automatic_merge"
+      ],
+      "type": "object"
+    },
+    "budget": {
+      "additionalProperties": false,
+      "properties": {
+        "context_tokens": {
+          "maximum": 64000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "cost_microusd": {
+          "const": 0
+        },
+        "device_events": {
+          "maximum": 100000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "memory_mb": {
+          "maximum": 512,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "model_calls": {
+          "const": 0
+        },
+        "network_calls": {
+          "const": 0
+        },
+        "output_bytes": {
+          "maximum": 4000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "tool_calls": {
+          "maximum": 64,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "wall_time_ms": {
+          "maximum": 300000,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "wall_time_ms",
+        "memory_mb",
+        "context_tokens",
+        "output_bytes",
+        "tool_calls",
+        "model_calls",
+        "cost_microusd",
+        "network_calls",
+        "device_events"
+      ],
+      "type": "object"
+    },
+    "current_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_ref": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "freshness_class": {
+          "enum": [
+            "CURRENT",
+            "BOUNDED"
+          ]
+        },
+        "metadata": {
+          "additionalProperties": false,
+          "dependentRequired": {
+            "line_end": [
+              "line_start",
+              "source_path"
+            ],
+            "line_start": [
+              "line_end",
+              "source_path"
+            ]
+          },
+          "properties": {
+            "artifact_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "byte_length": {
+              "maximum": 10000000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "content_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "description": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "evidence_class": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "legacy_manifest_digest": {
+              "pattern": "^[0-9a-f]{32}$",
+              "type": "string"
+            },
+            "line_end": {
+              "maximum": 10000000000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "line_start": {
+              "maximum": 10000000000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "manifest_version": {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+              "type": "string"
+            },
+            "media_type": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "note": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "relation": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "source_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "source_path": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^(?!\\s)(?!.*\\s$)(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\.[eE][nN][vV])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS])(?!.*\\.[kK][eE][yY])(?!.*\\.[pP][eE][mM])(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[sS][sS][hH])[^\\u0000-\\u001f]+$",
+              "type": "string"
+            },
+            "source_span": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "symbol": {
+              "maxLength": 4096,
+              "minLength": 1,
+              "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+              "type": "string"
+            },
+            "wrapped_not_replaced": {
+              "const": true
+            }
+          },
+          "type": "object"
+        },
+        "owner": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "reference_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "truth_class": {
+          "const": "EXACT"
+        },
+        "version": {
+          "const": "AURA_CANONICAL_REFERENCE_V1"
+        }
+      },
+      "required": [
+        "version",
+        "reference_id",
+        "owner",
+        "canonical_ref",
+        "digest",
+        "truth_class",
+        "freshness_class",
+        "metadata"
+      ],
+      "type": "object"
+    },
+    "manifest_metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "legacy_manifest_digest": {
+          "pattern": "^[0-9a-f]{32}$",
+          "type": "string"
+        },
+        "manifest_version": {
+          "const": "AURA_EPHEMERAL_ORGAN_V1"
+        },
+        "source_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "wrapped_not_replaced": {
+          "const": true
+        }
+      },
+      "required": [
+        "manifest_version",
+        "legacy_manifest_digest",
+        "source_digest",
+        "wrapped_not_replaced"
+      ],
+      "type": "object"
+    },
+    "manifest_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_ref": {
+          "pattern": "^ephemeral-organ-projection:[0-9a-f]{32}@AURA_EPHEMERAL_ORGAN_V1$",
+          "type": "string"
+        },
+        "digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "freshness_class": {
+          "enum": [
+            "CURRENT",
+            "BOUNDED"
+          ]
+        },
+        "metadata": {
+          "additionalProperties": false,
+          "properties": {
+            "legacy_manifest_digest": {
+              "pattern": "^[0-9a-f]{32}$",
+              "type": "string"
+            },
+            "manifest_version": {
+              "const": "AURA_EPHEMERAL_ORGAN_V1"
+            },
+            "source_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "wrapped_not_replaced": {
+              "const": true
+            }
+          },
+          "required": [
+            "manifest_version",
+            "legacy_manifest_digest",
+            "source_digest",
+            "wrapped_not_replaced"
+          ],
+          "type": "object"
+        },
+        "owner": {
+          "const": "aura_ephemeral_manifest"
+        },
+        "reference_id": {
+          "pattern": "^organ-manifest-projection:[0-9a-f]{32}$",
+          "type": "string"
+        },
+        "truth_class": {
+          "const": "EXACT"
+        },
+        "version": {
+          "const": "AURA_CANONICAL_REFERENCE_V1"
+        }
+      },
+      "required": [
+        "version",
+        "reference_id",
+        "owner",
+        "canonical_ref",
+        "digest",
+        "truth_class",
+        "freshness_class",
+        "metadata"
+      ],
+      "type": "object"
+    },
+    "metadata": {
+      "additionalProperties": false,
+      "dependentRequired": {
+        "line_end": [
+          "line_start",
+          "source_path"
+        ],
+        "line_start": [
+          "line_end",
+          "source_path"
+        ]
+      },
+      "properties": {
+        "artifact_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "byte_length": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "content_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "description": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "evidence_class": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "legacy_manifest_digest": {
+          "pattern": "^[0-9a-f]{32}$",
+          "type": "string"
+        },
+        "line_end": {
+          "maximum": 10000000000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "line_start": {
+          "maximum": 10000000000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "manifest_version": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+          "type": "string"
+        },
+        "media_type": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "note": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "relation": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "source_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "source_path": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^(?!\\s)(?!.*\\s$)(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\.[eE][nN][vV])(?!.*[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL][sS])(?!.*\\.[kK][eE][yY])(?!.*\\.[pP][eE][mM])(?!.*[sS][eE][cC][rR][eE][tT])(?!.*[pP][aA][sS][sS][wW][oO][rR][dD])(?!.*[iI][dD]_[rR][sS][aA])(?!.*\\.[sS][sS][hH])[^\\u0000-\\u001f]+$",
+          "type": "string"
+        },
+        "source_span": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "symbol": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001f]*$",
+          "type": "string"
+        },
+        "wrapped_not_replaced": {
+          "const": true
+        }
+      },
+      "type": "object"
+    }
+  },
+  "$id": "https://auraos.local/schemas/aura_ephemeral_workspace_recipe.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adapter_refs": {
+      "items": {
+        "$ref": "#/$defs/current_reference"
+      },
+      "maxItems": 512,
+      "minItems": 1,
+      "type": "array"
+    },
+    "allowed_interaction_actions": {
+      "const": [
+        "SELECT",
+        "DESELECT",
+        "EXPAND",
+        "CONTRACT",
+        "FOCUS",
+        "OPEN_SOURCE",
+        "ISOLATE",
+        "COMPARE",
+        "REQUEST_RELATIONAL_SYNTHESIS",
+        "REQUEST_SIMULATION",
+        "DISMISS_CANDIDATE",
+        "PREPARE_REPAIR_REQUEST",
+        "PREPARE_DOMAIN_HANDOFF",
+        "CONFIRM_HANDOFF"
+      ]
+    },
+    "authority": {
+      "$ref": "#/$defs/authority"
+    },
+    "automatic_persistence": {
+      "const": false
+    },
+    "automatic_promotion": {
+      "const": false
+    },
+    "automatic_resume": {
+      "const": false
+    },
+    "base_manifest_ref": {
+      "$ref": "#/$defs/manifest_reference"
+    },
+    "budgets": {
+      "$ref": "#/$defs/budget"
+    },
+    "canonical_intent_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "capability_ids": {
+      "const": [
+        "compile_compass_packet",
+        "fetch_bounded_neighborhood",
+        "open_exact_source_slice",
+        "display_tests_and_schemas",
+        "compile_candidate_change_graph",
+        "prepare_forge_handoff",
+        "read_verification_status",
+        "display_attempt_archive_evidence",
+        "dissolve_workspace"
+      ]
+    },
+    "demonstration_id": {
+      "const": "CODING_SPATIAL_WORKSPACE_V1"
+    },
+    "dependency_edges": {
+      "const": [
+        {
+          "source_capability_id": "compile_candidate_change_graph",
+          "target_capability_id": "prepare_forge_handoff"
+        },
+        {
+          "source_capability_id": "compile_compass_packet",
+          "target_capability_id": "fetch_bounded_neighborhood"
+        },
+        {
+          "source_capability_id": "display_attempt_archive_evidence",
+          "target_capability_id": "dissolve_workspace"
+        },
+        {
+          "source_capability_id": "fetch_bounded_neighborhood",
+          "target_capability_id": "compile_candidate_change_graph"
+        },
+        {
+          "source_capability_id": "fetch_bounded_neighborhood",
+          "target_capability_id": "display_tests_and_schemas"
+        },
+        {
+          "source_capability_id": "fetch_bounded_neighborhood",
+          "target_capability_id": "open_exact_source_slice"
+        },
+        {
+          "source_capability_id": "prepare_forge_handoff",
+          "target_capability_id": "read_verification_status"
+        },
+        {
+          "source_capability_id": "read_verification_status",
+          "target_capability_id": "display_attempt_archive_evidence"
+        }
+      ]
+    },
+    "device_requirements": {
+      "const": [
+        "KEYBOARD_REQUIRED",
+        "POINTER_OPTIONAL",
+        "XR_OPTIONAL"
+      ]
+    },
+    "dissolution_policy": {
+      "const": "MANDATORY_REVOKE_AND_REMOVE_TEMP_STATE"
+    },
+    "domain_owner_handoff_map": {
+      "const": {
+        "architecture": "aura_coding_relationship_compass",
+        "code_candidate": "aura_forge",
+        "continuity": "aura_unified_memory_continuity",
+        "dissolution": "aura_ephemeral_runtime",
+        "runtime_proof": "aura_runtime_refactor_harness",
+        "semantic_review": "aura_coding_waboose"
+      }
+    },
+    "evidence_refs": {
+      "items": {
+        "$ref": "#/$defs/current_reference"
+      },
+      "maxItems": 512,
+      "minItems": 1,
+      "type": "array"
+    },
+    "expires_at_epoch_seconds": {
+      "maximum": 9223372036854775807,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "issued_at_epoch_seconds": {
+      "maximum": 9223372036854775807,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "lifecycle_policy": {
+      "const": "EXPLICIT_COMPLETE_CANCEL_FAILURE_OR_TTL"
+    },
+    "project_projection_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "project_projection_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "recipe_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "recipe_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "renderer_requirements": {
+      "const": [
+        "ACCESSIBLE_2D_REQUIRED",
+        "WEBGL2_OPTIONAL",
+        "WEBXR_OPTIONAL"
+      ]
+    },
+    "required_verification_gates": {
+      "const": [
+        "EXACT_REPOSITORY_IDENTITY",
+        "EXACT_PROJECT_PROJECTION",
+        "ADAPTER_IDENTITY",
+        "EVIDENCE_FRESHNESS",
+        "AUTHORITY_NON_ESCALATION",
+        "NO_PRODUCTION_MUTATION",
+        "MANDATORY_DISSOLUTION"
+      ]
+    },
+    "ttl_seconds": {
+      "maximum": 86400,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "version": {
+      "const": "AURA_EPHEMERAL_WORKSPACE_RECIPE_V1"
+    }
+  },
+  "required": [
+    "version",
+    "recipe_id",
+    "demonstration_id",
+    "base_manifest_ref",
+    "canonical_intent_digest",
+    "project_projection_id",
+    "project_projection_digest",
+    "capability_ids",
+    "dependency_edges",
+    "adapter_refs",
+    "evidence_refs",
+    "domain_owner_handoff_map",
+    "budgets",
+    "renderer_requirements",
+    "device_requirements",
+    "allowed_interaction_actions",
+    "required_verification_gates",
+    "ttl_seconds",
+    "lifecycle_policy",
+    "dissolution_policy",
+    "automatic_persistence",
+    "automatic_resume",
+    "automatic_promotion",
+    "authority",
+    "recipe_digest",
+    "issued_at_epoch_seconds",
+    "expires_at_epoch_seconds"
+  ],
+  "title": "Aura Ephemeral Workspace Recipe V1",
+  "type": "object",
+  "x-aura-semantic-delegations": {
+    "absolute_recipe_expiration_admission": "mandatory semantic validator",
+    "base_manifest_resource_budget_binding": "mandatory semantic validator",
+    "behavior_derived_recipe_id": "mandatory semantic validator",
+    "canonical_serialized_ordering": "mandatory semantic validator",
+    "exact_builtin_integer_representation": "mandatory semantic validator",
+    "manifest_reference_identity_digest_prefix_binding": "mandatory semantic validator",
+    "recipe_digest_equality": "mandatory semantic validator",
+    "reference_id_uniqueness_across_adapter_and_evidence_refs": "mandatory semantic validator",
+    "reference_id_uniqueness_across_manifest_adapter_and_evidence_refs": "mandatory semantic validator",
+    "signed_recipe_expiration_arithmetic": "mandatory semantic validator",
+    "source_span_ordering": "mandatory semantic validator",
+    "unicode_scalar_validation": "mandatory semantic validator",
+    "utf8_byte_ceilings": "mandatory semantic validator",
+    "wall_time_ttl_binding": "mandatory semantic validator"
+  },
+  "x-aura-semantic-invariants": [
+    "record digest verification",
+    "compiled recipe identity",
+    "independently trusted recipe rebinding",
+    "wall time does not exceed TTL",
+    "UTF-8 byte ceilings",
+    "source span ordering delegated to mandatory semantic validation",
+    "independently trusted complete-record rebinding",
+    "canonical serialized ordering delegated to mandatory semantic validation",
+    "reference-ID uniqueness across manifest, adapter, and evidence roles delegated to mandatory semantic validation",
+    "manifest reference ID and canonical-ref digest-prefix binding delegated to mandatory semantic validation",
+    "Unicode scalar validation delegated to mandatory semantic validation",
+    "wall-time budget to TTL binding delegated to mandatory semantic validation",
+    "base-manifest and trusted compiled-recipe resource ceilings delegated to mandatory semantic validation",
+    "recipe digest equality delegated to mandatory semantic validation",
+    "behavior-derived recipe ID delegated to mandatory semantic validation",
+    "issued-at plus TTL equals the signed absolute recipe expiration",
+    "expired recipes are rejected during mandatory semantic admission",
+    "exact built-in integer representation delegated to mandatory semantic validation",
+    "signed issued-at plus TTL equals absolute expiration delegated to mandatory semantic validation"
+  ],
+  "x-aura-semantic-requires-independent-binding": true,
+  "x-aura-semantic-validator": "aura_ephemeral_workspace_contracts.validate_recipe_semantics"
+}
