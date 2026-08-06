@@ -93,4 +93,4 @@ replace_once(
     '            )\n',
 )
 
-# Control-plane trigger revision V2; this file is copied to the runner and never enters the PR delta.
+# Control-plane trigger revision V3; this file is copied to the runner and never enters the PR delta.
