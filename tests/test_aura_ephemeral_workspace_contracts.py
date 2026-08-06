@@ -2084,8 +2084,32 @@ def test_enum_unicode_failures_are_normalized_to_value_error() -> None:
 
 
 def test_hostile_container_protocol_callbacks_fail_closed_at_shared_boundaries() -> None:
-    """Accepted hostile containers must not leak protocol-specific exceptions."""
-    class ItemsRaisesMapping(Mapping[str, Any]):
+    """Every ordinary hostile container callback normalizes without catching BaseException."""
+    class MappingLengthRaises(Mapping[str, Any]):
+        def __getitem__(self, key: str) -> Any:
+            raise KeyError(key)
+
+        def __iter__(self):
+            return iter(())
+
+        def __len__(self) -> int:
+            raise RuntimeError("hostile mapping length")
+
+    class ItemsLookupRaisesMapping(Mapping[str, Any]):
+        def __getitem__(self, key: str) -> Any:
+            raise KeyError(key)
+
+        def __iter__(self):
+            return iter(())
+
+        def __len__(self) -> int:
+            return 0
+
+        @property
+        def items(self):
+            raise RuntimeError("hostile items lookup")
+
+    class ItemsCallRaisesMapping(Mapping[str, Any]):
         def __getitem__(self, key: str) -> Any:
             raise KeyError(key)
 
@@ -2096,7 +2120,7 @@ def test_hostile_container_protocol_callbacks_fail_closed_at_shared_boundaries()
             return 0
 
         def items(self):
-            raise TypeError("hostile items export")
+            raise RuntimeError("hostile items invocation")
 
     class ItemsIteratorRaisesMapping(Mapping[str, Any]):
         def __getitem__(self, key: str) -> Any:
@@ -2114,37 +2138,86 @@ def test_hostile_container_protocol_callbacks_fail_closed_at_shared_boundaries()
                     return self
 
                 def __next__(self):
-                    raise OverflowError("hostile items iterator")
+                    raise RuntimeError("hostile items iterator")
 
             return BrokenIterator()
 
     class SequenceIteratorRaises(Sequence[Any]):
         def __getitem__(self, index: int) -> Any:
-            raise OverflowError("hostile sequence iterator")
+            raise IndexError(index)
 
         def __len__(self) -> int:
             return 1
+
+        def __iter__(self):
+            raise RuntimeError("hostile sequence iterator")
 
     class PairLengthRaises(Sequence[Any]):
         def __getitem__(self, index: int) -> Any:
             return ("architecture", "aura_coding_relationship_compass")[index]
 
         def __len__(self) -> int:
-            raise TypeError("hostile pair length")
+            raise RuntimeError("hostile pair length")
 
-    for mapping in (ItemsRaisesMapping(), ItemsIteratorRaisesMapping()):
+    class PairIndexRaises(Sequence[Any]):
+        def __getitem__(self, index: int) -> Any:
+            raise RuntimeError("hostile pair index")
+
+        def __len__(self) -> int:
+            return 2
+
+    class PreservedValueErrorSequence(Sequence[Any]):
+        def __getitem__(self, index: int) -> Any:
+            raise IndexError(index)
+
+        def __len__(self) -> int:
+            return 1
+
+        def __iter__(self):
+            raise ValueError("preserved sequence callback")
+
+    class ControlFlowSequence(Sequence[Any]):
+        def __getitem__(self, index: int) -> Any:
+            raise IndexError(index)
+
+        def __len__(self) -> int:
+            return 1
+
+        def __iter__(self):
+            raise KeyboardInterrupt("control flow must propagate")
+
+    with pytest.raises(ValueError, match="invalid item count"):
+        workspace_contracts._bounded_mapping_snapshot(
+            MappingLengthRaises(), "hostile mapping", 2
+        )
+    for mapping in (
+        ItemsLookupRaisesMapping(),
+        ItemsCallRaisesMapping(),
+        ItemsIteratorRaisesMapping(),
+    ):
         with pytest.raises(ValueError, match="mapping export protocol"):
             workspace_contracts._bounded_mapping_snapshot(mapping, "hostile mapping", 2)
     with pytest.raises(ValueError, match="sequence protocol"):
         workspace_contracts._bounded_sequence_snapshot(
             SequenceIteratorRaises(), "hostile sequence", 2
         )
-    with pytest.raises(ValueError, match="key/value pair"):
-        workspace_contracts._bounded_pair_snapshot(PairLengthRaises(), "hostile pair")
+    for pair in (PairLengthRaises(), PairIndexRaises()):
+        with pytest.raises(ValueError, match="key/value pair"):
+            workspace_contracts._bounded_pair_snapshot(pair, "hostile pair")
     with pytest.raises(ValueError, match="metadata entries must be key/value pairs"):
         workspace_contracts._metadata((PairLengthRaises(),), "metadata")
     with pytest.raises(ValueError, match="handoff map entries must be key/owner pairs"):
-        workspace_contracts._owner_map((PairLengthRaises(),))
+        workspace_contracts._owner_map((PairIndexRaises(),))
+    with pytest.raises(ValueError, match="preserved sequence callback"):
+        workspace_contracts._bounded_sequence_snapshot(
+            PreservedValueErrorSequence(), "hostile sequence", 2
+        )
+    with pytest.raises(KeyboardInterrupt, match="control flow must propagate"):
+        workspace_contracts._bounded_sequence_snapshot(
+            ControlFlowSequence(), "hostile sequence", 2
+        )
+    with pytest.raises(ValueError, match="mapping export protocol"):
+        ProjectContextProjection.from_dict(ItemsCallRaisesMapping())
 
 
 def test_compiler_timestamp_binding_is_a_bounded_detached_sequence() -> None:
@@ -2212,6 +2285,7 @@ def test_schema_delegations_name_all_remaining_public_boundary_semantics() -> No
             "binding_digest_equality",
             "observation_digest_equality",
             "exact_builtin_integer_representation",
+            "exact_builtin_number_representation",
         },
     }
     for filename, required_delegations in expected.items():
@@ -2225,6 +2299,8 @@ def test_schema_delegations_name_all_remaining_public_boundary_semantics() -> No
         invariants = "\n".join(schema["x-aura-semantic-invariants"])
         assert "Unicode scalar validation delegated" in invariants
         assert "exact built-in integer representation delegated" in invariants
+        if filename == "aura_multimodal_spatial_observation.schema.json":
+            assert "exact built-in number representation delegated" in invariants
         if filename == "aura_ephemeral_workspace_recipe.schema.json":
             assert (
                 "signed issued-at plus TTL equals absolute expiration delegated"
@@ -2263,46 +2339,101 @@ def test_exact_builtin_strings_are_required_at_public_scalar_boundaries() -> Non
 
 
 def test_dataclass_export_callbacks_are_normalized_to_value_error() -> None:
-    """Dataclass exporter lookup, callability, and callback failures fail closed."""
+    """Lookup, invocation, and field callbacks normalize RuntimeError but preserve ValueError."""
     @dataclass
     class NonCallableExport:
         value: int = 1
         to_dict: Any = 7
 
     @dataclass
-    class RaisingExport:
+    class LookupRaisesExport:
+        value: int = 1
+
+        @property
+        def to_dict(self):
+            raise RuntimeError("hostile dataclass lookup")
+
+    @dataclass
+    class InvocationRaisesExport:
         value: int = 1
 
         def to_dict(self) -> dict[str, Any]:
-            raise OverflowError("hostile dataclass export")
+            raise RuntimeError("hostile dataclass invocation")
 
-    for value in (NonCallableExport(), RaisingExport()):
+    @dataclass
+    class FieldAccessRaisesExport:
+        value: int = 1
+
+        def __getattribute__(self, name: str) -> Any:
+            if name == "value":
+                raise RuntimeError("hostile dataclass field access")
+            return object.__getattribute__(self, name)
+
+    @dataclass
+    class PreservedValueErrorExport:
+        value: int = 1
+
+        def to_dict(self) -> dict[str, Any]:
+            raise ValueError("preserved dataclass callback")
+
+    for value in (
+        NonCallableExport(),
+        LookupRaisesExport(),
+        InvocationRaisesExport(),
+    ):
         with pytest.raises(ValueError, match="dataclass has an invalid export protocol"):
             stable_digest(value)
+    with pytest.raises(ValueError, match="dataclass has an invalid field export protocol"):
+        stable_digest(FieldAccessRaisesExport())
+    with pytest.raises(ValueError, match="preserved dataclass callback"):
+        stable_digest(PreservedValueErrorExport())
 
 
 def test_live_manifest_export_callbacks_are_normalized_to_value_error() -> None:
-    """Broken live-manifest exporters cannot leak callback-specific exceptions."""
+    """Live-manifest lookup and invocation normalize RuntimeError but preserve ValueError."""
     class NonCallableManifest:
         to_dict: Any = {}
 
-    class RaisingManifest:
-        def to_dict(self) -> dict[str, Any]:
-            raise TypeError("hostile manifest export")
+    class LookupRaisesManifest:
+        @property
+        def to_dict(self):
+            raise RuntimeError("hostile manifest lookup")
 
-    for manifest in (NonCallableManifest(), RaisingManifest()):
+    class InvocationRaisesManifest:
+        def to_dict(self) -> dict[str, Any]:
+            raise RuntimeError("hostile manifest invocation")
+
+    class PreservedValueErrorManifest:
+        def to_dict(self) -> dict[str, Any]:
+            raise ValueError("preserved manifest callback")
+
+    for manifest in (
+        NonCallableManifest(),
+        LookupRaisesManifest(),
+        InvocationRaisesManifest(),
+    ):
+        trusted_project = project()
         with pytest.raises(ValueError, match="base manifest has an invalid export protocol"):
             compile_coding_spatial_workspace_recipe(
                 base_manifest=manifest,
                 expected_manifest_timestamps=(0, 1),
-                project_projection=project(),
-                expected_project_projection=project(),
+                project_projection=trusted_project,
+                expected_project_projection=trusted_project,
                 canonical_intent_digest=D["1"],
                 adapter_refs=(ref("adapter:compass", D["2"]),),
                 evidence_refs=(ref("evidence:source", D["3"]),),
             )
-
-
+    trusted_project = project()
+    with pytest.raises(ValueError, match="preserved manifest callback"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=PreservedValueErrorManifest(),
+            expected_manifest_timestamps=(0, 1),
+            project_projection=trusted_project,
+            expected_project_projection=trusted_project,
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
 
 
 def test_nested_contract_subclasses_are_rejected_before_parent_signing() -> None:

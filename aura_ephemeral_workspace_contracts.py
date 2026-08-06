@@ -128,10 +128,12 @@ def _bounded_sequence_snapshot(value: Any, name: str, max_items: int) -> tuple[A
             result.append(item)
             if len(result) > max_items:
                 raise ValueError(f"{name} exceeds its item ceiling")
-    except (TypeError, OverflowError) as exc:
-        raise ValueError(f"{name} has an invalid sequence protocol") from exc
+    except ValueError:
+        raise
     except RecursionError as exc:
         raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
+    except Exception as exc:
+        raise ValueError(f"{name} has an invalid sequence protocol") from exc
     return tuple(result)
 
 
@@ -141,18 +143,22 @@ def _bounded_pair_snapshot(value: Any, name: str) -> tuple[Any, Any]:
         raise ValueError(f"{name} must be a key/value pair")
     try:
         pair_length = len(value)
-    except (TypeError, OverflowError) as exc:
-        raise ValueError(f"{name} must be a key/value pair") from exc
+    except ValueError:
+        raise
     except RecursionError as exc:
         raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
+    except Exception as exc:
+        raise ValueError(f"{name} must be a key/value pair") from exc
     if pair_length != 2:
         raise ValueError(f"{name} must be a key/value pair")
     try:
         return value[0], value[1]
-    except (IndexError, KeyError, TypeError, OverflowError) as exc:
-        raise ValueError(f"{name} must be a key/value pair") from exc
+    except ValueError:
+        raise
     except RecursionError as exc:
         raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
+    except Exception as exc:
+        raise ValueError(f"{name} must be a key/value pair") from exc
 
 
 def _bounded_mapping_snapshot(value: Any, name: str, max_items: int) -> tuple[tuple[Any, Any], ...]:
@@ -162,30 +168,38 @@ def _bounded_mapping_snapshot(value: Any, name: str, max_items: int) -> tuple[tu
     try:
         if len(value) > max_items:
             raise ValueError(f"{name} exceeds its item ceiling")
-    except (TypeError, OverflowError) as exc:
-        raise ValueError(f"{name} has an invalid item count") from exc
+    except ValueError:
+        raise
     except RecursionError as exc:
         raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
+    except Exception as exc:
+        raise ValueError(f"{name} has an invalid item count") from exc
     try:
         exported_items = value.items()
-    except (TypeError, OverflowError) as exc:
-        raise ValueError(f"{name} has an invalid mapping export protocol") from exc
+    except ValueError:
+        raise
     except RecursionError as exc:
         raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
+    except Exception as exc:
+        raise ValueError(f"{name} has an invalid mapping export protocol") from exc
     result: list[tuple[Any, Any]] = []
     try:
         for item in exported_items:
             try:
                 key, item_value = _bounded_pair_snapshot(item, f"{name} entry")
             except ValueError as exc:
+                if exc.__cause__ is None:
+                    raise
                 raise ValueError(f"{name} entries must be key/value pairs") from exc
             result.append((key, item_value))
             if len(result) > max_items:
                 raise ValueError(f"{name} exceeds its item ceiling")
-    except (TypeError, OverflowError) as exc:
-        raise ValueError(f"{name} has an invalid mapping export protocol") from exc
+    except ValueError:
+        raise
     except RecursionError as exc:
         raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
+    except Exception as exc:
+        raise ValueError(f"{name} has an invalid mapping export protocol") from exc
     return tuple(result)
 
 
@@ -205,26 +219,32 @@ def _canonical(value: Any, *, _depth: int = 0, _active: set[int] | None = None) 
         try:
             try:
                 exporter = getattr(value, "to_dict", None)
-            except (TypeError, OverflowError) as exc:
-                raise ValueError("canonical JSON dataclass has an invalid export protocol") from exc
+            except ValueError:
+                raise
             except RecursionError as exc:
                 raise ValueError("canonical JSON dataclass nesting exceeds its depth ceiling") from exc
+            except Exception as exc:
+                raise ValueError("canonical JSON dataclass has an invalid export protocol") from exc
             if exporter is not None:
                 if not callable(exporter):
                     raise ValueError("canonical JSON dataclass has an invalid export protocol")
                 try:
                     exported = exporter()
-                except (TypeError, OverflowError) as exc:
-                    raise ValueError("canonical JSON dataclass has an invalid export protocol") from exc
+                except ValueError:
+                    raise
                 except RecursionError as exc:
                     raise ValueError("canonical JSON dataclass nesting exceeds its depth ceiling") from exc
+                except Exception as exc:
+                    raise ValueError("canonical JSON dataclass has an invalid export protocol") from exc
             else:
                 try:
                     exported = {field.name: getattr(value, field.name) for field in fields(value)}
-                except (AttributeError, TypeError, OverflowError) as exc:
-                    raise ValueError("canonical JSON dataclass has an invalid field export protocol") from exc
+                except ValueError:
+                    raise
                 except RecursionError as exc:
                     raise ValueError("canonical JSON dataclass nesting exceeds its depth ceiling") from exc
+                except Exception as exc:
+                    raise ValueError("canonical JSON dataclass has an invalid field export protocol") from exc
             return _canonical(exported, _depth=next_depth, _active=active)
         finally:
             active.remove(marker)
@@ -2051,20 +2071,24 @@ def _bounded_manifest_export(manifest: Any) -> Any:
     """Export a live V1 manifest while normalizing hostile export callbacks."""
     try:
         exporter = getattr(manifest, "to_dict", None)
-    except (TypeError, OverflowError) as exc:
-        raise ValueError("base manifest has an invalid export protocol") from exc
+    except ValueError:
+        raise
     except RecursionError as exc:
         raise ValueError("base manifest nesting exceeds its depth ceiling") from exc
+    except Exception as exc:
+        raise ValueError("base manifest has an invalid export protocol") from exc
     if exporter is None:
         return manifest
     if not callable(exporter):
         raise ValueError("base manifest has an invalid export protocol")
     try:
         return exporter()
-    except (TypeError, OverflowError) as exc:
-        raise ValueError("base manifest has an invalid export protocol") from exc
+    except ValueError:
+        raise
     except RecursionError as exc:
         raise ValueError("base manifest nesting exceeds its depth ceiling") from exc
+    except Exception as exc:
+        raise ValueError("base manifest has an invalid export protocol") from exc
 
 
 def _manifest_snapshot(raw_manifest: Any) -> tuple[dict[str, Any], str, str]:
