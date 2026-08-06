@@ -734,10 +734,12 @@
     "base_manifest_resource_budget_binding": "mandatory semantic validator",
     "behavior_derived_recipe_id": "mandatory semantic validator",
     "canonical_serialized_ordering": "mandatory semantic validator",
+    "exact_builtin_integer_representation": "mandatory semantic validator",
     "manifest_reference_identity_digest_prefix_binding": "mandatory semantic validator",
     "recipe_digest_equality": "mandatory semantic validator",
     "reference_id_uniqueness_across_adapter_and_evidence_refs": "mandatory semantic validator",
     "reference_id_uniqueness_across_manifest_adapter_and_evidence_refs": "mandatory semantic validator",
+    "signed_recipe_expiration_arithmetic": "mandatory semantic validator",
     "source_span_ordering": "mandatory semantic validator",
     "unicode_scalar_validation": "mandatory semantic validator",
     "utf8_byte_ceilings": "mandatory semantic validator",
@@ -760,7 +762,9 @@
     "recipe digest equality delegated to mandatory semantic validation",
     "behavior-derived recipe ID delegated to mandatory semantic validation",
     "issued-at plus TTL equals the signed absolute recipe expiration",
-    "expired recipes are rejected during mandatory semantic admission"
+    "expired recipes are rejected during mandatory semantic admission",
+    "exact built-in integer representation delegated to mandatory semantic validation",
+    "signed issued-at plus TTL equals absolute expiration delegated to mandatory semantic validation"
   ],
   "x-aura-semantic-requires-independent-binding": true,
   "x-aura-semantic-validator": "aura_ephemeral_workspace_contracts.validate_recipe_semantics"

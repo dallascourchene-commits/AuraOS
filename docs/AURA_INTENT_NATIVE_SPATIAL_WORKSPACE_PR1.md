@@ -108,7 +108,7 @@ Unknown keys, nested structures, authority aliases, raw camera/audio/joint/gaze/
 
 The three Draft 2020-12 schemas enforce exact local shape, fixed authority and owner constants, closed metadata, exact digest formats, bounded arrays/numbers, no surrounding whitespace in bounded text, source-path restrictions, and frozen recipe constants.
 
-Cross-record identity, graph, digest equality, timestamp arithmetic, transcript equality, freshness admission, reference-ID uniqueness, manifest digest-prefix identity, target identity uniqueness, canonical serialized array ordering, Unicode scalar validity, and complete admission require executable semantic validation. All three schemas declare `x-aura-semantic-requires-independent-binding: true`. Each non-structural rejection is named in `x-aura-semantic-delegations`; UTF-8 byte ceilings, Unicode scalar validity, source-span ordering (`line_start <= line_end`), cross-record uniqueness/equality, freshness, digest-prefix identity, and canonical ordering are enforced by the named mandatory semantic validator rather than falsely claimed as Draft 2020-12 structure.
+Cross-record identity, graph, digest equality, signed issue/TTL/expiration arithmetic, exact built-in integer representation, transcript equality, freshness admission, reference-ID uniqueness, manifest digest-prefix identity, target identity uniqueness, canonical serialized array ordering, Unicode scalar validity, and complete admission require executable semantic validation. All three schemas declare `x-aura-semantic-requires-independent-binding: true`. Each non-structural rejection is named in `x-aura-semantic-delegations`; UTF-8 byte ceilings, Unicode scalar validity, exact built-in integer representation, signed lifecycle arithmetic, source-span ordering (`line_start <= line_end`), cross-record uniqueness/equality, freshness, digest-prefix identity, and canonical ordering are enforced by the named mandatory semantic validator rather than falsely claimed as Draft 2020-12 structure.
 
 Consumers must run both schema validation and the named validator:
 
@@ -130,7 +130,7 @@ The focused suite contains **46 tests** covering the original review waves plus 
 - complete graph/reference/observation bindings;
 - sanitized manifest-projection identity;
 - manifest/recipe TTL, signed issue/absolute-expiry lifecycle binding, complete resource-budget ceilings, and exact authority/nested-record admission;
-- schema parity, canonical path-policy equivalence, and explicit semantic delegation;
+- schema parity, canonical path-policy equivalence, exact integer representation, signed lifecycle arithmetic, and explicit semantic delegation;
 - explicit parse-bind-admit separation.
 
 Verification completed in the exact-head focused workspace:

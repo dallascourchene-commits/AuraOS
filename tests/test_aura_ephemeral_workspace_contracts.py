@@ -2190,6 +2190,7 @@ def test_schema_delegations_name_all_remaining_public_boundary_semantics() -> No
             "reference_id_uniqueness_across_project_reference_arrays",
             "repository_identity_digest_equality",
             "project_projection_digest_equality",
+            "exact_builtin_integer_representation",
         },
         "aura_ephemeral_workspace_recipe.schema.json": {
             "reference_id_uniqueness_across_adapter_and_evidence_refs",
@@ -2198,6 +2199,8 @@ def test_schema_delegations_name_all_remaining_public_boundary_semantics() -> No
             "wall_time_ttl_binding",
             "recipe_digest_equality",
             "behavior_derived_recipe_id",
+            "exact_builtin_integer_representation",
+            "signed_recipe_expiration_arithmetic",
         },
         "aura_multimodal_spatial_observation.schema.json": {
             "transcript_digest_equality",
@@ -2208,6 +2211,7 @@ def test_schema_delegations_name_all_remaining_public_boundary_semantics() -> No
             "temporal_window_ordering_and_duration_ceiling",
             "binding_digest_equality",
             "observation_digest_equality",
+            "exact_builtin_integer_representation",
         },
     }
     for filename, required_delegations in expected.items():
@@ -2220,6 +2224,12 @@ def test_schema_delegations_name_all_remaining_public_boundary_semantics() -> No
         )
         invariants = "\n".join(schema["x-aura-semantic-invariants"])
         assert "Unicode scalar validation delegated" in invariants
+        assert "exact built-in integer representation delegated" in invariants
+        if filename == "aura_ephemeral_workspace_recipe.schema.json":
+            assert (
+                "signed issued-at plus TTL equals absolute expiration delegated"
+                in invariants
+            )
 
 
 def test_exact_builtin_strings_are_required_at_public_scalar_boundaries() -> None:
