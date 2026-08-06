@@ -51,29 +51,6 @@ jobs:
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
 
-      - name: Reconstruct exact sealed PR2 payload for repair diagnostics
-        if: github.event.pull_request.head.ref == 'analysis/pr2-materializer-transport'
-        run: |
-          set -euo pipefail
-          cat .aura/pr2_materialize_chunks_v3/{000..015}.b64 > "$RUNNER_TEMP/pr2-request.b64"
-          test "$(sha256sum "$RUNNER_TEMP/pr2-request.b64" | awk '{print $1}')" = "ce14c4abfb53a0ead81a0396b1d362c18e156611a56081bc176600bf838e17cc"
-          base64 -d "$RUNNER_TEMP/pr2-request.b64" > "$RUNNER_TEMP/pr2-transaction.tar.gz"
-          test "$(sha256sum "$RUNNER_TEMP/pr2-transaction.tar.gz" | awk '{print $1}')" = "6061cd9840b1ab1f85e1cd169b709c080fa5a8294e99994c88ef546f3eac8f4f"
-          mkdir "$RUNNER_TEMP/pr2-extracted"
-          tar -xzf "$RUNNER_TEMP/pr2-transaction.tar.gz" -C "$RUNNER_TEMP/pr2-extracted"
-          test "$(find "$RUNNER_TEMP/pr2-extracted" -type f | wc -l)" -eq 9
-
-      - name: Upload exact sealed PR2 payload for repair
-        if: github.event.pull_request.head.ref == 'analysis/pr2-materializer-transport'
-        uses: actions/upload-artifact@v4
-        with:
-          name: pr2-sealed-payload-${{ github.event.pull_request.head.sha }}
-          path: |
-            ${{ runner.temp }}/pr2-transaction.tar.gz
-            ${{ runner.temp }}/pr2-extracted
-          if-no-files-found: error
-          retention-days: 2
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

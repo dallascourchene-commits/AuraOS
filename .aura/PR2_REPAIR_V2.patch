@@ -1,0 +1,234 @@
+diff --git a/aura_ephemeral_registry_store.py b/aura_ephemeral_registry_store.py
+index 262ada5..ecc5b5d 100644
+--- a/aura_ephemeral_registry_store.py
++++ b/aura_ephemeral_registry_store.py
+@@ -528,6 +528,98 @@ class EphemeralRegistryStore:
+         return {"ok": cur.rowcount == 1, "workspace_id": workspace_id,
+                 "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+ 
++    def commit_workspace_v2_node_execution(
++        self,
++        workspace_id: str,
++        *,
++        expected_node_receipts: dict[str, Any],
++        expected_usage: dict[str, Any],
++        node_receipts: dict[str, Any],
++        usage_json: dict[str, Any],
++        now: float | None = None,
++    ) -> dict[str, Any]:
++        """Atomically persist node evidence only while execution authority remains active."""
++        for name, value in (
++            ("expected_node_receipts", expected_node_receipts),
++            ("expected_usage", expected_usage),
++            ("node_receipts", node_receipts),
++            ("usage_json", usage_json),
++        ):
++            if type(value) is not dict:
++                raise ValueError(f"{name} must be an exact object")
++        current_time = time.time() if now is None else now
++        if type(current_time) not in {int, float}:
++            raise ValueError("now must be a finite number")
++        current_time = float(current_time)
++        if not (current_time == current_time and abs(current_time) != float("inf")):
++            raise ValueError("now must be a finite number")
++        expected_receipts_json = self._workspace_v2_json(
++            expected_node_receipts, "expected_node_receipts"
++        )
++        expected_usage_json = self._workspace_v2_json(expected_usage, "expected_usage")
++        receipts_json = self._workspace_v2_json(node_receipts, "node_receipts")
++        usage_encoded = self._workspace_v2_json(usage_json, "usage_json")
++        conn = self._conn
++        assert conn is not None
++        cur = conn.execute(
++            """
++            UPDATE ephemeral_workspaces_v2
++            SET node_receipts = ?, usage_json = ?, updated_at = ?
++            WHERE workspace_id = ?
++              AND state = 'ACTIVE'
++              AND lease_status = 'ACTIVE'
++              AND expires_at > ?
++              AND node_receipts = ?
++              AND usage_json = ?
++            """,
++            (
++                receipts_json,
++                usage_encoded,
++                current_time,
++                workspace_id,
++                current_time,
++                expected_receipts_json,
++                expected_usage_json,
++            ),
++        )
++        if cur.rowcount == 1:
++            return {
++                "ok": True,
++                "workspace_id": workspace_id,
++                "patch_authority": PATCH_AUTHORITY,
++                "vsa_patch_authority": VSA_PATCH_AUTHORITY,
++            }
++        row = conn.execute(
++            """
++            SELECT state, lease_status, expires_at
++            FROM ephemeral_workspaces_v2
++            WHERE workspace_id = ?
++            """,
++            (workspace_id,),
++        ).fetchone()
++        if row is None:
++            error = "workspace_execution_invalidated"
++            state, lease_status, expires_at = "MISSING", "MISSING", 0.0
++        else:
++            state, lease_status, expires_at = row
++            error = (
++                "workspace_execution_invalidated"
++                if state != "ACTIVE"
++                or lease_status != "ACTIVE"
++                or current_time >= expires_at
++                else "stale_workspace_evidence"
++            )
++        return {
++            "ok": False,
++            "error": error,
++            "workspace_id": workspace_id,
++            "state": state,
++            "lease_status": lease_status,
++            "expires_at": expires_at,
++            "patch_authority": PATCH_AUTHORITY,
++            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
++        }
++
+     def revoke_workspace_v2_lease(self, workspace_id: str, *, reason: str) -> dict[str, Any]:
+         if type(reason) is not str or not reason:
+             raise ValueError("lease revocation reason is required")
+diff --git a/aura_ephemeral_workspace_runtime_v2.py b/aura_ephemeral_workspace_runtime_v2.py
+index 0c24495..623a4e5 100644
+--- a/aura_ephemeral_workspace_runtime_v2.py
++++ b/aura_ephemeral_workspace_runtime_v2.py
+@@ -838,7 +838,8 @@ def execute_workspace_node_v2(
+     if node_key not in nodes:
+         raise ValueError("unknown graph node")
+     node = nodes[node_key]
+-    receipts = dict(record["node_receipts"])
++    expected_receipts = dict(record["node_receipts"])
++    receipts = dict(expected_receipts)
+     if node_key in receipts:
+         return {"ok": False, "error": "node_already_executed", "receipt": receipts[node_key]}
+     missing = [parent for parent in parents[node_key]
+@@ -851,7 +852,8 @@ def execute_workspace_node_v2(
+     ):
+         return {"ok": False, "error": "human_gate_required", "node_id": node_key}
+     clean_params = _detach_json(_exact_mapping(params, "params"), name="params")
+-    usage = dict(record["usage_json"])
++    expected_usage = dict(record["usage_json"])
++    usage = dict(expected_usage)
+     if usage.get("tool_calls", 0) >= graph["budgets"]["tool_calls"]:
+         return _fail_workspace_v2(
+             workspace_id, store=store, failure_class="budget",
+@@ -908,9 +910,21 @@ def execute_workspace_node_v2(
+                 workspace_id, store=store, failure_class="budget",
+                 reason="cumulative output budget exhausted", node_id=node_key,
+             )
+-        store.update_workspace_v2(
+-            workspace_id, node_receipts=receipts, usage_json=usage,
++        committed = store.commit_workspace_v2_node_execution(
++            workspace_id,
++            expected_node_receipts=expected_receipts,
++            expected_usage=expected_usage,
++            node_receipts=receipts,
++            usage_json=usage,
++            now=completed,
+         )
++        if not committed.get("ok"):
++            return {
++                **committed,
++                "ok": False,
++                "node_id": node_key,
++                "receipt_committed": False,
++            }
+         return {"ok": True, "workspace_id": workspace_id, "node_id": node_key,
+                 "receipt": receipt,
+                 "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+diff --git a/tests/test_aura_ephemeral_workspace_runtime_v2.py b/tests/test_aura_ephemeral_workspace_runtime_v2.py
+index e994373..530c219 100644
+--- a/tests/test_aura_ephemeral_workspace_runtime_v2.py
++++ b/tests/test_aura_ephemeral_workspace_runtime_v2.py
+@@ -2,6 +2,7 @@ from __future__ import annotations
+ 
+ import copy
+ import json
++import threading
+ import time
+ from pathlib import Path
+ from typing import Any
+@@ -328,6 +329,56 @@ def test_ordinary_hostile_callback_failure_normalizes_and_cleans(tmp_path: Path)
+     assert runtime.workspace_status_v2(workspace_id, store=store)["workspace"]["state"] == "DISSOLVED"
+ 
+ 
++def test_cancellation_during_adapter_execution_cannot_commit_receipt(
++    tmp_path: Path,
++) -> None:
++    started = threading.Event()
++    release = threading.Event()
++
++    def blocking(**params: Any) -> dict[str, Any]:
++        started.set()
++        if not release.wait(timeout=5):
++            raise RuntimeError("test adapter was not released")
++        return {"ok": True, "echo": params}
++
++    recipe = _recipe()
++    first = recipe.capability_ids[0]
++    _, registry, _, graph, store, workspace_id = _admitted(
++        tmp_path, overrides={first: blocking}
++    )
++    assert runtime.activate_workspace_v2(
++        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
++    )["ok"]
++
++    result_box: dict[str, Any] = {}
++
++    def execute() -> None:
++        result_box["result"] = runtime.execute_workspace_node_v2(
++            workspace_id,
++            graph["entry_node_ids"][0],
++            params={},
++            store=store,
++            adapter_registry=registry,
++        )
++
++    worker = threading.Thread(target=execute)
++    worker.start()
++    assert started.wait(timeout=5)
++    cancelled = runtime.cancel_workspace_v2(workspace_id, store=store)
++    assert cancelled["ok"] and cancelled["state"] == "DISSOLVED"
++    release.set()
++    worker.join(timeout=5)
++    assert not worker.is_alive()
++
++    result = result_box["result"]
++    assert not result["ok"]
++    assert result["error"] == "workspace_execution_invalidated"
++    assert result["receipt_committed"] is False
++    record = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
++    assert record["state"] == "DISSOLVED"
++    assert graph["entry_node_ids"][0] not in record["node_receipts"]
++
++
+ def test_process_interruption_reraises_after_cleanup(tmp_path: Path) -> None:
+     def interrupt(**params: Any) -> dict[str, Any]:
+         raise KeyboardInterrupt()
+diff --git a/docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md b/docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md
+index 271b50d..e7f1928 100644
+--- a/docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md
++++ b/docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md
+@@ -1,7 +1,7 @@
+ # AuraOS Verified Ephemeral Workspace V2
+ 
+-**Master implementation unit:** PR2  
+-**Exact base:** `9c04a1efa57461a6078acb9f3b569766cbd2ab24` (merged PR #255)  
++**Master implementation unit:** PR2
++**Exact base:** `9c04a1efa57461a6078acb9f3b569766cbd2ab24` (merged PR #255)
+ **Terminal state:** `READY_FOR_HUMAN_REVIEW`
+ 
+ ## Objective
