@@ -92,3 +92,5 @@ replace_once(
     '                in invariants\n'
     '            )\n',
 )
+
+# Control-plane trigger revision V2; this file is copied to the runner and never enters the PR delta.
