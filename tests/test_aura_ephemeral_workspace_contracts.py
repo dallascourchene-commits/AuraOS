@@ -2078,9 +2078,27 @@ def test_schema_delegation_matches_canonical_path_and_text_policy() -> None:
 
 
 def test_enum_unicode_failures_are_normalized_to_value_error() -> None:
-    """Recursive Enum canonicalization preserves the public fail-closed exception type."""
+    """Enum value lookup and recursive validation share the fail-closed boundary."""
+    class RuntimeValueEnum(Enum):
+        BAD = "runtime"
+
+        @property
+        def value(self):
+            raise RuntimeError("hostile enum value lookup")
+
+    class PreservedValueEnum(Enum):
+        BAD = "value-error"
+
+        @property
+        def value(self):
+            raise ValueError("preserved enum value callback")
+
     with pytest.raises(ValueError, match="valid Unicode scalar values"):
         stable_digest(_SurrogateEnum.BAD)
+    with pytest.raises(ValueError, match="enum has an invalid value protocol"):
+        stable_digest(RuntimeValueEnum.BAD)
+    with pytest.raises(ValueError, match="preserved enum value callback"):
+        stable_digest(PreservedValueEnum.BAD)
 
 
 def test_hostile_container_protocol_callbacks_fail_closed_at_shared_boundaries() -> None:
@@ -2166,6 +2184,51 @@ def test_hostile_container_protocol_callbacks_fail_closed_at_shared_boundaries()
         def __len__(self) -> int:
             return 2
 
+    class ClassificationRaisesMapping(Mapping[str, Any]):
+        @property
+        def __class__(self):
+            raise RuntimeError("hostile mapping classification")
+
+        def __getitem__(self, key: str) -> Any:
+            raise KeyError(key)
+
+        def __iter__(self):
+            return iter(())
+
+        def __len__(self) -> int:
+            return 0
+
+    class ClassificationRaisesSequence(Sequence[Any]):
+        @property
+        def __class__(self):
+            raise RuntimeError("hostile sequence classification")
+
+        def __getitem__(self, index: int) -> Any:
+            raise IndexError(index)
+
+        def __len__(self) -> int:
+            return 0
+
+    class CausedValueErrorPairLength(Sequence[Any]):
+        def __getitem__(self, index: int) -> Any:
+            return ("architecture", "aura_coding_relationship_compass")[index]
+
+        def __len__(self) -> int:
+            try:
+                raise RuntimeError("pair length cause")
+            except RuntimeError as cause:
+                raise ValueError("preserved caused pair length") from cause
+
+    class CausedValueErrorPairIndex(Sequence[Any]):
+        def __getitem__(self, index: int) -> Any:
+            try:
+                raise RuntimeError("pair index cause")
+            except RuntimeError as cause:
+                raise ValueError("preserved caused pair index") from cause
+
+        def __len__(self) -> int:
+            return 2
+
     class PreservedValueErrorSequence(Sequence[Any]):
         def __getitem__(self, index: int) -> Any:
             raise IndexError(index)
@@ -2175,6 +2238,22 @@ def test_hostile_container_protocol_callbacks_fail_closed_at_shared_boundaries()
 
         def __iter__(self):
             raise ValueError("preserved sequence callback")
+
+    class _SinglePairMapping(Mapping[str, Any]):
+        def __init__(self, pair: Sequence[Any]) -> None:
+            self.pair = pair
+
+        def __getitem__(self, key: str) -> Any:
+            raise KeyError(key)
+
+        def __iter__(self):
+            return iter(())
+
+        def __len__(self) -> int:
+            return 1
+
+        def items(self):
+            return iter((self.pair,))
 
     class ControlFlowSequence(Sequence[Any]):
         def __getitem__(self, index: int) -> Any:
@@ -2208,6 +2287,24 @@ def test_hostile_container_protocol_callbacks_fail_closed_at_shared_boundaries()
         workspace_contracts._metadata((PairLengthRaises(),), "metadata")
     with pytest.raises(ValueError, match="handoff map entries must be key/owner pairs"):
         workspace_contracts._owner_map((PairIndexRaises(),))
+    with pytest.raises(ValueError, match="invalid type classification protocol"):
+        workspace_contracts._bounded_mapping_snapshot(
+            ClassificationRaisesMapping(), "hostile mapping", 2
+        )
+    with pytest.raises(ValueError, match="invalid type classification protocol"):
+        workspace_contracts._bounded_sequence_snapshot(
+            ClassificationRaisesSequence(), "hostile sequence", 2
+        )
+    for pair, message in (
+        (CausedValueErrorPairLength(), "preserved caused pair length"),
+        (CausedValueErrorPairIndex(), "preserved caused pair index"),
+    ):
+        with pytest.raises(ValueError, match=message):
+            workspace_contracts._bounded_mapping_snapshot(
+                {"entry": 1}.items() if False else _SinglePairMapping(pair),
+                "hostile mapping",
+                2,
+            )
     with pytest.raises(ValueError, match="preserved sequence callback"):
         workspace_contracts._bounded_sequence_snapshot(
             PreservedValueErrorSequence(), "hostile sequence", 2
@@ -2218,6 +2315,8 @@ def test_hostile_container_protocol_callbacks_fail_closed_at_shared_boundaries()
         )
     with pytest.raises(ValueError, match="mapping export protocol"):
         ProjectContextProjection.from_dict(ItemsCallRaisesMapping())
+    with pytest.raises(ValueError, match="invalid type classification protocol"):
+        ProjectContextProjection.from_dict(ClassificationRaisesMapping())
 
 
 def test_compiler_timestamp_binding_is_a_bounded_detached_sequence() -> None:
@@ -2369,6 +2468,24 @@ def test_dataclass_export_callbacks_are_normalized_to_value_error() -> None:
                 raise RuntimeError("hostile dataclass field access")
             return object.__getattribute__(self, name)
 
+    class RuntimeClassificationMeta(type):
+        def __getattribute__(cls, name: str) -> Any:
+            if name == "__dataclass_fields__":
+                raise RuntimeError("hostile dataclass classification")
+            return super().__getattribute__(name)
+
+    class RuntimeClassification(metaclass=RuntimeClassificationMeta):
+        pass
+
+    class PreservedClassificationMeta(type):
+        def __getattribute__(cls, name: str) -> Any:
+            if name == "__dataclass_fields__":
+                raise ValueError("preserved dataclass classification")
+            return super().__getattribute__(name)
+
+    class PreservedClassification(metaclass=PreservedClassificationMeta):
+        pass
+
     @dataclass
     class PreservedValueErrorExport:
         value: int = 1
@@ -2385,6 +2502,10 @@ def test_dataclass_export_callbacks_are_normalized_to_value_error() -> None:
             stable_digest(value)
     with pytest.raises(ValueError, match="dataclass has an invalid field export protocol"):
         stable_digest(FieldAccessRaisesExport())
+    with pytest.raises(ValueError, match="invalid dataclass classification protocol"):
+        stable_digest(RuntimeClassification())
+    with pytest.raises(ValueError, match="preserved dataclass classification"):
+        stable_digest(PreservedClassification())
     with pytest.raises(ValueError, match="preserved dataclass callback"):
         stable_digest(PreservedValueErrorExport())
 

@@ -37,7 +37,7 @@ A digest proves that a body is internally self-consistent. It does not prove tha
 
 Mappings, nested mappings, nested sequences, dataclasses, enums, and live manifest exports are recursively detached exactly once before validation. The canonicalizer:
 
-- rechecks observed breadth after iteration rather than trusting a custom `len()`, and normalizes hostile sequence iteration, mapping length/export/iteration, pair length/index, dataclass export/field access, and live-manifest export callbacks to `ValueError`; existing `ValueError` is preserved, other ordinary `Exception` failures are normalized, and control-flow `BaseException` values propagate;
+- rechecks observed breadth after iteration rather than trusting a custom `len()`, and normalizes hostile container/type classification, sequence iteration, mapping length/export/iteration, pair length/index, enum-value lookup, dataclass classification/export/field access, and live-manifest export callbacks to `ValueError`; an internal callback marker—not exception chaining—is used to distinguish normalized pair failures, so existing `ValueError` (including explicitly caused values) is preserved, other ordinary `Exception` failures are normalized, and control-flow `BaseException` values propagate;
 - recursively validates enum values;
 - walks dataclass fields without unbounded `asdict()` recursion;
 - detects recursive/cyclic values and normalizes failures to `ValueError`;

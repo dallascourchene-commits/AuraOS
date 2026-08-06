@@ -118,9 +118,55 @@ _PR1_RESOURCE_CEILINGS = MappingProxyType({
 })
 
 
+class _NormalizedCallbackError(ValueError):
+    """Internal marker for an ordinary hostile callback normalized at a boundary."""
+
+
+class _NormalizedPairCallbackError(_NormalizedCallbackError):
+    """Internal marker for a normalized pair classification/length/index callback."""
+
+
+class _PairShapeError(ValueError):
+    """Internal marker for a pair value that is structurally not a two-item pair."""
+
+
+def _guarded_isinstance(value: Any, classinfo: Any, name: str) -> bool:
+    """Classify a hostile value without leaking ordinary __class__ callbacks."""
+    try:
+        return isinstance(value, classinfo)
+    except ValueError:
+        raise
+    except RecursionError as exc:
+        raise _NormalizedCallbackError(
+            f"{name} type classification exceeds its depth ceiling"
+        ) from exc
+    except Exception as exc:
+        raise _NormalizedCallbackError(
+            f"{name} has an invalid type classification protocol"
+        ) from exc
+
+
+def _guarded_is_dataclass(value: Any) -> bool:
+    """Classify a dataclass without leaking hostile metaclass callbacks."""
+    try:
+        return is_dataclass(value)
+    except ValueError:
+        raise
+    except RecursionError as exc:
+        raise _NormalizedCallbackError(
+            "canonical JSON dataclass classification exceeds its depth ceiling"
+        ) from exc
+    except Exception as exc:
+        raise _NormalizedCallbackError(
+            "canonical JSON value has an invalid dataclass classification protocol"
+        ) from exc
+
+
 def _bounded_sequence_snapshot(value: Any, name: str, max_items: int) -> tuple[Any, ...]:
-    """Detach a sequence once and normalize hostile iterator protocol failures."""
-    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
+    """Detach a sequence once and normalize hostile classification/iteration failures."""
+    if _guarded_isinstance(value, (str, bytes, bytearray), name):
+        raise ValueError(f"{name} must be a sequence")
+    if not _guarded_isinstance(value, Sequence, name):
         raise ValueError(f"{name} must be a sequence")
     result: list[Any] = []
     try:
@@ -133,37 +179,46 @@ def _bounded_sequence_snapshot(value: Any, name: str, max_items: int) -> tuple[A
     except RecursionError as exc:
         raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
     except Exception as exc:
-        raise ValueError(f"{name} has an invalid sequence protocol") from exc
+        raise _NormalizedCallbackError(f"{name} has an invalid sequence protocol") from exc
     return tuple(result)
 
 
 def _bounded_pair_snapshot(value: Any, name: str) -> tuple[Any, Any]:
-    """Detach one pair-like sequence while normalizing hostile callbacks."""
-    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
-        raise ValueError(f"{name} must be a key/value pair")
+    """Detach one pair while separating caller ValueError from internal rejection markers."""
+    try:
+        if _guarded_isinstance(value, (str, bytes, bytearray), name):
+            raise _PairShapeError(f"{name} must be a key/value pair")
+        if not _guarded_isinstance(value, Sequence, name):
+            raise _PairShapeError(f"{name} must be a key/value pair")
+    except _NormalizedCallbackError as exc:
+        raise _NormalizedPairCallbackError(f"{name} must be a key/value pair") from exc
     try:
         pair_length = len(value)
     except ValueError:
         raise
     except RecursionError as exc:
-        raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
+        raise _NormalizedPairCallbackError(
+            f"{name} nesting exceeds its depth ceiling"
+        ) from exc
     except Exception as exc:
-        raise ValueError(f"{name} must be a key/value pair") from exc
+        raise _NormalizedPairCallbackError(f"{name} must be a key/value pair") from exc
     if pair_length != 2:
-        raise ValueError(f"{name} must be a key/value pair")
+        raise _PairShapeError(f"{name} must be a key/value pair")
     try:
         return value[0], value[1]
     except ValueError:
         raise
     except RecursionError as exc:
-        raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
+        raise _NormalizedPairCallbackError(
+            f"{name} nesting exceeds its depth ceiling"
+        ) from exc
     except Exception as exc:
-        raise ValueError(f"{name} must be a key/value pair") from exc
+        raise _NormalizedPairCallbackError(f"{name} must be a key/value pair") from exc
 
 
 def _bounded_mapping_snapshot(value: Any, name: str, max_items: int) -> tuple[tuple[Any, Any], ...]:
-    """Detach a mapping once and normalize hostile export/iterator callbacks."""
-    if not isinstance(value, Mapping):
+    """Detach a mapping once and normalize hostile classification/export callbacks."""
+    if not _guarded_isinstance(value, Mapping, name):
         raise ValueError(f"{name} must be an object")
     try:
         if len(value) > max_items:
@@ -173,7 +228,7 @@ def _bounded_mapping_snapshot(value: Any, name: str, max_items: int) -> tuple[tu
     except RecursionError as exc:
         raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
     except Exception as exc:
-        raise ValueError(f"{name} has an invalid item count") from exc
+        raise _NormalizedCallbackError(f"{name} has an invalid item count") from exc
     try:
         exported_items = value.items()
     except ValueError:
@@ -181,15 +236,15 @@ def _bounded_mapping_snapshot(value: Any, name: str, max_items: int) -> tuple[tu
     except RecursionError as exc:
         raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
     except Exception as exc:
-        raise ValueError(f"{name} has an invalid mapping export protocol") from exc
+        raise _NormalizedCallbackError(
+            f"{name} has an invalid mapping export protocol"
+        ) from exc
     result: list[tuple[Any, Any]] = []
     try:
         for item in exported_items:
             try:
                 key, item_value = _bounded_pair_snapshot(item, f"{name} entry")
-            except ValueError as exc:
-                if exc.__cause__ is None:
-                    raise
+            except (_PairShapeError, _NormalizedPairCallbackError) as exc:
                 raise ValueError(f"{name} entries must be key/value pairs") from exc
             result.append((key, item_value))
             if len(result) > max_items:
@@ -199,7 +254,9 @@ def _bounded_mapping_snapshot(value: Any, name: str, max_items: int) -> tuple[tu
     except RecursionError as exc:
         raise ValueError(f"{name} nesting exceeds its depth ceiling") from exc
     except Exception as exc:
-        raise ValueError(f"{name} has an invalid mapping export protocol") from exc
+        raise _NormalizedCallbackError(
+            f"{name} has an invalid mapping export protocol"
+        ) from exc
     return tuple(result)
 
 
@@ -209,9 +266,19 @@ def _canonical(value: Any, *, _depth: int = 0, _active: set[int] | None = None) 
         raise ValueError("canonical JSON nesting exceeds its depth ceiling")
     active = set() if _active is None else _active
     next_depth = _depth + 1
-    if isinstance(value, Enum):
-        return _canonical(value.value, _depth=next_depth, _active=active)
-    if is_dataclass(value):
+    if _guarded_isinstance(value, Enum, "canonical JSON value"):
+        try:
+            enum_value = value.value
+        except ValueError:
+            raise
+        except RecursionError as exc:
+            raise ValueError("canonical JSON enum nesting exceeds its depth ceiling") from exc
+        except Exception as exc:
+            raise _NormalizedCallbackError(
+                "canonical JSON enum has an invalid value protocol"
+            ) from exc
+        return _canonical(enum_value, _depth=next_depth, _active=active)
+    if _guarded_is_dataclass(value):
         marker = id(value)
         if marker in active:
             raise ValueError("canonical JSON contains a recursive dataclass")
@@ -248,7 +315,7 @@ def _canonical(value: Any, *, _depth: int = 0, _active: set[int] | None = None) 
             return _canonical(exported, _depth=next_depth, _active=active)
         finally:
             active.remove(marker)
-    if isinstance(value, Mapping):
+    if _guarded_isinstance(value, Mapping, "canonical JSON value"):
         marker = id(value)
         if marker in active:
             raise ValueError("canonical JSON contains a recursive object")
@@ -277,7 +344,7 @@ def _canonical(value: Any, *, _depth: int = 0, _active: set[int] | None = None) 
             }
         finally:
             active.remove(marker)
-    if isinstance(value, (list, tuple)):
+    if _guarded_isinstance(value, (list, tuple), "canonical JSON value"):
         marker = id(value)
         if marker in active:
             raise ValueError("canonical JSON contains a recursive sequence")
@@ -287,7 +354,7 @@ def _canonical(value: Any, *, _depth: int = 0, _active: set[int] | None = None) 
             return [_canonical(item, _depth=next_depth, _active=active) for item in items]
         finally:
             active.remove(marker)
-    if isinstance(value, (set, frozenset)):
+    if _guarded_isinstance(value, (set, frozenset), "canonical JSON value"):
         raise ValueError("sets are not JSON values")
     if type(value) is str:
         try:
@@ -465,13 +532,13 @@ def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
         raise ValueError(f"{name} must be an object")
     if type(value) is tuple and not value:
         return ()
-    if isinstance(value, tuple):
+    if _guarded_isinstance(value, tuple, name):
         pairs = _bounded_sequence_snapshot(value, name, len(_METADATA_FIELDS))
         normalized_pairs: list[tuple[str, Any]] = []
         for item in pairs:
             try:
                 key, item_value = _bounded_pair_snapshot(item, f"{name} entry")
-            except ValueError as exc:
+            except (_PairShapeError, _NormalizedPairCallbackError) as exc:
                 raise ValueError(f"{name} entries must be key/value pairs") from exc
             if type(key) is not str:
                 raise ValueError(f"{name} keys must be strings")
@@ -479,7 +546,7 @@ def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
         if len({key for key, _ in normalized_pairs}) != len(normalized_pairs):
             raise ValueError(f"{name} keys must be unique")
         candidate = dict(normalized_pairs)
-    elif isinstance(value, Mapping):
+    elif _guarded_isinstance(value, Mapping, name):
         try:
             pairs = _bounded_mapping_snapshot(value, name, len(_METADATA_FIELDS))
         except ValueError as exc:
@@ -532,9 +599,9 @@ def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
 
 def _strict(payload: Mapping[str, Any], expected: set[str], name: str) -> None:
     """Require an exact mapping key set without trusting custom length reports."""
-    if not isinstance(payload, Mapping):
+    if not _guarded_isinstance(payload, Mapping, name):
         raise ValueError(f"{name} must be an object")
-    if isinstance(payload, dict) and any(type(key) is not str for key in payload):
+    if _guarded_isinstance(payload, dict, name) and any(type(key) is not str for key in payload):
         raise ValueError(f"{name} keys must be strings")
     try:
         if len(payload) > len(expected):
@@ -577,7 +644,7 @@ def _detached_json_snapshot(
         raise ValueError(f"{name} nesting exceeds its depth ceiling")
     active = set() if _active is None else _active
     next_depth = _depth + 1
-    if isinstance(value, Mapping):
+    if _guarded_isinstance(value, Mapping, name):
         marker = id(value)
         if marker in active:
             raise ValueError(f"{name} contains a recursive object")
@@ -604,7 +671,10 @@ def _detached_json_snapshot(
             return result
         finally:
             active.remove(marker)
-    if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
+    if (
+        _guarded_isinstance(value, Sequence, name)
+        and not _guarded_isinstance(value, (str, bytes, bytearray), name)
+    ):
         marker = id(value)
         if marker in active:
             raise ValueError(f"{name} contains a recursive sequence")
@@ -1152,7 +1222,7 @@ def _refs(value: Any, name: str, *, require_current: bool = False) -> tuple[Cano
 
 def _owner_map(value: Any) -> tuple[tuple[str, str], ...]:
     """Validate and canonicalize the closed domain-owner handoff map."""
-    if isinstance(value, Mapping):
+    if _guarded_isinstance(value, Mapping, "handoff map"):
         items = _bounded_mapping_snapshot(value, "handoff map", MAX_HANDOFF_OWNERS)
     else:
         items = _bounded_sequence_snapshot(value, "handoff map", MAX_HANDOFF_OWNERS)
@@ -1160,7 +1230,7 @@ def _owner_map(value: Any) -> tuple[tuple[str, str], ...]:
     for item in items:
         try:
             key, owner = _bounded_pair_snapshot(item, "handoff map entry")
-        except ValueError as exc:
+        except (_PairShapeError, _NormalizedPairCallbackError) as exc:
             raise ValueError("handoff map entries must be key/owner pairs") from exc
         pairs.append((_id(key, "handoff key"), _id(owner, "handoff owner")))
     result = tuple(sorted(pairs))
