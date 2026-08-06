@@ -4,18 +4,23 @@ on:
   push:
     branches:
       - analysis/pr2-materializer-transport
+  pull_request:
+    types:
+      - edited
 
 permissions:
   contents: read
 
 jobs:
   extract:
+    if: github.event_name == 'push' || github.event.pull_request.head.ref == 'analysis/pr2-materializer-transport'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: Fetch exact transport head
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 1
           persist-credentials: false
 
@@ -34,7 +39,7 @@ jobs:
       - name: Upload exact sealed payload
         uses: actions/upload-artifact@v4
         with:
-          name: pr2-sealed-payload-${{ github.sha }}
+          name: pr2-sealed-payload-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
             ${{ runner.temp }}/pr2-transaction.tar.gz
             ${{ runner.temp }}/pr2-extracted
