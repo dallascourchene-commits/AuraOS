@@ -31,28 +31,59 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Fetch exact head without persisted credentials
+      - name: Fetch exact head and pinned PR1 base without persisted credentials
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          SOURCE_SHA: 9c04a1efa57461a6078acb9f3b569766cbd2ab24
         run: |
+          set -euo pipefail
           git init .
           git remote add origin "https://github.com/${{ github.repository }}.git"
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+            fetch --no-tags --depth=1 origin \
+            "$TARGET_SHA" \
+            refs/heads/main:refs/remotes/origin/main
           unset AUTH_HEADER
-          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse refs/remotes/origin/main)" = "$SOURCE_SHA"
+          git checkout --detach "$TARGET_SHA"
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Reconstruct exact sealed PR2 payload for repair diagnostics
+        if: github.event.pull_request.head.ref == 'analysis/pr2-materializer-transport'
+        run: |
+          set -euo pipefail
+          cat .aura/pr2_materialize_chunks_v3/{000..015}.b64 > "$RUNNER_TEMP/pr2-request.b64"
+          test "$(sha256sum "$RUNNER_TEMP/pr2-request.b64" | awk '{print $1}')" = "ce14c4abfb53a0ead81a0396b1d362c18e156611a56081bc176600bf838e17cc"
+          base64 -d "$RUNNER_TEMP/pr2-request.b64" > "$RUNNER_TEMP/pr2-transaction.tar.gz"
+          test "$(sha256sum "$RUNNER_TEMP/pr2-transaction.tar.gz" | awk '{print $1}')" = "6061cd9840b1ab1f85e1cd169b709c080fa5a8294e99994c88ef546f3eac8f4f"
+          mkdir "$RUNNER_TEMP/pr2-extracted"
+          tar -xzf "$RUNNER_TEMP/pr2-transaction.tar.gz" -C "$RUNNER_TEMP/pr2-extracted"
+          test "$(find "$RUNNER_TEMP/pr2-extracted" -type f | wc -l)" -eq 9
+
+      - name: Upload exact sealed PR2 payload for repair
+        if: github.event.pull_request.head.ref == 'analysis/pr2-materializer-transport'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr2-sealed-payload-${{ github.event.pull_request.head.sha }}
+          path: |
+            ${{ runner.temp }}/pr2-transaction.tar.gz
+            ${{ runner.temp }}/pr2-extracted
+          if-no-files-found: error
+          retention-days: 2
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
+
       - name: Install declared dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
+
       - name: Regenerate and validate CODEMAP
         run: |
           cp .aura/CODEMAP.json /tmp/aura-codemap-reference.json
@@ -100,7 +131,8 @@ jobs:
           test -s topology_map.json
           test -s Aura_Memory/live_topology_ast.json
           git diff --check
-      - name: Commit synchronized maps
+
+      - name: Commit synchronized maps and publish exact head
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
@@ -119,23 +151,32 @@ jobs:
               topology_map.json
             git add -f Aura_Memory/live_topology_ast.json
             git diff --cached --stat
-            if git diff --cached --quiet; then
-              exit 0
+            if ! git diff --cached --quiet; then
+              git commit -m "docs: synchronize CODEMAP and topology"
             fi
-            git commit -m "docs: synchronize CODEMAP and topology"
-            AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+
             TARGET_REF="refs/heads/${TARGET_BRANCH}"
             if [ "$TARGET_BRANCH" = "analysis/pr2-materializer-transport" ]; then
               test -n "$EXPECTED_REMOTE_SHA"
+              if [ "$(git rev-parse HEAD)" = "$EXPECTED_REMOTE_SHA" ]; then
+                exit 0
+              fi
+              AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
               git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
                 push --force-with-lease="${TARGET_REF}:${EXPECTED_REMOTE_SHA}" \
                 origin "HEAD:${TARGET_REF}"
+              unset AUTH_HEADER
             else
+              if [ "$(git rev-parse HEAD)" = "$EXPECTED_REMOTE_SHA" ]; then
+                exit 0
+              fi
+              AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
               git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
                 push origin "HEAD:${TARGET_REF}"
+              unset AUTH_HEADER
             fi
-            unset AUTH_HEADER
           } 2>&1 | tee codemap-push.log
+
       - name: Upload synchronized maps and push diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -149,5 +190,5 @@ jobs:
             codemap-push.log
             /tmp/aura-codemap-comparison.json
             /tmp/aura-codemap-change-class.txt
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
