@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1554
-- **total_bytes**: 58856042
-- **text_tokens_est**: 5257308
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 196, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 973, 'schema_or_lexicon': 226, 'support_file': 79}
+- **file_count**: 1555
+- **total_bytes**: 58856428
+- **text_tokens_est**: 5257405
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 196, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 973, 'schema_or_lexicon': 226, 'support_file': 80}
 - **topology_nodes**: 11310
 - **topology_edges**: 27480
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 34399.39
+- **elapsed_ms**: 34051.14
 
 ## Coverage
 
-- **included_file_count**: 1554
+- **included_file_count**: 1555
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=25, `Aura_Memory`=6, `Aura_Sandbox`=2, `__pycache__`=8
@@ -401,6 +401,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/ARCHITECTURE.md`
 - `.aura/AURA.md`
 - `.aura/CONVERSE.md`
+- `.aura/HARNESS_EXPORT_REQUEST`
 - `.aura/HERMES_AURA_RULES.md`
 - `.aura/ISSUE_200_PR_SCOPE`
 - `.aura/OUTPUT_FORMATS.md`
@@ -408,8 +409,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/ROLES.md`
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md`
-- `.aura/arena_routes/coding.v1.json`
-- ... 1331 more; query CODEMAP.json for exact file cards
+- ... 1332 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
