@@ -104,9 +104,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          EXPECTED_REMOTE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -o pipefail
           {
+            set -euo pipefail
             set -x
             git config user.name "AuraOS CODEMAP Bot"
             git config user.email "actions@users.noreply.github.com"
@@ -122,8 +124,16 @@ jobs:
             fi
             git commit -m "docs: synchronize CODEMAP and topology"
             AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-            git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-              push origin HEAD:"${TARGET_BRANCH}"
+            TARGET_REF="refs/heads/${TARGET_BRANCH}"
+            if [ "$TARGET_BRANCH" = "analysis/pr2-materializer-transport" ]; then
+              test -n "$EXPECTED_REMOTE_SHA"
+              git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+                push --force-with-lease="${TARGET_REF}:${EXPECTED_REMOTE_SHA}" \
+                origin "HEAD:${TARGET_REF}"
+            else
+              git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+                push origin "HEAD:${TARGET_REF}"
+            fi
             unset AUTH_HEADER
           } 2>&1 | tee codemap-push.log
       - name: Upload synchronized maps and push diagnostics

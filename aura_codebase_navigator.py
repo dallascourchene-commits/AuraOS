@@ -30,7 +30,7 @@ EXPECTED = {
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md": "71d44e792ff4ce5519b157ea8dc1b2c6655851008dfafe3148db4d3a3f1300cf",
     "schemas/aura_spatial_action_certificate_v2.schema.json": "9853ad2b7bc6398aaec5c25fecb0a72c4818ea958f77b14ee5ae1b1cedc88382",
     "schemas/aura_workspace_execution_graph_v2.schema.json": "4d74fcb3791a5eaa8f7387feafb8cd0eb6502d3cc0e4152647f2ea4ab14864ad",
-    "tests/test_aura_ephemeral_workspace_runtime_v2.py": "5f21d6accf7349555e1487af4d8a3208814c85484b4e212914f151c0176ba770",
+    "tests/test_aura_ephemeral_workspace_runtime_v2.py": "5f21d6accf7349555e1487af4d8a3208814c854b4e212914f151c0176ba770",
 }
 
 
@@ -121,22 +121,9 @@ def main() -> None:
     if run("git", "rev-parse", "HEAD^") != SOURCE_SHA:
         raise SystemExit("published source commit has the wrong parent")
 
-    wrapper_dir = temp / "git-wrapper"
-    wrapper_dir.mkdir()
-    wrapper = wrapper_dir / "git"
-    wrapper.write_text(
-        "#!/bin/sh\n"
-        "if [ \"$1\" = push ]; then shift; exec /usr/bin/git push --force \"$@\"; fi\n"
-        "exec /usr/bin/git \"$@\"\n",
-        encoding="utf-8",
-    )
-    wrapper.chmod(0o755)
-    github_path = os.environ.get("GITHUB_PATH")
-    if not github_path:
-        raise SystemExit("GITHUB_PATH is unavailable")
-    with open(github_path, "a", encoding="utf-8") as handle:
-        handle.write(str(wrapper_dir) + "\n")
-
+    # The workflow owns the only publication step. It applies an exact-SHA,
+    # branch-scoped force-with-lease after the canonical navigator finishes.
+    # No PATH or git-command rewriting is permitted here.
     os.execv(sys.executable, [sys.executable, str(repo / "aura_codebase_navigator.py")])
 
 
