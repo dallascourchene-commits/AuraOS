@@ -1,0 +1,184 @@
+name: Materialize verified ephemeral workspace PR2
+
+on:
+  push:
+    branches:
+      - materialize/verified-ephemeral-workspace-pr2
+    paths:
+      - .aura/PR2_MATERIALIZE_REQUEST.b64
+
+permissions:
+  contents: write
+  statuses: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SOURCE_SHA: 9c04a1efa57461a6078acb9f3b569766cbd2ab24
+      TARGET_BRANCH: refactor/verified-ephemeral-workspace-pr2
+      REQUEST_PATH: .aura/PR2_MATERIALIZE_REQUEST.b64
+      REQUEST_B64_SHA256: 77a662a2d0b9e6e26a9ab2ba92cb8974168cfe1beed85a4ad6075026119ca6dd
+      ARCHIVE_SHA256: 54cecddef860b01b11c68f014b7a21ade76365a640a427c33e6d0c5efc1fe45f
+      TRANSACTION_DIGEST: da84f452cdc1eeb52f3a873ea496e201424c600b0299baf9ad1599f38612a146
+    steps:
+      - name: Fetch exact source and request without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git init repo
+          cd repo
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags origin \
+            refs/heads/main:refs/remotes/origin/main \
+            "refs/heads/${GITHUB_REF_NAME}:refs/remotes/origin/request"
+          test "$(git rev-parse refs/remotes/origin/main)" = "$SOURCE_SHA"
+          test "$(git rev-parse refs/remotes/origin/request)" = "$GITHUB_SHA"
+          git checkout --detach "$SOURCE_SHA"
+          git show "$GITHUB_SHA:$REQUEST_PATH" > "${RUNNER_TEMP}/pr2-request.b64"
+          test "$(sha256sum "${RUNNER_TEMP}/pr2-request.b64" | awk '{print $1}')" = "$REQUEST_B64_SHA256"
+          base64 -d "${RUNNER_TEMP}/pr2-request.b64" > "${RUNNER_TEMP}/pr2-transaction.tar.gz"
+          test "$(sha256sum "${RUNNER_TEMP}/pr2-transaction.tar.gz" | awk '{print $1}')" = "$ARCHIVE_SHA256"
+          unset AUTH_HEADER
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Validate and extract exact nine-file transaction
+        run: |
+          set -euo pipefail
+          cd repo
+          python - <<'PY'
+          import hashlib, json, tarfile
+          from pathlib import Path
+
+          archive = Path('${{ runner.temp }}/pr2-transaction.tar.gz')
+          expected = {
+              '.aura/refactor_objectives/intent_native_ephemeral_workspace_pr2.v1.json': 'aa601e1d22c86acd36a6a671fe0bd6604eafab7dad2c1028089a8a904d278562',
+              '.aura/waboose_requests/intent_native_ephemeral_workspace_pr2.v1.json': '19cb4862044bb753a121a86797b8424a1fb2d94d0589c99cc21c3b28e412decc',
+              'aura_ephemeral_adapter_registry.py': 'c6f1496b5d86030f8aa47af5eb2ad3f9826f3a5d4bfef14f3d4c01d5405e5135',
+              'aura_ephemeral_registry_store.py': '6c9ccb4fccae23ed6a6e0e7782aa492d47d3850a7f0b9ceeda52fc65b5cd8cc5',
+              'aura_ephemeral_workspace_runtime_v2.py': '75e6b83ee6b1cd56edb4147196de6743510b571cb912a2fe03ba29b236dd05cf',
+              'docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md': '71d44e792ff4ce5519b157ea8dc1b2c6655851008dfafe3148db4d3a3f1300cf',
+              'schemas/aura_spatial_action_certificate_v2.schema.json': '9853ad2b7bc6398aaec5c25fecb0a72c4818ea958f77b14ee5ae1b1cedc88382',
+              'schemas/aura_workspace_execution_graph_v2.schema.json': '4d74fcb3791a5eaa8f7387feafb8cd0eb6502d3cc0e4152647f2ea4ab14864ad',
+              'tests/test_aura_ephemeral_workspace_runtime_v2.py': 'bd3b46bd24ac2c9f4bea8d137a5eeb7ab46f3f5caadde4915b7c99bdad136988',
+          }
+          with tarfile.open(archive, 'r:gz') as tf:
+              members = tf.getmembers()
+              names = [m.name for m in members]
+              assert set(names) == set(expected), (names, sorted(expected))
+              assert len(names) == len(expected)
+              for member in members:
+                  path = Path(member.name)
+                  assert not path.is_absolute()
+                  assert '..' not in path.parts
+                  assert member.isfile()
+              tf.extractall('.')
+          actual = {p: hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in expected}
+          assert actual == expected, (actual, expected)
+          digest = hashlib.sha256(json.dumps(actual, sort_keys=True).encode()).hexdigest()
+          assert digest == '${{ env.TRANSACTION_DIGEST }}', digest
+          print(json.dumps(actual, indent=2, sort_keys=True))
+          print('transaction_digest', digest)
+          PY
+          python -m py_compile \
+            aura_ephemeral_adapter_registry.py \
+            aura_ephemeral_registry_store.py \
+            aura_ephemeral_workspace_runtime_v2.py \
+            tests/test_aura_ephemeral_workspace_runtime_v2.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for path in (
+              'schemas/aura_workspace_execution_graph_v2.schema.json',
+              'schemas/aura_spatial_action_certificate_v2.schema.json',
+              '.aura/refactor_objectives/intent_native_ephemeral_workspace_pr2.v1.json',
+              '.aura/waboose_requests/intent_native_ephemeral_workspace_pr2.v1.json',
+          ):
+              json.loads(Path(path).read_text(encoding='utf-8'))
+          PY
+          git diff --check
+          python - <<'PY'
+          import subprocess
+          expected = {
+              '.aura/refactor_objectives/intent_native_ephemeral_workspace_pr2.v1.json',
+              '.aura/waboose_requests/intent_native_ephemeral_workspace_pr2.v1.json',
+              'aura_ephemeral_adapter_registry.py',
+              'aura_ephemeral_registry_store.py',
+              'aura_ephemeral_workspace_runtime_v2.py',
+              'docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md',
+              'schemas/aura_spatial_action_certificate_v2.schema.json',
+              'schemas/aura_workspace_execution_graph_v2.schema.json',
+              'tests/test_aura_ephemeral_workspace_runtime_v2.py',
+          }
+          changed = set(subprocess.check_output(['git', 'diff', '--name-only'], text=True).splitlines())
+          changed.update(subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard'], text=True).splitlines())
+          assert changed == expected, (sorted(changed), sorted(expected))
+          PY
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Run focused and retained verification
+        run: |
+          set -euo pipefail
+          cd repo
+          python -m pip install --disable-pip-version-check pytest jsonschema ruff
+          ruff check \
+            aura_ephemeral_adapter_registry.py \
+            aura_ephemeral_registry_store.py \
+            aura_ephemeral_workspace_runtime_v2.py \
+            tests/test_aura_ephemeral_workspace_runtime_v2.py
+          python -m pytest -q tests/test_aura_ephemeral_workspace_runtime_v2.py
+          python -m pytest -q tests/test_aura_ephemeral_runtime.py
+          python -m pytest -q tests/test_aura_ephemeral_phase0_hardening.py
+          python -m pytest -q tests/test_aura_ephemeral_workspace_contracts.py
+
+      - name: Publish one clean source commit on exact PR1 parent
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd repo
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          git config user.name "AuraOS Verified Materializer"
+          git config user.email "actions@users.noreply.github.com"
+          git add -- \
+            .aura/refactor_objectives/intent_native_ephemeral_workspace_pr2.v1.json \
+            .aura/waboose_requests/intent_native_ephemeral_workspace_pr2.v1.json \
+            aura_ephemeral_adapter_registry.py \
+            aura_ephemeral_registry_store.py \
+            aura_ephemeral_workspace_runtime_v2.py \
+            docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md \
+            schemas/aura_spatial_action_certificate_v2.schema.json \
+            schemas/aura_workspace_execution_graph_v2.schema.json \
+            tests/test_aura_ephemeral_workspace_runtime_v2.py
+          test "$(git diff --cached --name-only | wc -l)" -eq 9
+          git commit -m "PR2: Add verified ephemeral workspace runtime"
+          PUBLISHED_SHA="$(git rev-parse HEAD)"
+          test "$(git rev-parse HEAD^)" = "$SOURCE_SHA"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            push --force origin "HEAD:refs/heads/${TARGET_BRANCH}"
+          unset AUTH_HEADER
+          echo "PUBLISHED_SHA=$PUBLISHED_SHA" >> "$GITHUB_ENV"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Publish discoverable status
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          STATE=success
+          if [ "${{ job.status }}" != success ]; then STATE=failure; fi
+          SHA="${PUBLISHED_SHA:-$GITHUB_SHA}"
+          gh api --method POST \
+            "repos/${GITHUB_REPOSITORY}/statuses/${SHA}" \
+            -f state="$STATE" \
+            -f context="verified-pr2-materialization" \
+            -f description="Exact nine-file PR2 transaction; run ${GITHUB_RUN_ID}" \
+            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
