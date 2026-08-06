@@ -1,0 +1,86 @@
+name: Phase 0 complete manifest binding
+
+on:
+  push:
+    branches:
+      - repair/ephemeral-spatial-phase0-closeout
+    paths:
+      - .github/workflows/phase0-complete-manifest-binding.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: phase0-complete-manifest-binding
+  cancel-in-progress: false
+
+jobs:
+  materialize-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: repair/ephemeral-spatial-phase0-closeout
+          fetch-depth: 0
+
+      - name: Guard exact merged Phase 0 base
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          expected=9c04a1efa57461a6078acb9f3b569766cbd2ab24
+          actual=$(git rev-parse origin/main)
+          test "$actual" = "$expected"
+          test "$(git merge-base HEAD origin/main)" = "$expected"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install focused verification dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest jsonschema ruff
+
+      - name: Apply exact Phase 0 P2 transaction
+        shell: bash
+        run: python scripts/phase0_apply_complete_manifest_binding.py
+
+      - name: Verify focused contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+          python -m pytest -q tests/test_aura_ephemeral_workspace_contracts.py
+          python -m ruff check --select F401,F821,F841 aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+          git diff --check
+
+      - name: Enforce exact two-file substantive scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/phase0-complete-manifest-binding.yml
+          git rm scripts/phase0_apply_complete_manifest_binding.py
+          mapfile -t changed < <(git diff --name-only origin/main | sort)
+          printf '%s\n' "${changed[@]}"
+          expected=(
+            aura_ephemeral_workspace_contracts.py
+            tests/test_aura_ephemeral_workspace_contracts.py
+          )
+          test "${#changed[@]}" -eq "${#expected[@]}"
+          for i in "${!expected[@]}"; do
+            test "${changed[$i]}" = "${expected[$i]}"
+          done
+
+      - name: Publish verified transaction
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add aura_ephemeral_workspace_contracts.py tests/test_aura_ephemeral_workspace_contracts.py
+          git commit -m "fix: bind complete manifest identity before workspace compilation"
+          git push origin HEAD:repair/ephemeral-spatial-phase0-closeout
