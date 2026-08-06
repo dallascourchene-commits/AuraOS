@@ -1,0 +1,45 @@
+name: PR255 Lifecycle Identity Closure V2
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/pr255-lifecycle-identity-closure-v2.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pr255-lifecycle-identity-closure-v2
+  cancel-in-progress: true
+
+jobs:
+  prove_and_promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout control files
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: control
+          fetch-depth: 1
+
+      - name: Checkout exact frozen PR head
+        uses: actions/checkout@v4
+        with:
+          ref: b9db528ee06e97040712aeae185bc4fce79ceb98
+          path: work
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Prove and promote exact repair
+        working-directory: work
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash ../control/.github/pr255_lifecycle_identity_closure_runner_v2.sh
