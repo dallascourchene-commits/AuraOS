@@ -642,6 +642,16 @@
       "minItems": 1,
       "type": "array"
     },
+    "expires_at_epoch_seconds": {
+      "maximum": 9223372036854775807,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "issued_at_epoch_seconds": {
+      "maximum": 9223372036854775807,
+      "minimum": 1,
+      "type": "integer"
+    },
     "lifecycle_policy": {
       "const": "EXPLICIT_COMPLETE_CANCEL_FAILURE_OR_TTL"
     },
@@ -713,21 +723,25 @@
     "automatic_resume",
     "automatic_promotion",
     "authority",
-    "recipe_digest"
+    "recipe_digest",
+    "issued_at_epoch_seconds",
+    "expires_at_epoch_seconds"
   ],
   "title": "Aura Ephemeral Workspace Recipe V1",
   "type": "object",
   "x-aura-semantic-delegations": {
-    "source_span_ordering": "mandatory semantic validator",
-    "utf8_byte_ceilings": "mandatory semantic validator",
-    "canonical_serialized_ordering": "mandatory semantic validator",
-    "reference_id_uniqueness_across_adapter_and_evidence_refs": "mandatory semantic validator",
-    "manifest_reference_identity_digest_prefix_binding": "mandatory semantic validator",
-    "unicode_scalar_validation": "mandatory semantic validator",
-    "wall_time_ttl_binding": "mandatory semantic validator",
+    "absolute_recipe_expiration_admission": "mandatory semantic validator",
     "base_manifest_resource_budget_binding": "mandatory semantic validator",
+    "behavior_derived_recipe_id": "mandatory semantic validator",
+    "canonical_serialized_ordering": "mandatory semantic validator",
+    "manifest_reference_identity_digest_prefix_binding": "mandatory semantic validator",
     "recipe_digest_equality": "mandatory semantic validator",
-    "behavior_derived_recipe_id": "mandatory semantic validator"
+    "reference_id_uniqueness_across_adapter_and_evidence_refs": "mandatory semantic validator",
+    "reference_id_uniqueness_across_manifest_adapter_and_evidence_refs": "mandatory semantic validator",
+    "source_span_ordering": "mandatory semantic validator",
+    "unicode_scalar_validation": "mandatory semantic validator",
+    "utf8_byte_ceilings": "mandatory semantic validator",
+    "wall_time_ttl_binding": "mandatory semantic validator"
   },
   "x-aura-semantic-invariants": [
     "record digest verification",
@@ -738,13 +752,15 @@
     "source span ordering delegated to mandatory semantic validation",
     "independently trusted complete-record rebinding",
     "canonical serialized ordering delegated to mandatory semantic validation",
-    "reference-ID uniqueness within and across adapter/evidence references delegated to mandatory semantic validation",
+    "reference-ID uniqueness across manifest, adapter, and evidence roles delegated to mandatory semantic validation",
     "manifest reference ID and canonical-ref digest-prefix binding delegated to mandatory semantic validation",
     "Unicode scalar validation delegated to mandatory semantic validation",
     "wall-time budget to TTL binding delegated to mandatory semantic validation",
     "base-manifest and trusted compiled-recipe resource ceilings delegated to mandatory semantic validation",
     "recipe digest equality delegated to mandatory semantic validation",
-    "behavior-derived recipe ID delegated to mandatory semantic validation"
+    "behavior-derived recipe ID delegated to mandatory semantic validation",
+    "issued-at plus TTL equals the signed absolute recipe expiration",
+    "expired recipes are rejected during mandatory semantic admission"
   ],
   "x-aura-semantic-requires-independent-binding": true,
   "x-aura-semantic-validator": "aura_ephemeral_workspace_contracts.validate_recipe_semantics"

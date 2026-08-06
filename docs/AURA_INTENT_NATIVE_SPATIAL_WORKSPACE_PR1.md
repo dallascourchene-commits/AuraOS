@@ -73,7 +73,11 @@ The compiler admits `project_projection` only as an exact `ProjectContextProject
 
 ### `EphemeralWorkspaceRecipe`
 
-The frozen `CODING_SPATIAL_WORKSPACE_V1` recipe binds the manifest projection, canonical intent, project projection, capability graph, adapters, evidence, handoff owners, budgets, interactions, verification gates, TTL, and dissolution policy.
+The frozen `CODING_SPATIAL_WORKSPACE_V1` recipe binds the manifest projection, canonical intent, project projection, capability graph, adapters, evidence, handoff owners, budgets, interactions, verification gates, signed issue time, absolute expiration, TTL, and dissolution policy.
+
+`issued_at_epoch_seconds + ttl_seconds == expires_at_epoch_seconds` is enforced before signing. Parsing remains available for historical verification, but both recipe admission paths consult the trusted local clock and reject the exact record once its signed absolute expiration is reached. The compiler also proves that this expiration cannot exceed the wrapped V1 manifest's absolute expiry.
+
+Reference identifiers are unique across the base-manifest, adapter, and evidence roles. Explicit JSON `null` metadata is rejected; only an omitted/default empty mapping represents no metadata.
 
 The behavior-derived `recipe_id` is enforced during direct construction, `dataclasses.replace()`, and deserialization. A caller cannot create a live forged identity and have the constructor sign it.
 
@@ -114,7 +118,7 @@ Consumers must run both schema validation and the named validator:
 
 ## Focused verification
 
-The focused suite contains **45 tests** covering the original review waves plus the structural repair:
+The focused suite contains **46 tests** covering the original review waves plus the structural repair:
 
 - exact V1 object and serialized compatibility;
 - recursive single-snapshot live/custom mapping and nested-sequence behavior;
@@ -125,14 +129,14 @@ The focused suite contains **45 tests** covering the original review waves plus 
 - frozen capability/owner/gate/lifecycle profiles;
 - complete graph/reference/observation bindings;
 - sanitized manifest-projection identity;
-- manifest/recipe TTL, complete resource-budget ceilings, and exact authority/nested-record admission;
+- manifest/recipe TTL, signed issue/absolute-expiry lifecycle binding, complete resource-budget ceilings, and exact authority/nested-record admission;
 - schema parity, canonical path-policy equivalence, and explicit semantic delegation;
 - explicit parse-bind-admit separation.
 
 Verification completed in the exact-head focused workspace:
 
 - Python compilation: passed;
-- focused tests: **45 passed**;
+- focused tests: **46 passed**;
 - all JSON documents parse successfully;
 - all three schemas pass Draft 2020-12 meta-validation;
 - no operational or persistence invocation is introduced.

@@ -441,7 +441,9 @@ def _source_path(value: Any, name: str) -> str:
 
 def _metadata(value: Any, name: str) -> tuple[tuple[str, Any], ...]:
     """Validate and recursively freeze the closed scalar metadata contract."""
-    if value is None or (type(value) is tuple and not value):
+    if value is None:
+        raise ValueError(f"{name} must be an object")
+    if type(value) is tuple and not value:
         return ()
     if isinstance(value, tuple):
         pairs = _bounded_sequence_snapshot(value, name, len(_METADATA_FIELDS))
@@ -1211,6 +1213,8 @@ class EphemeralWorkspaceRecipe:
     device_requirements: tuple[str, ...]
     allowed_interaction_actions: tuple[str, ...]
     required_verification_gates: tuple[str, ...]
+    issued_at_epoch_seconds: int
+    expires_at_epoch_seconds: int
     ttl_seconds: int = 300
     lifecycle_policy: str = _LIFECYCLE_POLICY
     dissolution_policy: str = _DISSOLUTION_POLICY
@@ -1261,8 +1265,15 @@ class EphemeralWorkspaceRecipe:
         object.__setattr__(self, "dependency_edges", tuple(sorted(edges, key=lambda edge: (edge.source_capability_id, edge.target_capability_id))))
         adapters = _refs(self.adapter_refs, "adapter_refs", require_current=True)
         evidence = _refs(self.evidence_refs, "evidence_refs", require_current=True)
-        if {item.reference_id for item in adapters} & {item.reference_id for item in evidence}:
-            raise ValueError("duplicate recipe reference IDs across adapter and evidence roles")
+        reference_ids = [
+            self.base_manifest_ref.reference_id,
+            *(item.reference_id for item in adapters),
+            *(item.reference_id for item in evidence),
+        ]
+        if len(set(reference_ids)) != len(reference_ids):
+            raise ValueError(
+                "duplicate recipe reference IDs across manifest, adapter, and evidence roles"
+            )
         object.__setattr__(self, "adapter_refs", adapters)
         object.__setattr__(self, "evidence_refs", evidence)
         object.__setattr__(self, "domain_owner_handoff_map", _owner_map(self.domain_owner_handoff_map))
@@ -1281,7 +1292,29 @@ class EphemeralWorkspaceRecipe:
                 raise ValueError(f"budget.{name} exceeds the PR1 safe ceiling")
         for name, ids, limit, sort_values in (("renderer_requirements", False, 32, True), ("device_requirements", False, 32, True), ("allowed_interaction_actions", True, 64, False), ("required_verification_gates", True, 64, False)):
             object.__setattr__(self, name, _seq(getattr(self, name), f"recipe.{name}", ids=ids, max_items=limit, sort=sort_values))
+        object.__setattr__(
+            self,
+            "issued_at_epoch_seconds",
+            _int(
+                self.issued_at_epoch_seconds,
+                "recipe.issued_at_epoch_seconds",
+                1,
+                MAX_TIMESTAMP,
+            ),
+        )
+        object.__setattr__(
+            self,
+            "expires_at_epoch_seconds",
+            _int(
+                self.expires_at_epoch_seconds,
+                "recipe.expires_at_epoch_seconds",
+                1,
+                MAX_TIMESTAMP,
+            ),
+        )
         object.__setattr__(self, "ttl_seconds", _int(self.ttl_seconds, "recipe.ttl", 1, MAX_TTL_SECONDS))
+        if self.expires_at_epoch_seconds - self.issued_at_epoch_seconds != self.ttl_seconds:
+            raise ValueError("recipe absolute expiration must equal issue time plus TTL")
         if self.budgets.wall_time_ms > self.ttl_seconds * 1000:
             raise ValueError("budget.wall_time_ms cannot exceed recipe TTL")
         object.__setattr__(
@@ -1345,6 +1378,8 @@ class EphemeralWorkspaceRecipe:
                 "device_requirements": list(self.device_requirements),
                 "allowed_interaction_actions": list(self.allowed_interaction_actions),
                 "required_verification_gates": list(self.required_verification_gates),
+                "issued_at_epoch_seconds": self.issued_at_epoch_seconds,
+                "expires_at_epoch_seconds": self.expires_at_epoch_seconds,
                 "ttl_seconds": self.ttl_seconds,
                 "lifecycle_policy": self.lifecycle_policy,
                 "dissolution_policy": self.dissolution_policy,
@@ -1361,7 +1396,8 @@ class EphemeralWorkspaceRecipe:
                     "capability_ids", "dependency_edges", "adapter_refs", "evidence_refs",
                     "domain_owner_handoff_map", "budgets", "renderer_requirements",
                     "device_requirements", "allowed_interaction_actions",
-                    "required_verification_gates", "ttl_seconds", "lifecycle_policy",
+                    "required_verification_gates", "issued_at_epoch_seconds",
+                    "expires_at_epoch_seconds", "ttl_seconds", "lifecycle_policy",
                     "dissolution_policy", "automatic_persistence", "automatic_resume",
                     "automatic_promotion", "authority", "recipe_digest"}
         detached = _detached_serialized_record(
@@ -1403,6 +1439,14 @@ class EphemeralWorkspaceRecipe:
         )
         if self.to_dict() != expected.to_dict():
             raise ValueError("stale complete recipe identity")
+        _require_unexpired_recipe(self)
+
+
+def _require_unexpired_recipe(recipe: EphemeralWorkspaceRecipe) -> None:
+    """Reject admission after the recipe's signed absolute expiration boundary."""
+    now = _finite_number(time.time(), "current time")
+    if now >= recipe.expires_at_epoch_seconds:
+        raise ValueError("workspace recipe is expired")
 
 
 @dataclass(frozen=True)
@@ -1792,7 +1836,21 @@ def _validate_v1_arena_lease(
     _strict(lease, expected_fields, "base manifest arena_lease")
     if lease.get("lease_version") != "AURA_ARENA_LEASE_V1":
         raise ValueError("base manifest arena_lease version is unsafe")
-    _id(lease.get("lease_id"), "base manifest arena_lease.lease_id")
+    lease_id = _id(lease.get("lease_id"), "base manifest arena_lease.lease_id")
+    lease_identity_body = dict(lease)
+    lease_identity_body.pop("phase_hash")
+    lease_identity_body.pop("lease_id")
+    expected_lease_id = "LEASE-" + hashlib.blake2b(
+        json.dumps(
+            lease_identity_body,
+            sort_keys=True,
+            separators=(",", ":"),
+            default=str,
+        ).encode("utf-8"),
+        digest_size=16,
+    ).hexdigest()[:12]
+    if lease_id != expected_lease_id:
+        raise ValueError("base manifest arena_lease lease_id does not match content")
     if lease.get("domain") != "ephemeral":
         raise ValueError("base manifest arena_lease domain is unsafe")
     if lease.get("capsule_id") != organ_id or lease.get("holder") != organ_id:
@@ -2111,6 +2169,12 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
         raise ValueError("base manifest has less than one whole second remaining")
     remaining_ttl = math.floor(remaining_seconds)
     effective_ttl = min(requested_ttl, manifest_ttl, remaining_ttl)
+    issued_at_epoch_seconds = _int(
+        math.floor(now), "recipe issued_at_epoch_seconds", 1, MAX_TIMESTAMP
+    )
+    expires_at_epoch_seconds = issued_at_epoch_seconds + effective_ttl
+    if expires_at_epoch_seconds > math.floor(expires_at):
+        raise ValueError("recipe absolute expiration exceeds base manifest expiry")
 
     manifest_limits = _manifest_resource_limits(body)
     if budgets is None:
@@ -2153,6 +2217,8 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
         "device_requirements": sorted(definition["device_requirements"]),
         "allowed_interaction_actions": list(definition["allowed_interaction_actions"]),
         "required_verification_gates": list(definition["required_verification_gates"]),
+        "issued_at_epoch_seconds": issued_at_epoch_seconds,
+        "expires_at_epoch_seconds": expires_at_epoch_seconds,
         "ttl_seconds": effective_ttl,
         "lifecycle_policy": _LIFECYCLE_POLICY,
         "dissolution_policy": _DISSOLUTION_POLICY,
@@ -2181,6 +2247,8 @@ def compile_coding_spatial_workspace_recipe(*, base_manifest: Any,
         device_requirements=tuple(definition["device_requirements"]),
         allowed_interaction_actions=tuple(definition["allowed_interaction_actions"]),
         required_verification_gates=tuple(definition["required_verification_gates"]),
+        issued_at_epoch_seconds=issued_at_epoch_seconds,
+        expires_at_epoch_seconds=expires_at_epoch_seconds,
         ttl_seconds=effective_ttl,
     )
 
@@ -2199,6 +2267,7 @@ def validate_recipe_semantics(
     )
     if record.to_dict() != expected.to_dict():
         raise ValueError("stale complete recipe identity")
+    _require_unexpired_recipe(record)
     return record
 
 

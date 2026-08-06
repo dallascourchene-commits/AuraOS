@@ -422,7 +422,7 @@ def test_recipe_references_are_canonical_current_and_globally_unique() -> None:
 
     duplicate = first.to_dict()
     duplicate["evidence_refs"][0]["reference_id"] = duplicate["adapter_refs"][0]["reference_id"]
-    with pytest.raises(ValueError, match="across adapter and evidence"):
+    with pytest.raises(ValueError, match="across manifest, adapter, and evidence"):
         EphemeralWorkspaceRecipe.from_dict(duplicate)
     with pytest.raises(ValueError, match="base manifest reference"):
         replace(first, base_manifest_ref=replace(first.base_manifest_ref, freshness_class="STALE"), recipe_digest="")
@@ -673,7 +673,6 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     )
     lease_body = {
         "lease_version": "AURA_ARENA_LEASE_V1",
-        "lease_id": "lease-EORG-leased",
         "domain": "ephemeral",
         "capsule_id": leased.organ_id,
         "holder": leased.organ_id,
@@ -688,6 +687,15 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
         "status": "active",
         "metadata": {},
     }
+    lease_body["lease_id"] = "LEASE-" + workspace_contracts.hashlib.blake2b(
+        json.dumps(
+            lease_body,
+            sort_keys=True,
+            separators=(",", ":"),
+            default=str,
+        ).encode("utf-8"),
+        digest_size=16,
+    ).hexdigest()[:12]
     lease_body["phase_hash"] = workspace_contracts.hashlib.blake2b(
         json.dumps(
             lease_body,
@@ -710,7 +718,7 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
     )
 
     tampered_lease_hash = copy.deepcopy(leased)
-    tampered_lease_hash.arena_lease["lease_id"] = "lease-EORG-leased-tampered"
+    tampered_lease_hash.arena_lease["phase_hash"] = "0" * 32
     tampered_lease_hash.phase_hash = tampered_lease_hash.compute_digest()
     with pytest.raises(ValueError, match="arena_lease digest does not match content"):
         compile_coding_spatial_workspace_recipe(
@@ -723,9 +731,57 @@ def test_manifest_snapshot_requires_stored_hash_complete_shape_and_safe_policy()
             evidence_refs=(ref("evidence:source", D["3"]),),
         )
 
+    redirected_lease_id = copy.deepcopy(leased)
+    redirected_lease_id.arena_lease["lease_id"] = "LEASE-000000000000"
+    redirected_lease_id_body = dict(redirected_lease_id.arena_lease)
+    redirected_lease_id_body.pop("phase_hash")
+    redirected_lease_id.arena_lease["phase_hash"] = workspace_contracts.hashlib.blake2b(
+        json.dumps(
+            redirected_lease_id_body,
+            sort_keys=True,
+            separators=(",", ":"),
+            default=str,
+        ).encode("utf-8"),
+        digest_size=16,
+    ).hexdigest()
+    redirected_lease_id.phase_hash = redirected_lease_id.compute_digest()
+    with pytest.raises(ValueError, match="arena_lease lease_id does not match content"):
+        compile_coding_spatial_workspace_recipe(
+            base_manifest=redirected_lease_id,
+            expected_manifest_timestamps=_trusted_manifest_timestamps(redirected_lease_id),
+            project_projection=project(),
+            expected_project_projection=project(),
+            canonical_intent_digest=D["1"],
+            adapter_refs=(ref("adapter:compass", D["2"]),),
+            evidence_refs=(ref("evidence:source", D["3"]),),
+        )
+
     unsafe_lease = copy.deepcopy(leased)
     unsafe_lease.arena_lease["allowed_actions"] = ["shell"]
     unsafe_lease.arena_lease["mode"] = "read_write"
+    unsafe_identity_body = dict(unsafe_lease.arena_lease)
+    unsafe_identity_body.pop("phase_hash")
+    unsafe_identity_body.pop("lease_id")
+    unsafe_lease.arena_lease["lease_id"] = "LEASE-" + workspace_contracts.hashlib.blake2b(
+        json.dumps(
+            unsafe_identity_body,
+            sort_keys=True,
+            separators=(",", ":"),
+            default=str,
+        ).encode("utf-8"),
+        digest_size=16,
+    ).hexdigest()[:12]
+    unsafe_phase_body = dict(unsafe_lease.arena_lease)
+    unsafe_phase_body.pop("phase_hash")
+    unsafe_lease.arena_lease["phase_hash"] = workspace_contracts.hashlib.blake2b(
+        json.dumps(
+            unsafe_phase_body,
+            sort_keys=True,
+            separators=(",", ":"),
+            default=str,
+        ).encode("utf-8"),
+        digest_size=16,
+    ).hexdigest()
     unsafe_lease.phase_hash = unsafe_lease.compute_digest()
     with pytest.raises(
         ValueError,
@@ -2473,4 +2529,83 @@ def test_remaining_exact_record_and_key_boundaries_fail_closed() -> None:
             ),
             expected_evidence_refs=expected_observation_evidence(trusted_observation),
             expected_observation=trusted_observation,
+        )
+
+def test_lifecycle_anchor_cross_role_identity_and_explicit_null_fail_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Final contract closure binds delayed admission and every recipe reference role."""
+    with pytest.raises(ValueError, match="reference.metadata must be an object"):
+        CanonicalReference(
+            "artifact:null-metadata",
+            "canonical.owner",
+            "owner://artifact:null-metadata",
+            D["1"],
+            metadata=None,
+        )
+    assert CanonicalReference(
+        "artifact:default-metadata",
+        "canonical.owner",
+        "owner://artifact:default-metadata",
+        D["1"],
+    ).to_dict()["metadata"] == {}
+
+    current, _ = recipe()
+    colliding_adapter = replace(
+        current.adapter_refs[0],
+        reference_id=current.base_manifest_ref.reference_id,
+    )
+    with pytest.raises(
+        ValueError,
+        match="duplicate recipe reference IDs across manifest, adapter, and evidence roles",
+    ):
+        replace(
+            current,
+            adapter_refs=(colliding_adapter, *current.adapter_refs[1:]),
+            recipe_digest="",
+        )
+
+    manifest = create_manifest(
+        "Anchor delayed workspace admission to an absolute expiration.",
+        organ_id="EORG-absolute-recipe-expiry",
+        ttl_seconds=10,
+        requested_capabilities=["resolve_capabilities", "read_slice", "dissolve"],
+    )
+    compile_now = manifest.created_at + 1.25
+    monkeypatch.setattr(workspace_contracts.time, "time", lambda: compile_now)
+    anchored = compile_coding_spatial_workspace_recipe(
+        base_manifest=manifest,
+        expected_manifest_timestamps=_trusted_manifest_timestamps(manifest),
+        project_projection=project(),
+        expected_project_projection=project(),
+        canonical_intent_digest=D["1"],
+        adapter_refs=(ref("adapter:compass", D["2"]),),
+        evidence_refs=(ref("evidence:source", D["3"]),),
+        ttl_seconds=3,
+    )
+    assert anchored.issued_at_epoch_seconds == int(compile_now // 1)
+    assert anchored.expires_at_epoch_seconds == anchored.issued_at_epoch_seconds + 3
+    assert anchored.expires_at_epoch_seconds <= int(manifest.expires_at // 1)
+    assert EphemeralWorkspaceRecipe.from_dict(anchored.to_dict()).to_dict() == anchored.to_dict()
+
+    monkeypatch.setattr(
+        workspace_contracts.time,
+        "time",
+        lambda: float(anchored.expires_at_epoch_seconds),
+    )
+    with pytest.raises(ValueError, match="workspace recipe is expired"):
+        validate_recipe_semantics(anchored.to_dict(), expected_recipe=anchored)
+    with pytest.raises(ValueError, match="workspace recipe is expired"):
+        anchored.validate_bindings(
+            expected_intent_digest=anchored.canonical_intent_digest,
+            expected_project_projection_id=anchored.project_projection_id,
+            expected_project_projection_digest=anchored.project_projection_digest,
+            expected_base_manifest_ref=anchored.base_manifest_ref,
+            expected_adapter_refs={
+                item.reference_id: item.to_dict() for item in anchored.adapter_refs
+            },
+            expected_evidence_refs={
+                item.reference_id: item.to_dict() for item in anchored.evidence_refs
+            },
+            expected_recipe=anchored,
         )
