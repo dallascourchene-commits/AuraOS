@@ -47,7 +47,9 @@ jobs:
 
       - name: Apply exact Phase 0 P2 transaction
         shell: bash
-        run: python scripts/phase0_apply_complete_manifest_binding.py
+        run: |
+          python scripts/phase0_apply_complete_manifest_binding.py
+          python scripts/phase0_fix_complete_manifest_fixture.py
 
       - name: Verify focused contracts
         shell: bash
@@ -64,6 +66,7 @@ jobs:
           set -euo pipefail
           git rm .github/workflows/phase0-complete-manifest-binding.yml
           git rm scripts/phase0_apply_complete_manifest_binding.py
+          git rm scripts/phase0_fix_complete_manifest_fixture.py
           mapfile -t changed < <(git diff --name-only origin/main | sort)
           printf '%s\n' "${changed[@]}"
           expected=(
