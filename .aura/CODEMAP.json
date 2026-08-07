@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786089234,
+  "generated_at_unix": 1786089459,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1564,
+    "included_file_count": 1565,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -1570,6 +1570,7 @@
       "tools/pr2_review_hardening_269.py",
       "tools/pr2_review_hardening_269_followup.py",
       "tools/pr2_review_hardening_269_round2.py",
+      "tools/pr2_round2_trigger.txt",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1586,9 +1587,9 @@
     ]
   },
   "summary": {
-    "file_count": 1564,
-    "total_bytes": 59062002,
-    "text_tokens_est": 5308802,
+    "file_count": 1565,
+    "total_bytes": 59062027,
+    "text_tokens_est": 5308809,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 64,
@@ -1597,12 +1598,12 @@
       "operator_script": 6,
       "python_module": 978,
       "schema_or_lexicon": 230,
-      "support_file": 79
+      "support_file": 80
     },
     "topology_nodes": 11381,
     "topology_edges": 27800,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 33422.97
+    "elapsed_ms": 33394.87
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -3174,6 +3175,7 @@
       "tools/pr2_review_hardening_269.py",
       "tools/pr2_review_hardening_269_followup.py",
       "tools/pr2_review_hardening_269_round2.py",
+      "tools/pr2_round2_trigger.txt",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -93635,6 +93637,14 @@
         "end_line": 5,
         "semantic_id": "tools/pr2_review_hardening_269.py#function:read:63587ea9f06ca401",
         "signature_hash": "a3f58a6873b03607"
+      },
+      {
+        "file": "tools/pr2_review_hardening_269_round2.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 5,
+        "semantic_id": "tools/pr2_review_hardening_269_round2.py#function:read:6b597c630a626922",
+        "signature_hash": "a3f58a6873b03607"
       }
     ],
     "read_all": [
@@ -95677,6 +95687,14 @@
         "end_line": 28,
         "semantic_id": "tools/pr2_review_hardening_269.py#function:replace_block:78d37f5c28fc80eb",
         "signature_hash": "6cc9545e444d14e8"
+      },
+      {
+        "file": "tools/pr2_review_hardening_269_round2.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 28,
+        "semantic_id": "tools/pr2_review_hardening_269_round2.py#function:replace_block:5145f131d3ac3274",
+        "signature_hash": "6cc9545e444d14e8"
       }
     ],
     "replace_once": [
@@ -95686,6 +95704,14 @@
         "line": 12,
         "end_line": 16,
         "semantic_id": "tools/pr2_review_hardening_269.py#function:replace_once:d87a14ae2e4d6441",
+        "signature_hash": "820625feabdd1c16"
+      },
+      {
+        "file": "tools/pr2_review_hardening_269_round2.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 16,
+        "semantic_id": "tools/pr2_review_hardening_269_round2.py#function:replace_once:fae1685ee2586dca",
         "signature_hash": "820625feabdd1c16"
       }
     ],
@@ -146340,6 +146366,14 @@
         "line": 8,
         "end_line": 9,
         "semantic_id": "tools/pr2_review_hardening_269.py#function:write:780725728eb3a36c",
+        "signature_hash": "e6dc81a0f4d81b92"
+      },
+      {
+        "file": "tools/pr2_review_hardening_269_round2.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 9,
+        "semantic_id": "tools/pr2_review_hardening_269_round2.py#function:write:14e02908043e737c",
         "signature_hash": "e6dc81a0f4d81b92"
       }
     ],
@@ -240601,47 +240635,93 @@
     {
       "path": "tools/pr2_review_hardening_269_round2.py",
       "role": "python_module",
-      "bytes": 15680,
+      "bytes": 15688,
       "lines": 363,
-      "tokens_est": 3920,
+      "tokens_est": 3922,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7158017b7c0f89b0",
+      "vector": [
+        -0.075438,
+        -0.285674,
+        0.152112,
+        0.129852,
+        0.008657,
+        0.02597,
+        -0.288148,
+        0.100171,
+        0.028444,
+        0.157059,
+        -0.278254,
+        -0.00371,
+        0.115012,
+        0.043284,
+        0.273307,
+        0.129852,
+        0.184266,
+        -0.107592,
+        0.132325,
+        0.038337,
+        -0.149639,
+        0.142219,
+        0.199106,
+        -0.302988,
+        0.283201,
+        0.228787,
+        -0.147165,
+        -0.013604,
+        -0.278254,
+        0.016077,
+        -0.302988,
+        0.082858
+      ]
+    },
+    {
+      "path": "tools/pr2_round2_trigger.txt",
+      "role": "support_file",
+      "bytes": 17,
+      "lines": 2,
+      "tokens_est": 5,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "ac5925b08a7e4aaa",
+      "digest8": "2f35d6a7e0b7e6a1",
       "vector": [
-        0.057027,
-        -0.0123,
-        0.224755,
-        0.1353,
-        -0.197919,
-        0.251592,
-        0.24041,
-        0.130828,
-        -0.260537,
-        -0.074918,
-        0.276192,
-        -0.213573,
-        0.001118,
-        0.186737,
-        -0.144246,
-        0.081628,
-        0.054791,
-        -0.010064,
-        0.282901,
-        0.137537,
-        0.200155,
-        0.0615,
-        -0.059264,
-        0.273955,
-        -0.039136,
-        0.027955,
-        -0.226992,
-        -0.229228,
-        -0.204628,
-        -0.278428,
-        -0.197919,
-        0.057027
+        0.102663,
+        0.231787,
+        0.117481,
+        -0.250838,
+        -0.1577,
+        0.267772,
+        0.117481,
+        0.10478,
+        -0.263538,
+        -0.106897,
+        -0.248721,
+        0.240254,
+        0.109014,
+        0.159816,
+        0.255071,
+        -0.255071,
+        -0.197918,
+        0.180984,
+        0.166167,
+        -0.053978,
+        0.212736,
+        0.22332,
+        0.037044,
+        0.10478,
+        -0.102663,
+        0.180984,
+        0.068795,
+        0.16405,
+        -0.136532,
+        -0.227553,
+        0.049744,
+        -0.109014
       ]
     },
     {
