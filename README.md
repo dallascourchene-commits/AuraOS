@@ -24,6 +24,7 @@ AuraOS is **not a single LLM, chatbot, autonomous super-agent, or monolithic app
 - [What is implemented vs. what is future architecture](#what-is-implemented-vs-what-is-future-architecture)
 - [Quick start](#quick-start)
 - [Using Aura with AI coding agents](#using-aura-with-ai-coding-agents)
+- [ARCH v2.3 governance harness](#arch-v23-governance-harness)
 - [Research and prior art](#research-and-prior-art)
 - [Detailed architecture](#detailed-architecture)
 - [Domain Arenas](#domain-arenas)
@@ -288,6 +289,8 @@ Recommended orientation:
 ```text
 README
   → .aura/ARCHITECTURE.md
+  → docs/AURA_ARCH_V2_3_HARNESS.md
+  → ARCH v2.3 policy + continuity capsule
   → current CODEMAP/topology health
   → capability resolution / relational neighborhood
   → exact symbols and source slices
@@ -329,6 +332,27 @@ Useful agent-facing owners include:
 - `aura_gate.py`
 
 Harness output remains navigation, analysis, review, or proposal evidence. Exact source spans, hashes, tests, verifier receipts, and authorized human disposition remain patch/merge authority.
+
+---
+
+# ARCH v2.3 governance harness
+
+The current long-horizon AI-assisted refactor governance standard is **ARCH v2.3** (`AURA_ARCH_V2_3`). Read [`docs/AURA_ARCH_V2_3_HARNESS.md`](docs/AURA_ARCH_V2_3_HARNESS.md) before starting a governed refactor or handing one to a fresh AI worker.
+
+ARCH v2.3 is deliberately distinct from the existing Architecture Harness CLI and Runtime Refactor Harness: those are bounded source-orientation and runtime-proof companions; **ARCH v2.3 owns the governance/convergence contract** for exact-head continuity, scope, authority, recursive workers, patch transactions, proof, review, learning, communication, durable-effect authorization, and stopping.
+
+The versioned four-file bundle is:
+
+- [`docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md`](docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md)
+- [`docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json`](docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json)
+- [`docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json`](docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json)
+- [`docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md`](docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md)
+
+Do not mix the v2.3 Markdown with an older policy/schema/template. v2.3 preserves the v2.2 recursive/provenance-governed continual-harness semantics while adding declared inter-agent channels, covert-channel resistance, non-malleable origin-bound authority, commit-time authorization for durable effects, verifier-independence/correlation receipts, and a bounded AuraJSpace working-set contract.
+
+Aura's existing `aura_jspace_codec.py` remains **advisory only**. ARCH v2.3 binds a JSpace projection to workspace/head/phase, keeps the current default and policy ceiling at **25 active concepts**, requires reconstruction or disablement when stale, and explicitly forbids JSpace from becoming patch authority, persistent truth, routing ownership, verifier status, policy, or a second memory/control plane.
+
+No ARCH component grants automatic merge. The terminal autonomous state remains `READY_FOR_HUMAN_REVIEW`; human disposition remains required.
 
 ---
 
@@ -735,6 +759,7 @@ Start here:
 |---|---|
 | [`README.md`](README.md) | Broad architecture, implementation map, research record, and operator orientation |
 | [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md) | Canonical owners, truth/evidence order, authority, data flow, and subsystem boundaries |
+| [`docs/AURA_ARCH_V2_3_HARNESS.md`](docs/AURA_ARCH_V2_3_HARNESS.md) | Current ARCH v2.3 governance-harness bundle, startup order, JSpace boundary, and migration orientation |
 | [`.aura/CODEMAP.md`](.aura/CODEMAP.md) | Generated compact repository navigation; regenerate after source changes |
 | [`USER_GUIDE.md`](USER_GUIDE.md) | Installation, commands, APIs, testing, and operator workflows |
 | [`.aura/SECURITY.md`](.aura/SECURITY.md) | Repository security constraints |
