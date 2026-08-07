@@ -358,5 +358,5 @@ def test_certificate_mutation_rejects_backdated_authority_after_expiry(tmp_path:
             evidence_digest=D["4"], owner="spatial_runtime",
             timestamp=prepared["issued_at"],
         )
-
-# Trigger installed round-two workflow.
+'''
+write(path, text.rstrip() + addition + "\n")
