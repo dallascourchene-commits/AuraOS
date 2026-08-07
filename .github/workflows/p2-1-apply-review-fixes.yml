@@ -1,4 +1,4 @@
-name: PR2 review hardening 269
+name: PR2 review hardening 269 round 2
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: pr2-review-hardening-269
+  group: pr2-review-hardening-269-round2
   cancel-in-progress: false
 
 jobs:
@@ -22,18 +22,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Preserve patchers and checkout exact clean PR2 head
+      - name: Preserve round-two patcher and checkout exact PR2 head
         run: |
-          cp tools/pr2_review_hardening_269.py /tmp/pr2_review_hardening_269.py
-          cp tools/pr2_review_hardening_269_followup.py /tmp/pr2_review_hardening_269_followup.py
+          cp tools/pr2_review_hardening_269_round2.py /tmp/pr2_review_hardening_269_round2.py
           git fetch --no-tags origin refactor/verified-ephemeral-workspace-pr2-clean
           git checkout --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "7bf5728cbd7b7fd229cc0067d212514f005fc518"
+          test "$(git rev-parse HEAD)" = "581f1a173fb248de360d97c5879cfd47edf6d6a3"
 
-      - name: Apply reviewed hardening transaction
-        run: |
-          python /tmp/pr2_review_hardening_269.py
-          python /tmp/pr2_review_hardening_269_followup.py
+      - name: Apply authoritative-clock and cleanup-race hardening
+        run: python /tmp/pr2_review_hardening_269_round2.py
 
       - uses: actions/setup-python@v5
         with:
@@ -45,19 +42,21 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Verify hardened PR2 transaction
+      - name: Verify focused PR2 and retained V1 contracts
         run: |
           python -m py_compile \
-            aura_ephemeral_adapter_registry.py \
             aura_ephemeral_registry_store.py \
             aura_ephemeral_workspace_runtime_v2.py \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
           python -m ruff check --select E9,F63,F7,F82 \
-            aura_ephemeral_adapter_registry.py \
             aura_ephemeral_registry_store.py \
             aura_ephemeral_workspace_runtime_v2.py \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
           python -m pytest -q tests/test_aura_ephemeral_workspace_runtime_v2.py
+          python -m pytest -q \
+            tests/test_aura_ephemeral_runtime.py \
+            tests/test_aura_ephemeral_phase0_hardening.py \
+            tests/test_aura_ephemeral_workspace_contracts.py
           git diff --check
           python - <<'PY'
           import json
@@ -70,19 +69,16 @@ jobs:
                   Draft202012Validator.check_schema(json.load(handle))
           PY
 
-      - name: Publish ordinary source hardening commit
+      - name: Publish ordinary PR2 round-two source commit
         run: |
           set -euo pipefail
           git config user.name "AuraOS PR2 Review Hardener"
           git config user.email "actions@users.noreply.github.com"
           git add \
-            aura_ephemeral_adapter_registry.py \
             aura_ephemeral_registry_store.py \
             aura_ephemeral_workspace_runtime_v2.py \
-            schemas/aura_workspace_execution_graph_v2.schema.json \
-            schemas/aura_spatial_action_certificate_v2.schema.json \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
-          test "$(git diff --cached --name-only | wc -l)" -eq 6
+          test "$(git diff --cached --name-only | wc -l)" -eq 3
           git diff --cached --check
-          git commit -m "PR2: Harden verified workspace lifecycle after review"
+          git commit -m "PR2: Close authoritative clock and cleanup races"
           git push origin HEAD:refs/heads/refactor/verified-ephemeral-workspace-pr2-clean
