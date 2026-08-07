@@ -80,7 +80,17 @@ jobs:
           PY
 
       - name: Diff whitespace gate
-        run: git diff --check
+        run: |
+          set +e
+          git diff --check > /tmp/diff-check.txt 2>&1
+          status=$?
+          cat /tmp/diff-check.txt
+          if [ "$status" -ne 0 ]; then
+            while IFS= read -r line; do
+              echo "::error title=git diff --check::$line"
+            done < /tmp/diff-check.txt
+            exit "$status"
+          fi
 
       - name: Publish ordinary PR2 round-two source commit
         run: |
