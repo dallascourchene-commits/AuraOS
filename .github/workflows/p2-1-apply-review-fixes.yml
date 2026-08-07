@@ -1,4 +1,4 @@
-name: PR2 independent audit hardening 269 round 8
+name: PR2 independent audit hardening 269 round 9
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: pr2-independent-audit-hardening-269-round8
+  group: pr2-independent-audit-hardening-269-round9
   cancel-in-progress: false
 
 jobs:
@@ -24,15 +24,15 @@ jobs:
 
       - name: Preserve patcher and checkout exact PR2 head
         run: |
-          cp tools/pr2_review_hardening_269_round8.py /tmp/pr2_review_hardening_269_round8.py
-          python -m py_compile /tmp/pr2_review_hardening_269_round8.py
-          test "$(git hash-object /tmp/pr2_review_hardening_269_round8.py)" = "b38b0425c064b928d0a7110abbf3d460c2a834d9"
+          cp tools/pr2_review_hardening_269_round9.py /tmp/pr2_review_hardening_269_round9.py
+          python -m py_compile /tmp/pr2_review_hardening_269_round9.py
+          test "$(git hash-object /tmp/pr2_review_hardening_269_round9.py)" = "cbd7fbcacd30e075080e9342ad3c643edaf66b7c"
           git fetch --no-tags origin refactor/verified-ephemeral-workspace-pr2-clean
           git checkout --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "d09f94a2b43a751d81df57211e449e837d992861"
+          test "$(git rev-parse HEAD)" = "decbcc876435b81eb683e4543e15487124c4d5f6"
 
-      - name: Apply memory-budget hardening
-        run: python /tmp/pr2_review_hardening_269_round8.py
+      - name: Apply final review hardening
+        run: python /tmp/pr2_review_hardening_269_round9.py
 
       - uses: actions/setup-python@v5
         with:
@@ -60,7 +60,7 @@ jobs:
             aura_ephemeral_workspace_runtime_v2.py \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
 
-      - name: Focused PR2 security and lifecycle suite
+      - name: Focused PR2 final review suite
         run: python -m pytest -q tests/test_aura_ephemeral_workspace_runtime_v2.py
 
       - name: Retained V1 Phase0 and PR1 tests
@@ -83,31 +83,29 @@ jobs:
                   Draft202012Validator.check_schema(json.load(handle))
           PY
 
-      - name: Exact round-eight scope and whitespace gate
+      - name: Exact round-nine scope and whitespace gate
         run: |
           printf '%s\n' \
             aura_ephemeral_adapter_registry.py \
+            aura_ephemeral_registry_store.py \
             aura_ephemeral_workspace_runtime_v2.py \
-            docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md \
-            schemas/aura_workspace_execution_graph_v2.schema.json \
             tests/test_aura_ephemeral_workspace_runtime_v2.py \
             | sort > /tmp/expected-files.txt
           git diff --name-only | sort > /tmp/actual-files.txt
           diff -u /tmp/expected-files.txt /tmp/actual-files.txt
           git diff --check
 
-      - name: Publish PR2 round-eight hardening commit
+      - name: Publish PR2 round-nine hardening commit
         run: |
           set -euo pipefail
           git config user.name "AuraOS PR2 Independent Audit Hardener"
           git config user.email "actions@users.noreply.github.com"
           git add \
             aura_ephemeral_adapter_registry.py \
+            aura_ephemeral_registry_store.py \
             aura_ephemeral_workspace_runtime_v2.py \
-            docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md \
-            schemas/aura_workspace_execution_graph_v2.schema.json \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
-          test "$(git diff --cached --name-only | wc -l)" -eq 5
+          test "$(git diff --cached --name-only | wc -l)" -eq 4
           git diff --cached --check
-          git commit -m "PR2: Enforce bounded adapter memory budgets"
+          git commit -m "PR2: Close final review hardening gaps"
           git push origin HEAD:refs/heads/refactor/verified-ephemeral-workspace-pr2-clean
