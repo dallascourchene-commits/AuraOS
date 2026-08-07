@@ -1,15 +1,14 @@
 ---
-capsule_schema: AURA_PR_CONTINUITY_CAPSULE_V2_3
-generated_projection: true
+schema_version: AURA_PR_CONTINUITY_CAPSULE_V2_3
 harness_version: AURA_ARCH_V2_3
 authoritative_state: ".aura/pr_context/PR-XXXX.context.json"
 pr_number: XXXX
 phase: "P?"
 base_sha: "<40-hex>"
 head_sha: "<40-hex>"
-capsule_generation: 1
+generation: 1
 last_transaction_id: null
-terminal_state: "ORIENTING"
+state: "ORIENTED"
 ---
 
 # Aura PR #XXXX Continuity Capsule
@@ -197,7 +196,12 @@ If stale, reconstruct from canonical capsule/route/evidence or disable it. Never
 - Verifier refs:
 - Shared-origin refs:
 - Shared-context refs:
-- Shared-tool/model/session refs:
+- Model-provider refs:
+- Input-origin refs:
+- Shared-origin refs:
+- Shared-context refs:
+- Shared-tool refs:
+- Shared-session refs:
 - Independence receipt:
 - Exact contradictions retained: YES / NO
 
