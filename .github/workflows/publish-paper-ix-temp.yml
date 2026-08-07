@@ -1,9 +1,10 @@
 name: Temporary Paper IX publication
 
 on:
-  push:
+  pull_request:
     branches:
-      - docs/publish-paper-ix-readme-architecture
+      - main
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 permissions:
@@ -47,8 +48,6 @@ jobs:
           if not pdfs:
               raise SystemExit('Zenodo record contains no PDF file')
 
-          # Paper IX publication record is expected to carry the canonical paper PDF.
-          # Prefer an AuraOS/Paper-IX-looking filename when multiple PDFs are present.
           pdfs.sort(key=lambda p: (0 if ('paper' in p[0].lower() and ('ix' in p[0].lower() or '9' in p[0].lower())) else 1, p[0]))
           key, url = pdfs[0]
 
