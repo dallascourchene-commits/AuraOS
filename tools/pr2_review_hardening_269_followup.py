@@ -39,3 +39,5 @@ if tests.count(marker) != 1:
     raise SystemExit("adapter params regression marker mismatch")
 tests = tests.replace(marker, addition, 1)
 test_path.write_text(tests.rstrip() + "\n", encoding="utf-8")
+
+# Trigger the already-installed validated helper workflow.
