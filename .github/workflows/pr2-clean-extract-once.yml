@@ -37,7 +37,16 @@ jobs:
         run: |
           set -euo pipefail
           expected="9c04a1efa57461a6078acb9f3b569766cbd2ab24"
-          remote="$(git ls-remote origin refs/heads/refactor/verified-ephemeral-workspace-pr2-clean | cut -f1)"
-          test "$remote" = "$expected"
+          target="refs/heads/refactor/verified-ephemeral-workspace-pr2-clean"
+          remote="$(git ls-remote origin "$target" | cut -f1)"
+          test -n "$remote"
+          if [ "$remote" != "$expected" ]; then
+            git fetch origin "$remote"
+            test "$(git rev-parse "$remote^")" = "$expected"
+            changed="$(git diff --name-only "$expected" "$remote" | sort)"
+            unexpected="$(printf '%s\n' "$changed" | grep -Ev '^(\.aura/CODEMAP\.json|\.aura/CODEMAP\.md|topology_map\.json)$' || true)"
+            test -z "$unexpected"
+          fi
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" push origin HEAD:refs/heads/refactor/verified-ephemeral-workspace-pr2-clean
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" push \
+            --force-with-lease="$target:$remote" origin "HEAD:$target"
