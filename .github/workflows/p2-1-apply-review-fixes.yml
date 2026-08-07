@@ -22,15 +22,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Preserve round-six patcher and checkout exact PR2 head
+      - name: Preserve round-six patchers and checkout exact PR2 head
         run: |
           cp tools/pr2_review_hardening_269_round6.py /tmp/pr2_review_hardening_269_round6.py
+          cp tools/pr2_review_hardening_269_round6_followup.py /tmp/pr2_review_hardening_269_round6_followup.py
           git fetch --no-tags origin refactor/verified-ephemeral-workspace-pr2-clean
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "b746773df5cf46548e8afa1950ff942f111f8c16"
 
       - name: Apply enforceable callback deadline hardening
-        run: python /tmp/pr2_review_hardening_269_round6.py
+        run: |
+          python /tmp/pr2_review_hardening_269_round6.py
+          python /tmp/pr2_review_hardening_269_round6_followup.py
 
       - uses: actions/setup-python@v5
         with:
