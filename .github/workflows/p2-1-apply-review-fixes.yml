@@ -32,6 +32,14 @@ jobs:
       - name: Apply authoritative-clock and cleanup-race hardening
         run: python /tmp/pr2_review_hardening_269_round2.py
 
+      - name: Normalize patched test EOF
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("tests/test_aura_ephemeral_workspace_runtime_v2.py")
+          path.write_text(path.read_text(encoding="utf-8").rstrip() + "\n", encoding="utf-8")
+          PY
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
