@@ -1,4 +1,4 @@
-name: PR2 review hardening 269 round 3
+name: PR2 master exit-gate audit 269 round 4
 
 on:
   push:
@@ -9,11 +9,11 @@ permissions:
   contents: write
 
 concurrency:
-  group: pr2-review-hardening-269-round3
+  group: pr2-master-exit-gate-269-round4
   cancel-in-progress: false
 
 jobs:
-  harden:
+  audit:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -22,23 +22,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Preserve round-three patcher and checkout exact PR2 head
+      - name: Preserve master exit-gate patcher and checkout exact PR2 head
         run: |
-          cp tools/pr2_review_hardening_269_round3.py /tmp/pr2_review_hardening_269_round3.py
+          cp tools/pr2_master_exit_gate_tests_269.py /tmp/pr2_master_exit_gate_tests_269.py
           git fetch --no-tags origin refactor/verified-ephemeral-workspace-pr2-clean
           git checkout --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "3e7d28a0a9c6391f5ab9358490a717bfa03cb0f2"
+          test "$(git rev-parse HEAD)" = "63980c1e42172e25d78855f4fbdd6863b6ee28b7"
 
-      - name: Apply certificate-expiry cleanup and reuse regression hardening
-        run: python /tmp/pr2_review_hardening_269_round3.py
-
-      - name: Normalize patched test EOF
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          path = Path("tests/test_aura_ephemeral_workspace_runtime_v2.py")
-          path.write_text(path.read_text(encoding="utf-8").rstrip() + "\n", encoding="utf-8")
-          PY
+      - name: Add explicit master-plan adversarial regressions
+        run: python /tmp/pr2_master_exit_gate_tests_269.py
 
       - uses: actions/setup-python@v5
         with:
@@ -50,19 +42,23 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Compile PR2 sources
+      - name: Compile PR2 sources and tests
         run: |
           python -m py_compile \
+            aura_ephemeral_adapter_registry.py \
+            aura_ephemeral_registry_store.py \
             aura_ephemeral_workspace_runtime_v2.py \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
 
       - name: Fatal Ruff classes
         run: |
           python -m ruff check --select E9,F63,F7,F82 \
+            aura_ephemeral_adapter_registry.py \
+            aura_ephemeral_registry_store.py \
             aura_ephemeral_workspace_runtime_v2.py \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
 
-      - name: Focused PR2 tests
+      - name: Focused PR2 tests with master exit-gate regressions
         run: python -m pytest -q tests/test_aura_ephemeral_workspace_runtime_v2.py
 
       - name: Retained V1 Phase0 and PR1 tests
@@ -85,18 +81,19 @@ jobs:
                   Draft202012Validator.check_schema(json.load(handle))
           PY
 
-      - name: Diff whitespace gate
-        run: git diff --check
+      - name: Exact test-only scope and whitespace gate
+        run: |
+          test "$(git diff --name-only | wc -l)" -eq 1
+          test "$(git diff --name-only)" = "tests/test_aura_ephemeral_workspace_runtime_v2.py"
+          git diff --check
 
-      - name: Publish ordinary PR2 round-three source commit
+      - name: Publish PR2 master exit-gate regression commit
         run: |
           set -euo pipefail
-          git config user.name "AuraOS PR2 Review Hardener"
+          git config user.name "AuraOS PR2 Exit Gate"
           git config user.email "actions@users.noreply.github.com"
-          git add \
-            aura_ephemeral_workspace_runtime_v2.py \
-            tests/test_aura_ephemeral_workspace_runtime_v2.py
-          test "$(git diff --cached --name-only | wc -l)" -eq 2
+          git add tests/test_aura_ephemeral_workspace_runtime_v2.py
+          test "$(git diff --cached --name-only)" = "tests/test_aura_ephemeral_workspace_runtime_v2.py"
           git diff --cached --check
-          git commit -m "PR2: Dissolve expired certificate workspaces"
+          git commit -m "PR2: Prove master adversarial exit gates"
           git push origin HEAD:refs/heads/refactor/verified-ephemeral-workspace-pr2-clean
