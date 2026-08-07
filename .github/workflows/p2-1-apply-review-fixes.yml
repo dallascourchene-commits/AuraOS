@@ -42,22 +42,32 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Verify focused PR2 and retained V1 contracts
+      - name: Compile PR2 sources
         run: |
           python -m py_compile \
             aura_ephemeral_registry_store.py \
             aura_ephemeral_workspace_runtime_v2.py \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
+
+      - name: Fatal Ruff classes
+        run: |
           python -m ruff check --select E9,F63,F7,F82 \
             aura_ephemeral_registry_store.py \
             aura_ephemeral_workspace_runtime_v2.py \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
-          python -m pytest -q tests/test_aura_ephemeral_workspace_runtime_v2.py
+
+      - name: Focused PR2 tests
+        run: python -m pytest -q tests/test_aura_ephemeral_workspace_runtime_v2.py
+
+      - name: Retained V1 Phase0 and PR1 tests
+        run: |
           python -m pytest -q \
             tests/test_aura_ephemeral_runtime.py \
             tests/test_aura_ephemeral_phase0_hardening.py \
             tests/test_aura_ephemeral_workspace_contracts.py
-          git diff --check
+
+      - name: Schema meta-validation
+        run: |
           python - <<'PY'
           import json
           from jsonschema import Draft202012Validator
@@ -68,6 +78,9 @@ jobs:
               with open(path, encoding="utf-8") as handle:
                   Draft202012Validator.check_schema(json.load(handle))
           PY
+
+      - name: Diff whitespace gate
+        run: git diff --check
 
       - name: Publish ordinary PR2 round-two source commit
         run: |
