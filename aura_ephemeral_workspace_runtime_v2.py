@@ -1229,6 +1229,7 @@ def prepare_spatial_action_certificate_v2(
     now: float | None = None,
 ) -> dict[str, Any]:
     """Prepare a proposal-only certificate; no domain operation is authorized."""
+    _expire_if_needed(workspace_id, store=store, now=now)
     record = _workspace(store, workspace_id)
     if record["state"] != "ACTIVE":
         raise ValueError("action certificate requires an active workspace")
@@ -1374,6 +1375,7 @@ def advance_spatial_action_certificate_v2(
     timestamp: float | None = None,
 ) -> dict[str, Any]:
     """Advance one exact receipt step under ACTIVE-state certificate CAS."""
+    _expire_if_needed(workspace_id, store=store, now=timestamp)
     record = _workspace(store, workspace_id)
     if record["state"] != "ACTIVE":
         raise ValueError("action certificate advancement requires an active workspace")

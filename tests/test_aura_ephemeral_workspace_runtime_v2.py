@@ -492,6 +492,22 @@ def test_partial_reexecution_requires_unchanged_identity_closure(tmp_path: Path)
     assert independent in plan2["reexecute_node_ids"]
 
 
+def test_partial_reexecution_reuses_verified_receipts_when_identity_closure_is_unchanged(
+    tmp_path: Path,
+) -> None:
+    _, registry, _, graph, store, workspace_id = _admitted(tmp_path)
+    runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )
+    _execute_all(workspace_id, graph, store, registry)
+    receipts = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]["node_receipts"]
+    plan = runtime.partial_reexecution_plan_v2(
+        graph, prior_receipts=receipts, changed_node_ids=[],
+    )
+    assert set(plan["reusable_node_ids"]) == set(receipts)
+    assert plan["reexecute_node_ids"] == []
+
+
 def test_action_certificate_lifecycle_is_monotonic_owner_bound_and_non_authoritative(tmp_path: Path) -> None:
     _, registry, _, _graph, store, workspace_id = _admitted(tmp_path)
     runtime.activate_workspace_v2(
@@ -874,7 +890,7 @@ def test_certificate_mutation_rejects_backdated_authority_after_expiry(tmp_path:
         "UPDATE ephemeral_workspaces_v2 SET expires_at = ? WHERE workspace_id = ?",
         (time.time() - 1, workspace_id),
     )
-    with pytest.raises(ValueError, match="certificate expiry"):
+    with pytest.raises(ValueError, match="expired and dissolved"):
         runtime.prepare_spatial_action_certificate_v2(
             workspace_id, store=store,
             principal_id="human:dallas", requested_operation="PREPARE_FORGE_HANDOFF",
@@ -885,6 +901,9 @@ def test_certificate_mutation_rejects_backdated_authority_after_expiry(tmp_path:
             proof_obligations=["EXACT_SOURCE"], nonce="cert-backdated-prepare",
             expires_at=time.time() + 120, now=time.time() - 3600,
         )
+    prepared_record = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
+    assert prepared_record["state"] == "DISSOLVED"
+    assert prepared_record["lease_status"] == "REVOKED"
 
     _, registry2, _, _, store2, workspace_id2 = _admitted(tmp_path / "advance")
     runtime.activate_workspace_v2(
@@ -905,9 +924,12 @@ def test_certificate_mutation_rejects_backdated_authority_after_expiry(tmp_path:
         "UPDATE ephemeral_workspaces_v2 SET expires_at = ? WHERE workspace_id = ?",
         (time.time() - 1, workspace_id2),
     )
-    with pytest.raises(ValueError, match="workspace_certificate_invalidated"):
+    with pytest.raises(ValueError, match="expired and dissolved"):
         runtime.advance_spatial_action_certificate_v2(
             workspace_id2, store=store2, expected_status="PREPARED",
             evidence_digest=D["4"], owner="spatial_runtime",
             timestamp=prepared["issued_at"],
         )
+    advanced_record = runtime.workspace_status_v2(workspace_id2, store=store2)["workspace"]
+    assert advanced_record["state"] == "DISSOLVED"
+    assert advanced_record["lease_status"] == "REVOKED"
