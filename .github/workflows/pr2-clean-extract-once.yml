@@ -32,8 +32,6 @@ jobs:
           git reset --hard HEAD
           git clean -fd
       - name: Publish only ordinary source commit to clean PR2 branch
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           expected="9c04a1efa57461a6078acb9f3b569766cbd2ab24"
@@ -47,6 +45,4 @@ jobs:
             unexpected="$(printf '%s\n' "$changed" | grep -Ev '^(\.aura/CODEMAP\.json|\.aura/CODEMAP\.md|topology_map\.json)$' || true)"
             test -z "$unexpected"
           fi
-          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" push \
-            --force-with-lease="$target:$remote" origin "HEAD:$target"
+          git push --force-with-lease="$target:$remote" origin "HEAD:$target"
