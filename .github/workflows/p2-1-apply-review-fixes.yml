@@ -22,27 +22,30 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Reconstruct verified patcher and checkout exact PR2 head
+      - name: Reconstruct verified single patcher and checkout exact PR2 head
         run: |
-          cp tools/pr2_review_hardening_269_round6.py /tmp/pr2_review_hardening_269_round6.py
           cat \
-            tools/round6_followup.part1 \
-            tools/round6_followup.part2 \
-            tools/round6_followup.part3 \
-            tools/round6_followup.part4 \
-            tools/round6_followup.part5 \
-            tools/round6_followup.part6 \
-            | base64 -d > /tmp/pr2_review_hardening_269_round6_followup.py
-          python -m py_compile /tmp/pr2_review_hardening_269_round6_followup.py
-          test "$(git hash-object /tmp/pr2_review_hardening_269_round6_followup.py)" = "c4ee294e673cae30da63dbf128d352a344394c45"
+            tools/round6_v2.part1 \
+            tools/round6_v2.part2 \
+            tools/round6_v2.part3 \
+            tools/round6_v2.part4 \
+            > /tmp/round6_v2.b64z
+          python - <<'PY'
+          from pathlib import Path
+          import base64, zlib
+          packed = Path('/tmp/round6_v2.b64z').read_text(encoding='utf-8')
+          Path('/tmp/pr2_review_hardening_269_round6_v2.py').write_bytes(
+              zlib.decompress(base64.b64decode(packed))
+          )
+          PY
+          python -m py_compile /tmp/pr2_review_hardening_269_round6_v2.py
+          test "$(git hash-object /tmp/pr2_review_hardening_269_round6_v2.py)" = "2c3f94a09083a7da9533a408b28fdad7f1601fb4"
           git fetch --no-tags origin refactor/verified-ephemeral-workspace-pr2-clean
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "b746773df5cf46548e8afa1950ff942f111f8c16"
 
       - name: Apply enforceable callback deadline hardening
-        run: |
-          python /tmp/pr2_review_hardening_269_round6.py
-          python /tmp/pr2_review_hardening_269_round6_followup.py
+        run: python /tmp/pr2_review_hardening_269_round6_v2.py
 
       - uses: actions/setup-python@v5
         with:
