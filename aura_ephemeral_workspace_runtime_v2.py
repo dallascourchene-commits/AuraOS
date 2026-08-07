@@ -295,7 +295,7 @@ def compile_workspace_execution_graph_v2(
             "human_gate": human_gate,
             "terminal": False,
             "retry_limit": 0,
-            "timeout_ms": min(value.budgets.wall_time_ms, 30_000),
+            "timeout_ms": max(1, min(value.budgets.wall_time_ms, 30_000)),
             "assumptions_digest": stable_digest({"capability_id": capability_id, "recipe": value.recipe_digest}),
             "source_identity_digest": binding["implementation_digest"],
             "node_digest": "",
