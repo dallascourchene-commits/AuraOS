@@ -22,10 +22,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Preserve round-six patchers and checkout exact PR2 head
+      - name: Reconstruct verified patcher and checkout exact PR2 head
         run: |
           cp tools/pr2_review_hardening_269_round6.py /tmp/pr2_review_hardening_269_round6.py
-          cp tools/pr2_review_hardening_269_round6_followup.py /tmp/pr2_review_hardening_269_round6_followup.py
+          cat \
+            tools/round6_followup.part1 \
+            tools/round6_followup.part2 \
+            tools/round6_followup.part3 \
+            tools/round6_followup.part4 \
+            tools/round6_followup.part5 \
+            tools/round6_followup.part6 \
+            | base64 -d > /tmp/pr2_review_hardening_269_round6_followup.py
+          python -m py_compile /tmp/pr2_review_hardening_269_round6_followup.py
+          test "$(git hash-object /tmp/pr2_review_hardening_269_round6_followup.py)" = "c4ee294e673cae30da63dbf128d352a344394c45"
           git fetch --no-tags origin refactor/verified-ephemeral-workspace-pr2-clean
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "b746773df5cf46548e8afa1950ff942f111f8c16"
