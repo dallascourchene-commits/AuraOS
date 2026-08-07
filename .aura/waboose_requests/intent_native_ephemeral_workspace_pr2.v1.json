@@ -1,0 +1,73 @@
+{
+  "agent_name": "Aura PR2 bounded coding worker",
+  "allowed_file_set_digest": "d0f74015d3f1b616aa10b631a0632dcc77936bb010101712b4b8216fc33a25c3",
+  "automatic_merge": false,
+  "automatic_publication": false,
+  "begin_pr3": false,
+  "changed_files": [
+    ".aura/refactor_objectives/intent_native_ephemeral_workspace_pr2.v1.json",
+    ".aura/waboose_requests/intent_native_ephemeral_workspace_pr2.v1.json",
+    "aura_ephemeral_adapter_registry.py",
+    "aura_ephemeral_registry_store.py",
+    "aura_ephemeral_workspace_runtime_v2.py",
+    "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
+    "schemas/aura_spatial_action_certificate_v2.schema.json",
+    "schemas/aura_workspace_execution_graph_v2.schema.json",
+    "tests/test_aura_ephemeral_workspace_runtime_v2.py"
+  ],
+  "files_to_review": [
+    ".aura/refactor_objectives/intent_native_ephemeral_workspace_pr2.v1.json",
+    ".aura/waboose_requests/intent_native_ephemeral_workspace_pr2.v1.json",
+    "aura_ephemeral_adapter_registry.py",
+    "aura_ephemeral_registry_store.py",
+    "aura_ephemeral_workspace_runtime_v2.py",
+    "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
+    "schemas/aura_spatial_action_certificate_v2.schema.json",
+    "schemas/aura_workspace_execution_graph_v2.schema.json",
+    "tests/test_aura_ephemeral_workspace_runtime_v2.py"
+  ],
+  "graph_depth": 2,
+  "graph_node_budget": 250,
+  "invariants": [
+    "V1 APIs and behavior remain unchanged",
+    "parse bind admit are separate",
+    "complete identities bind before activation",
+    "no arbitrary native execution",
+    "every terminal path verifies cleanup",
+    "spatial runtime never gains domain authority",
+    "no automatic merge or PR3"
+  ],
+  "metadata": {
+    "allowed_file_set_digest": "d0f74015d3f1b616aa10b631a0632dcc77936bb010101712b4b8216fc33a25c3",
+    "human_disposition_authority": "Dallas Courchene",
+    "source_main_sha": "9c04a1efa57461a6078acb9f3b569766cbd2ab24"
+  },
+  "mode": "files",
+  "objective": "Review Master PR2 Verified Ephemeral Workspace execution lifecycle for V1 compatibility, exact graph/adapter/certificate identity, authority non-escalation, hostile-input boundaries, deterministic cleanup, and no silent resurrection.",
+  "objective_id": "intent-native-ephemeral-workspace-pr2",
+  "profile": "exhaustive",
+  "request_id": "intent-native-ephemeral-workspace-pr2-final",
+  "requested_reviewers": [],
+  "required_disposition": "READY_FOR_HUMAN_REVIEW",
+  "review_questions": [
+    "Does V2 preserve every V1 public behavior?",
+    "Can malformed, stale, cyclic, authority-escalating, or unbound graphs activate?",
+    "Can adapter callbacks, outputs, paths, leases, budgets, cancellation, expiry, or process interruption bypass cleanup?",
+    "Can a SpatialActionCertificate self-authorize or close without canonical owner/runtime proof?",
+    "Can a dissolved workspace resume or a node receipt be reused after identity/assumption drift?"
+  ],
+  "risk_map": [
+    "lifecycle race",
+    "stale adapter binding",
+    "hostile callback/output",
+    "path escape",
+    "lease leak",
+    "certificate replay",
+    "authority escalation",
+    "V1 regression"
+  ],
+  "run_optional_tools": false,
+  "run_tests": false,
+  "source_main_sha": "9c04a1efa57461a6078acb9f3b569766cbd2ab24",
+  "version": "AURA_CODING_WABOOSE_REQUEST_V1"
+}

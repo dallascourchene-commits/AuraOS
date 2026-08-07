@@ -1,0 +1,64 @@
+{
+  "allowed_file_set_digest": "d0f74015d3f1b616aa10b631a0632dcc77936bb010101712b4b8216fc33a25c3",
+  "allowed_files": [
+    ".aura/refactor_objectives/intent_native_ephemeral_workspace_pr2.v1.json",
+    ".aura/waboose_requests/intent_native_ephemeral_workspace_pr2.v1.json",
+    "aura_ephemeral_adapter_registry.py",
+    "aura_ephemeral_registry_store.py",
+    "aura_ephemeral_workspace_runtime_v2.py",
+    "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
+    "schemas/aura_spatial_action_certificate_v2.schema.json",
+    "schemas/aura_workspace_execution_graph_v2.schema.json",
+    "tests/test_aura_ephemeral_workspace_runtime_v2.py"
+  ],
+  "allowed_path_digest": "1264db85d24d2668d318b82df6f8b690f9e70c902a959dabaa57da7d323fb99b",
+  "automatic_merge": false,
+  "canonical_owners": {
+    "adapter_identity": "aura_ephemeral_adapter_registry.py",
+    "contract": "aura_ephemeral_workspace_contracts.py",
+    "lifecycle_store": "aura_ephemeral_registry_store.py",
+    "path_policy": "aura_ephemeral_path_policy.py",
+    "sandbox": "aura_ephemeral_sandbox.py",
+    "v2_companion": "aura_ephemeral_workspace_runtime_v2.py"
+  },
+  "compass_grounding_digest": "5c9b9d7469bc5b18ef525612c8ee1705cad9d83c8aeb22d7",
+  "compass_packet_digest": "2568b3320969ede51387b76da2df64d86d59a45244befa29",
+  "goal": "Preserve one-shot Ephemeral Organ V1 while adding a separate verified interactive Workspace V2 lifecycle compiled from PR1 recipes.",
+  "harness_run_digest": "bf397cce5a66c4c121965dcfd8df81bb",
+  "human_disposition_authority": "Dallas Courchene",
+  "implementation_unit": "MASTER_PR2_VERIFIED_EPHEMERAL_WORKSPACE_EXECUTION_LIFECYCLE",
+  "master_plan": "AURAOS_INTENT_NATIVE_EPHEMERAL_ARENAS_CAPABILITY_MARKETPLACE_MASTER_NUMBERED_PR_REFACTOR_PLAN_2026-08-06",
+  "objective_id": "intent-native-ephemeral-workspace-pr2",
+  "pr1_dependency": "GitHub PR #255 merged",
+  "program": "AURAOS_INTENT_NATIVE_EPHEMERAL_ARENAS_CAPABILITY_MARKETPLACE",
+  "prohibited_scope": [
+    "V1 runtime or lifecycle DFA rewrites",
+    "renderer, WebXR, multimodal, collaboration, marketplace, payment, package, or PR3 work",
+    "source/domain mutation, deployment, publication, automatic review, automatic merge",
+    "generated CODEMAP/topology changes before source stabilization"
+  ],
+  "required_invariants": [
+    "V1 public APIs and behavior remain unchanged",
+    "parse, bind, and admit remain separate trust states",
+    "complete graph/adapter/schema/implementation identities bind before activation",
+    "DAG, terminal reachability, effects, human gates, TTL, budgets, cancellation, and cleanup fail closed",
+    "partial re-execution requires unchanged upstream identity closure",
+    "spatial action certificates remain proposal-only and require canonical owner/runtime evidence",
+    "arbitrary native execution remains denied",
+    "every terminal path revokes leases and removes temporary state",
+    "dissolved workspaces cannot silently resume"
+  ],
+  "source_main_sha": "9c04a1efa57461a6078acb9f3b569766cbd2ab24",
+  "status": "READY_FOR_HUMAN_REVIEW",
+  "verification": [
+    "python compilation",
+    "Draft 2020-12 schema meta-validation",
+    "focused PR2 tests",
+    "retained V1/Phase-0/PR1 tests",
+    "fatal Ruff classes when available in hosted CI",
+    "git diff --check",
+    "exact nine-file scope audit",
+    "Coding Waboose"
+  ],
+  "version": "AURA_REFACTOR_OBJECTIVE_V1"
+}

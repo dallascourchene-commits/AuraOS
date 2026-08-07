@@ -1,0 +1,413 @@
+{
+  "$id": "https://aura.local/schemas/aura_spatial_action_certificate_v2.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "PREPARED"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "receipts": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "OPEN"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "receipts": {
+            "maxItems": 1,
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "APPROVED"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "receipts": {
+            "maxItems": 2,
+            "minItems": 2
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "EXECUTED"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "receipts": {
+            "maxItems": 3,
+            "minItems": 3
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "CLOSED"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "receipts": {
+            "maxItems": 4,
+            "minItems": 4
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "approval_class": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "assumptions_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "automatic_commit": {
+          "const": false
+        },
+        "automatic_merge": {
+          "const": false
+        },
+        "automatic_persistence": {
+          "const": false
+        },
+        "automatic_promotion": {
+          "const": false
+        },
+        "automatic_pull_request": {
+          "const": false
+        },
+        "automatic_push": {
+          "const": false
+        },
+        "automatic_resume": {
+          "const": false
+        },
+        "deployment_authority": {
+          "const": false
+        },
+        "domain_mutation": {
+          "const": false
+        },
+        "execution_authority": {
+          "const": false
+        },
+        "human_review_required": {
+          "const": true
+        },
+        "model_authority": {
+          "const": false
+        },
+        "patch_authority": {
+          "const": false
+        },
+        "payment_authority": {
+          "const": false
+        },
+        "persistence_authority": {
+          "const": false
+        },
+        "physical_work_authority": {
+          "const": false
+        },
+        "production_mutation": {
+          "const": false
+        },
+        "professional_authority": {
+          "const": false
+        },
+        "projection_only": {
+          "const": true
+        },
+        "renderer_authority": {
+          "const": false
+        },
+        "review_only": {
+          "const": true
+        },
+        "sensor_authority": {
+          "const": false
+        },
+        "source_mutation": {
+          "const": false
+        },
+        "version": {
+          "const": "AURA_WORKSPACE_AUTHORITY_ENVELOPE_V1"
+        },
+        "vsa_patch_authority": {
+          "const": false
+        }
+      },
+      "required": [
+        "automatic_commit",
+        "automatic_merge",
+        "automatic_persistence",
+        "automatic_promotion",
+        "automatic_pull_request",
+        "automatic_push",
+        "automatic_resume",
+        "deployment_authority",
+        "domain_mutation",
+        "execution_authority",
+        "human_review_required",
+        "model_authority",
+        "patch_authority",
+        "payment_authority",
+        "persistence_authority",
+        "physical_work_authority",
+        "production_mutation",
+        "professional_authority",
+        "projection_only",
+        "renderer_authority",
+        "review_only",
+        "sensor_authority",
+        "source_mutation",
+        "version",
+        "vsa_patch_authority"
+      ],
+      "type": "object"
+    },
+    "certificate_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "certificate_id": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "cost_microusd": {
+      "maximum": 10000000000,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "effect_boundary": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "expires_at": {
+      "minimum": 0,
+      "type": "number"
+    },
+    "graph_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "issued_at": {
+      "minimum": 0,
+      "type": "number"
+    },
+    "nonce": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "policy_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "principal_id": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "proof_obligations": {
+      "items": {
+        "maxLength": 192,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+        "type": "string"
+      },
+      "maxItems": 512,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "receipts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "certificate_id": {
+            "maxLength": 192,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+            "type": "string"
+          },
+          "evidence_digest": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "owner": {
+            "maxLength": 192,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+            "type": "string"
+          },
+          "receipt_digest": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "receipt_type": {
+            "enum": [
+              "OPEN",
+              "APPROVAL",
+              "EXECUTION",
+              "OUTCOME"
+            ]
+          },
+          "timestamp": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "receipt_type",
+          "certificate_id",
+          "timestamp",
+          "evidence_digest",
+          "owner",
+          "receipt_digest"
+        ],
+        "type": "object"
+      },
+      "maxItems": 5,
+      "type": "array"
+    },
+    "requested_operation": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "reversible": {
+      "type": "boolean"
+    },
+    "runtime_environment_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "PREPARED",
+        "OPEN",
+        "APPROVED",
+        "EXECUTED",
+        "CLOSED"
+      ]
+    },
+    "subject_refs": {
+      "items": {
+        "maxLength": 192,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+        "type": "string"
+      },
+      "maxItems": 512,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "target_refs": {
+      "items": {
+        "maxLength": 192,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+        "type": "string"
+      },
+      "maxItems": 512,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "version": {
+      "const": "AURA_SPATIAL_ACTION_CERTIFICATE_V2"
+    },
+    "workspace_id": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "version",
+    "certificate_id",
+    "workspace_id",
+    "graph_digest",
+    "principal_id",
+    "requested_operation",
+    "subject_refs",
+    "target_refs",
+    "policy_digest",
+    "approval_class",
+    "runtime_environment_digest",
+    "effect_boundary",
+    "assumptions_digest",
+    "cost_microusd",
+    "reversible",
+    "proof_obligations",
+    "nonce",
+    "issued_at",
+    "expires_at",
+    "status",
+    "receipts",
+    "authority",
+    "certificate_digest"
+  ],
+  "title": "Aura Spatial Action Certificate V2",
+  "type": "object",
+  "x-aura-semantic-delegations": [
+    "complete independent certificate binding",
+    "workspace/graph binding",
+    "monotonic receipt chain",
+    "owner/runtime evidence separation",
+    "expiry and replay resistance",
+    "closed authority envelope"
+  ],
+  "x-aura-semantic-validator": "aura_ephemeral_workspace_runtime_v2.validate_spatial_action_certificate_v2"
+}

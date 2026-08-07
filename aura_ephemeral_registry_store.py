@@ -12,7 +12,6 @@ Dependencies: stdlib only (sqlite3).
 from __future__ import annotations
 
 import json
-import os
 import sqlite3
 import time
 from pathlib import Path
@@ -20,7 +19,7 @@ from typing import Any
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 
 def _default_db_path(repo_root: str | Path = ".") -> Path:
@@ -90,6 +89,42 @@ class EphemeralRegistryStore:
             conn.execute("CREATE INDEX IF NOT EXISTS idx_organ_expires ON ephemeral_organs(expires_at)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_organ_lease_status ON ephemeral_organs(lease_status)")
             conn.execute("INSERT OR REPLACE INTO schema_migrations (version, applied_at) VALUES (1, ?)", (time.time(),))
+        if current < 2:
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS ephemeral_workspaces_v2 (
+                    workspace_id TEXT PRIMARY KEY,
+                    recipe_json TEXT NOT NULL,
+                    recipe_digest TEXT NOT NULL,
+                    graph_json TEXT NOT NULL,
+                    graph_digest TEXT NOT NULL,
+                    state TEXT NOT NULL,
+                    created_at REAL NOT NULL,
+                    updated_at REAL NOT NULL,
+                    expires_at REAL NOT NULL,
+                    activation_nonce TEXT NOT NULL UNIQUE,
+                    lease_status TEXT NOT NULL DEFAULT 'ACTIVE',
+                    sandbox_path TEXT NOT NULL DEFAULT '',
+                    node_receipts TEXT NOT NULL DEFAULT '{}',
+                    failure_records TEXT NOT NULL DEFAULT '[]',
+                    usage_json TEXT NOT NULL DEFAULT '{}',
+                    cleanup_receipt TEXT NOT NULL DEFAULT '{}',
+                    certificate_json TEXT NOT NULL DEFAULT '{}',
+                    terminal_reason TEXT NOT NULL DEFAULT ''
+                )
+            """)
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_workspace_v2_state ON ephemeral_workspaces_v2(state)"
+            )
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_workspace_v2_expires ON ephemeral_workspaces_v2(expires_at)"
+            )
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_workspace_v2_lease ON ephemeral_workspaces_v2(lease_status)"
+            )
+            conn.execute(
+                "INSERT OR REPLACE INTO schema_migrations (version, applied_at) VALUES (2, ?)",
+                (time.time(),),
+            )
 
     def register(self, record: dict[str, Any]) -> dict[str, Any]:
         conn = self._conn
@@ -340,12 +375,287 @@ class EphemeralRegistryStore:
         return {"ok": True, "audit_records": records, "count": len(records),
                 "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
+    # ------------------------------------------------------------------
+    # Verified Ephemeral Workspace V2 — additive, separate from V1 organs.
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _workspace_v2_json(value: Any, name: str) -> str:
+        try:
+            return json.dumps(value, sort_keys=True, separators=(",", ":"),
+                              ensure_ascii=False, allow_nan=False)
+        except (TypeError, ValueError, OverflowError) as exc:
+            raise ValueError(f"{name} must be canonical JSON") from exc
+
+    @staticmethod
+    def _workspace_v2_row(row: tuple[Any, ...], cur: sqlite3.Cursor) -> dict[str, Any]:
+        record = dict(zip((item[0] for item in cur.description), row, strict=True))
+        for name in (
+            "recipe_json", "graph_json", "node_receipts", "failure_records",
+            "usage_json", "cleanup_receipt", "certificate_json",
+        ):
+            try:
+                record[name] = json.loads(record[name])
+            except (json.JSONDecodeError, TypeError) as exc:
+                raise ValueError(f"stored workspace {name} is invalid") from exc
+        return record
+
+    def register_workspace_v2(self, record: dict[str, Any]) -> dict[str, Any]:
+        """Atomically register one admitted V2 workspace; duplicate IDs/nonces fail."""
+        if type(record) is not dict:
+            raise ValueError("workspace record must be an exact object")
+        required = {
+            "workspace_id", "recipe_json", "recipe_digest", "graph_json", "graph_digest",
+            "state", "created_at", "expires_at", "activation_nonce",
+        }
+        if set(record) - {
+            *required, "lease_status", "sandbox_path", "node_receipts", "failure_records",
+            "usage_json", "cleanup_receipt", "certificate_json", "terminal_reason",
+        } or not required <= set(record):
+            raise ValueError("workspace record fields are incomplete or unknown")
+        conn = self._conn
+        assert conn is not None
+        now = time.time()
+        try:
+            conn.execute(
+                """
+                INSERT INTO ephemeral_workspaces_v2
+                (workspace_id, recipe_json, recipe_digest, graph_json, graph_digest,
+                 state, created_at, updated_at, expires_at, activation_nonce,
+                 lease_status, sandbox_path, node_receipts, failure_records,
+                 usage_json, cleanup_receipt, certificate_json, terminal_reason)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                """,
+                (
+                    record["workspace_id"],
+                    self._workspace_v2_json(record["recipe_json"], "recipe_json"),
+                    record["recipe_digest"],
+                    self._workspace_v2_json(record["graph_json"], "graph_json"),
+                    record["graph_digest"],
+                    record["state"],
+                    record["created_at"],
+                    now,
+                    record["expires_at"],
+                    record["activation_nonce"],
+                    record.get("lease_status", "ACTIVE"),
+                    record.get("sandbox_path", ""),
+                    self._workspace_v2_json(record.get("node_receipts", {}), "node_receipts"),
+                    self._workspace_v2_json(record.get("failure_records", []), "failure_records"),
+                    self._workspace_v2_json(record.get("usage_json", {}), "usage_json"),
+                    self._workspace_v2_json(record.get("cleanup_receipt", {}), "cleanup_receipt"),
+                    self._workspace_v2_json(record.get("certificate_json", {}), "certificate_json"),
+                    record.get("terminal_reason", ""),
+                ),
+            )
+        except sqlite3.IntegrityError:
+            return {"ok": False, "error": "duplicate_workspace_or_activation_nonce",
+                    "workspace_id": record.get("workspace_id", ""),
+                    "patch_authority": PATCH_AUTHORITY,
+                    "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+        return {"ok": True, "workspace_id": record["workspace_id"], "state": record["state"],
+                "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+
+    def get_workspace_v2(self, workspace_id: str) -> dict[str, Any]:
+        conn = self._conn
+        assert conn is not None
+        cur = conn.execute(
+            "SELECT * FROM ephemeral_workspaces_v2 WHERE workspace_id = ?", (workspace_id,)
+        )
+        row = cur.fetchone()
+        if row is None:
+            return {"ok": False, "error": f"workspace not found: {workspace_id}",
+                    "patch_authority": PATCH_AUTHORITY,
+                    "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+        return {"ok": True, "workspace": self._workspace_v2_row(row, cur),
+                "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+
+    def transition_workspace_v2(
+        self,
+        workspace_id: str,
+        expected_from: str | tuple[str, ...],
+        to: str,
+        *,
+        terminal_reason: str = "",
+    ) -> dict[str, Any]:
+        """Compare-and-set one V2 lifecycle transition."""
+        expected = (expected_from,) if type(expected_from) is str else expected_from
+        if type(expected) is not tuple or not expected or any(type(v) is not str for v in expected):
+            raise ValueError("expected_from must be a state or non-empty state tuple")
+        conn = self._conn
+        assert conn is not None
+        placeholders = ",".join("?" for _ in expected)
+        params: tuple[Any, ...] = (to, time.time(), terminal_reason, workspace_id, *expected)
+        cur = conn.execute(
+            f"UPDATE ephemeral_workspaces_v2 SET state = ?, updated_at = ?, terminal_reason = ? "
+            f"WHERE workspace_id = ? AND state IN ({placeholders})",
+            params,
+        )
+        if cur.rowcount != 1:
+            current = self.get_workspace_v2(workspace_id)
+            actual = current.get("workspace", {}).get("state", "MISSING")
+            return {"ok": False, "error": "stale_workspace_state", "workspace_id": workspace_id,
+                    "expected": list(expected), "actual": actual,
+                    "patch_authority": PATCH_AUTHORITY,
+                    "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+        return {"ok": True, "workspace_id": workspace_id, "from": list(expected), "to": to,
+                "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+
+    def update_workspace_v2(self, workspace_id: str, **fields: Any) -> dict[str, Any]:
+        """Update only bounded V2 evidence fields; lifecycle state is CAS-only."""
+        allowed = {
+            "sandbox_path", "node_receipts", "failure_records", "usage_json",
+            "cleanup_receipt", "certificate_json", "lease_status", "terminal_reason",
+        }
+        if not fields or not set(fields) <= allowed:
+            raise ValueError("unknown or empty workspace evidence update")
+        encoded: dict[str, Any] = {}
+        for name, value in fields.items():
+            encoded[name] = (
+                self._workspace_v2_json(value, name)
+                if name in {"node_receipts", "failure_records", "usage_json",
+                            "cleanup_receipt", "certificate_json"}
+                else value
+            )
+        assignments = ", ".join(f"{name} = ?" for name in sorted(encoded))
+        params = [encoded[name] for name in sorted(encoded)]
+        params.extend([time.time(), workspace_id])
+        conn = self._conn
+        assert conn is not None
+        cur = conn.execute(
+            f"UPDATE ephemeral_workspaces_v2 SET {assignments}, updated_at = ? WHERE workspace_id = ?",
+            tuple(params),
+        )
+        return {"ok": cur.rowcount == 1, "workspace_id": workspace_id,
+                "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+
+    def commit_workspace_v2_node_execution(
+        self,
+        workspace_id: str,
+        *,
+        expected_node_receipts: dict[str, Any],
+        expected_usage: dict[str, Any],
+        node_receipts: dict[str, Any],
+        usage_json: dict[str, Any],
+        now: float | None = None,
+    ) -> dict[str, Any]:
+        """Atomically persist node evidence only while execution authority remains active."""
+        for name, value in (
+            ("expected_node_receipts", expected_node_receipts),
+            ("expected_usage", expected_usage),
+            ("node_receipts", node_receipts),
+            ("usage_json", usage_json),
+        ):
+            if type(value) is not dict:
+                raise ValueError(f"{name} must be an exact object")
+        current_time = time.time() if now is None else now
+        if type(current_time) not in {int, float}:
+            raise ValueError("now must be a finite number")
+        current_time = float(current_time)
+        if not (current_time == current_time and abs(current_time) != float("inf")):
+            raise ValueError("now must be a finite number")
+        expected_receipts_json = self._workspace_v2_json(
+            expected_node_receipts, "expected_node_receipts"
+        )
+        expected_usage_json = self._workspace_v2_json(expected_usage, "expected_usage")
+        receipts_json = self._workspace_v2_json(node_receipts, "node_receipts")
+        usage_encoded = self._workspace_v2_json(usage_json, "usage_json")
+        conn = self._conn
+        assert conn is not None
+        cur = conn.execute(
+            """
+            UPDATE ephemeral_workspaces_v2
+            SET node_receipts = ?, usage_json = ?, updated_at = ?
+            WHERE workspace_id = ?
+              AND state = 'ACTIVE'
+              AND lease_status = 'ACTIVE'
+              AND expires_at > ?
+              AND node_receipts = ?
+              AND usage_json = ?
+            """,
+            (
+                receipts_json,
+                usage_encoded,
+                current_time,
+                workspace_id,
+                current_time,
+                expected_receipts_json,
+                expected_usage_json,
+            ),
+        )
+        if cur.rowcount == 1:
+            return {
+                "ok": True,
+                "workspace_id": workspace_id,
+                "patch_authority": PATCH_AUTHORITY,
+                "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+            }
+        row = conn.execute(
+            """
+            SELECT state, lease_status, expires_at
+            FROM ephemeral_workspaces_v2
+            WHERE workspace_id = ?
+            """,
+            (workspace_id,),
+        ).fetchone()
+        if row is None:
+            error = "workspace_execution_invalidated"
+            state, lease_status, expires_at = "MISSING", "MISSING", 0.0
+        else:
+            state, lease_status, expires_at = row
+            error = (
+                "workspace_execution_invalidated"
+                if state != "ACTIVE"
+                or lease_status != "ACTIVE"
+                or current_time >= expires_at
+                else "stale_workspace_evidence"
+            )
+        return {
+            "ok": False,
+            "error": error,
+            "workspace_id": workspace_id,
+            "state": state,
+            "lease_status": lease_status,
+            "expires_at": expires_at,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
+    def revoke_workspace_v2_lease(self, workspace_id: str, *, reason: str) -> dict[str, Any]:
+        if type(reason) is not str or not reason:
+            raise ValueError("lease revocation reason is required")
+        return self.update_workspace_v2(
+            workspace_id, lease_status="REVOKED", terminal_reason=reason
+        )
+
+    def is_workspace_v2_lease_active(self, workspace_id: str) -> bool:
+        conn = self._conn
+        assert conn is not None
+        row = conn.execute(
+            "SELECT lease_status, expires_at, state FROM ephemeral_workspaces_v2 WHERE workspace_id = ?",
+            (workspace_id,),
+        ).fetchone()
+        return bool(row and row[0] == "ACTIVE" and time.time() < row[1]
+                    and row[2] not in {"DISSOLVING", "DISSOLVED"})
+
+    def list_expired_workspaces_v2(self, *, now: float | None = None) -> dict[str, Any]:
+        current = time.time() if now is None else now
+        conn = self._conn
+        assert conn is not None
+        rows = conn.execute(
+            "SELECT workspace_id FROM ephemeral_workspaces_v2 "
+            "WHERE expires_at <= ? AND state != 'DISSOLVED'",
+            (current,),
+        ).fetchall()
+        values = [row[0] for row in rows]
+        return {"ok": True, "workspace_ids": values, "count": len(values),
+                "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+
     def close(self) -> None:
         if self._conn:
             self._conn.close()
             self._conn = None
 
     @classmethod
-    def for_tests(cls, tmp_path: str | Path) -> "EphemeralRegistryStore":
+    def for_tests(cls, tmp_path: str | Path) -> EphemeralRegistryStore:
         """Create a test-isolated store."""
         return cls(db_path=Path(tmp_path) / "test_ephemeral_registry.sqlite3")
