@@ -135,8 +135,9 @@ failures, duplicate/non-string keys, non-finite numbers, oversized nesting,
 item-count or string ceilings, and non-JSON values. Declared output paths must
 resolve inside the unique workspace sandbox and cannot be symlink escapes.
 
-The registry binds deterministic callable bytes rather than process-specific
-`repr()` values. Revocation changes the adapter identity and blocks later calls.
+The registry binds portable callable source identity (module, qualified name, and
+SHA-256 of source text) rather than process- or checkout-specific bytecode/`repr()`
+values. Revocation changes the adapter identity and blocks later calls.
 
 ## Lifecycle and cleanup
 

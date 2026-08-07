@@ -1394,7 +1394,7 @@ def advance_spatial_action_certificate_v2(
         "PREPARED": "OPEN", "OPEN": "APPROVAL", "APPROVED": "EXECUTION",
         "EXECUTED": "OUTCOME",
     }[status]
-    moment = time.time() if timestamp is None else _finite(timestamp, "timestamp")
+    moment = _trusted_now(timestamp)
     if moment >= certificate["expires_at"]:
         raise ValueError("certificate transition is expired")
     if certificate["receipts"] and moment < certificate["receipts"][-1]["timestamp"]:

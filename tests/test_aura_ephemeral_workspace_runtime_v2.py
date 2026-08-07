@@ -1047,6 +1047,34 @@ def test_master_negative_revoked_lease_denies_execution(tmp_path: Path) -> None:
     assert cleanup["ok"] and cleanup["state"] == "DISSOLVED"
 
 
+def test_certificate_advancement_clamps_backdated_receipt_timestamp_to_trusted_now(
+    tmp_path: Path,
+) -> None:
+    _, registry, _, _, store, workspace_id = _admitted(tmp_path)
+    assert runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )["ok"]
+    prepared = runtime.prepare_spatial_action_certificate_v2(
+        workspace_id, store=store,
+        principal_id="human:dallas", requested_operation="PREPARE_FORGE_HANDOFF",
+        subject_refs=["source:aura"], target_refs=["forge:candidate"],
+        policy_digest=D["1"], approval_class="HUMAN_EXPLICIT",
+        runtime_environment_digest=D["2"], effect_boundary="PROPOSAL_ONLY",
+        assumptions_digest=D["3"], cost_microusd=0, reversible=True,
+        proof_obligations=["EXACT_SOURCE"], nonce="cert-trusted-receipt-time",
+        expires_at=time.time() + 120,
+    )["certificate"]
+    real_before = time.time()
+    advanced = runtime.advance_spatial_action_certificate_v2(
+        workspace_id, store=store, expected_status="PREPARED",
+        evidence_digest=D["4"], owner="spatial_runtime",
+        timestamp=prepared["issued_at"] - 3600,
+    )["certificate"]
+    receipt_time = advanced["receipts"][-1]["timestamp"]
+    assert receipt_time >= real_before
+    assert receipt_time > prepared["issued_at"] - 3600
+
+
 def test_master_negative_runtime_cannot_close_certificate_with_self_proof(tmp_path: Path) -> None:
     _, registry, _, _, store, workspace_id = _admitted(tmp_path)
     assert runtime.activate_workspace_v2(
