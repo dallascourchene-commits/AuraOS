@@ -304,7 +304,12 @@ def _execute_bounded_callback(
                         )
                     if time.monotonic() >= deadline_monotonic:
                         return _bounded_event("DEADLINE", "adapter_deadline_exceeded", "budget")
-                    parent.send_bytes(b"execute")
+                    try:
+                        parent.send_bytes(b"execute")
+                    except OSError:
+                        return _bounded_event(
+                            "WORKER_ERROR", "bounded_adapter_protocol_failure", "environment"
+                        )
                     continue
                 if kind == "result" and ready:
                     try:
@@ -435,6 +440,8 @@ class AdapterMetadata:
             raise ValueError("invalid operational_status")
         if self.revocation_state not in _REVOCATION_STATES:
             raise ValueError("invalid revocation_state")
+        if self.identity_version != ADAPTER_IDENTITY_VERSION:
+            raise ValueError("invalid identity_version")
         self.input_schema = _strict_mapping(self.input_schema, "input_schema")
         self.output_schema = _strict_mapping(self.output_schema, "output_schema")
         for name in (

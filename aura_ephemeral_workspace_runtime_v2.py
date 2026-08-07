@@ -780,7 +780,11 @@ def _expire_if_needed(workspace_id: str, *, store: EphemeralRegistryStore, now: 
         moved = store.transition_workspace_v2(workspace_id, record["state"], "EXPIRING",
                                               terminal_reason="ttl_expired")
         if not moved.get("ok"):
-            raise ValueError("workspace expiry lost its state race")
+            record = _workspace(store, workspace_id)
+            if record["state"] not in _TERMINAL_PREP and record["state"] not in {
+                "DISSOLVING", "DISSOLVED",
+            }:
+                raise ValueError("workspace expiry lost its state race")
     _cleanup_workspace_v2(workspace_id, store=store, reason="ttl_expired")
     raise ValueError("workspace is expired and dissolved")
 

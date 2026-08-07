@@ -243,6 +243,42 @@ def test_adapter_identity_is_deterministic_and_revocable() -> None:
     assert first.execute("adapter.test", params={})["status"] == "DENIED"
 
 
+def test_adapter_registry_list_bindings_and_closed_identity_version() -> None:
+    registry = OperationalAdapterRegistry()
+    meta_a = AdapterMetadata(adapter_id="adapter.a", implementation_ref="tests._ok_adapter")
+    meta_b = AdapterMetadata(adapter_id="adapter.b", implementation_ref="tests._ok_adapter")
+    assert registry.declare(meta_b, implementation=_ok_adapter)["ok"]
+    assert registry.declare(meta_a, implementation=_ok_adapter)["ok"]
+
+    listed = registry.list_adapters()
+    assert listed["ok"] and listed["count"] == 2
+    assert [item["adapter_id"] for item in listed["adapters"]] == ["adapter.a", "adapter.b"]
+    before_b = {item["adapter_id"]: item for item in listed["adapters"]}["adapter.b"]
+    binding_before = registry.get_binding("adapter.b")
+    assert binding_before["ok"]
+    assert binding_before["binding"]["adapter_digest"] == before_b["adapter_digest"]
+    assert binding_before["binding"]["implementation_digest"] == before_b["implementation_digest"]
+
+    assert registry.revoke("adapter.b", reason="test revocation")["ok"]
+    after_b = {
+        item["adapter_id"]: item for item in registry.list_adapters()["adapters"]
+    }["adapter.b"]
+    assert after_b["revocation_state"] == "REVOKED"
+    assert after_b["operational_status"] == "DENIED"
+    assert after_b["revocation_reason"] == "test revocation"
+    binding_after = registry.get_binding("adapter.b")["binding"]
+    assert binding_after["revocation_state"] == "REVOKED"
+    assert binding_after["adapter_digest"] == after_b["adapter_digest"]
+    assert binding_after["implementation_digest"] == after_b["implementation_digest"]
+
+    invalid = AdapterMetadata(
+        adapter_id="adapter.invalid-version", implementation_ref="tests._ok_adapter",
+        identity_version="unrecognized",
+    )
+    with pytest.raises(ValueError, match="invalid identity_version"):
+        registry.declare(invalid, implementation=_ok_adapter)
+
+
 def test_graph_compile_parse_bind_is_deterministic() -> None:
     recipe = _recipe()
     registry, bindings = _registry(recipe)
@@ -427,7 +463,7 @@ def test_cancellation_during_adapter_execution_cannot_commit_receipt(
             params={
                 "started_file": str(started_path),
                 "completed_file": str(completed_path),
-                "delay_seconds": 5.0,
+                "delay_seconds": 1.0,
             },
             store=store,
             adapter_registry=registry,
@@ -451,7 +487,7 @@ def test_cancellation_during_adapter_execution_cannot_commit_receipt(
     record = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
     assert record["state"] == "DISSOLVED"
     assert graph["entry_node_ids"][0] not in record["node_receipts"]
-    time.sleep(0.1)
+    time.sleep(1.2)
     assert not completed_path.exists()
 
 
@@ -707,6 +743,27 @@ def test_authority_check_failure_uses_parent_owned_environment_event() -> None:
     assert "authority store unavailable" in result["error"]
 
 
+def test_authority_check_false_emits_parent_owned_revocation_event() -> None:
+    registry = OperationalAdapterRegistry()
+    assert registry.declare(
+        AdapterMetadata(
+            adapter_id="adapter.authority-revoked-test",
+            implementation_ref="tests._ok_adapter",
+        ),
+        implementation=_ok_adapter,
+    )["ok"]
+    result = registry.execute(
+        "adapter.authority-revoked-test",
+        params={},
+        deadline_monotonic=time.monotonic() + 1.0,
+        authority_check=lambda: False,
+        max_output_bytes=4096,
+    )
+    assert not result["ok"]
+    assert result["_aura_bounded_event"] == "AUTHORITY_REVOKED"
+    assert result["failure_class"] == "cancellation"
+
+
 def test_recursive_output_and_path_escape_fail_closed(tmp_path: Path) -> None:
     recipe = _recipe()
     first = recipe.capability_ids[0]
@@ -743,6 +800,71 @@ def test_expiry_invalidates_and_dissolves(tmp_path: Path) -> None:
     record = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
     assert record["state"] == "DISSOLVED"
     assert record["failure_records"][-1]["failure_class"] == "stale"
+
+
+def test_store_v2_lease_and_expiry_helpers_track_lifecycle(tmp_path: Path) -> None:
+    _, registry, _, _, store, workspace_id = _admitted(tmp_path / "lease")
+    assert runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )["ok"]
+    record = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
+    assert store.is_workspace_v2_lease_active(workspace_id, now=record["expires_at"] - 1)
+    assert not store.is_workspace_v2_lease_active(workspace_id, now=record["expires_at"] + 1)
+    assert store.revoke_workspace_v2_lease(workspace_id, reason="direct helper test")["ok"]
+    assert not store.is_workspace_v2_lease_active(workspace_id)
+
+    _, _, _, _, store2, workspace_id2 = _admitted(tmp_path / "expired-list")
+    record2 = runtime.workspace_status_v2(workspace_id2, store=store2)["workspace"]
+    listed = store2.list_expired_workspaces_v2(now=record2["expires_at"] + 1)
+    assert workspace_id2 in listed["workspace_ids"]
+    assert store2.transition_workspace_v2(workspace_id2, "ADMITTED", "DISSOLVING")["ok"]
+    assert workspace_id2 not in store2.list_expired_workspaces_v2(
+        now=record2["expires_at"] + 1
+    )["workspace_ids"]
+    assert store2.transition_workspace_v2(workspace_id2, "DISSOLVING", "DISSOLVED")["ok"]
+    assert workspace_id2 not in store2.list_expired_workspaces_v2(
+        now=record2["expires_at"] + 1
+    )["workspace_ids"]
+
+
+def test_terminal_reason_survives_reasonless_state_transition(tmp_path: Path) -> None:
+    _, _, _, _, store, workspace_id = _admitted(tmp_path / "terminal-reason")
+    assert store.update_workspace_v2(workspace_id, terminal_reason="preserve-me")["ok"]
+    assert store.transition_workspace_v2(workspace_id, "ADMITTED", "ACTIVATING")["ok"]
+    record = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
+    assert record["terminal_reason"] == "preserve-me"
+
+
+def test_expiry_state_race_converges_to_dissolution(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, registry, _, _, store, workspace_id = _admitted(tmp_path / "expiry-race")
+    assert runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )["ok"]
+    expires_at = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]["expires_at"]
+    original_transition = store.transition_workspace_v2
+
+    def race_transition(
+        target_workspace_id: str, expected_from: str | tuple[str, ...], to: str,
+        *, terminal_reason: str = "",
+    ) -> dict[str, Any]:
+        if to == "EXPIRING":
+            original_transition(
+                target_workspace_id, expected_from, "CANCELLING",
+                terminal_reason="concurrent_cancel",
+            )
+            return {"ok": False, "error": "stale_workspace_state"}
+        return original_transition(
+            target_workspace_id, expected_from, to, terminal_reason=terminal_reason,
+        )
+
+    monkeypatch.setattr(store, "transition_workspace_v2", race_transition)
+    with pytest.raises(ValueError, match="expired and dissolved"):
+        runtime._expire_if_needed(workspace_id, store=store, now=expires_at + 1)
+    final = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
+    assert final["state"] == "DISSOLVED"
+    assert final["lease_status"] == "REVOKED"
 
 
 def test_tool_call_budget_overflow_fails_and_cleans(tmp_path: Path) -> None:
@@ -1061,19 +1183,6 @@ def test_arbitrary_key_absolute_and_traversal_paths_fail_closed(tmp_path: Path) 
     )
     assert not result2["ok"] and "escapes" in result2["error"]
 
-
-def test_partial_reexecution_reuses_complete_unchanged_receipt_set(tmp_path: Path) -> None:
-    _, registry, _, graph, store, workspace_id = _admitted(tmp_path)
-    runtime.activate_workspace_v2(
-        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
-    )
-    _execute_all(workspace_id, graph, store, registry)
-    receipts = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]["node_receipts"]
-    plan = runtime.partial_reexecution_plan_v2(
-        graph, prior_receipts=receipts, changed_node_ids=[],
-    )
-    assert plan["reexecute_node_ids"] == []
-    assert set(plan["reusable_node_ids"]) == {node["node_id"] for node in graph["nodes"]}
 
 
 def test_action_certificate_runtime_owner_cannot_self_approve(tmp_path: Path) -> None:

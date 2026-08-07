@@ -503,9 +503,12 @@ class EphemeralRegistryStore:
         conn = self._conn
         assert conn is not None
         placeholders = ",".join("?" for _ in expected)
-        params: tuple[Any, ...] = (to, time.time(), terminal_reason, workspace_id, *expected)
+        params: tuple[Any, ...] = (
+            to, time.time(), 1 if terminal_reason else 0, terminal_reason, workspace_id, *expected,
+        )
         cur = conn.execute(
-            f"UPDATE ephemeral_workspaces_v2 SET state = ?, updated_at = ?, terminal_reason = ? "
+            f"UPDATE ephemeral_workspaces_v2 SET state = ?, updated_at = ?, "
+            f"terminal_reason = CASE WHEN ? THEN ? ELSE terminal_reason END "
             f"WHERE workspace_id = ? AND state IN ({placeholders})",
             params,
         )
