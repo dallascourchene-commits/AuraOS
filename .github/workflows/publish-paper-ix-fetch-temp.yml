@@ -1,0 +1,69 @@
+name: Temporary Paper IX binary fetch
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-paper:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout publication branch
+        uses: actions/checkout@v4
+        with:
+          ref: docs/publish-paper-ix-readme-architecture
+          fetch-depth: 0
+
+      - name: Download canonical Paper IX PDF from Zenodo
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import pathlib
+          import urllib.request
+
+          record = 'https://zenodo.org/api/records/21843659'
+          target = pathlib.Path('papers/AuraOS_Paper_IX_Objective_Native_Commons_Proof_Carrying_Contribution_Economies.pdf')
+          target.parent.mkdir(parents=True, exist_ok=True)
+
+          with urllib.request.urlopen(record, timeout=60) as r:
+              metadata = json.load(r)
+
+          pdfs = []
+          for item in metadata.get('files', []):
+              key = str(item.get('key', ''))
+              links = item.get('links') or {}
+              url = links.get('self') or links.get('content')
+              if key.lower().endswith('.pdf') and url:
+                  pdfs.append((key, url))
+          if not pdfs:
+              raise SystemExit('Zenodo record 21843659 contains no PDF')
+          pdfs.sort(key=lambda p: (0 if ('paper' in p[0].lower() and ('ix' in p[0].lower() or '9' in p[0].lower())) else 1, p[0]))
+          key, url = pdfs[0]
+          with urllib.request.urlopen(url, timeout=120) as r:
+              data = r.read()
+          if not data.startswith(b'%PDF-') or len(data) < 10000:
+              raise SystemExit(f'Invalid PDF fetched from Zenodo: {key}, {len(data)} bytes')
+          target.write_bytes(data)
+          print(f'Fetched {key}: {len(data)} bytes')
+          PY
+
+      - name: Commit PDF to publication branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add papers/AuraOS_Paper_IX_Objective_Native_Commons_Proof_Carrying_Contribution_Economies.pdf
+          if git diff --cached --quiet; then
+            echo 'Paper already present.'
+            exit 0
+          fi
+          git commit -m 'docs: publish AuraOS Paper IX N51-N87'
+          git push origin HEAD:docs/publish-paper-ix-readme-architecture
