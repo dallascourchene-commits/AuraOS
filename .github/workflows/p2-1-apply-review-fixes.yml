@@ -1,4 +1,4 @@
-name: PR2 final CODEMAP audit 269
+name: PR2 independent audit hardening 269 round 6
 
 on:
   push:
@@ -6,14 +6,14 @@ on:
       - "analysis/pr2-review-hardening-269"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: pr2-final-codemap-audit-269
+  group: pr2-independent-audit-hardening-269-round6
   cancel-in-progress: false
 
 jobs:
-  audit:
+  harden:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -22,11 +22,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Checkout exact PR2 head
+      - name: Preserve round-six patcher and checkout exact PR2 head
         run: |
+          cp tools/pr2_review_hardening_269_round6.py /tmp/pr2_review_hardening_269_round6.py
           git fetch --no-tags origin refactor/verified-ephemeral-workspace-pr2-clean
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "b746773df5cf46548e8afa1950ff942f111f8c16"
+
+      - name: Apply enforceable callback deadline hardening
+        run: python /tmp/pr2_review_hardening_269_round6.py
 
       - uses: actions/setup-python@v5
         with:
@@ -38,61 +42,68 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Regenerate CODEMAP without publishing
+      - name: Compile PR2 sources and tests
         run: |
-          cp .aura/CODEMAP.json /tmp/CODEMAP.committed.json
-          python aura_codebase_navigator.py
-          test -s .aura/CODEMAP.json
-          test -s .aura/CODEMAP.md
-          test -s topology_map.json
-          test -s Aura_Memory/live_topology_ast.json
-          git diff --check
+          python -m py_compile \
+            aura_ephemeral_adapter_registry.py \
+            aura_ephemeral_registry_store.py \
+            aura_ephemeral_workspace_runtime_v2.py \
+            tests/test_aura_ephemeral_workspace_runtime_v2.py
 
-      - name: Classify committed-to-generated drift
+      - name: Fatal Ruff classes
         run: |
-          set +e
-          python -m aura_codemap_verify --compare-json /tmp/CODEMAP.committed.json > /tmp/codemap-comparison.json
-          comparison_status=$?
-          set -e
-          cat /tmp/codemap-comparison.json
-          printf '%s\n' "$comparison_status" > /tmp/codemap-comparison-exit-code.txt
-          git diff --name-only | sort | tee /tmp/codemap-generated-files.txt
+          python -m ruff check --select E9,F63,F7,F82 \
+            aura_ephemeral_adapter_registry.py \
+            aura_ephemeral_registry_store.py \
+            aura_ephemeral_workspace_runtime_v2.py \
+            tests/test_aura_ephemeral_workspace_runtime_v2.py
+
+      - name: Focused PR2 tests including enforceable deadlines
+        run: python -m pytest -q tests/test_aura_ephemeral_workspace_runtime_v2.py
+
+      - name: Retained V1 Phase0 and PR1 tests
+        run: |
+          python -m pytest -q \
+            tests/test_aura_ephemeral_runtime.py \
+            tests/test_aura_ephemeral_phase0_hardening.py \
+            tests/test_aura_ephemeral_workspace_contracts.py
+
+      - name: Schema meta-validation
+        run: |
           python - <<'PY'
-          from pathlib import Path
-          allowed = {
-              '.aura/CODEMAP.json',
-              '.aura/CODEMAP.md',
-              'Aura_Memory/live_topology_ast.json',
-              'topology_map.json',
-          }
-          changed = {
-              line.strip()
-              for line in Path('/tmp/codemap-generated-files.txt').read_text(encoding='utf-8').splitlines()
-              if line.strip()
-          }
-          unexpected = sorted(changed - allowed)
-          if unexpected:
-              raise SystemExit(f'unexpected non-generated CODEMAP drift: {unexpected}')
-          print(f'generated_navigation_files={sorted(changed)}')
+          import json
+          from jsonschema import Draft202012Validator
+          for path in (
+              "schemas/aura_workspace_execution_graph_v2.schema.json",
+              "schemas/aura_spatial_action_certificate_v2.schema.json",
+          ):
+              with open(path, encoding="utf-8") as handle:
+                  Draft202012Validator.check_schema(json.load(handle))
           PY
 
-      - name: Validate regenerated navigation snapshot
+      - name: Exact round-six scope and whitespace gate
         run: |
-          cp .aura/CODEMAP.json /tmp/CODEMAP.generated.json
-          python -m aura_codemap_verify --compare-json /tmp/CODEMAP.generated.json
+          printf '%s\n' \
+            aura_ephemeral_adapter_registry.py \
+            aura_ephemeral_workspace_runtime_v2.py \
+            docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md \
+            tests/test_aura_ephemeral_workspace_runtime_v2.py \
+            | sort > /tmp/expected-files.txt
+          git diff --name-only | sort > /tmp/actual-files.txt
+          diff -u /tmp/expected-files.txt /tmp/actual-files.txt
+          git diff --check
 
-      - name: Upload final CODEMAP audit evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pr2-final-codemap-audit-${{ github.run_id }}
-          path: |
-            .aura/CODEMAP.json
-            .aura/CODEMAP.md
-            topology_map.json
-            Aura_Memory/live_topology_ast.json
-            /tmp/codemap-comparison.json
-            /tmp/codemap-comparison-exit-code.txt
-            /tmp/codemap-generated-files.txt
-          if-no-files-found: error
-          retention-days: 14
+      - name: Publish PR2 round-six hardening commit
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS PR2 Independent Audit Hardener"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            aura_ephemeral_adapter_registry.py \
+            aura_ephemeral_workspace_runtime_v2.py \
+            docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md \
+            tests/test_aura_ephemeral_workspace_runtime_v2.py
+          test "$(git diff --cached --name-only | wc -l)" -eq 4
+          git diff --cached --check
+          git commit -m "PR2: Enforce callback wall-time and TTL authority"
+          git push origin HEAD:refs/heads/refactor/verified-ephemeral-workspace-pr2-clean
