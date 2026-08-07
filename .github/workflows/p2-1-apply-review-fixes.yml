@@ -1,4 +1,4 @@
-name: PR2 master exit-gate audit 269 round 4
+name: PR2 final review hardening 269 round 5
 
 on:
   push:
@@ -9,11 +9,11 @@ permissions:
   contents: write
 
 concurrency:
-  group: pr2-master-exit-gate-269-round4
+  group: pr2-final-review-hardening-269-round5
   cancel-in-progress: false
 
 jobs:
-  audit:
+  harden:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -22,15 +22,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Preserve master exit-gate patcher and checkout exact PR2 head
+      - name: Preserve round-five patcher and checkout exact PR2 head
         run: |
-          cp tools/pr2_master_exit_gate_tests_269.py /tmp/pr2_master_exit_gate_tests_269.py
+          cp tools/pr2_review_hardening_269_round5.py /tmp/pr2_review_hardening_269_round5.py
           git fetch --no-tags origin refactor/verified-ephemeral-workspace-pr2-clean
           git checkout --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "63980c1e42172e25d78855f4fbdd6863b6ee28b7"
+          test "$(git rev-parse HEAD)" = "9b5cbe3a46cd4e54e01a34b7d235469f521369dc"
 
-      - name: Add explicit master-plan adversarial regressions
-        run: python /tmp/pr2_master_exit_gate_tests_269.py
+      - name: Apply trusted certificate receipt time and documentation hardening
+        run: python /tmp/pr2_review_hardening_269_round5.py
 
       - uses: actions/setup-python@v5
         with:
@@ -58,7 +58,7 @@ jobs:
             aura_ephemeral_workspace_runtime_v2.py \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
 
-      - name: Focused PR2 tests with master exit-gate regressions
+      - name: Focused PR2 tests
         run: python -m pytest -q tests/test_aura_ephemeral_workspace_runtime_v2.py
 
       - name: Retained V1 Phase0 and PR1 tests
@@ -81,19 +81,26 @@ jobs:
                   Draft202012Validator.check_schema(json.load(handle))
           PY
 
-      - name: Exact test-only scope and whitespace gate
+      - name: Exact round-five scope and whitespace gate
         run: |
-          test "$(git diff --name-only | wc -l)" -eq 1
-          test "$(git diff --name-only)" = "tests/test_aura_ephemeral_workspace_runtime_v2.py"
+          printf '%s\n' \
+            aura_ephemeral_workspace_runtime_v2.py \
+            docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md \
+            tests/test_aura_ephemeral_workspace_runtime_v2.py > /tmp/expected-files.txt
+          git diff --name-only | sort > /tmp/actual-files.txt
+          diff -u /tmp/expected-files.txt /tmp/actual-files.txt
           git diff --check
 
-      - name: Publish PR2 master exit-gate regression commit
+      - name: Publish PR2 round-five hardening commit
         run: |
           set -euo pipefail
-          git config user.name "AuraOS PR2 Exit Gate"
+          git config user.name "AuraOS PR2 Review Hardener"
           git config user.email "actions@users.noreply.github.com"
-          git add tests/test_aura_ephemeral_workspace_runtime_v2.py
-          test "$(git diff --cached --name-only)" = "tests/test_aura_ephemeral_workspace_runtime_v2.py"
+          git add \
+            aura_ephemeral_workspace_runtime_v2.py \
+            docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md \
+            tests/test_aura_ephemeral_workspace_runtime_v2.py
+          test "$(git diff --cached --name-only | wc -l)" -eq 3
           git diff --cached --check
-          git commit -m "PR2: Prove master adversarial exit gates"
+          git commit -m "PR2: Clamp certificate receipt time to trusted clock"
           git push origin HEAD:refs/heads/refactor/verified-ephemeral-workspace-pr2-clean
