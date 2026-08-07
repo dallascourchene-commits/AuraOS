@@ -109,6 +109,14 @@ def _finite(value: Any, name: str, *, low: float = 0.0) -> float:
     return result
 
 
+def _trusted_now(candidate: float | int | None = None) -> float:
+    """Return authoritative current time; caller input can only move it forward."""
+    current = time.time()
+    if candidate is None:
+        return current
+    return max(current, _finite(candidate, "now"))
+
+
 def _exact_mapping(value: Any, name: str) -> dict[str, Any]:
     if type(value) is not dict:
         raise ValueError(f"{name} must be an exact object")
@@ -232,7 +240,7 @@ def _require_closed_authority(value: Any, name: str) -> dict[str, Any]:
 
 
 def _require_current_recipe(recipe: EphemeralWorkspaceRecipe, now: float | None = None) -> float:
-    current = time.time() if now is None else _finite(now, "now")
+    current = _trusted_now(now)
     if current >= recipe.expires_at_epoch_seconds:
         raise ValueError("workspace recipe is expired")
     return current
@@ -529,7 +537,7 @@ def admit_workspace_v2(
     now: float | None = None,
 ) -> dict[str, Any]:
     """Admit a bound, current graph into the separate V2 registry."""
-    current = time.time() if now is None else _finite(now, "now")
+    current = _trusted_now(now)
     nonce = _exact_string(activation_nonce, "activation_nonce", pattern=_ID)
     bound = bind_workspace_execution_graph_v2(
         graph,
@@ -708,7 +716,21 @@ def _cleanup_workspace_v2(
                 receipt = dict(record.get("cleanup_receipt", {}))
                 return {"ok": bool(receipt.get("cleanup_verified", True)), **receipt,
                         "state": "DISSOLVED"}
-            if record["state"] != "DISSOLVING":
+            if record["state"] in _TERMINAL_PREP:
+                retry = store.transition_workspace_v2(
+                    workspace_id, record["state"], "DISSOLVING", terminal_reason=reason,
+                )
+                if retry.get("ok"):
+                    record = _workspace(store, workspace_id)
+                else:
+                    record = _workspace(store, workspace_id)
+                    if record["state"] == "DISSOLVED":
+                        receipt = dict(record.get("cleanup_receipt", {}))
+                        return {"ok": bool(receipt.get("cleanup_verified", True)), **receipt,
+                                "state": "DISSOLVED"}
+                    if record["state"] != "DISSOLVING":
+                        raise ValueError("workspace cleanup lost its state race")
+            elif record["state"] != "DISSOLVING":
                 raise ValueError("workspace cleanup lost its state race")
         else:
             record = _workspace(store, workspace_id)
@@ -743,7 +765,7 @@ def _cleanup_workspace_v2(
 
 def _expire_if_needed(workspace_id: str, *, store: EphemeralRegistryStore, now: float | None = None) -> None:
     record = _workspace(store, workspace_id)
-    current = time.time() if now is None else _finite(now, "now")
+    current = _trusted_now(now)
     if current < record["expires_at"] or record["state"] == "DISSOLVED":
         return
     failures = list(record["failure_records"])
@@ -886,7 +908,7 @@ def execute_workspace_node_v2(
             workspace_id, store=store, failure_class="budget",
             reason="tool call budget exhausted", node_id=node_key,
         )
-    started = time.time() if now is None else _finite(now, "now")
+    started = _trusted_now(now)
     upstream_digests = [receipts[parent]["receipt_digest"] for parent in sorted(parents[node_key])]
     try:
         raw = adapter_registry.execute(
@@ -1212,7 +1234,7 @@ def prepare_spatial_action_certificate_v2(
         raise ValueError("action certificate requires an active workspace")
     if record["certificate_json"]:
         raise ValueError("workspace already has an action certificate")
-    current = time.time() if now is None else _finite(now, "now")
+    current = _trusted_now(now)
     expiry = _finite(expires_at, "expires_at")
     if not current < expiry <= record["expires_at"]:
         raise ValueError("certificate expiry must be current and workspace-bounded")
@@ -1331,7 +1353,7 @@ def validate_spatial_action_certificate_v2(
             raise ValueError("certificate is not bound to the current workspace")
         if record.get("state") == "DISSOLVED" and value["status"] != "CLOSED":
             raise ValueError("open certificate cannot survive workspace dissolution")
-    current = time.time() if now is None else _finite(now, "now")
+    current = _trusted_now(now)
     if current >= value["expires_at"] and value["status"] != "CLOSED":
         raise ValueError("action certificate is expired")
     if stable_digest(_certificate_body(value)) != value["certificate_digest"]:

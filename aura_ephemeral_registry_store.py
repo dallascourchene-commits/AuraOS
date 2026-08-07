@@ -23,6 +23,18 @@ VSA_PATCH_AUTHORITY = False
 SCHEMA_VERSION = 2
 
 
+def _trusted_now(candidate: float | int | None = None) -> float:
+    current = time.time()
+    if candidate is None:
+        return current
+    if type(candidate) not in {int, float} or type(candidate) is bool:
+        raise ValueError("now must be a finite number")
+    supplied = float(candidate)
+    if not math.isfinite(supplied):
+        raise ValueError("now must be a finite number")
+    return max(current, supplied)
+
+
 def _default_db_path(repo_root: str | Path = ".") -> Path:
     return Path(repo_root).resolve() / ".aura" / "runtime" / "ephemeral_registry.sqlite3"
 
@@ -560,12 +572,7 @@ class EphemeralRegistryStore:
         """CAS one certificate while the workspace retains execution authority."""
         if type(expected_certificate) is not dict or type(certificate) is not dict:
             raise ValueError("certificate CAS values must be exact objects")
-        current_time = time.time() if now is None else now
-        if type(current_time) not in {int, float} or type(current_time) is bool:
-            raise ValueError("now must be a finite number")
-        current_time = float(current_time)
-        if not math.isfinite(current_time):
-            raise ValueError("now must be a finite number")
+        current_time = _trusted_now(now)
         expected_json = self._workspace_v2_json(expected_certificate, "expected_certificate")
         certificate_json = self._workspace_v2_json(certificate, "certificate")
         conn = self._conn
@@ -619,12 +626,7 @@ class EphemeralRegistryStore:
         ):
             if type(value) is not dict:
                 raise ValueError(f"{name} must be an exact object")
-        current_time = time.time() if now is None else now
-        if type(current_time) not in {int, float}:
-            raise ValueError("now must be a finite number")
-        current_time = float(current_time)
-        if not (current_time == current_time and abs(current_time) != float("inf")):
-            raise ValueError("now must be a finite number")
+        current_time = _trusted_now(now)
         expected_receipts_json = self._workspace_v2_json(
             expected_node_receipts, "expected_node_receipts"
         )
@@ -700,12 +702,7 @@ class EphemeralRegistryStore:
         )
 
     def is_workspace_v2_lease_active(self, workspace_id: str, *, now: float | None = None) -> bool:
-        current = time.time() if now is None else now
-        if type(current) not in {int, float} or type(current) is bool:
-            raise ValueError("now must be a finite number")
-        current = float(current)
-        if not math.isfinite(current):
-            raise ValueError("now must be a finite number")
+        current = _trusted_now(now)
         conn = self._conn
         assert conn is not None
         row = conn.execute(
@@ -716,12 +713,7 @@ class EphemeralRegistryStore:
                     and row[2] not in {"DISSOLVING", "DISSOLVED"})
 
     def list_expired_workspaces_v2(self, *, now: float | None = None) -> dict[str, Any]:
-        current = time.time() if now is None else now
-        if type(current) not in {int, float} or type(current) is bool:
-            raise ValueError("now must be a finite number")
-        current = float(current)
-        if not math.isfinite(current):
-            raise ValueError("now must be a finite number")
+        current = _trusted_now(now)
         conn = self._conn
         assert conn is not None
         rows = conn.execute(

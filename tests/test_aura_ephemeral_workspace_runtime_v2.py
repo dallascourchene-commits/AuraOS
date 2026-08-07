@@ -818,3 +818,96 @@ def test_action_certificate_requires_active_state_and_uses_cas(tmp_path: Path) -
         )
     cleanup = runtime.dissolve_workspace_v2(workspace_id, store=store, reason="test_cleanup")
     assert cleanup["ok"] and cleanup["state"] == "DISSOLVED"
+
+
+def test_cleanup_converges_when_cancellation_wins_first_transition(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, registry, _, _, store, workspace_id = _admitted(tmp_path)
+    runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )
+    original = store.transition_workspace_v2
+    injected = {"done": False}
+
+    def racing_transition(workspace: str, expected: Any, target: str, *, terminal_reason: str = ""):
+        if not injected["done"] and expected == "ACTIVE" and target == "DISSOLVING":
+            injected["done"] = True
+            assert original(
+                workspace, "ACTIVE", "CANCELLING", terminal_reason="concurrent_cancel",
+            )["ok"]
+            return {"ok": False, "error": "stale_workspace_state"}
+        return original(workspace, expected, target, terminal_reason=terminal_reason)
+
+    monkeypatch.setattr(store, "transition_workspace_v2", racing_transition)
+    result = runtime.dissolve_workspace_v2(workspace_id, store=store, reason="explicit_cleanup")
+    assert injected["done"] is True
+    assert result["ok"] and result["state"] == "DISSOLVED"
+    assert runtime.workspace_status_v2(workspace_id, store=store)["workspace"]["state"] == "DISSOLVED"
+
+
+def test_backdated_now_cannot_bypass_workspace_expiry(tmp_path: Path) -> None:
+    _, registry, _, graph, store, workspace_id = _admitted(tmp_path)
+    runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )
+    assert store._conn is not None
+    store._conn.execute(
+        "UPDATE ephemeral_workspaces_v2 SET expires_at = ? WHERE workspace_id = ?",
+        (time.time() - 1, workspace_id),
+    )
+    with pytest.raises(ValueError, match="expired and dissolved"):
+        runtime.execute_workspace_node_v2(
+            workspace_id, graph["entry_node_ids"][0], params={}, store=store,
+            adapter_registry=registry, now=time.time() - 3600,
+        )
+    assert runtime.workspace_status_v2(workspace_id, store=store)["workspace"]["state"] == "DISSOLVED"
+
+
+def test_certificate_mutation_rejects_backdated_authority_after_expiry(tmp_path: Path) -> None:
+    _, registry, _, _, store, workspace_id = _admitted(tmp_path / "prepare")
+    runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )
+    assert store._conn is not None
+    store._conn.execute(
+        "UPDATE ephemeral_workspaces_v2 SET expires_at = ? WHERE workspace_id = ?",
+        (time.time() - 1, workspace_id),
+    )
+    with pytest.raises(ValueError, match="certificate expiry"):
+        runtime.prepare_spatial_action_certificate_v2(
+            workspace_id, store=store,
+            principal_id="human:dallas", requested_operation="PREPARE_FORGE_HANDOFF",
+            subject_refs=["source:aura"], target_refs=["forge:candidate"],
+            policy_digest=D["1"], approval_class="HUMAN_EXPLICIT",
+            runtime_environment_digest=D["2"], effect_boundary="PROPOSAL_ONLY",
+            assumptions_digest=D["3"], cost_microusd=0, reversible=True,
+            proof_obligations=["EXACT_SOURCE"], nonce="cert-backdated-prepare",
+            expires_at=time.time() + 120, now=time.time() - 3600,
+        )
+
+    _, registry2, _, _, store2, workspace_id2 = _admitted(tmp_path / "advance")
+    runtime.activate_workspace_v2(
+        workspace_id2, store=store2, adapter_registry=registry2, repo_root=str(ROOT),
+    )
+    prepared = runtime.prepare_spatial_action_certificate_v2(
+        workspace_id2, store=store2,
+        principal_id="human:dallas", requested_operation="PREPARE_FORGE_HANDOFF",
+        subject_refs=["source:aura"], target_refs=["forge:candidate"],
+        policy_digest=D["1"], approval_class="HUMAN_EXPLICIT",
+        runtime_environment_digest=D["2"], effect_boundary="PROPOSAL_ONLY",
+        assumptions_digest=D["3"], cost_microusd=0, reversible=True,
+        proof_obligations=["EXACT_SOURCE"], nonce="cert-backdated-advance",
+        expires_at=time.time() + 120,
+    )["certificate"]
+    assert store2._conn is not None
+    store2._conn.execute(
+        "UPDATE ephemeral_workspaces_v2 SET expires_at = ? WHERE workspace_id = ?",
+        (time.time() - 1, workspace_id2),
+    )
+    with pytest.raises(ValueError, match="workspace_certificate_invalidated"):
+        runtime.advance_spatial_action_certificate_v2(
+            workspace_id2, store=store2, expected_status="PREPARED",
+            evidence_digest=D["4"], owner="spatial_runtime",
+            timestamp=prepared["issued_at"],
+        )
