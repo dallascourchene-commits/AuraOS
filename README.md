@@ -1,91 +1,303 @@
 # AuraOS
 
-**AuraOS — Augmented Universal Reasoning Architecture — is a sovereign, local-first cognitive operating substrate that compiles human intent into grounded, governed, temporary capability systems.**
+**Augmented Universal Reasoning Architecture**
 
-Aura is not a single language model and does not depend on one provider. Local deterministic components, exact repository evidence, finite-state guards, capability leases, verifiers, human governance, and purpose-limited memory form the operating system. Hermes, Codex, Fireworks-backed models, OpenAI-compatible endpoints, local Ollama models, and other agents can serve as replaceable workers inside that system.
+> **A sovereign, local-first, objective-native cognitive operating substrate that compiles human intent into grounded, governed, temporary capability systems.**
 
-Aura began as a locally controlled Anishinaabemowin learning system. That origin shaped its continuing design priorities: sovereignty, local operation, data minimization, provenance, explicit consent, purpose-limited sharing, revocable authority, and human/community governance. Aura keeps its sources distinct: Anishinaabemowin-derived governance alignments, an Athabaskan-inspired six-slot software ordering contract, and Aura's machine-oriented finite-state routing grammar are related design influences, not one flattened linguistic claim.
+AuraOS is **not a single LLM, chatbot, autonomous super-agent, or monolithic application**. It is an architecture for coordinating deterministic software, exact evidence, human governance, and replaceable AI workers without allowing probabilistic output to silently become truth or authority.
+
+**Repository status:** active research and development  
+**Software license:** GNU AGPL v3.0  
+**Research record:** nine defensive prior-art papers, claims **N1–N87**  
+**Latest paper:** [Paper IX — Zenodo 21843659](https://zenodo.org/records/21843659) · [repository PDF](papers/AuraOS_Paper_IX_Objective_Native_Commons_Proof_Carrying_Contribution_Economies.pdf)
 
 > **Meaning may guide discovery. Only exact grounded evidence and authorized governance may grant authority.**
 
-## What Aura does
+---
+
+## Contents
+
+- [Aura in one diagram](#aura-in-one-diagram)
+- [What makes Aura different](#what-makes-aura-different)
+- [Architecture at a glance](#architecture-at-a-glance)
+- [Current implemented surfaces](#current-implemented-surfaces)
+- [What is implemented vs. what is future architecture](#what-is-implemented-vs-what-is-future-architecture)
+- [Quick start](#quick-start)
+- [Using Aura with AI coding agents](#using-aura-with-ai-coding-agents)
+- [Research and prior art](#research-and-prior-art)
+- [Detailed architecture](#detailed-architecture)
+- [Domain Arenas](#domain-arenas)
+- [Truth, authority, and safety](#truth-authority-and-safety)
+- [Evidence and benchmarks](#evidence-and-benchmarks)
+- [Documentation map](#documentation-map)
+- [Origins, sovereignty, and data governance](#origins-sovereignty-and-data-governance)
+- [Licensing](#licensing)
+
+---
+
+# Aura in one diagram
 
 ```text
-ordinary human objective
-  → intent ingestion and lexical addressing
-  → DIR → ASP → CLASS → SUBJ → VOICE → STEM
-  → semantic LEXC and machine WFST admission
-  → capability discovery and reuse
-  → exact files, symbols, spans, hashes, tests, and boundaries
-  → bounded Arena and capability leases
-  → deterministic tools and optional external workers
-  → staged proposal
-  → tests, verifiers, and governance
-  → human/community decision
-  → receipts, experience, telemetry, and review-gated learning
+HUMAN / COMMUNITY OBJECTIVE
+        │
+        ▼
+INTENT + CONSTRAINTS + PROHIBITIONS
+        │
+        ▼
+lexical addressing + six-slot intent
+DIR → ASP → CLASS → SUBJ → VOICE → STEM
+        │
+        ▼
+semantic LEXC + guarded machine WFST
+hard admission rules before soft ranking
+        │
+        ▼
+RELATIONAL ORIENTATION
+CODEMAP + topology + Connectome + Atlas/Compass
+        │
+        ▼
+MINIMUM SUFFICIENT EXACT EVIDENCE
+files + symbols + spans + hashes + tests + contracts
+        │
+        ▼
+BOUNDED ARENA
+objective-specific context + capability leases + budgets
+        │
+        ├── deterministic tools
+        ├── human participants
+        └── replaceable AI/model workers
+        │
+        ▼
+STAGED RESULT / PROPOSAL
+        │
+        ▼
+TESTS + VERIFIERS + RECEIPTS + GOVERNANCE
+        │
+        ▼
+AUTHORIZED HUMAN / COMMUNITY DISPOSITION
+        │
+        ▼
+EXPERIENCE + PROVENANCE + REVIEW-GATED LEARNING
+        │
+        ▼
+REVOKE LEASES + DISSOLVE TEMPORARY STATE
 ```
 
-This architecture is designed to reduce unnecessary context, preserve exact evidence, make model behavior replaceable, and keep consequential authority outside probabilistic outputs.
+The architecture is designed around one separation:
 
-## Current system map
+```text
+intelligence may propose, search, rank, compose, simulate, and explain
+                              ≠
+truth, authority, verification, persistence, payment, or consequential action
+```
 
-AuraOS now contains a connected family of operating surfaces rather than one monolithic agent.
+External models are workers inside this system. They are not Aura's canonical memory, control plane, verifier, or sovereign decision-maker.
 
-| Surface | Implemented role | Authority boundary |
+---
+
+# What makes Aura different
+
+### Objective-native rather than app-native
+
+Aura begins with **what a person or community is trying to accomplish**, then resolves the smallest useful set of capabilities and evidence. The long-term architecture does not require every objective to begin inside a fixed monolithic application.
+
+### Deterministic control around probabilistic intelligence
+
+LLMs may reason, propose, summarize, generate, or critique. Admission, authority, state transitions, leases, exact source identity, verification, and stopping conditions remain program- and governance-owned.
+
+### Minimum-sufficient context
+
+Aura tries to avoid giving every worker the entire repository, history, database, or user profile. CODEMAP, topology, relational synthesis, exact slicing, compact state, and capability resolution narrow work to the evidence required for the objective.
+
+### Reuse before invention
+
+The Capability Connectome, Genome Resolver, Relationship Atlas/Compass, and emergent-capability analysis help determine what already exists, how it is connected, what is missing, and what should not be duplicated.
+
+### Arena lifecycle
+
+An **Arena** is a bounded objective-specific execution environment, not simply a chat session. It can contain humans, deterministic tools, models, capabilities, evidence, leases, verifiers, budgets, and an explicit lifecycle.
+
+### Canonical ownership
+
+Aura avoids creating duplicate truth, memory, routing, verification, persistence, policy, or authority planes. Projections, visualizations, vector representations, model output, and generated interfaces remain subordinate to their canonical owners.
+
+### Proof and provenance
+
+Important work is attached to exact source/state identity, tests, verifier evidence, receipts, Attempt Archive history, provenance, and human/community disposition rather than being accepted because a model sounded confident.
+
+### Local-first sovereignty
+
+Aura originated from a locally controlled language-learning system. Data minimization, purpose limitation, restricted egress, revocable authority, community governance, and local operation remain architectural requirements rather than optional product features.
+
+---
+
+# Architecture at a glance
+
+Aura can be understood as seven cooperating layers.
+
+| Layer | Role | Representative owners |
 |---|---|---|
-| **Native Cockpit** | Ingests structured objectives, resolves capabilities, prepares bounded handoffs, and routes work to existing Aura lanes | Planning and preparation only |
-| **Aura Observatory** | Shows lexical addressing, six-slot intent, FST route, CODEMAP localization, compression, topology, and worker handoff | Glass-box review surface; no execution or permission |
-| **Human Agent Arena** | Runs `FRAME → GROUND → PLAN → ACT → PROVE → DECIDE` with exact evidence and human gates | Guarded execution and review; no automatic merge |
-| **Coding Workbench / Coding Arena** | Localizes code, ranks bounded regions, builds change graphs, prepares capsules, and verifies candidate work | Exact source spans and hashes remain patch authority |
-| **Aura Forge** | Compiles a frozen Coding Arena plan and Arena Evidence Contract, then runs bounded Council–Surgeon slice sessions | Stops at verifier-backed human review; no automatic commit, PR, merge, or production mutation |
-| **Aura Gate** | Wraps an exact Forge contract with verified OIDC identity, static policy, expiring leases, governed egress, MCP/A2A adapters, comparisons, and append-only audit evidence | Private Forge-specific proof; no identity-in-body trust, automatic promotion, or release authority |
-| **Coding Waboose** | Computes exact diff/symbol/dependency impact, runs deterministic scans, and lets coding agents steer run-specific evidence review | Review only; agent findings cannot self-confirm or mutate, commit, push, open, or merge |
-| **Runtime Refactor Harness** | Boots a repository-declared loopback application in an external virtual environment, drives a real probe/browser, captures exact artifacts, and binds failing and repaired receipts | Observation and verification only; no automatic patch, commit, push, PR, or merge |
-| **Bilateral Live Repair / Spatial Foundry** | Captures one explicit bounded incident, compiles a deterministic replay, delegates exact Runtime Profile V2 proof and governed U7 reproof, preserves failed repair evidence, and projects the result in Showcase | Adapter and projection only; no background recording, production hot-swap, merge, deployment, physical-work, professional, or learning-promotion authority |
-| **Agent Arena Bridge** | Exposes bounded CLI/MCP workflows, external-agent handoffs, and exact GitHub publication contracts using server-side compare-and-swap | External agents may prepare or explicitly publish bounded changes; merge authority remains separate and human-controlled |
-| **Planning Board** | Represents proposal-only goals, actions, predicates, constraints, backward regression, forward replay, and continuity stages | Cannot execute or authorize actions |
-| **Civic Commons Arena** | Coordinates governed civic objectives, evidence, needs, resources, scenarios, consent, dissent, and reversible pilots | Non-binding; no funding, voting, legal approval, or person-level targeting |
-| **Construction Arena** | Replays exact project state, evaluates blocked/admissible proposals, and projects bounded Human Agent and Observatory views | No physical work, payment, access, equipment, or professional authority |
-| **Spatial Arena** | Projects canonical domain state into immutable scenes and runs a governed `FRAME → GROUND → COMPILE_SCENE → PLAN_RENDER → PRESENT → INTERACT → PROVE → DECIDE → DISSOLVE` lifecycle | Presentation and proposal only; no domain mutation, renderer authority, raw-sensor retention, automatic resume, or merge |
-| **Financial Arena** | Stores immutable Decimal-based exact-state financial records and explicit truth classes | No advice, prediction, transaction, connector, or account-mutation authority |
-| **Learning Arena / Crucible** | Mines verified `ArenaExperience` records across TRAIN, VALIDATION, and SHADOW | Emits `CRYSTALLIZATION_PROPOSED`; never auto-promotes code, grammar, or policy |
-| **Ephemeral Organ Runtime** | Compiles temporary capability systems with manifests, leases, sandbox policy, verification, dissolution, and receipts | No ambient authority; arbitrary components fail closed without a real sandbox |
-| **Model Cognome** | Records endpoint capability evidence, usage, cost, latency, drift, replay, shadow, and governed route proposals | Active routing changes require explicit authorization and verification |
-| **Empirical Cost Observatory** | Separates measured, calculated, estimated, and unavailable usage/cost evidence | Measurement cannot mutate production or upgrade a claim class |
+| **1. Intent & admission** | Convert objectives into structured intent and reject inadmissible routes before model reasoning | lexical addressing, six-slot intent, semantic LEXC, `aura_fst_routing.py` |
+| **2. Architecture self-understanding** | Discover exact repository/domain structure and existing capabilities | CODEMAP, topology, Topological Context Anchor, Connectome, Genome Resolver, Relationship Atlas/Compass |
+| **3. Advisory cognition** | Rank, compress, recall, compare, and discover possibilities without gaining authority | VSA/HDC, DREAM, QDKT, JSpace, ST3GG, MUSIC, MITOSIS, emergent-property analysis |
+| **4. Arena execution** | Assemble objective-specific context, participants, tools, capabilities, budgets, and leases | Human Agent Arena, Coding Arena, Forge, Gate, Agent Bridge, Ephemeral Organ Runtime |
+| **5. Verification & governance** | Prove bounded predicates and keep consequential disposition external to model output | tests, verifiers, relational authority, Council/Surgeon boundaries, human/community decision |
+| **6. Continuity & experience** | Preserve exact execution state, failed attempts, receipts, checkpoints, and reviewable experience | State Ledger, Attempt Archive, Temporal Persistence, ArenaExperience, Crucible |
+| **7. Projection & manifestation** | Render canonical state as spatial, visual, textual, voice, or generated interfaces without transferring truth ownership | Spatial Arena, Observatory, Showcase, Spatial Foundry |
 
-## Final bilateral live-repair path
+---
 
-B11–B15 completes the bilateral-intent refactor by composing existing owners rather than adding another truth, policy, persistence, verifier, rollback-authority, Construction, Crucible, or learning plane:
+# Current implemented surfaces
 
-```text
-confirmed positive + negative intent and guardrails
-  → explicit bounded “Aura, watch this” capture
-  → canonical privacy sanitization
-  → exact IncidentReplayPacket + Attempt Archive retention
-  → Runtime Profile V2 reproduction outside the source checkout
-  → positive + negative + preservation + fault proof
-  → bounded repair hypotheses and persistent no-repeat budget
-  → Surgeon for local failure / Council V3 for structural failure
-  → isolated preview and exact last-verified rollback
-  → canonical U7 P0 → P1 → current reproof
-  → human/community disposition
-  → Relationship Experience and governed QDKT observation
-  → projection-only Spatial Foundry
+The repository contains a connected set of implemented or repository-backed surfaces. Their purpose is easier to understand when grouped by function rather than by merge chronology.
+
+## Engineering and agent collaboration
+
+| Surface | What it does | What it does **not** own |
+|---|---|---|
+| **Human Agent Arena** | `FRAME → GROUND → PLAN → ACT → PROVE → DECIDE`; objective framing, exact grounding, bounded action, proof, and human disposition | automatic merge or production authority |
+| **Coding Arena / Workbench** | Localizes exact code neighborhoods, dependencies, tests, change graphs, and compact worker context | semantic similarity is not patch authority |
+| **Selective Council V3** | Architecture-level deliberation when cross-cutting reasoning is justified | direct file mutation |
+| **Surgeon** | Bounded exact-source implementation and focused repair | architecture redefinition outside its capsule |
+| **Aura Forge** | Freezes a grounded engineering plan and runs bounded Council–Surgeon work under an evidence contract | automatic commit, PR, merge, release, or production mutation |
+| **Aura Gate** | Adds verified identity, static policy, leases, controlled egress, MCP/A2A boundaries, and audit evidence around Forge | trust/reputation truth or release authority |
+| **Coding Waboose** | Deterministic graph-guided review plus bounded coding-agent investigation and exact-source corroboration | self-confirming findings or patch authority |
+| **Agent Arena Bridge** | Exposes bounded CLI/MCP and GitHub publication workflows to replaceable external agents | merge authority |
+
+## Architecture orientation and relational intelligence
+
+| Surface | Role |
+|---|---|
+| **CODEMAP + deep topology** | Generated compact repository map and exact structural navigation |
+| **Capability Connectome / Genome Resolver** | Reuse-before-invention capability anatomy and objective matching |
+| **Relational Synthesis** | Objective-bounded configuration of relevant architectural relationships |
+| **Relationship Atlas / Coding Relationship Compass** | Classifies wired, missing, overlapping, prohibited, stale, and objective-relevant relationships while keeping exact source authoritative |
+| **Emergent Properties / Evidence Spine** | Finds evidence-bound candidate capabilities and unwired combinations without auto-wiring them |
+| **Observatory** | Glass-box projection of intent, routing, topology, evidence, and review state |
+
+## Runtime proof, continuity, and learning
+
+| Surface | Role | Boundary |
+|---|---|---|
+| **Runtime Refactor Harness** | Reproduces repository-declared loopback applications in an external environment, captures evidence, and binds before/after proof | observes and verifies; never patches or merges |
+| **Bilateral Live Repair** | Captures an explicitly authorized incident, preserves failed repair attempts, delegates bounded repair, and re-proves the result | no ambient recording or autonomous production hot-swap |
+| **Attempt Archive** | Preserves successful, denied, failed, and superseded work so the system does not repeatedly rediscover the same failure | history is evidence, not automatic policy |
+| **Temporal Persistence / State Ledger** | Bounded continuity, checkpoints, restoration assessment, and exact state | no automatic state restoration |
+| **Learning Arena / Crucible** | Mines verified ArenaExperience and proposes narrow candidate learning | emits proposals; never auto-promotes code, grammar, hard guards, or policy |
+| **Model Cognome** | Tracks endpoint evidence, cost, latency, drift, replay, and governed routing proposals | route changes remain explicitly authorized |
+| **Empirical Cost Observatory** | Separates measured, tokenizer-exact, derived, estimated, and unavailable cost/usage evidence | measurement cannot upgrade claim authority |
+
+## Spatial and domain surfaces
+
+| Surface | Role | Boundary |
+|---|---|---|
+| **Spatial Arena** | Projects canonical state into bounded scenes and compiles user interaction back into reviewable intent | rendering is presentation, never domain truth |
+| **Spatial Foundry / Showcase** | Visual proof and explanation of architecture, construction, repair, provenance, and evidence | projection-only |
+| **Civic Commons Arena** | Non-binding civic planning, evidence, needs/offers, scenarios, consent, dissent, and reversible pilot design | no automatic funding, voting, legal approval, or person-level targeting |
+| **Construction Arena** | Exact project-state replay, planning gates, alternatives, evidence, Spatial projection, and human decision packets | no physical-work, payment, equipment, access, or professional authority |
+| **Financial Arena** | Immutable Decimal-based exact-state financial records and explicit truth classes | no transaction, account mutation, advice, or prediction authority |
+| **Anishinaabemowin Tutor** | Vetted-source language learning, morphology, pronunciation, dialect/provenance labels, and teacher review | language authority remains with speakers, teachers, and community governance |
+
+---
+
+# What is implemented vs. what is future architecture
+
+AuraOS deliberately distinguishes **repository-backed behavior** from **published architecture and future product direction**.
+
+### Repository-backed / implemented
+
+The current tree includes deterministic routing, CODEMAP/topology, relational architecture tooling, Human/Coding/Agent Arenas, Forge/Gate/Waboose, runtime proof harnesses, continuity and learning substrates, Spatial projection, Civic/Construction/Financial slices, model/cost observability, and the first intent-native ephemeral workspace contracts.
+
+### Active refactor architecture
+
+The current intent-native spatial/ephemeral refactor is progressively establishing stricter contracts for objective-compiled workspaces, persistent capability reuse, selective source hydration, governed manifestation, and future capability composition. Each PR must preserve existing canonical owners and avoid creating a second plane.
+
+### Published future architecture / enabling embodiments
+
+Paper IX publishes the broader architecture that can be built on the substrate, including:
+
+- persistent **Capability Packages** and reusable **Arena Recipes**;
+- a federated **Aura Commons** for capabilities, provenance, rights, evidence, and economic attribution;
+- open and proprietary capability participation under explicit evidence modes;
+- proof-carrying **Developer Arenas** and critical-path work graphs;
+- a portable **Personal Cognitive Capsule** and personal SLM layer;
+- intent-native generative/spatial manifestation and a proposal-only code breadboard;
+- **Aura Places** with persistent governed Places and ephemeral visitor-specific Visits;
+- **Convention Arenas** for temporary federated events, discovery, creators, commerce, and communities;
+- an **Open Discovery / Scientific Foundry** for governed R&D, simulation, falsification, empirical validation, and fabrication;
+- bounded physics/digital-twin and population-behavior simulation;
+- business-incubation Arenas;
+- sovereign cross-domain Arena federation;
+- participatory proof-carrying Scientific Arenas and a compounding Scientific Capability Commons.
+
+These are **published architectural embodiments and development directions, not a claim that every downstream product is already implemented in this repository**.
+
+---
+
+# Quick start
+
+## Requirements
+
+- Python 3
+- Git
+- Linux or Android/Termux
+- CPU-first operation; external model access is optional
+- additional dependencies from `requirements.txt` for the complete stack
+
+```bash
+git clone https://github.com/dallascourchene-commits/AuraOS.git
+cd AuraOS
+python3 -m pip install -r requirements.txt
 ```
 
-The incident marker is retained separately from the rolling event window so it cannot be evicted. Finalization, expiry, and closure scrub the rolling events, marker, browser listeners, and timers from active memory. The already-sanitized packet is retained as exact canonical JSON inside `ArenaAttemptArchive`, preventing archive key redaction from changing digest-bearing safe fields.
+Regenerate and verify architecture orientation before relying on graph-based workflows:
 
-Runtime evidence is accepted only when its intent, confirmation, Semantic Ledger, guardrail, revision, repository-head, source-tree, runtime-profile, independent-verifier, human-review, and authority identities match the incident contract. Repair readiness additionally requires adjacent-regression and repository-cleanliness evidence. Failed hypotheses and the eight-attempt ceiling persist across restarts.
+```bash
+python3 aura_codebase_navigator.py
+python3 -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+python3 -m aura_agent_arena_cli stabilization-status
+python3 -m aura_agent_arena_cli digest
+```
 
-B13 is isolated preview and technical rollback, not production hot swap. Rollback requires an exact last-verified digest, an isolated environment class, prior authorization, and a trusted in-process restore adapter. Browser request bodies cannot manufacture rollback or U7 authority objects.
+Launch common local surfaces:
 
-The Showcase Foundry displays confirmed intent, negative intent, guardrails, runtime evidence, failed attempts, minimized counterexamples, P0/P1/current reproof, human/community disposition, and exact source/receipt drill-down. Its visual layout is explanatory only.
+```bash
+# Human Agent Arena
+python3 aura_human_agent_arena_server.py --repo-root . --demo
 
-See [`docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md`](docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md) and [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md).
+# Coding Arena
+python3 aura_coding_arena_server.py --demo
 
-## AI-safe architecture handoff
+# Showcase
+python3 aura_showcase_server.py --demo-project winnipeg_pathways
 
-Use the architecture harness `handoff` operation before giving AuraOS to an AI reviewer:
+# Bilateral live-repair Showcase
+python3 aura_showcase_live_repair_server.py --demo-project winnipeg_pathways
+```
+
+The live-repair capture route remains disabled until a user explicitly starts a bounded session and supplies current bilateral intent/identity. It is not ambient production recording.
+
+---
+
+# Using Aura with AI coding agents
+
+AI agents should not approach AuraOS as a flat repository and indiscriminately load large hub files.
+
+Recommended orientation:
+
+```text
+README
+  → .aura/ARCHITECTURE.md
+  → current CODEMAP/topology health
+  → capability resolution / relational neighborhood
+  → exact symbols and source slices
+  → nearby tests and contracts
+  → bounded Arena / repair capsule
+  → verification
+  → human disposition
+```
+
+Create an AI-safe repository handoff:
 
 ```bash
 python scripts/aura_architecture_harness.py \
@@ -94,11 +306,7 @@ python scripts/aura_architecture_harness.py \
   --output-dir ../AuraOS-ai-handoff
 ```
 
-The output contains a compact manifest, a sorted source-review file list, and a deterministic ZIP built from immutable `HEAD` Git blobs. Generated CODEMAP/topology/P9 artifacts, binaries, symlinks, sensitive/runtime paths, and oversized files are digest-only and never treated as ordinary source. Dirty trees fail closed by default. Long `run` operations emit a structured watchdog check-in every 10 minutes (`HEALTHY_CONTINUE`, `SLOW_BUT_PROGRESSING`, `STALLED_REASSESS`, or `UNKNOWN_REASSESS`) and pause safely at 20 minutes with completed-artifact inventory and an exact `--resume` receipt. The exact full Git archive remains available separately for forensic reconstruction.
-
-Issue #200 hardens that boundary with `scripts/aura_exact_head_transport.py`. Exact-main exports, diagnostics, materialized review trees, and publication bundles are written outside the checkout; dirty or mismatched heads fail closed with explicit path evidence. Formatter drift is transported as verified whole-file bytes, while allowlisted scope validation rejects out-of-scope additions, modifications, deletions, symlinks, and special files before any bundle is emitted. The workflow executes the exact request-revision harness and transport helper from an external tools directory against a clean detached `main` checkout, then independently generates and compares a trusted native `git archive` before upload. These bundles remain proposal evidence for the existing Agent Bridge compare-and-swap lane and grant no automatic publication or merge authority.
-
-The same entrypoint now exposes repository-owned runtime profiles. A runtime profile creates an external virtual environment, starts one loopback-only application, runs a real probe and retained verification commands, hashes the evidence, terminates the process, and confirms that the source tree did not change:
+Run repository-owned runtime proof in an external environment:
 
 ```bash
 python scripts/aura_architecture_harness.py \
@@ -109,458 +317,336 @@ python scripts/aura_architecture_harness.py \
   --install-requirements
 ```
 
-See [`docs/AURA_ARCHITECTURE_HARNESS.md`](docs/AURA_ARCHITECTURE_HARNESS.md) and [`docs/AURA_RUNTIME_REFACTOR_HARNESS.md`](docs/AURA_RUNTIME_REFACTOR_HARNESS.md).
+Useful agent-facing owners include:
 
-<!-- AURA_FORGE_V1:START -->
-## Aura Forge — Verified Engineering OS
+- `scripts/aura_architecture_harness.py`
+- `scripts/aura_runtime_refactor_harness.py`
+- `aura_coding_waboose_cli.py`
+- `aura_coding_relationship_compass.py`
+- `aura_agent_arena_cli.py`
+- `aura_agent_arena_mcp.py`
+- `aura_forge.py`
+- `aura_gate.py`
 
-Aura Forge is the first commercial product surface over Aura's existing Coding Arena and
-controlled refactor owners. It does not introduce a second planner, patch store, verifier,
-or learning path.
+Harness output remains navigation, analysis, review, or proposal evidence. Exact source spans, hashes, tests, verifier receipts, and authorized human disposition remain patch/merge authority.
 
-```text
-engineering objective
-  → CODEMAP/topology grounding
-  → frozen Architect/Coding Arena plan
-  → AURA_FORGE_ARENA_EVIDENCE_CONTRACT_V1
-  → bounded source/test slice lease
-  → external worker unified diff
-  → canonical staging, verification, and repair
-  → READY_FOR_HUMAN_REVIEW
-  → separate authorized promotion decision
-```
+---
 
-`aura_forge.py` binds the objective, exact repository identity, plan phase, Act Capsules,
-source/test references, allowed files, required gates, worker budgets, authority, and
-lifecycle into one deterministic contract. External workers remain replaceable and receive
-no ambient repository or release authority.
+# Research and prior art
 
-See [`docs/AURA_FORGE.md`](docs/AURA_FORGE.md).
-<!-- AURA_FORGE_V1:END -->
+AuraOS maintains a **nine-paper defensive prior-art stack**.
 
-<!-- AURA_GATE_PHASE2:START -->
-## Aura Gate — Sovereign Agent Governance Gateway
+Papers I–VII establish claims **N1–N30**. Paper VIII continues the evidence-ordered relational architecture with **N31–N50**. Paper IX extends the published architecture through **N51–N87**.
 
-Aura Gate Phase 2 wraps the retained Forge prepare/start boundary with an exact authority
-envelope. It verifies OIDC identity offline against an operator-pinned RS256 JWKS, derives
-a deployment-local pseudonymous actor reference, admits only content-addressed static
-policy, issues a bounded Arena lease, and starts only the frozen Forge contract ID and
-digest. Forge actions, egress releases, and lease transitions carry append-only pre-action
-evidence, and every worker payload passes through a purpose-, destination-, data-,
-retention-, and budget-bound egress capsule.
+| Paper | Main claim family | Claims | Publication | Repository copy |
+|---|---|---:|---|---|
+| **Paper I — Foundation** | Polysynthetic LLM egress, dual linguistic cortex, sparse sweeps, QDKT, visual topology, atomic hot-swap, sovereign edge design | N1–N8 | [Zenodo 20635424](https://zenodo.org/records/20635424) | [PDF](AuraOS__A_Polysynthetic_Cognitive_Substrate_for_High-Dimensional_Edge_Orchestration_and_Visual_Code_Topology.pdf) |
+| **Paper II — Holographic swarm systems** | Holographic headers, fractal ledger, swarm learning, VSA-addressed rendering, FST narrative | N9–N13 | [Zenodo 20657391](https://zenodo.org/records/20657391) | [PDF](Second_Paper.pdf) |
+| **Paper III — Liquid Internet** | VSA-addressed routing and naming | N14 | [Zenodo 20659314](https://zenodo.org/records/20659314) | [PDF](Third_Paper.pdf) |
+| **Paper IV — Memristive and rendering upgrades** | Memristive hyper-epochs, timestep-aware SVD quantization, Gaussian/VSA rendering dynamics | N15–N17 | [Zenodo 20673206](https://zenodo.org/records/20673206) | — |
+| **Paper V — FST routing and self-refactoring** | FST routing core, 3D topology resonance, bounded self-refactoring incubator | N18–N20 | [Zenodo 20681601](https://zenodo.org/records/20681601) | — |
+| **Paper VI — Enhanced FST and topology** | FST lexicon, resonance topology, FST impact analysis | N21–N23 | [Zenodo 20682051](https://zenodo.org/records/20682051) | — |
+| **Paper VII — Protocol-layer innovations** | Hyperdimensional integrity, micro-module crystallization, resonant tests, thermal-cost arbitration, deterministic compression, local VSA mesh, bounded self-healing | N24–N30 | [Zenodo 20695562](https://zenodo.org/records/20695562) | — |
+| **Paper VIII — Evidence-Ordered Relational Arenas for Governed Cognitive Systems** | Relationship intelligence, Emergent Evidence Spine, governed Arenas, verified engineering, Waboose/Gate, spatial projection, continuity, atomic publication | **N31–N50** | [Zenodo 21465329](https://zenodo.org/records/21465329) | [PDF](papers/AuraOS_Paper_VIII_Evidence_Ordered_Relational_Arenas.pdf) |
+| **Paper IX — Objective-Native Capability Commons and Proof-Carrying Contribution Economies** | Objective-native Arena compilation; Capability Packages/Recipes; Commons and executable rights; proprietary capability evidence; attestation/provenance; Developer Arenas; Personal Cognitive Capsules; manifestation; Places/Conventions; Foundry/simulation/incubation; participatory scientific work and compounding capability reuse | **N51–N87** | [Zenodo 21843659](https://zenodo.org/records/21843659) | [PDF](papers/AuraOS_Paper_IX_Objective_Native_Commons_Proof_Carrying_Contribution_Economies.pdf) |
 
-```text
-verified identity + exact purpose + static policy
-  → Forge prepare
-  → Gate authority envelope + expiring lease
-  → exact Forge start
-  → governed MCP/A2A turns
-  → verifier-backed human-review packet
-  → dissolution or explicit revocation
-```
+Prior-art papers document conceptual lineage and disclosed combinations. They do not override current source, tests, licences, verifiers, or governance requirements.
 
-The current proof is Forge-specific OIDC/private single-node deployment. SAML/SCIM,
-HA/Kubernetes, arbitrary-domain policy, and vendor-certified SIEM integration are deferred.
-It never commits, pushes, creates a pull request, merges, releases, or promotes policy.
+---
 
-See [`docs/AURA_GATE.md`](docs/AURA_GATE.md).
-<!-- AURA_GATE_PHASE2:END -->
+# Detailed architecture
 
-<!-- AURA_CODING_WABOOSE_V1:START -->
-## Coding Waboose — graph-guided code review
+The remainder of this README gives a more technical map. For canonical ownership and exact architecture boundaries, read [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md).
 
-Coding Waboose combines deterministic program analysis with replaceable coding-agent
-investigation. Aura computes changed symbols, callers, callees, tests, schemas, shared-resource
-neighbors, exact source anchors, and tool evidence. Codex, Hermes, or another MCP client may
-supply run-specific review questions and semantic findings, but cannot invent authoritative
-edges, mark its own findings proven, or apply a fix.
+## 1. Intent, lexical addressing, and guarded finite-state routing
+
+Aura accepts ordinary language while preserving an inspectable internal route.
 
 ```text
-change or workspace
-  → exact diff and changed symbols
-  → bidirectional dependency-impact slice
-  → syntax/static/test scans
-  → run-specific focus directives
-  → diagnostic Coding Breadboard
-  → bounded coding-agent investigation
-  → exact-source corroboration and precision-first ranking
-  → human review packet
-  → optional Aura Forge repair handoff
-```
-
-See [`docs/AURA_CODING_WABOOSE.md`](docs/AURA_CODING_WABOOSE.md).
-<!-- AURA_CODING_WABOOSE_V1:END -->
-
-<!-- AURA_JULY20_MERGED_ARCHITECTURE:START -->
-## Merged architecture through July 20, 2026
-
-The current tree includes the architecture merged in PRs #164–#170. These changes complete Aura Spatial S0–S5 plus the Construction-only S6 projection, harden review learning and source integrity, and replace temporary workflow-based GitHub materialization with a bounded atomic publication lane.
-
-### Spatial S0–S6
-
-```text
-canonical domain or repository evidence
-  → immutable frames, assets, entities, links, scenes, and interactions
-  → deterministic transforms and content-addressed asset admission
-  → bounded device profile and render-plan negotiation
-  → replaceable browser/headless/accessibility renderer
-  → bounded glTF/GLB, PLY, SPZ v4, and KHR_gaussian_splatting import
-  → governed Spatial Arena lifecycle
-  → privacy-minimized proof and assessment-only persistence
-  → human/domain decision packet
-  → renderer-bound cleanup, lease release, and dissolution
-```
-
-The Spatial stack now includes:
-
-- **S0–S2 canonical substrate:** representation-independent contracts, rooted coordinate frames, deterministic scene compilation, content-addressed manifests, Coding/Showcase projections, six-slot review interactions, and fail-closed Forge handoff;
-- **S3-A/S3-B:** immutable device profiles, deterministic render-plan negotiation, bounded presentation sessions, active WebGL2, shadow-only WebGPU, explicit WebXR activation, accessible 2D, headless parity, picking, cancellation, telemetry, and dissolution receipts;
-- **S4-A:** bounded glTF/GLB and PLY interchange with explicit units, coordinate conversion, provenance receipts, and no external resource or executable-content authority;
-- **S4-B:** local-only SPZ v4 and Khronos `KHR_gaussian_splatting` Release Candidate import, deterministic point-cloud fallback, decoded-representation digest binding, Python/JavaScript parity, aggregate memory/GPU/frame budgets, and adversarial asset-security checks;
-- **S5:** `FRAME → GROUND → COMPILE_SCENE → PLAN_RENDER → PRESENT → INTERACT → PROVE → DECIDE → DISSOLVE`, with canonical cleanup bindings, bounded proof metrics, Attempt Archive evidence, assessment-only checkpoints, and no automatic resume;
-- **Construction S6:** projection of canonical `ConstructionProjectState` and canonically issued runtime packets into privacy-minimized review scenes without creating a second Construction truth owner.
-
-Spatial scenes, imported assets, Gaussian representations, interactions, telemetry, render receipts, and checkpoints remain non-authoritative. They cannot mutate domain state, authorize physical work, release payment, operate equipment, grant access, commit code, or merge branches.
-
-See [`docs/AURA_SPATIAL_COMPUTING_S0_S2.md`](docs/AURA_SPATIAL_COMPUTING_S0_S2.md), [`docs/AURA_SPATIAL_S3_S4.md`](docs/AURA_SPATIAL_S3_S4.md), and [`docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md`](docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md).
-
-### Review learning and source-integrity replay
-
-Coding Waboose can now normalize bounded Codex, CodeRabbit, and manual review evidence into typed lessons, run deterministic detector classes, and replay those lessons through Crucible against exact repository ancestry. Source-integrity scanning is bounded by UTF-8, file-count, aggregate-byte, symlink, filesystem, digest, Git-head/tree, registry-signature, and merge-ancestry checks. Review lessons remain teacher signals: they may focus investigation and propose repairs but cannot self-confirm, mutate files, commit, push, open a PR, or merge.
-
-Primary owners include `aura_coding_waboose_review_lessons.py`, `aura_coding_waboose_review_learning.py`, `aura_review_lessons_security.py`, `aura_agent_arena_review_learning_bridge.py`, and `aura_agent_arena_review_learning_mcp.py`.
-
-### Atomic Agent Bridge GitHub publication
-
-The Agent Bridge publication lane replaces temporary payload files and materializer workflows with GitHub GraphQL `createCommitOnBranch(expectedHeadOid)`.
-
-```text
-exact base/head/PR evidence
-  → bounded canonical additions and deletions
-  → fresh snapshot ref in create mode
-  → server-side commit + branch compare-and-swap
-  → existing or newly created pull request
-  → separate trusted-human merge action
-```
-
-`aura_github_prepare_publication` and `aura_github_execute_publication` support exact create/update publication with UTF-8 and Base64 bounds, same-repository PR binding, no redirect-capable bearer-token transport, no force update, no automatic branch deletion, and blanket rejection of caller-supplied `.github/workflows/` paths. `aura_github_prepare_merge` is evidence-only and always returns `merge_authority=false`, `connector_tool=null`, and `automatic_merge=false`.
-
-See [`docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md`](docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md).
-<!-- AURA_JULY20_MERGED_ARCHITECTURE:END -->
-
-## Canonical architecture
-
-### 1. Intent and finite-state routing
-
-Aura supports ordinary language input while preserving a deterministic internal route.
-
-```text
-lexical address and local tags
-  → six-slot intent packet
-  → semantic LEXC route
+natural language / structured objective
+  → lexical address and local tags
+  → six-slot intent
+  → semantic LEXC
   → state-local guarded WFST
-  → hard guards before soft ranking
-  → admitted action or explicit denial
+  → hard blockers
+  → weighted ranking among already-admissible routes
+  → admitted route or explicit denial
 ```
 
-The canonical slot order is:
+Canonical slot order:
 
 ```text
 DIR → ASP → CLASS → SUBJ → VOICE → STEM
 ```
 
-VSA/HDC resonance may rank only already-admissible options. It cannot override missing evidence, blocked risk, an expired lease, a denied capability, or a failed verifier requirement.
+The six-slot software ordering is Athabaskan-inspired. Aura's machine FST/WFST is its own engineering grammar. Anishinaabemowin-derived governance/relational influences are distinct again. The project does not flatten these into one linguistic claim.
 
-### 2. CODEMAP, topology, and capability reuse
+VSA/HDC resonance may help rank already-admissible alternatives. It cannot override missing grounding, tests, expired leases, risk blocks, denied capabilities, or failed verifier requirements.
 
-Aura's self-model is built from the current repository:
+## 2. CODEMAP, topology, and architecture self-understanding
+
+Aura is designed so humans and AI workers can orient without loading the whole repository.
+
+The architecture composes:
 
 - `.aura/CODEMAP.json` and `.aura/CODEMAP.md`;
-- compiled deep topology and symbol relations;
+- compiled deep topology;
+- exact file, symbol, call, import, and test relations;
 - Topological Context Anchor;
-- Node Inspector and Affordance Directory;
-- Capability Connectome and Capability Genome Resolver;
-- module manifests, command indexes, tests, and ownership metadata.
+- Affordance Directory and Node Inspector;
+- Capability Connectome and Genome Resolver;
+- Relational Index / Relationship Atlas;
+- Coding Relationship Compass;
+- Emergent Evidence Spine and candidate discovery;
+- manifests, schemas, ownership, and test evidence.
 
-The resolver searches existing owners before new code is proposed. Generated topology is navigation evidence, not proof by itself. Exact current source, symbols, spans, hashes, tests, schemas, and verifier output remain authoritative.
+The key rule is:
 
-Primary resolver owners include `aura_capability_resolver.py` and the graph-pinned `aura_capability_resolver_v2.py` facade over Capability Connectome evidence.
+> **Generated maps locate evidence; exact current source and verifier evidence establish it.**
 
-For broad cross-system coding objectives, `aura_coding_relationship_compass.py` combines the Connectome path, exact Emergent Evidence Spine closure, a JIT Relational Synthesis capsule, a deterministic budget-bounded Relational Index neighborhood, an objective-scoped Relationship Atlas, typed compatibility hard guards, and a proposal-only Planning Board/Coding Breadboard receipt. Architect uses this packet before legacy filename inference so exact targets, tests, preservation relations, missing roles, adapters, circuit breakers, and prohibitions travel together without becoming patch or execution authority. See `docs/AURA_CODING_RELATIONSHIP_COMPASS.md`.
+Regenerate CODEMAP/topology after architecture or source changes. Do not rely on historical line numbers or stale generated maps.
 
-The current synchronized map indexes more than one thousand repository files and a deep graph of thousands of nodes and edges. Regenerate it after architecture or source changes rather than relying on historical line numbers.
+## 3. Relational Synthesis and the Relationship Atlas
 
-### 3. Planning, events, continuity, and governance
-
-Aura separates proposal, authority, and proof:
-
-```text
-Planning Board proposal
-  → relational authority and quorum decision
-  → append-only event/sidecar evidence
-  → independent history projection
-  → execution inside an admitted Arena
-  → verifier receipt
-```
-
-The Planning Board provides typed goals/actions, BC0–BC5 continuity, bounded backward regression, forward symbolic replay, and compatibility shadows over existing systems. Planning artifacts can be projected into canonical append-only events and independently reconstructed without becoming execution authority.
-
-The Coding Relationship Compass now implements C0–C9. After bounded Relational Index and objective Atlas grounding, it evaluates typed interfaces, discovers only local unwired candidates, compiles proposal-only Change Graph/Act Capsule/Agent IR work, records Council-versus-Surgeon routing, and projects append-only bi-temporal relationship experience. Six strict Agent Arena/MCP tools expose preparation, neighborhood, classification, Breadboard, planning, and capsule compilation. `SHADOW` remains the default rollout; no Compass artifact grants provider execution, patch, commit, PR, or merge authority.
-
-C8 receipt ingestion is fail-closed across every construction path. `create()` sanitizes reason text before computing identity; direct construction and `from_dict()` accept only already-sanitized reasons and canonical digests. `PRIVATE_REDACTED` references must be approved kind-specific placeholders (`redacted:verifier`, `redacted:receipt`, or `redacted:source`) or opaque lowercase-hex digest tokens, never raw data with a `redacted:` label. Scalar, reference-list, aggregate-payload, and timestamp limits are enforced before projection or persistence.
-
-Relational authority binds approvals to an exact action ID, action digest, capability/policy scope, validity window, role, quorum, delegation chain, and risk class. Emergency authority remains narrower, temporary, reason-bearing, and review-producing.
-
-### 4. Human Agent, external workers, and Council–Surgeon engineering
-
-The Human Agent Arena is the main governed collaboration surface:
+Aura's relational systems distinguish several questions:
 
 ```text
-FRAME → GROUND → PLAN → ACT → PROVE → DECIDE
+What exists?
+What is exactly wired?
+What is merely advisory?
+What overlaps?
+What is missing?
+What is stale?
+What is prohibited from connecting?
+What combination is relevant for this objective?
 ```
 
-It includes:
+The Relationship Atlas/Compass can classify and bound these relationships without becoming another source-of-truth database. A JIT Relational Synthesis capsule selects the objective-relevant configuration; exact source/state remains canonical.
 
-- concept workspaces and exact node inspection;
-- topology-anchored gate dialogue;
-- bounded tools and capability leases;
-- an Attempt Archive that preserves successful, denied, and failed work;
-- persistent emergent-property findings and bounded arXiv/GitHub research;
-- grounded phase capsules with shared evidence rather than repeated repository context;
-- external-LLM slice sessions that lease only required source, tests, state, and constraints;
-- reviewable refactor output records with exact gate evidence and claim classes.
+## 4. Planning, work decomposition, and Council–Surgeon separation
 
-Selective Council V3 performs architecture-level deliberation only where critic lanes are justified. The sliced Surgeon performs exact-file implementation, focused verification, and bounded repair. Local assertion failures may return to the Surgeon; interface, dependency, invariant, or expanded-scope failures return to the Council.
+The Planning Board represents goals, actions, predicates, constraints, dependencies, backward regression, forward replay, and continuity. It proposes; it does not execute.
 
-### 5. Compression and continuity substrates
-
-Aura uses several distinct compression and state representations without treating them as interchangeable truth:
-
-- **Context Crusher / exact slicing** — removes unrelated repository context;
-- **ST3GG** — compact advisory frames and exact-recall handles with protocol-overhead-aware admission;
-- **JSpace J0/J1/J2** — compact route, Arena, and cross-system continuity packets;
-- **QDKT** — canonical observation events and read-only compatibility evidence around retained legacy results;
-- **Symbolic Trace Memory** — raw references, compact atoms, and independently consolidated canvases;
-- **State Ledger V3** — compact intra-session execution state;
-- **Temporal Persistence** — content-addressed checkpoints, forks, restoration assessment, and payload-free cross-Arena handoff.
-
-Temporal restoration produces one of these review decisions:
-
-- `DIRECT_RESUME_REVIEW_REQUIRED`;
-- `MITOSIS_REQUIRED`;
-- `RESTORATION_COUNCIL_REQUIRED`.
-
-No checkpoint automatically applies state, invokes a model, promotes a hotswap, mutates grammar, commits code, or merges a branch.
-
-### 6. Experience and proposal-only learning
-
-A raw prompt, research paper, failed attempt, route trace, or model response is not learned truth.
+For engineering work:
 
 ```text
-governed Arena execution
-  → verifier evidence
-  → OutcomeVector
-  → ArenaExperience V3
-  → TRAIN / VALIDATION / SHADOW separation
-  → CRYSTALLIZATION_PROPOSED
-  → verifier and human review
+objective
+  → grounding / relationship packet
+  → Planning Board / Change Graph
+  → bounded Act Capsules / work units
+  → Council V3 for structural reasoning when needed
+  → Surgeon for exact implementation
+  → focused verification
+  → human review
 ```
 
-The current Crucible can propose changes only to a narrow soft-weight surface such as `soft_weight_profile.empirical_uncertainty`. It cannot change hard guards, transitions, capabilities, consent, risk classes, source code, active grammar, route policy, or governance authority.
+Local failures may return to the Surgeon. Interface, dependency, invariant, or scope-expansion failures return to architecture-level reasoning rather than being repeatedly patched locally.
 
-### 7. Model Cognome and controlled egress
+## 5. Arenas, capability leases, and ephemeral execution
 
-Model Cognome separates endpoint identity, capability evidence, cost/latency telemetry, route policy, and authorization.
+An Arena assembles only what one objective requires.
 
-Supported route classes include:
+A typical lifecycle is:
+
+```text
+FRAME
+  → GROUND
+  → PLAN
+  → ACT
+  → PROVE
+  → DECIDE
+  → DISSOLVE
+```
+
+Domain-specific Arenas may introduce additional typed stages, but the same principles remain:
+
+- bounded objective;
+- explicit context and evidence;
+- minimum capabilities;
+- revocable/expiring leases;
+- resource and cost bounds;
+- no ambient authority;
+- separate verification;
+- external disposition;
+- explicit cleanup and dissolution.
+
+The Ephemeral Organ Runtime compiles temporary capability systems from verified manifests and leases. The FST is an admission grammar, **not** a complete security sandbox; arbitrary components require a real restricted runtime and must fail closed when the required sandbox is unavailable.
+
+## 6. External models and Model Cognome
+
+Aura is model-agnostic by design.
+
+Possible workers include local/open-weight models, OpenAI-compatible endpoints, Codex, Hermes, or other MCP/A2A-connected agents. They remain replaceable.
+
+Model Cognome tracks:
+
+- endpoint identity and capability evidence;
+- cost and latency;
+- quality/drift observations;
+- replay and shadow comparisons;
+- route proposals and quarantine state.
+
+Representative route classes:
 
 ```text
 ZERO_MODEL | DIRECT | CASCADE | PANEL
 ```
 
-Operating modes include:
+Representative operating modes:
 
 ```text
 LEGACY | SHADOW | PAIRED_LIVE
 ```
 
-- `LEGACY` preserves established behavior and rollback.
-- `SHADOW` plans and compares without provider execution.
-- `PAIRED_LIVE` requires explicit purpose, graph digest, endpoint, verifier, expiry, budget, nonce/replay, and egress authorization.
+A model may recommend a route. The model does not authorize itself.
 
-Open-weight mechanistic evidence is optional and aggregate-only. Gray-box and black-box endpoints cannot be assigned unsupported mechanistic claims. Drift, quarantine, federation, and promotion remain review-gated.
+## 7. Compression, memory, and continuity
 
-## Domain Arenas
+Aura uses multiple compact representations for different purposes rather than treating one vector store or chat transcript as memory.
 
-### Civic Commons
+- **Exact slicing / Context Crusher** — remove unrelated source/context.
+- **VSA/HDC** — associative semantic addressing.
+- **ST3GG** — compact visible advisory frames with exact-recall handles.
+- **JSpace** — active route/workspace continuity.
+- **QDKT** — compact observation and knowledge-transfer events.
+- **State Ledger** — bounded intra-session execution state.
+- **Attempt Archive** — failed/denied/successful historical work.
+- **Temporal Persistence** — content-addressed checkpoints, forks, and restoration assessment.
+- **ArenaExperience** — verified outcomes suitable for review-gated learning.
 
-Civic Commons combines ephemeral organs, official-source snapshots, local profiles, truth classes, MITOSIS decomposition, MUSIC trade-off surfaces, consent/dissent preservation, simulation-only what-if analysis, reversible pilot design, privacy-filtered community memory, and a model broker with fixture fallback.
+Restoration remains reviewable. A checkpoint does not silently regain expired authority or automatically apply itself.
 
-All included demonstration stories and community overlays are explicitly labeled. The system rejects person-level vulnerability maps, binding votes, automatic funding, legal approval, unrestricted surveillance, and invented Indigenous-language translations.
+## 8. Review-gated learning
 
-### SCO Construction
-
-The completed E0–E14 Construction refactor reuses canonical Aura owners for planning, governance, receipts, WFST admission, Experience, Crucible, persistence, Human Agent, and Observatory.
-
-#### Construction Human Agent profile
-
-The Construction Human Agent profile is purpose-limited to the admitted planning capsule and keeps decision authority external; its paired Observatory projection is stricter and read-only.
+Aura's learning philosophy is **learning to re-prove**, not learning to bypass proof.
 
 ```text
-immutable claims/evidence/events
-  → ConstructionProjectState replay
-  → exact readiness/conflict/expiry checks
-  → hard blockers before ranking
-  → deterministic proposal roles
-  → bounded Human Agent profile
-  → stricter read-only Observatory projection
-  → external authorized decision
+verified execution
+  → typed outcome
+  → ArenaExperience
+  → TRAIN / VALIDATION / SHADOW separation
+  → candidate crystallization
+  → verifier + human review
+  → explicit promotion or rejection
 ```
 
-`ConstructionProjectState` is the only Construction truth owner. Probabilistic or sensor scores cannot rescue a blocked route. Real connectors, physical/equipment control, payment release, access control, safety/engineering/legal certification, and commercial field claims remain separate future programs.
+A research paper, model answer, route trace, or successful-looking patch is not durable learned truth by itself.
 
-<!-- AURA_SPATIAL_S5_S6:START -->
-### Spatial Arena and Construction projection
+## 9. Verification, receipts, and provenance
 
-Spatial S5 completes Aura's governed presentation lifecycle, while the Construction-only S6 adapter projects exact `ConstructionProjectState` and its validated runtime packet without creating another Construction ledger.
+Aura separates several questions that are often collapsed:
 
 ```text
-canonical domain truth
+identity      — who/what is acting?
+authority     — what was it allowed to do?
+execution     — what did it actually do?
+provenance    — what did the result derive from?
+verification  — what bounded predicates were checked?
+disposition   — who accepted/rejected the consequence?
+attribution   — what materially contributed?
+```
+
+Current repository mechanisms include exact hashes, contracts, tests, verifier output, append-only events, Attempt Archive evidence, action/lease identity, runtime receipts, and provenance-bearing artifacts.
+
+Paper IX extends this architecture into a generalized Attestation/Provenance DAG and meaningful-use contribution economy. That broader Commons/economic layer is published architecture, not a claim that automated settlement is already active in the current tree.
+
+## 10. Spatial manifestation and proposal-only interaction
+
+Aura's spatial architecture keeps canonical truth separate from presentation.
+
+```text
+canonical domain/repository state
   → privacy-minimized adapter
   → immutable SpatialSceneSnapshot
-  → deterministic device/render plan
-  → ephemeral presentation session
-  → review-only interaction
-  → render evidence + Attempt Archive + assessment-only checkpoint
-  → read-only Observatory projection
-  → human/domain decision packet
-  → exact renderer-boundary receipt
-  → lease and session dissolution
+  → device/render plan
+  → replaceable renderer
+  → user interaction
+  → typed interaction intent / proposal
+  → domain verification path
+  → authorized disposition
 ```
 
-The canonical lifecycle is:
+A scene, splat, graph, gesture, gaze target, generated layout, or visual relationship cannot create domain authority.
+
+The current Spatial lifecycle is:
 
 ```text
 FRAME → GROUND → COMPILE_SCENE → PLAN_RENDER → PRESENT
       → INTERACT → PROVE → DECIDE → DISSOLVE
 ```
 
-`DECIDE` emits a review packet; it does not apply a decision. `DISSOLVE` preserves the client's evidence class and requires exact session, scene, and render-plan bindings. Emergency close never fabricates renderer cleanup. Public Construction identifiers are hashed, restricted/sensitive projections remain local and abstract, and floor-plan manifests are admitted only when they are local, privacy-compatible, explicitly non-survey, and contain no person-level data.
+Paper IX generalizes this separation into **intent-native manifestation**: rich spatial, visual, textual, voice, or generative interfaces may help people understand and manipulate a proposal while canonical records remain authoritative.
 
-Validate the route and run the synthetic, non-persistent demonstration:
+## 11. Runtime Refactor Harness and bilateral live repair
 
-```bash
-python aura_spatial_cli.py --repo-root . validate-route
-python aura_spatial_cli.py --repo-root . synthetic-construction-demo
+The Runtime Refactor Harness is an observation/proof owner, not an autonomous coding loop.
+
+```text
+exact Git identity + repository runtime profile
+  → external virtual environment
+  → loopback application
+  → probe/browser evidence
+  → retained verification
+  → artifact hashes + cleanup
+  → failure or verified receipt
+  → separately authorized repair
+  → exact rerun
+  → repaired-and-verified receipt
 ```
 
-See [`docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md`](docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md).
-<!-- AURA_SPATIAL_S5_S6:END -->
+Bilateral live repair adds explicit positive and negative user intent, bounded incident capture, privacy sanitization, deterministic replay, failed-attempt preservation, bounded repair routing, isolated preview/rollback, U7 reproof, and a projection-only Spatial Foundry.
 
-### Financial exact state
+No ambient recording, automatic production hot-swap, automatic merge, or professional/physical authority is granted.
 
-The first Financial Arena slice provides immutable Decimal-backed records for accounts, balances, transactions, cash flows, debts, asset values, fees, tax assumptions, provenance, freshness, currencies, and units. It distinguishes:
+---
+
+# Domain Arenas
+
+## Civic Commons
+
+Civic Commons composes needs, offers, evidence, rules, scenarios, dissent, consent, reversible pilots, and community decision packets.
+
+It is intentionally non-binding. Models may help compare options, but they do not become governments, voters, funders, courts, or cultural authorities.
+
+See [`docs/AURA_CIVIC_COMMONS_ARENA.md`](docs/AURA_CIVIC_COMMONS_ARENA.md).
+
+## Construction Arena
+
+Construction replays exact `ConstructionProjectState`, evaluates readiness/conflict/expiry, hard blockers, alternatives, and bounded Human Agent/Observatory/Spatial projections.
+
+It does not authorize physical work, payments, equipment, site access, safety certification, engineering certification, or legal approval.
+
+Synthetic demonstration:
+
+```bash
+python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --serve
+```
+
+See [`docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md`](docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md).
+
+## Financial Arena
+
+The current Financial slice stores immutable Decimal-backed exact-state records and explicit truth classes:
 
 ```text
 USER_RECORDED | IMPORTED_EXACT | DERIVED_ARITHMETIC | ASSUMPTION | UNAVAILABLE
 ```
 
-It rejects silent floats, implicit rounding, inferred ownership, implicit currency conversion, future/lifecycle contradictions, duplicate identities, and model-estimated values presented as exact state. Planning Board indicators and scenarios remain separately bounded stages.
+It rejects silent floats, implicit rounding, inferred ownership, implicit currency conversion, contradictory lifecycle state, and model-estimated values presented as exact records.
 
-## Prior art
+It does not provide transaction, account-mutation, advice, or prediction authority.
 
-AuraOS maintains an eight-paper defensive prior-art stack. Papers I–VII establish the original conceptual lineage and claims N1–N30. **Paper VIII is the canonical continuation**, establishing claims N31–N50 for evidence-ordered relational Arenas, compiled relationship intelligence, verified engineering, governed spatial projection, exact-state continuity, and atomic publication.
+## Anishinaabemowin Tutor
 
-| Paper | Main claim family | Claims | Publication | Repository copy |
-|---|---|---:|---|---|
-| **Paper I — Foundation** | Polysynthetic LLM egress, dual linguistic cortex, sparse sweeps, QDKT, visual topology, atomic hot-swap, and sovereign edge design | N1–N8 | [Zenodo 20635424](https://zenodo.org/records/20635424) | [PDF](AuraOS__A_Polysynthetic_Cognitive_Substrate_for_High-Dimensional_Edge_Orchestration_and_Visual_Code_Topology.pdf) |
-| **Paper II — Holographic swarm systems** | Holographic headers, fractal ledger, swarm learning, VSA-addressed rendering, and FST narrative | N9–N13 | [Zenodo 20657391](https://zenodo.org/records/20657391) | [PDF](Second_Paper.pdf) |
-| **Paper III — Liquid Internet** | VSA-addressed routing and naming | N14 | [Zenodo 20659314](https://zenodo.org/records/20659314) | [PDF](Third_Paper.pdf) |
-| **Paper IV — Memristive and rendering upgrades** | Memristive hyper-epochs, timestep-aware SVD quantization, and Gaussian/VSA rendering dynamics | N15–N17 | [Zenodo 20673206](https://zenodo.org/records/20673206) | — |
-| **Paper V — FST routing and self-refactoring** | FST routing core, 3D topology resonance, and bounded self-refactoring incubator | N18–N20 | [Zenodo 20681601](https://zenodo.org/records/20681601) | — |
-| **Paper VI — Enhanced FST and topology** | FST lexicon, resonance topology, and FST impact analysis | N21–N23 | [Zenodo 20682051](https://zenodo.org/records/20682051) | — |
-| **Paper VII — Protocol-layer innovations** | Hyperdimensional integrity, micro-module crystallization, resonant tests, thermal-cost API arbitration, deterministic compression, local VSA mesh, and bounded self-healing | N24–N30 | [Zenodo 20695562](https://zenodo.org/records/20695562) | — |
-| **Paper VIII — Evidence-Ordered Relational Arenas for Governed Cognitive Systems** | Relationship intelligence, Emergent Evidence Spine, governed Arenas, verified engineering, Waboose/Gate, spatial projection, continuity, and atomic publication | **N31–N50** | [Zenodo 21465329](https://zenodo.org/records/21465329) | [PDF](papers/AuraOS_Paper_VIII_Evidence_Ordered_Relational_Arenas.pdf) |
+The tutor uses vetted sources, morphology, pronunciation guidance, dialect/provenance labels, confidence classes, privacy/governance gates, and teacher review.
 
-Prior-art papers remain reference material; current source, tests, exact evidence, licences, verifiers, and governance requirements determine implemented behavior.
+Community-controlled language assets remain legally and technically distinct from the general AuraOS software layer.
 
-## Benchmark evidence
+---
 
-Aura does not collapse unlike evidence into one score.
+# Truth, authority, and safety
 
-| Tier | Evidence class | What it can support |
-|---:|---|---|
-| 1 | Executable gates and exact-head tests | Claims about the exact evaluated artifact |
-| 2 | Deterministic comparative proxies | Controlled relative efficiency or continuity comparisons |
-| 3 | Estimated structural projections | Architecture hypotheses labeled `ESTIMATED` |
-| 4 | Discovery and capacity scans | Candidate capabilities and missing wires |
-
-Representative current evidence includes:
-
-- executable fixture: `3/3` visible, `3/3` hidden, `2/2` regression, `WORKING`, `ACCEPTED`;
-- exact-head AuraOS refactor: `32/32` visible/property, `35/35` adversarial, focused regression `24/24`; `WORKING`, `ACCEPTED`; observed `100.00`, benchmark `93.50`;
-- context-localization proxy: `89.04% lower` total proxy with quality `+0.0057`;
-- Selective Council V3: `32.83% lower` total proxy than Council V2 on the controlled fixture with the same accepted patch and quality;
-- Aura Gate Phase 2 instrumented Agent Bridge + Council V3 scope: `37,907` input,
-  `1,852` output, and `39,759` total token proxy, with `51,987` estimated saved
-  (`56.66%`) against the documented counterfactual; full Codex-session provider totals
-  were unavailable, so this is not billing evidence;
-- State Ledger synthetic continuity: `96.19%` less step-7 context, preservation `1.0000`, drift `0.0000`;
-- shared grounding evidence: `53.1936%` projected structural savings, explicitly `ESTIMATED` rather than provider billing.
-
-Provider-reported usage, tokenizer-exact measurements, deterministic token proxies, byte counts, and chars/4 estimates remain separate fields. Unknown usage remains unknown.
-
-## Quick start
-
-```bash
-git clone https://github.com/dallascourchene-commits/AuraOS.git
-cd AuraOS
-python3 -m pip install -r requirements.txt
-python3 aura_codebase_navigator.py
-python3 -m aura_agent_arena_cli topology-health
-python3 -m aura_agent_arena_cli stabilization-status
-python3 -m aura_agent_arena_cli digest
-```
-
-Launch the unified Human Agent surface:
-
-```bash
-python3 aura_human_agent_arena_server.py --repo-root . --demo
-```
-
-Launch the four-surface showcase:
-
-```bash
-python3 aura_showcase_server.py --demo-project winnipeg_pathways
-```
-
-Launch the bilateral live-repair Showcase composition:
-
-```bash
-python3 aura_showcase_live_repair_server.py --demo-project winnipeg_pathways
-```
-
-The Foundry capture route remains disabled until the user explicitly starts a bounded session and supplies a current exact bilateral identity. It is intended for loopback/local demonstration and governed field-replay evidence, not ambient production recording.
-
-Launch the local Coding Arena:
-
-```bash
-python3 aura_coding_arena_server.py --demo
-```
-
-Run the Construction completion audit:
-
-```bash
-python3 -m aura_construction_refactor_completion --repo-root .
-```
-
-Verify temporal persistence:
-
-```bash
-python3 -m aura_persistence_cli --repo-root . verify-registry
-```
-
-## Truth and authority invariants
+## Constitutional invariants
 
 ```yaml
 planning_proposes: true
@@ -571,8 +657,9 @@ vsa_patch_authority: false
 visual_topology_patch_authority: false
 external_model_action_authority: false
 crystallization_patch_authority: false
-automatic_grammar_promotion: false
 automatic_state_restoration: false
+automatic_grammar_promotion: false
+automatic_fix: false
 automatic_commit: false
 automatic_push: false
 automatic_pull_request: false
@@ -580,71 +667,164 @@ automatic_merge: false
 human_review_required: true
 ```
 
-Unknown, stale, ungrounded, malformed, expired, ambiguous, or unauthorized work fails closed.
+Unknown, stale, ungrounded, malformed, expired, ambiguous, conflicting, or unauthorized operations fail closed.
 
-## Implemented architecture versus product direction
+## Source-of-truth order
 
-Implemented repository capabilities are documented as implemented. Broader directions—including intent-compiled consumer application fabrics, sovereign Arena federations, disaster coordination, institutional deployments, production spatial/XR deployments, public information networks, module marketplaces, and real-world Construction/Financial connectors—remain architecture-supported product directions until separately built, reviewed, measured, and authorized.
+When sources conflict, prefer:
 
-AuraOS evidence does not establish consciousness, unrestricted autonomy, universal model superiority, legal certification, court admissibility, or production readiness beyond the exact measured gates.
+1. exact current source, schemas, contracts, and repository/domain state;
+2. tests, verifiers, replay, and tamper evidence;
+3. healthy current CODEMAP and compiled topology;
+4. exact snapshots, sidecars, ledgers, event chains, and content-addressed records;
+5. manifests, leases, consent, relational authority, and boundary contracts;
+6. current canonical subsystem documentation;
+7. summaries, generated reports, screenshots, model output, and historical artifacts.
 
-## Documentation
+## Advisory does not mean authoritative
 
-- [`USER_GUIDE.md`](USER_GUIDE.md) — installation, operating workflows, commands, APIs, testing, and troubleshooting
-- [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md) — canonical ownership, planes, data flows, contracts, and authority model
-- [`.aura/CODEMAP.md`](.aura/CODEMAP.md) — current compact repository navigation
-- [`docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md`](docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md) — B11–B15 incident capture, deterministic replay, bounded repair, isolated preview/rollback, U7 delegation, Spatial Foundry, testing, and authority boundaries
-- [`docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md`](docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md) — governed Spatial lifecycle, Construction projection, privacy, evidence, checkpoints, Agent Bridge/MCP/CLI, and dissolution boundaries
-- [`docs/AURA_GATE.md`](docs/AURA_GATE.md) — Phase 2 authority flow, identity, policy, protocols, deployment, audit, and proof limits
-- [`docs/AURA_COUNCIL_V3_EFFICIENCY_AND_SCALE_ENHANCEMENT_PROPOSAL.md`](docs/AURA_COUNCIL_V3_EFFICIENCY_AND_SCALE_ENHANCEMENT_PROPOSAL.md) — operation-DAG, parallel-wave, quality, speed, and token-efficiency recommendations for Council V3.1
+The following may help discover, rank, compress, visualize, or explain without granting consequential authority by themselves:
+
+- VSA/HDC similarity;
+- DREAM/DREAM-lite;
+- JSpace;
+- ST3GG;
+- QDKT;
+- MUSIC/MITOSIS;
+- Model Cognome proposals;
+- visual topology and generated UI;
+- inferred/ghost relationships;
+- emergent-capability hypotheses;
+- external research and LLM output.
+
+## Human and community boundaries
+
+Aura does not claim autonomous authority over legal decisions, professional certification, community governance, restricted cultural knowledge, financial transactions, physical work, production deployment, or repository merge unless a separate authorized system explicitly grants that capability.
+
+---
+
+# Evidence and benchmarks
+
+Aura keeps evidence classes separate rather than collapsing them into one impressive-looking score.
+
+| Tier | Evidence class | What it can support |
+|---:|---|---|
+| 1 | Executable gates and exact-head tests | Claims about the exact evaluated artifact |
+| 2 | Deterministic comparative proxies | Controlled relative efficiency or continuity comparisons |
+| 3 | Estimated structural projections | Architecture hypotheses explicitly labeled `ESTIMATED` |
+| 4 | Discovery/capacity scans | Candidate capabilities and missing relationships |
+
+Representative evidence retained in the current README lineage includes:
+
+- exact-head refactor fixtures with visible, adversarial, and focused regression gates;
+- a context-localization proxy reporting `89.04% lower` total proxy with quality `+0.0057` on its documented fixture;
+- Selective Council V3 reporting `32.83% lower` total proxy than Council V2 on its controlled comparison with the same accepted patch and quality;
+- a Gate Phase 2 instrumented scope reporting `37,907` input, `1,852` output, `39,759` total token proxy and `51,987` estimated saved (`56.66%`) against its documented counterfactual, explicitly **not provider billing evidence**;
+- State Ledger synthetic continuity reporting `96.19%` lower step-7 context with preservation `1.0000` and drift `0.0000`;
+- shared-grounding structural projections explicitly labeled `ESTIMATED`.
+
+These figures are historical evidence tied to specific fixtures and revisions. **Rerun the exact benchmark/gate before quoting a number as current.** Unknown provider usage remains unknown.
+
+---
+
+# Documentation map
+
+Start here:
+
+| Document | Purpose |
+|---|---|
+| [`README.md`](README.md) | Broad architecture, implementation map, research record, and operator orientation |
+| [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md) | Canonical owners, truth/evidence order, authority, data flow, and subsystem boundaries |
+| [`.aura/CODEMAP.md`](.aura/CODEMAP.md) | Generated compact repository navigation; regenerate after source changes |
+| [`USER_GUIDE.md`](USER_GUIDE.md) | Installation, commands, APIs, testing, and operator workflows |
+| [`.aura/SECURITY.md`](.aura/SECURITY.md) | Repository security constraints |
+
+Engineering and agent architecture:
+
+- [`docs/AURA_ARCHITECTURE_HARNESS.md`](docs/AURA_ARCHITECTURE_HARNESS.md)
+- [`docs/AURA_RUNTIME_REFACTOR_HARNESS.md`](docs/AURA_RUNTIME_REFACTOR_HARNESS.md)
 - [`docs/AURA_HUMAN_AGENT_ARENA.md`](docs/AURA_HUMAN_AGENT_ARENA.md)
-- [`docs/AURA_OBSERVATORY_CRUCIBLE_HANDOFF.md`](docs/AURA_OBSERVATORY_CRUCIBLE_HANDOFF.md)
+- [`docs/AURA_CODING_WABOOSE.md`](docs/AURA_CODING_WABOOSE.md)
+- [`docs/AURA_GATE.md`](docs/AURA_GATE.md)
+- [`docs/AURA_AGENT_ARENA_BRIDGE.md`](docs/AURA_AGENT_ARENA_BRIDGE.md)
+- [`docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md`](docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md)
+- [`docs/AURA_CODING_RELATIONSHIP_COMPASS.md`](docs/AURA_CODING_RELATIONSHIP_COMPASS.md)
 - [`docs/AURA_EXTERNAL_LLM_SLICE_SESSIONS.md`](docs/AURA_EXTERNAL_LLM_SLICE_SESSIONS.md)
 - [`docs/AURA_EXECUTABLE_REFACTOR_BENCHMARK.md`](docs/AURA_EXECUTABLE_REFACTOR_BENCHMARK.md)
 - [`docs/AURA_REFACTOR_CODE_QUALITY_STANDARD.md`](docs/AURA_REFACTOR_CODE_QUALITY_STANDARD.md)
+
+Spatial and domain architecture:
+
+- [`docs/AURA_SPATIAL_COMPUTING_S0_S2.md`](docs/AURA_SPATIAL_COMPUTING_S0_S2.md)
+- [`docs/AURA_SPATIAL_S3_S4.md`](docs/AURA_SPATIAL_S3_S4.md)
+- [`docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md`](docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md)
+- [`docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md`](docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md)
+- [`docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md`](docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md)
+- [`docs/AURA_CIVIC_COMMONS_ARENA.md`](docs/AURA_CIVIC_COMMONS_ARENA.md)
+- [`docs/AURA_CIVIC_DATA_AND_PRIVACY.md`](docs/AURA_CIVIC_DATA_AND_PRIVACY.md)
+- [`docs/AURA_CIVIC_GOVERNANCE_AND_CONSENT.md`](docs/AURA_CIVIC_GOVERNANCE_AND_CONSENT.md)
+
+Evidence, learning, and observability:
+
+- [`docs/AURA_OBSERVATORY_CRUCIBLE_HANDOFF.md`](docs/AURA_OBSERVATORY_CRUCIBLE_HANDOFF.md)
 - [`docs/AURA_EMPIRICAL_COST_OBSERVATORY.md`](docs/AURA_EMPIRICAL_COST_OBSERVATORY.md)
 - [`docs/AURA_TENSOR_EVIDENCE_ARENAS.md`](docs/AURA_TENSOR_EVIDENCE_ARENAS.md)
-- [`docs/AURA_SCO_PHASE5_E9_E14_COMPLETION_PLAN.md`](docs/AURA_SCO_PHASE5_E9_E14_COMPLETION_PLAN.md)
-- [`docs/AURA_RUNTIME_REFACTOR_HARNESS.md`](docs/AURA_RUNTIME_REFACTOR_HARNESS.md) — isolated loopback runtime reproduction, browser evidence, before/after repair binding, and authority boundaries
 
-<!-- AURA_CONSTRUCTION_G7_G8 -->
-## Construction Arena G0–G8
+Research papers:
 
-AuraOS includes a deterministic, local Construction Arena demonstration spanning source provenance, fictional BIM compilation, synthetic project state, immutable Spatial projection, Gaussian/graph/overlay presentation, director tours, Observatory evidence, a human decision packet, and exact renderer dissolution.
+- [`papers/AuraOS_Paper_VIII_Evidence_Ordered_Relational_Arenas.pdf`](papers/AuraOS_Paper_VIII_Evidence_Ordered_Relational_Arenas.pdf)
+- [`papers/AuraOS_Paper_IX_Objective_Native_Commons_Proof_Carrying_Contribution_Economies.pdf`](papers/AuraOS_Paper_IX_Objective_Native_Commons_Proof_Carrying_Contribution_Economies.pdf)
 
-```bash
-python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --serve
-```
+---
 
-Open `http://127.0.0.1:8767/demo/construction?tour=full`.
+# Origins, sovereignty, and data governance
 
-The recording client renders the deterministic Gaussian fallback plus a bounds-derived wireframe mesh presentation and graph/overlay context. Mesh, Splats, and Hybrid are all live for the synthetic fallback. The wireframe is explicitly presentation-derived and does not claim browser GLB decoding; real asset packs may be compiled and contract-validated, but the browser still refuses to substitute fallback geometry for real digests.
+Aura began as a locally controlled Anishinaabemowin learning system. That origin continues to shape the architecture:
 
-See [`docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md`](docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md) for the complete operator, recording, verification, security, and troubleshooting guide.
+- local operation and sovereignty;
+- data minimization;
+- purpose-limited disclosure;
+- inspectable provenance;
+- explicit consent;
+- revocable authority;
+- speaker/teacher/community governance;
+- refusal to treat external model convenience as authority.
 
-## AI-agent harnesses and Aura-native development tools
+Aura keeps its influences distinct:
 
-AI agents should not approach AuraOS as an ordinary flat repository. Aura includes persistent harnesses and architecture organs that expose exact repository evidence, bounded relational context, review circuits, and safe handoffs:
+1. **Anishinaabemowin-derived relational/governance alignments** influence sovereignty, reciprocity, local authority, and data-governance design.
+2. **An Athabaskan-inspired six-slot software ordering contract** informs the canonical `DIR → ASP → CLASS → SUBJ → VOICE → STEM` ordering.
+3. **Aura's machine-oriented finite-state grammar** implements deterministic software routing and hard gates.
+4. Conventional software engineering, formal methods, agent architecture, VSA/HDC, security, provenance, and distributed-systems techniques provide additional engineering substrate.
 
-- **CODEMAP and topology** — read [`.aura/CODEMAP.md`](.aura/CODEMAP.md) first; regenerate with `python aura_codebase_navigator.py` and verify with `python -m aura_codemap_verify --compare-json .aura/CODEMAP.json` only after source stabilizes.
-- **Aura Architecture Harness** — `scripts/aura_architecture_harness.py` reconstructs a reproducible environment, runs doctor checks, exports AI-safe source handoffs, supervises long runs with 10-minute check-ins and a 20-minute reassessment pause, and invokes the Connectome, Relational Index, Relationship Atlas, Emergent Properties, and Architect Fusion Loop without granting patch authority.
-- **Runtime Refactor Harness** — the `runtime` command consumes a repository-owned profile, creates an external virtual environment, starts a loopback server, drives a real probe/browser, captures screenshots/logs/receipts, runs retained gates, dissolves the process, and binds a failing baseline to a later `REPAIRED_AND_VERIFIED` receipt. It observes and proves; it never patches or merges.
-- **Bilateral Live Repair / Spatial Foundry** — `aura_showcase_live_repair_server.py` composes the Showcase with explicit bounded incident capture, replay, repair evidence, and a non-authoritative spatial proof surface while reusing Attempt Archive, Runtime Profile V2, U7, Waboose, Council, and Crucible owners.
-- **Coding Waboose** — `aura_coding_waboose_cli.py` performs deterministic graph-guided review, static checks, semantic rule packs, focused-test selection, evidence corroboration, and bounded Forge repair requests. Waboose reviews; it does not patch or merge.
-- **Coding Relationship Compass** — compiles objective-bounded callers, callees, shared resources, required tests, invariants, and authority risks from Aura's topology.
-- **Council V3 and Surgeon** — route failure classes and prepare bounded repair strategies while keeping execution and merge human-authorized.
-- **Capability Connectome, Relational Synthesis, Relationship Atlas, and Emergent Properties** — reveal existing capability anatomy, wired and unwired relationships, missing roles, prohibitions, and evidence-bound candidate combinations.
-- **Agent Arena MCP / Agent Bridge** — exposes Aura tools to replaceable external agents while preserving proposal-only authority and exact receipts.
-- **Crucible and Observatory** — benchmark candidate behavior and present evidence for review; neither surface is automatic patch or merge authority.
+These sources should not be flattened into a generic claim about “Indigenous grammar.”
 
-Start with:
+Community-owned language recordings, local dialect lexicons, teaching materials, corrections, private or ceremonial knowledge, learner data, and contributor consent records remain governed separately from the general AuraOS software licence.
 
-```bash
-python scripts/aura_architecture_harness.py --repo-root . doctor
-python scripts/aura_architecture_harness.py --repo-root . handoff --output-dir ../AuraOS-ai-handoff
-python scripts/aura_architecture_harness.py --repo-root . runtime --profile .aura/runtime_profiles/construction_demo.v1.json --output-dir ../AuraOS-runtime-evidence/construction --install-requirements
-```
+---
 
-Then use the focused guides in [`docs/AURA_ARCHITECTURE_HARNESS.md`](docs/AURA_ARCHITECTURE_HARNESS.md), [`docs/AURA_RUNTIME_REFACTOR_HARNESS.md`](docs/AURA_RUNTIME_REFACTOR_HARNESS.md), and the Waboose contract in [`docs/AURA_CODING_WABOOSE.md`](docs/AURA_CODING_WABOOSE.md).
+# Licensing
 
-All harness outputs remain navigation, analysis, review, or proposal evidence. Exact source spans, hashes, tests, verifier receipts, and human authorization remain patch and merge authority.
+AuraOS source code is released under the **GNU Affero General Public License v3.0** unless a file or bundled dependency states otherwise.
+
+The repository includes or integrates third-party components with their own terms. In particular, the OjibweMorph finite-state resource is associated with **CC BY-NC-SA 4.0** terms and should not be assumed to permit unrestricted commercial deployment.
+
+Research papers have their own publication metadata/licensing. Publishing prior art does not transfer ownership of community-controlled data or eliminate third-party licence obligations.
+
+---
+
+# Project status
+
+AuraOS is an active research and development system, not a claim of finished universal AGI infrastructure.
+
+The repository demonstrates substantial implemented architecture around deterministic intent routing, relational repository understanding, bounded human/AI Arenas, source-grounded engineering, governance, verification, continuity, spatial projection, domain Arenas, and review-gated learning.
+
+Important work remains around production hardening, broader independent benchmarking, network authentication/authorization, sandbox deployment, documentation synchronization, standards integration, live data connectors, governance agreements, licensing, developer experience, and the staged implementation of the broader Commons/Places/Foundry architecture published in Paper IX.
+
+---
+
+## Contact
+
+**Founder:** Dallas Courchene  
+**Repository:** [dallascourchene-commits/AuraOS](https://github.com/dallascourchene-commits/AuraOS)  
+**Email:** aura.os.q@gmail.com
