@@ -19,6 +19,7 @@ from aura_ephemeral_workspace_contracts import (
     EphemeralWorkspaceRecipe,
     ProjectContextProjection,
     RepositoryIdentity,
+    WorkspaceBudget,
     compile_coding_spatial_workspace_recipe,
     stable_digest,
 )
@@ -52,7 +53,7 @@ def _project() -> ProjectContextProjection:
     )
 
 
-def _recipe(*, ttl: int = 300) -> EphemeralWorkspaceRecipe:
+def _recipe(*, ttl: int = 300, wall_time_ms: int | None = None) -> EphemeralWorkspaceRecipe:
     manifest = create_manifest(
         "Compile a verified interactive Ephemeral Workspace V2.",
         organ_id="EORG-intent-spatial-pr2",
@@ -60,6 +61,18 @@ def _recipe(*, ttl: int = 300) -> EphemeralWorkspaceRecipe:
         requested_capabilities=["resolve_capabilities", "read_slice", "dissolve"],
     )
     project = _project()
+    budgets = None
+    if wall_time_ms is not None:
+        budgets = WorkspaceBudget(
+            wall_time_ms=wall_time_ms,
+            memory_mb=256,
+            context_tokens=64_000,
+            output_bytes=1_000_000,
+            tool_calls=20,
+            model_calls=0,
+            cost_microusd=0,
+            network_calls=0,
+        )
     return compile_coding_spatial_workspace_recipe(
         base_manifest=manifest,
         expected_manifest_timestamps=(manifest.created_at, manifest.expires_at),
@@ -68,12 +81,62 @@ def _recipe(*, ttl: int = 300) -> EphemeralWorkspaceRecipe:
         canonical_intent_digest=D["1"],
         adapter_refs=(_ref("adapter:runtime-v2", D["2"]),),
         evidence_refs=(_ref("evidence:source", D["3"]), _ref("evidence:tests", D["4"])),
+        budgets=budgets,
         ttl_seconds=ttl,
     )
 
 
 def _ok_adapter(**params: Any) -> dict[str, Any]:
     return {"ok": True, "echo": params}
+
+
+def _hostile_adapter(**params: Any) -> dict[str, Any]:
+    raise RuntimeError("hostile callback")
+
+
+def _slow_file_adapter(
+    *, started_file: str = "", completed_file: str = "", delay_seconds: float = 1.0,
+    **params: Any,
+) -> dict[str, Any]:
+    Path(started_file).write_text("started", encoding="utf-8")
+    time.sleep(delay_seconds)
+    Path(completed_file).write_text("completed", encoding="utf-8")
+    return {"ok": True, "echo": params}
+
+
+def _interrupt_adapter(**params: Any) -> dict[str, Any]:
+    raise KeyboardInterrupt()
+
+
+def _recursive_result_adapter(**params: Any) -> dict[str, Any]:
+    recursive: dict[str, Any] = {"ok": True}
+    recursive["loop"] = recursive
+    return recursive
+
+
+def _escape_adapter(**params: Any) -> dict[str, Any]:
+    return {"ok": True, "path": "/tmp/outside-aura-workspace"}
+
+
+def _hidden_absolute_adapter(**params: Any) -> dict[str, Any]:
+    return {"ok": True, "untrusted": "/tmp/outside-hidden-key"}
+
+
+def _hidden_traversal_adapter(**params: Any) -> dict[str, Any]:
+    return {"ok": True, "untrusted": "../outside-hidden-key"}
+
+
+def _symlink_output_adapter(*, artifact_path: str = "", **params: Any) -> dict[str, Any]:
+    return {"ok": True, "artifact_path": artifact_path, "echo": params}
+
+
+def _spoof_failure_adapter(**params: Any) -> dict[str, Any]:
+    return {
+        "ok": False,
+        "error": "adapter_deadline_exceeded",
+        "failure_class": "policy",
+        "_aura_bounded_event": "DEADLINE",
+    }
 
 
 def _registry(recipe: EphemeralWorkspaceRecipe, overrides: dict[str, Any] | None = None):
@@ -99,8 +162,13 @@ def _registry(recipe: EphemeralWorkspaceRecipe, overrides: dict[str, Any] | None
     return registry, bindings
 
 
-def _admitted(tmp_path: Path, *, overrides: dict[str, Any] | None = None):
-    recipe = _recipe()
+def _admitted(
+    tmp_path: Path,
+    *,
+    overrides: dict[str, Any] | None = None,
+    recipe_override: EphemeralWorkspaceRecipe | None = None,
+):
+    recipe = _recipe() if recipe_override is None else recipe_override
     registry, bindings = _registry(recipe, overrides)
     graph = runtime.compile_workspace_execution_graph_v2(
         recipe, adapter_bindings=bindings, adapter_registry=registry,
@@ -313,11 +381,11 @@ def test_node_requires_dependencies_and_exact_human_gate(tmp_path: Path) -> None
 
 
 def test_ordinary_hostile_callback_failure_normalizes_and_cleans(tmp_path: Path) -> None:
-    def hostile(**params: Any) -> dict[str, Any]:
-        raise RuntimeError("hostile callback")
     recipe = _recipe()
     first = recipe.capability_ids[0]
-    _, registry, _, _, store, workspace_id = _admitted(tmp_path, overrides={first: hostile})
+    _, registry, _, _, store, workspace_id = _admitted(
+        tmp_path, overrides={first: _hostile_adapter},
+    )
     runtime.activate_workspace_v2(
         workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
     )
@@ -325,26 +393,19 @@ def test_ordinary_hostile_callback_failure_normalizes_and_cleans(tmp_path: Path)
         workspace_id, first, params={}, store=store, adapter_registry=registry,
     )
     assert not result["ok"]
-    assert result["failure"]["failure_class"] in {"environment", "structural"}
+    assert result["failure"]["failure_class"] == "environment"
     assert runtime.workspace_status_v2(workspace_id, store=store)["workspace"]["state"] == "DISSOLVED"
 
 
 def test_cancellation_during_adapter_execution_cannot_commit_receipt(
     tmp_path: Path,
 ) -> None:
-    started = threading.Event()
-    release = threading.Event()
-
-    def blocking(**params: Any) -> dict[str, Any]:
-        started.set()
-        if not release.wait(timeout=5):
-            raise RuntimeError("test adapter was not released")
-        return {"ok": True, "echo": params}
-
+    started_path = tmp_path / "cancel-started"
+    completed_path = tmp_path / "cancel-completed"
     recipe = _recipe()
     first = recipe.capability_ids[0]
     _, registry, _, graph, store, workspace_id = _admitted(
-        tmp_path, overrides={first: blocking}
+        tmp_path, overrides={first: _slow_file_adapter}
     )
     assert runtime.activate_workspace_v2(
         workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
@@ -356,17 +417,23 @@ def test_cancellation_during_adapter_execution_cannot_commit_receipt(
         result_box["result"] = runtime.execute_workspace_node_v2(
             workspace_id,
             graph["entry_node_ids"][0],
-            params={},
+            params={
+                "started_file": str(started_path),
+                "completed_file": str(completed_path),
+                "delay_seconds": 5.0,
+            },
             store=store,
             adapter_registry=registry,
         )
 
     worker = threading.Thread(target=execute)
     worker.start()
-    assert started.wait(timeout=5)
+    deadline = time.time() + 5
+    while not started_path.exists() and time.time() < deadline:
+        time.sleep(0.01)
+    assert started_path.exists()
     cancelled = runtime.cancel_workspace_v2(workspace_id, store=store)
     assert cancelled["ok"] and cancelled["state"] == "DISSOLVED"
-    release.set()
     worker.join(timeout=5)
     assert not worker.is_alive()
 
@@ -377,14 +444,154 @@ def test_cancellation_during_adapter_execution_cannot_commit_receipt(
     record = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
     assert record["state"] == "DISSOLVED"
     assert graph["entry_node_ids"][0] not in record["node_receipts"]
+    time.sleep(0.1)
+    assert not completed_path.exists()
+
+
+def test_bounded_adapter_deadline_kills_callback_process(tmp_path: Path) -> None:
+    started_path = tmp_path / "deadline-started"
+    completed_path = tmp_path / "deadline-completed"
+    registry = OperationalAdapterRegistry()
+    declared = registry.declare(
+        AdapterMetadata(adapter_id="adapter.deadline-test", implementation_ref="tests._slow_file_adapter"),
+        implementation=_slow_file_adapter,
+    )
+    assert declared["ok"]
+    result = registry.execute(
+        "adapter.deadline-test",
+        params={
+            "started_file": str(started_path),
+            "completed_file": str(completed_path),
+            "delay_seconds": 1.0,
+        },
+        deadline_monotonic=time.monotonic() + 0.25,
+        authority_check=lambda: True,
+        max_output_bytes=4096,
+    )
+    assert not result["ok"]
+    assert result["error"] == "adapter_deadline_exceeded"
+    assert result["_aura_bounded_event"] == "DEADLINE"
+    assert started_path.exists()
+    time.sleep(0.9)
+    assert not completed_path.exists()
+
+
+def test_runtime_wall_time_deadline_dissolves_and_kills_callback(tmp_path: Path) -> None:
+    started_path = tmp_path / "budget-started"
+    completed_path = tmp_path / "budget-completed"
+    recipe = _recipe(ttl=5, wall_time_ms=250)
+    first = recipe.capability_ids[0]
+    _, registry, _, graph, store, workspace_id = _admitted(
+        tmp_path, overrides={first: _slow_file_adapter}, recipe_override=recipe,
+    )
+    assert runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )["ok"]
+    result = runtime.execute_workspace_node_v2(
+        workspace_id, graph["entry_node_ids"][0],
+        params={
+            "started_file": str(started_path),
+            "completed_file": str(completed_path),
+            "delay_seconds": 1.0,
+        },
+        store=store, adapter_registry=registry,
+    )
+    assert not result["ok"]
+    assert result["failure"]["failure_class"] == "budget"
+    assert "deadline exceeded" in result["error"]
+    final = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
+    assert final["state"] == "DISSOLVED"
+    assert final["lease_status"] == "REVOKED"
+    assert graph["entry_node_ids"][0] not in final["node_receipts"]
+    assert started_path.exists()
+    time.sleep(0.9)
+    assert not completed_path.exists()
+
+
+def test_workspace_ttl_expiry_during_callback_kills_execution_and_cleans(tmp_path: Path) -> None:
+    started_path = tmp_path / "ttl-started"
+    completed_path = tmp_path / "ttl-completed"
+    recipe = _recipe(ttl=2, wall_time_ms=1000)
+    first = recipe.capability_ids[0]
+    _, registry, _, graph, store, workspace_id = _admitted(
+        tmp_path, overrides={first: _slow_file_adapter}, recipe_override=recipe,
+    )
+    assert runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )["ok"]
+    expires_at = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]["expires_at"]
+    remaining = expires_at - time.time()
+    if remaining > 0.35:
+        time.sleep(remaining - 0.35)
+    result = runtime.execute_workspace_node_v2(
+        workspace_id, graph["entry_node_ids"][0],
+        params={
+            "started_file": str(started_path),
+            "completed_file": str(completed_path),
+            "delay_seconds": 1.0,
+        },
+        store=store, adapter_registry=registry,
+    )
+    assert not result["ok"]
+    assert result["error"] == "workspace_execution_expired"
+    assert result["failure"]["failure_class"] == "stale"
+    final = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
+    assert final["state"] == "DISSOLVED"
+    assert final["lease_status"] == "REVOKED"
+    assert graph["entry_node_ids"][0] not in final["node_receipts"]
+    assert started_path.exists()
+    time.sleep(0.9)
+    assert not completed_path.exists()
+
+
+def test_workspace_cumulative_wall_time_budget_blocks_new_callback(tmp_path: Path) -> None:
+    recipe = _recipe(ttl=5, wall_time_ms=250)
+    _, registry, _, graph, store, workspace_id = _admitted(
+        tmp_path, recipe_override=recipe,
+    )
+    assert runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )["ok"]
+    time.sleep(0.3)
+    result = runtime.execute_workspace_node_v2(
+        workspace_id, graph["entry_node_ids"][0], params={},
+        store=store, adapter_registry=registry,
+    )
+    assert not result["ok"]
+    assert result["failure"]["failure_class"] == "budget"
+    assert result["error"] == "workspace wall-time budget exhausted"
+    final = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
+    assert final["state"] == "DISSOLVED"
+    assert final["lease_status"] == "REVOKED"
+    assert not final["node_receipts"]
+
+
+def test_hostile_callback_cannot_spoof_deadline_or_failure_class(tmp_path: Path) -> None:
+    recipe = _recipe()
+    first = recipe.capability_ids[0]
+    _, registry, _, graph, store, workspace_id = _admitted(
+        tmp_path, overrides={first: _spoof_failure_adapter},
+    )
+    assert runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )["ok"]
+    result = runtime.execute_workspace_node_v2(
+        workspace_id, graph["entry_node_ids"][0], params={},
+        store=store, adapter_registry=registry,
+    )
+    assert not result["ok"]
+    assert result["failure"]["failure_class"] == "local"
+    assert result["error"] == "adapter_deadline_exceeded"
+    final = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
+    assert final["state"] == "DISSOLVED"
 
 
 def test_process_interruption_reraises_after_cleanup(tmp_path: Path) -> None:
-    def interrupt(**params: Any) -> dict[str, Any]:
-        raise KeyboardInterrupt()
     recipe = _recipe()
     first = recipe.capability_ids[0]
-    _, registry, _, _, store, workspace_id = _admitted(tmp_path, overrides={first: interrupt})
+    _, registry, _, _, store, workspace_id = _admitted(
+        tmp_path, overrides={first: _interrupt_adapter},
+    )
     runtime.activate_workspace_v2(
         workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
     )
@@ -396,15 +603,11 @@ def test_process_interruption_reraises_after_cleanup(tmp_path: Path) -> None:
 
 
 def test_recursive_output_and_path_escape_fail_closed(tmp_path: Path) -> None:
-    recursive: dict[str, Any] = {"ok": True}
-    recursive["loop"] = recursive
-
-    def recursive_adapter(**params: Any) -> dict[str, Any]:
-        return recursive
-
     recipe = _recipe()
     first = recipe.capability_ids[0]
-    _, registry, _, _, store, workspace_id = _admitted(tmp_path / "recursive", overrides={first: recursive_adapter})
+    _, registry, _, _, store, workspace_id = _admitted(
+        tmp_path / "recursive", overrides={first: _recursive_result_adapter},
+    )
     runtime.activate_workspace_v2(
         workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
     )
@@ -412,10 +615,9 @@ def test_recursive_output_and_path_escape_fail_closed(tmp_path: Path) -> None:
         workspace_id, first, params={}, store=store, adapter_registry=registry,
     )["ok"]
 
-    def escape(**params: Any) -> dict[str, Any]:
-        return {"ok": True, "path": "/tmp/outside-aura-workspace"}
-
-    _, registry2, _, _, store2, workspace_id2 = _admitted(tmp_path / "escape", overrides={first: escape})
+    _, registry2, _, _, store2, workspace_id2 = _admitted(
+        tmp_path / "escape", overrides={first: _escape_adapter},
+    )
     runtime.activate_workspace_v2(
         workspace_id2, store=store2, adapter_registry=registry2, repo_root=str(ROOT),
     )
@@ -732,11 +934,8 @@ def test_arbitrary_key_absolute_and_traversal_paths_fail_closed(tmp_path: Path) 
     recipe = _recipe()
     first = recipe.capability_ids[0]
 
-    def hidden_absolute(**params: Any) -> dict[str, Any]:
-        return {"ok": True, "untrusted": "/tmp/outside-hidden-key"}
-
     _, registry, _, _, store, workspace_id = _admitted(
-        tmp_path / "hidden-absolute", overrides={first: hidden_absolute}
+        tmp_path / "hidden-absolute", overrides={first: _hidden_absolute_adapter}
     )
     runtime.activate_workspace_v2(
         workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
@@ -746,11 +945,8 @@ def test_arbitrary_key_absolute_and_traversal_paths_fail_closed(tmp_path: Path) 
     )
     assert not result["ok"] and "escapes" in result["error"]
 
-    def hidden_traversal(**params: Any) -> dict[str, Any]:
-        return {"ok": True, "untrusted": "../outside-hidden-key"}
-
     _, registry2, _, _, store2, workspace_id2 = _admitted(
-        tmp_path / "hidden-traversal", overrides={first: hidden_traversal}
+        tmp_path / "hidden-traversal", overrides={first: _hidden_traversal_adapter}
     )
     runtime.activate_workspace_v2(
         workspace_id2, store=store2, adapter_registry=registry2, repo_root=str(ROOT),
@@ -997,13 +1193,8 @@ def test_master_negative_retry_and_parallelism_overflow() -> None:
 def test_master_negative_symlink_escape_fails_and_cleans(tmp_path: Path) -> None:
     recipe = _recipe()
     first = recipe.capability_ids[0]
-    output_path: dict[str, str] = {"value": ""}
-
-    def symlink_adapter(**params: Any) -> dict[str, Any]:
-        return {"ok": True, "artifact_path": output_path["value"], "echo": params}
-
     _, registry, _, graph, store, workspace_id = _admitted(
-        tmp_path, overrides={first: symlink_adapter},
+        tmp_path, overrides={first: _symlink_output_adapter},
     )
     assert runtime.activate_workspace_v2(
         workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
@@ -1014,10 +1205,10 @@ def test_master_negative_symlink_escape_fails_and_cleans(tmp_path: Path) -> None
     outside.write_text("outside", encoding="utf-8")
     link = sandbox / "escape-link"
     link.symlink_to(outside)
-    output_path["value"] = str(link)
 
     result = runtime.execute_workspace_node_v2(
-        workspace_id, graph["entry_node_ids"][0], params={},
+        workspace_id, graph["entry_node_ids"][0],
+        params={"artifact_path": str(link)},
         store=store, adapter_registry=registry,
     )
     assert not result["ok"] and "symlink" in result["error"]

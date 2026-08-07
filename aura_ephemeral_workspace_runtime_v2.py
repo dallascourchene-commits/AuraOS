@@ -808,7 +808,12 @@ def activate_workspace_v2(
         )
         if not sandbox.get("ok"):
             raise ValueError(sandbox.get("error", "sandbox preparation failed"))
-        store.update_workspace_v2(workspace_id, sandbox_path=sandbox["temp_dir"])
+        activation_record = _workspace(store, workspace_id)
+        activation_usage = dict(activation_record["usage_json"])
+        activation_usage["started_at"] = time.time()
+        store.update_workspace_v2(
+            workspace_id, sandbox_path=sandbox["temp_dir"], usage_json=activation_usage,
+        )
         moved = store.transition_workspace_v2(workspace_id, "ACTIVATING", "ACTIVE")
         if not moved.get("ok"):
             raise ValueError("activation lost its lifecycle state race")
@@ -909,13 +914,123 @@ def execute_workspace_node_v2(
             reason="tool call budget exhausted", node_id=node_key,
         )
     started = _trusted_now(now)
+    authority_started = time.time()
+    workspace_started = _finite(expected_usage.get("started_at"), "workspace usage started_at")
+    workspace_deadline = workspace_started + graph["budgets"]["wall_time_ms"] / 1000.0
+    if authority_started >= workspace_deadline:
+        return _fail_workspace_v2(
+            workspace_id, store=store, failure_class="budget",
+            reason="workspace wall-time budget exhausted", node_id=node_key,
+        )
+    remaining_output = graph["budgets"]["output_bytes"] - usage.get("output_bytes", 0)
+    if remaining_output <= 0:
+        return _fail_workspace_v2(
+            workspace_id, store=store, failure_class="budget",
+            reason="cumulative output budget exhausted", node_id=node_key,
+        )
+    absolute_deadlines = {
+        "node": authority_started + node["timeout_ms"] / 1000.0,
+        "workspace": workspace_deadline,
+        "ttl": record["expires_at"],
+    }
+    deadline_kind, absolute_deadline = min(absolute_deadlines.items(), key=lambda item: item[1])
+    deadline_monotonic = time.monotonic() + max(0.0, absolute_deadline - authority_started)
+
+    def execution_authority_active() -> bool:
+        if not store.is_workspace_v2_lease_active(workspace_id):
+            return False
+        binding = adapter_registry.get_binding(node["adapter_id"])
+        current = binding.get("binding", {})
+        return bool(
+            binding.get("ok")
+            and adapter_registry.is_operational(node["adapter_id"])
+            and current.get("adapter_digest") == node["adapter_digest"]
+            and current.get("implementation_digest") == node["implementation_digest"]
+        )
+
+    def invalidated_execution_result() -> dict[str, Any]:
+        current = _workspace(store, workspace_id)
+        if current["state"] == "DISSOLVED":
+            return {
+                "ok": False, "error": "workspace_execution_invalidated",
+                "workspace_id": workspace_id, "node_id": node_key,
+                "state": "DISSOLVED", "receipt_committed": False,
+            }
+        current_binding = adapter_registry.get_binding(node["adapter_id"])
+        binding_body = current_binding.get("binding", {})
+        if (
+            not current_binding.get("ok")
+            or not adapter_registry.is_operational(node["adapter_id"])
+            or binding_body.get("adapter_digest") != node["adapter_digest"]
+            or binding_body.get("implementation_digest") != node["implementation_digest"]
+        ):
+            return _fail_workspace_v2(
+                workspace_id, store=store, failure_class="stale",
+                reason="adapter binding invalidated during execution", node_id=node_key,
+            )
+        return {
+            "ok": False, "error": "workspace_execution_invalidated",
+            "workspace_id": workspace_id, "node_id": node_key,
+            "state": current["state"], "receipt_committed": False,
+        }
+
+    def expired_execution_result() -> dict[str, Any]:
+        try:
+            _expire_if_needed(workspace_id, store=store)
+        except ValueError:
+            pass
+        final = _workspace(store, workspace_id)
+        failure = final["failure_records"][-1] if final["failure_records"] else {}
+        return {
+            "ok": False, "error": "workspace_execution_expired",
+            "workspace_id": workspace_id, "node_id": node_key,
+            "failure": failure, "cleanup": final.get("cleanup_receipt", {}),
+            "state": final["state"], "receipt_committed": False,
+        }
+
     upstream_digests = [receipts[parent]["receipt_digest"] for parent in sorted(parents[node_key])]
     try:
         raw = adapter_registry.execute(
             node["adapter_id"], params=clean_params,
-            lease_active=store.is_workspace_v2_lease_active(workspace_id, now=started),
+            lease_active=store.is_workspace_v2_lease_active(workspace_id),
+            deadline_monotonic=deadline_monotonic,
+            authority_check=execution_authority_active,
+            max_output_bytes=min(remaining_output, MAX_OUTPUT_BYTES),
         )
         output = _detach_json(raw, name="adapter_result")
+        bounded_event = output.pop("_aura_bounded_event", None)
+        if bounded_event == "AUTHORITY_REVOKED":
+            current = _workspace(store, workspace_id)
+            if current["state"] != "DISSOLVED" and time.time() >= current["expires_at"]:
+                return expired_execution_result()
+            return invalidated_execution_result()
+        if bounded_event == "DEADLINE":
+            current = _workspace(store, workspace_id)
+            if current["state"] != "DISSOLVED" and time.time() >= current["expires_at"]:
+                return expired_execution_result()
+            return _fail_workspace_v2(
+                workspace_id, store=store, failure_class="budget",
+                reason=f"{deadline_kind} execution deadline exceeded", node_id=node_key,
+            )
+        if bounded_event in {"AUTHORITY_CHECK_FAILED", "WORKER_ERROR"}:
+            category = output.get("failure_class", "environment")
+            category = category if category in {"environment", "structural", "stale", "budget"} else "environment"
+            return _fail_workspace_v2(
+                workspace_id, store=store, failure_class=category,
+                reason=_exact_string(str(output.get("error", "bounded adapter failed")), "adapter failure"),
+                node_id=node_key,
+            )
+        completed_real = time.time()
+        current = _workspace(store, workspace_id)
+        if current["state"] != "DISSOLVED" and completed_real >= current["expires_at"]:
+            return expired_execution_result()
+        if not execution_authority_active():
+            return invalidated_execution_result()
+        if time.monotonic() >= deadline_monotonic:
+            return _fail_workspace_v2(
+                workspace_id, store=store, failure_class="budget",
+                reason=f"{deadline_kind} execution deadline exceeded", node_id=node_key,
+            )
         encoded_size = len(canonical_json(output).encode("utf-8"))
         if encoded_size > min(graph["budgets"]["output_bytes"], MAX_OUTPUT_BYTES):
             raise _BudgetExceeded("adapter result exceeds output budget")
@@ -931,7 +1046,7 @@ def execute_workspace_node_v2(
                 workspace_id, store=store, failure_class=category,
                 reason=reason, node_id=node_key,
             )
-        completed = time.time()
+        completed = max(time.time(), started)
         receipt = {
             "workspace_id": workspace_id,
             "graph_digest": graph["graph_digest"],

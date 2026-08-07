@@ -10,6 +10,10 @@ from __future__ import annotations
 import hashlib
 import inspect
 import json
+import multiprocessing
+import os
+import signal
+import time
 from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass, field
 from typing import Any
@@ -60,6 +64,293 @@ def _strict_mapping(value: Any, name: str) -> dict[str, Any]:
         return json.loads(_canonical_json(value))
     except json.JSONDecodeError as exc:  # pragma: no cover - canonical output is valid
         raise ValueError(f"{name} is invalid") from exc
+
+
+def _bounded_callback_worker(
+    implementation: Callable[..., dict[str, Any]],
+    expected_implementation_digest: str,
+    params: dict[str, Any],
+    connection: Any,
+    max_output_bytes: int,
+) -> None:
+    """Execute one exact registered callback in a new POSIX process group."""
+    try:
+        os.setsid()
+        try:
+            current_digest = _callable_digest(implementation)
+        except Exception as exc:
+            connection.send_bytes(_canonical_json({
+                "kind": "worker_error",
+                "error": f"bounded_adapter_identity_unavailable: {type(exc).__name__}: {str(exc)[:1024]}",
+                "failure_class": "stale",
+            }).encode("utf-8"))
+            return
+        if current_digest != expected_implementation_digest:
+            connection.send_bytes(_canonical_json({
+                "kind": "worker_error",
+                "error": "bounded_adapter_implementation_digest_mismatch",
+                "failure_class": "stale",
+            }).encode("utf-8"))
+            return
+        connection.send_bytes(b'{"kind":"ready"}')
+        if connection.recv_bytes() != b"execute":
+            return
+        try:
+            result = implementation(**params)
+        except BaseException as exc:
+            if isinstance(exc, Exception):
+                envelope = {
+                    "kind": "callback_error",
+                    "error_type": type(exc).__name__,
+                    "error": str(exc)[:2048],
+                }
+            else:
+                envelope = {
+                    "kind": "base_exception",
+                    "error_type": type(exc).__name__,
+                    "error": str(exc)[:2048],
+                }
+        else:
+            if not isinstance(result, Mapping):
+                envelope = {"kind": "result_error", "error": "adapter_result_must_be_mapping"}
+            else:
+                try:
+                    detached = dict(result)
+                    result_json = _canonical_json(detached)
+                except Exception as exc:
+                    envelope = {
+                        "kind": "result_error",
+                        "error": f"adapter_result_not_canonical: {type(exc).__name__}: {str(exc)[:1024]}",
+                    }
+                else:
+                    encoded = result_json.encode("utf-8")
+                    if len(encoded) > max_output_bytes:
+                        envelope = {
+                            "kind": "result_error",
+                            "error": "adapter_result_transport_limit_exceeded",
+                            "failure_class": "budget",
+                        }
+                    else:
+                        envelope = {"kind": "result", "result_json": result_json}
+        connection.send_bytes(_canonical_json(envelope).encode("utf-8"))
+        # Keep the process-group leader alive until the authority-owning parent
+        # kills/reaps the whole group, including any callback descendants.
+        try:
+            connection.recv_bytes()
+        except EOFError:
+            pass
+    except BaseException:
+        pass
+    finally:
+        connection.close()
+
+
+def _kill_bounded_process_group(process: Any) -> None:
+    pid = getattr(process, "pid", None)
+    if pid is None:
+        return
+    if os.name == "posix":
+        try:
+            os.killpg(pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        except OSError:
+            if process.is_alive():
+                process.kill()
+    elif process.is_alive():
+        process.kill()
+    process.join(timeout=1.0)
+    if process.is_alive():
+        process.kill()
+        process.join(timeout=1.0)
+
+
+def _bounded_event(
+    event: str,
+    error: str,
+    failure_class: str,
+) -> tuple[dict[str, Any], bool]:
+    return ({
+        "ok": False,
+        "error": error,
+        "failure_class": failure_class,
+        "_aura_bounded_event": event,
+    }, True)
+
+
+def _execute_bounded_callback(
+    implementation: Callable[..., dict[str, Any]],
+    *,
+    expected_implementation_digest: str,
+    params: dict[str, Any],
+    deadline_monotonic: float,
+    authority_check: Callable[[], bool],
+    max_output_bytes: int,
+) -> tuple[dict[str, Any], bool]:
+    """Execute one exact adapter with parent-owned hard authority/deadline checks."""
+    if os.name != "posix" or "spawn" not in multiprocessing.get_all_start_methods():
+        return _bounded_event(
+            "WORKER_ERROR", "bounded_adapter_execution_unavailable_on_host", "environment"
+        )
+    if type(deadline_monotonic) not in {int, float} or type(deadline_monotonic) is bool:
+        raise ValueError("deadline_monotonic must be a finite positive number")
+    if deadline_monotonic != deadline_monotonic or deadline_monotonic in {float("inf"), float("-inf")} \
+            or deadline_monotonic <= 0:
+        raise ValueError("deadline_monotonic must be a finite positive number")
+    if type(max_output_bytes) is not int or type(max_output_bytes) is bool or max_output_bytes < 1:
+        raise ValueError("max_output_bytes must be a positive integer")
+    if not callable(authority_check):
+        raise ValueError("authority_check must be callable")
+
+    try:
+        if authority_check() is not True:
+            return _bounded_event(
+                "AUTHORITY_REVOKED", "execution_authority_revoked", "cancellation"
+            )
+    except Exception as exc:
+        return _bounded_event(
+            "AUTHORITY_CHECK_FAILED",
+            f"execution_authority_check_failed: {type(exc).__name__}: {exc}",
+            "environment",
+        )
+    if time.monotonic() >= deadline_monotonic:
+        return _bounded_event("DEADLINE", "adapter_deadline_exceeded", "budget")
+
+    context = multiprocessing.get_context("spawn")
+    parent, child = context.Pipe(duplex=True)
+    process = context.Process(
+        target=_bounded_callback_worker,
+        args=(
+            implementation,
+            expected_implementation_digest,
+            params,
+            child,
+            max_output_bytes,
+        ),
+        daemon=False,
+    )
+    try:
+        process.start()
+    except Exception as exc:
+        parent.close()
+        child.close()
+        return _bounded_event(
+            "WORKER_ERROR",
+            f"bounded_adapter_start_failed: {type(exc).__name__}: {exc}",
+            "environment",
+        )
+    child.close()
+    ready = False
+    try:
+        while True:
+            try:
+                authority_active = authority_check() is True
+            except Exception as exc:
+                return _bounded_event(
+                    "AUTHORITY_CHECK_FAILED",
+                    f"execution_authority_check_failed: {type(exc).__name__}: {exc}",
+                    "environment",
+                )
+            if not authority_active:
+                return _bounded_event(
+                    "AUTHORITY_REVOKED", "execution_authority_revoked", "cancellation"
+                )
+            remaining = deadline_monotonic - time.monotonic()
+            if remaining <= 0:
+                return _bounded_event("DEADLINE", "adapter_deadline_exceeded", "budget")
+            if parent.poll(min(0.01, remaining)):
+                try:
+                    envelope = json.loads(parent.recv_bytes().decode("utf-8"))
+                except (EOFError, UnicodeDecodeError, json.JSONDecodeError):
+                    return _bounded_event(
+                        "WORKER_ERROR", "bounded_adapter_protocol_failure", "environment"
+                    )
+                kind = envelope.get("kind")
+                if kind == "ready" and not ready:
+                    ready = True
+                    try:
+                        if authority_check() is not True:
+                            return _bounded_event(
+                                "AUTHORITY_REVOKED", "execution_authority_revoked", "cancellation"
+                            )
+                    except Exception as exc:
+                        return _bounded_event(
+                            "AUTHORITY_CHECK_FAILED",
+                            f"execution_authority_check_failed: {type(exc).__name__}: {exc}",
+                            "environment",
+                        )
+                    if time.monotonic() >= deadline_monotonic:
+                        return _bounded_event("DEADLINE", "adapter_deadline_exceeded", "budget")
+                    parent.send_bytes(b"execute")
+                    continue
+                if kind == "result" and ready:
+                    try:
+                        if authority_check() is not True:
+                            return _bounded_event(
+                                "AUTHORITY_REVOKED", "execution_authority_revoked", "cancellation"
+                            )
+                    except Exception as exc:
+                        return _bounded_event(
+                            "AUTHORITY_CHECK_FAILED",
+                            f"execution_authority_check_failed: {type(exc).__name__}: {exc}",
+                            "environment",
+                        )
+                    if time.monotonic() >= deadline_monotonic:
+                        return _bounded_event("DEADLINE", "adapter_deadline_exceeded", "budget")
+                    try:
+                        decoded = json.loads(envelope["result_json"])
+                    except (KeyError, TypeError, json.JSONDecodeError):
+                        return _bounded_event(
+                            "WORKER_ERROR", "bounded_adapter_result_decode_failed", "structural"
+                        )
+                    if type(decoded) is not dict:
+                        return _bounded_event(
+                            "WORKER_ERROR", "bounded_adapter_result_must_be_object", "structural"
+                        )
+                    # A callback cannot forge parent-owned lifecycle/control events.
+                    decoded.pop("_aura_bounded_event", None)
+                    return decoded, False
+                if kind == "callback_error":
+                    return ({
+                        "ok": False,
+                        "error": (
+                            f"adapter_callback_failed: {envelope.get('error_type', 'Exception')}: "
+                            f"{envelope.get('error', '')}"
+                        ),
+                        "failure_class": "environment",
+                    }, True)
+                if kind == "result_error":
+                    return ({
+                        "ok": False,
+                        "error": envelope.get("error", "adapter_result_invalid"),
+                        "failure_class": envelope.get("failure_class", "structural"),
+                    }, True)
+                if kind == "worker_error":
+                    return _bounded_event(
+                        "WORKER_ERROR",
+                        envelope.get("error", "bounded_adapter_worker_error"),
+                        envelope.get("failure_class", "environment"),
+                    )
+                if kind == "base_exception":
+                    error_type = envelope.get("error_type", "BaseException")
+                    message = envelope.get("error", "")
+                    if error_type == "KeyboardInterrupt":
+                        raise KeyboardInterrupt(message)
+                    if error_type == "SystemExit":
+                        raise SystemExit(message)
+                    if error_type == "GeneratorExit":
+                        raise GeneratorExit(message)
+                    raise BaseException(f"adapter process interruption: {error_type}: {message}")
+                return _bounded_event(
+                    "WORKER_ERROR", "bounded_adapter_protocol_failure", "environment"
+                )
+            if not process.is_alive():
+                return _bounded_event(
+                    "WORKER_ERROR", "bounded_adapter_worker_exited_without_result", "environment"
+                )
+    finally:
+        _kill_bounded_process_group(process)
+        parent.close()
 
 
 @dataclass
@@ -227,8 +518,16 @@ class OperationalAdapterRegistry:
                 "adapter_digest": meta.adapter_digest,
                 "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
-    def execute(self, adapter_id: str, *, params: dict[str, Any] | None = None,
-                lease_active: bool = True) -> dict[str, Any]:
+    def execute(
+        self,
+        adapter_id: str,
+        *,
+        params: dict[str, Any] | None = None,
+        lease_active: bool = True,
+        deadline_monotonic: float | None = None,
+        authority_check: Callable[[], bool] | None = None,
+        max_output_bytes: int = 4_000_000,
+    ) -> dict[str, Any]:
         try:
             params = {} if params is None else _strict_mapping(params, "params")
         except ValueError as exc:
@@ -254,14 +553,32 @@ class OperationalAdapterRegistry:
         if impl is None:
             return {"ok": False, "error": f"no_implementation: {adapter_id}", "status": "NOT_OPERATIONAL",
                     "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
-        try:
-            result = impl(**params)
-        except Exception as exc:
-            return {"ok": False, "error": f"adapter_callback_failed: {type(exc).__name__}: {exc}",
-                    "adapter": adapter_id, "failure_class": "environment",
-                    "adapter_digest": meta.adapter_digest,
-                    "implementation_digest": meta.implementation_digest,
-                    "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+
+        trusted_failure = False
+        if deadline_monotonic is None:
+            # Historical/V1-compatible path: no new process boundary is imposed on
+            # callers that did not opt into the V2 bounded execution contract.
+            try:
+                result = impl(**params)
+            except Exception as exc:
+                result = {
+                    "ok": False,
+                    "error": f"adapter_callback_failed: {type(exc).__name__}: {exc}",
+                    "failure_class": "environment",
+                }
+                trusted_failure = True
+        else:
+            if authority_check is None:
+                raise ValueError("authority_check is required for bounded adapter execution")
+            result, trusted_failure = _execute_bounded_callback(
+                impl,
+                expected_implementation_digest=meta.implementation_digest,
+                params=params,
+                deadline_monotonic=deadline_monotonic,
+                authority_check=authority_check,
+                max_output_bytes=max_output_bytes,
+            )
+
         if not isinstance(result, Mapping):
             return {"ok": False, "error": "adapter_result_must_be_mapping", "adapter": adapter_id,
                     "failure_class": "structural",
@@ -273,6 +590,12 @@ class OperationalAdapterRegistry:
                     "adapter_digest": meta.adapter_digest,
                     "implementation_digest": meta.implementation_digest,
                     "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+        if not trusted_failure:
+            # Callback-controlled text cannot select failure attribution or forge
+            # the registry/runtime's private lifecycle-control channel.
+            detached.pop("_aura_bounded_event", None)
+            if detached["ok"] is False:
+                detached["failure_class"] = "local"
         detached["adapter"] = adapter_id
         detached["operational_status"] = "OPERATIONAL"
         detached["adapter_digest"] = meta.adapter_digest

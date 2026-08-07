@@ -104,6 +104,21 @@ proven independent but intentionally uses deterministic serial execution
 (`parallelism_used: 1`) until a later bounded implementation proves safe
 concurrency behavior.
 
+Executable V2 callbacks are bounded by one runtime-owned absolute deadline: the
+minimum of the node timeout, the cumulative workspace wall-time budget measured
+from activation, and the absolute workspace TTL. On POSIX hosts with Python's
+`spawn` process start method, the existing adapter registry runs only the exact
+already-registered callable in an isolated child process group. The parent
+continuously checks the live workspace lease/state and exact current adapter and
+implementation identities; deadline expiry, revocation/cancellation, or binding
+drift kills and reaps the whole child process group before output can be
+accepted. The child re-verifies the admitted implementation source digest before
+execution. Hosts without the required containment primitive fail V2 bounded
+execution closed. This is internal containment of an admitted adapter, not a
+shell/arbitrary-subprocess capability and not arbitrary native execution. The
+historical registry path remains unchanged for callers that do not opt into the
+V2 bounded execution contract.
+
 ## Receipts and failure attribution
 
 A verified node receipt binds:
@@ -117,11 +132,15 @@ A verified node receipt binds:
 - the complete receipt digest.
 
 Failures are classified as `local`, `upstream`, `structural`, `stale`, `policy`,
-`budget`, `cancellation`, or `environment`. Ordinary adapter exceptions are
-normalized into a failed result. `KeyboardInterrupt`, `SystemExit`, and other
-process-level exceptions are never swallowed: cleanup runs and the original
-exception is re-raised, with a cleanup exception explicitly chained if cleanup
-itself fails.
+`budget`, `cancellation`, or `environment`. Ordinary callback-returned failures
+are always attributed `local`; callback-controlled text cannot select another
+failure class or forge the registry/runtime's private deadline/authority events.
+Registry-detected callback exceptions remain `environment`, structural transport
+violations remain `structural`, node/workspace wall-time expiry is `budget`, and
+absolute workspace TTL expiry is `stale`. `KeyboardInterrupt`, `SystemExit`, and
+other process-level exceptions are never swallowed: bounded execution reports
+the interruption to the parent runtime, cleanup runs, and the process-level
+exception is re-raised.
 
 Partial re-execution reuses a receipt only when the exact node binding,
 implementation, assumptions, source, and all upstream receipt digests remain
