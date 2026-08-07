@@ -1,41 +1,85 @@
-name: P2.1 review regression gate
+name: PR2 review hardening 269
 
 on:
-  pull_request:
-    paths:
-      - aura_planning_board.py
-      - tests/test_aura_planning_board.py
-      - .github/workflows/p2-1-apply-review-fixes.yml
   push:
     branches:
-      - main
-      - "refactor/**"
-    paths:
-      - aura_planning_board.py
-      - tests/test_aura_planning_board.py
-      - .github/workflows/p2-1-apply-review-fixes.yml
+      - "analysis/pr2-review-hardening-269"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: p2-1-review-regressions-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: pr2-review-hardening-269
+  cancel-in-progress: false
 
 jobs:
-  reviewed-regressions:
-    name: Reviewed Planning Board regressions
+  harden:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout helper commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Preserve patcher and checkout exact clean PR2 head
+        run: |
+          cp tools/pr2_review_hardening_269.py /tmp/pr2_review_hardening_269.py
+          git fetch --no-tags origin refactor/verified-ephemeral-workspace-pr2-clean
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "7bf5728cbd7b7fd229cc0067d212514f005fc518"
+
+      - name: Apply reviewed hardening transaction
+        run: python /tmp/pr2_review_hardening_269.py
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
-      - name: Install test tooling
-        run: python -m pip install pytest
-      - name: Preserve reviewed semantics
+
+      - name: Install declared dependencies
         run: |
-          python -m pytest -q tests/test_aura_planning_board.py \
-            -k "membership_precondition_semantics or declared_blocking_constraint_refs or nonblocking_constraint_refs"
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Verify hardened PR2 transaction
+        run: |
+          python -m py_compile \
+            aura_ephemeral_adapter_registry.py \
+            aura_ephemeral_registry_store.py \
+            aura_ephemeral_workspace_runtime_v2.py \
+            tests/test_aura_ephemeral_workspace_runtime_v2.py
+          python -m ruff check --select E9,F63,F7,F82 \
+            aura_ephemeral_adapter_registry.py \
+            aura_ephemeral_registry_store.py \
+            aura_ephemeral_workspace_runtime_v2.py \
+            tests/test_aura_ephemeral_workspace_runtime_v2.py
+          python -m pytest -q tests/test_aura_ephemeral_workspace_runtime_v2.py
+          git diff --check
+          python - <<'PY'
+          import json
+          from jsonschema import Draft202012Validator
+          for path in (
+              "schemas/aura_workspace_execution_graph_v2.schema.json",
+              "schemas/aura_spatial_action_certificate_v2.schema.json",
+          ):
+              with open(path, encoding="utf-8") as handle:
+                  Draft202012Validator.check_schema(json.load(handle))
+          PY
+
+      - name: Publish ordinary source hardening commit
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS PR2 Review Hardener"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            aura_ephemeral_adapter_registry.py \
+            aura_ephemeral_registry_store.py \
+            aura_ephemeral_workspace_runtime_v2.py \
+            schemas/aura_workspace_execution_graph_v2.schema.json \
+            schemas/aura_spatial_action_certificate_v2.schema.json \
+            tests/test_aura_ephemeral_workspace_runtime_v2.py
+          test "$(git diff --cached --name-only | wc -l)" -eq 6
+          git diff --cached --check
+          git commit -m "PR2: Harden verified workspace lifecycle after review"
+          git push origin HEAD:refs/heads/refactor/verified-ephemeral-workspace-pr2-clean
