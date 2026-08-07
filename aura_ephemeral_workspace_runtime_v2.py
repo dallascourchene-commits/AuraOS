@@ -41,7 +41,7 @@ WORKSPACE_RUNTIME_V2 = "AURA_VERIFIED_EPHEMERAL_WORKSPACE_RUNTIME_V2"
 MAX_GRAPH_NODES = 256
 MAX_GRAPH_EDGES = 512
 MAX_OUTPUT_BYTES = 4_000_000
-MAX_CERTIFICATE_RECEIPTS = 5
+MAX_CERTIFICATE_RECEIPTS = 4
 MAX_JSON_ITEMS = 4096
 _ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$")
 _DIGEST = re.compile(r"^[0-9a-f]{64}$")
@@ -69,6 +69,10 @@ _CERT_TRANSITIONS = {
     "APPROVED": "EXECUTED",
     "EXECUTED": "CLOSED",
 }
+
+
+class _BudgetExceeded(ValueError):
+    """Internal marker for runtime-owned resource budget exhaustion."""
 
 
 # ---------------------------------------------------------------------------
@@ -262,6 +266,8 @@ def compile_workspace_execution_graph_v2(
     """Compile a closed graph from an exact, current PR1 recipe."""
     value = _recipe(recipe)
     _require_current_recipe(value, now)
+    if value.budgets.wall_time_ms < 1:
+        raise ValueError("wall_time_ms must be at least 1 for executable workspaces")
     bindings = _exact_mapping(adapter_bindings, "adapter_bindings")
     if set(bindings) != set(value.capability_ids):
         raise ValueError("adapter_bindings must cover the complete recipe capability set")
@@ -475,7 +481,8 @@ def validate_workspace_execution_graph_v2(payload: Mapping[str, Any]) -> dict[st
     if set(budgets) != expected_budget_fields:
         raise ValueError("graph budgets are incomplete")
     for name, value in budgets.items():
-        _integer(value, f"budget.{name}", 0, 10_000_000_000)
+        minimum = 1 if name == "wall_time_ms" else 0
+        _integer(value, f"budget.{name}", minimum, 10_000_000_000)
     if budgets["model_calls"] != 0 or budgets["network_calls"] != 0:
         raise ValueError("PR2 graph cannot admit model or network calls")
     if graph["expires_at_epoch_seconds"] <= graph["issued_at_epoch_seconds"]:
@@ -610,16 +617,25 @@ def _validate_temp_paths(value: Any, temp_dir: str, *, key: str = "") -> None:
         for child in value:
             _validate_temp_paths(child, temp_dir, key=key)
         return
-    if type(value) is str and key in {"path", "temp_dir", "output_path", "artifact_path"}:
-        candidate = Path(value)
-        if candidate.is_symlink():
-            raise ValueError("adapter output contains a symlink path")
-        root = Path(temp_dir).resolve()
-        try:
-            candidate.resolve().relative_to(root)
-        except (OSError, ValueError) as exc:
-            raise ValueError("adapter output path escapes the workspace sandbox") from exc
-
+    if type(value) is not str:
+        return
+    path_keys = {"path", "temp_dir", "output_path", "artifact_path"}
+    parts = [part for part in re.split(r"[\/]+", value) if part]
+    windows_absolute = re.match(r"^(?:[A-Za-z]:[\/]|\\)", value) is not None
+    candidate = Path(value)
+    path_sensitive = key in path_keys or candidate.is_absolute() or windows_absolute or ".." in parts
+    if not path_sensitive:
+        return
+    if windows_absolute and not candidate.is_absolute():
+        raise ValueError("adapter output path escapes the workspace sandbox")
+    root = Path(temp_dir).resolve()
+    candidate = candidate if candidate.is_absolute() else root / candidate
+    if candidate.is_symlink():
+        raise ValueError("adapter output contains a symlink path")
+    try:
+        candidate.resolve().relative_to(root)
+    except (OSError, ValueError) as exc:
+        raise ValueError("adapter output path escapes the workspace sandbox") from exc
 
 def _approval_valid(approval: Any, *, workspace_id: str, graph_digest: str, node_id: str) -> bool:
     if type(approval) is not dict:
@@ -681,24 +697,31 @@ def _cleanup_workspace_v2(
 ) -> dict[str, Any]:
     record = _workspace(store, workspace_id)
     if record["state"] == "DISSOLVED":
-        return record.get("cleanup_receipt", {})
+        receipt = dict(record.get("cleanup_receipt", {}))
+        return {"ok": bool(receipt.get("cleanup_verified", True)), **receipt, "state": "DISSOLVED"}
     if record["state"] != "DISSOLVING":
         moved = store.transition_workspace_v2(workspace_id, record["state"], "DISSOLVING",
                                               terminal_reason=reason)
         if not moved.get("ok"):
-            raise ValueError("workspace cleanup lost its state race")
-        record = _workspace(store, workspace_id)
+            record = _workspace(store, workspace_id)
+            if record["state"] == "DISSOLVED":
+                receipt = dict(record.get("cleanup_receipt", {}))
+                return {"ok": bool(receipt.get("cleanup_verified", True)), **receipt,
+                        "state": "DISSOLVED"}
+            if record["state"] != "DISSOLVING":
+                raise ValueError("workspace cleanup lost its state race")
+        else:
+            record = _workspace(store, workspace_id)
     lease = store.revoke_workspace_v2_lease(workspace_id, reason=reason)
     temp_dir = record.get("sandbox_path", "")
-    destroyed = destroy_sandbox(temp_dir) if temp_dir else {
-        "ok": True, "temp_dir_removed": True, "note": "no sandbox was allocated",
-    }
+    if temp_dir:
+        destroy_sandbox(temp_dir)
     verified = verify_dissolution(temp_dir, lease.get("ok", False))
     receipt = {
         "workspace_id": workspace_id,
         "reason": reason,
         "lease_revoked": bool(lease.get("ok")),
-        "temp_dir_removed": bool(destroyed.get("temp_dir_removed")),
+        "temp_dir_removed": bool(verified.get("temp_dir_removed")),
         "cleanup_verified": bool(verified.get("ok")),
         "cleaned_at": time.time(),
         "cleanup_digest": "",
@@ -710,9 +733,13 @@ def _cleanup_workspace_v2(
     moved = store.transition_workspace_v2(workspace_id, "DISSOLVING", "DISSOLVED",
                                           terminal_reason=reason)
     if not moved.get("ok"):
+        current = _workspace(store, workspace_id)
+        if current["state"] == "DISSOLVED":
+            final_receipt = dict(current.get("cleanup_receipt", receipt))
+            return {"ok": bool(final_receipt.get("cleanup_verified", True)), **final_receipt,
+                    "state": "DISSOLVED"}
         raise ValueError("workspace cleanup could not finalize dissolution")
     return {"ok": True, **receipt, "state": "DISSOLVED"}
-
 
 def _expire_if_needed(workspace_id: str, *, store: EphemeralRegistryStore, now: float | None = None) -> None:
     record = _workspace(store, workspace_id)
@@ -823,7 +850,7 @@ def execute_workspace_node_v2(
     record = _workspace(store, workspace_id)
     if record["state"] != "ACTIVE":
         return {"ok": False, "error": f"workspace_not_active: {record['state']}"}
-    if not store.is_workspace_v2_lease_active(workspace_id):
+    if not store.is_workspace_v2_lease_active(workspace_id, now=now):
         return {"ok": False, "error": "workspace_lease_revoked"}
     graph = validate_workspace_execution_graph_v2(record["graph_json"])
     try:
@@ -864,12 +891,12 @@ def execute_workspace_node_v2(
     try:
         raw = adapter_registry.execute(
             node["adapter_id"], params=clean_params,
-            lease_active=store.is_workspace_v2_lease_active(workspace_id),
+            lease_active=store.is_workspace_v2_lease_active(workspace_id, now=started),
         )
         output = _detach_json(raw, name="adapter_result")
         encoded_size = len(canonical_json(output).encode("utf-8"))
         if encoded_size > min(graph["budgets"]["output_bytes"], MAX_OUTPUT_BYTES):
-            raise ValueError("adapter result exceeds output budget")
+            raise _BudgetExceeded("adapter result exceeds output budget")
         _validate_temp_paths(output, record["sandbox_path"])
         if output.get("adapter_digest") != node["adapter_digest"] \
                 or output.get("implementation_digest") != node["implementation_digest"]:
@@ -930,7 +957,7 @@ def execute_workspace_node_v2(
                 "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
     except BaseException as original:
         if isinstance(original, Exception):
-            failure_class = "budget" if "budget" in str(original).lower() else "structural"
+            failure_class = "budget" if isinstance(original, _BudgetExceeded) else "structural"
             return _fail_workspace_v2(
                 workspace_id, store=store, failure_class=failure_class,
                 reason=f"node execution failed: {type(original).__name__}: {original}",
@@ -1030,12 +1057,14 @@ def cancel_workspace_v2(workspace_id: str, *, store: EphemeralRegistryStore,
     record = _workspace(store, workspace_id)
     if record["state"] == "DISSOLVED":
         return {"ok": False, "error": "workspace_already_dissolved"}
+    if record["state"] in _TERMINAL_PREP or record["state"] == "DISSOLVING":
+        terminal_reason = record.get("terminal_reason") or reason
+        return _cleanup_workspace_v2(workspace_id, store=store, reason=terminal_reason)
     moved = store.transition_workspace_v2(workspace_id, record["state"], "CANCELLING",
                                           terminal_reason=reason)
     if not moved.get("ok"):
         return moved
     return _cleanup_workspace_v2(workspace_id, store=store, reason="cancelled")
-
 
 def invalidate_workspace_v2(workspace_id: str, *, store: EphemeralRegistryStore,
                             reason: str) -> dict[str, Any]:
@@ -1227,7 +1256,14 @@ def prepare_spatial_action_certificate_v2(
     )
     certificate["certificate_digest"] = stable_digest(_certificate_body(certificate))
     validate_spatial_action_certificate_v2(certificate)
-    store.update_workspace_v2(workspace_id, certificate_json=certificate)
+    committed = store.commit_workspace_v2_certificate(
+        workspace_id,
+        expected_certificate={},
+        certificate=certificate,
+        now=current,
+    )
+    if not committed.get("ok"):
+        raise ValueError(committed.get("error", "action certificate state changed"))
     return {"ok": True, "certificate": certificate, "authorized": False,
             "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
@@ -1315,8 +1351,10 @@ def advance_spatial_action_certificate_v2(
     owner: str,
     timestamp: float | None = None,
 ) -> dict[str, Any]:
-    """Advance one exact receipt step; execution/outcome require owner evidence."""
+    """Advance one exact receipt step under ACTIVE-state certificate CAS."""
     record = _workspace(store, workspace_id)
+    if record["state"] != "ACTIVE":
+        raise ValueError("action certificate advancement requires an active workspace")
     current = record["certificate_json"]
     if not current:
         raise ValueError("workspace has no action certificate")
@@ -1324,6 +1362,7 @@ def advance_spatial_action_certificate_v2(
         current, expected_certificate=current, workspace_record=record,
     )
     status = _exact_string(expected_status, "expected_status")
+    owner_id = _exact_string(owner, "receipt owner", pattern=_ID)
     if certificate["status"] != status or status not in _CERT_TRANSITIONS:
         raise ValueError("stale or illegal certificate transition")
     next_status = _CERT_TRANSITIONS[status]
@@ -1336,9 +1375,10 @@ def advance_spatial_action_certificate_v2(
         raise ValueError("certificate transition is expired")
     if certificate["receipts"] and moment < certificate["receipts"][-1]["timestamp"]:
         raise ValueError("certificate transition timestamp regressed")
-    if status == "APPROVED" and owner in {"spatial_runtime", "workspace_runtime"}:
+    runtime_owners = {"spatial_runtime", "workspace_runtime"}
+    if status in {"OPEN", "APPROVED"} and owner_id in runtime_owners:
         raise ValueError("spatial/runtime layer cannot self-authorize execution")
-    if status == "EXECUTED" and owner in {"spatial_runtime", "workspace_runtime"}:
+    if status == "EXECUTED" and owner_id in runtime_owners:
         raise ValueError("spatial/runtime layer cannot self-prove outcome")
     updated = copy.deepcopy(certificate)
     updated["status"] = next_status
@@ -1347,15 +1387,21 @@ def advance_spatial_action_certificate_v2(
         certificate_id=certificate["certificate_id"],
         timestamp=moment,
         evidence_digest=evidence_digest,
-        owner=owner,
+        owner=owner_id,
     ))
     updated["certificate_digest"] = stable_digest(_certificate_body(updated))
     validate_spatial_action_certificate_v2(updated, workspace_record=record)
-    store.update_workspace_v2(workspace_id, certificate_json=updated)
+    committed = store.commit_workspace_v2_certificate(
+        workspace_id,
+        expected_certificate=certificate,
+        certificate=updated,
+        now=moment,
+    )
+    if not committed.get("ok"):
+        raise ValueError(committed.get("error", "stale action certificate state"))
     return {"ok": True, "certificate": updated,
             "authorized": False,
             "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
-
 
 class WorkspaceSessionV2:
     """Context manager that guarantees cancellation cleanup on interruption."""

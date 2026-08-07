@@ -10,7 +10,6 @@ from __future__ import annotations
 import hashlib
 import inspect
 import json
-import marshal
 from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass, field
 from typing import Any
@@ -37,21 +36,19 @@ def _digest(value: Any) -> str:
 
 
 def _callable_digest(implementation: Callable[..., Any]) -> str:
-    """Bind a Python implementation without process-specific repr()/addresses."""
+    """Bind a Python implementation to portable source identity."""
     try:
         source = inspect.getsource(implementation).encode("utf-8")
-    except (OSError, TypeError):
-        source = b""
-    code = getattr(implementation, "__code__", None)
-    code_bytes = marshal.dumps(code) if code is not None else b""
+    except (OSError, TypeError) as exc:
+        raise ValueError(
+            "adapter implementation source is unavailable for stable identity"
+        ) from exc
     identity = {
         "module": str(getattr(implementation, "__module__", "")),
         "qualname": str(getattr(implementation, "__qualname__", "")),
         "source_sha256": hashlib.sha256(source).hexdigest(),
-        "code_sha256": hashlib.sha256(code_bytes).hexdigest(),
     }
     return _digest(identity)
-
 
 def _strict_mapping(value: Any, name: str) -> dict[str, Any]:
     if type(value) is not dict:
@@ -181,12 +178,12 @@ class OperationalAdapterRegistry:
     ) -> dict[str, Any]:
         if type(meta) is not AdapterMetadata:
             raise ValueError("meta must be an exact AdapterMetadata record")
-        if meta.adapter_id in self._adapters:
-            existing = self._adapters[meta.adapter_id]
-            if existing.adapter_digest and existing.adapter_digest != meta.adapter_digest:
-                return {"ok": False, "error": f"adapter_already_declared: {meta.adapter_id}"}
         meta.operational_status = "OPERATIONAL" if implementation is not None else "DECLARED"
         meta.finalize_identity(implementation)
+        if meta.adapter_id in self._adapters:
+            existing = self._adapters[meta.adapter_id]
+            if existing.adapter_digest != meta.adapter_digest:
+                return {"ok": False, "error": f"adapter_already_declared: {meta.adapter_id}"}
         self._adapters[meta.adapter_id] = meta
         if implementation is not None:
             self._implementations[meta.adapter_id] = implementation
@@ -232,7 +229,13 @@ class OperationalAdapterRegistry:
 
     def execute(self, adapter_id: str, *, params: dict[str, Any] | None = None,
                 lease_active: bool = True) -> dict[str, Any]:
-        params = {} if params is None else _strict_mapping(params, "params")
+        try:
+            params = {} if params is None else _strict_mapping(params, "params")
+        except ValueError as exc:
+            return {"ok": False, "error": f"invalid_adapter_params: {exc}",
+                    "failure_class": "structural",
+                    "patch_authority": PATCH_AUTHORITY,
+                    "vsa_patch_authority": VSA_PATCH_AUTHORITY}
         meta = self._adapters.get(adapter_id)
         if not meta:
             return {"ok": False, "error": f"unknown_adapter: {adapter_id}", "status": "DENIED",
@@ -264,6 +267,12 @@ class OperationalAdapterRegistry:
                     "failure_class": "structural",
                     "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
         detached = dict(result)
+        if type(detached.get("ok")) is not bool:
+            return {"ok": False, "error": "adapter_result_missing_status", "adapter": adapter_id,
+                    "failure_class": "structural",
+                    "adapter_digest": meta.adapter_digest,
+                    "implementation_digest": meta.implementation_digest,
+                    "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
         detached["adapter"] = adapter_id
         detached["operational_status"] = "OPERATIONAL"
         detached["adapter_digest"] = meta.adapter_digest

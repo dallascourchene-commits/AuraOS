@@ -643,3 +643,178 @@ def test_governance_records_bind_exact_scope_and_deny_automatic_merge() -> None:
     assert request["automatic_merge"] is False
     assert request["requested_reviewers"] == []
     assert set(objective["allowed_files"]) == set(request["files_to_review"])
+
+
+def test_adapter_redeclaration_is_identity_based_and_status_is_explicit() -> None:
+    registry = OperationalAdapterRegistry()
+    first = AdapterMetadata(adapter_id="adapter.redeclare", implementation_ref="tests._ok_adapter")
+    second = AdapterMetadata(adapter_id="adapter.redeclare", implementation_ref="tests._ok_adapter")
+    assert registry.declare(first, implementation=_ok_adapter)["ok"]
+    assert registry.declare(second, implementation=_ok_adapter)["ok"]
+    assert first.adapter_digest == second.adapter_digest
+
+    different = AdapterMetadata(
+        adapter_id="adapter.redeclare", implementation_ref="tests._ok_adapter", version="2.0.0"
+    )
+    assert not registry.declare(different, implementation=_ok_adapter)["ok"]
+
+    def missing_status(**params: Any) -> dict[str, Any]:
+        return {"echo": params}
+
+    meta = AdapterMetadata(adapter_id="adapter.missing-status", implementation_ref="tests.missing_status")
+    assert registry.declare(meta, implementation=missing_status)["ok"]
+    result = registry.execute("adapter.missing-status", params={})
+    assert result["ok"] is False
+    assert result["error"] == "adapter_result_missing_status"
+    assert result["failure_class"] == "structural"
+
+    malformed = registry.execute("adapter.redeclare", params={1: "bad"})  # type: ignore[dict-item]
+    assert malformed["ok"] is False
+    assert malformed["failure_class"] == "structural"
+    assert malformed["error"].startswith("invalid_adapter_params:")
+
+
+def test_compile_rejects_zero_wall_time_at_executable_boundary() -> None:
+    recipe = _recipe()
+    zero_budget = type(recipe.budgets)(**{**recipe.budgets.to_dict(), "wall_time_ms": 0})
+    object.__setattr__(recipe, "budgets", zero_budget)
+    registry, bindings = _registry(recipe)
+    with pytest.raises(ValueError, match="wall_time_ms must be at least 1"):
+        runtime.compile_workspace_execution_graph_v2(
+            recipe, adapter_bindings=bindings, adapter_registry=registry,
+        )
+
+
+def test_store_rejects_nonfinite_v2_timestamps(tmp_path: Path) -> None:
+    recipe = _recipe()
+    registry, bindings = _registry(recipe)
+    graph = runtime.compile_workspace_execution_graph_v2(
+        recipe, adapter_bindings=bindings, adapter_registry=registry,
+    )
+    store = EphemeralRegistryStore.for_tests(tmp_path)
+    base = {
+        "workspace_id": "workspace:v2:timestamp-test",
+        "recipe_json": recipe.to_dict(),
+        "recipe_digest": recipe.recipe_digest,
+        "graph_json": graph,
+        "graph_digest": graph["graph_digest"],
+        "state": "ADMITTED",
+        "created_at": time.time(),
+        "expires_at": time.time() + 60,
+        "activation_nonce": "timestamp-test-nonce",
+    }
+    for index, invalid in enumerate(("bad", float("nan"), float("inf"))):
+        record = dict(base)
+        record["workspace_id"] = f"workspace:v2:timestamp-test-{index}"
+        record["activation_nonce"] = f"timestamp-test-nonce-{index}"
+        record["created_at"] = invalid
+        with pytest.raises(ValueError, match="created_at must be a finite number"):
+            store.register_workspace_v2(record)
+
+
+def test_arbitrary_key_absolute_and_traversal_paths_fail_closed(tmp_path: Path) -> None:
+    recipe = _recipe()
+    first = recipe.capability_ids[0]
+
+    def hidden_absolute(**params: Any) -> dict[str, Any]:
+        return {"ok": True, "untrusted": "/tmp/outside-hidden-key"}
+
+    _, registry, _, _, store, workspace_id = _admitted(
+        tmp_path / "hidden-absolute", overrides={first: hidden_absolute}
+    )
+    runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )
+    result = runtime.execute_workspace_node_v2(
+        workspace_id, first, params={}, store=store, adapter_registry=registry,
+    )
+    assert not result["ok"] and "escapes" in result["error"]
+
+    def hidden_traversal(**params: Any) -> dict[str, Any]:
+        return {"ok": True, "untrusted": "../outside-hidden-key"}
+
+    _, registry2, _, _, store2, workspace_id2 = _admitted(
+        tmp_path / "hidden-traversal", overrides={first: hidden_traversal}
+    )
+    runtime.activate_workspace_v2(
+        workspace_id2, store=store2, adapter_registry=registry2, repo_root=str(ROOT),
+    )
+    result2 = runtime.execute_workspace_node_v2(
+        workspace_id2, first, params={}, store=store2, adapter_registry=registry2,
+    )
+    assert not result2["ok"] and "escapes" in result2["error"]
+
+
+def test_partial_reexecution_reuses_complete_unchanged_receipt_set(tmp_path: Path) -> None:
+    _, registry, _, graph, store, workspace_id = _admitted(tmp_path)
+    runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )
+    _execute_all(workspace_id, graph, store, registry)
+    receipts = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]["node_receipts"]
+    plan = runtime.partial_reexecution_plan_v2(
+        graph, prior_receipts=receipts, changed_node_ids=[],
+    )
+    assert plan["reexecute_node_ids"] == []
+    assert set(plan["reusable_node_ids"]) == {node["node_id"] for node in graph["nodes"]}
+
+
+def test_action_certificate_runtime_owner_cannot_self_approve(tmp_path: Path) -> None:
+    _, registry, _, _, store, workspace_id = _admitted(tmp_path)
+    runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )
+    runtime.prepare_spatial_action_certificate_v2(
+        workspace_id, store=store,
+        principal_id="human:dallas", requested_operation="PREPARE_FORGE_HANDOFF",
+        subject_refs=["source:aura"], target_refs=["forge:candidate"],
+        policy_digest=D["1"], approval_class="HUMAN_EXPLICIT",
+        runtime_environment_digest=D["2"], effect_boundary="PROPOSAL_ONLY",
+        assumptions_digest=D["3"], cost_microusd=0, reversible=True,
+        proof_obligations=["EXACT_SOURCE"], nonce="cert-self-approve",
+        expires_at=time.time() + 120,
+    )
+    runtime.advance_spatial_action_certificate_v2(
+        workspace_id, store=store, expected_status="PREPARED",
+        evidence_digest=D["4"], owner="spatial_runtime",
+    )
+    with pytest.raises(ValueError, match="self-authorize"):
+        runtime.advance_spatial_action_certificate_v2(
+            workspace_id, store=store, expected_status="OPEN",
+            evidence_digest=D["5"], owner="spatial_runtime",
+        )
+
+
+def test_action_certificate_requires_active_state_and_uses_cas(tmp_path: Path) -> None:
+    _, registry, _, _, store, workspace_id = _admitted(tmp_path)
+    runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )
+    prepared = runtime.prepare_spatial_action_certificate_v2(
+        workspace_id, store=store,
+        principal_id="human:dallas", requested_operation="PREPARE_FORGE_HANDOFF",
+        subject_refs=["source:aura"], target_refs=["forge:candidate"],
+        policy_digest=D["1"], approval_class="HUMAN_EXPLICIT",
+        runtime_environment_digest=D["2"], effect_boundary="PROPOSAL_ONLY",
+        assumptions_digest=D["3"], cost_microusd=0, reversible=True,
+        proof_obligations=["EXACT_SOURCE"], nonce="cert-cas-test",
+        expires_at=time.time() + 120,
+    )["certificate"]
+    stale = dict(prepared)
+    stale["status"] = "OPEN"
+    cas = store.commit_workspace_v2_certificate(
+        workspace_id,
+        expected_certificate=stale,
+        certificate=prepared,
+    )
+    assert cas["ok"] is False and cas["error"] == "stale_workspace_certificate"
+
+    moved = store.transition_workspace_v2(workspace_id, "ACTIVE", "CANCELLING")
+    assert moved["ok"]
+    with pytest.raises(ValueError, match="active workspace"):
+        runtime.advance_spatial_action_certificate_v2(
+            workspace_id, store=store, expected_status="PREPARED",
+            evidence_digest=D["4"], owner="spatial_runtime",
+        )
+    cleanup = runtime.dissolve_workspace_v2(workspace_id, store=store, reason="test_cleanup")
+    assert cleanup["ok"] and cleanup["state"] == "DISSOLVED"

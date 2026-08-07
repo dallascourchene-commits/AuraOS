@@ -12,6 +12,7 @@ Dependencies: stdlib only (sqlite3).
 from __future__ import annotations
 
 import json
+import math
 import sqlite3
 import time
 from pathlib import Path
@@ -413,6 +414,12 @@ class EphemeralRegistryStore:
             "usage_json", "cleanup_receipt", "certificate_json", "terminal_reason",
         } or not required <= set(record):
             raise ValueError("workspace record fields are incomplete or unknown")
+        for name in ("created_at", "expires_at"):
+            value = record[name]
+            if type(value) not in {int, float} or type(value) is bool or not math.isfinite(float(value)):
+                raise ValueError(f"{name} must be a finite number")
+        if float(record["expires_at"]) <= float(record["created_at"]):
+            raise ValueError("workspace expiration must be after creation")
         conn = self._conn
         assert conn is not None
         now = time.time()
@@ -502,10 +509,11 @@ class EphemeralRegistryStore:
 
     def update_workspace_v2(self, workspace_id: str, **fields: Any) -> dict[str, Any]:
         """Update only bounded V2 evidence fields; lifecycle state is CAS-only."""
-        allowed = {
+        columns = (
             "sandbox_path", "node_receipts", "failure_records", "usage_json",
             "cleanup_receipt", "certificate_json", "lease_status", "terminal_reason",
-        }
+        )
+        allowed = set(columns)
         if not fields or not set(fields) <= allowed:
             raise ValueError("unknown or empty workspace evidence update")
         encoded: dict[str, Any] = {}
@@ -516,17 +524,81 @@ class EphemeralRegistryStore:
                             "cleanup_receipt", "certificate_json"}
                 else value
             )
-        assignments = ", ".join(f"{name} = ?" for name in sorted(encoded))
-        params = [encoded[name] for name in sorted(encoded)]
-        params.extend([time.time(), workspace_id])
+        params: list[Any] = []
+        for name in columns:
+            params.extend((1 if name in encoded else 0, encoded.get(name)))
+        params.extend((time.time(), workspace_id))
         conn = self._conn
         assert conn is not None
         cur = conn.execute(
-            f"UPDATE ephemeral_workspaces_v2 SET {assignments}, updated_at = ? WHERE workspace_id = ?",
+            """
+            UPDATE ephemeral_workspaces_v2 SET
+              sandbox_path = CASE WHEN ? THEN ? ELSE sandbox_path END,
+              node_receipts = CASE WHEN ? THEN ? ELSE node_receipts END,
+              failure_records = CASE WHEN ? THEN ? ELSE failure_records END,
+              usage_json = CASE WHEN ? THEN ? ELSE usage_json END,
+              cleanup_receipt = CASE WHEN ? THEN ? ELSE cleanup_receipt END,
+              certificate_json = CASE WHEN ? THEN ? ELSE certificate_json END,
+              lease_status = CASE WHEN ? THEN ? ELSE lease_status END,
+              terminal_reason = CASE WHEN ? THEN ? ELSE terminal_reason END,
+              updated_at = ?
+            WHERE workspace_id = ?
+            """,
             tuple(params),
         )
         return {"ok": cur.rowcount == 1, "workspace_id": workspace_id,
                 "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+
+    def commit_workspace_v2_certificate(
+        self,
+        workspace_id: str,
+        *,
+        expected_certificate: dict[str, Any],
+        certificate: dict[str, Any],
+        now: float | None = None,
+    ) -> dict[str, Any]:
+        """CAS one certificate while the workspace retains execution authority."""
+        if type(expected_certificate) is not dict or type(certificate) is not dict:
+            raise ValueError("certificate CAS values must be exact objects")
+        current_time = time.time() if now is None else now
+        if type(current_time) not in {int, float} or type(current_time) is bool:
+            raise ValueError("now must be a finite number")
+        current_time = float(current_time)
+        if not math.isfinite(current_time):
+            raise ValueError("now must be a finite number")
+        expected_json = self._workspace_v2_json(expected_certificate, "expected_certificate")
+        certificate_json = self._workspace_v2_json(certificate, "certificate")
+        conn = self._conn
+        assert conn is not None
+        cur = conn.execute(
+            """
+            UPDATE ephemeral_workspaces_v2
+            SET certificate_json = ?, updated_at = ?
+            WHERE workspace_id = ?
+              AND state = 'ACTIVE'
+              AND lease_status = 'ACTIVE'
+              AND expires_at > ?
+              AND certificate_json = ?
+            """,
+            (certificate_json, current_time, workspace_id, current_time, expected_json),
+        )
+        if cur.rowcount == 1:
+            return {"ok": True, "workspace_id": workspace_id,
+                    "patch_authority": PATCH_AUTHORITY,
+                    "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+        current = self.get_workspace_v2(workspace_id)
+        workspace = current.get("workspace", {})
+        invalidated = (
+            not current.get("ok")
+            or workspace.get("state") != "ACTIVE"
+            or workspace.get("lease_status") != "ACTIVE"
+            or current_time >= workspace.get("expires_at", 0)
+        )
+        return {"ok": False,
+                "error": "workspace_certificate_invalidated" if invalidated else "stale_workspace_certificate",
+                "workspace_id": workspace_id,
+                "patch_authority": PATCH_AUTHORITY,
+                "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
     def commit_workspace_v2_node_execution(
         self,
@@ -627,23 +699,34 @@ class EphemeralRegistryStore:
             workspace_id, lease_status="REVOKED", terminal_reason=reason
         )
 
-    def is_workspace_v2_lease_active(self, workspace_id: str) -> bool:
+    def is_workspace_v2_lease_active(self, workspace_id: str, *, now: float | None = None) -> bool:
+        current = time.time() if now is None else now
+        if type(current) not in {int, float} or type(current) is bool:
+            raise ValueError("now must be a finite number")
+        current = float(current)
+        if not math.isfinite(current):
+            raise ValueError("now must be a finite number")
         conn = self._conn
         assert conn is not None
         row = conn.execute(
             "SELECT lease_status, expires_at, state FROM ephemeral_workspaces_v2 WHERE workspace_id = ?",
             (workspace_id,),
         ).fetchone()
-        return bool(row and row[0] == "ACTIVE" and time.time() < row[1]
+        return bool(row and row[0] == "ACTIVE" and current < row[1]
                     and row[2] not in {"DISSOLVING", "DISSOLVED"})
 
     def list_expired_workspaces_v2(self, *, now: float | None = None) -> dict[str, Any]:
         current = time.time() if now is None else now
+        if type(current) not in {int, float} or type(current) is bool:
+            raise ValueError("now must be a finite number")
+        current = float(current)
+        if not math.isfinite(current):
+            raise ValueError("now must be a finite number")
         conn = self._conn
         assert conn is not None
         rows = conn.execute(
             "SELECT workspace_id FROM ephemeral_workspaces_v2 "
-            "WHERE expires_at <= ? AND state != 'DISSOLVED'",
+            "WHERE expires_at <= ? AND state NOT IN ('DISSOLVING', 'DISSOLVED')",
             (current,),
         ).fetchall()
         values = [row[0] for row in rows]
