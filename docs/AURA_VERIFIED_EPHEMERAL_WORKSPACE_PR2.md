@@ -104,9 +104,11 @@ proven independent but intentionally uses deterministic serial execution
 (`parallelism_used: 1`) until a later bounded implementation proves safe
 concurrency behavior.
 
-Executable V2 callbacks are bounded by one runtime-owned absolute deadline: the
-minimum of the node timeout, the cumulative workspace wall-time budget measured
-from activation, and the absolute workspace TTL. On POSIX hosts with Python's
+Executable V2 callbacks are bounded by one runtime-owned absolute deadline. The
+runtime first derives the node deadline as `callback_start + timeout_ms`, then
+takes the minimum of that absolute node deadline, the absolute cumulative
+workspace wall-time deadline measured from activation, and the absolute
+workspace TTL. On POSIX hosts with Python's
 `spawn` process start method, the existing adapter registry runs only the exact
 already-registered callable in an isolated child process group. The parent
 continuously checks the live workspace lease/state and exact current adapter and
@@ -137,10 +139,12 @@ are always attributed `local`; callback-controlled text cannot select another
 failure class or forge the registry/runtime's private deadline/authority events.
 Registry-detected callback exceptions remain `environment`, structural transport
 violations remain `structural`, node/workspace wall-time expiry is `budget`, and
-absolute workspace TTL expiry is `stale`. `KeyboardInterrupt`, `SystemExit`, and
-other process-level exceptions are never swallowed: bounded execution reports
-the interruption to the parent runtime, cleanup runs, and the process-level
-exception is re-raised.
+absolute workspace TTL expiry is `stale`. A child callback cannot choose
+parent-process control flow by raising `KeyboardInterrupt`, `SystemExit`,
+`GeneratorExit`, or another `BaseException`: every child-reported process-level
+interruption is normalized to one parent-owned `WORKER_ERROR` environment
+failure, followed by normal fail-closed cleanup. Parent-local process
+interruptions still run cleanup before they propagate.
 
 Partial re-execution reuses a receipt only when the exact node binding,
 implementation, assumptions, source, and all upstream receipt digests remain

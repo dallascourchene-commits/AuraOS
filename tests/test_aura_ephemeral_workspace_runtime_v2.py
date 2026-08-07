@@ -476,6 +476,41 @@ def test_bounded_adapter_deadline_kills_callback_process(tmp_path: Path) -> None
     assert not completed_path.exists()
 
 
+def test_activation_evidence_write_failure_destroys_unpersisted_sandbox(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, registry, _, _, store, workspace_id = _admitted(tmp_path)
+    sandbox_dir = tmp_path / "activation-unpersisted-sandbox"
+    sandbox_dir.mkdir()
+
+    def fake_prepare_sandbox(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        return {
+            "ok": True,
+            "temp_dir": str(sandbox_dir),
+            "receipt": {"sandbox_mode": "builtin_only"},
+        }
+
+    original_update = store.update_workspace_v2
+
+    def reject_activation_evidence(target_workspace_id: str, **fields: Any) -> dict[str, Any]:
+        if "sandbox_path" in fields:
+            return {"ok": False, "workspace_id": target_workspace_id}
+        return original_update(target_workspace_id, **fields)
+
+    monkeypatch.setattr(runtime, "prepare_sandbox", fake_prepare_sandbox)
+    monkeypatch.setattr(store, "update_workspace_v2", reject_activation_evidence)
+
+    result = runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )
+    assert not result["ok"]
+    assert "activation evidence update failed" in result["error"]
+    assert not sandbox_dir.exists()
+    final = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
+    assert final["state"] == "DISSOLVED"
+    assert final["lease_status"] == "REVOKED"
+
+
 def test_runtime_wall_time_deadline_dissolves_and_kills_callback(tmp_path: Path) -> None:
     started_path = tmp_path / "budget-started"
     completed_path = tmp_path / "budget-completed"
@@ -586,7 +621,7 @@ def test_hostile_callback_cannot_spoof_deadline_or_failure_class(tmp_path: Path)
     assert final["state"] == "DISSOLVED"
 
 
-def test_process_interruption_reraises_after_cleanup(tmp_path: Path) -> None:
+def test_child_process_interruption_is_parent_owned_worker_failure(tmp_path: Path) -> None:
     recipe = _recipe()
     first = recipe.capability_ids[0]
     _, registry, _, _, store, workspace_id = _admitted(
@@ -595,11 +630,42 @@ def test_process_interruption_reraises_after_cleanup(tmp_path: Path) -> None:
     runtime.activate_workspace_v2(
         workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
     )
-    with pytest.raises(KeyboardInterrupt):
-        runtime.execute_workspace_node_v2(
-            workspace_id, first, params={}, store=store, adapter_registry=registry,
-        )
-    assert runtime.workspace_status_v2(workspace_id, store=store)["workspace"]["state"] == "DISSOLVED"
+    result = runtime.execute_workspace_node_v2(
+        workspace_id, first, params={}, store=store, adapter_registry=registry,
+    )
+    assert not result["ok"]
+    assert result["failure"]["failure_class"] == "environment"
+    assert "bounded_adapter_worker_interruption: KeyboardInterrupt" in result["error"]
+    final = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
+    assert final["state"] == "DISSOLVED"
+    assert final["lease_status"] == "REVOKED"
+
+
+def test_authority_check_failure_uses_parent_owned_environment_event() -> None:
+    registry = OperationalAdapterRegistry()
+    declared = registry.declare(
+        AdapterMetadata(
+            adapter_id="adapter.authority-check-test",
+            implementation_ref="tests._ok_adapter",
+        ),
+        implementation=_ok_adapter,
+    )
+    assert declared["ok"]
+
+    def broken_authority_check() -> bool:
+        raise RuntimeError("authority store unavailable")
+
+    result = registry.execute(
+        "adapter.authority-check-test",
+        params={},
+        deadline_monotonic=time.monotonic() + 1.0,
+        authority_check=broken_authority_check,
+        max_output_bytes=4096,
+    )
+    assert not result["ok"]
+    assert result["_aura_bounded_event"] == "AUTHORITY_CHECK_FAILED"
+    assert result["failure_class"] == "environment"
+    assert "authority store unavailable" in result["error"]
 
 
 def test_recursive_output_and_path_escape_fail_closed(tmp_path: Path) -> None:

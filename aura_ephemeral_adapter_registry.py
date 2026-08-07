@@ -332,15 +332,15 @@ def _execute_bounded_callback(
                         envelope.get("failure_class", "environment"),
                     )
                 if kind == "base_exception":
-                    error_type = envelope.get("error_type", "BaseException")
-                    message = envelope.get("error", "")
-                    if error_type == "KeyboardInterrupt":
-                        raise KeyboardInterrupt(message)
-                    if error_type == "SystemExit":
-                        raise SystemExit(message)
-                    if error_type == "GeneratorExit":
-                        raise GeneratorExit(message)
-                    raise BaseException(f"adapter process interruption: {error_type}: {message}")
+                    # Child callback exception names/text are diagnostics only. They
+                    # must never select a parent-process control-flow exception.
+                    error_type = str(envelope.get("error_type", "BaseException"))[:128]
+                    message = str(envelope.get("error", ""))[:2048]
+                    return _bounded_event(
+                        "WORKER_ERROR",
+                        f"bounded_adapter_worker_interruption: {error_type}: {message}",
+                        "environment",
+                    )
                 return _bounded_event(
                     "WORKER_ERROR", "bounded_adapter_protocol_failure", "environment"
                 )

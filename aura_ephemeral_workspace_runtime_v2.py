@@ -811,9 +811,17 @@ def activate_workspace_v2(
         activation_record = _workspace(store, workspace_id)
         activation_usage = dict(activation_record["usage_json"])
         activation_usage["started_at"] = time.time()
-        store.update_workspace_v2(
+        evidence_update = store.update_workspace_v2(
             workspace_id, sandbox_path=sandbox["temp_dir"], usage_json=activation_usage,
         )
+        if not evidence_update.get("ok"):
+            removed = destroy_sandbox(sandbox["temp_dir"])
+            if not removed.get("ok"):
+                raise RuntimeError(
+                    "activation evidence update failed and unpersisted sandbox cleanup failed: "
+                    f"{removed.get('error', 'unknown cleanup failure')}"
+                )
+            raise ValueError("activation evidence update failed")
         moved = store.transition_workspace_v2(workspace_id, "ACTIVATING", "ACTIVE")
         if not moved.get("ok"):
             raise ValueError("activation lost its lifecycle state race")
