@@ -53,7 +53,9 @@ def _project() -> ProjectContextProjection:
     )
 
 
-def _recipe(*, ttl: int = 300, wall_time_ms: int | None = None) -> EphemeralWorkspaceRecipe:
+def _recipe(
+    *, ttl: int = 300, wall_time_ms: int | None = None, memory_mb: int | None = None,
+) -> EphemeralWorkspaceRecipe:
     manifest = create_manifest(
         "Compile a verified interactive Ephemeral Workspace V2.",
         organ_id="EORG-intent-spatial-pr2",
@@ -62,10 +64,10 @@ def _recipe(*, ttl: int = 300, wall_time_ms: int | None = None) -> EphemeralWork
     )
     project = _project()
     budgets = None
-    if wall_time_ms is not None:
+    if wall_time_ms is not None or memory_mb is not None:
         budgets = WorkspaceBudget(
-            wall_time_ms=wall_time_ms,
-            memory_mb=256,
+            wall_time_ms=30_000 if wall_time_ms is None else wall_time_ms,
+            memory_mb=256 if memory_mb is None else memory_mb,
             context_tokens=64_000,
             output_bytes=1_000_000,
             tool_calls=20,
@@ -106,6 +108,11 @@ def _slow_file_adapter(
 
 def _interrupt_adapter(**params: Any) -> dict[str, Any]:
     raise KeyboardInterrupt()
+
+
+def _memory_hog_adapter(*, allocation_mb: int = 512, **params: Any) -> dict[str, Any]:
+    payload = bytearray(allocation_mb * 1024 * 1024)
+    return {"ok": True, "allocated_bytes": len(payload), "echo": params}
 
 
 def _recursive_result_adapter(**params: Any) -> dict[str, Any]:
@@ -509,6 +516,38 @@ def test_activation_evidence_write_failure_destroys_unpersisted_sandbox(
     final = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
     assert final["state"] == "DISSOLVED"
     assert final["lease_status"] == "REVOKED"
+
+
+def test_zero_memory_budget_rejected_at_v2_executable_boundary(tmp_path: Path) -> None:
+    recipe = _recipe(wall_time_ms=1000, memory_mb=0)
+    registry, bindings = _registry(recipe)
+    with pytest.raises(ValueError, match="memory_mb must be at least 1"):
+        runtime.compile_workspace_execution_graph_v2(
+            recipe, adapter_bindings=bindings, adapter_registry=registry,
+        )
+
+
+def test_bounded_memory_budget_prevents_host_memory_exhaustion(tmp_path: Path) -> None:
+    recipe = _recipe(ttl=5, wall_time_ms=3000, memory_mb=256)
+    first = recipe.capability_ids[0]
+    _, registry, _, graph, store, workspace_id = _admitted(
+        tmp_path, overrides={first: _memory_hog_adapter}, recipe_override=recipe,
+    )
+    assert runtime.activate_workspace_v2(
+        workspace_id, store=store, adapter_registry=registry, repo_root=str(ROOT),
+    )["ok"]
+    result = runtime.execute_workspace_node_v2(
+        workspace_id, graph["entry_node_ids"][0],
+        params={"allocation_mb": 512},
+        store=store, adapter_registry=registry,
+    )
+    assert not result["ok"]
+    assert result["failure"]["failure_class"] == "environment"
+    assert "MemoryError" in result["error"] or "worker" in result["error"]
+    final = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]
+    assert final["state"] == "DISSOLVED"
+    assert final["lease_status"] == "REVOKED"
+    assert graph["entry_node_ids"][0] not in final["node_receipts"]
 
 
 def test_runtime_wall_time_deadline_dissolves_and_kills_callback(tmp_path: Path) -> None:

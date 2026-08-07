@@ -72,10 +72,29 @@ def _bounded_callback_worker(
     params: dict[str, Any],
     connection: Any,
     max_output_bytes: int,
+    max_memory_mb: int,
 ) -> None:
     """Execute one exact registered callback in a new POSIX process group."""
     try:
         os.setsid()
+        try:
+            import resource
+            if not hasattr(resource, "RLIMIT_AS"):
+                raise RuntimeError("RLIMIT_AS is unavailable")
+            limit_bytes = max_memory_mb * 1024 * 1024
+            _soft_limit, hard_limit = resource.getrlimit(resource.RLIMIT_AS)
+            if hard_limit != resource.RLIM_INFINITY:
+                limit_bytes = min(limit_bytes, hard_limit)
+            if limit_bytes < 1:
+                raise RuntimeError("effective address-space limit is invalid")
+            resource.setrlimit(resource.RLIMIT_AS, (limit_bytes, limit_bytes))
+        except Exception as exc:
+            connection.send_bytes(_canonical_json({
+                "kind": "worker_error",
+                "error": f"bounded_adapter_memory_limit_failed: {type(exc).__name__}: {str(exc)[:1024]}",
+                "failure_class": "environment",
+            }).encode("utf-8"))
+            return
         try:
             current_digest = _callable_digest(implementation)
         except Exception as exc:
@@ -186,6 +205,7 @@ def _execute_bounded_callback(
     deadline_monotonic: float,
     authority_check: Callable[[], bool],
     max_output_bytes: int,
+    max_memory_mb: int,
 ) -> tuple[dict[str, Any], bool]:
     """Execute one exact adapter with parent-owned hard authority/deadline checks."""
     if os.name != "posix" or "spawn" not in multiprocessing.get_all_start_methods():
@@ -199,6 +219,8 @@ def _execute_bounded_callback(
         raise ValueError("deadline_monotonic must be a finite positive number")
     if type(max_output_bytes) is not int or type(max_output_bytes) is bool or max_output_bytes < 1:
         raise ValueError("max_output_bytes must be a positive integer")
+    if type(max_memory_mb) is not int or type(max_memory_mb) is bool or max_memory_mb < 1:
+        raise ValueError("max_memory_mb must be a positive integer")
     if not callable(authority_check):
         raise ValueError("authority_check must be callable")
 
@@ -226,6 +248,7 @@ def _execute_bounded_callback(
             params,
             child,
             max_output_bytes,
+            max_memory_mb,
         ),
         daemon=False,
     )
@@ -527,6 +550,7 @@ class OperationalAdapterRegistry:
         deadline_monotonic: float | None = None,
         authority_check: Callable[[], bool] | None = None,
         max_output_bytes: int = 4_000_000,
+        max_memory_mb: int = 512,
     ) -> dict[str, Any]:
         try:
             params = {} if params is None else _strict_mapping(params, "params")
@@ -577,6 +601,7 @@ class OperationalAdapterRegistry:
                 deadline_monotonic=deadline_monotonic,
                 authority_check=authority_check,
                 max_output_bytes=max_output_bytes,
+                max_memory_mb=max_memory_mb,
             )
 
         if not isinstance(result, Mapping):

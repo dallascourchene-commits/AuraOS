@@ -276,6 +276,8 @@ def compile_workspace_execution_graph_v2(
     _require_current_recipe(value, now)
     if value.budgets.wall_time_ms < 1:
         raise ValueError("wall_time_ms must be at least 1 for executable workspaces")
+    if value.budgets.memory_mb < 1:
+        raise ValueError("memory_mb must be at least 1 for executable workspaces")
     bindings = _exact_mapping(adapter_bindings, "adapter_bindings")
     if set(bindings) != set(value.capability_ids):
         raise ValueError("adapter_bindings must cover the complete recipe capability set")
@@ -489,7 +491,7 @@ def validate_workspace_execution_graph_v2(payload: Mapping[str, Any]) -> dict[st
     if set(budgets) != expected_budget_fields:
         raise ValueError("graph budgets are incomplete")
     for name, value in budgets.items():
-        minimum = 1 if name == "wall_time_ms" else 0
+        minimum = 1 if name in {"wall_time_ms", "memory_mb"} else 0
         _integer(value, f"budget.{name}", minimum, 10_000_000_000)
     if budgets["model_calls"] != 0 or budgets["network_calls"] != 0:
         raise ValueError("PR2 graph cannot admit model or network calls")
@@ -1004,6 +1006,7 @@ def execute_workspace_node_v2(
             deadline_monotonic=deadline_monotonic,
             authority_check=execution_authority_active,
             max_output_bytes=min(remaining_output, MAX_OUTPUT_BYTES),
+            max_memory_mb=graph["budgets"]["memory_mb"],
         )
         output = _detach_json(raw, name="adapter_result")
         bounded_event = output.pop("_aura_bounded_event", None)

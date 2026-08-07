@@ -114,9 +114,14 @@ already-registered callable in an isolated child process group. The parent
 continuously checks the live workspace lease/state and exact current adapter and
 implementation identities; deadline expiry, revocation/cancellation, or binding
 drift kills and reaps the whole child process group before output can be
-accepted. The child re-verifies the admitted implementation source digest before
-execution. Hosts without the required containment primitive fail V2 bounded
-execution closed. This is internal containment of an admitted adapter, not a
+accepted. Before source re-verification or callback execution, the child applies
+a POSIX `RLIMIT_AS` per-process address-space ceiling from the admitted
+`memory_mb` budget; descendants inherit that ceiling. If the host cannot apply
+the address-space limit, V2 execution fails closed. This is a per-process
+address-space bound rather than a cgroup-wide aggregate-memory claim. The child
+then re-verifies the admitted implementation source digest before execution.
+Hosts without the required containment primitive fail V2 bounded execution
+closed. This is internal containment of an admitted adapter, not a
 shell/arbitrary-subprocess capability and not arbitrary native execution. The
 historical registry path remains unchanged for callers that do not opt into the
 V2 bounded execution contract.
