@@ -31,7 +31,7 @@ def test_master_negative_unknown_adapter_and_identity_digest_mismatch() -> None:
     first = recipe.capability_ids[0]
     unknown = dict(bindings)
     unknown[first] = "adapter.missing"
-    with pytest.raises(ValueError, match="unknown adapter"):
+    with pytest.raises(ValueError, match="unknown_adapter"):
         runtime.compile_workspace_execution_graph_v2(
             recipe, adapter_bindings=unknown, adapter_registry=registry,
         )
