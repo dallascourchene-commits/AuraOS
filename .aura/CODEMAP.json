@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786088181,
+  "generated_at_unix": 1786088801,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1563,
+    "included_file_count": 1564,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -1569,6 +1569,7 @@
       "tools/construction_demo_assets/requirements.txt",
       "tools/pr2_review_hardening_269.py",
       "tools/pr2_review_hardening_269_followup.py",
+      "tools/pr2_review_hardening_269_round2.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1585,23 +1586,23 @@
     ]
   },
   "summary": {
-    "file_count": 1563,
-    "total_bytes": 59046504,
-    "text_tokens_est": 5304928,
+    "file_count": 1564,
+    "total_bytes": 59062010,
+    "text_tokens_est": 5308804,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 64,
       "knowledge_artifact": 197,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 977,
+      "python_module": 978,
       "schema_or_lexicon": 230,
       "support_file": 79
     },
     "topology_nodes": 11381,
     "topology_edges": 27800,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 34369.26
+    "elapsed_ms": 29112.97
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -3172,6 +3173,7 @@
       "tools/construction_demo_assets/requirements.txt",
       "tools/pr2_review_hardening_269.py",
       "tools/pr2_review_hardening_269_followup.py",
+      "tools/pr2_review_hardening_269_round2.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -93633,6 +93635,14 @@
         "end_line": 5,
         "semantic_id": "tools/pr2_review_hardening_269.py#function:read:63587ea9f06ca401",
         "signature_hash": "a3f58a6873b03607"
+      },
+      {
+        "file": "tools/pr2_review_hardening_269_round2.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 5,
+        "semantic_id": "tools/pr2_review_hardening_269_round2.py#function:read:6b597c630a626922",
+        "signature_hash": "a3f58a6873b03607"
       }
     ],
     "read_all": [
@@ -95675,6 +95685,14 @@
         "end_line": 28,
         "semantic_id": "tools/pr2_review_hardening_269.py#function:replace_block:78d37f5c28fc80eb",
         "signature_hash": "6cc9545e444d14e8"
+      },
+      {
+        "file": "tools/pr2_review_hardening_269_round2.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 28,
+        "semantic_id": "tools/pr2_review_hardening_269_round2.py#function:replace_block:5145f131d3ac3274",
+        "signature_hash": "6cc9545e444d14e8"
       }
     ],
     "replace_once": [
@@ -95684,6 +95702,14 @@
         "line": 12,
         "end_line": 16,
         "semantic_id": "tools/pr2_review_hardening_269.py#function:replace_once:d87a14ae2e4d6441",
+        "signature_hash": "820625feabdd1c16"
+      },
+      {
+        "file": "tools/pr2_review_hardening_269_round2.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 16,
+        "semantic_id": "tools/pr2_review_hardening_269_round2.py#function:replace_once:fae1685ee2586dca",
         "signature_hash": "820625feabdd1c16"
       }
     ],
@@ -146338,6 +146364,14 @@
         "line": 8,
         "end_line": 9,
         "semantic_id": "tools/pr2_review_hardening_269.py#function:write:780725728eb3a36c",
+        "signature_hash": "e6dc81a0f4d81b92"
+      },
+      {
+        "file": "tools/pr2_review_hardening_269_round2.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 9,
+        "semantic_id": "tools/pr2_review_hardening_269_round2.py#function:write:14e02908043e737c",
         "signature_hash": "e6dc81a0f4d81b92"
       }
     ],
@@ -207439,47 +207473,47 @@
     {
       "path": ".github/workflows/p2-1-apply-review-fixes.yml",
       "role": "schema_or_lexicon",
-      "bytes": 3281,
-      "lines": 89,
-      "tokens_est": 821,
+      "bytes": 3099,
+      "lines": 85,
+      "tokens_est": 775,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "d6273c0a01e7e234",
+      "digest8": "109f51726aeed987",
       "vector": [
-        -0.298942,
-        -0.00425,
-        0.27344,
-        0.287608,
-        0.143096,
-        -0.174265,
-        0.225269,
-        -0.213935,
-        0.111926,
-        0.089258,
-        0.103426,
-        0.080757,
-        0.00425,
-        0.038253,
-        0.126094,
-        0.31311,
-        0.281941,
-        -0.137429,
-        -0.358448,
-        -0.109093,
-        0.024085,
-        -0.058088,
-        -0.208268,
-        -0.225269,
-        -0.055255,
-        0.182766,
-        0.072256,
-        0.021252,
-        -0.134595,
-        -0.029753,
-        -0.00425,
-        -0.23377
+        0.20152,
+        -0.035562,
+        0.125127,
+        0.117224,
+        -0.075076,
+        0.154103,
+        0.209422,
+        -0.043465,
+        0.246302,
+        0.262107,
+        0.233131,
+        -0.198885,
+        0.093516,
+        -0.20152,
+        0.212057,
+        0.038197,
+        -0.069807,
+        -0.219959,
+        0.101418,
+        0.075076,
+        -0.317426,
+        -0.090881,
+        -0.243668,
+        0.172543,
+        -0.067173,
+        -0.235765,
+        -0.325329,
+        0.056636,
+        -0.001317,
+        0.198885,
+        -0.238399,
+        0.040831
       ]
     },
     {
@@ -240594,6 +240628,52 @@
         0.20923,
         0.202922,
         0.179791
+      ]
+    },
+    {
+      "path": "tools/pr2_review_hardening_269_round2.py",
+      "role": "python_module",
+      "bytes": 15688,
+      "lines": 363,
+      "tokens_est": 3922,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7158017b7c0f89b0",
+      "vector": [
+        -0.075438,
+        -0.285674,
+        0.152112,
+        0.129852,
+        0.008657,
+        0.02597,
+        -0.288148,
+        0.100171,
+        0.028444,
+        0.157059,
+        -0.278254,
+        -0.00371,
+        0.115012,
+        0.043284,
+        0.273307,
+        0.129852,
+        0.184266,
+        -0.107592,
+        0.132325,
+        0.038337,
+        -0.149639,
+        0.142219,
+        0.199106,
+        -0.302988,
+        0.283201,
+        0.228787,
+        -0.147165,
+        -0.013604,
+        -0.278254,
+        0.016077,
+        -0.302988,
+        0.082858
       ]
     },
     {
