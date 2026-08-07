@@ -1,4 +1,4 @@
-name: PR2 independent audit hardening 269 round 6
+name: PR2 independent audit hardening 269 round 7
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: pr2-independent-audit-hardening-269-round6
+  group: pr2-independent-audit-hardening-269-round7
   cancel-in-progress: false
 
 jobs:
@@ -22,30 +22,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Reconstruct verified single patcher and checkout exact PR2 head
+      - name: Preserve patcher and checkout exact PR2 head
         run: |
-          cat \
-            tools/round6_v2.part1 \
-            tools/round6_v2.part2 \
-            tools/round6_v2.part3 \
-            tools/round6_v2.part4 \
-            > /tmp/round6_v2.b64z
-          python - <<'PY'
-          from pathlib import Path
-          import base64, zlib
-          packed = Path('/tmp/round6_v2.b64z').read_text(encoding='utf-8')
-          Path('/tmp/pr2_review_hardening_269_round6_v2.py').write_bytes(
-              zlib.decompress(base64.b64decode(packed))
-          )
-          PY
-          python -m py_compile /tmp/pr2_review_hardening_269_round6_v2.py
-          test "$(git hash-object /tmp/pr2_review_hardening_269_round6_v2.py)" = "2c3f94a09083a7da9533a408b28fdad7f1601fb4"
+          cp tools/pr2_review_hardening_269_round7.py /tmp/pr2_review_hardening_269_round7.py
+          python -m py_compile /tmp/pr2_review_hardening_269_round7.py
+          test "$(git hash-object /tmp/pr2_review_hardening_269_round7.py)" = "f7f1a391690ecda829eed6d10379a94b55192f86"
           git fetch --no-tags origin refactor/verified-ephemeral-workspace-pr2-clean
           git checkout --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "b746773df5cf46548e8afa1950ff942f111f8c16"
+          test "$(git rev-parse HEAD)" = "73921afab5a84cb16bf28bb46e08f0627af613d5"
 
-      - name: Apply enforceable callback deadline hardening
-        run: python /tmp/pr2_review_hardening_269_round6_v2.py
+      - name: Apply exact-head security corrections
+        run: python /tmp/pr2_review_hardening_269_round7.py
 
       - uses: actions/setup-python@v5
         with:
@@ -73,7 +60,7 @@ jobs:
             aura_ephemeral_workspace_runtime_v2.py \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
 
-      - name: Focused PR2 tests including enforceable deadlines
+      - name: Focused PR2 security and lifecycle suite
         run: python -m pytest -q tests/test_aura_ephemeral_workspace_runtime_v2.py
 
       - name: Retained V1 Phase0 and PR1 tests
@@ -96,7 +83,7 @@ jobs:
                   Draft202012Validator.check_schema(json.load(handle))
           PY
 
-      - name: Exact round-six scope and whitespace gate
+      - name: Exact round-seven scope and whitespace gate
         run: |
           printf '%s\n' \
             aura_ephemeral_adapter_registry.py \
@@ -108,7 +95,7 @@ jobs:
           diff -u /tmp/expected-files.txt /tmp/actual-files.txt
           git diff --check
 
-      - name: Publish PR2 round-six hardening commit
+      - name: Publish PR2 round-seven hardening commit
         run: |
           set -euo pipefail
           git config user.name "AuraOS PR2 Independent Audit Hardener"
@@ -120,5 +107,5 @@ jobs:
             tests/test_aura_ephemeral_workspace_runtime_v2.py
           test "$(git diff --cached --name-only | wc -l)" -eq 4
           git diff --cached --check
-          git commit -m "PR2: Enforce callback wall-time and TTL authority"
+          git commit -m "PR2: Harden parent-owned interruption semantics"
           git push origin HEAD:refs/heads/refactor/verified-ephemeral-workspace-pr2-clean
