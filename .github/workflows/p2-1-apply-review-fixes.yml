@@ -1,4 +1,4 @@
-name: PR2 review hardening 269 round 2
+name: PR2 review hardening 269 round 3
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: pr2-review-hardening-269-round2
+  group: pr2-review-hardening-269-round3
   cancel-in-progress: false
 
 jobs:
@@ -22,15 +22,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Preserve round-two patcher and checkout exact PR2 head
+      - name: Preserve round-three patcher and checkout exact PR2 head
         run: |
-          cp tools/pr2_review_hardening_269_round2.py /tmp/pr2_review_hardening_269_round2.py
+          cp tools/pr2_review_hardening_269_round3.py /tmp/pr2_review_hardening_269_round3.py
           git fetch --no-tags origin refactor/verified-ephemeral-workspace-pr2-clean
           git checkout --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "581f1a173fb248de360d97c5879cfd47edf6d6a3"
+          test "$(git rev-parse HEAD)" = "3e7d28a0a9c6391f5ab9358490a717bfa03cb0f2"
 
-      - name: Apply authoritative-clock and cleanup-race hardening
-        run: python /tmp/pr2_review_hardening_269_round2.py
+      - name: Apply certificate-expiry cleanup and reuse regression hardening
+        run: python /tmp/pr2_review_hardening_269_round3.py
 
       - name: Normalize patched test EOF
         run: |
@@ -53,14 +53,12 @@ jobs:
       - name: Compile PR2 sources
         run: |
           python -m py_compile \
-            aura_ephemeral_registry_store.py \
             aura_ephemeral_workspace_runtime_v2.py \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
 
       - name: Fatal Ruff classes
         run: |
           python -m ruff check --select E9,F63,F7,F82 \
-            aura_ephemeral_registry_store.py \
             aura_ephemeral_workspace_runtime_v2.py \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
 
@@ -88,28 +86,17 @@ jobs:
           PY
 
       - name: Diff whitespace gate
-        run: |
-          set +e
-          git diff --check > /tmp/diff-check.txt 2>&1
-          status=$?
-          cat /tmp/diff-check.txt
-          if [ "$status" -ne 0 ]; then
-            while IFS= read -r line; do
-              echo "::error title=git diff --check::$line"
-            done < /tmp/diff-check.txt
-            exit "$status"
-          fi
+        run: git diff --check
 
-      - name: Publish ordinary PR2 round-two source commit
+      - name: Publish ordinary PR2 round-three source commit
         run: |
           set -euo pipefail
           git config user.name "AuraOS PR2 Review Hardener"
           git config user.email "actions@users.noreply.github.com"
           git add \
-            aura_ephemeral_registry_store.py \
             aura_ephemeral_workspace_runtime_v2.py \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
-          test "$(git diff --cached --name-only | wc -l)" -eq 3
+          test "$(git diff --cached --name-only | wc -l)" -eq 2
           git diff --cached --check
-          git commit -m "PR2: Close authoritative clock and cleanup races"
+          git commit -m "PR2: Dissolve expired certificate workspaces"
           git push origin HEAD:refs/heads/refactor/verified-ephemeral-workspace-pr2-clean
