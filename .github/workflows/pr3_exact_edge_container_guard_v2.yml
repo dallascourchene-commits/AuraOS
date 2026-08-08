@@ -22,7 +22,6 @@ jobs:
             schemas/aura_projection_selection_receipt_v1.schema.json
             docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
       - name: Require exact head
-        shell: bash
         run: test "$(git rev-parse HEAD)" = "5f8794560ace6d31f44e06f75e8a5b4999f569e4"
       - name: Patch
         shell: bash
@@ -35,7 +34,7 @@ jobs:
           if s.count(old)!=1: raise SystemExit('source anchor mismatch')
           p.write_text(s.replace(old,new,1).rstrip()+'\n')
           t=Path('tests/test_aura_project_context_compiler.py'); x=t.read_text().rstrip()
-          block='''\n\ndef test_edge_input_rejects_hostile_sequence_before_any_protocol_call() -> None:\n    source = _candidate(\n        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True\n    )\n\n    class HostileSequence:\n        def __len__(self):\n            raise AssertionError("hostile __len__ must not run")\n\n        def __iter__(self):\n            raise AssertionError("hostile __iter__ must not run")\n\n    with pytest.raises(TypeError, match="exact built-in tuple or list"):\n        compile_project_context_projection(\n            "Fix the exact behavior without losing proof context.",\n            project_ref="project:auraos-pr3",\n            repository_identity=_repo(),\n            candidates=(source,),\n            edges=HostileSequence(),\n            budget=ProjectionBudget(max_nodes=64, max_edges=256),\n            freshness_timestamp_ms=1_786_180_000_000,\n        )\n'''
+          block='''\n\ndef test_edge_input_rejects_hostile_sequence_before_any_protocol_call() -> None:\n    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True)\n    class HostileSequence:\n        def __len__(self): raise AssertionError("hostile __len__ must not run")\n        def __iter__(self): raise AssertionError("hostile __iter__ must not run")\n    with pytest.raises(TypeError, match="exact built-in tuple or list"):\n        compile_project_context_projection(\n            "Fix the exact behavior without losing proof context.", project_ref="project:auraos-pr3",\n            repository_identity=_repo(), candidates=(source,), edges=HostileSequence(),\n            budget=ProjectionBudget(max_nodes=64, max_edges=256), freshness_timestamp_ms=1_786_180_000_000,\n        )\n'''
           if 'test_edge_input_rejects_hostile_sequence_before_any_protocol_call' in x: raise SystemExit('test exists')
           t.write_text(x+block+'\n')
           d=Path('docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md'); y=d.read_text()
@@ -44,15 +43,24 @@ jobs:
           if y.count(oldd)!=1: raise SystemExit('doc anchor mismatch')
           d.write_text(y.replace(oldd,newd,1).rstrip()+'\n')
           PY
-      - name: Install
-        run: python -m pip install --quiet pytest jsonschema ruff
-      - name: Verify
-        shell: bash
+      - run: python -m pip install --quiet pytest jsonschema ruff
+      - name: Compile and Ruff
         run: |
-          set -euo pipefail
           python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
           python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
-          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+      - name: Focused tests
+        shell: bash
+        run: |
+          set +e
+          output="$(python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py 2>&1)"
+          status=$?
+          set -e
+          echo "$output"
+          if [ "$status" -ne 0 ]; then
+            safe="${output//$'\n'/%0A}"
+            echo "::error title=PR3 exact edge-container test failure::$safe"
+            exit "$status"
+          fi
       - name: Publish
         shell: bash
         run: |
