@@ -603,3 +603,18 @@ def test_selection_receipt_digest_rejects_tamper_and_recomputes_when_blank() -> 
         ProjectionSelectionReceipt(**kwargs, receipt_digest="0" * 64)
     recomputed = ProjectionSelectionReceipt(**kwargs, receipt_digest="")
     assert recomputed.receipt_digest == receipt.receipt_digest
+
+
+def test_compile_rejects_non_exact_projection_budget() -> None:
+    source = _candidate(
+        "source:target",
+        CandidateCategory.SOURCE,
+        D["2"],
+        answer_determining=True,
+    )
+
+    class DerivedBudget(ProjectionBudget):
+        pass
+
+    with pytest.raises(ValueError, match="budget must be exact ProjectionBudget"):
+        _compile((source,), budget=DerivedBudget())
