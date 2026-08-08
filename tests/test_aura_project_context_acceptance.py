@@ -519,3 +519,129 @@ def test_derived_source_root_is_not_source_complete_even_on_verified_edge() -> N
     assert trace["exact_source_ids"] == []
     assert trace["authoritative_path"] is True
     assert trace["source_complete"] is False
+
+
+def test_public_compilation_rejects_incomplete_dependency_closure() -> None:
+    complete = _compile((_source(),))
+    assert complete.projection is not None
+    source = complete.selected_candidates[0]
+    proof_ref = _ref("ref:dependency-proof", _digest("e"))
+    proof = ProjectContextCandidate(
+        candidate_id="proof:dependency-gap",
+        category=CandidateCategory.PROOF_OBLIGATION,
+        source_adapter="adapter.proof",
+        origin_ref=proof_ref.canonical_ref,
+        authority_class=ContextAuthorityClass.CANONICAL_READ,
+        truth_class=CandidateTruthClass.EXACT_CURRENT,
+        reference=proof_ref,
+        dependency_ids=("test:missing",),
+    )
+    forged_receipt = ProjectionSelectionReceipt(
+        objective_digest=complete.objective_digest,
+        repository_identity_digest=complete.repository_identity.identity_digest,
+        canonical_owner=complete.selection_receipt.canonical_owner,
+        selected=(source.candidate_id, proof.candidate_id),
+        omitted_irrelevant=(), omitted_by_budget=(), stale=(), unavailable=(),
+        conflicting=(), source_adapter_missing=(), mandatory_evidence_missing=(),
+        status=SelectionStatus.COMPLETE, budget=complete.selection_receipt.budget,
+    )
+    forged_projection = replace(
+        complete.projection,
+        artifact_evidence_refs=(source.reference, proof_ref),
+        projection_digest="",
+    )
+    with pytest.raises(ValueError, match="dependency closure is incomplete"):
+        ProjectContextCompilation(
+            objective=complete.objective, objective_digest=complete.objective_digest,
+            repository_identity=complete.repository_identity, projection=forged_projection,
+            selection_receipt=forged_receipt, selected_candidates=(source, proof),
+            graph_edges=(), admissible=True,
+        )
+
+
+def test_public_compilation_rejects_same_id_different_reference_identity() -> None:
+    complete = _compile((_source(),))
+    assert complete.projection is not None
+    source = complete.selected_candidates[0]
+    assert source.reference is not None
+    forged_ref = CanonicalReference(
+        source.reference.reference_id,
+        source.reference.owner,
+        source.reference.canonical_ref,
+        _digest("f"),
+        truth_class="EXACT",
+        freshness_class="CURRENT",
+        metadata={},
+    )
+    forged_projection = replace(
+        complete.projection, artifact_evidence_refs=(forged_ref,), projection_digest=""
+    )
+    with pytest.raises(ValueError, match="artifact_evidence_refs references do not match"):
+        ProjectContextCompilation(
+            objective=complete.objective, objective_digest=complete.objective_digest,
+            repository_identity=complete.repository_identity, projection=forged_projection,
+            selection_receipt=complete.selection_receipt,
+            selected_candidates=complete.selected_candidates, graph_edges=(), admissible=True,
+        )
+
+
+def test_public_compilation_rejects_node_budget_bypass() -> None:
+    source = _source()
+    proof_ref = _ref("ref:budget-proof", _digest("e"))
+    proof = ProjectContextCandidate(
+        candidate_id="proof:budget", category=CandidateCategory.PROOF_OBLIGATION,
+        source_adapter="adapter.proof", origin_ref=proof_ref.canonical_ref,
+        authority_class=ContextAuthorityClass.CANONICAL_READ,
+        truth_class=CandidateTruthClass.EXACT_CURRENT, reference=proof_ref,
+    )
+    complete = _compile((source, proof))
+    assert complete.projection is not None
+    forged_receipt = ProjectionSelectionReceipt(
+        objective_digest=complete.objective_digest,
+        repository_identity_digest=complete.repository_identity.identity_digest,
+        canonical_owner=complete.selection_receipt.canonical_owner,
+        selected=complete.selection_receipt.selected, omitted_irrelevant=(),
+        omitted_by_budget=(), stale=(), unavailable=(), conflicting=(),
+        source_adapter_missing=(), mandatory_evidence_missing=(),
+        status=SelectionStatus.COMPLETE, budget=ProjectionBudget(max_nodes=1, max_edges=32),
+    )
+    with pytest.raises(ValueError, match="node budget"):
+        ProjectContextCompilation(
+            objective=complete.objective, objective_digest=complete.objective_digest,
+            repository_identity=complete.repository_identity, projection=complete.projection,
+            selection_receipt=forged_receipt, selected_candidates=complete.selected_candidates,
+            graph_edges=complete.graph_edges, admissible=True,
+        )
+
+
+def test_public_compilation_rejects_edge_budget_bypass() -> None:
+    source = _source()
+    test_ref = _ref("ref:edge-budget-test", _digest("e"))
+    direct_test = ProjectContextCandidate(
+        candidate_id="test:edge-budget", category=CandidateCategory.TEST,
+        source_adapter="adapter.test", origin_ref=test_ref.canonical_ref,
+        authority_class=ContextAuthorityClass.CANONICAL_READ,
+        truth_class=CandidateTruthClass.EXACT_CURRENT, reference=test_ref,
+        dependency_ids=(source.candidate_id,),
+    )
+    edges = (
+        ProjectContextEdge(source.candidate_id, direct_test.candidate_id, "tests", EdgeTruthClass.EXACT),
+        ProjectContextEdge(source.candidate_id, direct_test.candidate_id, "supports", EdgeTruthClass.EXACT),
+    )
+    complete = _compile((source, direct_test), edges)
+    forged_receipt = ProjectionSelectionReceipt(
+        objective_digest=complete.objective_digest,
+        repository_identity_digest=complete.repository_identity.identity_digest,
+        canonical_owner=complete.selection_receipt.canonical_owner,
+        selected=complete.selection_receipt.selected, omitted_irrelevant=(),
+        omitted_by_budget=(), stale=(), unavailable=(), conflicting=(),
+        source_adapter_missing=(), mandatory_evidence_missing=(),
+        status=SelectionStatus.COMPLETE, budget=ProjectionBudget(max_nodes=16, max_edges=1),
+    )
+    with pytest.raises(ValueError, match="edge budget"):
+        ProjectContextCompilation(
+            objective=complete.objective, objective_digest=complete.objective_digest,
+            repository_identity=complete.repository_identity, projection=complete.projection,
+            selection_receipt=forged_receipt, selected_candidates=complete.selected_candidates,
+            graph_edges=complete.graph_edges, admissible=True,
+        )

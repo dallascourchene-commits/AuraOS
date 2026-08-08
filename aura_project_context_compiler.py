@@ -527,7 +527,20 @@ class ProjectContextCompilation:
         selected_ids = tuple(item.candidate_id for item in selected)
         if selected_ids != self.selection_receipt.selected:
             raise ValueError("selected candidate identities do not match selection receipt")
+        if len(selected) > self.selection_receipt.budget.max_nodes:
+            raise ValueError("selected candidates exceed selection receipt node budget")
         selected_map = {item.candidate_id: item for item in selected}
+        missing_dependencies = sorted(
+            (item.candidate_id, dependency_id)
+            for item in selected
+            for dependency_id in item.dependency_ids
+            if dependency_id not in selected_map
+        )
+        if missing_dependencies:
+            raise ValueError(
+                "selected candidate dependency closure is incomplete: "
+                f"{missing_dependencies}"
+            )
         ineligible_selected = {
             item.candidate_id: problem
             for item in selected
@@ -560,6 +573,8 @@ class ProjectContextCompilation:
             )
 
         edges = tuple(self.graph_edges)
+        if len(edges) > self.selection_receipt.budget.max_edges:
+            raise ValueError("compiled graph edges exceed selection receipt edge budget")
         if any(type(item) is not ProjectContextEdge for item in edges):
             raise ValueError("graph_edges must be exact records")
         selected_id_set = set(selected_ids)
@@ -594,25 +609,24 @@ class ProjectContextCompilation:
                 != self.repository_identity.to_dict()
             ):
                 raise ValueError("projection repository identity is not bound to compilation")
-            projection_refs = (
-                self.projection.artifact_evidence_refs
-                + self.projection.decision_refs
-                + self.projection.rejected_alternative_refs
-                + self.projection.unresolved_question_refs
-                + self.projection.assumption_refs
-                + self.projection.capability_refs
-                + self.projection.relationship_refs
-                + self.projection.blocker_refs
-                + self.projection.next_action_refs
-            )
-            projection_ref_ids = {item.reference_id for item in projection_refs}
-            selected_ref_ids = {
-                item.reference.reference_id
-                for item in selected
-                if item.reference is not None
+            expected_projection_refs: dict[str, list[CanonicalReference]] = {
+                name: [] for name in set(_CATEGORY_FIELD.values())
             }
-            if projection_ref_ids != selected_ref_ids:
-                raise ValueError("projection references do not match selected candidates")
+            for item in selected:
+                if item.reference is None:
+                    raise ValueError("selected candidate is missing canonical reference")
+                expected_projection_refs[_CATEGORY_FIELD[item.category]].append(item.reference)
+            for field_name, expected_refs in expected_projection_refs.items():
+                actual_refs = getattr(self.projection, field_name)
+                canonical_expected = tuple(
+                    sorted(expected_refs, key=lambda ref: ref.reference_id)
+                )
+                if tuple(ref.to_dict() for ref in actual_refs) != tuple(
+                    ref.to_dict() for ref in canonical_expected
+                ):
+                    raise ValueError(
+                        f"projection {field_name} references do not match selected candidates"
+                    )
 
         if type(self.admissible) is not bool:
             raise TypeError("admissible must be a boolean")
@@ -764,7 +778,8 @@ def _projection(
     }
     selected_freshness: list[str] = []
     for candidate in selected:
-        assert candidate.reference is not None
+        if candidate.reference is None:
+            raise ValueError("selected candidate is missing canonical reference")
         buckets[_CATEGORY_FIELD[candidate.category]].append(candidate.reference)
         selected_freshness.append(candidate.reference.freshness_class)
     objective_digest = stable_digest({"objective": objective})
@@ -1043,6 +1058,8 @@ def trace_project_context_provenance(
     starts = _ids(start_ids, "start_ids", maximum=64)
     max_hops = _int(max_hops, "max_hops", minimum=1, maximum=16)
     max_nodes = _int(max_nodes, "max_nodes", minimum=1, maximum=256)
+    if len(starts) > max_nodes:
+        raise ValueError("provenance start_ids exceed max_nodes")
     node_map = {
         item.candidate_id: item for item in compilation.selected_candidates
     }
@@ -1166,10 +1183,12 @@ def validate_project_context_freshness(
         "observed_at_ms",
         maximum=2**63 - 1,
     )
-    normalized = {
-        _text(key, "binding key"): _digest(value, "binding digest")
-        for key, value in current_bindings.items()
-    }
+    normalized: dict[str, str] = {}
+    for key, value in current_bindings.items():
+        normalized_key = _text(key, "binding key")
+        if normalized_key in normalized:
+            raise ValueError("current_bindings contains duplicate normalized keys")
+        normalized[normalized_key] = _digest(value, "binding digest")
     reasons: list[str] = []
     if compilation.repository_identity.to_dict() != current_repository_identity.to_dict():
         reasons.append("repository_identity_changed")

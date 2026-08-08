@@ -543,3 +543,63 @@ def test_reserved_missing_source_marker_cannot_be_candidate_id() -> None:
     )
     with pytest.raises(ValueError, match="reserved"):
         _compile((reserved,))
+
+
+def test_current_binding_normalization_collision_fails_closed() -> None:
+    binding = TemporalBinding(TemporalBindingKind.SOURCE_HASH, "target-source", D["7"])
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"],
+        answer_determining=True, bindings=(binding,),
+    )
+    result = _compile((source,))
+    with pytest.raises(ValueError, match="duplicate normalized keys"):
+        validate_project_context_freshness(
+            result, current_repository_identity=_repo(),
+            current_bindings={f" {binding.key} ": D["8"], binding.key: binding.digest},
+            observed_at_ms=1_786_180_000_001,
+        )
+
+
+def test_provenance_start_ids_must_fit_node_budget() -> None:
+    first = _candidate(
+        "source:first", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+    second = _candidate(
+        "source:second", CandidateCategory.SOURCE, D["3"], relevance=100
+    )
+    result = _compile((first, second))
+    with pytest.raises(ValueError, match="start_ids exceed max_nodes"):
+        trace_project_context_provenance(
+            result, ("source:first", "source:second"), max_nodes=1
+        )
+
+
+def test_unknown_provenance_start_fails_closed() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+    result = _compile((source,))
+    with pytest.raises(ValueError, match="outside selected context"):
+        trace_project_context_provenance(result, ("source:missing",))
+
+
+def test_selection_receipt_digest_rejects_tamper_and_recomputes_when_blank() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+    receipt = _compile((source,)).selection_receipt
+    kwargs = dict(
+        objective_digest=receipt.objective_digest,
+        repository_identity_digest=receipt.repository_identity_digest,
+        canonical_owner=receipt.canonical_owner, selected=receipt.selected,
+        omitted_irrelevant=receipt.omitted_irrelevant,
+        omitted_by_budget=receipt.omitted_by_budget, stale=receipt.stale,
+        unavailable=receipt.unavailable, conflicting=receipt.conflicting,
+        source_adapter_missing=receipt.source_adapter_missing,
+        mandatory_evidence_missing=receipt.mandatory_evidence_missing,
+        status=receipt.status, budget=receipt.budget,
+    )
+    with pytest.raises(ValueError, match="receipt digest mismatch"):
+        ProjectionSelectionReceipt(**kwargs, receipt_digest="0" * 64)
+    recomputed = ProjectionSelectionReceipt(**kwargs, receipt_digest="")
+    assert recomputed.receipt_digest == receipt.receipt_digest

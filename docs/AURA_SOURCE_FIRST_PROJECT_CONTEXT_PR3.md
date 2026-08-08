@@ -2,7 +2,7 @@
 
 ## Status
 
-`READY_FOR_HUMAN_REVIEW`
+`IMPLEMENTING`
 
 **Program:** AuraOS Intent-Native Spatial Computing / Ephemeral Arenas foundation
 **Master unit:** PR3 — Source-first project reconstruction and task-conditioned relational graph
@@ -199,11 +199,12 @@ PR3 fails closed when:
 - a hand-assembled `COMPLETE` compilation cannot independently prove its exact-current answer-determining source anchor;
 - a hand-assembled compilation attempts to mark compiler-ineligible advisory, stale, unavailable, adapter-missing, or conflicting candidates as selected canonical evidence;
 - caller-supplied candidate IDs collide with the reserved `source:selected` missing-source receipt marker;
-- graph edges reference candidates outside the task-conditioned set;
+- selected candidates exceed signed node/edge budgets, have incomplete dependency closure, or graph edges reference candidates outside the task-conditioned set;
+- projection references differ in full canonical identity or category placement from selected candidates;
 - one canonical reference is aliased into multiple candidate roles;
 - an authority-bearing candidate claims an `origin_ref` different from its canonical reference origin;
 - advisory/hypothesis/stale/unavailable material attempts to carry canonical/derived read authority;
-- repository identity or selected temporal bindings drift;
+- repository identity or selected temporal bindings drift, or caller binding keys collide after canonical normalization;
 - a provenance trace is truncated, follows non-authoritative edges, or terminates at non-exact source roots but is presented as source-complete.
 
 PR3 never grants patch, execution, persistence, publication, deployment, payment, professional, or merge authority.
