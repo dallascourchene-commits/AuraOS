@@ -705,3 +705,45 @@ def test_public_compilation_rejects_low_level_tampered_temporal_binding() -> Non
             projection=complete.projection, selection_receipt=complete.selection_receipt,
             selected_candidates=complete.selected_candidates, graph_edges=complete.graph_edges, admissible=True,
         )
+
+def test_public_compilation_rejects_unbounded_selected_candidate_iterable_without_consuming_it() -> None:
+    complete = _compile((_source(),))
+
+    class ExplodingSelected:
+        def __iter__(self):
+            raise AssertionError("selected candidate iterable must not be consumed")
+
+    with pytest.raises(TypeError, match="selected_candidates must be a bounded built-in"):
+        ProjectContextCompilation(
+            project_ref=PROJECT_REF, objective=complete.objective,
+            objective_digest=complete.objective_digest, repository_identity=complete.repository_identity,
+            projection=complete.projection, selection_receipt=complete.selection_receipt,
+            selected_candidates=ExplodingSelected(), graph_edges=complete.graph_edges, admissible=True,
+        )
+
+
+def test_public_compilation_rejects_unbounded_graph_edge_iterable_without_consuming_it() -> None:
+    complete = _compile((_source(),))
+
+    class ExplodingEdges:
+        def __iter__(self):
+            raise AssertionError("graph edge iterable must not be consumed")
+
+    with pytest.raises(TypeError, match="graph_edges must be a bounded built-in"):
+        ProjectContextCompilation(
+            project_ref=PROJECT_REF, objective=complete.objective,
+            objective_digest=complete.objective_digest, repository_identity=complete.repository_identity,
+            projection=complete.projection, selection_receipt=complete.selection_receipt,
+            selected_candidates=complete.selected_candidates, graph_edges=ExplodingEdges(), admissible=True,
+        )
+
+
+def test_candidate_rejects_unbounded_temporal_binding_iterable_without_consuming_it() -> None:
+    source = _source()
+
+    class ExplodingBindings:
+        def __iter__(self):
+            raise AssertionError("temporal binding iterable must not be consumed")
+
+    with pytest.raises(TypeError, match="temporal_bindings must be a bounded built-in"):
+        replace(source, temporal_bindings=ExplodingBindings())

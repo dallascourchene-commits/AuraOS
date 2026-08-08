@@ -202,6 +202,7 @@ PR3 fails closed when:
 - a hand-assembled compilation attempts to mark compiler-ineligible advisory, stale, unavailable, adapter-missing, or conflicting candidates as selected canonical evidence;
 - caller-supplied candidate IDs collide with the reserved `source:selected` missing-source receipt marker, including through hand-assembled public compilation records;
 - selected candidates exceed signed node/edge budgets, have incomplete dependency closure, or graph edges reference candidates outside the task-conditioned set;
+- caller-controlled selected-candidate, graph-edge, or temporal-binding iterables are not materialized before exact finite-container and declared-length bounds are proven;
 - projection references differ in full canonical identity or category placement from selected candidates;
 - hand-assembled selected candidates contain low-level-tampered `CanonicalReference` or `TemporalBinding` records that no longer pass their canonical constructors;
 - one canonical reference is aliased into multiple candidate roles;

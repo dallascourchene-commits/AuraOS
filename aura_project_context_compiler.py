@@ -254,13 +254,16 @@ def _normalize_candidate_relationships(candidate: Any) -> None:
             "conflict_key",
             _id(candidate.conflict_key, "conflict_key"),
         )
-    bindings = tuple(candidate.temporal_bindings)
-    if len(bindings) > MAX_TEMPORAL_BINDINGS or any(
-        type(item) is not TemporalBinding for item in bindings
-    ):
+    raw_bindings = candidate.temporal_bindings
+    if type(raw_bindings) not in (tuple, list):
+        raise TypeError("temporal_bindings must be a bounded built-in tuple or list")
+    if len(raw_bindings) > MAX_TEMPORAL_BINDINGS:
+        raise ValueError("temporal_bindings exceeds the bounded record ceiling")
+    if any(type(item) is not TemporalBinding for item in raw_bindings):
         raise ValueError(
             "temporal_bindings must contain bounded exact TemporalBinding records"
         )
+    bindings = tuple(raw_bindings)
     if len({item.key for item in bindings}) != len(bindings):
         raise ValueError("temporal_bindings contains duplicate binding keys")
     object.__setattr__(
@@ -281,10 +284,11 @@ def _revalidate_selected_candidate_nested_records(candidate: Any) -> None:
         except Exception as exc:
             raise ValueError("selected candidate canonical reference failed revalidation") from exc
 
-    try:
-        bindings = tuple(candidate.temporal_bindings)
-    except Exception as exc:
-        raise ValueError("selected candidate temporal bindings failed revalidation") from exc
+    bindings = candidate.temporal_bindings
+    if type(bindings) is not tuple:
+        raise ValueError("selected candidate temporal bindings must remain a canonical tuple")
+    if len(bindings) > MAX_TEMPORAL_BINDINGS:
+        raise ValueError("selected candidate temporal bindings exceed the bounded record ceiling")
     for binding in bindings:
         if type(binding) is not TemporalBinding:
             raise ValueError("selected candidate temporal bindings must be exact TemporalBinding records")
@@ -704,9 +708,14 @@ def _canonical_compilation_candidates(
     dict[str, ProjectContextCandidate],
 ]:
     """Canonicalize the corresponding PR3 structure deterministically."""
-    selected = tuple(compilation.selected_candidates)
-    if any(type(item) is not ProjectContextCandidate for item in selected):
+    raw_selected = compilation.selected_candidates
+    if type(raw_selected) not in (tuple, list):
+        raise TypeError("selected_candidates must be a bounded built-in tuple or list")
+    if len(raw_selected) > compilation.selection_receipt.budget.max_nodes:
+        raise ValueError("selected candidates exceed selection receipt node budget")
+    if any(type(item) is not ProjectContextCandidate for item in raw_selected):
         raise ValueError("selected_candidates must be exact records")
+    selected = tuple(raw_selected)
     for item in selected:
         _revalidate_selected_candidate_nested_records(item)
     selected = tuple(sorted(selected, key=lambda item: item.candidate_id))
@@ -731,10 +740,6 @@ def _canonical_compilation_candidates(
     if selected_ids != compilation.selection_receipt.selected:
         raise ValueError(
             "selected candidate identities do not match selection receipt"
-        )
-    if len(selected) > compilation.selection_receipt.budget.max_nodes:
-        raise ValueError(
-            "selected candidates exceed selection receipt node budget"
         )
     return selected, selected_ids, {
         item.candidate_id: item for item in selected
@@ -828,13 +833,16 @@ def _canonicalize_compilation_edges(
     selected_ids: tuple[str, ...],
 ) -> None:
     """Canonicalize the corresponding PR3 structure deterministically."""
-    edges = tuple(compilation.graph_edges)
-    if len(edges) > compilation.selection_receipt.budget.max_edges:
+    raw_edges = compilation.graph_edges
+    if type(raw_edges) not in (tuple, list):
+        raise TypeError("graph_edges must be a bounded built-in tuple or list")
+    if len(raw_edges) > compilation.selection_receipt.budget.max_edges:
         raise ValueError(
             "compiled graph edges exceed selection receipt edge budget"
         )
-    if any(type(item) is not ProjectContextEdge for item in edges):
+    if any(type(item) is not ProjectContextEdge for item in raw_edges):
         raise ValueError("graph_edges must be exact records")
+    edges = tuple(raw_edges)
     selected_id_set = set(selected_ids)
     if any(
         edge.source_id not in selected_id_set
