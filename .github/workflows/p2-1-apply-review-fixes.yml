@@ -74,7 +74,7 @@ jobs:
           region = text[start:end]
           replacements = [
               ('    recipe = _recipe(ttl=2, wall_time_ms=1000)\n',
-               '    # Give hosted runners startup margin while keeping TTL earlier than node timeout.\n    recipe = _recipe(ttl=10, wall_time_ms=10000)\n'),
+               '    # The compiler floors remaining TTL; 10 requested seconds yields a 9-second effective TTL.\n    # Match that budget so TTL remains the earliest authority deadline while leaving child startup margin.\n    recipe = _recipe(ttl=10, wall_time_ms=9000)\n'),
               ('    if remaining > 0.35:\n        time.sleep(remaining - 0.35)\n',
                '    if remaining > 2.0:\n        time.sleep(remaining - 2.0)\n'),
               ('            "delay_seconds": 1.0,\n', '            "delay_seconds": 5.0,\n'),
