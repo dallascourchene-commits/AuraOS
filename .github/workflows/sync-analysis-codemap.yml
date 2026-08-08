@@ -1,9 +1,10 @@
-name: Synchronize CODEMAP on architecture work branches
+name: Synchronize CODEMAP topology and source anchors
 
 on:
   pull_request:
   push:
     branches:
+      - main
       - "analysis/**"
       - "docs/**"
       - "fix/construction-demo-runtime-harness-*"
