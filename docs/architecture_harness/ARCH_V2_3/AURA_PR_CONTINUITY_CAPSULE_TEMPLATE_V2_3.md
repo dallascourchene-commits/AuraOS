@@ -1,5 +1,5 @@
 ---
-capsule_schema: AURA_PR_CONTINUITY_CAPSULE_V2_3
+schema_version: AURA_PR_CONTINUITY_CAPSULE_V2_3
 generated_projection: true
 harness_version: AURA_ARCH_V2_3
 authoritative_state: ".aura/pr_context/PR-XXXX.context.json"
@@ -7,9 +7,9 @@ pr_number: XXXX
 phase: "P?"
 base_sha: "<40-hex>"
 head_sha: "<40-hex>"
-capsule_generation: 1
+generation: 1
 last_transaction_id: null
-terminal_state: "ORIENTING"
+state: "ORIENTED"
 ---
 
 # Aura PR #XXXX Continuity Capsule
@@ -147,21 +147,28 @@ This PR does **not** grant:
 ## 12A. JSpace advisory working-set projection
 
 - Status: ENABLED / DISABLED / UNAVAILABLE
+- Projection ID:
 - Codec version: `AURA_JSPACE_CODEC_V0` / null
+- Workspace ID:
+- Head SHA:
 - Active limit: `<= 25`
 - Packet digest:
 - Phase hash:
 - Source refs:
 - Origin refs:
 - Freshness: CURRENT / STALE / UNKNOWN / NOT_APPLICABLE
+- Authority class: `ADVISORY_NONE`
 - Authoritative: **false**
 - Patch authority: **false**
 - Persistent truth: **false**
 - Reconstructable: **true**
+- Expires at:
 
-If stale, reconstruct from canonical capsule/route/evidence or disable it. Never promote a JSpace item directly to truth, policy, capability, verifier status, or patch authority.
+If enabled, the projection must be bound to the current workspace, exact head, phase, source/origin evidence, and expiry. If stale, reconstruct from canonical capsule/route/evidence or disable it. Never promote a JSpace item directly to truth, policy, capability, verifier status, or patch authority.
 
 ## 13. Active findings and root-cause groups
+
+`findings` and `root_cause_groups` are the canonical ledgers. Do not create parallel `open_*` collections; openness is represented by each entry's disposition/status.
 
 | Root cause | Findings | Invariants | Status | Proposed disposition |
 |---|---|---|---|---|
@@ -193,18 +200,24 @@ If stale, reconstruct from canonical capsule/route/evidence or disable it. Never
 
 ## 15A. Verification independence
 
-- Status: UNASSESSED / INDEPENDENT / CORRELATED / CONFLICTING
+- Correlation status: UNASSESSED / INDEPENDENT / CORRELATED / CONFLICTING
 - Verifier refs:
+- Model-provider refs:
+- Input-origin refs:
 - Shared-origin refs:
 - Shared-context refs:
-- Shared-tool/model/session refs:
+- Shared-tool refs:
+- Shared-session refs:
+- Conflicts:
+- Sybil-resistance evidence:
+- Disposition:
 - Independence receipt:
 - Exact contradictions retained: YES / NO
 
 ## 16. Reviewer history
 
 | Wave | Reviewer | Head range | Root causes found | Disposition |
-|---|---|---|---|---|
+|---|---|---|---|
 | 1 | CodeRabbit | ... | ... | ... |
 
 ## 17. Regression risks
@@ -224,17 +237,27 @@ If stale, reconstruct from canonical capsule/route/evidence or disable it. Never
 ## 18A. Commit-time authorization
 
 - Status: NOT_REQUIRED / PENDING / VALIDATED / STALE / REVOKED / REFUSED / REPLAN_REQUIRED
+- Workspace ID:
 - Planned/candidate effect digest:
 - Authority witness digest:
+- Capability-lease digest:
+- Dependency digest:
 - Validated exact head:
-- Lease still current: YES / NO / N/A
-- Dependency/effect binding still current: YES / NO / N/A
+- Identity binding: PASSED / FAILED / NOT_APPLICABLE / UNASSESSED
+- Witness fresh and unrevoked: PASSED / FAILED / NOT_APPLICABLE / UNASSESSED
+- Lease current and eligible: PASSED / FAILED / NOT_APPLICABLE / UNASSESSED
+- Witness causally prior: PASSED / FAILED / NOT_APPLICABLE / UNASSESSED
+- Effect binding current: PASSED / FAILED / NOT_APPLICABLE / UNASSESSED
+- Dependency and threat-model freshness: PASSED / FAILED / NOT_APPLICABLE / UNASSESSED
+- Proof freshness: PASSED / FAILED / NOT_APPLICABLE / UNASSESSED
+- Verifier independence: PASSED / FAILED / NOT_APPLICABLE / UNASSESSED
+- Required governance disposition present: PASSED / FAILED / NOT_APPLICABLE / UNASSESSED
 - Validated at:
 - Expires at:
 - Receipt ref:
 - Revalidation required before durable effect: **true**
 
-Endpoint success is not authorization. A stale or mismatched witness requires replan/refusal before durability.
+`VALIDATED` is only representable when every mandatory gate above is `PASSED` and the workspace/head/witness/effect/lease/dependency bindings are non-null and current. Endpoint success is not authorization. A stale or mismatched witness requires replan/refusal before durability.
 
 ## 19. Durable-promotion checklist
 
