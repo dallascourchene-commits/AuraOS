@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 import pytest
 
 from scripts.aura_arch_v2_3_capsule_validator import validate_arch_v2_3_capsule_semantics
