@@ -21,7 +21,7 @@ jobs:
   source-anchors:
     name: Verify CODEMAP source anchors
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,6 +29,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
+      - name: Install declared dependencies and focused test tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "pytest>=8.2,<9.0"
       - name: Compile source-anchor navigation tools
         run: |
           python -m py_compile \
@@ -39,5 +44,4 @@ jobs:
           python scripts/aura_source_anchor_map.py --root . --check
       - name: Run deterministic source-anchor regressions
         run: |
-          python -m pip install --disable-pip-version-check "pytest>=8.2,<9.0"
           python -m pytest -q tests/test_aura_source_anchor_map.py
