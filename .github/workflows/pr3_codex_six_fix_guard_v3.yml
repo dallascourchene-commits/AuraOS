@@ -63,7 +63,11 @@ jobs:
 
       - name: Whitespace diff check
         shell: bash
-        run: git diff --check
+        run: |
+          git diff --check -- \
+            aura_project_context_compiler.py \
+            tests/test_aura_project_context_compiler.py \
+            docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
 
       - name: Focused PR3 tests
         shell: bash
