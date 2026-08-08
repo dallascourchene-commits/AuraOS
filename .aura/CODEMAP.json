@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786155189,
+  "generated_at_unix": 1786173101,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1583,
+    "included_file_count": 1584,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -183,6 +183,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/pr2-final-closeout.yml",
       ".github/workflows/provider-routing-materialize.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
@@ -1605,9 +1606,9 @@
     ]
   },
   "summary": {
-    "file_count": 1583,
-    "total_bytes": 59192512,
-    "text_tokens_est": 5335402,
+    "file_count": 1584,
+    "total_bytes": 59200505,
+    "text_tokens_est": 5337400,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 64,
@@ -1615,13 +1616,13 @@
       "native_accelerator": 8,
       "operator_script": 6,
       "python_module": 986,
-      "schema_or_lexicon": 230,
+      "schema_or_lexicon": 231,
       "support_file": 90
     },
     "topology_nodes": 11381,
     "topology_edges": 27800,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 26151.35
+    "elapsed_ms": 29995.47
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1992,6 +1993,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/pr2-final-closeout.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -4126,6 +4128,8 @@
       "aura_human_agent_arena/emergent.js:139"
     ],
     "!r": [
+      ".github/workflows/p2-1-apply-review-fixes.yml:79",
+      ".github/workflows/pr2-final-closeout.yml:79",
       "aura_agent_arena_github_bridge.py:180",
       "aura_architect_consolidation_benchmark.py:193",
       "aura_architect_consolidation_benchmark_v2.py:55",
@@ -207607,47 +207611,53 @@
     {
       "path": ".github/workflows/p2-1-apply-review-fixes.yml",
       "role": "schema_or_lexicon",
-      "bytes": 10229,
-      "lines": 196,
-      "tokens_est": 2558,
+      "bytes": 9118,
+      "lines": 184,
+      "tokens_est": 2280,
       "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
+      "commands": [
+        "!r"
+      ],
+      "command_lines": {
+        "!r": [
+          79
+        ]
+      },
       "topology": {},
-      "digest8": "7e203257af40db33",
+      "digest8": "fbef64133051b05c",
       "vector": [
-        0.271593,
-        -0.226516,
-        0.206231,
-        0.222008,
-        -0.012396,
-        -0.084521,
-        -0.043951,
-        0.2175,
-        -0.253562,
-        0.05522,
-        0.185946,
-        0.120583,
-        -0.111567,
-        -0.131852,
-        0.118329,
-        0.068744,
-        0.276101,
-        0.212992,
-        -0.242293,
-        -0.073251,
-        -0.22877,
-        -0.197215,
-        0.165661,
-        -0.118329,
-        -0.104806,
-        0.278355,
-        0.17693,
-        0.086775,
-        -0.1882,
-        -0.206231,
-        -0.070997,
-        -0.181438
+        0.238611,
+        -0.14275,
+        -0.265702,
+        -0.00521,
+        -0.240695,
+        0.230275,
+        -0.265702,
+        0.174009,
+        -0.057308,
+        -0.161505,
+        -0.257367,
+        -0.257367,
+        0.096903,
+        0.253199,
+        -0.249031,
+        0.007294,
+        -0.078148,
+        0.167757,
+        0.06356,
+        0.105239,
+        0.055224,
+        -0.180261,
+        -0.249031,
+        0.06356,
+        0.069812,
+        0.05314,
+        0.215688,
+        -0.036469,
+        0.253199,
+        0.030217,
+        -0.078148,
+        0.255283
       ]
     },
     {
@@ -208476,6 +208486,58 @@
         0.106887,
         -0.031437,
         -0.225092
+      ]
+    },
+    {
+      "path": ".github/workflows/pr2-final-closeout.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 9104,
+      "lines": 184,
+      "tokens_est": 2276,
+      "symbol_count": 0,
+      "commands": [
+        "!r"
+      ],
+      "command_lines": {
+        "!r": [
+          79
+        ]
+      },
+      "topology": {},
+      "digest8": "01160c227ccf5e2e",
+      "vector": [
+        0.24259,
+        -0.069144,
+        -0.24259,
+        0.048049,
+        0.191025,
+        0.258997,
+        0.186338,
+        0.24259,
+        -0.176962,
+        -0.263685,
+        0.113678,
+        0.207432,
+        0.188681,
+        -0.270717,
+        0.24259,
+        0.113678,
+        0.116022,
+        -0.041018,
+        -0.235559,
+        0.228527,
+        -0.031642,
+        0.158211,
+        0.076176,
+        0.092583,
+        0.019923,
+        -0.071488,
+        0.205089,
+        0.127741,
+        0.106646,
+        0.202745,
+        0.174618,
+        0.174618
       ]
     },
     {
