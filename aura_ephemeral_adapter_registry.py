@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import inspect
 import json
+import math
 import multiprocessing
 import os
 import signal
@@ -214,8 +215,7 @@ def _execute_bounded_callback(
         )
     if type(deadline_monotonic) not in {int, float} or type(deadline_monotonic) is bool:
         raise ValueError("deadline_monotonic must be a finite positive number")
-    if deadline_monotonic != deadline_monotonic or deadline_monotonic in {float("inf"), float("-inf")} \
-            or deadline_monotonic <= 0:
+    if not math.isfinite(deadline_monotonic) or deadline_monotonic <= 0:
         raise ValueError("deadline_monotonic must be a finite positive number")
     if type(max_output_bytes) is not int or type(max_output_bytes) is bool or max_output_bytes < 1:
         raise ValueError("max_output_bytes must be a positive integer")
@@ -381,6 +381,10 @@ def _execute_bounded_callback(
         parent.close()
 
 
+def _default_host_compatibility() -> list[str]:
+    return ["python-stdlib"]
+
+
 @dataclass
 class AdapterMetadata:
     """Versioned behavior identity for one bounded adapter implementation."""
@@ -399,7 +403,7 @@ class AdapterMetadata:
     operational_status: str = "DECLARED"
     implementation_ref: str = ""
     tests: list[str] = field(default_factory=list)
-    host_compatibility: list[str] = field(default_factory=lambda: ["python-stdlib"])
+    host_compatibility: list[str] = field(default_factory=_default_host_compatibility)
     rollback_ref: str = ""
     revocation_state: str = "ACTIVE"
     revocation_reason: str = ""

@@ -621,7 +621,9 @@ def test_runtime_wall_time_deadline_dissolves_and_kills_callback(tmp_path: Path)
 def test_workspace_ttl_expiry_during_callback_kills_execution_and_cleans(tmp_path: Path) -> None:
     started_path = tmp_path / "ttl-started"
     completed_path = tmp_path / "ttl-completed"
-    recipe = _recipe(ttl=2, wall_time_ms=1000)
+    # The compiler floors remaining TTL; 10 requested seconds yields a 9-second effective TTL.
+    # Match that budget so TTL remains the earliest authority deadline while leaving child startup margin.
+    recipe = _recipe(ttl=10, wall_time_ms=9000)
     first = recipe.capability_ids[0]
     _, registry, _, graph, store, workspace_id = _admitted(
         tmp_path, overrides={first: _slow_file_adapter}, recipe_override=recipe,
@@ -631,14 +633,14 @@ def test_workspace_ttl_expiry_during_callback_kills_execution_and_cleans(tmp_pat
     )["ok"]
     expires_at = runtime.workspace_status_v2(workspace_id, store=store)["workspace"]["expires_at"]
     remaining = expires_at - time.time()
-    if remaining > 0.35:
-        time.sleep(remaining - 0.35)
+    if remaining > 2.0:
+        time.sleep(remaining - 2.0)
     result = runtime.execute_workspace_node_v2(
         workspace_id, graph["entry_node_ids"][0],
         params={
             "started_file": str(started_path),
             "completed_file": str(completed_path),
-            "delay_seconds": 1.0,
+            "delay_seconds": 5.0,
         },
         store=store, adapter_registry=registry,
     )
@@ -650,7 +652,7 @@ def test_workspace_ttl_expiry_during_callback_kills_execution_and_cleans(tmp_pat
     assert final["lease_status"] == "REVOKED"
     assert graph["entry_node_ids"][0] not in final["node_receipts"]
     assert started_path.exists()
-    time.sleep(0.9)
+    time.sleep(0.5)
     assert not completed_path.exists()
 
 
