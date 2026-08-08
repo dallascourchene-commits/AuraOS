@@ -1112,14 +1112,18 @@ def compile_project_context_projection(
     )
 
 
-def trace_project_context_provenance(
+def _provenance_inputs(
     compilation: ProjectContextCompilation,
     start_ids: Sequence[str],
-    *,
-    max_hops: int = 4,
-    max_nodes: int = 64,
-) -> dict[str, Any]:
-    """Trace a bounded authoritative predecessor closure without overclaiming completeness."""
+    max_hops: int,
+    max_nodes: int,
+) -> tuple[
+    tuple[str, ...],
+    int,
+    int,
+    dict[str, ProjectContextCandidate],
+    dict[str, list[ProjectContextEdge]],
+]:
     if type(compilation) is not ProjectContextCompilation:
         raise ValueError("compilation must be exact ProjectContextCompilation")
     starts = _ids(start_ids, "start_ids", maximum=64)
@@ -1146,7 +1150,15 @@ def trace_project_context_provenance(
                 edge.truth_class.value,
             )
         )
+    return starts, max_hops, max_nodes, node_map, incoming
 
+
+def _walk_provenance(
+    starts: tuple[str, ...],
+    incoming: Mapping[str, Sequence[ProjectContextEdge]],
+    max_hops: int,
+    max_nodes: int,
+) -> tuple[set[str], set[ProjectContextEdge], set[str]]:
     seen = set(starts)
     frontier = list(starts)
     traversed: set[ProjectContextEdge] = set()
@@ -1174,7 +1186,17 @@ def trace_project_context_provenance(
                 for edge in incoming.get(target, ())
                 if edge.source_id not in seen
             )
+    return seen, traversed, truncated
 
+
+def _provenance_summary(
+    node_map: Mapping[str, ProjectContextCandidate],
+    incoming: Mapping[str, Sequence[ProjectContextEdge]],
+    seen: set[str],
+    traversed: set[ProjectContextEdge],
+) -> tuple[
+    list[ProjectContextCandidate], list[str], list[str], list[str], bool, bool
+]:
     nodes = [node_map[item] for item in sorted(seen)]
     source_ids = [
         item.candidate_id
@@ -1187,19 +1209,53 @@ def trace_project_context_provenance(
         if item.category is CandidateCategory.SOURCE
         and item.truth_class is CandidateTruthClass.EXACT_CURRENT
     ]
-    provenance_root_ids = sorted(
+    root_ids = sorted(
         node_id
         for node_id in seen
-        if not any(edge.source_id in seen for edge in incoming.get(node_id, ()))
+        if not any(
+            edge.source_id in seen for edge in incoming.get(node_id, ())
+        )
     )
-    roots_are_exact_sources = bool(provenance_root_ids) and all(
+    roots_are_exact_sources = bool(root_ids) and all(
         node_map[node_id].category is CandidateCategory.SOURCE
         and node_map[node_id].truth_class is CandidateTruthClass.EXACT_CURRENT
-        for node_id in provenance_root_ids
+        for node_id in root_ids
     )
     authoritative_path = all(
         edge.truth_class in _AUTHORITATIVE_EDGE_TRUTH for edge in traversed
     )
+    return (
+        nodes,
+        source_ids,
+        exact_source_ids,
+        root_ids,
+        roots_are_exact_sources,
+        authoritative_path,
+    )
+
+
+def trace_project_context_provenance(
+    compilation: ProjectContextCompilation,
+    start_ids: Sequence[str],
+    *,
+    max_hops: int = 4,
+    max_nodes: int = 64,
+) -> dict[str, Any]:
+    """Trace a bounded authoritative predecessor closure without overclaiming completeness."""
+    starts, max_hops, max_nodes, node_map, incoming = _provenance_inputs(
+        compilation, start_ids, max_hops, max_nodes
+    )
+    seen, traversed, truncated = _walk_provenance(
+        starts, incoming, max_hops, max_nodes
+    )
+    (
+        nodes,
+        source_ids,
+        exact_source_ids,
+        root_ids,
+        roots_are_exact_sources,
+        authoritative_path,
+    ) = _provenance_summary(node_map, incoming, seen, traversed)
     result = {
         "version": PROJECT_CONTEXT_PROVENANCE_VERSION,
         "compilation_digest": compilation.compilation_digest,
@@ -1221,14 +1277,61 @@ def trace_project_context_provenance(
         "source_ids": source_ids,
         "exact_source_ids": exact_source_ids,
         "source_reached": bool(source_ids),
-        "provenance_root_ids": provenance_root_ids,
+        "provenance_root_ids": root_ids,
         "truncated_frontier": sorted(truncated),
         "authoritative_path": authoritative_path,
-        "source_complete": roots_are_exact_sources and authoritative_path and not truncated,
+        "source_complete": (
+            roots_are_exact_sources and authoritative_path and not truncated
+        ),
         "bounded": True,
     }
     result["trace_digest"] = stable_digest(result)
     return result
+
+
+def _normalized_current_bindings(
+    current_bindings: Mapping[str, str],
+) -> dict[str, str]:
+    if not isinstance(current_bindings, Mapping):
+        raise TypeError("current_bindings must be a mapping")
+    normalized: dict[str, str] = {}
+    for key, value in current_bindings.items():
+        normalized_key = _text(key, "binding key")
+        if normalized_key in normalized:
+            raise ValueError("current_bindings contains duplicate normalized keys")
+        normalized[normalized_key] = _digest(value, "binding digest")
+    return normalized
+
+
+def _freshness_reasons(
+    compilation: ProjectContextCompilation,
+    current_repository_identity: RepositoryIdentity,
+    current_bindings: Mapping[str, str],
+    observed_at_ms: int,
+) -> list[str]:
+    reasons: list[str] = []
+    if (
+        compilation.repository_identity.to_dict()
+        != current_repository_identity.to_dict()
+    ):
+        reasons.append("repository_identity_changed")
+    for candidate in compilation.selected_candidates:
+        if candidate.reference is None:
+            reasons.append(
+                f"selected_reference_missing:{candidate.candidate_id}"
+            )
+            continue
+        if candidate.reference.freshness_class not in {"CURRENT", "BOUNDED"}:
+            reasons.append(f"reference_stale:{candidate.candidate_id}")
+        for binding in candidate.temporal_bindings:
+            current = current_bindings.get(binding.key)
+            if current is None:
+                reasons.append(f"binding_missing:{binding.key}")
+            elif current != binding.digest:
+                reasons.append(f"binding_changed:{binding.key}")
+            if binding.expires_at_ms and observed_at_ms >= binding.expires_at_ms:
+                reasons.append(f"binding_expired:{binding.key}")
+    return sorted(set(reasons))
 
 
 def validate_project_context_freshness(
@@ -1243,37 +1346,18 @@ def validate_project_context_freshness(
         raise ValueError("compilation must be exact ProjectContextCompilation")
     if type(current_repository_identity) is not RepositoryIdentity:
         raise ValueError("current_repository_identity must be exact RepositoryIdentity")
-    if not isinstance(current_bindings, Mapping):
-        raise TypeError("current_bindings must be a mapping")
     observed_at_ms = _int(
         observed_at_ms,
         "observed_at_ms",
         maximum=2**63 - 1,
     )
-    normalized: dict[str, str] = {}
-    for key, value in current_bindings.items():
-        normalized_key = _text(key, "binding key")
-        if normalized_key in normalized:
-            raise ValueError("current_bindings contains duplicate normalized keys")
-        normalized[normalized_key] = _digest(value, "binding digest")
-    reasons: list[str] = []
-    if compilation.repository_identity.to_dict() != current_repository_identity.to_dict():
-        reasons.append("repository_identity_changed")
-    for candidate in compilation.selected_candidates:
-        if candidate.reference is None:
-            reasons.append(f"selected_reference_missing:{candidate.candidate_id}")
-            continue
-        if candidate.reference.freshness_class not in {"CURRENT", "BOUNDED"}:
-            reasons.append(f"reference_stale:{candidate.candidate_id}")
-        for binding in candidate.temporal_bindings:
-            current = normalized.get(binding.key)
-            if current is None:
-                reasons.append(f"binding_missing:{binding.key}")
-            elif current != binding.digest:
-                reasons.append(f"binding_changed:{binding.key}")
-            if binding.expires_at_ms and observed_at_ms >= binding.expires_at_ms:
-                reasons.append(f"binding_expired:{binding.key}")
-    reasons = sorted(set(reasons))
+    normalized = _normalized_current_bindings(current_bindings)
+    reasons = _freshness_reasons(
+        compilation,
+        current_repository_identity,
+        normalized,
+        observed_at_ms,
+    )
     result = {
         "version": PROJECT_CONTEXT_FRESHNESS_VERSION,
         "compilation_digest": compilation.compilation_digest,
