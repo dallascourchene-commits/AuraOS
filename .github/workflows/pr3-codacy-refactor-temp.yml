@@ -1,0 +1,47 @@
+name: TEMP PR3 Codacy Refactor
+
+on:
+  push:
+    branches:
+      - "analysis/pr3-codacy-refactor-script-20260808"
+
+permissions:
+  contents: write
+
+jobs:
+  refactor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/source-first-project-context-pr3
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install verification tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "ruff>=0.5" "pytest>=8.2,<9" "radon>=6,<7"
+      - name: Load refactor script from analysis branch
+        run: |
+          git show origin/analysis/pr3-codacy-refactor-script-20260808:tools/pr3_codacy_refactor_temp.py > /tmp/pr3_codacy_refactor_temp.py
+          python -m py_compile /tmp/pr3_codacy_refactor_temp.py
+      - name: Apply maintainability refactor
+        run: python /tmp/pr3_codacy_refactor_temp.py
+      - name: Verify behavior and complexity
+        run: |
+          python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          git diff --check
+          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          radon cc -s aura_project_context_compiler.py
+      - name: Commit only if verified
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aura_project_context_compiler.py
+          git commit -m "refactor(pr3): decompose project-context validation surfaces"
+          git push origin HEAD:refactor/source-first-project-context-pr3
