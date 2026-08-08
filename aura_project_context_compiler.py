@@ -284,7 +284,7 @@ class ProjectContextEdge:
         if self.source_id == self.target_id:
             raise ValueError("project-context self-edge is prohibited")
         object.__setattr__(self, "relation", _id(self.relation, "edge relation"))
-        object.__setattr__(self, "truth_class", _enum(EdgeTruthClass, self.truth_class, "edge truth class"))
+        object.__setattr__(self, "truth_class", _enum(EdgeTruthClass, self.truth_class, "edge truth_class"))
 
     def to_dict(self) -> dict[str, str]:
         return {
@@ -421,10 +421,10 @@ class ProjectContextCompilation:
             "selected_candidates": [item.to_dict() for item in self.selected_candidates],
             "graph_edges": [item.to_dict() for item in self.graph_edges],
             "admissible": self.admissible,
-            "projection_only": true,
-            "source_mutation": false,
-            "automatic_persistence": false,
-            "automatic_merge": false,
+            "projection_only": True,
+            "source_mutation": False,
+            "automatic_persistence": False,
+            "automatic_merge": False,
         }
         if include_digest:
             body["compilation_digest"] = self.compilation_digest
