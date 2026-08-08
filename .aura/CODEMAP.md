@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1584
-- **total_bytes**: 59663904
-- **text_tokens_est**: 5407085
+- **total_bytes**: 59681701
+- **text_tokens_est**: 5411534
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 209, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 980, 'schema_or_lexicon': 236, 'support_file': 79}
 - **topology_nodes**: 11436
 - **topology_edges**: 27979
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 33934.91
+- **elapsed_ms**: 34095.39
 
 ## Coverage
 
@@ -234,7 +234,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!qdkt` -> `aura_affordance_directory.py:356`
 - `!query` -> `aura_human_agent_arena/emergent.js:68`
 - `!queryInput` -> `aura_human_agent_arena/emergent.js:139`
-- `!r` -> `aura_agent_arena_github_bridge.py:180`, `aura_architect_consolidation_benchmark.py:193`, `aura_architect_consolidation_benchmark_v2.py:55`, `aura_architecture_harness_git_tree_routing.py:66`
+- `!r` -> `.github/workflows/pr3-final-parity-hardening-temp.yml:85`, `aura_agent_arena_github_bridge.py:180`, `aura_architect_consolidation_benchmark.py:193`, `aura_architect_consolidation_benchmark_v2.py:55`
 - `!rail` -> `aura_showcase/app.js:270`
 - `!reason` -> `AURA_FINAL_REPORT.md:154`, `aura_node.py:7564`
 - `!receipt` -> `aura_spatial_web/app.js:112`, `aura_spatial_web/construction_scene_renderer.js:495`
