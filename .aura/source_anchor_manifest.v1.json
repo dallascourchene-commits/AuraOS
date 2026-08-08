@@ -1,0 +1,78 @@
+{
+  "version": "AURA_SOURCE_ANCHOR_MANIFEST_V1",
+  "purpose": "Curated architecture anchors resolved from CODEMAP semantic symbol records; line ranges are generated projections, not durable identity.",
+  "anchors": [
+    {
+      "anchor_id": "codemap_symbol_extraction",
+      "mechanism": "CODEMAP semantic symbol extraction",
+      "path": "aura_codebase_navigator.py",
+      "symbol": "_python_symbol_records",
+      "kind": "function",
+      "role": "Regenerates semantic_id, signature_hash, and current source spans from AST."
+    },
+    {
+      "anchor_id": "codemap_incremental_refresh",
+      "mechanism": "CODEMAP incremental refresh",
+      "path": "aura_codebase_navigator.py",
+      "symbol": "refresh_index_for_paths",
+      "kind": "function",
+      "role": "Reparses touched files and regenerates symbol identities and line ranges after writes."
+    },
+    {
+      "anchor_id": "guarded_wfst_route",
+      "mechanism": "Guarded WFST admission/runtime",
+      "path": "aura_arena_wfst_runtime.py",
+      "symbol": "route",
+      "kind": "method",
+      "role": "Evaluates hard guards, capability bindings, ranking, abstention, and bounded state packets."
+    },
+    {
+      "anchor_id": "capability_connectome",
+      "mechanism": "Capability Connectome",
+      "path": "aura_capability_connectome.py",
+      "symbol": "build_capability_connectome",
+      "kind": "function",
+      "role": "Builds the capability graph and grounds implementation references against CODEMAP."
+    },
+    {
+      "anchor_id": "capability_path",
+      "mechanism": "Capability path resolution",
+      "path": "aura_capability_connectome.py",
+      "symbol": "find_capability_path",
+      "kind": "function",
+      "role": "Finds objective-relevant capability paths before reinvention."
+    },
+    {
+      "anchor_id": "relational_synthesis",
+      "mechanism": "Relational Synthesis",
+      "path": "aura_relational_synthesis.py",
+      "symbol": "compile_relational_shadow_capsule",
+      "kind": "function",
+      "role": "Compiles exact evidence into a read-only relational synthesis capsule."
+    },
+    {
+      "anchor_id": "relationship_atlas",
+      "mechanism": "Relationship Atlas",
+      "path": "aura_relationship_atlas.py",
+      "symbol": "build_relationship_atlas",
+      "kind": "function",
+      "role": "Classifies explicit, overlapping, auxiliary, and candidate relationships without becoming source truth."
+    },
+    {
+      "anchor_id": "selective_council",
+      "mechanism": "Selective Council V3",
+      "path": "aura_architect_council_v3.py",
+      "symbol": "select_critic_lanes",
+      "kind": "function",
+      "role": "Selects critic lanes from plan structure, dependencies, continuity, rollback, and cost pressure."
+    },
+    {
+      "anchor_id": "architecture_harness",
+      "mechanism": "Architecture Harness",
+      "path": "scripts/aura_architecture_harness.py",
+      "symbol": "run_architecture",
+      "kind": "function",
+      "role": "Runs repository architecture analysis while preserving the Harness compatibility/authority boundary."
+    }
+  ]
+}
