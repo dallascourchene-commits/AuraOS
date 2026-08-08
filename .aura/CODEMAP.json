@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786213053,
+  "generated_at_unix": 1786213551,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1583,
+    "included_file_count": 1585,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,7 +13,7 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 286,
+      ".git": 25,
       "Aura_Memory": 6,
       "Aura_Sandbox": 2,
       "__pycache__": 8
@@ -185,6 +185,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/pr3_codex_six_fix_guard_v2.yml",
       ".github/workflows/provider-routing-materialize.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
@@ -1589,6 +1590,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/tmp_pr3_codex_six_fix_v2.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1605,23 +1607,23 @@
     ]
   },
   "summary": {
-    "file_count": 1583,
-    "total_bytes": 59665844,
-    "text_tokens_est": 5407570,
+    "file_count": 1585,
+    "total_bytes": 59687796,
+    "text_tokens_est": 5413059,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 64,
       "knowledge_artifact": 209,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 980,
-      "schema_or_lexicon": 235,
+      "python_module": 981,
+      "schema_or_lexicon": 236,
       "support_file": 79
     },
     "topology_nodes": 11468,
     "topology_edges": 28041,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 36299.07
+    "elapsed_ms": 34691.38
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1821,6 +1823,7 @@
       ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2_hardening.v1.json",
       ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr3.v1.json",
       ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr4.v1.json",
+      ".github/workflows/pr3_codex_six_fix_guard_v2.yml",
       "DEEP_AUDIT_REPORT.md",
       "aura_background_auditor.py",
       "aura_cockpit_audit_trail.py",
@@ -3212,6 +3215,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/tmp_pr3_codex_six_fix_v2.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -91850,6 +91854,16 @@
         "end_line": 128,
         "semantic_id": "aura_codemap_watcher.py#method:CodeMapFileHandler.on_moved:54bae2c26fb1149a",
         "signature_hash": "dd68588778ed1b4f"
+      }
+    ],
+    "once": [
+      {
+        "file": "tools/tmp_pr3_codex_six_fix_v2.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 12,
+        "semantic_id": "tools/tmp_pr3_codex_six_fix_v2.py#function:once:7d13cce63218ed4b",
+        "signature_hash": "798f42037ed0a28c"
       }
     ],
     "open": [
@@ -210549,6 +210563,52 @@
       ]
     },
     {
+      "path": ".github/workflows/pr3_codex_six_fix_guard_v2.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 2298,
+      "lines": 62,
+      "tokens_est": 575,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7278c8dbde3f6804",
+      "vector": [
+        0.293255,
+        0.157552,
+        -0.281754,
+        0.194353,
+        0.056351,
+        0.215053,
+        0.242654,
+        0.127652,
+        0.141452,
+        0.224254,
+        -0.139152,
+        -0.02185,
+        0.086251,
+        -0.217353,
+        0.109252,
+        0.129952,
+        0.143752,
+        0.267954,
+        0.111552,
+        -0.173653,
+        0.02875,
+        -0.106952,
+        -0.148352,
+        0.217353,
+        -0.233454,
+        0.070151,
+        -0.044851,
+        0.279454,
+        0.162153,
+        -0.067851,
+        -0.093151,
+        0.279454
+      ]
+    },
+    {
       "path": ".github/workflows/provider-routing-materialize.yml",
       "role": "schema_or_lexicon",
       "bytes": 4134,
@@ -243614,6 +243674,52 @@
         0.035534,
         -0.106601,
         0.03338
+      ]
+    },
+    {
+      "path": "tools/tmp_pr3_codex_six_fix_v2.py",
+      "role": "python_module",
+      "bytes": 19654,
+      "lines": 497,
+      "tokens_est": 4914,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "36d99b0bb8a36022",
+      "vector": [
+        0.046594,
+        -0.237516,
+        -0.287519,
+        0.192058,
+        0.019319,
+        -0.153419,
+        -0.273882,
+        0.280701,
+        0.101143,
+        -0.005682,
+        0.282974,
+        0.080687,
+        0.123872,
+        -0.080687,
+        0.253426,
+        0.244335,
+        -0.219333,
+        -0.019319,
+        0.171602,
+        0.055686,
+        -0.146601,
+        0.221606,
+        0.205696,
+        -0.198877,
+        0.071596,
+        0.08296,
+        -0.019319,
+        0.060231,
+        0.262518,
+        -0.251153,
+        0.096597,
+        0.103416
       ]
     },
     {
