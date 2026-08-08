@@ -48,7 +48,17 @@ jobs:
         run: python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
 
       - name: Fatal Ruff classes
-        run: python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+        shell: bash
+        run: |
+          set +e
+          output="$(python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py 2>&1)"
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ]; then
+            safe="${output//$'\n'/%0A}"
+            echo "::error title=PR3 quality Ruff failure::$safe"
+            exit "$status"
+          fi
 
       - name: Production docstring coverage
         shell: bash
@@ -63,6 +73,7 @@ jobs:
           print(f'production docstring coverage: {len(docs)}/{len(funcs)} = {coverage:.2f}%')
           if coverage < 80:
               raise SystemExit('production docstring coverage remains below 80%')
+          echo = None
           PY
 
       - name: Direct whitespace and EOF proof
