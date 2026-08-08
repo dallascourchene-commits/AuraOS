@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Canonical Aura navigation refresh: CODEMAP first, source anchors second.
 
-SOURCE_ANCHORS.md is a generated projection over CODEMAP. A full CODEMAP scan
-must therefore hide that projection while scanning, otherwise navigation would
-index its own derived output. Incremental refresh similarly ignores the anchor
-output if a caller includes it in the changed-path set.
+SOURCE_ANCHORS.md is a generated projection over CODEMAP. Normal navigation
+refreshes source cards and symbol spans against Aura's already verified deep
+topology; it does not silently recompile that separate generated graph.
 """
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 import sys
 
@@ -20,9 +20,8 @@ from aura_codebase_navigator import (
     DEFAULT_INDEX_PATH,
     DEFAULT_MARKDOWN_PATH,
     DEFAULT_TOPOLOGY_PATH,
-    build_navigation_system,
+    _iter_repo_files,
     refresh_codemap_for_paths,
-    write_navigation_artifacts,
 )
 from scripts.aura_source_anchor_map import DEFAULT_MANIFEST, DEFAULT_OUTPUT, generate
 
@@ -54,48 +53,57 @@ def _source_changes_only(root: Path, changed: list[str]) -> list[str]:
     return [value for value in changed if not _is_generated_anchor_path(root, value)]
 
 
-def _full_navigation_refresh(
-    root: Path,
-    *,
-    include_topology: bool,
-    refresh_topology: bool,
-) -> Path:
-    """Rebuild navigation without allowing SOURCE_ANCHORS to index itself.
+def _full_source_refresh_paths(root: Path) -> list[str]:
+    """Return current + previously indexed paths so additions/deletions converge."""
+    index_path = root / DEFAULT_INDEX_PATH
+    if not index_path.exists():
+        raise FileNotFoundError(
+            f"Missing {index_path}; Aura source refresh requires the committed CODEMAP baseline"
+        )
+    payload = json.loads(index_path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("CODEMAP baseline must contain a JSON object")
+    previous = {
+        str(card.get("path") or "")
+        for card in payload.get("files", [])
+        if isinstance(card, dict) and str(card.get("path") or "")
+    }
+    current = {path.relative_to(root).as_posix() for path in _iter_repo_files(root)}
+    return sorted(previous | current)
 
-    The previous projection is restored if CODEMAP or anchor generation fails,
-    so a failed refresh does not silently delete the last known navigation aid.
+
+def _full_navigation_refresh(root: Path, *, include_topology: bool) -> Path:
+    """Refresh every source card while preserving the verified topology plane.
+
+    The previous source-anchor projection is restored if CODEMAP or anchor
+    generation fails, so failed navigation refresh cannot silently delete the
+    last known human/AI orientation aid.
     """
     anchor_path = root / DEFAULT_OUTPUT
-    previous: bytes | None = None
-    existed = anchor_path.exists()
-    if existed:
-        previous = anchor_path.read_bytes()
-        anchor_path.unlink()
+    previous_anchor: bytes | None = anchor_path.read_bytes() if anchor_path.exists() else None
     try:
-        payload = build_navigation_system(
-            root,
+        refresh_codemap_for_paths(
+            _full_source_refresh_paths(root),
+            root=root,
+            index_path=DEFAULT_INDEX_PATH,
+            markdown_path=DEFAULT_MARKDOWN_PATH,
             include_topology=include_topology,
             topology_path=DEFAULT_TOPOLOGY_PATH,
-            refresh_topology=refresh_topology,
-        )
-        write_navigation_artifacts(
-            payload,
-            root / DEFAULT_INDEX_PATH,
-            root / DEFAULT_MARKDOWN_PATH,
+            refresh_topology=False,
         )
         return _write_anchors(root)
     except BaseException:
         if anchor_path.exists():
             anchor_path.unlink()
-        if existed and previous is not None:
+        if previous_anchor is not None:
             anchor_path.parent.mkdir(parents=True, exist_ok=True)
-            anchor_path.write_bytes(previous)
+            anchor_path.write_bytes(previous_anchor)
         raise
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Refresh Aura CODEMAP and its generated source-anchor projection as one transaction."
+        description="Refresh Aura CODEMAP source cards and generated source anchors as one transaction."
     )
     parser.add_argument("--root", default=".")
     parser.add_argument(
@@ -105,15 +113,26 @@ def main() -> int:
         help="changed/deleted source paths for incremental refresh",
     )
     parser.add_argument("--no-topology", action="store_true")
-    parser.add_argument("--refresh-topology", action="store_true")
-    parser.add_argument("--reuse-topology-json", action="store_true")
+    parser.add_argument(
+        "--refresh-topology",
+        action="store_true",
+        help="fail closed: deep-topology recompilation is a separate owner operation",
+    )
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
+    if args.refresh_topology:
+        raise SystemExit(
+            "Deep topology has a separate owner. Recompile it explicitly with "
+            "aura_topological_scanner.compile_topology_map(deep=True), then rerun "
+            "this source-navigation refresh without --refresh-topology."
+        )
+
+    index = root / DEFAULT_INDEX_PATH
+    if not index.exists():
+        raise SystemExit(f"Missing {index}; restore/generate the canonical CODEMAP baseline first")
+
     if args.refresh is not None:
-        index = root / DEFAULT_INDEX_PATH
-        if not index.exists():
-            raise SystemExit(f"Missing {index}; run a full navigation refresh first")
         changed = _source_changes_only(root, list(args.refresh))
         if changed:
             refresh_codemap_for_paths(
@@ -123,16 +142,13 @@ def main() -> int:
                 markdown_path=DEFAULT_MARKDOWN_PATH,
                 include_topology=not args.no_topology,
                 topology_path=DEFAULT_TOPOLOGY_PATH,
-                refresh_topology=args.refresh_topology,
+                refresh_topology=False,
             )
         output = _write_anchors(root)
     else:
-        output = _full_navigation_refresh(
-            root,
-            include_topology=not args.no_topology,
-            refresh_topology=not args.reuse_topology_json,
-        )
-    print(f"[+] CODEMAP and source anchors synchronized; anchors={output}")
+        output = _full_navigation_refresh(root, include_topology=not args.no_topology)
+
+    print(f"[+] CODEMAP source cards and source anchors synchronized; anchors={output}")
     return 0
 
 
