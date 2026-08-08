@@ -100,7 +100,7 @@ Within that task-conditioned set, these classes are mandatory and cannot be sile
 
 Answer-determining source candidates are also mandatory. Explicitly required candidates remain mandatory regardless of category.
 
-Selection eligibility and **source admission are deliberately different predicates**. `DERIVED_VERIFIED` evidence may be selected and may support reconstruction, but a `COMPLETE` source-first compilation requires at least one selected `SOURCE` candidate whose truth class is `EXACT_CURRENT`. A derived source cannot impersonate that exact-source anchor.
+Selection eligibility and **source admission are deliberately different predicates**. `DERIVED_VERIFIED` evidence may be selected and may support reconstruction, but a `COMPLETE` source-first compilation requires at least one selected `SOURCE` candidate whose truth class is `EXACT_CURRENT` **and whose `answer_determining` flag is true for the current objective**. A derived answer source cannot impersonate that anchor, and an unrelated exact source cannot launder a derived answer source into completeness.
 
 If the complete mandatory dependency closure cannot fit the declared node budget, PR3 does **not** choose an arbitrary subset. The receipt becomes `INCOMPLETE`, records the budget omission, and denies admission.
 
@@ -127,7 +127,7 @@ A `COMPLETE` receipt cannot contain missing mandatory evidence. An `INCOMPLETE` 
 
 ## 7. Existing PR1 projection remains canonical
 
-**Projection emission is a consequence of a complete receipt, not merely of having selected references.** When—and only when—the receipt is `COMPLETE` and the exact-current source admission anchor is satisfied, PR3 emits the existing PR1 `ProjectContextProjection` with:
+**Projection emission is a consequence of a complete receipt, not merely of having selected references.** When—and only when—the receipt is `COMPLETE` and the exact-current answer-determining source admission anchor is satisfied, PR3 emits the existing PR1 `ProjectContextProjection` with:
 
 - canonical owner fixed to `aura_unified_memory_continuity`;
 - exact repository identity;
@@ -136,7 +136,7 @@ A `COMPLETE` receipt cannot contain missing mandatory evidence. An `INCOMPLETE` 
 - `LOCAL_ONLY` egress class;
 - false mutation/execution/persistence/merge authority inherited from the PR1 authority envelope.
 
-An `INCOMPLETE` compilation has `projection: null`; the same is true through `headless_projection()`. The public `ProjectContextCompilation` constructor also rejects a hand-assembled `INCOMPLETE` record that attempts to smuggle in a PR1 projection.
+An `INCOMPLETE` compilation has `projection: null`; the same is true through `headless_projection()`. The public `ProjectContextCompilation` constructor also rejects a hand-assembled `INCOMPLETE` record that attempts to smuggle in a PR1 projection, and independently re-proves the exact-current answer-determining source anchor for a hand-assembled `COMPLETE` record.
 
 PR3 does not change the PR1 serialized contract or PR2 runtime contract.
 
@@ -173,7 +173,7 @@ Every retained candidate records the full lifecycle:
 5. `SHARE_PROPAGATE`
 6. `FORGET_ROLLBACK`
 
-This is governance metadata, not a new memory owner. For authority-bearing candidates, origin is structurally rebound to the candidate's canonical reference at creation. Authority is fixed by truth class (`EXACT_CURRENT` → canonical read, `DERIVED_VERIFIED` → derived read); advisory/hypothesis/stale/unavailable material carries no read authority and cannot increase authority by transformation.
+This is governance metadata, not a new memory owner. For authority-bearing candidates, origin is structurally rebound to the candidate's canonical reference at creation. Authority is fixed by truth class (`EXACT_CURRENT` → canonical read, `DERIVED_VERIFIED` → derived read); advisory/hypothesis/stale/unavailable material carries no read authority and cannot increase authority by transformation. The serialized `authority_non_increasing` field is computed from that enforced truth/authority mapping rather than emitted as an unconditional assertion.
 
 ## 11. Headless / client projection
 
@@ -194,8 +194,9 @@ PR3 does not grant VSA/HDC ranking any authority. A future PR3 transaction may a
 PR3 fails closed when:
 
 - mandatory evidence is stale, unavailable, conflicting, adapter-missing, dependency-missing, or budget-blocked;
-- no selected `EXACT_CURRENT` source anchors admission, even if `DERIVED_VERIFIED` source material is present;
+- no selected `EXACT_CURRENT`, answer-determining source anchors admission, even if `DERIVED_VERIFIED` source material or unrelated exact source material is present;
 - an `INCOMPLETE` compilation attempts to emit or expose a canonical PR1 projection;
+- a hand-assembled `COMPLETE` compilation cannot independently prove its exact-current answer-determining source anchor;
 - graph edges reference candidates outside the task-conditioned set;
 - one canonical reference is aliased into multiple candidate roles;
 - an authority-bearing candidate claims an `origin_ref` different from its canonical reference origin;
@@ -211,8 +212,11 @@ The focused PR3 suite must prove at minimum:
 
 - deterministic selection/digest under reordered equivalent inputs;
 - `INCOMPLETE` never emits or exposes the canonical PR1 projection, including hand-assembled public records;
-- `DERIVED_VERIFIED` source cannot satisfy the exact-source admission anchor;
+- `DERIVED_VERIFIED` answer source cannot satisfy the exact-current answer-source admission anchor;
+- an unrelated exact source cannot launder a derived answer source into a `COMPLETE` compilation;
+- the public compilation object independently re-proves the exact-current answer-determining source anchor;
 - authority-bearing origin claims are structurally bound to `CanonicalReference.canonical_ref` and forged origin claims fail closed;
+- serialized authority non-increase is computed from enforced truth/authority class mapping;
 - provenance rooted only in derived source cannot claim `source_complete`;
 - answer-determining source changes invalidate identity/freshness;
 - mandatory evidence survives context pressure;
