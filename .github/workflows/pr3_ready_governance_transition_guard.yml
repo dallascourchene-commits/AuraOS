@@ -1,0 +1,84 @@
+name: PR3 ready governance transition guard
+on:
+  push:
+    branches:
+      - analysis/pr3-ready-governance-transition
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/source-first-project-context-pr3
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            .aura/refactor_objectives/intent_native_source_first_project_context_pr3.v1.json
+            docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+            aura_project_context_compiler.py
+            aura_ephemeral_workspace_contracts.py
+            aura_ephemeral_path_policy.py
+            tests/test_aura_project_context_compiler.py
+            tests/test_aura_project_context_acceptance.py
+            schemas/aura_projection_selection_receipt_v1.schema.json
+      - name: Check exact frozen source
+        run: test "$(git rev-parse HEAD)" = "57fb802158b7042d1750ae4a1f319ae62ab98dcd"
+      - name: Apply governance transition
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          objective = Path('.aura/refactor_objectives/intent_native_source_first_project_context_pr3.v1.json')
+          data = json.loads(objective.read_text())
+          if data.get('status') != 'IMPLEMENTING':
+              raise SystemExit(f"unexpected objective status: {data.get('status')!r}")
+          data['status'] = 'READY_FOR_HUMAN_REVIEW'
+          objective.write_text(json.dumps(data, indent=2, sort_keys=True) + '\n')
+
+          doc = Path('docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md')
+          text = doc.read_text()
+          old = '## Status\n\n`IMPLEMENTING`\n'
+          new = '## Status\n\n`READY_FOR_HUMAN_REVIEW`\n'
+          if text.count(old) != 1:
+              raise SystemExit('PR3 status marker mismatch')
+          doc.write_text(text.replace(old, new, 1).rstrip() + '\n')
+          PY
+      - name: Install tools
+        run: python -m pip install --quiet pytest jsonschema ruff
+      - name: Re-prove frozen source with status-bearing governance
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('.aura/refactor_objectives/intent_native_source_first_project_context_pr3.v1.json').read_text())
+          assert data['status'] == 'READY_FOR_HUMAN_REVIEW'
+          doc = Path('docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md').read_text()
+          assert '## Status\n\n`READY_FOR_HUMAN_REVIEW`\n' in doc
+          for name in (
+              '.aura/refactor_objectives/intent_native_source_first_project_context_pr3.v1.json',
+              'docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md',
+          ):
+              text = Path(name).read_text()
+              assert text.endswith('\n') and not text.endswith('\n\n'), name
+              assert all(line.rstrip(' \t') == line for line in text.splitlines()), name
+          PY
+          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+      - name: Publish status-bearing governance
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aura PR3 Governance"
+          git config user.email "actions@users.noreply.github.com"
+          git add .aura/refactor_objectives/intent_native_source_first_project_context_pr3.v1.json docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+          git commit -m "PR3: mark source ready for human review"
+          git fetch --depth=1 origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse FETCH_HEAD)" = "57fb802158b7042d1750ae4a1f319ae62ab98dcd"
+          git push origin HEAD:refactor/source-first-project-context-pr3
