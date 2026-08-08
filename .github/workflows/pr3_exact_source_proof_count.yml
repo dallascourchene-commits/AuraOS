@@ -15,7 +15,7 @@ jobs:
       - name: Sparse checkout exact PR3 source
         uses: actions/checkout@v4
         with:
-          ref: ef2fedc9f144185fdd06f0f13e10634fb7765e16
+          ref: a282cda62c3e47d47e7771ee4c3e7512d2122da7
           fetch-depth: 1
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -45,4 +45,4 @@ jobs:
           COLLECTED: ${{ steps.proof.outputs.collected }}
         shell: bash
         run: |
-          echo "::notice title=PR3 exact-source proof::SHA ef2fedc9f144185fdd06f0f13e10634fb7765e16; ${COLLECTED}; focused suites passed; compile passed; Ruff E9,F63,F7,F82 passed"
+          echo "::notice title=PR3 exact-source proof::SHA a282cda62c3e47d47e7771ee4c3e7512d2122da7; ${COLLECTED}; focused suites passed; compile passed; Ruff E9,F63,F7,F82 passed"
