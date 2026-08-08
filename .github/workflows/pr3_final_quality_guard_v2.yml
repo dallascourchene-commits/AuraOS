@@ -53,7 +53,8 @@ jobs:
           if a.count(block) != 1:
               raise SystemExit('derived-authority test relocation anchor mismatch')
           acceptance.write_text(a.replace(block,'',1).rstrip()+'\n', encoding='utf-8')
-          compiler.write_text(compiler.read_text(encoding='utf-8').rstrip()+block+'\n', encoding='utf-8')
+          c=compiler.read_text(encoding='utf-8').rstrip()
+          compiler.write_text(c+block.rstrip()+'\n', encoding='utf-8')
           PY
 
       - name: Install focused tools
@@ -88,8 +89,7 @@ jobs:
           print(f'production docstring coverage: {len(docs)}/{len(funcs)} = {coverage:.2f}%')
           if coverage < 80:
               raise SystemExit('production docstring coverage remains below 80%')
-          echo_msg=f'production docstring coverage {len(docs)}/{len(funcs)} = {coverage:.2f}%'
-          print(f'::notice title=PR3 docstring coverage::{echo_msg}')
+          print(f'::notice title=PR3 docstring coverage::production {len(docs)}/{len(funcs)} = {coverage:.2f}%')
           PY
 
       - name: Direct whitespace and EOF proof
