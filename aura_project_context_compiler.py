@@ -721,7 +721,8 @@ def _problem(candidate: ProjectContextCandidate) -> str | None:
         return "unavailable"
     if candidate.truth_class not in _ELIGIBLE_TRUTH:
         return "omitted_irrelevant"
-    assert candidate.reference is not None
+    if candidate.reference is None:
+        raise ValueError("eligible candidate is missing canonical reference")
     if candidate.reference.freshness_class not in {"CURRENT", "BOUNDED"}:
         return "stale"
     return None
@@ -815,19 +816,12 @@ def _projection(
     )
 
 
-def compile_project_context_projection(
-    objective: str,
-    *,
-    project_ref: str,
+def _validate_compile_context(
     repository_identity: RepositoryIdentity,
     candidates: Sequence[ProjectContextCandidate],
-    edges: Sequence[ProjectContextEdge] = (),
-    budget: ProjectionBudget = ProjectionBudget(),
-    freshness_timestamp_ms: int,
-) -> ProjectContextCompilation:
-    """Compile a deterministic minimum-sufficient read-only project projection."""
-    objective = _text(objective, "objective")
-    project_ref = _text(project_ref, "project_ref")
+    edges: Sequence[ProjectContextEdge],
+    budget: ProjectionBudget,
+) -> tuple[dict[str, ProjectContextCandidate], tuple[ProjectContextEdge, ...]]:
     if type(repository_identity) is not RepositoryIdentity:
         raise ValueError("repository_identity must be exact PR1 RepositoryIdentity")
     if isinstance(candidates, (str, bytes, bytearray)) or not isinstance(
@@ -857,7 +851,6 @@ def compile_project_context_projection(
         raise ValueError(
             "task-conditioned candidates must not alias one canonical reference into multiple roles"
         )
-
     edge_items = tuple(edges)
     if len(edge_items) > min(MAX_EDGES, budget.max_edges * 4) or any(
         type(item) is not ProjectContextEdge for item in edge_items
@@ -877,7 +870,13 @@ def compile_project_context_projection(
         raise ValueError(
             f"edge endpoint is outside the task-conditioned candidate set: {unknown[:5]}"
         )
+    return candidate_map, edge_items
 
+
+def _selection_buckets(
+    candidates: Sequence[ProjectContextCandidate],
+    candidate_map: Mapping[str, ProjectContextCandidate],
+) -> tuple[set[str], dict[str, set[str]]]:
     conflict_ids = _conflicts(candidate_map)
     buckets = {
         name: set()
@@ -895,7 +894,16 @@ def compile_project_context_projection(
     for candidate in candidates:
         if problem := _problem(candidate):
             buckets[problem].add(candidate.candidate_id)
+    return conflict_ids, buckets
 
+
+def _mandatory_selection(
+    candidates: Sequence[ProjectContextCandidate],
+    candidate_map: Mapping[str, ProjectContextCandidate],
+    conflict_ids: set[str],
+    buckets: dict[str, set[str]],
+    budget: ProjectionBudget,
+) -> tuple[set[str], set[str]]:
     mandatory_seeds = {
         item.candidate_id
         for item in candidates
@@ -908,21 +916,29 @@ def compile_project_context_projection(
         closure, missing = _closure(seed, candidate_map)
         mandatory.update(closure)
         buckets["mandatory_evidence_missing"].update(missing)
-    invalid_mandatory = {
+    invalid = {
         item
         for item in mandatory
         if item in conflict_ids or _problem(candidate_map[item]) is not None
     }
-    buckets["mandatory_evidence_missing"].update(invalid_mandatory)
-    eligible_mandatory = mandatory - invalid_mandatory
+    buckets["mandatory_evidence_missing"].update(invalid)
+    eligible = mandatory - invalid
+    if len(eligible) > budget.max_nodes:
+        buckets["omitted_by_budget"].update(eligible)
+        buckets["mandatory_evidence_missing"].update(eligible)
+        return mandatory, set()
+    return mandatory, set(eligible)
 
-    selected: set[str] = set()
-    if len(eligible_mandatory) > budget.max_nodes:
-        buckets["omitted_by_budget"].update(eligible_mandatory)
-        buckets["mandatory_evidence_missing"].update(eligible_mandatory)
-    else:
-        selected.update(eligible_mandatory)
 
+def _extend_optional_selection(
+    candidates: Sequence[ProjectContextCandidate],
+    candidate_map: Mapping[str, ProjectContextCandidate],
+    mandatory: set[str],
+    conflict_ids: set[str],
+    buckets: dict[str, set[str]],
+    budget: ProjectionBudget,
+    selected: set[str],
+) -> None:
     optional = sorted(
         (
             item
@@ -954,17 +970,12 @@ def compile_project_context_projection(
             continue
         selected.update(needed)
 
-    selected_candidates = tuple(candidate_map[item] for item in sorted(selected))
-    exact_answer_sources = tuple(
-        candidate
-        for candidate in selected_candidates
-        if candidate.category is CandidateCategory.SOURCE
-        and candidate.truth_class is CandidateTruthClass.EXACT_CURRENT
-        and candidate.answer_determining
-    )
-    if not exact_answer_sources:
-        buckets["mandatory_evidence_missing"].add(MISSING_SELECTED_SOURCE_ID)
 
+def _selected_context_edges(
+    edge_items: tuple[ProjectContextEdge, ...],
+    selected: set[str],
+    budget: ProjectionBudget,
+) -> tuple[ProjectContextEdge, ...]:
     selected_edges = tuple(
         edge
         for edge in edge_items
@@ -975,11 +986,19 @@ def compile_project_context_projection(
             "selected project-context edges exceed the declared edge budget; "
             "silent edge clipping is prohibited"
         )
+    return selected_edges
 
+
+def _build_selection_receipt(
+    objective_digest: str,
+    repository_identity: RepositoryIdentity,
+    selected: set[str],
+    buckets: Mapping[str, set[str]],
+    budget: ProjectionBudget,
+) -> ProjectionSelectionReceipt:
     missing = tuple(sorted(buckets["mandatory_evidence_missing"]))
     status = SelectionStatus.INCOMPLETE if missing else SelectionStatus.COMPLETE
-    objective_digest = stable_digest({"objective": objective})
-    receipt = ProjectionSelectionReceipt(
+    return ProjectionSelectionReceipt(
         objective_digest=objective_digest,
         repository_identity_digest=repository_identity.identity_digest,
         canonical_owner=PROJECT_CANONICAL_OWNER,
@@ -996,8 +1015,11 @@ def compile_project_context_projection(
         status=status,
         budget=budget,
     )
+
+
+def _selection_warnings(receipt: ProjectionSelectionReceipt) -> tuple[str, ...]:
     warnings: list[str] = []
-    if missing:
+    if receipt.mandatory_evidence_missing:
         warnings.append(
             "Mandatory project evidence is missing, stale, conflicting, unavailable, "
             "source-less, or budget-blocked."
@@ -1018,20 +1040,65 @@ def compile_project_context_projection(
         warnings.append(
             "Unavailable project context or missing source adapters remain receipt-visible."
         )
+    return tuple(warnings)
+
+
+def compile_project_context_projection(
+    objective: str,
+    *,
+    project_ref: str,
+    repository_identity: RepositoryIdentity,
+    candidates: Sequence[ProjectContextCandidate],
+    edges: Sequence[ProjectContextEdge] = (),
+    budget: ProjectionBudget = ProjectionBudget(),
+    freshness_timestamp_ms: int,
+) -> ProjectContextCompilation:
+    """Compile a deterministic minimum-sufficient read-only project projection."""
+    objective = _text(objective, "objective")
+    project_ref = _text(project_ref, "project_ref")
+    candidate_map, edge_items = _validate_compile_context(
+        repository_identity, candidates, edges, budget
+    )
+    conflict_ids, buckets = _selection_buckets(candidates, candidate_map)
+    mandatory, selected = _mandatory_selection(
+        candidates, candidate_map, conflict_ids, buckets, budget
+    )
+    _extend_optional_selection(
+        candidates,
+        candidate_map,
+        mandatory,
+        conflict_ids,
+        buckets,
+        budget,
+        selected,
+    )
+    selected_candidates = tuple(candidate_map[item] for item in sorted(selected))
+    if not any(
+        candidate.category is CandidateCategory.SOURCE
+        and candidate.truth_class is CandidateTruthClass.EXACT_CURRENT
+        and candidate.answer_determining
+        for candidate in selected_candidates
+    ):
+        buckets["mandatory_evidence_missing"].add(MISSING_SELECTED_SOURCE_ID)
+    selected_edges = _selected_context_edges(edge_items, selected, budget)
+    objective_digest = stable_digest({"objective": objective})
+    receipt = _build_selection_receipt(
+        objective_digest, repository_identity, selected, buckets, budget
+    )
     timestamp_ms = _int(
         freshness_timestamp_ms,
         "freshness_timestamp_ms",
         maximum=2**63 - 1,
     )
     projection = None
-    if status is SelectionStatus.COMPLETE:
+    if receipt.status is SelectionStatus.COMPLETE:
         projection = _projection(
             objective,
             project_ref,
             repository_identity,
             selected_candidates,
             timestamp_ms,
-            warnings,
+            _selection_warnings(receipt),
         )
     return ProjectContextCompilation(
         objective=objective,
@@ -1041,7 +1108,7 @@ def compile_project_context_projection(
         selection_receipt=receipt,
         selected_candidates=selected_candidates,
         graph_edges=selected_edges,
-        admissible=status is SelectionStatus.COMPLETE,
+        admissible=receipt.status is SelectionStatus.COMPLETE,
     )
 
 
