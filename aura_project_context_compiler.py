@@ -2,9 +2,8 @@
 
 PR3 wraps the existing PR1 ``ProjectContextProjection``. It does not create a
 project database, mutate canonical owners, grant patch/execution authority, or
-replace Compass/Continuity/Evidence owners. Its outputs are disposable receipts
-and bounded projections that must be recompiled when answer-determining identity
-changes.
+replace Compass/Continuity/Evidence owners. Outputs are disposable receipts and
+bounded projections recompiled when answer-determining identity changes.
 """
 from __future__ import annotations
 
@@ -280,10 +279,18 @@ class ProjectContextCandidate:
             )
             if self.authority_class is not expected:
                 raise ValueError("candidate authority class does not match its truth class")
+            if self.origin_ref != self.reference.canonical_ref:
+                raise ValueError(
+                    "authoritative candidate origin_ref must equal its canonical reference origin"
+                )
         elif self.authority_class is not ContextAuthorityClass.ADVISORY_NONE:
             raise ValueError(
                 "advisory/hypothesis/stale/unavailable candidates cannot carry authority"
             )
+
+    @property
+    def origin_bound(self) -> bool:
+        return self.reference is not None and self.origin_ref == self.reference.canonical_ref
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -302,7 +309,7 @@ class ProjectContextCandidate:
             "conflict_key": self.conflict_key,
             "temporal_bindings": [item.to_dict() for item in self.temporal_bindings],
             "memory_lifecycle": list(MEMORY_LIFECYCLE_PHASES),
-            "origin_bound": True,
+            "origin_bound": self.origin_bound,
             "authority_non_increasing": True,
         }
 
@@ -487,6 +494,10 @@ class ProjectContextCompilation:
             != self.repository_identity.identity_digest
         ):
             raise ValueError("selection receipt repository identity is not bound to compilation")
+        if self.selection_receipt.status is SelectionStatus.COMPLETE and self.projection is None:
+            raise ValueError("COMPLETE selection must emit the canonical PR1 projection")
+        if self.selection_receipt.status is SelectionStatus.INCOMPLETE and self.projection is not None:
+            raise ValueError("INCOMPLETE selection must not expose a canonical PR1 projection")
 
         selected = tuple(self.selected_candidates)
         if any(type(item) is not ProjectContextCandidate for item in selected):
@@ -564,12 +575,9 @@ class ProjectContextCompilation:
 
         if type(self.admissible) is not bool:
             raise TypeError("admissible must be a boolean")
-        expected_admission = (
-            self.projection is not None
-            and self.selection_receipt.status is SelectionStatus.COMPLETE
-        )
+        expected_admission = self.selection_receipt.status is SelectionStatus.COMPLETE
         if self.admissible != expected_admission:
-            raise ValueError("admissible must equal complete receipt plus emitted projection")
+            raise ValueError("admissible must equal COMPLETE receipt with emitted projection")
         expected = stable_digest(self.to_dict(include_digest=False))
         if self.compilation_digest and self.compilation_digest != expected:
             raise ValueError("project-context compilation digest mismatch")
@@ -709,17 +717,15 @@ def _projection(
     selected: Sequence[ProjectContextCandidate],
     freshness_timestamp_ms: int,
     warnings: Sequence[str],
-) -> ProjectContextProjection | None:
+) -> ProjectContextProjection:
     buckets: dict[str, list[CanonicalReference]] = {
         name: [] for name in set(_CATEGORY_FIELD.values())
     }
     selected_freshness: list[str] = []
     for candidate in selected:
-        if candidate.reference is not None:
-            buckets[_CATEGORY_FIELD[candidate.category]].append(candidate.reference)
-            selected_freshness.append(candidate.reference.freshness_class)
-    if not buckets["artifact_evidence_refs"]:
-        return None
+        assert candidate.reference is not None
+        buckets[_CATEGORY_FIELD[candidate.category]].append(candidate.reference)
+        selected_freshness.append(candidate.reference.freshness_class)
     objective_digest = stable_digest({"objective": objective})
     purpose_digest = stable_digest(
         {
@@ -888,10 +894,13 @@ def compile_project_context_projection(
         selected.update(needed)
 
     selected_candidates = tuple(candidate_map[item] for item in sorted(selected))
-    if not any(
-        candidate.category is CandidateCategory.SOURCE
+    exact_sources = tuple(
+        candidate
         for candidate in selected_candidates
-    ):
+        if candidate.category is CandidateCategory.SOURCE
+        and candidate.truth_class is CandidateTruthClass.EXACT_CURRENT
+    )
+    if not exact_sources:
         buckets["mandatory_evidence_missing"].add(MISSING_SELECTED_SOURCE_ID)
 
     selected_edges = tuple(
@@ -947,18 +956,21 @@ def compile_project_context_projection(
         warnings.append(
             "Unavailable project context or missing source adapters remain receipt-visible."
         )
-    projection = _projection(
-        objective,
-        project_ref,
-        repository_identity,
-        selected_candidates,
-        _int(
-            freshness_timestamp_ms,
-            "freshness_timestamp_ms",
-            maximum=2**63 - 1,
-        ),
-        warnings,
+    timestamp_ms = _int(
+        freshness_timestamp_ms,
+        "freshness_timestamp_ms",
+        maximum=2**63 - 1,
     )
+    projection = None
+    if status is SelectionStatus.COMPLETE:
+        projection = _projection(
+            objective,
+            project_ref,
+            repository_identity,
+            selected_candidates,
+            timestamp_ms,
+            warnings,
+        )
     return ProjectContextCompilation(
         objective=objective,
         objective_digest=objective_digest,
@@ -967,7 +979,7 @@ def compile_project_context_projection(
         selection_receipt=receipt,
         selected_candidates=selected_candidates,
         graph_edges=selected_edges,
-        admissible=projection is not None and status is SelectionStatus.COMPLETE,
+        admissible=status is SelectionStatus.COMPLETE,
     )
 
 
@@ -1038,13 +1050,20 @@ def trace_project_context_provenance(
         for item in nodes
         if item.category is CandidateCategory.SOURCE
     ]
+    exact_source_ids = [
+        item.candidate_id
+        for item in nodes
+        if item.category is CandidateCategory.SOURCE
+        and item.truth_class is CandidateTruthClass.EXACT_CURRENT
+    ]
     provenance_root_ids = sorted(
         node_id
         for node_id in seen
         if not any(edge.source_id in seen for edge in incoming.get(node_id, ()))
     )
-    roots_are_sources = bool(provenance_root_ids) and all(
+    roots_are_exact_sources = bool(provenance_root_ids) and all(
         node_map[node_id].category is CandidateCategory.SOURCE
+        and node_map[node_id].truth_class is CandidateTruthClass.EXACT_CURRENT
         for node_id in provenance_root_ids
     )
     authoritative_path = all(
@@ -1069,11 +1088,12 @@ def trace_project_context_provenance(
             )
         ],
         "source_ids": source_ids,
+        "exact_source_ids": exact_source_ids,
         "source_reached": bool(source_ids),
         "provenance_root_ids": provenance_root_ids,
         "truncated_frontier": sorted(truncated),
         "authoritative_path": authoritative_path,
-        "source_complete": roots_are_sources and authoritative_path and not truncated,
+        "source_complete": roots_are_exact_sources and authoritative_path and not truncated,
         "bounded": True,
     }
     result["trace_digest"] = stable_digest(result)
