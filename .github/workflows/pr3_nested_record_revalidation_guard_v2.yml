@@ -1,0 +1,84 @@
+name: PR3 nested record revalidation guard v2
+on:
+  push:
+    branches: [analysis/pr3-nested-record-revalidation]
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/source-first-project-context-pr3
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            aura_project_context_compiler.py
+            aura_ephemeral_workspace_contracts.py
+            aura_ephemeral_path_policy.py
+            tests/test_aura_project_context_compiler.py
+            tests/test_aura_project_context_acceptance.py
+            schemas/aura_projection_selection_receipt_v1.schema.json
+            docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+      - name: Require exact head
+        run: test "$(git rev-parse HEAD)" = "68d5ee47502c2c29bbadc0e5d04713bb5af7949a"
+      - name: Patch
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('aura_project_context_compiler.py'); s=p.read_text()
+          marker='\n\ndef _validate_candidate_reference(candidate: Any) -> None:\n'
+          helper='''\n\ndef _revalidate_selected_candidate_record(candidate: Any) -> None:\n    \"\"\"Re-run canonical constructors for selected nested records before admission.\"\"\"\n    reference = candidate.reference\n    canonical_reference = None\n    if reference is not None:\n        if type(reference) is not CanonicalReference:\n            raise ValueError(\"selected candidate reference must be an exact CanonicalReference\")\n        try:\n            canonical_reference = CanonicalReference.from_dict(reference.to_dict())\n        except Exception as exc:\n            raise ValueError(\"selected candidate canonical reference failed revalidation\") from exc\n\n    rebound_bindings = []\n    try:\n        raw_bindings = tuple(candidate.temporal_bindings)\n    except Exception as exc:\n        raise ValueError(\"selected candidate temporal bindings failed revalidation\") from exc\n    for binding in raw_bindings:\n        if type(binding) is not TemporalBinding:\n            raise ValueError(\"selected candidate temporal bindings must be exact TemporalBinding records\")\n        try:\n            rebound = TemporalBinding(binding.kind, binding.binding_id, binding.digest, binding.expires_at_ms)\n        except Exception as exc:\n            raise ValueError(\"selected candidate temporal binding failed revalidation\") from exc\n        if rebound.to_dict() != binding.to_dict():\n            raise ValueError(\"selected candidate temporal binding is not in canonical form\")\n        rebound_bindings.append(rebound)\n\n    try:\n        rebuilt = ProjectContextCandidate(\n            candidate_id=candidate.candidate_id, category=candidate.category,\n            source_adapter=candidate.source_adapter, origin_ref=candidate.origin_ref,\n            authority_class=candidate.authority_class, truth_class=candidate.truth_class,\n            availability=candidate.availability, reference=canonical_reference,\n            relevance_score=candidate.relevance_score, required=candidate.required,\n            answer_determining=candidate.answer_determining, dependency_ids=candidate.dependency_ids,\n            conflict_key=candidate.conflict_key, temporal_bindings=tuple(rebound_bindings),\n        )\n    except Exception as exc:\n        raise ValueError(\"selected candidate failed canonical revalidation\") from exc\n    try:\n        if rebuilt.to_dict() != candidate.to_dict():\n            raise ValueError(\"selected candidate is not in canonical form\")\n    except ValueError:\n        raise\n    except Exception as exc:\n        raise ValueError(\"selected candidate failed canonical revalidation\") from exc\n'''
+          if s.count(marker)!=1: raise SystemExit('candidate marker mismatch')
+          s=s.replace(marker,helper+marker,1)
+          old='''    selected = tuple(compilation.selected_candidates)\n    if any(type(item) is not ProjectContextCandidate for item in selected):\n        raise ValueError(\"selected_candidates must be exact records\")\n    selected = tuple(sorted(selected, key=lambda item: item.candidate_id))\n'''
+          new='''    selected = tuple(compilation.selected_candidates)\n    if any(type(item) is not ProjectContextCandidate for item in selected):\n        raise ValueError(\"selected_candidates must be exact records\")\n    for item in selected:\n        _revalidate_selected_candidate_record(item)\n    selected = tuple(sorted(selected, key=lambda item: item.candidate_id))\n'''
+          if s.count(old)!=1: raise SystemExit('candidate collection anchor mismatch')
+          p.write_text(s.replace(old,new,1).rstrip()+'\n')
+
+          t=Path('tests/test_aura_project_context_acceptance.py'); x=t.read_text().rstrip()
+          block='''\n\ndef test_public_compilation_rejects_low_level_tampered_nested_reference() -> None:\n    complete = _compile((_source(),))\n    assert complete.projection is not None\n    source = complete.selected_candidates[0]\n    assert source.reference is not None\n    object.__setattr__(source.reference, \"canonical_ref\", None)\n    object.__setattr__(source, \"origin_ref\", None)\n    with pytest.raises(ValueError, match=\"canonical reference failed revalidation\"):\n        ProjectContextCompilation(\n            project_ref=PROJECT_REF, objective=complete.objective,\n            objective_digest=complete.objective_digest, repository_identity=complete.repository_identity,\n            projection=complete.projection, selection_receipt=complete.selection_receipt,\n            selected_candidates=complete.selected_candidates, graph_edges=complete.graph_edges, admissible=True,\n        )\n\n\ndef test_public_compilation_rejects_low_level_tampered_temporal_binding() -> None:\n    complete = _compile((_source(),))\n    source = complete.selected_candidates[0]\n    object.__setattr__(source.temporal_bindings[0], \"digest\", None)\n    with pytest.raises(ValueError, match=\"temporal binding failed revalidation\"):\n        ProjectContextCompilation(\n            project_ref=PROJECT_REF, objective=complete.objective,\n            objective_digest=complete.objective_digest, repository_identity=complete.repository_identity,\n            projection=complete.projection, selection_receipt=complete.selection_receipt,\n            selected_candidates=complete.selected_candidates, graph_edges=complete.graph_edges, admissible=True,\n        )\n'''
+          if 'test_public_compilation_rejects_low_level_tampered_nested_reference' in x: raise SystemExit('test exists')
+          t.write_text((x+block).rstrip()+'\n')
+
+          d=Path('docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md'); y=d.read_text()
+          needle='- projection references differ in full canonical identity or category placement from selected candidates;\n'
+          repl=needle+'- hand-assembled selected candidates contain low-level-tampered `CanonicalReference` or `TemporalBinding` records that no longer pass their canonical constructors;\n'
+          if y.count(needle)!=1: raise SystemExit('doc anchor mismatch')
+          d.write_text(y.replace(needle,repl,1).rstrip()+'\n')
+          PY
+      - name: Install
+        run: python -m pip install --quiet pytest jsonschema ruff
+      - name: Verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+          tree=ast.parse(Path('aura_project_context_compiler.py').read_text())
+          funcs=[n for n in ast.walk(tree) if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef))]
+          coverage=sum(ast.get_docstring(n) is not None for n in funcs)/len(funcs)
+          print(f'production docstring coverage={coverage:.2%}')
+          assert coverage >= 0.80
+          for name in ('aura_project_context_compiler.py','tests/test_aura_project_context_acceptance.py','docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md'):
+              data=Path(name).read_text()
+              assert data.endswith('\n') and not data.endswith('\n\n'), name
+              assert all(line.rstrip(' \t')==line for line in data.splitlines()), name
+          PY
+          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aura PR3 Guarded Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+          git commit -m "PR3: revalidate nested selected records"
+          git fetch --depth=1 origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse FETCH_HEAD)" = "68d5ee47502c2c29bbadc0e5d04713bb5af7949a"
+          git push origin HEAD:refactor/source-first-project-context-pr3
