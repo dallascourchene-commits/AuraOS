@@ -46,7 +46,7 @@ jobs:
           text = text.replace(old_edges, new_edges, 1)
 
           old_projection = '''            projection_refs = (\n                self.projection.artifact_evidence_refs\n                + self.projection.decision_refs\n                + self.projection.rejected_alternative_refs\n                + self.projection.unresolved_question_refs\n                + self.projection.assumption_refs\n                + self.projection.capability_refs\n                + self.projection.relationship_refs\n                + self.projection.blocker_refs\n                + self.projection.next_action_refs\n            )\n            projection_ref_ids = {item.reference_id for item in projection_refs}\n            selected_ref_ids = {\n                item.reference.reference_id\n                for item in selected\n                if item.reference is not None\n            }\n            if projection_ref_ids != selected_ref_ids:\n                raise ValueError("projection references do not match selected candidates")\n'''
-          new_projection = '''            expected_projection_refs: dict[str, list[CanonicalReference]] = {\n                name: [] for name in set(_CATEGORY_FIELD.values())\n            }\n            for item in selected:\n                assert item.reference is not None\n                expected_projection_refs[_CATEGORY_FIELD[item.category]].append(item.reference)\n            for field_name, expected_refs in expected_projection_refs.items():\n                actual_refs = getattr(self.projection, field_name)\n                if tuple(ref.to_dict() for ref in actual_refs) != tuple(\n                    ref.to_dict() for ref in expected_refs\n                ):\n                    raise ValueError(\n                        f"projection {field_name} references do not match selected candidates"\n                    )\n'''
+          new_projection = '''            expected_projection_refs: dict[str, list[CanonicalReference]] = {\n                name: [] for name in set(_CATEGORY_FIELD.values())\n            }\n            for item in selected:\n                if item.reference is None:\n                    raise ValueError("selected candidate is missing canonical reference")\n                expected_projection_refs[_CATEGORY_FIELD[item.category]].append(item.reference)\n            for field_name, expected_refs in expected_projection_refs.items():\n                actual_refs = getattr(self.projection, field_name)\n                canonical_expected = tuple(\n                    sorted(expected_refs, key=lambda ref: ref.reference_id)\n                )\n                if tuple(ref.to_dict() for ref in actual_refs) != tuple(\n                    ref.to_dict() for ref in canonical_expected\n                ):\n                    raise ValueError(\n                        f"projection {field_name} references do not match selected candidates"\n                    )\n'''
           if old_projection not in text:
               raise SystemExit("projection identity anchor not found")
           text = text.replace(old_projection, new_projection, 1)
@@ -62,6 +62,12 @@ jobs:
           if old_fresh not in text:
               raise SystemExit("freshness normalization anchor not found")
           text = text.replace(old_fresh, new_fresh, 1)
+
+          old_projection_assert = '''    for candidate in selected:\n        assert candidate.reference is not None\n        buckets[_CATEGORY_FIELD[candidate.category]].append(candidate.reference)\n        selected_freshness.append(candidate.reference.freshness_class)\n'''
+          new_projection_assert = '''    for candidate in selected:\n        if candidate.reference is None:\n            raise ValueError("selected candidate is missing canonical reference")\n        buckets[_CATEGORY_FIELD[candidate.category]].append(candidate.reference)\n        selected_freshness.append(candidate.reference.freshness_class)\n'''
+          if old_projection_assert not in text:
+              raise SystemExit("projection assert anchor not found")
+          text = text.replace(old_projection_assert, new_projection_assert, 1)
           compiler.write_text(text, encoding="utf-8")
 
           acceptance = Path("tests/test_aura_project_context_acceptance.py")
@@ -111,8 +117,8 @@ jobs:
           python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
       - name: Commit to PR3 only if verified
         run: |
-          git config user.name "AuraOS PR3 Verification Worker"
-          git config user.email "actions@users.noreply.github.com"
-          git add aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md .aura/refactor_objectives/intent_native_source_first_project_context_pr3.v1.json
-          git commit -m "PR3: close public parity and temporal identity boundaries"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py .aura/refactor_objectives/intent_native_source_first_project_context_pr3.v1.json docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+          git commit -m "fix(pr3): harden public compilation parity and freshness"
           git push origin HEAD:refactor/source-first-project-context-pr3
