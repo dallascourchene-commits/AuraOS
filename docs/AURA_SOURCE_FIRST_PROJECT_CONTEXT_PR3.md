@@ -80,6 +80,8 @@ Graph edges independently preserve:
 - `STALE`
 - `UNAVAILABLE`
 
+For an authority-bearing `EXACT_CURRENT` or `DERIVED_VERIFIED` candidate, `origin_ref` must equal the exact `CanonicalReference.canonical_ref`. This structurally binds the candidate's claimed origin to the canonical reference that also carries owner, digest, truth, and freshness identity. An authority-bearing candidate with a different claimed origin is rejected at construction. Advisory/hypothesis/stale/unavailable material cannot acquire authority through an origin claim; if its origin differs from its reference, `origin_bound` is false rather than self-asserted true.
+
 A summary, model conclusion, shadow ranker, trusted-tool echo, or repeated/corroborated advisory statement cannot upgrade its origin or authority class.
 
 ## 5. Hard inclusion and graph reduction
@@ -97,6 +99,8 @@ Within that task-conditioned set, these classes are mandatory and cannot be sile
 - proof obligations.
 
 Answer-determining source candidates are also mandatory. Explicitly required candidates remain mandatory regardless of category.
+
+Selection eligibility and **source admission are deliberately different predicates**. `DERIVED_VERIFIED` evidence may be selected and may support reconstruction, but a `COMPLETE` source-first compilation requires at least one selected `SOURCE` candidate whose truth class is `EXACT_CURRENT`. A derived source cannot impersonate that exact-source anchor.
 
 If the complete mandatory dependency closure cannot fit the declared node budget, PR3 does **not** choose an arbitrary subset. The receipt becomes `INCOMPLETE`, records the budget omission, and denies admission.
 
@@ -123,7 +127,7 @@ A `COMPLETE` receipt cannot contain missing mandatory evidence. An `INCOMPLETE` 
 
 ## 7. Existing PR1 projection remains canonical
 
-When the receipt is complete and at least one exact artifact/source evidence reference is selected, PR3 emits the existing PR1 `ProjectContextProjection` with:
+**Projection emission is a consequence of a complete receipt, not merely of having selected references.** When—and only when—the receipt is `COMPLETE` and the exact-current source admission anchor is satisfied, PR3 emits the existing PR1 `ProjectContextProjection` with:
 
 - canonical owner fixed to `aura_unified_memory_continuity`;
 - exact repository identity;
@@ -131,6 +135,8 @@ When the receipt is complete and at least one exact artifact/source evidence ref
 - `MINIMUM_SUFFICIENT` privacy class;
 - `LOCAL_ONLY` egress class;
 - false mutation/execution/persistence/merge authority inherited from the PR1 authority envelope.
+
+An `INCOMPLETE` compilation has `projection: null`; the same is true through `headless_projection()`. The public `ProjectContextCompilation` constructor also rejects a hand-assembled `INCOMPLETE` record that attempts to smuggle in a PR1 projection.
 
 PR3 does not change the PR1 serialized contract or PR2 runtime contract.
 
@@ -152,7 +158,9 @@ Freshness validation compares the complete compiled repository identity and ever
 
 PR3 can trace incoming project-context edges backward from a selected result, failure, proof obligation, or operation. The trace is explicitly bounded by hop and node ceilings and reports any truncated frontier.
 
-A trace is `source_complete` only when at least one exact source candidate is reached and no predecessor frontier was truncated. Bounded output may never imply completeness it did not prove.
+`source_reached` means only that at least one node categorized as `SOURCE` was encountered. It is intentionally weaker than proof completeness.
+
+A trace is `source_complete` only when every retained provenance root is an `EXACT_CURRENT` `SOURCE`, every traversed path edge is `EXACT` or `DERIVED_VERIFIED`, and no predecessor frontier was truncated. `DERIVED_VERIFIED` source roots may support a trace but cannot make it source-complete. Bounded output may never imply completeness it did not prove.
 
 ## 10. Memory lifecycle governance
 
@@ -165,7 +173,7 @@ Every retained candidate records the full lifecycle:
 5. `SHARE_PROPAGATE`
 6. `FORGET_ROLLBACK`
 
-This is governance metadata, not a new memory owner. Origin is bound at candidate creation and authority may only stay equal or decrease through later transformations.
+This is governance metadata, not a new memory owner. For authority-bearing candidates, origin is structurally rebound to the candidate's canonical reference at creation. Authority is fixed by truth class (`EXACT_CURRENT` → canonical read, `DERIVED_VERIFIED` → derived read); advisory/hypothesis/stale/unavailable material carries no read authority and cannot increase authority by transformation.
 
 ## 11. Headless / client projection
 
@@ -173,7 +181,7 @@ This is governance metadata, not a new memory owner. Origin is bound at candidat
 
 `full_project_graph_included: false`
 
-The complete repository/project topology is not sent to the client by default. Exact canonical references survive the headless path.
+The complete repository/project topology is not sent to the client by default. Exact canonical references survive the headless path. If selection is `INCOMPLETE`, the headless payload retains the receipt and selected diagnostic context but exposes no canonical PR1 projection.
 
 Spatial representation, asset streaming, scene deltas, WebXR, and renderer work are PR4 or later and are out of scope here.
 
@@ -186,11 +194,14 @@ PR3 does not grant VSA/HDC ranking any authority. A future PR3 transaction may a
 PR3 fails closed when:
 
 - mandatory evidence is stale, unavailable, conflicting, adapter-missing, dependency-missing, or budget-blocked;
+- no selected `EXACT_CURRENT` source anchors admission, even if `DERIVED_VERIFIED` source material is present;
+- an `INCOMPLETE` compilation attempts to emit or expose a canonical PR1 projection;
 - graph edges reference candidates outside the task-conditioned set;
 - one canonical reference is aliased into multiple candidate roles;
+- an authority-bearing candidate claims an `origin_ref` different from its canonical reference origin;
 - advisory/hypothesis/stale/unavailable material attempts to carry canonical/derived read authority;
 - repository identity or selected temporal bindings drift;
-- a provenance trace is truncated but presented as source-complete.
+- a provenance trace is truncated, follows non-authoritative edges, or terminates at non-exact source roots but is presented as source-complete.
 
 PR3 never grants patch, execution, persistence, publication, deployment, payment, professional, or merge authority.
 
@@ -199,6 +210,10 @@ PR3 never grants patch, execution, persistence, publication, deployment, payment
 The focused PR3 suite must prove at minimum:
 
 - deterministic selection/digest under reordered equivalent inputs;
+- `INCOMPLETE` never emits or exposes the canonical PR1 projection, including hand-assembled public records;
+- `DERIVED_VERIFIED` source cannot satisfy the exact-source admission anchor;
+- authority-bearing origin claims are structurally bound to `CanonicalReference.canonical_ref` and forged origin claims fail closed;
+- provenance rooted only in derived source cannot claim `source_complete`;
 - answer-determining source changes invalidate identity/freshness;
 - mandatory evidence survives context pressure;
 - mandatory closure is never arbitrarily clipped;
@@ -210,14 +225,14 @@ The focused PR3 suite must prove at minimum:
 - memory lifecycle and origin/authority monotonicity are explicit;
 - full project topology is absent from default headless output;
 - Draft 2020-12 schema validation passes for the selection receipt;
-- retained PR1/PR2 compatibility suites remain green.
+- retained PR1/PR2 compatibility suites remain green or any pre-existing baseline failure is exact-base reproduced and dispositioned without being silently attributed to PR3.
 
 ## 15. PR3 exit boundary
 
 PR3 is complete only when:
 
 - focused compiler/schema tests are green;
-- retained PR1 and PR2 tests are green;
+- retained PR1 and PR2 tests are green, with any unrelated pre-existing repository failure separately baseline-proven and dispositioned;
 - compile/static/schema/diff checks are green;
 - exact changed-file scope is intentional;
 - available external reviewer findings are reproduced and dispositioned against PR3 invariants;
