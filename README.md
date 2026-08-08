@@ -2,9 +2,9 @@
 
 **Augmented Universal Reasoning Architecture**
 
-> **A sovereign, local-first, objective-native cognitive operating substrate that compiles human intent into grounded, governed, temporary capability systems.**
+> **A sovereign, local-first, objective-native cognitive operating substrate that compiles human intent into grounded, governed, temporary capability systems — and tries very hard not to pay twice for work humanity already proved.**
 
-AuraOS is **not a single LLM, chatbot, autonomous super-agent, or monolithic application**. It is an architecture for coordinating deterministic software, exact evidence, human governance, and replaceable AI workers without allowing probabilistic output to silently become truth or authority.
+AuraOS is **not a single LLM, chatbot, autonomous super-agent, or monolithic application**. It is an architecture for coordinating deterministic software, exact evidence, human governance, replaceable AI workers, reusable capabilities, and eventually human/machine economic participation without allowing probabilistic output to silently become truth or authority.
 
 **Repository status:** active research and development  
 **Software license:** GNU AGPL v3.0  
@@ -17,22 +17,72 @@ AuraOS is **not a single LLM, chatbot, autonomous super-agent, or monolithic app
 
 ## Contents
 
+- [The idea in 90 seconds](#the-idea-in-90-seconds)
 - [Aura in one diagram](#aura-in-one-diagram)
 - [What makes Aura different](#what-makes-aura-different)
-- [Architecture at a glance](#architecture-at-a-glance)
-- [Current implemented surfaces](#current-implemented-surfaces)
-- [What is implemented vs. what is future architecture](#what-is-implemented-vs-what-is-future-architecture)
+- [The Capability Commons](#the-capability-commons)
+- [Verified capability amortization](#verified-capability-amortization)
+- [Compute is a governed resource](#compute-is-a-governed-resource)
+- [What 10 million developers could mean](#what-10-million-developers-could-mean)
+- [Open and proprietary capability participation](#open-and-proprietary-capability-participation)
+- [A different route to general intelligence](#a-different-route-to-general-intelligence)
+- [Current development path](#current-development-path)
 - [Quick start](#quick-start)
+- [Pointing Aura at a repository](#pointing-aura-at-a-repository)
 - [Using Aura with AI coding agents](#using-aura-with-ai-coding-agents)
 - [ARCH v2.3 governance harness](#arch-v23-governance-harness)
+- [Architecture at a glance](#architecture-at-a-glance)
+- [Current implemented surfaces](#current-implemented-surfaces)
+- [Implemented vs. published future architecture](#implemented-vs-published-future-architecture)
 - [Research and prior art](#research-and-prior-art)
-- [Detailed architecture](#detailed-architecture)
-- [Domain Arenas](#domain-arenas)
 - [Truth, authority, and safety](#truth-authority-and-safety)
 - [Evidence and benchmarks](#evidence-and-benchmarks)
+- [Origins, sovereignty, and intergenerational continuity](#origins-sovereignty-and-intergenerational-continuity)
+- [How to work with the founder-architect](#how-to-work-with-the-founder-architect)
+- [Long-horizon direction](#long-horizon-direction)
 - [Documentation map](#documentation-map)
-- [Origins, sovereignty, and data governance](#origins-sovereignty-and-data-governance)
 - [Licensing](#licensing)
+- [Project status](#project-status)
+
+---
+
+# The idea in 90 seconds
+
+Modern AI-assisted development has an odd habit: it repeatedly spends expensive inference rediscovering primitives that already exist, then repeatedly spends human time reviewing, debugging, benchmarking, and hardening slightly different versions of the same thing.
+
+We do not reinvent the transistor every time we build a phone.
+
+We probably should not reinvent authentication, parsing, scheduling, retrieval, provenance, routing, caching, verification, or the same architectural repair every time we build software either.
+
+If ten million developers independently ask ten million AI workers to reinvent the same parser, that is not ten million acts of innovation. It is a very expensive group-amnesia benchmark.
+
+Aura's long-term direction is therefore not merely **faster generation**. It is **less unnecessary generation**.
+
+```text
+objective
+  → discover what is already proven
+  → select the minimum relevant capability set
+  → hydrate the minimum exact evidence
+  → compose / adapt only what is necessary
+  → use frontier reasoning only where novelty remains
+  → verify
+  → preserve provenance and contribution
+  → reuse the result next time
+```
+
+The desired transition is:
+
+```text
+reason → regenerate → debug → forget → repeat
+
+                    ↓
+
+route → retrieve → compose → adapt → prove → remember
+```
+
+Aura treats **verified capability as accumulating infrastructure**. Each accepted capability, repair, recipe, verifier, benchmark, scientific procedure, machine interface, or architectural constraint can reduce the amount of cognition future objectives need to buy again.
+
+The frontier remains open. The ground behind it should stop disappearing.
 
 ---
 
@@ -57,6 +107,14 @@ RELATIONAL ORIENTATION
 CODEMAP + topology + Connectome + Atlas/Compass
         │
         ▼
+REUSE CHECK
+proven capability? recipe? verifier? prior failed attempt?
+        │
+        ├── yes → retrieve / bind / minimally adapt
+        │
+        └── no  → bounded frontier reasoning
+        │
+        ▼
 MINIMUM SUFFICIENT EXACT EVIDENCE
 files + symbols + spans + hashes + tests + contracts
         │
@@ -79,6 +137,9 @@ AUTHORIZED HUMAN / COMMUNITY DISPOSITION
         │
         ▼
 EXPERIENCE + PROVENANCE + REVIEW-GATED LEARNING
+        │
+        ▼
+REUSABLE CAPABILITY / RECIPE / EVIDENCE
         │
         ▼
 REVOKE LEASES + DISSOLVE TEMPORARY STATE
@@ -112,7 +173,7 @@ Aura tries to avoid giving every worker the entire repository, history, database
 
 ### Reuse before invention
 
-The Capability Connectome, Genome Resolver, Relationship Atlas/Compass, and emergent-capability analysis help determine what already exists, how it is connected, what is missing, and what should not be duplicated.
+The Capability Connectome, Genome Resolver, Relationship Atlas/Compass, Attempt Archive, and emergent-capability analysis help determine what already exists, how it is connected, what already failed, what is missing, and what should not be duplicated.
 
 ### Arena lifecycle
 
@@ -120,7 +181,7 @@ An **Arena** is a bounded objective-specific execution environment, not simply a
 
 ### Canonical ownership
 
-Aura avoids creating duplicate truth, memory, routing, verification, persistence, policy, or authority planes. Projections, visualizations, vector representations, model output, and generated interfaces remain subordinate to their canonical owners.
+Aura avoids creating duplicate truth, memory, routing, verification, persistence, policy, or authority planes. Projections, vectors, model output, generated interfaces, and economic claims remain subordinate to their canonical owners.
 
 ### Proof and provenance
 
@@ -129,6 +190,457 @@ Important work is attached to exact source/state identity, tests, verifier evide
 ### Local-first sovereignty
 
 Aura originated from a locally controlled language-learning system. Data minimization, purpose limitation, restricted egress, revocable authority, community governance, and local operation remain architectural requirements rather than optional product features.
+
+---
+
+# The Capability Commons
+
+Paper IX extends Aura from a governed cognitive substrate into a proposed **Capability Commons**: a federated environment where useful capability can be discovered, composed, verified, attributed, licensed, improved, and reused.
+
+The Commons is not intended to be one giant public source-code dump.
+
+A capability may be:
+
+- fully open source;
+- source-available under its own terms;
+- proprietary but callable through a bounded interface;
+- local-only or community-controlled;
+- a recipe that composes other capabilities;
+- a verifier or benchmark suite;
+- a human/professional/facility capability with explicit authority boundaries;
+- a machine capability exposed through a typed manifest;
+- a scientific procedure carrying evidence and replication state.
+
+The durable unit is not merely **code**. It is a proof-bearing description of what a capability does, under what conditions, with what evidence, boundaries, provenance, rights, costs, and known failure modes.
+
+This produces a different kind of technological landscape.
+
+A "blue ocean" is empty opportunity. Aura's intended end state is closer to a **cultivated frontier**: there is still unexplored territory, but behind the frontier are roads, tools, workshops, proven components, failed-attempt records, standards, benchmarks, and things people can actually build on.
+
+The frontier moves outward because the ground behind it stays put.
+
+---
+
+# Verified capability amortization
+
+The first instance of a capability may be expensive to discover.
+
+Call its original cost `C0`:
+
+```text
+C0 = research
+   + architecture discovery
+   + implementation
+   + failed attempts
+   + debugging
+   + security review
+   + benchmarking
+   + verification
+   + provenance work
+```
+
+A later objective should not automatically pay `C0` again.
+
+If a proven capability already exists, the marginal cost can approach:
+
+```text
+Cnext = discovery
+      + constraint matching
+      + composition
+      + minimal adaptation
+      + re-verification
+```
+
+That is **verified capability amortization**.
+
+Aura itself is an example. Building the first Aura requires discovering and hardening the architecture. Building an Aura-like system later, using a mature Aura Capability Commons, should require less rediscovery because many routing, provenance, governance, verification, memory, Arena, and developer-workflow primitives would already exist as reusable components.
+
+This does **not** require one universal "best" implementation. Real systems have different constraints. The long-term target is a **verified Pareto frontier** of capability variants: the best-known implementations for different combinations of security, latency, privacy, hardware, jurisdiction, cost, energy, licensing, and assurance requirements.
+
+The system should ask:
+
+> Given this objective and these constraints, which proven capability family dominates here?
+
+Only when no adequate capability exists should expensive frontier reasoning become the default path.
+
+In that sense, generative AI can gradually become the **novelty path**, not the reflex path.
+
+---
+
+# Compute is a governed resource
+
+Aura's sustainability thesis is not "compute always goes down." That would be too easy to falsify and, more importantly, probably wrong.
+
+If engineering becomes 20× cheaper, humanity may attempt 100× more projects.
+
+The stronger objective is:
+
+> **Increase verified useful capability per unit of scarce resource, while detecting when efficiency gains are being consumed by rebound.**
+
+Candidate system-level metrics include:
+
+```text
+inference tokens / accepted verified capability increment
+joules          / accepted verified capability increment
+water           / accepted verified capability increment
+currency        / accepted verified capability increment
+human-hours     / accepted verified capability increment
+reuse hit rate
+novel-work fraction
+failed-reinvention rate
+absolute annual compute / energy / water use
+```
+
+The goal is not zero compute. A powered-off cluster wins that benchmark and accomplishes very little.
+
+The proposed Commons can therefore support a **resource governor**:
+
+1. measure marginal efficiency and absolute resource use separately;
+2. detect when per-capability cost is falling but total consumption is still rising;
+3. identify the highest-leverage architectural or physical bottlenecks causing the rebound;
+4. route a bounded portion of research, bounty, developer, and facility capacity toward those bottlenecks;
+5. independently verify whether the next cycle actually improves the resource/capability curve;
+6. keep the intervention only if the evidence survives.
+
+This turns sustainability from a slogan into an optimization problem with receipts.
+
+At larger scale, the same framework can decide **where** work belongs. Edge devices, homes, community clusters, regional compute, universities, factories, and hyperscale data centers can coexist. Large data centers remain valuable for frontier training, high-bandwidth workloads, major simulations, and other heavy compute; they simply stop being the unquestioned destination for every inference request.
+
+Future machine/facility capabilities can also expose energy source, grid state, water stress, cooling method, recoverable waste heat, latency, jurisdiction, and other constraints so objective compilation can consider physical resource cost rather than pretending all compute is environmentally identical.
+
+---
+
+# What 10 million developers could mean
+
+GitHub's current public materials report **180M+ developers** ([GitHub Octoverse 2025](https://github.blog/news-insights/octoverse/octoverse-a-new-developer-joins-github-every-second-as-ai-leads-typescript-to-1/), [GitHub About](https://github.com/about)). This README uses that figure only as a scale reference, not as a forecast of Aura adoption.
+
+Against a 180M baseline:
+
+| Illustrative Aura developer population | Share of 180M baseline | One accepted capability increment per developer/week |
+|---:|---:|---:|
+| 1 million | ~0.56% | ~52 million/year |
+| 10 million | ~5.56% | ~520 million/year |
+| 100 million | ~55.56% | ~5.2 billion/year |
+
+These are arithmetic thought experiments, **not productivity forecasts**. A "capability increment" can vary enormously in size and value.
+
+The coordination implication is still important. Ten million developers could theoretically populate:
+
+```text
+10,000 concurrent groups of 1,000 developers
+or
+ 1,000 concurrent groups of 10,000 developers
+```
+
+Real engineering cannot be parallelized without limit. Communication overhead, critical paths, verification, physical experiments, regulation, and architecture dependencies remain real. Aura's Developer/Architecture Arena hypothesis is not "add more people and time disappears." It is:
+
+> **Increase the portion of work that can be safely decomposed, independently executed, recomposed, and verified.**
+
+A mature ecosystem could contain a larger population around those developers — recipe authors, creators, researchers, security reviewers, machine/facility operators, domain experts, evaluators, compute providers, communities, enterprises, and end users — without requiring everyone to become a programmer.
+
+The important compounding variable is not headcount alone. It is how much of each new objective can begin from **proven prior capability instead of blank context**.
+
+---
+
+# Open and proprietary capability participation
+
+The intended Capability Commons does **not** require a developer or company to expose proprietary source code to every caller.
+
+The target model is closer to:
+
+```text
+PROVIDER PRIVATE IMPLEMENTATION
+        │
+        ▼
+PUBLIC / SHARED CAPABILITY MANIFEST
+- what it does
+- input/output contract
+- constraints and prohibited uses
+- version / digest / identity
+- verifier suite
+- benchmark evidence
+- pricing / licence / rights metadata
+- provenance / attribution hooks
+        │
+        ▼
+BOUNDED LEASE / INVOCATION
+provider-controlled or attested execution boundary
+        │
+        ▼
+OUTPUT + RECEIPT + VERIFICATION EVIDENCE
+caller sees the agreed result/evidence, not necessarily the implementation
+```
+
+That allows several economic roles:
+
+- **foundational primitive authors** can publish reusable capability interfaces and evidence;
+- open-source maintainers can receive meaningful-use attribution for widely reused primitives;
+- proprietary developers can expose a callable capability without turning the Commons into a source-code exfiltration service;
+- recipe authors can compose capabilities without owning every implementation;
+- verifier authors can contribute tests, attacks, benchmarks, and assurance evidence;
+- machine/facility operators can expose bounded physical capabilities under explicit local authority.
+
+This confidentiality model requires real sandboxing, authentication, authorization, isolation, attestation, licensing, and production hardening. A manifest by itself is not a magic invisibility cloak. Those controls are part of the staged development program, not something this README claims is already globally deployed.
+
+AuraOS itself is AGPL-licensed. Proprietary participants must still comply with Aura's licence and any third-party terms; the long-term capability interface does not erase software-licence obligations.
+
+The economic principle is simpler:
+
+> **Keep what is uniquely yours. Stop paying to reinvent what does not need to be.**
+
+---
+
+# A different route to general intelligence
+
+Aura does not assume that general intelligence must live inside one enormous autonomous model.
+
+A useful proposed architectural classification is:
+
+## Governed Compositional Intelligence (GCI)
+
+**GCI** describes a system in which broad problem-solving capacity can emerge from the governed composition of specialized humans, models, deterministic software, proven capabilities, evidence, machines, and institutions around an objective.
+
+Aura's specific research direction is more precisely:
+
+> **Human-Governed Objective-Native Compositional Intelligence**
+
+The classification is a research proposal, not an established industry standard and not a claim that the current repository is AGI.
+
+The key shift is:
+
+```text
+traditional AGI intuition:
+put general intelligence inside the model
+
+Aura hypothesis:
+put generality inside the governed substrate that can marshal intelligence
+```
+
+Under that model, no individual component needs to know everything. The system needs to find the relevant intelligence, constrain it, supply the right evidence, coordinate dependencies, verify the outcome, preserve provenance, and leave consequential authority where it belongs.
+
+Three improvement mechanisms then become separable:
+
+| Mechanism | What improves |
+|---|---|
+| **Model intelligence** | Better reasoning on genuinely novel problems |
+| **Collective intelligence** | Better coordination of humans, models, tools, and institutions |
+| **Accumulated intelligence** | More problems no longer require fresh reasoning because verified capability already exists |
+
+The third mechanism is central to Aura. A system can become more capable even when its model does not become proportionally "smarter" if more of the problem space has become executable, verified, reusable infrastructure.
+
+A future system should only be called **collective superintelligence** on evidence: for example, if it repeatedly solves broad, high-complexity objectives better than humanity's strongest existing institutions while retaining reliable verification, bounded authority, and legitimate governance. Until then, it is an architectural hypothesis to test rather than a title to award ourselves.
+
+---
+
+# Current development path
+
+Aura's near-term objective is deliberately narrower than the century-scale vision.
+
+The current program is to complete and harden the numbered **PR1–PR18 intent-native / ephemeral / Developer-and-Architecture-Arena refactor sequence**, while preserving canonical owners and avoiding a second truth, routing, verification, persistence, policy, memory, or authority plane.
+
+The intended progression is:
+
+```text
+PHASE 1 — FOUNDATION
+complete PR1–PR18
+harden Developer Arena + Architecture Arena
+prove exact-head continuity, bounded context, manifests, leases, verification, provenance
+
+PHASE 2 — EXTERNAL DEVELOPER ONBOARDING
+make "point Aura at my repo" boring and repeatable
+build capability manifests and evidence packets
+allow early developers to become foundational primitive authors
+
+PHASE 3 — CAPABILITY COMMONS
+publish and discover open/proprietary capability interfaces
+benchmark competing variants
+reuse proven primitives across objectives
+attach meaningful-use provenance and attribution
+
+PHASE 4 — MULTI-DOMAIN ARENAS
+science, civic, finance, construction, creator, business, spatial, physical-machine/facility domains
+
+PHASE 5 — FEDERATED PHYSICAL / SCIENTIFIC INFRASTRUCTURE
+local fabrication, R&D facilities, resource-aware compute, scientific replication, living artifact lineage
+```
+
+Aura's three-speed architecture exists because these phases contain different kinds of work:
+
+1. **Frontier lane** — fast architectural discovery, new combinations, hypothesis formation, and Architectural Deltas.
+2. **Build / hardening lane** — the large engineering surface: implementation, tests, interfaces, optimization, documentation, primitive creation, integration, and operational reliability.
+3. **Constitutional / proof lane** — slower independent verification, security, governance, compatibility, provenance, licensing, and high-consequence boundary review.
+
+The founder's comparative advantage is expected to remain concentrated in the frontier/architecture lane. A mature project should have many more people converting those deltas into hardened, independently operable capability than depending on the founder to personally implement every subsystem.
+
+---
+
+# Quick start
+
+## Requirements
+
+- Python 3
+- Git
+- Linux or Android/Termux
+- CPU-first operation; external model access is optional
+- additional dependencies from `requirements.txt` for the complete stack
+
+```bash
+git clone https://github.com/dallascourchene-commits/AuraOS.git
+cd AuraOS
+
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+Regenerate and verify architecture orientation before relying on graph-based workflows:
+
+```bash
+python aura_codebase_navigator.py
+python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+python -m aura_agent_arena_cli stabilization-status
+python -m aura_agent_arena_cli digest
+```
+
+Launch common local surfaces:
+
+```bash
+# Human Agent Arena
+python aura_human_agent_arena_server.py --repo-root . --demo
+
+# Coding Arena
+python aura_coding_arena_server.py --demo
+
+# Showcase
+python aura_showcase_server.py --demo-project winnipeg_pathways
+
+# Bilateral live-repair Showcase
+python aura_showcase_live_repair_server.py --demo-project winnipeg_pathways
+```
+
+The live-repair capture route remains disabled until a user explicitly starts a bounded session and supplies current bilateral intent/identity. It is not ambient production recording.
+
+---
+
+# Pointing Aura at a repository
+
+The desired onboarding experience is intentionally simple:
+
+```text
+install Aura
+  → point it at a repository
+  → let the Harness establish exact identity and bounded context
+  → describe the objective
+  → inspect what Aura believes is relevant
+  → let replaceable workers operate inside the bounded contract
+  → verify the result
+  → decide what becomes durable
+```
+
+The current Architecture Harness already accepts a repository root:
+
+```bash
+python scripts/aura_architecture_harness.py \
+  --repo-root /path/to/repository \
+  handoff \
+  --output-dir /path/outside/repository/repo-ai-handoff
+```
+
+For a full governed `run`, the target currently needs the Aura harness/supporting architecture expected by the runner. In other words, **the interface already points at repositories; arbitrary-repository zero-friction onboarding is still being hardened.** PR1–PR18 is intended to close that gap rather than pretending it is already closed.
+
+For an Aura-instrumented repository:
+
+```bash
+python scripts/aura_architecture_harness.py \
+  --repo-root /path/to/repository \
+  prepare \
+  --install-requirements
+
+python scripts/aura_architecture_harness.py \
+  --repo-root /path/to/repository \
+  run \
+  --objective "Describe the bounded engineering objective here"
+```
+
+The Harness remains analysis/proposal/proof infrastructure. It does not automatically commit, push, open a pull request, merge, release, or grant itself production authority.
+
+---
+
+# Using Aura with AI coding agents
+
+AI agents should not approach AuraOS as a flat repository and indiscriminately load large hub files.
+
+Recommended orientation:
+
+```text
+README
+  → .aura/ARCHITECTURE.md
+  → docs/AURA_ARCH_V2_3_HARNESS.md
+  → ARCH v2.3 policy + continuity capsule
+  → current CODEMAP/topology health
+  → capability resolution / relational neighborhood
+  → prior attempts / reusable capability check
+  → exact symbols and source slices
+  → nearby tests and contracts
+  → bounded Arena / repair capsule
+  → verification
+  → human disposition
+```
+
+Create an AI-safe repository handoff:
+
+```bash
+python scripts/aura_architecture_harness.py \
+  --repo-root . \
+  handoff \
+  --output-dir ../AuraOS-ai-handoff
+```
+
+Run repository-owned runtime proof in an external environment:
+
+```bash
+python scripts/aura_architecture_harness.py \
+  --repo-root . \
+  runtime \
+  --profile .aura/runtime_profiles/construction_demo.v1.json \
+  --output-dir ../AuraOS-runtime-evidence/construction \
+  --install-requirements
+```
+
+Useful agent-facing owners include:
+
+- `scripts/aura_architecture_harness.py`
+- `scripts/aura_runtime_refactor_harness.py`
+- `aura_coding_waboose_cli.py`
+- `aura_coding_relationship_compass.py`
+- `aura_agent_arena_cli.py`
+- `aura_agent_arena_mcp.py`
+- `aura_forge.py`
+- `aura_gate.py`
+
+Harness output remains navigation, analysis, review, or proposal evidence. Exact source spans, hashes, tests, verifier receipts, and authorized human disposition remain patch/merge authority.
+
+---
+
+# ARCH v2.3 governance harness
+
+The current long-horizon AI-assisted refactor governance standard is **ARCH v2.3** (`AURA_ARCH_V2_3`). Read [`docs/AURA_ARCH_V2_3_HARNESS.md`](docs/AURA_ARCH_V2_3_HARNESS.md) before starting a governed refactor or handing one to a fresh AI worker.
+
+ARCH v2.3 is deliberately distinct from the Architecture Harness CLI and Runtime Refactor Harness: those are bounded source-orientation and runtime-proof companions; **ARCH v2.3 owns the governance/convergence contract** for exact-head continuity, scope, authority, recursive workers, patch transactions, proof, review, learning, communication, durable-effect authorization, and stopping.
+
+The versioned four-file bundle is:
+
+- [`docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md`](docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md)
+- [`docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json`](docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json)
+- [`docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json`](docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json)
+- [`docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md`](docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md)
+
+Do not mix the v2.3 Markdown with an older policy/schema/template. v2.3 preserves the v2.2 recursive/provenance-governed continual-harness semantics while adding declared inter-agent channels, covert-channel resistance, non-malleable origin-bound authority, commit-time authorization for durable effects, verifier-independence/correlation receipts, and a bounded AuraJSpace working-set contract.
+
+Aura's existing `aura_jspace_codec.py` remains **advisory only**. ARCH v2.3 binds a JSpace projection to workspace/head/phase, keeps the current default and policy ceiling at **25 active concepts**, requires reconstruction or disablement when stale, and explicitly forbids JSpace from becoming patch authority, persistent truth, routing ownership, verifier status, policy, or a second memory/control plane.
+
+No ARCH component grants automatic merge. The terminal autonomous state remains `READY_FOR_HUMAN_REVIEW`; human disposition remains required.
 
 ---
 
@@ -150,7 +662,7 @@ Aura can be understood as seven cooperating layers.
 
 # Current implemented surfaces
 
-The repository contains a connected set of implemented or repository-backed surfaces. Their purpose is easier to understand when grouped by function rather than by merge chronology.
+The repository already contains a connected set of implemented or repository-backed surfaces.
 
 ## Engineering and agent collaboration
 
@@ -201,7 +713,7 @@ The repository contains a connected set of implemented or repository-backed surf
 
 ---
 
-# What is implemented vs. what is future architecture
+# Implemented vs. published future architecture
 
 AuraOS deliberately distinguishes **repository-backed behavior** from **published architecture and future product direction**.
 
@@ -211,7 +723,7 @@ The current tree includes deterministic routing, CODEMAP/topology, relational ar
 
 ### Active refactor architecture
 
-The current intent-native spatial/ephemeral refactor is progressively establishing stricter contracts for objective-compiled workspaces, persistent capability reuse, selective source hydration, governed manifestation, and future capability composition. Each PR must preserve existing canonical owners and avoid creating a second plane.
+The current intent-native spatial/ephemeral refactor is progressively establishing stricter contracts for objective-compiled workspaces, persistent capability reuse, selective source hydration, governed manifestation, Developer/Architecture Arenas, and future capability composition. Each PR must preserve existing canonical owners and avoid creating a second plane.
 
 ### Published future architecture / enabling embodiments
 
@@ -230,7 +742,7 @@ Paper IX publishes the broader architecture that can be built on the substrate, 
 - business-incubation Arenas;
 - sovereign cross-domain Arena federation;
 - participatory proof-carrying Scientific Arenas and a compounding Scientific Capability Commons;
-- a three-speed **Architecture Arena / convergence compiler** that separates fast discovery, implementation/hardening, and slow constitutional change;
+- a three-speed **Architecture Arena / convergence compiler** separating fast discovery, implementation/hardening, and slow constitutional change;
 - **keystone-bottleneck analysis** and demand/capability graphs for prioritizing high-leverage development and research bounties;
 - privacy-preserving **Opportunity** and **Learning** compilers driven by verified capability evidence rather than a universal reputation score;
 - compute-to-data sovereignty, portable verified claims, and evidence-bearing contribution portfolios while private LifeOS/Capsule history remains separately governed;
@@ -242,127 +754,6 @@ Paper IX publishes the broader architecture that can be built on the substrate, 
 - proof-carrying assurance/warranty contract references that keep evidence separate from legal liability, certification, insurance, and truth.
 
 These are **published architectural embodiments and development directions, not a claim that every downstream product is already implemented in this repository**.
-
----
-
-# Quick start
-
-## Requirements
-
-- Python 3
-- Git
-- Linux or Android/Termux
-- CPU-first operation; external model access is optional
-- additional dependencies from `requirements.txt` for the complete stack
-
-```bash
-git clone https://github.com/dallascourchene-commits/AuraOS.git
-cd AuraOS
-python3 -m pip install -r requirements.txt
-```
-
-Regenerate and verify architecture orientation before relying on graph-based workflows:
-
-```bash
-python3 aura_codebase_navigator.py
-python3 -m aura_codemap_verify --compare-json .aura/CODEMAP.json
-python3 -m aura_agent_arena_cli stabilization-status
-python3 -m aura_agent_arena_cli digest
-```
-
-Launch common local surfaces:
-
-```bash
-# Human Agent Arena
-python3 aura_human_agent_arena_server.py --repo-root . --demo
-
-# Coding Arena
-python3 aura_coding_arena_server.py --demo
-
-# Showcase
-python3 aura_showcase_server.py --demo-project winnipeg_pathways
-
-# Bilateral live-repair Showcase
-python3 aura_showcase_live_repair_server.py --demo-project winnipeg_pathways
-```
-
-The live-repair capture route remains disabled until a user explicitly starts a bounded session and supplies current bilateral intent/identity. It is not ambient production recording.
-
----
-
-# Using Aura with AI coding agents
-
-AI agents should not approach AuraOS as a flat repository and indiscriminately load large hub files.
-
-Recommended orientation:
-
-```text
-README
-  → .aura/ARCHITECTURE.md
-  → docs/AURA_ARCH_V2_3_HARNESS.md
-  → ARCH v2.3 policy + continuity capsule
-  → current CODEMAP/topology health
-  → capability resolution / relational neighborhood
-  → exact symbols and source slices
-  → nearby tests and contracts
-  → bounded Arena / repair capsule
-  → verification
-  → human disposition
-```
-
-Create an AI-safe repository handoff:
-
-```bash
-python scripts/aura_architecture_harness.py \
-  --repo-root . \
-  handoff \
-  --output-dir ../AuraOS-ai-handoff
-```
-
-Run repository-owned runtime proof in an external environment:
-
-```bash
-python scripts/aura_architecture_harness.py \
-  --repo-root . \
-  runtime \
-  --profile .aura/runtime_profiles/construction_demo.v1.json \
-  --output-dir ../AuraOS-runtime-evidence/construction \
-  --install-requirements
-```
-
-Useful agent-facing owners include:
-
-- `scripts/aura_architecture_harness.py`
-- `scripts/aura_runtime_refactor_harness.py`
-- `aura_coding_waboose_cli.py`
-- `aura_coding_relationship_compass.py`
-- `aura_agent_arena_cli.py`
-- `aura_agent_arena_mcp.py`
-- `aura_forge.py`
-- `aura_gate.py`
-
-Harness output remains navigation, analysis, review, or proposal evidence. Exact source spans, hashes, tests, verifier receipts, and authorized human disposition remain patch/merge authority.
-
----
-
-# ARCH v2.3 governance harness
-
-The current long-horizon AI-assisted refactor governance standard is **ARCH v2.3** (`AURA_ARCH_V2_3`). Read [`docs/AURA_ARCH_V2_3_HARNESS.md`](docs/AURA_ARCH_V2_3_HARNESS.md) before starting a governed refactor or handing one to a fresh AI worker.
-
-ARCH v2.3 is deliberately distinct from the existing Architecture Harness CLI and Runtime Refactor Harness: those are bounded source-orientation and runtime-proof companions; **ARCH v2.3 owns the governance/convergence contract** for exact-head continuity, scope, authority, recursive workers, patch transactions, proof, review, learning, communication, durable-effect authorization, and stopping.
-
-The versioned four-file bundle is:
-
-- [`docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md`](docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md)
-- [`docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json`](docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json)
-- [`docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json`](docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json)
-- [`docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md`](docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md)
-
-Do not mix the v2.3 Markdown with an older policy/schema/template. v2.3 preserves the v2.2 recursive/provenance-governed continual-harness semantics while adding declared inter-agent channels, covert-channel resistance, non-malleable origin-bound authority, commit-time authorization for durable effects, verifier-independence/correlation receipts, and a bounded AuraJSpace working-set contract.
-
-Aura's existing `aura_jspace_codec.py` remains **advisory only**. ARCH v2.3 binds a JSpace projection to workspace/head/phase, keeps the current default and policy ceiling at **25 active concepts**, requires reconstruction or disablement when stale, and explicitly forbids JSpace from becoming patch authority, persistent truth, routing ownership, verifier status, policy, or a second memory/control plane.
-
-No ARCH component grants automatic merge. The terminal autonomous state remains `READY_FOR_HUMAN_REVIEW`; human disposition remains required.
 
 ---
 
@@ -385,296 +776,6 @@ Papers I–VII establish claims **N1–N30**. Paper VIII continues the evidence-
 | **Paper IX v2.0 — Objective-Native Capability Commons and Proof-Carrying Contribution Economies** | Objective-native Arena compilation; Capability Packages/Recipes; Commons and executable rights; proprietary capability evidence; attestation/provenance; Developer and Architecture Arenas; Personal Cognitive Capsules; manifestation; Places/Conventions; opportunity/learning compilers; Foundry and multi-class research bounties; Ephemeral Institutions; simulation/incubation; participatory science; machine/facility capabilities; local fabrication and circular lineage; transport-neutral AuraNet federation; assurance contracts | **N51–N100** | [Zenodo 21845020 / DOI](https://doi.org/10.5281/zenodo.21845020) | Latest expanded artifact on Zenodo; repository PDF is the earlier N51–N87 edition until replaced |
 
 Prior-art papers document conceptual lineage and disclosed combinations. They do not override current source, tests, licences, verifiers, or governance requirements.
-
----
-
-# Detailed architecture
-
-The remainder of this README gives a more technical map. For canonical ownership and exact architecture boundaries, read [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md).
-
-## 1. Intent, lexical addressing, and guarded finite-state routing
-
-Aura accepts ordinary language while preserving an inspectable internal route.
-
-```text
-natural language / structured objective
-  → lexical address and local tags
-  → six-slot intent
-  → semantic LEXC
-  → state-local guarded WFST
-  → hard blockers
-  → weighted ranking among already-admissible routes
-  → admitted route or explicit denial
-```
-
-Canonical slot order:
-
-```text
-DIR → ASP → CLASS → SUBJ → VOICE → STEM
-```
-
-The six-slot software ordering is Athabaskan-inspired. Aura's machine FST/WFST is its own engineering grammar. Anishinaabemowin-derived governance/relational influences are distinct again. The project does not flatten these into one linguistic claim.
-
-VSA/HDC resonance may help rank already-admissible alternatives. It cannot override missing grounding, tests, expired leases, risk blocks, denied capabilities, or failed verifier requirements.
-
-## 2. CODEMAP, topology, and architecture self-understanding
-
-Aura is designed so humans and AI workers can orient without loading the whole repository.
-
-The architecture composes:
-
-- `.aura/CODEMAP.json` and `.aura/CODEMAP.md`;
-- compiled deep topology;
-- exact file, symbol, call, import, and test relations;
-- Topological Context Anchor;
-- Affordance Directory and Node Inspector;
-- Capability Connectome and Genome Resolver;
-- Relational Index / Relationship Atlas;
-- Coding Relationship Compass;
-- Emergent Evidence Spine and candidate discovery;
-- manifests, schemas, ownership, and test evidence.
-
-The key rule is:
-
-> **Generated maps locate evidence; exact current source and verifier evidence establish it.**
-
-Regenerate CODEMAP/topology after architecture or source changes. Do not rely on historical line numbers or stale generated maps.
-
-## 3. Relational Synthesis and the Relationship Atlas
-
-Aura's relational systems distinguish several questions:
-
-```text
-What exists?
-What is exactly wired?
-What is merely advisory?
-What overlaps?
-What is missing?
-What is stale?
-What is prohibited from connecting?
-What combination is relevant for this objective?
-```
-
-The Relationship Atlas/Compass can classify and bound these relationships without becoming another source-of-truth database. A JIT Relational Synthesis capsule selects the objective-relevant configuration; exact source/state remains canonical.
-
-## 4. Planning, work decomposition, and Council–Surgeon separation
-
-The Planning Board represents goals, actions, predicates, constraints, dependencies, backward regression, forward replay, and continuity. It proposes; it does not execute.
-
-For engineering work:
-
-```text
-objective
-  → grounding / relationship packet
-  → Planning Board / Change Graph
-  → bounded Act Capsules / work units
-  → Council V3 for structural reasoning when needed
-  → Surgeon for exact implementation
-  → focused verification
-  → human review
-```
-
-Local failures may return to the Surgeon. Interface, dependency, invariant, or scope-expansion failures return to architecture-level reasoning rather than being repeatedly patched locally.
-
-## 5. Arenas, capability leases, and ephemeral execution
-
-An Arena assembles only what one objective requires.
-
-A typical lifecycle is:
-
-```text
-FRAME
-  → GROUND
-  → PLAN
-  → ACT
-  → PROVE
-  → DECIDE
-  → DISSOLVE
-```
-
-Domain-specific Arenas may introduce additional typed stages, but the same principles remain:
-
-- bounded objective;
-- explicit context and evidence;
-- minimum capabilities;
-- revocable/expiring leases;
-- resource and cost bounds;
-- no ambient authority;
-- separate verification;
-- external disposition;
-- explicit cleanup and dissolution.
-
-The Ephemeral Organ Runtime compiles temporary capability systems from verified manifests and leases. The FST is an admission grammar, **not** a complete security sandbox; arbitrary components require a real restricted runtime and must fail closed when the required sandbox is unavailable.
-
-## 6. External models and Model Cognome
-
-Aura is model-agnostic by design.
-
-Possible workers include local/open-weight models, OpenAI-compatible endpoints, Codex, Hermes, or other MCP/A2A-connected agents. They remain replaceable.
-
-Model Cognome tracks:
-
-- endpoint identity and capability evidence;
-- cost and latency;
-- quality/drift observations;
-- replay and shadow comparisons;
-- route proposals and quarantine state.
-
-Representative route classes:
-
-```text
-ZERO_MODEL | DIRECT | CASCADE | PANEL
-```
-
-Representative operating modes:
-
-```text
-LEGACY | SHADOW | PAIRED_LIVE
-```
-
-A model may recommend a route. The model does not authorize itself.
-
-## 7. Compression, memory, and continuity
-
-Aura uses multiple compact representations for different purposes rather than treating one vector store or chat transcript as memory.
-
-- **Exact slicing / Context Crusher** — remove unrelated source/context.
-- **VSA/HDC** — associative semantic addressing.
-- **ST3GG** — compact visible advisory frames with exact-recall handles.
-- **JSpace** — active route/workspace continuity.
-- **QDKT** — compact observation and knowledge-transfer events.
-- **State Ledger** — bounded intra-session execution state.
-- **Attempt Archive** — failed/denied/successful historical work.
-- **Temporal Persistence** — content-addressed checkpoints, forks, and restoration assessment.
-- **ArenaExperience** — verified outcomes suitable for review-gated learning.
-
-Restoration remains reviewable. A checkpoint does not silently regain expired authority or automatically apply itself.
-
-## 8. Review-gated learning
-
-Aura's learning philosophy is **learning to re-prove**, not learning to bypass proof.
-
-```text
-verified execution
-  → typed outcome
-  → ArenaExperience
-  → TRAIN / VALIDATION / SHADOW separation
-  → candidate crystallization
-  → verifier + human review
-  → explicit promotion or rejection
-```
-
-A research paper, model answer, route trace, or successful-looking patch is not durable learned truth by itself.
-
-## 9. Verification, receipts, and provenance
-
-Aura separates several questions that are often collapsed:
-
-```text
-identity      — who/what is acting?
-authority     — what was it allowed to do?
-execution     — what did it actually do?
-provenance    — what did the result derive from?
-verification  — what bounded predicates were checked?
-disposition   — who accepted/rejected the consequence?
-attribution   — what materially contributed?
-```
-
-Current repository mechanisms include exact hashes, contracts, tests, verifier output, append-only events, Attempt Archive evidence, action/lease identity, runtime receipts, and provenance-bearing artifacts.
-
-Paper IX extends this architecture into a generalized Attestation/Provenance DAG and meaningful-use contribution economy. That broader Commons/economic layer is published architecture, not a claim that automated settlement is already active in the current tree.
-
-## 10. Spatial manifestation and proposal-only interaction
-
-Aura's spatial architecture keeps canonical truth separate from presentation.
-
-```text
-canonical domain/repository state
-  → privacy-minimized adapter
-  → immutable SpatialSceneSnapshot
-  → device/render plan
-  → replaceable renderer
-  → user interaction
-  → typed interaction intent / proposal
-  → domain verification path
-  → authorized disposition
-```
-
-A scene, splat, graph, gesture, gaze target, generated layout, or visual relationship cannot create domain authority.
-
-The current Spatial lifecycle is:
-
-```text
-FRAME → GROUND → COMPILE_SCENE → PLAN_RENDER → PRESENT
-      → INTERACT → PROVE → DECIDE → DISSOLVE
-```
-
-Paper IX generalizes this separation into **intent-native manifestation**: rich spatial, visual, textual, voice, or generative interfaces may help people understand and manipulate a proposal while canonical records remain authoritative.
-
-## 11. Runtime Refactor Harness and bilateral live repair
-
-The Runtime Refactor Harness is an observation/proof owner, not an autonomous coding loop.
-
-```text
-exact Git identity + repository runtime profile
-  → external virtual environment
-  → loopback application
-  → probe/browser evidence
-  → retained verification
-  → artifact hashes + cleanup
-  → failure or verified receipt
-  → separately authorized repair
-  → exact rerun
-  → repaired-and-verified receipt
-```
-
-Bilateral live repair adds explicit positive and negative user intent, bounded incident capture, privacy sanitization, deterministic replay, failed-attempt preservation, bounded repair routing, isolated preview/rollback, U7 reproof, and a projection-only Spatial Foundry.
-
-No ambient recording, automatic production hot-swap, automatic merge, or professional/physical authority is granted.
-
----
-
-# Domain Arenas
-
-## Civic Commons
-
-Civic Commons composes needs, offers, evidence, rules, scenarios, dissent, consent, reversible pilots, and community decision packets.
-
-It is intentionally non-binding. Models may help compare options, but they do not become governments, voters, funders, courts, or cultural authorities.
-
-See [`docs/AURA_CIVIC_COMMONS_ARENA.md`](docs/AURA_CIVIC_COMMONS_ARENA.md).
-
-## Construction Arena
-
-Construction replays exact `ConstructionProjectState`, evaluates readiness/conflict/expiry, hard blockers, alternatives, and bounded Human Agent/Observatory/Spatial projections.
-
-It does not authorize physical work, payments, equipment, site access, safety certification, engineering certification, or legal approval.
-
-Synthetic demonstration:
-
-```bash
-python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --serve
-```
-
-See [`docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md`](docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md).
-
-## Financial Arena
-
-The current Financial slice stores immutable Decimal-backed exact-state records and explicit truth classes:
-
-```text
-USER_RECORDED | IMPORTED_EXACT | DERIVED_ARITHMETIC | ASSUMPTION | UNAVAILABLE
-```
-
-It rejects silent floats, implicit rounding, inferred ownership, implicit currency conversion, contradictory lifecycle state, and model-estimated values presented as exact records.
-
-It does not provide transaction, account-mutation, advice, or prediction authority.
-
-## Anishinaabemowin Tutor
-
-The tutor uses vetted sources, morphology, pronunciation guidance, dialect/provenance labels, confidence classes, privacy/governance gates, and teacher review.
-
-Community-controlled language assets remain legally and technically distinct from the general AuraOS software layer.
 
 ---
 
@@ -717,19 +818,7 @@ When sources conflict, prefer:
 
 ## Advisory does not mean authoritative
 
-The following may help discover, rank, compress, visualize, or explain without granting consequential authority by themselves:
-
-- VSA/HDC similarity;
-- DREAM/DREAM-lite;
-- JSpace;
-- ST3GG;
-- QDKT;
-- MUSIC/MITOSIS;
-- Model Cognome proposals;
-- visual topology and generated UI;
-- inferred/ghost relationships;
-- emergent-capability hypotheses;
-- external research and LLM output.
+VSA/HDC similarity, DREAM, JSpace, ST3GG, QDKT, MUSIC/MITOSIS, Model Cognome proposals, visual topology, generated UI, inferred relationships, emergent-capability hypotheses, external research, market simulations, and LLM output may help discover or reason. They do not grant consequential authority by themselves.
 
 ## Human and community boundaries
 
@@ -759,6 +848,179 @@ Representative evidence retained in the current README lineage includes:
 
 These figures are historical evidence tied to specific fixtures and revisions. **Rerun the exact benchmark/gate before quoting a number as current.** Unknown provider usage remains unknown.
 
+The new Capability Commons scale figures elsewhere in this README are explicitly **scenario arithmetic**, not benchmark evidence.
+
+---
+
+# Origins, sovereignty, and intergenerational continuity
+
+Aura began as a locally controlled Anishinaabemowin learning system. That origin continues to shape the architecture:
+
+- local operation and sovereignty;
+- data minimization;
+- purpose-limited disclosure;
+- inspectable provenance;
+- explicit consent;
+- revocable authority;
+- speaker/teacher/community governance;
+- refusal to treat external model convenience as authority.
+
+Aura keeps its influences distinct:
+
+1. **Anishinaabemowin-derived relational/governance alignments** influence sovereignty, reciprocity, local authority, and data-governance design.
+2. **An Athabaskan-inspired six-slot software ordering contract** informs the canonical `DIR → ASP → CLASS → SUBJ → VOICE → STEM` ordering.
+3. **Aura's machine-oriented finite-state grammar** implements deterministic software routing and hard gates.
+4. Conventional software engineering, formal methods, agent architecture, VSA/HDC, security, provenance, and distributed-systems techniques provide additional engineering substrate.
+
+These sources should not be flattened into a generic claim about "Indigenous grammar."
+
+The project's interest in continuity is also not purely technical. Colonial systems, including residential schools, deliberately disrupted Indigenous language, family, governance, knowledge transmission, and intergenerational continuity. Software cannot repair that history and should never pretend to replace living culture, elders, families, teachers, Nations, ceremony, or governance.
+
+The engineering lesson is narrower and still important:
+
+> **Preserving an artifact is not the same as preserving the relationships, provenance, authority, consent, and context that make the artifact meaningful.**
+
+Aura's federated Arenas, bounded roles, relational accountability, local authority, and dissolution after an objective is complete have resonances with relational/federated governance traditions. Aura should **not** be described as a digitized clan system, and no claim is made that all Indigenous governance traditions are identical.
+
+Community-owned language recordings, local dialect lexicons, teaching materials, corrections, private or ceremonial knowledge, learner data, and contributor consent records remain governed separately from the general AuraOS software licence.
+
+<details>
+<summary><strong>Why Aura sometimes uses an inheritance metaphor</strong></summary>
+
+Some animal research has reported intergenerational effects associated with conditioned sensory responses — for example, a 2014 mouse study of odor conditioning ([Dias & Ressler, Nature Neuroscience](https://www.nature.com/articles/nn.3594)). Broad claims that humans inherit detailed traumatic memories genetically are **not established**, and Aura does not depend on that claim.
+
+The engineering metaphor is simpler: biological systems, cultures, languages, institutions, and tools all have mechanisms for carrying adaptation forward. Aura asks what it would mean for technological systems to inherit **verified executable capability** — not merely a document saying what was learned, but the evidence, constraints, provenance, failed attempts, interfaces, and procedures required to use it again.
+
+</details>
+
+This leads to a simple project philosophy:
+
+> **Humans are ephemeral. Arenas are ephemeral. Processes terminate. Machines fail. Organizations change. Contribution does not have to disappear with them.**
+
+We do not reinvent the transistor every time we build a phone.
+
+We should not have to rediscover civilization every time a generation ends.
+
+---
+
+# How to work with the founder-architect
+
+This section exists for collaboration accuracy, not founder mythology.
+
+It is **not** a clinical psychological assessment, IQ test, psychiatric diagnosis, or standardized personality inventory. It is a work-facing synthesis derived from the evolution of AuraOS, project artifacts, repeated collaboration, and the founder's observed reasoning/decision patterns.
+
+## Working profile
+
+The strongest current description of Dallas Courchene's observed working style is:
+
+> **Recursive relational systems synthesis with cross-domain topology transfer, constitutional conservation, architectural chain-completion testing, and personalized salience-driven implication propagation.**
+
+A shorter role label is:
+
+> **Founder-Architect / Objective Owner / Systems Integrator / Architectural Frontier Driver**
+
+In practical terms, Dallas tends to:
+
+1. encounter a visible problem, inconsistency, or opportunity;
+2. reject the surface framing when it appears too narrow;
+3. reconstruct the actors, relationships, authority, information, incentives, evidence, dependencies, failure paths, and feedback loops;
+4. identify the topology beneath the visible details;
+5. search for an existing mechanism with the same operational structure;
+6. transfer the mechanism rather than copying its surface form;
+7. re-establish the destination domain's truth, authority, privacy, provenance, verification, persistence, attribution, and safety boundaries;
+8. ask what the mechanism still **does not** solve;
+9. complete missing links with complementary mechanisms rather than forcing one subsystem to do everything;
+10. infer the larger technical, economic, institutional, social, or physical system the mechanism makes possible;
+11. identify the next-order problems created by that larger system;
+12. repeat.
+
+The nouns change. The topology often survives.
+
+## Where he creates the most value
+
+Dallas's highest-value role is generally **not repetitive ticket execution or boilerplate programming**. It is holding and extending the cross-system relational model, defining objectives, identifying constitutional boundaries, discovering reusable architecture, spotting missing links, and integrating specialist work without letting one subsystem silently assume another subsystem's authority.
+
+That makes the three-speed model organizational as well as technical:
+
+```text
+Dallas / frontier architects
+        │
+        ▼
+FAST FRONTIER
+new mechanisms + Architectural Deltas + implications
+        │
+        ▼
+BUILD / HARDENING LANE
+engineers + primitive authors + integrators + optimizers
+        │
+        ▼
+PROOF / CONSTITUTIONAL LANE
+independent tests + security + specialists + governance
+        │
+        ▼
+only what survives becomes durable architecture
+```
+
+## How to collaborate effectively
+
+- **Bring the objective and constraints.** Do not assume the first requested feature is the actual problem.
+- **Ask for the causal chain.** Dallas may compress intermediate reasoning because several relationships are already active in his internal model; collaborators should force important steps into explicit artifacts.
+- **Preserve negative constraints.** Ask not only what a mechanism can become, but what it must never be allowed to become.
+- **Separate insight from proof.** Fast architectural synthesis is a candidate generator, not verifier evidence.
+- **Use qualified depth specialists.** Cryptography, law, finance, compiler correctness, chemistry, physical engineering, regulation, security, and distributed systems still require domain experts.
+- **Do not duplicate the founder.** Build a team that translates frontier architecture into specifications, production code, tests, security, publication, product operations, governance, and deployment.
+- **Externalize relationships.** If a critical architectural relationship exists only in one person's head, it is a continuity defect.
+- **Challenge rather than flatter.** Multiple AI systems agreeing is not independent validation. Contradictions, failed tests, adversarial review, and reproducibility are more useful than consensus theatre.
+- **Keep four states visible:** `CURRENT IMPLEMENTATION`, `NEXT VALIDATED PROGRAM`, `FUTURE ARCHITECTURE`, and `SPECULATIVE OPPORTUNITY`.
+
+The primary execution risk mirrors the primary strength:
+
+> **Architecture can be discovered faster than implementation and proof can absorb it.**
+
+The answer is not to slow the frontier to the speed of every downstream process. It is to compile fast insight into bounded state that slower implementation, verification, governance, and institutional systems can safely absorb.
+
+---
+
+# Long-horizon direction
+
+If Aura's major claims survive independent validation and the architecture becomes a useful standard, the long-horizon opportunity is larger than an AI coding product.
+
+## 1. Software becomes accumulated capability
+
+Common primitives increasingly become hardened capability families rather than prompts that every team pays to regenerate. New projects begin higher on the stack.
+
+## 2. Applications become increasingly objective-native
+
+Persistent applications remain where useful, but many workflows can become temporary objective-compiled Arenas assembled from proven capabilities and dissolved when the objective is complete.
+
+## 3. The developer economy becomes a contribution economy
+
+Value can attach to code, recipes, tests, verification, research, data rights, compute, facilities, machine access, domain expertise, and meaningful downstream use rather than only to employment, advertising, or raw invocation counts.
+
+## 4. Compute becomes heterogeneous and resource-aware
+
+Edge, community, enterprise, research, regional, and hyperscale compute coexist. Scheduling can consider not only price and latency but energy, carbon, water, jurisdiction, data sovereignty, and available waste-heat/resource recovery.
+
+## 5. The Commons crosses into machines and manufacturing
+
+Verified designs can eventually resolve against locality-aware machine/facility capabilities: 3D printers, CNC systems, robotics, test equipment, labs, assembly cells, and qualified human operators — while keeping their real-world authority and safety requirements external to model output.
+
+## 6. Science becomes capability-bearing rather than paper-only
+
+A research result can retain hypothesis lineage, simulation, experiment protocol, data provenance, falsification attempts, replication state, facility requirements, and reusable procedures. Future teams inherit more than a citation.
+
+## 7. Intergenerational technological memory becomes executable
+
+The most valuable long-term asset may not be an LLM or even Aura's source code. It may be the continuously growing graph of what humans and machines have **actually proved they can do**, under which conditions, with which evidence, and through whose contribution.
+
+That is the century-scale thesis:
+
+> **Civilization should increasingly spend intelligence on the unknown, not repeatedly pay the full computational and human price of rediscovering the known.**
+
+Aura I has to help build the ladder.
+
+Everyone after it should get to start several rungs higher.
+
 ---
 
 # Documentation map
@@ -767,7 +1029,7 @@ Start here:
 
 | Document | Purpose |
 |---|---|
-| [`README.md`](README.md) | Broad architecture, implementation map, research record, and operator orientation |
+| [`README.md`](README.md) | Broad architecture, vision, implementation map, operator and collaborator orientation |
 | [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md) | Canonical owners, truth/evidence order, authority, data flow, and subsystem boundaries |
 | [`docs/AURA_ARCH_V2_3_HARNESS.md`](docs/AURA_ARCH_V2_3_HARNESS.md) | Current ARCH v2.3 governance-harness bundle, startup order, JSpace boundary, and migration orientation |
 | [`.aura/CODEMAP.md`](.aura/CODEMAP.md) | Generated compact repository navigation; regenerate after source changes |
@@ -812,32 +1074,6 @@ Research papers:
 
 ---
 
-# Origins, sovereignty, and data governance
-
-Aura began as a locally controlled Anishinaabemowin learning system. That origin continues to shape the architecture:
-
-- local operation and sovereignty;
-- data minimization;
-- purpose-limited disclosure;
-- inspectable provenance;
-- explicit consent;
-- revocable authority;
-- speaker/teacher/community governance;
-- refusal to treat external model convenience as authority.
-
-Aura keeps its influences distinct:
-
-1. **Anishinaabemowin-derived relational/governance alignments** influence sovereignty, reciprocity, local authority, and data-governance design.
-2. **An Athabaskan-inspired six-slot software ordering contract** informs the canonical `DIR → ASP → CLASS → SUBJ → VOICE → STEM` ordering.
-3. **Aura's machine-oriented finite-state grammar** implements deterministic software routing and hard gates.
-4. Conventional software engineering, formal methods, agent architecture, VSA/HDC, security, provenance, and distributed-systems techniques provide additional engineering substrate.
-
-These sources should not be flattened into a generic claim about “Indigenous grammar.”
-
-Community-owned language recordings, local dialect lexicons, teaching materials, corrections, private or ceremonial knowledge, learner data, and contributor consent records remain governed separately from the general AuraOS software licence.
-
----
-
 # Licensing
 
 AuraOS source code is released under the **GNU Affero General Public License v3.0** unless a file or bundled dependency states otherwise.
@@ -846,15 +1082,23 @@ The repository includes or integrates third-party components with their own term
 
 Research papers have their own publication metadata/licensing. Publishing prior art does not transfer ownership of community-controlled data or eliminate third-party licence obligations.
 
+The proposed Capability Commons can support open and proprietary capability interfaces, but implementation details must respect Aura's AGPL terms, contributor agreements, external component licences, jurisdiction, and any separate community/data governance rules.
+
 ---
 
 # Project status
 
-AuraOS is an active research and development system, not a claim of finished universal AGI infrastructure.
+AuraOS is an active research and development system, **not a claim of finished universal AGI infrastructure**.
 
 The repository demonstrates substantial implemented architecture around deterministic intent routing, relational repository understanding, bounded human/AI Arenas, source-grounded engineering, governance, verification, continuity, spatial projection, domain Arenas, and review-gated learning.
 
-Important work remains around production hardening, broader independent benchmarking, network authentication/authorization, sandbox deployment, documentation synchronization, standards integration, live data connectors, governance agreements, licensing, developer experience, and the staged implementation of the broader Commons/Places/Foundry architecture published in Paper IX.
+Important work remains around PR1–PR18 completion, production hardening, broader independent benchmarking, arbitrary-repository onboarding, network authentication/authorization, confidential capability execution, sandbox deployment, documentation synchronization, standards integration, live data connectors, governance agreements, licensing, developer experience, economic settlement, machine/facility federation, and the staged implementation of the broader Commons/Places/Foundry architecture published in Paper IX.
+
+The ambition is intentionally large.
+
+The acceptance criterion remains intentionally boring:
+
+> **Show the evidence.**
 
 ---
 
