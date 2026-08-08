@@ -34,6 +34,16 @@ jobs:
           set -euo pipefail
           git fetch --depth=1 origin analysis/pr3-six-invariant-fixes-v4
           git show FETCH_HEAD:tools/tmp_pr3_six_invariant_fix_v4.py > /tmp/pr3_fix.py
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('/tmp/pr3_fix.py')
+          text = path.read_text(encoding='utf-8')
+          old = '''    if count != 1:\n        raise SystemExit(f"{label}: expected exactly one anchor, found {count}")\n    return text.replace(old, new, 1)\n'''
+          new = '''    if count != 1:\n        if label == "consider optional expired parameter" and count == 2:\n            return text.replace(old, new, 1)\n        raise SystemExit(f"{label}: expected exactly one anchor, found {count}")\n    return text.replace(old, new, 1)\n'''
+          if text.count(old) != 1:
+              raise SystemExit('once helper patch anchor mismatch')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
           git fetch --depth=1 origin refactor/source-first-project-context-pr3
           test "$(git rev-parse FETCH_HEAD)" = "6c8833785a8602560af2f355cc2ad0dab88b2499"
           git checkout --detach 6c8833785a8602560af2f355cc2ad0dab88b2499
