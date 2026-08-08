@@ -204,6 +204,7 @@ PR3 fails closed when:
 - selected candidates exceed signed node/edge budgets, have incomplete dependency closure, or graph edges reference candidates outside the task-conditioned set;
 - caller-controlled candidate, selected-candidate, graph-edge, edge-input, or temporal-binding collections must be exact immutable tuples and satisfy declared-length bounds before traversal;
 - bounded identifier vectors such as dependency IDs and provenance start IDs are likewise exact immutable tuples, so `_ids()` never trusts caller-defined sequence length or iteration protocols;
+- public compiler type signatures advertise the same immutable tuple contract enforced at runtime for candidate and edge inputs;
 - projection references differ in full canonical identity or category placement from selected candidates;
 - hand-assembled selected candidates contain low-level-tampered `CanonicalReference` or `TemporalBinding` records that no longer pass their canonical constructors;
 - one canonical reference is aliased into multiple candidate roles;

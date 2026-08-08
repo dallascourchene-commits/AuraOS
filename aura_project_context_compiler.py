@@ -1226,7 +1226,7 @@ def _projection(
 
 
 def _compile_candidate_map(
-    candidates: Sequence[ProjectContextCandidate],
+    candidates: tuple[ProjectContextCandidate, ...],
 ) -> dict[str, ProjectContextCandidate]:
     """Compile the corresponding bounded PR3 structure from validated inputs."""
     if type(candidates) is not tuple:
@@ -1258,7 +1258,7 @@ def _compile_candidate_map(
 
 
 def _compile_edge_items(
-    edges: Sequence[ProjectContextEdge],
+    edges: tuple[ProjectContextEdge, ...],
     candidate_map: Mapping[str, ProjectContextCandidate],
     budget: ProjectionBudget,
 ) -> tuple[ProjectContextEdge, ...]:
@@ -1289,8 +1289,8 @@ def _compile_edge_items(
 
 def _validate_compile_context(
     repository_identity: RepositoryIdentity,
-    candidates: Sequence[ProjectContextCandidate],
-    edges: Sequence[ProjectContextEdge],
+    candidates: tuple[ProjectContextCandidate, ...],
+    edges: tuple[ProjectContextEdge, ...],
     budget: ProjectionBudget,
 ) -> tuple[dict[str, ProjectContextCandidate], tuple[ProjectContextEdge, ...]]:
     """Validate the corresponding PR3 invariant and fail closed on mismatch."""
@@ -1593,8 +1593,8 @@ def compile_project_context_projection(
     *,
     project_ref: str,
     repository_identity: RepositoryIdentity,
-    candidates: Sequence[ProjectContextCandidate],
-    edges: Sequence[ProjectContextEdge] = (),
+    candidates: tuple[ProjectContextCandidate, ...],
+    edges: tuple[ProjectContextEdge, ...] = (),
     budget: ProjectionBudget = ProjectionBudget(),
     freshness_timestamp_ms: int,
 ) -> ProjectContextCompilation:
