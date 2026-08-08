@@ -45,11 +45,18 @@ jobs:
           if old not in text or "import math\n" in text:
               raise SystemExit("unexpected adapter import block")
           text = text.replace(old, "import inspect\nimport json\nimport math\n", 1)
-          old = '''    if deadline_monotonic != deadline_monotonic or deadline_monotonic in {float("inf"), float("-inf")} \\
-            or deadline_monotonic <= 0:\n'''
-          if old not in text:
-              raise SystemExit("deadline finite guard not found")
-          text = text.replace(old, "    if not math.isfinite(deadline_monotonic) or deadline_monotonic <= 0:\n", 1)
+
+          lines = text.splitlines(keepends=True)
+          matches = [i for i, line in enumerate(lines) if "if deadline_monotonic != deadline_monotonic" in line]
+          if len(matches) != 1:
+              raise SystemExit(f"unexpected deadline finite-guard match count: {len(matches)}")
+          i = matches[0]
+          if i + 1 >= len(lines) or "or deadline_monotonic <= 0:" not in lines[i + 1]:
+              raise SystemExit("deadline finite guard continuation not found")
+          indent = lines[i][:len(lines[i]) - len(lines[i].lstrip())]
+          lines[i:i + 2] = [f"{indent}if not math.isfinite(deadline_monotonic) or deadline_monotonic <= 0:\n"]
+          text = "".join(lines)
+
           marker = "\n\n@dataclass\nclass AdapterMetadata:"
           if marker not in text:
               raise SystemExit("AdapterMetadata marker not found")
