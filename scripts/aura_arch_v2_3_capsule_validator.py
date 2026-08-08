@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """Semantic validator for ARCH v2.3 continuity capsules.
 
-JSON Schema owns structural/type validation. This module owns relational
-invariants Draft 2020-12 cannot express, especially equality between values at
-different instance paths. It is a validator only: no mutation, promotion, or
-merge authority.
+JSON Schema owns structural/type validation. This module owns relational and
+trusted-time invariants Draft 2020-12 cannot express, especially equality
+between values at different instance paths and expiry against authoritative
+current time. It is a validator only: no mutation, promotion, or merge authority.
 """
 from __future__ import annotations
 
 import argparse
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -34,9 +35,34 @@ def _mapping(value: Any, name: str) -> Mapping[str, Any]:
     return value
 
 
-def validate_arch_v2_3_capsule_semantics(capsule: Mapping[str, Any]) -> None:
-    """Raise ValueError if ARCH v2.3 relational invariants are violated."""
+def _trusted_now(now: datetime | None) -> datetime:
+    current = datetime.now(timezone.utc) if now is None else now
+    if current.tzinfo is None or current.utcoffset() is None:
+        raise ValueError("validator current time must be timezone-aware")
+    return current.astimezone(timezone.utc)
+
+
+def _timestamp(value: Any, name: str) -> datetime:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{name} must be a non-empty RFC3339 timestamp")
+    raw = value.strip()
+    if raw.endswith("Z"):
+        raw = raw[:-1] + "+00:00"
+    try:
+        parsed = datetime.fromisoformat(raw)
+    except ValueError as exc:
+        raise ValueError(f"{name} must be a valid RFC3339 timestamp") from exc
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise ValueError(f"{name} must include a timezone offset")
+    return parsed.astimezone(timezone.utc)
+
+
+def validate_arch_v2_3_capsule_semantics(
+    capsule: Mapping[str, Any], *, now: datetime | None = None
+) -> None:
+    """Raise ValueError if ARCH v2.3 relational/freshness invariants are violated."""
     root = _mapping(capsule, "capsule")
+    current = _trusted_now(now)
     if root.get("schema_version") != "AURA_PR_CONTINUITY_CAPSULE_V2_3":
         raise ValueError("unsupported capsule schema_version")
     if root.get("harness_version") != "AURA_ARCH_V2_3":
@@ -56,6 +82,8 @@ def validate_arch_v2_3_capsule_semantics(capsule: Mapping[str, Any]) -> None:
             raise ValueError("enabled JSpace requires source_refs")
         if not jspace.get("origin_refs"):
             raise ValueError("enabled JSpace requires origin_refs")
+        if _timestamp(jspace.get("expires_at"), "jspace_projection.expires_at") <= current:
+            raise ValueError("enabled JSpace projection is expired")
 
     authorization = _mapping(root.get("commit_authorization"), "commit_authorization")
     if authorization.get("status") == "VALIDATED":
@@ -74,6 +102,10 @@ def validate_arch_v2_3_capsule_semantics(capsule: Mapping[str, Any]) -> None:
             raise ValueError("validated commit authorization requires all effect digests")
         if len(set(effect_values)) != 1:
             raise ValueError("authorized, planned, and candidate effect digests must match")
+        if _timestamp(
+            authorization.get("expires_at"), "commit_authorization.expires_at"
+        ) <= current:
+            raise ValueError("validated commit authorization is expired")
 
     independence = _mapping(root.get("verification_independence"), "verification_independence")
     if independence.get("status") == "INDEPENDENT":
