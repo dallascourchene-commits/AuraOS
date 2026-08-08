@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from aura_ephemeral_workspace_contracts import CanonicalReference, RepositoryIdentity
 from aura_project_context_compiler import (
     CandidateAvailability,
@@ -47,14 +49,15 @@ def _ref(reference_id: str, digest: str) -> CanonicalReference:
 
 
 def _source(digest: str = _digest("2")) -> ProjectContextCandidate:
+    reference = _ref("ref:source-answer", digest)
     return ProjectContextCandidate(
         candidate_id="source:answer-determining",
         category=CandidateCategory.SOURCE,
         source_adapter="adapter.source",
-        origin_ref="source://module.py:answer",
+        origin_ref=reference.canonical_ref,
         authority_class=ContextAuthorityClass.CANONICAL_READ,
         truth_class=CandidateTruthClass.EXACT_CURRENT,
-        reference=_ref("ref:source-answer", digest),
+        reference=reference,
         relevance_score=100,
         answer_determining=True,
     )
@@ -100,6 +103,63 @@ def test_source_first_fixture_corrects_conclusion_only_failure() -> None:
     assert result.projection is not None
     assert result.projection.artifact_evidence_refs[0].reference_id == "ref:source-answer"
     assert result.projection.artifact_evidence_refs[0].digest == _digest("2")
+
+
+def test_incomplete_fixture_never_exposes_canonical_projection() -> None:
+    test_ref = _ref("ref:test-only", _digest("6"))
+    direct_test = ProjectContextCandidate(
+        candidate_id="test:only",
+        category=CandidateCategory.TEST,
+        source_adapter="adapter.test",
+        origin_ref=test_ref.canonical_ref,
+        authority_class=ContextAuthorityClass.CANONICAL_READ,
+        truth_class=CandidateTruthClass.EXACT_CURRENT,
+        reference=test_ref,
+    )
+
+    result = _compile((direct_test,))
+
+    assert result.selection_receipt.status is SelectionStatus.INCOMPLETE
+    assert result.admissible is False
+    assert result.projection is None
+    assert result.headless_projection()["projection"] is None
+
+
+def test_derived_source_support_cannot_impersonate_exact_source() -> None:
+    derived_ref = _ref("ref:derived-source", _digest("8"))
+    derived_source = ProjectContextCandidate(
+        candidate_id="source:derived",
+        category=CandidateCategory.SOURCE,
+        source_adapter="adapter.derived",
+        origin_ref=derived_ref.canonical_ref,
+        authority_class=ContextAuthorityClass.DERIVED_READ,
+        truth_class=CandidateTruthClass.DERIVED_VERIFIED,
+        reference=derived_ref,
+        answer_determining=True,
+    )
+
+    result = _compile((derived_source,))
+
+    assert result.selection_receipt.selected == ("source:derived",)
+    assert result.selection_receipt.status is SelectionStatus.INCOMPLETE
+    assert result.selection_receipt.mandatory_evidence_missing == ("source:selected",)
+    assert result.projection is None
+    assert result.admissible is False
+
+
+def test_authoritative_origin_is_reference_bound() -> None:
+    reference = _ref("ref:bound-source", _digest("9"))
+    with pytest.raises(ValueError, match="origin_ref must equal"):
+        ProjectContextCandidate(
+            candidate_id="source:forged-origin",
+            category=CandidateCategory.SOURCE,
+            source_adapter="adapter.source",
+            origin_ref="source://forged-origin",
+            authority_class=ContextAuthorityClass.CANONICAL_READ,
+            truth_class=CandidateTruthClass.EXACT_CURRENT,
+            reference=reference,
+            answer_determining=True,
+        )
 
 
 def test_shadow_ranker_disagreement_is_visible_and_non_authoritative() -> None:
@@ -156,6 +216,7 @@ def test_memory_revision_revocation_and_rollback_remain_reconstructable() -> Non
     )
     revoked = _compile((revoked_source,))
     assert revoked.admissible is False
+    assert revoked.projection is None
     assert revoked.selection_receipt.status is SelectionStatus.INCOMPLETE
     assert "source:answer-determining" in revoked.selection_receipt.unavailable
     assert "source:answer-determining" in revoked.selection_receipt.mandatory_evidence_missing
@@ -177,24 +238,26 @@ def test_headless_accessible_projection_retains_exact_reference_identity() -> No
 
 def test_bounded_provenance_does_not_emit_dangling_truncated_edges() -> None:
     source = _source()
+    test_ref = _ref("ref:test-direct", _digest("6"))
     test = ProjectContextCandidate(
         candidate_id="test:direct",
         category=CandidateCategory.TEST,
         source_adapter="adapter.test",
-        origin_ref="test://direct",
+        origin_ref=test_ref.canonical_ref,
         authority_class=ContextAuthorityClass.CANONICAL_READ,
         truth_class=CandidateTruthClass.EXACT_CURRENT,
-        reference=_ref("ref:test-direct", _digest("6")),
+        reference=test_ref,
         dependency_ids=("source:answer-determining",),
     )
+    proof_ref = _ref("ref:proof-result", _digest("7"))
     proof = ProjectContextCandidate(
         candidate_id="proof:result",
         category=CandidateCategory.PROOF_OBLIGATION,
         source_adapter="adapter.proof",
-        origin_ref="proof://result",
+        origin_ref=proof_ref.canonical_ref,
         authority_class=ContextAuthorityClass.CANONICAL_READ,
         truth_class=CandidateTruthClass.EXACT_CURRENT,
-        reference=_ref("ref:proof-result", _digest("7")),
+        reference=proof_ref,
         dependency_ids=("test:direct",),
     )
     edges = (
@@ -231,14 +294,15 @@ def test_bounded_provenance_does_not_emit_dangling_truncated_edges() -> None:
 
 def test_hypothesis_edge_can_reach_source_without_claiming_source_complete() -> None:
     source = _source()
+    proof_ref = _ref("ref:proof-result", _digest("7"))
     proof = ProjectContextCandidate(
         candidate_id="proof:result",
         category=CandidateCategory.PROOF_OBLIGATION,
         source_adapter="adapter.proof",
-        origin_ref="proof://result",
+        origin_ref=proof_ref.canonical_ref,
         authority_class=ContextAuthorityClass.CANONICAL_READ,
         truth_class=CandidateTruthClass.EXACT_CURRENT,
-        reference=_ref("ref:proof-result", _digest("7")),
+        reference=proof_ref,
         dependency_ids=("source:answer-determining",),
     )
     result = _compile(
@@ -257,4 +321,48 @@ def test_hypothesis_edge_can_reach_source_without_claiming_source_complete() -> 
 
     assert trace["source_reached"] is True
     assert trace["authoritative_path"] is False
+    assert trace["source_complete"] is False
+
+
+def test_derived_source_root_is_not_source_complete_even_on_verified_edge() -> None:
+    exact_source = _source()
+    derived_ref = _ref("ref:derived-root", _digest("8"))
+    derived_source = ProjectContextCandidate(
+        candidate_id="source:derived-root",
+        category=CandidateCategory.SOURCE,
+        source_adapter="adapter.derived",
+        origin_ref=derived_ref.canonical_ref,
+        authority_class=ContextAuthorityClass.DERIVED_READ,
+        truth_class=CandidateTruthClass.DERIVED_VERIFIED,
+        reference=derived_ref,
+        required=True,
+    )
+    proof_ref = _ref("ref:derived-proof", _digest("9"))
+    proof = ProjectContextCandidate(
+        candidate_id="proof:derived",
+        category=CandidateCategory.PROOF_OBLIGATION,
+        source_adapter="adapter.proof",
+        origin_ref=proof_ref.canonical_ref,
+        authority_class=ContextAuthorityClass.CANONICAL_READ,
+        truth_class=CandidateTruthClass.EXACT_CURRENT,
+        reference=proof_ref,
+        dependency_ids=("source:derived-root",),
+    )
+    result = _compile(
+        (exact_source, derived_source, proof),
+        (
+            ProjectContextEdge(
+                "source:derived-root",
+                "proof:derived",
+                "supports",
+                EdgeTruthClass.DERIVED_VERIFIED,
+            ),
+        ),
+    )
+
+    assert result.admissible is True
+    trace = trace_project_context_provenance(result, ("proof:derived",))
+    assert trace["source_reached"] is True
+    assert trace["exact_source_ids"] == []
+    assert trace["authoritative_path"] is True
     assert trace["source_complete"] is False
