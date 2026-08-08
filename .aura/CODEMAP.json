@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786207536,
+  "generated_at_unix": 1786207879,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1583,
+    "included_file_count": 1584,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,7 +13,7 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 282,
+      ".git": 25,
       "Aura_Memory": 6,
       "Aura_Sandbox": 2,
       "__pycache__": 8
@@ -185,6 +185,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/pr3-compilation-constructor-temp.yml",
       ".github/workflows/provider-routing-materialize.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
@@ -1605,9 +1606,9 @@
     ]
   },
   "summary": {
-    "file_count": 1583,
-    "total_bytes": 59659578,
-    "text_tokens_est": 5406003,
+    "file_count": 1584,
+    "total_bytes": 59678072,
+    "text_tokens_est": 5410627,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 64,
@@ -1615,13 +1616,13 @@
       "native_accelerator": 8,
       "operator_script": 6,
       "python_module": 980,
-      "schema_or_lexicon": 235,
+      "schema_or_lexicon": 236,
       "support_file": 79
     },
-    "topology_nodes": 11452,
-    "topology_edges": 28011,
+    "topology_nodes": 11462,
+    "topology_edges": 28031,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 33650.6
+    "elapsed_ms": 35249.82
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1994,6 +1995,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/pr3-compilation-constructor-temp.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -4150,7 +4152,7 @@
       "aura_ojibwe_translation_guard.py:65",
       "aura_ojibwe_tutor_engine.py:91",
       "aura_opd_license_adapter.py:86",
-      "aura_project_context_compiler.py:876",
+      "aura_project_context_compiler.py:900",
       "aura_refactor_patch_evaluator.py:158",
       "aura_refactor_skeleton.py:59",
       "aura_review_lessons_security.py:38",
@@ -13152,8 +13154,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "class",
-        "line": 504,
-        "end_line": 705,
+        "line": 533,
+        "end_line": 734,
         "semantic_id": "aura_project_context_compiler.py#class:ProjectContextCompilation:69436a32dbb994ea",
         "signature_hash": "5cd153777df69e91"
       }
@@ -13232,8 +13234,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "class",
-        "line": 411,
-        "end_line": 500,
+        "line": 487,
+        "end_line": 529,
         "semantic_id": "aura_project_context_compiler.py#class:ProjectionSelectionReceipt:8c2ebfd5795f2af9",
         "signature_hash": "e9a44b4efe880947"
       }
@@ -25122,16 +25124,16 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "method",
-        "line": 428,
-        "end_line": 479,
+        "line": 504,
+        "end_line": 508,
         "semantic_id": "aura_project_context_compiler.py#method:ProjectionSelectionReceipt.__post_init__:8b4ae2a31acc68a8",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_project_context_compiler.py",
         "kind": "method",
-        "line": 516,
-        "end_line": 673,
+        "line": 545,
+        "end_line": 702,
         "semantic_id": "aura_project_context_compiler.py#method:ProjectContextCompilation.__post_init__:532090a0a52133ac",
         "signature_hash": "175e4972e4d2d582"
       },
@@ -29872,8 +29874,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 1026,
-        "end_line": 1051,
+        "line": 1099,
+        "end_line": 1124,
         "semantic_id": "aura_project_context_compiler.py#function:_build_selection_receipt:c9ab4cc78555bf23",
         "signature_hash": "028087cd8c49985e"
       }
@@ -31924,8 +31926,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 765,
-        "end_line": 782,
+        "line": 794,
+        "end_line": 811,
         "semantic_id": "aura_project_context_compiler.py#function:_closure:d48c6b400dd42158",
         "signature_hash": "a89c64815681177b"
       }
@@ -32886,6 +32888,16 @@
         "signature_hash": "e8e048a3317cce03"
       }
     ],
+    "_compile_candidate_map": [
+      {
+        "file": "aura_project_context_compiler.py",
+        "kind": "function",
+        "line": 882,
+        "end_line": 912,
+        "semantic_id": "aura_project_context_compiler.py#function:_compile_candidate_map:34d34fbfdd9dc217",
+        "signature_hash": "f6907a71f3774ed2"
+      }
+    ],
     "_compile_compactor": [
       {
         "file": "test_aura_st3gg_compact.py",
@@ -32934,6 +32946,16 @@
         "end_line": 321,
         "semantic_id": "aura_cockpit_planner.py#function:_compile_denial:68e1b1c2f2bb29a1",
         "signature_hash": "66decb71f3c00cd3"
+      }
+    ],
+    "_compile_edge_items": [
+      {
+        "file": "aura_project_context_compiler.py",
+        "kind": "function",
+        "line": 915,
+        "end_line": 940,
+        "semantic_id": "aura_project_context_compiler.py#function:_compile_edge_items:0e154a0938dd69c1",
+        "signature_hash": "72e06cc83b515e16"
       }
     ],
     "_compile_from_request": [
@@ -33414,8 +33436,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 785,
-        "end_line": 800,
+        "line": 814,
+        "end_line": 829,
         "semantic_id": "aura_project_context_compiler.py#function:_conflicts:40797462f15979ee",
         "signature_hash": "9811ca7631980779"
       }
@@ -33530,6 +33552,16 @@
         "end_line": 243,
         "semantic_id": "aura_agent_arena_mcp_architect.py#function:_connector_for:8818f6eb734eec48",
         "signature_hash": "b94718885b2c6d50"
+      }
+    ],
+    "_consider_optional_candidate": [
+      {
+        "file": "aura_project_context_compiler.py",
+        "kind": "function",
+        "line": 1035,
+        "end_line": 1058,
+        "semantic_id": "aura_project_context_compiler.py#function:_consider_optional_candidate:b26e8e5b5cc10ccf",
+        "signature_hash": "7a1b5161a43d9961"
       }
     ],
     "_constant_string": [
@@ -38138,8 +38170,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 967,
-        "end_line": 1005,
+        "line": 1061,
+        "end_line": 1078,
         "semantic_id": "aura_project_context_compiler.py#function:_extend_optional_selection:25cb2f886d7aa531",
         "signature_hash": "6f503782e9622083"
       }
@@ -39036,6 +39068,16 @@
         "signature_hash": "b7bb15edade95563"
       }
     ],
+    "_finalize_selection_receipt": [
+      {
+        "file": "aura_project_context_compiler.py",
+        "kind": "function",
+        "line": 479,
+        "end_line": 483,
+        "semantic_id": "aura_project_context_compiler.py#function:_finalize_selection_receipt:0dff649e482fddc2",
+        "signature_hash": "7c27089f7159360c"
+      }
+    ],
     "_find_act_capsule": [
       {
         "file": "aura_agent_arena_bridge.py",
@@ -39850,8 +39892,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 1340,
-        "end_line": 1368,
+        "line": 1457,
+        "end_line": 1485,
         "semantic_id": "aura_project_context_compiler.py#function:_freshness_reasons:862cb01aacd57c64",
         "signature_hash": "dced4aecc225e81f"
       }
@@ -46440,8 +46482,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 934,
-        "end_line": 964,
+        "line": 981,
+        "end_line": 1011,
         "semantic_id": "aura_project_context_compiler.py#function:_mandatory_selection:961a3ba1146c801a",
         "signature_hash": "d157fce920864ca2"
       }
@@ -46844,6 +46886,16 @@
         "end_line": 347,
         "semantic_id": "aura_capsule_trial_runner.py#function:_materialize_case_context:6a0195f53488be32",
         "signature_hash": "216b27b4fa1e09e8"
+      }
+    ],
+    "_materialize_project_context_compilation": [
+      {
+        "file": "aura_project_context_compiler.py",
+        "kind": "function",
+        "line": 1153,
+        "end_line": 1202,
+        "semantic_id": "aura_project_context_compiler.py#function:_materialize_project_context_compilation:a722693a66bc302c",
+        "signature_hash": "e46b43640ee44507"
       }
     ],
     "_materialized_review_head": [
@@ -48686,6 +48738,16 @@
         "signature_hash": "abd34cdd9dd7cc55"
       }
     ],
+    "_normalize_selection_receipt": [
+      {
+        "file": "aura_project_context_compiler.py",
+        "kind": "function",
+        "line": 410,
+        "end_line": 440,
+        "semantic_id": "aura_project_context_compiler.py#function:_normalize_selection_receipt:8832843f77e1caff",
+        "signature_hash": "113ddc0d088f0ddd"
+      }
+    ],
     "_normalize_subsystem": [
       {
         "file": "aura_emergent_capability_auditor.py",
@@ -48730,8 +48792,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 1326,
-        "end_line": 1337,
+        "line": 1443,
+        "end_line": 1454,
         "semantic_id": "aura_project_context_compiler.py#function:_normalized_current_bindings:dfa84928c632568f",
         "signature_hash": "c3c1443e2c2ae64a"
       }
@@ -49314,6 +49376,16 @@
         "end_line": 99,
         "semantic_id": "aura_construction_adapter.py#function:_optional_bounded:03c75794eb23a22a",
         "signature_hash": "b644acb70666585d"
+      }
+    ],
+    "_optional_candidates": [
+      {
+        "file": "aura_project_context_compiler.py",
+        "kind": "function",
+        "line": 1014,
+        "end_line": 1032,
+        "semantic_id": "aura_project_context_compiler.py#function:_optional_candidates:42f8ecc9d00ec309",
+        "signature_hash": "150fa9f21a54be52"
       }
     ],
     "_optional_finite": [
@@ -51382,8 +51454,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 747,
-        "end_line": 762,
+        "line": 776,
+        "end_line": 791,
         "semantic_id": "aura_project_context_compiler.py#function:_problem:99fb4868f507f8cb",
         "signature_hash": "4d350f08227665f7"
       }
@@ -51646,8 +51718,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 803,
-        "end_line": 850,
+        "line": 832,
+        "end_line": 879,
         "semantic_id": "aura_project_context_compiler.py#function:_projection:2ccbac5e3e5b75e7",
         "signature_hash": "9a89043b15eacf58"
       },
@@ -51848,18 +51920,28 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 1149,
-        "end_line": 1187,
+        "line": 1247,
+        "end_line": 1285,
         "semantic_id": "aura_project_context_compiler.py#function:_provenance_inputs:c28bd77f543aebd4",
         "signature_hash": "2436f0442dbedc54"
+      }
+    ],
+    "_provenance_result": [
+      {
+        "file": "aura_project_context_compiler.py",
+        "kind": "function",
+        "line": 1369,
+        "end_line": 1411,
+        "semantic_id": "aura_project_context_compiler.py#function:_provenance_result:67cdb82c200ab311",
+        "signature_hash": "3c9cfc845c4bc117"
       }
     ],
     "_provenance_summary": [
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 1226,
-        "end_line": 1268,
+        "line": 1324,
+        "end_line": 1366,
         "semantic_id": "aura_project_context_compiler.py#function:_provenance_summary:3551223a6c39c02c",
         "signature_hash": "04f4e09f6fe69428"
       }
@@ -58640,8 +58722,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 1008,
-        "end_line": 1023,
+        "line": 1081,
+        "end_line": 1096,
         "semantic_id": "aura_project_context_compiler.py#function:_selected_context_edges:8826ed97d0d5e997",
         "signature_hash": "383872a199964b9a"
       }
@@ -58700,8 +58782,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 910,
-        "end_line": 931,
+        "line": 957,
+        "end_line": 978,
         "semantic_id": "aura_project_context_compiler.py#function:_selection_buckets:033dbc87e593173e",
         "signature_hash": "b0439b3d5c8c4beb"
       }
@@ -58730,8 +58812,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 1054,
-        "end_line": 1077,
+        "line": 1127,
+        "end_line": 1150,
         "semantic_id": "aura_project_context_compiler.py#function:_selection_warnings:48764bca7e5e5315",
         "signature_hash": "b3339025c935e3b3"
       }
@@ -65154,8 +65236,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 853,
-        "end_line": 907,
+        "line": 943,
+        "end_line": 954,
         "semantic_id": "aura_project_context_compiler.py#function:_validate_compile_context:049799c4727850cf",
         "signature_hash": "c1eb23c880c2052a"
       }
@@ -65944,6 +66026,26 @@
         "signature_hash": "e27bb5d4f64873ee"
       }
     ],
+    "_validate_selection_receipt_partition": [
+      {
+        "file": "aura_project_context_compiler.py",
+        "kind": "function",
+        "line": 443,
+        "end_line": 452,
+        "semantic_id": "aura_project_context_compiler.py#function:_validate_selection_receipt_partition:34d612386878e937",
+        "signature_hash": "2289e2f984186f2d"
+      }
+    ],
+    "_validate_selection_receipt_status": [
+      {
+        "file": "aura_project_context_compiler.py",
+        "kind": "function",
+        "line": 455,
+        "end_line": 476,
+        "semantic_id": "aura_project_context_compiler.py#function:_validate_selection_receipt_status:e79b6a4cded8a364",
+        "signature_hash": "af9c8cc3234d2f16"
+      }
+    ],
     "_validate_split_receipt": [
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
@@ -66532,8 +66634,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 1190,
-        "end_line": 1223,
+        "line": 1288,
+        "end_line": 1321,
         "semantic_id": "aura_project_context_compiler.py#function:_walk_provenance:c81eb9f9d46f692b",
         "signature_hash": "bc3bce396915b309"
       }
@@ -75832,8 +75934,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 1080,
-        "end_line": 1146,
+        "line": 1205,
+        "end_line": 1244,
         "semantic_id": "aura_project_context_compiler.py#function:compile_project_context_projection:e90f6401b37c44ee",
         "signature_hash": "77ae386f58688006"
       }
@@ -85750,8 +85852,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "method",
-        "line": 695,
-        "end_line": 705,
+        "line": 724,
+        "end_line": 734,
         "semantic_id": "aura_project_context_compiler.py#method:ProjectContextCompilation.headless_projection:0b72809eadb231c8",
         "signature_hash": "fc4e9405b56b5742"
       }
@@ -108966,6 +109068,16 @@
         "end_line": 49,
         "semantic_id": "test_aura_paper_memory.py#function:test_compile_paper_memory_record_builds_header_points_and_vectors:637f3eba284449bb",
         "signature_hash": "73d93b0d6d732f0b"
+      }
+    ],
+    "test_compile_rejects_non_exact_projection_budget": [
+      {
+        "file": "tests/test_aura_project_context_compiler.py",
+        "kind": "function",
+        "line": 608,
+        "end_line": 620,
+        "semantic_id": "tests/test_aura_project_context_compiler.py#function:test_compile_rejects_non_exact_projection_budget:06010b002d75bc44",
+        "signature_hash": "7899402fd13232e1"
       }
     ],
     "test_compile_rejects_zero_wall_time_at_executable_boundary": [
@@ -143972,16 +144084,16 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "method",
-        "line": 481,
-        "end_line": 500,
+        "line": 510,
+        "end_line": 529,
         "semantic_id": "aura_project_context_compiler.py#method:ProjectionSelectionReceipt.to_dict:dd147b391c931e03",
         "signature_hash": "c9885ae795ae11e7"
       },
       {
         "file": "aura_project_context_compiler.py",
         "kind": "method",
-        "line": 675,
-        "end_line": 693,
+        "line": 704,
+        "end_line": 722,
         "semantic_id": "aura_project_context_compiler.py#method:ProjectContextCompilation.to_dict:fe5391b60d93e0d6",
         "signature_hash": "c9885ae795ae11e7"
       },
@@ -145594,8 +145706,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 1271,
-        "end_line": 1323,
+        "line": 1414,
+        "end_line": 1440,
         "semantic_id": "aura_project_context_compiler.py#function:trace_project_context_provenance:61601438056092fe",
         "signature_hash": "a8df76127474d064"
       }
@@ -146680,8 +146792,8 @@
       {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
-        "line": 1371,
-        "end_line": 1405,
+        "line": 1488,
+        "end_line": 1522,
         "semantic_id": "aura_project_context_compiler.py#function:validate_project_context_freshness:8007c929f96d5160",
         "signature_hash": "ea5f5582a538b3f3"
       }
@@ -162841,7 +162953,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 37,
+        "hub_rank": 38,
         "node_count": 36,
         "edge_count": 284,
         "degree": 284,
@@ -164206,7 +164318,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 42,
+        "hub_rank": 43,
         "node_count": 45,
         "edge_count": 260,
         "degree": 260,
@@ -164361,7 +164473,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 36,
+        "hub_rank": 37,
         "node_count": 53,
         "edge_count": 292,
         "degree": 292,
@@ -165386,7 +165498,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 40,
+        "hub_rank": 41,
         "node_count": 46,
         "edge_count": 270,
         "degree": 270,
@@ -168435,7 +168547,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 43,
+        "hub_rank": 44,
         "node_count": 46,
         "edge_count": 259,
         "degree": 259,
@@ -170777,7 +170889,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 41,
+        "hub_rank": 42,
         "node_count": 52,
         "edge_count": 265,
         "degree": 265,
@@ -177300,7 +177412,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 35,
+        "hub_rank": 36,
         "node_count": 49,
         "edge_count": 294,
         "degree": 294,
@@ -181862,23 +181974,23 @@
     {
       "path": "aura_project_context_compiler.py",
       "role": "python_module",
-      "bytes": 54047,
-      "lines": 1430,
-      "tokens_est": 13512,
-      "symbol_count": 58,
+      "bytes": 56937,
+      "lines": 1547,
+      "tokens_est": 14235,
+      "symbol_count": 68,
       "commands": [
         "!r"
       ],
       "command_lines": {
         "!r": [
-          876
+          900
         ]
       },
       "topology": {
-        "hub_rank": 44,
-        "node_count": 59,
-        "edge_count": 256,
-        "degree": 256,
+        "hub_rank": 35,
+        "node_count": 69,
+        "edge_count": 296,
+        "degree": 296,
         "symbols": [
           "CandidateAvailability",
           "CandidateCategory",
@@ -181896,54 +182008,54 @@
           "__post_init__",
           "_build_selection_receipt",
           "_closure",
+          "_compile_candidate_map",
+          "_compile_edge_items",
           "_conflicts",
-          "_digest",
-          "_enum",
-          "_extend_optional_selection"
+          "_consider_optional_candidate"
         ],
         "neighbor_files": [
           "aura_ephemeral_workspace_contracts.py"
         ],
         "edge_kinds": {
-          "call": 139,
-          "defines": 116,
+          "call": 159,
+          "defines": 136,
           "import_module": 1
         }
       },
-      "digest8": "96b907e4380ed0d4",
+      "digest8": "16de4c2b7615c246",
       "vector": [
-        -0.120743,
-        -0.24029,
-        0.170953,
-        -0.080097,
-        -0.053796,
-        0.051405,
-        -0.180517,
-        0.218772,
-        0.218772,
-        0.283327,
-        -0.125525,
-        -0.202035,
-        0.149434,
-        -0.089661,
-        0.034669,
-        -0.08727,
-        -0.032278,
-        -0.029887,
-        -0.254636,
-        -0.211599,
-        -0.075315,
-        0.108788,
-        -0.249854,
-        -0.156607,
-        0.197253,
-        -0.266591,
-        0.216381,
-        0.221163,
-        -0.302455,
-        -0.185299,
-        -0.178126,
-        -0.053796
+        0.028502,
+        0.09294,
+        0.167293,
+        0.14003,
+        -0.063199,
+        0.276342,
+        -0.080548,
+        -0.083027,
+        0.251558,
+        -0.164814,
+        -0.315997,
+        0.130116,
+        0.12516,
+        0.281299,
+        -0.137552,
+        -0.097897,
+        0.083027,
+        0.286256,
+        0.008674,
+        -0.159857,
+        0.283778,
+        -0.01611,
+        0.043372,
+        0.236688,
+        -0.254037,
+        -0.006196,
+        0.23421,
+        0.189598,
+        0.075591,
+        -0.026023,
+        -0.306083,
+        0.100376
       ]
     },
     {
@@ -191553,7 +191665,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 38,
+        "hub_rank": 39,
         "node_count": 72,
         "edge_count": 283,
         "degree": 283,
@@ -192589,7 +192701,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 39,
+        "hub_rank": 40,
         "node_count": 65,
         "edge_count": 271,
         "degree": 271,
@@ -210365,6 +210477,52 @@
         0.106887,
         -0.031437,
         -0.225092
+      ]
+    },
+    {
+      "path": ".github/workflows/pr3-compilation-constructor-temp.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 15206,
+      "lines": 317,
+      "tokens_est": 3802,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "79dcd637782b3482",
+      "vector": [
+        0.136842,
+        0.028452,
+        -0.304846,
+        -0.266909,
+        0.109744,
+        -0.123293,
+        -0.001355,
+        0.033872,
+        0.009484,
+        0.163939,
+        0.323814,
+        0.25607,
+        -0.031162,
+        -0.033872,
+        0.337362,
+        -0.039291,
+        -0.098905,
+        0.326523,
+        -0.004065,
+        -0.193746,
+        0.345492,
+        0.177488,
+        0.234392,
+        -0.161229,
+        0.023033,
+        0.142261,
+        -0.028452,
+        0.025743,
+        0.017613,
+        -0.212714,
+        -0.082647,
+        -0.112454
       ]
     },
     {
@@ -237442,47 +237600,47 @@
     {
       "path": "tests/test_aura_project_context_compiler.py",
       "role": "python_module",
-      "bytes": 30101,
-      "lines": 606,
-      "tokens_est": 7526,
-      "symbol_count": 41,
+      "bytes": 30499,
+      "lines": 621,
+      "tokens_est": 7625,
+      "symbol_count": 42,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "a201f485671fa506",
+      "digest8": "67e9109b8ee6b9e7",
       "vector": [
-        -0.203974,
-        0.222623,
-        0.157352,
-        0.21563,
-        -0.075762,
-        0.269246,
-        -0.106067,
-        0.015152,
-        0.022146,
-        -0.066437,
-        -0.23661,
-        -0.259922,
-        0.171338,
-        0.245935,
-        0.269246,
-        -0.129378,
-        -0.059444,
-        -0.096742,
-        0.040795,
-        0.176001,
-        0.192319,
-        -0.255259,
-        0.259922,
-        -0.180663,
-        0.131709,
-        0.171338,
-        -0.199312,
-        -0.029139,
-        -0.09208,
-        0.078093,
-        0.19465,
-        -0.229617
+        -0.038133,
+        -0.26693,
+        -0.001156,
+        0.116709,
+        -0.063555,
+        0.102843,
+        -0.100532,
+        0.186042,
+        -0.035822,
+        -0.292351,
+        0.121332,
+        -0.024266,
+        0.167553,
+        -0.20453,
+        -0.236885,
+        0.211464,
+        -0.142131,
+        0.079732,
+        -0.082043,
+        -0.292351,
+        0.197597,
+        0.218397,
+        -0.248441,
+        0.236885,
+        0.045066,
+        0.206841,
+        -0.068177,
+        -0.038133,
+        -0.283107,
+        -0.243819,
+        0.255374,
+        -0.049688
       ]
     },
     {
@@ -243624,7 +243782,7 @@
     "source": "compiled_deep_topology",
     "diagnostics": {
       "isolated_node_count": 7,
-      "dead_end_count": 4941,
+      "dead_end_count": 4945,
       "dangling_edge_count": 0,
       "top_hubs": [
         {
@@ -243724,11 +243882,11 @@
       "generated_by": "aura_topology_manager",
       "root": ".",
       "module_count": 640,
-      "node_count": 11452,
-      "edge_count": 28011,
+      "node_count": 11462,
+      "edge_count": 28031,
       "spectral_layout": true,
-      "spectral_sparsity": 0.052397,
-      "global_health": 0.971544
+      "spectral_sparsity": 0.052351,
+      "global_health": 0.971569
     },
     "file_index": {
       "aura_node.py": {
@@ -245244,8 +245402,44 @@
           "import_module": 2
         }
       },
-      "aura_music_coding_arena.py": {
+      "aura_project_context_compiler.py": {
         "hub_rank": 35,
+        "node_count": 69,
+        "edge_count": 296,
+        "degree": 296,
+        "symbols": [
+          "CandidateAvailability",
+          "CandidateCategory",
+          "CandidateTruthClass",
+          "ContextAuthorityClass",
+          "EdgeTruthClass",
+          "ProjectContextCandidate",
+          "ProjectContextCompilation",
+          "ProjectContextEdge",
+          "ProjectionBudget",
+          "ProjectionSelectionReceipt",
+          "SelectionStatus",
+          "TemporalBinding",
+          "TemporalBindingKind",
+          "__post_init__",
+          "_build_selection_receipt",
+          "_closure",
+          "_compile_candidate_map",
+          "_compile_edge_items",
+          "_conflicts",
+          "_consider_optional_candidate"
+        ],
+        "neighbor_files": [
+          "aura_ephemeral_workspace_contracts.py"
+        ],
+        "edge_kinds": {
+          "call": 159,
+          "defines": 136,
+          "import_module": 1
+        }
+      },
+      "aura_music_coding_arena.py": {
+        "hub_rank": 36,
         "node_count": 49,
         "edge_count": 294,
         "degree": 294,
@@ -245286,7 +245480,7 @@
         }
       },
       "aura_construction_contracts.py": {
-        "hub_rank": 36,
+        "hub_rank": 37,
         "node_count": 53,
         "edge_count": 292,
         "degree": 292,
@@ -245332,7 +245526,7 @@
         }
       },
       "aura_coding_relationship_compass.py": {
-        "hub_rank": 37,
+        "hub_rank": 38,
         "node_count": 36,
         "edge_count": 284,
         "degree": 284,
@@ -245387,7 +245581,7 @@
         }
       },
       "aura_topological_context_anchor.py": {
-        "hub_rank": 38,
+        "hub_rank": 39,
         "node_count": 72,
         "edge_count": 283,
         "degree": 283,
@@ -245432,7 +245626,7 @@
         }
       },
       "aura_understand_graph_bridge.py": {
-        "hub_rank": 39,
+        "hub_rank": 40,
         "node_count": 65,
         "edge_count": 271,
         "degree": 271,
@@ -245472,7 +245666,7 @@
         }
       },
       "aura_construction_pascal_spatial_foundry_p4_server.py": {
-        "hub_rank": 40,
+        "hub_rank": 41,
         "node_count": 46,
         "edge_count": 270,
         "degree": 270,
@@ -245523,7 +245717,7 @@
         }
       },
       "aura_financial_contracts.py": {
-        "hub_rank": 41,
+        "hub_rank": 42,
         "node_count": 52,
         "edge_count": 265,
         "degree": 265,
@@ -245559,7 +245753,7 @@
         }
       },
       "aura_construction_authority.py": {
-        "hub_rank": 42,
+        "hub_rank": 43,
         "node_count": 45,
         "edge_count": 260,
         "degree": 260,
@@ -245599,7 +245793,7 @@
         }
       },
       "aura_emergent_result_verifier.py": {
-        "hub_rank": 43,
+        "hub_rank": 44,
         "node_count": 46,
         "edge_count": 259,
         "degree": 259,
@@ -245636,42 +245830,6 @@
           "call": 167,
           "defines": 90,
           "import_module": 2
-        }
-      },
-      "aura_project_context_compiler.py": {
-        "hub_rank": 44,
-        "node_count": 59,
-        "edge_count": 256,
-        "degree": 256,
-        "symbols": [
-          "CandidateAvailability",
-          "CandidateCategory",
-          "CandidateTruthClass",
-          "ContextAuthorityClass",
-          "EdgeTruthClass",
-          "ProjectContextCandidate",
-          "ProjectContextCompilation",
-          "ProjectContextEdge",
-          "ProjectionBudget",
-          "ProjectionSelectionReceipt",
-          "SelectionStatus",
-          "TemporalBinding",
-          "TemporalBindingKind",
-          "__post_init__",
-          "_build_selection_receipt",
-          "_closure",
-          "_conflicts",
-          "_digest",
-          "_enum",
-          "_extend_optional_selection"
-        ],
-        "neighbor_files": [
-          "aura_ephemeral_workspace_contracts.py"
-        ],
-        "edge_kinds": {
-          "call": 139,
-          "defines": 116,
-          "import_module": 1
         }
       },
       "test_aura_ojibwe_tutor.py": {
