@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1584
-- **total_bytes**: 59715023
-- **text_tokens_est**: 5419865
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 209, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 980, 'schema_or_lexicon': 236, 'support_file': 79}
-- **topology_nodes**: 11476
+- **file_count**: 1588
+- **total_bytes**: 59729807
+- **text_tokens_est**: 5423562
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 209, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 982, 'schema_or_lexicon': 238, 'support_file': 79}
+- **topology_nodes**: 11478
 - **topology_edges**: 28063
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 33749.41
+- **elapsed_ms**: 35107.14
 
 ## Coverage
 
-- **included_file_count**: 1584
+- **included_file_count**: 1588
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=25, `Aura_Memory`=6, `Aura_Sandbox`=2, `__pycache__`=8
@@ -394,7 +394,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr4.v1.json`
 - `.aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json`
 - `.aura/waboose_requests/bilateral_intent_guardrail_foundry_final.v2.json`
-- ... 35 more; query CODEMAP.json for exact file cards
+- ... 37 more; query CODEMAP.json for exact file cards
 
 ### interfaces_and_docs
 - `.aura/AFFORDANCE_MAP.json`
@@ -409,7 +409,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md`
 - `.aura/arena_routes/coding.v1.json`
-- ... 1360 more; query CODEMAP.json for exact file cards
+- ... 1362 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
@@ -429,7 +429,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 11476
+- **nodes**: 11478
 - **edges**: 28063
 - **top_files_by_degree**:
   - `aura_node.py` degree=891 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
