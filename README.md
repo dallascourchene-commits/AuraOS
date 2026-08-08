@@ -29,15 +29,18 @@ If you are evaluating Aura as a human or an AI system, reconstruct the project i
         ↓
 3. WHICH COMPONENT OWNS EACH STEP?
         ↓
-4. WHERE IS THE CANONICAL SOURCE / TEST / CONTRACT?
+4. IS THE FILE I AM READING A CANONICAL OWNER, SUPPORTING IMPLEMENTATION,
+   EXPERIMENT, COMPATIBILITY SURFACE, GENERATED PROJECTION, OR UNKNOWN?
         ↓
-5. WHAT HAS ACTUALLY BEEN MEASURED?
+5. HOW DOES THE SHARED SUBSTRATE BIND TO THIS DOMAIN?
         ↓
-6. WHAT DOES THAT EVIDENCE NOT ESTABLISH?
+6. WHERE IS THE EXACT SOURCE / TEST / CONTRACT?
         ↓
-7. WHAT IS ACTIVE REFACTOR WORK OR FUTURE ARCHITECTURE?
+7. WHAT HAS ACTUALLY BEEN MEASURED?
         ↓
-8. THEN ASSESS MATURITY, ADOPTION, AND LONG-RANGE POTENTIAL
+8. WHAT DOES THAT EVIDENCE NOT ESTABLISH?
+        ↓
+9. THEN ASSESS MATURITY, ADOPTION, AND LONG-RANGE POTENTIAL
 ```
 
 Why this order? Aura contains working software, active refactors, published architecture, research hypotheses, and domain projections in the same repository. They are related, but they are **not the same evidence class**.
@@ -72,15 +75,16 @@ These axes are deliberately separate.
 
 | Question | Start here | Then inspect |
 |---|---|---|
-| **What is Aura architecturally?** | [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md) | CODEMAP + canonical subsystem source/tests |
-| **Does the code actually exist?** | [`.aura/CODEMAP.md`](.aura/CODEMAP.md) | exact source + tests for the component |
+| **What is Aura architecturally?** | [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md) | canonical owner → CODEMAP/topology → exact source/tests |
+| **Does a capability actually exist?** | architecture ownership + [`.aura/CODEMAP.md`](.aura/CODEMAP.md) | exact owner source + direct tests/contracts |
+| **Is this file representative of current Aura?** | establish its role in architecture/ownership first | inspect dependencies, consumers, tests, and current owner |
 | **How are authority and security bounded?** | [`.aura/SECURITY.md`](.aura/SECURITY.md) | architecture invariants + Gate/Harness contracts/tests |
 | **Do the context/refactor claims have measurements?** | [`docs/AURA_ARCHITECT_CONSOLIDATION_BENCHMARK.md`](docs/AURA_ARCHITECT_CONSOLIDATION_BENCHMARK.md) | [`docs/AURA_EXECUTABLE_REFACTOR_BENCHMARK.md`](docs/AURA_EXECUTABLE_REFACTOR_BENCHMARK.md) |
 | **What is merged vs. planned?** | current GitHub `main` + PR history | numbered refactor plan / Paper IX status classes |
 | **Is the project mature enough to adopt?** | Quick start + current GitHub activity | contributors, CI, independent replication, onboarding friction |
-| **What is the long-range direction?** | this README's Future section | Paper IX + deeper design documents |
+| **What is the long-range direction?** | Sections 8–9 below | Paper IX + deeper design documents |
 
-A low star count is evidence about **adoption**, not whether a function exists. A passing fixture is evidence about **that fixture**, not the entire architecture. A file not found in a small sample is **not** proof that the repository lacks the capability.
+Community/adoption metadata belongs to the **maturity lane**. It should not substitute for source, test, architecture, or benchmark evidence. A passing fixture is evidence about **that fixture**, not the entire architecture. A file not found in a small sample is **not** proof that the repository lacks the capability.
 
 ---
 
@@ -133,6 +137,48 @@ temporary state  ≠ durable authority
 
 This is why Aura has more architectural boundaries than a simple coding-agent wrapper.
 
+## One substrate, many domain bindings
+
+Aura is **not** attempting to build a separate operating system from scratch for Coding, Construction, Civic, Financial, Spatial, scientific, and future domains.
+
+The generalization thesis is narrower and testable:
+
+> **Different domains repeatedly need some of the same underlying operations — objective structuring, capability discovery, exact evidence, bounded execution, verification, provenance, and governed disposition — while retaining domain-specific evidence, authority, tools, and lifecycle rules.**
+
+```text
+SHARED AURA SUBSTRATE
+objective
+→ structured intent
+→ capability discovery
+→ evidence grounding
+→ bounded Arena
+→ verification / receipts
+→ authorized disposition
+→ provenance / reusable experience
+            │
+      ┌─────┼──────────┬─────────┐
+      ▼     ▼          ▼         ▼
+   CODING  SPATIAL  CONSTRUCTION  CIVIC ...
+      │     │          │         │
+      └── domain-specific bindings ──
+```
+
+A new domain should therefore look like:
+
+```text
+NEW DOMAIN
+=
+SHARED SUBSTRATE
++ DOMAIN-SPECIFIC EVIDENCE
++ DOMAIN-SPECIFIC AUTHORITY
++ DOMAIN-SPECIFIC CAPABILITIES
++ DOMAIN-SPECIFIC LIFECYCLE / ACCEPTANCE RULES
+```
+
+This is **not** a claim that one generic algorithm solves every domain. It is a claim that the common governance, evidence, composition, and lifecycle machinery should not be rebuilt every time the domain changes.
+
+The domain Arenas are therefore useful as **stress tests of substrate generality**. If each new Arena requires another parallel truth, policy, memory, verification, or authority system, the architecture has failed its own convergence goal.
+
 ---
 
 # 2. The components that matter first
@@ -154,6 +200,35 @@ You do not need to learn every Aura term before understanding the architecture. 
 | **ARCH / runtime harnesses** | long-horizon refactor continuity and proof system | binds exact HEAD, scope, failed attempts, review, proof, cleanup, and terminal state | autonomous merge authority |
 
 Everything else should be understood by asking where it fits in this flow and which canonical owner it depends on.
+
+## Before generalizing from a file
+
+Aura is old enough to contain active owners, supporting modules, experiments, compatibility surfaces, generated projections, and historical lineage in the same tree.
+
+Before using one file to characterize an architecture-wide mechanism, establish its role:
+
+| Evaluation role | Meaning |
+|---|---|
+| **CANONICAL OWNER** | current source/contract that owns the capability or invariant |
+| **ACTIVE SUPPORT** | current implementation used by a canonical owner |
+| **COMPATIBILITY** | retained to preserve an older interface/path |
+| **EXPERIMENTAL / RESEARCH** | prototype or hypothesis-bearing implementation |
+| **HISTORICAL / LINEAGE** | useful for development history; not sufficient evidence of current architecture |
+| **GENERATED PROJECTION** | CODEMAP/topology/report/navigation output; not source authority |
+| **UNKNOWN** | role not yet established; do not propagate conclusions architecture-wide |
+
+These labels are an **evaluation lens**, not a new authority database. The current architecture, exact source relationships, tests, and contracts determine the real status.
+
+In particular:
+
+```text
+interesting / weak / obsolete local implementation
+        ≠
+complete implementation of the architecture that may contain, replace,
+constrain, or no longer depend on that file
+```
+
+A local finding becomes architecture-wide only when an explicit ownership or dependency relationship carries it.
 
 ---
 
@@ -208,25 +283,44 @@ Canonical references:
 
 ---
 
-# 4. What exists now
+# 4. What exists now — and what the current refactor is doing
 
-AuraOS is a working research repository, not only a roadmap.
+AuraOS is working research software, not only a roadmap.
 
-The generated CODEMAP snapshot referenced by this README reports:
+The repository contains substantial source, tests, schemas, generated topology, governed coding/runtime surfaces, provenance/continuity machinery, and domain bindings. For current inventory counts and symbol/file navigation, use [`.aura/CODEMAP.md`](.aura/CODEMAP.md) rather than treating raw repository size as an architectural claim.
 
-| Fact | Generated evidence |
-|---|---:|
-| Files indexed | **1,576** |
-| Repository bytes indexed | **59,522,794** |
-| Estimated text tokens | **5,371,792** |
-| Deep-topology nodes | **11,393** |
-| Deep-topology edges | **27,882** |
-| Python modules indexed | **977** |
-| Schema / lexicon artifacts indexed | **232** |
+## The current direction is convergence, not feature accumulation
 
-Source: [`.aura/CODEMAP.md`](.aura/CODEMAP.md).
+Aura accumulated capabilities quickly. The current refactor program is intended to make those capabilities easier to reason about and reuse by:
 
-These are navigation counts from a generated projection. They are not proof that every file is equally important, mature, or unique.
+- identifying canonical owners;
+- removing or refusing duplicate truth/authority/policy planes;
+- reconstructing projects source-first;
+- selecting task-conditioned capability/dependency closures;
+- hydrating only the evidence needed for the active objective;
+- preserving failed attempts and proof lineage without carrying full transcripts;
+- making reusable capability contracts explicit;
+- and keeping human/governance disposition outside model authority.
+
+The target is:
+
+```text
+many accumulated mechanisms
+        ↓
+canonical ownership
+        ↓
+explicit relationships / invariants
+        ↓
+task-conditioned project shape
+        ↓
+minimum sufficient context
+        ↓
+bounded execution
+        ↓
+proof + reusable verified capability
+```
+
+A successful refactor should therefore make Aura **smaller in active reasoning surface even when the repository contains more accumulated capability**.
 
 ## Merged refactor foundation
 
@@ -257,7 +351,7 @@ Its documented gate included:
 
 [#269](https://github.com/dallascourchene-commits/AuraOS/pull/269)
 
-PR3 onward continues the broader numbered refactor program. Use GitHub for current live PR state.
+PR3 onward continues the broader numbered convergence program. Use GitHub for current live PR state.
 
 ---
 
@@ -333,9 +427,9 @@ Older exploratory measurements remain historical evidence, but are not stacked i
 
 Source: [`docs/AURA_ARCHITECT_CONSOLIDATION_BENCHMARK.md`](docs/AURA_ARCHITECT_CONSOLIDATION_BENCHMARK.md)
 
-**Status:** single-session planning pilot.  
-**Model fixture:** GPT-5.6 Thinking.  
-**Token values:** deterministic proxy, not tokenizer/provider billing.
+**Status:** single-session assisted planning pilot.  
+**Token values:** deterministic proxy, not tokenizer/provider billing.  
+See the benchmark document for the exact recorded fixture/model metadata.
 
 | Arm | Calls | Input proxy | Output proxy | Total proxy | Grounded-plan quality |
 |---|---:|---:|---:|---:|---:|
@@ -451,13 +545,32 @@ Aura's longer-range direction is not "add every feature."
 
 It is **reuse before unnecessary regeneration**.
 
-A useful capability may be expensive to discover, implement, debug, test, secure, benchmark, and document the first time.
+A useful capability can be expensive the first time:
 
-The next objective should not automatically pay the entire cost again.
+```text
+discover
++ implement
++ integrate
++ secure
++ test
++ verify
++ document
+= high first-use cost
+```
+
+If that capability is preserved with a clear contract, evidence, provenance, and authority boundary, later objectives should increasingly pay only for the **novel delta**:
+
+```text
+OBJECTIVE A → build + verify X
+
+OBJECTIVE B → reuse X + build/verify Y
+
+OBJECTIVE C → reuse X + Y + build/verify Z
+```
 
 > **We do not reinvent the transistor every time we build a phone. Software agents should not need to rediscover every verified primitive every time someone opens a new chat.**
 
-The architectural direction is:
+This is the architecture's compute/capability-amortization thesis:
 
 ```text
 objective
@@ -468,78 +581,86 @@ objective
 → execute inside a bounded Arena
 → preserve provenance / attribution
 → dissolve temporary authority
-→ retain reusable capability
+→ retain reusable verified capability
 ```
 
-This is the path toward:
+The potential of Coding, Construction, Civic, Spatial, scientific, and other Arenas therefore does **not** depend on one maintainer manually finishing a separate giant product for every field.
 
-- Developer / Architecture Arenas;
-- reusable capability contracts;
-- recipes;
-- Capability Commons;
-- scientific and domain-specific Arenas;
-- Places and other spatial projections;
-- future provenance-aware economic mechanisms.
+It depends on whether:
 
-These are not all equally implemented today. Use the R/P/E/S classes.
+1. the shared substrate really is reusable;
+2. domain-specific bindings can remain narrow;
+3. canonical capabilities can be discovered rather than reinvented;
+4. evidence and limitations survive reuse;
+5. contributors can add primitives without creating parallel authority planes;
+6. verification cost falls as proven capability accumulates.
+
+If those conditions fail, the generalization thesis should be rejected or narrowed.
+
+If they hold, then each verified capability can reduce the amount of new reasoning, code, integration, and testing required by later objectives.
+
+This is the path toward Developer / Architecture Arenas, reusable capability contracts, recipes, Capability Commons, scientific/domain Arenas, Places/spatial projections, and future provenance-aware economic mechanisms.
+
+These are not all equally implemented today. Use the R/P/E/S and evidence-maturity classes.
 
 ---
 
 # 9. Developer call to action
 
-Aura's architecture is advancing quickly. The most useful next step is not for developers to stand outside the repository and admire or dismiss the whole thing.
+Aura is not supposed to reach its broader potential by one person implementing every downstream domain.
 
-It is to **bring real capability**.
+The contribution model is:
 
-If you have:
+> **Bring a capability you already understand deeply. Help make its contract, evidence, boundaries, provenance, and reuse explicit.**
 
-- a deterministic algorithm;
-- a parser;
-- a verifier;
-- a routing method;
-- a local model tool;
-- a repository-analysis technique;
-- a security primitive;
-- a renderer;
-- a scientific workflow;
-- a domain-specific engine;
-- or another reusable software capability;
+Useful contributions can include:
 
-the intended development path is:
+- deterministic algorithms;
+- parsers and compilers;
+- verifiers;
+- routing/localization methods;
+- local-model tools;
+- repository-analysis techniques;
+- security primitives;
+- renderers;
+- scientific workflows;
+- domain engines;
+- evaluation harnesses;
+- or other reusable software capabilities.
+
+The intended path is:
 
 ```text
 YOUR EXISTING CAPABILITY
         ↓
-IDENTIFY ITS TRUE CONTRACT + BOUNDARIES
+ESTABLISH WHAT IT ACTUALLY DOES / DOES NOT DO
+        ↓
+IDENTIFY CANONICAL CONTRACT + DEPENDENCIES
         ↓
 MAP IT INTO AURA'S CAPABILITY / RELATIONSHIP GRAPH
         ↓
-GROUND IT AGAINST CANONICAL SOURCE + TESTS
+GROUND IT AGAINST SOURCE + TESTS
         ↓
-RUN IT INSIDE A BOUNDED ARENA / HARNESS
+RUN IT INSIDE THE APPROPRIATE BOUNDED ARENA / HARNESS
         ↓
-MEASURE WHAT IT ADDS
+MEASURE THE NOVEL VALUE
         ↓
 PRESERVE PROVENANCE + ATTRIBUTION
         ↓
-MAKE THE VERIFIED PRIMITIVE REUSABLE
+MAKE THE VERIFIED PRIMITIVE DISCOVERABLE AND REUSABLE
 ```
 
-The immediate opportunity is technical: help harden the substrate with real, reusable primitives rather than rebuilding everything from scratch.
+The immediate opportunity is technical: **turn isolated capability into reusable, evidence-bearing infrastructure**.
 
-The longer-range economic thesis is that verified capabilities should be able to retain provenance and eventually participate in a **Capability Commons / Extension Economy**, where reuse can create attribution and compensation instead of forcing every developer to resell the same labor manually.
+The longer-range economic thesis is that verified capability should be able to retain provenance and eventually participate in a **Capability Commons / Extension Economy**, so reuse can preserve attribution and potentially support compensation rather than forcing developers to repeatedly resell the same labor.
 
-That economic layer is **not yet a deployed real-money system and no contribution carries a profit guarantee**.
+That economic layer is **not a deployed real-money system, and no contribution carries a profit guarantee**.
 
-But contributors who establish useful primitives early can help define the contracts, evidence, provenance, and interoperability rules that such a system would require.
+Early contributors can nevertheless help define the interoperability, evidence, provenance, rights, and lifecycle rules such a system would need.
 
 In short:
 
-> **Bring the thing you already know how to build. Help Aura learn where it belongs, what it depends on, how to prove it, and how other people can safely reuse it.**
-
-The project does not need another thousand disconnected features.
-
-It needs **high-quality primitives with clear contracts, evidence, and provenance**.
+> **Do not come merely to add another feature. Bring the thing you already know how to build, establish where it belongs, prove it, and help make it reusable.**
 
 ---
 
@@ -618,7 +739,9 @@ The engineering lesson was:
 
 > **Dense meaning can be composed from constrained relationships rather than represented as an unstructured bag of words.**
 
-That principle later became useful far beyond language learning: repository navigation, capability composition, bounded context, Arena assembly, and task-specific execution.
+In engineering terms, Aura increasingly applies that lesson as **grammar before content**: establish the roles, relationships, constraints, authority, and evidence state that make an interpretation valid, then hydrate the content needed for the objective.
+
+That principle later became useful far beyond language learning: repository navigation, capability composition, bounded context, Arena assembly, task-specific execution, and the current convergence/refactor work.
 
 Further background:
 
@@ -718,7 +841,7 @@ Current weaknesses include:
 
 - limited independent replication;
 - limited external adoption/contribution;
-- a large and fast-moving codebase;
+- a broad and fast-moving repository whose canonical ownership is still being consolidated;
 - substantial terminology/onboarding cost;
 - many downstream P/E/S-class directions still requiring hardening;
 - benchmark coverage that is much smaller than the architecture's total surface area.
