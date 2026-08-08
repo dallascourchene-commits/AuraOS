@@ -1234,6 +1234,128 @@ def _provenance_summary(
     )
 
 
+def _provenance_inputs(
+    compilation: ProjectContextCompilation,
+    start_ids: Sequence[str],
+    max_hops: int,
+    max_nodes: int,
+) -> tuple[
+    tuple[str, ...],
+    int,
+    int,
+    dict[str, ProjectContextCandidate],
+    dict[str, list[ProjectContextEdge]],
+]:
+    if type(compilation) is not ProjectContextCompilation:
+        raise ValueError("compilation must be exact ProjectContextCompilation")
+    starts = _ids(start_ids, "start_ids", maximum=64)
+    max_hops = _int(max_hops, "max_hops", minimum=1, maximum=16)
+    max_nodes = _int(max_nodes, "max_nodes", minimum=1, maximum=256)
+    if len(starts) > max_nodes:
+        raise ValueError("provenance start_ids exceed max_nodes")
+    node_map = {
+        item.candidate_id: item for item in compilation.selected_candidates
+    }
+    missing = sorted(set(starts) - set(node_map))
+    if missing:
+        raise ValueError(f"provenance start is outside selected context: {missing}")
+    incoming: dict[str, list[ProjectContextEdge]] = {
+        node_id: [] for node_id in node_map
+    }
+    for edge in compilation.graph_edges:
+        incoming[edge.target_id].append(edge)
+    for values in incoming.values():
+        values.sort(
+            key=lambda edge: (
+                edge.source_id,
+                edge.relation,
+                edge.truth_class.value,
+            )
+        )
+    return starts, max_hops, max_nodes, node_map, incoming
+
+
+def _walk_provenance(
+    starts: tuple[str, ...],
+    incoming: Mapping[str, Sequence[ProjectContextEdge]],
+    max_hops: int,
+    max_nodes: int,
+) -> tuple[set[str], set[ProjectContextEdge], set[str]]:
+    seen = set(starts)
+    frontier = list(starts)
+    traversed: set[ProjectContextEdge] = set()
+    truncated: set[str] = set()
+    for _ in range(max_hops):
+        next_frontier: list[str] = []
+        for target in sorted(frontier):
+            for edge in incoming.get(target, ()):
+                if edge.source_id in seen:
+                    traversed.add(edge)
+                    continue
+                if len(seen) >= max_nodes:
+                    truncated.add(edge.source_id)
+                    continue
+                seen.add(edge.source_id)
+                next_frontier.append(edge.source_id)
+                traversed.add(edge)
+        if not next_frontier:
+            break
+        frontier = sorted(set(next_frontier))
+    else:
+        for target in frontier:
+            truncated.update(
+                edge.source_id
+                for edge in incoming.get(target, ())
+                if edge.source_id not in seen
+            )
+    return seen, traversed, truncated
+
+
+def _provenance_summary(
+    node_map: Mapping[str, ProjectContextCandidate],
+    incoming: Mapping[str, Sequence[ProjectContextEdge]],
+    seen: set[str],
+    traversed: set[ProjectContextEdge],
+) -> tuple[
+    list[ProjectContextCandidate], list[str], list[str], list[str], bool, bool
+]:
+    nodes = [node_map[item] for item in sorted(seen)]
+    source_ids = [
+        item.candidate_id
+        for item in nodes
+        if item.category is CandidateCategory.SOURCE
+    ]
+    exact_source_ids = [
+        item.candidate_id
+        for item in nodes
+        if item.category is CandidateCategory.SOURCE
+        and item.truth_class is CandidateTruthClass.EXACT_CURRENT
+    ]
+    root_ids = sorted(
+        node_id
+        for node_id in seen
+        if not any(
+            edge.source_id in seen for edge in incoming.get(node_id, ())
+        )
+    )
+    roots_are_exact_sources = bool(root_ids) and all(
+        node_map[node_id].category is CandidateCategory.SOURCE
+        and node_map[node_id].truth_class is CandidateTruthClass.EXACT_CURRENT
+        for node_id in root_ids
+    )
+    authoritative_path = all(
+        edge.truth_class in _AUTHORITATIVE_EDGE_TRUTH for edge in traversed
+    )
+    return (
+        nodes,
+        source_ids,
+        exact_source_ids,
+        root_ids,
+        roots_are_exact_sources,
+        authoritative_path,
+    )
+
+
 def trace_project_context_provenance(
     compilation: ProjectContextCompilation,
     start_ids: Sequence[str],
