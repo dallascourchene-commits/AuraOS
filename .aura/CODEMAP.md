@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1583
-- **total_bytes**: 59638874
-- **text_tokens_est**: 5400826
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 209, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 980, 'schema_or_lexicon': 235, 'support_file': 79}
+- **file_count**: 1584
+- **total_bytes**: 59643909
+- **text_tokens_est**: 5402085
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 209, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 980, 'schema_or_lexicon': 236, 'support_file': 79}
 - **topology_nodes**: 11436
-- **topology_edges**: 27977
+- **topology_edges**: 27979
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 34131.94
+- **elapsed_ms**: 33215.88
 
 ## Coverage
 
-- **included_file_count**: 1583
+- **included_file_count**: 1584
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=277, `Aura_Memory`=6, `Aura_Sandbox`=2, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=25, `Aura_Memory`=6, `Aura_Sandbox`=2, `__pycache__`=8
 
 ## Command Index
 
@@ -409,7 +409,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md`
 - `.aura/arena_routes/coding.v1.json`
-- ... 1360 more; query CODEMAP.json for exact file cards
+- ... 1361 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
@@ -430,7 +430,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 - **source**: compiled_deep_topology
 - **nodes**: 11436
-- **edges**: 27977
+- **edges**: 27979
 - **top_files_by_degree**:
   - `aura_node.py` degree=891 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_ephemeral_workspace_contracts.py` degree=862 nodes=99 neighbors=`aura_coding_relationship_compass.py`, `aura_ephemeral_path_policy.py`, `aura_ephemeral_workspace_runtime_v2.py`, `aura_llm_egress.py`
