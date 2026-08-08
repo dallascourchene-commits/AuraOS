@@ -1,0 +1,89 @@
+name: PR3 six-invariant guarded repair v5
+
+on:
+  push:
+    branches:
+      - analysis/pr3-six-invariant-fixes-v5
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repair control branch
+        uses: actions/checkout@v4
+        with:
+          ref: analysis/pr3-six-invariant-fixes-v5
+          fetch-depth: 0
+
+      - name: Recover v4 repair payload and switch to exact PR3 head
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin analysis/pr3-six-invariant-fixes-v4
+          git show FETCH_HEAD:tools/tmp_pr3_six_invariant_fix_v4.py > /tmp/pr3_fix.py
+          git fetch origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse origin/refactor/source-first-project-context-pr3)" = "6c8833785a8602560af2f355cc2ad0dab88b2499"
+          git checkout --detach 6c8833785a8602560af2f355cc2ad0dab88b2499
+
+      - name: Apply six invariant fixes
+        shell: bash
+        run: python /tmp/pr3_fix.py
+
+      - name: Normalize repaired-file whitespace
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          for name in (
+              "aura_project_context_compiler.py",
+              "tests/test_aura_project_context_compiler.py",
+              "tests/test_aura_project_context_acceptance.py",
+              "docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md",
+          ):
+              path = Path(name)
+              lines = path.read_text(encoding="utf-8").splitlines()
+              path.write_text(
+                  "\n".join(line.rstrip(" \t") for line in lines) + "\n",
+                  encoding="utf-8",
+              )
+          PY
+
+      - name: Install focused verification tools
+        shell: bash
+        run: python -m pip install --quiet pytest jsonschema ruff
+
+      - name: Python compile
+        shell: bash
+        run: python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+
+      - name: Fatal Ruff classes
+        shell: bash
+        run: python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+
+      - name: Repaired-file whitespace diff check
+        shell: bash
+        run: |
+          git diff --check -- \
+            aura_project_context_compiler.py \
+            tests/test_aura_project_context_compiler.py \
+            tests/test_aura_project_context_acceptance.py \
+            docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+
+      - name: Focused PR3 tests
+        shell: bash
+        run: python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+
+      - name: Commit and guarded fast-forward
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aura PR3 Guarded Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+          git commit -m "PR3: close six temporal and provenance invariant gaps"
+          git fetch origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse origin/refactor/source-first-project-context-pr3)" = "6c8833785a8602560af2f355cc2ad0dab88b2499"
+          git push origin HEAD:refactor/source-first-project-context-pr3
