@@ -34,10 +34,11 @@ jobs:
           git checkout -B pr2-final-candidate origin/refactor/verified-ephemeral-workspace-pr2-clean
           git merge --no-ff --no-edit origin/main
 
-      - name: Apply low-risk Codacy cleanup
+      - name: Apply low-risk Codacy and test-stability cleanup
         run: |
           python - <<'PY'
           from pathlib import Path
+
           path = Path("aura_ephemeral_adapter_registry.py")
           text = path.read_text(encoding="utf-8")
           old = "import inspect\nimport json\n"
@@ -56,6 +57,41 @@ jobs:
           if old not in text:
               raise SystemExit("default_factory not found")
           text = text.replace(old, '    host_compatibility: list[str] = field(default_factory=_default_host_compatibility)\n', 1)
+          path.write_text(text, encoding="utf-8")
+
+          path = Path("tests/test_aura_ephemeral_workspace_runtime_v2.py")
+          text = path.read_text(encoding="utf-8")
+          old = '''    recipe = _recipe(ttl=2, wall_time_ms=1000)\n'''
+          new = '''    # Leave ample process-startup margin so this proves in-flight TTL cancellation,\n    # rather than racing expiry before the spawned callback can begin.\n    recipe = _recipe(ttl=4, wall_time_ms=5000)\n'''
+          if text.count(old) != 1:
+              raise SystemExit("unexpected TTL test recipe occurrence count")
+          text = text.replace(old, new, 1)
+          old = '''    if remaining > 0.35:\n        time.sleep(remaining - 0.35)\n'''
+          new = '''    if remaining > 1.5:\n        time.sleep(remaining - 1.5)\n'''
+          if text.count(old) != 1:
+              raise SystemExit("unexpected TTL sleep occurrence count")
+          text = text.replace(old, new, 1)
+          old = '''            "delay_seconds": 1.0,\n'''
+          # Replace only the delay inside this TTL test, anchored by its function region.
+          start = text.index("def test_workspace_ttl_expiry_during_callback_kills_execution_and_cleans")
+          end = text.index("\ndef test_workspace_cumulative_wall_time_budget_blocks_new_callback", start)
+          region = text[start:end]
+          if region.count(old) != 1:
+              raise SystemExit("unexpected TTL delay occurrence count")
+          region = region.replace(old, '''            "delay_seconds": 3.0,\n''', 1)
+          text = text[:start] + region + text[end:]
+          old = '''    time.sleep(0.9)\n    assert not completed_path.exists()\n'''
+          new = '''    time.sleep(0.5)\n    assert not completed_path.exists()\n'''
+          if region.count(old) != 1:
+              raise SystemExit("unexpected TTL post-cancel sleep occurrence count")
+          # region was already inserted above, so replace in full text within the same function only.
+          start = text.index("def test_workspace_ttl_expiry_during_callback_kills_execution_and_cleans")
+          end = text.index("\ndef test_workspace_cumulative_wall_time_budget_blocks_new_callback", start)
+          region = text[start:end]
+          if region.count(old) != 1:
+              raise SystemExit("unexpected TTL post-cancel sleep occurrence count after delay patch")
+          region = region.replace(old, new, 1)
+          text = text[:start] + region + text[end:]
           path.write_text(text, encoding="utf-8")
           PY
           git diff --check
@@ -113,7 +149,7 @@ jobs:
       - name: Commit final candidate and enforce scope
         run: |
           set -euo pipefail
-          git add aura_ephemeral_adapter_registry.py .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
+          git add aura_ephemeral_adapter_registry.py tests/test_aura_ephemeral_workspace_runtime_v2.py .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
           git add -f Aura_Memory/live_topology_ast.json
           git diff --cached --check
           if ! git diff --cached --quiet; then
