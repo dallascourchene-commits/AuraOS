@@ -2,7 +2,7 @@
 """Generate/verify current source anchors from Aura's CODEMAP.
 
 Stable identity is the CODEMAP semantic symbol identity + signature hash.
-Line numbers are current projections and are regenerated after navigation refresh.
+Line numbers and symbol-index display keys are current projections and may move.
 This file is navigation only: it never becomes source, patch, policy, or authority.
 """
 from __future__ import annotations
@@ -32,39 +32,93 @@ def _file_digest(codemap: dict[str, Any], path: str) -> str:
     return ""
 
 
+def _semantic_matches(
+    codemap: dict[str, Any],
+    *,
+    semantic_id: str,
+    path: str,
+    kind: str,
+) -> list[dict[str, Any]]:
+    """Find a symbol by semantic identity independent of symbol-index display key."""
+    matches: list[dict[str, Any]] = []
+    symbol_index = codemap.get("symbol_index", {})
+    if not isinstance(symbol_index, dict):
+        return matches
+    for index_name, hits in symbol_index.items():
+        if not isinstance(hits, list):
+            continue
+        for raw in hits:
+            if not isinstance(raw, dict):
+                continue
+            if raw.get("file") != path:
+                continue
+            if kind and raw.get("kind") != kind:
+                continue
+            if str(raw.get("semantic_id") or "") != semantic_id:
+                continue
+            hit = dict(raw)
+            hit["index_name"] = str(index_name)
+            matches.append(hit)
+    return matches
+
+
 def resolve_anchor(codemap: dict[str, Any], spec: dict[str, Any]) -> dict[str, Any]:
     symbol = str(spec.get("symbol") or "").strip()
     path = str(spec.get("path") or "").strip()
     kind = str(spec.get("kind") or "").strip()
+    expected_semantic_id = str(spec.get("semantic_id") or "").strip()
+    expected_signature_hash = str(spec.get("signature_hash") or "").strip()
     if not symbol or not path:
         raise ValueError("every source anchor requires nonempty path and symbol")
-    hits = codemap.get("symbol_index", {}).get(symbol, [])
-    matches = [
-        hit for hit in hits
-        if isinstance(hit, dict)
-        and hit.get("file") == path
-        and (not kind or hit.get("kind") == kind)
-    ]
+
+    if expected_semantic_id:
+        matches = _semantic_matches(
+            codemap,
+            semantic_id=expected_semantic_id,
+            path=path,
+            kind=kind,
+        )
+    else:
+        hits = codemap.get("symbol_index", {}).get(symbol, [])
+        matches = [
+            dict(hit)
+            for hit in hits
+            if isinstance(hit, dict)
+            and hit.get("file") == path
+            and (not kind or hit.get("kind") == kind)
+        ]
+
     if len(matches) != 1:
+        identity = expected_semantic_id or symbol
         raise ValueError(
             f"source anchor {spec.get('anchor_id') or symbol!r} resolved to {len(matches)} "
-            f"CODEMAP symbols for {path}:{symbol}; expected exactly one"
+            f"CODEMAP symbols for {path}:{identity}; expected exactly one"
         )
+
     hit = dict(matches[0])
     line = hit.get("line")
     end_line = hit.get("end_line", line)
     if type(line) is not int or type(end_line) is not int or line < 1 or end_line < line:
         raise ValueError(f"invalid CODEMAP line range for {path}:{symbol}")
+
     semantic_id = str(hit.get("semantic_id") or "")
     signature_hash = str(hit.get("signature_hash") or "")
     if not semantic_id or not signature_hash:
         raise ValueError(f"missing semantic identity for {path}:{symbol}; refresh CODEMAP first")
+    if expected_semantic_id and semantic_id != expected_semantic_id:
+        raise ValueError(f"semantic identity drift for {path}:{symbol}")
+    if expected_signature_hash and signature_hash != expected_signature_hash:
+        raise ValueError(
+            f"signature drift for {path}:{symbol}: expected {expected_signature_hash}, got {signature_hash}"
+        )
+
     return {
         **spec,
         "line": line,
         "end_line": end_line,
         "semantic_id": semantic_id,
         "signature_hash": signature_hash,
+        "index_name": str(hit.get("index_name") or symbol),
         "file_digest8": _file_digest(codemap, path),
     }
 
@@ -96,7 +150,7 @@ def render_markdown(resolved: list[dict[str, Any]], *, codemap_path: str) -> str
         f"**Generated from:** `{codemap_path}` + `.aura/source_anchor_manifest.v1.json`  ",
         "**Authority:** navigation projection only; exact current source/tests/contracts remain authoritative.",
         "",
-        "> **Do not use line numbers as durable identity.** CODEMAP `semantic_id` + `signature_hash` identify the selected symbol; `Lstart-Lend` is regenerated whenever navigation state is refreshed.",
+        "> **Do not use line numbers or symbol-index display keys as durable identity.** CODEMAP `semantic_id` + `signature_hash` identify the selected symbol; `Lstart-Lend` is regenerated whenever navigation state is refreshed.",
         "",
         "| Mechanism | Symbol | Current source span | Semantic identity | Signature | Why it matters |",
         "|---|---|---|---|---|---|",
@@ -130,7 +184,7 @@ def render_markdown(resolved: list[dict[str, Any]], *, codemap_path: str) -> str
         "→ stale/missing/ambiguous anchors fail closed",
         "```",
         "",
-        "Use `python scripts/aura_navigation_refresh.py --refresh <changed paths...>` after bounded source writes, or run it without `--refresh` for a full navigation rebuild.",
+        "Use `python scripts/aura_navigation_refresh.py` to sync current commit/working-tree changes, or pass `--refresh <paths...>` for an explicit bounded refresh. Use `--all` only for an intentional full source-card refresh.",
         "",
     ]
     return "\n".join(lines)
