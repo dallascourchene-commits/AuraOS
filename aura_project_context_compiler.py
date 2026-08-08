@@ -1223,8 +1223,8 @@ def _compile_edge_items(
     budget: ProjectionBudget,
 ) -> tuple[ProjectContextEdge, ...]:
     """Compile the corresponding bounded PR3 structure from validated inputs."""
-    if isinstance(edges, (str, bytes, bytearray)) or not isinstance(edges, Sequence):
-        raise TypeError("edges must be a sequence")
+    if type(edges) not in (tuple, list):
+        raise TypeError("edges must be a sequence backed by an exact built-in tuple or list")
     edge_limit = min(MAX_EDGES, budget.max_edges * _EDGE_INPUT_EXPANSION_FACTOR)
     if len(edges) > edge_limit:
         raise ValueError("edges exceed the bounded edge-input ceiling")

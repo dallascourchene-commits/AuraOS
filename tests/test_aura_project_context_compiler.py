@@ -960,3 +960,12 @@ def test_edge_input_rejects_non_sequence_without_consuming_iterable() -> None:
             budget=ProjectionBudget(max_nodes=64, max_edges=256),
             freshness_timestamp_ms=1_786_180_000_000,
         )
+
+def test_edge_input_rejects_hostile_sequence_before_any_protocol_call() -> None:
+    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True)
+    class HostileSequence:
+        def __len__(self): raise AssertionError("hostile len must not run")
+        def __iter__(self): raise AssertionError("hostile iter must not run")
+    with pytest.raises(TypeError, match="exact built-in tuple or list"):
+        compile_project_context_projection("Fix the exact behavior without losing proof context.", project_ref="project:auraos-pr3", repository_identity=_repo(), candidates=(source,), edges=HostileSequence(), budget=ProjectionBudget(max_nodes=64,max_edges=256), freshness_timestamp_ms=1_786_180_000_000)
+
