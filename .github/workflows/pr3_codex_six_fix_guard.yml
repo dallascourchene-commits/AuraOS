@@ -1,0 +1,344 @@
+name: PR3 Codex six-finding guarded repair
+
+on:
+  push:
+    branches:
+      - analysis/pr3-codex-six-fixes-v1
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout guarded PR3 head
+        uses: actions/checkout@v4
+        with:
+          ref: refactor/source-first-project-context-pr3
+          fetch-depth: 0
+
+      - name: Require exact starting head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "b99ae723226f279a3666993167abd106ae72f7ab"
+
+      - name: Apply six invariant fixes and regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          source_path = Path("aura_project_context_compiler.py")
+          test_path = Path("tests/test_aura_project_context_compiler.py")
+          doc_path = Path("docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md")
+          source = source_path.read_text(encoding="utf-8")
+          tests = test_path.read_text(encoding="utf-8")
+          doc = doc_path.read_text(encoding="utf-8")
+
+          def replace_once(text: str, old: str, new: str, label: str) -> str:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected one match, found {count}")
+              return text.replace(old, new, 1)
+
+          source = replace_once(
+              source,
+              '''    if _id(receipt.canonical_owner, "canonical_owner") != PROJECT_CANONICAL_OWNER:\n        raise ValueError("canonical_owner must remain the unified continuity owner")\n''',
+              '''    canonical_owner = _id(receipt.canonical_owner, "canonical_owner")\n    if canonical_owner != PROJECT_CANONICAL_OWNER:\n        raise ValueError("canonical_owner must remain the unified continuity owner")\n    object.__setattr__(receipt, "canonical_owner", canonical_owner)\n''',
+              "receipt owner normalization",
+          )
+
+          candidate_marker = '''\n\n@dataclass(frozen=True)\nclass ProjectContextCandidate:\n'''
+          candidate_helper = '''\n\ndef _bind_candidate_reference_identity(candidate: Any) -> None:\n    if (\n        candidate.truth_class\n        not in {CandidateTruthClass.EXACT_CURRENT, CandidateTruthClass.DERIVED_VERIFIED}\n        or candidate.reference is None\n    ):\n        return\n    reference_binding = TemporalBinding(\n        TemporalBindingKind.SOURCE_HASH,\n        candidate.reference.reference_id,\n        candidate.reference.digest,\n    )\n    existing = {item.key: item for item in candidate.temporal_bindings}.get(\n        reference_binding.key\n    )\n    if existing is not None and existing.digest != reference_binding.digest:\n        raise ValueError(\n            "authoritative reference binding conflicts with canonical reference digest"\n        )\n    if existing is None:\n        object.__setattr__(\n            candidate,\n            "temporal_bindings",\n            tuple(\n                sorted(\n                    (*candidate.temporal_bindings, reference_binding),\n                    key=lambda item: item.key,\n                )\n            ),\n        )\n\n\n@dataclass(frozen=True)\nclass ProjectContextCandidate:\n'''
+          source = replace_once(
+              source,
+              candidate_marker,
+              candidate_helper,
+              "reference identity helper insertion",
+          )
+          source = replace_once(
+              source,
+              '''        _validate_candidate_reference(self)\n        _validate_candidate_authority(self)\n''',
+              '''        _validate_candidate_reference(self)\n        _validate_candidate_authority(self)\n        _bind_candidate_reference_identity(self)\n''',
+              "candidate reference identity binding",
+          )
+
+          selection_marker = '''\n\ndef _validate_compilation_selection(\n    compilation: Any,\n    selected: tuple[ProjectContextCandidate, ...],\n    selected_map: Mapping[str, ProjectContextCandidate],\n) -> None:\n'''
+          selection_helper = '''\n\ndef _selected_temporal_binding_map(\n    selected: Sequence[ProjectContextCandidate],\n) -> dict[str, TemporalBinding]:\n    bindings: dict[str, TemporalBinding] = {}\n    for candidate in selected:\n        for binding in candidate.temporal_bindings:\n            existing = bindings.get(binding.key)\n            if existing is not None and existing.to_dict() != binding.to_dict():\n                raise ValueError(\n                    "selected candidates contain conflicting temporal binding definitions"\n                )\n            bindings[binding.key] = binding\n    return bindings\n\n\ndef _validate_compilation_selection(\n    compilation: Any,\n    selected: tuple[ProjectContextCandidate, ...],\n    selected_map: Mapping[str, ProjectContextCandidate],\n) -> None:\n'''
+          source = replace_once(
+              source,
+              selection_marker,
+              selection_helper,
+              "selected temporal binding helper insertion",
+          )
+          source = replace_once(
+              source,
+              '''    selected_conflicts = _conflicts(selected_map)\n    if selected_conflicts:\n        raise ValueError(\n            "selected candidates must not contain unresolved conflicts: "\n            f"{sorted(selected_conflicts)}"\n        )\n    has_exact_answer_source = any(\n''',
+              '''    selected_conflicts = _conflicts(selected_map)\n    if selected_conflicts:\n        raise ValueError(\n            "selected candidates must not contain unresolved conflicts: "\n            f"{sorted(selected_conflicts)}"\n        )\n    selected_bindings = _selected_temporal_binding_map(selected)\n    if compilation.selection_receipt.status is SelectionStatus.COMPLETE:\n        if compilation.projection is None:\n            raise ValueError("COMPLETE selection requires a projection timestamp")\n        timestamp_ms = compilation.projection.freshness_timestamp_ms\n        expired = sorted(\n            key\n            for key, binding in selected_bindings.items()\n            if binding.expires_at_ms and timestamp_ms >= binding.expires_at_ms\n        )\n        if expired:\n            raise ValueError(\n                "selected temporal binding expired at compilation timestamp: "\n                f"{expired}"\n            )\n    has_exact_answer_source = any(\n''',
+              "selected temporal snapshot validation",
+          )
+
+          source = replace_once(
+              source,
+              '''        if tuple(ref.to_dict() for ref in actual_refs) != tuple(\n            ref.to_dict() for ref in canonical_expected\n        ):\n            raise ValueError(\n                f"projection {field_name} references do not match selected candidates"\n            )\n\n\ndef _finalize_compilation(compilation: Any) -> None:\n''',
+              '''        if tuple(ref.to_dict() for ref in actual_refs) != tuple(\n            ref.to_dict() for ref in canonical_expected\n        ):\n            raise ValueError(\n                f"projection {field_name} references do not match selected candidates"\n            )\n    expected_projection = _projection(\n        compilation.objective,\n        projection.project_ref,\n        compilation.repository_identity,\n        selected,\n        projection.freshness_timestamp_ms,\n        _selection_warnings(compilation.selection_receipt),\n    )\n    if projection.to_dict() != expected_projection.to_dict():\n        raise ValueError(\n            "projection derived fields do not match compiler reconstruction"\n        )\n\n\ndef _finalize_compilation(compilation: Any) -> None:\n''',
+              "projection derived-field parity",
+          )
+
+          provenance_marker = '''\n\ndef _provenance_summary(\n    node_map: Mapping[str, ProjectContextCandidate],\n    incoming: Mapping[str, Sequence[ProjectContextEdge]],\n    seen: set[str],\n    traversed: set[ProjectContextEdge],\n) -> tuple[\n'''
+          provenance_helper = '''\n\ndef _provenance_start_is_source_complete(\n    start_id: str,\n    node_map: Mapping[str, ProjectContextCandidate],\n    incoming: Mapping[str, Sequence[ProjectContextEdge]],\n    traversed: set[ProjectContextEdge],\n) -> bool:\n    memo: dict[str, bool] = {}\n    visiting: set[str] = set()\n\n    def visit(node_id: str) -> bool:\n        if node_id in memo:\n            return memo[node_id]\n        if node_id in visiting:\n            return False\n        visiting.add(node_id)\n        predecessors = [\n            edge for edge in incoming.get(node_id, ()) if edge in traversed\n        ]\n        candidate = node_map[node_id]\n        if not predecessors:\n            result = (\n                candidate.category is CandidateCategory.SOURCE\n                and candidate.truth_class is CandidateTruthClass.EXACT_CURRENT\n            )\n        else:\n            result = all(\n                edge.truth_class in _AUTHORITATIVE_EDGE_TRUTH\n                and visit(edge.source_id)\n                for edge in predecessors\n            )\n        visiting.remove(node_id)\n        memo[node_id] = result\n        return result\n\n    return visit(start_id)\n\n\ndef _provenance_summary(\n    starts: Sequence[str],\n    node_map: Mapping[str, ProjectContextCandidate],\n    incoming: Mapping[str, Sequence[ProjectContextEdge]],\n    seen: set[str],\n    traversed: set[ProjectContextEdge],\n) -> tuple[\n'''
+          source = replace_once(
+              source,
+              provenance_marker,
+              provenance_helper,
+              "per-start provenance completeness helper",
+          )
+          source = replace_once(
+              source,
+              '''    roots_are_exact_sources = bool(root_ids) and all(\n        node_map[node_id].category is CandidateCategory.SOURCE\n        and node_map[node_id].truth_class is CandidateTruthClass.EXACT_CURRENT\n        for node_id in root_ids\n    )\n    authoritative_path = all(\n''',
+              '''    starts_are_source_complete = bool(starts) and all(\n        _provenance_start_is_source_complete(\n            start_id, node_map, incoming, traversed\n        )\n        for start_id in starts\n    )\n    authoritative_path = all(\n''',
+              "per-start provenance completeness calculation",
+          )
+          source = replace_once(
+              source,
+              '''        roots_are_exact_sources,\n        authoritative_path,\n''',
+              '''        starts_are_source_complete,\n        authoritative_path,\n''',
+              "provenance summary return",
+          )
+          source = replace_once(
+              source,
+              '''    roots_are_exact_sources: bool,\n    authoritative_path: bool,\n''',
+              '''    starts_are_source_complete: bool,\n    authoritative_path: bool,\n''',
+              "provenance result parameter",
+          )
+          source = replace_once(
+              source,
+              '''            roots_are_exact_sources and authoritative_path and not truncated\n''',
+              '''            starts_are_source_complete and authoritative_path and not truncated\n''',
+              "provenance source_complete gate",
+          )
+          source = replace_once(
+              source,
+              '''    summary = _provenance_summary(node_map, incoming, seen, traversed)\n''',
+              '''    summary = _provenance_summary(starts, node_map, incoming, seen, traversed)\n''',
+              "provenance summary call",
+          )
+
+          tests = replace_once(
+              tests,
+              '''from __future__ import annotations\n\nimport json\n''',
+              '''from __future__ import annotations\n\nfrom dataclasses import replace\nimport json\n''',
+              "test dataclasses import",
+          )
+          tests = replace_once(
+              tests,
+              '''    bindings = tuple(TemporalBinding(kind, f"id-{index}", D[str(index + 2)], expires_at_ms=2_000) for index, kind in enumerate(TemporalBindingKind))\n    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True, bindings=bindings)\n    current = {item.key: item.digest for item in bindings}\n    freshness = validate_project_context_freshness(_compile((source,)), current_repository_identity=_repo(), current_bindings=current, observed_at_ms=2_000)\n''',
+              '''    expiry_ms = 1_786_180_000_010\n    bindings = tuple(TemporalBinding(kind, f"id-{index}", D[str(index + 2)], expires_at_ms=expiry_ms) for index, kind in enumerate(TemporalBindingKind))\n    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True, bindings=bindings)\n    result = _compile((source,))\n    current = {item.key: item.digest for item in result.selected_candidates[0].temporal_bindings}\n    freshness = validate_project_context_freshness(result, current_repository_identity=_repo(), current_bindings=current, observed_at_ms=expiry_ms)\n''',
+              "post-compilation expiry test chronology",
+          )
+
+          appended = r'''
+
+
+def test_receipt_canonical_owner_is_normalized_before_digest() -> None:
+    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True)
+    receipt = _compile((source,)).selection_receipt
+    normalized = ProjectionSelectionReceipt(
+        objective_digest=receipt.objective_digest,
+        repository_identity_digest=receipt.repository_identity_digest,
+        canonical_owner=" aura_unified_memory_continuity ",
+        selected=receipt.selected,
+        omitted_irrelevant=receipt.omitted_irrelevant,
+        omitted_by_budget=receipt.omitted_by_budget,
+        stale=receipt.stale,
+        unavailable=receipt.unavailable,
+        conflicting=receipt.conflicting,
+        source_adapter_missing=receipt.source_adapter_missing,
+        mandatory_evidence_missing=receipt.mandatory_evidence_missing,
+        status=receipt.status,
+        budget=receipt.budget,
+    )
+    assert normalized.canonical_owner == "aura_unified_memory_continuity"
+    assert normalized.to_dict()["canonical_owner"] == "aura_unified_memory_continuity"
+
+
+def test_public_constructor_rejects_forged_projection_aggregate_freshness() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"],
+        answer_determining=True, freshness="BOUNDED",
+    )
+    result = _compile((source,))
+    assert result.projection is not None
+    forged = replace(result.projection, freshness_class="CURRENT", projection_digest="")
+    with pytest.raises(ValueError, match="projection derived fields"):
+        ProjectContextCompilation(
+            objective=result.objective,
+            objective_digest=result.objective_digest,
+            repository_identity=result.repository_identity,
+            projection=forged,
+            selection_receipt=result.selection_receipt,
+            selected_candidates=result.selected_candidates,
+            graph_edges=result.graph_edges,
+            admissible=result.admissible,
+        )
+
+
+def test_provenance_rootless_cycle_component_cannot_claim_source_complete() -> None:
+    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True)
+    left = _candidate("decision:left", CandidateCategory.DECISION, D["3"])
+    right = _candidate("decision:right", CandidateCategory.DECISION, D["4"])
+    edges = (
+        ProjectContextEdge("decision:left", "decision:right", "precedes", EdgeTruthClass.EXACT),
+        ProjectContextEdge("decision:right", "decision:left", "precedes", EdgeTruthClass.EXACT),
+    )
+    result = _compile((source, left, right), edges)
+    trace = trace_project_context_provenance(
+        result, ("source:target", "decision:left"), max_hops=4, max_nodes=8
+    )
+    assert trace["exact_source_ids"] == ["source:target"]
+    assert trace["truncated_frontier"] == []
+    assert trace["authoritative_path"] is True
+    assert trace["source_complete"] is False
+
+
+def test_authoritative_reference_requires_live_reference_digest_observation() -> None:
+    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True)
+    result = _compile((source,))
+    selected_source = result.selected_candidates[0]
+    reference_binding = next(
+        item
+        for item in selected_source.temporal_bindings
+        if item.kind is TemporalBindingKind.SOURCE_HASH
+        and item.binding_id == selected_source.reference.reference_id
+    )
+    missing = validate_project_context_freshness(
+        result,
+        current_repository_identity=_repo(),
+        current_bindings={},
+        observed_at_ms=1_786_180_000_001,
+    )
+    assert missing["valid"] is False
+    assert f"binding_missing:{reference_binding.key}" in missing["reasons"]
+    current = validate_project_context_freshness(
+        result,
+        current_repository_identity=_repo(),
+        current_bindings={reference_binding.key: reference_binding.digest},
+        observed_at_ms=1_786_180_000_001,
+    )
+    assert current["valid"] is True
+
+
+def test_cross_candidate_temporal_binding_conflict_fails_closed() -> None:
+    left_binding = TemporalBinding(TemporalBindingKind.POLICY, "shared-policy", D["7"])
+    right_binding = TemporalBinding(TemporalBindingKind.POLICY, "shared-policy", D["8"])
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"],
+        answer_determining=True, bindings=(left_binding,),
+    )
+    proof = _candidate(
+        "proof:result", CandidateCategory.PROOF_OBLIGATION, D["3"],
+        bindings=(right_binding,),
+    )
+    with pytest.raises(ValueError, match="conflicting temporal binding definitions"):
+        _compile((source, proof))
+
+
+def test_compile_rejects_binding_already_expired_at_projection_timestamp() -> None:
+    binding = TemporalBinding(
+        TemporalBindingKind.LEASE,
+        "expired-lease",
+        D["7"],
+        expires_at_ms=1_786_180_000_000,
+    )
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"],
+        answer_determining=True, bindings=(binding,),
+    )
+    with pytest.raises(ValueError, match="expired at compilation timestamp"):
+        _compile((source,))
+
+
+def test_public_constructor_rejects_binding_expired_by_forged_projection_timestamp() -> None:
+    binding = TemporalBinding(
+        TemporalBindingKind.LEASE,
+        "future-lease",
+        D["7"],
+        expires_at_ms=1_786_180_000_010,
+    )
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"],
+        answer_determining=True, bindings=(binding,),
+    )
+    result = _compile((source,))
+    assert result.projection is not None
+    forged = replace(
+        result.projection,
+        freshness_timestamp_ms=binding.expires_at_ms,
+        projection_digest="",
+    )
+    with pytest.raises(ValueError, match="expired at compilation timestamp"):
+        ProjectContextCompilation(
+            objective=result.objective,
+            objective_digest=result.objective_digest,
+            repository_identity=result.repository_identity,
+            projection=forged,
+            selection_receipt=result.selection_receipt,
+            selected_candidates=result.selected_candidates,
+            graph_edges=result.graph_edges,
+            admissible=result.admissible,
+        )
+'''
+          if "test_receipt_canonical_owner_is_normalized_before_digest" in tests:
+              raise SystemExit("six-finding regressions already present")
+          tests = tests.rstrip() + appended + "\n"
+
+          doc = doc.replace("`READY_FOR_HUMAN_REVIEW`", "`IMPLEMENTING`", 1)
+          temporal_sentence = (
+              "Freshness validation compares the complete compiled repository identity and every selected temporal binding against current canonical observations. "
+          )
+          temporal_replacement = (
+              temporal_sentence
+              + "Every authoritative selected canonical reference is automatically bound to its exact reference digest as a SOURCE_HASH temporal identity, so an empty live-observation map cannot silently bless external source drift. Cross-candidate binding definitions must agree, and a binding already expired at the projection freshness timestamp is rejected before the compilation can be admitted. "
+          )
+          if temporal_sentence not in doc:
+              raise SystemExit("temporal documentation anchor missing")
+          doc = doc.replace(temporal_sentence, temporal_replacement, 1)
+          provenance_sentence = (
+              "A trace is `source_complete` only when every retained provenance root is an `EXACT_CURRENT` `SOURCE`, every traversed path edge is `EXACT` or `DERIVED_VERIFIED`, and no predecessor frontier was truncated. "
+          )
+          provenance_replacement = (
+              "A trace is `source_complete` only when every requested start's complete backward component terminates at `EXACT_CURRENT` `SOURCE` nodes through only `EXACT` or `DERIVED_VERIFIED` edges, no rootless/cyclic component remains unproved, and no predecessor frontier was truncated. "
+          )
+          if provenance_sentence not in doc:
+              raise SystemExit("provenance documentation anchor missing")
+          doc = doc.replace(provenance_sentence, provenance_replacement, 1)
+
+          source_path.write_text(source, encoding="utf-8")
+          test_path.write_text(tests, encoding="utf-8")
+          doc_path.write_text(doc, encoding="utf-8")
+          PY
+
+      - name: Verify focused PR3 gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet pytest jsonschema ruff
+          python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          git diff --check
+          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+
+      - name: Fast-forward only if PR3 head did not move
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aura PR3 Guarded Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add aura_project_context_compiler.py tests/test_aura_project_context_compiler.py docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+          git commit -m "PR3: close six Codex invariant gaps"
+          git fetch origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse origin/refactor/source-first-project-context-pr3)" = "b99ae723226f279a3666993167abd106ae72f7ab"
+          git push origin HEAD:refactor/source-first-project-context-pr3
