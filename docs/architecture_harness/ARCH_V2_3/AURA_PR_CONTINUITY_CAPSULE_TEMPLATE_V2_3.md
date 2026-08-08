@@ -217,7 +217,7 @@ If enabled, the projection must be bound to the current workspace, exact head, p
 ## 16. Reviewer history
 
 | Wave | Reviewer | Head range | Root causes found | Disposition |
-|---|---|---|---|
+|---|---|---|---|---|
 | 1 | CodeRabbit | ... | ... | ... |
 
 ## 17. Regression risks
@@ -238,7 +238,9 @@ If enabled, the projection must be bound to the current workspace, exact head, p
 
 - Status: NOT_REQUIRED / PENDING / VALIDATED / STALE / REVOKED / REFUSED / REPLAN_REQUIRED
 - Workspace ID:
-- Planned/candidate effect digest:
+- Authorized/witness effect digest:
+- Planned effect digest:
+- Candidate effect digest:
 - Authority witness digest:
 - Capability-lease digest:
 - Dependency digest:
@@ -257,7 +259,7 @@ If enabled, the projection must be bound to the current workspace, exact head, p
 - Receipt ref:
 - Revalidation required before durable effect: **true**
 
-`VALIDATED` is only representable when every mandatory gate above is `PASSED` and the workspace/head/witness/effect/lease/dependency bindings are non-null and current. Endpoint success is not authorization. A stale or mismatched witness requires replan/refusal before durability.
+`VALIDATED` is only representable when every mandatory gate above is `PASSED` and the workspace/head/witness/authorized/planned/candidate-effect/lease/dependency bindings are non-null and current. Endpoint success is not authorization. A stale or mismatched witness requires replan/refusal before durability.
 
 ## 19. Durable-promotion checklist
 
