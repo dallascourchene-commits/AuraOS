@@ -123,6 +123,8 @@ Every compilation emits `AURA_PROJECTION_SELECTION_RECEIPT_V1`, recording:
 
 The receipt is bound to the objective digest, exact repository identity digest, and canonical project owner.
 
+`receipt_digest` is a deterministic integrity checksum over receipt content. It is **not** an authenticity signature, authorization token, or proof that a particular budget was approved by an external authority. A stale or low-level-mutated receipt whose carried digest no longer matches its content fails closed. A caller that deliberately chooses another globally legal budget and recomputes the dependent receipt and compilation digests creates a **new compilation identity**; PR3 does not claim that local self-hashes can authenticate a prior budget. Budget authorization, if required by a host, must come from Aura's existing external authority/capability controls rather than a second signing plane inside PR3.
+
 A `COMPLETE` receipt cannot contain missing mandatory evidence. An `INCOMPLETE` receipt must expose at least one missing mandatory item.
 
 ## 7. Existing PR1 projection remains canonical
@@ -201,13 +203,14 @@ PR3 fails closed when:
 - a hand-assembled `COMPLETE` compilation cannot independently prove its exact-current answer-determining source anchor;
 - a hand-assembled compilation attempts to mark compiler-ineligible advisory, stale, unavailable, adapter-missing, or conflicting candidates as selected canonical evidence;
 - caller-supplied candidate IDs collide with the reserved `source:selected` missing-source receipt marker, including through hand-assembled public compilation records;
-- selected candidates exceed signed node/edge budgets, have incomplete dependency closure, or graph edges reference candidates outside the task-conditioned set;
+- selected candidates exceed the receipt-declared node/edge budgets, have incomplete dependency closure, or graph edges reference candidates outside the task-conditioned set;
 - caller-controlled candidate, selected-candidate, graph-edge, edge-input, or temporal-binding collections must be exact immutable tuples and satisfy declared-length bounds before traversal;
 - bounded identifier vectors such as dependency IDs and provenance start IDs are likewise exact immutable tuples, so `_ids()` never trusts caller-defined sequence length or iteration protocols;
 - public compiler type signatures advertise the same immutable tuple contract enforced at runtime for candidate and edge inputs;
 - projection references differ in full canonical identity or category placement from selected candidates;
 - hand-assembled selected candidates contain low-level-tampered `CanonicalReference` or `TemporalBinding` records that no longer pass their canonical constructors;
 - hand-assembled compilations contain a low-level-tampered selection receipt or nested projection budget whose canonical reconstruction or receipt digest no longer matches;
+- receipt and compilation digests are treated as deterministic integrity identities only; PR3 does not misrepresent them as authenticated budget signatures or create a second authority/signing plane;
 - one canonical reference is aliased into multiple candidate roles;
 - an authority-bearing candidate claims an `origin_ref` different from its canonical reference origin;
 - advisory/hypothesis/stale/unavailable material attempts to carry canonical/derived read authority;

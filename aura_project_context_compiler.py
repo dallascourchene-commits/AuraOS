@@ -47,6 +47,10 @@ MEMORY_LIFECYCLE_PHASES = (
 )
 
 
+class _SelectionReceiptDigestMismatch(ValueError):
+    """Identify deterministic receipt-integrity mismatch without string dispatch."""
+
+
 class CandidateCategory(str, Enum):
     SOURCE = "SOURCE"
     TEST = "TEST"
@@ -594,7 +598,7 @@ def _finalize_selection_receipt(receipt: Any) -> None:
     """Enforce the corresponding deterministic PR3 helper contract."""
     expected = stable_digest(receipt.to_dict(include_digest=False))
     if receipt.receipt_digest and receipt.receipt_digest != expected:
-        raise ValueError("selection receipt digest mismatch")
+        raise _SelectionReceiptDigestMismatch("selection receipt digest mismatch")
     object.__setattr__(receipt, "receipt_digest", expected)
 
 
@@ -675,9 +679,9 @@ def _revalidate_selection_receipt(receipt: Any) -> ProjectionSelectionReceipt:
             receipt_digest=receipt.receipt_digest,
             version=receipt.version,
         )
+    except _SelectionReceiptDigestMismatch:
+        raise
     except Exception as exc:
-        if isinstance(exc, ValueError) and str(exc) == "selection receipt digest mismatch":
-            raise
         raise ValueError("selection receipt failed canonical revalidation") from exc
     try:
         if rebuilt.to_dict() != receipt.to_dict():

@@ -795,3 +795,40 @@ def test_public_compilation_rejects_low_level_tampered_receipt_edge_budget() -> 
             selected_candidates=complete.selected_candidates,
             graph_edges=complete.graph_edges, admissible=True,
         )
+
+
+def test_recomputed_legal_budget_creates_new_compilation_identity_not_authenticity() -> None:
+    complete = _compile((_source(),))
+    receipt = complete.selection_receipt
+    rebudgeted_receipt = ProjectionSelectionReceipt(
+        objective_digest=receipt.objective_digest,
+        repository_identity_digest=receipt.repository_identity_digest,
+        canonical_owner=receipt.canonical_owner,
+        selected=receipt.selected,
+        omitted_irrelevant=receipt.omitted_irrelevant,
+        omitted_by_budget=receipt.omitted_by_budget,
+        stale=receipt.stale,
+        unavailable=receipt.unavailable,
+        conflicting=receipt.conflicting,
+        source_adapter_missing=receipt.source_adapter_missing,
+        mandatory_evidence_missing=receipt.mandatory_evidence_missing,
+        status=receipt.status,
+        budget=ProjectionBudget(max_nodes=32, max_edges=64),
+    )
+
+    rebudgeted = ProjectContextCompilation(
+        project_ref=PROJECT_REF,
+        objective=complete.objective,
+        objective_digest=complete.objective_digest,
+        repository_identity=complete.repository_identity,
+        projection=complete.projection,
+        selection_receipt=rebudgeted_receipt,
+        selected_candidates=complete.selected_candidates,
+        graph_edges=complete.graph_edges,
+        admissible=True,
+    )
+
+    assert rebudgeted.selection_receipt.budget != complete.selection_receipt.budget
+    assert rebudgeted.selection_receipt.receipt_digest != complete.selection_receipt.receipt_digest
+    assert rebudgeted.compilation_digest != complete.compilation_digest
+    assert rebudgeted.admissible is True
