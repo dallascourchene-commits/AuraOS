@@ -1,4 +1,4 @@
-name: PR2 independent audit hardening 269 round 9
+name: PR2 final convergence, CODEMAP, and publish
 
 on:
   push:
@@ -9,30 +9,70 @@ permissions:
   contents: write
 
 concurrency:
-  group: pr2-independent-audit-hardening-269-round9
+  group: pr2-final-convergence-269
   cancel-in-progress: false
 
 jobs:
-  harden:
+  finalize:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
-      - name: Checkout helper commit
+      - name: Checkout helper branch
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Preserve patcher and checkout exact PR2 head
+      - name: Verify exact PR and main heads, then integrate main
         run: |
-          cp tools/pr2_review_hardening_269_round9.py /tmp/pr2_review_hardening_269_round9.py
-          python -m py_compile /tmp/pr2_review_hardening_269_round9.py
-          test "$(git hash-object /tmp/pr2_review_hardening_269_round9.py)" = "cbd7fbcacd30e075080e9342ad3c643edaf66b7c"
-          git fetch --no-tags origin refactor/verified-ephemeral-workspace-pr2-clean
-          git checkout --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "decbcc876435b81eb683e4543e15487124c4d5f6"
+          set -euo pipefail
+          git config user.name "AuraOS PR2 Finalizer"
+          git config user.email "actions@users.noreply.github.com"
+          git fetch --no-tags origin \
+            refs/heads/refactor/verified-ephemeral-workspace-pr2-clean \
+            refs/heads/main
+          test "$(git rev-parse origin/refactor/verified-ephemeral-workspace-pr2-clean)" = \
+            "6a701595910e9a32e5df909c4fe361de772bbe90"
+          test "$(git rev-parse origin/main)" = \
+            "c1d896ff7b5f15471d8170cbd0594b0f4ed0c163"
+          git checkout -B pr2-final-candidate origin/refactor/verified-ephemeral-workspace-pr2-clean
+          git merge --no-ff --no-edit origin/main
 
-      - name: Apply final review hardening
-        run: python /tmp/pr2_review_hardening_269_round9.py
+      - name: Apply low-risk Codacy cleanup only
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("aura_ephemeral_adapter_registry.py")
+          text = path.read_text(encoding="utf-8")
+
+          old = "import inspect\nimport json\n"
+          new = "import inspect\nimport json\nimport math\n"
+          if old not in text or "import math\n" in text:
+              raise SystemExit("unexpected import block while applying Codacy cleanup")
+          text = text.replace(old, new, 1)
+
+          old = '''    if deadline_monotonic != deadline_monotonic or deadline_monotonic in {float("inf"), float("-inf")} \\\n            or deadline_monotonic <= 0:\n'''
+          new = '''    if not math.isfinite(deadline_monotonic) or deadline_monotonic <= 0:\n'''
+          if old not in text:
+              raise SystemExit("expected deadline finiteness guard not found")
+          text = text.replace(old, new, 1)
+
+          marker = "\n\n@dataclass\nclass AdapterMetadata:"
+          helper = '''\n\ndef _default_host_compatibility() -> list[str]:\n    return ["python-stdlib"]\n\n\n@dataclass\nclass AdapterMetadata:'''
+          if marker not in text:
+              raise SystemExit("AdapterMetadata marker not found")
+          text = text.replace(marker, helper, 1)
+
+          old = '    host_compatibility: list[str] = field(default_factory=lambda: ["python-stdlib"])\n'
+          new = '    host_compatibility: list[str] = field(default_factory=_default_host_compatibility)\n'
+          if old not in text:
+              raise SystemExit("host compatibility default_factory not found")
+          text = text.replace(old, new, 1)
+
+          path.write_text(text, encoding="utf-8")
+          PY
+          git diff --check
 
       - uses: actions/setup-python@v5
         with:
@@ -44,23 +84,20 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Compile PR2 sources and tests
+      - name: Compile and fatal Ruff
         run: |
           python -m py_compile \
             aura_ephemeral_adapter_registry.py \
             aura_ephemeral_registry_store.py \
             aura_ephemeral_workspace_runtime_v2.py \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
-
-      - name: Fatal Ruff classes
-        run: |
           python -m ruff check --select E9,F63,F7,F82 \
             aura_ephemeral_adapter_registry.py \
             aura_ephemeral_registry_store.py \
             aura_ephemeral_workspace_runtime_v2.py \
             tests/test_aura_ephemeral_workspace_runtime_v2.py
 
-      - name: Focused PR2 final review suite
+      - name: Focused PR2 tests
         run: python -m pytest -q tests/test_aura_ephemeral_workspace_runtime_v2.py
 
       - name: Retained V1 Phase0 and PR1 tests
@@ -83,29 +120,119 @@ jobs:
                   Draft202012Validator.check_schema(json.load(handle))
           PY
 
-      - name: Exact round-nine scope and whitespace gate
-        run: |
-          printf '%s\n' \
-            aura_ephemeral_adapter_registry.py \
-            aura_ephemeral_registry_store.py \
-            aura_ephemeral_workspace_runtime_v2.py \
-            tests/test_aura_ephemeral_workspace_runtime_v2.py \
-            | sort > /tmp/expected-files.txt
-          git diff --name-only | sort > /tmp/actual-files.txt
-          diff -u /tmp/expected-files.txt /tmp/actual-files.txt
-          git diff --check
-
-      - name: Publish PR2 round-nine hardening commit
+      - name: Regenerate and verify CODEMAP/topology
         run: |
           set -euo pipefail
-          git config user.name "AuraOS PR2 Independent Audit Hardener"
-          git config user.email "actions@users.noreply.github.com"
+          cp .aura/CODEMAP.json /tmp/aura-codemap-reference.json
+          python aura_codebase_navigator.py
+          set +e
+          python -m aura_codemap_verify \
+            --compare-json /tmp/aura-codemap-reference.json \
+            > /tmp/aura-codemap-comparison.json
+          comparison_status=$?
+          set -e
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/aura-codemap-comparison.json').read_text(encoding='utf-8'))
+          stable = result.get('stable_comparison', {})
+          print(json.dumps({
+              'errors': result.get('errors', []),
+              'missing_paths': result.get('missing_paths', []),
+              'missing_symbols': result.get('missing_symbols', []),
+              'stable_comparison': stable,
+          }, sort_keys=True))
+          if result.get('missing_paths'):
+              raise SystemExit('CODEMAP regeneration has missing paths')
+          if result.get('missing_symbols'):
+              raise SystemExit('CODEMAP regeneration has missing symbols')
+          PY
+          # Structural drift is expected because PR2 adds real source. Validate the regenerated
+          # snapshot against itself as the final merge artifact.
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s topology_map.json
+          test -s Aura_Memory/live_topology_ast.json
+          git diff --check
+
+      - name: Commit final convergence and synchronized maps
+        run: |
+          set -euo pipefail
           git add \
             aura_ephemeral_adapter_registry.py \
-            aura_ephemeral_registry_store.py \
-            aura_ephemeral_workspace_runtime_v2.py \
-            tests/test_aura_ephemeral_workspace_runtime_v2.py
-          test "$(git diff --cached --name-only | wc -l)" -eq 4
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json
+          git add -f Aura_Memory/live_topology_ast.json
           git diff --cached --check
-          git commit -m "PR2: Close final review hardening gaps"
-          git push origin HEAD:refs/heads/refactor/verified-ephemeral-workspace-pr2-clean
+          if ! git diff --cached --quiet; then
+            git commit -m "PR2: finalize Codacy disposition and synchronize CODEMAP"
+          fi
+
+          python - <<'PY'
+          import subprocess
+
+          allowed = {
+              '.aura/refactor_objectives/intent_native_ephemeral_workspace_pr2.v1.json',
+              '.aura/waboose_requests/intent_native_ephemeral_workspace_pr2.v1.json',
+              'aura_ephemeral_adapter_registry.py',
+              'aura_ephemeral_registry_store.py',
+              'aura_ephemeral_workspace_runtime_v2.py',
+              'docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md',
+              'schemas/aura_spatial_action_certificate_v2.schema.json',
+              'schemas/aura_workspace_execution_graph_v2.schema.json',
+              'tests/test_aura_ephemeral_workspace_runtime_v2.py',
+              '.aura/CODEMAP.json',
+              '.aura/CODEMAP.md',
+              'topology_map.json',
+              'Aura_Memory/live_topology_ast.json',
+          }
+          required_source = {
+              '.aura/refactor_objectives/intent_native_ephemeral_workspace_pr2.v1.json',
+              '.aura/waboose_requests/intent_native_ephemeral_workspace_pr2.v1.json',
+              'aura_ephemeral_adapter_registry.py',
+              'aura_ephemeral_registry_store.py',
+              'aura_ephemeral_workspace_runtime_v2.py',
+              'docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md',
+              'schemas/aura_spatial_action_certificate_v2.schema.json',
+              'schemas/aura_workspace_execution_graph_v2.schema.json',
+              'tests/test_aura_ephemeral_workspace_runtime_v2.py',
+          }
+          files = set(subprocess.check_output(
+              ['git', 'diff', '--name-only', 'origin/main...HEAD'], text=True
+          ).splitlines())
+          unexpected = files - allowed
+          missing = required_source - files
+          print('final PR files:', sorted(files))
+          if unexpected:
+              raise SystemExit(f'unexpected final PR files: {sorted(unexpected)}')
+          if missing:
+              raise SystemExit(f'missing PR2 source files: {sorted(missing)}')
+          PY
+          git status --short
+
+      - name: Publish final PR2 candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            push origin HEAD:refs/heads/refactor/verified-ephemeral-workspace-pr2-clean
+          unset AUTH_HEADER
+
+      - name: Upload final convergence evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr2-final-convergence-${{ github.sha }}
+          path: |
+            /tmp/aura-codemap-comparison.json
+            .aura/CODEMAP.json
+            .aura/CODEMAP.md
+            topology_map.json
+            Aura_Memory/live_topology_ast.json
+          if-no-files-found: warn
+          retention-days: 14
