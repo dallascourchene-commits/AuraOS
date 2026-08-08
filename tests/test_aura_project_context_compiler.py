@@ -869,3 +869,45 @@ def test_public_constructor_rejects_authoritative_candidate_without_canonical_bi
             admissible=result.admissible,
         )
 
+
+def test_public_constructor_rejects_tampered_authoritative_origin() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+    result = _compile((source,))
+    tampered = replace(source)
+    object.__setattr__(tampered, "origin_ref", "forged://different-origin")
+    with pytest.raises(ValueError, match="origin_ref must equal"):
+        ProjectContextCompilation(
+            project_ref=result.project_ref,
+            objective=result.objective,
+            objective_digest=result.objective_digest,
+            repository_identity=result.repository_identity,
+            projection=result.projection,
+            selection_receipt=result.selection_receipt,
+            selected_candidates=(tampered,),
+            graph_edges=result.graph_edges,
+            admissible=result.admissible,
+        )
+
+
+def test_public_constructor_rejects_tampered_authority_escalation() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+    result = _compile((source,))
+    tampered = replace(source)
+    object.__setattr__(tampered, "authority_class", ContextAuthorityClass.DERIVED_READ)
+    with pytest.raises(ValueError, match="authority class does not match"):
+        ProjectContextCompilation(
+            project_ref=result.project_ref,
+            objective=result.objective,
+            objective_digest=result.objective_digest,
+            repository_identity=result.repository_identity,
+            projection=result.projection,
+            selection_receipt=result.selection_receipt,
+            selected_candidates=(tampered,),
+            graph_edges=result.graph_edges,
+            admissible=result.admissible,
+        )
+

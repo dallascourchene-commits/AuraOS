@@ -697,6 +697,9 @@ def _validate_compilation_selection(
             "selected candidate dependency closure is incomplete: "
             f"{missing_dependencies}"
         )
+    for item in selected:
+        _validate_candidate_reference(item)
+        _validate_candidate_authority(item)
     ineligible_selected = {
         item.candidate_id: problem
         for item in selected
