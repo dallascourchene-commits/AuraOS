@@ -1,0 +1,98 @@
+name: PR3 exact edge-container guarded repair
+
+on:
+  push:
+    branches:
+      - analysis/pr3-exact-edge-container-fix
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/source-first-project-context-pr3
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            aura_project_context_compiler.py
+            aura_ephemeral_workspace_contracts.py
+            aura_ephemeral_path_policy.py
+            tests/test_aura_project_context_compiler.py
+            tests/test_aura_project_context_acceptance.py
+            schemas/aura_projection_selection_receipt_v1.schema.json
+            docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+      - name: Require exact source
+        run: test "$(git rev-parse HEAD)" = "5f8794560ace6d31f44e06f75e8a5b4999f569e4"
+      - name: Apply exact finite edge-container contract
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('aura_project_context_compiler.py'); s=p.read_text()
+          old='''    if isinstance(edges, (str, bytes, bytearray)) or not isinstance(edges, Sequence):\n        raise TypeError("edges must be a sequence")\n    edge_limit = min(MAX_EDGES, budget.max_edges * _EDGE_INPUT_EXPANSION_FACTOR)\n    if len(edges) > edge_limit:\n        raise ValueError("edges exceed the bounded edge-input ceiling")\n    if any(type(item) is not ProjectContextEdge for item in edges):\n        raise ValueError("edges must contain exact ProjectContextEdge records")\n    edge_items = tuple(edges)\n'''
+          new='''    if type(edges) not in {tuple, list}:\n        raise TypeError("edges must be an exact built-in tuple or list")\n    edge_limit = min(MAX_EDGES, budget.max_edges * _EDGE_INPUT_EXPANSION_FACTOR)\n    if len(edges) > edge_limit:\n        raise ValueError("edges exceed the bounded edge-input ceiling")\n    if any(type(item) is not ProjectContextEdge for item in edges):\n        raise ValueError("edges must contain exact ProjectContextEdge records")\n    edge_items = tuple(edges)\n'''
+          if s.count(old)!=1: raise SystemExit('edge implementation anchor mismatch')
+          p.write_text(s.replace(old,new,1).rstrip()+'\n')
+
+          t=Path('tests/test_aura_project_context_compiler.py'); x=t.read_text().rstrip()
+          block=r'''
+
+
+def test_edge_input_rejects_hostile_sequence_with_lying_length_before_iteration() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+
+    class HostileSequence:
+        def __len__(self):
+            return 0
+
+        def __getitem__(self, index):
+            raise AssertionError("hostile sequence must not be indexed")
+
+        def __iter__(self):
+            raise AssertionError("hostile sequence must not be iterated")
+
+    with pytest.raises(TypeError, match="exact built-in tuple or list"):
+        compile_project_context_projection(
+            "Fix the exact behavior without losing proof context.",
+            project_ref="project:auraos-pr3",
+            repository_identity=_repo(),
+            candidates=(source,),
+            edges=HostileSequence(),
+            budget=ProjectionBudget(max_nodes=64, max_edges=256),
+            freshness_timestamp_ms=1_786_180_000_000,
+        )
+'''
+          if 'test_edge_input_rejects_hostile_sequence_with_lying_length' in x: raise SystemExit('regression already present')
+          t.write_text(x+block.rstrip()+'\n')
+
+          d=Path('docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md'); y=d.read_text()
+          old_doc='Candidate input edges must be a runtime `Sequence`; the compiler validates the sequence type and declared length before materialization or item traversal.'
+          new_doc='Candidate input edges must be an exact built-in `tuple` or `list`; arbitrary `Sequence` implementations are rejected before length inspection or traversal, so custom `__len__`/iteration behavior cannot evade the resource bound.'
+          if y.count(old_doc)!=1: raise SystemExit('doc anchor mismatch')
+          d.write_text(y.replace(old_doc,new_doc,1).rstrip()+'\n')
+          PY
+      - run: python -m pip install --quiet pytest jsonschema ruff
+      - name: Verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+      - name: Commit and fast-forward
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aura PR3 Guarded Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add aura_project_context_compiler.py tests/test_aura_project_context_compiler.py docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+          git commit -m "PR3: require exact finite edge containers"
+          git fetch --depth=1 origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse FETCH_HEAD)" = "5f8794560ace6d31f44e06f75e8a5b4999f569e4"
+          git push origin HEAD:refactor/source-first-project-context-pr3
