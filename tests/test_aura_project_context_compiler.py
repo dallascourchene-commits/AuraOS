@@ -199,6 +199,7 @@ def test_hand_constructed_incomplete_compilation_cannot_smuggle_projection() -> 
     )
     with pytest.raises(ValueError, match="INCOMPLETE selection must not expose"):
         ProjectContextCompilation(
+            project_ref="project:auraos-pr3",
             objective=complete.objective,
             objective_digest=complete.objective_digest,
             repository_identity=complete.repository_identity,
@@ -452,6 +453,7 @@ def test_compilation_rejects_cross_field_objective_or_receipt_mismatch() -> None
     result = _compile((source,))
     with pytest.raises(ValueError, match="objective_digest is not bound"):
         ProjectContextCompilation(
+            project_ref="project:auraos-pr3",
             objective=result.objective, objective_digest=D["9"], repository_identity=result.repository_identity,
             projection=result.projection, selection_receipt=result.selection_receipt,
             selected_candidates=result.selected_candidates, graph_edges=result.graph_edges, admissible=result.admissible,
@@ -473,6 +475,7 @@ def test_compilation_rejects_cross_field_objective_or_receipt_mismatch() -> None
     )
     with pytest.raises(ValueError, match="repository identity is not bound"):
         ProjectContextCompilation(
+            project_ref="project:auraos-pr3",
             objective=result.objective, objective_digest=result.objective_digest, repository_identity=result.repository_identity,
             projection=result.projection, selection_receipt=wrong_receipt,
             selected_candidates=result.selected_candidates, graph_edges=result.graph_edges, admissible=result.admissible,
@@ -658,6 +661,7 @@ def test_public_constructor_rejects_forged_projection_aggregate_freshness() -> N
     forged = replace(result.projection, freshness_class="CURRENT", projection_digest="")
     with pytest.raises(ValueError, match="projection derived fields"):
         ProjectContextCompilation(
+            project_ref="project:auraos-pr3",
             objective=result.objective,
             objective_digest=result.objective_digest,
             repository_identity=result.repository_identity,
@@ -748,6 +752,7 @@ def test_public_constructor_rejects_cross_candidate_temporal_binding_conflict() 
     )
     with pytest.raises(ValueError, match="unresolved conflicts"):
         ProjectContextCompilation(
+            project_ref="project:auraos-pr3",
             objective=complete.objective,
             objective_digest=complete.objective_digest,
             repository_identity=complete.repository_identity,
@@ -797,12 +802,69 @@ def test_public_constructor_rejects_binding_expired_by_forged_projection_timesta
     )
     with pytest.raises(ValueError, match="expired at compilation timestamp"):
         ProjectContextCompilation(
+            project_ref="project:auraos-pr3",
             objective=result.objective,
             objective_digest=result.objective_digest,
             repository_identity=result.repository_identity,
             projection=forged,
             selection_receipt=result.selection_receipt,
             selected_candidates=result.selected_candidates,
+            graph_edges=result.graph_edges,
+            admissible=result.admissible,
+        )
+
+
+def test_public_constructor_binds_project_ref_into_compilation_identity() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+    result = _compile((source,))
+    assert result.projection is not None
+    forged_projection = replace(
+        result.projection,
+        project_ref="project:other-context",
+        projection_digest="",
+    )
+    with pytest.raises(ValueError, match="projection project_ref is not bound"):
+        ProjectContextCompilation(
+            project_ref=result.project_ref,
+            objective=result.objective,
+            objective_digest=result.objective_digest,
+            repository_identity=result.repository_identity,
+            projection=forged_projection,
+            selection_receipt=result.selection_receipt,
+            selected_candidates=result.selected_candidates,
+            graph_edges=result.graph_edges,
+            admissible=result.admissible,
+        )
+
+
+def test_headless_projection_carries_compilation_identity() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+    result = _compile((source,))
+    payload = result.headless_projection()
+    assert payload["project_ref"] == result.project_ref
+    assert payload["compilation_digest"] == result.compilation_digest
+
+
+def test_public_constructor_rejects_authoritative_candidate_without_canonical_binding() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+    result = _compile((source,))
+    tampered = replace(source, temporal_bindings=())
+    object.__setattr__(tampered, "temporal_bindings", ())
+    with pytest.raises(ValueError, match="drift-sensitive canonical-reference bindings"):
+        ProjectContextCompilation(
+            project_ref=result.project_ref,
+            objective=result.objective,
+            objective_digest=result.objective_digest,
+            repository_identity=result.repository_identity,
+            projection=result.projection,
+            selection_receipt=result.selection_receipt,
+            selected_candidates=(tampered,),
             graph_edges=result.graph_edges,
             admissible=result.admissible,
         )

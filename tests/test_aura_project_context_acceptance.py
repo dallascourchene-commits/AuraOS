@@ -210,6 +210,7 @@ def test_public_compilation_reproves_exact_answer_source_anchor() -> None:
         match="COMPLETE selection requires an exact-current answer-determining source",
     ):
         ProjectContextCompilation(
+            project_ref=PROJECT_REF,
             objective=complete.objective,
             objective_digest=complete.objective_digest,
             repository_identity=complete.repository_identity,
@@ -259,6 +260,7 @@ def test_public_compilation_rejects_advisory_projection_smuggling() -> None:
 
     with pytest.raises(ValueError, match="selected candidates must remain compiler-eligible"):
         ProjectContextCompilation(
+            project_ref=PROJECT_REF,
             objective=complete.objective,
             objective_digest=complete.objective_digest,
             repository_identity=complete.repository_identity,
@@ -552,6 +554,7 @@ def test_public_compilation_rejects_incomplete_dependency_closure() -> None:
     )
     with pytest.raises(ValueError, match="dependency closure is incomplete"):
         ProjectContextCompilation(
+            project_ref=PROJECT_REF,
             objective=complete.objective, objective_digest=complete.objective_digest,
             repository_identity=complete.repository_identity, projection=forged_projection,
             selection_receipt=forged_receipt, selected_candidates=(source, proof),
@@ -578,6 +581,7 @@ def test_public_compilation_rejects_same_id_different_reference_identity() -> No
     )
     with pytest.raises(ValueError, match="artifact_evidence_refs references do not match"):
         ProjectContextCompilation(
+            project_ref=PROJECT_REF,
             objective=complete.objective, objective_digest=complete.objective_digest,
             repository_identity=complete.repository_identity, projection=forged_projection,
             selection_receipt=complete.selection_receipt,
@@ -607,6 +611,7 @@ def test_public_compilation_rejects_node_budget_bypass() -> None:
     )
     with pytest.raises(ValueError, match="node budget"):
         ProjectContextCompilation(
+            project_ref=PROJECT_REF,
             objective=complete.objective, objective_digest=complete.objective_digest,
             repository_identity=complete.repository_identity, projection=complete.projection,
             selection_receipt=forged_receipt, selected_candidates=complete.selected_candidates,
@@ -641,6 +646,7 @@ def test_public_compilation_rejects_edge_budget_bypass() -> None:
     )
     with pytest.raises(ValueError, match="edge budget"):
         ProjectContextCompilation(
+            project_ref=PROJECT_REF,
             objective=complete.objective, objective_digest=complete.objective_digest,
             repository_identity=complete.repository_identity, projection=complete.projection,
             selection_receipt=forged_receipt, selected_candidates=complete.selected_candidates,
@@ -665,6 +671,7 @@ def test_public_compilation_rejects_reserved_source_selected_id() -> None:
     )
     with pytest.raises(ValueError, match="candidate_id 'source:selected' is reserved"):
         ProjectContextCompilation(
+            project_ref=PROJECT_REF,
             objective=complete.objective, objective_digest=complete.objective_digest,
             repository_identity=complete.repository_identity, projection=complete.projection,
             selection_receipt=forged_receipt, selected_candidates=(reserved,),

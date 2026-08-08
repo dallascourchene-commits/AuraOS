@@ -136,7 +136,7 @@ A `COMPLETE` receipt cannot contain missing mandatory evidence. An `INCOMPLETE` 
 - `LOCAL_ONLY` egress class;
 - false mutation/execution/persistence/merge authority inherited from the PR1 authority envelope.
 
-An `INCOMPLETE` compilation has `projection: null`; the same is true through `headless_projection()`. The public `ProjectContextCompilation` constructor also rejects a hand-assembled `INCOMPLETE` record that attempts to smuggle in a PR1 projection, independently re-proves the exact-current answer-determining source anchor for a hand-assembled `COMPLETE` record, revalidates every selected candidate against the same truth/availability/freshness eligibility boundary used by the compiler, and independently rejects the reserved `source:selected` missing-source marker. Selected unresolved conflicts are rejected as well. This prevents a caller from placing advisory, stale, unavailable, adapter-missing, conflicting, or reserved-sentinel material into a canonical projection by bypassing `compile_project_context_projection()`.
+An `INCOMPLETE` compilation has `projection: null`; the same is true through `headless_projection()`. PR3's compilation record independently owns `project_ref`; that value is included in the compilation digest and the nested PR1 projection must match it, so a hand-built projection cannot silently substitute a different project identity. The public `ProjectContextCompilation` constructor also rejects a hand-assembled `INCOMPLETE` record that attempts to smuggle in a PR1 projection, independently re-proves the exact-current answer-determining source anchor for a hand-assembled `COMPLETE` record, revalidates every selected candidate against the same truth/availability/freshness eligibility boundary used by the compiler, and independently rejects the reserved `source:selected` missing-source marker. Selected unresolved conflicts are rejected as well. This prevents a caller from placing advisory, stale, unavailable, adapter-missing, conflicting, or reserved-sentinel material into a canonical projection by bypassing `compile_project_context_projection()`.
 
 PR3 does not change the PR1 serialized contract or PR2 runtime contract.
 
@@ -181,7 +181,7 @@ This is governance metadata, not a new memory owner. For authority-bearing candi
 
 `full_project_graph_included: false`
 
-The complete repository/project topology is not sent to the client by default. Exact canonical references survive the headless path. If selection is `INCOMPLETE`, the headless payload retains the receipt and selected diagnostic context but exposes no canonical PR1 projection.
+The complete repository/project topology is not sent to the client by default. The headless payload includes `project_ref` and `compilation_digest`, and exact canonical references survive the headless path. If selection is `INCOMPLETE`, the headless payload retains the receipt and selected diagnostic context but exposes no canonical PR1 projection.
 
 Spatial representation, asset streaming, scene deltas, WebXR, and renderer work are PR4 or later and are out of scope here.
 

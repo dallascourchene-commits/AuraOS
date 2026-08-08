@@ -590,6 +590,11 @@ def _validate_compilation_identity(compilation: Any) -> None:
     )
     object.__setattr__(
         compilation,
+        "project_ref",
+        _text(compilation.project_ref, "project_ref"),
+    )
+    object.__setattr__(
+        compilation,
         "objective_digest",
         _digest(compilation.objective_digest, "objective_digest"),
     )
@@ -719,6 +724,26 @@ def _validate_compilation_selection(
                 "selected temporal binding expired at compilation timestamp: "
                 f"{sorted(expired_ids)}"
             )
+    authoritative_unbound = sorted(
+        item.candidate_id
+        for item in selected
+        if item.truth_class in _ELIGIBLE_TRUTH
+        and item.reference is not None
+        and not any(
+            binding.kind is _canonical_reference_binding_kind(item.category)
+            and binding.binding_id == item.reference.reference_id
+            and binding.digest == item.reference.digest
+            for binding in item.temporal_bindings
+        )
+    )
+    if (
+        compilation.selection_receipt.status is SelectionStatus.COMPLETE
+        and authoritative_unbound
+    ):
+        raise ValueError(
+            "COMPLETE selection requires drift-sensitive canonical-reference bindings: "
+            f"{authoritative_unbound}"
+        )
     has_exact_answer_source = any(
         item.category is CandidateCategory.SOURCE
         and item.truth_class is CandidateTruthClass.EXACT_CURRENT
@@ -778,6 +803,8 @@ def _validate_compilation_projection(
     projection = compilation.projection
     if projection is None:
         return
+    if projection.project_ref != compilation.project_ref:
+        raise ValueError("projection project_ref is not bound to compilation")
     if projection.objective_digest != compilation.objective_digest:
         raise ValueError(
             "projection objective is not bound to compilation"
@@ -817,7 +844,7 @@ def _validate_compilation_projection(
             )
     expected_projection = _projection(
         compilation.objective,
-        projection.project_ref,
+        compilation.project_ref,
         compilation.repository_identity,
         selected,
         projection.freshness_timestamp_ms,
@@ -849,6 +876,7 @@ def _finalize_compilation(compilation: Any) -> None:
 @dataclass(frozen=True)
 class ProjectContextCompilation:
     objective: str
+    project_ref: str
     objective_digest: str
     repository_identity: RepositoryIdentity
     projection: ProjectContextProjection | None
@@ -871,6 +899,7 @@ class ProjectContextCompilation:
         body = {
             "version": self.version,
             "objective": self.objective,
+            "project_ref": self.project_ref,
             "objective_digest": self.objective_digest,
             "repository_identity": self.repository_identity.to_dict(),
             "projection": self.projection.to_dict() if self.projection is not None else None,
@@ -890,6 +919,8 @@ class ProjectContextCompilation:
     def headless_projection(self) -> dict[str, Any]:
         return {
             "version": PROJECT_CONTEXT_COMPILATION_VERSION,
+            "compilation_digest": self.compilation_digest,
+            "project_ref": self.project_ref,
             "objective_digest": self.objective_digest,
             "projection": self.projection.to_dict() if self.projection is not None else None,
             "selection_receipt": self.selection_receipt.to_dict(),
@@ -1394,6 +1425,7 @@ def _materialize_project_context_compilation(
         )
     return ProjectContextCompilation(
         objective=objective,
+        project_ref=project_ref,
         objective_digest=objective_digest,
         repository_identity=repository_identity,
         projection=projection,
@@ -1780,6 +1812,9 @@ __all__ = [
     "PROJECT_CONTEXT_COMPILER_VERSION",
     "PROJECTION_SELECTION_RECEIPT_VERSION",
     "PROJECT_CONTEXT_COMPILATION_VERSION",
+    "PROJECT_CONTEXT_PROVENANCE_VERSION",
+    "PROJECT_CONTEXT_FRESHNESS_VERSION",
+    "MISSING_SELECTED_SOURCE_ID",
     "MEMORY_LIFECYCLE_PHASES",
     "CandidateCategory",
     "CandidateTruthClass",
