@@ -646,6 +646,49 @@ class ProjectionSelectionReceipt:
         return body
 
 
+def _revalidate_selection_receipt(receipt: Any) -> ProjectionSelectionReceipt:
+    """Reconstruct the receipt and nested budget before public admission."""
+    if type(receipt) is not ProjectionSelectionReceipt:
+        raise ValueError("selection_receipt must be exact ProjectionSelectionReceipt")
+    budget = receipt.budget
+    if type(budget) is not ProjectionBudget:
+        raise ValueError("selection receipt requires exact ProjectionBudget")
+    try:
+        canonical_budget = ProjectionBudget(budget.max_nodes, budget.max_edges)
+    except Exception as exc:
+        raise ValueError("selection receipt budget failed revalidation") from exc
+    try:
+        rebuilt = ProjectionSelectionReceipt(
+            objective_digest=receipt.objective_digest,
+            repository_identity_digest=receipt.repository_identity_digest,
+            canonical_owner=receipt.canonical_owner,
+            selected=receipt.selected,
+            omitted_irrelevant=receipt.omitted_irrelevant,
+            omitted_by_budget=receipt.omitted_by_budget,
+            stale=receipt.stale,
+            unavailable=receipt.unavailable,
+            conflicting=receipt.conflicting,
+            source_adapter_missing=receipt.source_adapter_missing,
+            mandatory_evidence_missing=receipt.mandatory_evidence_missing,
+            status=receipt.status,
+            budget=canonical_budget,
+            receipt_digest=receipt.receipt_digest,
+            version=receipt.version,
+        )
+    except Exception as exc:
+        if isinstance(exc, ValueError) and str(exc) == "selection receipt digest mismatch":
+            raise
+        raise ValueError("selection receipt failed canonical revalidation") from exc
+    try:
+        if rebuilt.to_dict() != receipt.to_dict():
+            raise ValueError("selection receipt is not in canonical form")
+    except ValueError:
+        raise
+    except Exception as exc:
+        raise ValueError("selection receipt failed canonical revalidation") from exc
+    return rebuilt
+
+
 def _validate_compilation_identity(compilation: Any) -> None:
     """Validate the corresponding PR3 invariant and fail closed on mismatch."""
     if compilation.version != PROJECT_CONTEXT_COMPILATION_VERSION:
@@ -675,10 +718,8 @@ def _validate_compilation_identity(compilation: Any) -> None:
         and type(compilation.projection) is not ProjectContextProjection
     ):
         raise ValueError("projection must be exact ProjectContextProjection")
-    if type(compilation.selection_receipt) is not ProjectionSelectionReceipt:
-        raise ValueError(
-            "selection_receipt must be exact ProjectionSelectionReceipt"
-        )
+    canonical_receipt = _revalidate_selection_receipt(compilation.selection_receipt)
+    object.__setattr__(compilation, "selection_receipt", canonical_receipt)
     if compilation.selection_receipt.objective_digest != compilation.objective_digest:
         raise ValueError(
             "selection receipt objective is not bound to compilation"

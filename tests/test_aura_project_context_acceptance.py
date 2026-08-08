@@ -747,3 +747,51 @@ def test_candidate_rejects_unbounded_temporal_binding_iterable_without_consuming
 
     with pytest.raises(TypeError, match="temporal_bindings must be an exact immutable tuple"):
         replace(source, temporal_bindings=ExplodingBindings())
+
+
+def test_public_compilation_rejects_low_level_tampered_selection_receipt_vector() -> None:
+    complete = _compile((_source(),))
+    receipt = complete.selection_receipt
+    object.__setattr__(receipt, "selected", ("source:target", "source:forged"))
+
+    with pytest.raises(ValueError, match="selection receipt digest mismatch"):
+        ProjectContextCompilation(
+            project_ref=PROJECT_REF, objective=complete.objective,
+            objective_digest=complete.objective_digest,
+            repository_identity=complete.repository_identity,
+            projection=complete.projection, selection_receipt=receipt,
+            selected_candidates=complete.selected_candidates,
+            graph_edges=complete.graph_edges, admissible=True,
+        )
+
+
+def test_public_compilation_rejects_low_level_tampered_receipt_node_budget() -> None:
+    complete = _compile((_source(),))
+    receipt = complete.selection_receipt
+    object.__setattr__(receipt.budget, "max_nodes", 257)
+
+    with pytest.raises(ValueError, match="selection receipt budget failed revalidation"):
+        ProjectContextCompilation(
+            project_ref=PROJECT_REF, objective=complete.objective,
+            objective_digest=complete.objective_digest,
+            repository_identity=complete.repository_identity,
+            projection=complete.projection, selection_receipt=receipt,
+            selected_candidates=complete.selected_candidates,
+            graph_edges=complete.graph_edges, admissible=True,
+        )
+
+
+def test_public_compilation_rejects_low_level_tampered_receipt_edge_budget() -> None:
+    complete = _compile((_source(),))
+    receipt = complete.selection_receipt
+    object.__setattr__(receipt.budget, "max_edges", 1025)
+
+    with pytest.raises(ValueError, match="selection receipt budget failed revalidation"):
+        ProjectContextCompilation(
+            project_ref=PROJECT_REF, objective=complete.objective,
+            objective_digest=complete.objective_digest,
+            repository_identity=complete.repository_identity,
+            projection=complete.projection, selection_receipt=receipt,
+            selected_candidates=complete.selected_candidates,
+            graph_edges=complete.graph_edges, admissible=True,
+        )

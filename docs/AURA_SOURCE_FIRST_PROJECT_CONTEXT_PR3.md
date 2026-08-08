@@ -207,6 +207,7 @@ PR3 fails closed when:
 - public compiler type signatures advertise the same immutable tuple contract enforced at runtime for candidate and edge inputs;
 - projection references differ in full canonical identity or category placement from selected candidates;
 - hand-assembled selected candidates contain low-level-tampered `CanonicalReference` or `TemporalBinding` records that no longer pass their canonical constructors;
+- hand-assembled compilations contain a low-level-tampered selection receipt or nested projection budget whose canonical reconstruction or receipt digest no longer matches;
 - one canonical reference is aliased into multiple candidate roles;
 - an authority-bearing candidate claims an `origin_ref` different from its canonical reference origin;
 - advisory/hypothesis/stale/unavailable material attempts to carry canonical/derived read authority;
