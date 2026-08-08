@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1584
-- **total_bytes**: 59700206
-- **text_tokens_est**: 5416160
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 209, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 980, 'schema_or_lexicon': 236, 'support_file': 79}
+- **file_count**: 1586
+- **total_bytes**: 59709027
+- **text_tokens_est**: 5418366
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 209, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 980, 'schema_or_lexicon': 238, 'support_file': 79}
 - **topology_nodes**: 11475
 - **topology_edges**: 28060
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 34375.57
+- **elapsed_ms**: 35792.56
 
 ## Coverage
 
-- **included_file_count**: 1584
+- **included_file_count**: 1586
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=25, `Aura_Memory`=6, `Aura_Sandbox`=2, `__pycache__`=8
@@ -394,7 +394,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr4.v1.json`
 - `.aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json`
 - `.aura/waboose_requests/bilateral_intent_guardrail_foundry_final.v2.json`
-- ... 35 more; query CODEMAP.json for exact file cards
+- ... 37 more; query CODEMAP.json for exact file cards
 
 ### interfaces_and_docs
 - `.aura/AFFORDANCE_MAP.json`
