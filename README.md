@@ -8,8 +8,8 @@ AuraOS is **not a single LLM, chatbot, autonomous super-agent, or monolithic app
 
 **Repository status:** active research and development  
 **Software license:** GNU AGPL v3.0  
-**Research record:** nine defensive prior-art papers, claims **N1–N87**  
-**Latest paper:** [Paper IX — Zenodo 21843659](https://zenodo.org/records/21843659) · [repository PDF](papers/AuraOS_Paper_IX_Objective_Native_Commons_Proof_Carrying_Contribution_Economies.pdf)
+**Research record:** nine defensive prior-art papers, claims **N1–N100**  
+**Latest paper:** [Paper IX v2.0 — DOI 10.5281/zenodo.21845020](https://doi.org/10.5281/zenodo.21845020) · PDF SHA-256 `667ea216178b44d63e6c2add370e6ada2180a9274f0a65ea400832f0ccd4895e`
 
 > **Meaning may guide discovery. Only exact grounded evidence and authorized governance may grant authority.**
 
@@ -229,7 +229,17 @@ Paper IX publishes the broader architecture that can be built on the substrate, 
 - bounded physics/digital-twin and population-behavior simulation;
 - business-incubation Arenas;
 - sovereign cross-domain Arena federation;
-- participatory proof-carrying Scientific Arenas and a compounding Scientific Capability Commons.
+- participatory proof-carrying Scientific Arenas and a compounding Scientific Capability Commons;
+- a three-speed **Architecture Arena / convergence compiler** that separates fast discovery, implementation/hardening, and slow constitutional change;
+- **keystone-bottleneck analysis** and demand/capability graphs for prioritizing high-leverage development and research bounties;
+- privacy-preserving **Opportunity** and **Learning** compilers driven by verified capability evidence rather than a universal reputation score;
+- compute-to-data sovereignty, portable verified claims, and evidence-bearing contribution portfolios while private LifeOS/Capsule history remains separately governed;
+- graded creator/referral attribution rather than treating exposure or chronology as automatic causality;
+- multi-class scientific bounties for discovery, replication, falsification, boundary finding, optimization, generalization, field validation, and qualified facility work;
+- objective-compiled **Ephemeral Institutions** spanning people, organizations, communities, Nations, facilities, funding, and professional roles without transferring their legal authority to Aura;
+- a **Machine Capability Commons** for locality-aware fabrication plus living physical-artifact, repair, field-learning, and circular-economy lineage;
+- transport-neutral, jurisdiction-aware **AuraNet** federation;
+- proof-carrying assurance/warranty contract references that keep evidence separate from legal liability, certification, insurance, and truth.
 
 These are **published architectural embodiments and development directions, not a claim that every downstream product is already implemented in this repository**.
 
@@ -360,7 +370,7 @@ No ARCH component grants automatic merge. The terminal autonomous state remains 
 
 AuraOS maintains a **nine-paper defensive prior-art stack**.
 
-Papers I–VII establish claims **N1–N30**. Paper VIII continues the evidence-ordered relational architecture with **N31–N50**. Paper IX extends the published architecture through **N51–N87**.
+Papers I–VII establish claims **N1–N30**. Paper VIII continues the evidence-ordered relational architecture with **N31–N50**. **Paper IX v2.0 extends the published architecture through N51–N100.** The expanded same-day edition preserves the original N51–N87 declarations and adds N88–N100 rather than splitting the architecture across a separate follow-on paper.
 
 | Paper | Main claim family | Claims | Publication | Repository copy |
 |---|---|---:|---|---|
@@ -372,7 +382,7 @@ Papers I–VII establish claims **N1–N30**. Paper VIII continues the evidence-
 | **Paper VI — Enhanced FST and topology** | FST lexicon, resonance topology, FST impact analysis | N21–N23 | [Zenodo 20682051](https://zenodo.org/records/20682051) | — |
 | **Paper VII — Protocol-layer innovations** | Hyperdimensional integrity, micro-module crystallization, resonant tests, thermal-cost arbitration, deterministic compression, local VSA mesh, bounded self-healing | N24–N30 | [Zenodo 20695562](https://zenodo.org/records/20695562) | — |
 | **Paper VIII — Evidence-Ordered Relational Arenas for Governed Cognitive Systems** | Relationship intelligence, Emergent Evidence Spine, governed Arenas, verified engineering, Waboose/Gate, spatial projection, continuity, atomic publication | **N31–N50** | [Zenodo 21465329](https://zenodo.org/records/21465329) | [PDF](papers/AuraOS_Paper_VIII_Evidence_Ordered_Relational_Arenas.pdf) |
-| **Paper IX — Objective-Native Capability Commons and Proof-Carrying Contribution Economies** | Objective-native Arena compilation; Capability Packages/Recipes; Commons and executable rights; proprietary capability evidence; attestation/provenance; Developer Arenas; Personal Cognitive Capsules; manifestation; Places/Conventions; Foundry/simulation/incubation; participatory scientific work and compounding capability reuse | **N51–N87** | [Zenodo 21843659](https://zenodo.org/records/21843659) | [PDF](papers/AuraOS_Paper_IX_Objective_Native_Commons_Proof_Carrying_Contribution_Economies.pdf) |
+| **Paper IX v2.0 — Objective-Native Capability Commons and Proof-Carrying Contribution Economies** | Objective-native Arena compilation; Capability Packages/Recipes; Commons and executable rights; proprietary capability evidence; attestation/provenance; Developer and Architecture Arenas; Personal Cognitive Capsules; manifestation; Places/Conventions; opportunity/learning compilers; Foundry and multi-class research bounties; Ephemeral Institutions; simulation/incubation; participatory science; machine/facility capabilities; local fabrication and circular lineage; transport-neutral AuraNet federation; assurance contracts | **N51–N100** | [Zenodo 21845020 / DOI](https://doi.org/10.5281/zenodo.21845020) | Latest expanded artifact on Zenodo; repository PDF is the earlier N51–N87 edition until replaced |
 
 Prior-art papers document conceptual lineage and disclosed combinations. They do not override current source, tests, licences, verifiers, or governance requirements.
 
@@ -798,7 +808,7 @@ Evidence, learning, and observability:
 Research papers:
 
 - [`papers/AuraOS_Paper_VIII_Evidence_Ordered_Relational_Arenas.pdf`](papers/AuraOS_Paper_VIII_Evidence_Ordered_Relational_Arenas.pdf)
-- [`papers/AuraOS_Paper_IX_Objective_Native_Commons_Proof_Carrying_Contribution_Economies.pdf`](papers/AuraOS_Paper_IX_Objective_Native_Commons_Proof_Carrying_Contribution_Economies.pdf)
+- [Paper IX v2.0 — Zenodo DOI 10.5281/zenodo.21845020](https://doi.org/10.5281/zenodo.21845020) *(expanded N51–N100 edition; repository PDF remains the earlier edition until replaced)*
 
 ---
 
