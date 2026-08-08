@@ -254,6 +254,7 @@ def test_public_compilation_rejects_advisory_projection_smuggling() -> None:
     forged_projection = replace(
         complete.projection,
         relationship_refs=(advisory_ref,),
+        projection_digest="",
     )
 
     with pytest.raises(ValueError, match="selected candidates must remain compiler-eligible"):
