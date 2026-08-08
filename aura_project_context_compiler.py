@@ -1,0 +1,834 @@
+"""Source-first, task-conditioned project-context compilation for Aura PR3.
+
+PR3 wraps the existing PR1 ``ProjectContextProjection``. It does not create a
+project database, mutate canonical owners, grant patch/execution authority, or
+replace Compass/Continuity/Evidence owners. Its outputs are disposable receipts
+and bounded projections that must be recompiled when answer-determining identity
+changes.
+"""
+from __future__ import annotations
+
+from collections.abc import Mapping, Sequence
+from dataclasses import dataclass
+from enum import Enum
+import re
+from typing import Any
+
+from aura_ephemeral_workspace_contracts import (
+    CanonicalReference,
+    ProjectContextProjection,
+    RepositoryIdentity,
+    stable_digest,
+)
+
+PROJECT_CONTEXT_COMPILER_VERSION = "AURA_SOURCE_FIRST_PROJECT_CONTEXT_COMPILER_V1"
+PROJECTION_SELECTION_RECEIPT_VERSION = "AURA_PROJECTION_SELECTION_RECEIPT_V1"
+PROJECT_CONTEXT_COMPILATION_VERSION = "AURA_PROJECT_CONTEXT_COMPILATION_V1"
+PROJECT_CONTEXT_PROVENANCE_VERSION = "AURA_PROJECT_CONTEXT_PROVENANCE_TRACE_V1"
+PROJECT_CONTEXT_FRESHNESS_VERSION = "AURA_PROJECT_CONTEXT_FRESHNESS_VALIDATION_V1"
+PROJECT_CANONICAL_OWNER = "aura_unified_memory_continuity"
+
+MAX_CANDIDATES = 512
+MAX_EDGES = 2048
+MAX_DEPENDENCIES = 64
+MAX_TEMPORAL_BINDINGS = 64
+MAX_TEXT_BYTES = 4096
+_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$")
+_DIGEST = re.compile(r"^[0-9a-f]{64}$")
+
+MEMORY_LIFECYCLE_PHASES = (
+    "WRITE_INGEST",
+    "STORE",
+    "RETRIEVE",
+    "EXECUTE_USE",
+    "SHARE_PROPAGATE",
+    "FORGET_ROLLBACK",
+)
+
+
+class CandidateCategory(str, Enum):
+    SOURCE = "SOURCE"
+    TEST = "TEST"
+    SCHEMA = "SCHEMA"
+    DECISION = "DECISION"
+    REJECTED_ALTERNATIVE = "REJECTED_ALTERNATIVE"
+    FAILED_ATTEMPT = "FAILED_ATTEMPT"
+    UNRESOLVED_QUESTION = "UNRESOLVED_QUESTION"
+    ASSUMPTION = "ASSUMPTION"
+    CAPABILITY = "CAPABILITY"
+    RELATIONSHIP = "RELATIONSHIP"
+    BLOCKER = "BLOCKER"
+    NEXT_ACTION = "NEXT_ACTION"
+    AUTHORITY = "AUTHORITY"
+    POLICY = "POLICY"
+    PROOF_OBLIGATION = "PROOF_OBLIGATION"
+
+
+class CandidateTruthClass(str, Enum):
+    EXACT_CURRENT = "EXACT_CURRENT"
+    DERIVED_VERIFIED = "DERIVED_VERIFIED"
+    ADVISORY = "ADVISORY"
+    HYPOTHESIS = "HYPOTHESIS"
+    STALE = "STALE"
+    UNAVAILABLE = "UNAVAILABLE"
+
+
+class CandidateAvailability(str, Enum):
+    AVAILABLE = "AVAILABLE"
+    UNAVAILABLE = "UNAVAILABLE"
+    SOURCE_ADAPTER_MISSING = "SOURCE_ADAPTER_MISSING"
+
+
+class EdgeTruthClass(str, Enum):
+    EXACT = "EXACT"
+    DERIVED_VERIFIED = "DERIVED_VERIFIED"
+    ADVISORY = "ADVISORY"
+    HYPOTHESIS = "HYPOTHESIS"
+    STALE = "STALE"
+    UNAVAILABLE = "UNAVAILABLE"
+
+
+class SelectionStatus(str, Enum):
+    COMPLETE = "COMPLETE"
+    INCOMPLETE = "INCOMPLETE"
+
+
+class TemporalBindingKind(str, Enum):
+    REPOSITORY_HEAD = "REPOSITORY_HEAD"
+    SOURCE_HASH = "SOURCE_HASH"
+    EVIDENCE = "EVIDENCE"
+    POLICY = "POLICY"
+    LEASE = "LEASE"
+    OWNER_RECORD = "OWNER_RECORD"
+    DEPENDENCY_VERSION = "DEPENDENCY_VERSION"
+
+
+class ContextAuthorityClass(str, Enum):
+    CANONICAL_READ = "CANONICAL_READ"
+    DERIVED_READ = "DERIVED_READ"
+    ADVISORY_NONE = "ADVISORY_NONE"
+
+
+def _text(value: Any, name: str, *, maximum: int = MAX_TEXT_BYTES) -> str:
+    if type(value) is not str:
+        raise TypeError(f"{name} must be a string")
+    value = " ".join(value.strip().split())
+    if not value or len(value.encode("utf-8")) > maximum:
+        raise ValueError(f"{name} must be non-empty and bounded")
+    return value
+
+
+def _id(value: Any, name: str) -> str:
+    value = _text(value, name, maximum=192)
+    if not _ID.fullmatch(value):
+        raise ValueError(f"{name} is not a canonical identifier")
+    return value
+
+
+def _digest(value: Any, name: str) -> str:
+    value = _text(value, name, maximum=64).lower()
+    if not _DIGEST.fullmatch(value):
+        raise ValueError(f"{name} must be a 64-hex digest")
+    return value
+
+
+def _enum(enum_type: type[Enum], value: Any, name: str) -> Any:
+    raw = value.value if isinstance(value, Enum) else value
+    if type(raw) is not str:
+        raise TypeError(f"{name} must be a string enum value")
+    try:
+        return enum_type(raw)
+    except ValueError as exc:
+        raise ValueError(f"unsupported {name}: {raw}") from exc
+
+
+def _ids(values: Sequence[str], name: str, *, maximum: int) -> tuple[str, ...]:
+    if isinstance(values, (str, bytes, bytearray)) or not isinstance(values, Sequence):
+        raise TypeError(f"{name} must be a sequence")
+    if len(values) > maximum:
+        raise ValueError(f"{name} exceeds its item ceiling")
+    result = tuple(_id(item, f"{name} item") for item in values)
+    if len(set(result)) != len(result):
+        raise ValueError(f"{name} contains duplicates")
+    return tuple(sorted(result))
+
+
+def _int(value: Any, name: str, *, minimum: int = 0, maximum: int | None = None) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise TypeError(f"{name} must be an integer")
+    if value < minimum or (maximum is not None and value > maximum):
+        raise ValueError(f"{name} is outside its allowed range")
+    return value
+
+
+@dataclass(frozen=True)
+class TemporalBinding:
+    kind: TemporalBindingKind
+    binding_id: str
+    digest: str
+    expires_at_ms: int = 0
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "kind", _enum(TemporalBindingKind, self.kind, "temporal kind"))
+        object.__setattr__(self, "binding_id", _id(self.binding_id, "temporal binding_id"))
+        object.__setattr__(self, "digest", _digest(self.digest, "temporal digest"))
+        object.__setattr__(
+            self, "expires_at_ms", _int(self.expires_at_ms, "expires_at_ms", maximum=2**63 - 1)
+        )
+
+    @property
+    def key(self) -> str:
+        return f"{self.kind.value}:{self.binding_id}"
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "kind": self.kind.value,
+            "binding_id": self.binding_id,
+            "digest": self.digest,
+            "expires_at_ms": self.expires_at_ms,
+        }
+
+
+@dataclass(frozen=True)
+class ProjectContextCandidate:
+    candidate_id: str
+    category: CandidateCategory
+    source_adapter: str
+    origin_ref: str
+    authority_class: ContextAuthorityClass
+    truth_class: CandidateTruthClass
+    availability: CandidateAvailability = CandidateAvailability.AVAILABLE
+    reference: CanonicalReference | None = None
+    relevance_score: int = 0
+    required: bool = False
+    answer_determining: bool = False
+    dependency_ids: tuple[str, ...] = ()
+    conflict_key: str = ""
+    temporal_bindings: tuple[TemporalBinding, ...] = ()
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "candidate_id", _id(self.candidate_id, "candidate_id"))
+        object.__setattr__(self, "category", _enum(CandidateCategory, self.category, "category"))
+        object.__setattr__(self, "source_adapter", _id(self.source_adapter, "source_adapter"))
+        object.__setattr__(self, "origin_ref", _text(self.origin_ref, "origin_ref"))
+        object.__setattr__(
+            self, "authority_class", _enum(ContextAuthorityClass, self.authority_class, "authority_class")
+        )
+        object.__setattr__(self, "truth_class", _enum(CandidateTruthClass, self.truth_class, "truth_class"))
+        object.__setattr__(self, "availability", _enum(CandidateAvailability, self.availability, "availability"))
+        object.__setattr__(self, "relevance_score", _int(self.relevance_score, "relevance_score", maximum=1_000_000))
+        if type(self.required) is not bool or type(self.answer_determining) is not bool:
+            raise TypeError("required and answer_determining must be booleans")
+        object.__setattr__(self, "dependency_ids", _ids(self.dependency_ids, "dependency_ids", maximum=MAX_DEPENDENCIES))
+        if self.conflict_key:
+            object.__setattr__(self, "conflict_key", _id(self.conflict_key, "conflict_key"))
+        bindings = tuple(self.temporal_bindings)
+        if len(bindings) > MAX_TEMPORAL_BINDINGS or any(type(item) is not TemporalBinding for item in bindings):
+            raise ValueError("temporal_bindings must contain bounded exact TemporalBinding records")
+        if len({item.key for item in bindings}) != len(bindings):
+            raise ValueError("temporal_bindings contains duplicate binding keys")
+        object.__setattr__(self, "temporal_bindings", tuple(sorted(bindings, key=lambda item: item.key)))
+
+        if self.availability is CandidateAvailability.AVAILABLE:
+            if type(self.reference) is not CanonicalReference:
+                raise ValueError("available candidate requires an exact CanonicalReference")
+        elif self.reference is not None:
+            raise ValueError("unavailable candidate must not carry a canonical reference")
+
+        authoritative = {CandidateTruthClass.EXACT_CURRENT, CandidateTruthClass.DERIVED_VERIFIED}
+        if self.truth_class in authoritative:
+            if self.reference is None or self.reference.truth_class != "EXACT":
+                raise ValueError("authoritative read candidate requires an EXACT canonical reference")
+            expected = (
+                ContextAuthorityClass.CANONICAL_READ
+                if self.truth_class is CandidateTruthClass.EXACT_CURRENT
+                else ContextAuthorityClass.DERIVED_READ
+            )
+            if self.authority_class is not expected:
+                raise ValueError("candidate authority class does not match its truth class")
+        elif self.authority_class is not ContextAuthorityClass.ADVISORY_NONE:
+            raise ValueError("advisory/hypothesis/stale/unavailable candidates cannot carry authority")
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "candidate_id": self.candidate_id,
+            "category": self.category.value,
+            "source_adapter": self.source_adapter,
+            "origin_ref": self.origin_ref,
+            "authority_class": self.authority_class.value,
+            "truth_class": self.truth_class.value,
+            "availability": self.availability.value,
+            "reference": self.reference.to_dict() if self.reference is not None else None,
+            "relevance_score": self.relevance_score,
+            "required": self.required,
+            "answer_determining": self.answer_determining,
+            "dependency_ids": list(self.dependency_ids),
+            "conflict_key": self.conflict_key,
+            "temporal_bindings": [item.to_dict() for item in self.temporal_bindings],
+            "memory_lifecycle": list(MEMORY_LIFECYCLE_PHASES),
+            "origin_bound": True,
+            "authority_non_increasing": True,
+        }
+
+
+@dataclass(frozen=True)
+class ProjectContextEdge:
+    source_id: str
+    target_id: str
+    relation: str
+    truth_class: EdgeTruthClass
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "source_id", _id(self.source_id, "edge source_id"))
+        object.__setattr__(self, "target_id", _id(self.target_id, "edge target_id"))
+        if self.source_id == self.target_id:
+            raise ValueError("project-context self-edge is prohibited")
+        object.__setattr__(self, "relation", _id(self.relation, "edge relation"))
+        object.__setattr__(self, "truth_class", _enum(EdgeTruthClass, self.truth_class, "edge truth class"))
+
+    def to_dict(self) -> dict[str, str]:
+        return {
+            "source_id": self.source_id,
+            "target_id": self.target_id,
+            "relation": self.relation,
+            "truth_class": self.truth_class.value,
+        }
+
+
+@dataclass(frozen=True)
+class ProjectionBudget:
+    max_nodes: int = 64
+    max_edges: int = 256
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "max_nodes", _int(self.max_nodes, "max_nodes", minimum=1, maximum=256))
+        object.__setattr__(self, "max_edges", _int(self.max_edges, "max_edges", minimum=1, maximum=1024))
+
+    def to_dict(self) -> dict[str, int]:
+        return {"max_nodes": self.max_nodes, "max_edges": self.max_edges}
+
+
+@dataclass(frozen=True)
+class ProjectionSelectionReceipt:
+    objective_digest: str
+    repository_identity_digest: str
+    canonical_owner: str
+    selected: tuple[str, ...]
+    omitted_irrelevant: tuple[str, ...]
+    omitted_by_budget: tuple[str, ...]
+    stale: tuple[str, ...]
+    unavailable: tuple[str, ...]
+    conflicting: tuple[str, ...]
+    source_adapter_missing: tuple[str, ...]
+    mandatory_evidence_missing: tuple[str, ...]
+    status: SelectionStatus
+    budget: ProjectionBudget
+    receipt_digest: str = ""
+    version: str = PROJECTION_SELECTION_RECEIPT_VERSION
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "objective_digest", _digest(self.objective_digest, "objective_digest"))
+        object.__setattr__(self, "repository_identity_digest", _digest(self.repository_identity_digest, "repository_identity_digest"))
+        if _id(self.canonical_owner, "canonical_owner") != PROJECT_CANONICAL_OWNER:
+            raise ValueError("canonical_owner must remain the unified continuity owner")
+        for name in (
+            "selected", "omitted_irrelevant", "omitted_by_budget", "stale", "unavailable",
+            "conflicting", "source_adapter_missing", "mandatory_evidence_missing",
+        ):
+            object.__setattr__(self, name, _ids(getattr(self, name), name, maximum=MAX_CANDIDATES))
+        object.__setattr__(self, "status", _enum(SelectionStatus, self.status, "selection status"))
+        if type(self.budget) is not ProjectionBudget:
+            raise ValueError("selection receipt requires exact ProjectionBudget")
+        if self.status is SelectionStatus.COMPLETE and self.mandatory_evidence_missing:
+            raise ValueError("COMPLETE selection cannot have missing mandatory evidence")
+        if self.status is SelectionStatus.INCOMPLETE and not self.mandatory_evidence_missing:
+            raise ValueError("INCOMPLETE selection must identify missing mandatory evidence")
+        expected = stable_digest(self.to_dict(include_digest=False))
+        if self.receipt_digest and self.receipt_digest != expected:
+            raise ValueError("selection receipt digest mismatch")
+        object.__setattr__(self, "receipt_digest", expected)
+
+    def to_dict(self, *, include_digest: bool = True) -> dict[str, Any]:
+        body = {
+            "version": self.version,
+            "objective_digest": self.objective_digest,
+            "repository_identity_digest": self.repository_identity_digest,
+            "canonical_owner": self.canonical_owner,
+            "selected": list(self.selected),
+            "omitted_irrelevant": list(self.omitted_irrelevant),
+            "omitted_by_budget": list(self.omitted_by_budget),
+            "stale": list(self.stale),
+            "unavailable": list(self.unavailable),
+            "conflicting": list(self.conflicting),
+            "source_adapter_missing": list(self.source_adapter_missing),
+            "mandatory_evidence_missing": list(self.mandatory_evidence_missing),
+            "status": self.status.value,
+            "budget": self.budget.to_dict(),
+        }
+        if include_digest:
+            body["receipt_digest"] = self.receipt_digest
+        return body
+
+
+@dataclass(frozen=True)
+class ProjectContextCompilation:
+    objective: str
+    objective_digest: str
+    repository_identity: RepositoryIdentity
+    projection: ProjectContextProjection | None
+    selection_receipt: ProjectionSelectionReceipt
+    selected_candidates: tuple[ProjectContextCandidate, ...]
+    graph_edges: tuple[ProjectContextEdge, ...]
+    admissible: bool
+    compilation_digest: str = ""
+    version: str = PROJECT_CONTEXT_COMPILATION_VERSION
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "objective", _text(self.objective, "objective"))
+        object.__setattr__(self, "objective_digest", _digest(self.objective_digest, "objective_digest"))
+        if type(self.repository_identity) is not RepositoryIdentity:
+            raise ValueError("compilation requires exact RepositoryIdentity")
+        if self.projection is not None and type(self.projection) is not ProjectContextProjection:
+            raise ValueError("projection must be exact ProjectContextProjection")
+        if type(self.selection_receipt) is not ProjectionSelectionReceipt:
+            raise ValueError("selection_receipt must be exact ProjectionSelectionReceipt")
+        selected = tuple(self.selected_candidates)
+        if any(type(item) is not ProjectContextCandidate for item in selected):
+            raise ValueError("selected_candidates must be exact records")
+        object.__setattr__(self, "selected_candidates", tuple(sorted(selected, key=lambda item: item.candidate_id)))
+        edges = tuple(self.graph_edges)
+        if any(type(item) is not ProjectContextEdge for item in edges):
+            raise ValueError("graph_edges must be exact records")
+        object.__setattr__(self, "graph_edges", tuple(sorted(edges, key=lambda item: (item.source_id, item.target_id, item.relation, item.truth_class.value))))
+        if type(self.admissible) is not bool:
+            raise TypeError("admissible must be a boolean")
+        expected_admission = self.projection is not None and self.selection_receipt.status is SelectionStatus.COMPLETE
+        if self.admissible != expected_admission:
+            raise ValueError("admissible must equal complete receipt plus emitted projection")
+        expected = stable_digest(self.to_dict(include_digest=False))
+        if self.compilation_digest and self.compilation_digest != expected:
+            raise ValueError("project-context compilation digest mismatch")
+        object.__setattr__(self, "compilation_digest", expected)
+
+    def to_dict(self, *, include_digest: bool = True) -> dict[str, Any]:
+        body = {
+            "version": self.version,
+            "objective": self.objective,
+            "objective_digest": self.objective_digest,
+            "repository_identity": self.repository_identity.to_dict(),
+            "projection": self.projection.to_dict() if self.projection is not None else None,
+            "selection_receipt": self.selection_receipt.to_dict(),
+            "selected_candidates": [item.to_dict() for item in self.selected_candidates],
+            "graph_edges": [item.to_dict() for item in self.graph_edges],
+            "admissible": self.admissible,
+            "projection_only": true,
+            "source_mutation": false,
+            "automatic_persistence": false,
+            "automatic_merge": false,
+        }
+        if include_digest:
+            body["compilation_digest"] = self.compilation_digest
+        return body
+
+    def headless_projection(self) -> dict[str, Any]:
+        return {
+            "version": PROJECT_CONTEXT_COMPILATION_VERSION,
+            "objective_digest": self.objective_digest,
+            "projection": self.projection.to_dict() if self.projection is not None else None,
+            "selection_receipt": self.selection_receipt.to_dict(),
+            "nodes": [item.to_dict() for item in self.selected_candidates],
+            "edges": [item.to_dict() for item in self.graph_edges],
+            "full_project_graph_included": False,
+            "source_mutation": False,
+        }
+
+
+_CATEGORY_FIELD = {
+    CandidateCategory.SOURCE: "artifact_evidence_refs",
+    CandidateCategory.TEST: "artifact_evidence_refs",
+    CandidateCategory.SCHEMA: "artifact_evidence_refs",
+    CandidateCategory.FAILED_ATTEMPT: "artifact_evidence_refs",
+    CandidateCategory.AUTHORITY: "artifact_evidence_refs",
+    CandidateCategory.POLICY: "artifact_evidence_refs",
+    CandidateCategory.PROOF_OBLIGATION: "artifact_evidence_refs",
+    CandidateCategory.DECISION: "decision_refs",
+    CandidateCategory.REJECTED_ALTERNATIVE: "rejected_alternative_refs",
+    CandidateCategory.UNRESOLVED_QUESTION: "unresolved_question_refs",
+    CandidateCategory.ASSUMPTION: "assumption_refs",
+    CandidateCategory.CAPABILITY: "capability_refs",
+    CandidateCategory.RELATIONSHIP: "relationship_refs",
+    CandidateCategory.BLOCKER: "blocker_refs",
+    CandidateCategory.NEXT_ACTION: "next_action_refs",
+}
+_CATEGORY_PRIORITY = {category: index for index, category in enumerate(CandidateCategory)}
+_HARD_INCLUDE_CATEGORIES = frozenset({
+    CandidateCategory.TEST,
+    CandidateCategory.SCHEMA,
+    CandidateCategory.AUTHORITY,
+    CandidateCategory.POLICY,
+    CandidateCategory.BLOCKER,
+    CandidateCategory.FAILED_ATTEMPT,
+    CandidateCategory.PROOF_OBLIGATION,
+})
+_ELIGIBLE_TRUTH = frozenset({CandidateTruthClass.EXACT_CURRENT, CandidateTruthClass.DERIVED_VERIFIED})
+
+
+def _problem(candidate: ProjectContextCandidate) -> str | None:
+    if candidate.availability is CandidateAvailability.SOURCE_ADAPTER_MISSING:
+        return "source_adapter_missing"
+    if candidate.availability is CandidateAvailability.UNAVAILABLE:
+        return "unavailable"
+    if candidate.truth_class is CandidateTruthClass.STALE:
+        return "stale"
+    if candidate.truth_class is CandidateTruthClass.UNAVAILABLE:
+        return "unavailable"
+    if candidate.truth_class not in _ELIGIBLE_TRUTH:
+        return "omitted_irrelevant"
+    assert candidate.reference is not None
+    if candidate.reference.freshness_class not in {"CURRENT", "BOUNDED"}:
+        return "stale"
+    return None
+
+
+def _closure(seed: str, candidates: Mapping[str, ProjectContextCandidate]) -> tuple[set[str], set[str]]:
+    selected: set[str] = set()
+    missing: set[str] = set()
+    stack = [seed]
+    while stack:
+        candidate_id = stack.pop()
+        if candidate_id in selected:
+            continue
+        candidate = candidates.get(candidate_id)
+        if candidate is None:
+            missing.add(candidate_id)
+            continue
+        selected.add(candidate_id)
+        stack.extend(reversed(candidate.dependency_ids))
+    return selected, missing
+
+
+def _conflicts(candidates: Mapping[str, ProjectContextCandidate]) -> set[str]:
+    groups: dict[str, list[ProjectContextCandidate]] = {}
+    for candidate in candidates.values():
+        if candidate.conflict_key and _problem(candidate) is None and candidate.reference is not None:
+            groups.setdefault(candidate.conflict_key, []).append(candidate)
+    result: set[str] = set()
+    for items in groups.values():
+        if len({item.reference.digest for item in items if item.reference is not None}) > 1:
+            result.update(item.candidate_id for item in items)
+    return result
+
+
+def _projection(
+    objective: str,
+    project_ref: str,
+    repository_identity: RepositoryIdentity,
+    selected: Sequence[ProjectContextCandidate],
+    freshness_timestamp_ms: int,
+    warnings: Sequence[str],
+) -> ProjectContextProjection | None:
+    buckets: dict[str, list[CanonicalReference]] = {name: [] for name in set(_CATEGORY_FIELD.values())}
+    for candidate in selected:
+        if candidate.reference is not None:
+            buckets[_CATEGORY_FIELD[candidate.category]].append(candidate.reference)
+    if not buckets["artifact_evidence_refs"]:
+        return None
+    objective_digest = stable_digest({"objective": objective})
+    purpose_digest = stable_digest({"objective": objective, "compiler": PROJECT_CONTEXT_COMPILER_VERSION, "mode": "source_first"})
+    return ProjectContextProjection(
+        projection_id=f"project-context:{objective_digest[:24]}",
+        project_ref=project_ref,
+        canonical_owner=PROJECT_CANONICAL_OWNER,
+        objective_digest=objective_digest,
+        purpose_digest=purpose_digest,
+        repository_identity=repository_identity,
+        artifact_evidence_refs=tuple(buckets["artifact_evidence_refs"]),
+        decision_refs=tuple(buckets["decision_refs"]),
+        rejected_alternative_refs=tuple(buckets["rejected_alternative_refs"]),
+        unresolved_question_refs=tuple(buckets["unresolved_question_refs"]),
+        assumption_refs=tuple(buckets["assumption_refs"]),
+        capability_refs=tuple(buckets["capability_refs"]),
+        relationship_refs=tuple(buckets["relationship_refs"]),
+        blocker_refs=tuple(buckets["blocker_refs"]),
+        next_action_refs=tuple(buckets["next_action_refs"]),
+        freshness_timestamp_ms=freshness_timestamp_ms,
+        freshness_class="CURRENT",
+        completeness_warnings=tuple(sorted(set(warnings))),
+    )
+
+
+def compile_project_context_projection(
+    objective: str,
+    *,
+    project_ref: str,
+    repository_identity: RepositoryIdentity,
+    candidates: Sequence[ProjectContextCandidate],
+    edges: Sequence[ProjectContextEdge] = (),
+    budget: ProjectionBudget = ProjectionBudget(),
+    freshness_timestamp_ms: int,
+) -> ProjectContextCompilation:
+    """Compile a deterministic minimum-sufficient read-only project projection."""
+    objective = _text(objective, "objective")
+    project_ref = _text(project_ref, "project_ref")
+    if type(repository_identity) is not RepositoryIdentity:
+        raise ValueError("repository_identity must be exact PR1 RepositoryIdentity")
+    if isinstance(candidates, (str, bytes, bytearray)) or not isinstance(candidates, Sequence):
+        raise TypeError("candidates must be a sequence")
+    if len(candidates) > MAX_CANDIDATES or any(type(item) is not ProjectContextCandidate for item in candidates):
+        raise ValueError("candidates must be a bounded sequence of exact ProjectContextCandidate records")
+    candidate_map = {item.candidate_id: item for item in candidates}
+    if len(candidate_map) != len(candidates):
+        raise ValueError("duplicate candidate_id")
+    reference_ids = [item.reference.reference_id for item in candidates if item.reference is not None]
+    if len(set(reference_ids)) != len(reference_ids):
+        raise ValueError("task-conditioned candidates must not alias one canonical reference into multiple roles")
+
+    edge_items = tuple(edges)
+    if len(edge_items) > min(MAX_EDGES, budget.max_edges * 4) or any(type(item) is not ProjectContextEdge for item in edge_items):
+        raise ValueError("edges must be a bounded sequence of exact ProjectContextEdge records")
+    unknown = sorted({endpoint for edge in edge_items for endpoint in (edge.source_id, edge.target_id) if endpoint not in candidate_map})
+    if unknown:
+        raise ValueError(f"edge endpoint is outside the task-conditioned candidate set: {unknown[:5]}")
+
+    conflict_ids = _conflicts(candidate_map)
+    buckets = {name: set() for name in (
+        "omitted_irrelevant", "omitted_by_budget", "stale", "unavailable",
+        "conflicting", "source_adapter_missing", "mandatory_evidence_missing",
+    )}
+    buckets["conflicting"].update(conflict_ids)
+    for candidate in candidates:
+        if problem := _problem(candidate):
+            buckets[problem].add(candidate.candidate_id)
+
+    mandatory_seeds = {
+        item.candidate_id
+        for item in candidates
+        if item.required or item.answer_determining or item.category in _HARD_INCLUDE_CATEGORIES
+    }
+    mandatory: set[str] = set()
+    for seed in sorted(mandatory_seeds):
+        closure, missing = _closure(seed, candidate_map)
+        mandatory.update(closure)
+        buckets["mandatory_evidence_missing"].update(missing)
+    invalid_mandatory = {
+        item for item in mandatory if item in conflict_ids or _problem(candidate_map[item]) is not None
+    }
+    buckets["mandatory_evidence_missing"].update(invalid_mandatory)
+    eligible_mandatory = mandatory - invalid_mandatory
+
+    selected: set[str] = set()
+    if len(eligible_mandatory) > budget.max_nodes:
+        buckets["omitted_by_budget"].update(eligible_mandatory)
+        buckets["mandatory_evidence_missing"].update(eligible_mandatory)
+    else:
+        selected.update(eligible_mandatory)
+
+    optional = sorted(
+        (
+            item for item in candidates
+            if item.candidate_id not in mandatory
+            and item.candidate_id not in conflict_ids
+            and _problem(item) is None
+        ),
+        key=lambda item: (-item.relevance_score, _CATEGORY_PRIORITY[item.category], item.candidate_id),
+    )
+    for candidate in optional:
+        if candidate.relevance_score == 0:
+            buckets["omitted_irrelevant"].add(candidate.candidate_id)
+            continue
+        closure, missing = _closure(candidate.candidate_id, candidate_map)
+        if missing or any(member in conflict_ids or _problem(candidate_map[member]) is not None for member in closure):
+            buckets["omitted_irrelevant"].add(candidate.candidate_id)
+            continue
+        needed = closure - selected
+        if len(selected) + len(needed) > budget.max_nodes:
+            buckets["omitted_by_budget"].add(candidate.candidate_id)
+            continue
+        selected.update(needed)
+
+    selected_candidates = tuple(candidate_map[item] for item in sorted(selected))
+    selected_edges = tuple(edge for edge in edge_items if edge.source_id in selected and edge.target_id in selected)
+    if len(selected_edges) > budget.max_edges:
+        rank = {value: index for index, value in enumerate(EdgeTruthClass)}
+        selected_edges = tuple(sorted(selected_edges, key=lambda edge: (rank[edge.truth_class], edge.source_id, edge.target_id, edge.relation))[:budget.max_edges])
+
+    missing = tuple(sorted(buckets["mandatory_evidence_missing"]))
+    status = SelectionStatus.INCOMPLETE if missing else SelectionStatus.COMPLETE
+    objective_digest = stable_digest({"objective": objective})
+    receipt = ProjectionSelectionReceipt(
+        objective_digest=objective_digest,
+        repository_identity_digest=repository_identity.identity_digest,
+        canonical_owner=PROJECT_CANONICAL_OWNER,
+        selected=tuple(sorted(selected)),
+        omitted_irrelevant=tuple(sorted(buckets["omitted_irrelevant"] - selected)),
+        omitted_by_budget=tuple(sorted(buckets["omitted_by_budget"] - selected)),
+        stale=tuple(sorted(buckets["stale"] - selected)),
+        unavailable=tuple(sorted(buckets["unavailable"] - selected)),
+        conflicting=tuple(sorted(buckets["conflicting"] - selected)),
+        source_adapter_missing=tuple(sorted(buckets["source_adapter_missing"] - selected)),
+        mandatory_evidence_missing=missing,
+        status=status,
+        budget=budget,
+    )
+    warnings: list[str] = []
+    if missing:
+        warnings.append("Mandatory project evidence is missing, stale, conflicting, unavailable, or budget-blocked.")
+    if receipt.omitted_by_budget:
+        warnings.append("Optional project context was omitted by the declared task-conditioned budget.")
+    if receipt.stale:
+        warnings.append("Stale project context remains receipt-visible but is not projected as current truth.")
+    if receipt.conflicting:
+        warnings.append("Conflicting project context remains explicit and is not collapsed into one truth claim.")
+    projection = _projection(
+        objective,
+        project_ref,
+        repository_identity,
+        selected_candidates,
+        _int(freshness_timestamp_ms, "freshness_timestamp_ms", maximum=2**63 - 1),
+        warnings,
+    )
+    return ProjectContextCompilation(
+        objective=objective,
+        objective_digest=objective_digest,
+        repository_identity=repository_identity,
+        projection=projection,
+        selection_receipt=receipt,
+        selected_candidates=selected_candidates,
+        graph_edges=selected_edges,
+        admissible=projection is not None and status is SelectionStatus.COMPLETE,
+    )
+
+
+def trace_project_context_provenance(
+    compilation: ProjectContextCompilation,
+    start_ids: Sequence[str],
+    *,
+    max_hops: int = 4,
+    max_nodes: int = 64,
+) -> dict[str, Any]:
+    """Trace a bounded predecessor closure and never overclaim source completeness."""
+    if type(compilation) is not ProjectContextCompilation:
+        raise ValueError("compilation must be exact ProjectContextCompilation")
+    starts = _ids(start_ids, "start_ids", maximum=64)
+    max_hops = _int(max_hops, "max_hops", minimum=1, maximum=16)
+    max_nodes = _int(max_nodes, "max_nodes", minimum=1, maximum=256)
+    node_map = {item.candidate_id: item for item in compilation.selected_candidates}
+    missing = sorted(set(starts) - set(node_map))
+    if missing:
+        raise ValueError(f"provenance start is outside selected context: {missing}")
+    incoming: dict[str, list[ProjectContextEdge]] = {node_id: [] for node_id in node_map}
+    for edge in compilation.graph_edges:
+        incoming[edge.target_id].append(edge)
+    for values in incoming.values():
+        values.sort(key=lambda edge: (edge.source_id, edge.relation, edge.truth_class.value))
+
+    seen = set(starts)
+    frontier = list(starts)
+    traversed: set[ProjectContextEdge] = set()
+    truncated: set[str] = set()
+    for _ in range(max_hops):
+        next_frontier: list[str] = []
+        for target in sorted(frontier):
+            for edge in incoming.get(target, ()):
+                traversed.add(edge)
+                if edge.source_id in seen:
+                    continue
+                if len(seen) >= max_nodes:
+                    truncated.add(edge.source_id)
+                    continue
+                seen.add(edge.source_id)
+                next_frontier.append(edge.source_id)
+        if not next_frontier:
+            break
+        frontier = sorted(set(next_frontier))
+    else:
+        for target in frontier:
+            truncated.update(edge.source_id for edge in incoming.get(target, ()) if edge.source_id not in seen)
+
+    nodes = [node_map[item] for item in sorted(seen)]
+    source_ids = [item.candidate_id for item in nodes if item.category is CandidateCategory.SOURCE]
+    result = {
+        "version": PROJECT_CONTEXT_PROVENANCE_VERSION,
+        "compilation_digest": compilation.compilation_digest,
+        "start_ids": list(starts),
+        "node_ids": [item.candidate_id for item in nodes],
+        "nodes": [item.to_dict() for item in nodes],
+        "edges": [item.to_dict() for item in sorted(traversed, key=lambda edge: (edge.source_id, edge.target_id, edge.relation, edge.truth_class.value))],
+        "source_ids": source_ids,
+        "truncated_frontier": sorted(truncated),
+        "source_complete": bool(source_ids) and not truncated,
+        "bounded": True,
+    }
+    result["trace_digest"] = stable_digest(result)
+    return result
+
+
+def validate_project_context_freshness(
+    compilation: ProjectContextCompilation,
+    *,
+    current_repository_identity: RepositoryIdentity,
+    current_bindings: Mapping[str, str],
+    observed_at_ms: int,
+) -> dict[str, Any]:
+    """Require recompilation after repository or selected temporal identity drift."""
+    if type(compilation) is not ProjectContextCompilation:
+        raise ValueError("compilation must be exact ProjectContextCompilation")
+    if type(current_repository_identity) is not RepositoryIdentity:
+        raise ValueError("current_repository_identity must be exact RepositoryIdentity")
+    if not isinstance(current_bindings, Mapping):
+        raise TypeError("current_bindings must be a mapping")
+    observed_at_ms = _int(observed_at_ms, "observed_at_ms", maximum=2**63 - 1)
+    normalized = {_text(key, "binding key"): _digest(value, "binding digest") for key, value in current_bindings.items()}
+    reasons: list[str] = []
+    if compilation.repository_identity.to_dict() != current_repository_identity.to_dict():
+        reasons.append("repository_identity_changed")
+    for candidate in compilation.selected_candidates:
+        if candidate.reference is None:
+            reasons.append(f"selected_reference_missing:{candidate.candidate_id}")
+            continue
+        if candidate.reference.freshness_class not in {"CURRENT", "BOUNDED"}:
+            reasons.append(f"reference_stale:{candidate.candidate_id}")
+        for binding in candidate.temporal_bindings:
+            current = normalized.get(binding.key)
+            if current is None:
+                reasons.append(f"binding_missing:{binding.key}")
+            elif current != binding.digest:
+                reasons.append(f"binding_changed:{binding.key}")
+            if binding.expires_at_ms and observed_at_ms >= binding.expires_at_ms:
+                reasons.append(f"binding_expired:{binding.key}")
+    reasons = sorted(set(reasons))
+    result = {
+        "version": PROJECT_CONTEXT_FRESHNESS_VERSION,
+        "compilation_digest": compilation.compilation_digest,
+        "valid": not reasons,
+        "recompile_required": bool(reasons),
+        "reasons": reasons,
+        "observed_at_ms": observed_at_ms,
+        "mutation_performed": False,
+    }
+    result["validation_digest"] = stable_digest(result)
+    return result
+
+
+__all__ = [
+    "PROJECT_CONTEXT_COMPILER_VERSION",
+    "PROJECTION_SELECTION_RECEIPT_VERSION",
+    "PROJECT_CONTEXT_COMPILATION_VERSION",
+    "MEMORY_LIFECYCLE_PHASES",
+    "CandidateCategory",
+    "CandidateTruthClass",
+    "CandidateAvailability",
+    "EdgeTruthClass",
+    "SelectionStatus",
+    "TemporalBindingKind",
+    "ContextAuthorityClass",
+    "TemporalBinding",
+    "ProjectContextCandidate",
+    "ProjectContextEdge",
+    "ProjectionBudget",
+    "ProjectionSelectionReceipt",
+    "ProjectContextCompilation",
+    "compile_project_context_projection",
+    "trace_project_context_provenance",
+    "validate_project_context_freshness",
+]
