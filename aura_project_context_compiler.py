@@ -642,6 +642,9 @@ _HARD_INCLUDE_CATEGORIES = frozenset(
 _ELIGIBLE_TRUTH = frozenset(
     {CandidateTruthClass.EXACT_CURRENT, CandidateTruthClass.DERIVED_VERIFIED}
 )
+_AUTHORITATIVE_EDGE_TRUTH = frozenset(
+    {EdgeTruthClass.EXACT, EdgeTruthClass.DERIVED_VERIFIED}
+)
 
 
 def _problem(candidate: ProjectContextCandidate) -> str | None:
@@ -975,7 +978,7 @@ def trace_project_context_provenance(
     max_hops: int = 4,
     max_nodes: int = 64,
 ) -> dict[str, Any]:
-    """Trace a bounded predecessor closure and never overclaim source completeness."""
+    """Trace a bounded authoritative predecessor closure without overclaiming completeness."""
     if type(compilation) is not ProjectContextCompilation:
         raise ValueError("compilation must be exact ProjectContextCompilation")
     starts = _ids(start_ids, "start_ids", maximum=64)
@@ -1009,14 +1012,15 @@ def trace_project_context_provenance(
         next_frontier: list[str] = []
         for target in sorted(frontier):
             for edge in incoming.get(target, ()):
-                traversed.add(edge)
                 if edge.source_id in seen:
+                    traversed.add(edge)
                     continue
                 if len(seen) >= max_nodes:
                     truncated.add(edge.source_id)
                     continue
                 seen.add(edge.source_id)
                 next_frontier.append(edge.source_id)
+                traversed.add(edge)
         if not next_frontier:
             break
         frontier = sorted(set(next_frontier))
@@ -1043,6 +1047,9 @@ def trace_project_context_provenance(
         node_map[node_id].category is CandidateCategory.SOURCE
         for node_id in provenance_root_ids
     )
+    authoritative_path = all(
+        edge.truth_class in _AUTHORITATIVE_EDGE_TRUTH for edge in traversed
+    )
     result = {
         "version": PROJECT_CONTEXT_PROVENANCE_VERSION,
         "compilation_digest": compilation.compilation_digest,
@@ -1062,9 +1069,11 @@ def trace_project_context_provenance(
             )
         ],
         "source_ids": source_ids,
+        "source_reached": bool(source_ids),
         "provenance_root_ids": provenance_root_ids,
         "truncated_frontier": sorted(truncated),
-        "source_complete": roots_are_sources and not truncated,
+        "authoritative_path": authoritative_path,
+        "source_complete": roots_are_sources and authoritative_path and not truncated,
         "bounded": True,
     }
     result["trace_digest"] = stable_digest(result)
