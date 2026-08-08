@@ -94,23 +94,46 @@ def test_incremental_refresh_filters_generated_anchor_projection(tmp_path: Path)
     assert changed == ["aura_demo.py", "tests/test_demo.py"]
 
 
+def test_full_refresh_paths_include_current_and_deleted_index_entries(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    aura = tmp_path / ".aura"
+    aura.mkdir()
+    (aura / "CODEMAP.json").write_text(
+        json.dumps({"files": [{"path": "deleted_old.py"}]}),
+        encoding="utf-8",
+    )
+    current = tmp_path / "current.py"
+    current.write_text("def current():\n    return True\n", encoding="utf-8")
+    monkeypatch.setattr(navigation_refresh, "_iter_repo_files", lambda root: [current])
+
+    assert navigation_refresh._full_source_refresh_paths(tmp_path) == [
+        "current.py",
+        "deleted_old.py",
+    ]
+
+
 def test_failed_full_refresh_restores_previous_anchor_projection(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    anchor = tmp_path / ".aura/SOURCE_ANCHORS.md"
-    anchor.parent.mkdir(parents=True)
+    aura = tmp_path / ".aura"
+    aura.mkdir(parents=True)
+    (aura / "CODEMAP.json").write_text(json.dumps({"files": []}), encoding="utf-8")
+    anchor = aura / "SOURCE_ANCHORS.md"
     anchor.write_bytes(b"last-known-anchor\n")
 
-    def fail_build(*args, **kwargs):
+    monkeypatch.setattr(navigation_refresh, "_full_source_refresh_paths", lambda root: ["demo.py"])
+
+    def fail_refresh(*args, **kwargs):
         raise RuntimeError("synthetic refresh failure")
 
-    monkeypatch.setattr(navigation_refresh, "build_navigation_system", fail_build)
+    monkeypatch.setattr(navigation_refresh, "refresh_codemap_for_paths", fail_refresh)
     with pytest.raises(RuntimeError, match="synthetic refresh failure"):
         navigation_refresh._full_navigation_refresh(
             tmp_path,
             include_topology=False,
-            refresh_topology=False,
         )
 
     assert anchor.read_bytes() == b"last-known-anchor\n"
