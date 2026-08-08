@@ -1,0 +1,99 @@
+name: PR3 public authority parity guarded repair
+
+on:
+  push:
+    branches:
+      - analysis/pr3-public-authority-parity-fix
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sparse checkout repair control branch
+        uses: actions/checkout@v4
+        with:
+          ref: analysis/pr3-public-authority-parity-fix
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            .github/workflows/pr3_public_authority_parity_guard.yml
+            tools/tmp_pr3_public_authority_parity_fix.py
+            aura_project_context_compiler.py
+            aura_ephemeral_workspace_contracts.py
+            aura_ephemeral_path_policy.py
+            tests/test_aura_project_context_compiler.py
+            tests/test_aura_project_context_acceptance.py
+            schemas/aura_projection_selection_receipt_v1.schema.json
+            docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+
+      - name: Preserve payload and switch to exact PR3 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp tools/tmp_pr3_public_authority_parity_fix.py /tmp/pr3_fix.py
+          git fetch --depth=1 origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse FETCH_HEAD)" = "ef2fedc9f144185fdd06f0f13e10634fb7765e16"
+          git checkout --detach ef2fedc9f144185fdd06f0f13e10634fb7765e16
+
+      - name: Apply authority parity repair
+        run: python /tmp/pr3_fix.py
+
+      - name: Normalize repaired-file whitespace
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          for name in (
+              "aura_project_context_compiler.py",
+              "tests/test_aura_project_context_compiler.py",
+              "docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md",
+          ):
+              path=Path(name)
+              lines=path.read_text(encoding="utf-8").splitlines()
+              path.write_text("\n".join(line.rstrip(" \t") for line in lines)+"\n", encoding="utf-8")
+          PY
+
+      - name: Install focused tools
+        run: python -m pip install --quiet pytest jsonschema ruff
+
+      - name: Python compile
+        run: python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+
+      - name: Fatal Ruff classes
+        run: python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+
+      - name: Direct whitespace proof
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          failures=[]
+          for name in (
+              "aura_project_context_compiler.py",
+              "tests/test_aura_project_context_compiler.py",
+              "docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md",
+          ):
+              path=Path(name); text=path.read_text(encoding="utf-8")
+              for i,line in enumerate(text.splitlines(),1):
+                  if line.endswith((" ","\t")): failures.append(f"{path}:{i}")
+              if not text.endswith("\n"): failures.append(f"{path}:missing-final-newline")
+          if failures: raise SystemExit("whitespace violations: "+", ".join(failures))
+          PY
+
+      - name: Focused PR3 tests
+        run: python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+
+      - name: Commit and guarded fast-forward
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aura PR3 Guarded Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add aura_project_context_compiler.py tests/test_aura_project_context_compiler.py docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+          git commit -m "PR3: reprove origin and authority at public construction"
+          git fetch --depth=1 origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse FETCH_HEAD)" = "ef2fedc9f144185fdd06f0f13e10634fb7765e16"
+          git push origin HEAD:refactor/source-first-project-context-pr3
