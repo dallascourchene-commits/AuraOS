@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts import aura_navigation_refresh as navigation_refresh
 from scripts.aura_source_anchor_map import generate, resolve_anchor
 
 
@@ -83,3 +84,33 @@ def test_generate_regenerates_line_projection(tmp_path: Path) -> None:
     )
     assert "L40-L52" in second
     assert "L10-L22" not in second
+
+
+def test_incremental_refresh_filters_generated_anchor_projection(tmp_path: Path) -> None:
+    changed = navigation_refresh._source_changes_only(
+        tmp_path,
+        ["aura_demo.py", ".aura/SOURCE_ANCHORS.md", "tests/test_demo.py"],
+    )
+    assert changed == ["aura_demo.py", "tests/test_demo.py"]
+
+
+def test_failed_full_refresh_restores_previous_anchor_projection(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    anchor = tmp_path / ".aura/SOURCE_ANCHORS.md"
+    anchor.parent.mkdir(parents=True)
+    anchor.write_bytes(b"last-known-anchor\n")
+
+    def fail_build(*args, **kwargs):
+        raise RuntimeError("synthetic refresh failure")
+
+    monkeypatch.setattr(navigation_refresh, "build_navigation_system", fail_build)
+    with pytest.raises(RuntimeError, match="synthetic refresh failure"):
+        navigation_refresh._full_navigation_refresh(
+            tmp_path,
+            include_topology=False,
+            refresh_topology=False,
+        )
+
+    assert anchor.read_bytes() == b"last-known-anchor\n"
