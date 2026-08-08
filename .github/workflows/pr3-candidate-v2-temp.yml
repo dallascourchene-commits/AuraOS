@@ -1,0 +1,201 @@
+name: TEMP PR3 Candidate V2
+
+on:
+  push:
+    branches:
+      - "analysis/pr3-codacy-candidate-v2-20260808"
+
+permissions:
+  contents: write
+
+jobs:
+  refactor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/source-first-project-context-pr3
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install verification tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "ruff>=0.5" "pytest>=8.2,<9" "radon>=6,<7"
+      - name: Remove duplicate provenance helpers and split candidate validation
+        run: |
+          cat > /tmp/refactor_candidate_v2.py <<'PY'
+          from pathlib import Path
+
+          path = Path("aura_project_context_compiler.py")
+          text = path.read_text(encoding="utf-8")
+
+          # A stale temporary verifier re-fired and duplicated the provenance helper trio.
+          # Remove only the earlier duplicate block, preserving the later verified definitions.
+          needle = "def _provenance_inputs(\n"
+          positions = []
+          offset = 0
+          while True:
+              found = text.find(needle, offset)
+              if found < 0:
+                  break
+              positions.append(found)
+              offset = found + len(needle)
+          if len(positions) != 2:
+              raise SystemExit(f"expected exactly two provenance helper blocks, found {len(positions)}")
+          text = text[:positions[0]] + text[positions[1]:]
+
+          marker = "@dataclass(frozen=True)\nclass ProjectContextCandidate:\n"
+          helpers = r'''def _normalize_candidate_identity(candidate: Any) -> None:
+              object.__setattr__(candidate, "candidate_id", _id(candidate.candidate_id, "candidate_id"))
+              object.__setattr__(
+                  candidate,
+                  "category",
+                  _enum(CandidateCategory, candidate.category, "category"),
+              )
+              object.__setattr__(
+                  candidate,
+                  "source_adapter",
+                  _id(candidate.source_adapter, "source_adapter"),
+              )
+              object.__setattr__(candidate, "origin_ref", _text(candidate.origin_ref, "origin_ref"))
+              object.__setattr__(
+                  candidate,
+                  "authority_class",
+                  _enum(ContextAuthorityClass, candidate.authority_class, "authority_class"),
+              )
+              object.__setattr__(
+                  candidate,
+                  "truth_class",
+                  _enum(CandidateTruthClass, candidate.truth_class, "truth_class"),
+              )
+              object.__setattr__(
+                  candidate,
+                  "availability",
+                  _enum(CandidateAvailability, candidate.availability, "availability"),
+              )
+              object.__setattr__(
+                  candidate,
+                  "relevance_score",
+                  _int(candidate.relevance_score, "relevance_score", maximum=1_000_000),
+              )
+
+
+          def _normalize_candidate_relationships(candidate: Any) -> None:
+              if type(candidate.required) is not bool or type(candidate.answer_determining) is not bool:
+                  raise TypeError("required and answer_determining must be booleans")
+              object.__setattr__(
+                  candidate,
+                  "dependency_ids",
+                  _ids(candidate.dependency_ids, "dependency_ids", maximum=MAX_DEPENDENCIES),
+              )
+              if type(candidate.conflict_key) is not str:
+                  raise TypeError("conflict_key must be a string")
+              if candidate.conflict_key:
+                  object.__setattr__(
+                      candidate,
+                      "conflict_key",
+                      _id(candidate.conflict_key, "conflict_key"),
+                  )
+              bindings = tuple(candidate.temporal_bindings)
+              if len(bindings) > MAX_TEMPORAL_BINDINGS or any(
+                  type(item) is not TemporalBinding for item in bindings
+              ):
+                  raise ValueError(
+                      "temporal_bindings must contain bounded exact TemporalBinding records"
+                  )
+              if len({item.key for item in bindings}) != len(bindings):
+                  raise ValueError("temporal_bindings contains duplicate binding keys")
+              object.__setattr__(
+                  candidate,
+                  "temporal_bindings",
+                  tuple(sorted(bindings, key=lambda item: item.key)),
+              )
+
+
+          def _validate_candidate_reference(candidate: Any) -> None:
+              if candidate.availability is CandidateAvailability.AVAILABLE:
+                  if type(candidate.reference) is not CanonicalReference:
+                      raise ValueError(
+                          "available candidate requires an exact CanonicalReference"
+                      )
+                  return
+              if candidate.reference is not None:
+                  raise ValueError(
+                      "unavailable candidate must not carry a canonical reference"
+                  )
+
+
+          def _validate_candidate_authority(candidate: Any) -> None:
+              authoritative = {
+                  CandidateTruthClass.EXACT_CURRENT,
+                  CandidateTruthClass.DERIVED_VERIFIED,
+              }
+              if candidate.truth_class not in authoritative:
+                  if candidate.authority_class is not ContextAuthorityClass.ADVISORY_NONE:
+                      raise ValueError(
+                          "advisory/hypothesis/stale/unavailable candidates cannot carry authority"
+                      )
+                  return
+              if candidate.reference is None or candidate.reference.truth_class != "EXACT":
+                  raise ValueError(
+                      "authoritative read candidate requires an EXACT canonical reference"
+                  )
+              expected = (
+                  ContextAuthorityClass.CANONICAL_READ
+                  if candidate.truth_class is CandidateTruthClass.EXACT_CURRENT
+                  else ContextAuthorityClass.DERIVED_READ
+              )
+              if candidate.authority_class is not expected:
+                  raise ValueError(
+                      "candidate authority class does not match its truth class"
+                  )
+              if candidate.origin_ref != candidate.reference.canonical_ref:
+                  raise ValueError(
+                      "authoritative candidate origin_ref must equal its canonical reference origin"
+                  )
+
+
+          '''
+          if helpers not in text:
+              text = text.replace(marker, helpers + marker, 1)
+          class_at = text.index(marker)
+          start = text.index("    def __post_init__(self) -> None:\n", class_at)
+          end = text.index("    @property\n    def origin_bound", start)
+          replacement = '''    def __post_init__(self) -> None:\n        _normalize_candidate_identity(self)\n        _normalize_candidate_relationships(self)\n        _validate_candidate_reference(self)\n        _validate_candidate_authority(self)\n\n'''
+          text = text[:start] + replacement + text[end:]
+
+          # Guard against the exact race residue that motivated this transaction.
+          if text.count("def _provenance_inputs(\n") != 1:
+              raise SystemExit("provenance helper duplication remains")
+          if text.count("def _walk_provenance(\n") != 1:
+              raise SystemExit("walk helper duplication remains")
+          if text.count("def _provenance_summary(\n") != 1:
+              raise SystemExit("summary helper duplication remains")
+
+          path.write_text(text, encoding="utf-8")
+          PY
+          python -m py_compile /tmp/refactor_candidate_v2.py
+          python /tmp/refactor_candidate_v2.py
+      - name: Verify behavior and complexity
+        run: |
+          python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          git diff --check
+          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          test "$(grep -c '^def _provenance_inputs(' aura_project_context_compiler.py)" -eq 1
+          test "$(grep -c '^def _walk_provenance(' aura_project_context_compiler.py)" -eq 1
+          test "$(grep -c '^def _provenance_summary(' aura_project_context_compiler.py)" -eq 1
+          radon cc -s aura_project_context_compiler.py | grep -E 'ProjectContextCandidate.__post_init__|_normalize_candidate_identity|_normalize_candidate_relationships|_validate_candidate_reference|_validate_candidate_authority|trace_project_context_provenance|validate_project_context_freshness|compile_project_context_projection'
+      - name: Commit only if verified and fast-forwardable
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aura_project_context_compiler.py
+          git commit -m "refactor(pr3): normalize candidate validation and remove duplicate helpers"
+          git fetch origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse HEAD^)" = "$(git rev-parse origin/refactor/source-first-project-context-pr3)" || { echo 'PR3 head moved; refusing non-fast-forward push'; exit 1; }
+          git push origin HEAD:refactor/source-first-project-context-pr3
