@@ -1,0 +1,104 @@
+name: PR3 public container bounds guard
+on:
+  push:
+    branches: [analysis/pr3-public-container-bounds]
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/source-first-project-context-pr3
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            aura_project_context_compiler.py
+            aura_ephemeral_workspace_contracts.py
+            aura_ephemeral_path_policy.py
+            tests/test_aura_project_context_compiler.py
+            tests/test_aura_project_context_acceptance.py
+            schemas/aura_projection_selection_receipt_v1.schema.json
+            docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+      - name: Exact head
+        run: test "$(git rev-parse HEAD)" = "fa888ea70d0408b7aa4ee1ce6dfd13aa454387a4"
+      - name: Patch bounded public containers
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('aura_project_context_compiler.py'); s=p.read_text()
+
+          old='''    bindings = tuple(candidate.temporal_bindings)\n    if len(bindings) > MAX_TEMPORAL_BINDINGS or any(\n        type(item) is not TemporalBinding for item in bindings\n    ):\n        raise ValueError(\n            "temporal_bindings must contain bounded exact TemporalBinding records"\n        )\n'''
+          new='''    raw_bindings = candidate.temporal_bindings\n    if type(raw_bindings) not in (tuple, list):\n        raise TypeError("temporal_bindings must be a bounded built-in tuple or list")\n    if len(raw_bindings) > MAX_TEMPORAL_BINDINGS:\n        raise ValueError("temporal_bindings exceeds the bounded record ceiling")\n    if any(type(item) is not TemporalBinding for item in raw_bindings):\n        raise ValueError(\n            "temporal_bindings must contain bounded exact TemporalBinding records"\n        )\n    bindings = tuple(raw_bindings)\n'''
+          if s.count(old)!=1: raise SystemExit('temporal normalize anchor mismatch')
+          s=s.replace(old,new,1)
+
+          old='''    try:\n        bindings = tuple(candidate.temporal_bindings)\n    except Exception as exc:\n        raise ValueError("selected candidate temporal bindings failed revalidation") from exc\n    for binding in bindings:\n'''
+          new='''    bindings = candidate.temporal_bindings\n    if type(bindings) is not tuple:\n        raise ValueError("selected candidate temporal bindings must remain a canonical tuple")\n    if len(bindings) > MAX_TEMPORAL_BINDINGS:\n        raise ValueError("selected candidate temporal bindings exceed the bounded record ceiling")\n    for binding in bindings:\n'''
+          if s.count(old)!=1: raise SystemExit('nested temporal anchor mismatch')
+          s=s.replace(old,new,1)
+
+          old='''    selected = tuple(compilation.selected_candidates)\n    if any(type(item) is not ProjectContextCandidate for item in selected):\n        raise ValueError("selected_candidates must be exact records")\n'''
+          new='''    raw_selected = compilation.selected_candidates\n    if type(raw_selected) not in (tuple, list):\n        raise TypeError("selected_candidates must be a bounded built-in tuple or list")\n    if len(raw_selected) > compilation.selection_receipt.budget.max_nodes:\n        raise ValueError("selected candidates exceed selection receipt node budget")\n    if any(type(item) is not ProjectContextCandidate for item in raw_selected):\n        raise ValueError("selected_candidates must be exact records")\n    selected = tuple(raw_selected)\n'''
+          if s.count(old)!=1: raise SystemExit('selected container anchor mismatch')
+          s=s.replace(old,new,1)
+          old='''    if len(selected) > compilation.selection_receipt.budget.max_nodes:\n        raise ValueError(\n            "selected candidates exceed selection receipt node budget"\n        )\n'''
+          if s.count(old)!=1: raise SystemExit('duplicate selected budget anchor mismatch')
+          s=s.replace(old,'',1)
+
+          old='''    edges = tuple(compilation.graph_edges)\n    if len(edges) > compilation.selection_receipt.budget.max_edges:\n        raise ValueError(\n            "compiled graph edges exceed selection receipt edge budget"\n        )\n    if any(type(item) is not ProjectContextEdge for item in edges):\n'''
+          new='''    raw_edges = compilation.graph_edges\n    if type(raw_edges) not in (tuple, list):\n        raise TypeError("graph_edges must be a bounded built-in tuple or list")\n    if len(raw_edges) > compilation.selection_receipt.budget.max_edges:\n        raise ValueError(\n            "compiled graph edges exceed selection receipt edge budget"\n        )\n    if any(type(item) is not ProjectContextEdge for item in raw_edges):\n'''
+          if s.count(old)!=1: raise SystemExit('graph edge anchor mismatch')
+          s=s.replace(old,new,1)
+          old='''    selected_id_set = set(selected_ids)\n'''
+          new='''    edges = tuple(raw_edges)\n    selected_id_set = set(selected_ids)\n'''
+          if s.count(old)!=1: raise SystemExit('edge tuple placement mismatch')
+          s=s.replace(old,new,1)
+          p.write_text(s.rstrip()+'\n')
+
+          t=Path('tests/test_aura_project_context_acceptance.py'); x=t.read_text().rstrip()
+          block='''\n\ndef test_public_compilation_rejects_unbounded_selected_candidate_iterable_without_consuming_it() -> None:\n    complete = _compile((_source(),))\n\n    class ExplodingSelected:\n        def __iter__(self):\n            raise AssertionError("selected candidate iterable must not be consumed")\n\n    with pytest.raises(TypeError, match="selected_candidates must be a bounded built-in"):\n        ProjectContextCompilation(\n            project_ref=PROJECT_REF, objective=complete.objective,\n            objective_digest=complete.objective_digest, repository_identity=complete.repository_identity,\n            projection=complete.projection, selection_receipt=complete.selection_receipt,\n            selected_candidates=ExplodingSelected(), graph_edges=complete.graph_edges, admissible=True,\n        )\n\n\ndef test_public_compilation_rejects_unbounded_graph_edge_iterable_without_consuming_it() -> None:\n    complete = _compile((_source(),))\n\n    class ExplodingEdges:\n        def __iter__(self):\n            raise AssertionError("graph edge iterable must not be consumed")\n\n    with pytest.raises(TypeError, match="graph_edges must be a bounded built-in"):\n        ProjectContextCompilation(\n            project_ref=PROJECT_REF, objective=complete.objective,\n            objective_digest=complete.objective_digest, repository_identity=complete.repository_identity,\n            projection=complete.projection, selection_receipt=complete.selection_receipt,\n            selected_candidates=complete.selected_candidates, graph_edges=ExplodingEdges(), admissible=True,\n        )\n\n\ndef test_candidate_rejects_unbounded_temporal_binding_iterable_without_consuming_it() -> None:\n    source = _source()\n\n    class ExplodingBindings:\n        def __iter__(self):\n            raise AssertionError("temporal binding iterable must not be consumed")\n\n    with pytest.raises(TypeError, match="temporal_bindings must be a bounded built-in"):\n        replace(source, temporal_bindings=ExplodingBindings())\n'''
+          if 'test_public_compilation_rejects_unbounded_selected_candidate_iterable_without_consuming_it' in x: raise SystemExit('container tests already exist')
+          t.write_text((x+block).rstrip()+'\n')
+
+          d=Path('docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md'); y=d.read_text()
+          needle='- selected candidates exceed signed node/edge budgets, have incomplete dependency closure, or graph edges reference candidates outside the task-conditioned set;\n'
+          repl=needle+'- caller-controlled selected-candidate, graph-edge, or temporal-binding iterables are not materialized before exact finite-container and declared-length bounds are proven;\n'
+          if y.count(needle)!=1: raise SystemExit('doc container anchor mismatch')
+          d.write_text(y.replace(needle,repl,1).rstrip()+'\n')
+          PY
+      - name: Install
+        run: python -m pip install --quiet pytest jsonschema ruff
+      - name: Verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+          tree=ast.parse(Path('aura_project_context_compiler.py').read_text())
+          funcs=[n for n in ast.walk(tree) if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef))]
+          coverage=sum(ast.get_docstring(n) is not None for n in funcs)/len(funcs)
+          print(f'production docstring coverage={coverage:.2%}')
+          assert coverage >= .80
+          for name in ('aura_project_context_compiler.py','tests/test_aura_project_context_acceptance.py','docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md'):
+              data=Path(name).read_text()
+              assert data.endswith('\n') and not data.endswith('\n\n'), name
+              assert all(line.rstrip(' \t')==line for line in data.splitlines()), name
+          PY
+          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aura PR3 Guarded Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+          git commit -m "PR3: bound public compilation containers"
+          git fetch --depth=1 origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse FETCH_HEAD)" = "fa888ea70d0408b7aa4ee1ce6dfd13aa454387a4"
+          git push origin HEAD:refactor/source-first-project-context-pr3
