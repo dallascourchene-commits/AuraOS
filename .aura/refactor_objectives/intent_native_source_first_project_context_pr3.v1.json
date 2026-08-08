@@ -1,11 +1,12 @@
 {
-  "allowed_file_set_digest": "ec435523f6e7493d505160a5492ef39fac1832a5eafc906d59cdc6e8fc02a9a7",
+  "allowed_file_set_digest": "c2e8e59458c6011ebe5bb0610636b435c1283ea76dbca31332b16d06c823c1d5",
   "allowed_files": [
     ".aura/refactor_objectives/intent_native_source_first_project_context_pr3.v1.json",
     ".aura/waboose_requests/intent_native_source_first_project_context_pr3.v1.json",
     "aura_project_context_compiler.py",
     "docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md",
     "schemas/aura_projection_selection_receipt_v1.schema.json",
+    "tests/test_aura_project_context_acceptance.py",
     "tests/test_aura_project_context_compiler.py"
   ],
   "automatic_merge": false,
@@ -45,7 +46,8 @@
     "repository/source/evidence/policy/lease/owner/dependency drift requires recompilation rather than in-place mutation",
     "origin and authority are bound at ingestion and later transformation cannot increase authority",
     "full repository/project topology is not sent to the client by default",
-    "VSA/HDC ranking, if later added inside PR3, remains shadow advisory and never patch or truth authority",
+    "shadow VSA/HDC-style ranking remains visible through advisory/omission receipts and never changes exact selection, patch authority, or truth authority",
+    "memory revision, revocation, and rollback are reconstructed from immutable deterministic compilations rather than a mutable universal project database",
     "no automatic merge and no automatic PR4"
   ],
   "source_main_sha": "bf0c65a9e6ae1dfcbb575401d51a9d22f343d804",
@@ -54,11 +56,12 @@
     "python compilation for PR3 Python source and tests",
     "Draft 2020-12 schema meta-validation and output validation",
     "focused PR3 compiler/provenance/freshness tests",
+    "master-plan source-first correction, shadow-disagreement, revision/revocation/rollback, and headless exact-reference acceptance fixtures",
     "retained PR1 contract tests",
     "retained PR2 runtime and retained V1/Phase-0/PR1 compatibility tests",
     "fatal Ruff/static correctness classes when available in hosted CI",
     "git diff --check",
-    "exact six-file final source/governance scope audit",
+    "exact seven-file final source/governance scope audit",
     "available exact-head external review findings reproduced and dispositioned"
   ],
   "version": "AURA_REFACTOR_OBJECTIVE_V1"
