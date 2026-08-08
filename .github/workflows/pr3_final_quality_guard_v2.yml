@@ -1,0 +1,130 @@
+name: PR3 final quality guarded cleanup v2
+
+on:
+  push:
+    branches:
+      - analysis/pr3-final-quality-cleanup
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sparse checkout quality control branch
+        uses: actions/checkout@v4
+        with:
+          ref: analysis/pr3-final-quality-cleanup
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            .github/workflows/pr3_final_quality_guard_v2.yml
+            tools/tmp_pr3_final_quality_cleanup.py
+            aura_project_context_compiler.py
+            aura_ephemeral_workspace_contracts.py
+            aura_ephemeral_path_policy.py
+            tests/test_aura_project_context_compiler.py
+            tests/test_aura_project_context_acceptance.py
+            schemas/aura_projection_selection_receipt_v1.schema.json
+            docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+
+      - name: Preserve payload and switch to exact PR3 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp tools/tmp_pr3_final_quality_cleanup.py /tmp/pr3_cleanup.py
+          git fetch --depth=1 origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse FETCH_HEAD)" = "7227c948bd3445e9d4fa3335149089563d70ceb6"
+          git checkout --detach 7227c948bd3445e9d4fa3335149089563d70ceb6
+
+      - name: Apply quality cleanup
+        run: python /tmp/pr3_cleanup.py
+
+      - name: Move derived-authority regression to compiler suite
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          acceptance=Path('tests/test_aura_project_context_acceptance.py')
+          compiler=Path('tests/test_aura_project_context_compiler.py')
+          block='''\n\ndef test_derived_verified_candidate_cannot_claim_canonical_read_authority() -> None:\n    with pytest.raises(ValueError, match="authority class does not match"):\n        _candidate(\n            "decision:derived-escalation",\n            CandidateCategory.DECISION,\n            D["8"],\n            truth=CandidateTruthClass.DERIVED_VERIFIED,\n            authority=ContextAuthorityClass.CANONICAL_READ,\n        )\n'''
+          a=acceptance.read_text(encoding='utf-8')
+          if a.count(block) != 1:
+              raise SystemExit('derived-authority test relocation anchor mismatch')
+          acceptance.write_text(a.replace(block,'',1).rstrip()+'\n', encoding='utf-8')
+          compiler.write_text(compiler.read_text(encoding='utf-8').rstrip()+block+'\n', encoding='utf-8')
+          PY
+
+      - name: Install focused tools
+        run: python -m pip install --quiet pytest jsonschema ruff
+
+      - name: Python compile
+        run: python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+
+      - name: Fatal Ruff classes
+        shell: bash
+        run: |
+          set +e
+          output="$(python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py 2>&1)"
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ]; then
+            safe="${output//$'\n'/%0A}"
+            echo "::error title=PR3 quality Ruff failure::$safe"
+            exit "$status"
+          fi
+
+      - name: Production docstring coverage
+        shell: bash
+        run: |
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+          tree=ast.parse(Path('aura_project_context_compiler.py').read_text(encoding='utf-8'))
+          funcs=[n for n in ast.walk(tree) if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef))]
+          docs=[n for n in funcs if ast.get_docstring(n)]
+          coverage=100*len(docs)/max(1,len(funcs))
+          print(f'production docstring coverage: {len(docs)}/{len(funcs)} = {coverage:.2f}%')
+          if coverage < 80:
+              raise SystemExit('production docstring coverage remains below 80%')
+          echo_msg=f'production docstring coverage {len(docs)}/{len(funcs)} = {coverage:.2f}%'
+          print(f'::notice title=PR3 docstring coverage::{echo_msg}')
+          PY
+
+      - name: Direct whitespace and EOF proof
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          failures=[]
+          for name in (
+              'aura_project_context_compiler.py',
+              'tests/test_aura_project_context_compiler.py',
+              'tests/test_aura_project_context_acceptance.py',
+              'docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md',
+          ):
+              path=Path(name); text=path.read_text(encoding='utf-8')
+              for i,line in enumerate(text.splitlines(),1):
+                  if line.endswith((' ','\t')):
+                      failures.append(f'{path}:{i}')
+              if not text.endswith('\n') or text.endswith('\n\n'):
+                  failures.append(f'{path}:noncanonical-eof')
+          if failures:
+              raise SystemExit('whitespace/EOF violations: '+', '.join(failures))
+          PY
+
+      - name: Focused PR3 tests
+        run: python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+
+      - name: Commit and guarded fast-forward
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aura PR3 Guarded Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+          git commit -m "PR3: close documentation and maintainability review gaps"
+          git fetch --depth=1 origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse FETCH_HEAD)" = "7227c948bd3445e9d4fa3335149089563d70ceb6"
+          git push origin HEAD:refactor/source-first-project-context-pr3
