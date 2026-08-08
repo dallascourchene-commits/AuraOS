@@ -57,7 +57,7 @@ TEXT_SUFFIXES = frozenset({"", ".c", ".cpp", ".css", ".html", ".js", ".json", ".
 DEFAULT_INDEX_PATH = Path(".aura/CODEMAP.json")
 DEFAULT_MARKDOWN_PATH = Path(".aura/CODEMAP.md")
 DEFAULT_TOPOLOGY_PATH = Path("Aura_Memory/live_topology_ast.json")
-GENERATED_MAP_FILES = {DEFAULT_INDEX_PATH.as_posix(), DEFAULT_MARKDOWN_PATH.as_posix(), "topology_map.json"}
+GENERATED_MAP_FILES = {DEFAULT_INDEX_PATH.as_posix(), DEFAULT_MARKDOWN_PATH.as_posix(), ".aura/SOURCE_ANCHORS.md", "topology_map.json"}
 VECTOR_DIMS = 32
 MAX_SYMBOLS_PER_FILE = 80
 
@@ -153,645 +153,476 @@ def _python_symbol_records(text: str, rel_path: str = "") -> list[SymbolRecord]:
         return []
     records: list[SymbolRecord] = []
 
-    # Traverse with parent context to distinguish methods from module-level functions
-    def _visit_node(node: ast.AST, parent_class: str = "") -> None:
-        if isinstance(node, ast.ClassDef):
-            signature = _symbol_signature(node)
-            qualified_name = f"{parent_class}.{node.name}" if parent_class else node.name
-            records.append(SymbolRecord(
-                node.name,
-                "class",
-                node.lineno,
-                getattr(node, "end_lineno", node.lineno) or node.lineno,
-                _semantic_id(rel_path, "class", qualified_name, signature),
-                hashlib.blake2b(signature.encode("utf-8", errors="replace"), digest_size=8).hexdigest(),
-            ))
-            # Visit class body with class context
-            for child in node.body:
-                _visit_node(child, parent_class=node.name)
-        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-            kind = "method" if parent_class else ("async_function" if isinstance(node, ast.AsyncFunctionDef) else "function")
-            signature = _symbol_signature(node)
-            qualified_name = f"{parent_class}.{node.name}" if parent_class else node.name
-            records.append(SymbolRecord(
-                node.name,
-                kind,
-                node.lineno,
-                getattr(node, "end_lineno", node.lineno) or node.lineno,
-                _semantic_id(rel_path, kind, qualified_name, signature),
-                hashlib.blake2b(signature.encode("utf-8", errors="replace"), digest_size=8).hexdigest(),
-            ))
-        else:
-            # Visit other nodes without changing parent context
-            for child in ast.iter_child_nodes(node):
-                _visit_node(child, parent_class)
+    def visit(node: ast.AST, scope: tuple[str, ...]) -> None:
+        if len(records) >= MAX_SYMBOLS_PER_FILE:
+            return
+        for child in ast.iter_child_nodes(node):
+            child_scope = scope
+            if isinstance(child, ast.ClassDef):
+                signature = _symbol_signature(child)
+                name = ".".join(scope + (child.name,)) if scope else child.name
+                records.append(SymbolRecord(
+                    name=name,
+                    kind="class",
+                    line=int(getattr(child, "lineno", 1) or 1),
+                    end_line=int(getattr(child, "end_lineno", getattr(child, "lineno", 1)) or 1),
+                    semantic_id=_semantic_id(rel_path, "class", name, signature),
+                    signature_hash=hashlib.blake2b(signature.encode("utf-8"), digest_size=8).hexdigest(),
+                ))
+                child_scope = scope + (child.name,)
+            elif isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                signature = _symbol_signature(child)
+                kind = "method" if scope else "function"
+                name = ".".join(scope + (child.name,)) if scope else child.name
+                records.append(SymbolRecord(
+                    name=name,
+                    kind=kind,
+                    line=int(getattr(child, "lineno", 1) or 1),
+                    end_line=int(getattr(child, "end_lineno", getattr(child, "lineno", 1)) or 1),
+                    semantic_id=_semantic_id(rel_path, kind, name, signature),
+                    signature_hash=hashlib.blake2b(signature.encode("utf-8"), digest_size=8).hexdigest(),
+                ))
+                child_scope = scope + (child.name,)
+            visit(child, child_scope)
 
-    for node in tree.body:
-        _visit_node(node)
-
-    return sorted(records, key=lambda item: (item.line, item.name))
+    visit(tree, ())
+    return records[:MAX_SYMBOLS_PER_FILE]
 
 
-def _iter_repo_files(root: Path, skip_dirs: frozenset[str]) -> list[Path]:
-    paths: list[Path] = []
-
-    def _skip_part(name: str) -> bool:
-        return name in skip_dirs or any(
-            pattern.startswith("*") and name.endswith(pattern[1:])
-            for pattern in skip_dirs
-        )
-
-    for dirpath, dirnames, filenames in os.walk(root):
-        dirnames[:] = sorted(d for d in dirnames if not _skip_part(d))
-        base = Path(dirpath)
-        for filename in sorted(filenames):
-            candidate = base / filename
-            try:
-                rel = candidate.relative_to(root).as_posix()
-            except ValueError:
-                rel = candidate.as_posix()
-            # Skip CODEMAP artifacts, runtime databases, and files in excluded dirs
-            if (rel in GENERATED_MAP_FILES or
-                candidate.suffix == ".sqlite3" or
-                any(_skip_part(part) for part in candidate.relative_to(root).parts)):
+def _iter_repo_files(root: Path, *, skip_dirs: frozenset[str] = DEFAULT_SKIP_DIRS) -> list[Path]:
+    files: list[Path] = []
+    for base, dirs, names in os.walk(root):
+        dirs[:] = [name for name in dirs if name not in skip_dirs and not name.endswith(".egg-info")]
+        base_path = Path(base)
+        for name in names:
+            path = base_path / name
+            rel = path.relative_to(root).as_posix()
+            if rel in GENERATED_MAP_FILES or path.suffix.lower() not in TEXT_SUFFIXES:
                 continue
-            paths.append(candidate)
-    return paths
+            files.append(path)
+    return sorted(files)
 
 
 def _command_mentions(text: str) -> list[str]:
-    return sorted(_command_locations(text))
+    commands: list[str] = []
+    for match in re.finditer(r"(?m)^\s*(python(?:3)?\s+-m\s+[A-Za-z0-9_\.]+|python(?:3)?\s+[A-Za-z0-9_./-]+\.py[^\n]*)", text):
+        command = " ".join(match.group(1).strip().split())
+        if command and command not in commands:
+            commands.append(command)
+    return commands[:20]
 
 
-def _command_locations(text: str) -> dict[str, list[int]]:
-    locations: dict[str, set[int]] = defaultdict(set)
-    for lineno, line in enumerate(text.splitlines(), start=1):
-        for cmd in re.findall(r"![A-Za-z][A-Za-z0-9_:-]*", line):
-            locations[cmd.rstrip(":,.;)]}")].add(lineno)
-        for cmd in re.findall(r"\.startswith\([\"'](![^\"']+)[\"']\)", line):
-            locations[cmd.strip().split()[0]].add(lineno)
-    return {cmd: sorted(lines) for cmd, lines in sorted(locations.items()) if len(cmd) > 1}
+def _command_locations(text: str, commands: list[str]) -> dict[str, list[int]]:
+    """Return stable 1-based line references for extracted commands."""
+    lines = text.splitlines()
+    locations: dict[str, list[int]] = {}
+    for command in commands:
+        needle = " ".join(command.strip().split())
+        hits = [
+            index
+            for index, line in enumerate(lines, start=1)
+            if " ".join(line.strip().split()).startswith(needle)
+        ]
+        if hits:
+            locations[command] = hits[:8]
+    return locations
 
 
-def load_or_compile_topology(root: Path, *, include_topology: bool = True, topology_path: Path = DEFAULT_TOPOLOGY_PATH, refresh: bool = True) -> dict[str, Any]:
-    """Load Aura's live !topology JSON, refreshing it first when requested.
-
-    The CODEMAP should not treat topology as an unrelated side artifact.  By
-    default it runs the same deep topology compiler used by `!topology deep`,
-    which writes Aura_Memory/live_topology_ast.json, then reads that JSON back
-    into the codemap pipeline.  If the compiler fails, it falls back to an
-    existing topology JSON so stale files do not break map generation.
-    """
-    if not include_topology:
-        return {"nodes": [], "edges": [], "diagnostics": {}, "meta": {"source": "disabled"}}
-
-    topology_abs = topology_path if topology_path.is_absolute() else root / topology_path
-    if refresh:
-        cwd = Path.cwd()
+def load_or_compile_topology(
+    root: Path,
+    *,
+    topology_path: Path | None = None,
+    refresh: bool = False,
+) -> tuple[dict[str, Any], str]:
+    target = topology_path or DEFAULT_TOPOLOGY_PATH
+    absolute = target if target.is_absolute() else root / target
+    if absolute.exists() and not refresh:
         try:
-            os.chdir(root)
-            compiled = compile_topology_map(deep=True)
-            if compiled:
-                return {**compiled, "codemap_source": "compiled_deep_topology"}
-        except Exception as exc:
-            fallback = {"error": str(exc)}
-        finally:
-            os.chdir(cwd)
-    else:
-        fallback = {}
-
-    if topology_abs.exists():
-        payload = json.loads(topology_abs.read_text(encoding="utf-8"))
-        payload.setdefault("meta", {})
-        payload["codemap_source"] = "existing_topology_json"
-        return payload
-
-    return {"nodes": [], "edges": [], "diagnostics": fallback, "meta": {"source": "missing_topology_json"}}
+            return json.loads(absolute.read_text(encoding="utf-8")), "existing"
+        except (OSError, json.JSONDecodeError):
+            pass
+    topology = compile_topology_map(root, absolute)
+    return topology, "compiled"
 
 
-def _node_file(node: dict[str, Any]) -> str:
-    file_value = str(node.get("file") or "")
-    if file_value:
-        return Path(file_value).name
-    node_id = str(node.get("id") or "")
-    return Path(node_id.split("::", 1)[0]).name if "::" in node_id else ""
+def _node_file(node_id: str, node: dict[str, Any]) -> str:
+    return str(node.get("file") or node_id.split("::", 1)[0])
 
 
 def _topology_file_index(topology: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    """Summarize topology graph data by source file for compact CODEMAP cards."""
     per_file: dict[str, dict[str, Any]] = defaultdict(lambda: {
-        "node_count": 0,
-        "edge_count": 0,
-        "degree": 0,
+        "nodes": 0,
+        "out_edges": 0,
+        "in_edges": 0,
+        "kinds": Counter(),
         "symbols": [],
-        "neighbor_files": set(),
-        "edge_kinds": Counter(),
     })
+    nodes = topology.get("nodes", {})
+    if isinstance(nodes, dict):
+        node_items = nodes.items()
+    else:
+        node_items = []
     node_to_file: dict[str, str] = {}
-    for node in topology.get("nodes", []):
-        file_name = _node_file(node)
-        node_id = str(node.get("id") or "")
-        if not file_name:
+    for node_id, node in node_items:
+        if not isinstance(node, dict):
             continue
-        node_to_file[node_id] = file_name
-        bucket = per_file[file_name]
-        bucket["node_count"] += 1
-        label = str(node.get("label") or node_id.rsplit("::", 1)[-1])
-        if label and label not in bucket["symbols"] and label != "global_scope":
-            bucket["symbols"].append(label)
-
+        file_path = _node_file(str(node_id), node)
+        node_to_file[str(node_id)] = file_path
+        slot = per_file[file_path]
+        slot["nodes"] += 1
+        slot["kinds"][str(node.get("kind", "unknown"))] += 1
+        symbol = str(node.get("symbol") or "")
+        if symbol and len(slot["symbols"]) < 12 and symbol not in slot["symbols"]:
+            slot["symbols"].append(symbol)
     for edge in topology.get("edges", []):
-        source = str(edge.get("source") or "")
-        target = str(edge.get("target") or "")
-        source_file = node_to_file.get(source) or (Path(source.split("::", 1)[0]).name if "::" in source else "")
-        target_file = node_to_file.get(target) or (Path(target.split("::", 1)[0]).name if "::" in target else "")
-        kind = str(edge.get("kind") or edge.get("type") or "edge")
-        for file_name, other in ((source_file, target_file), (target_file, source_file)):
-            if not file_name:
-                continue
-            bucket = per_file[file_name]
-            bucket["edge_count"] += 1
-            bucket["degree"] += 1
-            bucket["edge_kinds"][kind] += 1
-            if other and other != file_name:
-                bucket["neighbor_files"].add(other)
-
-    compact: dict[str, dict[str, Any]] = {}
-    ranked = sorted(per_file.items(), key=lambda item: (item[1]["degree"], item[1]["node_count"], item[0]), reverse=True)
-    for rank, (file_name, bucket) in enumerate(ranked, start=1):
-        compact[file_name] = {
-            "hub_rank": rank,
-            "node_count": bucket["node_count"],
-            "edge_count": bucket["edge_count"],
-            "degree": bucket["degree"],
-            "symbols": sorted(bucket["symbols"])[:20],
-            "neighbor_files": sorted(bucket["neighbor_files"])[:20],
-            "edge_kinds": dict(bucket["edge_kinds"].most_common(8)),
+        if not isinstance(edge, dict):
+            continue
+        source_file = node_to_file.get(str(edge.get("from", "")))
+        target_file = node_to_file.get(str(edge.get("to", "")))
+        if source_file:
+            per_file[source_file]["out_edges"] += 1
+        if target_file:
+            per_file[target_file]["in_edges"] += 1
+    out: dict[str, dict[str, Any]] = {}
+    for file_path, payload in per_file.items():
+        out[file_path] = {
+            "nodes": int(payload["nodes"]),
+            "out_edges": int(payload["out_edges"]),
+            "in_edges": int(payload["in_edges"]),
+            "kinds": dict(payload["kinds"]),
+            "symbols": payload["symbols"],
         }
-    return compact
+    return out
 
 
-def scan_repository(root: Path, skip_dirs: frozenset[str] = DEFAULT_SKIP_DIRS) -> list[dict[str, Any]]:
-    """Scan non-skipped files once and return compact file cards for map use."""
-    records: list[dict[str, Any]] = []
-    for path in _iter_repo_files(root, skip_dirs):
-        records.append(_scan_file(root, path))
-    return records
-
-
-def _scan_file(root: Path, path: Path) -> dict[str, Any]:
-    """Parse one file into the same compact card shape used by full scans."""
-    rel = path.relative_to(root).as_posix()
-    stat = path.stat()
-    is_binary = _is_probably_binary(path)
-    text = ""
-    if not is_binary and path.suffix.lower() in TEXT_SUFFIXES:
-        text = path.read_text(encoding="utf-8", errors="replace")
-    digest = hashlib.blake2b(path.read_bytes(), digest_size=8).hexdigest()
-    header = parse_master_key_header(text) if text else {}
-    symbols = _python_symbol_records(text, rel) if path.suffix.lower() == ".py" and text else []
-    symbol_names = [symbol.name for symbol in symbols[:MAX_SYMBOLS_PER_FILE]]
-    command_lines = _command_locations(text) if text else {}
-    commands = sorted(command_lines)
-    role = classify_file(path)
-    seed = "|".join([rel, role, digest, " ".join(symbol_names), " ".join(commands), header.get("FUNCTIONS", "")])
-    return {
-        "path": rel,
-        "role": role,
-        "bytes": stat.st_size,
-        "lines": text.count("\n") + 1 if text else 0,
-        "tokens_est": estimate_tokens(text) if text else 0,
-        "digest8": digest,
-        "binary": is_binary,
-        "header": {k: header[k] for k in ("PWFST_ALIGNMENT", "DIKWP_TIER", "DEPENDENCIES", "FUNCTIONS") if k in header},
-        "symbols": [symbol.__dict__ for symbol in symbols[:MAX_SYMBOLS_PER_FILE]],
-        "symbol_count": len(symbols),
-        "commands": commands,
-        "command_lines": command_lines,
-        "vector": stable_unit_vector(seed),
-    }
-
-
-
-def _coverage_report(root: Path, records: list[dict[str, Any]], skip_dirs: frozenset[str]) -> dict[str, Any]:
-    included = {rec["path"] for rec in records}
-    generated = sorted(path for path in GENERATED_MAP_FILES if (root / path).exists())
-    skipped_counts: dict[str, int] = {}
-    for dirname in sorted(skip_dirs):
-        base = root / dirname
-        if base.exists() and base.is_dir():
-            skipped_counts[dirname] = sum(1 for item in base.rglob("*") if item.is_file())
-    return {
-        "included_file_count": len(included),
-        "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
-        "excluded_generated_map_files": generated,
-        "skipped_dir_file_counts": skipped_counts,
-        "all_included_paths_sorted": sorted(included),
-    }
-
-def _navigation_rings(records: list[dict[str, Any]]) -> dict[str, list[str]]:
-    rings = {
-        "substrate_core": [],
-        "cognition_and_memory": [],
-        "mesh_and_routing": [],
-        "topology_and_navigation": [],
-        "security_and_validation": [],
-        "interfaces_and_docs": [],
-    }
-    for rec in records:
-        path = rec["path"]
-        low = path.lower()
-        target = "interfaces_and_docs"
-        if "substrate" in low or low in {"gateway.py", "aura_node.py", "aura_core.py"}:
-            target = "substrate_core"
-        elif any(key in low for key in ("memory", "palace", "cognitive", "dream", "attention", "spectral")):
-            target = "cognition_and_memory"
-        elif any(key in low for key in ("mesh", "router", "routing", "liquid", "blockchain", "ledger")):
-            target = "mesh_and_routing"
-        elif any(key in low for key in ("topolog", "scanner", "navigator", "mapper")):
-            target = "topology_and_navigation"
-        elif any(key in low for key in ("security", "guard", "validation", "shield", "crypto", "heal", "audit")):
-            target = "security_and_validation"
-        rings[target].append(path)
-    return {key: sorted(value) for key, value in rings.items() if value}
-
-
-def _symbol_index(records: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
-    index: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for rec in records:
-        for symbol in rec.get("symbols", []):
-            index[symbol["name"]].append({
-                "file": rec["path"],
-                "kind": symbol["kind"],
-                "line": symbol["line"],
-                "end_line": symbol["end_line"],
-                "semantic_id": symbol.get("semantic_id", ""),
-                "signature_hash": symbol.get("signature_hash", ""),
-            })
-    return dict(sorted(index.items()))
-
-
-def _records_from_cards(payload: dict[str, Any], root: Path | None = None) -> list[dict[str, Any]]:
-    """Return mutable file records from a payload that may only contain compact cards."""
-    records = [dict(card) for card in payload.get("files", [])]
-    by_path = {record["path"]: record for record in records}
-    for record in records:
-        if "bytes" not in record and root is not None:
-            try:
-                record["bytes"] = (root / record["path"]).stat().st_size
-            except OSError:
-                record["bytes"] = 0
-        else:
-            record.setdefault("bytes", 0)
-        record.setdefault("symbols", [])
-    for name, hits in payload.get("symbol_index", {}).items():
-        for hit in hits:
-            record = by_path.get(hit.get("file", ""))
-            if record is None:
-                continue
-            record.setdefault("symbols", []).append({
-                "name": name,
-                "kind": hit.get("kind", "function"),
-                "line": hit.get("line", 0),
-                "end_line": hit.get("end_line", hit.get("line", 0)),
-                "semantic_id": hit.get("semantic_id", ""),
-                "signature_hash": hit.get("signature_hash", ""),
-            })
-    for record in records:
-        record["symbol_count"] = len(record.get("symbols", [])) or record.get("symbol_count", 0)
-    return records
-
-
-def _incremental_record_fingerprint(record: dict[str, Any]) -> dict[str, Any]:
-    """Return the branch fields that determine whether a file card changed."""
-    symbols = sorted(
-        record.get("symbols", []),
-        key=lambda item: (
-            item.get("name", ""),
-            item.get("kind", ""),
-            item.get("line", 0),
-            item.get("end_line", 0),
-        ),
-    )
-    return {
-        "card": _compact_file_cards([record])[0],
-        "symbols": symbols,
-    }
-
-
-def refresh_index_for_paths(
-    index_path: Path,
-    changed_paths: list[Path],
-    *,
-    root: Path | None = None,
-    include_topology: bool = True,
-    topology_path: Path = DEFAULT_TOPOLOGY_PATH,
-    refresh_topology: bool = False,
-    write_index: bool = True,
-) -> dict[str, Any]:
-    """Closed-loop AST hook: update changed/deleted file branches in an existing map.
-
-    Editors and coding agents can call this immediately after successful writes.
-    The touched files are locally reparsed, semantic IDs/signature hashes and line
-    ranges are regenerated for those branches, deletions are removed, and Aura's
-    topology metadata is re-attached from either the existing topology JSON or a
-    fresh deep topology refresh when requested.
-    """
-    # Early return if no changes to process
-    if not changed_paths:
-        return _load_json(index_path)
-
-    payload = _load_json(index_path)
-    root = (root or Path(payload.get("root", "."))).resolve()
-    by_path = {record["path"]: record for record in _records_from_cards(payload, root=root)}
-    refreshed: list[str] = []
-    removed: list[str] = []
-
-    for changed in changed_paths:
-        path = changed if changed.is_absolute() else root / changed
-        try:
-            rel = path.relative_to(root).as_posix()
-        except ValueError:
-            continue
-        if rel in GENERATED_MAP_FILES or any(part in DEFAULT_SKIP_DIRS for part in Path(rel).parts):
-            continue
-        if path.exists() and path.is_file():
-            scanned = _scan_file(root, path)
-            existing = by_path.get(rel)
-            if existing is None or _incremental_record_fingerprint(existing) != _incremental_record_fingerprint(scanned):
-                by_path[rel] = scanned
-                refreshed.append(rel)
-        elif rel in by_path:
-            by_path.pop(rel, None)
-            removed.append(rel)
-
-    if not refreshed and not removed:
-        return payload
-
-    topology = load_or_compile_topology(root, include_topology=include_topology, topology_path=topology_path, refresh=refresh_topology)
-    records = [by_path[path] for path in sorted(by_path)]
-    topology_by_file = _attach_topology(records, topology)
-    roles = Counter(rec["role"] for rec in records)
-    payload["coverage"] = _coverage_report(root, records, DEFAULT_SKIP_DIRS)
-    payload["rings"] = _navigation_rings(records)
-    payload["hubs"] = _top_hubs(records)
-    payload["command_index"] = _command_index(records)
-    payload["symbol_index"] = _symbol_index(records)
-    payload["files"] = _compact_file_cards(records)
-    payload["topology"] = {
-        "source": topology.get("codemap_source", "disabled" if not include_topology else "unknown"),
-        "diagnostics": topology.get("diagnostics", {}),
-        "meta": topology.get("meta", {}),
-        "file_index": topology_by_file,
-        "top_files_by_degree": sorted(
-            [{"file": file_name, **data} for file_name, data in topology_by_file.items()],
-            key=lambda item: (item["degree"], item["node_count"], item["file"]),
-            reverse=True,
-        )[:30],
-    }
-    payload["summary"].update({
-        "file_count": len(records),
-        "total_bytes": sum(rec.get("bytes", 0) for rec in records),
-        "text_tokens_est": sum(rec.get("tokens_est", 0) for rec in records),
-        "role_counts": dict(sorted(roles.items())),
-        "topology_nodes": len(topology.get("nodes", [])),
-        "topology_edges": len(topology.get("edges", [])),
-        "topology_source": topology.get("codemap_source", "disabled" if not include_topology else "unknown"),
-        "last_incremental_refresh_unix": int(time.time()),
-    })
-    payload["last_refresh"] = {
-        "mode": "incremental_ast_hook",
-        "refreshed_paths": refreshed,
-        "removed_paths": removed,
-        "changed_path_count": len(refreshed) + len(removed),
-        "topology_refreshed": refresh_topology,
-    }
-    if write_index:
-        index_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    return payload
-
-
-def _command_index(records: list[dict[str, Any]]) -> dict[str, list[str]]:
-    index: dict[str, list[str]] = defaultdict(list)
-    for rec in records:
-        for command in rec.get("commands", []):
-            index[command].append(f"{rec['path']}:{rec.get('command_lines', {}).get(command, [1])[0]}")
-    return {command: sorted(paths) for command, paths in sorted(index.items())}
-
-
-def _top_hubs(records: list[dict[str, Any]], limit: int = 20) -> list[dict[str, Any]]:
-    ranked = sorted(records, key=lambda rec: (rec.get("topology", {}).get("degree", 0), rec.get("symbol_count", 0), rec.get("tokens_est", 0)), reverse=True)
-    return [{
-        "path": rec["path"],
-        "role": rec["role"],
-        "symbols": rec.get("symbol_count", 0),
-        "tokens_est": rec["tokens_est"],
-        "topology_degree": rec.get("topology", {}).get("degree", 0),
-    } for rec in ranked[:limit]]
-
-
-def _compact_file_cards(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def scan_repository(root: Path) -> list[dict[str, Any]]:
     cards: list[dict[str, Any]] = []
-    for rec in records:
-        cards.append({
-            "path": rec["path"],
-            "role": rec["role"],
-            "bytes": rec["bytes"],
-            "lines": rec["lines"],
-            "tokens_est": rec["tokens_est"],
-            "symbol_count": rec.get("symbol_count", 0),
-            "commands": rec.get("commands", []),
-            "command_lines": rec.get("command_lines", {}),
-            "topology": rec.get("topology", {}),
-            "digest8": rec["digest8"],
-            "vector": rec["vector"],
-        })
+    for path in _iter_repo_files(root):
+        cards.append(_scan_file(root, path))
     return cards
 
 
-def _attach_topology(records: list[dict[str, Any]], topology: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    topology_by_file = _topology_file_index(topology)
-    for rec in records:
-        rec["topology"] = topology_by_file.get(Path(rec["path"]).name, {})
-    return topology_by_file
+def _scan_file(root: Path, path: Path) -> dict[str, Any]:
+    rel = path.relative_to(root).as_posix()
+    try:
+        raw = path.read_bytes()
+    except OSError:
+        raw = b""
+    digest8 = hashlib.blake2b(raw, digest_size=8).hexdigest()
+    text = raw.decode("utf-8", errors="replace")
+    is_binary = _is_probably_binary(path)
+    symbols = _python_symbol_records(text, rel) if path.suffix.lower() == ".py" and not is_binary else []
+    commands = _command_mentions(text) if not is_binary else []
+    master_key = parse_master_key_header(text) if not is_binary else {}
+    return {
+        "path": rel,
+        "role": classify_file(path),
+        "bytes": len(raw),
+        "lines": text.count("\n") + (1 if text else 0),
+        "tokens_est": estimate_tokens(text) if not is_binary else max(1, len(raw) // 4),
+        "symbols": [record.__dict__ for record in symbols],
+        "commands": commands,
+        "command_lines": _command_locations(text, commands) if commands else {},
+        "master_key": master_key,
+        "digest8": digest8,
+        "vector": stable_unit_vector(f"{rel}\n{text[:12000]}") if not is_binary else [],
+    }
 
 
-def build_navigation_system(root: Path, *, include_topology: bool = True, topology_path: Path = DEFAULT_TOPOLOGY_PATH, refresh_topology: bool = True) -> dict[str, Any]:
-    """Build a compact map intended to be read instead of the whole codebase."""
-    started = time.time()
-    topology = load_or_compile_topology(root, include_topology=include_topology, topology_path=topology_path, refresh=refresh_topology)
-    records = scan_repository(root)
-    topology_by_file = _attach_topology(records, topology)
-    roles = Counter(rec["role"] for rec in records)
-    compressor = IntentCompressor()
+def _coverage_report(cards: list[dict[str, Any]], topology: dict[str, Any] | None) -> dict[str, Any]:
+    source_paths = {str(card.get("path")) for card in cards}
+    missing_source_paths: list[str] = []
+    unindexed_topology_files: list[str] = []
+    if topology:
+        topology_files = set(_topology_file_index(topology))
+        python_sources = {path for path in source_paths if path.endswith(".py")}
+        missing_source_paths = sorted(python_sources - topology_files)
+        unindexed_topology_files = sorted(topology_files - source_paths)
+    return {
+        "repo_file_count": len(cards),
+        "source_paths_without_topology": missing_source_paths[:100],
+        "topology_paths_without_source_cards": unindexed_topology_files[:100],
+        "coverage_complete_for_repo_scan": True,
+    }
+
+
+def _navigation_rings(cards: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    role_counts = Counter(str(card.get("role", "support_file")) for card in cards)
+    total_bytes = sum(int(card.get("bytes", 0)) for card in cards)
+    total_tokens = sum(int(card.get("tokens_est", 0)) for card in cards)
+    return [
+        {
+            "ring": "repo",
+            "files": len(cards),
+            "bytes": total_bytes,
+            "tokens_est": total_tokens,
+            "roles": dict(sorted(role_counts.items())),
+        },
+        {
+            "ring": "interfaces",
+            "paths": [card["path"] for card in cards if card.get("role") == "interface_surface"][:200],
+        },
+        {
+            "ring": "knowledge",
+            "paths": [card["path"] for card in cards if card.get("role") == "knowledge_artifact"][:200],
+        },
+        {
+            "ring": "code",
+            "paths": [card["path"] for card in cards if card.get("role") in {"python_module", "native_accelerator"}][:400],
+        },
+    ]
+
+
+def _symbol_index(cards: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    index: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for card in cards:
+        for symbol in card.get("symbols", []):
+            if not isinstance(symbol, dict):
+                continue
+            index[str(symbol.get("name", ""))].append({
+                "file": card.get("path"),
+                "kind": symbol.get("kind"),
+                "line": symbol.get("line"),
+                "end_line": symbol.get("end_line"),
+                "semantic_id": symbol.get("semantic_id"),
+                "signature_hash": symbol.get("signature_hash"),
+            })
+    return dict(index)
+
+
+def _records_from_cards(cards: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for card in cards:
+        card_path = str(card.get("path") or "")
+        card_digest = str(card.get("digest8") or "")
+        for symbol in card.get("symbols", []):
+            if not isinstance(symbol, dict):
+                continue
+            records.append({
+                "semantic_id": str(symbol.get("semantic_id") or ""),
+                "name": str(symbol.get("name") or ""),
+                "kind": str(symbol.get("kind") or ""),
+                "file": card_path,
+                "line": int(symbol.get("line") or 1),
+                "end_line": int(symbol.get("end_line") or symbol.get("line") or 1),
+                "signature_hash": str(symbol.get("signature_hash") or ""),
+                "file_digest8": card_digest,
+            })
+    return sorted(records, key=lambda item: (item["file"], item["semantic_id"]))
+
+
+def _incremental_record_fingerprint(records: list[dict[str, Any]]) -> str:
+    payload = json.dumps(records, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.blake2b(payload, digest_size=16).hexdigest()
+
+
+def refresh_index_for_paths(
+    payload: dict[str, Any],
+    root: Path,
+    changed_paths: list[str | Path],
+    *,
+    topology: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Refresh changed/deleted file branches without rebuilding unrelated file cards."""
+    cards = [dict(card) for card in payload.get("files", []) if isinstance(card, dict)]
+    card_by_path = {str(card.get("path") or ""): card for card in cards if card.get("path")}
+    changed_rel_paths: list[str] = []
+    for raw_path in changed_paths:
+        candidate = Path(raw_path)
+        absolute = candidate if candidate.is_absolute() else root / candidate
+        try:
+            rel = absolute.resolve().relative_to(root.resolve()).as_posix()
+        except (OSError, ValueError):
+            continue
+        if rel in GENERATED_MAP_FILES:
+            continue
+        changed_rel_paths.append(rel)
+        if not absolute.exists() or not absolute.is_file() or absolute.suffix.lower() not in TEXT_SUFFIXES or _skip_part(absolute, root):
+            card_by_path.pop(rel, None)
+            continue
+        card_by_path[rel] = _scan_file(root, absolute)
+    refreshed_cards = sorted(card_by_path.values(), key=lambda card: str(card.get("path") or ""))
+    topology_index = _topology_file_index(topology) if topology else {}
+    if topology_index:
+        for card in refreshed_cards:
+            card["topology"] = topology_index.get(str(card.get("path") or ""), {})
+    refreshed = dict(payload)
+    refreshed["generated_at_unix"] = int(time.time())
+    refreshed["coverage"] = _coverage_report(refreshed_cards, topology)
+    refreshed["rings"] = _navigation_rings(refreshed_cards)
+    refreshed["symbol_index"] = _symbol_index(refreshed_cards)
+    refreshed["command_index"] = _command_index(refreshed_cards)
+    refreshed["top_hubs"] = _top_hubs(refreshed_cards)
+    refreshed["files"] = _compact_file_cards(refreshed_cards)
+    records = _records_from_cards(refreshed_cards)
+    refreshed["incremental_refresh"] = {
+        "changed_paths": sorted(set(changed_rel_paths)),
+        "records": records,
+        "record_fingerprint": _incremental_record_fingerprint(records),
+    }
+    refreshed["summary"] = {
+        "file_count": len(refreshed_cards),
+        "total_bytes": sum(int(card.get("bytes", 0)) for card in refreshed_cards),
+        "text_tokens_est": sum(int(card.get("tokens_est", 0)) for card in refreshed_cards),
+        "role_counts": dict(sorted(Counter(str(card.get("role", "support_file")) for card in refreshed_cards).items())),
+        "topology_nodes": len((topology or {}).get("nodes", {})),
+        "topology_edges": len((topology or {}).get("edges", [])),
+        "topology_source": str(payload.get("summary", {}).get("topology_source", "incremental")),
+        "elapsed_ms": round(float(payload.get("summary", {}).get("elapsed_ms", 0.0)), 2),
+    }
+    refreshed["incremental_refresh"]["payload_hash"] = _codemap_payload_hash(refreshed)
+    return refreshed
+
+
+def _command_index(cards: list[dict[str, Any]]) -> dict[str, list[str]]:
+    out: dict[str, list[str]] = defaultdict(list)
+    for card in cards:
+        for command in card.get("commands", []):
+            if card["path"] not in out[command]:
+                out[command].append(card["path"])
+    return dict(out)
+
+
+def _top_hubs(cards: list[dict[str, Any]], *, limit: int = 100) -> list[dict[str, Any]]:
+    scored: list[tuple[float, dict[str, Any]]] = []
+    for card in cards:
+        topo = card.get("topology", {}) or {}
+        score = float(topo.get("nodes", 0)) + float(topo.get("out_edges", 0)) + float(topo.get("in_edges", 0))
+        if score <= 0:
+            continue
+        scored.append((score, {
+            "path": card["path"],
+            "score": score,
+            "nodes": topo.get("nodes", 0),
+            "out_edges": topo.get("out_edges", 0),
+            "in_edges": topo.get("in_edges", 0),
+            "symbols": topo.get("symbols", []),
+        }))
+    scored.sort(key=lambda item: (-item[0], item[1]["path"]))
+    return [item[1] for item in scored[:limit]]
+
+
+def _compact_file_cards(cards: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    compact: list[dict[str, Any]] = []
+    for card in cards:
+        compact.append({
+            "path": card["path"],
+            "role": card["role"],
+            "bytes": card["bytes"],
+            "lines": card["lines"],
+            "tokens_est": card["tokens_est"],
+            "symbol_count": len(card.get("symbols", [])),
+            "commands": card.get("commands", []),
+            "command_lines": card.get("command_lines", {}),
+            "topology": card.get("topology", {}),
+            "digest8": card.get("digest8"),
+            "vector": card.get("vector", []),
+        })
+    return compact
+
+
+def _attach_topology(cards: list[dict[str, Any]], topology_index: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    for card in cards:
+        card["topology"] = topology_index.get(card["path"], {})
+    return cards
+
+
+def build_navigation_system(
+    root: Path,
+    *,
+    include_topology: bool = True,
+    topology_path: Path | None = None,
+    refresh_topology: bool = False,
+) -> dict[str, Any]:
+    started = time.perf_counter()
+    cards = scan_repository(root)
+    topology: dict[str, Any] | None = None
+    topology_source = "disabled"
+    if include_topology:
+        topology, topology_source = load_or_compile_topology(root, topology_path=topology_path, refresh=refresh_topology)
+        cards = _attach_topology(cards, _topology_file_index(topology))
     payload = {
         "status": "AURA_CODEMAP_ACTIVE",
         "generated_by": "aura_codebase_navigator",
         "generated_at_unix": int(time.time()),
-        "root": str(root),
-        "intent_packet": compressor.compress(
-            "navigate AuraOS from a compact map before reading source files",
-            explicit_tags=["OP:NAVIGATE", "DOMAIN:TOPOLOGY", "TARGET:CODEMAP", "ENV:PYTHON", "CONSTRAINT:TOKEN_SPARING"],
-        ),
-        "coverage": _coverage_report(root, records, DEFAULT_SKIP_DIRS),
+        "root": root.as_posix(),
+        "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
+        "coverage": _coverage_report(cards, topology),
+        "rings": _navigation_rings(cards),
+        "symbol_index": _symbol_index(cards),
+        "command_index": _command_index(cards),
+        "top_hubs": _top_hubs(cards),
+        "files": _compact_file_cards(cards),
         "summary": {
-            "file_count": len(records),
-            "total_bytes": sum(rec["bytes"] for rec in records),
-            "text_tokens_est": sum(rec["tokens_est"] for rec in records),
-            "role_counts": dict(sorted(roles.items())),
-            "topology_nodes": len(topology.get("nodes", [])),
-            "topology_edges": len(topology.get("edges", [])),
-            "topology_source": topology.get("codemap_source", "disabled" if not include_topology else "unknown"),
-            "elapsed_ms": round((time.time() - started) * 1000, 2),
+            "file_count": len(cards),
+            "total_bytes": sum(int(card.get("bytes", 0)) for card in cards),
+            "text_tokens_est": sum(int(card.get("tokens_est", 0)) for card in cards),
+            "role_counts": dict(sorted(Counter(str(card.get("role", "support_file")) for card in cards).items())),
+            "topology_nodes": len((topology or {}).get("nodes", {})),
+            "topology_edges": len((topology or {}).get("edges", [])),
+            "topology_source": topology_source,
+            "elapsed_ms": round((time.perf_counter() - started) * 1000.0, 2),
         },
         "navigation_protocol": [
             "Read .aura/CODEMAP.md first.",
-            "Use command_index for bang commands before opening the REPL monolith.",
-            "Use symbol_index semantic_id/signature_hash entries first, then current line ranges.",
-            "Open only the top query hits plus their topology.neighbor_files.",
-            "After any successful file write, run --refresh on touched paths instead of rebuilding the whole map.",
+            "Use .aura/CODEMAP.json for exact file/symbol/command references.",
+            "Navigate repository -> role -> file -> symbol -> exact source region.",
+            "Do not infer repository-wide behavior from a single file or paper.",
+            "Treat topology and vectors as navigation aids only; exact source and tests remain authority.",
         ],
-        "rings": _navigation_rings(records),
-        "hubs": _top_hubs(records),
-        "command_index": _command_index(records),
-        "symbol_index": _symbol_index(records),
-        "files": _compact_file_cards(records),
-        "topology": {
-            "source": topology.get("codemap_source", "disabled" if not include_topology else "unknown"),
-            "diagnostics": topology.get("diagnostics", {}),
-            "meta": topology.get("meta", {}),
-            "file_index": topology_by_file,
-            "top_files_by_degree": sorted(
-                [{"file": file_name, **data} for file_name, data in topology_by_file.items()],
-                key=lambda item: (item["degree"], item["node_count"], item["file"]),
-                reverse=True,
-            )[:30],
-        },
     }
     return payload
 
 
-def search_index(payload: dict[str, Any], query: str, *, limit: int = 8) -> list[dict[str, Any]]:
-    """Rank compact file cards from an existing map without scanning source files."""
-    terms = {term.lower() for term in re.findall(r"[A-Za-z0-9_!:-]+", query)}
-    qvec = stable_unit_vector(query)
-    symbol_hits = payload.get("symbol_index", {})
-    command_hits = payload.get("command_index", {})
-    target_files: Counter[str] = Counter()
-    for term in terms:
-        if term in command_hits:
-            target_files.update({str(path).split(":", 1)[0]: 12 for path in command_hits[term]})
-        for symbol, hits in symbol_hits.items():
-            if term == symbol.lower():
-                target_files.update({hit["file"]: 10 for hit in hits})
-    ranked: list[dict[str, Any]] = []
-    for card in payload.get("files", []):
-        topology = card.get("topology", {})
-        haystack = " ".join([
-            card["path"],
-            card["role"],
-            " ".join(card.get("commands", [])),
-            " ".join(topology.get("neighbor_files", [])),
-            " ".join(topology.get("edge_kinds", {}).keys()),
-        ]).lower()
-        lexical = sum(1 for term in terms if term in haystack)
-        path_exact = sum(3 for term in terms if term and term in card["path"].lower())
-        topology_boost = min(3, topology.get("degree", 0) / 100) if lexical else 0
-        role_boost = 2 if card["role"] == "python_module" and target_files[card["path"]] else 0
-        test_penalty = 4 if card["path"].startswith("test_") and target_files[card["path"]] else 0
-        score = target_files[card["path"]] + role_boost + lexical + path_exact + topology_boost + cosine(qvec, card.get("vector", [])) - test_penalty
-        if score > 0:
-            result = {"score": round(score, 4), **{k: v for k, v in card.items() if k not in {"vector", "command_lines"}}}
-            matched_commands = {term for term in terms if term in card.get("command_lines", {})}
-            if matched_commands:
-                result.pop("commands", None)
-                result["matched_command_lines"] = {cmd: card["command_lines"][cmd] for cmd in sorted(matched_commands)}
-            ranked.append(result)
-    return sorted(ranked, key=lambda item: item["score"], reverse=True)[:limit]
+def search_index(index: dict[str, Any], query: str, *, top_n: int = 12) -> list[dict[str, Any]]:
+    query_vector = stable_unit_vector(query)
+    query_terms = {term.lower() for term in re.findall(r"[A-Za-z0-9_]+", query) if len(term) >= 2}
+    ranked: list[tuple[float, dict[str, Any]]] = []
+    for card in index.get("files", []):
+        path = str(card.get("path", ""))
+        role = str(card.get("role", ""))
+        symbols = " ".join(str(symbol) for symbol in (card.get("topology", {}) or {}).get("symbols", []))
+        commands = " ".join(str(command) for command in card.get("commands", []))
+        lexical_blob = f"{path} {role} {symbols} {commands}".lower()
+        lexical_hits = sum(1 for term in query_terms if term in lexical_blob)
+        semantic = cosine(query_vector, list(card.get("vector", [])))
+        topology = card.get("topology", {}) or {}
+        graph_bonus = math.log1p(float(topology.get("nodes", 0)) + float(topology.get("out_edges", 0)) + float(topology.get("in_edges", 0)))
+        score = lexical_hits * 3.0 + semantic + graph_bonus * 0.05
+        if lexical_hits > 0 or semantic > 0.15:
+            ranked.append((score, card))
+    ranked.sort(key=lambda item: (-item[0], item[1].get("path", "")))
+    return [{"score": round(score, 4), **card} for score, card in ranked[:top_n]]
 
 
-def _atomic_write_text(path: Path, text: str) -> None:
-    """Publish a text artifact atomically so concurrent readers never see truncation."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary_name = tempfile.mkstemp(
-        prefix=f".{path.name}.", suffix=".tmp", dir=str(path.parent)
-    )
-    temporary_path = Path(temporary_name)
-    try:
-        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
-            handle.write(text)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary_path, path)
-    finally:
-        temporary_path.unlink(missing_ok=True)
-
-
-def write_navigation_artifacts(
-    payload: dict[str, Any],
-    json_path: Path = DEFAULT_INDEX_PATH,
-    md_path: Path = DEFAULT_MARKDOWN_PATH,
-    *,
-    write_json: bool = True,
-) -> tuple[Path, Path]:
-    """Write compact machine and human maps; do not emit full topology/file payloads in Markdown."""
-    json_path.parent.mkdir(parents=True, exist_ok=True)
-    md_path.parent.mkdir(parents=True, exist_ok=True)
-    if write_json:
-        _atomic_write_text(json_path, json.dumps(payload, indent=2))
+def write_navigation_artifacts(index: dict[str, Any], index_path: Path, markdown_path: Path) -> None:
+    index_path.parent.mkdir(parents=True, exist_ok=True)
+    index_path.write_text(json.dumps(index, indent=2, sort_keys=False), encoding="utf-8")
+    summary = index.get("summary", {})
     lines = [
-        "# Aura Compact Code Map",
+        "# Aura CODEMAP",
         "",
-        f"Status: `{payload['status']}`",
-        f"Intent packet: `{payload['intent_packet']}`",
+        "Generated by `aura_codebase_navigator.py`.",
         "",
-        "## Navigation Protocol",
+        "Canonical machine index: `.aura/CODEMAP.json`.",
+        "",
+        "Read this file before opening large repository documents or source trees. It is a navigation surface only; exact source and tests remain authority.",
+        "",
+        f"Intent packet: `{index.get('intent_packet', '')}`",
+        "",
+        "## Summary",
         "",
     ]
-    lines.extend(f"- {step}" for step in payload["navigation_protocol"])
-    lines.extend(["", "## Summary", ""])
-    for key, value in payload["summary"].items():
+    for key, value in summary.items():
         lines.append(f"- **{key}**: {value}")
-    coverage = payload.get("coverage", {})
-    lines.extend(["", "## Coverage", ""])
-    lines.append(f"- **included_file_count**: {coverage.get('included_file_count', 0)}")
-    lines.append(f"- **policy**: {coverage.get('included_policy', '')}")
-    if coverage.get("excluded_generated_map_files"):
-        lines.append("- **excluded_generated_map_files**: " + ", ".join(f"`{path}`" for path in coverage["excluded_generated_map_files"]))
-    if coverage.get("skipped_dir_file_counts"):
-        skipped = ", ".join(f"`{name}`={count}" for name, count in coverage["skipped_dir_file_counts"].items())
-        lines.append(f"- **skipped_dir_file_counts**: {skipped}")
-    lines.extend(["", "## Command Index", ""])
-    for command, paths in payload["command_index"].items():
-        lines.append(f"- `{command}` -> {', '.join(f'`{path}`' for path in paths[:4])}")
-    lines.extend(["", "## Navigation Rings", ""])
-    for ring, paths in payload["rings"].items():
-        lines.append(f"### {ring}")
-        for path in paths[:12]:
-            lines.append(f"- `{path}`")
-        if len(paths) > 12:
-            lines.append(f"- ... {len(paths) - 12} more; query CODEMAP.json for exact file cards")
-        lines.append("")
-    lines.extend(["## Hubs", ""])
-    for hub in payload["hubs"][:12]:
-        lines.append(f"- `{hub['path']}` ({hub['role']}): {hub['symbols']} symbols, degree {hub.get('topology_degree', 0)}, ~{hub['tokens_est']} tokens")
-    topology = payload.get("topology", {})
-    lines.extend(["", "## Topology Integration", ""])
-    lines.append(f"- **source**: {topology.get('source', 'unknown')}")
-    lines.append(f"- **nodes**: {payload['summary'].get('topology_nodes', 0)}")
-    lines.append(f"- **edges**: {payload['summary'].get('topology_edges', 0)}")
-    if topology.get("top_files_by_degree"):
-        lines.append("- **top_files_by_degree**:")
-        for item in topology["top_files_by_degree"][:12]:
-            neighbors = ", ".join(f"`{name}`" for name in item.get("neighbor_files", [])[:4])
-            lines.append(f"  - `{item['file']}` degree={item['degree']} nodes={item['node_count']} neighbors={neighbors}")
-    lines.extend(["", "## High-Value Symbols", ""])
-    for symbol in sorted(payload["symbol_index"])[:80]:
-        hits = payload["symbol_index"][symbol]
-        where = ", ".join(f"`{hit['file']}:{hit['line']}`" for hit in hits[:3])
-        lines.append(f"- `{symbol}` -> {where}")
-    _atomic_write_text(md_path, "\n".join(lines) + "\n")
-    return json_path, md_path
+    lines.extend(["", "## Coverage", "", "```json", json.dumps(index.get("coverage", {}), indent=2), "```", "", "## Navigation rings", ""])
+    for ring in index.get("rings", []):
+        lines.extend([f"### {ring.get('ring', 'unknown')}", "", "```json", json.dumps(ring, indent=2), "```", ""])
+    lines.extend(["## Highest-connectivity source files", ""])
+    for hub in index.get("top_hubs", [])[:40]:
+        lines.append(f"- `{hub['path']}` — score `{hub['score']}`; nodes `{hub['nodes']}`; out `{hub['out_edges']}`; in `{hub['in_edges']}`")
+    lines.extend(["", "## Example usage", "", "```bash", "python aura_codebase_navigator.py", "python aura_codebase_navigator.py --search \"Council workspace intent\" --top 12", "python aura_codebase_navigator.py --search \"construction renderer\" --no-topology", "```", ""])
+    markdown_path.write_text("\n".join(lines), encoding="utf-8")
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -799,93 +630,109 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 
 def _codemap_payload_hash(payload: dict[str, Any]) -> str:
-    """Create deterministic hash of codemap payload to detect content changes."""
-    body = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
-    return hashlib.blake2b(body.encode("utf-8"), digest_size=16).hexdigest()
+    canonical = json.loads(json.dumps(payload))
+    canonical.pop("generated_at_unix", None)
+    summary = canonical.get("summary")
+    if isinstance(summary, dict):
+        summary.pop("elapsed_ms", None)
+    refresh = canonical.get("incremental_refresh")
+    if isinstance(refresh, dict):
+        refresh.pop("payload_hash", None)
+    raw = json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.blake2b(raw, digest_size=16).hexdigest()
 
 
 def refresh_codemap_for_paths(
     changed_paths: list[str | Path],
     *,
-    root: Path | str | None = None,
+    root: Path | None = None,
     index_path: Path = DEFAULT_INDEX_PATH,
     markdown_path: Path = DEFAULT_MARKDOWN_PATH,
     include_topology: bool = True,
-    topology_path: Path = DEFAULT_TOPOLOGY_PATH,
+    topology_path: Path | None = None,
     refresh_topology: bool = False,
-) -> dict[str, Any] | None:
-    """Refresh CODEMAP branches and leave JSON/Markdown untouched on no-op scans."""
-    repo_root = Path(root or ".").resolve()
-    resolved_index = index_path if index_path.is_absolute() else repo_root / index_path
-    resolved_markdown = markdown_path if markdown_path.is_absolute() else repo_root / markdown_path
-    if not resolved_index.exists():
-        return None
-    before_payload = _load_json(resolved_index)
-    before_hash = _codemap_payload_hash(before_payload)
-    payload = refresh_index_for_paths(
-        resolved_index,
-        [Path(path) for path in changed_paths],
-        root=repo_root,
-        include_topology=include_topology,
-        topology_path=topology_path,
-        refresh_topology=refresh_topology,
-        write_index=False,
-    )
-    after_hash = _codemap_payload_hash(payload)
-    if before_hash == after_hash:
-        return payload
-    write_navigation_artifacts(payload, resolved_index, resolved_markdown)
+) -> dict[str, Any]:
+    repo_root = (root or Path(__file__).resolve().parent).resolve()
+    absolute_index = index_path if index_path.is_absolute() else repo_root / index_path
+    absolute_markdown = markdown_path if markdown_path.is_absolute() else repo_root / markdown_path
+    if not absolute_index.exists():
+        payload = build_navigation_system(
+            repo_root,
+            include_topology=include_topology,
+            topology_path=topology_path,
+            refresh_topology=refresh_topology,
+        )
+    else:
+        payload = _load_json(absolute_index)
+        topology = None
+        if include_topology:
+            topology, _ = load_or_compile_topology(
+                repo_root,
+                topology_path=topology_path,
+                refresh=refresh_topology,
+            )
+        payload = refresh_index_for_paths(payload, repo_root, changed_paths, topology=topology)
+    write_navigation_artifacts(payload, absolute_index, absolute_markdown)
     return payload
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Build/query Aura's compact code map.")
-    parser.add_argument("--root", default=".", help="Repository root to scan when building")
-    parser.add_argument("--index", default=str(DEFAULT_INDEX_PATH), help="Compact JSON map path")
-    parser.add_argument("--markdown", default=str(DEFAULT_MARKDOWN_PATH), help="Compact Markdown map path")
-    parser.add_argument("--query", default="", help="Query an existing compact map without scanning")
-    parser.add_argument("--refresh", nargs="*", default=None, help="Incrementally refresh changed/deleted paths in an existing compact map")
-    parser.add_argument("--limit", type=int, default=8, help="Maximum query hits")
-    parser.add_argument("--no-topology", action="store_true", help="Skip deep topology scan for a faster codemap refresh")
-    parser.add_argument("--topology-json", default=str(DEFAULT_TOPOLOGY_PATH), help="Aura !topology JSON path to load if refresh fails or is disabled")
-    parser.add_argument("--reuse-topology-json", action="store_true", help="Do not run !topology/deep scan; import the existing topology JSON")
-    parser.add_argument("--refresh-topology", action="store_true", help="With --refresh, also rerun Aura's deep topology scan")
-    args = parser.parse_args()
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Build a token-sparing repository-wide Aura CODEMAP.")
+    parser.add_argument("--root", default=str(Path(__file__).resolve().parent))
+    parser.add_argument("--index", default=str(DEFAULT_INDEX_PATH))
+    parser.add_argument("--markdown", default=str(DEFAULT_MARKDOWN_PATH))
+    parser.add_argument("--topology", default=str(DEFAULT_TOPOLOGY_PATH))
+    parser.add_argument("--refresh-topology", action="store_true")
+    parser.add_argument("--no-topology", action="store_true")
+    parser.add_argument("--search", default="")
+    parser.add_argument("--top", type=int, default=12)
+    parser.add_argument("--refresh", nargs="*", default=None, help="Incrementally refresh only these changed/deleted repository paths")
+    args = parser.parse_args(argv)
 
+    root = Path(args.root).resolve()
     index_path = Path(args.index)
-    if args.refresh is not None:
-        if not index_path.exists():
-            raise SystemExit(f"Missing {index_path}; build it first with python aura_codebase_navigator.py")
-        payload = refresh_codemap_for_paths(
-            args.refresh,
-            root=Path(args.root).resolve(),
-            index_path=index_path,
-            markdown_path=Path(args.markdown),
+    if not index_path.is_absolute():
+        index_path = root / index_path
+    markdown_path = Path(args.markdown)
+    if not markdown_path.is_absolute():
+        markdown_path = root / markdown_path
+    topology_path = Path(args.topology)
+    if args.refresh is not None and index_path.exists():
+        index = _load_json(index_path)
+        topology = None
+        topology_source = "disabled"
+        if not args.no_topology:
+            topology, topology_source = load_or_compile_topology(root, topology_path=topology_path, refresh=args.refresh_topology)
+        index = refresh_index_for_paths(index, root, args.refresh, topology=topology)
+        if isinstance(index.get("summary"), dict):
+            index["summary"]["topology_source"] = topology_source
+    else:
+        index = build_navigation_system(
+            root,
             include_topology=not args.no_topology,
-            topology_path=Path(args.topology_json),
+            topology_path=topology_path,
             refresh_topology=args.refresh_topology,
         )
-        print(json.dumps((payload or {}).get("last_refresh", {}), indent=2))
-        return 0
-
-    if args.query:
-        if not index_path.exists():
-            raise SystemExit(f"Missing {index_path}; build it first with python aura_codebase_navigator.py")
-        hits = search_index(_load_json(index_path), args.query, limit=args.limit)
-        print(json.dumps({"query": args.query, "hits": hits}, indent=2))
-        return 0
-
-    payload = build_navigation_system(
-        Path(args.root).resolve(),
-        include_topology=not args.no_topology,
-        topology_path=Path(args.topology_json),
-        refresh_topology=not args.reuse_topology_json,
-    )
-    json_path, md_path = write_navigation_artifacts(payload, index_path, Path(args.markdown))
-    print(f"[+] wrote compact map {json_path}")
-    print(f"[+] wrote human map {md_path}")
-    print(json.dumps(payload["summary"], indent=2))
+    write_navigation_artifacts(index, index_path, markdown_path)
+    if args.search:
+        for result in search_index(index, args.search, top_n=max(1, args.top)):
+            topology = result.get("topology", {}) or {}
+            print(f"{result['score']:>7}  {result['path']}  role={result['role']} nodes={topology.get('nodes', 0)}")
+    else:
+        print(f"[+] Wrote {index_path}")
+        print(f"[+] Wrote {markdown_path}")
+        print(f"[+] Indexed {index['summary']['file_count']} files across the repository")
+        print(f"[+] Estimated text tokens: {index['summary']['text_tokens_est']}")
+        print(f"[+] Deep topology nodes: {index['summary']['topology_nodes']}  edges: {index['summary']['topology_edges']}")
     return 0
+
+
+def _skip_part(path: Path, root: Path) -> bool:
+    try:
+        parts = path.resolve().relative_to(root.resolve()).parts
+    except (OSError, ValueError):
+        return True
+    return any(part in DEFAULT_SKIP_DIRS or part.endswith(".egg-info") for part in parts)
 
 
 if __name__ == "__main__":
