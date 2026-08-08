@@ -1,0 +1,53 @@
+name: PR3 receipt revalidation guard
+on:
+  push:
+    branches:
+      - analysis/pr3-receipt-budget-revalidation
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/source-first-project-context-pr3
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            aura_project_context_compiler.py
+            aura_ephemeral_workspace_contracts.py
+            aura_ephemeral_path_policy.py
+            tests/test_aura_project_context_compiler.py
+            tests/test_aura_project_context_acceptance.py
+            schemas/aura_projection_selection_receipt_v1.schema.json
+            docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+      - name: Check exact source
+        run: test "$(git rev-parse HEAD)" = "933ab7d977c7569baa8a506505eec44d45c3cb31"
+      - name: Apply staged patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin analysis/pr3-receipt-budget-revalidation
+          git show FETCH_HEAD:analysis_pr3_receipt_revalidation_patch.py > /tmp/pr3_receipt_patch.py
+          python /tmp/pr3_receipt_patch.py
+      - name: Install tools
+        run: python -m pip install --quiet pytest jsonschema ruff
+      - name: Verify focused PR3
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+      - name: Publish verified source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aura PR3 Guarded Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+          git commit -m "PR3: revalidate selection receipts and budgets"
+          git fetch --depth=1 origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse FETCH_HEAD)" = "933ab7d977c7569baa8a506505eec44d45c3cb31"
+          git push origin HEAD:refactor/source-first-project-context-pr3
