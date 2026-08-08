@@ -15,7 +15,7 @@ state: "ORIENTED"
 # Aura PR #XXXX Continuity Capsule
 
 > **Generated file. Do not edit directly.**  
-> Update the authoritative JSON state through the ARCH controller, then regenerate this projection.
+> Update the authoritative JSON state through the ARCH controller, then regenerate this projection. Structural/type validity is owned by the v2.3 JSON Schema; cross-field exact-head and effect-binding invariants must also pass `scripts/aura_arch_v2_3_capsule_validator.py`. Neither validator grants mutation, promotion, or merge authority.
 
 ## 0. Fresh-agent bootstrap
 
@@ -164,7 +164,7 @@ This PR does **not** grant:
 - Reconstructable: **true**
 - Expires at:
 
-If enabled, the projection must be bound to the current workspace, exact head, phase, source/origin evidence, and expiry. If stale, reconstruct from canonical capsule/route/evidence or disable it. Never promote a JSpace item directly to truth, policy, capability, verifier status, or patch authority.
+If enabled, the projection must be bound to the current workspace, exact head, phase, non-empty source/origin evidence, and expiry, and freshness must be `CURRENT`. Cross-field equality between this Head SHA and the capsule's top-level `head_sha` is enforced by the canonical semantic validator. If stale, reconstruct from canonical capsule/route/evidence or disable it. Never promote a JSpace item directly to truth, policy, capability, verifier status, or patch authority.
 
 ## 13. Active findings and root-cause groups
 
@@ -214,6 +214,8 @@ If enabled, the projection must be bound to the current workspace, exact head, p
 - Independence receipt:
 - Exact contradictions retained: YES / NO
 
+An `INDEPENDENT` determination is not machine-valid without verifier/provider/input-origin evidence, non-empty Sybil-resistance evidence, an explicit disposition, and an independence receipt.
+
 ## 16. Reviewer history
 
 | Wave | Reviewer | Head range | Root causes found | Disposition |
@@ -259,7 +261,7 @@ If enabled, the projection must be bound to the current workspace, exact head, p
 - Receipt ref:
 - Revalidation required before durable effect: **true**
 
-`VALIDATED` is only representable when every mandatory gate above is `PASSED` and the workspace/head/witness/authorized/planned/candidate-effect/lease/dependency bindings are non-null and current. Endpoint success is not authorization. A stale or mismatched witness requires replan/refusal before durability.
+`VALIDATED` is only representable when every mandatory gate above is `PASSED` and the workspace/head/witness/authorized/planned/candidate-effect/lease/dependency bindings are non-null and current. The canonical semantic validator additionally requires `Validated exact head == head_sha` and exact equality among authorized/planned/candidate effect digests. Endpoint success is not authorization. A stale or mismatched witness requires replan/refusal before durability.
 
 ## 19. Durable-promotion checklist
 
@@ -282,7 +284,8 @@ If enabled, the projection must be bound to the current workspace, exact head, p
 6. Use only declared communication channels; treat shared files/cache/status/JSpace as potential channels.
 7. Preserve non-malleable origin and authority labels across summaries/tool echoes/derived state.
 8. Treat JSpace as advisory reconstructable working state only.
-9. Revalidate authority at the durable commit boundary.
-10. Record verifier correlation/independence; do not equate vote count with independence.
-11. Perform only the authorized next action.
-12. Record results through the ARCH controller.
+9. Run structural schema validation and `scripts/aura_arch_v2_3_capsule_validator.py` before any durable commit-time authorization is accepted.
+10. Revalidate authority at the durable commit boundary.
+11. Record verifier correlation/independence; do not equate vote count with independence.
+12. Perform only the authorized next action.
+13. Record results through the ARCH controller.
