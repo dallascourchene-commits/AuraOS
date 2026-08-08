@@ -1,0 +1,102 @@
+name: PR3 bounded edge-input guarded repair
+
+on:
+  push:
+    branches:
+      - analysis/pr3-bounded-edge-input-fix
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sparse checkout repair control branch
+        uses: actions/checkout@v4
+        with:
+          ref: analysis/pr3-bounded-edge-input-fix
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            .github/workflows/pr3_bounded_edge_input_guard.yml
+            tools/tmp_pr3_bounded_edge_input_fix.py
+            aura_project_context_compiler.py
+            aura_ephemeral_workspace_contracts.py
+            aura_ephemeral_path_policy.py
+            tests/test_aura_project_context_compiler.py
+            tests/test_aura_project_context_acceptance.py
+            schemas/aura_projection_selection_receipt_v1.schema.json
+            docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+
+      - name: Preserve payload and switch to exact PR3 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp tools/tmp_pr3_bounded_edge_input_fix.py /tmp/pr3_fix.py
+          git fetch --depth=1 origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse FETCH_HEAD)" = "a282cda62c3e47d47e7771ee4c3e7512d2122da7"
+          git checkout --detach a282cda62c3e47d47e7771ee4c3e7512d2122da7
+
+      - name: Apply bounded edge-input repair
+        run: python /tmp/pr3_fix.py
+
+      - name: Install focused tools
+        run: python -m pip install --quiet pytest jsonschema ruff
+
+      - name: Python compile
+        run: python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+
+      - name: Fatal Ruff classes
+        run: python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+
+      - name: Production docstring coverage
+        shell: bash
+        run: |
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+          tree=ast.parse(Path('aura_project_context_compiler.py').read_text(encoding='utf-8'))
+          funcs=[n for n in ast.walk(tree) if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef))]
+          docs=[n for n in funcs if ast.get_docstring(n)]
+          coverage=100*len(docs)/max(1,len(funcs))
+          print(f'production docstring coverage: {len(docs)}/{len(funcs)} = {coverage:.2f}%')
+          if coverage < 80:
+              raise SystemExit('production docstring coverage remains below 80%')
+          PY
+
+      - name: Direct whitespace and EOF proof
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          failures=[]
+          for name in (
+              'aura_project_context_compiler.py',
+              'tests/test_aura_project_context_compiler.py',
+              'docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md',
+          ):
+              path=Path(name); text=path.read_text(encoding='utf-8')
+              for i,line in enumerate(text.splitlines(),1):
+                  if line.endswith((' ','\t')):
+                      failures.append(f'{path}:{i}')
+              if not text.endswith('\n') or text.endswith('\n\n'):
+                  failures.append(f'{path}:noncanonical-eof')
+          if failures:
+              raise SystemExit('whitespace/EOF violations: '+', '.join(failures))
+          PY
+
+      - name: Focused PR3 tests
+        run: python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+
+      - name: Commit and guarded fast-forward
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aura PR3 Guarded Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add aura_project_context_compiler.py tests/test_aura_project_context_compiler.py docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+          git commit -m "PR3: bound edge input before materialization"
+          git fetch --depth=1 origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse FETCH_HEAD)" = "a282cda62c3e47d47e7771ee4c3e7512d2122da7"
+          git push origin HEAD:refactor/source-first-project-context-pr3
