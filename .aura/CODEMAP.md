@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1584
-- **total_bytes**: 59200505
-- **text_tokens_est**: 5337400
+- **total_bytes**: 59200818
+- **text_tokens_est**: 5337478
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 197, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 986, 'schema_or_lexicon': 231, 'support_file': 90}
 - **topology_nodes**: 11381
 - **topology_edges**: 27800
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 29995.47
+- **elapsed_ms**: 32825.12
 
 ## Coverage
 
@@ -234,7 +234,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!qdkt` -> `aura_affordance_directory.py:356`
 - `!query` -> `aura_human_agent_arena/emergent.js:68`
 - `!queryInput` -> `aura_human_agent_arena/emergent.js:139`
-- `!r` -> `.github/workflows/p2-1-apply-review-fixes.yml:79`, `.github/workflows/pr2-final-closeout.yml:79`, `aura_agent_arena_github_bridge.py:180`, `aura_architect_consolidation_benchmark.py:193`
+- `!r` -> `.github/workflows/p2-1-apply-review-fixes.yml:86`, `.github/workflows/pr2-final-closeout.yml:79`, `aura_agent_arena_github_bridge.py:180`, `aura_architect_consolidation_benchmark.py:193`
 - `!rail` -> `aura_showcase/app.js:270`
 - `!reason` -> `AURA_FINAL_REPORT.md:154`, `aura_node.py:7564`
 - `!receipt` -> `aura_spatial_web/app.js:112`, `aura_spatial_web/construction_scene_renderer.js:495`
