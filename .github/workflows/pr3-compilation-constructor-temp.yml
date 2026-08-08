@@ -1,0 +1,316 @@
+name: TEMP PR3 Compilation Constructor Decomposition
+
+on:
+  push:
+    branches:
+      - "analysis/pr3-compilation-constructor-20260808"
+
+permissions:
+  contents: write
+
+jobs:
+  refactor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/source-first-project-context-pr3
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install verification tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "ruff>=0.5" "pytest>=8.2,<9" "radon>=6,<7"
+      - name: Decompose compilation parity constructor
+        run: |
+          cat > /tmp/pr3_compilation_constructor.py <<'PY'
+          from pathlib import Path
+
+          path = Path("aura_project_context_compiler.py")
+          text = path.read_text(encoding="utf-8")
+          marker = "@dataclass(frozen=True)\nclass ProjectContextCompilation:\n"
+          helpers = r'''def _validate_compilation_identity(compilation: Any) -> None:
+              if compilation.version != PROJECT_CONTEXT_COMPILATION_VERSION:
+                  raise ValueError("unsupported project-context compilation version")
+              object.__setattr__(
+                  compilation,
+                  "objective",
+                  _text(compilation.objective, "objective"),
+              )
+              object.__setattr__(
+                  compilation,
+                  "objective_digest",
+                  _digest(compilation.objective_digest, "objective_digest"),
+              )
+              expected_objective_digest = stable_digest({"objective": compilation.objective})
+              if compilation.objective_digest != expected_objective_digest:
+                  raise ValueError("objective_digest is not bound to objective")
+              if type(compilation.repository_identity) is not RepositoryIdentity:
+                  raise ValueError("compilation requires exact RepositoryIdentity")
+              if (
+                  compilation.projection is not None
+                  and type(compilation.projection) is not ProjectContextProjection
+              ):
+                  raise ValueError("projection must be exact ProjectContextProjection")
+              if type(compilation.selection_receipt) is not ProjectionSelectionReceipt:
+                  raise ValueError(
+                      "selection_receipt must be exact ProjectionSelectionReceipt"
+                  )
+              if compilation.selection_receipt.objective_digest != compilation.objective_digest:
+                  raise ValueError(
+                      "selection receipt objective is not bound to compilation"
+                  )
+              if (
+                  compilation.selection_receipt.repository_identity_digest
+                  != compilation.repository_identity.identity_digest
+              ):
+                  raise ValueError(
+                      "selection receipt repository identity is not bound to compilation"
+                  )
+              if (
+                  compilation.selection_receipt.status is SelectionStatus.COMPLETE
+                  and compilation.projection is None
+              ):
+                  raise ValueError(
+                      "COMPLETE selection must emit the canonical PR1 projection"
+                  )
+              if (
+                  compilation.selection_receipt.status is SelectionStatus.INCOMPLETE
+                  and compilation.projection is not None
+              ):
+                  raise ValueError(
+                      "INCOMPLETE selection must not expose a canonical PR1 projection"
+                  )
+
+
+          def _canonical_compilation_candidates(
+              compilation: Any,
+          ) -> tuple[
+              tuple[ProjectContextCandidate, ...],
+              tuple[str, ...],
+              dict[str, ProjectContextCandidate],
+          ]:
+              selected = tuple(compilation.selected_candidates)
+              if any(type(item) is not ProjectContextCandidate for item in selected):
+                  raise ValueError("selected_candidates must be exact records")
+              selected = tuple(sorted(selected, key=lambda item: item.candidate_id))
+              if len({item.candidate_id for item in selected}) != len(selected):
+                  raise ValueError(
+                      "selected_candidates contains duplicate candidate ids"
+                  )
+              reference_ids = {
+                  item.reference.reference_id
+                  for item in selected
+                  if item.reference is not None
+              }
+              if len(reference_ids) != len(selected):
+                  raise ValueError(
+                      "selected candidates must have unique canonical references"
+                  )
+              object.__setattr__(compilation, "selected_candidates", selected)
+              selected_ids = tuple(item.candidate_id for item in selected)
+              if selected_ids != compilation.selection_receipt.selected:
+                  raise ValueError(
+                      "selected candidate identities do not match selection receipt"
+                  )
+              if len(selected) > compilation.selection_receipt.budget.max_nodes:
+                  raise ValueError(
+                      "selected candidates exceed selection receipt node budget"
+                  )
+              return selected, selected_ids, {
+                  item.candidate_id: item for item in selected
+              }
+
+
+          def _validate_compilation_selection(
+              compilation: Any,
+              selected: tuple[ProjectContextCandidate, ...],
+              selected_map: Mapping[str, ProjectContextCandidate],
+          ) -> None:
+              missing_dependencies = sorted(
+                  (item.candidate_id, dependency_id)
+                  for item in selected
+                  for dependency_id in item.dependency_ids
+                  if dependency_id not in selected_map
+              )
+              if missing_dependencies:
+                  raise ValueError(
+                      "selected candidate dependency closure is incomplete: "
+                      f"{missing_dependencies}"
+                  )
+              ineligible_selected = {
+                  item.candidate_id: problem
+                  for item in selected
+                  if (problem := _problem(item)) is not None
+              }
+              if ineligible_selected:
+                  raise ValueError(
+                      "selected candidates must remain compiler-eligible: "
+                      f"{sorted(ineligible_selected.items())}"
+                  )
+              selected_conflicts = _conflicts(selected_map)
+              if selected_conflicts:
+                  raise ValueError(
+                      "selected candidates must not contain unresolved conflicts: "
+                      f"{sorted(selected_conflicts)}"
+                  )
+              has_exact_answer_source = any(
+                  item.category is CandidateCategory.SOURCE
+                  and item.truth_class is CandidateTruthClass.EXACT_CURRENT
+                  and item.answer_determining
+                  for item in selected
+              )
+              if (
+                  compilation.selection_receipt.status is SelectionStatus.COMPLETE
+                  and not has_exact_answer_source
+              ):
+                  raise ValueError(
+                      "COMPLETE selection requires an exact-current answer-determining source"
+                  )
+
+
+          def _canonicalize_compilation_edges(
+              compilation: Any,
+              selected_ids: tuple[str, ...],
+          ) -> None:
+              edges = tuple(compilation.graph_edges)
+              if len(edges) > compilation.selection_receipt.budget.max_edges:
+                  raise ValueError(
+                      "compiled graph edges exceed selection receipt edge budget"
+                  )
+              if any(type(item) is not ProjectContextEdge for item in edges):
+                  raise ValueError("graph_edges must be exact records")
+              selected_id_set = set(selected_ids)
+              if any(
+                  edge.source_id not in selected_id_set
+                  or edge.target_id not in selected_id_set
+                  for edge in edges
+              ):
+                  raise ValueError(
+                      "compiled graph edge escapes selected candidate set"
+                  )
+              object.__setattr__(
+                  compilation,
+                  "graph_edges",
+                  tuple(
+                      sorted(
+                          edges,
+                          key=lambda item: (
+                              item.source_id,
+                              item.target_id,
+                              item.relation,
+                              item.truth_class.value,
+                          ),
+                      )
+                  ),
+              )
+
+
+          def _validate_compilation_projection(
+              compilation: Any,
+              selected: tuple[ProjectContextCandidate, ...],
+          ) -> None:
+              projection = compilation.projection
+              if projection is None:
+                  return
+              if projection.objective_digest != compilation.objective_digest:
+                  raise ValueError(
+                      "projection objective is not bound to compilation"
+                  )
+              if projection.canonical_owner != PROJECT_CANONICAL_OWNER:
+                  raise ValueError(
+                      "projection canonical owner is not bound to PR3 owner"
+                  )
+              if (
+                  projection.repository_identity.to_dict()
+                  != compilation.repository_identity.to_dict()
+              ):
+                  raise ValueError(
+                      "projection repository identity is not bound to compilation"
+                  )
+              expected_projection_refs: dict[str, list[CanonicalReference]] = {
+                  name: [] for name in set(_CATEGORY_FIELD.values())
+              }
+              for item in selected:
+                  if item.reference is None:
+                      raise ValueError(
+                          "selected candidate is missing canonical reference"
+                      )
+                  expected_projection_refs[_CATEGORY_FIELD[item.category]].append(
+                      item.reference
+                  )
+              for field_name, expected_refs in expected_projection_refs.items():
+                  actual_refs = getattr(projection, field_name)
+                  canonical_expected = tuple(
+                      sorted(expected_refs, key=lambda ref: ref.reference_id)
+                  )
+                  if tuple(ref.to_dict() for ref in actual_refs) != tuple(
+                      ref.to_dict() for ref in canonical_expected
+                  ):
+                      raise ValueError(
+                          f"projection {field_name} references do not match selected candidates"
+                      )
+
+
+          def _finalize_compilation(compilation: Any) -> None:
+              if type(compilation.admissible) is not bool:
+                  raise TypeError("admissible must be a boolean")
+              expected_admission = (
+                  compilation.selection_receipt.status is SelectionStatus.COMPLETE
+              )
+              if compilation.admissible != expected_admission:
+                  raise ValueError(
+                      "admissible must equal COMPLETE receipt with emitted projection"
+                  )
+              expected = stable_digest(compilation.to_dict(include_digest=False))
+              if (
+                  compilation.compilation_digest
+                  and compilation.compilation_digest != expected
+              ):
+                  raise ValueError("project-context compilation digest mismatch")
+              object.__setattr__(compilation, "compilation_digest", expected)
+
+
+          '''
+          if helpers not in text:
+              text = text.replace(marker, helpers + marker, 1)
+          class_at = text.index(marker)
+          start = text.index("    def __post_init__(self) -> None:\n", class_at)
+          end = text.index(
+              "    def to_dict(self, *, include_digest: bool = True)", start
+          )
+          replacement = '''    def __post_init__(self) -> None:\n        _validate_compilation_identity(self)\n        selected, selected_ids, selected_map = _canonical_compilation_candidates(self)\n        _validate_compilation_selection(self, selected, selected_map)\n        _canonicalize_compilation_edges(self, selected_ids)\n        _validate_compilation_projection(self, selected)\n        _finalize_compilation(self)\n\n'''
+          path.write_text(text[:start] + replacement + text[end:], encoding="utf-8")
+          PY
+          python -m py_compile /tmp/pr3_compilation_constructor.py
+          python /tmp/pr3_compilation_constructor.py
+      - name: Verify behavior and complexity
+        run: |
+          python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          git diff --check
+          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+          tree = ast.parse(Path('aura_project_context_compiler.py').read_text())
+          for node in ast.walk(tree):
+              if isinstance(node, ast.ClassDef) and node.name == 'ProjectContextCompilation':
+                  for item in node.body:
+                      if isinstance(item, ast.FunctionDef) and item.name == '__post_init__':
+                          print(f'ProjectContextCompilation.__post_init__: {item.end_lineno - item.lineno + 1} lines')
+          PY
+          radon cc -s aura_project_context_compiler.py | grep -E 'ProjectContextCompilation.__post_init__|_validate_compilation_identity|_canonical_compilation_candidates|_validate_compilation_selection|_canonicalize_compilation_edges|_validate_compilation_projection|_finalize_compilation'
+      - name: Commit only if verified and fast-forwardable
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aura_project_context_compiler.py
+          git commit -m "refactor(pr3): decompose compilation parity validation"
+          git fetch origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse HEAD^)" = "$(git rev-parse origin/refactor/source-first-project-context-pr3)" || { echo 'PR3 head moved; refusing non-fast-forward push'; exit 1; }
+          git push origin HEAD:refactor/source-first-project-context-pr3
