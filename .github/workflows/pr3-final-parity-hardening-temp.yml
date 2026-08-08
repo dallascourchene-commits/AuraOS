@@ -1,0 +1,118 @@
+name: TEMP PR3 Final Parity Hardening
+
+on:
+  push:
+    branches:
+      - "analysis/pr3-final-parity-hardening-20260808"
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/source-first-project-context-pr3
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install focused verification tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "ruff>=0.5" "pytest>=8.2,<9" "jsonschema>=4.23,<5"
+      - name: Apply parity fixes and regressions
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          compiler = Path("aura_project_context_compiler.py")
+          text = compiler.read_text(encoding="utf-8")
+
+          old_selected = '''        selected_ids = tuple(item.candidate_id for item in selected)\n        if selected_ids != self.selection_receipt.selected:\n            raise ValueError("selected candidate identities do not match selection receipt")\n        selected_map = {item.candidate_id: item for item in selected}\n        ineligible_selected = {\n'''
+          new_selected = '''        selected_ids = tuple(item.candidate_id for item in selected)\n        if selected_ids != self.selection_receipt.selected:\n            raise ValueError("selected candidate identities do not match selection receipt")\n        if len(selected) > self.selection_receipt.budget.max_nodes:\n            raise ValueError("selected candidates exceed selection receipt node budget")\n        selected_map = {item.candidate_id: item for item in selected}\n        missing_dependencies = sorted(\n            (item.candidate_id, dependency_id)\n            for item in selected\n            for dependency_id in item.dependency_ids\n            if dependency_id not in selected_map\n        )\n        if missing_dependencies:\n            raise ValueError(\n                "selected candidate dependency closure is incomplete: "\n                f"{missing_dependencies}"\n            )\n        ineligible_selected = {\n'''
+          if old_selected not in text:
+              raise SystemExit("selected parity anchor not found")
+          text = text.replace(old_selected, new_selected, 1)
+
+          old_edges = '''        edges = tuple(self.graph_edges)\n        if any(type(item) is not ProjectContextEdge for item in edges):\n            raise ValueError("graph_edges must be exact records")\n'''
+          new_edges = '''        edges = tuple(self.graph_edges)\n        if len(edges) > self.selection_receipt.budget.max_edges:\n            raise ValueError("compiled graph edges exceed selection receipt edge budget")\n        if any(type(item) is not ProjectContextEdge for item in edges):\n            raise ValueError("graph_edges must be exact records")\n'''
+          if old_edges not in text:
+              raise SystemExit("edge parity anchor not found")
+          text = text.replace(old_edges, new_edges, 1)
+
+          old_projection = '''            projection_refs = (\n                self.projection.artifact_evidence_refs\n                + self.projection.decision_refs\n                + self.projection.rejected_alternative_refs\n                + self.projection.unresolved_question_refs\n                + self.projection.assumption_refs\n                + self.projection.capability_refs\n                + self.projection.relationship_refs\n                + self.projection.blocker_refs\n                + self.projection.next_action_refs\n            )\n            projection_ref_ids = {item.reference_id for item in projection_refs}\n            selected_ref_ids = {\n                item.reference.reference_id\n                for item in selected\n                if item.reference is not None\n            }\n            if projection_ref_ids != selected_ref_ids:\n                raise ValueError("projection references do not match selected candidates")\n'''
+          new_projection = '''            expected_projection_refs: dict[str, list[CanonicalReference]] = {\n                name: [] for name in set(_CATEGORY_FIELD.values())\n            }\n            for item in selected:\n                assert item.reference is not None\n                expected_projection_refs[_CATEGORY_FIELD[item.category]].append(item.reference)\n            for field_name, expected_refs in expected_projection_refs.items():\n                actual_refs = getattr(self.projection, field_name)\n                if tuple(ref.to_dict() for ref in actual_refs) != tuple(\n                    ref.to_dict() for ref in expected_refs\n                ):\n                    raise ValueError(\n                        f"projection {field_name} references do not match selected candidates"\n                    )\n'''
+          if old_projection not in text:
+              raise SystemExit("projection identity anchor not found")
+          text = text.replace(old_projection, new_projection, 1)
+
+          old_trace = '''    max_hops = _int(max_hops, "max_hops", minimum=1, maximum=16)\n    max_nodes = _int(max_nodes, "max_nodes", minimum=1, maximum=256)\n    node_map = {\n'''
+          new_trace = '''    max_hops = _int(max_hops, "max_hops", minimum=1, maximum=16)\n    max_nodes = _int(max_nodes, "max_nodes", minimum=1, maximum=256)\n    if len(starts) > max_nodes:\n        raise ValueError("provenance start_ids exceed max_nodes")\n    node_map = {\n'''
+          if old_trace not in text:
+              raise SystemExit("trace budget anchor not found")
+          text = text.replace(old_trace, new_trace, 1)
+
+          old_fresh = '''    normalized = {\n        _text(key, "binding key"): _digest(value, "binding digest")\n        for key, value in current_bindings.items()\n    }\n'''
+          new_fresh = '''    normalized: dict[str, str] = {}\n    for key, value in current_bindings.items():\n        normalized_key = _text(key, "binding key")\n        if normalized_key in normalized:\n            raise ValueError("current_bindings contains duplicate normalized keys")\n        normalized[normalized_key] = _digest(value, "binding digest")\n'''
+          if old_fresh not in text:
+              raise SystemExit("freshness normalization anchor not found")
+          text = text.replace(old_fresh, new_fresh, 1)
+          compiler.write_text(text, encoding="utf-8")
+
+          acceptance = Path("tests/test_aura_project_context_acceptance.py")
+          a = acceptance.read_text(encoding="utf-8")
+          marker = "def test_public_compilation_rejects_incomplete_dependency_closure"
+          if marker not in a:
+              a += '''\n\ndef test_public_compilation_rejects_incomplete_dependency_closure() -> None:\n    complete = _compile((_source(),))\n    assert complete.projection is not None\n    source = complete.selected_candidates[0]\n    proof_ref = _ref("ref:dependency-proof", _digest("e"))\n    proof = ProjectContextCandidate(\n        candidate_id="proof:dependency-gap",\n        category=CandidateCategory.PROOF_OBLIGATION,\n        source_adapter="adapter.proof",\n        origin_ref=proof_ref.canonical_ref,\n        authority_class=ContextAuthorityClass.CANONICAL_READ,\n        truth_class=CandidateTruthClass.EXACT_CURRENT,\n        reference=proof_ref,\n        dependency_ids=("test:missing",),\n    )\n    forged_receipt = ProjectionSelectionReceipt(\n        objective_digest=complete.objective_digest,\n        repository_identity_digest=complete.repository_identity.identity_digest,\n        canonical_owner=complete.selection_receipt.canonical_owner,\n        selected=(source.candidate_id, proof.candidate_id),\n        omitted_irrelevant=(), omitted_by_budget=(), stale=(), unavailable=(),\n        conflicting=(), source_adapter_missing=(), mandatory_evidence_missing=(),\n        status=SelectionStatus.COMPLETE, budget=complete.selection_receipt.budget,\n    )\n    forged_projection = replace(\n        complete.projection,\n        artifact_evidence_refs=(source.reference, proof_ref),\n        projection_digest="",\n    )\n    with pytest.raises(ValueError, match="dependency closure is incomplete"):\n        ProjectContextCompilation(\n            objective=complete.objective, objective_digest=complete.objective_digest,\n            repository_identity=complete.repository_identity, projection=forged_projection,\n            selection_receipt=forged_receipt, selected_candidates=(source, proof),\n            graph_edges=(), admissible=True,\n        )\n\n\ndef test_public_compilation_rejects_same_id_different_reference_identity() -> None:\n    complete = _compile((_source(),))\n    assert complete.projection is not None\n    source = complete.selected_candidates[0]\n    assert source.reference is not None\n    forged_ref = CanonicalReference(\n        source.reference.reference_id,\n        source.reference.owner,\n        source.reference.canonical_ref,\n        _digest("f"),\n        truth_class="EXACT",\n        freshness_class="CURRENT",\n        metadata={},\n    )\n    forged_projection = replace(\n        complete.projection, artifact_evidence_refs=(forged_ref,), projection_digest=""\n    )\n    with pytest.raises(ValueError, match="artifact_evidence_refs references do not match"):\n        ProjectContextCompilation(\n            objective=complete.objective, objective_digest=complete.objective_digest,\n            repository_identity=complete.repository_identity, projection=forged_projection,\n            selection_receipt=complete.selection_receipt,\n            selected_candidates=complete.selected_candidates, graph_edges=(), admissible=True,\n        )\n\n\ndef test_public_compilation_rejects_node_budget_bypass() -> None:\n    source = _source()\n    proof_ref = _ref("ref:budget-proof", _digest("e"))\n    proof = ProjectContextCandidate(\n        candidate_id="proof:budget", category=CandidateCategory.PROOF_OBLIGATION,\n        source_adapter="adapter.proof", origin_ref=proof_ref.canonical_ref,\n        authority_class=ContextAuthorityClass.CANONICAL_READ,\n        truth_class=CandidateTruthClass.EXACT_CURRENT, reference=proof_ref,\n    )\n    complete = _compile((source, proof))\n    assert complete.projection is not None\n    forged_receipt = ProjectionSelectionReceipt(\n        objective_digest=complete.objective_digest,\n        repository_identity_digest=complete.repository_identity.identity_digest,\n        canonical_owner=complete.selection_receipt.canonical_owner,\n        selected=complete.selection_receipt.selected, omitted_irrelevant=(),\n        omitted_by_budget=(), stale=(), unavailable=(), conflicting=(),\n        source_adapter_missing=(), mandatory_evidence_missing=(),\n        status=SelectionStatus.COMPLETE, budget=ProjectionBudget(max_nodes=1, max_edges=32),\n    )\n    with pytest.raises(ValueError, match="node budget"):\n        ProjectContextCompilation(\n            objective=complete.objective, objective_digest=complete.objective_digest,\n            repository_identity=complete.repository_identity, projection=complete.projection,\n            selection_receipt=forged_receipt, selected_candidates=complete.selected_candidates,\n            graph_edges=complete.graph_edges, admissible=True,\n        )\n\n\ndef test_public_compilation_rejects_edge_budget_bypass() -> None:\n    source = _source()\n    test_ref = _ref("ref:edge-budget-test", _digest("e"))\n    direct_test = ProjectContextCandidate(\n        candidate_id="test:edge-budget", category=CandidateCategory.TEST,\n        source_adapter="adapter.test", origin_ref=test_ref.canonical_ref,\n        authority_class=ContextAuthorityClass.CANONICAL_READ,\n        truth_class=CandidateTruthClass.EXACT_CURRENT, reference=test_ref,\n        dependency_ids=(source.candidate_id,),\n    )\n    edges = (\n        ProjectContextEdge(source.candidate_id, direct_test.candidate_id, "tests", EdgeTruthClass.EXACT),\n        ProjectContextEdge(source.candidate_id, direct_test.candidate_id, "supports", EdgeTruthClass.EXACT),\n    )\n    complete = _compile((source, direct_test), edges)\n    forged_receipt = ProjectionSelectionReceipt(\n        objective_digest=complete.objective_digest,\n        repository_identity_digest=complete.repository_identity.identity_digest,\n        canonical_owner=complete.selection_receipt.canonical_owner,\n        selected=complete.selection_receipt.selected, omitted_irrelevant=(),\n        omitted_by_budget=(), stale=(), unavailable=(), conflicting=(),\n        source_adapter_missing=(), mandatory_evidence_missing=(),\n        status=SelectionStatus.COMPLETE, budget=ProjectionBudget(max_nodes=16, max_edges=1),\n    )\n    with pytest.raises(ValueError, match="edge budget"):\n        ProjectContextCompilation(\n            objective=complete.objective, objective_digest=complete.objective_digest,\n            repository_identity=complete.repository_identity, projection=complete.projection,\n            selection_receipt=forged_receipt, selected_candidates=complete.selected_candidates,\n            graph_edges=complete.graph_edges, admissible=True,\n        )\n'''
+              acceptance.write_text(a, encoding="utf-8")
+
+          compiler_tests = Path("tests/test_aura_project_context_compiler.py")
+          t = compiler_tests.read_text(encoding="utf-8")
+          marker2 = "def test_current_binding_normalization_collision_fails_closed"
+          if marker2 not in t:
+              t += '''\n\ndef test_current_binding_normalization_collision_fails_closed() -> None:\n    binding = TemporalBinding(TemporalBindingKind.SOURCE_HASH, "target-source", D["7"])\n    source = _candidate(\n        "source:target", CandidateCategory.SOURCE, D["2"],\n        answer_determining=True, bindings=(binding,),\n    )\n    result = _compile((source,))\n    with pytest.raises(ValueError, match="duplicate normalized keys"):\n        validate_project_context_freshness(\n            result, current_repository_identity=_repo(),\n            current_bindings={f" {binding.key} ": D["8"], binding.key: binding.digest},\n            observed_at_ms=1_786_180_000_001,\n        )\n\n\ndef test_provenance_start_ids_must_fit_node_budget() -> None:\n    first = _candidate(\n        "source:first", CandidateCategory.SOURCE, D["2"], answer_determining=True\n    )\n    second = _candidate(\n        "source:second", CandidateCategory.SOURCE, D["3"], relevance=100\n    )\n    result = _compile((first, second))\n    with pytest.raises(ValueError, match="start_ids exceed max_nodes"):\n        trace_project_context_provenance(\n            result, ("source:first", "source:second"), max_nodes=1\n        )\n\n\ndef test_unknown_provenance_start_fails_closed() -> None:\n    source = _candidate(\n        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True\n    )\n    result = _compile((source,))\n    with pytest.raises(ValueError, match="outside selected context"):\n        trace_project_context_provenance(result, ("source:missing",))\n\n\ndef test_selection_receipt_digest_rejects_tamper_and_recomputes_when_blank() -> None:\n    source = _candidate(\n        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True\n    )\n    receipt = _compile((source,)).selection_receipt\n    kwargs = dict(\n        objective_digest=receipt.objective_digest,\n        repository_identity_digest=receipt.repository_identity_digest,\n        canonical_owner=receipt.canonical_owner, selected=receipt.selected,\n        omitted_irrelevant=receipt.omitted_irrelevant,\n        omitted_by_budget=receipt.omitted_by_budget, stale=receipt.stale,\n        unavailable=receipt.unavailable, conflicting=receipt.conflicting,\n        source_adapter_missing=receipt.source_adapter_missing,\n        mandatory_evidence_missing=receipt.mandatory_evidence_missing,\n        status=receipt.status, budget=receipt.budget,\n    )\n    with pytest.raises(ValueError, match="receipt digest mismatch"):\n        ProjectionSelectionReceipt(**kwargs, receipt_digest="0" * 64)\n    recomputed = ProjectionSelectionReceipt(**kwargs, receipt_digest="")\n    assert recomputed.receipt_digest == receipt.receipt_digest\n'''
+              compiler_tests.write_text(t, encoding="utf-8")
+
+          objective = Path(".aura/refactor_objectives/intent_native_source_first_project_context_pr3.v1.json")
+          o = objective.read_text(encoding="utf-8")
+          o = o.replace('"status": "READY_FOR_HUMAN_REVIEW"', '"status": "IMPLEMENTING"')
+          objective.write_text(o, encoding="utf-8")
+
+          docs = Path("docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md")
+          d = docs.read_text(encoding="utf-8")
+          d = d.replace("`READY_FOR_HUMAN_REVIEW`", "`IMPLEMENTING`", 1)
+          d = d.replace(
+              "- repository identity or selected temporal bindings drift;\n",
+              "- repository identity or selected temporal bindings drift, or caller binding keys collide after canonical normalization;\n",
+              1,
+          )
+          d = d.replace(
+              "- graph edges reference candidates outside the task-conditioned set;\n",
+              "- selected candidates exceed signed node/edge budgets, have incomplete dependency closure, or graph edges reference candidates outside the task-conditioned set;\n",
+              1,
+          )
+          d = d.replace(
+              "- one canonical reference is aliased into multiple candidate roles;\n",
+              "- projection references differ in full canonical identity or category placement from selected candidates;\n- one canonical reference is aliased into multiple candidate roles;\n",
+              1,
+          )
+          docs.write_text(d, encoding="utf-8")
+          PY
+      - name: Validate hardening transaction
+        run: |
+          python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          git diff --check
+          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+      - name: Commit to PR3 only if verified
+        run: |
+          git config user.name "AuraOS PR3 Verification Worker"
+          git config user.email "actions@users.noreply.github.com"
+          git add aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md .aura/refactor_objectives/intent_native_source_first_project_context_pr3.v1.json
+          git commit -m "PR3: close public parity and temporal identity boundaries"
+          git push origin HEAD:refactor/source-first-project-context-pr3
