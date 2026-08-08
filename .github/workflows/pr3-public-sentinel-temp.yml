@@ -1,0 +1,62 @@
+name: TEMP PR3 Public Sentinel Guard
+
+on:
+  push:
+    branches:
+      - "analysis/pr3-public-sentinel-20260808"
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/source-first-project-context-pr3
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install verification tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "ruff>=0.5" "pytest>=8.2,<9"
+      - name: Apply public constructor sentinel guard
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          compiler = Path("aura_project_context_compiler.py")
+          text = compiler.read_text(encoding="utf-8")
+          old = '''    if len({item.candidate_id for item in selected}) != len(selected):\n        raise ValueError(\n            "selected_candidates contains duplicate candidate ids"\n        )\n    reference_ids = {\n'''
+          new = '''    if len({item.candidate_id for item in selected}) != len(selected):\n        raise ValueError(\n            "selected_candidates contains duplicate candidate ids"\n        )\n    if any(item.candidate_id == MISSING_SELECTED_SOURCE_ID for item in selected):\n        raise ValueError(\n            f"candidate_id {MISSING_SELECTED_SOURCE_ID!r} is reserved for the "\n            "missing exact-current answer-determining source receipt marker"\n        )\n    reference_ids = {\n'''
+          if old not in text:
+              raise SystemExit("public candidate anchor not found")
+          compiler.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          tests = Path("tests/test_aura_project_context_acceptance.py")
+          t = tests.read_text(encoding="utf-8")
+          marker = "def test_public_compilation_rejects_reserved_source_selected_id"
+          if marker not in t:
+              t += '''\n\ndef test_public_compilation_rejects_reserved_source_selected_id() -> None:\n    complete = _compile((_source(),))\n    assert complete.projection is not None\n    reserved = replace(\n        complete.selected_candidates[0], candidate_id="source:selected"\n    )\n    forged_receipt = ProjectionSelectionReceipt(\n        objective_digest=complete.objective_digest,\n        repository_identity_digest=complete.repository_identity.identity_digest,\n        canonical_owner=complete.selection_receipt.canonical_owner,\n        selected=("source:selected",), omitted_irrelevant=(),\n        omitted_by_budget=(), stale=(), unavailable=(), conflicting=(),\n        source_adapter_missing=(), mandatory_evidence_missing=(),\n        status=SelectionStatus.COMPLETE, budget=complete.selection_receipt.budget,\n    )\n    with pytest.raises(ValueError, match="candidate_id 'source:selected' is reserved"):\n        ProjectContextCompilation(\n            objective=complete.objective, objective_digest=complete.objective_digest,\n            repository_identity=complete.repository_identity, projection=complete.projection,\n            selection_receipt=forged_receipt, selected_candidates=(reserved,),\n            graph_edges=(), admissible=True,\n        )\n'''
+              tests.write_text(t, encoding="utf-8")
+          PY
+      - name: Verify exact PR3 gates
+        run: |
+          python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          git diff --check
+          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+      - name: Commit only if verified and fast-forwardable
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          git commit -m "fix(pr3): reject reserved source sentinel in public compilation"
+          git fetch origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse HEAD^)" = "$(git rev-parse origin/refactor/source-first-project-context-pr3)" || { echo 'PR3 head moved; refusing non-fast-forward push'; exit 1; }
+          git push origin HEAD:refactor/source-first-project-context-pr3
