@@ -92,14 +92,29 @@ jobs:
         shell: bash
         run: python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
 
-      - name: Repaired-file whitespace diff check
+      - name: Direct repaired-file whitespace proof
         shell: bash
         run: |
-          git diff --check -- \
-            aura_project_context_compiler.py \
-            tests/test_aura_project_context_compiler.py \
-            tests/test_aura_project_context_acceptance.py \
-            docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+          python - <<'PY'
+          from pathlib import Path
+          paths = (
+              Path("aura_project_context_compiler.py"),
+              Path("tests/test_aura_project_context_compiler.py"),
+              Path("tests/test_aura_project_context_acceptance.py"),
+              Path("docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md"),
+          )
+          failures = []
+          for path in paths:
+              text = path.read_text(encoding="utf-8")
+              for number, line in enumerate(text.splitlines(), 1):
+                  if line.endswith((" ", "\t")):
+                      failures.append(f"{path}:{number}")
+              if not text.endswith("\n"):
+                  failures.append(f"{path}:missing-final-newline")
+          if failures:
+              raise SystemExit("whitespace violations: " + ", ".join(failures))
+          print("direct whitespace proof passed for repaired files")
+          PY
 
       - name: Focused PR3 tests
         shell: bash
