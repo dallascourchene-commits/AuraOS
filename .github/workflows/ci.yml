@@ -66,9 +66,7 @@ jobs:
             aura_bilateral_intent_ingestion.py \
             aura_intent_refinement.py \
             aura_bilateral_intent_compiler.py \
-            aura_arena_gate_dialogue.py \
-            scripts/aura_source_anchor_map.py \
-            scripts/aura_navigation_refresh.py
+            aura_arena_gate_dialogue.py
       - name: Validate Gate Dialogue JavaScript syntax
         run: node --check aura_showcase/gate-dialogue.js
       - name: Fatal lint checks
@@ -103,8 +101,6 @@ jobs:
             aura_intent_refinement.py \
             aura_bilateral_intent_compiler.py \
             aura_arena_gate_dialogue.py \
-            scripts/aura_source_anchor_map.py \
-            scripts/aura_navigation_refresh.py \
             tests/test_aura_arena_experience_ledger.py \
             tests/test_aura_crucible_phase_b.py \
             tests/test_aura_phase_c1_route_capsules.py \
@@ -116,7 +112,6 @@ jobs:
             tests/test_aura_intent_refinement.py \
             tests/test_bilateral_intent_pr1_evidence.py \
             tests/test_aura_bilateral_gate_dialogue.py \
-            tests/test_aura_source_anchor_map.py \
             > fatal-ruff-output.txt 2>&1
           code=$?
           set -e
@@ -153,7 +148,6 @@ jobs:
             tests/test_aura_intent_refinement.py \
             tests/test_bilateral_intent_pr1_evidence.py \
             tests/test_aura_bilateral_gate_dialogue.py \
-            tests/test_aura_source_anchor_map.py \
             --junitxml=focused-tests-junit.xml \
             > focused-tests-output.txt 2>&1
           code=$?
@@ -280,7 +274,7 @@ jobs:
           exit 1
 
   topology:
-    name: Regenerate and verify CODEMAP topology + source anchors
+    name: Regenerate and verify CODEMAP topology
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -298,14 +292,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-      - name: Preserve committed navigation snapshots
-        run: |
-          cp .aura/CODEMAP.json "${RUNNER_TEMP}/CODEMAP.committed.json"
-          cp .aura/SOURCE_ANCHORS.md "${RUNNER_TEMP}/SOURCE_ANCHORS.committed.md"
-          python scripts/aura_source_anchor_map.py --root . --check
-      - name: Regenerate deep navigation
-        run: python scripts/aura_navigation_refresh.py --root .
-      - name: Upload regenerated navigation artifacts
+      - name: Preserve committed CODEMAP snapshot
+        run: cp .aura/CODEMAP.json "${RUNNER_TEMP}/CODEMAP.committed.json"
+      - name: Regenerate deep CODEMAP
+        run: python aura_codebase_navigator.py
+      - name: Upload regenerated CODEMAP artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -313,19 +304,11 @@ jobs:
           path: |
             .aura/CODEMAP.md
             .aura/CODEMAP.json
-            .aura/SOURCE_ANCHORS.md
             topology_map.json
           if-no-files-found: error
           retention-days: 7
-      - name: Verify topology, source anchors, and stable committed structure
-        run: |
-          python -m aura_codemap_verify --compare-json "${RUNNER_TEMP}/CODEMAP.committed.json"
-          python scripts/aura_source_anchor_map.py --root . --check
-          if ! cmp -s "${RUNNER_TEMP}/SOURCE_ANCHORS.committed.md" .aura/SOURCE_ANCHORS.md; then
-            echo "Committed SOURCE_ANCHORS.md is stale relative to regenerated CODEMAP/source."
-            diff -u "${RUNNER_TEMP}/SOURCE_ANCHORS.committed.md" .aura/SOURCE_ANCHORS.md || true
-            exit 1
-          fi
+      - name: Verify topology and stable committed structure
+        run: python -m aura_codemap_verify --compare-json "${RUNNER_TEMP}/CODEMAP.committed.json"
 
   sync-codemap:
     name: Synchronize CODEMAP on refactor branches
@@ -347,23 +330,18 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-      - name: Regenerate and validate navigation
+      - name: Regenerate and validate CODEMAP
         run: |
-          python scripts/aura_navigation_refresh.py --root .
-          python scripts/aura_source_anchor_map.py --root . --check
+          python aura_codebase_navigator.py
           python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
       - name: Commit synchronized navigation artifacts
         run: |
           git config user.name "AuraOS CODEMAP Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add \
-            .aura/CODEMAP.json \
-            .aura/CODEMAP.md \
-            .aura/SOURCE_ANCHORS.md \
-            topology_map.json
+          git add .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
           if git diff --cached --quiet; then
-            echo "CODEMAP and source anchors are already synchronized."
+            echo "CODEMAP is already synchronized."
             exit 0
           fi
-          git commit -m "chore: synchronize CODEMAP topology and source anchors"
+          git commit -m "chore: synchronize CODEMAP for P1.1 authority contracts"
           git push origin HEAD:${{ github.ref_name }}
