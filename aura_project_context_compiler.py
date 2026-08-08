@@ -301,6 +301,54 @@ def _validate_candidate_authority(candidate: Any) -> None:
         )
 
 
+def _canonical_reference_binding_kind(
+    category: CandidateCategory,
+) -> TemporalBindingKind:
+    if category is CandidateCategory.SOURCE:
+        return TemporalBindingKind.SOURCE_HASH
+    if category is CandidateCategory.POLICY:
+        return TemporalBindingKind.POLICY
+    if category in {
+        CandidateCategory.TEST,
+        CandidateCategory.SCHEMA,
+        CandidateCategory.FAILED_ATTEMPT,
+        CandidateCategory.PROOF_OBLIGATION,
+    }:
+        return TemporalBindingKind.EVIDENCE
+    return TemporalBindingKind.OWNER_RECORD
+
+
+def _bind_candidate_reference_identity(candidate: Any) -> None:
+    if (
+        candidate.truth_class
+        not in {CandidateTruthClass.EXACT_CURRENT, CandidateTruthClass.DERIVED_VERIFIED}
+        or candidate.reference is None
+    ):
+        return
+    reference_binding = TemporalBinding(
+        _canonical_reference_binding_kind(candidate.category),
+        candidate.reference.reference_id,
+        candidate.reference.digest,
+    )
+    by_key = {item.key: item for item in candidate.temporal_bindings}
+    existing = by_key.get(reference_binding.key)
+    if existing is not None and existing.digest != reference_binding.digest:
+        raise ValueError(
+            "authoritative reference binding conflicts with canonical reference digest"
+        )
+    if existing is None:
+        object.__setattr__(
+            candidate,
+            "temporal_bindings",
+            tuple(
+                sorted(
+                    (*candidate.temporal_bindings, reference_binding),
+                    key=lambda item: item.key,
+                )
+            ),
+        )
+
+
 @dataclass(frozen=True)
 class ProjectContextCandidate:
     candidate_id: str
@@ -323,6 +371,7 @@ class ProjectContextCandidate:
         _normalize_candidate_relationships(self)
         _validate_candidate_reference(self)
         _validate_candidate_authority(self)
+        _bind_candidate_reference_identity(self)
 
     @property
     def origin_bound(self) -> bool:
@@ -420,8 +469,10 @@ def _normalize_selection_receipt(receipt: Any) -> tuple[str, ...]:
         "repository_identity_digest",
         _digest(receipt.repository_identity_digest, "repository_identity_digest"),
     )
-    if _id(receipt.canonical_owner, "canonical_owner") != PROJECT_CANONICAL_OWNER:
+    canonical_owner = _id(receipt.canonical_owner, "canonical_owner")
+    if canonical_owner != PROJECT_CANONICAL_OWNER:
         raise ValueError("canonical_owner must remain the unified continuity owner")
+    object.__setattr__(receipt, "canonical_owner", canonical_owner)
     omission_fields = (
         "omitted_irrelevant",
         "omitted_by_budget",
@@ -603,11 +654,9 @@ def _canonical_compilation_candidates(
             f"candidate_id {MISSING_SELECTED_SOURCE_ID!r} is reserved for the "
             "missing exact-current answer-determining source receipt marker"
         )
-    reference_ids = {
-        item.reference.reference_id
-        for item in selected
-        if item.reference is not None
-    }
+    if any(item.reference is None for item in selected):
+        raise ValueError("selected candidate is missing canonical reference")
+    reference_ids = {item.reference.reference_id for item in selected}
     if len(reference_ids) != len(selected):
         raise ValueError(
             "selected candidates must have unique canonical references"
@@ -659,6 +708,17 @@ def _validate_compilation_selection(
             "selected candidates must not contain unresolved conflicts: "
             f"{sorted(selected_conflicts)}"
         )
+    if compilation.selection_receipt.status is SelectionStatus.COMPLETE:
+        if compilation.projection is None:
+            raise ValueError("COMPLETE selection requires a projection timestamp")
+        expired_ids = _expired_binding_candidate_ids(
+            selected, compilation.projection.freshness_timestamp_ms
+        )
+        if expired_ids:
+            raise ValueError(
+                "selected temporal binding expired at compilation timestamp: "
+                f"{sorted(expired_ids)}"
+            )
     has_exact_answer_source = any(
         item.category is CandidateCategory.SOURCE
         and item.truth_class is CandidateTruthClass.EXACT_CURRENT
@@ -755,6 +815,16 @@ def _validate_compilation_projection(
             raise ValueError(
                 f"projection {field_name} references do not match selected candidates"
             )
+    expected_projection = _projection(
+        compilation.objective,
+        projection.project_ref,
+        compilation.repository_identity,
+        selected,
+        projection.freshness_timestamp_ms,
+        _selection_warnings(compilation.selection_receipt),
+    )
+    if projection.to_dict() != expected_projection.to_dict():
+        raise ValueError("projection derived fields do not match compiler reconstruction")
 
 
 def _finalize_compilation(compilation: Any) -> None:
@@ -909,6 +979,7 @@ def _closure(
 
 def _conflicts(candidates: Mapping[str, ProjectContextCandidate]) -> set[str]:
     groups: dict[str, list[ProjectContextCandidate]] = {}
+    binding_groups: dict[str, list[tuple[ProjectContextCandidate, TemporalBinding]]] = {}
     for candidate in candidates.values():
         if (
             candidate.conflict_key
@@ -916,13 +987,33 @@ def _conflicts(candidates: Mapping[str, ProjectContextCandidate]) -> set[str]:
             and candidate.reference is not None
         ):
             groups.setdefault(candidate.conflict_key, []).append(candidate)
+        for binding in candidate.temporal_bindings:
+            binding_groups.setdefault(binding.key, []).append((candidate, binding))
     result: set[str] = set()
     for items in groups.values():
         if len(
             {item.reference.digest for item in items if item.reference is not None}
         ) > 1:
             result.update(item.candidate_id for item in items)
+    for items in binding_groups.values():
+        if len({binding.to_dict()["digest"] for _, binding in items}) > 1:
+            result.update(candidate.candidate_id for candidate, _ in items)
     return result
+
+
+def _expired_binding_candidate_ids(
+    candidates: Sequence[ProjectContextCandidate],
+    freshness_timestamp_ms: int,
+) -> set[str]:
+    return {
+        candidate.candidate_id
+        for candidate in candidates
+        if any(
+            binding.expires_at_ms
+            and freshness_timestamp_ms >= binding.expires_at_ms
+            for binding in candidate.temporal_bindings
+        )
+    }
 
 
 def _projection(
@@ -1053,8 +1144,10 @@ def _validate_compile_context(
 def _selection_buckets(
     candidates: Sequence[ProjectContextCandidate],
     candidate_map: Mapping[str, ProjectContextCandidate],
-) -> tuple[set[str], dict[str, set[str]]]:
+    freshness_timestamp_ms: int,
+) -> tuple[set[str], set[str], dict[str, set[str]]]:
     conflict_ids = _conflicts(candidate_map)
+    expired_ids = _expired_binding_candidate_ids(candidates, freshness_timestamp_ms)
     buckets = {
         name: set()
         for name in (
@@ -1068,16 +1161,18 @@ def _selection_buckets(
         )
     }
     buckets["conflicting"].update(conflict_ids)
+    buckets["stale"].update(expired_ids)
     for candidate in candidates:
         if problem := _problem(candidate):
             buckets[problem].add(candidate.candidate_id)
-    return conflict_ids, buckets
+    return conflict_ids, expired_ids, buckets
 
 
 def _mandatory_selection(
     candidates: Sequence[ProjectContextCandidate],
     candidate_map: Mapping[str, ProjectContextCandidate],
     conflict_ids: set[str],
+    expired_ids: set[str],
     buckets: dict[str, set[str]],
     budget: ProjectionBudget,
 ) -> tuple[set[str], set[str]]:
@@ -1096,7 +1191,9 @@ def _mandatory_selection(
     invalid = {
         item
         for item in mandatory
-        if item in conflict_ids or _problem(candidate_map[item]) is not None
+        if item in conflict_ids
+        or item in expired_ids
+        or _problem(candidate_map[item]) is not None
     }
     buckets["mandatory_evidence_missing"].update(invalid)
     eligible = mandatory - invalid
@@ -1111,6 +1208,7 @@ def _optional_candidates(
     candidates: Sequence[ProjectContextCandidate],
     mandatory: set[str],
     conflict_ids: set[str],
+    expired_ids: set[str],
 ) -> list[ProjectContextCandidate]:
     return sorted(
         (
@@ -1118,6 +1216,7 @@ def _optional_candidates(
             for item in candidates
             if item.candidate_id not in mandatory
             and item.candidate_id not in conflict_ids
+            and item.candidate_id not in expired_ids
             and _problem(item) is None
         ),
         key=lambda item: (
@@ -1132,6 +1231,7 @@ def _consider_optional_candidate(
     candidate: ProjectContextCandidate,
     candidate_map: Mapping[str, ProjectContextCandidate],
     conflict_ids: set[str],
+    expired_ids: set[str],
     buckets: dict[str, set[str]],
     budget: ProjectionBudget,
     selected: set[str],
@@ -1141,7 +1241,9 @@ def _consider_optional_candidate(
         return
     closure, missing = _closure(candidate.candidate_id, candidate_map)
     invalid = missing or any(
-        member in conflict_ids or _problem(candidate_map[member]) is not None
+        member in conflict_ids
+        or member in expired_ids
+        or _problem(candidate_map[member]) is not None
         for member in closure
     )
     if invalid:
@@ -1159,15 +1261,19 @@ def _extend_optional_selection(
     candidate_map: Mapping[str, ProjectContextCandidate],
     mandatory: set[str],
     conflict_ids: set[str],
+    expired_ids: set[str],
     buckets: dict[str, set[str]],
     budget: ProjectionBudget,
     selected: set[str],
 ) -> None:
-    for candidate in _optional_candidates(candidates, mandatory, conflict_ids):
+    for candidate in _optional_candidates(
+        candidates, mandatory, conflict_ids, expired_ids
+    ):
         _consider_optional_candidate(
             candidate,
             candidate_map,
             conflict_ids,
+            expired_ids,
             buckets,
             budget,
             selected,
@@ -1314,15 +1420,28 @@ def compile_project_context_projection(
     candidate_map, edge_items = _validate_compile_context(
         repository_identity, candidates, edges, budget
     )
-    conflict_ids, buckets = _selection_buckets(candidates, candidate_map)
+    freshness_timestamp_ms = _int(
+        freshness_timestamp_ms,
+        "freshness_timestamp_ms",
+        maximum=2**63 - 1,
+    )
+    conflict_ids, expired_ids, buckets = _selection_buckets(
+        candidates, candidate_map, freshness_timestamp_ms
+    )
     mandatory, selected = _mandatory_selection(
-        candidates, candidate_map, conflict_ids, buckets, budget
+        candidates,
+        candidate_map,
+        conflict_ids,
+        expired_ids,
+        buckets,
+        budget,
     )
     _extend_optional_selection(
         candidates,
         candidate_map,
         mandatory,
         conflict_ids,
+        expired_ids,
         buckets,
         budget,
         selected,
@@ -1417,7 +1536,45 @@ def _walk_provenance(
     return seen, traversed, truncated
 
 
+def _provenance_start_is_source_complete(
+    start_id: str,
+    node_map: Mapping[str, ProjectContextCandidate],
+    incoming: Mapping[str, Sequence[ProjectContextEdge]],
+    traversed: set[ProjectContextEdge],
+) -> bool:
+    memo: dict[str, bool] = {}
+    visiting: set[str] = set()
+
+    def visit(node_id: str) -> bool:
+        if node_id in memo:
+            return memo[node_id]
+        if node_id in visiting:
+            return False
+        visiting.add(node_id)
+        predecessors = [
+            edge for edge in incoming.get(node_id, ()) if edge in traversed
+        ]
+        candidate = node_map[node_id]
+        if not predecessors:
+            result = (
+                candidate.category is CandidateCategory.SOURCE
+                and candidate.truth_class is CandidateTruthClass.EXACT_CURRENT
+            )
+        else:
+            result = all(
+                edge.truth_class in _AUTHORITATIVE_EDGE_TRUTH
+                and visit(edge.source_id)
+                for edge in predecessors
+            )
+        visiting.remove(node_id)
+        memo[node_id] = result
+        return result
+
+    return visit(start_id)
+
+
 def _provenance_summary(
+    starts: Sequence[str],
     node_map: Mapping[str, ProjectContextCandidate],
     incoming: Mapping[str, Sequence[ProjectContextEdge]],
     seen: set[str],
@@ -1444,10 +1601,11 @@ def _provenance_summary(
             edge.source_id in seen for edge in incoming.get(node_id, ())
         )
     )
-    roots_are_exact_sources = bool(root_ids) and all(
-        node_map[node_id].category is CandidateCategory.SOURCE
-        and node_map[node_id].truth_class is CandidateTruthClass.EXACT_CURRENT
-        for node_id in root_ids
+    starts_are_source_complete = bool(starts) and all(
+        _provenance_start_is_source_complete(
+            start_id, node_map, incoming, traversed
+        )
+        for start_id in starts
     )
     authoritative_path = all(
         edge.truth_class in _AUTHORITATIVE_EDGE_TRUTH for edge in traversed
@@ -1457,7 +1615,7 @@ def _provenance_summary(
         source_ids,
         exact_source_ids,
         root_ids,
-        roots_are_exact_sources,
+        starts_are_source_complete,
         authoritative_path,
     )
 
@@ -1471,7 +1629,7 @@ def _provenance_result(
     exact_source_ids: Sequence[str],
     root_ids: Sequence[str],
     truncated: set[str],
-    roots_are_exact_sources: bool,
+    starts_are_source_complete: bool,
     authoritative_path: bool,
 ) -> dict[str, Any]:
     result = {
@@ -1499,7 +1657,7 @@ def _provenance_result(
         "truncated_frontier": sorted(truncated),
         "authoritative_path": authoritative_path,
         "source_complete": (
-            roots_are_exact_sources and authoritative_path and not truncated
+            starts_are_source_complete and authoritative_path and not truncated
         ),
         "bounded": True,
     }
@@ -1521,7 +1679,7 @@ def trace_project_context_provenance(
     seen, traversed, truncated = _walk_provenance(
         starts, incoming, max_hops, max_nodes
     )
-    summary = _provenance_summary(node_map, incoming, seen, traversed)
+    summary = _provenance_summary(starts, node_map, incoming, seen, traversed)
     return _provenance_result(
         compilation,
         starts,

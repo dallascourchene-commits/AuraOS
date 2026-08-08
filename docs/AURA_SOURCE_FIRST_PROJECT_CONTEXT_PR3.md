@@ -152,7 +152,7 @@ Selected candidates may bind any of the following validity dependencies:
 - `OWNER_RECORD`
 - `DEPENDENCY_VERSION`
 
-Freshness validation compares the complete compiled repository identity and every selected temporal binding against current canonical observations. Missing, changed, or expired bindings require recompilation. Freshness validation is read-only and never mutates the projection in place.
+Freshness validation compares the complete compiled repository identity and every selected temporal binding against current canonical observations. Every authoritative selected canonical reference is automatically represented by a drift-sensitive temporal binding over its exact canonical-reference digest, using the existing SOURCE_HASH, EVIDENCE, POLICY, or OWNER_RECORD binding classes according to evidence category. Cross-candidate binding definitions with the same key must agree; conflicting mandatory evidence is receipt-visible and prevents admission. A binding already expired at the compilation freshness timestamp is classified as stale before selection and prevents mandatory admission. Missing, changed, or expired bindings require recompilation. Freshness validation is read-only and never mutates the projection in place.
 
 ## 9. Bounded backward provenance
 
@@ -160,7 +160,7 @@ PR3 can trace incoming project-context edges backward from a selected result, fa
 
 `source_reached` means only that at least one node categorized as `SOURCE` was encountered. It is intentionally weaker than proof completeness.
 
-A trace is `source_complete` only when every retained provenance root is an `EXACT_CURRENT` `SOURCE`, every traversed path edge is `EXACT` or `DERIVED_VERIFIED`, and no predecessor frontier was truncated. `DERIVED_VERIFIED` source roots may support a trace but cannot make it source-complete. Bounded output may never imply completeness it did not prove.
+A trace is `source_complete` only when every requested start's complete backward component terminates at `EXACT_CURRENT` `SOURCE` nodes through only `EXACT` or `DERIVED_VERIFIED` edges, no rootless or cyclic component remains unproved, and no predecessor frontier was truncated. `DERIVED_VERIFIED` source roots may support a trace but cannot make it source-complete. Bounded output may never imply completeness it did not prove.
 
 ## 10. Memory lifecycle governance
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 import json
 from pathlib import Path
 
@@ -362,10 +363,15 @@ def test_repository_head_change_invalidates_projection() -> None:
 
 
 def test_all_temporal_binding_classes_are_explicit_and_expiry_fails_closed() -> None:
-    bindings = tuple(TemporalBinding(kind, f"id-{index}", D[str(index + 2)], expires_at_ms=2_000) for index, kind in enumerate(TemporalBindingKind))
+    expiry_ms = 1_786_180_000_010
+    bindings = tuple(TemporalBinding(kind, f"id-{index}", D[str(index + 2)], expires_at_ms=expiry_ms) for index, kind in enumerate(TemporalBindingKind))
     source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True, bindings=bindings)
-    current = {item.key: item.digest for item in bindings}
-    freshness = validate_project_context_freshness(_compile((source,)), current_repository_identity=_repo(), current_bindings=current, observed_at_ms=2_000)
+    result = _compile((source,))
+    current = {
+        item.key: item.digest
+        for item in result.selected_candidates[0].temporal_bindings
+    }
+    freshness = validate_project_context_freshness(result, current_repository_identity=_repo(), current_bindings=current, observed_at_ms=expiry_ms)
     assert freshness["valid"] is False
     assert len([reason for reason in freshness["reasons"] if reason.startswith("binding_expired:")]) == len(bindings)
 
@@ -618,3 +624,186 @@ def test_compile_rejects_non_exact_projection_budget() -> None:
 
     with pytest.raises(ValueError, match="budget must be exact ProjectionBudget"):
         _compile((source,), budget=DerivedBudget())
+
+
+def test_receipt_canonical_owner_is_normalized_before_digest() -> None:
+    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True)
+    receipt = _compile((source,)).selection_receipt
+    normalized = ProjectionSelectionReceipt(
+        objective_digest=receipt.objective_digest,
+        repository_identity_digest=receipt.repository_identity_digest,
+        canonical_owner=" aura_unified_memory_continuity ",
+        selected=receipt.selected,
+        omitted_irrelevant=receipt.omitted_irrelevant,
+        omitted_by_budget=receipt.omitted_by_budget,
+        stale=receipt.stale,
+        unavailable=receipt.unavailable,
+        conflicting=receipt.conflicting,
+        source_adapter_missing=receipt.source_adapter_missing,
+        mandatory_evidence_missing=receipt.mandatory_evidence_missing,
+        status=receipt.status,
+        budget=receipt.budget,
+    )
+    assert normalized.canonical_owner == "aura_unified_memory_continuity"
+    assert normalized.to_dict()["canonical_owner"] == "aura_unified_memory_continuity"
+
+
+def test_public_constructor_rejects_forged_projection_aggregate_freshness() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"],
+        answer_determining=True, freshness="BOUNDED",
+    )
+    result = _compile((source,))
+    assert result.projection is not None
+    forged = replace(result.projection, freshness_class="CURRENT", projection_digest="")
+    with pytest.raises(ValueError, match="projection derived fields"):
+        ProjectContextCompilation(
+            objective=result.objective,
+            objective_digest=result.objective_digest,
+            repository_identity=result.repository_identity,
+            projection=forged,
+            selection_receipt=result.selection_receipt,
+            selected_candidates=result.selected_candidates,
+            graph_edges=result.graph_edges,
+            admissible=result.admissible,
+        )
+
+
+def test_provenance_rootless_cycle_component_cannot_claim_source_complete() -> None:
+    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True)
+    left = _candidate("decision:left", CandidateCategory.DECISION, D["3"])
+    right = _candidate("decision:right", CandidateCategory.DECISION, D["4"])
+    edges = (
+        ProjectContextEdge("decision:left", "decision:right", "precedes", EdgeTruthClass.EXACT),
+        ProjectContextEdge("decision:right", "decision:left", "precedes", EdgeTruthClass.EXACT),
+    )
+    result = _compile((source, left, right), edges)
+    trace = trace_project_context_provenance(
+        result, ("source:target", "decision:left"), max_hops=4, max_nodes=8
+    )
+    assert trace["exact_source_ids"] == ["source:target"]
+    assert trace["truncated_frontier"] == []
+    assert trace["authoritative_path"] is True
+    assert trace["source_complete"] is False
+
+
+def test_authoritative_reference_requires_live_reference_digest_observation() -> None:
+    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True)
+    result = _compile((source,))
+    selected_source = result.selected_candidates[0]
+    assert selected_source.reference is not None
+    reference_binding = next(
+        item
+        for item in selected_source.temporal_bindings
+        if item.kind is TemporalBindingKind.SOURCE_HASH
+        and item.binding_id == selected_source.reference.reference_id
+    )
+    missing = validate_project_context_freshness(
+        result,
+        current_repository_identity=_repo(),
+        current_bindings={},
+        observed_at_ms=1_786_180_000_001,
+    )
+    assert missing["valid"] is False
+    assert f"binding_missing:{reference_binding.key}" in missing["reasons"]
+    current = validate_project_context_freshness(
+        result,
+        current_repository_identity=_repo(),
+        current_bindings={reference_binding.key: reference_binding.digest},
+        observed_at_ms=1_786_180_000_001,
+    )
+    assert current["valid"] is True
+
+
+def test_cross_candidate_temporal_binding_conflict_is_receipt_visible() -> None:
+    left_binding = TemporalBinding(TemporalBindingKind.POLICY, "shared-policy", D["7"])
+    right_binding = TemporalBinding(TemporalBindingKind.POLICY, "shared-policy", D["8"])
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"],
+        answer_determining=True, bindings=(left_binding,),
+    )
+    proof = _candidate(
+        "proof:result", CandidateCategory.PROOF_OBLIGATION, D["3"],
+        bindings=(right_binding,),
+    )
+    result = _compile((source, proof))
+    assert result.selection_receipt.status is SelectionStatus.INCOMPLETE
+    assert set(result.selection_receipt.conflicting) == {"source:target", "proof:result"}
+    assert set(result.selection_receipt.mandatory_evidence_missing) >= {"source:target", "proof:result"}
+    assert result.projection is None
+
+
+def test_public_constructor_rejects_cross_candidate_temporal_binding_conflict() -> None:
+    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True)
+    proof = _candidate("proof:result", CandidateCategory.PROOF_OBLIGATION, D["3"])
+    complete = _compile((source, proof))
+    shared_left = TemporalBinding(TemporalBindingKind.POLICY, "shared-policy", D["7"])
+    shared_right = TemporalBinding(TemporalBindingKind.POLICY, "shared-policy", D["8"])
+    forged = tuple(
+        replace(
+            candidate,
+            temporal_bindings=(*candidate.temporal_bindings, shared_left if candidate.candidate_id == "source:target" else shared_right),
+        )
+        for candidate in complete.selected_candidates
+    )
+    with pytest.raises(ValueError, match="unresolved conflicts"):
+        ProjectContextCompilation(
+            objective=complete.objective,
+            objective_digest=complete.objective_digest,
+            repository_identity=complete.repository_identity,
+            projection=complete.projection,
+            selection_receipt=complete.selection_receipt,
+            selected_candidates=forged,
+            graph_edges=complete.graph_edges,
+            admissible=True,
+        )
+
+
+def test_expired_binding_is_stale_and_incomplete_at_compile_time() -> None:
+    binding = TemporalBinding(
+        TemporalBindingKind.LEASE,
+        "expired-lease",
+        D["7"],
+        expires_at_ms=1_786_180_000_000,
+    )
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"],
+        answer_determining=True, bindings=(binding,),
+    )
+    result = _compile((source,))
+    assert result.selection_receipt.status is SelectionStatus.INCOMPLETE
+    assert result.selection_receipt.stale == ("source:target",)
+    assert "source:target" in result.selection_receipt.mandatory_evidence_missing
+    assert result.projection is None
+
+
+def test_public_constructor_rejects_binding_expired_by_forged_projection_timestamp() -> None:
+    binding = TemporalBinding(
+        TemporalBindingKind.LEASE,
+        "future-lease",
+        D["7"],
+        expires_at_ms=1_786_180_000_010,
+    )
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"],
+        answer_determining=True, bindings=(binding,),
+    )
+    result = _compile((source,))
+    assert result.projection is not None
+    forged = replace(
+        result.projection,
+        freshness_timestamp_ms=binding.expires_at_ms,
+        projection_digest="",
+    )
+    with pytest.raises(ValueError, match="expired at compilation timestamp"):
+        ProjectContextCompilation(
+            objective=result.objective,
+            objective_digest=result.objective_digest,
+            repository_identity=result.repository_identity,
+            projection=forged,
+            selection_receipt=result.selection_receipt,
+            selected_candidates=result.selected_candidates,
+            graph_edges=result.graph_edges,
+            admissible=result.admissible,
+        )
+

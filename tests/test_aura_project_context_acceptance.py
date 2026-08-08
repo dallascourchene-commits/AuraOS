@@ -629,6 +629,7 @@ def test_public_compilation_rejects_edge_budget_bypass() -> None:
         ProjectContextEdge(source.candidate_id, direct_test.candidate_id, "supports", EdgeTruthClass.EXACT),
     )
     complete = _compile((source, direct_test), edges)
+    assert len(complete.graph_edges) == 2
     forged_receipt = ProjectionSelectionReceipt(
         objective_digest=complete.objective_digest,
         repository_identity_digest=complete.repository_identity.identity_digest,
