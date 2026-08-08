@@ -525,6 +525,23 @@ class ProjectContextCompilation:
         selected_ids = tuple(item.candidate_id for item in selected)
         if selected_ids != self.selection_receipt.selected:
             raise ValueError("selected candidate identities do not match selection receipt")
+        selected_map = {item.candidate_id: item for item in selected}
+        ineligible_selected = {
+            item.candidate_id: problem
+            for item in selected
+            if (problem := _problem(item)) is not None
+        }
+        if ineligible_selected:
+            raise ValueError(
+                "selected candidates must remain compiler-eligible: "
+                f"{sorted(ineligible_selected.items())}"
+            )
+        selected_conflicts = _conflicts(selected_map)
+        if selected_conflicts:
+            raise ValueError(
+                "selected candidates must not contain unresolved conflicts: "
+                f"{sorted(selected_conflicts)}"
+            )
         exact_answer_sources = tuple(
             item
             for item in selected
