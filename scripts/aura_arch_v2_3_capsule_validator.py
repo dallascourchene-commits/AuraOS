@@ -21,7 +21,7 @@ _REQUIRED_AUTH_GATES = (
     "lease_current_and_eligible",
     "causal_prior",
     "effect_binding_current",
-    "dependency_and_threat_model_current",
+    "dependency_and_threat_model_freshness",
     "proof_freshness",
     "verifier_independence",
     "governance_disposition",
