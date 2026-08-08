@@ -6,10 +6,13 @@ from aura_project_context_compiler import (
     CandidateCategory,
     CandidateTruthClass,
     ContextAuthorityClass,
+    EdgeTruthClass,
     ProjectContextCandidate,
+    ProjectContextEdge,
     ProjectionBudget,
     SelectionStatus,
     compile_project_context_projection,
+    trace_project_context_provenance,
 )
 
 
@@ -57,12 +60,16 @@ def _source(digest: str = _digest("2")) -> ProjectContextCandidate:
     )
 
 
-def _compile(candidates: tuple[ProjectContextCandidate, ...]):
+def _compile(
+    candidates: tuple[ProjectContextCandidate, ...],
+    edges: tuple[ProjectContextEdge, ...] = (),
+):
     return compile_project_context_projection(
         OBJECTIVE,
         project_ref=PROJECT_REF,
         repository_identity=_repo(),
         candidates=candidates,
+        edges=edges,
         budget=ProjectionBudget(max_nodes=16, max_edges=32),
         freshness_timestamp_ms=NOW_MS,
     )
@@ -166,3 +173,88 @@ def test_headless_accessible_projection_retains_exact_reference_identity() -> No
     assert payload["full_project_graph_included"] is False
     assert payload["projection"]["artifact_evidence_refs"][0]["reference_id"] == "ref:source-answer"
     assert payload["projection"]["artifact_evidence_refs"][0]["digest"] == _digest("2")
+
+
+def test_bounded_provenance_does_not_emit_dangling_truncated_edges() -> None:
+    source = _source()
+    test = ProjectContextCandidate(
+        candidate_id="test:direct",
+        category=CandidateCategory.TEST,
+        source_adapter="adapter.test",
+        origin_ref="test://direct",
+        authority_class=ContextAuthorityClass.CANONICAL_READ,
+        truth_class=CandidateTruthClass.EXACT_CURRENT,
+        reference=_ref("ref:test-direct", _digest("6")),
+        dependency_ids=("source:answer-determining",),
+    )
+    proof = ProjectContextCandidate(
+        candidate_id="proof:result",
+        category=CandidateCategory.PROOF_OBLIGATION,
+        source_adapter="adapter.proof",
+        origin_ref="proof://result",
+        authority_class=ContextAuthorityClass.CANONICAL_READ,
+        truth_class=CandidateTruthClass.EXACT_CURRENT,
+        reference=_ref("ref:proof-result", _digest("7")),
+        dependency_ids=("test:direct",),
+    )
+    edges = (
+        ProjectContextEdge(
+            "source:answer-determining",
+            "test:direct",
+            "tested_by",
+            EdgeTruthClass.EXACT,
+        ),
+        ProjectContextEdge(
+            "test:direct",
+            "proof:result",
+            "proves",
+            EdgeTruthClass.EXACT,
+        ),
+    )
+    result = _compile((source, test, proof), edges)
+
+    trace = trace_project_context_provenance(
+        result,
+        ("proof:result",),
+        max_hops=4,
+        max_nodes=2,
+    )
+
+    node_ids = set(trace["node_ids"])
+    assert trace["source_complete"] is False
+    assert trace["truncated_frontier"] == ["source:answer-determining"]
+    assert all(
+        edge["source_id"] in node_ids and edge["target_id"] in node_ids
+        for edge in trace["edges"]
+    )
+
+
+def test_hypothesis_edge_can_reach_source_without_claiming_source_complete() -> None:
+    source = _source()
+    proof = ProjectContextCandidate(
+        candidate_id="proof:result",
+        category=CandidateCategory.PROOF_OBLIGATION,
+        source_adapter="adapter.proof",
+        origin_ref="proof://result",
+        authority_class=ContextAuthorityClass.CANONICAL_READ,
+        truth_class=CandidateTruthClass.EXACT_CURRENT,
+        reference=_ref("ref:proof-result", _digest("7")),
+        dependency_ids=("source:answer-determining",),
+    )
+    result = _compile(
+        (source, proof),
+        (
+            ProjectContextEdge(
+                "source:answer-determining",
+                "proof:result",
+                "suspected_support",
+                EdgeTruthClass.HYPOTHESIS,
+            ),
+        ),
+    )
+
+    trace = trace_project_context_provenance(result, ("proof:result",))
+
+    assert trace["source_reached"] is True
+    assert trace["authoritative_path"] is False
+    assert trace["source_complete"] is False
