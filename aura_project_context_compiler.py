@@ -270,6 +270,32 @@ def _normalize_candidate_relationships(candidate: Any) -> None:
     )
 
 
+def _revalidate_selected_candidate_nested_records(candidate: Any) -> None:
+    """Re-run nested canonical constructors before public compilation admission."""
+    reference = candidate.reference
+    if reference is not None:
+        if type(reference) is not CanonicalReference:
+            raise ValueError("selected candidate reference must be an exact CanonicalReference")
+        try:
+            CanonicalReference.from_dict(reference.to_dict())
+        except Exception as exc:
+            raise ValueError("selected candidate canonical reference failed revalidation") from exc
+
+    try:
+        bindings = tuple(candidate.temporal_bindings)
+    except Exception as exc:
+        raise ValueError("selected candidate temporal bindings failed revalidation") from exc
+    for binding in bindings:
+        if type(binding) is not TemporalBinding:
+            raise ValueError("selected candidate temporal bindings must be exact TemporalBinding records")
+        try:
+            rebound = TemporalBinding(binding.kind, binding.binding_id, binding.digest, binding.expires_at_ms)
+        except Exception as exc:
+            raise ValueError("selected candidate temporal binding failed revalidation") from exc
+        if rebound.to_dict() != binding.to_dict():
+            raise ValueError("selected candidate temporal binding is not in canonical form")
+
+
 def _validate_candidate_reference(candidate: Any) -> None:
     """Validate the corresponding PR3 invariant and fail closed on mismatch."""
     if candidate.availability is CandidateAvailability.AVAILABLE:
@@ -681,6 +707,8 @@ def _canonical_compilation_candidates(
     selected = tuple(compilation.selected_candidates)
     if any(type(item) is not ProjectContextCandidate for item in selected):
         raise ValueError("selected_candidates must be exact records")
+    for item in selected:
+        _revalidate_selected_candidate_nested_records(item)
     selected = tuple(sorted(selected, key=lambda item: item.candidate_id))
     if len({item.candidate_id for item in selected}) != len(selected):
         raise ValueError(

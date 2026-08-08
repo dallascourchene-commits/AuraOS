@@ -677,3 +677,31 @@ def test_public_compilation_rejects_reserved_source_selected_id() -> None:
             selection_receipt=forged_receipt, selected_candidates=(reserved,),
             graph_edges=(), admissible=True,
         )
+
+def test_public_compilation_rejects_low_level_tampered_nested_reference() -> None:
+    complete = _compile((_source(),))
+    assert complete.projection is not None
+    source = complete.selected_candidates[0]
+    assert source.reference is not None
+    object.__setattr__(source.reference, "canonical_ref", None)
+    object.__setattr__(source, "origin_ref", None)
+    with pytest.raises(ValueError, match="canonical reference failed revalidation"):
+        ProjectContextCompilation(
+            project_ref=PROJECT_REF, objective=complete.objective,
+            objective_digest=complete.objective_digest, repository_identity=complete.repository_identity,
+            projection=complete.projection, selection_receipt=complete.selection_receipt,
+            selected_candidates=complete.selected_candidates, graph_edges=complete.graph_edges, admissible=True,
+        )
+
+
+def test_public_compilation_rejects_low_level_tampered_temporal_binding() -> None:
+    complete = _compile((_source(),))
+    source = complete.selected_candidates[0]
+    object.__setattr__(source.temporal_bindings[0], "digest", None)
+    with pytest.raises(ValueError, match="temporal binding failed revalidation"):
+        ProjectContextCompilation(
+            project_ref=PROJECT_REF, objective=complete.objective,
+            objective_digest=complete.objective_digest, repository_identity=complete.repository_identity,
+            projection=complete.projection, selection_receipt=complete.selection_receipt,
+            selected_candidates=complete.selected_candidates, graph_edges=complete.graph_edges, admissible=True,
+        )

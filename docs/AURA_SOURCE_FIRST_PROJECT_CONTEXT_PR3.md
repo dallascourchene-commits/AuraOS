@@ -203,6 +203,7 @@ PR3 fails closed when:
 - caller-supplied candidate IDs collide with the reserved `source:selected` missing-source receipt marker, including through hand-assembled public compilation records;
 - selected candidates exceed signed node/edge budgets, have incomplete dependency closure, or graph edges reference candidates outside the task-conditioned set;
 - projection references differ in full canonical identity or category placement from selected candidates;
+- hand-assembled selected candidates contain low-level-tampered `CanonicalReference` or `TemporalBinding` records that no longer pass their canonical constructors;
 - one canonical reference is aliased into multiple candidate roles;
 - an authority-bearing candidate claims an `origin_ref` different from its canonical reference origin;
 - advisory/hypothesis/stale/unavailable material attempts to carry canonical/derived read authority;
