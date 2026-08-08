@@ -939,3 +939,24 @@ def test_derived_verified_candidate_cannot_claim_canonical_read_authority() -> N
             truth=CandidateTruthClass.DERIVED_VERIFIED,
             authority=ContextAuthorityClass.CANONICAL_READ,
         )
+
+
+def test_edge_input_rejects_non_sequence_without_consuming_iterable() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+
+    class ExplodingEdges:
+        def __iter__(self):
+            raise AssertionError("edge iterable must not be consumed before sequence validation")
+
+    with pytest.raises(TypeError, match="edges must be a sequence"):
+        compile_project_context_projection(
+            "Fix the exact behavior without losing proof context.",
+            project_ref="project:auraos-pr3",
+            repository_identity=_repo(),
+            candidates=(source,),
+            edges=ExplodingEdges(),
+            budget=ProjectionBudget(max_nodes=64, max_edges=256),
+            freshness_timestamp_ms=1_786_180_000_000,
+        )
