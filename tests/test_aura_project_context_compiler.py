@@ -950,7 +950,7 @@ def test_edge_input_rejects_non_sequence_without_consuming_iterable() -> None:
         def __iter__(self):
             raise AssertionError("edge iterable must not be consumed before sequence validation")
 
-    with pytest.raises(TypeError, match="edges must be a sequence"):
+    with pytest.raises(TypeError, match="edges must be an exact immutable tuple"):
         compile_project_context_projection(
             "Fix the exact behavior without losing proof context.",
             project_ref="project:auraos-pr3",
@@ -966,6 +966,70 @@ def test_edge_input_rejects_hostile_sequence_before_any_protocol_call() -> None:
     class HostileSequence:
         def __len__(self): raise AssertionError("hostile len must not run")
         def __iter__(self): raise AssertionError("hostile iter must not run")
-    with pytest.raises(TypeError, match="exact built-in tuple or list"):
+    with pytest.raises(TypeError, match="edges must be an exact immutable tuple"):
         compile_project_context_projection("Fix the exact behavior without losing proof context.", project_ref="project:auraos-pr3", repository_identity=_repo(), candidates=(source,), edges=HostileSequence(), budget=ProjectionBudget(max_nodes=64,max_edges=256), freshness_timestamp_ms=1_786_180_000_000)
 
+
+def test_compile_rejects_mutable_candidate_list_before_traversal() -> None:
+    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True)
+    with pytest.raises(TypeError, match="candidates must be an exact immutable tuple"):
+        compile_project_context_projection(
+            "Fix the exact behavior without losing proof context.",
+            project_ref="project:auraos-pr3",
+            repository_identity=_repo(), candidates=[source], edges=(),
+            budget=ProjectionBudget(max_nodes=64, max_edges=256),
+            freshness_timestamp_ms=1_786_180_000_000,
+        )
+
+
+def test_compile_rejects_mutable_edge_list_before_traversal() -> None:
+    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True)
+    with pytest.raises(TypeError, match="edges must be an exact immutable tuple"):
+        compile_project_context_projection(
+            "Fix the exact behavior without losing proof context.",
+            project_ref="project:auraos-pr3",
+            repository_identity=_repo(), candidates=(source,), edges=[],
+            budget=ProjectionBudget(max_nodes=64, max_edges=256),
+            freshness_timestamp_ms=1_786_180_000_000,
+        )
+
+
+def test_compile_rejects_hostile_candidate_sequence_without_protocol_calls() -> None:
+    class HostileCandidates:
+        def __len__(self):
+            raise AssertionError("hostile candidate length must not run")
+        def __iter__(self):
+            raise AssertionError("hostile candidate iterator must not run")
+    with pytest.raises(TypeError, match="candidates must be an exact immutable tuple"):
+        compile_project_context_projection(
+            "Fix the exact behavior without losing proof context.",
+            project_ref="project:auraos-pr3", repository_identity=_repo(),
+            candidates=HostileCandidates(), edges=(),
+            budget=ProjectionBudget(max_nodes=64, max_edges=256),
+            freshness_timestamp_ms=1_786_180_000_000,
+        )
+
+
+def test_incomplete_mandatory_selection_remains_dependency_closed() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"],
+        answer_determining=True, deps=("test:missing",),
+    )
+    result = _compile((source,))
+    assert result.selection_receipt.status is SelectionStatus.INCOMPLETE
+    assert result.projection is None
+    assert result.selected_candidates == ()
+    assert "test:missing" in result.selection_receipt.mandatory_evidence_missing
+    assert "source:target" in result.selection_receipt.mandatory_evidence_missing
+
+
+def test_authoritative_candidate_reserves_slot_for_reference_binding() -> None:
+    bindings = tuple(
+        TemporalBinding(TemporalBindingKind.LEASE, f"lease:{index}", f"{index + 1:064x}")
+        for index in range(64)
+    )
+    with pytest.raises(ValueError, match="no room for canonical-reference identity binding"):
+        _candidate(
+            "source:target", CandidateCategory.SOURCE, D["2"],
+            answer_determining=True, bindings=bindings,
+        )

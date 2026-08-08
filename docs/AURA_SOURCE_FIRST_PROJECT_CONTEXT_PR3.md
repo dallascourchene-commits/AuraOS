@@ -104,7 +104,7 @@ Selection eligibility and **source admission are deliberately different predicat
 
 If the complete mandatory dependency closure cannot fit the declared node budget, PR3 does **not** choose an arbitrary subset. The receipt becomes `INCOMPLETE`, records the budget omission, and denies admission.
 
-Optional candidates are ranked deterministically by declared relevance, then fixed category priority, then candidate ID. A candidate and its dependency closure are selected as a unit only when they fit. Candidate input edges must be an exact built-in `tuple` or `list`; arbitrary custom `Sequence` implementations are rejected before calling their length, indexing, or iteration protocols. They may be accepted up to a bounded four-times selected-edge budget (never above the module-wide edge ceiling) so task-conditioned endpoint reduction can occur before the final selected graph is checked strictly against `max_edges`. An edge incident to an omitted node is absent from the selected graph; the existing node omission bucket remains the attributable reason, rather than introducing a second edge-omission receipt plane.
+Optional candidates are ranked deterministically by declared relevance, then fixed category priority, then candidate ID. A candidate and its dependency closure are selected as a unit only when they fit. Candidate and edge inputs must be exact immutable built-in `tuple` values; mutable lists and arbitrary custom `Sequence` implementations are rejected before calling caller-controlled length, indexing, or iteration protocols. They may be accepted up to a bounded four-times selected-edge budget (never above the module-wide edge ceiling) so task-conditioned endpoint reduction can occur before the final selected graph is checked strictly against `max_edges`. An edge incident to an omitted node is absent from the selected graph; the existing node omission bucket remains the attributable reason, rather than introducing a second edge-omission receipt plane.
 
 ## 6. `ProjectionSelectionReceipt`
 
@@ -202,7 +202,7 @@ PR3 fails closed when:
 - a hand-assembled compilation attempts to mark compiler-ineligible advisory, stale, unavailable, adapter-missing, or conflicting candidates as selected canonical evidence;
 - caller-supplied candidate IDs collide with the reserved `source:selected` missing-source receipt marker, including through hand-assembled public compilation records;
 - selected candidates exceed signed node/edge budgets, have incomplete dependency closure, or graph edges reference candidates outside the task-conditioned set;
-- caller-controlled selected-candidate, graph-edge, or temporal-binding iterables are not materialized before exact finite-container and declared-length bounds are proven;
+- caller-controlled candidate, selected-candidate, graph-edge, edge-input, or temporal-binding collections must be exact immutable tuples and satisfy declared-length bounds before traversal;
 - projection references differ in full canonical identity or category placement from selected candidates;
 - hand-assembled selected candidates contain low-level-tampered `CanonicalReference` or `TemporalBinding` records that no longer pass their canonical constructors;
 - one canonical reference is aliased into multiple candidate roles;

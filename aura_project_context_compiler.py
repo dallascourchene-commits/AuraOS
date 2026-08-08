@@ -255,8 +255,8 @@ def _normalize_candidate_relationships(candidate: Any) -> None:
             _id(candidate.conflict_key, "conflict_key"),
         )
     raw_bindings = candidate.temporal_bindings
-    if type(raw_bindings) not in (tuple, list):
-        raise TypeError("temporal_bindings must be a bounded built-in tuple or list")
+    if type(raw_bindings) is not tuple:
+        raise TypeError("temporal_bindings must be an exact immutable tuple")
     if len(raw_bindings) > MAX_TEMPORAL_BINDINGS:
         raise ValueError("temporal_bindings exceeds the bounded record ceiling")
     if any(type(item) is not TemporalBinding for item in raw_bindings):
@@ -383,6 +383,10 @@ def _bind_candidate_reference_identity(candidate: Any) -> None:
             "authoritative reference binding conflicts with canonical reference digest"
         )
     if existing is None:
+        if len(candidate.temporal_bindings) >= MAX_TEMPORAL_BINDINGS:
+            raise ValueError(
+                "temporal_bindings leaves no room for canonical-reference identity binding"
+            )
         object.__setattr__(
             candidate,
             "temporal_bindings",
@@ -393,6 +397,8 @@ def _bind_candidate_reference_identity(candidate: Any) -> None:
                 )
             ),
         )
+        if len(candidate.temporal_bindings) > MAX_TEMPORAL_BINDINGS:
+            raise ValueError("temporal_bindings exceeds the bounded record ceiling")
 
 
 @dataclass(frozen=True)
@@ -709,8 +715,8 @@ def _canonical_compilation_candidates(
 ]:
     """Canonicalize the corresponding PR3 structure deterministically."""
     raw_selected = compilation.selected_candidates
-    if type(raw_selected) not in (tuple, list):
-        raise TypeError("selected_candidates must be a bounded built-in tuple or list")
+    if type(raw_selected) is not tuple:
+        raise TypeError("selected_candidates must be an exact immutable tuple")
     if len(raw_selected) > compilation.selection_receipt.budget.max_nodes:
         raise ValueError("selected candidates exceed selection receipt node budget")
     if any(type(item) is not ProjectContextCandidate for item in raw_selected):
@@ -834,8 +840,8 @@ def _canonicalize_compilation_edges(
 ) -> None:
     """Canonicalize the corresponding PR3 structure deterministically."""
     raw_edges = compilation.graph_edges
-    if type(raw_edges) not in (tuple, list):
-        raise TypeError("graph_edges must be a bounded built-in tuple or list")
+    if type(raw_edges) is not tuple:
+        raise TypeError("graph_edges must be an exact immutable tuple")
     if len(raw_edges) > compilation.selection_receipt.budget.max_edges:
         raise ValueError(
             "compiled graph edges exceed selection receipt edge budget"
@@ -1223,15 +1229,13 @@ def _compile_candidate_map(
     candidates: Sequence[ProjectContextCandidate],
 ) -> dict[str, ProjectContextCandidate]:
     """Compile the corresponding bounded PR3 structure from validated inputs."""
-    if isinstance(candidates, (str, bytes, bytearray)) or not isinstance(
-        candidates, Sequence
-    ):
-        raise TypeError("candidates must be a sequence")
-    if len(candidates) > MAX_CANDIDATES or any(
-        type(item) is not ProjectContextCandidate for item in candidates
-    ):
+    if type(candidates) is not tuple:
+        raise TypeError("candidates must be an exact immutable tuple")
+    if len(candidates) > MAX_CANDIDATES:
+        raise ValueError("candidates exceed the bounded candidate ceiling")
+    if any(type(item) is not ProjectContextCandidate for item in candidates):
         raise ValueError(
-            "candidates must be a bounded sequence of exact ProjectContextCandidate records"
+            "candidates must contain exact ProjectContextCandidate records"
         )
     candidate_map = {item.candidate_id: item for item in candidates}
     if len(candidate_map) != len(candidates):
@@ -1259,8 +1263,8 @@ def _compile_edge_items(
     budget: ProjectionBudget,
 ) -> tuple[ProjectContextEdge, ...]:
     """Compile the corresponding bounded PR3 structure from validated inputs."""
-    if type(edges) not in (tuple, list):
-        raise TypeError("edges must be a sequence backed by an exact built-in tuple or list")
+    if type(edges) is not tuple:
+        raise TypeError("edges must be an exact immutable tuple")
     edge_limit = min(MAX_EDGES, budget.max_edges * _EDGE_INPUT_EXPANSION_FACTOR)
     if len(edges) > edge_limit:
         raise ValueError("edges exceed the bounded edge-input ceiling")
@@ -1356,6 +1360,19 @@ def _mandatory_selection(
     }
     buckets["mandatory_evidence_missing"].update(invalid)
     eligible = mandatory - invalid
+    while True:
+        orphaned = {
+            candidate_id
+            for candidate_id in eligible
+            if any(
+                dependency_id not in eligible
+                for dependency_id in candidate_map[candidate_id].dependency_ids
+            )
+        }
+        if not orphaned:
+            break
+        buckets["mandatory_evidence_missing"].update(orphaned)
+        eligible.difference_update(orphaned)
     if len(eligible) > budget.max_nodes:
         buckets["omitted_by_budget"].update(eligible)
         buckets["mandatory_evidence_missing"].update(eligible)

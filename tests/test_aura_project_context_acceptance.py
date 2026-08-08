@@ -713,7 +713,7 @@ def test_public_compilation_rejects_unbounded_selected_candidate_iterable_withou
         def __iter__(self):
             raise AssertionError("selected candidate iterable must not be consumed")
 
-    with pytest.raises(TypeError, match="selected_candidates must be a bounded built-in"):
+    with pytest.raises(TypeError, match="selected_candidates must be an exact immutable tuple"):
         ProjectContextCompilation(
             project_ref=PROJECT_REF, objective=complete.objective,
             objective_digest=complete.objective_digest, repository_identity=complete.repository_identity,
@@ -729,7 +729,7 @@ def test_public_compilation_rejects_unbounded_graph_edge_iterable_without_consum
         def __iter__(self):
             raise AssertionError("graph edge iterable must not be consumed")
 
-    with pytest.raises(TypeError, match="graph_edges must be a bounded built-in"):
+    with pytest.raises(TypeError, match="graph_edges must be an exact immutable tuple"):
         ProjectContextCompilation(
             project_ref=PROJECT_REF, objective=complete.objective,
             objective_digest=complete.objective_digest, repository_identity=complete.repository_identity,
@@ -745,5 +745,5 @@ def test_candidate_rejects_unbounded_temporal_binding_iterable_without_consuming
         def __iter__(self):
             raise AssertionError("temporal binding iterable must not be consumed")
 
-    with pytest.raises(TypeError, match="temporal_bindings must be a bounded built-in"):
+    with pytest.raises(TypeError, match="temporal_bindings must be an exact immutable tuple"):
         replace(source, temporal_bindings=ExplodingBindings())
