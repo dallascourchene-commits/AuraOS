@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786173760,
+  "generated_at_unix": 1786223349,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1576,
+    "included_file_count": 1581,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,12 +13,10 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 280,
-      ".pytest_cache": 4,
-      ".ruff_cache": 4,
+      ".git": 25,
       "Aura_Memory": 6,
       "Aura_Sandbox": 2,
-      "__pycache__": 35
+      "__pycache__": 9
     },
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
@@ -87,6 +85,7 @@
       ".aura/runtime_profiles/construction_foundry_p4.confirmation.template.json",
       ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
       ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json",
+      ".aura/source_anchor_manifest.v1.json",
       ".aura/tool_bundles/coding_localize.v1.json",
       ".aura/topology_baseline.json",
       ".aura/understand_graph.json",
@@ -193,6 +192,7 @@
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml",
+      ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/umc-verified-synchronize-publish.yml",
       ".github/workflows/unified-memory-continuity-deep-final-materialize.yml",
@@ -1176,11 +1176,13 @@
       "scripts/aura_fetch_construction_demo_source.py",
       "scripts/aura_ifc_storey_index.py",
       "scripts/aura_mesh_to_gaussian.py",
+      "scripts/aura_navigation_refresh.py",
       "scripts/aura_prepare_construction_demo_assets.py",
       "scripts/aura_prepare_construction_demo_assets_core.py",
       "scripts/aura_review_learning_architect_harness.py",
       "scripts/aura_runtime_profile_v2_adapter.py",
       "scripts/aura_runtime_refactor_harness.py",
+      "scripts/aura_source_anchor_map.py",
       "scripts/aura_spatial_continuation_architect_harness.py",
       "scripts/aura_spatial_s4b_architect_harness.py",
       "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
@@ -1513,6 +1515,7 @@
       "tests/test_aura_showcase_observatory_crucible.py",
       "tests/test_aura_showcase_spatial_integration.py",
       "tests/test_aura_skill_cockpit_adapter.py",
+      "tests/test_aura_source_anchor_map.py",
       "tests/test_aura_source_integrity.py",
       "tests/test_aura_spatial_agent_bridge_mcp.py",
       "tests/test_aura_spatial_asset_security.py",
@@ -1600,23 +1603,23 @@
     ]
   },
   "summary": {
-    "file_count": 1576,
-    "total_bytes": 59522794,
-    "text_tokens_est": 5371792,
+    "file_count": 1581,
+    "total_bytes": 59493259,
+    "text_tokens_est": 5364448,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 64,
       "knowledge_artifact": 208,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 977,
-      "schema_or_lexicon": 232,
+      "python_module": 980,
+      "schema_or_lexicon": 234,
       "support_file": 79
     },
     "topology_nodes": 11393,
     "topology_edges": 27882,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 33315.1
+    "elapsed_ms": 34208.58
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1901,6 +1904,7 @@
       ".aura/runtime_profiles/construction_foundry_p4.confirmation.template.json",
       ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
       ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json",
+      ".aura/source_anchor_manifest.v1.json",
       ".aura/tool_bundles/coding_localize.v1.json",
       ".aura/understand_graph.json",
       ".aura/understand_graph_diff.json",
@@ -1994,6 +1998,7 @@
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml",
+      ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/umc-verified-synchronize-publish.yml",
       ".gitignore",
@@ -2836,11 +2841,13 @@
       "scripts/aura_exact_head_transport.py",
       "scripts/aura_fetch_construction_demo_source.py",
       "scripts/aura_ifc_storey_index.py",
+      "scripts/aura_navigation_refresh.py",
       "scripts/aura_prepare_construction_demo_assets.py",
       "scripts/aura_prepare_construction_demo_assets_core.py",
       "scripts/aura_review_learning_architect_harness.py",
       "scripts/aura_runtime_profile_v2_adapter.py",
       "scripts/aura_runtime_refactor_harness.py",
+      "scripts/aura_source_anchor_map.py",
       "scripts/aura_spatial_continuation_architect_harness.py",
       "scripts/aura_spatial_s4b_architect_harness.py",
       "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
@@ -3143,6 +3150,7 @@
       "tests/test_aura_showcase_observatory_crucible.py",
       "tests/test_aura_showcase_spatial_integration.py",
       "tests/test_aura_skill_cockpit_adapter.py",
+      "tests/test_aura_source_anchor_map.py",
       "tests/test_aura_source_integrity.py",
       "tests/test_aura_spatial_agent_bridge_mcp.py",
       "tests/test_aura_spatial_browser_interaction.py",
@@ -4155,6 +4163,7 @@
       "scripts/aura_architecture_harness_core.py:697",
       "scripts/aura_exact_head_transport.py:34",
       "scripts/aura_runtime_profile_v2_adapter.py:110",
+      "scripts/aura_source_anchor_map.py:50",
       "tests/test_aura_qdkt_inventory.py:124",
       "tests/test_aura_verify_construction_demo_assets.py:255",
       "travel_price_sidecar.py:64"
@@ -32101,6 +32110,16 @@
         "signature_hash": "6d036998d6ab8563"
       }
     ],
+    "_codemap": [
+      {
+        "file": "tests/test_aura_source_anchor_map.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 25,
+        "semantic_id": "tests/test_aura_source_anchor_map.py#function:_codemap:a29e80ffba1befeb",
+        "signature_hash": "5ccb9e2d3882ea28"
+      }
+    ],
     "_codemap_digest": [
       {
         "file": "aura_capability_resolver.py",
@@ -38635,6 +38654,14 @@
         "end_line": 125,
         "semantic_id": "aura_unified_memory_continuity_toolchain.py#function:_file_digest:246a52018ff2cd42",
         "signature_hash": "8bf1e816db213da9"
+      },
+      {
+        "file": "scripts/aura_source_anchor_map.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 32,
+        "semantic_id": "scripts/aura_source_anchor_map.py#function:_file_digest:ead76cea3e7a6ac5",
+        "signature_hash": "ff73f1a4aa6e1fdd"
       }
     ],
     "_file_hash": [
@@ -39575,6 +39602,16 @@
         "end_line": 89,
         "semantic_id": "aura_forge.py#function:_full_digest:4c47b48c6c7b1895",
         "signature_hash": "efc460deaff199a5"
+      }
+    ],
+    "_full_navigation_refresh": [
+      {
+        "file": "scripts/aura_navigation_refresh.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 93,
+        "semantic_id": "scripts/aura_navigation_refresh.py#function:_full_navigation_refresh:f62adea642e58158",
+        "signature_hash": "fc5c3792668ad8e0"
       }
     ],
     "_full_tour": [
@@ -43607,6 +43644,16 @@
         "signature_hash": "246a93c00e30d2f0"
       }
     ],
+    "_is_generated_anchor_path": [
+      {
+        "file": "scripts/aura_navigation_refresh.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 49,
+        "semantic_id": "scripts/aura_navigation_refresh.py#function:_is_generated_anchor_path:18e4768b1dd97f6f",
+        "signature_hash": "61d71b40f5ef5d55"
+      }
+    ],
     "_is_generated_inventory": [
       {
         "file": "aura_qdkt_inventory.py",
@@ -45524,6 +45571,14 @@
         "line": 344,
         "end_line": 348,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_load_json:1fa13c8d696f29a9",
+        "signature_hash": "e16edca9b4e963c1"
+      },
+      {
+        "file": "scripts/aura_source_anchor_map.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 25,
+        "semantic_id": "scripts/aura_source_anchor_map.py#function:_load_json:3e6e6148ac3be2c7",
         "signature_hash": "e16edca9b4e963c1"
       }
     ],
@@ -59295,6 +59350,16 @@
         "signature_hash": "3f82267f482b9fe5"
       }
     ],
+    "_source_changes_only": [
+      {
+        "file": "scripts/aura_navigation_refresh.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 54,
+        "semantic_id": "scripts/aura_navigation_refresh.py#function:_source_changes_only:ae87efb4bf97e85e",
+        "signature_hash": "ed8dc40cff89b275"
+      }
+    ],
     "_source_digest": [
       {
         "file": "aura_source_integrity.py",
@@ -66377,6 +66442,16 @@
         "end_line": 25,
         "semantic_id": "tests/test_aura_waboose_callsite_resolution.py#function:_write:01d8caa947505b3a",
         "signature_hash": "8b250679dc5bee83"
+      }
+    ],
+    "_write_anchors": [
+      {
+        "file": "scripts/aura_navigation_refresh.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 39,
+        "semantic_id": "scripts/aura_navigation_refresh.py#function:_write_anchors:8db00e908fbdbf95",
+        "signature_hash": "7a66156f312eec69"
       }
     ],
     "_write_capability_repo": [
@@ -83057,6 +83132,14 @@
         "end_line": 386,
         "semantic_id": "benchmarks/refactor_code_quality/generate_fixture.py#function:generate:1b827933e25e682f",
         "signature_hash": "14f27adf741dce28"
+      },
+      {
+        "file": "scripts/aura_source_anchor_map.py",
+        "kind": "function",
+        "line": 139,
+        "end_line": 145,
+        "semantic_id": "scripts/aura_source_anchor_map.py#function:generate:57b3457eec06a284",
+        "signature_hash": "5e206b8b2edb8cd1"
       }
     ],
     "generate_address": [
@@ -89681,6 +89764,14 @@
         "signature_hash": "0e430dbd1b01e915"
       },
       {
+        "file": "scripts/aura_navigation_refresh.py",
+        "kind": "function",
+        "line": 96,
+        "end_line": 136,
+        "semantic_id": "scripts/aura_navigation_refresh.py#function:main:9ae36ab1107915e9",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "scripts/aura_prepare_construction_demo_assets.py",
         "kind": "function",
         "line": 78,
@@ -89719,6 +89810,14 @@
         "end_line": 931,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:main:957bc05c7d82a5a8",
         "signature_hash": "d5857061120d68cd"
+      },
+      {
+        "file": "scripts/aura_source_anchor_map.py",
+        "kind": "function",
+        "line": 148,
+        "end_line": 178,
+        "semantic_id": "scripts/aura_source_anchor_map.py#function:main:8cba7eba297c198e",
+        "signature_hash": "1107cedc597d81be"
       },
       {
         "file": "scripts/aura_spatial_continuation_architect_harness.py",
@@ -95865,6 +95964,16 @@
         "signature_hash": "6e7d6d902209ce61"
       }
     ],
+    "render_markdown": [
+      {
+        "file": "scripts/aura_source_anchor_map.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 136,
+        "semantic_id": "scripts/aura_source_anchor_map.py#function:render_markdown:eb9cda7307bb6883",
+        "signature_hash": "a88c2d4de7ee8279"
+      }
+    ],
     "render_packet": [
       {
         "file": "aura_substrate.py",
@@ -96489,6 +96598,16 @@
         "signature_hash": "c39a2836445d9b15"
       }
     ],
+    "resolve_anchor": [
+      {
+        "file": "scripts/aura_source_anchor_map.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 69,
+        "semantic_id": "scripts/aura_source_anchor_map.py#function:resolve_anchor:53634c47217126f2",
+        "signature_hash": "d8ce05c28163c8dd"
+      }
+    ],
     "resolve_candidates_for_path": [
       {
         "file": "aura_model_connectome_bridge.py",
@@ -96555,6 +96674,16 @@
         "end_line": 187,
         "semantic_id": "travel_vsa_pointer_index.py#method:TravelVSAPointerIndex.resolve_exact_price:0213cdc2f0228835",
         "signature_hash": "58d0dc4f6b4ce437"
+      }
+    ],
+    "resolve_manifest": [
+      {
+        "file": "scripts/aura_source_anchor_map.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 88,
+        "semantic_id": "scripts/aura_source_anchor_map.py#function:resolve_manifest:460f0b2c90e09e65",
+        "signature_hash": "2824bf64e50629c9"
       }
     ],
     "resolve_mode": [
@@ -114603,6 +114732,16 @@
         "signature_hash": "cf93ccb7f5d11219"
       }
     ],
+    "test_failed_full_refresh_restores_previous_anchor_projection": [
+      {
+        "file": "tests/test_aura_source_anchor_map.py",
+        "kind": "function",
+        "line": 97,
+        "end_line": 116,
+        "semantic_id": "tests/test_aura_source_anchor_map.py#function:test_failed_full_refresh_restores_previous_anchor_projection:8ef216bb8903b5c2",
+        "signature_hash": "26bbdecaa953f93b"
+      }
+    ],
     "test_failed_hypothesis_cannot_repeat_across_service_restart": [
       {
         "file": "tests/test_aura_bilateral_live_repair_foundry.py",
@@ -116069,6 +116208,16 @@
         "end_line": 32,
         "semantic_id": "test_aura_module_manifest.py#function:test_generate_module_manifest_finds_module_and_excludes_runtime_dirs:85fd01b1be6b2990",
         "signature_hash": "f550dcc1abf09cd8"
+      }
+    ],
+    "test_generate_regenerates_line_projection": [
+      {
+        "file": "tests/test_aura_source_anchor_map.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 86,
+        "semantic_id": "tests/test_aura_source_anchor_map.py#function:test_generate_regenerates_line_projection:a8e95ca67ca7581e",
+        "signature_hash": "d083515e96986f34"
       }
     ],
     "test_generated_body_never_appears_in_manifest_or_archive": [
@@ -117987,6 +118136,16 @@
         "end_line": 530,
         "semantic_id": "tests/test_aura_relational_index.py#function:test_incremental_path_is_validated_and_uses_canonical_full_build:76dc8751cae8b682",
         "signature_hash": "a41bb7a14a724b14"
+      }
+    ],
+    "test_incremental_refresh_filters_generated_anchor_projection": [
+      {
+        "file": "tests/test_aura_source_anchor_map.py",
+        "kind": "function",
+        "line": 89,
+        "end_line": 94,
+        "semantic_id": "tests/test_aura_source_anchor_map.py#function:test_incremental_refresh_filters_generated_anchor_projection:88a334921150795f",
+        "signature_hash": "a44fd5600a466a84"
       }
     ],
     "test_independence_without_evidence_is_rejected": [
@@ -130095,6 +130254,26 @@
         "end_line": 71,
         "semantic_id": "tests/test_aura_tensor_evidence.py#method:TestCoreEngine.test_residual_threshold:1927509a40069f70",
         "signature_hash": "d79d697b1f5f31df"
+      }
+    ],
+    "test_resolve_anchor_fails_closed_on_ambiguity": [
+      {
+        "file": "tests/test_aura_source_anchor_map.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 52,
+        "semantic_id": "tests/test_aura_source_anchor_map.py#function:test_resolve_anchor_fails_closed_on_ambiguity:8a60e1cda5822c3e",
+        "signature_hash": "f1ae3dd7085445c3"
+      }
+    ],
+    "test_resolve_anchor_uses_codemap_identity_and_current_span": [
+      {
+        "file": "tests/test_aura_source_anchor_map.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 40,
+        "semantic_id": "tests/test_aura_source_anchor_map.py#function:test_resolve_anchor_uses_codemap_identity_and_current_span:57e0e2571a2a2270",
+        "signature_hash": "70ad05b14f57191d"
       }
     ],
     "test_resolve_bilateral_contract_accepts_object_only_via_matching_session_id": [
@@ -149257,47 +149436,47 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "bytes": 79441,
-      "lines": 1490,
-      "tokens_est": 19728,
+      "bytes": 27705,
+      "lines": 694,
+      "tokens_est": 6833,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "48066d188b96fd9a",
+      "digest8": "412451b82cb14c27",
       "vector": [
-        -0.269066,
-        -0.14452,
-        0.252616,
-        -0.001175,
-        0.15627,
-        -0.222067,
-        -0.097522,
-        0.055223,
-        -0.15627,
-        -0.292565,
-        0.165669,
-        0.001175,
-        -0.109271,
-        -0.231467,
-        -0.010575,
-        0.118671,
-        -0.240867,
-        0.024674,
-        -0.292565,
-        -0.022324,
-        0.064623,
-        -0.252616,
-        -0.064623,
-        -0.041124,
-        0.224417,
-        0.299615,
-        -0.052873,
-        0.273765,
-        -0.262016,
-        0.165669,
-        -0.017624,
-        -0.081072
+        0.161049,
+        -0.292709,
+        0.104623,
+        0.14224,
+        0.017633,
+        -0.081112,
+        -0.118729,
+        -0.071708,
+        -0.001176,
+        0.20807,
+        0.297411,
+        0.036442,
+        0.102272,
+        0.290358,
+        0.017633,
+        -0.177506,
+        -0.2739,
+        -0.219825,
+        -0.217474,
+        -0.219825,
+        0.18691,
+        -0.156346,
+        0.008229,
+        0.139889,
+        -0.285656,
+        0.102272,
+        0.034091,
+        -0.262145,
+        -0.003527,
+        -0.184559,
+        0.25274,
+        -0.116378
       ]
     },
     {
@@ -202381,6 +202560,52 @@
       ]
     },
     {
+      "path": ".aura/source_anchor_manifest.v1.json",
+      "role": "schema_or_lexicon",
+      "bytes": 3084,
+      "lines": 79,
+      "tokens_est": 771,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f6337a7b0f1bfa4f",
+      "vector": [
+        -0.16506,
+        0.135049,
+        0.028647,
+        0.085941,
+        -0.162332,
+        0.18143,
+        -0.184158,
+        -0.315115,
+        0.047745,
+        -0.216898,
+        -0.10231,
+        -0.16506,
+        -0.257822,
+        -0.072299,
+        -0.222354,
+        -0.02319,
+        -0.154147,
+        -0.238724,
+        -0.10231,
+        0.24418,
+        -0.045016,
+        0.10231,
+        -0.336942,
+        0.009549,
+        0.336942,
+        0.328757,
+        0.058658,
+        0.05593,
+        -0.072299,
+        -0.047745,
+        0.072299,
+        -0.16506
+      ]
+    },
+    {
       "path": ".aura/topology_baseline.json",
       "role": "schema_or_lexicon",
       "bytes": 475,
@@ -207541,47 +207766,47 @@
     {
       "path": ".github/workflows/ci.yml",
       "role": "schema_or_lexicon",
-      "bytes": 12796,
-      "lines": 348,
-      "tokens_est": 3199,
+      "bytes": 13940,
+      "lines": 370,
+      "tokens_est": 3485,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "1e5cf15d6657f8db",
+      "digest8": "edda271a6cf124e7",
       "vector": [
-        -0.181829,
-        -0.139774,
-        -0.199146,
-        -0.164512,
-        -0.283258,
-        0.072979,
-        -0.018554,
-        0.107613,
-        -0.186777,
-        -0.038345,
-        0.12493,
-        0.035871,
-        0.110087,
-        0.033397,
-        -0.280784,
-        0.194199,
-        -0.09277,
-        -0.159565,
-        -0.085348,
-        -0.300575,
-        -0.226359,
-        0.157091,
-        0.231307,
-        0.293153,
-        -0.003711,
-        0.144721,
-        0.102666,
-        -0.251098,
-        -0.21399,
-        -0.162038,
-        -0.144721,
-        0.256045
+        -0.168626,
+        0.194936,
+        -0.053817,
+        -0.001196,
+        0.223638,
+        -0.304961,
+        -0.13514,
+        -0.130356,
+        0.214071,
+        -0.237989,
+        0.156666,
+        -0.300177,
+        0.182977,
+        0.056209,
+        -0.094478,
+        0.249949,
+        0.271475,
+        -0.192544,
+        -0.013155,
+        -0.029898,
+        -0.302569,
+        -0.154274,
+        -0.147099,
+        -0.254732,
+        0.046641,
+        0.027506,
+        -0.00598,
+        -0.025114,
+        0.163842,
+        0.127964,
+        -0.094478,
+        -0.240381
       ]
     },
     {
@@ -209379,49 +209604,95 @@
       ]
     },
     {
-      "path": ".github/workflows/sync-analysis-codemap.yml",
+      "path": ".github/workflows/source-anchor-verify.yml",
       "role": "schema_or_lexicon",
-      "bytes": 5352,
-      "lines": 144,
-      "tokens_est": 1338,
+      "bytes": 1357,
+      "lines": 48,
+      "tokens_est": 340,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "bf53a527e997a1d6",
+      "digest8": "3741e186a28d87ac",
       "vector": [
-        -0.252708,
-        -0.236599,
-        0.236599,
-        0.248681,
-        0.210422,
-        -0.166123,
-        0.152028,
-        -0.256735,
-        0.111755,
-        -0.24264,
-        0.063429,
-        -0.216463,
-        0.127864,
-        -0.224517,
-        0.234586,
-        -0.228545,
-        -0.252708,
-        -0.091619,
-        0.043293,
-        -0.166123,
-        0.085578,
-        0.013088,
-        0.04732,
-        -0.22049,
-        -0.123837,
-        -0.172164,
-        -0.061415,
-        -0.083565,
-        0.065442,
-        -0.09766,
-        0.190286,
-        0.198341
+        0.262587,
+        -0.034059,
+        -0.185679,
+        0.194468,
+        0.277969,
+        -0.06702,
+        0.113165,
+        -0.269179,
+        -0.02527,
+        -0.187876,
+        0.163705,
+        0.212047,
+        0.062625,
+        -0.249403,
+        -0.165902,
+        -0.099981,
+        -0.02527,
+        0.099981,
+        -0.1681,
+        0.269179,
+        0.042849,
+        0.249403,
+        -0.012086,
+        0.271377,
+        0.201061,
+        0.240613,
+        -0.2516,
+        0.192271,
+        -0.038454,
+        -0.148323,
+        0.07581,
+        0.047244
+      ]
+    },
+    {
+      "path": ".github/workflows/sync-analysis-codemap.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 5702,
+      "lines": 151,
+      "tokens_est": 1426,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b2bfd5b16d582edb",
+      "vector": [
+        -0.139447,
+        -0.146985,
+        -0.086683,
+        0.219849,
+        -0.139447,
+        0.099246,
+        -0.159548,
+        -0.028894,
+        -0.255025,
+        0.041457,
+        -0.008794,
+        -0.222362,
+        -0.061558,
+        0.290201,
+        -0.14196,
+        0.149497,
+        -0.255025,
+        -0.059045,
+        -0.25,
+        -0.242462,
+        -0.101759,
+        -0.244975,
+        0.126884,
+        -0.149497,
+        -0.302764,
+        0.136935,
+        -0.076633,
+        0.229899,
+        0.13191,
+        0.05402,
+        0.305276,
+        -0.139447
       ]
     },
     {
@@ -226295,6 +226566,52 @@
       ]
     },
     {
+      "path": "scripts/aura_navigation_refresh.py",
+      "role": "python_module",
+      "bytes": 4757,
+      "lines": 141,
+      "tokens_est": 1190,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2a8435949e8072b1",
+      "vector": [
+        0.157825,
+        0.019565,
+        -0.024782,
+        0.236086,
+        -0.136956,
+        0.131738,
+        0.053478,
+        0.285651,
+        0.22826,
+        0.170869,
+        -0.301303,
+        -0.113478,
+        0.131738,
+        0.113478,
+        -0.110869,
+        -0.121304,
+        -0.249129,
+        0.204782,
+        -0.103043,
+        -0.233477,
+        -0.022174,
+        0.003913,
+        0.20739,
+        -0.037826,
+        -0.139564,
+        -0.061304,
+        0.204782,
+        -0.014348,
+        0.26739,
+        0.322172,
+        0.121304,
+        0.293477
+      ]
+    },
+    {
       "path": "scripts/aura_prepare_construction_demo_assets.py",
       "role": "python_module",
       "bytes": 2675,
@@ -226528,6 +226845,58 @@
         -0.301435,
         0.113187,
         -0.027403
+      ]
+    },
+    {
+      "path": "scripts/aura_source_anchor_map.py",
+      "role": "python_module",
+      "bytes": 7668,
+      "lines": 183,
+      "tokens_est": 1915,
+      "symbol_count": 7,
+      "commands": [
+        "!r"
+      ],
+      "command_lines": {
+        "!r": [
+          50
+        ]
+      },
+      "topology": {},
+      "digest8": "50d65d47c5fbc59a",
+      "vector": [
+        0.078568,
+        -0.102021,
+        0.153618,
+        0.238049,
+        -0.041043,
+        0.223977,
+        -0.045734,
+        -0.174726,
+        0.015245,
+        -0.085604,
+        0.038698,
+        -0.048079,
+        -0.141891,
+        0.195834,
+        -0.05746,
+        -0.144237,
+        0.28261,
+        0.256812,
+        0.284955,
+        -0.05277,
+        0.205215,
+        0.299027,
+        0.24743,
+        0.069187,
+        -0.205215,
+        0.186452,
+        -0.263848,
+        -0.087949,
+        0.212251,
+        -0.083259,
+        0.219287,
+        0.20756
       ]
     },
     {
@@ -237696,6 +238065,52 @@
         0.109897,
         0.262289,
         -0.0718
+      ]
+    },
+    {
+      "path": "tests/test_aura_source_anchor_map.py",
+      "role": "python_module",
+      "bytes": 3841,
+      "lines": 117,
+      "tokens_est": 961,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "75b32b4d1542fb6b",
+      "vector": [
+        -0.293259,
+        -0.191045,
+        0.154539,
+        0.205647,
+        0.186177,
+        -0.127769,
+        -0.212948,
+        -0.132636,
+        -0.062059,
+        -0.006084,
+        -0.015819,
+        -0.100998,
+        -0.052324,
+        -0.171575,
+        -0.105865,
+        0.22755,
+        -0.071794,
+        -0.225116,
+        -0.242152,
+        -0.271356,
+        0.091263,
+        0.283525,
+        0.266489,
+        0.281091,
+        0.239718,
+        -0.178876,
+        -0.018253,
+        -0.118034,
+        0.047457,
+        -0.054758,
+        0.222682,
+        -0.049891
       ]
     },
     {
