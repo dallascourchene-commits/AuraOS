@@ -1,0 +1,401 @@
+{
+  "$id": "https://aura.local/schemas/aura_workspace_execution_graph_v2.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "arbitrary_native_execution": {
+      "const": false
+    },
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "automatic_commit": {
+          "const": false
+        },
+        "automatic_merge": {
+          "const": false
+        },
+        "automatic_persistence": {
+          "const": false
+        },
+        "automatic_promotion": {
+          "const": false
+        },
+        "automatic_pull_request": {
+          "const": false
+        },
+        "automatic_push": {
+          "const": false
+        },
+        "automatic_resume": {
+          "const": false
+        },
+        "deployment_authority": {
+          "const": false
+        },
+        "domain_mutation": {
+          "const": false
+        },
+        "execution_authority": {
+          "const": false
+        },
+        "human_review_required": {
+          "const": true
+        },
+        "model_authority": {
+          "const": false
+        },
+        "patch_authority": {
+          "const": false
+        },
+        "payment_authority": {
+          "const": false
+        },
+        "persistence_authority": {
+          "const": false
+        },
+        "physical_work_authority": {
+          "const": false
+        },
+        "production_mutation": {
+          "const": false
+        },
+        "professional_authority": {
+          "const": false
+        },
+        "projection_only": {
+          "const": true
+        },
+        "renderer_authority": {
+          "const": false
+        },
+        "review_only": {
+          "const": true
+        },
+        "sensor_authority": {
+          "const": false
+        },
+        "source_mutation": {
+          "const": false
+        },
+        "version": {
+          "const": "AURA_WORKSPACE_AUTHORITY_ENVELOPE_V1"
+        },
+        "vsa_patch_authority": {
+          "const": false
+        }
+      },
+      "required": [
+        "automatic_commit",
+        "automatic_merge",
+        "automatic_persistence",
+        "automatic_promotion",
+        "automatic_pull_request",
+        "automatic_push",
+        "automatic_resume",
+        "deployment_authority",
+        "domain_mutation",
+        "execution_authority",
+        "human_review_required",
+        "model_authority",
+        "patch_authority",
+        "payment_authority",
+        "persistence_authority",
+        "physical_work_authority",
+        "production_mutation",
+        "professional_authority",
+        "projection_only",
+        "renderer_authority",
+        "review_only",
+        "sensor_authority",
+        "source_mutation",
+        "version",
+        "vsa_patch_authority"
+      ],
+      "type": "object"
+    },
+    "budgets": {
+      "additionalProperties": false,
+      "properties": {
+        "context_tokens": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "cost_microusd": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "device_events": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "memory_mb": {
+          "maximum": 10000000000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "model_calls": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "network_calls": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "output_bytes": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "tool_calls": {
+          "maximum": 10000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "wall_time_ms": {
+          "maximum": 10000000000,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "wall_time_ms",
+        "memory_mb",
+        "context_tokens",
+        "output_bytes",
+        "tool_calls",
+        "model_calls",
+        "cost_microusd",
+        "network_calls",
+        "device_events"
+      ],
+      "type": "object"
+    },
+    "edges": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "source_node_id": {
+            "maxLength": 192,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+            "type": "string"
+          },
+          "target_node_id": {
+            "maxLength": 192,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_node_id",
+          "target_node_id"
+        ],
+        "type": "object"
+      },
+      "maxItems": 512,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "entry_node_ids": {
+      "items": {
+        "maxLength": 192,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+        "type": "string"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "expires_at_epoch_seconds": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "graph_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "graph_id": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "issued_at_epoch_seconds": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "max_parallelism": {
+      "maximum": 16,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "nodes": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "adapter_digest": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "adapter_id": {
+            "maxLength": 192,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+            "type": "string"
+          },
+          "adapter_version": {
+            "maxLength": 4096,
+            "minLength": 1,
+            "type": "string"
+          },
+          "assumptions_digest": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "capability_id": {
+            "maxLength": 192,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+            "type": "string"
+          },
+          "effect_class": {
+            "enum": [
+              "read_only",
+              "compute",
+              "write_temp",
+              "domain_handoff"
+            ]
+          },
+          "human_gate": {
+            "type": "boolean"
+          },
+          "implementation_digest": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "input_schema_digest": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "node_digest": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "node_id": {
+            "maxLength": 192,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+            "type": "string"
+          },
+          "output_schema_digest": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "retry_limit": {
+            "maximum": 8,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "source_identity_digest": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "terminal": {
+            "type": "boolean"
+          },
+          "timeout_ms": {
+            "maximum": 300000,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "node_id",
+          "capability_id",
+          "adapter_id",
+          "adapter_version",
+          "adapter_digest",
+          "implementation_digest",
+          "input_schema_digest",
+          "output_schema_digest",
+          "effect_class",
+          "human_gate",
+          "terminal",
+          "retry_limit",
+          "timeout_ms",
+          "assumptions_digest",
+          "source_identity_digest",
+          "node_digest"
+        ],
+        "type": "object"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "recipe_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "recipe_id": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "terminal_node_ids": {
+      "items": {
+        "maxLength": 192,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+        "type": "string"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "version": {
+      "const": "AURA_WORKSPACE_EXECUTION_GRAPH_V2"
+    }
+  },
+  "required": [
+    "version",
+    "graph_id",
+    "recipe_id",
+    "recipe_digest",
+    "nodes",
+    "edges",
+    "entry_node_ids",
+    "terminal_node_ids",
+    "budgets",
+    "issued_at_epoch_seconds",
+    "expires_at_epoch_seconds",
+    "max_parallelism",
+    "authority",
+    "arbitrary_native_execution",
+    "graph_digest"
+  ],
+  "title": "Aura Workspace Execution Graph V2",
+  "type": "object",
+  "x-aura-semantic-delegations": [
+    "complete recipe binding",
+    "adapter implementation/schema identity",
+    "DAG acyclicity",
+    "reachable terminals",
+    "effect and human-gate policy",
+    "TTL and budget consistency",
+    "closed authority envelope"
+  ],
+  "x-aura-semantic-validator": "aura_ephemeral_workspace_runtime_v2.validate_workspace_execution_graph_v2"
+}
