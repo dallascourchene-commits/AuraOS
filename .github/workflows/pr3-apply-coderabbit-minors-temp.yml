@@ -11,12 +11,20 @@ permissions:
 jobs:
   apply-fixes:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
           ref: refactor/source-first-project-context-pr3
           fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install focused verification tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "ruff>=0.5" "pytest>=8.2,<9" "jsonschema>=4.23,<5"
       - name: Apply verified PR3 boundary fixes and regressions
         run: |
           python - <<'PY'
