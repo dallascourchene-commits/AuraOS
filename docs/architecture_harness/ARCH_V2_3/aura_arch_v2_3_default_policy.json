@@ -39,8 +39,8 @@
     "decisions",
     "invariants",
     "execution_state.stale",
-    "open_findings",
-    "open_root_cause_groups",
+    "findings",
+    "root_cause_groups",
     "rejected_approaches",
     "rollback.last_known_green_sha",
     "authorized_next_action",
@@ -196,8 +196,13 @@
     "causal_prior_required": true,
     "current_eligibility_required": true,
     "current_head_required": true,
+    "current_workspace_required": true,
+    "current_resource_identity_required": true,
     "current_lease_required": true,
+    "dependency_and_threat_model_freshness_required": true,
     "proof_freshness_required": true,
+    "verifier_independence_required": true,
+    "governance_disposition_required": true,
     "mismatch_action": "REPLAN_OR_REFUSE"
   }
 }
