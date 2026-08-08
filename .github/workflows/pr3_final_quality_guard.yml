@@ -41,6 +41,22 @@ jobs:
       - name: Apply quality cleanup
         run: python /tmp/pr3_cleanup.py
 
+      - name: Move derived-authority regression to compiler suite
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          acceptance=Path('tests/test_aura_project_context_acceptance.py')
+          compiler=Path('tests/test_aura_project_context_compiler.py')
+          block='''\n\ndef test_derived_verified_candidate_cannot_claim_canonical_read_authority() -> None:\n    with pytest.raises(ValueError, match="authority class does not match"):\n        _candidate(\n            "decision:derived-escalation",\n            CandidateCategory.DECISION,\n            D["8"],\n            truth=CandidateTruthClass.DERIVED_VERIFIED,\n            authority=ContextAuthorityClass.CANONICAL_READ,\n        )\n'''
+          a=acceptance.read_text(encoding='utf-8')
+          if a.count(block) != 1:
+              raise SystemExit('derived-authority test relocation anchor mismatch')
+          acceptance.write_text(a.replace(block,'',1).rstrip()+'\n', encoding='utf-8')
+          c=compiler.read_text(encoding='utf-8').rstrip()+block+'\n'
+          compiler.write_text(c, encoding='utf-8')
+          PY
+
       - name: Install focused tools
         run: python -m pip install --quiet pytest jsonschema ruff
 
@@ -73,7 +89,6 @@ jobs:
           print(f'production docstring coverage: {len(docs)}/{len(funcs)} = {coverage:.2f}%')
           if coverage < 80:
               raise SystemExit('production docstring coverage remains below 80%')
-          echo = None
           PY
 
       - name: Direct whitespace and EOF proof
