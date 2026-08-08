@@ -15,8 +15,10 @@ from aura_project_context_compiler import (
     EdgeTruthClass,
     MEMORY_LIFECYCLE_PHASES,
     ProjectContextCandidate,
+    ProjectContextCompilation,
     ProjectContextEdge,
     ProjectionBudget,
+    ProjectionSelectionReceipt,
     SelectionStatus,
     TemporalBinding,
     TemporalBindingKind,
@@ -104,11 +106,19 @@ def test_same_objective_and_exact_sources_are_deterministic_across_input_order()
     source = _candidate(
         "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
     )
-    test = _candidate("test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",))
-    decision = _candidate("decision:accepted", CandidateCategory.DECISION, D["4"], relevance=80)
+    test = _candidate(
+        "test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",)
+    )
+    decision = _candidate(
+        "decision:accepted", CandidateCategory.DECISION, D["4"], relevance=80
+    )
     edges = (
-        ProjectContextEdge("source:target", "test:direct", "verified_by", EdgeTruthClass.EXACT),
-        ProjectContextEdge("decision:accepted", "source:target", "constrains", EdgeTruthClass.EXACT),
+        ProjectContextEdge(
+            "source:target", "test:direct", "verified_by", EdgeTruthClass.EXACT
+        ),
+        ProjectContextEdge(
+            "decision:accepted", "source:target", "constrains", EdgeTruthClass.EXACT
+        ),
     )
     left = _compile((source, test, decision), edges)
     right = _compile((decision, source, test), tuple(reversed(edges)))
@@ -124,10 +134,19 @@ def test_hard_inclusion_survives_optional_context_pressure() -> None:
     source = _candidate(
         "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
     )
-    direct_test = _candidate("test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",))
-    schema = _candidate("schema:direct", CandidateCategory.SCHEMA, D["4"], deps=("source:target",))
+    direct_test = _candidate(
+        "test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",)
+    )
+    schema = _candidate(
+        "schema:direct", CandidateCategory.SCHEMA, D["4"], deps=("source:target",)
+    )
     policy = _candidate("policy:scope", CandidateCategory.POLICY, D["5"])
-    optional = _candidate("relationship:optional", CandidateCategory.RELATIONSHIP, D["6"], relevance=1_000_000)
+    optional = _candidate(
+        "relationship:optional",
+        CandidateCategory.RELATIONSHIP,
+        D["6"],
+        relevance=1_000_000,
+    )
 
     result = _compile(
         (optional, schema, source, policy, direct_test),
@@ -136,7 +155,10 @@ def test_hard_inclusion_survives_optional_context_pressure() -> None:
 
     assert result.selection_receipt.status is SelectionStatus.COMPLETE
     assert set(result.selection_receipt.selected) == {
-        "source:target", "test:direct", "schema:direct", "policy:scope"
+        "source:target",
+        "test:direct",
+        "schema:direct",
+        "policy:scope",
     }
     assert result.selection_receipt.omitted_by_budget == ("relationship:optional",)
 
@@ -145,17 +167,25 @@ def test_budget_never_arbitrarily_clips_mandatory_closure() -> None:
     source = _candidate(
         "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
     )
-    direct_test = _candidate("test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",))
-    schema = _candidate("schema:direct", CandidateCategory.SCHEMA, D["4"], deps=("source:target",))
+    direct_test = _candidate(
+        "test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",)
+    )
+    schema = _candidate(
+        "schema:direct", CandidateCategory.SCHEMA, D["4"], deps=("source:target",)
+    )
 
     result = _compile(
-        (source, direct_test, schema), budget=ProjectionBudget(max_nodes=2, max_edges=8)
+        (source, direct_test, schema),
+        budget=ProjectionBudget(max_nodes=2, max_edges=8),
     )
 
     assert not result.admissible
     assert result.selection_receipt.status is SelectionStatus.INCOMPLETE
     assert set(result.selection_receipt.mandatory_evidence_missing) == {
-        "source:target", "test:direct", "schema:direct"
+        "source:target",
+        "test:direct",
+        "schema:direct",
+        "source:selected",
     }
     assert result.selection_receipt.selected == ()
 
@@ -194,8 +224,21 @@ def test_stale_answer_determining_source_is_visible_and_not_admitted() -> None:
 
     assert not result.admissible
     assert result.selection_receipt.stale == ("source:target",)
-    assert result.selection_receipt.mandatory_evidence_missing == ("source:target",)
+    assert set(result.selection_receipt.mandatory_evidence_missing) == {
+        "source:target",
+        "source:selected",
+    }
     assert result.projection is None
+
+
+def test_projection_without_selected_source_is_explicitly_incomplete() -> None:
+    direct_test = _candidate("test:direct", CandidateCategory.TEST, D["3"])
+    result = _compile((direct_test,))
+
+    assert result.projection is not None
+    assert result.admissible is False
+    assert result.selection_receipt.status is SelectionStatus.INCOMPLETE
+    assert result.selection_receipt.mandatory_evidence_missing == ("source:selected",)
 
 
 def test_optional_conflict_is_preserved_without_collapsing_to_truth() -> None:
@@ -203,16 +246,25 @@ def test_optional_conflict_is_preserved_without_collapsing_to_truth() -> None:
         "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
     )
     d1 = _candidate(
-        "decision:left", CandidateCategory.DECISION, D["3"], conflict_key="decision:scope"
+        "decision:left",
+        CandidateCategory.DECISION,
+        D["3"],
+        conflict_key="decision:scope",
     )
     d2 = _candidate(
-        "decision:right", CandidateCategory.DECISION, D["4"], conflict_key="decision:scope"
+        "decision:right",
+        CandidateCategory.DECISION,
+        D["4"],
+        conflict_key="decision:scope",
     )
 
     result = _compile((source, d1, d2))
 
     assert result.admissible
-    assert result.selection_receipt.conflicting == ("decision:left", "decision:right")
+    assert result.selection_receipt.conflicting == (
+        "decision:left",
+        "decision:right",
+    )
     assert "decision:left" not in result.selection_receipt.selected
     assert "decision:right" not in result.selection_receipt.selected
 
@@ -222,24 +274,38 @@ def test_hard_conflict_makes_projection_incomplete() -> None:
         "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
     )
     p1 = _candidate(
-        "policy:left", CandidateCategory.POLICY, D["3"], conflict_key="policy:authority"
+        "policy:left",
+        CandidateCategory.POLICY,
+        D["3"],
+        conflict_key="policy:authority",
     )
     p2 = _candidate(
-        "policy:right", CandidateCategory.POLICY, D["4"], conflict_key="policy:authority"
+        "policy:right",
+        CandidateCategory.POLICY,
+        D["4"],
+        conflict_key="policy:authority",
     )
 
     result = _compile((source, p1, p2))
 
     assert not result.admissible
-    assert set(result.selection_receipt.conflicting) == {"policy:left", "policy:right"}
-    assert set(result.selection_receipt.mandatory_evidence_missing) == {"policy:left", "policy:right"}
+    assert set(result.selection_receipt.conflicting) == {
+        "policy:left",
+        "policy:right",
+    }
+    assert set(result.selection_receipt.mandatory_evidence_missing) == {
+        "policy:left",
+        "policy:right",
+    }
 
 
 def test_headless_projection_never_contains_full_project_graph() -> None:
     source = _candidate(
         "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
     )
-    optional = _candidate("decision:optional", CandidateCategory.DECISION, D["3"], relevance=0)
+    optional = _candidate(
+        "decision:optional", CandidateCategory.DECISION, D["3"], relevance=0
+    )
     result = _compile((source, optional))
 
     payload = result.headless_projection()
@@ -252,10 +318,19 @@ def test_edge_truth_classes_remain_structurally_distinct() -> None:
     source = _candidate(
         "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
     )
-    test = _candidate("test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",))
+    test = _candidate(
+        "test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",)
+    )
     edges = (
-        ProjectContextEdge("source:target", "test:direct", "verified_by", EdgeTruthClass.EXACT),
-        ProjectContextEdge("source:target", "test:direct", "suspected_link", EdgeTruthClass.HYPOTHESIS),
+        ProjectContextEdge(
+            "source:target", "test:direct", "verified_by", EdgeTruthClass.EXACT
+        ),
+        ProjectContextEdge(
+            "source:target",
+            "test:direct",
+            "suspected_link",
+            EdgeTruthClass.HYPOTHESIS,
+        ),
     )
     result = _compile((source, test), edges)
 
@@ -263,44 +338,127 @@ def test_edge_truth_classes_remain_structurally_distinct() -> None:
     assert classes == {EdgeTruthClass.EXACT, EdgeTruthClass.HYPOTHESIS}
 
 
+def test_edge_budget_refuses_silent_graph_clipping() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+    test = _candidate(
+        "test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",)
+    )
+    edges = (
+        ProjectContextEdge(
+            "source:target", "test:direct", "verified_by", EdgeTruthClass.EXACT
+        ),
+        ProjectContextEdge(
+            "source:target", "test:direct", "constrains", EdgeTruthClass.EXACT
+        ),
+    )
+    with pytest.raises(ValueError, match="silent edge clipping is prohibited"):
+        _compile(
+            (source, test),
+            edges,
+            budget=ProjectionBudget(max_nodes=4, max_edges=1),
+        )
+
+
 def test_backward_provenance_is_bounded_and_source_complete_when_limits_allow() -> None:
     source = _candidate(
         "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
     )
-    test = _candidate("test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",))
-    proof = _candidate("proof:result", CandidateCategory.PROOF_OBLIGATION, D["4"], deps=("test:direct",))
+    test = _candidate(
+        "test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",)
+    )
+    proof = _candidate(
+        "proof:result",
+        CandidateCategory.PROOF_OBLIGATION,
+        D["4"],
+        deps=("test:direct",),
+    )
     edges = (
-        ProjectContextEdge("source:target", "test:direct", "tested_by", EdgeTruthClass.EXACT),
-        ProjectContextEdge("test:direct", "proof:result", "proves", EdgeTruthClass.DERIVED_VERIFIED),
+        ProjectContextEdge(
+            "source:target", "test:direct", "tested_by", EdgeTruthClass.EXACT
+        ),
+        ProjectContextEdge(
+            "test:direct",
+            "proof:result",
+            "proves",
+            EdgeTruthClass.DERIVED_VERIFIED,
+        ),
     )
     result = _compile((source, test, proof), edges)
 
-    trace = trace_project_context_provenance(result, ("proof:result",), max_hops=4, max_nodes=8)
+    trace = trace_project_context_provenance(
+        result, ("proof:result",), max_hops=4, max_nodes=8
+    )
     assert trace["source_complete"] is True
     assert trace["bounded"] is True
-    assert set(trace["node_ids"]) == {"source:target", "test:direct", "proof:result"}
+    assert set(trace["node_ids"]) == {
+        "source:target",
+        "test:direct",
+        "proof:result",
+    }
     assert trace["source_ids"] == ["source:target"]
+    assert trace["provenance_root_ids"] == ["source:target"]
 
 
 def test_backward_provenance_reports_truncation_instead_of_hiding_it() -> None:
     source = _candidate(
         "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
     )
-    test = _candidate("test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",))
-    proof = _candidate("proof:result", CandidateCategory.PROOF_OBLIGATION, D["4"], deps=("test:direct",))
+    test = _candidate(
+        "test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",)
+    )
+    proof = _candidate(
+        "proof:result",
+        CandidateCategory.PROOF_OBLIGATION,
+        D["4"],
+        deps=("test:direct",),
+    )
     edges = (
-        ProjectContextEdge("source:target", "test:direct", "tested_by", EdgeTruthClass.EXACT),
-        ProjectContextEdge("test:direct", "proof:result", "proves", EdgeTruthClass.EXACT),
+        ProjectContextEdge(
+            "source:target", "test:direct", "tested_by", EdgeTruthClass.EXACT
+        ),
+        ProjectContextEdge(
+            "test:direct", "proof:result", "proves", EdgeTruthClass.EXACT
+        ),
     )
     result = _compile((source, test, proof), edges)
 
-    trace = trace_project_context_provenance(result, ("proof:result",), max_hops=1, max_nodes=8)
+    trace = trace_project_context_provenance(
+        result, ("proof:result",), max_hops=1, max_nodes=8
+    )
     assert trace["source_complete"] is False
     assert trace["truncated_frontier"]
 
 
+def test_backward_provenance_requires_every_root_to_reach_source() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+    decision = _candidate("decision:root", CandidateCategory.DECISION, D["3"])
+    proof = _candidate("proof:result", CandidateCategory.PROOF_OBLIGATION, D["4"])
+    edges = (
+        ProjectContextEdge(
+            "source:target", "proof:result", "supports", EdgeTruthClass.EXACT
+        ),
+        ProjectContextEdge(
+            "decision:root", "proof:result", "constrains", EdgeTruthClass.EXACT
+        ),
+    )
+    result = _compile((source, decision, proof), edges)
+    trace = trace_project_context_provenance(
+        result, ("proof:result",), max_hops=4, max_nodes=8
+    )
+
+    assert trace["source_ids"] == ["source:target"]
+    assert trace["provenance_root_ids"] == ["decision:root", "source:target"]
+    assert trace["source_complete"] is False
+
+
 def test_changed_answer_determining_source_binding_requires_recompile() -> None:
-    binding = TemporalBinding(TemporalBindingKind.SOURCE_HASH, "target-source", D["7"])
+    binding = TemporalBinding(
+        TemporalBindingKind.SOURCE_HASH, "target-source", D["7"]
+    )
     source = _candidate(
         "source:target",
         CandidateCategory.SOURCE,
@@ -339,7 +497,12 @@ def test_repository_head_change_invalidates_projection() -> None:
 
 def test_all_temporal_binding_classes_are_explicit_and_expiry_fails_closed() -> None:
     bindings = tuple(
-        TemporalBinding(kind, f"id-{index}", D[str(index + 2)], expires_at_ms=2_000)
+        TemporalBinding(
+            kind,
+            f"id-{index}",
+            D[str(index + 2)],
+            expires_at_ms=2_000,
+        )
         for index, kind in enumerate(TemporalBindingKind)
     )
     source = _candidate(
@@ -359,7 +522,27 @@ def test_all_temporal_binding_classes_are_explicit_and_expiry_fails_closed() -> 
         observed_at_ms=2_000,
     )
     assert freshness["valid"] is False
-    assert len([reason for reason in freshness["reasons"] if reason.startswith("binding_expired:")]) == len(bindings)
+    assert len(
+        [
+            reason
+            for reason in freshness["reasons"]
+            if reason.startswith("binding_expired:")
+        ]
+    ) == len(bindings)
+
+
+def test_bounded_reference_cannot_be_upgraded_to_current_projection() -> None:
+    source = _candidate(
+        "source:target",
+        CandidateCategory.SOURCE,
+        D["2"],
+        answer_determining=True,
+        freshness="BOUNDED",
+    )
+    result = _compile((source,))
+
+    assert result.projection is not None
+    assert result.projection.freshness_class == "BOUNDED"
 
 
 def test_memory_lifecycle_and_origin_authority_are_bound_at_candidate_creation() -> None:
@@ -387,17 +570,98 @@ def test_advisory_or_hypothesis_content_cannot_mint_authority() -> None:
 def test_one_canonical_reference_cannot_be_laundered_into_multiple_roles() -> None:
     ref = _ref("ref:shared", D["2"])
     left = ProjectContextCandidate(
-        "source:left", CandidateCategory.SOURCE, "adapter.project-context", "canonical://left",
-        ContextAuthorityClass.CANONICAL_READ, CandidateTruthClass.EXACT_CURRENT,
-        reference=ref, answer_determining=True,
+        "source:left",
+        CandidateCategory.SOURCE,
+        "adapter.project-context",
+        "canonical://left",
+        ContextAuthorityClass.CANONICAL_READ,
+        CandidateTruthClass.EXACT_CURRENT,
+        reference=ref,
+        answer_determining=True,
     )
     right = ProjectContextCandidate(
-        "decision:right", CandidateCategory.DECISION, "adapter.project-context", "canonical://right",
-        ContextAuthorityClass.CANONICAL_READ, CandidateTruthClass.EXACT_CURRENT,
-        reference=ref, relevance_score=10,
+        "decision:right",
+        CandidateCategory.DECISION,
+        "adapter.project-context",
+        "canonical://right",
+        ContextAuthorityClass.CANONICAL_READ,
+        CandidateTruthClass.EXACT_CURRENT,
+        reference=ref,
+        relevance_score=10,
     )
     with pytest.raises(ValueError, match="alias one canonical reference"):
         _compile((left, right))
+
+
+def test_compilation_rejects_cross_field_objective_or_receipt_mismatch() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+    result = _compile((source,))
+
+    with pytest.raises(ValueError, match="objective_digest is not bound"):
+        ProjectContextCompilation(
+            objective=result.objective,
+            objective_digest=D["9"],
+            repository_identity=result.repository_identity,
+            projection=result.projection,
+            selection_receipt=result.selection_receipt,
+            selected_candidates=result.selected_candidates,
+            graph_edges=result.graph_edges,
+            admissible=result.admissible,
+        )
+
+    wrong_receipt = ProjectionSelectionReceipt(
+        objective_digest=result.objective_digest,
+        repository_identity_digest=D["10"],
+        canonical_owner=result.selection_receipt.canonical_owner,
+        selected=result.selection_receipt.selected,
+        omitted_irrelevant=result.selection_receipt.omitted_irrelevant,
+        omitted_by_budget=result.selection_receipt.omitted_by_budget,
+        stale=result.selection_receipt.stale,
+        unavailable=result.selection_receipt.unavailable,
+        conflicting=result.selection_receipt.conflicting,
+        source_adapter_missing=result.selection_receipt.source_adapter_missing,
+        mandatory_evidence_missing=result.selection_receipt.mandatory_evidence_missing,
+        status=result.selection_receipt.status,
+        budget=result.selection_receipt.budget,
+    )
+    with pytest.raises(ValueError, match="repository identity is not bound"):
+        ProjectContextCompilation(
+            objective=result.objective,
+            objective_digest=result.objective_digest,
+            repository_identity=result.repository_identity,
+            projection=result.projection,
+            selection_receipt=wrong_receipt,
+            selected_candidates=result.selected_candidates,
+            graph_edges=result.graph_edges,
+            admissible=result.admissible,
+        )
+
+
+def test_selection_receipt_rejects_selected_omission_overlap() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+    result = _compile((source,))
+    receipt = result.selection_receipt
+
+    with pytest.raises(ValueError, match="selected ids as omitted_irrelevant"):
+        ProjectionSelectionReceipt(
+            objective_digest=receipt.objective_digest,
+            repository_identity_digest=receipt.repository_identity_digest,
+            canonical_owner=receipt.canonical_owner,
+            selected=receipt.selected,
+            omitted_irrelevant=receipt.selected,
+            omitted_by_budget=(),
+            stale=(),
+            unavailable=(),
+            conflicting=(),
+            source_adapter_missing=(),
+            mandatory_evidence_missing=(),
+            status=SelectionStatus.COMPLETE,
+            budget=receipt.budget,
+        )
 
 
 def test_source_first_identity_changes_when_exact_source_changes_but_not_for_advisory_noise() -> None:
@@ -428,20 +692,26 @@ def test_source_first_identity_changes_when_exact_source_changes_but_not_for_adv
     )
     third = _compile((source_b, advisory_b))
 
-    assert first.projection is not None and second.projection is not None and third.projection is not None
+    assert first.projection is not None
+    assert second.projection is not None
+    assert third.projection is not None
     assert first.projection.projection_digest == second.projection.projection_digest
     assert first.projection.projection_digest != third.projection.projection_digest
 
 
 def test_projection_selection_receipt_schema_is_draft_2020_12_valid_and_accepts_output() -> None:
     schema = json.loads(
-        (ROOT / "schemas/aura_projection_selection_receipt_v1.schema.json").read_text(encoding="utf-8")
+        (ROOT / "schemas/aura_projection_selection_receipt_v1.schema.json").read_text(
+            encoding="utf-8"
+        )
     )
     Draft202012Validator.check_schema(schema)
     source = _candidate(
         "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
     )
-    test = _candidate("test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",))
+    test = _candidate(
+        "test:direct", CandidateCategory.TEST, D["3"], deps=("source:target",)
+    )
     result = _compile((source, test))
     Draft202012Validator(schema).validate(result.selection_receipt.to_dict())
 
@@ -455,5 +725,12 @@ def test_duplicate_candidate_ids_and_unknown_edge_endpoints_fail_closed() -> Non
     with pytest.raises(ValueError, match="outside the task-conditioned"):
         _compile(
             (source,),
-            (ProjectContextEdge("source:target", "missing:node", "points_to", EdgeTruthClass.EXACT),),
+            (
+                ProjectContextEdge(
+                    "source:target",
+                    "missing:node",
+                    "points_to",
+                    EdgeTruthClass.EXACT,
+                ),
+            ),
         )
