@@ -292,6 +292,14 @@ class ProjectContextCandidate:
     def origin_bound(self) -> bool:
         return self.reference is not None and self.origin_ref == self.reference.canonical_ref
 
+    @property
+    def authority_non_increasing(self) -> bool:
+        if self.truth_class is CandidateTruthClass.EXACT_CURRENT:
+            return self.authority_class is ContextAuthorityClass.CANONICAL_READ
+        if self.truth_class is CandidateTruthClass.DERIVED_VERIFIED:
+            return self.authority_class is ContextAuthorityClass.DERIVED_READ
+        return self.authority_class is ContextAuthorityClass.ADVISORY_NONE
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "candidate_id": self.candidate_id,
@@ -310,7 +318,7 @@ class ProjectContextCandidate:
             "temporal_bindings": [item.to_dict() for item in self.temporal_bindings],
             "memory_lifecycle": list(MEMORY_LIFECYCLE_PHASES),
             "origin_bound": self.origin_bound,
-            "authority_non_increasing": True,
+            "authority_non_increasing": self.authority_non_increasing,
         }
 
 
@@ -517,6 +525,20 @@ class ProjectContextCompilation:
         selected_ids = tuple(item.candidate_id for item in selected)
         if selected_ids != self.selection_receipt.selected:
             raise ValueError("selected candidate identities do not match selection receipt")
+        exact_answer_sources = tuple(
+            item
+            for item in selected
+            if item.category is CandidateCategory.SOURCE
+            and item.truth_class is CandidateTruthClass.EXACT_CURRENT
+            and item.answer_determining
+        )
+        if (
+            self.selection_receipt.status is SelectionStatus.COMPLETE
+            and not exact_answer_sources
+        ):
+            raise ValueError(
+                "COMPLETE selection requires an exact-current answer-determining source"
+            )
 
         edges = tuple(self.graph_edges)
         if any(type(item) is not ProjectContextEdge for item in edges):
@@ -894,13 +916,14 @@ def compile_project_context_projection(
         selected.update(needed)
 
     selected_candidates = tuple(candidate_map[item] for item in sorted(selected))
-    exact_sources = tuple(
+    exact_answer_sources = tuple(
         candidate
         for candidate in selected_candidates
         if candidate.category is CandidateCategory.SOURCE
         and candidate.truth_class is CandidateTruthClass.EXACT_CURRENT
+        and candidate.answer_determining
     )
-    if not exact_sources:
+    if not exact_answer_sources:
         buckets["mandatory_evidence_missing"].add(MISSING_SELECTED_SOURCE_ID)
 
     selected_edges = tuple(
