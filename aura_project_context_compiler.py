@@ -598,6 +598,11 @@ def _canonical_compilation_candidates(
         raise ValueError(
             "selected_candidates contains duplicate candidate ids"
         )
+    if any(item.candidate_id == MISSING_SELECTED_SOURCE_ID for item in selected):
+        raise ValueError(
+            f"candidate_id {MISSING_SELECTED_SOURCE_ID!r} is reserved for the "
+            "missing exact-current answer-determining source receipt marker"
+        )
     reference_ids = {
         item.reference.reference_id
         for item in selected

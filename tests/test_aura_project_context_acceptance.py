@@ -645,3 +645,27 @@ def test_public_compilation_rejects_edge_budget_bypass() -> None:
             selection_receipt=forged_receipt, selected_candidates=complete.selected_candidates,
             graph_edges=complete.graph_edges, admissible=True,
         )
+
+
+def test_public_compilation_rejects_reserved_source_selected_id() -> None:
+    complete = _compile((_source(),))
+    assert complete.projection is not None
+    reserved = replace(
+        complete.selected_candidates[0], candidate_id="source:selected"
+    )
+    forged_receipt = ProjectionSelectionReceipt(
+        objective_digest=complete.objective_digest,
+        repository_identity_digest=complete.repository_identity.identity_digest,
+        canonical_owner=complete.selection_receipt.canonical_owner,
+        selected=("source:selected",), omitted_irrelevant=(),
+        omitted_by_budget=(), stale=(), unavailable=(), conflicting=(),
+        source_adapter_missing=(), mandatory_evidence_missing=(),
+        status=SelectionStatus.COMPLETE, budget=complete.selection_receipt.budget,
+    )
+    with pytest.raises(ValueError, match="candidate_id 'source:selected' is reserved"):
+        ProjectContextCompilation(
+            objective=complete.objective, objective_digest=complete.objective_digest,
+            repository_identity=complete.repository_identity, projection=complete.projection,
+            selection_receipt=forged_receipt, selected_candidates=(reserved,),
+            graph_edges=(), admissible=True,
+        )
