@@ -191,6 +191,116 @@ class TemporalBinding:
         }
 
 
+def _normalize_candidate_identity(candidate: Any) -> None:
+    object.__setattr__(candidate, "candidate_id", _id(candidate.candidate_id, "candidate_id"))
+    object.__setattr__(
+        candidate,
+        "category",
+        _enum(CandidateCategory, candidate.category, "category"),
+    )
+    object.__setattr__(
+        candidate,
+        "source_adapter",
+        _id(candidate.source_adapter, "source_adapter"),
+    )
+    object.__setattr__(candidate, "origin_ref", _text(candidate.origin_ref, "origin_ref"))
+    object.__setattr__(
+        candidate,
+        "authority_class",
+        _enum(ContextAuthorityClass, candidate.authority_class, "authority_class"),
+    )
+    object.__setattr__(
+        candidate,
+        "truth_class",
+        _enum(CandidateTruthClass, candidate.truth_class, "truth_class"),
+    )
+    object.__setattr__(
+        candidate,
+        "availability",
+        _enum(CandidateAvailability, candidate.availability, "availability"),
+    )
+    object.__setattr__(
+        candidate,
+        "relevance_score",
+        _int(candidate.relevance_score, "relevance_score", maximum=1_000_000),
+    )
+
+
+def _normalize_candidate_relationships(candidate: Any) -> None:
+    if type(candidate.required) is not bool or type(candidate.answer_determining) is not bool:
+        raise TypeError("required and answer_determining must be booleans")
+    object.__setattr__(
+        candidate,
+        "dependency_ids",
+        _ids(candidate.dependency_ids, "dependency_ids", maximum=MAX_DEPENDENCIES),
+    )
+    if type(candidate.conflict_key) is not str:
+        raise TypeError("conflict_key must be a string")
+    if candidate.conflict_key:
+        object.__setattr__(
+            candidate,
+            "conflict_key",
+            _id(candidate.conflict_key, "conflict_key"),
+        )
+    bindings = tuple(candidate.temporal_bindings)
+    if len(bindings) > MAX_TEMPORAL_BINDINGS or any(
+        type(item) is not TemporalBinding for item in bindings
+    ):
+        raise ValueError(
+            "temporal_bindings must contain bounded exact TemporalBinding records"
+        )
+    if len({item.key for item in bindings}) != len(bindings):
+        raise ValueError("temporal_bindings contains duplicate binding keys")
+    object.__setattr__(
+        candidate,
+        "temporal_bindings",
+        tuple(sorted(bindings, key=lambda item: item.key)),
+    )
+
+
+def _validate_candidate_reference(candidate: Any) -> None:
+    if candidate.availability is CandidateAvailability.AVAILABLE:
+        if type(candidate.reference) is not CanonicalReference:
+            raise ValueError(
+                "available candidate requires an exact CanonicalReference"
+            )
+        return
+    if candidate.reference is not None:
+        raise ValueError(
+            "unavailable candidate must not carry a canonical reference"
+        )
+
+
+def _validate_candidate_authority(candidate: Any) -> None:
+    authoritative = {
+        CandidateTruthClass.EXACT_CURRENT,
+        CandidateTruthClass.DERIVED_VERIFIED,
+    }
+    if candidate.truth_class not in authoritative:
+        if candidate.authority_class is not ContextAuthorityClass.ADVISORY_NONE:
+            raise ValueError(
+                "advisory/hypothesis/stale/unavailable candidates cannot carry authority"
+            )
+        return
+    if candidate.reference is None or candidate.reference.truth_class != "EXACT":
+        raise ValueError(
+            "authoritative read candidate requires an EXACT canonical reference"
+        )
+    expected = (
+        ContextAuthorityClass.CANONICAL_READ
+        if candidate.truth_class is CandidateTruthClass.EXACT_CURRENT
+        else ContextAuthorityClass.DERIVED_READ
+    )
+    if candidate.authority_class is not expected:
+        raise ValueError(
+            "candidate authority class does not match its truth class"
+        )
+    if candidate.origin_ref != candidate.reference.canonical_ref:
+        raise ValueError(
+            "authoritative candidate origin_ref must equal its canonical reference origin"
+        )
+
+
 @dataclass(frozen=True)
 class ProjectContextCandidate:
     candidate_id: str
@@ -209,86 +319,10 @@ class ProjectContextCandidate:
     temporal_bindings: tuple[TemporalBinding, ...] = ()
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "candidate_id", _id(self.candidate_id, "candidate_id"))
-        object.__setattr__(self, "category", _enum(CandidateCategory, self.category, "category"))
-        object.__setattr__(self, "source_adapter", _id(self.source_adapter, "source_adapter"))
-        object.__setattr__(self, "origin_ref", _text(self.origin_ref, "origin_ref"))
-        object.__setattr__(
-            self,
-            "authority_class",
-            _enum(ContextAuthorityClass, self.authority_class, "authority_class"),
-        )
-        object.__setattr__(
-            self,
-            "truth_class",
-            _enum(CandidateTruthClass, self.truth_class, "truth_class"),
-        )
-        object.__setattr__(
-            self,
-            "availability",
-            _enum(CandidateAvailability, self.availability, "availability"),
-        )
-        object.__setattr__(
-            self,
-            "relevance_score",
-            _int(self.relevance_score, "relevance_score", maximum=1_000_000),
-        )
-        if type(self.required) is not bool or type(self.answer_determining) is not bool:
-            raise TypeError("required and answer_determining must be booleans")
-        object.__setattr__(
-            self,
-            "dependency_ids",
-            _ids(self.dependency_ids, "dependency_ids", maximum=MAX_DEPENDENCIES),
-        )
-        if type(self.conflict_key) is not str:
-            raise TypeError("conflict_key must be a string")
-        if self.conflict_key:
-            object.__setattr__(self, "conflict_key", _id(self.conflict_key, "conflict_key"))
-        bindings = tuple(self.temporal_bindings)
-        if len(bindings) > MAX_TEMPORAL_BINDINGS or any(
-            type(item) is not TemporalBinding for item in bindings
-        ):
-            raise ValueError(
-                "temporal_bindings must contain bounded exact TemporalBinding records"
-            )
-        if len({item.key for item in bindings}) != len(bindings):
-            raise ValueError("temporal_bindings contains duplicate binding keys")
-        object.__setattr__(
-            self,
-            "temporal_bindings",
-            tuple(sorted(bindings, key=lambda item: item.key)),
-        )
-
-        if self.availability is CandidateAvailability.AVAILABLE:
-            if type(self.reference) is not CanonicalReference:
-                raise ValueError("available candidate requires an exact CanonicalReference")
-        elif self.reference is not None:
-            raise ValueError("unavailable candidate must not carry a canonical reference")
-
-        authoritative = {
-            CandidateTruthClass.EXACT_CURRENT,
-            CandidateTruthClass.DERIVED_VERIFIED,
-        }
-        if self.truth_class in authoritative:
-            if self.reference is None or self.reference.truth_class != "EXACT":
-                raise ValueError(
-                    "authoritative read candidate requires an EXACT canonical reference"
-                )
-            expected = (
-                ContextAuthorityClass.CANONICAL_READ
-                if self.truth_class is CandidateTruthClass.EXACT_CURRENT
-                else ContextAuthorityClass.DERIVED_READ
-            )
-            if self.authority_class is not expected:
-                raise ValueError("candidate authority class does not match its truth class")
-            if self.origin_ref != self.reference.canonical_ref:
-                raise ValueError(
-                    "authoritative candidate origin_ref must equal its canonical reference origin"
-                )
-        elif self.authority_class is not ContextAuthorityClass.ADVISORY_NONE:
-            raise ValueError(
-                "advisory/hypothesis/stale/unavailable candidates cannot carry authority"
-            )
+        _normalize_candidate_identity(self)
+        _normalize_candidate_relationships(self)
+        _validate_candidate_reference(self)
+        _validate_candidate_authority(self)
 
     @property
     def origin_bound(self) -> bool:
@@ -1109,128 +1143,6 @@ def compile_project_context_projection(
         selected_candidates=selected_candidates,
         graph_edges=selected_edges,
         admissible=receipt.status is SelectionStatus.COMPLETE,
-    )
-
-
-def _provenance_inputs(
-    compilation: ProjectContextCompilation,
-    start_ids: Sequence[str],
-    max_hops: int,
-    max_nodes: int,
-) -> tuple[
-    tuple[str, ...],
-    int,
-    int,
-    dict[str, ProjectContextCandidate],
-    dict[str, list[ProjectContextEdge]],
-]:
-    if type(compilation) is not ProjectContextCompilation:
-        raise ValueError("compilation must be exact ProjectContextCompilation")
-    starts = _ids(start_ids, "start_ids", maximum=64)
-    max_hops = _int(max_hops, "max_hops", minimum=1, maximum=16)
-    max_nodes = _int(max_nodes, "max_nodes", minimum=1, maximum=256)
-    if len(starts) > max_nodes:
-        raise ValueError("provenance start_ids exceed max_nodes")
-    node_map = {
-        item.candidate_id: item for item in compilation.selected_candidates
-    }
-    missing = sorted(set(starts) - set(node_map))
-    if missing:
-        raise ValueError(f"provenance start is outside selected context: {missing}")
-    incoming: dict[str, list[ProjectContextEdge]] = {
-        node_id: [] for node_id in node_map
-    }
-    for edge in compilation.graph_edges:
-        incoming[edge.target_id].append(edge)
-    for values in incoming.values():
-        values.sort(
-            key=lambda edge: (
-                edge.source_id,
-                edge.relation,
-                edge.truth_class.value,
-            )
-        )
-    return starts, max_hops, max_nodes, node_map, incoming
-
-
-def _walk_provenance(
-    starts: tuple[str, ...],
-    incoming: Mapping[str, Sequence[ProjectContextEdge]],
-    max_hops: int,
-    max_nodes: int,
-) -> tuple[set[str], set[ProjectContextEdge], set[str]]:
-    seen = set(starts)
-    frontier = list(starts)
-    traversed: set[ProjectContextEdge] = set()
-    truncated: set[str] = set()
-    for _ in range(max_hops):
-        next_frontier: list[str] = []
-        for target in sorted(frontier):
-            for edge in incoming.get(target, ()):
-                if edge.source_id in seen:
-                    traversed.add(edge)
-                    continue
-                if len(seen) >= max_nodes:
-                    truncated.add(edge.source_id)
-                    continue
-                seen.add(edge.source_id)
-                next_frontier.append(edge.source_id)
-                traversed.add(edge)
-        if not next_frontier:
-            break
-        frontier = sorted(set(next_frontier))
-    else:
-        for target in frontier:
-            truncated.update(
-                edge.source_id
-                for edge in incoming.get(target, ())
-                if edge.source_id not in seen
-            )
-    return seen, traversed, truncated
-
-
-def _provenance_summary(
-    node_map: Mapping[str, ProjectContextCandidate],
-    incoming: Mapping[str, Sequence[ProjectContextEdge]],
-    seen: set[str],
-    traversed: set[ProjectContextEdge],
-) -> tuple[
-    list[ProjectContextCandidate], list[str], list[str], list[str], bool, bool
-]:
-    nodes = [node_map[item] for item in sorted(seen)]
-    source_ids = [
-        item.candidate_id
-        for item in nodes
-        if item.category is CandidateCategory.SOURCE
-    ]
-    exact_source_ids = [
-        item.candidate_id
-        for item in nodes
-        if item.category is CandidateCategory.SOURCE
-        and item.truth_class is CandidateTruthClass.EXACT_CURRENT
-    ]
-    root_ids = sorted(
-        node_id
-        for node_id in seen
-        if not any(
-            edge.source_id in seen for edge in incoming.get(node_id, ())
-        )
-    )
-    roots_are_exact_sources = bool(root_ids) and all(
-        node_map[node_id].category is CandidateCategory.SOURCE
-        and node_map[node_id].truth_class is CandidateTruthClass.EXACT_CURRENT
-        for node_id in root_ids
-    )
-    authoritative_path = all(
-        edge.truth_class in _AUTHORITATIVE_EDGE_TRUTH for edge in traversed
-    )
-    return (
-        nodes,
-        source_ids,
-        exact_source_ids,
-        root_ids,
-        roots_are_exact_sources,
-        authoritative_path,
     )
 
 
