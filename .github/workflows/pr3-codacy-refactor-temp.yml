@@ -28,6 +28,7 @@ jobs:
       - name: Load refactor script from analysis branch
         run: |
           git show origin/analysis/pr3-codacy-refactor-script-20260808:tools/pr3_codacy_refactor_temp.py > /tmp/pr3_codacy_refactor_temp.py
+          sed -i 's/text{comp_to_dict:]/text[comp_to_dict:]/' /tmp/pr3_codacy_refactor_temp.py
           python -m py_compile /tmp/pr3_codacy_refactor_temp.py
       - name: Apply maintainability refactor
         run: python /tmp/pr3_codacy_refactor_temp.py
