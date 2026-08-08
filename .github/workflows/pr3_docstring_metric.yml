@@ -1,0 +1,51 @@
+name: PR3 docstring metric
+
+on:
+  push:
+    branches:
+      - analysis/pr3-docstring-metric
+
+permissions:
+  contents: read
+
+jobs:
+  metric:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 7227c948bd3445e9d4fa3335149089563d70ceb6
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            aura_project_context_compiler.py
+            tests/test_aura_project_context_compiler.py
+            tests/test_aura_project_context_acceptance.py
+      - name: Count function docstrings
+        shell: bash
+        run: |
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+          files = [
+              Path('aura_project_context_compiler.py'),
+              Path('tests/test_aura_project_context_compiler.py'),
+              Path('tests/test_aura_project_context_acceptance.py'),
+          ]
+          for path in files:
+              tree=ast.parse(path.read_text(encoding='utf-8'))
+              funcs=[n for n in ast.walk(tree) if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef))]
+              documented=[n for n in funcs if ast.get_docstring(n)]
+              print(f'{path}: {len(documented)}/{len(funcs)} = {100*len(documented)/max(1,len(funcs)):.2f}%')
+          prod=ast.parse(files[0].read_text(encoding='utf-8'))
+          funcs=[n for n in ast.walk(prod) if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef))]
+          undocumented=[n.name for n in funcs if not ast.get_docstring(n)]
+          print('PRODUCTION_UNDOCUMENTED=' + ','.join(undocumented))
+          all_funcs=[]
+          for path in files:
+              tree=ast.parse(path.read_text(encoding='utf-8'))
+              all_funcs.extend(n for n in ast.walk(tree) if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef)))
+          docs=sum(bool(ast.get_docstring(n)) for n in all_funcs)
+          print(f'ALL_CHANGED_PYTHON={docs}/{len(all_funcs)}={100*docs/max(1,len(all_funcs)):.2f}%')
+          print(f'::notice title=PR3 docstring metric::production {sum(bool(ast.get_docstring(n)) for n in funcs)}/{len(funcs)}; all changed Python {docs}/{len(all_funcs)}')
+          PY
