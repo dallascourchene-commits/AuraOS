@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786183347,
+  "generated_at_unix": 1786183950,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1582,
+    "included_file_count": 1583,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -1478,6 +1478,7 @@
       "tests/test_aura_planning_regression_adversarial.py",
       "tests/test_aura_prepare_construction_demo_assets.py",
       "tests/test_aura_prepare_construction_demo_assets_temp_cleanup.py",
+      "tests/test_aura_project_context_acceptance.py",
       "tests/test_aura_project_context_compiler.py",
       "tests/test_aura_provider_routing.py",
       "tests/test_aura_qdkt_compatibility.py",
@@ -1604,23 +1605,23 @@
     ]
   },
   "summary": {
-    "file_count": 1582,
-    "total_bytes": 59611571,
-    "text_tokens_est": 5394002,
+    "file_count": 1583,
+    "total_bytes": 59619308,
+    "text_tokens_est": 5395936,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 64,
       "knowledge_artifact": 209,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 979,
+      "python_module": 980,
       "schema_or_lexicon": 235,
       "support_file": 79
     },
     "topology_nodes": 11434,
     "topology_edges": 27975,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 33893.54
+    "elapsed_ms": 33542.29
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -3117,6 +3118,7 @@
       "tests/test_aura_planning_regression_adversarial.py",
       "tests/test_aura_prepare_construction_demo_assets.py",
       "tests/test_aura_prepare_construction_demo_assets_temp_cleanup.py",
+      "tests/test_aura_project_context_acceptance.py",
       "tests/test_aura_project_context_compiler.py",
       "tests/test_aura_qdkt_compatibility.py",
       "tests/test_aura_qdkt_compatibility_hardening.py",
@@ -32831,6 +32833,14 @@
         "signature_hash": "d638726b0c3b629b"
       },
       {
+        "file": "tests/test_aura_project_context_acceptance.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 68,
+        "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_compile:3869ae9e64923483",
+        "signature_hash": "40ec9791e5253a84"
+      },
+      {
         "file": "tests/test_aura_project_context_compiler.py",
         "kind": "function",
         "line": 93,
@@ -35796,6 +35806,14 @@
         "line": 13,
         "end_line": 14,
         "semantic_id": "tests/test_aura_arch_v2_3_capsule_validator.py#function:_digest:7ede0d67260ee654",
+        "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tests/test_aura_project_context_acceptance.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
       }
     ],
@@ -53409,6 +53427,14 @@
         "signature_hash": "9cb3a4e379979a73"
       },
       {
+        "file": "tests/test_aura_project_context_acceptance.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 43,
+        "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_ref:e438d05ef50dde88",
+        "signature_hash": "e3d82cfa34e9bfbf"
+      },
+      {
         "file": "tests/test_aura_project_context_compiler.py",
         "kind": "function",
         "line": 44,
@@ -54197,6 +54223,14 @@
         "end_line": 32,
         "semantic_id": "tests/test_aura_exact_head_transport.py#function:_repo:0bc474849f93c1cf",
         "signature_hash": "fcb551d97b8275c8"
+      },
+      {
+        "file": "tests/test_aura_project_context_acceptance.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 31,
+        "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_repo:48010af2f61c6f5b",
+        "signature_hash": "9b85714c772f4cf0"
       },
       {
         "file": "tests/test_aura_project_context_compiler.py",
@@ -59581,6 +59615,16 @@
         "end_line": 257,
         "semantic_id": "aura_route_capsule_live_runtime.py#function:_sort_key:da49385ae7c9f928",
         "signature_hash": "4a7a0b0781c257f5"
+      }
+    ],
+    "_source": [
+      {
+        "file": "tests/test_aura_project_context_acceptance.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 57,
+        "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_source:d2184bb0a3933f18",
+        "signature_hash": "63527ff6751278ee"
       }
     ],
     "_source_anchor": [
@@ -117615,6 +117659,16 @@
         "signature_hash": "ad7e96ab521e73a7"
       }
     ],
+    "test_headless_accessible_projection_retains_exact_reference_identity": [
+      {
+        "file": "tests/test_aura_project_context_acceptance.py",
+        "kind": "function",
+        "line": 162,
+        "end_line": 168,
+        "semantic_id": "tests/test_aura_project_context_acceptance.py#function:test_headless_accessible_projection_retains_exact_reference_identity:f07e7d4370451be9",
+        "signature_hash": "5600040b38fb3703"
+      }
+    ],
     "test_headless_projection_never_contains_full_project_graph": [
       {
         "file": "tests/test_aura_project_context_compiler.py",
@@ -122001,6 +122055,16 @@
         "end_line": 556,
         "semantic_id": "tests/test_aura_project_context_compiler.py#function:test_memory_lifecycle_and_origin_authority_are_bound_at_candidate_creation:8207fab056b08f30",
         "signature_hash": "04eabb23a0667f3e"
+      }
+    ],
+    "test_memory_revision_revocation_and_rollback_remain_reconstructable": [
+      {
+        "file": "tests/test_aura_project_context_acceptance.py",
+        "kind": "function",
+        "line": 124,
+        "end_line": 159,
+        "semantic_id": "tests/test_aura_project_context_acceptance.py#function:test_memory_revision_revocation_and_rollback_remain_reconstructable:d44e276a4f10d970",
+        "signature_hash": "43b490ec58143c51"
       }
     ],
     "test_merge_packet_is_evidence_only": [
@@ -133687,6 +133751,16 @@
         "signature_hash": "f8cf2be12a939e80"
       }
     ],
+    "test_shadow_ranker_disagreement_is_visible_and_non_authoritative": [
+      {
+        "file": "tests/test_aura_project_context_acceptance.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 121,
+        "semantic_id": "tests/test_aura_project_context_acceptance.py#function:test_shadow_ranker_disagreement_is_visible_and_non_authoritative:358c6898d7353fb4",
+        "signature_hash": "85abbb90d27a763c"
+      }
+    ],
     "test_shadow_report_blocks_fake_file_and_symbol": [
       {
         "file": "test_aura_architect_loop.py",
@@ -134515,6 +134589,16 @@
         "end_line": 34,
         "semantic_id": "tests/test_aura_civic_planning_diagnostics.py#function:test_source_change_diagnostic_is_true:fc40188c4cc5fe5d",
         "signature_hash": "94291075ab96a11b"
+      }
+    ],
+    "test_source_first_fixture_corrects_conclusion_only_failure": [
+      {
+        "file": "tests/test_aura_project_context_acceptance.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 95,
+        "semantic_id": "tests/test_aura_project_context_acceptance.py#function:test_source_first_fixture_corrects_conclusion_only_failure:99f823562968e478",
+        "signature_hash": "af966c81949086e4"
       }
     ],
     "test_source_first_identity_changes_when_exact_source_changes_but_not_for_advisory_noise": [
@@ -205013,47 +205097,47 @@
     {
       "path": ".aura/refactor_objectives/intent_native_source_first_project_context_pr3.v1.json",
       "role": "schema_or_lexicon",
-      "bytes": 4348,
-      "lines": 66,
-      "tokens_est": 1087,
+      "bytes": 4752,
+      "lines": 68,
+      "tokens_est": 1188,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "3f12a23fbe70a5be",
+      "digest8": "24842e919525594f",
       "vector": [
-        -0.280191,
-        -0.257318,
-        0.21386,
-        -0.26418,
-        -0.005718,
-        -0.204711,
-        0.147529,
-        0.019442,
-        0.097209,
-        -0.065187,
-        0.241307,
-        0.220722,
-        0.106358,
-        -0.120082,
-        -0.005718,
-        -0.273329,
-        -0.236732,
-        0.193274,
-        -0.117794,
-        0.158965,
-        0.108645,
-        0.236732,
-        0.122369,
-        0.035453,
-        -0.069762,
-        -0.206998,
-        -0.211572,
-        0.126943,
-        0.23902,
-        -0.0629,
-        -0.074336,
-        -0.250456
+        0.277274,
+        -0.133503,
+        0.13122,
+        0.270428,
+        0.20653,
+        -0.094707,
+        -0.170016,
+        -0.039937,
+        -0.259018,
+        -0.058193,
+        0.071886,
+        -0.231633,
+        -0.263582,
+        0.060475,
+        -0.245325,
+        -0.140349,
+        0.270428,
+        0.204247,
+        -0.279557,
+        -0.170016,
+        -0.051347,
+        0.02168,
+        0.199683,
+        -0.087861,
+        0.06504,
+        -0.07645,
+        -0.231633,
+        0.249889,
+        -0.071886,
+        0.014834,
+        -0.028526,
+        0.213376
       ]
     },
     {
@@ -206347,47 +206431,47 @@
     {
       "path": ".aura/waboose_requests/intent_native_source_first_project_context_pr3.v1.json",
       "role": "schema_or_lexicon",
-      "bytes": 3657,
-      "lines": 69,
-      "tokens_est": 915,
+      "bytes": 4334,
+      "lines": 75,
+      "tokens_est": 1084,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "af84b7fc5db11f46",
+      "digest8": "9b977d4f6595c4ea",
       "vector": [
-        -0.13027,
-        -0.099916,
-        -0.069562,
-        -0.208685,
-        0.201096,
-        0.089798,
-        -0.206155,
-        0.170742,
-        0.18086,
-        -0.067032,
-        -0.112563,
-        -0.188449,
-        0.061973,
-        0.211214,
-        -0.008853,
-        0.239039,
-        0.046796,
-        -0.259275,
-        -0.122681,
-        0.158095,
-        0.188449,
-        0.266864,
-        0.2871,
-        -0.299747,
-        0.016442,
-        0.07968,
-        0.031619,
-        -0.319984,
-        0.094857,
-        -0.206155,
-        -0.011383,
-        0.251687
+        -0.203654,
+        0.082101,
+        0.231376,
+        0.229244,
+        -0.077836,
+        -0.073571,
+        -0.259099,
+        0.192991,
+        0.003199,
+        -0.246304,
+        0.158871,
+        -0.212184,
+        -0.203654,
+        -0.131149,
+        0.039451,
+        -0.237774,
+        -0.148209,
+        0.118354,
+        0.114089,
+        0.216449,
+        0.105559,
+        -0.227111,
+        -0.007464,
+        0.192991,
+        0.248436,
+        0.156739,
+        -0.180196,
+        0.090631,
+        0.163136,
+        0.235641,
+        -0.186594,
+        -0.205786
       ]
     },
     {
@@ -236870,6 +236954,52 @@
         0.124583,
         -0.255214,
         -0.127002
+      ]
+    },
+    {
+      "path": "tests/test_aura_project_context_acceptance.py",
+      "role": "python_module",
+      "bytes": 6656,
+      "lines": 169,
+      "tokens_est": 1664,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "395c0c7a8670af21",
+      "vector": [
+        0.031744,
+        0.222211,
+        -0.241022,
+        -0.036447,
+        0.097585,
+        0.005879,
+        -0.226914,
+        -0.059962,
+        -0.201048,
+        0.095233,
+        -0.109342,
+        -0.222211,
+        -0.048204,
+        -0.205751,
+        -0.088179,
+        0.297457,
+        0.114045,
+        -0.118748,
+        -0.264537,
+        -0.029393,
+        0.130505,
+        0.193994,
+        -0.288051,
+        -0.142262,
+        0.130505,
+        0.048204,
+        -0.278645,
+        -0.144613,
+        -0.233968,
+        -0.019987,
+        0.292754,
+        -0.243374
       ]
     },
     {
