@@ -10,6 +10,7 @@ from aura_project_context_compiler import (
     ContextAuthorityClass,
     EdgeTruthClass,
     ProjectContextCandidate,
+    ProjectContextCompilation,
     ProjectContextEdge,
     ProjectionBudget,
     SelectionStatus,
@@ -147,6 +148,76 @@ def test_derived_source_support_cannot_impersonate_exact_source() -> None:
     assert result.admissible is False
 
 
+def test_unrelated_exact_source_cannot_launder_derived_answer_source_into_complete() -> None:
+    derived_ref = _ref("ref:derived-answer", _digest("8"))
+    derived_answer = ProjectContextCandidate(
+        candidate_id="source:derived-answer",
+        category=CandidateCategory.SOURCE,
+        source_adapter="adapter.derived",
+        origin_ref=derived_ref.canonical_ref,
+        authority_class=ContextAuthorityClass.DERIVED_READ,
+        truth_class=CandidateTruthClass.DERIVED_VERIFIED,
+        reference=derived_ref,
+        relevance_score=100,
+        answer_determining=True,
+    )
+    unrelated_ref = _ref("ref:unrelated-exact", _digest("a"))
+    unrelated_exact = ProjectContextCandidate(
+        candidate_id="source:unrelated-exact",
+        category=CandidateCategory.SOURCE,
+        source_adapter="adapter.source",
+        origin_ref=unrelated_ref.canonical_ref,
+        authority_class=ContextAuthorityClass.CANONICAL_READ,
+        truth_class=CandidateTruthClass.EXACT_CURRENT,
+        reference=unrelated_ref,
+        relevance_score=1_000,
+        answer_determining=False,
+    )
+
+    result = _compile((derived_answer, unrelated_exact))
+
+    assert set(result.selection_receipt.selected) == {
+        "source:derived-answer",
+        "source:unrelated-exact",
+    }
+    assert result.selection_receipt.status is SelectionStatus.INCOMPLETE
+    assert result.selection_receipt.mandatory_evidence_missing == ("source:selected",)
+    assert result.projection is None
+    assert result.admissible is False
+
+
+def test_public_compilation_reproves_exact_answer_source_anchor() -> None:
+    complete = _compile((_source(),))
+    assert complete.projection is not None
+    original = complete.selected_candidates[0]
+    derived_semantics = ProjectContextCandidate(
+        candidate_id=original.candidate_id,
+        category=CandidateCategory.SOURCE,
+        source_adapter=original.source_adapter,
+        origin_ref=original.origin_ref,
+        authority_class=ContextAuthorityClass.DERIVED_READ,
+        truth_class=CandidateTruthClass.DERIVED_VERIFIED,
+        reference=original.reference,
+        relevance_score=original.relevance_score,
+        answer_determining=True,
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="COMPLETE selection requires an exact-current answer-determining source",
+    ):
+        ProjectContextCompilation(
+            objective=complete.objective,
+            objective_digest=complete.objective_digest,
+            repository_identity=complete.repository_identity,
+            projection=complete.projection,
+            selection_receipt=complete.selection_receipt,
+            selected_candidates=(derived_semantics,),
+            graph_edges=complete.graph_edges,
+            admissible=True,
+        )
+
+
 def test_authoritative_origin_is_reference_bound() -> None:
     reference = _ref("ref:bound-source", _digest("9"))
     with pytest.raises(ValueError, match="origin_ref must equal"):
@@ -160,6 +231,36 @@ def test_authoritative_origin_is_reference_bound() -> None:
             reference=reference,
             answer_determining=True,
         )
+
+
+def test_authority_non_increasing_is_computed_from_truth_and_authority() -> None:
+    exact = _source()
+    derived_ref = _ref("ref:derived-authority", _digest("b"))
+    derived = ProjectContextCandidate(
+        candidate_id="source:derived-authority",
+        category=CandidateCategory.SOURCE,
+        source_adapter="adapter.derived",
+        origin_ref=derived_ref.canonical_ref,
+        authority_class=ContextAuthorityClass.DERIVED_READ,
+        truth_class=CandidateTruthClass.DERIVED_VERIFIED,
+        reference=derived_ref,
+    )
+    advisory = ProjectContextCandidate(
+        candidate_id="relationship:advisory-authority",
+        category=CandidateCategory.RELATIONSHIP,
+        source_adapter="adapter.summary",
+        origin_ref="summary://advisory-authority",
+        authority_class=ContextAuthorityClass.ADVISORY_NONE,
+        truth_class=CandidateTruthClass.ADVISORY,
+        reference=_ref("ref:advisory-authority", _digest("c")),
+    )
+
+    assert exact.authority_non_increasing is True
+    assert derived.authority_non_increasing is True
+    assert advisory.authority_non_increasing is True
+    assert exact.to_dict()["authority_non_increasing"] is exact.authority_non_increasing
+    assert derived.to_dict()["authority_non_increasing"] is derived.authority_non_increasing
+    assert advisory.to_dict()["authority_non_increasing"] is advisory.authority_non_increasing
 
 
 def test_shadow_ranker_disagreement_is_visible_and_non_authoritative() -> None:
