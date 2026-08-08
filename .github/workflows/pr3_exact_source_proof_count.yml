@@ -1,0 +1,51 @@
+name: PR3 exact source proof count
+
+on:
+  push:
+    branches:
+      - analysis/pr3-exact-source-proof-count
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sparse checkout exact PR3 source
+        uses: actions/checkout@v4
+        with:
+          ref: cc2cb7a2f1e9a1d369ab80f06b9bbeaed5f936ef
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            aura_project_context_compiler.py
+            aura_ephemeral_workspace_contracts.py
+            aura_ephemeral_path_policy.py
+            tests/test_aura_project_context_compiler.py
+            tests/test_aura_project_context_acceptance.py
+            schemas/aura_projection_selection_receipt_v1.schema.json
+
+      - name: Install tools
+        run: python -m pip install --quiet pytest jsonschema ruff
+
+      - name: Collect and run focused PR3 tests
+        id: proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          collected="$(python -m pytest --collect-only -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py | tail -n 1)"
+          python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          echo "collected=$collected" >> "$GITHUB_OUTPUT"
+
+      - name: Post exact proof receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COLLECTED: ${{ steps.proof.outputs.collected }}
+        shell: bash
+        run: |
+          gh api repos/dallascourchene-commits/AuraOS/issues/277/comments \
+            -f body="PR3 exact-source focused proof receipt: source SHA \`cc2cb7a2f1e9a1d369ab80f06b9bbeaed5f936ef\`; pytest collection: **${COLLECTED}**; focused suites passed; Python compile passed; Ruff fatal classes E9,F63,F7,F82 passed. Verification branch only; no PR3 source mutation." >/dev/null
