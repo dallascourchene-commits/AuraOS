@@ -240,6 +240,8 @@ class ProjectContextCandidate:
             "dependency_ids",
             _ids(self.dependency_ids, "dependency_ids", maximum=MAX_DEPENDENCIES),
         )
+        if type(self.conflict_key) is not str:
+            raise TypeError("conflict_key must be a string")
         if self.conflict_key:
             object.__setattr__(self, "conflict_key", _id(self.conflict_key, "conflict_key"))
         bindings = tuple(self.temporal_bindings)
@@ -826,6 +828,11 @@ def compile_project_context_projection(
     candidate_map = {item.candidate_id: item for item in candidates}
     if len(candidate_map) != len(candidates):
         raise ValueError("duplicate candidate_id")
+    if MISSING_SELECTED_SOURCE_ID in candidate_map:
+        raise ValueError(
+            f"candidate_id {MISSING_SELECTED_SOURCE_ID!r} is reserved for the "
+            "missing exact-current answer-determining source receipt marker"
+        )
     reference_ids = [
         item.reference.reference_id
         for item in candidates

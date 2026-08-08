@@ -59,7 +59,7 @@ Every candidate carries:
 - exact `CanonicalReference` when authoritative source material is available;
 - relevance score;
 - explicit dependencies;
-- optional conflict key;
+- optional conflict key, which is always a string and is canonically validated when non-empty;
 - temporal bindings.
 
 Truth classes are structurally distinct:
@@ -198,6 +198,7 @@ PR3 fails closed when:
 - an `INCOMPLETE` compilation attempts to emit or expose a canonical PR1 projection;
 - a hand-assembled `COMPLETE` compilation cannot independently prove its exact-current answer-determining source anchor;
 - a hand-assembled compilation attempts to mark compiler-ineligible advisory, stale, unavailable, adapter-missing, or conflicting candidates as selected canonical evidence;
+- caller-supplied candidate IDs collide with the reserved `source:selected` missing-source receipt marker;
 - graph edges reference candidates outside the task-conditioned set;
 - one canonical reference is aliased into multiple candidate roles;
 - an authority-bearing candidate claims an `origin_ref` different from its canonical reference origin;

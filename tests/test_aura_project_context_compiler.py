@@ -521,3 +521,25 @@ def test_duplicate_candidate_ids_and_unknown_edge_endpoints_fail_closed() -> Non
         _compile((source, source))
     with pytest.raises(ValueError, match="outside the task-conditioned"):
         _compile((source,), (ProjectContextEdge("source:target", "missing:node", "points_to", EdgeTruthClass.EXACT),))
+
+
+@pytest.mark.parametrize("bad_conflict_key", [None, 0, False])
+def test_conflict_key_rejects_falsy_non_string_values(bad_conflict_key) -> None:
+    with pytest.raises(TypeError, match="conflict_key must be a string"):
+        _candidate(
+            "decision:bad-conflict",
+            CandidateCategory.DECISION,
+            D["2"],
+            conflict_key=bad_conflict_key,
+        )
+
+
+def test_reserved_missing_source_marker_cannot_be_candidate_id() -> None:
+    reserved = _candidate(
+        "source:selected",
+        CandidateCategory.SOURCE,
+        D["2"],
+        answer_determining=True,
+    )
+    with pytest.raises(ValueError, match="reserved"):
+        _compile((reserved,))
