@@ -1,0 +1,61 @@
+name: PR3 Codex six-finding guarded repair v2
+
+on:
+  push:
+    branches:
+      - analysis/pr3-codex-six-fixes-v2
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout analysis repair payload
+        uses: actions/checkout@v4
+        with:
+          ref: analysis/pr3-codex-six-fixes-v2
+          fetch-depth: 0
+
+      - name: Preserve repair payload
+        shell: bash
+        run: cp tools/tmp_pr3_codex_six_fix_v2.py /tmp/pr3_fix.py
+
+      - name: Checkout exact PR3 target
+        uses: actions/checkout@v4
+        with:
+          ref: refactor/source-first-project-context-pr3
+          fetch-depth: 0
+
+      - name: Require exact target head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "2eb6b46f3a21c5f63af5a1fba13460bda8ebb615"
+
+      - name: Apply six invariant fixes
+        shell: bash
+        run: python /tmp/pr3_fix.py
+
+      - name: Verify focused PR3 gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet pytest jsonschema ruff
+          python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python -m ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          git diff --check
+          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+
+      - name: Commit and guarded fast-forward
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aura PR3 Guarded Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add aura_project_context_compiler.py tests/test_aura_project_context_compiler.py docs/AURA_SOURCE_FIRST_PROJECT_CONTEXT_PR3.md
+          git commit -m "PR3: close six Codex invariant gaps"
+          git fetch origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse origin/refactor/source-first-project-context-pr3)" = "2eb6b46f3a21c5f63af5a1fba13460bda8ebb615"
+          git push origin HEAD:refactor/source-first-project-context-pr3
