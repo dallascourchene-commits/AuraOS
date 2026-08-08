@@ -911,3 +911,31 @@ def test_public_constructor_rejects_tampered_authority_escalation() -> None:
             admissible=result.admissible,
         )
 
+
+def test_edge_to_budget_omitted_endpoint_is_absent_and_node_omission_is_visible() -> None:
+    source = _candidate(
+        "source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True
+    )
+    optional = _candidate(
+        "decision:optional", CandidateCategory.DECISION, D["3"], relevance=1000
+    )
+    edge = ProjectContextEdge(
+        "source:target", "decision:optional", "constrains", EdgeTruthClass.EXACT
+    )
+    result = _compile(
+        (source, optional),
+        (edge,),
+        budget=ProjectionBudget(max_nodes=1, max_edges=8),
+    )
+    assert result.selection_receipt.omitted_by_budget == ("decision:optional",)
+    assert result.graph_edges == ()
+
+def test_derived_verified_candidate_cannot_claim_canonical_read_authority() -> None:
+    with pytest.raises(ValueError, match="authority class does not match"):
+        _candidate(
+            "decision:derived-escalation",
+            CandidateCategory.DECISION,
+            D["8"],
+            truth=CandidateTruthClass.DERIVED_VERIFIED,
+            authority=ContextAuthorityClass.CANONICAL_READ,
+        )

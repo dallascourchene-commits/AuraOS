@@ -30,6 +30,7 @@ MISSING_SELECTED_SOURCE_ID = "source:selected"
 
 MAX_CANDIDATES = 512
 MAX_EDGES = 2048
+_EDGE_INPUT_EXPANSION_FACTOR = 4
 MAX_DEPENDENCIES = 64
 MAX_TEMPORAL_BINDINGS = 64
 MAX_TEXT_BYTES = 4096
@@ -110,6 +111,7 @@ class ContextAuthorityClass(str, Enum):
 
 
 def _text(value: Any, name: str, *, maximum: int = MAX_TEXT_BYTES) -> str:
+    """Normalize bounded text into a canonical single-space form."""
     if type(value) is not str:
         raise TypeError(f"{name} must be a string")
     value = " ".join(value.strip().split())
@@ -119,6 +121,7 @@ def _text(value: Any, name: str, *, maximum: int = MAX_TEXT_BYTES) -> str:
 
 
 def _id(value: Any, name: str) -> str:
+    """Normalize and validate a canonical identifier."""
     value = _text(value, name, maximum=192)
     if not _ID.fullmatch(value):
         raise ValueError(f"{name} is not a canonical identifier")
@@ -126,6 +129,7 @@ def _id(value: Any, name: str) -> str:
 
 
 def _digest(value: Any, name: str) -> str:
+    """Normalize and validate a lowercase SHA-256 digest."""
     value = _text(value, name, maximum=64).lower()
     if not _DIGEST.fullmatch(value):
         raise ValueError(f"{name} must be a 64-hex digest")
@@ -133,6 +137,7 @@ def _digest(value: Any, name: str) -> str:
 
 
 def _enum(enum_type: type[Enum], value: Any, name: str) -> Any:
+    """Normalize a value into the required enum class."""
     raw = value.value if isinstance(value, Enum) else value
     if type(raw) is not str:
         raise TypeError(f"{name} must be a string enum value")
@@ -143,6 +148,7 @@ def _enum(enum_type: type[Enum], value: Any, name: str) -> Any:
 
 
 def _ids(values: Sequence[str], name: str, *, maximum: int) -> tuple[str, ...]:
+    """Normalize, bound, deduplicate, and sort canonical identifiers."""
     if isinstance(values, (str, bytes, bytearray)) or not isinstance(values, Sequence):
         raise TypeError(f"{name} must be a sequence")
     if len(values) > maximum:
@@ -154,6 +160,7 @@ def _ids(values: Sequence[str], name: str, *, maximum: int) -> tuple[str, ...]:
 
 
 def _int(value: Any, name: str, *, minimum: int = 0, maximum: int | None = None) -> int:
+    """Validate a bounded integer while rejecting booleans."""
     if isinstance(value, bool) or not isinstance(value, int):
         raise TypeError(f"{name} must be an integer")
     if value < minimum or (maximum is not None and value > maximum):
@@ -169,6 +176,7 @@ class TemporalBinding:
     expires_at_ms: int = 0
 
     def __post_init__(self) -> None:
+        """Normalize and validate this immutable PR3 record after construction."""
         object.__setattr__(self, "kind", _enum(TemporalBindingKind, self.kind, "temporal kind"))
         object.__setattr__(self, "binding_id", _id(self.binding_id, "temporal binding_id"))
         object.__setattr__(self, "digest", _digest(self.digest, "temporal digest"))
@@ -180,9 +188,11 @@ class TemporalBinding:
 
     @property
     def key(self) -> str:
+        """Return the canonical temporal-binding key."""
         return f"{self.kind.value}:{self.binding_id}"
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this record into its deterministic dictionary representation."""
         return {
             "kind": self.kind.value,
             "binding_id": self.binding_id,
@@ -192,6 +202,7 @@ class TemporalBinding:
 
 
 def _normalize_candidate_identity(candidate: Any) -> None:
+    """Normalize the corresponding PR3 value into canonical form."""
     object.__setattr__(candidate, "candidate_id", _id(candidate.candidate_id, "candidate_id"))
     object.__setattr__(
         candidate,
@@ -227,6 +238,7 @@ def _normalize_candidate_identity(candidate: Any) -> None:
 
 
 def _normalize_candidate_relationships(candidate: Any) -> None:
+    """Normalize the corresponding PR3 value into canonical form."""
     if type(candidate.required) is not bool or type(candidate.answer_determining) is not bool:
         raise TypeError("required and answer_determining must be booleans")
     object.__setattr__(
@@ -259,6 +271,7 @@ def _normalize_candidate_relationships(candidate: Any) -> None:
 
 
 def _validate_candidate_reference(candidate: Any) -> None:
+    """Validate the corresponding PR3 invariant and fail closed on mismatch."""
     if candidate.availability is CandidateAvailability.AVAILABLE:
         if type(candidate.reference) is not CanonicalReference:
             raise ValueError(
@@ -272,6 +285,7 @@ def _validate_candidate_reference(candidate: Any) -> None:
 
 
 def _validate_candidate_authority(candidate: Any) -> None:
+    """Validate the corresponding PR3 invariant and fail closed on mismatch."""
     authoritative = {
         CandidateTruthClass.EXACT_CURRENT,
         CandidateTruthClass.DERIVED_VERIFIED,
@@ -304,6 +318,7 @@ def _validate_candidate_authority(candidate: Any) -> None:
 def _canonical_reference_binding_kind(
     category: CandidateCategory,
 ) -> TemporalBindingKind:
+    """Canonicalize the corresponding PR3 structure deterministically."""
     if category is CandidateCategory.SOURCE:
         return TemporalBindingKind.SOURCE_HASH
     if category is CandidateCategory.POLICY:
@@ -319,6 +334,7 @@ def _canonical_reference_binding_kind(
 
 
 def _bind_candidate_reference_identity(candidate: Any) -> None:
+    """Enforce the corresponding deterministic PR3 helper contract."""
     if (
         candidate.truth_class
         not in {CandidateTruthClass.EXACT_CURRENT, CandidateTruthClass.DERIVED_VERIFIED}
@@ -367,6 +383,7 @@ class ProjectContextCandidate:
     temporal_bindings: tuple[TemporalBinding, ...] = ()
 
     def __post_init__(self) -> None:
+        """Normalize and validate this immutable PR3 record after construction."""
         _normalize_candidate_identity(self)
         _normalize_candidate_relationships(self)
         _validate_candidate_reference(self)
@@ -375,10 +392,12 @@ class ProjectContextCandidate:
 
     @property
     def origin_bound(self) -> bool:
+        """Report whether the claimed origin matches the canonical reference."""
         return self.reference is not None and self.origin_ref == self.reference.canonical_ref
 
     @property
     def authority_non_increasing(self) -> bool:
+        """Report whether the candidate preserves its allowed authority class."""
         if self.truth_class is CandidateTruthClass.EXACT_CURRENT:
             return self.authority_class is ContextAuthorityClass.CANONICAL_READ
         if self.truth_class is CandidateTruthClass.DERIVED_VERIFIED:
@@ -386,6 +405,7 @@ class ProjectContextCandidate:
         return self.authority_class is ContextAuthorityClass.ADVISORY_NONE
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this record into its deterministic dictionary representation."""
         return {
             "candidate_id": self.candidate_id,
             "category": self.category.value,
@@ -415,6 +435,7 @@ class ProjectContextEdge:
     truth_class: EdgeTruthClass
 
     def __post_init__(self) -> None:
+        """Normalize and validate this immutable PR3 record after construction."""
         object.__setattr__(self, "source_id", _id(self.source_id, "edge source_id"))
         object.__setattr__(self, "target_id", _id(self.target_id, "edge target_id"))
         if self.source_id == self.target_id:
@@ -427,6 +448,7 @@ class ProjectContextEdge:
         )
 
     def to_dict(self) -> dict[str, str]:
+        """Serialize this record into its deterministic dictionary representation."""
         return {
             "source_id": self.source_id,
             "target_id": self.target_id,
@@ -441,6 +463,7 @@ class ProjectionBudget:
     max_edges: int = 256
 
     def __post_init__(self) -> None:
+        """Normalize and validate this immutable PR3 record after construction."""
         object.__setattr__(
             self,
             "max_nodes",
@@ -453,10 +476,12 @@ class ProjectionBudget:
         )
 
     def to_dict(self) -> dict[str, int]:
+        """Serialize this record into its deterministic dictionary representation."""
         return {"max_nodes": self.max_nodes, "max_edges": self.max_edges}
 
 
 def _normalize_selection_receipt(receipt: Any) -> tuple[str, ...]:
+    """Normalize the corresponding PR3 value into canonical form."""
     if receipt.version != PROJECTION_SELECTION_RECEIPT_VERSION:
         raise ValueError("unsupported projection selection receipt version")
     object.__setattr__(
@@ -494,6 +519,7 @@ def _normalize_selection_receipt(receipt: Any) -> tuple[str, ...]:
 def _validate_selection_receipt_partition(
     receipt: Any, omission_fields: Sequence[str]
 ) -> None:
+    """Validate the corresponding PR3 invariant and fail closed on mismatch."""
     selected_ids = set(receipt.selected)
     for name in omission_fields:
         overlap = selected_ids.intersection(getattr(receipt, name))
@@ -504,6 +530,7 @@ def _validate_selection_receipt_partition(
 
 
 def _validate_selection_receipt_status(receipt: Any) -> None:
+    """Validate the corresponding PR3 invariant and fail closed on mismatch."""
     object.__setattr__(
         receipt,
         "status",
@@ -528,6 +555,7 @@ def _validate_selection_receipt_status(receipt: Any) -> None:
 
 
 def _finalize_selection_receipt(receipt: Any) -> None:
+    """Enforce the corresponding deterministic PR3 helper contract."""
     expected = stable_digest(receipt.to_dict(include_digest=False))
     if receipt.receipt_digest and receipt.receipt_digest != expected:
         raise ValueError("selection receipt digest mismatch")
@@ -553,12 +581,14 @@ class ProjectionSelectionReceipt:
     version: str = PROJECTION_SELECTION_RECEIPT_VERSION
 
     def __post_init__(self) -> None:
+        """Normalize and validate this immutable PR3 record after construction."""
         omission_fields = _normalize_selection_receipt(self)
         _validate_selection_receipt_partition(self, omission_fields)
         _validate_selection_receipt_status(self)
         _finalize_selection_receipt(self)
 
     def to_dict(self, *, include_digest: bool = True) -> dict[str, Any]:
+        """Serialize this record into its deterministic dictionary representation."""
         body = {
             "version": self.version,
             "objective_digest": self.objective_digest,
@@ -581,6 +611,7 @@ class ProjectionSelectionReceipt:
 
 
 def _validate_compilation_identity(compilation: Any) -> None:
+    """Validate the corresponding PR3 invariant and fail closed on mismatch."""
     if compilation.version != PROJECT_CONTEXT_COMPILATION_VERSION:
         raise ValueError("unsupported project-context compilation version")
     object.__setattr__(
@@ -646,6 +677,7 @@ def _canonical_compilation_candidates(
     tuple[str, ...],
     dict[str, ProjectContextCandidate],
 ]:
+    """Canonicalize the corresponding PR3 structure deterministically."""
     selected = tuple(compilation.selected_candidates)
     if any(type(item) is not ProjectContextCandidate for item in selected):
         raise ValueError("selected_candidates must be exact records")
@@ -686,6 +718,7 @@ def _validate_compilation_selection(
     selected: tuple[ProjectContextCandidate, ...],
     selected_map: Mapping[str, ProjectContextCandidate],
 ) -> None:
+    """Validate the corresponding PR3 invariant and fail closed on mismatch."""
     missing_dependencies = sorted(
         (item.candidate_id, dependency_id)
         for item in selected
@@ -766,6 +799,7 @@ def _canonicalize_compilation_edges(
     compilation: Any,
     selected_ids: tuple[str, ...],
 ) -> None:
+    """Canonicalize the corresponding PR3 structure deterministically."""
     edges = tuple(compilation.graph_edges)
     if len(edges) > compilation.selection_receipt.budget.max_edges:
         raise ValueError(
@@ -803,6 +837,7 @@ def _validate_compilation_projection(
     compilation: Any,
     selected: tuple[ProjectContextCandidate, ...],
 ) -> None:
+    """Validate the corresponding PR3 invariant and fail closed on mismatch."""
     projection = compilation.projection
     if projection is None:
         return
@@ -824,14 +859,14 @@ def _validate_compilation_projection(
             "projection repository identity is not bound to compilation"
         )
     expected_projection_refs: dict[str, list[CanonicalReference]] = {
-        name: [] for name in set(_CATEGORY_FIELD.values())
+        name: [] for name in _PROJECTION_REFERENCE_FIELDS
     }
     for item in selected:
         if item.reference is None:
             raise ValueError(
                 "selected candidate is missing canonical reference"
             )
-        expected_projection_refs[_CATEGORY_FIELD[item.category]].append(
+        expected_projection_refs[_projection_reference_field(item.category)].append(
             item.reference
         )
     for field_name, expected_refs in expected_projection_refs.items():
@@ -858,6 +893,7 @@ def _validate_compilation_projection(
 
 
 def _finalize_compilation(compilation: Any) -> None:
+    """Enforce the corresponding deterministic PR3 helper contract."""
     if type(compilation.admissible) is not bool:
         raise TypeError("admissible must be a boolean")
     expected_admission = (
@@ -891,6 +927,7 @@ class ProjectContextCompilation:
     version: str = PROJECT_CONTEXT_COMPILATION_VERSION
 
     def __post_init__(self) -> None:
+        """Normalize and validate this immutable PR3 record after construction."""
         _validate_compilation_identity(self)
         selected, selected_ids, selected_map = _canonical_compilation_candidates(self)
         _validate_compilation_selection(self, selected, selected_map)
@@ -899,6 +936,7 @@ class ProjectContextCompilation:
         _finalize_compilation(self)
 
     def to_dict(self, *, include_digest: bool = True) -> dict[str, Any]:
+        """Serialize this record into its deterministic dictionary representation."""
         body = {
             "version": self.version,
             "objective": self.objective,
@@ -920,6 +958,7 @@ class ProjectContextCompilation:
         return body
 
     def headless_projection(self) -> dict[str, Any]:
+        """Return the bounded client-safe projection payload."""
         return {
             "version": PROJECT_CONTEXT_COMPILATION_VERSION,
             "compilation_digest": self.compilation_digest,
@@ -951,6 +990,45 @@ _CATEGORY_FIELD = {
     CandidateCategory.BLOCKER: "blocker_refs",
     CandidateCategory.NEXT_ACTION: "next_action_refs",
 }
+_PROJECTION_REFERENCE_FIELDS = frozenset(
+    {
+        "artifact_evidence_refs",
+        "decision_refs",
+        "rejected_alternative_refs",
+        "unresolved_question_refs",
+        "assumption_refs",
+        "capability_refs",
+        "relationship_refs",
+        "blocker_refs",
+        "next_action_refs",
+    }
+)
+
+
+def _validate_projection_category_mapping() -> None:
+    """Validate the corresponding PR3 invariant and fail closed on mismatch."""
+    expected_categories = set(CandidateCategory)
+    if set(_CATEGORY_FIELD) != expected_categories:
+        raise RuntimeError("project-context category mapping is incomplete")
+    mapped_fields = set(_CATEGORY_FIELD.values())
+    if not mapped_fields.issubset(_PROJECTION_REFERENCE_FIELDS):
+        raise RuntimeError("project-context category mapping uses an unsupported PR1 field")
+    pr1_fields = set(ProjectContextProjection.__dataclass_fields__)
+    if not mapped_fields.issubset(pr1_fields):
+        raise RuntimeError("project-context category mapping is not present in PR1 projection")
+
+
+def _projection_reference_field(category: CandidateCategory) -> str:
+    """Build or resolve the canonical PR1 project projection field."""
+    try:
+        return _CATEGORY_FIELD[category]
+    except KeyError as exc:
+        raise ValueError("candidate category has no PR1 projection field") from exc
+
+
+_validate_projection_category_mapping()
+
+
 _CATEGORY_PRIORITY = {
     category: index for index, category in enumerate(CandidateCategory)
 }
@@ -974,6 +1052,7 @@ _AUTHORITATIVE_EDGE_TRUTH = frozenset(
 
 
 def _problem(candidate: ProjectContextCandidate) -> str | None:
+    """Classify a candidate selection problem, if any."""
     if candidate.availability is CandidateAvailability.SOURCE_ADAPTER_MISSING:
         return "source_adapter_missing"
     if candidate.availability is CandidateAvailability.UNAVAILABLE:
@@ -995,6 +1074,7 @@ def _closure(
     seed: str,
     candidates: Mapping[str, ProjectContextCandidate],
 ) -> tuple[set[str], set[str]]:
+    """Compute deterministic dependency closure and missing dependencies."""
     selected: set[str] = set()
     missing: set[str] = set()
     stack = [seed]
@@ -1012,6 +1092,7 @@ def _closure(
 
 
 def _conflicts(candidates: Mapping[str, ProjectContextCandidate]) -> set[str]:
+    """Identify unresolved content and temporal-binding conflicts."""
     groups: dict[str, list[ProjectContextCandidate]] = {}
     binding_groups: dict[str, list[tuple[ProjectContextCandidate, TemporalBinding]]] = {}
     for candidate in candidates.values():
@@ -1039,6 +1120,7 @@ def _expired_binding_candidate_ids(
     candidates: Sequence[ProjectContextCandidate],
     freshness_timestamp_ms: int,
 ) -> set[str]:
+    """Identify candidates whose temporal bindings are already expired."""
     return {
         candidate.candidate_id
         for candidate in candidates
@@ -1058,14 +1140,15 @@ def _projection(
     freshness_timestamp_ms: int,
     warnings: Sequence[str],
 ) -> ProjectContextProjection:
+    """Build or resolve the canonical PR1 project projection field."""
     buckets: dict[str, list[CanonicalReference]] = {
-        name: [] for name in set(_CATEGORY_FIELD.values())
+        name: [] for name in _PROJECTION_REFERENCE_FIELDS
     }
     selected_freshness: list[str] = []
     for candidate in selected:
         if candidate.reference is None:
             raise ValueError("selected candidate is missing canonical reference")
-        buckets[_CATEGORY_FIELD[candidate.category]].append(candidate.reference)
+        buckets[_projection_reference_field(candidate.category)].append(candidate.reference)
         selected_freshness.append(candidate.reference.freshness_class)
     objective_digest = stable_digest({"objective": objective})
     purpose_digest = stable_digest(
@@ -1103,6 +1186,7 @@ def _projection(
 def _compile_candidate_map(
     candidates: Sequence[ProjectContextCandidate],
 ) -> dict[str, ProjectContextCandidate]:
+    """Compile the corresponding bounded PR3 structure from validated inputs."""
     if isinstance(candidates, (str, bytes, bytearray)) or not isinstance(
         candidates, Sequence
     ):
@@ -1138,8 +1222,11 @@ def _compile_edge_items(
     candidate_map: Mapping[str, ProjectContextCandidate],
     budget: ProjectionBudget,
 ) -> tuple[ProjectContextEdge, ...]:
+    """Compile the corresponding bounded PR3 structure from validated inputs."""
     edge_items = tuple(edges)
-    if len(edge_items) > min(MAX_EDGES, budget.max_edges * 4) or any(
+    if len(edge_items) > min(
+        MAX_EDGES, budget.max_edges * _EDGE_INPUT_EXPANSION_FACTOR
+    ) or any(
         type(item) is not ProjectContextEdge for item in edge_items
     ):
         raise ValueError(
@@ -1167,6 +1254,7 @@ def _validate_compile_context(
     edges: Sequence[ProjectContextEdge],
     budget: ProjectionBudget,
 ) -> tuple[dict[str, ProjectContextCandidate], tuple[ProjectContextEdge, ...]]:
+    """Validate the corresponding PR3 invariant and fail closed on mismatch."""
     if type(repository_identity) is not RepositoryIdentity:
         raise ValueError("repository_identity must be exact PR1 RepositoryIdentity")
     if type(budget) is not ProjectionBudget:
@@ -1180,6 +1268,7 @@ def _selection_buckets(
     candidate_map: Mapping[str, ProjectContextCandidate],
     freshness_timestamp_ms: int,
 ) -> tuple[set[str], set[str], dict[str, set[str]]]:
+    """Compute deterministic project-context selection state."""
     conflict_ids = _conflicts(candidate_map)
     expired_ids = _expired_binding_candidate_ids(candidates, freshness_timestamp_ms)
     buckets = {
@@ -1210,6 +1299,7 @@ def _mandatory_selection(
     buckets: dict[str, set[str]],
     budget: ProjectionBudget,
 ) -> tuple[set[str], set[str]]:
+    """Resolve mandatory context without silent clipping."""
     mandatory_seeds = {
         item.candidate_id
         for item in candidates
@@ -1244,6 +1334,7 @@ def _optional_candidates(
     conflict_ids: set[str],
     expired_ids: set[str],
 ) -> list[ProjectContextCandidate]:
+    """Evaluate optional context under the declared deterministic budget."""
     return sorted(
         (
             item
@@ -1270,6 +1361,7 @@ def _consider_optional_candidate(
     budget: ProjectionBudget,
     selected: set[str],
 ) -> None:
+    """Evaluate optional context under the declared deterministic budget."""
     if candidate.relevance_score == 0:
         buckets["omitted_irrelevant"].add(candidate.candidate_id)
         return
@@ -1300,6 +1392,7 @@ def _extend_optional_selection(
     budget: ProjectionBudget,
     selected: set[str],
 ) -> None:
+    """Extend deterministic selection without exceeding declared bounds."""
     for candidate in _optional_candidates(
         candidates, mandatory, conflict_ids, expired_ids
     ):
@@ -1319,6 +1412,7 @@ def _selected_context_edges(
     selected: set[str],
     budget: ProjectionBudget,
 ) -> tuple[ProjectContextEdge, ...]:
+    """Resolve the selected bounded project-context subset."""
     selected_edges = tuple(
         edge
         for edge in edge_items
@@ -1339,6 +1433,7 @@ def _build_selection_receipt(
     buckets: Mapping[str, set[str]],
     budget: ProjectionBudget,
 ) -> ProjectionSelectionReceipt:
+    """Build the corresponding deterministic PR3 receipt structure."""
     missing = tuple(sorted(buckets["mandatory_evidence_missing"]))
     status = SelectionStatus.INCOMPLETE if missing else SelectionStatus.COMPLETE
     return ProjectionSelectionReceipt(
@@ -1361,6 +1456,7 @@ def _build_selection_receipt(
 
 
 def _selection_warnings(receipt: ProjectionSelectionReceipt) -> tuple[str, ...]:
+    """Compute deterministic project-context selection state."""
     warnings: list[str] = []
     if receipt.mandatory_evidence_missing:
         warnings.append(
@@ -1397,6 +1493,7 @@ def _materialize_project_context_compilation(
     selected: set[str],
     buckets: dict[str, set[str]],
 ) -> ProjectContextCompilation:
+    """Materialize the validated read-only project-context compilation."""
     selected_candidates = tuple(candidate_map[item] for item in sorted(selected))
     exact_answer_source = any(
         candidate.category is CandidateCategory.SOURCE
@@ -1506,6 +1603,7 @@ def _provenance_inputs(
     dict[str, ProjectContextCandidate],
     dict[str, list[ProjectContextEdge]],
 ]:
+    """Evaluate bounded provenance state without overclaiming completeness."""
     if type(compilation) is not ProjectContextCompilation:
         raise ValueError("compilation must be exact ProjectContextCompilation")
     starts = _ids(start_ids, "start_ids", maximum=64)
@@ -1541,6 +1639,7 @@ def _walk_provenance(
     max_hops: int,
     max_nodes: int,
 ) -> tuple[set[str], set[ProjectContextEdge], set[str]]:
+    """Enforce the corresponding deterministic PR3 helper contract."""
     seen = set(starts)
     frontier = list(starts)
     traversed: set[ProjectContextEdge] = set()
@@ -1577,10 +1676,12 @@ def _provenance_start_is_source_complete(
     incoming: Mapping[str, Sequence[ProjectContextEdge]],
     traversed: set[ProjectContextEdge],
 ) -> bool:
+    """Evaluate bounded provenance state without overclaiming completeness."""
     memo: dict[str, bool] = {}
     visiting: set[str] = set()
 
     def visit(node_id: str) -> bool:
+        """Visit one provenance node while detecting backward cycles."""
         if node_id in memo:
             return memo[node_id]
         if node_id in visiting:
@@ -1617,6 +1718,7 @@ def _provenance_summary(
 ) -> tuple[
     list[ProjectContextCandidate], list[str], list[str], list[str], bool, bool
 ]:
+    """Evaluate bounded provenance state without overclaiming completeness."""
     nodes = [node_map[item] for item in sorted(seen)]
     source_ids = [
         item.candidate_id
@@ -1667,6 +1769,7 @@ def _provenance_result(
     starts_are_source_complete: bool,
     authoritative_path: bool,
 ) -> dict[str, Any]:
+    """Evaluate bounded provenance state without overclaiming completeness."""
     result = {
         "version": PROJECT_CONTEXT_PROVENANCE_VERSION,
         "compilation_digest": compilation.compilation_digest,
@@ -1732,6 +1835,7 @@ def trace_project_context_provenance(
 def _normalized_current_bindings(
     current_bindings: Mapping[str, str],
 ) -> dict[str, str]:
+    """Enforce the corresponding deterministic PR3 helper contract."""
     if not isinstance(current_bindings, Mapping):
         raise TypeError("current_bindings must be a mapping")
     normalized: dict[str, str] = {}
@@ -1749,6 +1853,7 @@ def _freshness_reasons(
     current_bindings: Mapping[str, str],
     observed_at_ms: int,
 ) -> list[str]:
+    """Evaluate temporal freshness state for the compiled context."""
     reasons: list[str] = []
     if (
         compilation.repository_identity.to_dict()

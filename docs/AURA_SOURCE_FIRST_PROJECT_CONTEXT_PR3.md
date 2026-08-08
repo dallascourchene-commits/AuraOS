@@ -104,7 +104,7 @@ Selection eligibility and **source admission are deliberately different predicat
 
 If the complete mandatory dependency closure cannot fit the declared node budget, PR3 does **not** choose an arbitrary subset. The receipt becomes `INCOMPLETE`, records the budget omission, and denies admission.
 
-Optional candidates are ranked deterministically by declared relevance, then fixed category priority, then candidate ID. A candidate and its dependency closure are selected as a unit only when they fit.
+Optional candidates are ranked deterministically by declared relevance, then fixed category priority, then candidate ID. A candidate and its dependency closure are selected as a unit only when they fit. Candidate input edges may be accepted up to a bounded four-times selected-edge budget (never above the module-wide edge ceiling) so task-conditioned endpoint reduction can occur before the final selected graph is checked strictly against `max_edges`. An edge incident to an omitted node is absent from the selected graph; the existing node omission bucket remains the attributable reason, rather than introducing a second edge-omission receipt plane.
 
 ## 6. `ProjectionSelectionReceipt`
 
@@ -137,6 +137,8 @@ A `COMPLETE` receipt cannot contain missing mandatory evidence. An `INCOMPLETE` 
 - false mutation/execution/persistence/merge authority inherited from the PR1 authority envelope.
 
 An `INCOMPLETE` compilation has `projection: null`; the same is true through `headless_projection()`. PR3's compilation record independently owns `project_ref`; that value is included in the compilation digest and the nested PR1 projection must match it, so a hand-built projection cannot silently substitute a different project identity. The public `ProjectContextCompilation` constructor also rejects a hand-assembled `INCOMPLETE` record that attempts to smuggle in a PR1 projection, independently re-proves the exact-current answer-determining source anchor for a hand-assembled `COMPLETE` record, revalidates every selected candidate against the same reference, truth, availability, origin, authority, and freshness boundaries used by the compiler, and independently rejects the reserved `source:selected` missing-source marker. Selected unresolved conflicts are rejected as well. This prevents a caller from placing advisory, stale, unavailable, adapter-missing, conflicting, or reserved-sentinel material into a canonical projection by bypassing `compile_project_context_projection()`.
+
+The category-to-reference-field adapter is explicitly validated against every `CandidateCategory` and the current PR1 `ProjectContextProjection` dataclass fields at import time, so a future category or PR1 field change cannot silently drift the projection mapping.
 
 PR3 does not change the PR1 serialized contract or PR2 runtime contract.
 
