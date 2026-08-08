@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 import pytest
 
 from aura_ephemeral_workspace_contracts import CanonicalReference, RepositoryIdentity
@@ -13,6 +15,7 @@ from aura_project_context_compiler import (
     ProjectContextCompilation,
     ProjectContextEdge,
     ProjectionBudget,
+    ProjectionSelectionReceipt,
     SelectionStatus,
     compile_project_context_projection,
     trace_project_context_provenance,
@@ -214,6 +217,54 @@ def test_public_compilation_reproves_exact_answer_source_anchor() -> None:
             selection_receipt=complete.selection_receipt,
             selected_candidates=(derived_semantics,),
             graph_edges=complete.graph_edges,
+            admissible=True,
+        )
+
+
+def test_public_compilation_rejects_advisory_projection_smuggling() -> None:
+    complete = _compile((_source(),))
+    assert complete.projection is not None
+    source = complete.selected_candidates[0]
+    advisory_ref = _ref("ref:advisory-smuggled", _digest("d"))
+    advisory = ProjectContextCandidate(
+        candidate_id="relationship:advisory-smuggled",
+        category=CandidateCategory.RELATIONSHIP,
+        source_adapter="adapter.summary",
+        origin_ref="summary://advisory-smuggled",
+        authority_class=ContextAuthorityClass.ADVISORY_NONE,
+        truth_class=CandidateTruthClass.ADVISORY,
+        reference=advisory_ref,
+        relevance_score=1_000_000,
+    )
+    forged_receipt = ProjectionSelectionReceipt(
+        objective_digest=complete.objective_digest,
+        repository_identity_digest=complete.repository_identity.identity_digest,
+        canonical_owner=complete.selection_receipt.canonical_owner,
+        selected=(source.candidate_id, advisory.candidate_id),
+        omitted_irrelevant=(),
+        omitted_by_budget=(),
+        stale=(),
+        unavailable=(),
+        conflicting=(),
+        source_adapter_missing=(),
+        mandatory_evidence_missing=(),
+        status=SelectionStatus.COMPLETE,
+        budget=complete.selection_receipt.budget,
+    )
+    forged_projection = replace(
+        complete.projection,
+        relationship_refs=(advisory_ref,),
+    )
+
+    with pytest.raises(ValueError, match="selected candidates must remain compiler-eligible"):
+        ProjectContextCompilation(
+            objective=complete.objective,
+            objective_digest=complete.objective_digest,
+            repository_identity=complete.repository_identity,
+            projection=forged_projection,
+            selection_receipt=forged_receipt,
+            selected_candidates=(source, advisory),
+            graph_edges=(),
             admissible=True,
         )
 
