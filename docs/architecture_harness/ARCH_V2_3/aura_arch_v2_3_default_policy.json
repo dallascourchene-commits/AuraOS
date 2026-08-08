@@ -21,7 +21,15 @@
     "default_review_wave_threshold": 10,
     "schema_version": "AURA_PR_CONTINUITY_CAPSULE_V2_3",
     "harness_version": "AURA_ARCH_V2_3",
-    "commit_time_authorization_required_for_durable_effects": true
+    "commit_time_authorization_required_for_durable_effects": true,
+    "semantic_validation_required": true,
+    "semantic_validator": "scripts/aura_arch_v2_3_capsule_validator.py",
+    "semantic_validator_version": "AURA_ARCH_V2_3_CAPSULE_SEMANTIC_VALIDATOR_V1",
+    "cross_field_relational_checks": [
+      "jspace_projection.head_sha == head_sha when ENABLED",
+      "commit_authorization.validated_head_sha == head_sha when VALIDATED",
+      "authorized_effect_digest == planned_effect_digest == candidate_effect_digest when VALIDATED"
+    ]
   },
   "minimum_fidelity_fields": [
     "repository",
@@ -39,8 +47,8 @@
     "decisions",
     "invariants",
     "execution_state.stale",
-    "open_findings",
-    "open_root_cause_groups",
+    "findings",
+    "root_cause_groups",
     "rejected_approaches",
     "rollback.last_known_green_sha",
     "authorized_next_action",
@@ -196,8 +204,13 @@
     "causal_prior_required": true,
     "current_eligibility_required": true,
     "current_head_required": true,
+    "current_workspace_required": true,
+    "current_resource_identity_required": true,
     "current_lease_required": true,
+    "dependency_and_threat_model_freshness_required": true,
     "proof_freshness_required": true,
+    "verifier_independence_required": true,
+    "governance_disposition_required": true,
     "mismatch_action": "REPLAN_OR_REFUSE"
   }
 }
