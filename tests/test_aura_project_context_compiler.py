@@ -1033,3 +1033,30 @@ def test_authoritative_candidate_reserves_slot_for_reference_binding() -> None:
             "source:target", CandidateCategory.SOURCE, D["2"],
             answer_determining=True, bindings=bindings,
         )
+
+
+def test_dependency_ids_reject_hostile_sequence_before_protocol_calls() -> None:
+    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True)
+
+    class HostileIds:
+        def __len__(self):
+            raise AssertionError("dependency id length must not run")
+        def __iter__(self):
+            raise AssertionError("dependency id iterator must not run")
+
+    with pytest.raises(TypeError, match="dependency_ids must be an exact immutable tuple"):
+        replace(source, dependency_ids=HostileIds())
+
+
+def test_provenance_start_ids_reject_hostile_sequence_before_protocol_calls() -> None:
+    source = _candidate("source:target", CandidateCategory.SOURCE, D["2"], answer_determining=True)
+    compilation = _compile((source,))
+
+    class HostileIds:
+        def __len__(self):
+            raise AssertionError("start id length must not run")
+        def __iter__(self):
+            raise AssertionError("start id iterator must not run")
+
+    with pytest.raises(TypeError, match="start_ids must be an exact immutable tuple"):
+        trace_project_context_provenance(compilation, HostileIds(), max_hops=4, max_nodes=8)

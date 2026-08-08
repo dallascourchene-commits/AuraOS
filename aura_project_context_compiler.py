@@ -147,10 +147,10 @@ def _enum(enum_type: type[Enum], value: Any, name: str) -> Any:
         raise ValueError(f"unsupported {name}: {raw}") from exc
 
 
-def _ids(values: Sequence[str], name: str, *, maximum: int) -> tuple[str, ...]:
-    """Normalize, bound, deduplicate, and sort canonical identifiers."""
-    if isinstance(values, (str, bytes, bytearray)) or not isinstance(values, Sequence):
-        raise TypeError(f"{name} must be a sequence")
+def _ids(values: tuple[str, ...], name: str, *, maximum: int) -> tuple[str, ...]:
+    """Normalize a bounded immutable tuple of canonical identifiers."""
+    if type(values) is not tuple:
+        raise TypeError(f"{name} must be an exact immutable tuple")
     if len(values) > maximum:
         raise ValueError(f"{name} exceeds its item ceiling")
     result = tuple(_id(item, f"{name} item") for item in values)
@@ -1857,7 +1857,7 @@ def _provenance_result(
 
 def trace_project_context_provenance(
     compilation: ProjectContextCompilation,
-    start_ids: Sequence[str],
+    start_ids: tuple[str, ...],
     *,
     max_hops: int = 4,
     max_nodes: int = 64,
