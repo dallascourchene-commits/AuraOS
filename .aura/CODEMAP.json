@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786214345,
+  "generated_at_unix": 1786214497,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1583,
+    "included_file_count": 1584,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,7 +13,7 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 290,
+      ".git": 25,
       "Aura_Memory": 6,
       "Aura_Sandbox": 2,
       "__pycache__": 8
@@ -185,6 +185,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/pr3_six_invariant_fix_guard_v5.yml",
       ".github/workflows/provider-routing-materialize.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
@@ -1605,9 +1606,9 @@
     ]
   },
   "summary": {
-    "file_count": 1583,
-    "total_bytes": 59665834,
-    "text_tokens_est": 5407567,
+    "file_count": 1584,
+    "total_bytes": 59669407,
+    "text_tokens_est": 5408461,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 64,
@@ -1615,13 +1616,13 @@
       "native_accelerator": 8,
       "operator_script": 6,
       "python_module": 980,
-      "schema_or_lexicon": 235,
+      "schema_or_lexicon": 236,
       "support_file": 79
     },
     "topology_nodes": 11468,
     "topology_edges": 28041,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 34333.08
+    "elapsed_ms": 35647.91
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1821,6 +1822,7 @@
       ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2_hardening.v1.json",
       ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr3.v1.json",
       ".aura/waboose_requests/bilateral_intent_guardrail_foundry_pr4.v1.json",
+      ".github/workflows/pr3_six_invariant_fix_guard_v5.yml",
       "DEEP_AUDIT_REPORT.md",
       "aura_background_auditor.py",
       "aura_cockpit_audit_trail.py",
@@ -210546,6 +210548,52 @@
         0.106887,
         -0.031437,
         -0.225092
+      ]
+    },
+    {
+      "path": ".github/workflows/pr3_six_invariant_fix_guard_v5.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 3573,
+      "lines": 90,
+      "tokens_est": 894,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "728d7f42558caf5d",
+      "vector": [
+        -0.02222,
+        0.145083,
+        0.040519,
+        -0.035291,
+        0.173839,
+        0.069274,
+        0.001307,
+        0.100643,
+        -0.286245,
+        0.220893,
+        -0.294088,
+        -0.1111,
+        -0.092801,
+        0.069274,
+        0.134627,
+        -0.218278,
+        -0.16861,
+        -0.325457,
+        0.296702,
+        -0.249648,
+        0.226121,
+        0.286245,
+        0.001307,
+        -0.064046,
+        -0.252262,
+        -0.090187,
+        0.014378,
+        -0.082345,
+        -0.325457,
+        -0.027448,
+        -0.056203,
+        -0.105872
       ]
     },
     {
