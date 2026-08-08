@@ -1,0 +1,522 @@
+name: TEMP PR3 Final Production Codacy Cleanup
+
+on:
+  push:
+    branches:
+      - "analysis/pr3-codacy-final-prod-20260808"
+
+permissions:
+  contents: write
+
+jobs:
+  refactor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/source-first-project-context-pr3
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install verification tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "ruff>=0.5" "pytest>=8.2,<9" "radon>=6,<7"
+      - name: Apply final production maintainability cleanup
+        run: |
+          cat > /tmp/pr3_codacy_final_prod.py <<'PY'
+          from pathlib import Path
+
+          path = Path("aura_project_context_compiler.py")
+          text = path.read_text(encoding="utf-8")
+
+          # --- ProjectionSelectionReceipt: separate normalization, partition, status, digest. ---
+          receipt_class = "@dataclass(frozen=True)\nclass ProjectionSelectionReceipt:\n"
+          receipt_helpers = r'''def _normalize_selection_receipt(receipt: Any) -> tuple[str, ...]:
+              if receipt.version != PROJECTION_SELECTION_RECEIPT_VERSION:
+                  raise ValueError("unsupported projection selection receipt version")
+              object.__setattr__(
+                  receipt,
+                  "objective_digest",
+                  _digest(receipt.objective_digest, "objective_digest"),
+              )
+              object.__setattr__(
+                  receipt,
+                  "repository_identity_digest",
+                  _digest(receipt.repository_identity_digest, "repository_identity_digest"),
+              )
+              if _id(receipt.canonical_owner, "canonical_owner") != PROJECT_CANONICAL_OWNER:
+                  raise ValueError("canonical_owner must remain the unified continuity owner")
+              omission_fields = (
+                  "omitted_irrelevant",
+                  "omitted_by_budget",
+                  "stale",
+                  "unavailable",
+                  "conflicting",
+                  "source_adapter_missing",
+                  "mandatory_evidence_missing",
+              )
+              for name in ("selected", *omission_fields):
+                  object.__setattr__(
+                      receipt,
+                      name,
+                      _ids(getattr(receipt, name), name, maximum=MAX_CANDIDATES),
+                  )
+              return omission_fields
+
+
+          def _validate_selection_receipt_partition(
+              receipt: Any, omission_fields: Sequence[str]
+          ) -> None:
+              selected_ids = set(receipt.selected)
+              for name in omission_fields:
+                  overlap = selected_ids.intersection(getattr(receipt, name))
+                  if overlap:
+                      raise ValueError(
+                          f"selection receipt cannot mark selected ids as {name}: {sorted(overlap)}"
+                      )
+
+
+          def _validate_selection_receipt_status(receipt: Any) -> None:
+              object.__setattr__(
+                  receipt,
+                  "status",
+                  _enum(SelectionStatus, receipt.status, "selection status"),
+              )
+              if type(receipt.budget) is not ProjectionBudget:
+                  raise ValueError("selection receipt requires exact ProjectionBudget")
+              if (
+                  receipt.status is SelectionStatus.COMPLETE
+                  and receipt.mandatory_evidence_missing
+              ):
+                  raise ValueError(
+                      "COMPLETE selection cannot have missing mandatory evidence"
+                  )
+              if (
+                  receipt.status is SelectionStatus.INCOMPLETE
+                  and not receipt.mandatory_evidence_missing
+              ):
+                  raise ValueError(
+                      "INCOMPLETE selection must identify missing mandatory evidence"
+                  )
+
+
+          def _finalize_selection_receipt(receipt: Any) -> None:
+              expected = stable_digest(receipt.to_dict(include_digest=False))
+              if receipt.receipt_digest and receipt.receipt_digest != expected:
+                  raise ValueError("selection receipt digest mismatch")
+              object.__setattr__(receipt, "receipt_digest", expected)
+
+
+          '''
+          if receipt_helpers not in text:
+              text = text.replace(receipt_class, receipt_helpers + receipt_class, 1)
+          receipt_at = text.index(receipt_class)
+          receipt_post = text.index("    def __post_init__(self) -> None:\n", receipt_at)
+          receipt_to_dict = text.index(
+              "    def to_dict(self, *, include_digest: bool = True)", receipt_post
+          )
+          receipt_post_replacement = '''    def __post_init__(self) -> None:\n        omission_fields = _normalize_selection_receipt(self)\n        _validate_selection_receipt_partition(self, omission_fields)\n        _validate_selection_receipt_status(self)\n        _finalize_selection_receipt(self)\n\n'''
+          text = (
+              text[:receipt_post]
+              + receipt_post_replacement
+              + text[receipt_to_dict:]
+          )
+
+          # --- Compiler input validation: split candidate and edge surfaces. ---
+          compile_context_start = text.index("def _validate_compile_context(\n")
+          selection_buckets_start = text.index("def _selection_buckets(\n", compile_context_start)
+          compile_context_replacement = r'''def _compile_candidate_map(
+              candidates: Sequence[ProjectContextCandidate],
+          ) -> dict[str, ProjectContextCandidate]:
+              if isinstance(candidates, (str, bytes, bytearray)) or not isinstance(
+                  candidates, Sequence
+              ):
+                  raise TypeError("candidates must be a sequence")
+              if len(candidates) > MAX_CANDIDATES or any(
+                  type(item) is not ProjectContextCandidate for item in candidates
+              ):
+                  raise ValueError(
+                      "candidates must be a bounded sequence of exact ProjectContextCandidate records"
+                  )
+              candidate_map = {item.candidate_id: item for item in candidates}
+              if len(candidate_map) != len(candidates):
+                  raise ValueError("duplicate candidate_id")
+              if MISSING_SELECTED_SOURCE_ID in candidate_map:
+                  raise ValueError(
+                      f"candidate_id {MISSING_SELECTED_SOURCE_ID!r} is reserved for the "
+                      "missing exact-current answer-determining source receipt marker"
+                  )
+              reference_ids = [
+                  item.reference.reference_id
+                  for item in candidates
+                  if item.reference is not None
+              ]
+              if len(set(reference_ids)) != len(reference_ids):
+                  raise ValueError(
+                      "task-conditioned candidates must not alias one canonical reference into multiple roles"
+                  )
+              return candidate_map
+
+
+          def _compile_edge_items(
+              edges: Sequence[ProjectContextEdge],
+              candidate_map: Mapping[str, ProjectContextCandidate],
+              budget: ProjectionBudget,
+          ) -> tuple[ProjectContextEdge, ...]:
+              edge_items = tuple(edges)
+              if len(edge_items) > min(MAX_EDGES, budget.max_edges * 4) or any(
+                  type(item) is not ProjectContextEdge for item in edge_items
+              ):
+                  raise ValueError(
+                      "edges must be a bounded sequence of exact ProjectContextEdge records"
+                  )
+              unknown = sorted(
+                  {
+                      endpoint
+                      for edge in edge_items
+                      for endpoint in (edge.source_id, edge.target_id)
+                      if endpoint not in candidate_map
+                  }
+              )
+              if unknown:
+                  raise ValueError(
+                      "edge endpoint is outside the task-conditioned candidate set: "
+                      f"{unknown[:5]}"
+                  )
+              return edge_items
+
+
+          def _validate_compile_context(
+              repository_identity: RepositoryIdentity,
+              candidates: Sequence[ProjectContextCandidate],
+              edges: Sequence[ProjectContextEdge],
+              budget: ProjectionBudget,
+          ) -> tuple[dict[str, ProjectContextCandidate], tuple[ProjectContextEdge, ...]]:
+              if type(repository_identity) is not RepositoryIdentity:
+                  raise ValueError("repository_identity must be exact PR1 RepositoryIdentity")
+              if type(budget) is not ProjectionBudget:
+                  raise ValueError("budget must be exact ProjectionBudget")
+              candidate_map = _compile_candidate_map(candidates)
+              return candidate_map, _compile_edge_items(edges, candidate_map, budget)
+
+
+          '''
+          text = (
+              text[:compile_context_start]
+              + compile_context_replacement
+              + text[selection_buckets_start:]
+          )
+
+          # --- Optional selection: isolate one-candidate decision. ---
+          optional_start = text.index("def _extend_optional_selection(\n")
+          selected_edges_start = text.index("def _selected_context_edges(\n", optional_start)
+          optional_replacement = r'''def _optional_candidates(
+              candidates: Sequence[ProjectContextCandidate],
+              mandatory: set[str],
+              conflict_ids: set[str],
+          ) -> list[ProjectContextCandidate]:
+              return sorted(
+                  (
+                      item
+                      for item in candidates
+                      if item.candidate_id not in mandatory
+                      and item.candidate_id not in conflict_ids
+                      and _problem(item) is None
+                  ),
+                  key=lambda item: (
+                      -item.relevance_score,
+                      _CATEGORY_PRIORITY[item.category],
+                      item.candidate_id,
+                  ),
+              )
+
+
+          def _consider_optional_candidate(
+              candidate: ProjectContextCandidate,
+              candidate_map: Mapping[str, ProjectContextCandidate],
+              conflict_ids: set[str],
+              buckets: dict[str, set[str]],
+              budget: ProjectionBudget,
+              selected: set[str],
+          ) -> None:
+              if candidate.relevance_score == 0:
+                  buckets["omitted_irrelevant"].add(candidate.candidate_id)
+                  return
+              closure, missing = _closure(candidate.candidate_id, candidate_map)
+              invalid = missing or any(
+                  member in conflict_ids or _problem(candidate_map[member]) is not None
+                  for member in closure
+              )
+              if invalid:
+                  buckets["omitted_irrelevant"].add(candidate.candidate_id)
+                  return
+              needed = closure - selected
+              if len(selected) + len(needed) > budget.max_nodes:
+                  buckets["omitted_by_budget"].add(candidate.candidate_id)
+                  return
+              selected.update(needed)
+
+
+          def _extend_optional_selection(
+              candidates: Sequence[ProjectContextCandidate],
+              candidate_map: Mapping[str, ProjectContextCandidate],
+              mandatory: set[str],
+              conflict_ids: set[str],
+              buckets: dict[str, set[str]],
+              budget: ProjectionBudget,
+              selected: set[str],
+          ) -> None:
+              for candidate in _optional_candidates(candidates, mandatory, conflict_ids):
+                  _consider_optional_candidate(
+                      candidate,
+                      candidate_map,
+                      conflict_ids,
+                      buckets,
+                      budget,
+                      selected,
+                  )
+
+
+          '''
+          text = text[:optional_start] + optional_replacement + text[selected_edges_start:]
+
+          # --- Public compiler wrapper: move materialization into an explicit helper. ---
+          compile_start = text.index("def compile_project_context_projection(\n")
+          provenance_inputs_start = text.index("def _provenance_inputs(\n", compile_start)
+          compile_replacement = r'''def _materialize_project_context_compilation(
+              objective: str,
+              project_ref: str,
+              repository_identity: RepositoryIdentity,
+              candidate_map: Mapping[str, ProjectContextCandidate],
+              edge_items: tuple[ProjectContextEdge, ...],
+              budget: ProjectionBudget,
+              freshness_timestamp_ms: int,
+              selected: set[str],
+              buckets: dict[str, set[str]],
+          ) -> ProjectContextCompilation:
+              selected_candidates = tuple(candidate_map[item] for item in sorted(selected))
+              exact_answer_source = any(
+                  candidate.category is CandidateCategory.SOURCE
+                  and candidate.truth_class is CandidateTruthClass.EXACT_CURRENT
+                  and candidate.answer_determining
+                  for candidate in selected_candidates
+              )
+              if not exact_answer_source:
+                  buckets["mandatory_evidence_missing"].add(MISSING_SELECTED_SOURCE_ID)
+              selected_edges = _selected_context_edges(edge_items, selected, budget)
+              objective_digest = stable_digest({"objective": objective})
+              receipt = _build_selection_receipt(
+                  objective_digest, repository_identity, selected, buckets, budget
+              )
+              timestamp_ms = _int(
+                  freshness_timestamp_ms,
+                  "freshness_timestamp_ms",
+                  maximum=2**63 - 1,
+              )
+              projection = None
+              if receipt.status is SelectionStatus.COMPLETE:
+                  projection = _projection(
+                      objective,
+                      project_ref,
+                      repository_identity,
+                      selected_candidates,
+                      timestamp_ms,
+                      _selection_warnings(receipt),
+                  )
+              return ProjectContextCompilation(
+                  objective=objective,
+                  objective_digest=objective_digest,
+                  repository_identity=repository_identity,
+                  projection=projection,
+                  selection_receipt=receipt,
+                  selected_candidates=selected_candidates,
+                  graph_edges=selected_edges,
+                  admissible=receipt.status is SelectionStatus.COMPLETE,
+              )
+
+
+          def compile_project_context_projection(
+              objective: str,
+              *,
+              project_ref: str,
+              repository_identity: RepositoryIdentity,
+              candidates: Sequence[ProjectContextCandidate],
+              edges: Sequence[ProjectContextEdge] = (),
+              budget: ProjectionBudget = ProjectionBudget(),
+              freshness_timestamp_ms: int,
+          ) -> ProjectContextCompilation:
+              """Compile a deterministic minimum-sufficient read-only project projection."""
+              objective = _text(objective, "objective")
+              project_ref = _text(project_ref, "project_ref")
+              candidate_map, edge_items = _validate_compile_context(
+                  repository_identity, candidates, edges, budget
+              )
+              conflict_ids, buckets = _selection_buckets(candidates, candidate_map)
+              mandatory, selected = _mandatory_selection(
+                  candidates, candidate_map, conflict_ids, buckets, budget
+              )
+              _extend_optional_selection(
+                  candidates,
+                  candidate_map,
+                  mandatory,
+                  conflict_ids,
+                  buckets,
+                  budget,
+                  selected,
+              )
+              return _materialize_project_context_compilation(
+                  objective,
+                  project_ref,
+                  repository_identity,
+                  candidate_map,
+                  edge_items,
+                  budget,
+                  freshness_timestamp_ms,
+                  selected,
+                  buckets,
+              )
+
+
+          '''
+          text = text[:compile_start] + compile_replacement + text[provenance_inputs_start:]
+
+          # --- Provenance wrapper: isolate serialization from traversal. ---
+          trace_start = text.index("def trace_project_context_provenance(\n")
+          bindings_start = text.index("def _normalized_current_bindings(\n", trace_start)
+          trace_replacement = r'''def _provenance_result(
+              compilation: ProjectContextCompilation,
+              starts: tuple[str, ...],
+              nodes: Sequence[ProjectContextCandidate],
+              traversed: set[ProjectContextEdge],
+              source_ids: Sequence[str],
+              exact_source_ids: Sequence[str],
+              root_ids: Sequence[str],
+              truncated: set[str],
+              roots_are_exact_sources: bool,
+              authoritative_path: bool,
+          ) -> dict[str, Any]:
+              result = {
+                  "version": PROJECT_CONTEXT_PROVENANCE_VERSION,
+                  "compilation_digest": compilation.compilation_digest,
+                  "start_ids": list(starts),
+                  "node_ids": [item.candidate_id for item in nodes],
+                  "nodes": [item.to_dict() for item in nodes],
+                  "edges": [
+                      item.to_dict()
+                      for item in sorted(
+                          traversed,
+                          key=lambda edge: (
+                              edge.source_id,
+                              edge.target_id,
+                              edge.relation,
+                              edge.truth_class.value,
+                          ),
+                      )
+                  ],
+                  "source_ids": list(source_ids),
+                  "exact_source_ids": list(exact_source_ids),
+                  "source_reached": bool(source_ids),
+                  "provenance_root_ids": list(root_ids),
+                  "truncated_frontier": sorted(truncated),
+                  "authoritative_path": authoritative_path,
+                  "source_complete": (
+                      roots_are_exact_sources and authoritative_path and not truncated
+                  ),
+                  "bounded": True,
+              }
+              result["trace_digest"] = stable_digest(result)
+              return result
+
+
+          def trace_project_context_provenance(
+              compilation: ProjectContextCompilation,
+              start_ids: Sequence[str],
+              *,
+              max_hops: int = 4,
+              max_nodes: int = 64,
+          ) -> dict[str, Any]:
+              """Trace a bounded authoritative predecessor closure without overclaiming completeness."""
+              starts, max_hops, max_nodes, node_map, incoming = _provenance_inputs(
+                  compilation, start_ids, max_hops, max_nodes
+              )
+              seen, traversed, truncated = _walk_provenance(
+                  starts, incoming, max_hops, max_nodes
+              )
+              summary = _provenance_summary(node_map, incoming, seen, traversed)
+              return _provenance_result(
+                  compilation,
+                  starts,
+                  summary[0],
+                  traversed,
+                  summary[1],
+                  summary[2],
+                  summary[3],
+                  truncated,
+                  summary[4],
+                  summary[5],
+              )
+
+
+          '''
+          text = text[:trace_start] + trace_replacement + text[bindings_start:]
+
+          path.write_text(text, encoding="utf-8")
+
+          # Add one regression for the newly explicit exact budget boundary.
+          tests = Path("tests/test_aura_project_context_compiler.py")
+          test_text = tests.read_text(encoding="utf-8")
+          marker = "def test_compile_rejects_non_exact_projection_budget"
+          if marker not in test_text:
+              test_text += r'''
+
+          def test_compile_rejects_non_exact_projection_budget() -> None:
+              source = _candidate(
+                  "source:target",
+                  CandidateCategory.SOURCE,
+                  D["2"],
+                  answer_determining=True,
+              )
+
+              class DerivedBudget(ProjectionBudget):
+                  pass
+
+              with pytest.raises(ValueError, match="budget must be exact ProjectionBudget"):
+                  _compile((source,), budget=DerivedBudget())
+          '''
+              tests.write_text(test_text, encoding="utf-8")
+          PY
+          python -m py_compile /tmp/pr3_codacy_final_prod.py
+          python /tmp/pr3_codacy_final_prod.py
+      - name: Verify behavior, structure, and complexity
+        run: |
+          python -m py_compile aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          ruff check --select E9,F63,F7,F82 aura_project_context_compiler.py tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          git diff --check
+          python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+          tree = ast.parse(Path('aura_project_context_compiler.py').read_text())
+          targets = {
+              '__post_init__', '_validate_compile_context', '_extend_optional_selection',
+              'compile_project_context_projection', 'trace_project_context_provenance'
+          }
+          for node in ast.walk(tree):
+              if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name in targets:
+                  lines = node.end_lineno - node.lineno + 1
+                  print(f'{node.name}: {lines} lines')
+          PY
+          radon cc -s aura_project_context_compiler.py | grep -E 'ProjectionSelectionReceipt.__post_init__|_validate_compile_context|_extend_optional_selection|compile_project_context_projection|trace_project_context_provenance|_consider_optional_candidate|_compile_candidate_map|_compile_edge_items'
+      - name: Commit only if verified and fast-forwardable
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aura_project_context_compiler.py tests/test_aura_project_context_compiler.py
+          git commit -m "refactor(pr3): close remaining production Codacy hotspots"
+          git fetch origin refactor/source-first-project-context-pr3
+          test "$(git rev-parse HEAD^)" = "$(git rev-parse origin/refactor/source-first-project-context-pr3)" || { echo 'PR3 head moved; refusing non-fast-forward push'; exit 1; }
+          git push origin HEAD:refactor/source-first-project-context-pr3
