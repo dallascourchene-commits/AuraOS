@@ -30,7 +30,16 @@ jobs:
 
       - name: Apply six invariant fixes
         shell: bash
-        run: python /tmp/pr3_fix.py
+        run: |
+          set +e
+          output="$(python /tmp/pr3_fix.py 2>&1)"
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ]; then
+            safe="${output//$'\n'/%0A}"
+            echo "::error title=PR3 transform mismatch::$safe"
+            exit "$status"
+          fi
 
       - name: Normalize repaired-file whitespace
         shell: bash
