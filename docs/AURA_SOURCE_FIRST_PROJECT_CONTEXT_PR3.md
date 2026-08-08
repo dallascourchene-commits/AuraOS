@@ -4,12 +4,12 @@
 
 `IMPLEMENTING`
 
-**Program:** AuraOS Intent-Native Spatial Computing / Ephemeral Arenas foundation  
-**Master unit:** PR3 — Source-first project reconstruction and task-conditioned relational graph  
-**Exact starting `main`:** `bf0c65a9e6ae1dfcbb575401d51a9d22f343d804`  
-**Branch:** `refactor/source-first-project-context-pr3`  
-**Harness:** ARCH v2.3  
-**Default terminal state:** `READY_FOR_HUMAN_REVIEW`  
+**Program:** AuraOS Intent-Native Spatial Computing / Ephemeral Arenas foundation
+**Master unit:** PR3 — Source-first project reconstruction and task-conditioned relational graph
+**Exact starting `main`:** `bf0c65a9e6ae1dfcbb575401d51a9d22f343d804`
+**Branch:** `refactor/source-first-project-context-pr3`
+**Harness:** ARCH v2.3
+**Default terminal state:** `READY_FOR_HUMAN_REVIEW`
 **Automatic merge:** forbidden
 
 ## 1. Objective
@@ -136,7 +136,7 @@ A `COMPLETE` receipt cannot contain missing mandatory evidence. An `INCOMPLETE` 
 - `LOCAL_ONLY` egress class;
 - false mutation/execution/persistence/merge authority inherited from the PR1 authority envelope.
 
-An `INCOMPLETE` compilation has `projection: null`; the same is true through `headless_projection()`. The public `ProjectContextCompilation` constructor also rejects a hand-assembled `INCOMPLETE` record that attempts to smuggle in a PR1 projection, and independently re-proves the exact-current answer-determining source anchor for a hand-assembled `COMPLETE` record.
+An `INCOMPLETE` compilation has `projection: null`; the same is true through `headless_projection()`. The public `ProjectContextCompilation` constructor also rejects a hand-assembled `INCOMPLETE` record that attempts to smuggle in a PR1 projection, independently re-proves the exact-current answer-determining source anchor for a hand-assembled `COMPLETE` record, and revalidates every selected candidate against the same truth/availability/freshness eligibility boundary used by the compiler. Selected unresolved conflicts are rejected as well. This prevents a caller from placing advisory, stale, unavailable, adapter-missing, or conflicting material into a canonical projection by bypassing `compile_project_context_projection()`.
 
 PR3 does not change the PR1 serialized contract or PR2 runtime contract.
 
@@ -197,6 +197,7 @@ PR3 fails closed when:
 - no selected `EXACT_CURRENT`, answer-determining source anchors admission, even if `DERIVED_VERIFIED` source material or unrelated exact source material is present;
 - an `INCOMPLETE` compilation attempts to emit or expose a canonical PR1 projection;
 - a hand-assembled `COMPLETE` compilation cannot independently prove its exact-current answer-determining source anchor;
+- a hand-assembled compilation attempts to mark compiler-ineligible advisory, stale, unavailable, adapter-missing, or conflicting candidates as selected canonical evidence;
 - graph edges reference candidates outside the task-conditioned set;
 - one canonical reference is aliased into multiple candidate roles;
 - an authority-bearing candidate claims an `origin_ref` different from its canonical reference origin;
@@ -215,6 +216,7 @@ The focused PR3 suite must prove at minimum:
 - `DERIVED_VERIFIED` answer source cannot satisfy the exact-current answer-source admission anchor;
 - an unrelated exact source cannot launder a derived answer source into a `COMPLETE` compilation;
 - the public compilation object independently re-proves the exact-current answer-determining source anchor;
+- the public compilation object rejects compiler-ineligible selected candidates even when a forged receipt and PR1 projection contain matching reference IDs;
 - authority-bearing origin claims are structurally bound to `CanonicalReference.canonical_ref` and forged origin claims fail closed;
 - serialized authority non-increase is computed from enforced truth/authority class mapping;
 - provenance rooted only in derived source cannot claim `source_complete`;
