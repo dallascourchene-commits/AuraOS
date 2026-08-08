@@ -6,7 +6,6 @@ on:
       - analysis/pr3-exact-source-proof-count
 
 permissions:
-  issues: write
   contents: read
 
 jobs:
@@ -41,11 +40,9 @@ jobs:
           python -m pytest -q tests/test_aura_project_context_compiler.py tests/test_aura_project_context_acceptance.py
           echo "collected=$collected" >> "$GITHUB_OUTPUT"
 
-      - name: Post exact proof receipt
+      - name: Publish proof notice
         env:
-          GH_TOKEN: ${{ github.token }}
           COLLECTED: ${{ steps.proof.outputs.collected }}
         shell: bash
         run: |
-          gh api repos/dallascourchene-commits/AuraOS/issues/277/comments \
-            -f body="PR3 exact-source focused proof receipt: source SHA \`cc2cb7a2f1e9a1d369ab80f06b9bbeaed5f936ef\`; pytest collection: **${COLLECTED}**; focused suites passed; Python compile passed; Ruff fatal classes E9,F63,F7,F82 passed. Verification branch only; no PR3 source mutation." >/dev/null
+          echo "::notice title=PR3 exact-source proof::SHA cc2cb7a2f1e9a1d369ab80f06b9bbeaed5f936ef; ${COLLECTED}; focused suites passed; compile passed; Ruff E9,F63,F7,F82 passed"
