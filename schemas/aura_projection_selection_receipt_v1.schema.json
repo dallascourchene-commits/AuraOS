@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://auraos.local/schemas/aura_projection_selection_receipt_v1.schema.json",
+  "title": "Aura Projection Selection Receipt V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "objective_digest",
+    "repository_identity_digest",
+    "canonical_owner",
+    "selected",
+    "omitted_irrelevant",
+    "omitted_by_budget",
+    "stale",
+    "unavailable",
+    "conflicting",
+    "source_adapter_missing",
+    "mandatory_evidence_missing",
+    "status",
+    "budget",
+    "receipt_digest"
+  ],
+  "properties": {
+    "version": {"const": "AURA_PROJECTION_SELECTION_RECEIPT_V1"},
+    "objective_digest": {"$ref": "#/$defs/digest"},
+    "repository_identity_digest": {"$ref": "#/$defs/digest"},
+    "canonical_owner": {"const": "aura_unified_memory_continuity"},
+    "selected": {"$ref": "#/$defs/idSet"},
+    "omitted_irrelevant": {"$ref": "#/$defs/idSet"},
+    "omitted_by_budget": {"$ref": "#/$defs/idSet"},
+    "stale": {"$ref": "#/$defs/idSet"},
+    "unavailable": {"$ref": "#/$defs/idSet"},
+    "conflicting": {"$ref": "#/$defs/idSet"},
+    "source_adapter_missing": {"$ref": "#/$defs/idSet"},
+    "mandatory_evidence_missing": {"$ref": "#/$defs/idSet"},
+    "status": {"enum": ["COMPLETE", "INCOMPLETE"]},
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_nodes", "max_edges"],
+      "properties": {
+        "max_nodes": {"type": "integer", "minimum": 1, "maximum": 256},
+        "max_edges": {"type": "integer", "minimum": 1, "maximum": 1024}
+      }
+    },
+    "receipt_digest": {"$ref": "#/$defs/digest"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "COMPLETE"}}, "required": ["status"]},
+      "then": {"properties": {"mandatory_evidence_missing": {"maxItems": 0}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "INCOMPLETE"}}, "required": ["status"]},
+      "then": {"properties": {"mandatory_evidence_missing": {"minItems": 1}}}
+    }
+  ],
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"
+    },
+    "idSet": {
+      "type": "array",
+      "maxItems": 512,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    }
+  }
+}
