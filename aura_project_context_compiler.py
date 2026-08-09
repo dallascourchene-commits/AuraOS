@@ -1189,8 +1189,9 @@ def _conflicts(candidates: Mapping[str, ProjectContextCandidate]) -> set[str]:
             and candidate.reference is not None
         ):
             groups.setdefault(candidate.conflict_key, []).append(candidate)
-        for binding in candidate.temporal_bindings:
-            binding_groups.setdefault(binding.key, []).append((candidate, binding))
+        if _problem(candidate) is None:
+            for binding in candidate.temporal_bindings:
+                binding_groups.setdefault(binding.key, []).append((candidate, binding))
     result: set[str] = set()
     for items in groups.values():
         if len(
