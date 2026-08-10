@@ -112,7 +112,10 @@ def normalize_workspace_event(raw: Mapping[str, Any]) -> EventEnvelope:
 
     Google may evolve resource-data shapes independently of Aura.  This function
     therefore keeps the original payload intact and only extracts the small set of
-    routing-neutral fields Aura needs for durable intake.
+    routing-neutral fields Aura needs for durable intake.  If the provider omits
+    both event id and event time, ``observed_at`` remains empty so local wall-clock
+    time cannot destabilize the content-derived idempotency key; SQLite separately
+    records the local first-seen timestamp.
     """
     if not isinstance(raw, Mapping):
         raise ValueError("workspace event must be a mapping")
@@ -132,7 +135,7 @@ def normalize_workspace_event(raw: Mapping[str, Any]) -> EventEnvelope:
         provider_event_id=str(raw.get("id") or raw.get("event_id") or ""),
         event_type=str(raw.get("type") or raw.get("event_type") or "google.drive.unknown"),
         resource_id=resource_id,
-        observed_at=str(raw.get("time") or raw.get("observed_at") or _utc_now_iso()),
+        observed_at=str(raw.get("time") or raw.get("observed_at") or ""),
         payload=dict(raw),
     )
 
@@ -489,6 +492,7 @@ class CustodianDriveEventAdapter:
         pages = 0
         inserted = 0
         observed = 0
+        next_page = ""
         while pages < max_pages:
             response = client.list_changes(cursor)
             if not isinstance(response, Mapping):
