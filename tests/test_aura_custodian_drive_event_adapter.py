@@ -85,6 +85,26 @@ def test_workspace_redelivery_is_idempotent(tmp_path):
     assert store.pending_count() == 1
 
 
+def test_idless_workspace_redelivery_without_time_is_still_idempotent(tmp_path):
+    store = SQLiteCustodianEventStore(tmp_path / "custodian.sqlite3")
+    adapter = CustodianDriveEventAdapter(store)
+    event = {
+        "type": "drive.updated",
+        "subject": "files/f-idless",
+        "data": {"resource": "files/f-idless"},
+    }
+
+    first = normalize_workspace_event(event)
+    second = normalize_workspace_event(event)
+    assert first.observed_at == ""
+    assert second.observed_at == ""
+    assert first.event_key == second.event_key
+
+    assert adapter.ingest_workspace_events([event]) == 1
+    assert adapter.ingest_workspace_events([event]) == 0
+    assert store.pending_count() == 1
+
+
 def test_change_row_key_is_replay_stable_for_same_page():
     raw = {"fileId": "file-1", "changeType": "file", "removed": False}
     first = normalize_drive_change(raw, page_token="p1", ordinal=0)
