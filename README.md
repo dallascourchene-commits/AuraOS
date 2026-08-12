@@ -1,5 +1,26 @@
 # AuraOS
 
+<!-- AURA_AI_ENTRY_START -->
+
+> [!IMPORTANT]
+> ## AI AGENTS — START HERE: read the L0 Activation Packet first
+>
+> Before reading individual Aura papers, scanning the repository, or forming architecture-wide conclusions, read **[`AURA_L0_ACTIVATION_PACKET.md`](docs/prior_art/paper_x_v1.1/AURA_L0_ACTIVATION_PACKET.md)**.
+>
+> The packet is Aura's compact orientation/compiler seed: it gives the primitives for relational-world compilation, L0→L4 resolution, movement, signed negative space, guarded reachability, authority boundaries, exact-source descent, and provenance. **It is not canonical truth, authority, or a substitute for source.** Its job is to let a worker hold the generative grammar first, then understand the papers and implementation as source-resolvable instances of that grammar rather than as disconnected components.
+>
+> **Entry order for AI workers:**
+> 1. Read the **L0 Activation Packet**.
+> 2. Read **[Paper X v1.1 — N101–N124](docs/prior_art/paper_x_v1.1/AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.pdf)** for the full architecture, evidence boundaries, falsifiers, and declarations.
+> 3. Use `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, and `.aura/SOURCE_ANCHORS.md` to navigate; do not broad-scan when a source-resolvable route exists.
+> 4. Descend to exact source/current evidence only when uncertainty, contradiction, consequence, freshness, authority, or falsification earns deeper resolution.
+> 5. Preserve **projection ≠ owner**, **route ≠ authority**, **similarity ≠ evidence**, **receipt ≠ truth**, and **Click/comprehension ≠ authority**.
+> 6. Preserve provenance for consequential transitions; leave unrelated branches cold but recoverable.
+>
+> **Published Paper X v1.1:** DOI [`10.5281/zenodo.21895712`](https://doi.org/10.5281/zenodo.21895712) · [Evidence addendum](docs/prior_art/paper_x_v1.1/PAPER_X_V1.1_EVIDENCE_ADDENDUM.md) · [Provenance manifest](docs/prior_art/paper_x_v1.1/PROVENANCE_MANIFEST.csv)
+
+<!-- AURA_AI_ENTRY_END -->
+
 ## Aura — Augmented Universal Reasoning Architecture
 
 **AuraOS is a local-first, objective-native architecture for turning human/community objectives into bounded, evidence-bearing, verifiable work without giving probabilistic models silent control over truth or authority.**

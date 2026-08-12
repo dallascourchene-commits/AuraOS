@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786495399,
+  "generated_at_unix": 1786495581,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1547,
+    "repo_file_count": 1548,
     "source_paths_without_topology": [
       "_aura_architect_consolidation_benchmark_legacy.py",
       "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -112,17 +112,17 @@
     "coverage_complete_for_repo_scan": true
   },
   "summary": {
-    "file_count": 1547,
-    "total_bytes": 25657998,
-    "text_tokens_est": 6405233,
+    "file_count": 1548,
+    "total_bytes": 25740338,
+    "text_tokens_est": 6425828,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 197,
+      "knowledge_artifact": 201,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 984,
-      "schema_or_lexicon": 240,
-      "support_file": 48
+      "python_module": 983,
+      "schema_or_lexicon": 237,
+      "support_file": 49
     },
     "topology_nodes": 11393,
     "topology_edges": 27882,
@@ -139,17 +139,17 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1547,
-      "bytes": 25657998,
-      "tokens_est": 6405233,
+      "files": 1548,
+      "bytes": 25740338,
+      "tokens_est": 6425828,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 197,
+        "knowledge_artifact": 201,
         "native_accelerator": 8,
         "operator_script": 6,
-        "python_module": 984,
-        "schema_or_lexicon": 240,
-        "support_file": 48
+        "python_module": 983,
+        "schema_or_lexicon": 237,
+        "support_file": 49
       }
     },
     {
@@ -417,10 +417,13 @@
         "docs/fragments/README_REFACTOR_CODE_QUALITY.md",
         "docs/fragments/USER_GUIDE_REFACTOR_CODE_QUALITY.md",
         "docs/prior_art/README.md",
+        "docs/prior_art/paper_x_v1.1/AURA_L0_ACTIVATION_PACKET.md",
+        "docs/prior_art/paper_x_v1.1/AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.md",
+        "docs/prior_art/paper_x_v1.1/PAPER_X_V1.1_EVIDENCE_ADDENDUM.md",
+        "docs/prior_art/paper_x_v1.1/ZENODO_PUBLICATION_RECORD.md",
         "forged_roots_audit.md",
         "papers/AuraOS_Paper_IX_CURRENT.md",
-        "refactored-auraos-upgrades.md",
-        "tools/construction_demo_assets/README.md"
+        "refactored-auraos-upgrades.md"
       ]
     },
     {
@@ -1028,8 +1031,6 @@
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/provider-routing-materialize.yml",
-      ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
-      ".github/workflows/publish-paper-x-v1.1-once.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
@@ -1062,7 +1063,6 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
-      ".github/workflows/finish-paper-x-v11.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-planning-board-contracts.yml",
@@ -1084,8 +1084,6 @@
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/provider-routing-materialize.yml",
-      ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
-      ".github/workflows/publish-paper-x-v1.1-once.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
@@ -1300,21 +1298,6 @@
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
     ],
-    "python scripts/aura_navigation_refresh.py --root .": [
-      ".github/workflows/finish-paper-x-v11.yml",
-      ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
-      ".github/workflows/publish-paper-x-v1.1-once.yml",
-      ".github/workflows/sync-analysis-codemap.yml",
-      "README.md"
-    ],
-    "python scripts/aura_source_anchor_map.py --root . --check": [
-      ".github/workflows/finish-paper-x-v11.yml",
-      ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
-      ".github/workflows/publish-paper-x-v1.1-once.yml",
-      ".github/workflows/source-anchor-verify.yml",
-      ".github/workflows/sync-analysis-codemap.yml",
-      "README.md"
-    ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
     ],
@@ -1394,6 +1377,15 @@
     ],
     "python -m aura_persistence_cli": [
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
+    ],
+    "python scripts/aura_source_anchor_map.py --root . --check": [
+      ".github/workflows/source-anchor-verify.yml",
+      ".github/workflows/sync-analysis-codemap.yml",
+      "README.md"
+    ],
+    "python scripts/aura_navigation_refresh.py --root .": [
+      ".github/workflows/sync-analysis-codemap.yml",
+      "README.md"
     ],
     "python aura_codebase_navigator.py > \"$EVIDENCE_DIR/codemap.log\" 2>&1": [
       ".github/workflows/unified-memory-continuity-verified-publish-command.yml"
@@ -3747,14 +3739,6 @@
         "line": 90,
         "end_line": 92,
         "semantic_id": "scripts/install_refactor_quality_docs.py#function:main:2b43502f7de024eb",
-        "signature_hash": "1107cedc597d81be"
-      },
-      {
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "kind": "function",
-        "line": 217,
-        "end_line": 221,
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:main:54e74d83d062d9d7",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -100568,14 +100552,6 @@
         "end_line": 22,
         "semantic_id": "scripts/install_refactor_quality_docs.py#function:replace_or_insert:45a7cef12582c0c1",
         "signature_hash": "fdc9d554d5109d6d"
-      },
-      {
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "kind": "function",
-        "line": 122,
-        "end_line": 129,
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:replace_or_insert:112b843d5a76c3a7",
-        "signature_hash": "0775bc8d853e8448"
       }
     ],
     "add_contents": [
@@ -100596,66 +100572,6 @@
         "end_line": 87,
         "semantic_id": "scripts/install_refactor_quality_docs.py#function:install:23f58167360e5f66",
         "signature_hash": "51e3fc8269189baf"
-      }
-    ],
-    "request_json": [
-      {
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "kind": "function",
-        "line": 61,
-        "end_line": 64,
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:request_json:eaff86ac69052a3b",
-        "signature_hash": "e05a7d6b8a2970c3"
-      }
-    ],
-    "download": [
-      {
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "kind": "function",
-        "line": 67,
-        "end_line": 70,
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:download:ffa7ff9841f9c651",
-        "signature_hash": "bac79ffa0110b0c4"
-      }
-    ],
-    "find_files": [
-      {
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "kind": "function",
-        "line": 73,
-        "end_line": 81,
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:find_files:d62c398df2b19ad7",
-        "signature_hash": "aafe655586774355"
-      }
-    ],
-    "mirror_publication": [
-      {
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "kind": "function",
-        "line": 84,
-        "end_line": 119,
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:mirror_publication:6ea7faa77e04fa8c",
-        "signature_hash": "15b5076171062cba"
-      }
-    ],
-    "patch_readmes": [
-      {
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "kind": "function",
-        "line": 132,
-        "end_line": 185,
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:patch_readmes:508afb8c98ac4f5a",
-        "signature_hash": "e413385ea324ffc8"
-      }
-    ],
-    "write_publication_receipt": [
-      {
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "kind": "function",
-        "line": 188,
-        "end_line": 214,
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:write_publication_receipt:c533e942c09e406e",
-        "signature_hash": "8d3c13035346a612"
       }
     ],
     "_replace_marked": [
@@ -163205,67 +163121,6 @@
       ]
     },
     {
-      "path": ".github/workflows/finish-paper-x-v11.yml",
-      "role": "schema_or_lexicon",
-      "bytes": 2401,
-      "lines": 72,
-      "tokens_est": 601,
-      "symbol_count": 0,
-      "commands": [
-        "python -m pip",
-        "python scripts/aura_navigation_refresh.py --root .",
-        "python scripts/aura_source_anchor_map.py --root . --check"
-      ],
-      "command_lines": {
-        "python -m pip": [
-          46,
-          47
-        ],
-        "python scripts/aura_navigation_refresh.py --root .": [
-          51
-        ],
-        "python scripts/aura_source_anchor_map.py --root . --check": [
-          52
-        ]
-      },
-      "topology": {},
-      "digest8": "d839ede65c8e9c79",
-      "vector": [
-        -0.163689,
-        -0.257974,
-        -0.127023,
-        0.090356,
-        0.310354,
-        0.082499,
-        -0.07988,
-        0.05369,
-        -0.069404,
-        -0.077261,
-        0.153213,
-        -0.072023,
-        0.13488,
-        0.032738,
-        0.132261,
-        0.200355,
-        -0.328687,
-        0.07988,
-        -0.064166,
-        0.234402,
-        -0.10607,
-        0.0275,
-        0.014405,
-        0.216069,
-        -0.179403,
-        -0.200355,
-        0.32083,
-        -0.29464,
-        0.328687,
-        0.011786,
-        0.056309,
-        0.218688
-      ]
-    },
-    {
       "path": ".github/workflows/huggingface-space-demo.yml",
       "role": "schema_or_lexicon",
       "bytes": 3453,
@@ -165062,136 +164917,6 @@
         -0.203305,
         0.276816,
         -0.201008
-      ]
-    },
-    {
-      "path": ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
-      "role": "schema_or_lexicon",
-      "bytes": 11835,
-      "lines": 223,
-      "tokens_est": 2952,
-      "symbol_count": 0,
-      "commands": [
-        "python -m py_compile",
-        "python -m pip",
-        "python scripts/aura_navigation_refresh.py --root .",
-        "python scripts/aura_source_anchor_map.py --root . --check"
-      ],
-      "command_lines": {
-        "python -m py_compile": [
-          163
-        ],
-        "python -m pip": [
-          193,
-          194
-        ],
-        "python scripts/aura_navigation_refresh.py --root .": [
-          199
-        ],
-        "python scripts/aura_source_anchor_map.py --root . --check": [
-          200
-        ]
-      },
-      "topology": {},
-      "digest8": "37c8962cd5d06c42",
-      "vector": [
-        0.112598,
-        -0.238233,
-        -0.058077,
-        0.010667,
-        -0.017779,
-        -0.02489,
-        0.202676,
-        0.242974,
-        0.216899,
-        0.190824,
-        -0.266679,
-        -0.17186,
-        -0.261938,
-        -0.017779,
-        -0.055706,
-        0.039113,
-        0.017779,
-        0.205047,
-        0.003556,
-        -0.181342,
-        -0.114968,
-        0.242974,
-        -0.032001,
-        -0.22401,
-        0.240604,
-        0.235863,
-        0.254827,
-        0.22401,
-        0.276161,
-        -0.107857,
-        -0.190824,
-        0.129191
-      ]
-    },
-    {
-      "path": ".github/workflows/publish-paper-x-v1.1-once.yml",
-      "role": "schema_or_lexicon",
-      "bytes": 14377,
-      "lines": 238,
-      "tokens_est": 3587,
-      "symbol_count": 0,
-      "commands": [
-        "python -m py_compile",
-        "python -m pip",
-        "python scripts/aura_navigation_refresh.py --root .",
-        "python scripts/aura_source_anchor_map.py --root . --check"
-      ],
-      "command_lines": {
-        "python -m py_compile": [
-          181
-        ],
-        "python -m pip": [
-          211,
-          212
-        ],
-        "python scripts/aura_navigation_refresh.py --root .": [
-          216
-        ],
-        "python scripts/aura_source_anchor_map.py --root . --check": [
-          217
-        ]
-      },
-      "topology": {},
-      "digest8": "509936b481964c08",
-      "vector": [
-        0.014813,
-        -0.1387,
-        0.200643,
-        0.095609,
-        0.2572,
-        0.060597,
-        -0.267973,
-        -0.039051,
-        -0.311064,
-        0.00404,
-        0.27336,
-        0.136006,
-        -0.162938,
-        0.025585,
-        0.136006,
-        -0.028279,
-        -0.179098,
-        -0.33261,
-        0.030972,
-        -0.176404,
-        -0.052517,
-        0.222189,
-        0.187177,
-        0.232962,
-        0.246428,
-        -0.055211,
-        -0.230268,
-        -0.00404,
-        0.232962,
-        -0.100995,
-        -0.214109,
-        -0.090222
       ]
     },
     {
@@ -167897,9 +167622,9 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "bytes": 27705,
-      "lines": 694,
-      "tokens_est": 6833,
+      "bytes": 29721,
+      "lines": 715,
+      "tokens_est": 7332,
       "symbol_count": 0,
       "commands": [
         "python scripts/aura_navigation_refresh.py --root .",
@@ -167915,75 +167640,75 @@
       ],
       "command_lines": {
         "python scripts/aura_navigation_refresh.py --root .": [
-          341,
-          344,
-          565
+          362,
+          365,
+          586
         ],
         "python scripts/aura_navigation_refresh.py --root . --refresh path/to/changed.py tests/test_changed.py": [
-          344
+          365
         ],
         "python scripts/aura_source_anchor_map.py --root . --check": [
-          347,
-          566
+          368,
+          587
         ],
         "python3 -m venv": [
-          556
+          577
         ],
         "python -m pip": [
-          558,
-          559
+          579,
+          580
         ],
         "python -m aura_codemap_verify": [
-          567
+          588
         ],
         "python aura_human_agent_arena_server.py --repo-root . --demo": [
-          573
+          594
         ],
         "python aura_coding_arena_server.py --demo": [
-          574
+          595
         ],
         "python aura_showcase_server.py --demo-project winnipeg_pathways": [
-          575
+          596
         ],
         "python scripts/aura_architecture_harness.py \\": [
-          581
+          602
         ]
       },
       "topology": {},
-      "digest8": "412451b82cb14c27",
+      "digest8": "4c99e9b7c4b63fda",
       "vector": [
-        0.06565,
-        -0.269037,
-        0.099119,
-        -0.024458,
-        0.06565,
-        -0.001287,
-        0.070799,
-        0.240717,
-        -0.287059,
-        -0.052778,
-        0.160907,
-        0.158333,
-        0.317953,
-        -0.070799,
-        -0.114566,
-        0.17378,
-        0.114566,
-        0.106842,
-        -0.006436,
-        0.292208,
-        0.140311,
-        0.207249,
-        -0.052778,
-        -0.083672,
-        0.30508,
-        0.163482,
-        -0.001287,
-        -0.317953,
-        -0.001287,
-        -0.021883,
-        0.289633,
-        0.269037
+        0.208975,
+        -0.272018,
+        -0.232324,
+        -0.227655,
+        -0.150602,
+        0.043196,
+        0.295367,
+        -0.108574,
+        0.024517,
+        -0.012842,
+        -0.131923,
+        0.159942,
+        0.036191,
+        -0.255674,
+        -0.145932,
+        0.141263,
+        0.103904,
+        -0.045531,
+        0.117913,
+        0.199636,
+        0.281358,
+        0.024517,
+        0.258009,
+        -0.117913,
+        -0.295367,
+        -0.031521,
+        0.180956,
+        -0.204305,
+        -0.054871,
+        -0.236994,
+        0.08289,
+        -0.213645
       ]
     },
     {
@@ -207022,47 +206747,277 @@
     {
       "path": "docs/prior_art/README.md",
       "role": "knowledge_artifact",
-      "bytes": 280,
-      "lines": 4,
-      "tokens_est": 70,
+      "bytes": 1579,
+      "lines": 21,
+      "tokens_est": 394,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "8316eda3d9aed65e",
+      "digest8": "7164f3929a831447",
       "vector": [
-        0.067029,
-        -0.180058,
-        0.237886,
-        -0.122229,
-        -0.185315,
-        0.201086,
-        0.003943,
-        0.287829,
-        -0.206343,
-        0.261543,
-        -0.256286,
-        -0.195829,
-        0.048629,
-        -0.106457,
-        0.198458,
-        -0.074914,
-        0.085429,
-        0.090686,
-        -0.279943,
-        0.109086,
-        -0.006571,
-        0.206343,
-        -0.130115,
-        -0.111715,
-        0.056514,
-        -0.261543,
-        0.269429,
-        -0.227372,
-        0.040743,
-        -0.164286,
-        0.1932,
-        -0.143257
+        -0.127703,
+        0.011849,
+        -0.069776,
+        0.09874,
+        0.001317,
+        -0.256723,
+        0.156667,
+        0.1593,
+        0.061877,
+        0.032913,
+        0.035546,
+        0.1593,
+        0.217227,
+        -0.038179,
+        0.280421,
+        -0.011849,
+        -0.333082,
+        0.283054,
+        -0.206695,
+        -0.169832,
+        0.148768,
+        -0.009216,
+        -0.182997,
+        0.09874,
+        -0.309384,
+        -0.230392,
+        0.19353,
+        -0.19353,
+        0.035546,
+        -0.243558,
+        -0.011849,
+        -0.285687
+      ]
+    },
+    {
+      "path": "docs/prior_art/paper_x_v1.1/AURA_L0_ACTIVATION_PACKET.md",
+      "role": "knowledge_artifact",
+      "bytes": 5008,
+      "lines": 101,
+      "tokens_est": 1251,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ef04e76136df1572",
+      "vector": [
+        -0.130799,
+        0.108796,
+        0.138134,
+        0.04034,
+        -0.020781,
+        0.304384,
+        -0.233483,
+        0.169917,
+        0.103906,
+        0.003667,
+        -0.101461,
+        -0.213924,
+        0.233483,
+        -0.233483,
+        -0.19681,
+        0.042785,
+        0.289715,
+        -0.169917,
+        -0.245707,
+        -0.213924,
+        0.015892,
+        0.023226,
+        -0.231038,
+        -0.231038,
+        0.255487,
+        -0.072123,
+        0.228593,
+        0.11613,
+        -0.231038,
+        -0.069678,
+        0.155248,
+        -0.111241
+      ]
+    },
+    {
+      "path": "docs/prior_art/paper_x_v1.1/AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.md",
+      "role": "knowledge_artifact",
+      "bytes": 109879,
+      "lines": 1262,
+      "tokens_est": 27470,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d30189d238a20722",
+      "vector": [
+        0.016288,
+        -0.081439,
+        -0.20957,
+        0.142247,
+        0.083611,
+        0.048863,
+        -0.179166,
+        -0.040177,
+        0.226943,
+        0.038005,
+        0.114015,
+        -0.231287,
+        0.03149,
+        0.13356,
+        0.253004,
+        0.207398,
+        0.179166,
+        -0.185681,
+        0.231287,
+        -0.155277,
+        -0.261691,
+        0.237802,
+        -0.205226,
+        -0.005429,
+        0.190024,
+        0.237802,
+        -0.246489,
+        -0.07058,
+        0.207398,
+        0.127045,
+        -0.218257,
+        0.253004
+      ]
+    },
+    {
+      "path": "docs/prior_art/paper_x_v1.1/PACKAGE_ZIP_SHA256_v1.1.txt",
+      "role": "support_file",
+      "bytes": 143,
+      "lines": 2,
+      "tokens_est": 36,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ac3dab303dfa44ae",
+      "vector": [
+        -0.123631,
+        -0.28308,
+        -0.266904,
+        0.021953,
+        0.086657,
+        0.232241,
+        -0.211443,
+        0.241484,
+        0.098211,
+        0.003466,
+        0.010399,
+        0.144428,
+        0.151361,
+        -0.010399,
+        0.211443,
+        -0.280769,
+        0.142118,
+        -0.065859,
+        0.246106,
+        0.199889,
+        0.243795,
+        -0.051994,
+        0.172159,
+        -0.285391,
+        0.107455,
+        0.017331,
+        -0.172159,
+        0.269215,
+        0.262282,
+        -0.077414,
+        0.056616,
+        -0.031197
+      ]
+    },
+    {
+      "path": "docs/prior_art/paper_x_v1.1/PAPER_X_V1.1_EVIDENCE_ADDENDUM.md",
+      "role": "knowledge_artifact",
+      "bytes": 1456,
+      "lines": 21,
+      "tokens_est": 364,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c835d7f725ca70b8",
+      "vector": [
+        -0.103462,
+        -0.070789,
+        -0.162271,
+        0.253753,
+        -0.160093,
+        -0.221081,
+        0.083858,
+        0.127421,
+        -0.266822,
+        -0.090393,
+        0.027227,
+        -0.255931,
+        0.247219,
+        0.062077,
+        -0.236328,
+        -0.033761,
+        -0.107818,
+        -0.08168,
+        -0.059899,
+        0.149202,
+        -0.264644,
+        -0.247219,
+        -0.258109,
+        -0.23415,
+        0.216725,
+        0.11653,
+        -0.218903,
+        0.155737,
+        -0.242862,
+        0.033761,
+        0.025049,
+        -0.194943
+      ]
+    },
+    {
+      "path": "docs/prior_art/paper_x_v1.1/ZENODO_PUBLICATION_RECORD.md",
+      "role": "knowledge_artifact",
+      "bytes": 1761,
+      "lines": 27,
+      "tokens_est": 436,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f78c315776308b44",
+      "vector": [
+        -0.005841,
+        0.237155,
+        -0.099301,
+        -0.150704,
+        -0.286221,
+        0.117993,
+        0.241828,
+        0.12033,
+        -0.001168,
+        0.139022,
+        0.129676,
+        0.129676,
+        0.255847,
+        -0.199771,
+        0.255847,
+        0.146031,
+        0.286221,
+        0.010514,
+        0.127339,
+        -0.176406,
+        0.209117,
+        0.068927,
+        0.146031,
+        -0.178742,
+        0.251174,
+        -0.11332,
+        -0.148368,
+        -0.258183,
+        0.141358,
+        0.16005,
+        0.071263,
+        0.225472
       ]
     },
     {
@@ -211875,52 +211830,6 @@
         0.116024,
         0.191635,
         -0.003911
-      ]
-    },
-    {
-      "path": "scripts/publish_paper_x_v1_1_once.py",
-      "role": "python_module",
-      "bytes": 10609,
-      "lines": 226,
-      "tokens_est": 2645,
-      "symbol_count": 8,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "239428bdab1fde9a",
-      "vector": [
-        -0.17897,
-        -0.023225,
-        -0.162576,
-        0.034155,
-        -0.181702,
-        -0.32925,
-        0.061478,
-        -0.165308,
-        -0.015028,
-        0.091534,
-        0.209026,
-        0.157111,
-        0.023225,
-        -0.27187,
-        -0.096999,
-        -0.263673,
-        0.116125,
-        0.088802,
-        0.034155,
-        0.053281,
-        -0.217223,
-        0.113393,
-        -0.116125,
-        0.209026,
-        -0.056013,
-        -0.307391,
-        -0.310123,
-        0.16804,
-        0.187167,
-        -0.312856,
-        0.012296,
-        0.198096
       ]
     },
     {
@@ -252313,6 +252222,11 @@
       "docs/fragments/README_REFACTOR_CODE_QUALITY.md",
       "docs/fragments/USER_GUIDE_REFACTOR_CODE_QUALITY.md",
       "docs/prior_art/README.md",
+      "docs/prior_art/paper_x_v1.1/AURA_L0_ACTIVATION_PACKET.md",
+      "docs/prior_art/paper_x_v1.1/AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.md",
+      "docs/prior_art/paper_x_v1.1/PACKAGE_ZIP_SHA256_v1.1.txt",
+      "docs/prior_art/paper_x_v1.1/PAPER_X_V1.1_EVIDENCE_ADDENDUM.md",
+      "docs/prior_art/paper_x_v1.1/ZENODO_PUBLICATION_RECORD.md",
       "download_papers.py",
       "download_zenodo_papers.py",
       "english_lexicon.json",
@@ -352434,86 +352348,6 @@
         "file_digest8": "3ad7b4c6dbb3ea84"
       },
       {
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:download:ffa7ff9841f9c651",
-        "name": "download",
-        "kind": "function",
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "line": 67,
-        "end_line": 70,
-        "signature_hash": "bac79ffa0110b0c4",
-        "file_digest8": "239428bdab1fde9a"
-      },
-      {
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:find_files:d62c398df2b19ad7",
-        "name": "find_files",
-        "kind": "function",
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "line": 73,
-        "end_line": 81,
-        "signature_hash": "aafe655586774355",
-        "file_digest8": "239428bdab1fde9a"
-      },
-      {
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:main:54e74d83d062d9d7",
-        "name": "main",
-        "kind": "function",
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "line": 217,
-        "end_line": 221,
-        "signature_hash": "1107cedc597d81be",
-        "file_digest8": "239428bdab1fde9a"
-      },
-      {
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:mirror_publication:6ea7faa77e04fa8c",
-        "name": "mirror_publication",
-        "kind": "function",
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "line": 84,
-        "end_line": 119,
-        "signature_hash": "15b5076171062cba",
-        "file_digest8": "239428bdab1fde9a"
-      },
-      {
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:patch_readmes:508afb8c98ac4f5a",
-        "name": "patch_readmes",
-        "kind": "function",
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "line": 132,
-        "end_line": 185,
-        "signature_hash": "e413385ea324ffc8",
-        "file_digest8": "239428bdab1fde9a"
-      },
-      {
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:replace_or_insert:112b843d5a76c3a7",
-        "name": "replace_or_insert",
-        "kind": "function",
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "line": 122,
-        "end_line": 129,
-        "signature_hash": "0775bc8d853e8448",
-        "file_digest8": "239428bdab1fde9a"
-      },
-      {
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:request_json:eaff86ac69052a3b",
-        "name": "request_json",
-        "kind": "function",
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "line": 61,
-        "end_line": 64,
-        "signature_hash": "e05a7d6b8a2970c3",
-        "file_digest8": "239428bdab1fde9a"
-      },
-      {
-        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:write_publication_receipt:c533e942c09e406e",
-        "name": "write_publication_receipt",
-        "kind": "function",
-        "file": "scripts/publish_paper_x_v1_1_once.py",
-        "line": 188,
-        "end_line": 214,
-        "signature_hash": "8d3c13035346a612",
-        "file_digest8": "239428bdab1fde9a"
-      },
-      {
         "semantic_id": "scripts/update_architect_benchmark_readme.py#function:_load:c1c403cb81d8593a",
         "name": "_load",
         "kind": "function",
@@ -410034,7 +409868,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "b8eeebad84ab045c7f8171fcecfb98b0",
-    "payload_hash": "69461319f3a6d0be29836a1e7edebe4f"
+    "record_fingerprint": "da4472d840d2be8b4bf430c4367d852f",
+    "payload_hash": "f89e7dc522f79b982fc61acb8e477956"
   }
 }
