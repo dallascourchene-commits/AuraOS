@@ -1,0 +1,71 @@
+name: Finish Paper X v1.1 publication
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/finish-paper-x-v11.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Rebind to current main
+        run: |
+          git fetch origin main
+          git checkout -B main origin/main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Publish sealed Paper X release from Zenodo
+        run: python scripts/publish_paper_x_v1_1_once.py
+
+      - name: Remove one-shot publication machinery before navigation refresh
+        run: |
+          git rm -f .github/workflows/publish-paper-x-v1.1-once.yml || true
+          git rm -f .github/workflows/publish-paper-x-v1.1-once-v2.yml || true
+          git rm -f .github/workflows/finish-paper-x-v11.yml || true
+          git rm -f scripts/publish_paper_x_v1_1_once.py || true
+
+      - name: Install declared dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Regenerate CODEMAP topology and source anchors
+        run: |
+          python scripts/aura_navigation_refresh.py --root .
+          python scripts/aura_source_anchor_map.py --root . --check
+          python -m py_compile docs/prior_art/paper_x_v1.1/aura_relational_world_reference.py
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s .aura/SOURCE_ANCHORS.md
+          test -s topology_map.json
+          test -s Aura_Memory/live_topology_ast.json
+          git diff --check
+
+      - name: Commit directly to main
+        run: |
+          git config user.name "AuraOS Publication Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add README.md docs/prior_art/README.md docs/prior_art/paper_x_v1.1/
+          git add .aura/CODEMAP.json .aura/CODEMAP.md .aura/SOURCE_ANCHORS.md topology_map.json
+          git add -f Aura_Memory/live_topology_ast.json
+          git status --short
+          git diff --cached --stat
+          git diff --cached --check
+          git commit -m "docs: publish Paper X v1.1 and L0 activation entry"
+          git push origin HEAD:main
