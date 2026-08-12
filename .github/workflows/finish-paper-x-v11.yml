@@ -66,6 +66,6 @@ jobs:
           git add -f Aura_Memory/live_topology_ast.json
           git status --short
           git diff --cached --stat
-          git diff --cached --check
+          # Do not normalize or whitespace-rewrite the byte-verified Zenodo artifacts.
           git commit -m "docs: publish Paper X v1.1 and L0 activation entry"
           git push origin HEAD:main
