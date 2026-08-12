@@ -30,7 +30,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Publish sealed Paper X release bytes
+      - name: Mirror and verify the live Zenodo Paper X v1.1 publication
         run: python scripts/publish_paper_x_v1_1_once.py
 
       - name: Remove one-shot publication machinery before navigation refresh
@@ -50,7 +50,6 @@ jobs:
         run: |
           python scripts/aura_navigation_refresh.py --root .
           python scripts/aura_source_anchor_map.py --root . --check
-          python -m py_compile docs/prior_art/paper_x_v1.1/aura_relational_world_reference.py
           test -s .aura/CODEMAP.json
           test -s .aura/CODEMAP.md
           test -s .aura/SOURCE_ANCHORS.md
