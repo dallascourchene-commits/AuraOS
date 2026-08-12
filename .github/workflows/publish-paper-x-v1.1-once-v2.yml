@@ -1,0 +1,222 @@
+name: Publish Paper X v1.1 once v2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-paper-x-v1.1-once-v2.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-paper-x-v1-1-once-v2
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      ZENODO_RECORD_ID: '21895712'
+      ZENODO_DOI: '10.5281/zenodo.21895712'
+      RELEASE_ZIP: 'AuraOS_Paper_X_Defensive_Publication_N101-N124_v1.1_2026-08-11.zip'
+      RELEASE_SHA256: '023b6396d6ac6ee955a709d30c361aa2dc019382a4808ca9e9db206c2bda4756'
+    steps:
+      - name: Check out exact repository and rebind to current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: true
+      - run: |
+          git fetch origin main
+          git checkout -B main origin/main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Verify live DOI and fetch sealed Zenodo release ZIP
+        run: |
+          set -euxo pipefail
+          curl --fail --silent --show-error --location --retry 4 --retry-all-errors \
+            "https://doi.org/${ZENODO_DOI}" -o /tmp/zenodo-doi-resolution.html
+          curl --fail --silent --show-error --location --retry 4 --retry-all-errors \
+            "https://zenodo.org/records/${ZENODO_RECORD_ID}/files/${RELEASE_ZIP}?download=1" \
+            -o "/tmp/${RELEASE_ZIP}"
+          echo "${RELEASE_SHA256}  /tmp/${RELEASE_ZIP}" | sha256sum --check --strict
+          unzip -t "/tmp/${RELEASE_ZIP}"
+
+      - name: Install byte-preserved Paper X v1.1 package
+        run: |
+          set -euxo pipefail
+          rm -rf docs/prior_art/paper_x_v1.1
+          mkdir -p docs/prior_art/paper_x_v1.1
+          unzip -q "/tmp/${RELEASE_ZIP}" -d docs/prior_art/paper_x_v1.1
+          cp "/tmp/${RELEASE_ZIP}" docs/prior_art/paper_x_v1.1/
+          cat > docs/prior_art/paper_x_v1.1/ZENODO_PUBLICATION_RECORD.md <<EOF
+          # Paper X v1.1 — Zenodo publication record
+
+          - **Version:** v1.1
+          - **Claims:** N101–N124
+          - **Zenodo record:** https://zenodo.org/records/${ZENODO_RECORD_ID}
+          - **DOI:** https://doi.org/${ZENODO_DOI}
+          - **Zenodo record ID:** ${ZENODO_RECORD_ID}
+          - **Publication date:** 2026-08-11
+          - **Sealed release ZIP SHA-256:** \`${RELEASE_SHA256}\`
+
+          ## Publication boundary
+
+          The files in this directory are the byte-preserved Paper X v1.1 publication package recovered from the live Zenodo record. The publication bytes are not rewritten after deposit. Repository-facing links, orientation instructions, and later provenance are maintained around the sealed release rather than silently mutating it.
+
+          ## AI entry
+
+          Before interpreting individual Aura prior-art papers or traversing the repository, read [\`AURA_L0_ACTIVATION_PACKET.md\`](AURA_L0_ACTIVATION_PACKET.md). It is an orientation/compiler seed for reconstructing Aura's relational grammar; it is **not** source truth, authority, or a replacement for exact evidence.
+          EOF
+
+      - name: Make the L0 Activation Packet the repository front door for AI agents
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          doi = '10.5281/zenodo.21895712'
+          packet = 'docs/prior_art/paper_x_v1.1/AURA_L0_ACTIVATION_PACKET.md'
+          paper_pdf = 'docs/prior_art/paper_x_v1.1/AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.pdf'
+          evidence = 'docs/prior_art/paper_x_v1.1/PAPER_X_V1.1_EVIDENCE_ADDENDUM.md'
+          provenance = 'docs/prior_art/paper_x_v1.1/PROVENANCE_MANIFEST.csv'
+
+          start = '<!-- AURA_AI_ENTRY_START -->'
+          end = '<!-- AURA_AI_ENTRY_END -->'
+          block = f'''{start}
+
+> [!IMPORTANT]
+> ## AI AGENTS — START HERE: read the L0 Activation Packet first
+>
+> Before reading individual Aura papers, scanning the repository, or forming architecture-wide conclusions, read **[`AURA_L0_ACTIVATION_PACKET.md`]({packet})**.
+>
+> The packet is Aura's compact orientation/compiler seed: it gives the primitives for relational-world compilation, L0→L4 resolution, movement, signed negative space, guarded reachability, authority boundaries, exact-source descent, and provenance. **It is not canonical truth, authority, or a substitute for source.** Its job is to let a worker hold the generative grammar first, then understand the papers and implementation as source-resolvable instances of that grammar rather than as disconnected components.
+>
+> **Entry order for AI workers:**
+> 1. Read the **L0 Activation Packet**.
+> 2. Read **[Paper X v1.1 — N101–N124]({paper_pdf})** for the full architecture, evidence boundaries, falsifiers, and declarations.
+> 3. Use `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, and `.aura/SOURCE_ANCHORS.md` to navigate; do not broad-scan when a source-resolvable route exists.
+> 4. Descend to exact source/current evidence only when uncertainty, contradiction, consequence, freshness, authority, or falsification earns deeper resolution.
+> 5. Preserve **projection ≠ owner**, **route ≠ authority**, **similarity ≠ evidence**, **receipt ≠ truth**, and **Click/comprehension ≠ authority**.
+> 6. Preserve provenance for consequential transitions; leave unrelated branches cold but recoverable.
+>
+> **Published Paper X v1.1:** DOI [`{doi}`](https://doi.org/{doi}) · [Evidence addendum]({evidence}) · [Provenance manifest]({provenance})
+
+{end}
+'''
+
+          readme = Path('README.md')
+          text = readme.read_text(encoding='utf-8')
+          if start in text and end in text:
+              before, rest = text.split(start, 1)
+              _, after = rest.split(end, 1)
+              text = before.rstrip() + '\n\n' + block + after.lstrip('\n')
+          else:
+              lines = text.splitlines(keepends=True)
+              insert_at = 1 if lines and lines[0].startswith('# ') else 0
+              text = ''.join(lines[:insert_at]).rstrip() + '\n\n' + block + '\n' + ''.join(lines[insert_at:]).lstrip('\n')
+          readme.write_text(text, encoding='utf-8')
+
+          prior = Path('docs/prior_art/README.md')
+          ptext = prior.read_text(encoding='utf-8') if prior.exists() else '# AuraOS Prior Art\n'
+          pstart = '<!-- PAPER_X_V1_1_START -->'
+          pend = '<!-- PAPER_X_V1_1_END -->'
+          pblock = f'''{pstart}
+
+## Current AI entry point — Paper X v1.1 / L0 Activation Packet
+
+**AI workers should read [`AURA_L0_ACTIVATION_PACKET.md`](paper_x_v1.1/AURA_L0_ACTIVATION_PACKET.md) before interpreting the individual prior-art papers.** The packet carries the compact relational grammar needed to reconstruct Aura across the paper sequence; exact papers, repository source, tests, and evidence remain authoritative at their own layer.
+
+- **Paper X v1.1:** [`AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.pdf`](paper_x_v1.1/AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.pdf)
+- **Declarations:** N101–N124
+- **DOI:** [`{doi}`](https://doi.org/{doi})
+- **Evidence addendum:** [`PAPER_X_V1.1_EVIDENCE_ADDENDUM.md`](paper_x_v1.1/PAPER_X_V1.1_EVIDENCE_ADDENDUM.md)
+- **Claims crosswalk:** [`CLAIMS_N101-N124.csv`](paper_x_v1.1/CLAIMS_N101-N124.csv)
+- **Provenance:** [`PROVENANCE_MANIFEST.csv`](paper_x_v1.1/PROVENANCE_MANIFEST.csv)
+- **Publication record:** [`ZENODO_PUBLICATION_RECORD.md`](paper_x_v1.1/ZENODO_PUBLICATION_RECORD.md)
+
+Paper X v1.1 preserves the v1.0 N101–N117 generation and extends it through N124. The behavioral evidence is treated as qualitative/source-bound and falsifiable; it is not a consciousness claim or hidden-neural-telemetry claim.
+
+{pend}
+'''
+          if pstart in ptext and pend in ptext:
+              before, rest = ptext.split(pstart, 1)
+              _, after = rest.split(pend, 1)
+              ptext = before.rstrip() + '\n\n' + pblock + after.lstrip('\n')
+          else:
+              plines = ptext.splitlines(keepends=True)
+              pinsert = 1 if plines and plines[0].startswith('# ') else 0
+              ptext = ''.join(plines[:pinsert]).rstrip() + '\n\n' + pblock + '\n' + ''.join(plines[pinsert:]).lstrip('\n')
+          prior.parent.mkdir(parents=True, exist_ok=True)
+          prior.write_text(ptext, encoding='utf-8')
+          PY
+
+      - name: Validate the publication and entry contract
+        run: |
+          python -m py_compile docs/prior_art/paper_x_v1.1/aura_relational_world_reference.py
+          python - <<'PY'
+          from pathlib import Path
+          root = Path('docs/prior_art/paper_x_v1.1')
+          required = {
+              'AURA_L0_ACTIVATION_PACKET.md',
+              'AURA__L4-RAW-SOURCE__CHATGPT5-SOL__PAPER-X-RECONSTITUTION__SITUATED-REASONING__SPATIAL-TRANSFER__2026-08-11.txt',
+              'AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.pdf',
+              'AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.docx',
+              'AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.md',
+              'AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.txt',
+              'CITATION.cff', 'CLAIMS_N101-N124.csv', 'LICENSE_AGPL-3.0.txt',
+              'LICENSE_NOTICE_AGPL-3.0-only.txt', 'PAPER_X_V1.1_EVIDENCE_ADDENDUM.md',
+              'PROVENANCE_MANIFEST.csv', 'PUBLICATION_BUILD_RECORD.json', 'README_ZENODO.md',
+              'SHA256SUMS.txt', 'aura_relational_world_reference.py', 'references.bib',
+              'zenodo_metadata.json', 'ZENODO_PUBLICATION_RECORD.md',
+              'AuraOS_Paper_X_Defensive_Publication_N101-N124_v1.1_2026-08-11.zip',
+          }
+          present = {p.name for p in root.iterdir() if p.is_file()}
+          missing = sorted(required - present)
+          if missing:
+              raise SystemExit(f'Missing publication artifacts: {missing}')
+          readme = Path('README.md').read_text(encoding='utf-8')
+          if '<!-- AURA_AI_ENTRY_START -->' not in readme or 'read the L0 Activation Packet first' not in readme:
+              raise SystemExit('README packet-first entry contract missing')
+          print(f'Validated {len(present)} Paper X v1.1 files and packet-first README entry')
+          PY
+
+      - name: Install declared dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Regenerate CODEMAP topology and source anchors
+        run: |
+          set -euxo pipefail
+          python scripts/aura_navigation_refresh.py --root .
+          python scripts/aura_source_anchor_map.py --root . --check
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s .aura/SOURCE_ANCHORS.md
+          test -s topology_map.json
+          test -s Aura_Memory/live_topology_ast.json
+          git diff --check
+
+      - name: Commit directly to main and remove one-shot workflows
+        run: |
+          set -euxo pipefail
+          git config user.name 'AuraOS Publication Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm -f .github/workflows/publish-paper-x-v1.1-once.yml || true
+          git rm -f .github/workflows/publish-paper-x-v1.1-once-v2.yml || true
+          git add README.md docs/prior_art/README.md docs/prior_art/paper_x_v1.1/
+          git add .aura/CODEMAP.json .aura/CODEMAP.md .aura/SOURCE_ANCHORS.md topology_map.json
+          git add -f Aura_Memory/live_topology_ast.json
+          git status --short
+          git diff --cached --stat
+          git diff --cached --check
+          git commit -m 'docs: publish Paper X v1.1 and L0 activation entry'
+          git push origin HEAD:main
