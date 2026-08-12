@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786236124,
+  "generated_at_unix": 1786493167,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1542,
+    "repo_file_count": 1543,
     "source_paths_without_topology": [
       "_aura_architect_consolidation_benchmark_legacy.py",
       "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -112,16 +112,16 @@
     "coverage_complete_for_repo_scan": true
   },
   "summary": {
-    "file_count": 1542,
-    "total_bytes": 25618496,
-    "text_tokens_est": 6395378,
+    "file_count": 1543,
+    "total_bytes": 25632873,
+    "text_tokens_est": 6398965,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 196,
       "native_accelerator": 8,
       "operator_script": 6,
       "python_module": 983,
-      "schema_or_lexicon": 237,
+      "schema_or_lexicon": 238,
       "support_file": 48
     },
     "topology_nodes": 11393,
@@ -139,16 +139,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1542,
-      "bytes": 25618496,
-      "tokens_est": 6395378,
+      "files": 1543,
+      "bytes": 25632873,
+      "tokens_est": 6398965,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 196,
         "native_accelerator": 8,
         "operator_script": 6,
         "python_module": 983,
-        "schema_or_lexicon": 237,
+        "schema_or_lexicon": 238,
         "support_file": 48
       }
     },
@@ -1027,6 +1027,7 @@
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/provider-routing-materialize.yml",
+      ".github/workflows/publish-paper-x-v1.1-once.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
@@ -1080,6 +1081,7 @@
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/provider-routing-materialize.yml",
+      ".github/workflows/publish-paper-x-v1.1-once.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
@@ -1326,6 +1328,17 @@
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
     ],
+    "python scripts/aura_navigation_refresh.py --root .": [
+      ".github/workflows/publish-paper-x-v1.1-once.yml",
+      ".github/workflows/sync-analysis-codemap.yml",
+      "README.md"
+    ],
+    "python scripts/aura_source_anchor_map.py --root . --check": [
+      ".github/workflows/publish-paper-x-v1.1-once.yml",
+      ".github/workflows/source-anchor-verify.yml",
+      ".github/workflows/sync-analysis-codemap.yml",
+      "README.md"
+    ],
     "python tools/apply_sco_construction_completion.py": [
       ".github/workflows/sco-construction-e9-e14-completion.yml"
     ],
@@ -1373,15 +1386,6 @@
     ],
     "python -m aura_persistence_cli": [
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
-    ],
-    "python scripts/aura_source_anchor_map.py --root . --check": [
-      ".github/workflows/source-anchor-verify.yml",
-      ".github/workflows/sync-analysis-codemap.yml",
-      "README.md"
-    ],
-    "python scripts/aura_navigation_refresh.py --root .": [
-      ".github/workflows/sync-analysis-codemap.yml",
-      "README.md"
     ],
     "python aura_codebase_navigator.py > \"$EVIDENCE_DIR/codemap.log\" 2>&1": [
       ".github/workflows/unified-memory-continuity-verified-publish-command.yml"
@@ -164916,6 +164920,71 @@
       ]
     },
     {
+      "path": ".github/workflows/publish-paper-x-v1.1-once.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 14377,
+      "lines": 238,
+      "tokens_est": 3587,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m pip",
+        "python scripts/aura_navigation_refresh.py --root .",
+        "python scripts/aura_source_anchor_map.py --root . --check"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          181
+        ],
+        "python -m pip": [
+          211,
+          212
+        ],
+        "python scripts/aura_navigation_refresh.py --root .": [
+          216
+        ],
+        "python scripts/aura_source_anchor_map.py --root . --check": [
+          217
+        ]
+      },
+      "topology": {},
+      "digest8": "509936b481964c08",
+      "vector": [
+        0.014813,
+        -0.1387,
+        0.200643,
+        0.095609,
+        0.2572,
+        0.060597,
+        -0.267973,
+        -0.039051,
+        -0.311064,
+        0.00404,
+        0.27336,
+        0.136006,
+        -0.162938,
+        0.025585,
+        0.136006,
+        -0.028279,
+        -0.179098,
+        -0.33261,
+        0.030972,
+        -0.176404,
+        -0.052517,
+        0.222189,
+        0.187177,
+        0.232962,
+        0.246428,
+        -0.055211,
+        -0.230268,
+        -0.00404,
+        0.232962,
+        -0.100995,
+        -0.214109,
+        -0.090222
+      ]
+    },
+    {
       "path": ".github/workflows/render-four-tab-demo.yml",
       "role": "schema_or_lexicon",
       "bytes": 2829,
@@ -250947,7 +251016,6 @@
       ".aura/refactor_objectives/intent_native_ephemeral_workspace_pr2.v1.json",
       ".aura/refactor_objectives/intent_native_source_first_project_context_pr3.v1.json",
       ".aura/refactor_objectives/intent_native_spatial_workspace_pr1.v1.json",
-      ".aura/refactor_payloads/umc_main_publish.trigger",
       ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
       ".aura/research/AURA_SPATIAL_BREADBOARD_RECEIPT.json",
       ".aura/research/AURA_SPATIAL_COUNCIL_V3_BREADBOARD_2026-07-19.md",
@@ -251063,6 +251131,7 @@
       ".github/workflows/provider-routing-materialize.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
+      ".github/workflows/publish-paper-x-v1.1-once.yml",
       ".github/workflows/render-four-tab-demo.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
@@ -251082,9 +251151,6 @@
       ".mempalace/lexicon.json",
       ".mempalace/nexus.json",
       ".mempalace/temp_prompt.txt",
-      ".termux/colors.properties",
-      ".termux/font.ttf",
-      ".termux/termux.properties",
       ".vscode/settings.json",
       "AMD_HACKATHON_SUBMISSION.md",
       "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
@@ -251096,7 +251162,6 @@
       "AURA_ROUTER.md",
       "AURA_SYSTEM_ANALYSIS.md",
       "AuraOS.tex",
-      "AuraOS__A_Polysynthetic_Cognitive_Substrate_for_High-Dimensional_Edge_Orchestration_and_Visual_Code_Topology.pdf",
       "CODEMAP_AUTO_REFRESH_INTEGRATION.md",
       "CODEMAP_AUTO_REFRESH_README.md",
       "CODEMAP_AUTO_REFRESH_SUMMARY.md",
@@ -251104,11 +251169,6 @@
       "CODEMAP_TOOL_INTEGRATION_GUIDE.md",
       "DEEP_AUDIT_REPORT.md",
       "Dockerfile",
-      "Dockerfile.amd-track3",
-      "Dockerfile.arena-connector",
-      "Dockerfile.aura-gate",
-      "Dockerfile.aura-showcase",
-      "Dockerfile.coding-arena",
       "FRACTAL_LEDGER_IMPLEMENTATION.md",
       "GRAPH_REPORT.md",
       "HOLOGRAPHIC_HEADER_IMPLEMENTATION.md",
@@ -251123,9 +251183,7 @@
       "README.md",
       "SWARM_COLLECTIVE_IMPLEMENTATION.md",
       "SYNTAX_FIXES_APPLIED.md",
-      "Second_Paper.pdf",
       "Second_Paper_extracted.txt",
-      "Third_Paper.pdf",
       "Third_Paper_extracted.txt",
       "USER_GUIDE.md",
       "VSA_RENDERING_IMPLEMENTATION.md",
@@ -251505,8 +251563,6 @@
       "aura_nesy_sat_reasoner.py",
       "aura_nesy_unit_interval.py",
       "aura_node.py",
-      "aura_node.py.save",
-      "aura_node.py.save.1",
       "aura_node_inspector.py",
       "aura_obsidian_graph_bridge.py",
       "aura_ojibwe_audio_consent_registry.py",
@@ -251752,7 +251808,6 @@
       "aura_unified_memory_continuity_learning.py",
       "aura_unified_memory_continuity_toolchain.py",
       "aura_unifier.sh",
-      "aura_upgrade_spec.docx",
       "aura_usage_normalizer.py",
       "aura_validation.py",
       "aura_visual_grounding_bridge.py",
@@ -251770,7 +251825,6 @@
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "build_aura.sh",
       "bus_init.cpp",
-      "codebase_header.bin",
       "cognitive_router.py",
       "cognitive_search.rs",
       "dag_executor.py",
@@ -251974,23 +252028,12 @@
       "logging_kit.py",
       "mint_genesis.py",
       "mistral_gate.py",
-      "myproject.zip",
-      "ojibwemorph_fst/ojibwe.att",
       "package.json",
-      "paper1.pdf",
       "paper1_extracted.txt",
-      "paper2.pdf",
       "paper2_extracted.txt",
-      "paper3.pdf",
       "paper3_extracted.txt",
-      "paper4.pdf",
       "paper4_extracted.txt",
-      "paper5.pdf",
-      "paper6.pdf",
-      "paper7.pdf",
       "papers/AuraOS_Paper_IX_CURRENT.md",
-      "papers/AuraOS_Paper_IX_Objective_Native_Commons_Proof_Carrying_Contribution_Economies.pdf",
-      "papers/AuraOS_Paper_VIII_Evidence_Ordered_Relational_Arenas.pdf",
       "pulse.py",
       "pvm_arch_checker.py",
       "pvm_memory_guard.py",
@@ -252073,7 +252116,6 @@
       "setup.sh",
       "setup_aura.sh",
       "spatial_mapper.py",
-      "start_codemap_watcher.bat",
       "start_codemap_watcher.sh",
       "symbolic_shield.py",
       "systems_check.py",
@@ -252145,24 +252187,6 @@
       "tests/fixtures/amd_track3/demo_three.py",
       "tests/fixtures/amd_track3/demo_two.py",
       "tests/fixtures/relationship_atlas/relational_index_fixture.json",
-      "tests/fixtures/spatial/gltf/triangle.gltf",
-      "tests/fixtures/spatial/ply/points_ascii.ply",
-      "tests/js/construction-foundry-director-contract.test.mjs",
-      "tests/js/spatial-accessibility.test.mjs",
-      "tests/js/spatial-app.test.mjs",
-      "tests/js/spatial-construction-demo.test.mjs",
-      "tests/js/spatial-construction-review-regressions.test.mjs",
-      "tests/js/spatial-fixture.mjs",
-      "tests/js/spatial-gaussian-covariance.test.mjs",
-      "tests/js/spatial-gaussian.test.mjs",
-      "tests/js/spatial-interaction.test.mjs",
-      "tests/js/spatial-mixed-scene.test.mjs",
-      "tests/js/spatial-renderer-adapter.test.mjs",
-      "tests/js/spatial-telemetry.test.mjs",
-      "tests/js/spatial-webgl2-failure-injection.test.mjs",
-      "tests/js/spatial-webgl2.test.mjs",
-      "tests/js/spatial-webgpu.test.mjs",
-      "tests/js/spatial-webxr.test.mjs",
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
@@ -409625,6 +409649,6 @@
       }
     ],
     "record_fingerprint": "da4472d840d2be8b4bf430c4367d852f",
-    "payload_hash": "bc50541ac399e476cc94f762b80f6e4a"
+    "payload_hash": "5b314fa2841e680d74004f91c0583050"
   }
 }
