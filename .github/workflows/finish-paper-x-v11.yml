@@ -30,11 +30,12 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Publish sealed Paper X release from Zenodo
+      - name: Publish sealed Paper X release bytes
         run: python scripts/publish_paper_x_v1_1_once.py
 
       - name: Remove one-shot publication machinery before navigation refresh
         run: |
+          git rm -f .paper_x_v11_release.zip.b64 || true
           git rm -f .github/workflows/publish-paper-x-v1.1-once.yml || true
           git rm -f .github/workflows/publish-paper-x-v1.1-once-v2.yml || true
           git rm -f .github/workflows/finish-paper-x-v11.yml || true
