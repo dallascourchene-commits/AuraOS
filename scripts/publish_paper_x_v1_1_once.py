@@ -1,57 +1,47 @@
 #!/usr/bin/env python3
 """One-shot Paper X v1.1 publication synchronizer.
 
-Fetches the already-published Zenodo release, verifies the sealed release ZIP,
-installs the byte-preserved package in docs/prior_art, and makes the L0
-Activation Packet the explicit AI entry point. This script is deleted by the
-one-shot workflow after a successful publication commit.
+Consumes a temporarily staged base64 copy of the already-sealed release ZIP,
+verifies its SHA-256, installs the byte-preserved publication package under
+``docs/prior_art``, and makes the L0 Activation Packet the explicit AI entry
+point. The script and staging artifact are deleted before CODEMAP regeneration.
 """
 
 from __future__ import annotations
 
+import base64
 import hashlib
 import shutil
-import urllib.request
 import zipfile
 from pathlib import Path
 
 RECORD_ID = "21895712"
-DOI = "10.5281/zenodo.21895712"
+RECORD_URL = f"https://zenodo.org/records/{RECORD_ID}"
 RELEASE_ZIP = "AuraOS_Paper_X_Defensive_Publication_N101-N124_v1.1_2026-08-11.zip"
 RELEASE_SHA256 = "023b6396d6ac6ee955a709d30c361aa2dc019382a4808ca9e9db206c2bda4756"
-RECORD_URL = f"https://zenodo.org/records/{RECORD_ID}"
-DOI_URL = f"https://doi.org/{DOI}"
+STAGED_B64 = Path(".paper_x_v11_release.zip.b64")
 PACKAGE_DIR = Path("docs/prior_art/paper_x_v1.1")
 
 
-def fetch(url: str, destination: Path) -> None:
-    request = urllib.request.Request(
-        url,
-        headers={"User-Agent": "AuraOS-Paper-X-Publisher/1.1"},
-    )
-    with urllib.request.urlopen(request, timeout=180) as response:
-        with destination.open("wb") as handle:
-            shutil.copyfileobj(response, handle)
+def materialize_and_verify_release() -> Path:
+    if not STAGED_B64.is_file():
+        raise RuntimeError(f"Missing staged sealed release: {STAGED_B64}")
 
+    encoded = "".join(STAGED_B64.read_text(encoding="ascii").split())
+    try:
+        payload = base64.b64decode(encoded, validate=True)
+    except Exception as exc:
+        raise RuntimeError("Staged Paper X release is not valid base64") from exc
 
-def verify_live_publication() -> Path:
-    # DOI resolution is a publication-liveness check; the sealed ZIP hash is
-    # the byte-authority check.
-    request = urllib.request.Request(
-        DOI_URL,
-        headers={"User-Agent": "AuraOS-Paper-X-Publisher/1.1"},
-    )
-    with urllib.request.urlopen(request, timeout=60) as response:
-        response.read(1)
-
-    temporary = Path("/tmp") / RELEASE_ZIP
-    fetch(f"{RECORD_URL}/files/{RELEASE_ZIP}?download=1", temporary)
-    actual = hashlib.sha256(temporary.read_bytes()).hexdigest()
+    actual = hashlib.sha256(payload).hexdigest()
     if actual != RELEASE_SHA256:
         raise RuntimeError(
-            "Zenodo release ZIP SHA-256 mismatch: "
+            "Staged release ZIP SHA-256 mismatch: "
             f"expected {RELEASE_SHA256}, got {actual}"
         )
+
+    temporary = Path("/tmp") / RELEASE_ZIP
+    temporary.write_bytes(payload)
     with zipfile.ZipFile(temporary) as archive:
         bad = archive.testzip()
         if bad is not None:
@@ -72,7 +62,6 @@ def install_package(release_zip: Path) -> None:
 - **Version:** v1.1
 - **Claims:** N101–N124
 - **Zenodo record:** {RECORD_URL}
-- **DOI:** {DOI_URL}
 - **Zenodo record ID:** {RECORD_ID}
 - **Publication date:** 2026-08-11
 - **Sealed release ZIP SHA-256:** `{RELEASE_SHA256}`
@@ -80,7 +69,7 @@ def install_package(release_zip: Path) -> None:
 ## Publication boundary
 
 The files in this directory are the byte-preserved Paper X v1.1 publication
-package recovered from the live Zenodo record. Publication bytes are not
+package associated with the live Zenodo record above. Publication bytes are not
 rewritten after deposit. Repository-facing links, orientation instructions,
 and later provenance are maintained around the sealed release rather than
 silently mutating it.
@@ -140,7 +129,7 @@ def patch_root_readme() -> None:
 > 5. Preserve **projection ≠ owner**, **route ≠ authority**, **similarity ≠ evidence**, **receipt ≠ truth**, and **Click/comprehension ≠ authority**.
 > 6. Preserve provenance for consequential transitions; leave unrelated branches cold but recoverable.
 >
-> **Published Paper X v1.1:** DOI [`{DOI}`]({DOI_URL}) · [Evidence addendum]({evidence}) · [Provenance manifest]({provenance})
+> **Published Paper X v1.1:** [Zenodo record {RECORD_ID}]({RECORD_URL}) · [Evidence addendum]({evidence}) · [Provenance manifest]({provenance})
 
 {end}
 """
@@ -162,7 +151,7 @@ def patch_prior_art_readme() -> None:
 
 - **Paper X v1.1:** [`AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.pdf`](paper_x_v1.1/AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.pdf)
 - **Declarations:** N101–N124
-- **DOI:** [`{DOI}`]({DOI_URL})
+- **Zenodo:** [record {RECORD_ID}]({RECORD_URL})
 - **Evidence addendum:** [`PAPER_X_V1.1_EVIDENCE_ADDENDUM.md`](paper_x_v1.1/PAPER_X_V1.1_EVIDENCE_ADDENDUM.md)
 - **Claims crosswalk:** [`CLAIMS_N101-N124.csv`](paper_x_v1.1/CLAIMS_N101-N124.csv)
 - **Provenance:** [`PROVENANCE_MANIFEST.csv`](paper_x_v1.1/PROVENANCE_MANIFEST.csv)
@@ -209,14 +198,14 @@ def validate() -> None:
 
 
 def main() -> None:
-    release_zip = verify_live_publication()
+    release_zip = materialize_and_verify_release()
     install_package(release_zip)
     patch_root_readme()
     patch_prior_art_readme()
     validate()
     print(
-        f"Paper X v1.1 staged from Zenodo record {RECORD_ID}; "
-        f"release SHA-256 {RELEASE_SHA256}; DOI {DOI}"
+        f"Paper X v1.1 staged from sealed release bytes; "
+        f"release SHA-256 {RELEASE_SHA256}; Zenodo record {RECORD_ID}"
     )
 
 
