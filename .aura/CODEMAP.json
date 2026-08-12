@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786493283,
+  "generated_at_unix": 1786493458,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1544,
+    "repo_file_count": 1546,
     "source_paths_without_topology": [
       "_aura_architect_consolidation_benchmark_legacy.py",
       "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -112,16 +112,16 @@
     "coverage_complete_for_repo_scan": true
   },
   "summary": {
-    "file_count": 1544,
-    "total_bytes": 25644708,
-    "text_tokens_est": 6401917,
+    "file_count": 1546,
+    "total_bytes": 25656952,
+    "text_tokens_est": 6404971,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 196,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 983,
-      "schema_or_lexicon": 239,
+      "python_module": 984,
+      "schema_or_lexicon": 240,
       "support_file": 48
     },
     "topology_nodes": 11393,
@@ -139,16 +139,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1544,
-      "bytes": 25644708,
-      "tokens_est": 6401917,
+      "files": 1546,
+      "bytes": 25656952,
+      "tokens_est": 6404971,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 196,
         "native_accelerator": 8,
         "operator_script": 6,
-        "python_module": 983,
-        "schema_or_lexicon": 239,
+        "python_module": 984,
+        "schema_or_lexicon": 240,
         "support_file": 48
       }
     },
@@ -1000,6 +1000,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/finish-paper-x-v11.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -1061,6 +1062,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/finish-paper-x-v11.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-planning-board-contracts.yml",
@@ -1298,6 +1300,21 @@
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
     ],
+    "python scripts/aura_navigation_refresh.py --root .": [
+      ".github/workflows/finish-paper-x-v11.yml",
+      ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
+      ".github/workflows/publish-paper-x-v1.1-once.yml",
+      ".github/workflows/sync-analysis-codemap.yml",
+      "README.md"
+    ],
+    "python scripts/aura_source_anchor_map.py --root . --check": [
+      ".github/workflows/finish-paper-x-v11.yml",
+      ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
+      ".github/workflows/publish-paper-x-v1.1-once.yml",
+      ".github/workflows/source-anchor-verify.yml",
+      ".github/workflows/sync-analysis-codemap.yml",
+      "README.md"
+    ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
     ],
@@ -1329,19 +1346,6 @@
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
-    ],
-    "python scripts/aura_navigation_refresh.py --root .": [
-      ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
-      ".github/workflows/publish-paper-x-v1.1-once.yml",
-      ".github/workflows/sync-analysis-codemap.yml",
-      "README.md"
-    ],
-    "python scripts/aura_source_anchor_map.py --root . --check": [
-      ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
-      ".github/workflows/publish-paper-x-v1.1-once.yml",
-      ".github/workflows/source-anchor-verify.yml",
-      ".github/workflows/sync-analysis-codemap.yml",
-      "README.md"
     ],
     "python tools/apply_sco_construction_completion.py": [
       ".github/workflows/sco-construction-e9-e14-completion.yml"
@@ -3743,6 +3747,14 @@
         "line": 90,
         "end_line": 92,
         "semantic_id": "scripts/install_refactor_quality_docs.py#function:main:2b43502f7de024eb",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "kind": "function",
+        "line": 211,
+        "end_line": 220,
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:main:54e74d83d062d9d7",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -100556,6 +100568,14 @@
         "end_line": 22,
         "semantic_id": "scripts/install_refactor_quality_docs.py#function:replace_or_insert:45a7cef12582c0c1",
         "signature_hash": "fdc9d554d5109d6d"
+      },
+      {
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "kind": "function",
+        "line": 100,
+        "end_line": 113,
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:replace_or_insert:112b843d5a76c3a7",
+        "signature_hash": "0775bc8d853e8448"
       }
     ],
     "add_contents": [
@@ -100576,6 +100596,66 @@
         "end_line": 87,
         "semantic_id": "scripts/install_refactor_quality_docs.py#function:install:23f58167360e5f66",
         "signature_hash": "51e3fc8269189baf"
+      }
+    ],
+    "fetch": [
+      {
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 34,
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:fetch:4a9e70159a015a98",
+        "signature_hash": "d58e2bc5539a3501"
+      }
+    ],
+    "verify_live_publication": [
+      {
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 59,
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:verify_live_publication:65c8deff8b7796cd",
+        "signature_hash": "38e2809347e830ca"
+      }
+    ],
+    "install_package": [
+      {
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 97,
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:install_package:4a56f43e19155e0d",
+        "signature_hash": "e07a57c99a1dd798"
+      }
+    ],
+    "patch_root_readme": [
+      {
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "kind": "function",
+        "line": 116,
+        "end_line": 149,
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:patch_root_readme:bf9e9f95fda29382",
+        "signature_hash": "157786e0987d6239"
+      }
+    ],
+    "patch_prior_art_readme": [
+      {
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 176,
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:patch_prior_art_readme:abe8e36dde46233c",
+        "signature_hash": "7cfa7f71ebfe02bd"
+      }
+    ],
+    "validate": [
+      {
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "kind": "function",
+        "line": 179,
+        "end_line": 208,
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:validate:760eb9be6a105371",
+        "signature_hash": "dee5fd622b0e22e4"
       }
     ],
     "_replace_marked": [
@@ -163125,6 +163205,71 @@
       ]
     },
     {
+      "path": ".github/workflows/finish-paper-x-v11.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 2412,
+      "lines": 72,
+      "tokens_est": 603,
+      "symbol_count": 0,
+      "commands": [
+        "python -m pip",
+        "python scripts/aura_navigation_refresh.py --root .",
+        "python scripts/aura_source_anchor_map.py --root . --check",
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m pip": [
+          45,
+          46
+        ],
+        "python scripts/aura_navigation_refresh.py --root .": [
+          50
+        ],
+        "python scripts/aura_source_anchor_map.py --root . --check": [
+          51
+        ],
+        "python -m py_compile": [
+          52
+        ]
+      },
+      "topology": {},
+      "digest8": "512c1546edaf9604",
+      "vector": [
+        0.001451,
+        0.201754,
+        0.030481,
+        -0.103054,
+        0.3469,
+        -0.137889,
+        -0.297551,
+        -0.105957,
+        0.111763,
+        0.146598,
+        -0.10886,
+        0.030481,
+        0.05951,
+        -0.294648,
+        -0.262715,
+        -0.044995,
+        0.239492,
+        0.242395,
+        0.033384,
+        -0.338192,
+        -0.05951,
+        -0.126278,
+        -0.021772,
+        -0.027578,
+        -0.242395,
+        0.17853,
+        -0.164016,
+        -0.100151,
+        0.071122,
+        -0.213365,
+        -0.152404,
+        0.216268
+      ]
+    },
+    {
       "path": ".github/workflows/huggingface-space-demo.yml",
       "role": "schema_or_lexicon",
       "bytes": 3453,
@@ -211691,6 +211836,52 @@
       ]
     },
     {
+      "path": "scripts/publish_paper_x_v1_1_once.py",
+      "role": "python_module",
+      "bytes": 9832,
+      "lines": 225,
+      "tokens_est": 2451,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ea4e659bd258591c",
+      "vector": [
+        0.261617,
+        0.085552,
+        -0.030997,
+        0.137628,
+        -0.202102,
+        -0.22938,
+        -0.065714,
+        -0.021078,
+        0.301293,
+        -0.053315,
+        0.080593,
+        -0.254177,
+        0.088032,
+        -0.140108,
+        0.167385,
+        -0.145067,
+        0.288894,
+        -0.187223,
+        0.281455,
+        -0.033477,
+        0.276495,
+        -0.070674,
+        -0.055795,
+        0.239299,
+        -0.060755,
+        -0.132668,
+        0.060755,
+        0.306253,
+        -0.023558,
+        0.22938,
+        -0.174824,
+        -0.147547
+      ]
+    },
+    {
       "path": "scripts/update_architect_benchmark_readme.py",
       "role": "python_module",
       "bytes": 12211,
@@ -251170,6 +251361,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/finish-paper-x-v11.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -252182,6 +252374,7 @@
       "scripts/deploy_huggingface_space.py",
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
+      "scripts/publish_paper_x_v1_1_once.py",
       "scripts/update_architect_benchmark_readme.py",
       "setup.sh",
       "setup_aura.sh",
@@ -352198,6 +352391,86 @@
         "file_digest8": "3ad7b4c6dbb3ea84"
       },
       {
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:fetch:4a9e70159a015a98",
+        "name": "fetch",
+        "kind": "function",
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "line": 27,
+        "end_line": 34,
+        "signature_hash": "d58e2bc5539a3501",
+        "file_digest8": "ea4e659bd258591c"
+      },
+      {
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:install_package:4a56f43e19155e0d",
+        "name": "install_package",
+        "kind": "function",
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "line": 62,
+        "end_line": 97,
+        "signature_hash": "e07a57c99a1dd798",
+        "file_digest8": "ea4e659bd258591c"
+      },
+      {
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:main:54e74d83d062d9d7",
+        "name": "main",
+        "kind": "function",
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "line": 211,
+        "end_line": 220,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "ea4e659bd258591c"
+      },
+      {
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:patch_prior_art_readme:abe8e36dde46233c",
+        "name": "patch_prior_art_readme",
+        "kind": "function",
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "line": 152,
+        "end_line": 176,
+        "signature_hash": "7cfa7f71ebfe02bd",
+        "file_digest8": "ea4e659bd258591c"
+      },
+      {
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:patch_root_readme:bf9e9f95fda29382",
+        "name": "patch_root_readme",
+        "kind": "function",
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "line": 116,
+        "end_line": 149,
+        "signature_hash": "157786e0987d6239",
+        "file_digest8": "ea4e659bd258591c"
+      },
+      {
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:replace_or_insert:112b843d5a76c3a7",
+        "name": "replace_or_insert",
+        "kind": "function",
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "line": 100,
+        "end_line": 113,
+        "signature_hash": "0775bc8d853e8448",
+        "file_digest8": "ea4e659bd258591c"
+      },
+      {
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:validate:760eb9be6a105371",
+        "name": "validate",
+        "kind": "function",
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "line": 179,
+        "end_line": 208,
+        "signature_hash": "dee5fd622b0e22e4",
+        "file_digest8": "ea4e659bd258591c"
+      },
+      {
+        "semantic_id": "scripts/publish_paper_x_v1_1_once.py#function:verify_live_publication:65c8deff8b7796cd",
+        "name": "verify_live_publication",
+        "kind": "function",
+        "file": "scripts/publish_paper_x_v1_1_once.py",
+        "line": 37,
+        "end_line": 59,
+        "signature_hash": "38e2809347e830ca",
+        "file_digest8": "ea4e659bd258591c"
+      },
+      {
         "semantic_id": "scripts/update_architect_benchmark_readme.py#function:_load:c1c403cb81d8593a",
         "name": "_load",
         "kind": "function",
@@ -409718,7 +409991,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "da4472d840d2be8b4bf430c4367d852f",
-    "payload_hash": "50368221efeaf4e9404c9be7e6b25fd4"
+    "record_fingerprint": "593a5af8c0c02826b31ffd696aaf4c76",
+    "payload_hash": "caba012db6e503c82bd4fb0817d904c3"
   }
 }
