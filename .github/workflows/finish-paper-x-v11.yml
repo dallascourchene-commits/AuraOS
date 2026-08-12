@@ -30,7 +30,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Mirror and verify the live Zenodo Paper X v1.1 publication
+      - name: Mirror and verify the live Zenodo Paper X v1.1 publication artifacts
         run: python scripts/publish_paper_x_v1_1_once.py
 
       - name: Remove one-shot publication machinery before navigation refresh
