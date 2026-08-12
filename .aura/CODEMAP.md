@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1543
-- **total_bytes**: 25632873
-- **text_tokens_est**: 6398965
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 196, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 983, 'schema_or_lexicon': 238, 'support_file': 48}
+- **file_count**: 1544
+- **total_bytes**: 25644708
+- **text_tokens_est**: 6401917
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 196, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 983, 'schema_or_lexicon': 239, 'support_file': 48}
 - **topology_nodes**: 11393
 - **topology_edges**: 27882
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1543,
+  "repo_file_count": 1544,
   "source_paths_without_topology": [
     "_aura_architect_consolidation_benchmark_legacy.py",
     "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -138,16 +138,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1543,
-  "bytes": 25632873,
-  "tokens_est": 6398965,
+  "files": 1544,
+  "bytes": 25644708,
+  "tokens_est": 6401917,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 196,
     "native_accelerator": 8,
     "operator_script": 6,
     "python_module": 983,
-    "schema_or_lexicon": 238,
+    "schema_or_lexicon": 239,
     "support_file": 48
   }
 }

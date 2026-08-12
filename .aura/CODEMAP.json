@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786493167,
+  "generated_at_unix": 1786493283,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1543,
+    "repo_file_count": 1544,
     "source_paths_without_topology": [
       "_aura_architect_consolidation_benchmark_legacy.py",
       "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -112,16 +112,16 @@
     "coverage_complete_for_repo_scan": true
   },
   "summary": {
-    "file_count": 1543,
-    "total_bytes": 25632873,
-    "text_tokens_est": 6398965,
+    "file_count": 1544,
+    "total_bytes": 25644708,
+    "text_tokens_est": 6401917,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 196,
       "native_accelerator": 8,
       "operator_script": 6,
       "python_module": 983,
-      "schema_or_lexicon": 238,
+      "schema_or_lexicon": 239,
       "support_file": 48
     },
     "topology_nodes": 11393,
@@ -139,16 +139,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1543,
-      "bytes": 25632873,
-      "tokens_est": 6398965,
+      "files": 1544,
+      "bytes": 25644708,
+      "tokens_est": 6401917,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 196,
         "native_accelerator": 8,
         "operator_script": 6,
         "python_module": 983,
-        "schema_or_lexicon": 238,
+        "schema_or_lexicon": 239,
         "support_file": 48
       }
     },
@@ -1027,6 +1027,7 @@
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/provider-routing-materialize.yml",
+      ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
       ".github/workflows/publish-paper-x-v1.1-once.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
@@ -1081,6 +1082,7 @@
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/provider-routing-materialize.yml",
+      ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
       ".github/workflows/publish-paper-x-v1.1-once.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
@@ -1329,11 +1331,13 @@
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
     ],
     "python scripts/aura_navigation_refresh.py --root .": [
+      ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
       ".github/workflows/publish-paper-x-v1.1-once.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       "README.md"
     ],
     "python scripts/aura_source_anchor_map.py --root . --check": [
+      ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
       ".github/workflows/publish-paper-x-v1.1-once.yml",
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/sync-analysis-codemap.yml",
@@ -164920,6 +164924,71 @@
       ]
     },
     {
+      "path": ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 11835,
+      "lines": 223,
+      "tokens_est": 2952,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m pip",
+        "python scripts/aura_navigation_refresh.py --root .",
+        "python scripts/aura_source_anchor_map.py --root . --check"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          163
+        ],
+        "python -m pip": [
+          193,
+          194
+        ],
+        "python scripts/aura_navigation_refresh.py --root .": [
+          199
+        ],
+        "python scripts/aura_source_anchor_map.py --root . --check": [
+          200
+        ]
+      },
+      "topology": {},
+      "digest8": "37c8962cd5d06c42",
+      "vector": [
+        0.112598,
+        -0.238233,
+        -0.058077,
+        0.010667,
+        -0.017779,
+        -0.02489,
+        0.202676,
+        0.242974,
+        0.216899,
+        0.190824,
+        -0.266679,
+        -0.17186,
+        -0.261938,
+        -0.017779,
+        -0.055706,
+        0.039113,
+        0.017779,
+        0.205047,
+        0.003556,
+        -0.181342,
+        -0.114968,
+        0.242974,
+        -0.032001,
+        -0.22401,
+        0.240604,
+        0.235863,
+        0.254827,
+        0.22401,
+        0.276161,
+        -0.107857,
+        -0.190824,
+        0.129191
+      ]
+    },
+    {
       "path": ".github/workflows/publish-paper-x-v1.1-once.yml",
       "role": "schema_or_lexicon",
       "bytes": 14377,
@@ -251131,6 +251200,7 @@
       ".github/workflows/provider-routing-materialize.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
+      ".github/workflows/publish-paper-x-v1.1-once-v2.yml",
       ".github/workflows/publish-paper-x-v1.1-once.yml",
       ".github/workflows/render-four-tab-demo.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
@@ -409649,6 +409719,6 @@
       }
     ],
     "record_fingerprint": "da4472d840d2be8b4bf430c4367d852f",
-    "payload_hash": "5b314fa2841e680d74004f91c0583050"
+    "payload_hash": "50368221efeaf4e9404c9be7e6b25fd4"
   }
 }
