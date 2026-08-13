@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1548
-- **total_bytes**: 25740338
-- **text_tokens_est**: 6425828
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 201, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 983, 'schema_or_lexicon': 237, 'support_file': 49}
+- **file_count**: 1549
+- **total_bytes**: 25757250
+- **text_tokens_est**: 6430013
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 202, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 983, 'schema_or_lexicon': 237, 'support_file': 49}
 - **topology_nodes**: 11393
 - **topology_edges**: 27882
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1548,
+  "repo_file_count": 1549,
   "source_paths_without_topology": [
     "_aura_architect_consolidation_benchmark_legacy.py",
     "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -138,12 +138,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1548,
-  "bytes": 25740338,
-  "tokens_est": 6425828,
+  "files": 1549,
+  "bytes": 25757250,
+  "tokens_est": 6430013,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 201,
+    "knowledge_artifact": 202,
     "native_accelerator": 8,
     "operator_script": 6,
     "python_module": 983,
@@ -276,6 +276,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "USER_GUIDE.md",
     "VSA_RENDERING_IMPLEMENTATION.md",
     "VSA_TEST_PLAN.md",
+    "defensive-publications/Paper_XI_Predictive_Locality_Recursive_Cardinality_World_Seed_2026-08-12.md",
     "demo_assets/construction_tuwien/ATTRIBUTION.md",
     "demo_assets/construction_tuwien/README.md",
     "deploy/huggingface-space/README.md",
@@ -431,8 +432,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/prior_art/paper_x_v1.1/PAPER_X_V1.1_EVIDENCE_ADDENDUM.md",
     "docs/prior_art/paper_x_v1.1/ZENODO_PUBLICATION_RECORD.md",
     "forged_roots_audit.md",
-    "papers/AuraOS_Paper_IX_CURRENT.md",
-    "refactored-auraos-upgrades.md"
+    "papers/AuraOS_Paper_IX_CURRENT.md"
   ]
 }
 ```
