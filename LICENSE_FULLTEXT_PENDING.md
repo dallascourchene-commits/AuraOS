@@ -1,0 +1,1 @@
+W7 staging guard: PR 286 must not merge until the complete standard GNU AGPLv3 license text replaces the temporary root LICENSE content.
