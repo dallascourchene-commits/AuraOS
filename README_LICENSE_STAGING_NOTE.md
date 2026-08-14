@@ -1,1 +1,0 @@
-This temporary staging note will be removed before PR readiness.
