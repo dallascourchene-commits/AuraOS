@@ -1,72 +1,75 @@
 WORK_ORDER=WO-TRIAD2-STAGING-README-SYNC-001
+GENERATION=GEN-002
 COORDINATE=AD:SYSTEM:STAGING-README-SYNC:001
 AUTHORITY=HUMAN_SOVEREIGN_DISPOSITION
 ASSIGNED_WORKERS=W4,W5,W6
 EXECUTION_MODE=DIRECT_MAIN_GITHUB_CONTENTS_API
+EXECUTED_AT=2026-08-15T09:13-05:00
 
-OBJECTIVE_RESULT=COMPLETE_WITH_SOURCE_RECONCILIATION
+STATUS=COMPLETE_WITH_FRESH_STAGING_SOURCE_RECONCILIATION
 
-SOURCE_DISCOVERY:
-- requested docs/staging/ready_review/TECHNICAL_BENCHMARKS_AND_ECONOMICS.md = NOT_FOUND_ON_CURRENT_MAIN_AT_INGEST
-- docs/staging/ready_review/PR_MANIFESTO_PRESS_RELEASE.md = FOUND / SOURCE-BOUND STAGING INPUT
-- docs/staging/ready_review/SOCIAL_VISUAL_CREATIVE_SPECS.md = FOUND / STAGING CREATIVE INPUT
-- README.md = FOUND / EXISTING SOURCE-BOUND BENCHMARK AND 3-6-9 CONTENT
-- docs/INDUSTRY_BENCHMARK_SCORECARD.md = REFERENCED BY CURRENT README
-- docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md = REFERENCED BY CURRENT README
-- docs/SECURITY_AND_ACCURACY_SCORECARD.md = REFERENCED BY CURRENT README
-- founder/contact = HUMAN DISPATCH INPUT: Dallas Fabian Courchene-Martin / dallascourchene@gmail.com
-- root LICENSE = NOT_FOUND_ON_CURRENT_MAIN_AT_INGEST
-- PR #286 = OPEN + DRAFT + NOT MERGED; contains staged root AGPLv3 license normalization
+PRIOR_GENERATION:
+- prior receipt blob = d954cfb8201acec1b085485e7c5b2df547291e43
+- prior generation had TECHNICAL_BENCHMARKS_AND_ECONOMICS.md unresolved at ingest
+- prior staged/root blob = f875ac32ab37c0eaeeb0feb2ff55deea4a6a7e0c
+- prior staged commit = 718edddf93d61d7244011ef46ba447b9d6a03df8
+- prior root promotion commit = d1866ded884d0743aeebaab8869148cc9f456f2a
+- GEN-002 supersedes only the currentness/evidence conclusions that changed; prior provenance remains historically valid
+
+SOURCE_CURRENTNESS:
+- TECHNICAL_BENCHMARKS_AND_ECONOMICS.md = FOUND / DRIVE id 1-vzQKKt7wR9v_DVDqPLlkTWNj45Kias7FtNexxcPb7Q / READY FOR HUMAN GATE 1 REVIEW
+- FOUNDER_BIO_AND_VISION.md = FOUND / DRIVE id 1o-4aSQS4rozVcCyvi32Ps4OSoSlvUASFt5CIbS9hLjs / READY FOR HUMAN GATE 1 REVIEW
+- PR_MANIFESTO_PRESS_RELEASE.md = FOUND / repository staging blob 21950e5428d5df374477ca6996886ae33520f990
+- founder contact = HUMAN DISPATCH AUTHORITY: Dallas Fabian Courchene-Martin / dallascourchene@gmail.com
 
 W4_INGESTION_AND_EXTRACTION:
-- measured serialized-state reduction = 72.73% fewer bytes (286 B -> 78 B)
-- >=94% tokenizer/L0 compression = TARGET / UNVERIFIED_SOURCE_GAP
-- ~98.60-98.78% = supplied OpEx model arithmetic, NOT token reduction
-- SQLite WAL = 19,934.69 writes/s @ 5 workers
-- full receipt throughput = NOT SEPARATELY MEASURED; >5,250 receipts/s NOT PROMOTED
-- bounded daemon fleet = 25/25 exact-once DONE / 0 duplicate fleet payloads
-- 25+ universal concurrent-agent capability = NOT PROMOTED
-- peak process RSS = 116.71 MiB
-- <95 MiB RSS target = NOT ACHIEVED / UNRESOLVED
-- InjecAgent-derived hard gate = 0/868 attack transitions reached executable state / 0.0000% gate-layer ASR
-- official end-to-end InjecAgent ASR = NOT MEASURED
-- bounded legacy tau-bench = 42/42 exact oracle-action trajectory preservation
-- official tau-bench pass^k = NOT MEASURED
+- 94%-98% token reduction = PRESERVED CLAIM / EVIDENCE BINDING REQUIRED; not one verified production benchmark
+- >5,250 receipt/events/sec = VERIFIED in fresh staged StateDeltaDaemon benchmark
+- fresh 1,000-transition runs = 6,864.45-7,071.97/sec; median 7,044.41/sec
+- separate timed run = 7,205.33/sec with 1,001 events including root creation
+- receipt/event benchmark scope = exact StateDeltaDaemon / SQLite :memory: / single thread / append-only state-event path / not distributed-network receipts
+- 25+ concurrent agents = DESIGN TARGET supported by 25-plus worker slots and 27 objective positions; not universal zero-collision benchmark
+- <95 MB RSS = FAIL for tested host process; staged run 115.95 MiB and fresh W3 process 113,012 KB; target retained only for narrower runtime surface
+- InjecAgent 0.00% = UNVERIFIED as official/end-to-end result in Gate-1 staging; repository bounded gate-layer 0/868 result preserved separately
+- Tau-bench 100% = UNVERIFIED as official pass^k in Gate-1 staging; repository bounded 42/42 legacy trajectory result preserved separately
+- UDP <500 us = VERIFIED WITH SCOPE CORRECTION; localhost synchronous unicast only
+- W4 adversarial invariant harness = 28/28 PASS; digest 11b2786ece07626d954089db235f6cdac669b5f7f481f28f542eef6126bdf2f2
 
 W5_COMPILATION:
-- created docs/staging/ready_review/README_STAGED.md
-- preserved architecture, quickstart, scientific disclosure, source-bound scorecards, reproduction commands
-- added explicit 3->6->9/1' conditional diagonal-rebase boundary
-- kept bounded 25-slot concurrency evidence separate from harmonic-law claims
-- integrated AGPLv3 declaration with explicit note that root LICENSE normalization remains unmerged in draft PR #286
-- integrated founder/contact from sovereign dispatch
-- added headline-claim reconciliation table to prevent target/model/proxy promotion as verified fact
+- compiled docs/staging/ready_review/README_STAGED.md from fresh Gate-1 sources plus current repository evidence
+- integrated 3-6-9 phase staggering as orchestration grammar, not universal law
+- integrated 25+ concurrency as design target and preserved exact 25-slot bounded repository evidence separately
+- integrated AGPLv3 / AGPL-3.0-only public-commons posture
+- integrated founder/contact from human dispatch
+- preserved operating-cost figures as staged model only, not audited savings and not token compression
+- README_STAGED SHA256 = 39e280a27a378d324691977b6e6105e6d9b294ccbb7c7a7a5f9f5c8e7e21d6ba
+- README_STAGED git blob = e4e9fb5f8f47046fc30c2a29b8d3168fac394fcc
 
 W6_ROOT_DEPLOYMENT:
-- README_STAGED create commit = 718edddf93d61d7244011ef46ba447b9d6a03df8
-- root README promotion commit = d1866ded884d0743aeebaab8869148cc9f456f2a
-- docs/staging/ready_review/README_STAGED.md blob = f875ac32ab37c0eaeeb0feb2ff55deea4a6a7e0c
-- root README.md blob after promotion = f875ac32ab37c0eaeeb0feb2ff55deea4a6a7e0c
+- staged README GEN-002 commit = edb003c69673ee55d09d703dfd57f1ab96796d64
+- root README promotion commit = 6da26c7796524cbf4c814cf8e7cc507d1c213aad
+- docs/staging/ready_review/README_STAGED.md blob = e4e9fb5f8f47046fc30c2a29b8d3168fac394fcc
+- root README.md blob = e4e9fb5f8f47046fc30c2a29b8d3168fac394fcc
 - STAGED_ROOT_BYTE_IDENTITY = PASS_BY_EQUAL_GIT_BLOB_SHA
 - GitHub push effect = COMPLETE_ON_MAIN
 
-CLAIM_RECONCILIATION:
-1. requested "94%-98% token reduction" -> NOT SOURCE-SUPPORTED AS ONE VERIFIED BENCHMARK
-2. requested ">5,250 receipts/sec" -> NOT SOURCE-SUPPORTED; publish 19,934.69 WAL writes/s only
-3. requested "25+ concurrent agents" -> SOURCE SUPPORTS TESTED 25-SLOT FLEET, NOT OPEN-ENDED 25+
-4. requested "<95 MB RSS" -> CONTRADICTED BY CURRENT 116.71 MiB MEASUREMENT
-5. requested "0.00% InjecAgent ASR" -> SUPPORTED ONLY AS 0.0000% GATE-LAYER RESULT (0/868 EXECUTABLE TRANSITIONS)
-6. requested "100% Tau-bench accuracy" -> SUPPORTED ONLY AS 42/42 BOUNDED LEGACY TRAJECTORY PRESERVATION
+CLAIM_RECONCILIATION_GEN002:
+1. requested 94%-98% token reduction -> INCLUDED WITH EVIDENCE-BINDING REQUIRED; not promoted as verified
+2. requested >5,250 receipts/sec -> NOW VERIFIED WITH EXACT STAGING SCOPE AND RUN RANGE
+3. requested 25+ concurrent agents -> INCLUDED AS DESIGN TARGET; bounded 25-slot run preserved separately
+4. requested <95 MB RSS -> INCLUDED AS TARGET / CURRENT TESTED HOST FAIL
+5. requested 0.00% InjecAgent ASR -> INCLUDED WITH OFFICIAL-END-TO-END UNVERIFIED BOUNDARY; bounded 0/868 gate-layer result preserved separately
+6. requested 100% Tau-bench accuracy -> INCLUDED WITH OFFICIAL PASS^K UNVERIFIED BOUNDARY; bounded 42/42 legacy trajectory result preserved separately
 
 NEGATIVE_SPACE:
 - no benchmark result fabricated
+- no stale GEN-001 source gap retained after source became available
 - no target promoted as measured result
 - no OpEx model relabeled as token compression
-- no WAL row write relabeled as full receipt
-- no 4 GiB capacity relabeled as <95 MiB process RSS
-- no bounded 25-slot run relabeled as universal concurrency capacity
-- no gate-layer security result relabeled as official end-to-end benchmark
-- no bounded tau-bench compatibility sample relabeled as official pass^k
-- no draft LICENSE normalization relabeled as merged
+- no 25+ design target relabeled as universal concurrency benchmark
+- no <95 MB target relabeled as achieved host RSS
+- no gate-layer security result relabeled as official end-to-end InjecAgent
+- no bounded legacy trajectory sample relabeled as official Tau-bench pass^k
+- no autonomous effects beyond the explicitly authorized GitHub README/staging/receipt mutation
 
-FINAL_STATE=README_STAGED_COMPILED / ROOT_README_PROMOTED / MAIN_PUSH_COMPLETE / RECEIPT_MINTED / SOURCE_GAPS_PRESERVED / FAIL_CLOSED_ON_UNVERIFIED_HEADLINES
+FINAL_STATE=README_STAGED_GEN002_COMPILED / ROOT_README_GEN002_PROMOTED / MAIN_PUSH_COMPLETE / STAGED_ROOT_IDENTITY_PASS / RECEIPT_GEN002_MINTED / SOURCE_GAPS_PRESERVED
