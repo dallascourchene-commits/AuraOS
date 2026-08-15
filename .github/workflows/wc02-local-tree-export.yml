@@ -51,16 +51,19 @@ jobs:
           python -m pip download --only-binary=:all: --no-deps 'arxiv>=1.4.0,<3.0' -d wc02-wheelhouse
           python -m pip download --only-binary=:all: --no-deps 'watchdog>=3.0,<5.0' -d wc02-wheelhouse
       - name: Package repaired source tree
+        shell: bash
         run: |
+          set -euo pipefail
           git status --porcelain=v1 > wc02-working-tree-status.txt
           git diff --binary > wc02-repair.diff
-          tar --exclude=.git --exclude=wc02-wheelhouse -czf wc02-repaired-tree.tgz .
-          sha256sum wc02-repaired-tree.tgz > wc02-repaired-tree.sha256
+          archive="${RUNNER_TEMP}/wc02-repaired-tree.tgz"
+          tar --exclude=.git --exclude=wc02-wheelhouse -czf "${archive}" .
+          sha256sum "${archive}" > wc02-repaired-tree.sha256
       - uses: actions/upload-artifact@v4
         with:
           name: wc02-local-tree-${{ github.run_id }}
           path: |
-            wc02-repaired-tree.tgz
+            ${{ runner.temp }}/wc02-repaired-tree.tgz
             wc02-repaired-tree.sha256
             wc02-working-tree-status.txt
             wc02-repair.diff
