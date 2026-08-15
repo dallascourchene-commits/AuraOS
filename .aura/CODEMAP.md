@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1605
-- **total_bytes**: 26080202
-- **text_tokens_est**: 6510476
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 247, 'support_file': 49}
+- **file_count**: 1606
+- **total_bytes**: 26081800
+- **text_tokens_est**: 6510876
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 1005, 'schema_or_lexicon': 247, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1605,
+  "repo_file_count": 1606,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1612,6 +1612,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/wc02_phase4_readme_patch.py",
     "tools/wc02_pytest_collection_patch.py",
     "tools/wc02_standalone_smoke_patch.py",
+    "tools/wc02_topology_health_schema_patch.py",
     "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py",
     "tools/wo_fleet_phase3_triad2_contract_patch.py",
     "tools/wo_fleet_phase3_triad2_incremental_patch.py",
@@ -1745,15 +1746,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1605,
-  "bytes": 26080202,
-  "tokens_est": 6510476,
+  "files": 1606,
+  "bytes": 26081800,
+  "tokens_est": 6510876,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 224,
     "native_accelerator": 8,
     "operator_script": 9,
-    "python_module": 1004,
+    "python_module": 1005,
     "schema_or_lexicon": 247,
     "support_file": 49
   }

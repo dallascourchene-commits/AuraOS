@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786832855,
+  "generated_at_unix": 1786834014,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1605,
+    "repo_file_count": 1606,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1594,6 +1594,7 @@
       "tools/wc02_phase4_readme_patch.py",
       "tools/wc02_pytest_collection_patch.py",
       "tools/wc02_standalone_smoke_patch.py",
+      "tools/wc02_topology_health_schema_patch.py",
       "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py",
       "tools/wo_fleet_phase3_triad2_contract_patch.py",
       "tools/wo_fleet_phase3_triad2_incremental_patch.py",
@@ -1721,15 +1722,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1605,
-      "bytes": 26080202,
-      "tokens_est": 6510476,
+      "files": 1606,
+      "bytes": 26081800,
+      "tokens_est": 6510876,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 224,
         "native_accelerator": 8,
         "operator_script": 9,
-        "python_module": 1004,
+        "python_module": 1005,
         "schema_or_lexicon": 247,
         "support_file": 49
       }
@@ -4412,6 +4413,14 @@
         "line": 86,
         "end_line": 92,
         "semantic_id": "tools/wc02_standalone_smoke_patch.py#function:main:f3e2ffd5839adb87",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/wc02_topology_health_schema_patch.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 22,
+        "semantic_id": "tools/wc02_topology_health_schema_patch.py#function:main:6f57d3a1ba0759c4",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -260152,6 +260161,53 @@
       ]
     },
     {
+      "path": "tools/wc02_topology_health_schema_patch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1598,
+      "lines": 27,
+      "tokens_est": 400,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cb99f4a986293a8f",
+      "vector": [
+        -0.121248,
+        0.056869,
+        0.15773,
+        -0.189919,
+        -0.140562,
+        0.028971,
+        -0.209233,
+        0.035409,
+        0.078328,
+        0.054723,
+        -0.196357,
+        -0.241423,
+        0.256445,
+        -0.213525,
+        0.219963,
+        -0.065452,
+        -0.110518,
+        -0.226401,
+        -0.258591,
+        -0.031117,
+        -0.256445,
+        -0.131978,
+        0.108372,
+        0.226401,
+        -0.262883,
+        0.243569,
+        -0.155584,
+        -0.052577,
+        -0.16846,
+        -0.237131,
+        0.001073,
+        0.260737
+      ]
+    },
+    {
       "path": "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py",
       "role": "python_module",
       "binary": false,
@@ -284291,15 +284347,15 @@
     }
   },
   "summary": {
-    "file_count": 1605,
-    "total_bytes": 26080202,
-    "text_tokens_est": 6510476,
+    "file_count": 1606,
+    "total_bytes": 26081800,
+    "text_tokens_est": 6510876,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 224,
       "native_accelerator": 8,
       "operator_script": 9,
-      "python_module": 1004,
+      "python_module": 1005,
       "schema_or_lexicon": 247,
       "support_file": 49
     },
@@ -285904,6 +285960,7 @@
       "tools/wc02_phase4_readme_patch.py",
       "tools/wc02_pytest_collection_patch.py",
       "tools/wc02_standalone_smoke_patch.py",
+      "tools/wc02_topology_health_schema_patch.py",
       "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py",
       "tools/wo_fleet_phase3_triad2_contract_patch.py",
       "tools/wo_fleet_phase3_triad2_incremental_patch.py",
@@ -442645,6 +442702,16 @@
         "file_digest8": "b8da73ea52d0d920"
       },
       {
+        "semantic_id": "tools/wc02_topology_health_schema_patch.py#function:main:6f57d3a1ba0759c4",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/wc02_topology_health_schema_patch.py",
+        "line": 12,
+        "end_line": 22,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "cb99f4a986293a8f"
+      },
+      {
         "semantic_id": "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py#function:main:726427629e4e485d",
         "name": "main",
         "kind": "function",
@@ -443965,7 +444032,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "954b03a92ecba94a7f01b8bec65091f6",
-    "payload_hash": "3d963c76d30b0916803eaca08c28af69"
+    "record_fingerprint": "f167ad56f1c7829b927db432009b8519",
+    "payload_hash": "8a2fb43f600a66b13e68d064a72fb42a"
   }
 }
