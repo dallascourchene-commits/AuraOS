@@ -1,0 +1,173 @@
+name: WO Fleet Phase3 Triad2 Verification V2
+
+on:
+  push:
+    branches:
+      - fix/wo-fleet-phase3-triad2-001
+    paths:
+      - '.github/workflows/wo-fleet-phase3-triad2-verify-v2.yml'
+      - 'tools/wo_fleet_phase3_triad2_contract_patch.py'
+      - 'tools/wo_fleet_phase3_triad2_incremental_patch.py'
+      - 'tools/wo_fleet_phase3_triad2_skillweaver_patch.py'
+      - 'tools/wo_fleet_phase3_triad2_pascal_test_patch.py'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wo-fleet-phase3-triad2-v2
+  cancel-in-progress: true
+
+env:
+  PYTHONPATH: ${{ github.workspace }}
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+  PYTHONHASHSEED: '0'
+
+jobs:
+  verify-precommit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install governed Python 3.12 dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt \
+            'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' \
+            'jsonschema>=4.23,<5.0' 'trimesh>=4.7.1,<5.0' 'zstandard>=0.23.0,<1.0'
+
+      - name: Apply Phase3 contract repairs without committing
+        run: |
+          python tools/wo_fleet_phase3_triad2_contract_patch.py
+          python tools/wo_fleet_phase3_triad2_incremental_patch.py
+          python tools/wo_fleet_phase3_triad2_skillweaver_patch.py
+          python tools/wo_fleet_phase3_triad2_pascal_test_patch.py
+          git diff --check
+
+      - name: Compile repaired contract surfaces
+        run: |
+          python -m py_compile \
+            aura_coding_relationship_compass.py \
+            aura_emergent_potential_repl.py \
+            aura_codebase_navigator.py \
+            aura_codemap_verify.py \
+            aura_architect_loop.py \
+            aura_fusion.py \
+            aura_skillweaver.py \
+            tests/test_aura_construction_pascal_spatial_foundry_pr5.py
+
+      - name: Regenerate canonical deep CODEMAP topology
+        run: |
+          python aura_codebase_navigator.py --refresh-topology
+          python scripts/aura_source_anchor_map.py --root .
+          python scripts/aura_source_anchor_map.py --root . --check
+          python -m aura_codemap_verify | tee triad2-codemap-verify.txt
+          git diff --check
+
+      - name: Python 3.12 focused contract suite
+        run: |
+          set -o pipefail
+          python -m pytest -q \
+            tests/test_aura_codemap_verify.py \
+            tests/test_aura_arch_v2_3_capsule_validator.py \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_fully_projected_obligations_preserve_eligible_path \
+            tests/test_aura_construction_pascal_spatial_foundry_pr5.py::test_pr5_coordinate_receipt_mismatched_artifact_digest_fails_closed \
+            test_aura_fusion.py::test_infer_fusion_target_from_bang_command_prefers_implementation \
+            test_aura_fusion.py::test_mock_fusion_run_infers_command_target_before_mutation_gate \
+            test_aura_fusion.py::test_codemap_refresh_skips_artifact_write_when_payload_unchanged \
+            test_aura_skillweaver.py::TestSkillRegistry::test_registry_has_commands \
+            test_codemap_slimming.py::test_iter_repo_files_skips_runtime_dependency_dirs \
+            --junitxml=triad2-focused-py312.xml 2>&1 | tee triad2-focused-py312.txt
+
+      - name: Python 3.12 governed pytest suite
+        run: |
+          set -o pipefail
+          python -m pytest -q --disable-warnings --maxfail=1 \
+            --ignore=test_aura_functions.py \
+            --ignore=test_synthesis_upgrades.py \
+            --ignore=test_syntax_fixes.py \
+            --ignore=test_codemap_hooks_simple.py \
+            --ignore=test_pvm_logic.py \
+            --ignore=test_aura_substrate.py \
+            --deselect=tests/test_aura_human_agent_arena.py::test_affordance_map_declares_source_of_truth \
+            --junitxml=triad2-full-py312.xml 2>&1 | tee triad2-full-py312.txt
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.10'
+          cache: pip
+
+      - name: Install governed Python 3.10 dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt \
+            'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' \
+            'jsonschema>=4.23,<5.0' 'trimesh>=4.7.1,<5.0' 'zstandard>=0.23.0,<1.0'
+
+      - name: Python 3.10 focused contract suite
+        run: |
+          set -o pipefail
+          python -m pytest -q \
+            tests/test_aura_codemap_verify.py \
+            tests/test_aura_arch_v2_3_capsule_validator.py \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_fully_projected_obligations_preserve_eligible_path \
+            tests/test_aura_construction_pascal_spatial_foundry_pr5.py::test_pr5_coordinate_receipt_mismatched_artifact_digest_fails_closed \
+            test_aura_fusion.py::test_infer_fusion_target_from_bang_command_prefers_implementation \
+            test_aura_fusion.py::test_mock_fusion_run_infers_command_target_before_mutation_gate \
+            test_aura_fusion.py::test_codemap_refresh_skips_artifact_write_when_payload_unchanged \
+            test_aura_skillweaver.py::TestSkillRegistry::test_registry_has_commands \
+            test_codemap_slimming.py::test_iter_repo_files_skips_runtime_dependency_dirs \
+            --junitxml=triad2-focused-py310.xml 2>&1 | tee triad2-focused-py310.txt
+
+      - name: Python 3.10 governed pytest suite
+        run: |
+          set -o pipefail
+          python -m pytest -q --disable-warnings --maxfail=1 \
+            --ignore=test_aura_functions.py \
+            --ignore=test_synthesis_upgrades.py \
+            --ignore=test_syntax_fixes.py \
+            --ignore=test_codemap_hooks_simple.py \
+            --ignore=test_pvm_logic.py \
+            --ignore=test_aura_substrate.py \
+            --deselect=tests/test_aura_human_agent_arena.py::test_affordance_map_declares_source_of_truth \
+            --junitxml=triad2-full-py310.xml 2>&1 | tee triad2-full-py310.txt
+
+      - name: Package exact uncommitted verified repair tree
+        run: |
+          git status --porcelain=v1 > triad2-working-tree-status.txt
+          git diff --binary > triad2-repair.diff
+          tar --exclude=.git -czf "${RUNNER_TEMP}/triad2-patched-tree.tgz" .
+          sha256sum "${RUNNER_TEMP}/triad2-patched-tree.tgz" > triad2-patched-tree.sha256
+
+      - name: Upload exact precommit verification evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: wo-fleet-phase3-triad2-v2-${{ github.run_id }}
+          path: |
+            triad2-codemap-verify.txt
+            triad2-focused-py312.txt
+            triad2-focused-py312.xml
+            triad2-full-py312.txt
+            triad2-full-py312.xml
+            triad2-focused-py310.txt
+            triad2-focused-py310.xml
+            triad2-full-py310.txt
+            triad2-full-py310.xml
+            triad2-working-tree-status.txt
+            triad2-repair.diff
+            triad2-patched-tree.sha256
+            ${{ runner.temp }}/triad2-patched-tree.tgz
+          if-no-files-found: warn
+          retention-days: 30
