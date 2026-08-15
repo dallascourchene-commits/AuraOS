@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: de1fbd7636b2a2dccd1bc592a4cbd8300785f0d1
+          ref: adeb25d7b3158fbaca09d42c2617c2b1d59ec7d5
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
@@ -29,11 +29,12 @@ jobs:
           python -m pip install -r requirements.txt 'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' 'jsonschema>=4.23,<5.0' 'trimesh>=4.7.1,<5.0' 'zstandard>=0.23.0,<1.0'
       - name: Apply exact Phase3 repairs
         run: |
-          test "$(git rev-parse HEAD)" = 'de1fbd7636b2a2dccd1bc592a4cbd8300785f0d1'
+          test "$(git rev-parse HEAD)" = 'adeb25d7b3158fbaca09d42c2617c2b1d59ec7d5'
           python tools/wo_fleet_phase3_triad2_contract_patch.py
           python tools/wo_fleet_phase3_triad2_incremental_patch.py
           python tools/wo_fleet_phase3_triad2_skillweaver_patch.py
-          python -m py_compile aura_coding_relationship_compass.py aura_emergent_potential_repl.py aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py aura_fusion.py aura_skillweaver.py
+          python tools/wo_fleet_phase3_triad2_pascal_test_patch.py
+          python -m py_compile aura_coding_relationship_compass.py aura_emergent_potential_repl.py aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py aura_fusion.py aura_skillweaver.py tests/test_aura_construction_pascal_spatial_foundry_pr5.py
       - name: Regenerate and verify canonical CODEMAP
         run: |
           python aura_codebase_navigator.py --refresh-topology
@@ -45,6 +46,7 @@ jobs:
           git diff --binary > triad2-current-repair.diff
           tar --exclude=.git -czf /tmp/triad2-current-patched-tree.tgz .
           sha256sum /tmp/triad2-current-patched-tree.tgz > /tmp/triad2-current-patched-tree.sha256
+          sha256sum aura_coding_relationship_compass.py aura_codebase_navigator.py aura_skillweaver.py tests/test_aura_construction_pascal_spatial_foundry_pr5.py .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json > triad2-current-key-hashes.txt
       - uses: actions/upload-artifact@v4
         with:
           name: phase3-triad2-current-tested-tree-${{ github.run_id }}
@@ -54,5 +56,6 @@ jobs:
             triad2-current-codemap-verify.txt
             triad2-current-working-tree-status.txt
             triad2-current-repair.diff
+            triad2-current-key-hashes.txt
           if-no-files-found: error
           retention-days: 2
