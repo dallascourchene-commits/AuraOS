@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1587
-- **total_bytes**: 25992985
-- **text_tokens_est**: 6488674
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 222, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 245, 'support_file': 49}
+- **file_count**: 1589
+- **total_bytes**: 26001679
+- **text_tokens_est**: 6490840
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 245, 'support_file': 49}
 - **topology_nodes**: 11393
 - **topology_edges**: 27882
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1587,
+  "repo_file_count": 1589,
   "source_paths_without_topology": [
     "_aura_architect_consolidation_benchmark_legacy.py",
     "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -138,12 +138,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1587,
-  "bytes": 25992985,
-  "tokens_est": 6488674,
+  "files": 1589,
+  "bytes": 26001679,
+  "tokens_est": 6490840,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 222,
+    "knowledge_artifact": 224,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 990,
@@ -277,6 +277,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "USER_GUIDE.md",
     "VSA_RENDERING_IMPLEMENTATION.md",
     "VSA_TEST_PLAN.md",
+    "aura_workspace/inbox/bounties/BATCH2_TARGETS.md",
     "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
     "aura_workspace/inbox/bounties/INTAKE_ONLY_RESIDUE.md",
     "aura_workspace/inbox/bounties/WO-LIVE-BOUNTY-HARVESTER-001/HARVEST_MANIFEST.md",
@@ -431,8 +432,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
     "docs/PR_KIT.md",
     "docs/README_PRE_ARCHITECT_BENCHMARK.md",
-    "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
-    "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md"
+    "docs/SECURITY_AND_ACCURACY_SCORECARD.md"
   ]
 }
 ```
