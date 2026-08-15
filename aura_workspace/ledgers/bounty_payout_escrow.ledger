@@ -7,18 +7,25 @@ CREATED=2026-08-15
 STATE=OPEN_WITH_BLOCKED_DISPATCH
 
 SOURCE_RECONCILIATION:
-- requested_ready_to_submit_packages=3
-- discovered_ready_to_submit_packages=1
-- discovered_package=claude-hook
-- missing_or_unresolved_packages=2
-- absent_packages_do_not_create_receivables=true
+- requested_packages=3
+- literal_READY_TO_SUBMIT_packages=1
+- literal_READY_TO_SUBMIT_package=claude-hook
+- READY_FOR_PR_only_packages=plantguide-sdk,loru-contributing
+- absent_or_lower-stage_packages_do_not_create_receivables=true
 
 ENTRY_001:
 - package=claude-hook
+- package_stage=READY_TO_SUBMIT
 - upstream_repository=claude-builders-bounty/claude-builders-bounty
 - upstream_issue=3
-- upstream_issue_state_at_dispatch=OPEN
+- upstream_issue_state_at_reconciliation=OPEN
 - advertised_bounty_usd=100
+- staged_upstream_pin=1aeae2adc82d33f971fd7731644348dcdd24b5a6
+- live_competing_pr_example=3723
+- live_competing_pr_state=OPEN
+- live_competing_pr_merged=false
+- live_competing_pr_base_sha=1aeae2adc82d33f971fd7731644348dcdd24b5a6
+- equivalent_competing_submissions=MANY
 - required_claim_step=/opire try
 - human_gate_b_authority=GRANTED_BY_WO-FLEET-TRIGGER-ALL-001
 - claim_attempt=EXECUTED
@@ -26,28 +33,71 @@ ENTRY_001:
 - external_fork=NOT_CREATED
 - external_branch=NOT_CREATED
 - upstream_pr=NOT_OPENED
-- payout_condition=MERGE_REQUIRED
-- merge_state=NOT_APPLICABLE
+- disposition=BLOCKED_CONNECTOR_AND_HIGH_DUPLICATE_RISK
+- stale_already_merged=NOT_PROVEN
 - receivable_usd=0
-- receivable_state=NOT_MINTED
 - payout_usd=0
-- payout_state=NOT_MINTED
-- escrow_state=BLOCKED_BEFORE_CLAIM
+
+ENTRY_002:
+- package=plantguide-sdk
+- package_stage=READY_FOR_PR_ONLY
+- upstream_repository=mergeos-bounties/PlantGuide
+- upstream_issue=10
+- upstream_issue_state_at_reconciliation=OPEN
+- advertised_bounty_mrg=50
+- acceptance_requires=SCHEMA_MATCHES_CURRENT_PYTHON_PAYLOAD
+- current_sdk_contract=plantguide.sdk.v1_with_integration_version_ready_for_ui_and_care_report_surfaces
+- staged_patch_scope=older_identify_care_schema_shape_plus_typescript_types
+- live_competing_pr_example=148
+- live_competing_pr_state=OPEN
+- live_competing_pr_merged=false
+- live_competing_pr_validates_current_source_payloads=true
+- external_fork=NOT_CREATED
+- external_branch=NOT_CREATED
+- upstream_pr=NOT_OPENED
+- disposition=BLOCKED_SOURCE_IDENTITY_CURRENTNESS_AND_LOWER_STAGE
+- receivable_mrg=0
+- payout_mrg=0
+
+ENTRY_003:
+- package=loru-contributing
+- package_stage=READY_FOR_PR_ONLY
+- upstream_repository=mergeos-bounties/Loru
+- upstream_issue=19
+- upstream_issue_state_at_reconciliation=OPEN
+- advertised_bounty_mrg=25
+- current_root_CONTRIBUTING_md=ABSENT
+- live_competing_pr_example=637
+- live_competing_pr_state=OPEN
+- live_competing_pr_merged=false
+- additional_equivalent_prs=531,568,578,580,581,590
+- external_fork=NOT_CREATED
+- external_branch=NOT_CREATED
+- upstream_pr=NOT_OPENED
+- disposition=BLOCKED_LOWER_STAGE_AND_HIGH_DUPLICATE_RISK
+- stale_already_merged=NOT_PROVEN
+- receivable_mrg=0
+- payout_mrg=0
 
 NEGATIVE_SPACE:
 - NO_SUCCESSFUL_OPIRE_CLAIM
-- NO_UPSTREAM_PR
+- NO_UPSTREAM_PR_OPENED_BY_THIS_FLEET
+- NO_EXTERNAL_FORK_CREATED
+- NO_EXTERNAL_BRANCH_CREATED
+- NO_THIRD_PARTY_REPOSITORY_MUTATION_COMPLETED
 - NO_MERGE
 - NO_WALLET_ACTION
 - NO_PAYOUT_CLAIM
 - NO_RECEIVABLE_MINTED_FROM_ADVERTISED_BOUNTY
-- NO_TWO_MISSING_PACKAGES_INVENTED
-- NO_THIRD_PARTY_REPOSITORY_MUTATION_COMPLETED
+- NO_READY_FOR_PR_PACKAGE_RELABELLED_AS_READY_TO_SUBMIT
+- NO_CONTESTED_TARGET_RELABELLED_AS_MERGED
+- NO_SOURCE_STALE_SCHEMA_SUBMITTED_AS_CURRENT
 
 NEXT_VALID_TRANSITION:
-- obtain an upstream-capable GitHub identity/integration able to perform the required issue comment and fork/branch/PR operations;
-- revalidate issue state, bounty availability, and package exact-head applicability before retry;
-- mint a receivable only after the upstream claim/PR state actually supports one;
-- mint payout only after the upstream payout condition is satisfied and source-verifiable.
+- claude-hook: obtain an upstream-capable integration, then revalidate issue/claim availability and duplicate economics before any retry;
+- plantguide-sdk: rebase the package onto the current Python SDK contract and revalidate against live payloads before promotion from READY_FOR_PR;
+- loru-contributing: recheck issue/competing-PR disposition and only promote if a materially distinct, still-needed contribution remains;
+- mint receivables only after source-verifiable upstream claim/PR state supports them;
+- mint payouts only after the upstream payout condition is source-verifiably satisfied.
 
-FINAL_STATE=ONE_PACKAGE_SOURCE_RESOLVED / CLAIM_ATTEMPT_BLOCKED_403 / ZERO_RECEIVABLE / ZERO_PAYOUT / TWO_REQUESTED_PACKAGES_UNRESOLVED
+FINAL_STATE=THREE_PACKAGES_RECONCILED / ZERO_UPSTREAM_PRS / ZERO_RECEIVABLE / ZERO_PAYOUT / FAIL_CLOSED
