@@ -10,20 +10,20 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1586
-- **total_bytes**: 26006461
-- **text_tokens_est**: 6492034
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 242, 'support_file': 49}
+- **file_count**: 1585
+- **total_bytes**: 25993139
+- **text_tokens_est**: 6488704
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 241, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 35878.93
+- **elapsed_ms**: 28044.17
 
 ## Coverage
 
 ```json
 {
-  "repo_file_count": 1586,
+  "repo_file_count": 1585,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -200,7 +200,6 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/sco-temporal-persistence-e9-e12.yml",
     ".github/workflows/source-anchor-verify.yml",
     ".github/workflows/sync-analysis-codemap.yml",
-    ".github/workflows/triad2-ci-codemap-repair.yml",
     ".github/workflows/triad2-codemap-repair.yml",
     ".github/workflows/triad2-full-codemap-repair-v2.yml",
     ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
@@ -1726,16 +1725,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1586,
-  "bytes": 26006461,
-  "tokens_est": 6492034,
+  "files": 1585,
+  "bytes": 25993139,
+  "tokens_est": 6488704,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 224,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 990,
-    "schema_or_lexicon": 242,
+    "schema_or_lexicon": 241,
     "support_file": 49
   }
 }

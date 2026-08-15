@@ -352,17 +352,25 @@ def _load_codemap(repo_root: str | Path) -> dict[str, Any]:
     return data
 
 
+
 def _refresh_plan_codemap_targets(plan: FractalPlanCapsule, repo_root: str | Path) -> None:
     root = Path(repo_root)
+    # Refresh may update an existing snapshot, but must never create truth
+    # in a repository that has no CODEMAP. Grounding fails closed there.
     if not (root / ".aura" / "CODEMAP.json").is_file():
         return
-    targets = sorted({n for n in (_normalize_path(a.target_file) for a in plan.act_capsules) if n})
+    targets = sorted({
+        normalized
+        for normalized in (_normalize_path(act.target_file) for act in plan.act_capsules)
+        if normalized
+    })
     if not targets:
         return
     try:
         refresh_codemap_for_paths(targets, root=root, include_topology=True)
     except Exception as exc:
         _LOG.debug("CODEMAP target preflight refresh skipped: %s", type(exc).__name__)
+        return
 
 def _normalized_path_list(values: Any) -> list[str]:
     if values is None:
@@ -595,18 +603,23 @@ def architect_capability_cards() -> list[dict[str, Any]]:
     ]
 
 
+
 def _codemap_paths(codemap: dict[str, Any]) -> set[str]:
-    paths = set()
     coverage = codemap.get("coverage", {})
+    paths = set()
     for item in coverage.get("all_included_paths_sorted", []) or []:
-        n = _normalize_path(str(item))
-        if n: paths.add(n)
+        normalized = _normalize_path(str(item))
+        if normalized:
+            paths.add(normalized)
     for key in ("file_cards", "files"):
         for card in codemap.get(key, []) or []:
-            if isinstance(card, dict):
-                n = _normalize_path(str(card.get("path", "")))
-                if n: paths.add(n)
+            if not isinstance(card, dict):
+                continue
+            normalized = _normalize_path(str(card.get("path", "")))
+            if normalized:
+                paths.add(normalized)
     return paths
+
 
 def _file_card(codemap: dict[str, Any], target_file: str | None) -> dict[str, Any]:
     normalized = _normalize_path(target_file)
@@ -614,7 +627,9 @@ def _file_card(codemap: dict[str, Any], target_file: str | None) -> dict[str, An
         return {}
     for key in ("file_cards", "files"):
         for card in codemap.get(key, []) or []:
-            if isinstance(card, dict) and _normalize_path(str(card.get("path", ""))) == normalized:
+            if not isinstance(card, dict):
+                continue
+            if _normalize_path(str(card.get("path", ""))) == normalized:
                 return card
     return {}
 
