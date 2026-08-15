@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1596
-- **total_bytes**: 26069259
-- **text_tokens_est**: 6507729
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 231, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 245, 'support_file': 49}
+- **file_count**: 1597
+- **total_bytes**: 26073271
+- **text_tokens_est**: 6508732
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 231, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 246, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1596,
+  "repo_file_count": 1597,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -207,6 +207,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
     ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
     ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
+    ".github/workflows/wo-phase3-codemap-compat-audit.yml",
     ".github/workflows/wo-phase3-local-gate-bundle-001.yml",
     ".gitignore",
     ".mempalace/aura_thought.txt",
@@ -1736,16 +1737,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1596,
-  "bytes": 26069259,
-  "tokens_est": 6507729,
+  "files": 1597,
+  "bytes": 26073271,
+  "tokens_est": 6508732,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 231,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 990,
-    "schema_or_lexicon": 245,
+    "schema_or_lexicon": 246,
     "support_file": 49
   }
 }
