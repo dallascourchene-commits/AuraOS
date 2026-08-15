@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786832501,
+  "generated_at_unix": 1786832855,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1604,
+    "repo_file_count": 1605,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1589,6 +1589,7 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/wc02_memory_budget_sync_patch.py",
+      "tools/wc02_navigator_refresh_semantics_patch.py",
       "tools/wc02_navigator_search_compat_patch.py",
       "tools/wc02_phase4_readme_patch.py",
       "tools/wc02_pytest_collection_patch.py",
@@ -1720,15 +1721,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1604,
-      "bytes": 26074477,
-      "tokens_est": 6509044,
+      "files": 1605,
+      "bytes": 26080202,
+      "tokens_est": 6510476,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 224,
         "native_accelerator": 8,
         "operator_script": 9,
-        "python_module": 1003,
+        "python_module": 1004,
         "schema_or_lexicon": 247,
         "support_file": 49
       }
@@ -4371,6 +4372,14 @@
         "line": 18,
         "end_line": 46,
         "semantic_id": "tools/wc02_memory_budget_sync_patch.py#function:main:4ebc53e79afeb359",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/wc02_navigator_refresh_semantics_patch.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 51,
+        "semantic_id": "tools/wc02_navigator_refresh_semantics_patch.py#function:main:25d4480599f23f07",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -156542,6 +156551,14 @@
         "signature_hash": "820625feabdd1c16"
       },
       {
+        "file": "tools/wc02_navigator_refresh_semantics_patch.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 15,
+        "semantic_id": "tools/wc02_navigator_refresh_semantics_patch.py#function:replace_once:e005e37f7d4c269f",
+        "signature_hash": "820625feabdd1c16"
+      },
+      {
         "file": "tools/wc02_navigator_search_compat_patch.py",
         "kind": "function",
         "line": 105,
@@ -259900,6 +259917,53 @@
       ]
     },
     {
+      "path": "tools/wc02_navigator_refresh_semantics_patch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5725,
+      "lines": 56,
+      "tokens_est": 1432,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "19d584851862d776",
+      "vector": [
+        0.270856,
+        0.036483,
+        0.17578,
+        0.105026,
+        -0.164725,
+        -0.074071,
+        0.089548,
+        0.100604,
+        0.122714,
+        0.213368,
+        -0.07186,
+        -0.180202,
+        -0.091759,
+        0.259801,
+        0.087337,
+        -0.19568,
+        0.182413,
+        -0.244323,
+        -0.277489,
+        0.096182,
+        0.259801,
+        0.211157,
+        0.067438,
+        0.239901,
+        0.281911,
+        -0.016583,
+        0.239901,
+        0.244323,
+        -0.029849,
+        -0.202313,
+        -0.142614,
+        -0.001106
+      ]
+    },
+    {
       "path": "tools/wc02_navigator_search_compat_patch.py",
       "role": "python_module",
       "binary": false,
@@ -284227,15 +284291,15 @@
     }
   },
   "summary": {
-    "file_count": 1604,
-    "total_bytes": 26074477,
-    "text_tokens_est": 6509044,
+    "file_count": 1605,
+    "total_bytes": 26080202,
+    "text_tokens_est": 6510476,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 224,
       "native_accelerator": 8,
       "operator_script": 9,
-      "python_module": 1003,
+      "python_module": 1004,
       "schema_or_lexicon": 247,
       "support_file": 49
     },
@@ -285835,6 +285899,7 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/wc02_memory_budget_sync_patch.py",
+      "tools/wc02_navigator_refresh_semantics_patch.py",
       "tools/wc02_navigator_search_compat_patch.py",
       "tools/wc02_phase4_readme_patch.py",
       "tools/wc02_pytest_collection_patch.py",
@@ -442480,6 +442545,26 @@
         "file_digest8": "e61f923afd2d9504"
       },
       {
+        "semantic_id": "tools/wc02_navigator_refresh_semantics_patch.py#function:main:25d4480599f23f07",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/wc02_navigator_refresh_semantics_patch.py",
+        "line": 18,
+        "end_line": 51,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "19d584851862d776"
+      },
+      {
+        "semantic_id": "tools/wc02_navigator_refresh_semantics_patch.py#function:replace_once:e005e37f7d4c269f",
+        "name": "replace_once",
+        "kind": "function",
+        "file": "tools/wc02_navigator_refresh_semantics_patch.py",
+        "line": 9,
+        "end_line": 15,
+        "signature_hash": "820625feabdd1c16",
+        "file_digest8": "19d584851862d776"
+      },
+      {
         "semantic_id": "tools/wc02_navigator_search_compat_patch.py#function:main:7a4cd763826691ec",
         "name": "main",
         "kind": "function",
@@ -443880,7 +443965,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f1e1443992c9ccd712fc6298cec528b0",
-    "payload_hash": "ed1be15047fc27aaf53bc5d3280b91f1"
+    "record_fingerprint": "954b03a92ecba94a7f01b8bec65091f6",
+    "payload_hash": "3d963c76d30b0916803eaca08c28af69"
   }
 }
