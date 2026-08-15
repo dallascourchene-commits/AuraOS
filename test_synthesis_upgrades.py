@@ -470,4 +470,7 @@ if fails:
             print(f"    [{cat}] {name}")
 print(f"\n  {'✓ ALL PASS' if fails == 0 else '✗ FAILURES DETECTED'}")
 print(f"{'═'*64}")
-sys.exit(0 if fails == 0 else 1)
+if __name__ == "__main__":
+    raise SystemExit(0 if fails == 0 else 1)
+if fails:
+    raise AssertionError(f"{fails} synthesis upgrade checks failed")
