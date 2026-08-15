@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1451
-- **total_bytes**: 57402696
-- **text_tokens_est**: 4895577
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 185, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 934, 'schema_or_lexicon': 188, 'support_file': 77}
-- **topology_nodes**: 10724
-- **topology_edges**: 25579
+- **file_count**: 1518
+- **total_bytes**: 57447146
+- **text_tokens_est**: 4906660
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 51, 'knowledge_artifact': 187, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 936, 'schema_or_lexicon': 194, 'support_file': 134}
+- **topology_nodes**: 10750
+- **topology_edges**: 25637
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 31778.81
+- **elapsed_ms**: 31478.98
 
 ## Coverage
 
-- **included_file_count**: 1451
+- **included_file_count**: 1518
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=26, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=354, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
 
 ## Command Index
 
@@ -340,18 +340,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ### security_and_validation
 - `.aura/SECURITY.md`
+- `.aura/final_definition_of_done/bilateral_intent_guardrail_foundry_final.v1.json`
+- `.aura/plan_revision_deltas/bilateral_intent_guardrail_foundry_final_revision_1.v1.json`
+- `.aura/refactor_objectives/bilateral_intent_guardrail_foundry_final.v1.json`
 - `.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json`
 - `.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json`
 - `.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2.v1.json`
 - `.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr2_hardening_revision.v1.json`
 - `.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr3.v1.json`
 - `.aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr4.v1.json`
-- `.aura/waboose_requests/bilateral_intent_guardrail_foundry.v2.json`
-- `.aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2.v1.json`
-- `.aura/waboose_requests/bilateral_intent_guardrail_foundry_pr2_hardening.v1.json`
-- `.aura/waboose_requests/bilateral_intent_guardrail_foundry_pr3.v1.json`
-- `.aura/waboose_requests/bilateral_intent_guardrail_foundry_pr4.v1.json`
-- ... 30 more; query CODEMAP.json for exact file cards
+- `.aura/review_requests/bilateral_intent_guardrail_foundry_final.v1.json`
+- `.aura/staging/api_action_guard.txt`
+- ... 38 more; query CODEMAP.json for exact file cards
 
 ### interfaces_and_docs
 - `.aura/AFFORDANCE_MAP.json`
@@ -366,7 +366,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
-- ... 1232 more; query CODEMAP.json for exact file cards
+- ... 1291 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
@@ -386,8 +386,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 10724
-- **edges**: 25579
+- **nodes**: 10750
+- **edges**: 25637
 - **top_files_by_degree**:
   - `aura_node.py` degree=890 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=756 nodes=69 neighbors=`aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`, `aura_gate_adapters.py`
