@@ -16,6 +16,15 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
 def main() -> int:
     text = NAV.read_text(encoding="utf-8")
 
+    # Keep the helper compatible with its established test/caller contract:
+    # callers may pass an explicit skip set positionally or use the default.
+    text = replace_once(
+        text,
+        "def _iter_repo_files(root: Path, *, skip_dirs: frozenset[str] = DEFAULT_SKIP_DIRS) -> list[Path]:\n",
+        "def _iter_repo_files(root: Path, skip_dirs: frozenset[str] = DEFAULT_SKIP_DIRS) -> list[Path]:\n",
+        "repository scanner compatibility",
+    )
+
     old_cards = '''    cards = [dict(card) for card in payload.get("files", []) if isinstance(card, dict)]
     card_by_path = {str(card.get("path") or ""): card for card in cards if card.get("path")}
     changed_rel_paths: list[str] = []
@@ -103,7 +112,7 @@ def main() -> int:
     text = replace_once(text, old_existing, new_existing, "no-op refresh write suppression")
 
     NAV.write_text(text, encoding="utf-8")
-    print("Phase-3 CODEMAP incremental no-op repair applied")
+    print("Phase-3 CODEMAP incremental/no-op + scanner compatibility repair applied")
     return 0
 
 
