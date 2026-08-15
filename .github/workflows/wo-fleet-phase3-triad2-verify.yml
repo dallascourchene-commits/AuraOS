@@ -6,6 +6,7 @@ on:
       - fix/wo-fleet-phase3-triad2-001
     paths:
       - '.github/workflows/wo-fleet-phase3-triad2-verify.yml'
+      - 'tools/wo_fleet_phase3_triad2_contract_patch.py'
 
 permissions:
   contents: write
@@ -43,7 +44,7 @@ jobs:
         run: python tools/wo_fleet_phase3_triad2_contract_patch.py
 
       - name: Compile repaired contract surfaces
-        run: python -m py_compile aura_coding_relationship_compass.py aura_emergent_potential_repl.py aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py
+        run: python -m py_compile aura_coding_relationship_compass.py aura_emergent_potential_repl.py aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py aura_fusion.py
 
       - name: Regenerate canonical deep CODEMAP topology
         run: |
@@ -58,6 +59,8 @@ jobs:
             tests/test_aura_arch_v2_3_capsule_validator.py \
             tests/test_aura_bilateral_planning_enforcement.py::test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected \
             tests/test_aura_bilateral_planning_enforcement.py::test_compass_fully_projected_obligations_preserve_eligible_path \
+            test_aura_fusion.py::test_infer_fusion_target_from_bang_command_prefers_implementation \
+            test_aura_fusion.py::test_mock_fusion_run_infers_command_target_before_mutation_gate \
             --junitxml=triad2-focused-py312.xml 2>&1 | tee triad2-focused-py312.txt
 
       - name: Python 3.12 governed pytest suite
@@ -94,6 +97,8 @@ jobs:
             tests/test_aura_arch_v2_3_capsule_validator.py \
             tests/test_aura_bilateral_planning_enforcement.py::test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected \
             tests/test_aura_bilateral_planning_enforcement.py::test_compass_fully_projected_obligations_preserve_eligible_path \
+            test_aura_fusion.py::test_infer_fusion_target_from_bang_command_prefers_implementation \
+            test_aura_fusion.py::test_mock_fusion_run_infers_command_target_before_mutation_gate \
             --junitxml=triad2-focused-py310.xml 2>&1 | tee triad2-focused-py310.txt
 
       - name: Python 3.10 governed pytest suite
@@ -118,10 +123,11 @@ jobs:
           rm -f tools/wo_fleet_phase3_triad2_contract_patch.py
           python - <<'PY'
           from pathlib import Path
-          import hashlib, json, subprocess
+          import hashlib, json
 
           paths = [
               'aura_coding_relationship_compass.py',
+              'aura_codebase_navigator.py',
               '.aura/CODEMAP.json',
               '.aura/CODEMAP.md',
               'topology_map.json',
