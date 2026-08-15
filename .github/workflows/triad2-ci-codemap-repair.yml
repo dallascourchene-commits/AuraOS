@@ -1,0 +1,82 @@
+name: Triad 2 CI CODEMAP Repair
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/triad2-ci-codemap-repair.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: triad2-ci-codemap-repair-main
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact main generation
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install focused test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Restore CODEMAP scanned-path compatibility contract
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('aura_codebase_navigator.py')
+          text = path.read_text(encoding='utf-8')
+          marker = '        "repo_file_count": len(cards),\n        "source_paths_without_topology": missing_source_paths[:100],'
+          replacement = '        "repo_file_count": len(cards),\n        "all_included_paths_sorted": sorted(source_paths),\n        "source_paths_without_topology": missing_source_paths[:100],'
+          if '"all_included_paths_sorted": sorted(source_paths)' not in text:
+              if marker not in text:
+                  raise SystemExit('CODEMAP coverage contract marker not found; fail closed')
+              text = text.replace(marker, replacement, 1)
+              path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Regenerate deep CODEMAP topology
+        run: python aura_codebase_navigator.py --refresh-topology
+
+      - name: Verify regenerated coverage contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('.aura/CODEMAP.json').read_text(encoding='utf-8'))
+          paths = data.get('coverage', {}).get('all_included_paths_sorted', [])
+          required = {'aura_architect_loop.py', 'aura_fusion.py', 'aura_codebase_navigator.py'}
+          missing = sorted(required - set(paths))
+          if missing:
+              raise SystemExit(f'regenerated CODEMAP missing scanned source paths: {missing}')
+          print(f'CODEMAP scanned-path contract PASS: {len(paths)} paths')
+          PY
+
+      - name: Run Architect grounding regression suite
+        run: python -m pytest -q test_aura_architect_loop.py
+
+      - name: Commit repaired generator and regenerated CODEMAP
+        shell: bash
+        run: |
+          git config user.name 'aura-triad2-ci'
+          git config user.email 'aura-triad2-ci@users.noreply.github.com'
+          git add aura_codebase_navigator.py .aura/CODEMAP.json .aura/CODEMAP.md
+          if git diff --cached --quiet; then
+            echo 'No CODEMAP repair delta to commit.'
+            exit 0
+          fi
+          git commit -m 'fix(ci): restore CODEMAP scanned-path grounding contract'
+          git push origin HEAD:main
