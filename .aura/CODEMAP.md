@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1600
-- **total_bytes**: 26098551
-- **text_tokens_est**: 6515053
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 232, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 248, 'support_file': 49}
+- **file_count**: 1601
+- **total_bytes**: 26113835
+- **text_tokens_est**: 6518873
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 232, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 249, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1600,
+  "repo_file_count": 1601,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -210,6 +210,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
     ".github/workflows/wo-phase3-codemap-compat-audit.yml",
     ".github/workflows/wo-phase3-local-gate-bundle-001.yml",
+    ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
     ".github/workflows/wo-phase4-local-verifier-bundle.yml",
     ".gitignore",
     ".mempalace/aura_thought.txt",
@@ -1740,16 +1741,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1600,
-  "bytes": 26098551,
-  "tokens_est": 6515053,
+  "files": 1601,
+  "bytes": 26113835,
+  "tokens_est": 6518873,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 232,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 990,
-    "schema_or_lexicon": 248,
+    "schema_or_lexicon": 249,
     "support_file": 49
   }
 }
