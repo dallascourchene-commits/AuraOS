@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1576
-- **total_bytes**: 25923271
-- **text_tokens_est**: 6471461
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 215, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 990, 'schema_or_lexicon': 244, 'support_file': 49}
+- **file_count**: 1584
+- **total_bytes**: 25932552
+- **text_tokens_est**: 6473772
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 219, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 245, 'support_file': 49}
 - **topology_nodes**: 11393
 - **topology_edges**: 27882
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1576,
+  "repo_file_count": 1584,
   "source_paths_without_topology": [
     "_aura_architect_consolidation_benchmark_legacy.py",
     "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -138,16 +138,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1576,
-  "bytes": 25923271,
-  "tokens_est": 6471461,
+  "files": 1584,
+  "bytes": 25932552,
+  "tokens_est": 6473772,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 215,
+    "knowledge_artifact": 219,
     "native_accelerator": 8,
-    "operator_script": 6,
+    "operator_script": 9,
     "python_module": 990,
-    "schema_or_lexicon": 244,
+    "schema_or_lexicon": 245,
     "support_file": 49
   }
 }
@@ -280,6 +280,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
     "aura_workspace/inbox/bounties/INTAKE_ONLY_RESIDUE.md",
     "aura_workspace/inbox/bounties/WO-LIVE-BOUNTY-HARVESTER-001/HARVEST_MANIFEST.md",
+    "aura_workspace/inbox/bounties/active/ACTIVE_TARGETS.md",
+    "aura_workspace/inbox/bounties/active/typeorm_3357_POLICY_BLOCK.md",
     "defensive-publications/Paper_XI_Predictive_Locality_Recursive_Cardinality_World_Seed_2026-08-12.md",
     "demo_assets/construction_tuwien/ATTRIBUTION.md",
     "demo_assets/construction_tuwien/README.md",
@@ -430,9 +432,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/PR_KIT.md",
     "docs/README_PRE_ARCHITECT_BENCHMARK.md",
     "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
-    "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
-    "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
-    "docs/evidence/AURA_SCO_PHASE5_POST_MERGE_SYNC.md"
+    "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md"
   ]
 }
 ```
