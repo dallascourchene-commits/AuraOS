@@ -1,0 +1,88 @@
+name: Phase3 Triad2 Uncommitted Repaired Tree
+
+on:
+  push:
+    branches:
+      - phase3/triad2-local-pytest-deps-001
+    paths:
+      - .github/workflows/phase3-triad2-tested-tree-packager.yml
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      TARGET_BRANCH: ci/wo-triad2-ci-codemap-repair-001
+      TARGET_HEAD: 1cfe56305c7bbacb58db6e42019887b1ce2ce4ea
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ci/wo-triad2-ci-codemap-repair-001
+          fetch-depth: 0
+      - name: Bind exact uncommitted repair predecessor
+        run: test "$(git rev-parse HEAD)" = "$TARGET_HEAD"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install transform dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt \
+            "jsonschema>=4.23,<5.0" \
+            "pytest>=8.2,<9.0" \
+            "pytest-asyncio>=0.23,<1.0" \
+            "trimesh>=4.7.1,<5.0" \
+            "zstandard>=0.23.0,<1.0"
+      - name: Apply exact generation-13 deterministic repair transforms
+        run: |
+          python tools/wo_triad2_ci_codemap_repair.py
+          python tools/wo_triad2_ci_codemap_failclosed_patch.py
+          python tools/wo_triad2_ci_codemap_command_index_patch.py
+          python tools/wo_triad2_ci_codemap_incremental_stability_patch.py
+          python tools/wo_triad2_ci_skillweaver_codemap_patch.py
+          python tools/wo_triad2_ci_codemap_iterator_compat_patch.py
+          python tools/wo_triad2_ci_agent_bridge_codemap_patch.py
+          python tools/wo_triad2_ci_compass_intent_fidelity_patch.py
+          python tools/wo_triad2_ci_compass_bounded_handoff_patch.py
+      - name: Remove branch-local repair bootstrap surfaces
+        run: |
+          rm -f tools/wo_triad2_ci_codemap_repair.py
+          rm -f tools/wo_triad2_ci_codemap_failclosed_patch.py
+          rm -f tools/wo_triad2_ci_codemap_command_index_patch.py
+          rm -f tools/wo_triad2_ci_codemap_incremental_stability_patch.py
+          rm -f tools/wo_triad2_ci_skillweaver_codemap_patch.py
+          rm -f tools/wo_triad2_ci_codemap_iterator_compat_patch.py
+          rm -f tools/wo_triad2_ci_agent_bridge_codemap_patch.py
+          rm -f tools/wo_triad2_ci_compass_intent_fidelity_patch.py
+          rm -f tools/wo_triad2_ci_compass_bounded_handoff_patch.py
+          rm -f .github/workflows/wo-triad2-ci-codemap-repair-bootstrap.yml
+      - name: Compile and regenerate exact canonical CODEMAP generation
+        run: |
+          python -m py_compile aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py aura_topological_scanner.py aura_topology_manager.py aura_fusion.py aura_skillweaver.py aura_agent_arena_bridge.py aura_coding_relationship_compass.py
+          python aura_codebase_navigator.py --refresh-topology
+          git checkout -- Aura_Memory/live_topology_ast.json || true
+          python -m aura_codemap_verify
+          git diff --check
+      - name: Package uncommitted repaired tree
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/phase3_tree
+          git status --short > /tmp/phase3_tree/status.txt
+          git diff --binary > /tmp/phase3_tree/repair.patch
+          git diff --name-status > /tmp/phase3_tree/name-status.txt
+          git rev-parse HEAD > /tmp/phase3_tree/base-head.txt
+          tar --exclude=.git -czf /tmp/phase3_tree/repaired-tree.tar.gz .
+          sha256sum /tmp/phase3_tree/repaired-tree.tar.gz /tmp/phase3_tree/repair.patch > /tmp/phase3_tree/sha256.txt
+      - name: Upload uncommitted repaired tree
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-triad2-uncommitted-repaired-tree-${{ github.run_id }}
+          path: /tmp/phase3_tree/
+          if-no-files-found: error
+          retention-days: 2
