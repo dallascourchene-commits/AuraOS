@@ -1,0 +1,49 @@
+name: WC-02 Triad2 Phase4 materialize pytest repair
+
+on:
+  push:
+    branches:
+      - fix/wc-02-triad2-phase4
+    paths:
+      - '.github/workflows/wc-02-triad2-phase4-materialize.yml'
+      - 'tools/wc02_phase4_pytest_collection_patch.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wc-02-triad2-phase4-materialize
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/wc-02-triad2-phase4
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Rebase to latest branch generation
+        run: |
+          git fetch origin fix/wc-02-triad2-phase4
+          git checkout -B fix/wc-02-triad2-phase4 origin/fix/wc-02-triad2-phase4
+      - name: Apply collection-safe legacy harness boundaries
+        run: |
+          python tools/wc02_phase4_pytest_collection_patch.py
+          python -m py_compile test_aura_functions.py test_synthesis_upgrades.py test_syntax_fixes.py
+          git diff --check
+      - name: Commit only the bounded test-harness repair
+        run: |
+          git config user.name 'Aura Fleet Triad2 W6'
+          git config user.email 'actions@users.noreply.github.com'
+          git add test_aura_functions.py test_synthesis_upgrades.py test_syntax_fixes.py
+          git diff --cached --check
+          git diff --cached --quiet && exit 0
+          git commit -m 'test(phase4): make legacy harnesses pytest-collection safe'
+          git fetch origin fix/wc-02-triad2-phase4
+          git rebase origin/fix/wc-02-triad2-phase4
+          git push origin HEAD:fix/wc-02-triad2-phase4
