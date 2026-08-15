@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1592
-- **total_bytes**: 26048423
-- **text_tokens_est**: 6502524
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 230, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 242, 'support_file': 49}
+- **file_count**: 1594
+- **total_bytes**: 26054245
+- **text_tokens_est**: 6503976
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 231, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 243, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1592,
+  "repo_file_count": 1594,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -205,6 +205,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/triad2-full-codemap-repair-v2.yml",
     ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
     ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
+    ".github/workflows/wo-phase3-local-wheelhouse.yml",
     ".gitignore",
     ".mempalace/aura_thought.txt",
     ".mempalace/lexicon.json",
@@ -1111,6 +1112,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
     "docs/staging/content_production/CAPCUT_PROJECT_TEMPLATES.md",
     "docs/staging/content_production/COMMUNITY_LAUNCH_POSTS.md",
+    "docs/staging/ready_review/LIVE_BOUNTY_TARGETS_BATCH2.md",
     "docs/staging/ready_review/PR_MANIFESTO_PRESS_RELEASE.md",
     "docs/staging/ready_review/README_STAGED.md",
     "docs/staging/ready_review/SOCIAL_VISUAL_CREATIVE_SPECS.md",
@@ -1732,16 +1734,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1592,
-  "bytes": 26048423,
-  "tokens_est": 6502524,
+  "files": 1594,
+  "bytes": 26054245,
+  "tokens_est": 6503976,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 230,
+    "knowledge_artifact": 231,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 990,
-    "schema_or_lexicon": 242,
+    "schema_or_lexicon": 243,
     "support_file": 49
   }
 }
