@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1598
-- **total_bytes**: 26079627
-- **text_tokens_est**: 6510321
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 231, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 247, 'support_file': 49}
+- **file_count**: 1601
+- **total_bytes**: 26084505
+- **text_tokens_est**: 6511540
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 231, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 992, 'schema_or_lexicon': 248, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1598,
+  "repo_file_count": 1601,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -205,6 +205,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/triad2-codemap-repair.yml",
     ".github/workflows/triad2-full-codemap-repair-v2.yml",
     ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+    ".github/workflows/wc-02-triad2-phase4-materialize.yml",
     ".github/workflows/wc-02-triad2-phase4-verify.yml",
     ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
     ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
@@ -1602,6 +1603,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
+    "tests/test_wc02_phase4_pytest_collection_contract.py",
     "third_party/pascal/LICENSE",
     "third_party/pascal/package-metadata/core.package.json",
     "third_party/pascal/package-metadata/editor.package.json",
@@ -1610,6 +1612,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/wc02_phase4_pytest_collection_patch.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1738,16 +1741,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1598,
-  "bytes": 26079627,
-  "tokens_est": 6510321,
+  "files": 1601,
+  "bytes": 26084505,
+  "tokens_est": 6511540,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 231,
     "native_accelerator": 8,
     "operator_script": 9,
-    "python_module": 990,
-    "schema_or_lexicon": 247,
+    "python_module": 992,
+    "schema_or_lexicon": 248,
     "support_file": 49
   }
 }

@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786830130,
+  "generated_at_unix": 1786831206,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1598,
+    "repo_file_count": 1601,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -187,6 +187,7 @@
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+      ".github/workflows/wc-02-triad2-phase4-materialize.yml",
       ".github/workflows/wc-02-triad2-phase4-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
@@ -1584,6 +1585,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
+      "tests/test_wc02_phase4_pytest_collection_contract.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -1592,6 +1594,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/wc02_phase4_pytest_collection_patch.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1714,16 +1717,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1598,
-      "bytes": 26079627,
-      "tokens_est": 6510321,
+      "files": 1601,
+      "bytes": 26084505,
+      "tokens_est": 6511540,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 231,
         "native_accelerator": 8,
         "operator_script": 9,
-        "python_module": 990,
-        "schema_or_lexicon": 247,
+        "python_module": 992,
+        "schema_or_lexicon": 248,
         "support_file": 49
       }
     },
@@ -4357,6 +4360,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/wc02_phase4_pytest_collection_patch.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 56,
+        "semantic_id": "tools/wc02_phase4_pytest_collection_patch.py#function:main:e312c4b9189da058",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -156376,6 +156387,36 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "test_legacy_script_tests_do_not_exit_during_pytest_import": [
+      {
+        "file": "tests/test_wc02_phase4_pytest_collection_contract.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 19,
+        "semantic_id": "tests/test_wc02_phase4_pytest_collection_contract.py#function:test_legacy_script_tests_do_not_exit_during_pytest_import:3653df44545f05f1",
+        "signature_hash": "cf3b8124e6702ff5"
+      }
+    ],
+    "test_legacy_script_failures_remain_assertive_under_pytest": [
+      {
+        "file": "tests/test_wc02_phase4_pytest_collection_contract.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 25,
+        "semantic_id": "tests/test_wc02_phase4_pytest_collection_contract.py#function:test_legacy_script_failures_remain_assertive_under_pytest:71684a3206163e3c",
+        "signature_hash": "7ffc22efac40a702"
+      }
+    ],
+    "replace_once": [
+      {
+        "file": "tools/wc02_phase4_pytest_collection_patch.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 11,
+        "semantic_id": "tools/wc02_phase4_pytest_collection_patch.py#function:replace_once:e528b7025fc73b3c",
+        "signature_hash": "41fb393f9ea07f89"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -157529,6 +157570,7 @@
       ".github/workflows/sco-temporal-persistence-e9-e12.yml",
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/wc-02-triad2-phase4-materialize.yml",
       ".github/workflows/wo-phase3-codemap-compat-audit.yml",
       ".github/workflows/wo-phase3-local-gate-bundle-001.yml",
       "USER_GUIDE.md",
@@ -157901,6 +157943,9 @@
     "python aura_codebase_navigator.py --refresh-topology": [
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml"
+    ],
+    "python tools/wc02_phase4_pytest_collection_patch.py": [
+      ".github/workflows/wc-02-triad2-phase4-materialize.yml"
     ],
     "python aura_codebase_navigator.py --refresh-topology 2>&1 | tee /tmp/codemap-audit/regenerate.log": [
       ".github/workflows/wo-phase3-codemap-active-branch-audit.yml"
@@ -170093,6 +170138,63 @@
         -0.190812,
         0.164493,
         -0.088168
+      ]
+    },
+    {
+      "path": ".github/workflows/wc-02-triad2-phase4-materialize.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1708,
+      "lines": 50,
+      "tokens_est": 427,
+      "symbol_count": 0,
+      "commands": [
+        "python tools/wc02_phase4_pytest_collection_patch.py",
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python tools/wc02_phase4_pytest_collection_patch.py": [
+          36
+        ],
+        "python -m py_compile": [
+          37
+        ]
+      },
+      "topology": {},
+      "digest8": "b1b8a6ac5e1b139f",
+      "vector": [
+        -0.056315,
+        -0.139065,
+        -0.093093,
+        -0.159752,
+        0.116079,
+        0.155155,
+        0.251696,
+        0.281577,
+        0.235605,
+        -0.122975,
+        -0.012642,
+        0.155155,
+        0.077003,
+        0.132169,
+        -0.283876,
+        0.185036,
+        0.235605,
+        -0.086197,
+        -0.21262,
+        0.205724,
+        0.037927,
+        0.210321,
+        0.079301,
+        -0.095391,
+        0.203425,
+        0.267786,
+        0.219515,
+        0.070107,
+        -0.04942,
+        -0.141363,
+        0.233307,
+        0.274681
       ]
     },
     {
@@ -240710,9 +240812,9 @@
       "path": "test_aura_functions.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 37507,
-      "lines": 1017,
-      "tokens_est": 9340,
+      "bytes": 37628,
+      "lines": 1020,
+      "tokens_est": 9370,
       "symbol_count": 80,
       "commands": [
         "python test_aura_functions.py"
@@ -240794,7 +240896,7 @@
           "module": 1
         }
       },
-      "digest8": "e6086fc389ad0b57",
+      "digest8": "4bf72cf04b469cf8",
       "vector": [
         -0.167693,
         -0.098568,
@@ -244477,9 +244579,9 @@
       "path": "test_syntax_fixes.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 845,
-      "lines": 36,
-      "tokens_est": 209,
+      "bytes": 965,
+      "lines": 39,
+      "tokens_est": 239,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
@@ -244497,49 +244599,49 @@
           "module": 1
         }
       },
-      "digest8": "022b5170f6ae033b",
+      "digest8": "55449817c971cd22",
       "vector": [
-        0.131551,
-        0.048348,
-        0.174277,
-        0.196764,
-        -0.246236,
-        -0.122556,
-        0.046099,
-        0.016865,
-        -0.255231,
-        -0.190018,
-        -0.268723,
-        -0.234992,
-        0.06184,
-        -0.176525,
-        0.277718,
-        0.131551,
-        0.100068,
-        -0.273221,
-        0.120307,
-        -0.145043,
-        -0.04385,
-        -0.230495,
-        -0.023612,
-        0.019114,
-        -0.048348,
-        -0.086576,
-        0.261977,
-        0.196764,
-        0.273221,
-        0.266475,
-        -0.154038,
-        0.111312
+        0.278515,
+        0.23228,
+        -0.060547,
+        0.27191,
+        -0.260902,
+        0.045135,
+        0.053942,
+        0.049538,
+        -0.175035,
+        -0.07816,
+        0.042933,
+        0.16843,
+        -0.175035,
+        0.007706,
+        0.049538,
+        -0.040732,
+        0.201456,
+        -0.170632,
+        0.170632,
+        0.148615,
+        0.153018,
+        -0.278515,
+        0.192649,
+        -0.23228,
+        0.212464,
+        -0.139808,
+        -0.023118,
+        -0.238885,
+        0.16843,
+        0.263104,
+        -0.117791,
+        0.2587
       ]
     },
     {
       "path": "test_synthesis_upgrades.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 19398,
-      "lines": 474,
-      "tokens_est": 4829,
+      "bytes": 19516,
+      "lines": 477,
+      "tokens_est": 4859,
       "symbol_count": 51,
       "commands": [
         "python test_synthesis_upgrades.py"
@@ -244593,7 +244695,7 @@
           "module": 1
         }
       },
-      "digest8": "c0f2cd5ed56b884a",
+      "digest8": "2878a9aaf6f7502c",
       "vector": [
         -0.264155,
         -0.280304,
@@ -259222,6 +259324,53 @@
       ]
     },
     {
+      "path": "tests/test_wc02_phase4_pytest_collection_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 834,
+      "lines": 26,
+      "tokens_est": 209,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c3524e127976d59d",
+      "vector": [
+        0.238233,
+        0.156084,
+        -0.160778,
+        0.275787,
+        -0.146695,
+        -0.130265,
+        0.139654,
+        0.001174,
+        0.012909,
+        -0.214762,
+        -0.165472,
+        0.001174,
+        -0.139654,
+        0.088017,
+        -0.003521,
+        0.203026,
+        -0.073934,
+        -0.268745,
+        0.282828,
+        0.181902,
+        -0.080976,
+        0.104447,
+        -0.057504,
+        -0.233538,
+        -0.195985,
+        0.160778,
+        -0.25701,
+        0.292216,
+        -0.17486,
+        -0.144348,
+        -0.259357,
+        0.127918
+      ]
+    },
+    {
       "path": "third_party/pascal/LICENSE",
       "role": "support_file",
       "binary": false,
@@ -259595,6 +259744,53 @@
         -0.242578,
         0.019731,
         0.196151
+      ]
+    },
+    {
+      "path": "tools/wc02_phase4_pytest_collection_patch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1977,
+      "lines": 61,
+      "tokens_est": 493,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ed62cc7c44fcf59c",
+      "vector": [
+        -0.116372,
+        -0.132423,
+        0.164526,
+        0.159175,
+        0.226055,
+        0.084269,
+        -0.124397,
+        -0.121722,
+        -0.308987,
+        0.199303,
+        0.276884,
+        -0.226055,
+        -0.212679,
+        0.073568,
+        0.201979,
+        0.086944,
+        0.183252,
+        -0.001338,
+        -0.231406,
+        -0.153825,
+        -0.025415,
+        0.250132,
+        -0.116372,
+        -0.121722,
+        0.295611,
+        0.252808,
+        -0.159175,
+        0.054842,
+        0.10032,
+        -0.073568,
+        -0.255483,
+        0.057517
       ]
     },
     {
@@ -283502,16 +283698,16 @@
     }
   },
   "summary": {
-    "file_count": 1598,
-    "total_bytes": 26079627,
-    "text_tokens_est": 6510321,
+    "file_count": 1601,
+    "total_bytes": 26084505,
+    "text_tokens_est": 6511540,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 231,
       "native_accelerator": 8,
       "operator_script": 9,
-      "python_module": 990,
-      "schema_or_lexicon": 247,
+      "python_module": 992,
+      "schema_or_lexicon": 248,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -283708,6 +283904,7 @@
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+      ".github/workflows/wc-02-triad2-phase4-materialize.yml",
       ".github/workflows/wc-02-triad2-phase4-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
@@ -285105,6 +285302,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
+      "tests/test_wc02_phase4_pytest_collection_contract.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -285113,6 +285311,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/wc02_phase4_pytest_collection_patch.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -386766,7 +386965,7 @@
         "line": 761,
         "end_line": 763,
         "signature_hash": "cdad1ddd64dcacfa",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#class:_MockNode:68657cd59622faab",
@@ -386776,7 +386975,7 @@
         "line": 666,
         "end_line": 668,
         "signature_hash": "e3b8529e145d86f6",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#class:_test_dream_engine_cycle._FakeNode2:0c373fc982fcd76a",
@@ -386786,7 +386985,7 @@
         "line": 905,
         "end_line": 908,
         "signature_hash": "bd2ef78e1f398f81",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#class:_test_dream_engine_cycle._FakePalace:69500a009bcf7ebe",
@@ -386796,7 +386995,7 @@
         "line": 903,
         "end_line": 904,
         "signature_hash": "d615b33c58ebd4a0",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#class:_test_evolve_sandbox._FullFakeNode:bfddaaa83b295c8a",
@@ -386806,7 +387005,7 @@
         "line": 766,
         "end_line": 770,
         "signature_hash": "aba20818b3595886",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#class:_test_qdag._FakeNode:cb9d197c0d4373b2",
@@ -386816,7 +387015,7 @@
         "line": 506,
         "end_line": 507,
         "signature_hash": "39ef4fdd42afc391",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_header:3cf6f8d5fea32a89",
@@ -386826,7 +387025,7 @@
         "line": 62,
         "end_line": 65,
         "signature_hash": "cf5373ffa9783ea9",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_phasor:38921bd4da8a0ab2",
@@ -386836,7 +387035,7 @@
         "line": 74,
         "end_line": 76,
         "signature_hash": "d5a461d6e98f94db",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_run:86d133579b928629",
@@ -386846,7 +387045,7 @@
         "line": 38,
         "end_line": 54,
         "signature_hash": "2e9d3fc594e15537",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_skip:0f3c319e861414f4",
@@ -386856,7 +387055,7 @@
         "line": 57,
         "end_line": 59,
         "signature_hash": "0cb02f6b7a344031",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_accel_procrustes:a7a3e228cf33911a",
@@ -386866,7 +387065,7 @@
         "line": 278,
         "end_line": 281,
         "signature_hash": "44bd4c41688da48b",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_accel_structural:4893aaaa5a83e82c",
@@ -386876,7 +387075,7 @@
         "line": 271,
         "end_line": 275,
         "signature_hash": "27e0d8e34897eb8c",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_assert_zero_copy_fail:16693290efd2a93e",
@@ -386886,7 +387085,7 @@
         "line": 841,
         "end_line": 848,
         "signature_hash": "7b7112af69a04f15",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_assert_zero_copy_pass:85c442b7ff99d008",
@@ -386896,7 +387095,7 @@
         "line": 837,
         "end_line": 839,
         "signature_hash": "7851b628497b784a",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_assoc_decay:a9c8366d127fe98a",
@@ -386906,7 +387105,7 @@
         "line": 190,
         "end_line": 197,
         "signature_hash": "e74652af2f35126f",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_assoc_reset:9d19a432dc668c39",
@@ -386916,7 +387115,7 @@
         "line": 199,
         "end_line": 203,
         "signature_hash": "339288f5671d2183",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_assoc_store_query:c6403588f15872f7",
@@ -386926,7 +387125,7 @@
         "line": 182,
         "end_line": 188,
         "signature_hash": "fac97f957e35d6a4",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_bftree_empty:e7366dd82d828935",
@@ -386936,7 +387135,7 @@
         "line": 541,
         "end_line": 544,
         "signature_hash": "9b5ee36c636d019d",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_bftree_view:6df67c95ed78205f",
@@ -386946,7 +387145,7 @@
         "line": 533,
         "end_line": 539,
         "signature_hash": "347e6a053a8d9c70",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_budget_context_manager:0115eee0f72d6a92",
@@ -386956,7 +387155,7 @@
         "line": 850,
         "end_line": 852,
         "signature_hash": "6ec23a40d10179c2",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_cfc_forward:492bb8a494c42ecd",
@@ -386966,7 +387165,7 @@
         "line": 312,
         "end_line": 317,
         "signature_hash": "903bef6d36015fd5",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_cfc_reset:e2a5cc2c0f27ced4",
@@ -386976,7 +387175,7 @@
         "line": 319,
         "end_line": 323,
         "signature_hash": "f01fe68ef921a84a",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_checker_dep_map:7958c1efc9894efd",
@@ -386986,7 +387185,7 @@
         "line": 881,
         "end_line": 885,
         "signature_hash": "7ffb1d341eb14669",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_checker_passes_on_workspace:af38b63d7621183d",
@@ -386996,7 +387195,7 @@
         "line": 874,
         "end_line": 879,
         "signature_hash": "42479c381b8c351b",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_compile_graph:ec6f53dfa717b59e",
@@ -387006,7 +387205,7 @@
         "line": 481,
         "end_line": 485,
         "signature_hash": "10198605010df935",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_confidence:cb523bdcd29969b5",
@@ -387016,7 +387215,7 @@
         "line": 419,
         "end_line": 424,
         "signature_hash": "79d85514212cea5c",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_crystallization:7148b454a94ffde7",
@@ -387026,7 +387225,7 @@
         "line": 559,
         "end_line": 563,
         "signature_hash": "5c817c7fe37b1a51",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_dag_simple:a48891c9792c85ef",
@@ -387036,7 +387235,7 @@
         "line": 731,
         "end_line": 748,
         "signature_hash": "150ff62d007e7486",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_decoherence_shock:0b25b7c676a0f3a2",
@@ -387046,7 +387245,7 @@
         "line": 384,
         "end_line": 389,
         "signature_hash": "2705a1d289a58f6e",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_directory_cache:13114d13dccc476c",
@@ -387056,7 +387255,7 @@
         "line": 487,
         "end_line": 490,
         "signature_hash": "1203955d2cff2d9a",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_dream_engine_cycle:7f0eac301af7f175",
@@ -387066,7 +387265,7 @@
         "line": 902,
         "end_line": 911,
         "signature_hash": "b9cd19da00373b01",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_energy_ceiling:0de1b9f640587f51",
@@ -387076,7 +387275,7 @@
         "line": 335,
         "end_line": 339,
         "signature_hash": "62ca36a27fa11390",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_energy_ceiling_governor:96add427c45d6035",
@@ -387086,7 +387285,7 @@
         "line": 431,
         "end_line": 434,
         "signature_hash": "bb58c62c4ff980c0",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_ephaptic_resonance:8a11456d53289ff0",
@@ -387096,7 +387295,7 @@
         "line": 426,
         "end_line": 429,
         "signature_hash": "edaa616ce7adf525",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_evolve_sandbox:e5cafaf7b39cce8c",
@@ -387106,7 +387305,7 @@
         "line": 765,
         "end_line": 773,
         "signature_hash": "bbc9a069601d321e",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_fast_path_lookup:07a883c52b8a8c8b",
@@ -387116,7 +387315,7 @@
         "line": 205,
         "end_line": 210,
         "signature_hash": "24bfca29d19ed83f",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_fhrr:c12f8c0325bcf732",
@@ -387126,7 +387325,7 @@
         "line": 136,
         "end_line": 144,
         "signature_hash": "3cf7e16b60d2e623",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_gateway_bisha:8a209fe46ba98eb3",
@@ -387136,7 +387335,7 @@
         "line": 682,
         "end_line": 688,
         "signature_hash": "e549f492db2b2bcc",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_gateway_e8:954ac15eaae07a49",
@@ -387146,7 +387345,7 @@
         "line": 670,
         "end_line": 674,
         "signature_hash": "cb39789c7202c701",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_gateway_quantum_interference:f7e37c563b5c3070",
@@ -387156,7 +387355,7 @@
         "line": 690,
         "end_line": 695,
         "signature_hash": "e6b79e5f1e17ceec",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_gateway_st3gg:46d8fa7ccbc1a00e",
@@ -387166,7 +387365,7 @@
         "line": 676,
         "end_line": 680,
         "signature_hash": "e81ab1552e6c57cd",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_heap_snapshot:ddcdbba58e3c6212",
@@ -387176,7 +387375,7 @@
         "line": 854,
         "end_line": 856,
         "signature_hash": "11d49c85041056ee",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_lie_algebra:762322dbb33bf591",
@@ -387186,7 +387385,7 @@
         "line": 391,
         "end_line": 396,
         "signature_hash": "b2cc8b56479d4faa",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_liquid_state:31709804f239a791",
@@ -387196,7 +387395,7 @@
         "line": 341,
         "end_line": 345,
         "signature_hash": "c5fe5c6935436c7c",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_ltc_nde:fbe8069ef58d05df",
@@ -387206,7 +387405,7 @@
         "line": 325,
         "end_line": 333,
         "signature_hash": "f14695d524868daf",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_memory_rss:67932cf549768899",
@@ -387216,7 +387415,7 @@
         "line": 828,
         "end_line": 830,
         "signature_hash": "ba42ca59f1d6504c",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_mitosis:fab8e9d8bd606ec1",
@@ -387226,7 +387425,7 @@
         "line": 786,
         "end_line": 791,
         "signature_hash": "a838bcbf0e650470",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_morphemic_queue:78a55f5cd6a59b74",
@@ -387236,7 +387435,7 @@
         "line": 525,
         "end_line": 531,
         "signature_hash": "4aab8df855849e93",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_mqcr_convergence:41fefa32bd742231",
@@ -387246,7 +387445,7 @@
         "line": 377,
         "end_line": 382,
         "signature_hash": "65f899945873cb05",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_mqcr_unit_magnitude:ea8934dce524aaca",
@@ -387256,7 +387455,7 @@
         "line": 369,
         "end_line": 375,
         "signature_hash": "b8afa7c499073742",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_nesy_sweep:3e1a03b6fa19c4ff",
@@ -387266,7 +387465,7 @@
         "line": 568,
         "end_line": 571,
         "signature_hash": "6823c2b3508d4f0e",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_positional:4c2f32821d012ca6",
@@ -387276,7 +387475,7 @@
         "line": 584,
         "end_line": 591,
         "signature_hash": "7a165d0363180233",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_puf:27400e3b5b29d186",
@@ -387286,7 +387485,7 @@
         "line": 804,
         "end_line": 807,
         "signature_hash": "d48b8aac741ce1b7",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_pwfst_compile:e89db5860422146b",
@@ -387296,7 +387495,7 @@
         "line": 640,
         "end_line": 645,
         "signature_hash": "314465052e9d2826",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_pwfst_transduce:a84c3f49a9e2a6c5",
@@ -387306,7 +387505,7 @@
         "line": 647,
         "end_line": 652,
         "signature_hash": "ea546521d49ac9b0",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_qdag:ff35982f19127942",
@@ -387316,7 +387515,7 @@
         "line": 505,
         "end_line": 510,
         "signature_hash": "85696bb4a97740ba",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_reasoner_async:b0f61df694a7ec68",
@@ -387326,7 +387525,7 @@
         "line": 249,
         "end_line": 254,
         "signature_hash": "f231edacf047fa4c",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_reasoner_procrustes:b4b786dd39ea0713",
@@ -387336,7 +387535,7 @@
         "line": 237,
         "end_line": 247,
         "signature_hash": "7a263c61334d287e",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_reasoner_score:607a0fe01db1e6bf",
@@ -387346,7 +387545,7 @@
         "line": 226,
         "end_line": 230,
         "signature_hash": "e8a915c58b247b0a",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_reasoner_suggest:c83ac10a4ff46a0b",
@@ -387356,7 +387555,7 @@
         "line": 232,
         "end_line": 235,
         "signature_hash": "bfe4a55d4977c005",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_rosetta_write_query:b4a01db18e5c76df",
@@ -387366,7 +387565,7 @@
         "line": 711,
         "end_line": 718,
         "signature_hash": "81809560a6f3dc13",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_router_intent:5e5fdda15bd0996e",
@@ -387376,7 +387575,7 @@
         "line": 456,
         "end_line": 461,
         "signature_hash": "5627f63477b6d5ac",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_router_wave_scan:35c61ae6e1d905e3",
@@ -387386,7 +387585,7 @@
         "line": 450,
         "end_line": 454,
         "signature_hash": "b3ce87650925c53e",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_scan_vectorize:7af459141753c70a",
@@ -387396,7 +387595,7 @@
         "line": 476,
         "end_line": 479,
         "signature_hash": "a163c2cebb07d4f7",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_self_reflect_local:034b45f952b50374",
@@ -387406,7 +387605,7 @@
         "line": 284,
         "end_line": 291,
         "signature_hash": "64243c3559b52537",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_spectral_filter:a59351d993d8a4be",
@@ -387416,7 +387615,7 @@
         "line": 362,
         "end_line": 367,
         "signature_hash": "9bf707baa7d28b1c",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_spvm_range:195993f05a41df2b",
@@ -387426,7 +387625,7 @@
         "line": 166,
         "end_line": 170,
         "signature_hash": "81b3a4f39eb23b9e",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_spvm_self_implication:a9c4efaa291223e3",
@@ -387436,7 +387635,7 @@
         "line": 157,
         "end_line": 159,
         "signature_hash": "03cbd825285dea3f",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_spvm_vacuous_truth:b4231b5a0d2792f5",
@@ -387446,7 +387645,7 @@
         "line": 161,
         "end_line": 164,
         "signature_hash": "b8797765f05f7362",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_stimulate_leak:38f7703ec725dc0a",
@@ -387456,7 +387655,7 @@
         "line": 413,
         "end_line": 417,
         "signature_hash": "dc0b34a61f029701",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_synthesize_cmd:21773741131afc61",
@@ -387466,7 +387665,7 @@
         "line": 897,
         "end_line": 900,
         "signature_hash": "791adc34878e696f",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_transducer_cosine:17169b9a622d3fbd",
@@ -387476,7 +387675,7 @@
         "line": 621,
         "end_line": 626,
         "signature_hash": "70da07b384b5b252",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_transducer_forge:1fefc7a5f369ebb0",
@@ -387486,7 +387685,7 @@
         "line": 616,
         "end_line": 619,
         "signature_hash": "e13bd45bf0c88f88",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_vpt_tokenizer:8987eee1341d196a",
@@ -387496,7 +387695,7 @@
         "line": 598,
         "end_line": 603,
         "signature_hash": "778247f2996897fa",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_vsa_resonator:ec471119668c8c33",
@@ -387506,7 +387705,7 @@
         "line": 118,
         "end_line": 129,
         "signature_hash": "d52a94ced593c8b0",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#function:_test_zero_copy_zeros:43922ccbc781185e",
@@ -387516,7 +387715,7 @@
         "line": 832,
         "end_line": 835,
         "signature_hash": "f00d5236f718ce93",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#method:_FakeNodeForEvolve.log_error:439211fc8c673c53",
@@ -387526,7 +387725,7 @@
         "line": 763,
         "end_line": 763,
         "signature_hash": "577f8b72b953a39d",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#method:_MockNode.log_error:cf55be525d6341ed",
@@ -387536,7 +387735,7 @@
         "line": 668,
         "end_line": 668,
         "signature_hash": "577f8b72b953a39d",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#method:_test_evolve_sandbox._FullFakeNode.invoke_engine:cb06239fc44e1001",
@@ -387546,7 +387745,7 @@
         "line": 768,
         "end_line": 769,
         "signature_hash": "bd984cae4bbe78d0",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_functions.py#method:_test_evolve_sandbox._FullFakeNode.log_error:c87afda7e69466c9",
@@ -387556,7 +387755,7 @@
         "line": 770,
         "end_line": 770,
         "signature_hash": "577f8b72b953a39d",
-        "file_digest8": "e6086fc389ad0b57"
+        "file_digest8": "4bf72cf04b469cf8"
       },
       {
         "semantic_id": "test_aura_fusion.py#function:_fusion_config:654d6f60545dd2eb",
@@ -394976,7 +395175,7 @@
         "line": 377,
         "end_line": 379,
         "signature_hash": "e3b8529e145d86f6",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#class:_MockPalace:e0d3762a89a52328",
@@ -394986,7 +395185,7 @@
         "line": 374,
         "end_line": 375,
         "signature_hash": "2df34609d13da164",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_bis_commutativity_at_half:2aa3a0efa64b9b34",
@@ -394996,7 +395195,7 @@
         "line": 182,
         "end_line": 189,
         "signature_hash": "15ab20d8b8f5a344",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_bis_range:f61215c3ea8a5186",
@@ -395006,7 +395205,7 @@
         "line": 167,
         "end_line": 170,
         "signature_hash": "8592b9f2327c6e8f",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_bis_self_equals_one:733fb667b22f3c27",
@@ -395016,7 +395215,7 @@
         "line": 172,
         "end_line": 175,
         "signature_hash": "7da0758b0a1b1a3e",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_bis_zero_vector:c2f5f147f2f09f80",
@@ -395026,7 +395225,7 @@
         "line": 177,
         "end_line": 180,
         "signature_hash": "c9abd9a84bb6d8a1",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_header:01bc555c9f1df4e9",
@@ -395036,7 +395235,7 @@
         "line": 48,
         "end_line": 49,
         "signature_hash": "7b3492a50f524075",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_lsm_async_start_no_model:96d7d1b095f93db6",
@@ -395046,7 +395245,7 @@
         "line": 83,
         "end_line": 86,
         "signature_hash": "aa88c086094b2c03",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_lsm_double_terminate:b598012dbb4df83b",
@@ -395056,7 +395255,7 @@
         "line": 62,
         "end_line": 65,
         "signature_hash": "15059dd5072c5ff0",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_lsm_init:809febc44a642eef",
@@ -395066,7 +395265,7 @@
         "line": 57,
         "end_line": 60,
         "signature_hash": "86836b7063dfc0fa",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_lsm_kill_orphans_missing_binary:4be5db28cb0bc97f",
@@ -395076,7 +395275,7 @@
         "line": 67,
         "end_line": 69,
         "signature_hash": "913c4c09f297fc2f",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_lsm_missing_model:0df29de4565b061a",
@@ -395086,7 +395285,7 @@
         "line": 71,
         "end_line": 74,
         "signature_hash": "af14dd8af8790336",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_lsm_wait_for_ready_fast:92700141d6170ed2",
@@ -395096,7 +395295,7 @@
         "line": 76,
         "end_line": 81,
         "signature_hash": "d772089a755df054",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_markov_no_palace:7dce4ecdf09edf44",
@@ -395106,7 +395305,7 @@
         "line": 381,
         "end_line": 383,
         "signature_hash": "9173b5c0123fde89",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_markov_none_node:31e644d7c08d0744",
@@ -395116,7 +395315,7 @@
         "line": 385,
         "end_line": 387,
         "signature_hash": "2fbfd4cbca5be0f9",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_markov_returns_string:4d047cbe08570f40",
@@ -395126,7 +395325,7 @@
         "line": 389,
         "end_line": 391,
         "signature_hash": "17995289b70e8ad3",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_meta_daemon_imports_ok:0c14093e64f4f66f",
@@ -395136,7 +395335,7 @@
         "line": 410,
         "end_line": 412,
         "signature_hash": "0a02b7ec3128a3a1",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_meta_reasoner_scores_workspace:fae31a198be6df85",
@@ -395146,7 +395345,7 @@
         "line": 403,
         "end_line": 408,
         "signature_hash": "f0e61535e8406b35",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_mlstm_bounded_norm:76859cb9801cc5ae",
@@ -395156,7 +395355,7 @@
         "line": 254,
         "end_line": 260,
         "signature_hash": "f5ae244f8ca315d4",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_mlstm_finite_output:4b7c3c099c1910c9",
@@ -395166,7 +395365,7 @@
         "line": 247,
         "end_line": 252,
         "signature_hash": "47658cdb1b2ecece",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_mlstm_memory_matrix_updates:9031aa33f0663c6f",
@@ -395176,7 +395375,7 @@
         "line": 284,
         "end_line": 288,
         "signature_hash": "37cec847ee65b1a7",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_mlstm_output_shape:cee145dc56d0939e",
@@ -395186,7 +395385,7 @@
         "line": 242,
         "end_line": 245,
         "signature_hash": "cbd3e5fa9fc74582",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_mlstm_reset_determinism:f6ab1b16321c98b3",
@@ -395196,7 +395395,7 @@
         "line": 262,
         "end_line": 268,
         "signature_hash": "7ea718cd843199df",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_mlstm_short_input_padded:8e2e96c8d7891bdd",
@@ -395206,7 +395405,7 @@
         "line": 270,
         "end_line": 273,
         "signature_hash": "6e0b635242bd49b7",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_mlstm_state_changes_on_input:e6ba7653a35a06b9",
@@ -395216,7 +395415,7 @@
         "line": 275,
         "end_line": 282,
         "signature_hash": "c00da40333f8be45",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_pipeline_all_new_modules_importable:d6477cc9b03e47d0",
@@ -395226,7 +395425,7 @@
         "line": 444,
         "end_line": 446,
         "signature_hash": "75355d5fc2f597cf",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_pipeline_mlstm_bis:c4e6f154185ffb43",
@@ -395236,7 +395435,7 @@
         "line": 435,
         "end_line": 442,
         "signature_hash": "7c387d537fb91251",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_pipeline_tst_to_rubric:1f8e5f6ef7931811",
@@ -395246,7 +395445,7 @@
         "line": 423,
         "end_line": 433,
         "signature_hash": "7564ce7143cc2e4d",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_prune_gate_antipodal:659b3b4e0bbfcf2e",
@@ -395256,7 +395455,7 @@
         "line": 195,
         "end_line": 197,
         "signature_hash": "d0887338807c5cab",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_prune_gate_identical:5aa7d5aefacbdf40",
@@ -395266,7 +395465,7 @@
         "line": 191,
         "end_line": 193,
         "signature_hash": "6984a61c45e80a74",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_prune_gate_threshold:aad9b1f4ee5b1729",
@@ -395276,7 +395475,7 @@
         "line": 199,
         "end_line": 206,
         "signature_hash": "b5e947a4a18e3108",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_rubric_empty_patch:6702ae63877d7c0b",
@@ -395286,7 +395485,7 @@
         "line": 113,
         "end_line": 115,
         "signature_hash": "c211368bd9d317e3",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_rubric_eval_injection:d732156bd39dc46d",
@@ -395296,7 +395495,7 @@
         "line": 121,
         "end_line": 124,
         "signature_hash": "87ab686726d15c30",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_rubric_f_thermal_formula:d83a6778326d9dbb",
@@ -395306,7 +395505,7 @@
         "line": 135,
         "end_line": 139,
         "signature_hash": "073454a0ff64fc48",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_rubric_hot_device_blocks:b2c667420fc70296",
@@ -395316,7 +395515,7 @@
         "line": 130,
         "end_line": 133,
         "signature_hash": "fedd7aa250311367",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_rubric_nxsdk_import:ccaebc5782aa5236",
@@ -395326,7 +395525,7 @@
         "line": 126,
         "end_line": 128,
         "signature_hash": "553e44273e699916",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_rubric_syntax_error:f96a2de84e4fe9bb",
@@ -395336,7 +395535,7 @@
         "line": 109,
         "end_line": 111,
         "signature_hash": "04a657e5adf5f2e5",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_rubric_valid_code:50c6fb74a581f33d",
@@ -395346,7 +395545,7 @@
         "line": 104,
         "end_line": 107,
         "signature_hash": "f9451d4b916b9395",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_rubric_weight_variants:cfe9d0c6ac944060",
@@ -395356,7 +395555,7 @@
         "line": 141,
         "end_line": 144,
         "signature_hash": "477b448100c1c3ca",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_rubric_whitespace_only:bfcd2c5c240167d2",
@@ -395366,7 +395565,7 @@
         "line": 117,
         "end_line": 119,
         "signature_hash": "8b7086e4bdfe7dfb",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_run:d629802c5058396c",
@@ -395376,7 +395575,7 @@
         "line": 34,
         "end_line": 45,
         "signature_hash": "d0d081fe2315330e",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_simulate_pruning_reduces_count:e8dc931b96c15962",
@@ -395386,7 +395585,7 @@
         "line": 215,
         "end_line": 221,
         "signature_hash": "3125c5ff590e09a8",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_simulate_pruning_returns_nonempty:a5961112dfab1a28",
@@ -395396,7 +395595,7 @@
         "line": 208,
         "end_line": 213,
         "signature_hash": "7ab59b208bb28770",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_tst_cache_bounded:5c64d3d6d138156e",
@@ -395406,7 +395605,7 @@
         "line": 341,
         "end_line": 345,
         "signature_hash": "3b0c92dab259c2c8",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_tst_cache_speedup:4c50e64229ca9084",
@@ -395416,7 +395615,7 @@
         "line": 347,
         "end_line": 356,
         "signature_hash": "d972c7fd038029f6",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_tst_deterministic:b297db9d794b437e",
@@ -395426,7 +395625,7 @@
         "line": 317,
         "end_line": 322,
         "signature_hash": "a07c2703ab2a89f8",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_tst_empty_bag_finite:0b2176f0c55b7a5d",
@@ -395436,7 +395635,7 @@
         "line": 312,
         "end_line": 315,
         "signature_hash": "deb84553af48110d",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_tst_encode_sequence_length:1fae0591a7c7624e",
@@ -395446,7 +395645,7 @@
         "line": 330,
         "end_line": 334,
         "signature_hash": "8916820b07663021",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_tst_encode_short_sequence:0b766b84f3f6ed8b",
@@ -395456,7 +395655,7 @@
         "line": 336,
         "end_line": 339,
         "signature_hash": "5195ebfab97c45bc",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_tst_identical_tokens_eq_single:fe755076304abb83",
@@ -395466,7 +395665,7 @@
         "line": 324,
         "end_line": 328,
         "signature_hash": "5b047d781485671e",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_synthesis_upgrades.py#function:_tst_unit_magnitude:e15060dc704e4859",
@@ -395476,7 +395675,7 @@
         "line": 307,
         "end_line": 310,
         "signature_hash": "e38bf6dada465c73",
-        "file_digest8": "c0f2cd5ed56b884a"
+        "file_digest8": "2878a9aaf6f7502c"
       },
       {
         "semantic_id": "test_timestep_svd_quantizer.py#class:TestAsyncEngine:2acb290d7a688b33",
@@ -441659,6 +441858,46 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tests/test_wc02_phase4_pytest_collection_contract.py#function:test_legacy_script_failures_remain_assertive_under_pytest:71684a3206163e3c",
+        "name": "test_legacy_script_failures_remain_assertive_under_pytest",
+        "kind": "function",
+        "file": "tests/test_wc02_phase4_pytest_collection_contract.py",
+        "line": 22,
+        "end_line": 25,
+        "signature_hash": "7ffc22efac40a702",
+        "file_digest8": "c3524e127976d59d"
+      },
+      {
+        "semantic_id": "tests/test_wc02_phase4_pytest_collection_contract.py#function:test_legacy_script_tests_do_not_exit_during_pytest_import:3653df44545f05f1",
+        "name": "test_legacy_script_tests_do_not_exit_during_pytest_import",
+        "kind": "function",
+        "file": "tests/test_wc02_phase4_pytest_collection_contract.py",
+        "line": 14,
+        "end_line": 19,
+        "signature_hash": "cf3b8124e6702ff5",
+        "file_digest8": "c3524e127976d59d"
+      },
+      {
+        "semantic_id": "tools/wc02_phase4_pytest_collection_patch.py#function:main:e312c4b9189da058",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/wc02_phase4_pytest_collection_patch.py",
+        "line": 14,
+        "end_line": 56,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "ed62cc7c44fcf59c"
+      },
+      {
+        "semantic_id": "tools/wc02_phase4_pytest_collection_patch.py#function:replace_once:e528b7025fc73b3c",
+        "name": "replace_once",
+        "kind": "function",
+        "file": "tools/wc02_phase4_pytest_collection_patch.py",
+        "line": 6,
+        "end_line": 11,
+        "signature_hash": "41fb393f9ea07f89",
+        "file_digest8": "ed62cc7c44fcf59c"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -442909,7 +443148,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "ad92cc08a26db3200411c459a7f5f8e2",
-    "payload_hash": "bc9edddae762cb6325bc3070e86363f4"
+    "record_fingerprint": "397aec852b4e0c9e64de9762024473da",
+    "payload_hash": "9e23a8fd053bf609b1222aeb5f2d7a05"
   }
 }
