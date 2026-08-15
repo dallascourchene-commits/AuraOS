@@ -81,8 +81,6 @@ jobs:
           Draft202012Validator.check_schema(schema)
 
           text = template_path.read_text(encoding='utf-8')
-          # Normalize/check Markdown tables: separator rows must match adjacent
-          # table width and use legal dash/colon cells. This is verification-only.
           lines = text.splitlines()
           for i, line in enumerate(lines):
               stripped = line.strip()
@@ -119,14 +117,14 @@ jobs:
           retention-days: 14
 
   export-local-tree:
-    name: Export exact tree and offline Python 3.13 wheelhouse
+    name: Export exact git-bound tree and offline Python 3.13 wheelhouse
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
-          fetch-depth: 1
+          fetch-depth: 0
       - name: Bind exact source generation
         run: |
           test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
@@ -140,12 +138,16 @@ jobs:
           python -m pip download --dest /tmp/phase4-wheelhouse -r requirements.txt \
             'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' 'jsonschema>=4.23,<5.0' \
             'trimesh>=4.7.1,<5.0' 'zstandard>=0.23.0,<1.0'
-      - name: Package exact repository bytes
+      - name: Package exact repository bytes and git identity
         run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
           printf '%s\n' "${GITHUB_SHA}" > /tmp/phase4-source-sha.txt
           tar --exclude=.git -czf /tmp/phase4-repo.tar.gz .
-          sha256sum /tmp/phase4-repo.tar.gz > /tmp/phase4-repo.sha256
+          tar -czf /tmp/phase4-git-metadata.tar.gz .git
           tar -czf /tmp/phase4-wheelhouse.tar.gz -C /tmp phase4-wheelhouse
+          sha256sum /tmp/phase4-repo.tar.gz > /tmp/phase4-repo.sha256
+          sha256sum /tmp/phase4-git-metadata.tar.gz > /tmp/phase4-git-metadata.sha256
           sha256sum /tmp/phase4-wheelhouse.tar.gz > /tmp/phase4-wheelhouse.sha256
       - uses: actions/upload-artifact@v4
         with:
@@ -154,6 +156,8 @@ jobs:
             /tmp/phase4-source-sha.txt
             /tmp/phase4-repo.tar.gz
             /tmp/phase4-repo.sha256
+            /tmp/phase4-git-metadata.tar.gz
+            /tmp/phase4-git-metadata.sha256
             /tmp/phase4-wheelhouse.tar.gz
             /tmp/phase4-wheelhouse.sha256
           if-no-files-found: error
