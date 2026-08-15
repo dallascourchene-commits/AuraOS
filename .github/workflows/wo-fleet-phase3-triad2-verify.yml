@@ -9,6 +9,7 @@ on:
       - 'tools/wo_fleet_phase3_triad2_contract_patch.py'
       - 'tools/wo_fleet_phase3_triad2_incremental_patch.py'
       - 'tools/wo_fleet_phase3_triad2_skillweaver_patch.py'
+      - 'tools/wo_fleet_phase3_triad2_iter_files_patch.py'
 
 permissions:
   contents: write
@@ -47,6 +48,7 @@ jobs:
           python tools/wo_fleet_phase3_triad2_contract_patch.py
           python tools/wo_fleet_phase3_triad2_incremental_patch.py
           python tools/wo_fleet_phase3_triad2_skillweaver_patch.py
+          python tools/wo_fleet_phase3_triad2_iter_files_patch.py
 
       - name: Compile repaired contract surfaces
         run: python -m py_compile aura_coding_relationship_compass.py aura_emergent_potential_repl.py aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py aura_fusion.py aura_skillweaver.py
@@ -68,6 +70,7 @@ jobs:
             test_aura_fusion.py::test_mock_fusion_run_infers_command_target_before_mutation_gate \
             test_aura_fusion.py::test_codemap_refresh_skips_artifact_write_when_payload_unchanged \
             test_aura_skillweaver.py::TestSkillRegistry::test_registry_has_commands \
+            test_codemap_slimming.py::test_iter_repo_files_skips_runtime_dependency_dirs \
             --junitxml=triad2-focused-py312.xml 2>&1 | tee triad2-focused-py312.txt
 
       - name: Python 3.12 governed pytest suite
@@ -108,6 +111,7 @@ jobs:
             test_aura_fusion.py::test_mock_fusion_run_infers_command_target_before_mutation_gate \
             test_aura_fusion.py::test_codemap_refresh_skips_artifact_write_when_payload_unchanged \
             test_aura_skillweaver.py::TestSkillRegistry::test_registry_has_commands \
+            test_codemap_slimming.py::test_iter_repo_files_skips_runtime_dependency_dirs \
             --junitxml=triad2-focused-py310.xml 2>&1 | tee triad2-focused-py310.txt
 
       - name: Python 3.10 governed pytest suite
@@ -174,7 +178,7 @@ jobs:
           git config user.name 'Aura Fleet Triad2 W4'
           git config user.email 'actions@users.noreply.github.com'
           git add -A
-          git commit -m 'fix(phase3): bound Compass discovery and align dual-Python contracts'
+          git commit -m 'fix(phase3): align CODEMAP, Compass, and dual-Python contracts'
           git push origin HEAD:fix/wo-fleet-phase3-triad2-001
 
       - name: Upload verification diagnostics
