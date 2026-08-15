@@ -1,4 +1,4 @@
-# Registered one-shot runner for WO-TRIAD2-CI-CODEMAP-REPAIR-001 (generation 11).
+# Registered one-shot runner for WO-TRIAD2-CI-CODEMAP-REPAIR-001 (generation 13).
 name: WO Fleet Trigger Triad2 CI Repair Runner
 
 on:
@@ -65,6 +65,9 @@ jobs:
       - name: Enforce Compass intent fidelity before emergent discovery
         run: python tools/wo_triad2_ci_compass_intent_fidelity_patch.py
 
+      - name: Bound Compass handoff into emergent discovery
+        run: python tools/wo_triad2_ci_compass_bounded_handoff_patch.py
+
       - name: Remove branch-local bootstrap files before regeneration
         run: |
           rm -f tools/wo_triad2_ci_codemap_repair.py
@@ -75,6 +78,7 @@ jobs:
           rm -f tools/wo_triad2_ci_codemap_iterator_compat_patch.py
           rm -f tools/wo_triad2_ci_agent_bridge_codemap_patch.py
           rm -f tools/wo_triad2_ci_compass_intent_fidelity_patch.py
+          rm -f tools/wo_triad2_ci_compass_bounded_handoff_patch.py
           rm -f .github/workflows/wo-triad2-ci-codemap-repair-bootstrap.yml
 
       - name: Compile repaired Python surfaces
@@ -156,29 +160,41 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      - name: Enforce all pre-commit verification gates
+      - name: Enforce all pre-local verification gates
         if: steps.contracts312.outcome != 'success' || steps.full312.outcome != 'success' || steps.contracts310.outcome != 'success'
         run: |
-          echo "Repair verification is not 100% green; refusing commit and PR progression."
+          echo "Repair verification is not 100% green; refusing artifact promotion."
           echo "Python 3.12 focused: ${{ steps.contracts312.outcome }}"
           echo "Python 3.12 full: ${{ steps.full312.outcome }}"
           echo "Python 3.10 focused: ${{ steps.contracts310.outcome }}"
           exit 1
 
-      - name: Remove transient diagnostics before commit
+      - name: Remove transient diagnostics from tested tree
         run: |
           rm -f triad2-contracts-py312.txt triad2-contracts-py312.xml
           rm -f triad2-full-py312.txt triad2-full-py312.xml
           rm -f triad2-contracts-py310.txt triad2-contracts-py310.xml
 
-      - name: Commit exact tested repair tree
+      - name: Package exact tested repair tree for local pytest gate
         run: |
-          git config user.name "AuraOS CI Repair Bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No repair delta was produced."
-            exit 1
-          fi
-          git commit -m "fix(ci): restore deterministic deep CODEMAP contracts"
-          git push origin HEAD:${TARGET_BRANCH}
+          git status --short > /tmp/wo-triad2-tested-tree-status.txt
+          git diff --binary > /tmp/wo-triad2-tested-tree.patch
+          tar --exclude=.git -czf /tmp/wo-triad2-tested-tree.tar.gz .
+          sha256sum /tmp/wo-triad2-tested-tree.tar.gz /tmp/wo-triad2-tested-tree.patch > /tmp/wo-triad2-tested-tree.sha256
+
+      - name: Upload exact tested repair tree
+        uses: actions/upload-artifact@v4
+        with:
+          name: wo-triad2-tested-tree-${{ github.run_id }}
+          path: |
+            /tmp/wo-triad2-tested-tree.tar.gz
+            /tmp/wo-triad2-tested-tree.patch
+            /tmp/wo-triad2-tested-tree-status.txt
+            /tmp/wo-triad2-tested-tree.sha256
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Stop before commit pending local pytest
+        run: |
+          echo "CI gates are green. Exact tested tree emitted for required local pytest gate."
+          echo "No repair commit is permitted until local pytest passes 100%."
