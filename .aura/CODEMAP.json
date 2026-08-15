@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786817272,
+  "generated_at_unix": 1786817373,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1596,
+    "repo_file_count": 1597,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -176,6 +176,7 @@
       ".github/workflows/phase3-triad2-current-tested-tree.yml",
       ".github/workflows/phase3-triad2-git-metadata.yml",
       ".github/workflows/phase3-triad2-local-pytest-deps.yml",
+      ".github/workflows/phase3-triad2-local-tree-export.yml",
       ".github/workflows/phase3-triad2-tested-tree-packager.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/publish-arena-connector.yml",
@@ -1712,16 +1713,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1596,
-      "bytes": 26058399,
-      "tokens_est": 6505019,
+      "files": 1597,
+      "bytes": 26061114,
+      "tokens_est": 6505698,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 230,
         "native_accelerator": 8,
         "operator_script": 9,
         "python_module": 990,
-        "schema_or_lexicon": 246,
+        "schema_or_lexicon": 247,
         "support_file": 49
       }
     },
@@ -157520,6 +157521,7 @@
       ".github/workflows/phase-c3.yml",
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-triad2-current-tested-tree.yml",
+      ".github/workflows/phase3-triad2-local-tree-export.yml",
       ".github/workflows/phase3-triad2-tested-tree-packager.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
@@ -157576,6 +157578,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-triad2-current-tested-tree.yml",
       ".github/workflows/phase3-triad2-local-pytest-deps.yml",
+      ".github/workflows/phase3-triad2-local-tree-export.yml",
       ".github/workflows/phase3-triad2-tested-tree-packager.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
@@ -157784,6 +157787,7 @@
       ".github/workflows/ci.yml",
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-triad2-current-tested-tree.yml",
+      ".github/workflows/phase3-triad2-local-tree-export.yml",
       ".github/workflows/phase3-triad2-tested-tree-packager.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
@@ -157836,16 +157840,20 @@
       ".github/workflows/triad2-codemap-repair.yml"
     ],
     "python tools/wo_fleet_phase3_triad2_contract_patch.py": [
-      ".github/workflows/phase3-triad2-current-tested-tree.yml"
+      ".github/workflows/phase3-triad2-current-tested-tree.yml",
+      ".github/workflows/phase3-triad2-local-tree-export.yml"
     ],
     "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
-      ".github/workflows/phase3-triad2-current-tested-tree.yml"
+      ".github/workflows/phase3-triad2-current-tested-tree.yml",
+      ".github/workflows/phase3-triad2-local-tree-export.yml"
     ],
     "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
-      ".github/workflows/phase3-triad2-current-tested-tree.yml"
+      ".github/workflows/phase3-triad2-current-tested-tree.yml",
+      ".github/workflows/phase3-triad2-local-tree-export.yml"
     ],
     "python aura_codebase_navigator.py --refresh-topology": [
       ".github/workflows/phase3-triad2-current-tested-tree.yml",
+      ".github/workflows/phase3-triad2-local-tree-export.yml",
       ".github/workflows/phase3-triad2-tested-tree-packager.yml",
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml"
@@ -169343,6 +169351,85 @@
         0.061387,
         0.058881,
         0.023803
+      ]
+    },
+    {
+      "path": ".github/workflows/phase3-triad2-local-tree-export.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2715,
+      "lines": 73,
+      "tokens_est": 679,
+      "symbol_count": 0,
+      "commands": [
+        "python -m pip",
+        "python tools/wo_fleet_phase3_triad2_contract_patch.py",
+        "python tools/wo_fleet_phase3_triad2_incremental_patch.py",
+        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
+        "python -m py_compile",
+        "python aura_codebase_navigator.py --refresh-topology",
+        "python -m aura_codemap_verify"
+      ],
+      "command_lines": {
+        "python -m pip": [
+          34,
+          35,
+          49
+        ],
+        "python tools/wo_fleet_phase3_triad2_contract_patch.py": [
+          38
+        ],
+        "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
+          39
+        ],
+        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
+          40
+        ],
+        "python -m py_compile": [
+          41
+        ],
+        "python aura_codebase_navigator.py --refresh-topology": [
+          44
+        ],
+        "python -m aura_codemap_verify": [
+          45
+        ]
+      },
+      "topology": {},
+      "digest8": "f9b55b9ace3401d9",
+      "vector": [
+        -0.083933,
+        0.041301,
+        -0.337066,
+        -0.003997,
+        0.28644,
+        -0.113244,
+        -0.235813,
+        -0.265123,
+        0.083933,
+        0.177193,
+        0.203838,
+        0.035971,
+        0.195845,
+        0.081269,
+        -0.339731,
+        -0.16387,
+        0.121237,
+        -0.219826,
+        -0.217161,
+        0.195845,
+        0.07594,
+        -0.139889,
+        0.22249,
+        0.091927,
+        -0.059952,
+        -0.281111,
+        0.009326,
+        -0.214497,
+        -0.041301,
+        -0.019984,
+        0.073275,
+        0.142554
       ]
     },
     {
@@ -283419,16 +283506,16 @@
     }
   },
   "summary": {
-    "file_count": 1596,
-    "total_bytes": 26058399,
-    "text_tokens_est": 6505019,
+    "file_count": 1597,
+    "total_bytes": 26061114,
+    "text_tokens_est": 6505698,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 230,
       "native_accelerator": 8,
       "operator_script": 9,
       "python_module": 990,
-      "schema_or_lexicon": 246,
+      "schema_or_lexicon": 247,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -283614,6 +283701,7 @@
       ".github/workflows/phase3-triad2-current-tested-tree.yml",
       ".github/workflows/phase3-triad2-git-metadata.yml",
       ".github/workflows/phase3-triad2-local-pytest-deps.yml",
+      ".github/workflows/phase3-triad2-local-tree-export.yml",
       ".github/workflows/phase3-triad2-tested-tree-packager.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/publish-arena-connector.yml",
@@ -442825,6 +442913,6 @@
       }
     ],
     "record_fingerprint": "ad92cc08a26db3200411c459a7f5f8e2",
-    "payload_hash": "2a36e21562064c334bba83e27ff18dbf"
+    "payload_hash": "a9086591c13392908b1b4849fdcc236f"
   }
 }
