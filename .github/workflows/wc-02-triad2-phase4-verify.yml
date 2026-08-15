@@ -1,0 +1,160 @@
+name: WC-02 Triad2 Phase4 verification
+
+on:
+  push:
+    branches:
+      - fix/wc-02-triad2-phase4
+    paths:
+      - '.github/workflows/wc-02-triad2-phase4-verify.yml'
+      - '**/*.py'
+      - 'requirements.txt'
+      - 'docs/architecture_harness/ARCH_V2_3/**'
+      - '.aura/CODEMAP.json'
+      - '.aura/CODEMAP.md'
+      - '.aura/SOURCE_ANCHORS.md'
+      - 'topology_map.json'
+      - 'Aura_Memory/live_topology_ast.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wc-02-triad2-phase4-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONPATH: ${{ github.workspace }}
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+  PYTHONHASHSEED: '0'
+
+jobs:
+  verify:
+    name: Python ${{ matrix.python }} full contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Bind exact source generation
+        run: |
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          test -z "$(git status --porcelain)"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - name: Install declared verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' 'jsonschema>=4.23,<5.0' 'trimesh>=4.7.1,<5.0' 'zstandard>=0.23.0,<1.0'
+      - name: Recompute complete CODEMAP topology
+        run: |
+          python scripts/aura_navigation_refresh.py --root .
+          python scripts/aura_source_anchor_map.py --root . --check
+          python -m aura_codemap_verify
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s .aura/SOURCE_ANCHORS.md
+          test -s topology_map.json
+          test -s Aura_Memory/live_topology_ast.json
+      - name: Validate ARCH v2.3 schema and PR272/275 contract surface
+        run: |
+          python -m pytest -q tests/test_aura_arch_v2_3_capsule_validator.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          root = Path('docs/architecture_harness/ARCH_V2_3')
+          schema_path = root / 'aura_pr_continuity_capsule.v2_3.schema.json'
+          policy_path = root / 'aura_arch_v2_3_default_policy.json'
+          template_path = root / 'AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md'
+          schema = json.loads(schema_path.read_text(encoding='utf-8'))
+          json.loads(policy_path.read_text(encoding='utf-8'))
+          Draft202012Validator.check_schema(schema)
+
+          text = template_path.read_text(encoding='utf-8')
+          # Normalize/check Markdown tables: separator rows must match adjacent
+          # table width and use legal dash/colon cells. This is verification-only.
+          lines = text.splitlines()
+          for i, line in enumerate(lines):
+              stripped = line.strip()
+              if not (stripped.startswith('|') and stripped.endswith('|')):
+                  continue
+              cells = [c.strip() for c in stripped[1:-1].split('|')]
+              if cells and all(c.replace(':','').replace('-','') == '' and '-' in c for c in cells):
+                  if i == 0 or i + 1 >= len(lines):
+                      raise SystemExit(f'orphan table separator at line {i+1}')
+                  prev = lines[i-1].strip()
+                  nxt = lines[i+1].strip()
+                  if not (prev.startswith('|') and prev.endswith('|') and nxt.startswith('|') and nxt.endswith('|')):
+                      raise SystemExit(f'malformed table around line {i+1}')
+                  prev_n = len(prev[1:-1].split('|'))
+                  next_n = len(nxt[1:-1].split('|'))
+                  if prev_n != len(cells) or next_n != len(cells):
+                      raise SystemExit(f'table width mismatch around line {i+1}')
+          print('ARCH_V2_3_SCHEMA_AND_TABLE_CHECK=PASS')
+          PY
+          git diff --check
+      - name: Execute full pytest suite
+        run: |
+          set -o pipefail
+          python -m pytest -q --junitxml="phase4-full-py${{ matrix.python }}.xml" 2>&1 | tee "phase4-full-py${{ matrix.python }}.txt"
+      - name: Upload runner evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wc-02-phase4-py${{ matrix.python }}-${{ github.sha }}
+          path: |
+            phase4-full-py${{ matrix.python }}.txt
+            phase4-full-py${{ matrix.python }}.xml
+          if-no-files-found: warn
+          retention-days: 14
+
+  export-local-tree:
+    name: Export exact tree and offline Python 3.13 wheelhouse
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Bind exact source generation
+        run: |
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          test -z "$(git status --porcelain)"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Build offline wheelhouse
+        run: |
+          mkdir -p /tmp/phase4-wheelhouse
+          python -m pip download --dest /tmp/phase4-wheelhouse -r requirements.txt \
+            'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' 'jsonschema>=4.23,<5.0' \
+            'trimesh>=4.7.1,<5.0' 'zstandard>=0.23.0,<1.0'
+      - name: Package exact repository bytes
+        run: |
+          printf '%s\n' "${GITHUB_SHA}" > /tmp/phase4-source-sha.txt
+          tar --exclude=.git -czf /tmp/phase4-repo.tar.gz .
+          sha256sum /tmp/phase4-repo.tar.gz > /tmp/phase4-repo.sha256
+          tar -czf /tmp/phase4-wheelhouse.tar.gz -C /tmp phase4-wheelhouse
+          sha256sum /tmp/phase4-wheelhouse.tar.gz > /tmp/phase4-wheelhouse.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wc-02-phase4-local-tree-${{ github.sha }}
+          path: |
+            /tmp/phase4-source-sha.txt
+            /tmp/phase4-repo.tar.gz
+            /tmp/phase4-repo.sha256
+            /tmp/phase4-wheelhouse.tar.gz
+            /tmp/phase4-wheelhouse.sha256
+          if-no-files-found: error
+          retention-days: 2
