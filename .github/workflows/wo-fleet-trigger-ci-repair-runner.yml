@@ -1,0 +1,106 @@
+name: WO Fleet Trigger Triad2 CI Repair Runner
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/wo-fleet-trigger-ci-repair-runner.yml
+
+permissions:
+  contents: write
+
+jobs:
+  repair-target-branch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      TARGET_BRANCH: ci/wo-triad2-ci-codemap-repair-001
+      PYTHONPATH: ${{ github.workspace }}
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ci/wo-triad2-ci-codemap-repair-001
+          fetch-depth: 0
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install Python 3.12 dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt \
+            "jsonschema>=4.23,<5.0" \
+            "pytest>=8.2,<9.0" \
+            "pytest-asyncio>=0.23,<1.0" \
+            "trimesh>=4.7.1,<5.0" \
+            "zstandard>=0.23.0,<1.0"
+
+      - name: Apply deterministic repair transform
+        run: python tools/wo_triad2_ci_codemap_repair.py
+
+      - name: Remove branch-local bootstrap files before regeneration
+        run: |
+          rm -f tools/wo_triad2_ci_codemap_repair.py
+          rm -f .github/workflows/wo-triad2-ci-codemap-repair-bootstrap.yml
+
+      - name: Compile repaired Python surfaces
+        run: python -m py_compile aura_codebase_navigator.py aura_codemap_verify.py aura_topological_scanner.py aura_topology_manager.py
+
+      - name: Regenerate and verify canonical deep CODEMAP
+        run: |
+          python aura_codebase_navigator.py --refresh-topology
+          git checkout -- Aura_Memory/live_topology_ast.json || true
+          python -m aura_codemap_verify
+
+      - name: Python 3.12 CODEMAP and PR272/275 contract checks
+        run: |
+          python -m pytest -q \
+            tests/test_aura_codemap_verify.py \
+            tests/test_aura_arch_v2_3_capsule_validator.py
+
+      - name: Python 3.12 full pytest-native suite
+        env:
+          PYTHONHASHSEED: "0"
+        run: |
+          python -m pytest -q --disable-warnings --maxfail=1 \
+            --ignore=test_aura_functions.py \
+            --ignore=test_synthesis_upgrades.py \
+            --ignore=test_syntax_fixes.py \
+            --ignore=test_codemap_hooks_simple.py \
+            --ignore=test_pvm_logic.py \
+            --ignore=test_aura_substrate.py \
+            --deselect=tests/test_aura_human_agent_arena.py::test_affordance_map_declares_source_of_truth
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+
+      - name: Install Python 3.10 dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pytest pytest-asyncio
+
+      - name: Python 3.10 CODEMAP and PR272/275 contract checks
+        run: |
+          python -m pytest -q \
+            tests/test_aura_codemap_verify.py \
+            tests/test_aura_arch_v2_3_capsule_validator.py
+
+      - name: Commit exact tested repair tree
+        run: |
+          git config user.name "AuraOS CI Repair Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No repair delta was produced."
+            exit 1
+          fi
+          git commit -m "fix(ci): restore deterministic deep CODEMAP contracts"
+          git push origin HEAD:${TARGET_BRANCH}
