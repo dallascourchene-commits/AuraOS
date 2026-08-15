@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786772372,
+  "generated_at_unix": 1786773515,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1568,
+    "repo_file_count": 1569,
     "source_paths_without_topology": [
       "_aura_architect_consolidation_benchmark_legacy.py",
       "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -112,12 +112,12 @@
     "coverage_complete_for_repo_scan": true
   },
   "summary": {
-    "file_count": 1568,
-    "total_bytes": 25865903,
-    "text_tokens_est": 6457259,
+    "file_count": 1569,
+    "total_bytes": 25880074,
+    "text_tokens_est": 6460771,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 208,
+      "knowledge_artifact": 209,
       "native_accelerator": 8,
       "operator_script": 6,
       "python_module": 990,
@@ -139,12 +139,12 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1568,
-      "bytes": 25865903,
-      "tokens_est": 6457259,
+      "files": 1569,
+      "bytes": 25880074,
+      "tokens_est": 6460771,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 208,
+        "knowledge_artifact": 209,
         "native_accelerator": 8,
         "operator_script": 6,
         "python_module": 990,
@@ -415,6 +415,7 @@
         "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
         "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
         "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
+        "docs/PR_KIT.md",
         "docs/README_PRE_ARCHITECT_BENCHMARK.md",
         "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
         "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
@@ -422,8 +423,7 @@
         "docs/evidence/AURA_SCO_PHASE5_POST_MERGE_SYNC.md",
         "docs/fragments/ARCHITECTURE_REFACTOR_CODE_QUALITY.md",
         "docs/fragments/README_REFACTOR_CODE_QUALITY.md",
-        "docs/fragments/USER_GUIDE_REFACTOR_CODE_QUALITY.md",
-        "docs/prior_art/README.md"
+        "docs/fragments/USER_GUIDE_REFACTOR_CODE_QUALITY.md"
       ]
     },
     {
@@ -1509,9 +1509,15 @@
     "python aura_swarm_runner.py": [
       "README.md"
     ],
+    "python3 scripts/aura_industry_benchmark_validation.py": [
+      "README.md"
+    ],
     "python3 scripts/aura_advanced_benchmark_runner.py": [
       "README.md",
       "docs/ADVANCED_BENCHMARKS.md"
+    ],
+    "python3 scripts/aura_security_accuracy_harness.py": [
+      "README.md"
     ],
     "python test_syntax_fixes.py": [
       "SYNTAX_FIXES_APPLIED.md"
@@ -168273,65 +168279,73 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "bytes": 4466,
-      "lines": 109,
-      "tokens_est": 1113,
+      "bytes": 10218,
+      "lines": 178,
+      "tokens_est": 2538,
       "symbol_count": 0,
       "commands": [
         "python aura_node.py",
         "python aura_daemon.py",
         "python aura_swarm_runner.py",
-        "python3 scripts/aura_advanced_benchmark_runner.py"
+        "python3 scripts/aura_industry_benchmark_validation.py",
+        "python3 scripts/aura_advanced_benchmark_runner.py",
+        "python3 scripts/aura_security_accuracy_harness.py"
       ],
       "command_lines": {
         "python aura_node.py": [
-          63
+          97
         ],
         "python aura_daemon.py": [
-          66
+          100
         ],
         "python aura_swarm_runner.py": [
-          69
+          103
+        ],
+        "python3 scripts/aura_industry_benchmark_validation.py": [
+          172
         ],
         "python3 scripts/aura_advanced_benchmark_runner.py": [
-          105
+          173
+        ],
+        "python3 scripts/aura_security_accuracy_harness.py": [
+          174
         ]
       },
       "topology": {},
-      "digest8": "e7cb090a94a553b3",
+      "digest8": "3295245b50d08f90",
       "vector": [
-        0.056152,
-        -0.048984,
-        -0.197129,
-        0.156509,
-        0.266423,
-        0.295097,
-        0.273592,
-        0.089604,
-        0.254476,
-        0.28076,
-        -0.211466,
-        -0.285539,
-        -0.135004,
-        0.201908,
-        -0.02031,
-        0.132614,
-        0.053763,
-        0.235361,
-        -0.008363,
-        -0.206687,
-        -0.154119,
-        0.275981,
-        -0.113499,
-        -0.189961,
-        -0.0227,
-        0.211466,
-        0.072878,
-        -0.118278,
-        0.077657,
-        -0.013142,
-        -0.075268,
-        -0.130225
+        0.178203,
+        0.122164,
+        -0.205101,
+        -0.086299,
+        -0.162512,
+        0.205101,
+        0.021295,
+        0.180444,
+        0.052676,
+        -0.005604,
+        -0.193894,
+        0.04371,
+        0.265623,
+        -0.032502,
+        -0.243208,
+        0.070609,
+        -0.211826,
+        -0.245449,
+        -0.093024,
+        -0.218551,
+        -0.054918,
+        -0.265623,
+        -0.234241,
+        0.070609,
+        -0.119923,
+        -0.285797,
+        0.045952,
+        0.267865,
+        -0.11544,
+        -0.247691,
+        -0.285797,
+        0.054918
       ]
     },
     {
@@ -206646,6 +206660,52 @@
         0.081234,
         -0.099878,
         -0.201088
+      ]
+    },
+    {
+      "path": "docs/PR_KIT.md",
+      "role": "knowledge_artifact",
+      "bytes": 8419,
+      "lines": 129,
+      "tokens_est": 2087,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e1a25e2e248ac4ac",
+      "vector": [
+        0.012643,
+        0.008046,
+        0.035631,
+        0.168958,
+        0.178153,
+        0.122983,
+        -0.233323,
+        -0.077008,
+        -0.083904,
+        -0.155165,
+        -0.272402,
+        -0.021838,
+        0.25631,
+        -0.29309,
+        0.226427,
+        0.251713,
+        -0.093099,
+        0.203439,
+        0.23792,
+        0.286194,
+        -0.159763,
+        0.008046,
+        0.136775,
+        0.10919,
+        -0.090801,
+        -0.14597,
+        0.017241,
+        -0.221829,
+        0.233323,
+        0.23792,
+        -0.12758,
+        -0.198842
       ]
     },
     {
@@ -253720,6 +253780,7 @@
       "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
       "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
       "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
+      "docs/PR_KIT.md",
       "docs/README_PRE_ARCHITECT_BENCHMARK.md",
       "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
@@ -412030,6 +412091,6 @@
       }
     ],
     "record_fingerprint": "6a3a54ac0d8d733589a63b2ff13de6a9",
-    "payload_hash": "8b3228414e60733425095f42209c2155"
+    "payload_hash": "be359cec50300e7912bf5c2442a89cc3"
   }
 }

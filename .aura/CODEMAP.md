@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1568
-- **total_bytes**: 25865903
-- **text_tokens_est**: 6457259
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 208, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 990, 'schema_or_lexicon': 243, 'support_file': 49}
+- **file_count**: 1569
+- **total_bytes**: 25880074
+- **text_tokens_est**: 6460771
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 209, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 990, 'schema_or_lexicon': 243, 'support_file': 49}
 - **topology_nodes**: 11393
 - **topology_edges**: 27882
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1568,
+  "repo_file_count": 1569,
   "source_paths_without_topology": [
     "_aura_architect_consolidation_benchmark_legacy.py",
     "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -138,12 +138,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1568,
-  "bytes": 25865903,
-  "tokens_est": 6457259,
+  "files": 1569,
+  "bytes": 25880074,
+  "tokens_est": 6460771,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 208,
+    "knowledge_artifact": 209,
     "native_accelerator": 8,
     "operator_script": 6,
     "python_module": 990,
@@ -424,6 +424,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
     "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
     "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
+    "docs/PR_KIT.md",
     "docs/README_PRE_ARCHITECT_BENCHMARK.md",
     "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
     "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
@@ -431,8 +432,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/evidence/AURA_SCO_PHASE5_POST_MERGE_SYNC.md",
     "docs/fragments/ARCHITECTURE_REFACTOR_CODE_QUALITY.md",
     "docs/fragments/README_REFACTOR_CODE_QUALITY.md",
-    "docs/fragments/USER_GUIDE_REFACTOR_CODE_QUALITY.md",
-    "docs/prior_art/README.md"
+    "docs/fragments/USER_GUIDE_REFACTOR_CODE_QUALITY.md"
   ]
 }
 ```
