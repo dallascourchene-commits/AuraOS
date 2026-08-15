@@ -5,6 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 NAV = ROOT / "aura_codebase_navigator.py"
 VERIFY = ROOT / "aura_codemap_verify.py"
+ARCHITECT = ROOT / "aura_architect_loop.py"
 CI = ROOT / ".github/workflows/ci.yml"
 STALE = ROOT / ".github/workflows/unified-memory-continuity-deep-v2-target.yml"
 
@@ -193,6 +194,51 @@ def patch_verifier() -> None:
     VERIFY.write_text(text, encoding="utf-8")
 
 
+def patch_architect() -> None:
+    text = ARCHITECT.read_text(encoding="utf-8")
+    readers = '''def _codemap_file_cards(codemap: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return canonical CODEMAP file cards with a legacy read fallback.
+
+    ``files`` is the current navigator schema. ``file_cards`` is accepted only
+    as a read-compatibility fallback so Architect does not create a second
+    CODEMAP truth plane.
+    """
+    canonical = codemap.get("files")
+    if isinstance(canonical, list):
+        return [card for card in canonical if isinstance(card, dict)]
+    legacy = codemap.get("file_cards")
+    if isinstance(legacy, list):
+        return [card for card in legacy if isinstance(card, dict)]
+    return []
+
+
+def _codemap_paths(codemap: dict[str, Any]) -> set[str]:
+    coverage = codemap.get("coverage", {})
+    paths = set()
+    for item in coverage.get("all_included_paths_sorted", []) or []:
+        normalized = _normalize_path(str(item))
+        if normalized:
+            paths.add(normalized)
+    for card in _codemap_file_cards(codemap):
+        normalized = _normalize_path(str(card.get("path", "")))
+        if normalized:
+            paths.add(normalized)
+    return paths
+
+
+def _file_card(codemap: dict[str, Any], target_file: str | None) -> dict[str, Any]:
+    normalized = _normalize_path(target_file)
+    if not normalized:
+        return {}
+    for card in _codemap_file_cards(codemap):
+        if _normalize_path(str(card.get("path", ""))) == normalized:
+            return card
+    return {}
+'''
+    text = replace_region(text, "def _codemap_paths(", "def _symbol_hits(", readers, "architect CODEMAP schema reader")
+    ARCHITECT.write_text(text, encoding="utf-8")
+
+
 def patch_ci() -> None:
     text = CI.read_text(encoding="utf-8")
     needle = "python aura_codebase_navigator.py"
@@ -212,6 +258,7 @@ def retire_stale_target() -> None:
 def main() -> int:
     patch_navigator()
     patch_verifier()
+    patch_architect()
     patch_ci()
     retire_stale_target()
     print("WO-TRIAD2-CI-CODEMAP-REPAIR-001 source transform applied")
