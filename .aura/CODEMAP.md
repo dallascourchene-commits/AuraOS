@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1604
-- **total_bytes**: 26137239
-- **text_tokens_est**: 6524723
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 232, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 252, 'support_file': 49}
+- **file_count**: 1606
+- **total_bytes**: 26155773
+- **text_tokens_est**: 6529354
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 232, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 991, 'schema_or_lexicon': 253, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1604,
+  "repo_file_count": 1606,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -121,6 +121,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".coderabbit.yaml",
     ".devcontainer/devcontainer.json",
     ".dockerignore",
+    ".github/phase4/wc02_phase4_current_generation_patch.py",
     ".github/scripts/umc_publish_five_files.sh",
     ".github/umc_final5_payload/part-01",
     ".github/umc_final5_payload/part-02",
@@ -213,6 +214,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/wo-phase4-active-branch-verify.yml",
     ".github/workflows/wo-phase4-current-repair-archive.yml",
     ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
+    ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
     ".github/workflows/wo-phase4-final-candidate-materialize.yml",
     ".github/workflows/wo-phase4-local-verifier-bundle.yml",
     ".gitignore",
@@ -1631,6 +1633,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "vsa_resonator.py"
   ],
   "source_paths_without_topology": [
+    ".github/phase4/wc02_phase4_current_generation_patch.py",
     "aura_blockchain/__init__.py",
     "aura_blockchain/block.py",
     "aura_blockchain/consensus.py",
@@ -1729,8 +1732,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_civic_commons_arena.py",
     "tests/test_aura_civic_completion.py",
     "tests/test_aura_civic_planning_behavior.py",
-    "tests/test_aura_civic_planning_contracts.py",
-    "tests/test_aura_civic_planning_diagnostics.py"
+    "tests/test_aura_civic_planning_contracts.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1744,16 +1746,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1604,
-  "bytes": 26137239,
-  "tokens_est": 6524723,
+  "files": 1606,
+  "bytes": 26155773,
+  "tokens_est": 6529354,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 232,
     "native_accelerator": 8,
     "operator_script": 9,
-    "python_module": 990,
-    "schema_or_lexicon": 252,
+    "python_module": 991,
+    "schema_or_lexicon": 253,
     "support_file": 49
   }
 }
@@ -2049,6 +2051,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 {
   "ring": "code",
   "paths": [
+    ".github/phase4/wc02_phase4_current_generation_patch.py",
     "_aura_architect_consolidation_benchmark_legacy.py",
     "_aura_architect_consolidation_benchmark_refined_legacy.py",
     "_aura_architect_consolidation_benchmark_v2_legacy.py",
@@ -2447,8 +2450,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_pricing.py",
     "aura_pricing_registry.py",
     "aura_privacy_io.py",
-    "aura_project_context_compiler.py",
-    "aura_provider_registry.py"
+    "aura_project_context_compiler.py"
   ]
 }
 ```

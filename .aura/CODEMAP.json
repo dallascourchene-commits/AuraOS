@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786833168,
+  "generated_at_unix": 1786833488,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1604,
+    "repo_file_count": 1606,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -103,6 +103,7 @@
       ".coderabbit.yaml",
       ".devcontainer/devcontainer.json",
       ".dockerignore",
+      ".github/phase4/wc02_phase4_current_generation_patch.py",
       ".github/scripts/umc_publish_five_files.sh",
       ".github/umc_final5_payload/part-01",
       ".github/umc_final5_payload/part-02",
@@ -195,6 +196,7 @@
       ".github/workflows/wo-phase4-active-branch-verify.yml",
       ".github/workflows/wo-phase4-current-repair-archive.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml",
       ".github/workflows/wo-phase4-local-verifier-bundle.yml",
       ".gitignore",
@@ -1613,6 +1615,7 @@
       "vsa_resonator.py"
     ],
     "source_paths_without_topology": [
+      ".github/phase4/wc02_phase4_current_generation_patch.py",
       "aura_blockchain/__init__.py",
       "aura_blockchain/block.py",
       "aura_blockchain/consensus.py",
@@ -1711,8 +1714,7 @@
       "tests/test_aura_civic_commons_arena.py",
       "tests/test_aura_civic_completion.py",
       "tests/test_aura_civic_planning_behavior.py",
-      "tests/test_aura_civic_planning_contracts.py",
-      "tests/test_aura_civic_planning_diagnostics.py"
+      "tests/test_aura_civic_planning_contracts.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1720,16 +1722,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1604,
-      "bytes": 26137239,
-      "tokens_est": 6524723,
+      "files": 1606,
+      "bytes": 26155773,
+      "tokens_est": 6529354,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 232,
         "native_accelerator": 8,
         "operator_script": 9,
-        "python_module": 990,
-        "schema_or_lexicon": 252,
+        "python_module": 991,
+        "schema_or_lexicon": 253,
         "support_file": 49
       }
     },
@@ -2010,6 +2012,7 @@
     {
       "ring": "code",
       "paths": [
+        ".github/phase4/wc02_phase4_current_generation_patch.py",
         "_aura_architect_consolidation_benchmark_legacy.py",
         "_aura_architect_consolidation_benchmark_refined_legacy.py",
         "_aura_architect_consolidation_benchmark_v2_legacy.py",
@@ -2408,979 +2411,30 @@
         "aura_pricing.py",
         "aura_pricing_registry.py",
         "aura_privacy_io.py",
-        "aura_project_context_compiler.py",
-        "aura_provider_registry.py"
+        "aura_project_context_compiler.py"
       ]
     }
   ],
   "symbol_index": {
-    "_canonical": [
+    "replace_once": [
       {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "file": ".github/phase4/wc02_phase4_current_generation_patch.py",
         "kind": "function",
-        "line": 103,
-        "end_line": 104,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_canonical:2fc60a8aaee5d0d5",
-        "signature_hash": "8d5bf5695239b859"
-      },
-      {
-        "file": "aura_arena_architect_connector.py",
-        "kind": "function",
-        "line": 66,
-        "end_line": 67,
-        "semantic_id": "aura_arena_architect_connector.py#function:_canonical:ccd84e854659064e",
-        "signature_hash": "8d5bf5695239b859"
-      },
-      {
-        "file": "aura_benchmark_registry.py",
-        "kind": "function",
-        "line": 23,
-        "end_line": 24,
-        "semantic_id": "aura_benchmark_registry.py#function:_canonical:c5be99f8f23ad8f0",
-        "signature_hash": "8d5bf5695239b859"
-      },
-      {
-        "file": "aura_code_quality_registry.py",
-        "kind": "function",
-        "line": 16,
-        "end_line": 17,
-        "semantic_id": "aura_code_quality_registry.py#function:_canonical:dfb1873e025ae483",
-        "signature_hash": "8d5bf5695239b859"
-      },
-      {
-        "file": "aura_ephemeral_workspace_contracts.py",
-        "kind": "function",
-        "line": 263,
-        "end_line": 379,
-        "semantic_id": "aura_ephemeral_workspace_contracts.py#function:_canonical:acc5c2983f422c4d",
-        "signature_hash": "001e672a6bdd2069"
-      },
-      {
-        "file": "aura_refactor_chronicle.py",
-        "kind": "function",
-        "line": 54,
-        "end_line": 55,
-        "semantic_id": "aura_refactor_chronicle.py#function:_canonical:2429d52c4230305c",
-        "signature_hash": "8d5bf5695239b859"
-      },
-      {
-        "file": "aura_refactor_chronicle_recorded.py",
-        "kind": "function",
-        "line": 23,
-        "end_line": 24,
-        "semantic_id": "aura_refactor_chronicle_recorded.py#function:_canonical:255b6db81a8bfc32",
-        "signature_hash": "8d5bf5695239b859"
-      },
-      {
-        "file": "aura_refactor_output_vault.py",
-        "kind": "function",
-        "line": 43,
-        "end_line": 44,
-        "semantic_id": "aura_refactor_output_vault.py#function:_canonical:649bf0ccd3c56f0c",
-        "signature_hash": "8d5bf5695239b859"
-      },
-      {
-        "file": "scripts/aura_review_learning_architect_harness.py",
-        "kind": "function",
-        "line": 30,
-        "end_line": 38,
-        "semantic_id": "scripts/aura_review_learning_architect_harness.py#function:_canonical:692db8dcccd7494d",
-        "signature_hash": "8d5bf5695239b859"
-      },
-      {
-        "file": "scripts/aura_spatial_continuation_architect_harness.py",
-        "kind": "function",
-        "line": 83,
-        "end_line": 91,
-        "semantic_id": "scripts/aura_spatial_continuation_architect_harness.py#function:_canonical:711b3fa468b175f6",
-        "signature_hash": "8d5bf5695239b859"
-      },
-      {
-        "file": "scripts/aura_spatial_s4b_architect_harness.py",
-        "kind": "function",
-        "line": 74,
-        "end_line": 75,
-        "semantic_id": "scripts/aura_spatial_s4b_architect_harness.py#function:_canonical:d80a5da92a8803b2",
-        "signature_hash": "8d5bf5695239b859"
-      },
-      {
-        "file": "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
-        "kind": "function",
-        "line": 75,
-        "end_line": 83,
-        "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:_canonical:4b01bca749381a6a",
-        "signature_hash": "8d5bf5695239b859"
-      },
-      {
-        "file": "tests/test_aura_gate_egress.py",
-        "kind": "function",
-        "line": 32,
-        "end_line": 39,
-        "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
-        "signature_hash": "711cdedc61c63424"
-      }
-    ],
-    "_digest": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 107,
-        "end_line": 108,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_digest:05d3775480649df7",
-        "signature_hash": "5eed934bd8e243d0"
-      },
-      {
-        "file": "aura_agent_arena_github_bridge.py",
-        "kind": "function",
-        "line": 133,
-        "end_line": 134,
-        "semantic_id": "aura_agent_arena_github_bridge.py#function:_digest:ec4e7aed86fa2c78",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_architect_control.py",
-        "kind": "function",
-        "line": 36,
-        "end_line": 38,
-        "semantic_id": "aura_architect_control.py#function:_digest:635f5cd7898b48d5",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_architect_council_calling_benchmark.py",
-        "kind": "function",
-        "line": 21,
-        "end_line": 23,
-        "semantic_id": "aura_architect_council_calling_benchmark.py#function:_digest:55b3af2c32cd6afa",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_arena_architect_connector.py",
-        "kind": "function",
-        "line": 70,
-        "end_line": 71,
-        "semantic_id": "aura_arena_architect_connector.py#function:_digest:5c79aeada2381ec4",
-        "signature_hash": "5eed934bd8e243d0"
-      },
-      {
-        "file": "aura_arena_attempt_archive.py",
-        "kind": "function",
-        "line": 69,
-        "end_line": 70,
-        "semantic_id": "aura_arena_attempt_archive.py#function:_digest:3f61082161b90316",
-        "signature_hash": "6a2769a8ecbe738e"
-      },
-      {
-        "file": "aura_arena_gate_dialogue.py",
-        "kind": "function",
-        "line": 65,
-        "end_line": 67,
-        "semantic_id": "aura_arena_gate_dialogue.py#function:_digest:3e91147678285ab4",
-        "signature_hash": "6a2769a8ecbe738e"
-      },
-      {
-        "file": "aura_benchmark_registry.py",
-        "kind": "function",
-        "line": 27,
-        "end_line": 28,
-        "semantic_id": "aura_benchmark_registry.py#function:_digest:3cadb477b453ad99",
-        "signature_hash": "5eed934bd8e243d0"
-      },
-      {
-        "file": "aura_civic_planning_types.py",
-        "kind": "function",
-        "line": 56,
-        "end_line": 59,
-        "semantic_id": "aura_civic_planning_types.py#function:_digest:d90f3c9272d63907",
-        "signature_hash": "af4db70e827f41b5"
-      },
-      {
-        "file": "aura_code_quality_registry.py",
-        "kind": "function",
-        "line": 20,
-        "end_line": 21,
-        "semantic_id": "aura_code_quality_registry.py#function:_digest:efe18a139b270775",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_construction_authority.py",
-        "kind": "function",
-        "line": 69,
-        "end_line": 77,
-        "semantic_id": "aura_construction_authority.py#function:_digest:76032741913641ec",
-        "signature_hash": "7d599111b26d8d87"
-      },
-      {
-        "file": "aura_construction_contracts.py",
-        "kind": "function",
-        "line": 149,
-        "end_line": 157,
-        "semantic_id": "aura_construction_contracts.py#function:_digest:d8f3a1e896ed72dd",
-        "signature_hash": "7d599111b26d8d87"
-      },
-      {
-        "file": "aura_construction_demo_contracts.py",
-        "kind": "function",
-        "line": 85,
-        "end_line": 88,
-        "semantic_id": "aura_construction_demo_contracts.py#function:_digest:309b686437cfc22b",
-        "signature_hash": "7d599111b26d8d87"
-      },
-      {
-        "file": "aura_construction_demo_fixture.py",
-        "kind": "function",
-        "line": 112,
-        "end_line": 115,
-        "semantic_id": "aura_construction_demo_fixture.py#function:_digest:68f2e18852326653",
-        "signature_hash": "7d599111b26d8d87"
-      },
-      {
-        "file": "aura_construction_state.py",
-        "kind": "function",
-        "line": 38,
-        "end_line": 46,
-        "semantic_id": "aura_construction_state.py#function:_digest:a91449fed4dc7684",
-        "signature_hash": "7d599111b26d8d87"
-      },
-      {
-        "file": "aura_continuity_packet.py",
-        "kind": "function",
-        "line": 145,
-        "end_line": 153,
-        "semantic_id": "aura_continuity_packet.py#function:_digest:d5a98eb19899f6be",
-        "signature_hash": "d1287a01d88132e0"
-      },
-      {
-        "file": "aura_cost_attribution.py",
-        "kind": "function",
-        "line": 42,
-        "end_line": 45,
-        "semantic_id": "aura_cost_attribution.py#function:_digest:438c703873d5935f",
-        "signature_hash": "253850686e60d85e"
-      },
-      {
-        "file": "aura_current_code_quality_assessment.py",
-        "kind": "function",
-        "line": 23,
-        "end_line": 25,
-        "semantic_id": "aura_current_code_quality_assessment.py#function:_digest:be3efabcafb1cdad",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_emergent_evidence_spine.py",
-        "kind": "function",
-        "line": 1131,
-        "end_line": 1135,
-        "semantic_id": "aura_emergent_evidence_spine.py#function:_digest:618626343f423215",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_ephemeral_adapter_registry.py",
-        "kind": "function",
-        "line": 39,
-        "end_line": 40,
-        "semantic_id": "aura_ephemeral_adapter_registry.py#function:_digest:fe3e8f3d17616beb",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_ephemeral_workspace_contracts.py",
-        "kind": "function",
-        "line": 432,
-        "end_line": 437,
-        "semantic_id": "aura_ephemeral_workspace_contracts.py#function:_digest:97e8285e778ed250",
-        "signature_hash": "80a32e37617e75eb"
-      },
-      {
-        "file": "aura_ephemeral_workspace_runtime_v2.py",
-        "kind": "function",
-        "line": 93,
-        "end_line": 94,
-        "semantic_id": "aura_ephemeral_workspace_runtime_v2.py#function:_digest:44814f16445f99d8",
-        "signature_hash": "7d599111b26d8d87"
-      },
-      {
-        "file": "aura_external_llm_session.py",
-        "kind": "function",
-        "line": 37,
-        "end_line": 39,
-        "semantic_id": "aura_external_llm_session.py#function:_digest:e2bd21712cec5396",
-        "signature_hash": "aadee0efc1ef1ffa"
-      },
-      {
-        "file": "aura_external_llm_session_recorded.py",
-        "kind": "function",
-        "line": 45,
-        "end_line": 47,
-        "semantic_id": "aura_external_llm_session_recorded.py#function:_digest:58d9522d39744e91",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_forge.py",
-        "kind": "function",
-        "line": 82,
-        "end_line": 84,
-        "semantic_id": "aura_forge.py#function:_digest:1cabd93db2f20142",
-        "signature_hash": "5eed934bd8e243d0"
-      },
-      {
-        "file": "aura_gate_comparison.py",
-        "kind": "function",
-        "line": 30,
-        "end_line": 32,
-        "semantic_id": "aura_gate_comparison.py#function:_digest:73905f78dfd53102",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_gate_oidc.py",
-        "kind": "function",
-        "line": 110,
-        "end_line": 111,
-        "semantic_id": "aura_gate_oidc.py#function:_digest:809c79a216a8ac6d",
-        "signature_hash": "25839c0ce6ae0837"
-      },
-      {
-        "file": "aura_hybrid_refactor_benchmark.py",
-        "kind": "function",
-        "line": 35,
-        "end_line": 37,
-        "semantic_id": "aura_hybrid_refactor_benchmark.py#function:_digest:9e9fe282aa3d7813",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_multistep_refactor_benchmark.py",
-        "kind": "function",
-        "line": 29,
-        "end_line": 31,
-        "semantic_id": "aura_multistep_refactor_benchmark.py#function:_digest:2cc996e2bfc35d6f",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_packaged_source_identity.py",
-        "kind": "function",
-        "line": 27,
-        "end_line": 34,
-        "semantic_id": "aura_packaged_source_identity.py#function:_digest:64d66f48e716df2b",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_project_context_compiler.py",
-        "kind": "function",
-        "line": 135,
-        "end_line": 140,
-        "semantic_id": "aura_project_context_compiler.py#function:_digest:c8277919e85a6334",
-        "signature_hash": "7d599111b26d8d87"
-      },
-      {
-        "file": "aura_qdkt_compatibility_types.py",
-        "kind": "function",
-        "line": 109,
-        "end_line": 115,
-        "semantic_id": "aura_qdkt_compatibility_types.py#function:_digest:e146bfcddb2ca258",
-        "signature_hash": "931b04c7d83423ed"
-      },
-      {
-        "file": "aura_refactor_chronicle.py",
-        "kind": "function",
-        "line": 58,
-        "end_line": 59,
-        "semantic_id": "aura_refactor_chronicle.py#function:_digest:2b6d2da7ab18f40b",
-        "signature_hash": "5eed934bd8e243d0"
-      },
-      {
-        "file": "aura_refactor_chronicle_recorded.py",
-        "kind": "function",
-        "line": 27,
-        "end_line": 28,
-        "semantic_id": "aura_refactor_chronicle_recorded.py#function:_digest:16404ee68be83ec4",
-        "signature_hash": "5eed934bd8e243d0"
-      },
-      {
-        "file": "aura_refactor_output_vault.py",
-        "kind": "function",
-        "line": 47,
-        "end_line": 49,
-        "semantic_id": "aura_refactor_output_vault.py#function:_digest:432ef7753b9343a4",
-        "signature_hash": "5eed934bd8e243d0"
-      },
-      {
-        "file": "aura_refactor_patch_evaluator.py",
-        "kind": "function",
-        "line": 92,
-        "end_line": 93,
-        "semantic_id": "aura_refactor_patch_evaluator.py#function:_digest:28892195834ff0d0",
-        "signature_hash": "77d602ca1e012315"
-      },
-      {
-        "file": "aura_refactor_skeleton.py",
-        "kind": "function",
-        "line": 86,
-        "end_line": 87,
-        "semantic_id": "aura_refactor_skeleton.py#function:_digest:43cd41964d368f23",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_review_arena.py",
-        "kind": "function",
-        "line": 104,
-        "end_line": 106,
-        "semantic_id": "aura_review_arena.py#function:_digest:60fa3e367dcc095b",
-        "signature_hash": "5eed934bd8e243d0"
-      },
-      {
-        "file": "aura_review_lessons_contracts.py",
-        "kind": "function",
-        "line": 168,
-        "end_line": 169,
-        "semantic_id": "aura_review_lessons_contracts.py#function:_digest:a35a4df153e4bea4",
-        "signature_hash": "5eed934bd8e243d0"
-      },
-      {
-        "file": "aura_route_capsule_live_runtime.py",
-        "kind": "function",
-        "line": 299,
-        "end_line": 301,
-        "semantic_id": "aura_route_capsule_live_runtime.py#function:_digest:302e0edae03ee353",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_route_capsule_materializer.py",
-        "kind": "function",
-        "line": 410,
-        "end_line": 412,
-        "semantic_id": "aura_route_capsule_materializer.py#function:_digest:0ad91f7ec2d6826c",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_showcase_observatory_handoff.py",
-        "kind": "function",
-        "line": 19,
-        "end_line": 27,
-        "semantic_id": "aura_showcase_observatory_handoff.py#function:_digest:5423cb89eb60a17a",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "aura_spatial_arena.py",
-        "kind": "function",
-        "line": 1029,
-        "end_line": 1033,
-        "semantic_id": "aura_spatial_arena.py#function:_digest:40c609231275a9ae",
-        "signature_hash": "7d599111b26d8d87"
-      },
-      {
-        "file": "aura_spatial_construction.py",
-        "kind": "function",
-        "line": 476,
-        "end_line": 480,
-        "semantic_id": "aura_spatial_construction.py#function:_digest:403051239b08dba0",
-        "signature_hash": "7d599111b26d8d87"
-      },
-      {
-        "file": "aura_spatial_importers/contracts.py",
-        "kind": "function",
-        "line": 58,
-        "end_line": 62,
-        "semantic_id": "aura_spatial_importers/contracts.py#function:_digest:e260cd7c434923b5",
-        "signature_hash": "00468977fc4e74ba"
-      },
-      {
-        "file": "aura_st3gg_recall.py",
-        "kind": "function",
-        "line": 88,
-        "end_line": 89,
-        "semantic_id": "aura_st3gg_recall.py#function:_digest:b80292420b5b7c8c",
-        "signature_hash": "3ac0b50228ac8b68"
-      },
-      {
-        "file": "aura_waboose_learning.py",
-        "kind": "function",
-        "line": 65,
-        "end_line": 66,
-        "semantic_id": "aura_waboose_learning.py#function:_digest:bb02b89b76cef7ca",
-        "signature_hash": "5eed934bd8e243d0"
-      },
-      {
-        "file": "benchmarks/refactor_code_quality/generate_fixture.py",
-        "kind": "function",
-        "line": 217,
-        "end_line": 218,
-        "semantic_id": "benchmarks/refactor_code_quality/generate_fixture.py#function:_digest:9fb5457b4c90d731",
-        "signature_hash": "77d602ca1e012315"
-      },
-      {
-        "file": "scripts/aura_architecture_harness_core.py",
-        "kind": "function",
-        "line": 117,
-        "end_line": 119,
-        "semantic_id": "scripts/aura_architecture_harness_core.py#function:_digest:647bcbd2be052a98",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "scripts/aura_review_learning_architect_harness.py",
-        "kind": "function",
-        "line": 41,
-        "end_line": 42,
-        "semantic_id": "scripts/aura_review_learning_architect_harness.py#function:_digest:f2fb7dd69910e125",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "scripts/aura_spatial_continuation_architect_harness.py",
-        "kind": "function",
-        "line": 94,
-        "end_line": 95,
-        "semantic_id": "scripts/aura_spatial_continuation_architect_harness.py#function:_digest:3dc00f94cbec1f72",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "scripts/aura_spatial_s4b_architect_harness.py",
-        "kind": "function",
-        "line": 78,
-        "end_line": 79,
-        "semantic_id": "scripts/aura_spatial_s4b_architect_harness.py#function:_digest:1579e834203bc2f7",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
-        "kind": "function",
-        "line": 86,
-        "end_line": 87,
-        "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:_digest:c26125a4a37d1926",
-        "signature_hash": "514f786724465716"
-      },
-      {
-        "file": "tests/test_aura_arch_v2_3_capsule_validator.py",
-        "kind": "function",
-        "line": 13,
-        "end_line": 14,
-        "semantic_id": "tests/test_aura_arch_v2_3_capsule_validator.py#function:_digest:7ede0d67260ee654",
-        "signature_hash": "2dd9cb4d1e7f8c01"
-      },
-      {
-        "file": "tests/test_aura_project_context_acceptance.py",
-        "kind": "function",
-        "line": 30,
-        "end_line": 31,
-        "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
-        "signature_hash": "2dd9cb4d1e7f8c01"
-      }
-    ],
-    "_token_proxy": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 111,
-        "end_line": 113,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_token_proxy:eb609414c6df93bb",
-        "signature_hash": "e0d91d3281f8ab57"
-      },
-      {
-        "file": "_aura_architect_consolidation_benchmark_v2_legacy.py",
-        "kind": "function",
-        "line": 32,
-        "end_line": 33,
-        "semantic_id": "_aura_architect_consolidation_benchmark_v2_legacy.py#function:_token_proxy:1759d693661cbc65",
-        "signature_hash": "3a0c0a751c30f0f3"
-      },
-      {
-        "file": "aura_architect_consolidation_benchmark.py",
-        "kind": "function",
-        "line": 27,
-        "end_line": 30,
-        "semantic_id": "aura_architect_consolidation_benchmark.py#function:_token_proxy:76aef585e77d749a",
-        "signature_hash": "e0d91d3281f8ab57"
-      },
-      {
-        "file": "aura_architect_consolidation_benchmark_v2.py",
-        "kind": "function",
-        "line": 32,
-        "end_line": 34,
-        "semantic_id": "aura_architect_consolidation_benchmark_v2.py#function:_token_proxy:0242d79560febd2a",
-        "signature_hash": "3a0c0a751c30f0f3"
-      },
-      {
-        "file": "aura_civic_planning_benchmark.py",
-        "kind": "function",
-        "line": 62,
-        "end_line": 63,
-        "semantic_id": "aura_civic_planning_benchmark.py#function:_token_proxy:777dcdbc24e41ef1",
-        "signature_hash": "3a0c0a751c30f0f3"
-      },
-      {
-        "file": "aura_coding_arena_planning_benchmark.py",
-        "kind": "function",
-        "line": 662,
-        "end_line": 663,
-        "semantic_id": "aura_coding_arena_planning_benchmark.py#function:_token_proxy:0fa5226aaf77bed5",
-        "signature_hash": "c2096faba2ee9901"
-      }
-    ],
-    "_safe_read": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 116,
-        "end_line": 120,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_safe_read:ead71f696c8efc63",
-        "signature_hash": "ca793b5274eb8b2a"
-      }
-    ],
-    "_git_sha": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 123,
-        "end_line": 135,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_git_sha:d2df430d86d38f94",
-        "signature_hash": "287644c60ee38786"
-      },
-      {
-        "file": "aura_refactor_chronicle.py",
-        "kind": "function",
-        "line": 80,
-        "end_line": 89,
-        "semantic_id": "aura_refactor_chronicle.py#function:_git_sha:d04be833dc172c65",
-        "signature_hash": "287644c60ee38786"
-      }
-    ],
-    "_source_inventory": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 138,
-        "end_line": 180,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_source_inventory:34978bfbc7b50475",
-        "signature_hash": "882d30dacbef66e3"
-      }
-    ],
-    "_path_relevance": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 183,
-        "end_line": 200,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_path_relevance:3e1bd00f21460644",
-        "signature_hash": "415768ec8d69f95b"
-      }
-    ],
-    "_build_raw_context": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 203,
-        "end_line": 259,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_build_raw_context:d9301ef0027b9c03",
-        "signature_hash": "bd7e7d5704104aeb"
-      },
-      {
-        "file": "_aura_architect_consolidation_benchmark_refined_legacy.py",
-        "kind": "function",
-        "line": 26,
-        "end_line": 82,
-        "semantic_id": "_aura_architect_consolidation_benchmark_refined_legacy.py#function:_build_raw_context:7e05b84b1db09ef9",
-        "signature_hash": "bd7e7d5704104aeb"
-      }
-    ],
-    "_find_relevant_definitions": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 262,
-        "end_line": 278,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_find_relevant_definitions:b512ff3e7a69c8c8",
-        "signature_hash": "6353940a071d572b"
-      }
-    ],
-    "_slice_text": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 281,
-        "end_line": 294,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_slice_text:28e3a38559c2055b",
-        "signature_hash": "16cb8280cb58ddd6"
-      }
-    ],
-    "_normalize_candidate_path": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 297,
-        "end_line": 300,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_normalize_candidate_path:cfed2b4eb3be97ff",
-        "signature_hash": "62a1e985580e7a75"
-      }
-    ],
-    "_build_aura_slice_packet": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 303,
-        "end_line": 426,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_build_aura_slice_packet:ee8445bc8a01d3bc",
-        "signature_hash": "fc2d9999a55fa26c"
-      },
-      {
-        "file": "_aura_architect_consolidation_benchmark_refined_legacy.py",
-        "kind": "function",
-        "line": 85,
-        "end_line": 272,
-        "semantic_id": "_aura_architect_consolidation_benchmark_refined_legacy.py#function:_build_aura_slice_packet:1229ac0d202ae491",
-        "signature_hash": "fc2d9999a55fa26c"
-      },
-      {
-        "file": "aura_architect_consolidation_benchmark_refined.py",
-        "kind": "function",
-        "line": 57,
-        "end_line": 119,
-        "semantic_id": "aura_architect_consolidation_benchmark_refined.py#function:_build_aura_slice_packet:4e843bd9f6bd984c",
-        "signature_hash": "607a93f8e5570daa"
-      }
-    ],
-    "_build_aura_slice_packet.add_path": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "method",
-        "line": 328,
-        "end_line": 331,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#method:_build_aura_slice_packet.add_path:92438c1d223bb858",
-        "signature_hash": "478060a384b158c0"
-      },
-      {
-        "file": "_aura_architect_consolidation_benchmark_refined_legacy.py",
-        "kind": "method",
-        "line": 114,
-        "end_line": 121,
-        "semantic_id": "_aura_architect_consolidation_benchmark_refined_legacy.py#method:_build_aura_slice_packet.add_path:cd3bceb4358b6f4b",
-        "signature_hash": "9290640e8a3545c1"
-      }
-    ],
-    "_plan_instruction": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 429,
-        "end_line": 439,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_plan_instruction:ec25af8b62dfa119",
-        "signature_hash": "4553b285c1d998f8"
-      },
-      {
-        "file": "aura_architect_consolidation_benchmark.py",
-        "kind": "function",
-        "line": 33,
-        "end_line": 45,
-        "semantic_id": "aura_architect_consolidation_benchmark.py#function:_plan_instruction:04fc224f2a86f80b",
-        "signature_hash": "4553b285c1d998f8"
-      }
-    ],
-    "prepare_prompts": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 442,
-        "end_line": 499,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:prepare_prompts:e69269f165c5dc74",
-        "signature_hash": "106b79b3a4981f0b"
-      },
-      {
-        "file": "aura_architect_consolidation_benchmark.py",
-        "kind": "function",
-        "line": 108,
-        "end_line": 130,
-        "semantic_id": "aura_architect_consolidation_benchmark.py#function:prepare_prompts:1df81c99d48e7e6d",
-        "signature_hash": "106b79b3a4981f0b"
-      }
-    ],
-    "_symbol_exists": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 502,
-        "end_line": 512,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_symbol_exists:64d4aeee44235609",
-        "signature_hash": "8333c1480a3c19a8"
-      },
-      {
-        "file": "aura_architect_consolidation_benchmark.py",
-        "kind": "function",
-        "line": 48,
-        "end_line": 50,
-        "semantic_id": "aura_architect_consolidation_benchmark.py#function:_symbol_exists:894566ad7f523413",
-        "signature_hash": "8333c1480a3c19a8"
-      },
-      {
-        "file": "aura_music_coding_arena.py",
-        "kind": "function",
-        "line": 277,
-        "end_line": 290,
-        "semantic_id": "aura_music_coding_arena.py#function:_symbol_exists:2e24906ea5261c6a",
-        "signature_hash": "4afb8fd09181dbb7"
-      }
-    ],
-    "_as_dict": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 515,
-        "end_line": 520,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_as_dict:1d66e0d3be472d90",
-        "signature_hash": "94b9fe19cd72d976"
-      }
-    ],
-    "_prepare_plan": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 523,
-        "end_line": 541,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_prepare_plan:33a15ced49d0ea0c",
-        "signature_hash": "40a34477cbcbd578"
-      }
-    ],
-    "score_plan": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 544,
-        "end_line": 653,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:score_plan:fb49beb76d6bfc10",
-        "signature_hash": "b5c7cd7fbfa64341"
-      }
-    ],
-    "FixtureModelCallback": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "class",
-        "line": 656,
-        "end_line": 696,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#class:FixtureModelCallback:d2986817eb955d7b",
-        "signature_hash": "b277ca72a233a466"
-      },
-      {
-        "file": "aura_architect_consolidation_benchmark.py",
-        "kind": "class",
-        "line": 53,
-        "end_line": 86,
-        "semantic_id": "aura_architect_consolidation_benchmark.py#class:FixtureModelCallback:9f024ff294f0e3fb",
-        "signature_hash": "61f9279112be40af"
-      }
-    ],
-    "FixtureModelCallback.__init__": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "method",
-        "line": 659,
-        "end_line": 661,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#method:FixtureModelCallback.__init__:0bf53d039ad9ce1e",
-        "signature_hash": "8e92d73a293df5be"
-      }
-    ],
-    "FixtureModelCallback.__call__": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "method",
-        "line": 663,
-        "end_line": 696,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#method:FixtureModelCallback.__call__:998685224a5f3018",
-        "signature_hash": "c9a4a6534ad1fb81"
-      },
-      {
-        "file": "aura_architect_consolidation_benchmark.py",
-        "kind": "method",
-        "line": 56,
-        "end_line": 86,
-        "semantic_id": "aura_architect_consolidation_benchmark.py#method:FixtureModelCallback.__call__:faa6b181520c225e",
-        "signature_hash": "c9a4a6534ad1fb81"
-      }
-    ],
-    "_run_council": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 699,
-        "end_line": 727,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_run_council:a68e92c2f807b38d",
-        "signature_hash": "ba7d47a313c7570f"
-      }
-    ],
-    "_normalized_cost": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 730,
-        "end_line": 731,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_normalized_cost:ad902db2bb4480b9",
-        "signature_hash": "21030582100c906a"
-      }
-    ],
-    "_pct_reduction": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 734,
-        "end_line": 737,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_pct_reduction:d5b97e3d0dab1b12",
-        "signature_hash": "d7d555e47af4c74b"
-      },
-      {
-        "file": "aura_architect_council_calling_benchmark.py",
-        "kind": "function",
-        "line": 102,
-        "end_line": 105,
-        "semantic_id": "aura_architect_council_calling_benchmark.py#function:_pct_reduction:2f4865de220a8c26",
-        "signature_hash": "cde7983eeee34831"
-      },
-      {
-        "file": "aura_executable_refactor_benchmark.py",
-        "kind": "function",
-        "line": 52,
-        "end_line": 55,
-        "semantic_id": "aura_executable_refactor_benchmark.py#function:_pct_reduction:ce2e03d9645b8e30",
-        "signature_hash": "2498f5ad7a7d0125"
-      }
-    ],
-    "_write_markdown": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 740,
-        "end_line": 786,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_write_markdown:385e4be9181809c0",
-        "signature_hash": "fcf536b2a3e38f42"
-      },
-      {
-        "file": "aura_architect_council_calling_benchmark.py",
-        "kind": "function",
-        "line": 156,
-        "end_line": 176,
-        "semantic_id": "aura_architect_council_calling_benchmark.py#function:_write_markdown:b60c04582aa6755e",
-        "signature_hash": "fcf536b2a3e38f42"
-      },
-      {
-        "file": "aura_executable_refactor_benchmark.py",
-        "kind": "function",
-        "line": 129,
-        "end_line": 174,
-        "semantic_id": "aura_executable_refactor_benchmark.py#function:_write_markdown:c56598c6af7bc209",
-        "signature_hash": "30caecb7ec367af4"
-      }
-    ],
-    "score_benchmark": [
-      {
-        "file": "_aura_architect_consolidation_benchmark_legacy.py",
-        "kind": "function",
-        "line": 789,
-        "end_line": 935,
-        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:score_benchmark:4396a405cec3eee5",
-        "signature_hash": "565685d1a9196022"
-      },
-      {
-        "file": "aura_architect_consolidation_benchmark.py",
-        "kind": "function",
-        "line": 178,
-        "end_line": 212,
-        "semantic_id": "aura_architect_consolidation_benchmark.py#function:score_benchmark:22038d119e094f9e",
-        "signature_hash": "565685d1a9196022"
+        "line": 8,
+        "end_line": 13,
+        "semantic_id": ".github/phase4/wc02_phase4_current_generation_patch.py#function:replace_once:7702aacc02b3ded3",
+        "signature_hash": "41fb393f9ea07f89"
       }
     ],
     "main": [
+      {
+        "file": ".github/phase4/wc02_phase4_current_generation_patch.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 98,
+        "semantic_id": ".github/phase4/wc02_phase4_current_generation_patch.py#function:main:fa396146ab2337a5",
+        "signature_hash": "1107cedc597d81be"
+      },
       {
         "file": "_aura_architect_consolidation_benchmark_legacy.py",
         "kind": "function",
@@ -4372,6 +3426,972 @@
         "end_line": 250,
         "semantic_id": "unreal_bridge.py#function:main:a13e03774ee52e6e",
         "signature_hash": "621c1ef8c88e571d"
+      }
+    ],
+    "_canonical": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 104,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_canonical:2fc60a8aaee5d0d5",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "aura_arena_architect_connector.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 67,
+        "semantic_id": "aura_arena_architect_connector.py#function:_canonical:ccd84e854659064e",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "aura_benchmark_registry.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "aura_benchmark_registry.py#function:_canonical:c5be99f8f23ad8f0",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "aura_code_quality_registry.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "aura_code_quality_registry.py#function:_canonical:dfb1873e025ae483",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "aura_ephemeral_workspace_contracts.py",
+        "kind": "function",
+        "line": 263,
+        "end_line": 379,
+        "semantic_id": "aura_ephemeral_workspace_contracts.py#function:_canonical:acc5c2983f422c4d",
+        "signature_hash": "001e672a6bdd2069"
+      },
+      {
+        "file": "aura_refactor_chronicle.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "aura_refactor_chronicle.py#function:_canonical:2429d52c4230305c",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "aura_refactor_chronicle_recorded.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "aura_refactor_chronicle_recorded.py#function:_canonical:255b6db81a8bfc32",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "aura_refactor_output_vault.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "aura_refactor_output_vault.py#function:_canonical:649bf0ccd3c56f0c",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "scripts/aura_review_learning_architect_harness.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 38,
+        "semantic_id": "scripts/aura_review_learning_architect_harness.py#function:_canonical:692db8dcccd7494d",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "scripts/aura_spatial_continuation_architect_harness.py",
+        "kind": "function",
+        "line": 83,
+        "end_line": 91,
+        "semantic_id": "scripts/aura_spatial_continuation_architect_harness.py#function:_canonical:711b3fa468b175f6",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "scripts/aura_spatial_s4b_architect_harness.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 75,
+        "semantic_id": "scripts/aura_spatial_s4b_architect_harness.py#function:_canonical:d80a5da92a8803b2",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 83,
+        "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:_canonical:4b01bca749381a6a",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tests/test_aura_gate_egress.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 39,
+        "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
+        "signature_hash": "711cdedc61c63424"
+      }
+    ],
+    "_digest": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 107,
+        "end_line": 108,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_digest:05d3775480649df7",
+        "signature_hash": "5eed934bd8e243d0"
+      },
+      {
+        "file": "aura_agent_arena_github_bridge.py",
+        "kind": "function",
+        "line": 133,
+        "end_line": 134,
+        "semantic_id": "aura_agent_arena_github_bridge.py#function:_digest:ec4e7aed86fa2c78",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_architect_control.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 38,
+        "semantic_id": "aura_architect_control.py#function:_digest:635f5cd7898b48d5",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_architect_council_calling_benchmark.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 23,
+        "semantic_id": "aura_architect_council_calling_benchmark.py#function:_digest:55b3af2c32cd6afa",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_arena_architect_connector.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 71,
+        "semantic_id": "aura_arena_architect_connector.py#function:_digest:5c79aeada2381ec4",
+        "signature_hash": "5eed934bd8e243d0"
+      },
+      {
+        "file": "aura_arena_attempt_archive.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 70,
+        "semantic_id": "aura_arena_attempt_archive.py#function:_digest:3f61082161b90316",
+        "signature_hash": "6a2769a8ecbe738e"
+      },
+      {
+        "file": "aura_arena_gate_dialogue.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 67,
+        "semantic_id": "aura_arena_gate_dialogue.py#function:_digest:3e91147678285ab4",
+        "signature_hash": "6a2769a8ecbe738e"
+      },
+      {
+        "file": "aura_benchmark_registry.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "aura_benchmark_registry.py#function:_digest:3cadb477b453ad99",
+        "signature_hash": "5eed934bd8e243d0"
+      },
+      {
+        "file": "aura_civic_planning_types.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 59,
+        "semantic_id": "aura_civic_planning_types.py#function:_digest:d90f3c9272d63907",
+        "signature_hash": "af4db70e827f41b5"
+      },
+      {
+        "file": "aura_code_quality_registry.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "aura_code_quality_registry.py#function:_digest:efe18a139b270775",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_construction_authority.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 77,
+        "semantic_id": "aura_construction_authority.py#function:_digest:76032741913641ec",
+        "signature_hash": "7d599111b26d8d87"
+      },
+      {
+        "file": "aura_construction_contracts.py",
+        "kind": "function",
+        "line": 149,
+        "end_line": 157,
+        "semantic_id": "aura_construction_contracts.py#function:_digest:d8f3a1e896ed72dd",
+        "signature_hash": "7d599111b26d8d87"
+      },
+      {
+        "file": "aura_construction_demo_contracts.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 88,
+        "semantic_id": "aura_construction_demo_contracts.py#function:_digest:309b686437cfc22b",
+        "signature_hash": "7d599111b26d8d87"
+      },
+      {
+        "file": "aura_construction_demo_fixture.py",
+        "kind": "function",
+        "line": 112,
+        "end_line": 115,
+        "semantic_id": "aura_construction_demo_fixture.py#function:_digest:68f2e18852326653",
+        "signature_hash": "7d599111b26d8d87"
+      },
+      {
+        "file": "aura_construction_state.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 46,
+        "semantic_id": "aura_construction_state.py#function:_digest:a91449fed4dc7684",
+        "signature_hash": "7d599111b26d8d87"
+      },
+      {
+        "file": "aura_continuity_packet.py",
+        "kind": "function",
+        "line": 145,
+        "end_line": 153,
+        "semantic_id": "aura_continuity_packet.py#function:_digest:d5a98eb19899f6be",
+        "signature_hash": "d1287a01d88132e0"
+      },
+      {
+        "file": "aura_cost_attribution.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 45,
+        "semantic_id": "aura_cost_attribution.py#function:_digest:438c703873d5935f",
+        "signature_hash": "253850686e60d85e"
+      },
+      {
+        "file": "aura_current_code_quality_assessment.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 25,
+        "semantic_id": "aura_current_code_quality_assessment.py#function:_digest:be3efabcafb1cdad",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_emergent_evidence_spine.py",
+        "kind": "function",
+        "line": 1131,
+        "end_line": 1135,
+        "semantic_id": "aura_emergent_evidence_spine.py#function:_digest:618626343f423215",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_ephemeral_adapter_registry.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 40,
+        "semantic_id": "aura_ephemeral_adapter_registry.py#function:_digest:fe3e8f3d17616beb",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_ephemeral_workspace_contracts.py",
+        "kind": "function",
+        "line": 432,
+        "end_line": 437,
+        "semantic_id": "aura_ephemeral_workspace_contracts.py#function:_digest:97e8285e778ed250",
+        "signature_hash": "80a32e37617e75eb"
+      },
+      {
+        "file": "aura_ephemeral_workspace_runtime_v2.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 94,
+        "semantic_id": "aura_ephemeral_workspace_runtime_v2.py#function:_digest:44814f16445f99d8",
+        "signature_hash": "7d599111b26d8d87"
+      },
+      {
+        "file": "aura_external_llm_session.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 39,
+        "semantic_id": "aura_external_llm_session.py#function:_digest:e2bd21712cec5396",
+        "signature_hash": "aadee0efc1ef1ffa"
+      },
+      {
+        "file": "aura_external_llm_session_recorded.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 47,
+        "semantic_id": "aura_external_llm_session_recorded.py#function:_digest:58d9522d39744e91",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_forge.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 84,
+        "semantic_id": "aura_forge.py#function:_digest:1cabd93db2f20142",
+        "signature_hash": "5eed934bd8e243d0"
+      },
+      {
+        "file": "aura_gate_comparison.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 32,
+        "semantic_id": "aura_gate_comparison.py#function:_digest:73905f78dfd53102",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_gate_oidc.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 111,
+        "semantic_id": "aura_gate_oidc.py#function:_digest:809c79a216a8ac6d",
+        "signature_hash": "25839c0ce6ae0837"
+      },
+      {
+        "file": "aura_hybrid_refactor_benchmark.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 37,
+        "semantic_id": "aura_hybrid_refactor_benchmark.py#function:_digest:9e9fe282aa3d7813",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_multistep_refactor_benchmark.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 31,
+        "semantic_id": "aura_multistep_refactor_benchmark.py#function:_digest:2cc996e2bfc35d6f",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_packaged_source_identity.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 34,
+        "semantic_id": "aura_packaged_source_identity.py#function:_digest:64d66f48e716df2b",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_project_context_compiler.py",
+        "kind": "function",
+        "line": 135,
+        "end_line": 140,
+        "semantic_id": "aura_project_context_compiler.py#function:_digest:c8277919e85a6334",
+        "signature_hash": "7d599111b26d8d87"
+      },
+      {
+        "file": "aura_qdkt_compatibility_types.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 115,
+        "semantic_id": "aura_qdkt_compatibility_types.py#function:_digest:e146bfcddb2ca258",
+        "signature_hash": "931b04c7d83423ed"
+      },
+      {
+        "file": "aura_refactor_chronicle.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 59,
+        "semantic_id": "aura_refactor_chronicle.py#function:_digest:2b6d2da7ab18f40b",
+        "signature_hash": "5eed934bd8e243d0"
+      },
+      {
+        "file": "aura_refactor_chronicle_recorded.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "aura_refactor_chronicle_recorded.py#function:_digest:16404ee68be83ec4",
+        "signature_hash": "5eed934bd8e243d0"
+      },
+      {
+        "file": "aura_refactor_output_vault.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 49,
+        "semantic_id": "aura_refactor_output_vault.py#function:_digest:432ef7753b9343a4",
+        "signature_hash": "5eed934bd8e243d0"
+      },
+      {
+        "file": "aura_refactor_patch_evaluator.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 93,
+        "semantic_id": "aura_refactor_patch_evaluator.py#function:_digest:28892195834ff0d0",
+        "signature_hash": "77d602ca1e012315"
+      },
+      {
+        "file": "aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 87,
+        "semantic_id": "aura_refactor_skeleton.py#function:_digest:43cd41964d368f23",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_review_arena.py",
+        "kind": "function",
+        "line": 104,
+        "end_line": 106,
+        "semantic_id": "aura_review_arena.py#function:_digest:60fa3e367dcc095b",
+        "signature_hash": "5eed934bd8e243d0"
+      },
+      {
+        "file": "aura_review_lessons_contracts.py",
+        "kind": "function",
+        "line": 168,
+        "end_line": 169,
+        "semantic_id": "aura_review_lessons_contracts.py#function:_digest:a35a4df153e4bea4",
+        "signature_hash": "5eed934bd8e243d0"
+      },
+      {
+        "file": "aura_route_capsule_live_runtime.py",
+        "kind": "function",
+        "line": 299,
+        "end_line": 301,
+        "semantic_id": "aura_route_capsule_live_runtime.py#function:_digest:302e0edae03ee353",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_route_capsule_materializer.py",
+        "kind": "function",
+        "line": 410,
+        "end_line": 412,
+        "semantic_id": "aura_route_capsule_materializer.py#function:_digest:0ad91f7ec2d6826c",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_showcase_observatory_handoff.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 27,
+        "semantic_id": "aura_showcase_observatory_handoff.py#function:_digest:5423cb89eb60a17a",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "aura_spatial_arena.py",
+        "kind": "function",
+        "line": 1029,
+        "end_line": 1033,
+        "semantic_id": "aura_spatial_arena.py#function:_digest:40c609231275a9ae",
+        "signature_hash": "7d599111b26d8d87"
+      },
+      {
+        "file": "aura_spatial_construction.py",
+        "kind": "function",
+        "line": 476,
+        "end_line": 480,
+        "semantic_id": "aura_spatial_construction.py#function:_digest:403051239b08dba0",
+        "signature_hash": "7d599111b26d8d87"
+      },
+      {
+        "file": "aura_spatial_importers/contracts.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 62,
+        "semantic_id": "aura_spatial_importers/contracts.py#function:_digest:e260cd7c434923b5",
+        "signature_hash": "00468977fc4e74ba"
+      },
+      {
+        "file": "aura_st3gg_recall.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 89,
+        "semantic_id": "aura_st3gg_recall.py#function:_digest:b80292420b5b7c8c",
+        "signature_hash": "3ac0b50228ac8b68"
+      },
+      {
+        "file": "aura_waboose_learning.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 66,
+        "semantic_id": "aura_waboose_learning.py#function:_digest:bb02b89b76cef7ca",
+        "signature_hash": "5eed934bd8e243d0"
+      },
+      {
+        "file": "benchmarks/refactor_code_quality/generate_fixture.py",
+        "kind": "function",
+        "line": 217,
+        "end_line": 218,
+        "semantic_id": "benchmarks/refactor_code_quality/generate_fixture.py#function:_digest:9fb5457b4c90d731",
+        "signature_hash": "77d602ca1e012315"
+      },
+      {
+        "file": "scripts/aura_architecture_harness_core.py",
+        "kind": "function",
+        "line": 117,
+        "end_line": 119,
+        "semantic_id": "scripts/aura_architecture_harness_core.py#function:_digest:647bcbd2be052a98",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "scripts/aura_review_learning_architect_harness.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "scripts/aura_review_learning_architect_harness.py#function:_digest:f2fb7dd69910e125",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "scripts/aura_spatial_continuation_architect_harness.py",
+        "kind": "function",
+        "line": 94,
+        "end_line": 95,
+        "semantic_id": "scripts/aura_spatial_continuation_architect_harness.py#function:_digest:3dc00f94cbec1f72",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "scripts/aura_spatial_s4b_architect_harness.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 79,
+        "semantic_id": "scripts/aura_spatial_s4b_architect_harness.py#function:_digest:1579e834203bc2f7",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 87,
+        "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:_digest:c26125a4a37d1926",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tests/test_aura_arch_v2_3_capsule_validator.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tests/test_aura_arch_v2_3_capsule_validator.py#function:_digest:7ede0d67260ee654",
+        "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tests/test_aura_project_context_acceptance.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 31,
+        "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
+        "signature_hash": "2dd9cb4d1e7f8c01"
+      }
+    ],
+    "_token_proxy": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 111,
+        "end_line": 113,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_token_proxy:eb609414c6df93bb",
+        "signature_hash": "e0d91d3281f8ab57"
+      },
+      {
+        "file": "_aura_architect_consolidation_benchmark_v2_legacy.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "_aura_architect_consolidation_benchmark_v2_legacy.py#function:_token_proxy:1759d693661cbc65",
+        "signature_hash": "3a0c0a751c30f0f3"
+      },
+      {
+        "file": "aura_architect_consolidation_benchmark.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "aura_architect_consolidation_benchmark.py#function:_token_proxy:76aef585e77d749a",
+        "signature_hash": "e0d91d3281f8ab57"
+      },
+      {
+        "file": "aura_architect_consolidation_benchmark_v2.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 34,
+        "semantic_id": "aura_architect_consolidation_benchmark_v2.py#function:_token_proxy:0242d79560febd2a",
+        "signature_hash": "3a0c0a751c30f0f3"
+      },
+      {
+        "file": "aura_civic_planning_benchmark.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 63,
+        "semantic_id": "aura_civic_planning_benchmark.py#function:_token_proxy:777dcdbc24e41ef1",
+        "signature_hash": "3a0c0a751c30f0f3"
+      },
+      {
+        "file": "aura_coding_arena_planning_benchmark.py",
+        "kind": "function",
+        "line": 662,
+        "end_line": 663,
+        "semantic_id": "aura_coding_arena_planning_benchmark.py#function:_token_proxy:0fa5226aaf77bed5",
+        "signature_hash": "c2096faba2ee9901"
+      }
+    ],
+    "_safe_read": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 116,
+        "end_line": 120,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_safe_read:ead71f696c8efc63",
+        "signature_hash": "ca793b5274eb8b2a"
+      }
+    ],
+    "_git_sha": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 135,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_git_sha:d2df430d86d38f94",
+        "signature_hash": "287644c60ee38786"
+      },
+      {
+        "file": "aura_refactor_chronicle.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 89,
+        "semantic_id": "aura_refactor_chronicle.py#function:_git_sha:d04be833dc172c65",
+        "signature_hash": "287644c60ee38786"
+      }
+    ],
+    "_source_inventory": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 138,
+        "end_line": 180,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_source_inventory:34978bfbc7b50475",
+        "signature_hash": "882d30dacbef66e3"
+      }
+    ],
+    "_path_relevance": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 183,
+        "end_line": 200,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_path_relevance:3e1bd00f21460644",
+        "signature_hash": "415768ec8d69f95b"
+      }
+    ],
+    "_build_raw_context": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 203,
+        "end_line": 259,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_build_raw_context:d9301ef0027b9c03",
+        "signature_hash": "bd7e7d5704104aeb"
+      },
+      {
+        "file": "_aura_architect_consolidation_benchmark_refined_legacy.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 82,
+        "semantic_id": "_aura_architect_consolidation_benchmark_refined_legacy.py#function:_build_raw_context:7e05b84b1db09ef9",
+        "signature_hash": "bd7e7d5704104aeb"
+      }
+    ],
+    "_find_relevant_definitions": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 262,
+        "end_line": 278,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_find_relevant_definitions:b512ff3e7a69c8c8",
+        "signature_hash": "6353940a071d572b"
+      }
+    ],
+    "_slice_text": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 281,
+        "end_line": 294,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_slice_text:28e3a38559c2055b",
+        "signature_hash": "16cb8280cb58ddd6"
+      }
+    ],
+    "_normalize_candidate_path": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 297,
+        "end_line": 300,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_normalize_candidate_path:cfed2b4eb3be97ff",
+        "signature_hash": "62a1e985580e7a75"
+      }
+    ],
+    "_build_aura_slice_packet": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 303,
+        "end_line": 426,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_build_aura_slice_packet:ee8445bc8a01d3bc",
+        "signature_hash": "fc2d9999a55fa26c"
+      },
+      {
+        "file": "_aura_architect_consolidation_benchmark_refined_legacy.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 272,
+        "semantic_id": "_aura_architect_consolidation_benchmark_refined_legacy.py#function:_build_aura_slice_packet:1229ac0d202ae491",
+        "signature_hash": "fc2d9999a55fa26c"
+      },
+      {
+        "file": "aura_architect_consolidation_benchmark_refined.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 119,
+        "semantic_id": "aura_architect_consolidation_benchmark_refined.py#function:_build_aura_slice_packet:4e843bd9f6bd984c",
+        "signature_hash": "607a93f8e5570daa"
+      }
+    ],
+    "_build_aura_slice_packet.add_path": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "method",
+        "line": 328,
+        "end_line": 331,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#method:_build_aura_slice_packet.add_path:92438c1d223bb858",
+        "signature_hash": "478060a384b158c0"
+      },
+      {
+        "file": "_aura_architect_consolidation_benchmark_refined_legacy.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 121,
+        "semantic_id": "_aura_architect_consolidation_benchmark_refined_legacy.py#method:_build_aura_slice_packet.add_path:cd3bceb4358b6f4b",
+        "signature_hash": "9290640e8a3545c1"
+      }
+    ],
+    "_plan_instruction": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 429,
+        "end_line": 439,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_plan_instruction:ec25af8b62dfa119",
+        "signature_hash": "4553b285c1d998f8"
+      },
+      {
+        "file": "aura_architect_consolidation_benchmark.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 45,
+        "semantic_id": "aura_architect_consolidation_benchmark.py#function:_plan_instruction:04fc224f2a86f80b",
+        "signature_hash": "4553b285c1d998f8"
+      }
+    ],
+    "prepare_prompts": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 442,
+        "end_line": 499,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:prepare_prompts:e69269f165c5dc74",
+        "signature_hash": "106b79b3a4981f0b"
+      },
+      {
+        "file": "aura_architect_consolidation_benchmark.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 130,
+        "semantic_id": "aura_architect_consolidation_benchmark.py#function:prepare_prompts:1df81c99d48e7e6d",
+        "signature_hash": "106b79b3a4981f0b"
+      }
+    ],
+    "_symbol_exists": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 502,
+        "end_line": 512,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_symbol_exists:64d4aeee44235609",
+        "signature_hash": "8333c1480a3c19a8"
+      },
+      {
+        "file": "aura_architect_consolidation_benchmark.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 50,
+        "semantic_id": "aura_architect_consolidation_benchmark.py#function:_symbol_exists:894566ad7f523413",
+        "signature_hash": "8333c1480a3c19a8"
+      },
+      {
+        "file": "aura_music_coding_arena.py",
+        "kind": "function",
+        "line": 277,
+        "end_line": 290,
+        "semantic_id": "aura_music_coding_arena.py#function:_symbol_exists:2e24906ea5261c6a",
+        "signature_hash": "4afb8fd09181dbb7"
+      }
+    ],
+    "_as_dict": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 515,
+        "end_line": 520,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_as_dict:1d66e0d3be472d90",
+        "signature_hash": "94b9fe19cd72d976"
+      }
+    ],
+    "_prepare_plan": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 523,
+        "end_line": 541,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_prepare_plan:33a15ced49d0ea0c",
+        "signature_hash": "40a34477cbcbd578"
+      }
+    ],
+    "score_plan": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 544,
+        "end_line": 653,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:score_plan:fb49beb76d6bfc10",
+        "signature_hash": "b5c7cd7fbfa64341"
+      }
+    ],
+    "FixtureModelCallback": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "class",
+        "line": 656,
+        "end_line": 696,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#class:FixtureModelCallback:d2986817eb955d7b",
+        "signature_hash": "b277ca72a233a466"
+      },
+      {
+        "file": "aura_architect_consolidation_benchmark.py",
+        "kind": "class",
+        "line": 53,
+        "end_line": 86,
+        "semantic_id": "aura_architect_consolidation_benchmark.py#class:FixtureModelCallback:9f024ff294f0e3fb",
+        "signature_hash": "61f9279112be40af"
+      }
+    ],
+    "FixtureModelCallback.__init__": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "method",
+        "line": 659,
+        "end_line": 661,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#method:FixtureModelCallback.__init__:0bf53d039ad9ce1e",
+        "signature_hash": "8e92d73a293df5be"
+      }
+    ],
+    "FixtureModelCallback.__call__": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "method",
+        "line": 663,
+        "end_line": 696,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#method:FixtureModelCallback.__call__:998685224a5f3018",
+        "signature_hash": "c9a4a6534ad1fb81"
+      },
+      {
+        "file": "aura_architect_consolidation_benchmark.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 86,
+        "semantic_id": "aura_architect_consolidation_benchmark.py#method:FixtureModelCallback.__call__:faa6b181520c225e",
+        "signature_hash": "c9a4a6534ad1fb81"
+      }
+    ],
+    "_run_council": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 699,
+        "end_line": 727,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_run_council:a68e92c2f807b38d",
+        "signature_hash": "ba7d47a313c7570f"
+      }
+    ],
+    "_normalized_cost": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 730,
+        "end_line": 731,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_normalized_cost:ad902db2bb4480b9",
+        "signature_hash": "21030582100c906a"
+      }
+    ],
+    "_pct_reduction": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 734,
+        "end_line": 737,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_pct_reduction:d5b97e3d0dab1b12",
+        "signature_hash": "d7d555e47af4c74b"
+      },
+      {
+        "file": "aura_architect_council_calling_benchmark.py",
+        "kind": "function",
+        "line": 102,
+        "end_line": 105,
+        "semantic_id": "aura_architect_council_calling_benchmark.py#function:_pct_reduction:2f4865de220a8c26",
+        "signature_hash": "cde7983eeee34831"
+      },
+      {
+        "file": "aura_executable_refactor_benchmark.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 55,
+        "semantic_id": "aura_executable_refactor_benchmark.py#function:_pct_reduction:ce2e03d9645b8e30",
+        "signature_hash": "2498f5ad7a7d0125"
+      }
+    ],
+    "_write_markdown": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 740,
+        "end_line": 786,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:_write_markdown:385e4be9181809c0",
+        "signature_hash": "fcf536b2a3e38f42"
+      },
+      {
+        "file": "aura_architect_council_calling_benchmark.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 176,
+        "semantic_id": "aura_architect_council_calling_benchmark.py#function:_write_markdown:b60c04582aa6755e",
+        "signature_hash": "fcf536b2a3e38f42"
+      },
+      {
+        "file": "aura_executable_refactor_benchmark.py",
+        "kind": "function",
+        "line": 129,
+        "end_line": 174,
+        "semantic_id": "aura_executable_refactor_benchmark.py#function:_write_markdown:c56598c6af7bc209",
+        "signature_hash": "30caecb7ec367af4"
+      }
+    ],
+    "score_benchmark": [
+      {
+        "file": "_aura_architect_consolidation_benchmark_legacy.py",
+        "kind": "function",
+        "line": 789,
+        "end_line": 935,
+        "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#function:score_benchmark:4396a405cec3eee5",
+        "signature_hash": "565685d1a9196022"
+      },
+      {
+        "file": "aura_architect_consolidation_benchmark.py",
+        "kind": "function",
+        "line": 178,
+        "end_line": 212,
+        "semantic_id": "aura_architect_consolidation_benchmark.py#function:score_benchmark:22038d119e094f9e",
+        "signature_hash": "565685d1a9196022"
       }
     ],
     "_build_aura_slice_packet.build_slice": [
@@ -157538,6 +157558,7 @@
       ".github/workflows/wo-phase3-codemap-compat-audit.yml",
       ".github/workflows/wo-phase3-local-gate-bundle-001.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml",
       "USER_GUIDE.md",
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md",
@@ -157600,6 +157621,7 @@
       ".github/workflows/wo-phase3-codemap-compat-audit.yml",
       ".github/workflows/wo-phase3-local-gate-bundle-001.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml",
       ".github/workflows/wo-phase4-local-verifier-bundle.yml",
       "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
@@ -157663,6 +157685,7 @@
       ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml",
       "LIQUID_INTERNET_IMPLEMENTATION.md",
       "SWARM_COLLECTIVE_IMPLEMENTATION.md",
@@ -157810,6 +157833,7 @@
       ".github/workflows/wo-phase3-codemap-compat-audit.yml",
       ".github/workflows/wo-phase4-active-branch-verify.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml",
       "USER_GUIDE.md",
       "docs/AURA_ARCHITECTURE_HARNESS.md",
@@ -157917,6 +157941,7 @@
       ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml"
     ],
     "python tools/wo_triad2_ci_codemap_repair.py": [
@@ -157926,6 +157951,7 @@
     "python tools/wo_triad2_ci_codemap_failclosed_patch.py": [
       ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml"
     ],
     "python tools/wo_triad2_ci_codemap_command_index_patch.py": [
@@ -157939,6 +157965,7 @@
     "python tools/wo_triad2_ci_skillweaver_codemap_patch.py": [
       ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml"
     ],
     "python tools/wo_triad2_ci_codemap_iterator_compat_patch.py": [
@@ -157948,21 +157975,25 @@
     "python tools/wo_triad2_ci_agent_bridge_codemap_patch.py": [
       ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml"
     ],
     "python tools/wo_triad2_ci_compass_intent_fidelity_patch.py": [
       ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml"
     ],
     "python tools/wo_triad2_ci_compass_bounded_handoff_patch.py": [
       ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml"
     ],
     "python tools/wo_triad2_ci_pascal_receipt_test_patch.py": [
       ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml"
     ],
     "python aura_codebase_navigator.py --refresh-topology 2>&1 | tee /tmp/codemap-audit/regenerate.log": [
@@ -157983,7 +158014,11 @@
     "python /tmp/phase3_patch.py": [
       ".github/workflows/wo-phase3-local-gate-bundle-001.yml"
     ],
+    "python /tmp/wc02_phase4_patch.py": [
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml"
+    ],
     "python scripts/aura_navigation_refresh.py": [
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml"
     ],
     "python aura_coding_arena_server.py --host 127.0.0.1 --port 8080": [
@@ -165118,6 +165153,53 @@
       ]
     },
     {
+      "path": ".github/phase4/wc02_phase4_current_generation_patch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11804,
+      "lines": 103,
+      "tokens_est": 2948,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6ca398b6bf7056e4",
+      "vector": [
+        0.02095,
+        0.294539,
+        -0.186089,
+        -0.013556,
+        0.272356,
+        -0.122006,
+        0.191019,
+        0.260032,
+        -0.065316,
+        -0.12447,
+        -0.299468,
+        -0.240314,
+        0.011091,
+        -0.171301,
+        0.12447,
+        -0.065316,
+        0.161442,
+        0.065316,
+        -0.237849,
+        0.299468,
+        -0.240314,
+        0.245244,
+        -0.011091,
+        0.080105,
+        -0.23292,
+        0.067781,
+        0.109682,
+        0.122006,
+        -0.070246,
+        0.213202,
+        -0.094893,
+        0.149118
+      ]
+    },
+    {
       "path": ".github/scripts/umc_publish_five_files.sh",
       "role": "operator_script",
       "binary": false,
@@ -170754,6 +170836,109 @@
         0.139052,
         0.222245,
         -0.027335
+      ]
+    },
+    {
+      "path": ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6730,
+      "lines": 140,
+      "tokens_est": 1683,
+      "symbol_count": 0,
+      "commands": [
+        "python -m pip",
+        "python tools/wo_triad2_ci_codemap_failclosed_patch.py",
+        "python tools/wo_triad2_ci_skillweaver_codemap_patch.py",
+        "python tools/wo_triad2_ci_agent_bridge_codemap_patch.py",
+        "python tools/wo_triad2_ci_compass_intent_fidelity_patch.py",
+        "python tools/wo_triad2_ci_compass_bounded_handoff_patch.py",
+        "python tools/wo_triad2_ci_pascal_receipt_test_patch.py",
+        "python /tmp/wc02_phase4_patch.py",
+        "python -m py_compile",
+        "python aura_codebase_navigator.py --refresh-topology",
+        "python scripts/aura_navigation_refresh.py",
+        "python -m aura_codemap_verify",
+        "python -m pytest"
+      ],
+      "command_lines": {
+        "python -m pip": [
+          35,
+          36
+        ],
+        "python tools/wo_triad2_ci_codemap_failclosed_patch.py": [
+          42
+        ],
+        "python tools/wo_triad2_ci_skillweaver_codemap_patch.py": [
+          43
+        ],
+        "python tools/wo_triad2_ci_agent_bridge_codemap_patch.py": [
+          44
+        ],
+        "python tools/wo_triad2_ci_compass_intent_fidelity_patch.py": [
+          45
+        ],
+        "python tools/wo_triad2_ci_compass_bounded_handoff_patch.py": [
+          46
+        ],
+        "python tools/wo_triad2_ci_pascal_receipt_test_patch.py": [
+          47
+        ],
+        "python /tmp/wc02_phase4_patch.py": [
+          57
+        ],
+        "python -m py_compile": [
+          74
+        ],
+        "python aura_codebase_navigator.py --refresh-topology": [
+          80
+        ],
+        "python scripts/aura_navigation_refresh.py": [
+          82
+        ],
+        "python -m aura_codemap_verify": [
+          84,
+          111
+        ],
+        "python -m pytest": [
+          88
+        ]
+      },
+      "topology": {},
+      "digest8": "4a0a9f3e4bbb534c",
+      "vector": [
+        0.322652,
+        -0.277168,
+        0.046905,
+        -0.13503,
+        -0.007107,
+        -0.13503,
+        0.174829,
+        0.1862,
+        -0.223155,
+        -0.132188,
+        -0.206099,
+        -0.035534,
+        -0.143559,
+        -0.021321,
+        0.132188,
+        -0.231684,
+        -0.021321,
+        0.095232,
+        -0.038377,
+        -0.137873,
+        -0.143559,
+        0.007107,
+        -0.240212,
+        0.13503,
+        -0.33118,
+        -0.214627,
+        0.166301,
+        -0.04122,
+        -0.277168,
+        0.228841,
+        -0.234526,
+        -0.126502
       ]
     },
     {
@@ -284021,16 +284206,16 @@
     }
   },
   "summary": {
-    "file_count": 1604,
-    "total_bytes": 26137239,
-    "text_tokens_est": 6524723,
+    "file_count": 1606,
+    "total_bytes": 26155773,
+    "text_tokens_est": 6529354,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 232,
       "native_accelerator": 8,
       "operator_script": 9,
-      "python_module": 990,
-      "schema_or_lexicon": 252,
+      "python_module": 991,
+      "schema_or_lexicon": 253,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -284143,6 +284328,7 @@
       ".coderabbit.yaml",
       ".devcontainer/devcontainer.json",
       ".dockerignore",
+      ".github/phase4/wc02_phase4_current_generation_patch.py",
       ".github/scripts/umc_publish_five_files.sh",
       ".github/umc_final5_payload/part-01",
       ".github/umc_final5_payload/part-02",
@@ -284235,6 +284421,7 @@
       ".github/workflows/wo-phase4-active-branch-verify.yml",
       ".github/workflows/wo-phase4-current-repair-archive.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
+      ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml",
       ".github/workflows/wo-phase4-local-verifier-bundle.yml",
       ".gitignore",
@@ -285653,6 +285840,26 @@
       "vsa_resonator.py"
     ],
     "records": [
+      {
+        "semantic_id": ".github/phase4/wc02_phase4_current_generation_patch.py#function:main:fa396146ab2337a5",
+        "name": "main",
+        "kind": "function",
+        "file": ".github/phase4/wc02_phase4_current_generation_patch.py",
+        "line": 16,
+        "end_line": 98,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "6ca398b6bf7056e4"
+      },
+      {
+        "semantic_id": ".github/phase4/wc02_phase4_current_generation_patch.py#function:replace_once:7702aacc02b3ded3",
+        "name": "replace_once",
+        "kind": "function",
+        "file": ".github/phase4/wc02_phase4_current_generation_patch.py",
+        "line": 8,
+        "end_line": 13,
+        "signature_hash": "41fb393f9ea07f89",
+        "file_digest8": "6ca398b6bf7056e4"
+      },
       {
         "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#class:FixtureModelCallback:d2986817eb955d7b",
         "name": "FixtureModelCallback",
@@ -443434,7 +443641,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "ad92cc08a26db3200411c459a7f5f8e2",
-    "payload_hash": "fec05faf1f253b0d5845b8abc3f2030c"
+    "record_fingerprint": "1cd111964994f8a3f79a4f785d639c23",
+    "payload_hash": "182e8ffe3befb76d88cf2f9d99ed84e5"
   }
 }
