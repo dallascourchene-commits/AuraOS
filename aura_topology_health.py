@@ -31,9 +31,16 @@ def check_codemap_health(repo_root: str | Path = ".") -> dict[str, Any]:
     root = Path(repo_root).resolve()
     cm = _load_codemap(root)
     coverage = cm.get("coverage", {})
-    file_count = int(coverage.get("included_file_count", 0))
-    topo = cm.get("topology", {})
     summary = cm.get("summary", {})
+    file_count = int(
+        summary.get("file_count")
+        or coverage.get("included_file_count")
+        or coverage.get("repo_file_count")
+        or 0
+    )
+    if not file_count and isinstance(cm.get("files"), list):
+        file_count = len(cm["files"])
+    topo = cm.get("topology", {})
     # Topology node/edge counts are in summary, not in topology.nodes
     topo_nodes = int(summary.get("topology_nodes", 0))
     topo_edges = int(summary.get("topology_edges", 0))

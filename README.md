@@ -22,6 +22,7 @@ AuraOS is being developed around local-first execution, bounded hardware, source
 - **Bounded worker fleets** — identities, leases, coordinates, inboxes/outboxes, staging lanes, and receipts reduce collision surface.
 - **Human-gated authority** — routing, ranking, similarity, hashes, memory, or worker consensus never create consequential authority by themselves.
 - **Source-defeasible hydration** — compact representations must remain defeasible by exact/current source evidence.
+- **Construction Human Agent profile** — review-only projection over canonical Construction state and Observatory evidence; it grants no physical-work, payment, access, equipment, professional, deployment, or merge authority.
 
 ## Runtime architecture
 

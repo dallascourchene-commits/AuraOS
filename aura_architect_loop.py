@@ -353,6 +353,12 @@ def _load_codemap(repo_root: str | Path) -> dict[str, Any]:
 
 
 def _refresh_plan_codemap_targets(plan: FractalPlanCapsule, repo_root: str | Path) -> None:
+    root = Path(repo_root)
+    # Grounding is fail-closed on CODEMAP absence. Refresh may update a known
+    # navigation artifact, but it must never manufacture the artifact that is
+    # itself the prerequisite for grounding.
+    if not (root / ".aura" / "CODEMAP.json").is_file():
+        return
     targets = sorted({
         normalized
         for normalized in (_normalize_path(act.target_file) for act in plan.act_capsules)
@@ -361,7 +367,7 @@ def _refresh_plan_codemap_targets(plan: FractalPlanCapsule, repo_root: str | Pat
     if not targets:
         return
     try:
-        refresh_codemap_for_paths(targets, root=Path(repo_root), include_topology=True)
+        refresh_codemap_for_paths(targets, root=root, include_topology=True)
     except Exception as exc:
         _LOG.debug("CODEMAP target preflight refresh skipped: %s", type(exc).__name__)
         return
@@ -598,6 +604,22 @@ def architect_capability_cards() -> list[dict[str, Any]]:
     ]
 
 
+def _codemap_file_cards(codemap: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return canonical CODEMAP file cards with a legacy read fallback.
+
+    ``files`` is the current navigator schema. ``file_cards`` is accepted only
+    as a read-compatibility fallback so Architect does not create a second
+    CODEMAP truth plane.
+    """
+    canonical = codemap.get("files")
+    if isinstance(canonical, list):
+        return [card for card in canonical if isinstance(card, dict)]
+    legacy = codemap.get("file_cards")
+    if isinstance(legacy, list):
+        return [card for card in legacy if isinstance(card, dict)]
+    return []
+
+
 def _codemap_paths(codemap: dict[str, Any]) -> set[str]:
     coverage = codemap.get("coverage", {})
     paths = set()
@@ -605,7 +627,7 @@ def _codemap_paths(codemap: dict[str, Any]) -> set[str]:
         normalized = _normalize_path(str(item))
         if normalized:
             paths.add(normalized)
-    for card in codemap.get("file_cards", []) or []:
+    for card in _codemap_file_cards(codemap):
         normalized = _normalize_path(str(card.get("path", "")))
         if normalized:
             paths.add(normalized)
@@ -616,11 +638,10 @@ def _file_card(codemap: dict[str, Any], target_file: str | None) -> dict[str, An
     normalized = _normalize_path(target_file)
     if not normalized:
         return {}
-    for card in codemap.get("file_cards", []) or []:
+    for card in _codemap_file_cards(codemap):
         if _normalize_path(str(card.get("path", ""))) == normalized:
-            return card if isinstance(card, dict) else {}
+            return card
     return {}
-
 
 def _symbol_hits(codemap: dict[str, Any], target_symbol: str | None, target_file: str | None) -> list[dict[str, Any]]:
     if not target_symbol:

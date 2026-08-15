@@ -295,7 +295,7 @@ jobs:
       - name: Preserve committed CODEMAP snapshot
         run: cp .aura/CODEMAP.json "${RUNNER_TEMP}/CODEMAP.committed.json"
       - name: Regenerate deep CODEMAP
-        run: python aura_codebase_navigator.py
+        run: python aura_codebase_navigator.py --refresh-topology
       - name: Upload regenerated CODEMAP artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -332,7 +332,7 @@ jobs:
           python -m pip install -r requirements.txt
       - name: Regenerate and validate CODEMAP
         run: |
-          python aura_codebase_navigator.py
+          python aura_codebase_navigator.py --refresh-topology
           python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
       - name: Commit synchronized navigation artifacts
         run: |

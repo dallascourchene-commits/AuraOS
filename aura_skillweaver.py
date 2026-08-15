@@ -256,13 +256,14 @@ def compute_final_relevance(vsa_resonance, lexical_anchor_coverage,
 # ---------------------------------------------------------------------------
 
 def build_skill_registry(repo_root=None):
-    """Build a lightweight skill registry from CODEMAP and MASTER_KEY headers."""
+    """Build a lightweight skill registry from the canonical CODEMAP surface."""
     if repo_root is None:
         repo_root = os.path.dirname(os.path.abspath(__file__))
 
     skills = []
+    command_names = set()
 
-    # 1. Parse CODEMAP.json for module/function entries
+    # 1. Parse canonical CODEMAP.json for module/function/command entries.
     codemap_json = os.path.join(repo_root, ".aura", "CODEMAP.json")
     if os.path.exists(codemap_json):
         try:
@@ -286,19 +287,45 @@ def build_skill_registry(repo_root=None):
                         dependencies=deps,
                     ))
 
-            for sym in cmap.get("symbols", []):
-                skills.append(AuraSkill(
-                    name=sym.get("name", ""),
-                    kind="function",
-                    path=sym.get("file", ""),
-                    symbol=sym.get("name", ""),
-                    description=sym.get("signature", ""),
-                    categories=["symbol"],
-                ))
-        except (json.JSONDecodeError, KeyError):
+            symbol_index = cmap.get("symbol_index", {})
+            if isinstance(symbol_index, dict):
+                for name, entries in symbol_index.items():
+                    if not isinstance(entries, list):
+                        continue
+                    for sym in entries:
+                        if not isinstance(sym, dict):
+                            continue
+                        skills.append(AuraSkill(
+                            name=str(name),
+                            kind="function",
+                            path=sym.get("file", ""),
+                            symbol=str(name),
+                            description=str(sym.get("signature", "")),
+                            categories=["symbol"],
+                        ))
+
+            command_index = cmap.get("command_index", {})
+            if isinstance(command_index, dict):
+                for cmd, locations in sorted(command_index.items()):
+                    if not isinstance(cmd, str) or not cmd.startswith("!"):
+                        continue
+                    if not isinstance(locations, list) or not locations:
+                        continue
+                    first_loc = str(locations[0])
+                    file_part = first_loc.rsplit(":", 1)[0] if ":" in first_loc else first_loc
+                    skills.append(AuraSkill(
+                        name=cmd,
+                        kind="command",
+                        path=file_part,
+                        symbol=cmd,
+                        description="Bang command " + cmd,
+                        categories=["command"],
+                    ))
+                    command_names.add(cmd)
+        except (json.JSONDecodeError, KeyError, TypeError):
             pass
 
-    # 2. Parse CODEMAP.md command index for bang commands
+    # 2. Legacy fallback only: old CODEMAP.md builds rendered a command index.
     codemap_md = os.path.join(repo_root, ".aura", "CODEMAP.md")
     if os.path.exists(codemap_md):
         try:
@@ -307,6 +334,8 @@ def build_skill_registry(repo_root=None):
 
             for m in re.finditer(r"- `(!\w+)` -> (.+)", md_content):
                 cmd = m.group(1)
+                if cmd in command_names:
+                    continue
                 locations = m.group(2).strip()
                 first_loc = locations.split(",")[0].strip()
                 file_part = first_loc.split(":")[0].strip("`")
@@ -318,6 +347,7 @@ def build_skill_registry(repo_root=None):
                     description="Bang command " + cmd,
                     categories=["command"],
                 ))
+                command_names.add(cmd)
         except Exception:
             pass
 

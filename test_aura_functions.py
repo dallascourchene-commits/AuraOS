@@ -1013,4 +1013,7 @@ if fails:
 print(f"\n  {'✓ ALL PASS' if fails == 0 else '✗ FAILURES DETECTED — see above'}")
 print("═"*68)
 
-sys.exit(0 if fails == 0 else 1)
+if __name__ == "__main__":
+    raise SystemExit(0 if fails == 0 else 1)
+if fails:
+    raise AssertionError(f"{fails} legacy Aura function checks failed")

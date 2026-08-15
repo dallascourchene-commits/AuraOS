@@ -10,20 +10,20 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1600
-- **total_bytes**: 26047999
-- **text_tokens_est**: 6502423
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 1000, 'schema_or_lexicon': 246, 'support_file': 49}
+- **file_count**: 1590
+- **total_bytes**: 26013013
+- **text_tokens_est**: 6493675
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 991, 'schema_or_lexicon': 245, 'support_file': 49}
 - **topology_nodes**: 11477
 - **topology_edges**: 28069
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 36940.25
+- **elapsed_ms**: 40792.31
 
 ## Coverage
 
 ```json
 {
-  "repo_file_count": 1600,
+  "repo_file_count": 1590,
   "source_paths_without_topology": [
     "aura_blockchain/__init__.py",
     "aura_blockchain/block.py",
@@ -138,16 +138,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1600,
-  "bytes": 26047999,
-  "tokens_est": 6502423,
+  "files": 1590,
+  "bytes": 26013013,
+  "tokens_est": 6493675,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 224,
     "native_accelerator": 8,
     "operator_script": 9,
-    "python_module": 1000,
-    "schema_or_lexicon": 246,
+    "python_module": 991,
+    "schema_or_lexicon": 245,
     "support_file": 49
   }
 }

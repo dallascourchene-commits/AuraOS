@@ -27,9 +27,12 @@ for filepath in files_to_test:
 
 if all_passed:
     print("\n✅ All syntax fixes validated!")
-    sys.exit(0)
 else:
     print("\n❌ Some files still have syntax errors")
-    sys.exit(1)
+
+if __name__ == "__main__":
+    raise SystemExit(0 if all_passed else 1)
+if not all_passed:
+    raise AssertionError("legacy syntax validation failed")
 
 # Made with Bob

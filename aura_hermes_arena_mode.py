@@ -633,10 +633,18 @@ def run_preflight(
 
     # --- Repo digest summary (from CODEMAP, not full bridge call) ---
     coverage = codemap.get("coverage", {})
-    file_count = int(coverage.get("included_file_count", 0))
+    summary = codemap.get("summary", {})
+    file_count = int(
+        summary.get("file_count")
+        or coverage.get("included_file_count")
+        or coverage.get("repo_file_count")
+        or 0
+    )
     all_paths = coverage.get("all_included_paths_sorted", []) or []
     if not file_count and all_paths:
         file_count = len(all_paths)
+    if not file_count and isinstance(codemap.get("files"), list):
+        file_count = len(codemap["files"])
 
     symbol_index = codemap.get("symbol_index", {})
     topology = codemap.get("topology", {})

@@ -200,6 +200,17 @@ def test_pr5_coordinate_receipt_mismatched_artifact_digest_fails_closed(tmp_path
     bad_digest = list(real_manifest.artifact_digest)
     bad_digest[0] = "0" if bad_digest[0] != "0" else "1"
     real_coord["pascal_artifact_digest"] = "".join(bad_digest)
+    # This test targets the cross-artifact binding, not the receipt's own
+    # tamper-evident envelope. Recompute the self-digest after changing the
+    # inner artifact reference so AuraPascalCoordinateReceipt.from_mapping()
+    # remains internally valid and load_pascal_compatibility_fixture() can
+    # exercise the intended manifest/coordinate mismatch boundary.
+    receipt_body = {
+        key: value
+        for key, value in real_coord.items()
+        if key != "receipt_digest"
+    }
+    real_coord["receipt_digest"] = part5.sha256_digest(receipt_body)
 
     # Monkeypatch _load_json_object so that when the coordinate receipt is
     # loaded, it returns our tampered version.

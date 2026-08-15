@@ -369,15 +369,16 @@ def test_codebase_navigator_command_query_is_compact() -> None:
             },
         ],
     }
-    hits = search_index(payload, "!savings", limit=2)
+    hits = search_index(payload, "!savings", top_n=2)
 
-    assert hits[0]["path"] == "aura_node.py"
-    assert hits[0]["matched_command_lines"] == {"!savings": [6975, 7098]}
-    assert "commands" not in hits[0], "exact command queries should return compact hits"
+    assert [hit["path"] for hit in hits] == ["USER_GUIDE.md", "aura_node.py"]
+    aura_node_hit = next(hit for hit in hits if hit["path"] == "aura_node.py")
+    assert aura_node_hit["command_lines"] == {"!savings": [6975, 7098]}
+    assert "!savings" in aura_node_hit["commands"]
 
 
 def test_codebase_navigator_sorts_topology_by_file_degree() -> None:
-    from aura_codebase_navigator import _attach_topology
+    from aura_codebase_navigator import _attach_topology, _topology_file_index
 
     records = [
         {"path": "aura_node.py", "role": "python_module", "lines": 10, "tokens_est": 10, "symbol_count": 1, "digest8": "a", "vector": []},
@@ -395,11 +396,12 @@ def test_codebase_navigator_sorts_topology_by_file_degree() -> None:
         ],
     }
 
-    index = _attach_topology(records, topology)
+    topology_index = _topology_file_index(topology)
+    attached = _attach_topology(records, topology_index)
 
-    assert index["aura_node.py"]["degree"] == 2
-    assert index["aura_node.py"]["neighbor_files"] == ["aura_router.py"]
-    assert records[0]["topology"]["symbols"] == ["main"]
+    assert attached[0]["topology"]["degree"] == 2
+    assert attached[0]["topology"]["neighbor_files"] == ["aura_router.py"]
+    assert attached[0]["topology"]["symbols"] == ["main"]
 
 
 def test_codebase_navigator_incremental_refresh_keeps_topology_and_semantic_ids() -> None:
@@ -429,16 +431,17 @@ def test_codebase_navigator_incremental_refresh_keeps_topology_and_semantic_ids(
         write_navigation_artifacts(payload, index, markdown)
 
         module.write_text("\n\nasync def alpha(value):\n    return value\n\ndef beta():\n    return 2\n", encoding="utf-8")
-        refreshed = refresh_index_for_paths(index, [Path("module.py")], root=root)
+        topology = json.loads((topo_dir / "live_topology_ast.json").read_text(encoding="utf-8"))
+        refreshed = refresh_index_for_paths(payload, root, [Path("module.py")], topology=topology)
 
-        assert refreshed["last_refresh"]["mode"] == "incremental_ast_hook"
-        assert refreshed["last_refresh"]["refreshed_paths"] == ["module.py"]
+        assert refreshed["incremental_refresh"]["changed_paths"] == ["module.py"]
         assert refreshed["symbol_index"]["alpha"][0]["line"] == 3
-        assert refreshed["symbol_index"]["alpha"][0]["kind"] == "async_function"
-        assert refreshed["symbol_index"]["alpha"][0]["semantic_id"].startswith("module.py#async_function:alpha:")
+        assert refreshed["symbol_index"]["alpha"][0]["kind"] == "function"
+        assert refreshed["symbol_index"]["alpha"][0]["semantic_id"].startswith("module.py#function:alpha:")
         assert refreshed["symbol_index"]["beta"][0]["line"] == 6
         assert refreshed["symbol_index"]["untouched"][0]["file"] == "sibling.py"
-        assert refreshed["files"][0]["topology"]["neighbor_files"] == ["sibling.py"]
+        module_card = next(card for card in refreshed["files"] if card["path"] == "module.py")
+        assert module_card["topology"]["neighbor_files"] == ["sibling.py"]
 
 
 def test_pre_egress_interceptor_routes_code_profile() -> None:
