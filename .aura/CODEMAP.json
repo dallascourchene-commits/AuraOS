@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786817414,
+  "generated_at_unix": 1786817560,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1592,
+    "repo_file_count": 1594,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -185,6 +185,8 @@
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
@@ -1708,16 +1710,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1592,
-      "bytes": 26031559,
-      "tokens_est": 6498311,
+      "files": 1594,
+      "bytes": 26041735,
+      "tokens_est": 6500856,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 224,
         "native_accelerator": 8,
         "operator_script": 9,
         "python_module": 995,
-        "schema_or_lexicon": 243,
+        "schema_or_lexicon": 245,
         "support_file": 49
       }
     },
@@ -157579,6 +157581,8 @@
       ".github/workflows/sco-temporal-persistence-e9-e12.yml",
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
       "USER_GUIDE.md",
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md",
@@ -157633,6 +157637,8 @@
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
@@ -157693,6 +157699,8 @@
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
@@ -157835,6 +157843,8 @@
       ".github/workflows/ci.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
@@ -157929,6 +157939,8 @@
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml"
     ],
     "python scripts/aura_navigation_refresh.py --root .": [
@@ -157936,28 +157948,41 @@
     ],
     "python aura_codebase_navigator.py --refresh-topology": [
       ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml"
     ],
     "python scripts/aura_source_anchor_map.py --root .": [
       ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml"
     ],
     "python tools/wo_fleet_phase3_triad2_contract_patch.py": [
+      ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify.yml"
     ],
     "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
+      ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify.yml"
     ],
     "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
+      ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify.yml"
     ],
     "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py": [
-      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml"
+      ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify.yml"
     ],
     "python aura_coding_arena_server.py --host 127.0.0.1 --port 8080": [
       "AURA_CODING_ARENA_README.md"
@@ -169750,9 +169775,9 @@
       "path": ".github/workflows/sync-analysis-codemap.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 5329,
-      "lines": 143,
-      "tokens_est": 1333,
+      "bytes": 5374,
+      "lines": 144,
+      "tokens_est": 1344,
       "symbol_count": 0,
       "commands": [
         "python -m pip",
@@ -169762,56 +169787,56 @@
       ],
       "command_lines": {
         "python -m pip": [
-          48,
-          49
+          49,
+          50
         ],
         "python scripts/aura_navigation_refresh.py --root .": [
-          53
+          54
         ],
         "python scripts/aura_source_anchor_map.py --root . --check": [
-          54,
-          93
+          55,
+          94
         ],
         "python -m aura_codemap_verify": [
-          56,
-          89
+          57,
+          90
         ]
       },
       "topology": {},
-      "digest8": "dc81d45a00405ea1",
+      "digest8": "d7d0db5264419c12",
       "vector": [
-        0.036778,
-        0.22382,
-        0.0662,
-        0.135553,
-        -0.068302,
-        0.185991,
-        -0.139756,
-        0.26375,
-        0.257445,
-        -0.236429,
-        0.242734,
-        0.072505,
-        -0.26375,
-        -0.202804,
-        0.01366,
-        -0.154467,
-        -0.236429,
-        -0.093521,
-        -0.110334,
-        0.089318,
-        0.209108,
-        -0.125045,
-        -0.267953,
-        -0.183889,
-        0.26375,
-        0.249039,
-        0.085114,
-        -0.116638,
-        -0.01366,
-        0.028371,
-        0.110334,
-        0.246937
+        -0.22452,
+        -0.143337,
+        -0.277795,
+        0.23213,
+        -0.196613,
+        0.123042,
+        -0.23213,
+        -0.143337,
+        0.211835,
+        -0.303165,
+        0.019027,
+        0.001268,
+        -0.120505,
+        -0.209298,
+        -0.084988,
+        0.026638,
+        0.026638,
+        -0.262574,
+        -0.054544,
+        0.214372,
+        -0.153485,
+        -0.04947,
+        -0.07484,
+        0.158559,
+        0.2575,
+        -0.059618,
+        -0.01649,
+        -0.242278,
+        0.171244,
+        0.110357,
+        0.282869,
+        -0.201687
       ]
     },
     {
@@ -169994,6 +170019,197 @@
       ]
     },
     {
+      "path": ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4078,
+      "lines": 102,
+      "tokens_est": 1020,
+      "symbol_count": 0,
+      "commands": [
+        "python -m pip",
+        "python tools/wo_fleet_phase3_triad2_contract_patch.py",
+        "python tools/wo_fleet_phase3_triad2_incremental_patch.py",
+        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
+        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
+        "python -m py_compile",
+        "python aura_codebase_navigator.py --refresh-topology",
+        "python scripts/aura_source_anchor_map.py --root .",
+        "python scripts/aura_source_anchor_map.py --root . --check",
+        "python -m aura_codemap_verify",
+        "python -m pytest"
+      ],
+      "command_lines": {
+        "python -m pip": [
+          39,
+          40
+        ],
+        "python tools/wo_fleet_phase3_triad2_contract_patch.py": [
+          46
+        ],
+        "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
+          47
+        ],
+        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
+          48
+        ],
+        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py": [
+          49
+        ],
+        "python -m py_compile": [
+          50
+        ],
+        "python aura_codebase_navigator.py --refresh-topology": [
+          59
+        ],
+        "python scripts/aura_source_anchor_map.py --root .": [
+          60,
+          61
+        ],
+        "python scripts/aura_source_anchor_map.py --root . --check": [
+          61
+        ],
+        "python -m aura_codemap_verify": [
+          62
+        ],
+        "python -m pytest": [
+          67
+        ]
+      },
+      "topology": {},
+      "digest8": "126055df5242f709",
+      "vector": [
+        0.19183,
+        -0.197272,
+        0.167341,
+        0.232645,
+        0.131968,
+        0.284343,
+        0.088432,
+        0.061222,
+        -0.121084,
+        -0.009523,
+        0.197272,
+        0.325158,
+        0.031291,
+        0.080269,
+        -0.107479,
+        -0.148294,
+        -0.148294,
+        -0.322437,
+        0.025849,
+        0.159178,
+        -0.142852,
+        0.297948,
+        0.341484,
+        -0.175504,
+        -0.104758,
+        0.042175,
+        -0.189109,
+        -0.004081,
+        0.00136,
+        0.216319,
+        -0.066664,
+        0.153736
+      ]
+    },
+    {
+      "path": ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5583,
+      "lines": 128,
+      "tokens_est": 1396,
+      "symbol_count": 0,
+      "commands": [
+        "python -m pip",
+        "python tools/wo_fleet_phase3_triad2_contract_patch.py",
+        "python tools/wo_fleet_phase3_triad2_incremental_patch.py",
+        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
+        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
+        "python -m py_compile",
+        "python aura_codebase_navigator.py --refresh-topology",
+        "python scripts/aura_source_anchor_map.py --root .",
+        "python scripts/aura_source_anchor_map.py --root . --check",
+        "python -m aura_codemap_verify",
+        "python -m pytest"
+      ],
+      "command_lines": {
+        "python -m pip": [
+          47,
+          48
+        ],
+        "python tools/wo_fleet_phase3_triad2_contract_patch.py": [
+          54
+        ],
+        "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
+          55
+        ],
+        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
+          56
+        ],
+        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py": [
+          57
+        ],
+        "python -m py_compile": [
+          58
+        ],
+        "python aura_codebase_navigator.py --refresh-topology": [
+          67
+        ],
+        "python scripts/aura_source_anchor_map.py --root .": [
+          68,
+          69
+        ],
+        "python scripts/aura_source_anchor_map.py --root . --check": [
+          69
+        ],
+        "python -m aura_codemap_verify": [
+          70
+        ],
+        "python -m pytest": [
+          76,
+          93
+        ]
+      },
+      "topology": {},
+      "digest8": "0fa5dbf7c69609d7",
+      "vector": [
+        0.152887,
+        -0.150655,
+        0.210918,
+        0.050218,
+        -0.188598,
+        -0.27118,
+        0.161815,
+        0.27118,
+        -0.184134,
+        0.14396,
+        0.014508,
+        -0.099321,
+        -0.264484,
+        0.26002,
+        0.208686,
+        0.253324,
+        0.177439,
+        -0.253324,
+        0.137264,
+        0.14396,
+        0.065842,
+        -0.117176,
+        -0.231005,
+        -0.226541,
+        0.168511,
+        -0.166279,
+        0.012276,
+        -0.117176,
+        0.085929,
+        0.199758,
+        -0.081466,
+        -0.079234
+      ]
+    },
+    {
       "path": ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -170097,84 +170313,88 @@
       "path": ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 7527,
-      "lines": 172,
-      "tokens_est": 1882,
+      "bytes": 7997,
+      "lines": 176,
+      "tokens_est": 2000,
       "symbol_count": 0,
       "commands": [
         "python -m pip",
         "python tools/wo_fleet_phase3_triad2_contract_patch.py",
         "python tools/wo_fleet_phase3_triad2_incremental_patch.py",
         "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
+        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
         "python aura_codebase_navigator.py --refresh-topology",
         "python -m aura_codemap_verify",
         "python -m pytest"
       ],
       "command_lines": {
         "python -m pip": [
-          43,
           44,
-          98,
-          99,
-          135
+          45,
+          101,
+          102,
+          139
         ],
         "python tools/wo_fleet_phase3_triad2_contract_patch.py": [
-          48
-        ],
-        "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
           49
         ],
-        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
+        "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
           50
         ],
+        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
+          51
+        ],
+        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py": [
+          52
+        ],
         "python aura_codebase_navigator.py --refresh-topology": [
-          57
+          59
         ],
         "python -m aura_codemap_verify": [
-          58
+          60
         ],
         "python -m pytest": [
-          63,
-          80,
-          104,
-          121
+          65,
+          83,
+          107,
+          125
         ]
       },
       "topology": {},
-      "digest8": "fdd8feda9218332c",
+      "digest8": "47fa0b4e04bea299",
       "vector": [
-        -0.318115,
-        -0.132655,
-        -0.003864,
-        0.150686,
-        -0.088866,
-        0.245992,
-        0.06826,
-        0.073411,
-        0.282054,
-        -0.060532,
-        0.274326,
-        0.207354,
-        0.199627,
-        -0.204779,
-        0.00644,
-        0.05538,
-        -0.088866,
-        0.199627,
-        0.034774,
-        -0.106897,
-        -0.171293,
-        0.142959,
-        0.112049,
-        0.243416,
-        -0.20993,
-        -0.207354,
-        0.289781,
-        0.17902,
-        -0.00644,
-        0.176444,
-        0.155838,
-        0.230537
+        -0.194224,
+        0.176681,
+        0.166657,
+        0.041351,
+        -0.071424,
+        0.199236,
+        -0.279432,
+        0.201742,
+        -0.181693,
+        -0.166657,
+        -0.146608,
+        -0.19673,
+        -0.179187,
+        -0.038845,
+        -0.116534,
+        -0.201742,
+        -0.317024,
+        -0.003759,
+        0.008771,
+        -0.134077,
+        -0.199236,
+        0.281938,
+        0.048869,
+        -0.15162,
+        0.201742,
+        -0.164151,
+        0.251865,
+        0.126559,
+        -0.018796,
+        -0.136583,
+        0.063906,
+        0.309505
       ]
     },
     {
@@ -283218,16 +283438,16 @@
     }
   },
   "summary": {
-    "file_count": 1592,
-    "total_bytes": 26031559,
-    "text_tokens_est": 6498311,
+    "file_count": 1594,
+    "total_bytes": 26041735,
+    "text_tokens_est": 6500856,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 224,
       "native_accelerator": 8,
       "operator_script": 9,
       "python_module": 995,
-      "schema_or_lexicon": 243,
+      "schema_or_lexicon": 245,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -283422,6 +283642,8 @@
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
@@ -442690,6 +442912,6 @@
       }
     ],
     "record_fingerprint": "52c9af549e6a8b91e11eb3415b1e190d",
-    "payload_hash": "e1bfa28192408ac5b58225afa69c68cb"
+    "payload_hash": "87a753069e7c8a844473fddcae9b3784"
   }
 }

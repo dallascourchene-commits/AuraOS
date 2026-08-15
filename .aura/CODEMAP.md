@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1592
-- **total_bytes**: 26031559
-- **text_tokens_est**: 6498311
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 243, 'support_file': 49}
+- **file_count**: 1594
+- **total_bytes**: 26041735
+- **text_tokens_est**: 6500856
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 245, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1592,
+  "repo_file_count": 1594,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -203,6 +203,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/triad2-codemap-repair.yml",
     ".github/workflows/triad2-full-codemap-repair-v2.yml",
     ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+    ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
+    ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
     ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
     ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
     ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
@@ -1732,16 +1734,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1592,
-  "bytes": 26031559,
-  "tokens_est": 6498311,
+  "files": 1594,
+  "bytes": 26041735,
+  "tokens_est": 6500856,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 224,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 995,
-    "schema_or_lexicon": 243,
+    "schema_or_lexicon": 245,
     "support_file": 49
   }
 }
