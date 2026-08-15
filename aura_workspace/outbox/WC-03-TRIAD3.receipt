@@ -1,0 +1,100 @@
+WAR_CAPSULE=03
+COORDINATE=AD:BOUNTY:UPSTREAM-DISBURSEMENT:002
+TRIAD=W7,W8,W9
+EXECUTION_DATE=2026-08-15
+STATE=PARTIAL_COMPLETE_GATE_B_PENDING
+
+AURA_PARENT_AT_PREFLIGHT=0c688e78a03ccf18f4a2ce7a5ead4d50b01f3ae0
+PREFLIGHT_AND_SCAN_COMMIT=b78e7f2b00188e54d825507295a042f183f2e964
+
+READY_TO_SUBMIT_INGEST:
+- package_count=1
+- package=claude-hook
+- target=claude-builders-bounty/claude-builders-bounty#3
+- upstream_pinned=1aeae2adc82d33f971fd7731644348dcdd24b5a6
+- pr_package_git_blob=3729265f71cf76f790dc0f1a6774c2864effe7fb
+- patch_git_blob=7c9a84cb9469141921175f388622b6de1da6e09e
+- verification_git_blob=e8672e2e25722912fcd4c15156871979d2a5a03e
+- verification=PASS
+- unittest_methods=4/4
+- scenarios=17
+
+LIVE_UPSTREAM_PREFLIGHT:
+- issue_state=OPEN
+- advertised_bounty_usd=100
+- bounty_label=PRESENT
+- claim_step_1=/opire try
+- claim_step_2=submit PR
+- payout_term=payment released on merge
+- issue_comments_at_preflight=1570
+- source=https://github.com/claude-builders-bounty/claude-builders-bounty/issues/3
+
+GATE_B:
+- explicit_approval_artifact=NOT_FOUND
+- recursive_main_GATED_B_match=NONE
+- directive_wording=UPON_GATE_B_APPROVAL
+- gate_state=PENDING
+
+EXTERNAL_EFFECTS:
+- opire_try_comment=NOT_EXECUTED
+- bounty_claim=NOT_EXECUTED
+- external_fork=NOT_CREATED
+- external_branch=NOT_CREATED
+- upstream_pr=NOT_OPENED
+- wallet_action=NOT_EXECUTED
+- third_party_repo_mutation=NOT_EXECUTED
+
+ESCROW:
+- path=aura_workspace/ledgers/bounty_payout_escrow.ledger
+- existing_at_preflight=NO
+- created_this_generation=NO
+- reason=GATE_B_PENDING
+- monetary_receivable_minted=NO
+- payout_claim_minted=NO
+
+BATCH2_SCAN:
+- source_opire=https://app.opire.dev/home
+- source_algora=source-verified open project bounty pages
+- opire_snapshot_paid=44
+- opire_snapshot_available=330
+- opire_snapshot_paid_out_usd=4975.87
+- opire_snapshot_displayed_open_value_usd=1914294.22
+- exact_python_ast_ready=0
+- exact_rust_cli_ready=0
+- exact_fit_ready_to_claim=0
+- watch_or_recheck=4
+- funding_anomaly=1
+- external_batch2_claims=0
+
+BATCH2_WATCH:
+- O-PY-01 MisakaNet Windows Voice hook verification / Python+JS+Shell / $1500 / WATCH_NEAR_MATCH_NOT_AST
+- O-PY-02 qtop Challenge #6 / Python / $220 / WATCH_NEAR_MATCH_NOT_AST
+- O-RS-01 Zed Helix keymap / Rust / $395 / WATCH_NEAR_MATCH_NOT_CLI
+- O-RS-02 Deno view test coverage / Rust / $70 / WATCH_NEAR_MATCH_NOT_CLI
+- O-RS-04 zeroeye deterministic data seed / TypeScript+Rust+Python / title $50 vs feed $100100 / BLOCK_FUNDING_ANOMALY
+
+ARTIFACTS:
+- path=docs/staging/bounties/GATE_B_DISPATCH_QUEUE.md
+  sha256=229b8716ef03481816459e6d4b881137584f5e49c9eb5207b517ed5aec46bb67
+  git_blob=1a3e34080baa3b7ef617b9ceb97cec6f6f4fb1c9
+- path=aura_workspace/inbox/bounties/BATCH2_TARGETS.md
+  sha256=2243864bdbe7dc32e13e57c83a2d54205441d2806a0546fbd8a7a322ee334396
+  git_blob=0a7775b5fc01bc41c440518729e98ae802b15a5b
+
+NEGATIVE_SPACE:
+- NO_GATE_B_ASSUMED
+- NO_SUBMISSION_PAYLOAD_GENERATED_BEFORE_GATE_B
+- NO_OPIRE_TRY_COMMENT
+- NO_UPSTREAM_PR
+- NO_ESCROW_LEDGER_CREATED_BEFORE_GATE_B
+- NO_RECEIVABLE_OR_PAYOUT_RECORDED
+- NO_NEAR_MATCH_RELABELED_AS_EXACT_PYTHON_AST
+- NO_NEAR_MATCH_RELABELED_AS_EXACT_RUST_CLI
+- NO_ANOMALOUS_REWARD_TREATED_AS_SETTLED_FUNDING
+- NO_THIRD_PARTY_MUTATION
+
+SUCCESSOR_TRIGGER:
+An explicit human Gate B approval is required before submission payload generation,
+escrow-ledger creation, bounty claim, fork/branch creation, or upstream PR dispatch.
+
+FINAL_STATE=READY_TO_DISPATCH_AFTER_GATE_B / BATCH2_SCAN_COMPLETE / 0_EXACT_FIT_CLAIMS / ESCROW_NOT_OPENED / RECEIPT_MINTED
