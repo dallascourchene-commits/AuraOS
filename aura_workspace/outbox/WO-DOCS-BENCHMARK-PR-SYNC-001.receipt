@@ -1,0 +1,73 @@
+WORK_ORDER=WO-DOCS-BENCHMARK-PR-SYNC-001
+AUTHORITY=HUMAN_SOVEREIGN_DISPOSITION(+1=DISPATCH)
+COORDINATE=AD:SYSTEM:DOCS-BENCHMARKS-PR-SYNC:001
+EXECUTION_MODE=DIRECT_MAIN_ATOMIC_DOCS_COMMIT
+PROMOTION_SCOPE=README.md,docs/PR_KIT.md,aura_workspace/outbox/WO-DOCS-BENCHMARK-PR-SYNC-001.receipt
+DISPATCH_LOCAL=2026-08-15T00:49:00-05:00
+
+BASE_MAIN_COMMIT=e664be8d0c4cadfd491bb170a65674643a926192
+BASE_TREE=ae3bec23c9d50e41583251eabb2e4a77728222f5
+
+SOURCE_BINDINGS:
+- requested docs/MASTER_BENCHMARK_SCORECARD.md = NOT_FOUND_ON_BASE_MAIN
+- current replacement docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md blob=e18b43c05aaec364401ff21a8d62ce7a1e37eb7a
+- docs/SECURITY_AND_ACCURACY_SCORECARD.md blob=10afe37d7bff96de0ef2f1d70330ac7cf3fc58b4
+- docs/INDUSTRY_BENCHMARK_SCORECARD.md blob=43a4bad39536f35c6a0e3afe57544b92c240efbb
+- README.md parent blob=687dfe0bc9da26f030f758eae269ce6c9f67e223
+- docs/AURA_HUMAN_AGENT_SIX_SLOT_GUIDE.md blob=b934a1f56abc7c764f46229202f9cf7f95e09f16
+- docs/AURA_ST3GG_CANONICAL_CONTRACTS.md blob=06d68c2a92aa267b00c3c5cc5cc170c711b21b14
+- Aura Drive harmonic provenance: CAPSULE_W7__WO-PROV-HARMONIC-369-W7__2026-08-14 / Drive 1ywa8FbJX7oDjgW3qAO2C2y8ASzAn6-fwOx73ahtYogc
+
+SOURCE_CURRENTNESS_RECONCILIATION:
+1. REQUESTED: 94% token compression (~48 tokens/step)
+   CURRENT SOURCE: master exhaustive scorecard marks >=94% L0 symbolic-tensor payload reduction UNVERIFIED_SOURCE_GAP; industry scorecard measures 72.73% fewer serialized bytes (286 B -> 78 B), explicitly not tokenizer-measured.
+   DISPOSITION: NOT_PROMOTED_AS_VERIFIED; DOCUMENTED_AS_TARGET/UNVERIFIED.
+
+2. REQUESTED: >5,250 receipts/sec SQLite WAL throughput
+   CURRENT SOURCE: industry scorecard measures 19,934.69 one-row WAL writes/s at 5 workers.
+   DISPOSITION: PUBLISH_WRITES_PER_SECOND; DO_NOT_RELABEL_AS_FULL_RECEIPTS_PER_SECOND.
+
+3. REQUESTED: <95 MB RSS under 4GB edge budget
+   CURRENT SOURCE: industry peak process RSS=116.71 MiB; master benchmark-controller peak RSS=117.348 MiB and <95 MiB gate FAIL; narrow core/worker <95 MiB remains UNVERIFIED_SOURCE_GAP.
+   DISPOSITION: <95_MIB_NOT_PROMOTED; EDGE_CAPACITY_VIABILITY_DOCUMENTED_SEPARATELY.
+
+4. REQUESTED: <500 us UDP mesh gossip latency
+   CURRENT SOURCE: industry localhost synchronous UDP p95=10.126 us; master localhost p95=17.656 us.
+   DISPOSITION: THRESHOLD_PASS_ONLY_FOR_LOCALHOST_RTT_PROXY; REMOTE/WAN/MULTINODE_GOSSIP_UNMEASURED.
+
+5. REQUESTED: 0% InjecAgent exploit rate
+   CURRENT SOURCE: 0/868 attack transitions reached executable state; L0/FST gate-layer ASR=0.0000%; official end-to-end InjecAgent ASR not measured.
+   DISPOSITION: PUBLISH_GATE_LAYER_SCOPE_ONLY.
+
+6. REQUESTED: 100% Tau-bench trajectory accuracy
+   CURRENT SOURCE: bounded legacy sample 42/42 task-lane trials preserved exact oracle-action trajectories; official tau-bench pass^k not measured.
+   DISPOSITION: PUBLISH_BOUNDED_LEGACY_TRAJECTORY_SCOPE_ONLY.
+
+7. REQUESTED: 98% OpEx reduction ($60-$180/mo vs $4,900-$12,900/mo)
+   CURRENT SOURCE SEARCH: exact cost inputs not found in bound repository scorecards or exact Drive search during this execution.
+   ARITHMETIC: paired endpoints imply 98.78% lower ($60 vs $4,900) and 98.60% lower ($180 vs $12,900).
+   DISPOSITION: DOCUMENTED_AS_WORK_ORDER_SUPPLIED_COST_MODEL; NOT_A_MEASURED_OR_AUDITED_BENCHMARK.
+
+ARCHITECTURE_RECONCILIATION:
+- SIX_SLOT_RUNTIME: source-bound current repo documentation supports DIR -> ASP -> CLASS -> SUBJ -> VOICE -> STEM, hard guards before admitted state-local transitions, and human choice after deterministic/model-assisted explanation.
+- HARMONIC_369: Aura Drive provenance defines 3 -> 6 -> 9/1' as a conditional diagonal-rebase shortcut across independently verified/current invariant boundaries; explicitly not universal arithmetic law, authority, evidence, or promotion.
+- HARMONIC_DAEMON_RUNTIME: no source-bound executable service under literal name "3-6-9 Harmonic Daemon" resolved on base main.
+- DISPOSITION: README/PR_KIT document staged daemonization target and formal boundary; no production-daemon claim minted.
+
+WRITE_SET:
+- README.md = UPDATED with Industry Benchmark Scorecard, claim/evidence comparison matrix, six-slot runtime grammar, staged 3->6->9 harmonic architecture, and edge-readiness boundaries.
+- docs/PR_KIT.md = CREATED as source-bound PR / Investor Fact Sheet with verified engineering snapshot, modeled OpEx section, edge viability, Merkle provenance, and defense-in-depth boundaries.
+- aura_workspace/outbox/WO-DOCS-BENCHMARK-PR-SYNC-001.receipt = CREATED (this file).
+
+PROHIBITED_EFFECTS_CONFIRMED:
+- no scorecard source files rewritten
+- no benchmark results fabricated
+- no third-party certification claim minted
+- no official end-to-end InjecAgent or tau-bench score minted
+- no remote mesh result inferred from loopback
+- no <95 MiB PASS inferred from 4 GiB device capacity
+- no 94% token result inferred from byte projection
+- no receipt throughput inferred from SQLite row-write throughput
+
+COMMIT_BINDING=THIS_RECEIPT_IS_COMMITTED_ATOMICALLY_WITH_THE_DOCUMENTATION_WRITE_SET; RESOLVE_THE_CONTAINING_GIT_COMMIT_FROM_MAIN_HISTORY.
+FINAL_STATE=READY_FOR_ATOMIC_COMMIT_AND_MAIN_REF_ADVANCE
