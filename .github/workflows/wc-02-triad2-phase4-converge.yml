@@ -10,6 +10,7 @@ on:
       - 'tools/wo_fleet_phase3_triad2_incremental_patch.py'
       - 'tools/wo_fleet_phase3_triad2_skillweaver_patch.py'
       - 'tools/wc02_phase4_navigator_compat_patch.py'
+      - 'tools/wc02_phase4_navigator_composition_patch.py'
 
 permissions:
   contents: write
@@ -42,6 +43,7 @@ jobs:
           python tools/wo_fleet_phase3_triad2_incremental_patch.py
           python tools/wo_fleet_phase3_triad2_skillweaver_patch.py
           python tools/wc02_phase4_navigator_compat_patch.py
+          python tools/wc02_phase4_navigator_composition_patch.py
           python -m py_compile aura_coding_relationship_compass.py aura_codebase_navigator.py aura_skillweaver.py
           git diff --check
       - name: Install focused verification dependencies
