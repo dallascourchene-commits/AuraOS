@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1554
-- **total_bytes**: 58856042
-- **text_tokens_est**: 5257308
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 196, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 973, 'schema_or_lexicon': 226, 'support_file': 79}
+- **file_count**: 1593
+- **total_bytes**: 59055968
+- **text_tokens_est**: 5273113
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 64, 'knowledge_artifact': 196, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 973, 'schema_or_lexicon': 233, 'support_file': 111}
 - **topology_nodes**: 11310
 - **topology_edges**: 27480
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 34399.39
+- **elapsed_ms**: 37559.7
 
 ## Coverage
 
-- **included_file_count**: 1554
+- **included_file_count**: 1593
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=25, `Aura_Memory`=6, `Aura_Sandbox`=2, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=339, `Aura_Memory`=6, `Aura_Sandbox`=2, `__pycache__`=8
 
 ## Command Index
 
@@ -404,12 +404,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/HERMES_AURA_RULES.md`
 - `.aura/ISSUE_200_PR_SCOPE`
 - `.aura/OUTPUT_FORMATS.md`
+- `.aura/PR2_MATERIALIZE_TRIGGER`
+- `.aura/PR2_MATERIALIZE_TRIGGER_V2`
+- `.aura/PR2_MATERIALIZE_TRIGGER_V3`
+- `.aura/PR2_MATERIALIZE_TRIGGER_V4`
 - `.aura/RESEARCH_MANIFEST.json`
-- `.aura/ROLES.md`
-- `.aura/amd_track3_demo_tasks.json`
-- `.aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md`
-- `.aura/arena_routes/coding.v1.json`
-- ... 1331 more; query CODEMAP.json for exact file cards
+- ... 1370 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
