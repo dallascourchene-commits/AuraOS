@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1585
-- **total_bytes**: 25995408
-- **text_tokens_est**: 6489271
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 241, 'support_file': 49}
+- **file_count**: 1592
+- **total_bytes**: 26048423
+- **text_tokens_est**: 6502524
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 230, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 242, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1585,
+  "repo_file_count": 1592,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -190,6 +190,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/phase-c2-review-repair.yml",
     ".github/workflows/phase-c2.yml",
     ".github/workflows/phase-c3.yml",
+    ".github/workflows/phase3-compass-bounded-projection-repair.yml",
     ".github/workflows/pr138-grounded-phase-integration.yml",
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
@@ -885,6 +886,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_workspace/inbox/bounties/INTAKE_ONLY_RESIDUE.md",
     "aura_workspace/inbox/bounties/WO-LIVE-BOUNTY-HARVESTER-001/HARVEST_MANIFEST.md",
     "aura_workspace/inbox/bounties/active/ACTIVE_TARGETS.md",
+    "aura_workspace/inbox/bounties/active/batch2/README.md",
+    "aura_workspace/inbox/bounties/active/batch2/W7_BLOCKED_SOURCE_AUTHORITY.md",
+    "aura_workspace/inbox/bounties/active/batch2/W8_rust-grpc-44/ALLOCATION.md",
+    "aura_workspace/inbox/bounties/active/batch2/W9_BLOCKED_SOURCE_AUTHORITY.md",
     "aura_workspace/inbox/bounties/active/repro/claude_hook_repro.sh",
     "aura_workspace/inbox/bounties/active/repro/loru_contributing_repro.sh",
     "aura_workspace/inbox/bounties/active/repro/plantguide_schema_repro.sh",
@@ -1089,6 +1094,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/evidence/AURA_SCO_PHASE4_E9_E12_TEMPORAL_PERSISTENCE.json",
     "docs/evidence/AURA_SCO_PHASE5_E9_E14_COMPLETION.json",
     "docs/evidence/AURA_SCO_PHASE5_POST_MERGE_SYNC.md",
+    "docs/formal/AURA_MATHEMATICAL_SPECIFICATION_V1.tex",
     "docs/fragments/ARCHITECTURE_REFACTOR_CODE_QUALITY.md",
     "docs/fragments/README_REFACTOR_CODE_QUALITY.md",
     "docs/fragments/USER_GUIDE_REFACTOR_CODE_QUALITY.md",
@@ -1098,6 +1104,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/prior_art/paper_x_v1.1/PACKAGE_ZIP_SHA256_v1.1.txt",
     "docs/prior_art/paper_x_v1.1/PAPER_X_V1.1_EVIDENCE_ADDENDUM.md",
     "docs/prior_art/paper_x_v1.1/ZENODO_PUBLICATION_RECORD.md",
+    "docs/staging/arxiv_submission/AURA_MATHEMATICAL_SPECIFICATION_V1.tex",
     "docs/staging/bounties/GATE_B_DISPATCH_QUEUE.md",
     "docs/staging/bounties/READY_FOR_PR/VERIFICATION_SCORECARD.md",
     "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/PR.md",
@@ -1725,16 +1732,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1585,
-  "bytes": 25995408,
-  "tokens_est": 6489271,
+  "files": 1592,
+  "bytes": 26048423,
+  "tokens_est": 6502524,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 224,
+    "knowledge_artifact": 230,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 990,
-    "schema_or_lexicon": 241,
+    "schema_or_lexicon": 242,
     "support_file": 49
   }
 }
@@ -1869,6 +1876,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_workspace/inbox/bounties/INTAKE_ONLY_RESIDUE.md",
     "aura_workspace/inbox/bounties/WO-LIVE-BOUNTY-HARVESTER-001/HARVEST_MANIFEST.md",
     "aura_workspace/inbox/bounties/active/ACTIVE_TARGETS.md",
+    "aura_workspace/inbox/bounties/active/batch2/README.md",
+    "aura_workspace/inbox/bounties/active/batch2/W7_BLOCKED_SOURCE_AUTHORITY.md",
+    "aura_workspace/inbox/bounties/active/batch2/W8_rust-grpc-44/ALLOCATION.md",
+    "aura_workspace/inbox/bounties/active/batch2/W9_BLOCKED_SOURCE_AUTHORITY.md",
     "aura_workspace/inbox/bounties/active/typeorm_3357_POLICY_BLOCK.md",
     "defensive-publications/Paper_XI_Predictive_Locality_Recursive_Cardinality_World_Seed_2026-08-12.md",
     "demo_assets/construction_tuwien/ATTRIBUTION.md",
@@ -2015,11 +2026,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
     "docs/BENCHMARKS.md",
     "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
-    "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
-    "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
-    "docs/PR_KIT.md",
-    "docs/README_PRE_ARCHITECT_BENCHMARK.md",
-    "docs/SECURITY_AND_ACCURACY_SCORECARD.md"
+    "docs/INDUSTRY_BENCHMARK_SCORECARD.md"
   ]
 }
 ```
