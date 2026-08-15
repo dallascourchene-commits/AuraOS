@@ -1,0 +1,47 @@
+name: WO Phase3 Local Pytest Wheelhouse
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/wo-phase3-local-wheelhouse.yml
+
+permissions:
+  contents: read
+
+jobs:
+  wheelhouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Download binary wheels for offline local verifier
+        run: |
+          python -m pip install --upgrade pip
+          mkdir -p /tmp/wheelhouse
+          python -m pip download --only-binary=:all: -d /tmp/wheelhouse \
+            -r requirements.txt \
+            "jsonschema>=4.23,<5.0" \
+            "pytest>=8.2,<9.0" \
+            "pytest-asyncio>=0.23,<1.0" \
+            "trimesh>=4.7.1,<5.0" \
+            "zstandard>=0.23.0,<1.0"
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          root = Path('/tmp/wheelhouse')
+          lines=[]
+          for path in sorted(root.iterdir()):
+              if path.is_file():
+                  lines.append(f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.name}")
+          (root/'SHA256SUMS').write_text('\n'.join(lines)+'\n', encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wo-phase3-local-py313-wheelhouse
+          path: /tmp/wheelhouse/
+          if-no-files-found: error
+          retention-days: 2
