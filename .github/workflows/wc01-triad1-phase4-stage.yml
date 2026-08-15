@@ -1,185 +1,43 @@
-name: WC01 Triad1 Phase4 arXiv stage
-
-on:
+name: WC01 Triad1 Phase4 Stage Copy
+'on':
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
-      - '.github/workflows/wc01-triad1-phase4-stage.yml'
-
+      - .github/workflows/wc01-triad1-phase4-stage.yml
 permissions:
   contents: write
-
 concurrency:
-  group: wc01-triad1-phase4-stage
+  group: wc01-triad1-phase4-stage-copy
   cancel-in-progress: false
-
 jobs:
-  stage:
+  stage_copy:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
-
-      - name: Rebase onto current main and bind canonical blob
+      - name: Bind canonical source and stage exact copy
         shell: bash
         run: |
           set -euo pipefail
           git fetch origin main
-          git rebase origin/main
+          git reset --hard origin/main
           test "$(git hash-object docs/formal/AURA_MATHEMATICAL_SPECIFICATION_V1.tex)" = "11ea3550a8d79e9ce4ce339ef110fa22ef84dbea"
-
-      - name: Stage byte-identical arXiv source and manifest
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p docs/staging/arxiv_submission aura_workspace/outbox
+          mkdir -p docs/staging/arxiv_submission
           cp docs/formal/AURA_MATHEMATICAL_SPECIFICATION_V1.tex docs/staging/arxiv_submission/AURA_MATHEMATICAL_SPECIFICATION_V1.tex
           cmp -s docs/formal/AURA_MATHEMATICAL_SPECIFICATION_V1.tex docs/staging/arxiv_submission/AURA_MATHEMATICAL_SPECIFICATION_V1.tex
           test "$(git hash-object docs/staging/arxiv_submission/AURA_MATHEMATICAL_SPECIFICATION_V1.tex)" = "11ea3550a8d79e9ce4ce339ef110fa22ef84dbea"
-          cat > docs/staging/arxiv_submission/WC-01-PHASE4-BUNDLE-MANIFEST.md <<'EOF'
-          # WC-01 Phase4 arXiv Staging Manifest
-
-          WORK_ORDER: WC-01-TRIAD1-PHASE4
-          STATUS: STAGED / PUBLICATION-READY SOURCE / HUMAN REVIEW REQUIRED
-          CANONICAL_SOURCE: docs/formal/AURA_MATHEMATICAL_SPECIFICATION_V1.tex
-          STAGED_SOURCE: docs/staging/arxiv_submission/AURA_MATHEMATICAL_SPECIFICATION_V1.tex
-          GIT_BLOB_BOTH: 11ea3550a8d79e9ce4ce339ef110fa22ef84dbea
-          SOURCE_SHA256: 06fb2632a7dca918f66f7aebbbe4acfca67ad70a14292f82f08f5c8f86cd5093
-
-          ## Required numbered sections
-          1. Polysynthetic Relational Morphology
-          2. Six-Slot Deterministic Finite-State Transducer State Matrix
-          3. 3-6-9 Harmonic Concurrency Proofs for WAL Write Paths
-          4. Four Prime Directives as Boundary Invariant Constraints
-
-          ## Source bindings
-          - Founder bio Drive ID: 1o-4aSQS4rozVcCyvi32Ps4OSoSlvUASFt5CIbS9hLjs
-          - Founder bio revision: AIroW36UAQOeNzotLqRjGIMbIrWXdsa004pHjk_DK5KRd97cthvxWaxi0Gk21Ku3puw-7lY89aGyVM9W-KISDzQzQe5zSzAzanuhg3aADYM
-          - Six-slot FST Drive ID: 1YMykOQ-k3Sp7VK12ltawAkO_qS7u5OnoeWS6TfiS1p4
-          - Six-slot FST revision: AIroW37nMy2WdVwJBDFeWH_FU2DEUR_9Dq7D3FNNrFDnZYVMP7misTy3A53CyxPa1q1yHl-HiUD88P47s1CPTVtmv4XK50PPYxKD7aAyFqs
-          - Source reconciliation main: ca0080a974bf239da6a282060df6a43f95267a10
-          - Pre-write currentness recheck main: 8114e2dc5e3993f9a93579aa754a8bece1412abb
-          - Predecessor formal-spec blob: bc94866c0470a81eb869e44aa04cc64cdfed9892
-          - WC-01 canonical commit: c3cda3eb7b93710e54a83562d128e28dc8b0d93d
-
-          ## LaTeX validation
-          - Engine: pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian)
-          - Command: pdflatex -interaction=nonstopmode -halt-on-error (two passes)
-          - Result: PASS
-          - Errors: 0
-          - Undefined references: 0
-          - Overfull boxes: 0
-          - Generated PDF pages: 10
-          - Generated PDF SHA256: 742744e900fe7c6e8231930d1da30cc6113a794db6c4cca9600108f8f03f3aef
-          - Note: PDF is a validation product; this repository staging transaction binds the publication source and manifest.
-
-          ## Claim boundary
-          The Section 3 theorem proves zero application-level overlap of protected write ownership only under safe conflict-graph phase coloring, exclusive current leases, transaction confinement, and no hidden mutation path. It does not prove zero SQLite writer-lock wait, checkpoint contention, scheduler latency, or I/O contention. The 3-6-9 numbers are scheduling/index structure, not physical or numerological causation.
-
-          The polysynthetic morphology is an Aura computational abstraction inspired by relational morphology; it is not a universal linguistic claim about Anishinaabemowin or Athabaskan languages. The Four Prime Directives are compiled as enforceable boundary predicates and do not independently guarantee ethical outcomes without concrete gates and human/community authority.
-
-          EXTERNAL_ARXIV_SUBMISSION: NOT AUTHORIZED BY THIS MANIFEST
-          HUMAN_GATE: REQUIRED
-          EOF
-
-      - name: Mint Merkle execution receipt
+      - name: Commit staged copy and remove one-shot workflow
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          import hashlib
-          import subprocess
-
-          files = [
-              Path('docs/formal/AURA_MATHEMATICAL_SPECIFICATION_V1.tex'),
-              Path('docs/staging/arxiv_submission/AURA_MATHEMATICAL_SPECIFICATION_V1.tex'),
-              Path('docs/staging/arxiv_submission/WC-01-PHASE4-BUNDLE-MANIFEST.md'),
-          ]
-          files = sorted(files, key=lambda p: p.as_posix())
-          leaves = []
-          for p in files:
-              digest = hashlib.sha256(b'leaf\0' + p.as_posix().encode() + b'\0' + p.read_bytes()).digest()
-              leaves.append((p.as_posix(), digest))
-          level = [d for _, d in leaves]
-          while len(level) > 1:
-              if len(level) % 2:
-                  level.append(level[-1])
-              level = [hashlib.sha256(b'node\0' + level[i] + level[i+1]).digest() for i in range(0, len(level), 2)]
-          root = level[0].hex()
-          head = subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip()
-          tex_sha256 = hashlib.sha256(files[0].read_bytes()).hexdigest()
-          staged_sha256 = hashlib.sha256(files[1].read_bytes()).hexdigest()
-          canonical_blob = subprocess.check_output(['git','hash-object',str(files[0])], text=True).strip()
-          staged_blob = subprocess.check_output(['git','hash-object',str(files[1])], text=True).strip()
-          receipt = f'''AURA_MERKLE_RECEIPT_V1
-WORK_ORDER=WC-01-TRIAD1-PHASE4
-WAR_CAPSULE=01
-ASSIGNED=W1_LEAD|W2_FST_PROOFS|W3_LATEX_BUILDER
-STATUS=COMPLETE_STAGED_PUBLICATION_SOURCE_HUMAN_GATE_REQUIRED
-STAGE_TRIGGER_HEAD={head}
-CANONICAL_PATH=docs/formal/AURA_MATHEMATICAL_SPECIFICATION_V1.tex
-STAGED_PATH=docs/staging/arxiv_submission/AURA_MATHEMATICAL_SPECIFICATION_V1.tex
-CANONICAL_GIT_BLOB={canonical_blob}
-STAGED_GIT_BLOB={staged_blob}
-BLOB_IDENTITY={str(canonical_blob == staged_blob).upper()}
-CANONICAL_SHA256={tex_sha256}
-STAGED_SHA256={staged_sha256}
-BYTE_IDENTITY={str(tex_sha256 == staged_sha256).upper()}
-FOUNDER_BIO_DRIVE_ID=1o-4aSQS4rozVcCyvi32Ps4OSoSlvUASFt5CIbS9hLjs
-FOUNDER_BIO_REVISION=AIroW36UAQOeNzotLqRjGIMbIrWXdsa004pHjk_DK5KRd97cthvxWaxi0Gk21Ku3puw-7lY89aGyVM9W-KISDzQzQe5zSzAzanuhg3aADYM
-FST_DRIVE_ID=1YMykOQ-k3Sp7VK12ltawAkO_qS7u5OnoeWS6TfiS1p4
-FST_REVISION=AIroW37nMy2WdVwJBDFeWH_FU2DEUR_9Dq7D3FNNrFDnZYVMP7misTy3A53CyxPa1q1yHl-HiUD88P47s1CPTVtmv4XK50PPYxKD7aAyFqs
-SOURCE_RECONCILIATION_MAIN=ca0080a974bf239da6a282060df6a43f95267a10
-PREWRITE_CURRENTNESS_MAIN=8114e2dc5e3993f9a93579aa754a8bece1412abb
-CANONICAL_COMMIT=c3cda3eb7b93710e54a83562d128e28dc8b0d93d
-LATEX_ENGINE=pdfTeX_3.141592653-2.6-1.40.26_TeXLive2025dev_Debian
-LATEX_VALIDATION=TWO_PASS_PDFLATEX_HALT_ON_ERROR_PASS
-LATEX_ERRORS=0
-LATEX_UNDEFINED_REFERENCES=0
-LATEX_OVERFULL_BOXES=0
-VALIDATION_PDF_PAGES=10
-VALIDATION_PDF_SHA256=742744e900fe7c6e8231930d1da30cc6113a794db6c4cca9600108f8f03f3aef
-SECTION_1=POLYSYNTHETIC_RELATIONAL_MORPHOLOGY
-SECTION_2=SIX_SLOT_DETERMINISTIC_FST_STATE_MATRIX
-SECTION_3=THREE_SIX_NINE_WAL_CONCURRENCY_CONDITIONAL_PROOFS
-SECTION_4=FOUR_PRIME_DIRECTIVES_BOUNDARY_INVARIANTS
-ZERO_CONTENTION_SCOPE=APPLICATION_LEVEL_PROTECTED_WRITE_SET_ONLY
-ZERO_SQLITE_INTERNAL_WAIT_CLAIM=FALSE
-NUMEROLOGICAL_OR_PHYSICAL_HARMONIC_CLAIM=FALSE
-UNIVERSAL_INDIGENOUS_LINGUISTIC_TEMPLATE_CLAIM=FALSE
-ROUTE_EQUALS_AUTHORITY=FALSE
-RECEIPT_EQUALS_TRUTH=FALSE
-EXTERNAL_ARXIV_SUBMISSION=NONE
-HUMAN_GATE_REQUIRED=TRUE
-MERKLE_ALGORITHM=SHA-256
-MERKLE_LEAF=SHA256("leaf\\0"||relative_path_utf8||"\\0"||file_bytes)
-MERKLE_PARENT=SHA256("node\\0"||left_digest_bytes||right_digest_bytes)
-MERKLE_ODD_RULE=DUPLICATE_LAST_DIGEST
-MERKLE_LEAF_COUNT={len(leaves)}
-'''
-          for i,(path,digest) in enumerate(leaves,1):
-              receipt += f'LEAF_{i}_PATH={path}\nLEAF_{i}={digest.hex()}\n'
-          receipt += f'MERKLE_ROOT={root}\nDISPOSITION=WC01_COMPLETE_STAGED_NO_EXTERNAL_PUBLICATION_AUTHORITY\n'
-          Path('aura_workspace/outbox/WC-01-TRIAD1-PHASE4.receipt').write_text(receipt, encoding='utf-8')
-          print(receipt)
-          PY
-
-      - name: Commit exact staged bundle and receipt
-        shell: bash
-        run: |
-          set -euo pipefail
-          cmp -s docs/formal/AURA_MATHEMATICAL_SPECIFICATION_V1.tex docs/staging/arxiv_submission/AURA_MATHEMATICAL_SPECIFICATION_V1.tex
           rm .github/workflows/wc01-triad1-phase4-stage.yml
-          git config user.name "AuraOS WC-01 Stager"
+          git config user.name "AuraOS WC01 Stager"
           git config user.email "actions@users.noreply.github.com"
-          git add docs/staging/arxiv_submission/AURA_MATHEMATICAL_SPECIFICATION_V1.tex \
-                  docs/staging/arxiv_submission/WC-01-PHASE4-BUNDLE-MANIFEST.md \
-                  aura_workspace/outbox/WC-01-TRIAD1-PHASE4.receipt \
-                  .github/workflows/wc01-triad1-phase4-stage.yml
+          git add docs/staging/arxiv_submission/AURA_MATHEMATICAL_SPECIFICATION_V1.tex .github/workflows/wc01-triad1-phase4-stage.yml
           git diff --cached --check
-          git commit -m "receipt: stage WC-01 Triad1 Phase4 formal arXiv bundle"
+          git commit -m "docs(staging): bind WC-01 Phase4 arXiv source"
           git push origin HEAD:main
