@@ -1,0 +1,69 @@
+WAR_CAPSULE=02
+COORDINATE=AD:DISTRIBUTION:MEDIA-MATERIALIZE:002
+TRIAD=W4,W5,W6
+STATE=COMPLETE_STAGED_NOT_PUBLISHED
+
+SOURCE_BINDING:
+- requested source path=docs/staging/ready_review/TIKTOK_CAMPAIGN_SCRIPTS.md
+- source not present on current main at ingest
+- source resolved from branch=staging/wo-triad2-tiktok-campaign-004
+- source Git blob=6bb505276b0b34a3daf8a0424f186be22ad3421e
+- source parts ingested=10/10
+- source campaign state=STAGING / READY_REVIEW / HUMAN GATE 1 REQUIRED
+
+BASE_MAIN_AT_EXECUTION_START=7146282b09e7af1a30d461570514b28c4bbd461f
+
+W4_INGESTION:
+- ingested all ten source hooks, story bodies, storyboards, CTAs, audio pacing notes, and claim guardrails
+- preserved source distinctions between measured results, targets, bounded tests, models, and hypotheses
+
+W5_MATERIALIZATION:
+- created docs/staging/content_production/CAPCUT_PROJECT_TEMPLATES.md
+- commit=efc07f16e006328167d2ca81194459016284f55a
+- Git blob=498b9873a4d5e1153803bc4d33eba0442eb1980d
+- contents=10 exact CapCut desktop project blueprints
+- each project includes=timed cuts + timed text overlays + transparent PNG layer instructions + full source-bound voiceover master + audio cues + claim gate
+- global project preset=1080x1920 / 30fps / 48kHz / named V1-V5+A1-A3 tracks / safe-zone / watermark-free master
+- transparent PNG manifest=COMPLETE
+
+W6_COMMUNITY_PACKAGE:
+- created docs/staging/content_production/COMMUNITY_LAUNCH_POSTS.md
+- commit=6501f685d4362f7ee7dcd91388c3839eaa6a53e4
+- Git blob=6ef0edf4876c3b62eeddd5aeeacb738876a9c8f2
+- packaged=Hacker News + Reddit r/LocalLLaMA + Reddit r/Rust
+- external posting performed=NO
+- r/Rust boundary=no Rust implementation/benchmark claimed; draft framed as systems-design/typestate/concurrency discussion
+
+CLAIM_RECONCILIATION:
+- requested framing="98% token cost reduction under 4GB RAM limits"
+- current source does NOT support that statement as written
+- measured serialization result=72.73% fewer serialized bytes (286 B -> 78 B)
+- >=94% tokenizer/L0 reduction=TARGET / UNVERIFIED_SOURCE_GAP
+- ~98.60-98.78%=SUPPLIED MONTHLY OPEX MODEL from $60-$180 local/edge vs $4,900-$12,900 cloud-agent paired endpoints
+- ~98.60-98.78% is NOT token compression and NOT audited savings
+- measured peak process RSS=116.71 MiB in bounded host benchmark
+- 4 GiB=DEVICE-CLASS CAPACITY COMPARISON, NOT UNIVERSAL DEPLOYMENT LIMIT
+- <95 MiB target=NOT ACHIEVED / UNRESOLVED
+- bounded concurrency=25/25 exact-once DONE / 0 duplicate fleet payloads
+- SQLite=19,934.69 WAL writes/s @ 5 workers; NOT relabeled receipts/s
+- security=0/868 attack transitions executable / 0.0000% GATE-LAYER ASR; NOT official end-to-end InjecAgent
+- legacy tau-bench=42/42 bounded exact oracle-action trajectory preservation; NOT official tau-bench pass^k
+- staged 3-6-9 router=6:1 logical transition-count ratio vs ~1.279x recorded local wall-clock; NOT 6x speed and NOT universal law
+
+NEGATIVE_SPACE:
+- no TikTok/Reels/Shorts post published
+- no Hacker News post published
+- no Reddit post published
+- no unsupported 98% token-reduction claim minted
+- no 4GB universal deployment guarantee minted
+- no Rust implementation claim minted
+- no vendor pricing or audited savings claim minted
+- no watermark-bearing social export created
+- no target/model/proxy promoted as measured fact
+
+OUTPUTS:
+1=docs/staging/content_production/CAPCUT_PROJECT_TEMPLATES.md
+2=docs/staging/content_production/COMMUNITY_LAUNCH_POSTS.md
+3=aura_workspace/outbox/WC-02-TRIAD2.receipt
+
+FINAL_STATE=MEDIA_BLUEPRINTS_MATERIALIZED / COMMUNITY_DRAFTS_PACKAGED / CLAIMS_FAIL_CLOSED / HUMAN_RELEASE_GATE_REQUIRED
