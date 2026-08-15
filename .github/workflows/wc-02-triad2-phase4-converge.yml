@@ -9,6 +9,7 @@ on:
       - 'tools/wo_fleet_phase3_triad2_contract_patch.py'
       - 'tools/wo_fleet_phase3_triad2_incremental_patch.py'
       - 'tools/wo_fleet_phase3_triad2_skillweaver_patch.py'
+      - 'tools/wc02_phase4_navigator_compat_patch.py'
 
 permissions:
   contents: write
@@ -20,7 +21,7 @@ concurrency:
 jobs:
   materialize:
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,18 +35,25 @@ jobs:
           set -euo pipefail
           git fetch origin fix/wc-02-triad2-phase4
           git checkout -B fix/wc-02-triad2-phase4 origin/fix/wc-02-triad2-phase4
-      - name: Apply converged Phase3 contract repairs
+      - name: Apply converged contract and compatibility repairs
         run: |
           set -euo pipefail
           python tools/wo_fleet_phase3_triad2_contract_patch.py
           python tools/wo_fleet_phase3_triad2_incremental_patch.py
           python tools/wo_fleet_phase3_triad2_skillweaver_patch.py
+          python tools/wc02_phase4_navigator_compat_patch.py
           python -m py_compile aura_coding_relationship_compass.py aura_codebase_navigator.py aura_skillweaver.py
           git diff --check
       - name: Install focused verification dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt 'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' 'jsonschema>=4.23,<5.0' 'trimesh>=4.7.1,<5.0' 'zstandard>=0.23.0,<1.0'
+      - name: Regenerate CODEMAP before command-registry verification
+        run: |
+          set -euo pipefail
+          python scripts/aura_navigation_refresh.py --root .
+          python scripts/aura_source_anchor_map.py --root . --check
+          python -m aura_codemap_verify
       - name: Verify repaired contracts before commit
         run: |
           set -o pipefail
@@ -55,6 +63,9 @@ jobs:
             test_aura_fusion.py::test_mock_fusion_run_infers_command_target_before_mutation_gate \
             test_aura_skillweaver.py::TestSkillRegistry::test_registry_has_commands \
             test_codemap_slimming.py::test_iter_repo_files_skips_runtime_dependency_dirs \
+            test_aura_substrate.py::test_codebase_navigator_command_query_is_compact \
+            test_aura_substrate.py::test_codebase_navigator_sorts_topology_by_file_degree \
+            test_aura_substrate.py::test_codebase_navigator_incremental_refresh_keeps_topology_and_semantic_ids \
             tests/test_aura_bilateral_planning_enforcement.py::test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected \
             tests/test_aura_bilateral_planning_enforcement.py::test_compass_fully_projected_obligations_preserve_eligible_path
       - name: Commit only verified implementation repairs
