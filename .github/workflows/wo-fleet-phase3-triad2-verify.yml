@@ -9,7 +9,6 @@ on:
       - 'tools/wo_fleet_phase3_triad2_contract_patch.py'
       - 'tools/wo_fleet_phase3_triad2_incremental_patch.py'
       - 'tools/wo_fleet_phase3_triad2_skillweaver_patch.py'
-      - 'tools/wo_fleet_phase3_triad2_iter_files_patch.py'
 
 permissions:
   contents: write
@@ -48,7 +47,6 @@ jobs:
           python tools/wo_fleet_phase3_triad2_contract_patch.py
           python tools/wo_fleet_phase3_triad2_incremental_patch.py
           python tools/wo_fleet_phase3_triad2_skillweaver_patch.py
-          python tools/wo_fleet_phase3_triad2_iter_files_patch.py
 
       - name: Compile repaired contract surfaces
         run: python -m py_compile aura_coding_relationship_compass.py aura_emergent_potential_repl.py aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py aura_fusion.py aura_skillweaver.py
