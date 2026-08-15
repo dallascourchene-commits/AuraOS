@@ -1,0 +1,27 @@
+name: UMC deep review v2 target materialize (historical)
+
+# Historical PR #193 exact-head materializer.
+# PR #193 is merged and its exact reviewed generation is no longer an active
+# development head. Keeping an automatic pull_request_target trigger here caused
+# definition-level/zero-job failures after the historical binding became stale.
+# Preserve this file as auditable provenance, but require explicit manual review
+# before any historical replay.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  historical-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Explain historical boundary
+        shell: bash
+        run: |
+          cat <<'EOF'
+          This workflow is retained as provenance for the merged PR #193 deep-v2
+          materializer. Its former exact-head pull_request_target binding is
+          intentionally retired. Current continuity contracts are validated by
+          the active repository test suites and current CI workflows.
+          EOF
