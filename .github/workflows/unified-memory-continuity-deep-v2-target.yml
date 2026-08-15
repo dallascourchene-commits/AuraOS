@@ -1,10 +1,11 @@
-name: UMC deep review v2 target materialize
+name: "UMC deep review v2 target materialize"
 
-on:
+"on":
   pull_request_target:
     branches:
       - main
-    types: [ready_for_review]
+    types:
+      - ready_for_review
 
 permissions:
   contents: write
@@ -12,16 +13,12 @@ permissions:
   pull-requests: read
 
 concurrency:
-  group: umc-deep-review-v2-target-${{ github.event.pull_request.number }}
+  group: "umc-deep-review-v2-target-${{ github.event.pull_request.number }}"
   cancel-in-progress: false
 
 jobs:
   materialize:
-    if: >-
-      github.event.pull_request.number == 193 &&
-      github.event.pull_request.head.ref == 'refactor/unified-memory-continuity' &&
-      github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event.pull_request.head.sha == '2cdb398e05ca12c1622b20c43f98b04eaf170135'
+    if: ${{ github.event.pull_request.number == 193 && github.event.pull_request.head.ref == 'refactor/unified-memory-continuity' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.sha == '2cdb398e05ca12c1622b20c43f98b04eaf170135' }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
