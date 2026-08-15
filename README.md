@@ -8,6 +8,7 @@ AuraOS is a minimal, local-first substrate for deterministic state, recursive co
 - **3^n rollups** — recursive ternary rollups compress bounded child work into progressively smaller parent summaries.
 - **SQLite WAL** — write-ahead logging provides durable local state, atomic commits, crash recovery, and concurrent reads.
 - **P2P mesh** — nodes exchange bounded state and work directly without requiring a central coordinator.
+- **Source-resolvable execution** — compact state and routing remain connected to exact source, provenance, currentness, and human disposition boundaries.
 
 ## System Architecture
 
@@ -79,11 +80,13 @@ hard guards
 
 The FST/WFST layer is a routing and syntax mechanism. It does **not** mint source truth, capabilities, authority, commits, pushes, merges, or human disposition.
 
-### 3→6→9 Harmonic Daemon — staged diagonal-rebase architecture
+### 3→6→9 harmonic runtime architecture and bounded concurrency
 
-Aura's current provenance work defines the `3 → 6 → 9/1′` harmonic as a **conditional diagonal rebase** across independently verified/current invariant boundaries. The fast path is only admissible when the intervening guards are already satisfied; otherwise execution falls back to the guarded linear path.
+Aura's current provenance work defines the `3 → 6 → 9/1′` harmonic as a **conditional diagonal rebase** across independently verified/current invariant boundaries. The fast path is admissible only when intervening guards are already satisfied; otherwise execution falls back to the guarded linear path.
 
-This is staged routing/discovery semantics, not a claim that arithmetic pattern is a universal physical law. As of this documentation generation, current `main` does not expose a source-bound executable service named `3-6-9 Harmonic Daemon`; the name therefore refers to the staged daemonization target for the conditional diagonal-rebase contract, not a production-service claim.
+The bounded concurrency evidence is kept separate from the harmonic hypothesis: the current repository scorecard records a **25-slot daemon fleet with 25/25 exact-once DONE and 0 duplicate fleet payloads**. That demonstrates the bounded worker harness tested in this generation; it does not establish that `3→6→9` is a universal concurrency law or that every deployment supports 25+ agents.
+
+The `3→6→9` model remains staged routing/discovery semantics. Current `main` does not expose a source-bound executable service named `3-6-9 Harmonic Daemon`; the name refers to a staged daemonization target rather than a production-service claim.
 
 ## Quickstart
 
@@ -111,60 +114,62 @@ python aura_swarm_runner.py
 
 ## License
 
-AuraOS is licensed under the **GNU Affero General Public License v3.0 (GNU AGPLv3)**.
+AuraOS repository documentation declares the project under the **GNU Affero General Public License v3.0** with file/dependency-specific exceptions where applicable. The intended repository-level SPDX expression is **`AGPL-3.0-only`**.
 
-See [`LICENSE`](./LICENSE) for the complete license text.
+A conventional root `LICENSE` normalization is currently staged in draft PR #286 and is **not yet merged into `main`** at the time of this README synchronization. This README therefore does not represent that draft as already promoted.
 
 ---
 
 ## Canonical Archive & Permanent DOI
-* **Zenodo Record:** https://zenodo.org/records/21941334
-* **Canonical Genesis Seed:** `67d2597bfa7895d997b89eb288a8f6cd5fe54ddc1ea69f676ec5d1a1ab96b002`
 
-## Industry Benchmark Scorecard
+- **Zenodo Record:** https://zenodo.org/records/21941334
+- **Canonical Genesis Seed:** `67d2597bfa7895d997b89eb288a8f6cd5fe54ddc1ea69f676ec5d1a1ab96b002`
 
-Source documents:
+## Verified Engineering Scorecard
+
+Primary source documents:
 
 - [`docs/INDUSTRY_BENCHMARK_SCORECARD.md`](./docs/INDUSTRY_BENCHMARK_SCORECARD.md)
 - [`docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md`](./docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md)
 - [`docs/SECURITY_AND_ACCURACY_SCORECARD.md`](./docs/SECURITY_AND_ACCURACY_SCORECARD.md)
+- [`docs/staging/ready_review/PR_MANIFESTO_PRESS_RELEASE.md`](./docs/staging/ready_review/PR_MANIFESTO_PRESS_RELEASE.md)
 
-These are source-bound repository validations, **not third-party certifications or external percentile rankings**. Performance rows are host measurements or explicitly bounded proxies; security/accuracy rows preserve the exact executed scope.
+These are source-bound repository validations, **not third-party certifications or external percentile rankings**. Performance rows are host measurements or explicitly bounded proxies; security/accuracy rows preserve the executed scope.
 
 | Surface | Current source-bound result | Evidence boundary |
 | :--- | :--- | :--- |
 | Six-slot FST deterministic routing | **1,366,040.46 iterations/s**, **8,196,242.75 transitions/s** | 100,000-iteration deterministic transition microkernel; not linguistic accuracy |
 | `3^n` Merkle aggregation | **2,460.61 rollups/s**, **895,661.61 hashes/s** | 2,000 rollups, depth 5, 243 leaves/rollup |
 | SQLite WAL | **19,934.69 writes/s @ 5 workers** | Best observed one-row transaction throughput; **receipt throughput was not separately measured** |
-| Peak process RSS | **116.71 MiB** | Process high-water mark; comfortably below a 4 GiB edge-device capacity, but it **does not satisfy** the separate `<95 MiB` target |
+| Peak process RSS | **116.71 MiB** | Process high-water mark; below a 4 GiB device-class capacity, but it **does not satisfy** the separate `<95 MiB` target |
 | Serialized state projection | **72.73% fewer bytes** (`286 B → 78 B`) | Byte serialization only; tokenizer-measured `94%` token compression remains unverified |
 | UDP localhost unicast | median **7.080 µs**, p95 **10.126 µs** | Synchronous localhost RTT proxy; not remote/WAN/multi-node mesh gossip |
 | InjecAgent-derived hard gate | **0 / 868 attack transitions reached executable state** (`0.0000%` gate-layer ASR) | Gate-layer test only; official end-to-end InjecAgent ASR was not measured |
 | Legacy τ-bench trajectory preservation | **42 / 42 task-lane trials = 100.00%** exact oracle-action preservation | Bounded 6-task compatibility sample across 7 deterministic lanes; official τ-bench pass^k was not measured |
-| 25-slot bounded daemon fleet | **25 / 25 exact-once DONE**, **0 duplicate fleet payloads** | Process-spawned bounded workers; correctness-oriented, not a throughput claim |
+| Bounded daemon fleet | **25 / 25 exact-once DONE**, **0 duplicate fleet payloads** | Process-spawned bounded workers; correctness-oriented, not a universal concurrency limit or throughput claim |
 
-### Claim-to-evidence comparison matrix
+### Headline-claim reconciliation
 
-This matrix prevents target values, proxies, and bounded compatibility checks from being promoted as broader benchmark facts.
+This table keeps targets, models, proxies, and bounded compatibility tests from being promoted as broader benchmark facts.
 
-| Requested / target headline | Exact current evidence | Documentation disposition |
+| Requested headline | Exact current evidence | README disposition |
 | :--- | :--- | :--- |
-| `94% token compression (~48 tokens/step)` | `72.73%` fewer serialized bytes; master exhaustive scorecard marks `≥94% L0 symbolic-tensor payload reduction` **UNVERIFIED_SOURCE_GAP** | **Not promoted as verified.** Keep 94% as a target until tokenizer/source-bound execution exists. |
-| `>5,250 receipts/sec SQLite WAL` | **19,934.69 writes/s** best observed | Publish **writes/s**, not receipts/s; no current source equates one WAL write with one full receipt. |
-| `<95 MB RSS under 4GB edge budget` | **116.71 MiB** process RSS in the industry scorecard; master controller **117.348 MiB** | `<95 MiB` target is currently **FAIL / unverified for a narrower core worker**. Edge viability and the internal 95 MiB target are separate claims. |
-| `<500 µs UDP mesh gossip latency` | p95 **10.126 µs** in the industry localhost run; master p95 **17.656 µs** | Threshold passes for the **localhost RTT proxy only**; remote mesh gossip remains unmeasured here. |
-| `0% InjecAgent exploit rate` | **0/868** executable transitions; gate-layer ASR `0.0000%` | Publish as **gate-layer attack-surface result**, not official end-to-end InjecAgent ASR. |
-| `100% Tau-bench trajectory accuracy` | **42/42** bounded legacy τ-bench task-lane trajectory preservation | Publish as **bounded trajectory preservation**, not official τ-bench pass^k. |
+| `94–98% token reduction` | **72.73% fewer serialized bytes** is measured; `≥94%` tokenizer/L0 compression remains an **unverified target**. The `~98.60–98.78%` figure belongs to a supplied **OpEx model**, not token reduction. | **Do not publish 94–98% as one verified token-reduction benchmark.** |
+| `>5,250 receipts/sec` | **19,934.69 SQLite WAL writes/s** at the best observed worker count. | Publish writes/s only; no source currently equates one WAL row-write with one complete receipt. |
+| `25+ concurrent agents` | **25/25** exact-once bounded daemon tasks, 0 duplicates. | Publish the tested 25-slot fleet, not an unbounded `25+` capability claim. |
+| `<95 MB RSS` | **116.71 MiB** process high-water mark; the separate `<95 MiB` target remains unresolved. | Do not promote `<95 MiB` as achieved. |
+| `0.00% InjecAgent ASR` | **0/868** attack transitions reached executable state; gate-layer ASR `0.0000%`. | Publish with the **gate-layer** scope; official end-to-end InjecAgent ASR was not measured. |
+| `100% Tau-bench accuracy` | **42/42** bounded legacy τ-bench task-lane trajectories preserved exact oracle actions. | Publish as bounded trajectory preservation, not official τ-bench pass^k. |
 
 ## Edge Deployment Readiness
 
 The measured process high-water mark of **116.71 MiB** is small relative to a 4 GiB device-class memory budget, but AuraOS deliberately retains the stricter `<95 MiB` internal target as unresolved rather than rewriting the benchmark. SQLite WAL, localhost UDP, deterministic FST routing, bounded worker execution, and exact-source security gates all have executable repository evidence; remote network behavior, whole-device memory behavior, and broader external benchmark suites require their own environments.
 
-## Advanced Benchmark Snapshot
+## Operating-Economics Model
 
-See [`docs/ADVANCED_BENCHMARKS.md`](./docs/ADVANCED_BENCHMARKS.md) for methodology and scope boundaries.
+The staged manifesto distinguishes measured engineering evidence from a supplied operating-cost model. The model compares **$60–$180/month** for local/edge AuraOS operation with a **$4,900–$12,900/month** cloud-agent baseline, which arithmetically corresponds to approximately **98.60–98.78% lower modeled monthly OpEx** at paired endpoints.
 
-These measurements are bounded host microbenchmarks. They do **not** by themselves establish production AuraOS, remote P2P mesh, crash-injection performance, or third-party benchmark certification.
+This is a planning/economic model, **not an audited customer-savings benchmark** and not evidence of 98% token compression.
 
 ## Reproduce
 
@@ -175,3 +180,10 @@ python3 scripts/aura_security_accuracy_harness.py
 ```
 
 Machine-readable outputs and signed/hashed receipts remain source evidence; signatures authenticate the recorded artifact against their declared key/material and do not independently establish human identity or promotion authority.
+
+## Founder & Contact
+
+**Founder:** Dallas Fabian Courchene-Martin  
+**Contact:** dallascourchene@gmail.com
+
+Founder/contact fields above are integrated from the sovereign human dispatch for `WO-TRIAD2-STAGING-README-SYNC-001`; they are not benchmark-derived fields.
