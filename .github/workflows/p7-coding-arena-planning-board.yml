@@ -28,8 +28,8 @@ jobs:
       matrix:
         python-version: ["3.10", "3.12"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
@@ -102,7 +102,7 @@ jobs:
           assert payload['limitations']
           PY
       - name: Upload benchmark evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: p7-coding-arena-benchmark-${{ matrix.python-version }}
           path: p7-coding-arena-benchmark-${{ matrix.python-version }}.json
@@ -132,7 +132,7 @@ jobs:
           exit 0
       - name: Upload diagnostics on failure
         if: steps.focused-tests.outputs.status != '0'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: p7-pytest-${{ matrix.python-version }}
           path: p7-pytest-${{ matrix.python-version }}.txt
