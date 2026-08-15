@@ -1,0 +1,72 @@
+name: Phase3 Triad2 Local Tree Export
+
+on:
+  push:
+    branches:
+      - phase3/triad2-local-pytest-deps-001
+    paths:
+      - .github/workflows/phase3-triad2-local-tree-export.yml
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      TARGET_HEAD: de1fbd7636b2a2dccd1bc592a4cbd8300785f0d1
+      PYTHONPATH: ${{ github.workspace }}
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_HEAD }}
+          fetch-depth: 0
+      - name: Bind exact precommit generation
+        run: test "$(git rev-parse HEAD)" = "$TARGET_HEAD"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install generator dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' 'jsonschema>=4.23,<5.0' 'trimesh>=4.7.1,<5.0' 'zstandard>=0.23.0,<1.0'
+      - name: Apply exact repair transforms without commit
+        run: |
+          python tools/wo_fleet_phase3_triad2_contract_patch.py
+          python tools/wo_fleet_phase3_triad2_incremental_patch.py
+          python tools/wo_fleet_phase3_triad2_skillweaver_patch.py
+          python -m py_compile aura_coding_relationship_compass.py aura_codebase_navigator.py aura_skillweaver.py
+      - name: Regenerate and verify CODEMAP
+        run: |
+          python aura_codebase_navigator.py --refresh-topology
+          python -m aura_codemap_verify
+      - name: Download local Python 3.13 zstandard wheel
+        run: |
+          mkdir -p local-wheelhouse
+          python -m pip download --only-binary=:all: --no-deps \
+            --platform manylinux2014_x86_64 \
+            --implementation cp --python-version 313 --abi cp313 \
+            'zstandard>=0.23.0,<1.0' -d local-wheelhouse
+      - name: Package exact uncommitted tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git status --porcelain=v1 > local-tree-status.txt
+          git diff --binary > local-tree-repair.diff
+          archive="${RUNNER_TEMP}/triad2-local-tree.tgz"
+          tar --exclude=.git --exclude=local-wheelhouse -czf "$archive" .
+          sha256sum "$archive" > local-tree.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase3-triad2-local-tree-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/triad2-local-tree.tgz
+            local-tree.sha256
+            local-tree-status.txt
+            local-tree-repair.diff
+            local-wheelhouse/
+          if-no-files-found: error
+          retention-days: 7
