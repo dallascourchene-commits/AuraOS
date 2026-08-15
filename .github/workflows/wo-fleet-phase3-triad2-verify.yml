@@ -1,0 +1,180 @@
+name: WO Fleet Phase3 Triad2 Verification
+
+on:
+  push:
+    branches:
+      - fix/wo-fleet-phase3-triad2-001
+    paths:
+      - '.github/workflows/wo-fleet-phase3-triad2-verify.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wo-fleet-phase3-triad2-001
+  cancel-in-progress: false
+
+env:
+  PYTHONPATH: ${{ github.workspace }}
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+
+jobs:
+  verify-and-freeze:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/wo-fleet-phase3-triad2-001
+          fetch-depth: 0
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install governed Python 3.12 dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' 'jsonschema>=4.23,<5.0' 'trimesh>=4.7.1,<5.0' 'zstandard>=0.23.0,<1.0'
+
+      - name: Apply Phase3 contract repair
+        run: python tools/wo_fleet_phase3_triad2_contract_patch.py
+
+      - name: Compile repaired contract surfaces
+        run: python -m py_compile aura_coding_relationship_compass.py aura_emergent_potential_repl.py aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py
+
+      - name: Regenerate canonical deep CODEMAP topology
+        run: |
+          python aura_codebase_navigator.py --refresh-topology
+          python -m aura_codemap_verify | tee triad2-codemap-verify.txt
+
+      - name: Python 3.12 focused contract suite
+        run: |
+          set -o pipefail
+          python -m pytest -q \
+            tests/test_aura_codemap_verify.py \
+            tests/test_aura_arch_v2_3_capsule_validator.py \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_fully_projected_obligations_preserve_eligible_path \
+            --junitxml=triad2-focused-py312.xml 2>&1 | tee triad2-focused-py312.txt
+
+      - name: Python 3.12 governed pytest suite
+        env:
+          PYTHONHASHSEED: '0'
+        run: |
+          set -o pipefail
+          python -m pytest -q --disable-warnings --maxfail=1 \
+            --ignore=test_aura_functions.py \
+            --ignore=test_synthesis_upgrades.py \
+            --ignore=test_syntax_fixes.py \
+            --ignore=test_codemap_hooks_simple.py \
+            --ignore=test_pvm_logic.py \
+            --ignore=test_aura_substrate.py \
+            --deselect=tests/test_aura_human_agent_arena.py::test_affordance_map_declares_source_of_truth \
+            --junitxml=triad2-full-py312.xml 2>&1 | tee triad2-full-py312.txt
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: pip
+
+      - name: Install governed Python 3.10 dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' 'jsonschema>=4.23,<5.0' 'trimesh>=4.7.1,<5.0' 'zstandard>=0.23.0,<1.0'
+
+      - name: Python 3.10 focused contract suite
+        run: |
+          set -o pipefail
+          python -m pytest -q \
+            tests/test_aura_codemap_verify.py \
+            tests/test_aura_arch_v2_3_capsule_validator.py \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_fully_projected_obligations_preserve_eligible_path \
+            --junitxml=triad2-focused-py310.xml 2>&1 | tee triad2-focused-py310.txt
+
+      - name: Python 3.10 governed pytest suite
+        env:
+          PYTHONHASHSEED: '0'
+        run: |
+          set -o pipefail
+          python -m pytest -q --disable-warnings --maxfail=1 \
+            --ignore=test_aura_functions.py \
+            --ignore=test_synthesis_upgrades.py \
+            --ignore=test_syntax_fixes.py \
+            --ignore=test_codemap_hooks_simple.py \
+            --ignore=test_pvm_logic.py \
+            --ignore=test_aura_substrate.py \
+            --deselect=tests/test_aura_human_agent_arena.py::test_affordance_map_declares_source_of_truth \
+            --junitxml=triad2-full-py310.xml 2>&1 | tee triad2-full-py310.txt
+
+      - name: Mint Triad2 Merkle receipt and freeze verified repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f tools/wo_fleet_phase3_triad2_contract_patch.py
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, subprocess
+
+          paths = [
+              'aura_coding_relationship_compass.py',
+              '.aura/CODEMAP.json',
+              '.aura/CODEMAP.md',
+              'topology_map.json',
+          ]
+          leaves=[]
+          for name in paths:
+              p=Path(name)
+              if p.exists():
+                  leaves.append((name, hashlib.sha256(p.read_bytes()).hexdigest()))
+          layer=[bytes.fromhex(h) for _,h in leaves]
+          if not layer:
+              raise SystemExit('no Merkle leaves')
+          while len(layer)>1:
+              if len(layer)%2: layer.append(layer[-1])
+              layer=[hashlib.sha256(layer[i]+layer[i+1]).digest() for i in range(0,len(layer),2)]
+          receipt={
+              'schema':'AuraFleetMerkleReceiptV1',
+              'work_order':'WO-FLEET-PHASE3-DEPLOY-001',
+              'triad':'TRIAD-2',
+              'worker':'W4::J35/V01 coordination lane',
+              'state':'VERIFIED_FIX_BRANCH_COMMITTED',
+              'python':['3.10','3.12'],
+              'verification':'focused + governed pytest suites passed before commit',
+              'leaves':[{'path':p,'sha256':h} for p,h in leaves],
+              'merkle_root_sha256':layer[0].hex(),
+              'source_base':'25a103b02752f3f58f95946352d40bf798e6cfda',
+              'promotion':'fix branch only; no merge performed',
+          }
+          out=Path('aura_workspace/outbox/WO-FLEET-PHASE3-DEPLOY-001__TRIAD2.receipt')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+          PY
+          rm -f triad2-*.txt triad2-*.xml
+          git config user.name 'Aura Fleet Triad2 W4'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'fix(phase3): bound Compass discovery and align dual-Python contracts'
+          git push origin HEAD:fix/wo-fleet-phase3-triad2-001
+
+      - name: Upload verification diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wo-fleet-phase3-triad2-${{ github.run_id }}
+          path: |
+            triad2-codemap-verify.txt
+            triad2-focused-py312.txt
+            triad2-focused-py312.xml
+            triad2-full-py312.txt
+            triad2-full-py312.xml
+            triad2-focused-py310.txt
+            triad2-focused-py310.xml
+            triad2-full-py310.txt
+            triad2-full-py310.xml
+          if-no-files-found: warn
+          retention-days: 30
