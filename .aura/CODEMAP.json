@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786785642,
+  "generated_at_unix": 1786803646,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1584,
+    "repo_file_count": 1585,
     "source_paths_without_topology": [
       "_aura_architect_consolidation_benchmark_legacy.py",
       "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -112,12 +112,12 @@
     "coverage_complete_for_repo_scan": true
   },
   "summary": {
-    "file_count": 1584,
-    "total_bytes": 25932552,
-    "text_tokens_est": 6473772,
+    "file_count": 1585,
+    "total_bytes": 25951584,
+    "text_tokens_est": 6478508,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 219,
+      "knowledge_artifact": 220,
       "native_accelerator": 8,
       "operator_script": 9,
       "python_module": 990,
@@ -139,12 +139,12 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1584,
-      "bytes": 25932552,
-      "tokens_est": 6473772,
+      "files": 1585,
+      "bytes": 25951584,
+      "tokens_est": 6478508,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 219,
+        "knowledge_artifact": 220,
         "native_accelerator": 8,
         "operator_script": 9,
         "python_module": 990,
@@ -1412,7 +1412,8 @@
     "python aura_node.py": [
       "AURA_FINAL_REPORT.md",
       "AURA_SYSTEM_ANALYSIS.md",
-      "README.md"
+      "README.md",
+      "docs/staging/ready_review/README_STAGED.md"
     ],
     "python test_memory_guard_leak.py": [
       "AURA_FINAL_REPORT.md",
@@ -1504,20 +1505,25 @@
       "ICM_WORKSPACE_README.md"
     ],
     "python aura_daemon.py": [
-      "README.md"
+      "README.md",
+      "docs/staging/ready_review/README_STAGED.md"
     ],
     "python aura_swarm_runner.py": [
-      "README.md"
+      "README.md",
+      "docs/staging/ready_review/README_STAGED.md"
     ],
     "python3 scripts/aura_industry_benchmark_validation.py": [
-      "README.md"
+      "README.md",
+      "docs/staging/ready_review/README_STAGED.md"
     ],
     "python3 scripts/aura_advanced_benchmark_runner.py": [
       "README.md",
-      "docs/ADVANCED_BENCHMARKS.md"
+      "docs/ADVANCED_BENCHMARKS.md",
+      "docs/staging/ready_review/README_STAGED.md"
     ],
     "python3 scripts/aura_security_accuracy_harness.py": [
-      "README.md"
+      "README.md",
+      "docs/staging/ready_review/README_STAGED.md"
     ],
     "python test_syntax_fixes.py": [
       "SYNTAX_FIXES_APPLIED.md"
@@ -168282,9 +168288,9 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "bytes": 10218,
-      "lines": 178,
-      "tokens_est": 2538,
+      "bytes": 14625,
+      "lines": 211,
+      "tokens_est": 3637,
       "symbol_count": 0,
       "commands": [
         "python aura_node.py",
@@ -168296,59 +168302,59 @@
       ],
       "command_lines": {
         "python aura_node.py": [
-          97
+          158
         ],
         "python aura_daemon.py": [
-          100
+          161
         ],
         "python aura_swarm_runner.py": [
-          103
+          164
         ],
         "python3 scripts/aura_industry_benchmark_validation.py": [
-          172
+          176
         ],
         "python3 scripts/aura_advanced_benchmark_runner.py": [
-          173
+          177
         ],
         "python3 scripts/aura_security_accuracy_harness.py": [
-          174
+          178
         ]
       },
       "topology": {},
-      "digest8": "3295245b50d08f90",
+      "digest8": "9a382d581a4ea3ad",
       "vector": [
-        0.178203,
-        0.122164,
-        -0.205101,
-        -0.086299,
-        -0.162512,
-        0.205101,
-        0.021295,
-        0.180444,
-        0.052676,
-        -0.005604,
-        -0.193894,
-        0.04371,
-        0.265623,
-        -0.032502,
-        -0.243208,
-        0.070609,
-        -0.211826,
-        -0.245449,
-        -0.093024,
-        -0.218551,
-        -0.054918,
-        -0.265623,
-        -0.234241,
-        0.070609,
-        -0.119923,
-        -0.285797,
-        0.045952,
-        0.267865,
-        -0.11544,
-        -0.247691,
-        -0.285797,
-        0.054918
+        0.148406,
+        0.269712,
+        0.042586,
+        0.089044,
+        0.277455,
+        0.228416,
+        0.094206,
+        0.055491,
+        0.23874,
+        0.117434,
+        -0.089044,
+        -0.13292,
+        0.305845,
+        -0.210349,
+        -0.197445,
+        -0.040005,
+        -0.277455,
+        -0.016776,
+        -0.181959,
+        -0.063234,
+        0.009033,
+        0.029681,
+        0.269712,
+        0.042586,
+        0.179378,
+        -0.109691,
+        -0.120015,
+        0.249064,
+        -0.114853,
+        -0.29036,
+        0.040005,
+        -0.26455
       ]
     },
     {
@@ -208970,6 +208976,78 @@
         -0.124516,
         -0.17876,
         -0.025889
+      ]
+    },
+    {
+      "path": "docs/staging/ready_review/README_STAGED.md",
+      "role": "knowledge_artifact",
+      "bytes": 14625,
+      "lines": 211,
+      "tokens_est": 3637,
+      "symbol_count": 0,
+      "commands": [
+        "python aura_node.py",
+        "python aura_daemon.py",
+        "python aura_swarm_runner.py",
+        "python3 scripts/aura_industry_benchmark_validation.py",
+        "python3 scripts/aura_advanced_benchmark_runner.py",
+        "python3 scripts/aura_security_accuracy_harness.py"
+      ],
+      "command_lines": {
+        "python aura_node.py": [
+          158
+        ],
+        "python aura_daemon.py": [
+          161
+        ],
+        "python aura_swarm_runner.py": [
+          164
+        ],
+        "python3 scripts/aura_industry_benchmark_validation.py": [
+          176
+        ],
+        "python3 scripts/aura_advanced_benchmark_runner.py": [
+          177
+        ],
+        "python3 scripts/aura_security_accuracy_harness.py": [
+          178
+        ]
+      },
+      "topology": {},
+      "digest8": "9a382d581a4ea3ad",
+      "vector": [
+        0.047189,
+        -0.286763,
+        0.187545,
+        0.308542,
+        0.289183,
+        -0.134307,
+        0.061708,
+        0.233524,
+        -0.286763,
+        0.289183,
+        0.068968,
+        0.044769,
+        -0.252884,
+        -0.110107,
+        -0.088328,
+        -0.206905,
+        -0.274663,
+        0.158506,
+        -0.127047,
+        0.047189,
+        0.223844,
+        -0.255304,
+        -0.078648,
+        0.189965,
+        -0.020569,
+        0.00363,
+        -0.00847,
+        0.030249,
+        -0.027829,
+        0.131887,
+        0.105267,
+        0.136727
       ]
     },
     {
@@ -254527,6 +254605,7 @@
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/PR.md",
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
       "docs/staging/ready_review/PR_MANIFESTO_PRESS_RELEASE.md",
+      "docs/staging/ready_review/README_STAGED.md",
       "docs/staging/ready_review/SOCIAL_VISUAL_CREATIVE_SPECS.md",
       "download_papers.py",
       "download_zenodo_papers.py",
@@ -412805,6 +412884,6 @@
       }
     ],
     "record_fingerprint": "6a3a54ac0d8d733589a63b2ff13de6a9",
-    "payload_hash": "3c564c3b5f4a3e902c9901ba01eb501e"
+    "payload_hash": "41c28d9977c9a103bb3e52351a3d97bf"
   }
 }
