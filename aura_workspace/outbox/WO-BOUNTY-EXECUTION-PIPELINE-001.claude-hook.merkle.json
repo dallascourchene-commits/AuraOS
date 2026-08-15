@@ -1,0 +1,25 @@
+{
+  "schema": "AuraBountySubmissionMerkleV1",
+  "work_order": "WO-BOUNTY-EXECUTION-PIPELINE-001",
+  "target": "claude-builders-bounty/claude-builders-bounty#3",
+  "algorithm": "sha256(file_bytes) leaves sorted by path; parent=sha256(left_digest_bytes||right_digest_bytes); duplicate-last-if-odd",
+  "leaf_count": 3,
+  "leaves": [
+    {
+      "path": "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/PR.md",
+      "sha256": "5f3edebe543fe03ef23f6fe57557f050d95a1adf0dd6c8e4fedfeeb85fdf31c6",
+      "bytes": 1690
+    },
+    {
+      "path": "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/READY_TO_SUBMIT.patch",
+      "sha256": "d2472faaa93531a004e54ddd562673bf8d86af2c3821fd4d919c9038f49dc971",
+      "bytes": 10518
+    },
+    {
+      "path": "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
+      "sha256": "61c9d5df73fb25350ca02d9cd7db5992af1190732c3a6c73901097d3ac8800ea",
+      "bytes": 1476
+    }
+  ],
+  "merkle_root_sha256": "41edf5bd4658f00e920e74d0f4b7d6baade7d38a57226ad2a1b0330d0826668d"
+}

@@ -1,0 +1,282 @@
+--- /dev/null
++++ b/hooks/block_destructive_commands.py
+@@ -0,0 +1,136 @@
++#!/usr/bin/env python3
++"""Claude Code PreToolUse guard for destructive Bash commands.
++
++Reads the hook event JSON on stdin. For Bash tool calls, blocks a bounded set of
++high-risk command patterns required by the bounty. Blocked attempts are appended
++to ~/.claude/hooks/blocked.log and the process exits 2, which Claude Code treats
++as a blocking hook decision.
++"""
++from __future__ import annotations
++
++import json
++import os
++import re
++import shlex
++import sys
++from datetime import datetime, timezone
++from pathlib import Path
++from typing import Iterable
++
++LOG_PATH = Path.home() / ".claude" / "hooks" / "blocked.log"
++
++# These checks are deliberately narrow and auditable. They are not a general
++# shell sandbox and should not be advertised as one.
++RM_COMMAND = re.compile(r"(?:^|[;&|]\s*)(?:sudo\s+)?rm\s+([^\n;&|]+)", re.IGNORECASE)
++DROP_TABLE = re.compile(r"\bDROP\s+TABLE\b", re.IGNORECASE)
++TRUNCATE = re.compile(r"\bTRUNCATE(?:\s+TABLE)?\b", re.IGNORECASE)
++GIT_FORCE_PUSH = re.compile(r"\bgit\s+push\b[^\n;&|]*(?:--force(?:-with-lease|-if-includes)?\b|(?:^|\s)-f(?:\s|$))", re.IGNORECASE)
++DELETE_FROM = re.compile(r"\bDELETE\s+FROM\b", re.IGNORECASE)
++WHERE = re.compile(r"\bWHERE\b", re.IGNORECASE)
++
++
++def _sql_statements(command: str) -> Iterable[str]:
++    """Yield conservative SQL-ish statement fragments.
++
++    Semicolon splitting is sufficient for the required DELETE-without-WHERE gate
++    and errs on the side of blocking ambiguous destructive SQL.
++    """
++    for statement in command.split(";"):
++        statement = statement.strip()
++        if statement:
++            yield statement
++
++
++def _has_recursive_forced_rm(command: str) -> bool:
++    for match in RM_COMMAND.finditer(command):
++        try:
++            args = shlex.split(match.group(1), posix=True)
++        except ValueError:
++            # Ambiguous shell quoting around a destructive rm is safer to block.
++            args = match.group(1).split()
++        flags: set[str] = set()
++        for arg in args:
++            if arg == "--":
++                break
++            if arg.startswith("--"):
++                if arg in {"--recursive", "--force"}:
++                    flags.add("r" if arg == "--recursive" else "f")
++            elif arg.startswith("-") and len(arg) > 1:
++                flags.update(arg[1:])
++            else:
++                break
++        if {"r", "f"}.issubset(flags):
++            return True
++    return False
++
++
++def reasons_for(command: str) -> list[str]:
++    reasons: list[str] = []
++    if _has_recursive_forced_rm(command):
++        reasons.append("recursive forced removal (rm -rf/-fr)")
++    if DROP_TABLE.search(command):
++        reasons.append("DROP TABLE")
++    if TRUNCATE.search(command):
++        reasons.append("TRUNCATE")
++    if GIT_FORCE_PUSH.search(command):
++        reasons.append("forced git push")
++    for statement in _sql_statements(command):
++        match = DELETE_FROM.search(statement)
++        if match and not WHERE.search(statement[match.end() :]):
++            reasons.append("DELETE FROM without WHERE")
++            break
++    return reasons
++
++
++def _project_path(event: dict) -> str:
++    for key in ("cwd", "project_path"):
++        value = event.get(key)
++        if isinstance(value, str) and value.strip():
++            return value.strip()
++    return os.getcwd()
++
++
++def _log_block(command: str, project_path: str, reasons: list[str]) -> None:
++    LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
++    record = {
++        "timestamp": datetime.now(timezone.utc).isoformat(),
++        "project_path": project_path,
++        "command": command,
++        "reasons": reasons,
++    }
++    with LOG_PATH.open("a", encoding="utf-8") as handle:
++        handle.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n")
++
++
++def main() -> int:
++    try:
++        event = json.load(sys.stdin)
++    except (json.JSONDecodeError, TypeError) as exc:
++        print(f"Destructive-command hook received invalid JSON: {exc}", file=sys.stderr)
++        return 2
++
++    # Non-Bash tools are outside this hook's scope and pass unchanged.
++    if event.get("tool_name") != "Bash":
++        return 0
++
++    tool_input = event.get("tool_input")
++    command = tool_input.get("command") if isinstance(tool_input, dict) else None
++    if not isinstance(command, str) or not command.strip():
++        return 0
++
++    reasons = reasons_for(command)
++    if not reasons:
++        return 0
++
++    project_path = _project_path(event)
++    _log_block(command, project_path, reasons)
++    print(
++        "Blocked destructive Bash command before execution: " + ", ".join(reasons) + ". "
++        "Revise the command to use a bounded, reversible operation and explicit scope.",
++        file=sys.stderr,
++    )
++    return 2
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+--- /dev/null
++++ b/hooks/test_block_destructive_commands.py
+@@ -0,0 +1,103 @@
++from __future__ import annotations
++
++import json
++import os
++import subprocess
++import sys
++import tempfile
++import unittest
++from pathlib import Path
++
++SCRIPT = Path(__file__).with_name("block_destructive_commands.py")
++
++
++def run_hook(command: str, *, tool_name: str = "Bash") -> tuple[subprocess.CompletedProcess[str], Path]:
++    tmp = tempfile.TemporaryDirectory()
++    home = Path(tmp.name)
++    event = {"tool_name": tool_name, "cwd": "/tmp/project", "tool_input": {"command": command}}
++    env = os.environ.copy()
++    env["HOME"] = str(home)
++    result = subprocess.run(
++        [sys.executable, str(SCRIPT)],
++        input=json.dumps(event),
++        text=True,
++        capture_output=True,
++        env=env,
++        check=False,
++    )
++    # Materialize log before TemporaryDirectory cleanup.
++    source = home / ".claude" / "hooks" / "blocked.log"
++    log_copy = Path(tempfile.mkstemp(prefix="hook-log-", suffix=".jsonl")[1])
++    if source.exists():
++        log_copy.write_bytes(source.read_bytes())
++    else:
++        log_copy.write_text("", encoding="utf-8")
++    tmp.cleanup()
++    return result, log_copy
++
++
++class GuardTests(unittest.TestCase):
++    def assertBlocked(self, command: str, reason: str) -> None:
++        result, log = run_hook(command)
++        self.addCleanup(lambda: log.unlink(missing_ok=True))
++        self.assertEqual(result.returncode, 2, result.stderr)
++        self.assertIn(reason, result.stderr)
++        entries = [json.loads(line) for line in log.read_text().splitlines() if line]
++        self.assertEqual(len(entries), 1)
++        self.assertEqual(entries[0]["command"], command)
++        self.assertEqual(entries[0]["project_path"], "/tmp/project")
++        self.assertTrue(entries[0]["timestamp"].endswith("+00:00"))
++
++    def assertAllowed(self, command: str) -> None:
++        result, log = run_hook(command)
++        self.addCleanup(lambda: log.unlink(missing_ok=True))
++        self.assertEqual(result.returncode, 0, result.stderr)
++        self.assertEqual(log.read_text(), "")
++
++    def test_required_block_patterns(self) -> None:
++        cases = [
++            ("rm -rf build", "recursive forced removal"),
++            ("rm -fr ./cache", "recursive forced removal"),
++            ("psql -c 'DROP TABLE users'", "DROP TABLE"),
++            ("git push --force origin main", "forced git push"),
++            ("git push -f origin feature", "forced git push"),
++            ("sqlite3 app.db 'TRUNCATE TABLE events'", "TRUNCATE"),
++            ("sqlite3 app.db 'DELETE FROM sessions'", "DELETE FROM without WHERE"),
++            ("echo x; DELETE FROM sessions; echo y", "DELETE FROM without WHERE"),
++        ]
++        for command, reason in cases:
++            with self.subTest(command=command):
++                self.assertBlocked(command, reason)
++
++    def test_normal_commands_pass(self) -> None:
++        for command in [
++            "ls -la",
++            "rm -r build",
++            "rm -f artifact.txt",
++            "git push origin feature",
++            "sqlite3 app.db 'DELETE FROM sessions WHERE id = 7'",
++            "sqlite3 app.db 'SELECT * FROM sessions'",
++            "python -m pytest -q",
++        ]:
++            with self.subTest(command=command):
++                self.assertAllowed(command)
++
++    def test_non_bash_tool_passes(self) -> None:
++        result, log = run_hook("rm -rf build", tool_name="Read")
++        self.addCleanup(lambda: log.unlink(missing_ok=True))
++        self.assertEqual(result.returncode, 0)
++        self.assertEqual(log.read_text(), "")
++
++    def test_invalid_json_fails_closed(self) -> None:
++        with tempfile.TemporaryDirectory() as home:
++            env = os.environ.copy()
++            env["HOME"] = home
++            result = subprocess.run(
++                [sys.executable, str(SCRIPT)], input="{", text=True, capture_output=True, env=env
++            )
++        self.assertEqual(result.returncode, 2)
++        self.assertIn("invalid JSON", result.stderr)
++
++
++if __name__ == "__main__":
++    unittest.main()
+--- /dev/null
++++ b/hooks/README.md
+@@ -0,0 +1,34 @@
++# Destructive Bash command guard
++
++A Claude Code `PreToolUse` hook that blocks the bounty's five destructive command classes before the Bash tool executes. It logs each block as JSONL to `~/.claude/hooks/blocked.log` with UTC timestamp, command, project path, and reasons.
++
++## Install — two commands
++
++```bash
++mkdir -p ~/.claude/hooks && cp block_destructive_commands.py ~/.claude/hooks/
++python - <<'PY'
++import json, pathlib
++p=pathlib.Path.home()/'.claude/settings.json'; p.parent.mkdir(parents=True,exist_ok=True)
++d=json.loads(p.read_text()) if p.exists() else {}
++d.setdefault('hooks',{})['PreToolUse']=[{'matcher':'Bash','hooks':[{'type':'command','command':'python3 ~/.claude/hooks/block_destructive_commands.py'}]}]
++p.write_text(json.dumps(d,indent=2)+'\n')
++PY
++```
++
++Claude Code sends the hook event on stdin. A blocked command emits a clear reason on stderr and exits `2`, the documented blocking exit code for `PreToolUse` command hooks.
++
++## Guarded patterns
++
++- recursive forced removal: `rm -rf` and equivalent `rm -fr`
++- `DROP TABLE`
++- `git push --force` / `git push -f`
++- `TRUNCATE`
++- `DELETE FROM ...` without a `WHERE` clause in the same SQL statement
++
++This is a focused guard, **not a general shell sandbox**. It intentionally leaves ordinary Bash commands untouched.
++
++## Test
++
++```bash
++python -m unittest -v test_block_destructive_commands.py
++```

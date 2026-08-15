@@ -1,0 +1,104 @@
+{
+  "schema": "AuraWorkReceiptV1",
+  "work_order": "WO-BOUNTY-EXECUTION-PIPELINE-001",
+  "coordinate": "AD:BOUNTY:SOLVE-AND-STAGE:001",
+  "authority": {
+    "human_sovereign_disposition": 1,
+    "approved_pass": true
+  },
+  "completed_utc": "2026-08-15T09:15:58.295389+00:00",
+  "aura_main_parent_observed": "68b08ec20501db8e1f1f53f9c240ff3ef5c3da59",
+  "intake_provenance": {
+    "commanded_source": "docs/staging/ready_review/LIVE_BOUNTY_TARGETS.md",
+    "commanded_source_status": "MISSING_NO_PATH_HISTORY",
+    "fallback_source": "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
+    "rule": "Only previously verified fallback targets were executed; no replacement target list was invented."
+  },
+  "triads": {
+    "W1-W3": "currentness + pinned source isolation + pre-edit reproduction",
+    "W4-W6": "minimal patch + applicability + isolated regression leases",
+    "W7-W9": "PR package + evidence validation + Merkle + staging disposition"
+  },
+  "ci_lease": {
+    "branch": "w1/bounty-exec-ci-001",
+    "head": "ae1747e5ee9507af4d716c7471b9ecadb148ac75",
+    "run_id": 31876404949,
+    "permissions": "AuraOS contents read-only; public upstream clones only",
+    "third_party_pushes": 0
+  },
+  "results": {
+    "ready_to_submit": 1,
+    "blocked_upstream_baseline": 2,
+    "policy_excluded": 1,
+    "external_prs": 0,
+    "claims_or_reservations": 0,
+    "wallet_or_bond_actions": 0
+  },
+  "targets": [
+    {
+      "target": "claude-builders-bounty/claude-builders-bounty#3",
+      "pin": "1aeae2adc82d33f971fd7731644348dcdd24b5a6",
+      "status": "READY_TO_SUBMIT",
+      "evidence": {
+        "apply_check": "PASS",
+        "diff_check": "PASS",
+        "py_compile": "PASS",
+        "unittest": "4/4 PASS",
+        "scenario_count": 17
+      },
+      "bundle": "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/",
+      "merkle_root_sha256": "41edf5bd4658f00e920e74d0f4b7d6baade7d38a57226ad2a1b0330d0826668d"
+    },
+    {
+      "target": "mergeos-bounties/PlantGuide#10",
+      "pin": "2b9ed0e3169026e5c809bf563c1e3c71f1afc30e",
+      "status": "BLOCKED_UPSTREAM_BASELINE",
+      "evidence": {
+        "apply_check": "PASS",
+        "pytest": "49/49 PASS",
+        "ruff_baseline": "23 pre-existing errors on untouched src/tests",
+        "schema_harness": "RefResolver self-$defs resolution failure",
+        "typescript": "not reached in final lease"
+      },
+      "working_patch": "aura_workspace/inbox/bounties/active/plantguide/WORKING.patch"
+    },
+    {
+      "target": "mergeos-bounties/Loru#19",
+      "pin": "a2d332c790ea88bb2139c386d913195e7c8dce9e",
+      "status": "BLOCKED_UPSTREAM_BASELINE",
+      "evidence": {
+        "apply_check": "PASS",
+        "pytest": "32 PASS, 1 SKIPPED",
+        "demo": "PASS",
+        "ruff_baseline": "33 pre-existing errors on untouched src/tests",
+        "doc_anchor_harness": "NONZERO"
+      }
+    },
+    {
+      "target": "typeorm/typeorm#3357",
+      "status": "POLICY_EXCLUDED",
+      "reason": "Pinned maintainer notice rejects community PRs for this issue and states AI-generated PRs will be closed."
+    }
+  ],
+  "merkle_receipts": [
+    {
+      "target": "claude-builders-bounty/claude-builders-bounty#3",
+      "path": "aura_workspace/outbox/WO-BOUNTY-EXECUTION-PIPELINE-001.claude-hook.merkle.json",
+      "root_sha256": "41edf5bd4658f00e920e74d0f4b7d6baade7d38a57226ad2a1b0330d0826668d"
+    }
+  ],
+  "witness": {
+    "status": "W_VALIDATED_FAIL_CLOSED",
+    "W1-W3": "PASS_WITH_MISSING_INTAKE_SOURCE_SCAR",
+    "W4-W6": "1 FULL PASS; 2 BLOCKED BY UPSTREAM BASELINE",
+    "W7-W9": "1 READY_TO_SUBMIT PACKAGE SEALED"
+  },
+  "negative_space": [
+    "NO_THIRD_PARTY_REPOSITORY_MUTATED",
+    "NO_EXTERNAL_PR_OPENED",
+    "NO_BOUNTY_CLAIM_OR_RESERVATION_SUBMITTED",
+    "NO_WALLET_SIGNATURE_OR_BOND_ACTION",
+    "NO_BLOCKED_TARGET_PROMOTED_AS_READY",
+    "NO_UNRELATED_UPSTREAM_LINT_CLEANUP_SWEPT_INTO_BOUNTY_PATCH"
+  ]
+}
