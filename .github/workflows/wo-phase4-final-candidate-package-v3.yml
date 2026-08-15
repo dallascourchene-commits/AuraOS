@@ -1,0 +1,138 @@
+name: WO Phase4 Final Candidate Package V3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/wo-phase4-final-candidate-package-v3.yml
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      SOURCE_BRANCH: fix/wc-02-triad2-phase4-final
+      EXPECTED_BASE: bb9c2538910c760c79789b3cafa2a7404e789a2e
+      EXPECTED_TREE: 88ae935fe67e771d87f5e1b2e0e38f82e8294df8
+      PYTHONPATH: ${{ github.workspace }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/wc-02-triad2-phase4-final
+          fetch-depth: 0
+      - name: Bind exact synchronized base
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_BASE"
+          test -z "$(git status --porcelain)"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt \
+            "jsonschema>=4.23,<5.0" "pytest>=8.2,<9.0" \
+            "pytest-asyncio>=0.23,<1.0" "trimesh>=4.7.1,<5.0" "zstandard>=0.23.0,<1.0"
+      - name: Apply validated repair owners
+        run: |
+          set -euo pipefail
+          python tools/wo_triad2_ci_codemap_failclosed_patch.py
+          python tools/wo_triad2_ci_skillweaver_codemap_patch.py
+          python tools/wo_triad2_ci_agent_bridge_codemap_patch.py
+          python tools/wo_triad2_ci_compass_intent_fidelity_patch.py
+          python tools/wo_triad2_ci_compass_bounded_handoff_patch.py
+          python tools/wo_triad2_ci_pascal_receipt_test_patch.py
+          python - <<'PY'
+          from tools.wo_triad2_ci_codemap_repair import patch_architect, patch_ci
+          patch_architect(); patch_ci()
+          PY
+      - name: Apply current-generation direct contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show origin/main:.github/phase4/wc02_phase4_current_generation_patch.py > /tmp/wc02_phase4_patch.py
+          python /tmp/wc02_phase4_patch.py
+      - name: Remove repair bootstrap surfaces
+        run: |
+          rm -f .github/workflows/wo-triad2-ci-codemap-repair-bootstrap.yml
+          rm -f tools/wo_triad2_ci_codemap_repair.py
+          rm -f tools/wo_triad2_ci_codemap_failclosed_patch.py
+          rm -f tools/wo_triad2_ci_codemap_command_index_patch.py
+          rm -f tools/wo_triad2_ci_codemap_incremental_stability_patch.py
+          rm -f tools/wo_triad2_ci_codemap_iterator_compat_patch.py
+          rm -f tools/wo_triad2_ci_agent_bridge_codemap_patch.py
+          rm -f tools/wo_triad2_ci_compass_intent_fidelity_patch.py
+          rm -f tools/wo_triad2_ci_compass_bounded_handoff_patch.py
+          rm -f tools/wo_triad2_ci_pascal_receipt_test_patch.py
+          rm -f tools/wo_triad2_ci_skillweaver_codemap_patch.py
+      - name: Compile and regenerate navigation
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            aura_architect_loop.py aura_agent_arena_bridge.py aura_coding_relationship_compass.py \
+            aura_hermes_arena_mode.py aura_skillweaver.py aura_topology_health.py \
+            test_aura_functions.py test_aura_substrate.py test_synthesis_upgrades.py test_syntax_fixes.py \
+            tests/test_aura_construction_pascal_spatial_foundry_pr5.py \
+            tests/test_wc02_phase4_pytest_collection_contract.py
+          python aura_codebase_navigator.py --refresh-topology
+          git checkout -- Aura_Memory/live_topology_ast.json || true
+          python scripts/aura_navigation_refresh.py
+          git checkout -- Aura_Memory/live_topology_ast.json || true
+          python -m aura_codemap_verify
+          git diff --check
+      - name: Focused regression proof
+        run: |
+          python -m pytest -q \
+            tests/test_aura_codemap_verify.py \
+            tests/test_aura_arch_v2_3_capsule_validator.py \
+            tests/test_aura_topology_health.py \
+            tests/test_aura_hermes_arena_mode.py::TestPreflight::test_preflight_repo_digest_has_codemap_status \
+            tests/test_aura_system_stabilization.py::TestStabilization::test_codemap_counts \
+            tests/test_bilateral_intent_pr1_evidence.py::test_recorded_candidate_source_blobs_match_checkout \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_fully_projected_obligations_preserve_eligible_path \
+            tests/test_aura_construction_pascal_spatial_foundry_pr5.py::test_pr5_coordinate_receipt_mismatched_artifact_digest_fails_closed \
+            tests/test_wc02_phase4_pytest_collection_contract.py \
+            test_aura_substrate.py
+      - name: Commit exact candidate locally
+        run: |
+          set -euo pipefail
+          git config user.name 'Aura Fleet Triad2 Phase4'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git diff --cached --quiet && exit 1
+          GIT_AUTHOR_DATE='2026-08-15T22:40:21Z' GIT_COMMITTER_DATE='2026-08-15T22:40:21Z' \
+            git commit -m 'fix(phase4): remediate CI, CODEMAP, and pytest contracts'
+          git rev-parse HEAD | tee /tmp/wc02-phase4-candidate-head.txt
+          git rev-parse HEAD^{tree} | tee /tmp/wc02-phase4-candidate-tree.txt
+          test "$(git rev-parse HEAD^{tree})" = "$EXPECTED_TREE"
+          python -m aura_codemap_verify
+      - name: Package exact committed candidate before any push
+        run: |
+          git archive --format=tar.gz --output=/tmp/wc02-phase4-candidate.tar.gz HEAD
+          git bundle create /tmp/wc02-phase4-candidate.bundle HEAD
+          git diff HEAD^ HEAD --binary > /tmp/wc02-phase4-candidate.patch
+          git show --stat --oneline HEAD > /tmp/wc02-phase4-candidate-stat.txt
+          sha256sum /tmp/wc02-phase4-candidate.tar.gz /tmp/wc02-phase4-candidate.bundle \
+            /tmp/wc02-phase4-candidate.patch /tmp/wc02-phase4-candidate-head.txt \
+            /tmp/wc02-phase4-candidate-tree.txt > /tmp/wc02-phase4-candidate.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wc02-phase4-exact-candidate-v3
+          path: |
+            /tmp/wc02-phase4-candidate.tar.gz
+            /tmp/wc02-phase4-candidate.bundle
+            /tmp/wc02-phase4-candidate.patch
+            /tmp/wc02-phase4-candidate-stat.txt
+            /tmp/wc02-phase4-candidate-head.txt
+            /tmp/wc02-phase4-candidate-tree.txt
+            /tmp/wc02-phase4-candidate.sha256
+          if-no-files-found: error
+          retention-days: 14
+      - name: Confirm no remote mutation
+        run: echo 'Exact candidate packaged; no push and no PR performed.'
