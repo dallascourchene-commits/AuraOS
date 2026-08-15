@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786816880,
+  "generated_at_unix": 1786830130,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1597,
+    "repo_file_count": 1598,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -187,6 +187,7 @@
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+      ".github/workflows/wc-02-triad2-phase4-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
       ".github/workflows/wo-phase3-codemap-compat-audit.yml",
@@ -1713,16 +1714,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1597,
-      "bytes": 26073271,
-      "tokens_est": 6508732,
+      "files": 1598,
+      "bytes": 26079627,
+      "tokens_est": 6510321,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 231,
         "native_accelerator": 8,
         "operator_script": 9,
         "python_module": 990,
-        "schema_or_lexicon": 246,
+        "schema_or_lexicon": 247,
         "support_file": 49
       }
     },
@@ -157585,6 +157586,7 @@
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/wc-02-triad2-phase4-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
       ".github/workflows/wo-phase3-codemap-compat-audit.yml",
@@ -157647,6 +157649,7 @@
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
+      ".github/workflows/wc-02-triad2-phase4-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       "LIQUID_INTERNET_IMPLEMENTATION.md",
       "SWARM_COLLECTIVE_IMPLEMENTATION.md",
@@ -157788,6 +157791,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
+      ".github/workflows/wc-02-triad2-phase4-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
       ".github/workflows/wo-phase3-codemap-compat-audit.yml",
@@ -157826,7 +157830,8 @@
     ],
     "python scripts/aura_navigation_refresh.py --root .": [
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
-      ".github/workflows/sync-analysis-codemap.yml"
+      ".github/workflows/sync-analysis-codemap.yml",
+      ".github/workflows/wc-02-triad2-phase4-verify.yml"
     ],
     "python scripts/aura_source_anchor_map.py --root .": [
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
@@ -157836,7 +157841,8 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/sync-analysis-codemap.yml",
-      ".github/workflows/triad2-codemap-repair.yml"
+      ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/wc-02-triad2-phase4-verify.yml"
     ],
     "python aura_codemap_verify.py --repo-root .": [
       ".github/workflows/pr138-grounded-phase-integration.yml",
@@ -170087,6 +170093,78 @@
         -0.190812,
         0.164493,
         -0.088168
+      ]
+    },
+    {
+      "path": ".github/workflows/wc-02-triad2-phase4-verify.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6356,
+      "lines": 161,
+      "tokens_est": 1589,
+      "symbol_count": 0,
+      "commands": [
+        "python -m pip",
+        "python scripts/aura_navigation_refresh.py --root .",
+        "python scripts/aura_source_anchor_map.py --root . --check",
+        "python -m aura_codemap_verify",
+        "python -m pytest"
+      ],
+      "command_lines": {
+        "python -m pip": [
+          55,
+          56,
+          140
+        ],
+        "python scripts/aura_navigation_refresh.py --root .": [
+          59
+        ],
+        "python scripts/aura_source_anchor_map.py --root . --check": [
+          60
+        ],
+        "python -m aura_codemap_verify": [
+          61
+        ],
+        "python -m pytest": [
+          69,
+          109
+        ]
+      },
+      "topology": {},
+      "digest8": "70eb7fe1e5d30cf7",
+      "vector": [
+        -0.242829,
+        0.113934,
+        0.125442,
+        -0.206001,
+        -0.155364,
+        -0.072503,
+        -0.187588,
+        0.224415,
+        -0.215208,
+        -0.180683,
+        0.169174,
+        0.284259,
+        -0.233622,
+        -0.012659,
+        -0.254337,
+        -0.275052,
+        0.012659,
+        -0.123141,
+        -0.224415,
+        -0.233622,
+        0.247432,
+        0.134649,
+        0.079408,
+        -0.037978,
+        -0.05409,
+        -0.051788,
+        0.058693,
+        -0.284259,
+        0.031073,
+        0.199096,
+        0.182985,
+        0.012659
       ]
     },
     {
@@ -283424,16 +283502,16 @@
     }
   },
   "summary": {
-    "file_count": 1597,
-    "total_bytes": 26073271,
-    "text_tokens_est": 6508732,
+    "file_count": 1598,
+    "total_bytes": 26079627,
+    "text_tokens_est": 6510321,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 231,
       "native_accelerator": 8,
       "operator_script": 9,
       "python_module": 990,
-      "schema_or_lexicon": 246,
+      "schema_or_lexicon": 247,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -283630,6 +283708,7 @@
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+      ".github/workflows/wc-02-triad2-phase4-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
       ".github/workflows/wo-phase3-codemap-compat-audit.yml",
@@ -442831,6 +442910,6 @@
       }
     ],
     "record_fingerprint": "ad92cc08a26db3200411c459a7f5f8e2",
-    "payload_hash": "de4c9bdbcba1f67e715667042c374065"
+    "payload_hash": "bc9edddae762cb6325bc3070e86363f4"
   }
 }
