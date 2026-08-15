@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786831548,
+  "generated_at_unix": 1786831851,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1601,
+    "repo_file_count": 1603,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1579,6 +1579,7 @@
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "tests/test_wc02_arch_contract_regressions.py",
+      "tests/test_wc02_memory_budget_sync.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -1587,6 +1588,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/wc02_memory_budget_sync_patch.py",
       "tools/wc02_phase4_readme_patch.py",
       "tools/wc02_pytest_collection_patch.py",
       "tools/wc02_standalone_smoke_patch.py",
@@ -1717,15 +1719,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1601,
-      "bytes": 26060413,
-      "tokens_est": 6505527,
+      "files": 1603,
+      "bytes": 26068064,
+      "tokens_est": 6507440,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 224,
         "native_accelerator": 8,
         "operator_script": 9,
-        "python_module": 1000,
+        "python_module": 1002,
         "schema_or_lexicon": 247,
         "support_file": 49
       }
@@ -4360,6 +4362,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/wc02_memory_budget_sync_patch.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 46,
+        "semantic_id": "tools/wc02_memory_budget_sync_patch.py#function:main:4ebc53e79afeb359",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -156483,27 +156493,35 @@
         "signature_hash": "e2c57d5d546bacfa"
       }
     ],
-    "_patch_once": [
+    "test_sync_memory_budget_enters_and_exits_without_poll_deadline_block": [
       {
-        "file": "tools/wc02_pytest_collection_patch.py",
+        "file": "tests/test_wc02_memory_budget_sync.py",
         "kind": "function",
-        "line": 19,
-        "end_line": 26,
-        "semantic_id": "tools/wc02_pytest_collection_patch.py#function:_patch_once:ed897747c71c2090",
-        "signature_hash": "f4c82b1d6b720b31"
+        "line": 10,
+        "end_line": 18,
+        "semantic_id": "tests/test_wc02_memory_budget_sync.py#function:test_sync_memory_budget_enters_and_exits_without_poll_deadline_block:c8f33ac765faf716",
+        "signature_hash": "4ca1e79f7fb79228"
       }
     ],
-    "_patch_syntax_script": [
+    "test_sync_memory_budget_warn_monitor_runs_while_with_block_is_active": [
       {
-        "file": "tools/wc02_pytest_collection_patch.py",
+        "file": "tests/test_wc02_memory_budget_sync.py",
         "kind": "function",
-        "line": 29,
-        "end_line": 43,
-        "semantic_id": "tools/wc02_pytest_collection_patch.py#function:_patch_syntax_script:6935957a87475898",
-        "signature_hash": "8e101230737b90f2"
+        "line": 21,
+        "end_line": 34,
+        "semantic_id": "tests/test_wc02_memory_budget_sync.py#function:test_sync_memory_budget_warn_monitor_runs_while_with_block_is_active:789ca3e0f0e5eec5",
+        "signature_hash": "3d356f69e16cf3bd"
       }
     ],
     "replace_once": [
+      {
+        "file": "tools/wc02_memory_budget_sync_patch.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 15,
+        "semantic_id": "tools/wc02_memory_budget_sync_patch.py#function:replace_once:8e9aaa61f9c365c9",
+        "signature_hash": "820625feabdd1c16"
+      },
       {
         "file": "tools/wc02_standalone_smoke_patch.py",
         "kind": "function",
@@ -156527,6 +156545,26 @@
         "end_line": 13,
         "semantic_id": "tools/wo_fleet_phase3_triad2_incremental_patch.py#function:replace_once:fc7c9dfd48a2fbbd",
         "signature_hash": "820625feabdd1c16"
+      }
+    ],
+    "_patch_once": [
+      {
+        "file": "tools/wc02_pytest_collection_patch.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 26,
+        "semantic_id": "tools/wc02_pytest_collection_patch.py#function:_patch_once:ed897747c71c2090",
+        "signature_hash": "f4c82b1d6b720b31"
+      }
+    ],
+    "_patch_syntax_script": [
+      {
+        "file": "tools/wc02_pytest_collection_patch.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 43,
+        "semantic_id": "tools/wc02_pytest_collection_patch.py#function:_patch_syntax_script:6935957a87475898",
+        "signature_hash": "8e101230737b90f2"
       }
     ],
     "_coordinates": [
@@ -158114,6 +158152,10 @@
       ".github/workflows/wo-fleet-phase3-triad2-verify.yml"
     ],
     "python tools/wc02_standalone_smoke_patch.py": [
+      ".github/workflows/wc02-local-tree-export.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify.yml"
+    ],
+    "python tools/wc02_memory_budget_sync_patch.py": [
       ".github/workflows/wc02-local-tree-export.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify.yml"
     ],
@@ -170239,9 +170281,9 @@
       "path": ".github/workflows/wc02-local-tree-export.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 3151,
-      "lines": 74,
-      "tokens_est": 788,
+      "bytes": 3207,
+      "lines": 75,
+      "tokens_est": 802,
       "symbol_count": 0,
       "commands": [
         "python -m pip",
@@ -170251,6 +170293,7 @@
         "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
         "python tools/wc02_phase4_readme_patch.py",
         "python tools/wc02_standalone_smoke_patch.py",
+        "python tools/wc02_memory_budget_sync_patch.py",
         "python aura_codebase_navigator.py --refresh-topology",
         "python scripts/aura_source_anchor_map.py --root .",
         "python scripts/aura_source_anchor_map.py --root . --check",
@@ -170260,12 +170303,12 @@
         "python -m pip": [
           28,
           29,
-          48,
           49,
           50,
           51,
           52,
-          53
+          53,
+          54
         ],
         "python tools/wo_fleet_phase3_triad2_contract_patch.py": [
           32
@@ -170285,55 +170328,58 @@
         "python tools/wc02_standalone_smoke_patch.py": [
           37
         ],
-        "python aura_codebase_navigator.py --refresh-topology": [
+        "python tools/wc02_memory_budget_sync_patch.py": [
           38
         ],
+        "python aura_codebase_navigator.py --refresh-topology": [
+          39
+        ],
         "python scripts/aura_source_anchor_map.py --root .": [
-          40,
-          41
+          41,
+          42
         ],
         "python scripts/aura_source_anchor_map.py --root . --check": [
-          41
+          42
         ],
         "python -m aura_codemap_verify": [
-          43
+          44
         ]
       },
       "topology": {},
-      "digest8": "f5cbce0f0a6724ee",
+      "digest8": "36d2e7ea9c893f82",
       "vector": [
-        0.275005,
-        -0.088747,
-        -0.174206,
-        0.211458,
-        -0.211458,
-        0.239945,
-        -0.082173,
-        0.003287,
-        0.14572,
-        -0.277196,
-        0.018626,
-        -0.150102,
-        -0.24871,
-        0.150102,
-        -0.104086,
-        -0.26624,
-        0.185163,
-        0.16325,
-        -0.191737,
-        -0.209267,
-        -0.193928,
-        -0.110659,
-        -0.082173,
-        -0.066834,
-        -0.134763,
-        -0.161059,
-        0.275005,
-        0.250901,
-        0.207076,
-        -0.119425,
-        0.053686,
-        0.007669
+        -0.192338,
+        0.249242,
+        0.021624,
+        0.194614,
+        -0.010243,
+        -0.073976,
+        0.190062,
+        0.226481,
+        -0.085357,
+        0.285661,
+        0.287938,
+        0.228757,
+        0.067148,
+        -0.114947,
+        0.290214,
+        0.276557,
+        -0.278833,
+        0.037557,
+        -0.051214,
+        -0.2629,
+        -0.137709,
+        -0.085357,
+        0.135433,
+        0.064871,
+        -0.205995,
+        0.283385,
+        -0.026176,
+        0.137709,
+        0.039833,
+        0.080805,
+        0.080805,
+        -0.10129
       ]
     },
     {
@@ -170631,9 +170677,9 @@
       "path": ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 8487,
-      "lines": 185,
-      "tokens_est": 2122,
+      "bytes": 8802,
+      "lines": 190,
+      "tokens_est": 2201,
       "symbol_count": 0,
       "commands": [
         "python -m pip",
@@ -170643,6 +170689,7 @@
         "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
         "python tools/wc02_phase4_readme_patch.py",
         "python tools/wc02_standalone_smoke_patch.py",
+        "python tools/wc02_memory_budget_sync_patch.py",
         "python -m py_compile",
         "python aura_codebase_navigator.py --refresh-topology",
         "python -m aura_codemap_verify",
@@ -170650,80 +170697,83 @@
       ],
       "command_lines": {
         "python -m pip": [
-          49,
-          50,
-          114,
-          115
+          51,
+          52,
+          118,
+          119
         ],
         "python tools/wo_fleet_phase3_triad2_contract_patch.py": [
-          54
-        ],
-        "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
-          55
-        ],
-        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
           56
         ],
-        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py": [
+        "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
           57
         ],
-        "python tools/wc02_phase4_readme_patch.py": [
+        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
           58
         ],
-        "python tools/wc02_standalone_smoke_patch.py": [
+        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py": [
           59
         ],
+        "python tools/wc02_phase4_readme_patch.py": [
+          60
+        ],
+        "python tools/wc02_standalone_smoke_patch.py": [
+          61
+        ],
+        "python tools/wc02_memory_budget_sync_patch.py": [
+          62
+        ],
         "python -m py_compile": [
-          63
+          66
         ],
         "python aura_codebase_navigator.py --refresh-topology": [
-          73
+          76
         ],
         "python -m aura_codemap_verify": [
-          74
+          77
         ],
         "python -m pytest": [
-          79,
-          104,
-          120,
-          145
+          82,
+          108,
+          124,
+          150
         ]
       },
       "topology": {},
-      "digest8": "a319e6f7c51fb94a",
+      "digest8": "85782ed873b58283",
       "vector": [
-        -0.199,
-        -0.081352,
-        -0.236547,
-        -0.136421,
-        0.02378,
-        0.193994,
-        0.311642,
-        0.168962,
-        -0.201503,
-        -0.131415,
-        -0.106384,
-        -0.088862,
-        0.173969,
-        -0.098874,
-        0.06383,
-        0.091365,
-        -0.231541,
-        -0.118899,
-        0.098874,
-        0.166459,
-        -0.008761,
-        0.259076,
-        0.11139,
-        0.314145,
-        0.289113,
-        -0.066333,
-        0.041302,
-        -0.274095,
-        -0.291617,
-        -0.121403,
-        0.121403,
-        -0.15144
+        0.190727,
+        0.232851,
+        0.293696,
+        -0.162644,
+        0.024572,
+        0.005851,
+        -0.017552,
+        0.188387,
+        -0.101799,
+        -0.193067,
+        -0.050314,
+        0.153284,
+        -0.293696,
+        -0.265614,
+        -0.083077,
+        -0.272634,
+        -0.038613,
+        -0.104139,
+        0.052655,
+        0.143923,
+        -0.267954,
+        -0.22583,
+        -0.015211,
+        -0.183706,
+        -0.265614,
+        -0.207108,
+        -0.253913,
+        0.083077,
+        0.122861,
+        0.139242,
+        -0.097119,
+        -0.164985
       ]
     },
     {
@@ -259346,6 +259396,53 @@
       ]
     },
     {
+      "path": "tests/test_wc02_memory_budget_sync.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1124,
+      "lines": 35,
+      "tokens_est": 281,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1bfdea1eee90aeed",
+      "vector": [
+        0.250156,
+        0.159856,
+        0.010982,
+        0.096402,
+        0.154975,
+        -0.208667,
+        0.054912,
+        0.101283,
+        -0.167178,
+        0.035388,
+        -0.057353,
+        0.013423,
+        0.013423,
+        0.023185,
+        0.213548,
+        0.008542,
+        0.157415,
+        -0.186702,
+        0.269681,
+        0.262359,
+        -0.26724,
+        -0.059793,
+        -0.308729,
+        -0.120807,
+        -0.252597,
+        0.194024,
+        -0.08908,
+        -0.103723,
+        0.242835,
+        -0.301408,
+        0.098842,
+        0.277002
+      ]
+    },
+    {
       "path": "third_party/pascal/LICENSE",
       "role": "support_file",
       "binary": false,
@@ -259719,6 +259816,53 @@
         -0.242578,
         0.019731,
         0.196151
+      ]
+    },
+    {
+      "path": "tools/wc02_memory_budget_sync_patch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6156,
+      "lines": 51,
+      "tokens_est": 1539,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e61f923afd2d9504",
+      "vector": [
+        -0.040993,
+        0.224839,
+        -0.15776,
+        -0.207448,
+        0.316763,
+        0.232293,
+        0.18012,
+        -0.093165,
+        -0.294403,
+        -0.006211,
+        -0.008695,
+        -0.028571,
+        -0.103103,
+        0.249683,
+        0.053415,
+        0.058384,
+        0.18012,
+        -0.122978,
+        -0.145338,
+        0.234777,
+        0.098134,
+        0.175151,
+        0.031055,
+        0.259621,
+        0.172667,
+        0.15776,
+        -0.314278,
+        -0.001242,
+        -0.122978,
+        -0.190058,
+        -0.070806,
+        -0.274528
       ]
     },
     {
@@ -284002,15 +284146,15 @@
     }
   },
   "summary": {
-    "file_count": 1601,
-    "total_bytes": 26060413,
-    "text_tokens_est": 6505527,
+    "file_count": 1603,
+    "total_bytes": 26068064,
+    "text_tokens_est": 6507440,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 224,
       "native_accelerator": 8,
       "operator_script": 9,
-      "python_module": 1000,
+      "python_module": 1002,
       "schema_or_lexicon": 247,
       "support_file": 49
     },
@@ -285600,6 +285744,7 @@
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "tests/test_wc02_arch_contract_regressions.py",
+      "tests/test_wc02_memory_budget_sync.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -285608,6 +285753,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/wc02_memory_budget_sync_patch.py",
       "tools/wc02_phase4_readme_patch.py",
       "tools/wc02_pytest_collection_patch.py",
       "tools/wc02_standalone_smoke_patch.py",
@@ -442202,6 +442348,46 @@
         "file_digest8": "cb763830ff36f325"
       },
       {
+        "semantic_id": "tests/test_wc02_memory_budget_sync.py#function:test_sync_memory_budget_enters_and_exits_without_poll_deadline_block:c8f33ac765faf716",
+        "name": "test_sync_memory_budget_enters_and_exits_without_poll_deadline_block",
+        "kind": "function",
+        "file": "tests/test_wc02_memory_budget_sync.py",
+        "line": 10,
+        "end_line": 18,
+        "signature_hash": "4ca1e79f7fb79228",
+        "file_digest8": "1bfdea1eee90aeed"
+      },
+      {
+        "semantic_id": "tests/test_wc02_memory_budget_sync.py#function:test_sync_memory_budget_warn_monitor_runs_while_with_block_is_active:789ca3e0f0e5eec5",
+        "name": "test_sync_memory_budget_warn_monitor_runs_while_with_block_is_active",
+        "kind": "function",
+        "file": "tests/test_wc02_memory_budget_sync.py",
+        "line": 21,
+        "end_line": 34,
+        "signature_hash": "3d356f69e16cf3bd",
+        "file_digest8": "1bfdea1eee90aeed"
+      },
+      {
+        "semantic_id": "tools/wc02_memory_budget_sync_patch.py#function:main:4ebc53e79afeb359",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/wc02_memory_budget_sync_patch.py",
+        "line": 18,
+        "end_line": 46,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "e61f923afd2d9504"
+      },
+      {
+        "semantic_id": "tools/wc02_memory_budget_sync_patch.py#function:replace_once:8e9aaa61f9c365c9",
+        "name": "replace_once",
+        "kind": "function",
+        "file": "tools/wc02_memory_budget_sync_patch.py",
+        "line": 9,
+        "end_line": 15,
+        "signature_hash": "820625feabdd1c16",
+        "file_digest8": "e61f923afd2d9504"
+      },
+      {
         "semantic_id": "tools/wc02_phase4_readme_patch.py#function:main:6f7e7267d00efc22",
         "name": "main",
         "kind": "function",
@@ -443582,7 +443768,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "13ddc7f5c4b2bbbd51037d70be0825a0",
-    "payload_hash": "b8633af0d7600e921b8fc095d6474ccc"
+    "record_fingerprint": "a842eab3f540e75f35f7ad5547eadb78",
+    "payload_hash": "69825560158a1dc354ddd696af2387f4"
   }
 }
