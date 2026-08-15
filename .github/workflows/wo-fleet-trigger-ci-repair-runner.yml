@@ -1,4 +1,4 @@
-# Registered one-shot runner for WO-TRIAD2-CI-CODEMAP-REPAIR-001 (generation 9).
+# Registered one-shot runner for WO-TRIAD2-CI-CODEMAP-REPAIR-001 (generation 10).
 name: WO Fleet Trigger Triad2 CI Repair Runner
 
 on:
@@ -59,6 +59,9 @@ jobs:
       - name: Restore CODEMAP iterator positional compatibility
         run: python tools/wo_triad2_ci_codemap_iterator_compat_patch.py
 
+      - name: Bind Agent Arena digest to canonical CODEMAP summary
+        run: python tools/wo_triad2_ci_agent_bridge_codemap_patch.py
+
       - name: Remove branch-local bootstrap files before regeneration
         run: |
           rm -f tools/wo_triad2_ci_codemap_repair.py
@@ -67,10 +70,11 @@ jobs:
           rm -f tools/wo_triad2_ci_codemap_incremental_stability_patch.py
           rm -f tools/wo_triad2_ci_skillweaver_codemap_patch.py
           rm -f tools/wo_triad2_ci_codemap_iterator_compat_patch.py
+          rm -f tools/wo_triad2_ci_agent_bridge_codemap_patch.py
           rm -f .github/workflows/wo-triad2-ci-codemap-repair-bootstrap.yml
 
       - name: Compile repaired Python surfaces
-        run: python -m py_compile aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py aura_topological_scanner.py aura_topology_manager.py aura_fusion.py aura_skillweaver.py
+        run: python -m py_compile aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py aura_topological_scanner.py aura_topology_manager.py aura_fusion.py aura_skillweaver.py aura_agent_arena_bridge.py
 
       - name: Regenerate and verify canonical deep CODEMAP
         run: |
