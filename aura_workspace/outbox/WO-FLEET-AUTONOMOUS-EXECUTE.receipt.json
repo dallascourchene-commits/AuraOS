@@ -1,0 +1,61 @@
+{
+  "payload": {
+    "artifacts": {
+      "BENCHMARK_RESULTS.md": "3e1cf236d007a86eacfefe57cc462f423f934c6d5ff94e7590c38281e0dec98c",
+      "advanced_benchmark_results.json": "676307aac1918ecbe0afe2dbb6bbf1780cf844377949f36848095e2919df122c",
+      "aura_workspace/outbox/WO-FLEET-AUTONOMOUS-EXECUTE.industry-validation.json": "6f30bd8873a809573a819917e5ce1509b758156a0bdd78e219103373e6b470ff",
+      "docs/ADVANCED_BENCHMARKS.md": "50c48c92ddc76ba966ce380a6a3c7f13a03ffdb68f956ccae84d922e46531edf",
+      "docs/BENCHMARKS.md": "b0aa3e1b033999db25c2edad0373e69198f4f880c701b15d32d342d76bc53a2c",
+      "docs/INDUSTRY_BENCHMARK_SCORECARD.md": "b1b75a7b00d89d1bbca432a4c3f76478eeac65737330678cb5a979a50a922c50",
+      "scripts/aura_benchmark_suite.py": "e0bd8f8af38ecb857337191e5b4420de89c7f4c5167e2a5b3eb0c2c851bb30d9",
+      "scripts/aura_industry_benchmark_validation.py": "47c35dbfd64228015318a7abd1b454e4288428b7f8cc0504f72c8ff731c61ecb"
+    },
+    "authority_note": "This runtime Ed25519 signature attests integrity of the canonical receipt payload. It does not mint human sovereign authority, repository-owner identity, third-party certification, or a pre-existing organization signature.",
+    "completed_utc": "2026-08-15T04:09:39Z",
+    "execution_note": "Composite validator exceeded the outer tool wall-clock after gate 13; its WAL state was preserved. Gate 14 was resumed from the pending dispatcher task and gate 15 was then verified against the same dispatcher generation. The timeout was orchestration-wall-clock, not a failed benchmark gate.",
+    "fleet_state": {
+      "dispatcher_integrity_check": "ok",
+      "dispatcher_journal_mode": "wal",
+      "process_slots": 25,
+      "task_counts": {"DONE": 28, "FAILED": 1},
+      "unique_done_payloads": 25
+    },
+    "key_metrics": {
+      "fst_iterations_per_s": 1366040.46,
+      "fst_transitions_per_s": 8196242.75,
+      "merkle_hashes_per_s": 895661.61,
+      "merkle_rollups_per_s": 2460.61,
+      "merkle_witness_sha256": "220db7fe802a29350ee71ad08cc19b86dce79c8a384180860c24861a26a0c307",
+      "peak_rss_mib": 116.71,
+      "sqlite_best_workers": 5,
+      "sqlite_best_writes_per_s": 19934.69,
+      "sqlite_reopen_checkpoint_ms": 1.493,
+      "udp_datagrams_per_s": 113403.24,
+      "udp_median_round_trip_us": 7.08
+    },
+    "qualification": "Repository-defined industry-readiness validation; not third-party certification, external percentile ranking, or hardware-independent guarantee.",
+    "signed_utc": "2026-08-15T04:10:10Z",
+    "source_bindings": {
+      "core/aura_task_dispatcher.py": {"git_blob_sha1": "68bb13f98031edfe374b3c74553cc3cdedfa7fa7", "sha256": "0b68ec8b8a2209184292d76be369b5b45511c4087618b9d4cba364018b3f7cbd"},
+      "core/aura_worker_daemon.py": {"git_blob_sha1": "fd1a7f6e4e4ab6fce0a6a1ee24df16cceceb7835", "sha256": "fe75e41335be3c664882e97fe6ea8749e9ca5710f867191cea6cda7946fab307"},
+      "scripts/aura_advanced_benchmark_runner.py": {"git_blob_sha1": "05d711a4594edcb2bc1d59705cdc2edc32882a47", "sha256": "82f16fc830aa9bc412d579ad7d589ae585c34237d8ac048db67820a055993f4b"},
+      "scripts/aura_benchmark_suite.py": {"git_blob_sha1": "cb9ceeddee5ff2e9ce745cf9a76754ae6f26a169", "sha256": "e0bd8f8af38ecb857337191e5b4420de89c7f4c5167e2a5b3eb0c2c851bb30d9"},
+      "scripts/aura_industry_benchmark_validation.py": {"git_blob_sha1": "c1c8f301e8698327a34a72d5817abb3fc8d1ad6e", "sha256": "47c35dbfd64228015318a7abd1b454e4288428b7f8cc0504f72c8ff731c61ecb"}
+    },
+    "source_commit_bound_at_run_start": "6c1dc7284eb019010fa4c091e4963e44d1f0e6ee",
+    "status": "PASS",
+    "validation_gates": {"passed": 15, "total": 15},
+    "validation_schema": "AURA_INDUSTRY_VALIDATION_V1",
+    "work_order": "WO-FLEET-AUTONOMOUS-EXECUTE"
+  },
+  "receipt_version": 1,
+  "signature": {
+    "algorithm": "Ed25519",
+    "canonical_payload_sha256": "bc7c733f41f911b97ed954cb648fb3a04fb3efa3fc98f3e6090dcb88c7836316",
+    "canonicalization": "UTF-8 JSON; sort_keys=true; separators=(comma,colon); ensure_ascii=false",
+    "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAd/YNAq2AC7iJVeTTJh8gGS2C0L8PvvRyteG3PY0eIcA=\n-----END PUBLIC KEY-----\n",
+    "public_key_spki_sha256": "7e0a9295ea81321ee5f7dfc8def785586d3ef5842f41150d9d86091b21870e01",
+    "signature_base64": "1IgTXDVN8ZWQOxn9+Xbx2cuR86OGTva7+aiI+lcM9MOB6/HVumCMOQ4JIeWxoPgCC7NH5LTRKtezM4gyQ5iqAA==",
+    "verification": "PASS"
+  }
+}
