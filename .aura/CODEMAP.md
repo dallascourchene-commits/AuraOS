@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1606
-- **total_bytes**: 26081800
-- **text_tokens_est**: 6510876
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 1005, 'schema_or_lexicon': 247, 'support_file': 49}
+- **file_count**: 1607
+- **total_bytes**: 26091012
+- **text_tokens_est**: 6513179
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 1005, 'schema_or_lexicon': 248, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1606,
+  "repo_file_count": 1607,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -204,6 +204,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/triad2-full-codemap-repair-v2.yml",
     ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
     ".github/workflows/wc02-codemap-active-branch-sync.yml",
+    ".github/workflows/wc02-final-dual-python-verify.yml",
     ".github/workflows/wc02-local-tree-export.yml",
     ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
     ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
@@ -1746,16 +1747,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1606,
-  "bytes": 26081800,
-  "tokens_est": 6510876,
+  "files": 1607,
+  "bytes": 26091012,
+  "tokens_est": 6513179,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 224,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 1005,
-    "schema_or_lexicon": 247,
+    "schema_or_lexicon": 248,
     "support_file": 49
   }
 }
