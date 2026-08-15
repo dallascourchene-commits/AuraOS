@@ -57,111 +57,46 @@ jobs:
 
           path = Path('aura_coding_relationship_compass.py')
           text = path.read_text(encoding='utf-8')
-          anchor = '\ndef compile_coding_relationship_compass(\n'
+          anchor = "\ndef compile_coding_relationship_compass(\n"
           if text.count(anchor) != 1:
               raise SystemExit('compile_coding_relationship_compass anchor drift')
-          helper = r'''
-def _bounded_emergent_neighborhood_view(neighborhood: Mapping[str, Any]) -> dict[str, Any]:
-    """Project only fields consumed by bounded emergent discovery.
-
-    The full relational neighborhood remains available to subsequent verification;
-    this view prevents unrelated participant metadata from expanding the discovery
-    active surface beyond its declared byte budget.
-    """
-    participants: list[dict[str, Any]] = []
-    for item in neighborhood.get("participants", ()) or ():
-        if not isinstance(item, Mapping):
-            continue
-        projected = {
-            key: item[key]
-            for key in (
-                "participant_id",
-                "qualified_symbol",
-                "symbol",
-                "role",
-                "participant_type",
-                "kind",
-                "canonical_ref",
-                "source_hash",
-                "tests",
-            )
-            if key in item
-        }
-        metadata = item.get("metadata")
-        if isinstance(metadata, Mapping):
-            bounded_metadata = {
-                key: metadata[key]
-                for key in (
-                    "canonical_ref",
-                    "source_ref",
-                    "source_hash",
-                    "file_source_hash",
-                    "file_path",
-                    "tests",
-                )
-                if key in metadata
-            }
-            if bounded_metadata:
-                projected["metadata"] = bounded_metadata
-        participants.append(projected)
-
-    relations = [
-        {
-            key: item[key]
-            for key in (
-                "source_participant_id",
-                "target_participant_id",
-                "truth_class",
-            )
-            if key in item
-        }
-        for item in (neighborhood.get("relations", ()) or ())
-        if isinstance(item, Mapping)
-    ]
-    return {
-        "neighborhood_digest": neighborhood.get("neighborhood_digest"),
-        "participants": participants,
-        "relations": relations,
-    }
-
-
-def _bounded_emergent_compatibility_view(compatibility: Mapping[str, Any]) -> dict[str, Any]:
-    return {
-        key: compatibility[key]
-        for key in ("outcome", "assessment_digest", "compatibility_digest")
-        if key in compatibility
-    }
-
-
-def _bounded_emergent_atlas_view(atlas: Mapping[str, Any]) -> dict[str, Any]:
-    assessments = []
-    for item in atlas.get("assessments", ()) or ():
-        if not isinstance(item, Mapping):
-            continue
-        assessments.append({
-            key: item[key]
-            for key in (
-                "source_participant_id",
-                "target_participant_id",
-                "participant_a_id",
-                "participant_b_id",
-                "left_participant_id",
-                "right_participant_id",
-                "participant_ids",
-                "wiring_disposition",
-            )
-            if key in item
-        })
-    return {"assessments": assessments}
-'''
-          text = text.replace(anchor, '\n' + helper.rstrip() + '\n\n\ndef compile_coding_relationship_compass(\n')
-
-          old = '''    discovery = discover_bounded_emergent_candidates(\n        objective=normalized_objective,\n        neighborhood=neighborhood,\n        compatibility=packet["typed_compatibility"],\n        atlas=packet["atlas"],\n        required_tests=required_tests,\n        max_candidates=max_emergent_candidates,\n        max_pairs_considered=max_neighborhood_candidate_pairs,\n    )\n'''
-          new = '''    discovery_neighborhood = _bounded_emergent_neighborhood_view(neighborhood)\n    discovery_compatibility = _bounded_emergent_compatibility_view(packet["typed_compatibility"])\n    discovery_atlas = _bounded_emergent_atlas_view(packet["atlas"])\n    discovery = discover_bounded_emergent_candidates(\n        objective=normalized_objective,\n        neighborhood=discovery_neighborhood,\n        compatibility=discovery_compatibility,\n        atlas=discovery_atlas,\n        required_tests=required_tests,\n        max_candidates=max_emergent_candidates,\n        max_pairs_considered=max_neighborhood_candidate_pairs,\n    )\n'''
+          helper_lines = [
+              'def _bounded_emergent_neighborhood_view(neighborhood: Mapping[str, Any]) -> dict[str, Any]:',
+              '    """Project only fields consumed by bounded emergent discovery."""',
+              '    participants: list[dict[str, Any]] = []',
+              '    for item in neighborhood.get("participants", ()) or ():',
+              '        if not isinstance(item, Mapping):',
+              '            continue',
+              '        projected = {key: item[key] for key in ("participant_id", "qualified_symbol", "symbol", "role", "participant_type", "kind", "canonical_ref", "source_hash", "tests") if key in item}',
+              '        metadata = item.get("metadata")',
+              '        if isinstance(metadata, Mapping):',
+              '            bounded_metadata = {key: metadata[key] for key in ("canonical_ref", "source_ref", "source_hash", "file_source_hash", "file_path", "tests") if key in metadata}',
+              '            if bounded_metadata:',
+              '                projected["metadata"] = bounded_metadata',
+              '        participants.append(projected)',
+              '    relations = [{key: item[key] for key in ("source_participant_id", "target_participant_id", "truth_class") if key in item} for item in (neighborhood.get("relations", ()) or ()) if isinstance(item, Mapping)]',
+              '    return {"neighborhood_digest": neighborhood.get("neighborhood_digest"), "participants": participants, "relations": relations}',
+              '',
+              '',
+              'def _bounded_emergent_compatibility_view(compatibility: Mapping[str, Any]) -> dict[str, Any]:',
+              '    return {key: compatibility[key] for key in ("outcome", "assessment_digest", "compatibility_digest") if key in compatibility}',
+              '',
+              '',
+              'def _bounded_emergent_atlas_view(atlas: Mapping[str, Any]) -> dict[str, Any]:',
+              '    assessments = []',
+              '    for item in atlas.get("assessments", ()) or ():',
+              '        if not isinstance(item, Mapping):',
+              '            continue',
+              '        assessments.append({key: item[key] for key in ("source_participant_id", "target_participant_id", "participant_a_id", "participant_b_id", "left_participant_id", "right_participant_id", "participant_ids", "wiring_disposition") if key in item})',
+              '    return {"assessments": assessments}',
+          ]
+          helper = "\n".join(helper_lines)
+          text = text.replace(anchor, "\n" + helper + "\n\n\ndef compile_coding_relationship_compass(\n")
+          old = '    discovery = discover_bounded_emergent_candidates(\n        objective=normalized_objective,\n        neighborhood=neighborhood,\n        compatibility=packet["typed_compatibility"],\n        atlas=packet["atlas"],\n        required_tests=required_tests,\n        max_candidates=max_emergent_candidates,\n        max_pairs_considered=max_neighborhood_candidate_pairs,\n    )\n'
+          new = '    discovery_neighborhood = _bounded_emergent_neighborhood_view(neighborhood)\n    discovery_compatibility = _bounded_emergent_compatibility_view(packet["typed_compatibility"])\n    discovery_atlas = _bounded_emergent_atlas_view(packet["atlas"])\n    discovery = discover_bounded_emergent_candidates(\n        objective=normalized_objective,\n        neighborhood=discovery_neighborhood,\n        compatibility=discovery_compatibility,\n        atlas=discovery_atlas,\n        required_tests=required_tests,\n        max_candidates=max_emergent_candidates,\n        max_pairs_considered=max_neighborhood_candidate_pairs,\n    )\n'
           if text.count(old) != 1:
               raise SystemExit('discovery call anchor drift')
-          text = text.replace(old, new)
-          path.write_text(text, encoding='utf-8')
+          path.write_text(text.replace(old, new), encoding='utf-8')
           PY
           python -m py_compile aura_coding_relationship_compass.py
           ruff check --select E4,E7,E9,F --ignore E721 aura_coding_relationship_compass.py
