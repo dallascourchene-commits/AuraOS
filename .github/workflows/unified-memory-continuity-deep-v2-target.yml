@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  parser_probe:
+  materialize:
     if: ${{ github.event.pull_request.number == 193 && github.event.pull_request.head.ref == 'refactor/unified-memory-continuity' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.sha == '2cdb398e05ca12c1622b20c43f98b04eaf170135' }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -26,5 +26,48 @@ jobs:
       TRIGGER_PATH: .aura/refactor_payloads/umc_deep_review.retry
       EVIDENCE_DIR: ${{ runner.temp }}/umc-deep-review-v2
     steps:
-      - name: Parser probe
-        run: echo "workflow parser accepted security-bound PR-193 shell"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Bind exact bounded reviewed head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$EVENT_HEAD" = '2cdb398e05ca12c1622b20c43f98b04eaf170135'
+          test "$(git rev-parse HEAD)" = "$EVENT_HEAD"
+          test -z "$(git status --porcelain=v1)"
+          git merge-base --is-ancestor "$REVIEWED_CHECKPOINT" HEAD
+          git diff --name-only "$REVIEWED_CHECKPOINT" HEAD > "${RUNNER_TEMP}/bounded-history-paths.txt"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          paths = set((Path(os.environ['RUNNER_TEMP']) / 'bounded-history-paths.txt').read_text().splitlines())
+          allowed = {
+              'Aura_Sandbox/umc_deep_review_payload_v2/part-01',
+              'Aura_Sandbox/umc_deep_review_payload_v2/part-02',
+              'Aura_Sandbox/umc_deep_review_payload_v2/part-03',
+              '.aura/CODEMAP.json',
+              '.aura/CODEMAP.md',
+              'topology_map.json',
+              os.environ['TRIGGER_PATH'],
+          }
+          unexpected = paths - allowed
+          if unexpected:
+              raise SystemExit(f'unexpected bounded-history paths: {sorted(unexpected)}')
+          PY
+          test ! -e Aura_Sandbox/umc_deep_review_payload_v2
+          test -f "$TRIGGER_PATH"
+          test "$(sha256sum aura_unified_memory_continuity.py | awk '{print $1}')" = \
+            bb5c0c50e62b8edbb4cbdad4f9810709f67adf7866fcd8b0700eda334a030ade
+          test "$(sha256sum tests/test_aura_unified_memory_continuity.py | awk '{print $1}')" = \
+            edddf3af030fd5e4cdeb8bc0bb0c4b2751e3dc7857068ba46c28c5bd905d19ee
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Parser probe after exact-head bind
+        run: echo "workflow parser accepted checkout + bind + setup-python"
