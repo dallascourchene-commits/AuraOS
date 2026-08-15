@@ -1,4 +1,4 @@
-# Registered one-shot runner for WO-TRIAD2-CI-CODEMAP-REPAIR-001 (generation 13).
+# Registered one-shot runner for WO-TRIAD2-CI-CODEMAP-REPAIR-001 (generation 14).
 name: WO Fleet Trigger Triad2 CI Repair Runner
 
 on:
@@ -68,6 +68,9 @@ jobs:
       - name: Bound Compass handoff into emergent discovery
         run: python tools/wo_triad2_ci_compass_bounded_handoff_patch.py
 
+      - name: Preserve coordinate-receipt self-integrity in cross-artifact test
+        run: python tools/wo_triad2_ci_pascal_receipt_test_patch.py
+
       - name: Remove branch-local bootstrap files before regeneration
         run: |
           rm -f tools/wo_triad2_ci_codemap_repair.py
@@ -79,10 +82,11 @@ jobs:
           rm -f tools/wo_triad2_ci_agent_bridge_codemap_patch.py
           rm -f tools/wo_triad2_ci_compass_intent_fidelity_patch.py
           rm -f tools/wo_triad2_ci_compass_bounded_handoff_patch.py
+          rm -f tools/wo_triad2_ci_pascal_receipt_test_patch.py
           rm -f .github/workflows/wo-triad2-ci-codemap-repair-bootstrap.yml
 
       - name: Compile repaired Python surfaces
-        run: python -m py_compile aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py aura_topological_scanner.py aura_topology_manager.py aura_fusion.py aura_skillweaver.py aura_agent_arena_bridge.py aura_coding_relationship_compass.py
+        run: python -m py_compile aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py aura_topological_scanner.py aura_topology_manager.py aura_fusion.py aura_skillweaver.py aura_agent_arena_bridge.py aura_coding_relationship_compass.py tests/test_aura_construction_pascal_spatial_foundry_pr5.py
 
       - name: Regenerate and verify canonical deep CODEMAP
         run: |
@@ -90,7 +94,7 @@ jobs:
           git checkout -- Aura_Memory/live_topology_ast.json || true
           python -m aura_codemap_verify
 
-      - name: Python 3.12 CODEMAP, PR272/275, and intent-fidelity contract checks
+      - name: Python 3.12 CODEMAP, PR272/275, intent-fidelity, and Pascal contract checks
         id: contracts312
         continue-on-error: true
         run: |
@@ -100,6 +104,7 @@ jobs:
             tests/test_aura_arch_v2_3_capsule_validator.py \
             tests/test_aura_bilateral_planning_enforcement.py::test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected \
             tests/test_aura_bilateral_planning_enforcement.py::test_compass_fully_projected_obligations_preserve_eligible_path \
+            tests/test_aura_construction_pascal_spatial_foundry_pr5.py::test_pr5_coordinate_receipt_mismatched_artifact_digest_fails_closed \
             --junitxml=triad2-contracts-py312.xml \
             2>&1 | tee triad2-contracts-py312.txt
 
@@ -132,7 +137,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt pytest pytest-asyncio
 
-      - name: Python 3.10 CODEMAP, PR272/275, and intent-fidelity contract checks
+      - name: Python 3.10 CODEMAP, PR272/275, intent-fidelity, and Pascal contract checks
         id: contracts310
         continue-on-error: true
         run: |
@@ -142,6 +147,7 @@ jobs:
             tests/test_aura_arch_v2_3_capsule_validator.py \
             tests/test_aura_bilateral_planning_enforcement.py::test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected \
             tests/test_aura_bilateral_planning_enforcement.py::test_compass_fully_projected_obligations_preserve_eligible_path \
+            tests/test_aura_construction_pascal_spatial_foundry_pr5.py::test_pr5_coordinate_receipt_mismatched_artifact_digest_fails_closed \
             --junitxml=triad2-contracts-py310.xml \
             2>&1 | tee triad2-contracts-py310.txt
 
