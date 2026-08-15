@@ -1,0 +1,60 @@
+{
+  "semantic_id": "AURA:UI:MULTIMODAL:C2:ENDSTATE:20260813:001",
+  "version": "0.1",
+  "status": ["STAGED", "CANDIDATE", "USER_END_OBJECTIVE", "NOT_PROMOTED"],
+  "objective": "ONE SEMANTIC AURA WORLD / THREE HUMAN RENDERERS",
+  "canonical_query": "Hey Aura, where are work orders?",
+  "renderers": [
+    {
+      "id": "LAPTOP_C2",
+      "inputs": ["KEYBOARD", "MOUSE", "VOICE"],
+      "outputs": ["LIST", "CARDS", "RELATIONAL_2D", "INSPECTOR"]
+    },
+    {
+      "id": "PHONE_C2_AR",
+      "inputs": ["TOUCH", "VOICE", "CAMERA", "DEVICE_POSE", "HAND_CANDIDATE"],
+      "outputs": ["MOBILE_2D", "CAMERA_AR", "ANCHORED_LOCAL_SCENE"]
+    },
+    {
+      "id": "SPATIAL_C2_XR",
+      "inputs": ["VOICE", "HAND", "GAZE", "RAY", "CONTROLLER", "HEAD_POSE"],
+      "outputs": ["SPATIAL_3D", "ANCHORED_OBJECTS", "RELATIONAL_3D"]
+    }
+  ],
+  "invariants": [
+    "ONE_SEMANTIC_WORLD_MANY_RENDERERS",
+    "RENDER_COORDINATES_ARE_NOT_SEMANTIC_COORDINATES",
+    "RENDERER_INPUT_IS_NOT_AUTHORITY",
+    "L0_FIRST_LAZY_HYDRATION",
+    "SAME_SEMANTIC_ID_STATE_AUTHORITY_CURRENTNESS_PROVENANCE_ACROSS_SURFACES",
+    "NO_SECOND_TRUTH_ROUTING_VERIFICATION_PERSISTENCE_POLICY_OR_AUTHORITY_PLANE",
+    "EXACT_GENERATION_HUMAN_DISPOSITION_FOR_GATED_EFFECTS"
+  ],
+  "vertical_slice_01": {
+    "semantic_id": "AURA:WO:UI:C2:VERTICAL-SLICE-01:20260813",
+    "coordinate_request": {
+      "domain": "WORK",
+      "object_class": "WORK_ORDER",
+      "resolution": "L0",
+      "currentness": "CURRENT",
+      "authority": "VIEW_NO_EFFECT",
+      "presentation": "SURFACE_ADAPTIVE"
+    },
+    "pipeline": [
+      "NORMALIZE_INTENT",
+      "RESOLVE_COORDINATE",
+      "APPLY_CONTEXT_CURRENTNESS_AUTHORITY_GUARDS",
+      "SELECT_MINIMUM_SUFFICIENT_L0_SET",
+      "COMPILE_SOURCE_BOUND_SCENE_PROJECTION",
+      "RENDER_SURFACE_ADAPTIVELY",
+      "HYDRATE_ON_DEMAND",
+      "COMPILE_LAWFUL_TRANSITION_IF_ACTION_REQUESTED",
+      "EXACT_GENERATION_HUMAN_DISPOSITION_IF_GATED"
+    ]
+  },
+  "reference_video": {
+    "sha256": "b6b034f1b12e53edce733fff226e3550ba71e1e392e0c37eb5168a13fd98879a",
+    "spoken_transcript_status": "UNRESOLVED_NO_ASR_OR_SUBTITLE_TRACK",
+    "evidence_rule": "Do not fabricate verbatim speech; visual observations and derived Aura requirements remain separately labeled."
+  }
+}
