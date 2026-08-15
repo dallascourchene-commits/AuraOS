@@ -10,10 +10,14 @@ permissions:
   issues: write
   pull-requests: read
 
+concurrency:
+  group: umc-deep-review-v2-target-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
 jobs:
   parser_probe:
     if: github.event.pull_request.number == 193
     runs-on: ubuntu-latest
     steps:
       - name: Parser probe
-        run: echo "workflow parser accepted permissions block"
+        run: echo "workflow parser accepted permissions + concurrency"
