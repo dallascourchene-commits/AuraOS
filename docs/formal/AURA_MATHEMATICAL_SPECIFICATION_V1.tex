@@ -1,275 +1,208 @@
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
-\usepackage{amsmath,amssymb,amsthm,mathtools}
-\usepackage{booktabs,array,longtable}
-\usepackage[hidelinks]{hyperref}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{lmodern}
 \usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,array,longtable}
 \usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
 \emergencystretch=2em
 
 \title{Aura Mathematical Specification V1\\
 \large Polysynthetic Relational Morphology, Six-Slot Finite-State Routing,\\
-Phase-Staggered WAL Coordination, and Boundary-Constrained Governance}
-\author{Dallas Fabian Courchene-Martin\\Founder, AuraOS}
-\date{2026-08-15}
+3--6--9 WAL Coordination, and Boundary Invariants}
+\author{Dallas Fabian Courchene-Martin\\Founder, AuraOS\\Long Plain First Nation, Treaty 1 Territory, Manitoba, Canada}
+\date{15 August 2026}
 
 \newtheorem{definition}{Definition}
 \newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
 \newtheorem{lemma}{Lemma}
 \newtheorem{corollary}{Corollary}
 \newtheorem{assumption}{Assumption}
-\newtheorem{proposition}{Proposition}
 
 \newcommand{\Rel}{\mathsf{Rel}}
 \newcommand{\See}{\mathsf{See}}
 \newcommand{\Care}{\mathsf{Care}}
 \newcommand{\Rec}{\mathsf{Rec}}
 \newcommand{\Auth}{\mathsf{Auth}}
-\newcommand{\Lease}{\mathsf{Lease}}
 \newcommand{\Src}{\mathsf{Src}}
 \newcommand{\Fresh}{\mathsf{Fresh}}
-\newcommand{\Receipt}{\mathsf{Receipt}}
-\newcommand{\Hyd}{\mathsf{Hyd}}
-\newcommand{\one}{\mathbf{1}}
-\newcommand{\WAL}{\mathsf{WAL}}
 \newcommand{\Route}{\mathsf{Route}}
-\newcommand{\State}{\mathcal{S}}
-\newcommand{\Pow}{\mathcal{P}}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\botstate}{\bot}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-This document gives a source-bound formal specification for four connected AuraOS
-mechanisms: (1) a polysynthetic relational morphology in which a stable root and
-bound modifiers compile a compact relational state; (2) the canonical six-slot
-finite-state routing order
+This document formalizes four source-bound AuraOS mechanisms requested by WC-01 / Triad 1:
+(1) a polysynthetic relational morphology in which a stable root and bound operators transform a compact relational state;
+(2) the canonical six-slot deterministic routing order
 \[
 \mathrm{DIR}\rightarrow\mathrm{ASP}\rightarrow\mathrm{CLASS}\rightarrow
 \mathrm{SUBJ}\rightarrow\mathrm{VOICE}\rightarrow\mathrm{STEM};
 \]
-(3) a 3--6--9 phase-staggered concurrency discipline whose safety result is
-conditional on explicit conflict sets, leases, currentness, and bounded write
-ownership; and (4) the Four Prime Directives compiled as transition-boundary
-predicates.  The numerical 3--6--9 terminology is an orchestration grammar, not
-numerological or physical causation.  Likewise, the morphology section is an
-engineering abstraction inspired by polysynthetic relational structure; it is
-not a claim that Anishinaabemowin or any Athabaskan language obeys Aura's exact
-computational template.
+(3) 3--6--9 phase-staggered coordination as a conditional zero-application-contention schedule for write-ahead-log mutation paths; and
+(4) the Four Prime Directives compiled into transition-boundary invariants.
+The 3--6--9 terminology is treated as an orchestration grammar, not as numerological or physical causation. The morphology is an engineering abstraction inspired by polysynthetic relational structure; it is not presented as a universal grammar of Anishinaabemowin, Athabaskan languages, or any Indigenous language family.
 \end{abstract}
 
-\section*{Status, source generation, and claim classes}
+\section*{Status, source discipline, and prior-art boundary}
 
 \paragraph{Publication state.}
-This paper is staged for technical and human review.  It does not itself
-authorize deployment, merge, publication, promotion, payment, or any other
-consequential effect.
+This is a staged technical preprint. It does not itself authorize deployment, merge, publication, promotion, payment, or any other consequential effect.
 
-\paragraph{Primary staged source.}
-The founder source is \path{docs/staging/ready_review/FOUNDER_BIO_AND_VISION.md}.
-Its exact Drive binding is:
-\begin{quote}\scriptsize\ttfamily
-Object: 1o-4aSQS4rozVcCyvi32Ps4OSoSlvUASFt5CIbS9hLjs\\
-Revision: AIroW36UAQOeNzotLqRjGIMbIrWXdsa004pHjk\_\\
-DK5KRd97cthvxWaxi0Gk21Ku3puw-7lY89aGyVM9W-KISDzQzQe5zSzAzanuhg3aADYM
+\paragraph{Founder source.}
+The requested repository target is
+\path{docs/staging/ready_review/FOUNDER_BIO_AND_VISION.md}.
+At this WC-01 execution boundary that path is not present on current AuraOS \texttt{main}; the current source artifact with the exact requested title is therefore bound from Google Drive:
+\begin{quote}\small\ttfamily
+FOUNDER\_BIO\_AND\_VISION.md\\
+Drive object: 1o-4aSQS4rozVcCyvi32Ps4OSoSlvUASFt5CIbS9hLjs\\
+Current Drive revision: 8\\
+State in source: STAGED / READY FOR HUMAN GATE 1 REVIEW / NON-PUBLISHED
 \end{quote}
+This distinction is intentional: the Drive object is used as the source fallback, not represented as a repository file that exists when it does not.
 
 \paragraph{Six-slot source.}
-The canonical routing source is the Aura Drive six-slot FST routing and hydration
-contract dated 2026-08-08.  Its exact Drive binding is:
-\begin{quote}\scriptsize\ttfamily
-Object: 1YMykOQ-k3Sp7VK12ltawAkO\_qS7u5OnoeWS6TfiS1p4\\
-Revision: AIroW37nMy2WdVwJBDFeWH\_FU2DEUR\_9Dq7D3FNNrFDnZYVMP7\\
-misTy3A53CyxPa1q1yHl-HiUD88P47s1CPTVtmv4XK50PPYxKD7aAyFqs
+The canonical six-slot routing contract is
+\begin{quote}\small\ttfamily
+03\_AURA\_DRIVE\_\_SIX-SLOT-FST-ROUTING-AND-HYDRATION-CONTRACT\_\_2026-08-08\\
+Drive object: 1YMykOQ-k3Sp7VK12ltawAkO\_qS7u5OnoeWS6TfiS1p4\\
+Current Drive revision: 8
 \end{quote}
-That source labels the routing contract \emph{active / experimental-canonical}
-and explicitly separates decided design from unmeasured hypotheses.
+It identifies the ordered routing skeleton as
+\[
+\mathrm{DIR},\mathrm{ASP},\mathrm{CLASS},\mathrm{SUBJ},\mathrm{VOICE},\mathrm{STEM}
+\]
+and explicitly separates routing/addressability from truth and authority.
 
-\paragraph{Repository generation.}
-This WC-01 compilation is bound to AuraOS \texttt{main} generation:
-\begin{quote}\footnotesize\ttfamily
-ca0080a974bf239da6a282060df6a43f95267a10
-\end{quote}
-The predecessor formal specification at that generation has Git blob:
-\begin{quote}\footnotesize\ttfamily
-bc94866c0470a81eb869e44aa04cc64cdfed9892
-\end{quote}
+\paragraph{Prime-directive source.}
+The historical source titled \emph{The Prime Directives} is bound as Drive object
+\texttt{1ut\_03gVB9JfngKiccrWvNEiDYFluFtYVdAi1hSvU5wg}, current revision 1.
+Its metaphorical ``digital physics'' language is provenance. In this paper it is translated into enforceable software predicates and is not asserted as literal physical law.
 
-\paragraph{Claim classes.}
-Every formal statement below is one of:
-\begin{enumerate}[label=(\roman*)]
-  \item a \textbf{definition} introduced by this specification;
-  \item a \textbf{conditional theorem} that follows only under stated assumptions;
-  \item a \textbf{source-derived design constraint}; or
-  \item a \textbf{bounded observation or target} that must not be widened beyond its receipt.
-\end{enumerate}
+\paragraph{Repository benchmark boundary.}
+The current repository benchmark records a six-step deterministic transition-kernel microbenchmark and SQLite WAL trials from one through twenty-five workers. The recorded run reports zero \emph{lock retries} for every tested worker count and a best observed one-row WAL throughput of 19,934.69 writes/s at five workers. The source explicitly says the pruned benchmark is a transition-kernel microbenchmark, not a linguistic-coverage test. These observations do not prove universal collision freedom, zero internal SQLite mutex waiting, or arbitrary-fleet zero contention.
 
-\paragraph{Prior-art and lineage boundary.}
-Polysynthetic morphology, finite-state morphology, database write-ahead logging,
-and graph coloring are established conceptual families that predate AuraOS.
-Aura's proposed contribution in this paper is their particular composition with
-source-resolvable state, objective-conditioned hydration, explicit currentness,
-human/community authority, and receipt-bearing transitions.  The exact six-slot
-mapping is Aura's internal routing law; linguistic inspiration is not presented
-as ownership of, or a universal grammatical claim about, Indigenous languages.
+\paragraph{Prior-art boundary.}
+Polysynthetic morphology, finite-state morphology/transduction, write-ahead logging, leases, and graph coloring are established conceptual families that predate AuraOS. The object formalized here is AuraOS's project-specific composition of compact relational state, source-resolvable hydration, six-slot routing, explicit currentness and ownership, phase-staggered execution, receipts, and human/community authority. No claim of ownership over Indigenous language structure is made by this specification.
 
 \section{Polysynthetic Relational Morphology}
 
-\subsection{Engineering abstraction: root plus bound relational operators}
+\subsection{Root plus affix-like relational operators}
 
-The founder source describes Aura's relational grammar as inspired by the way a
-polysynthetic form can bind several relational dimensions into a compact
-structure.  For public accuracy, the source explicitly warns against presenting
-this as a universal four-slot rule for Anishinaabemowin.  We therefore define a
-computational morphology, not a linguistic grammar.
+The founder source describes Aura's computational grammar as inspired by the ability of polysynthetic forms to bind multiple relational dimensions into a compact organized unit. For public accuracy, the same source warns against treating the computational analogy as a universal linguistic slot template. Accordingly, we define a software morphology.
 
 \begin{definition}[Relational morph]
-A relational morph is a tuple
+A relational morph is
 \[
 \mu=(r,\mathbf{a},\mathbf{f},\pi),
 \]
-where \(r\) is a stable semantic root, \(\mathbf{a}=(a_1,\ldots,a_k)\) is a
-finite sequence of bound modifiers or affix-like operators, \(\mathbf{f}\) is a
-finite feature bundle, and \(\pi\) is a source/provenance pointer.  A convenient
-engineering analogy is
+where \(r\) is a stable semantic root, \(\mathbf{a}=(a_1,\ldots,a_k)\) is a finite sequence of bound affix-like operators, \(\mathbf{f}\) is a finite feature bundle, and \(\pi\) is a source/provenance pointer. A useful engineering analogy is
 \[
-\text{prefix/preverb} + \text{root/initial} + \text{internal medial or derivational material} +
-\text{final/suffixal inflection}.
+\text{prefix/preverb}+\text{root/initial}+\text{internal medial/derivation}+\text{final/suffixal inflection}.
 \]
-The words ``prefix'', ``infix'', and ``suffix'' here describe computational
-binding positions, not a universal linguistic template.
+These labels describe computational binding positions only.
 \end{definition}
 
 \begin{definition}[Relational tensor state]
-Let the active relational state be a finite tensor-like object
+Let the active state be a structured product
 \[
 X\in\mathcal{X}=R\otimes D\otimes T\otimes P\otimes A\otimes E,
 \]
-where \(R\) is semantic identity, \(D\) direction/role, \(T\) temporal or
-lifecycle state, \(P\) provenance/currentness, \(A\) authority/permission, and
-\(E\) evidence/hydration state.  ``Tensor'' denotes a structured product of
-bound dimensions; it does not require a particular numerical tensor library.
+where \(R\) is semantic identity, \(D\) direction/role, \(T\) lifecycle or temporal state, \(P\) provenance/currentness, \(A\) authority/permission, and \(E\) evidence/hydration state. Here ``tensor'' denotes a bound product of dimensions and does not require a particular numerical tensor implementation.
 \end{definition}
 
-Each bound modifier \(a_i\) compiles to an operator
+Each bound operator compiles to a partial state transformer
 \[
-B_{a_i}:\mathcal{X}\rightarrow\mathcal{X}\cup\{\bot\},
+B_{a_i}:\mathcal{X}\rightharpoonup\mathcal{X},
 \]
-where \(\bot\) denotes an inadmissible or unresolved state.  Composition yields
+where undefined output is represented operationally by fail-closed rejection. For a root state \(X_r\),
 \[
-X_\mu
-=
-B_{a_k}\circ\cdots\circ B_{a_2}\circ B_{a_1}(X_r).
+X_\mu=B_{a_k}\circ\cdots\circ B_{a_2}\circ B_{a_1}(X_r).
 \]
-A modifier may therefore change more than its local surface position: changing
-an authority binding can invalidate a transition; changing a source generation
-can stale a cached projection; and changing direction or role can change the
-legal hydration neighborhood.
+A modifier can therefore change the admissibility of the whole structure: a changed authority binding can invalidate a transition, a changed source generation can stale a cached projection, and a changed direction or role can alter the legal hydration neighborhood.
 
-\begin{definition}[Bound-state shift]
-For a modifier replacement \(a_i\mapsto a_i'\), define
+\begin{definition}[Affix-induced state shift]
+For \(a_i\mapsto a_i'\), define
 \[
-\Delta_i X
-=
-X(r,a_1,\ldots,a_i',\ldots,a_k)-X(r,a_1,\ldots,a_i,\ldots,a_k),
+\Delta_iX=X(r,a_1,\ldots,a_i',\ldots,a_k)-X(r,a_1,\ldots,a_i,\ldots,a_k)
 \]
-whenever both states are defined.  The shift is \emph{relationally global} if
-its admissibility projection changes any other bound dimension:
+whenever both states are defined. The shift is \emph{relationally global} when
 \[
-\exists j\neq i:\quad
-\Pi_j(X+\Delta_iX)\neq\Pi_j(X).
+\exists j\neq i:\quad \Pi_j(X+\Delta_iX)\neq\Pi_j(X),
 \]
+for some projection \(\Pi_j\) onto another bound dimension.
 \end{definition}
 
-\begin{proposition}[Whole-structure constraint propagation]
-If admissibility is a predicate over the complete bound state,
-\(G:\mathcal{X}\to\{0,1\}\), then a local modifier replacement can alter the
-admissibility of the whole morph even when the root is unchanged.
+\begin{proposition}[Whole-structure propagation]
+If admissibility is evaluated by a predicate \(G:\mathcal{X}\to\{0,1\}\), then a local affix replacement can change whole-morph admissibility while preserving the root.
 \end{proposition}
 
 \begin{proof}
-By definition, \(G\) is evaluated over all bound dimensions of \(X\).  A local
-operator replacement changes at least one component of \(X\), and may change
-multiple projected dimensions through relational binding.  Therefore
-\(G(X)\) and \(G(X+\Delta_iX)\) need not agree.  Root identity alone is not
-sufficient to preserve admissibility.
+The predicate \(G\) is evaluated on the complete bound state, not on root identity alone. Replacing \(a_i\) changes at least one component and can change additional dimensions through relational binding. Hence \(G(X)\) and \(G(X+\Delta_iX)\) need not agree even when \(r\) is unchanged.
 \end{proof}
 
-\subsection{Compression without source erasure}
+\subsection{Compact representation with source descent}
 
-Aura's efficiency objective is reduction of redundant linear restatement, not
-lossy deletion of evidence.  Let \(C_0(X,o)\) denote a compact objective-bound
-serialization and let \(L_4(X)\) denote exact authoritative evidence.  The
-required recoverability condition is
+The efficiency objective is reduced redundant linear restatement, not deletion of evidence. Let \(C_0(X,o)\) be a compact objective-bound representation and \(L_4(X)\) exact authoritative evidence. Source resolvability requires
 \[
-\mathrm{NeedL4}(C_0(X,o),o)=1
+\mathrm{NeedL4}(C_0,o)=1
 \Longrightarrow
 \exists\pi:\ \pi(C_0)\mapsto L_4(X).
 \]
-Thus a compact L0 representation is acceptable only when it remains
-source-resolvable.  A route or alias is a pointer; it is not the owner, source,
-or truth of the underlying object.
+A compact route is therefore a pointer into evidence, not a substitute owner or truth source.
 
 \begin{definition}[Minimum-sufficient active world]
-For objective \(o\), let \(\mathcal{P}_o\) be the set of source-resolvable
-projections that preserve required authority and evidence relations.  Aura seeks
+For objective \(o\), let \(\mathcal{P}_o\) be source-resolvable projections that preserve required currentness, authority, and evidence relations. Aura seeks
 \[
-p^\star\in\arg\min_{p\in\mathcal{P}_o} C(p)
+p^\star\in\arg\min_{p\in\mathcal{P}_o}C(p)
 \]
-subject to decision sufficiency, currentness, source resolvability, and authority
-preservation.  This is a design objective, not a claim that every runtime finds
-the global minimum.
+subject to decision sufficiency, source resolvability, currentness, and authority preservation. This is a design objective; it does not assert that a runtime always computes the global minimum.
 \end{definition}
 
 \section{Six-Slot Deterministic Finite-State Transducer State Matrix}
 
-\subsection{Canonical slot order}
+\subsection{Canonical state order}
 
-The source-bound routing skeleton is
+The source-bound morphology is
 \[
 [\mathrm{DIR}]\rightarrow[\mathrm{ASP}]\rightarrow[\mathrm{CLASS}]
 \rightarrow[\mathrm{SUBJ}]\rightarrow[\mathrm{VOICE}]\rightarrow[\mathrm{STEM}].
 \]
-A routing packet is
+A packet is
 \[
-x=(d,a,c,u,v,t)\in D\times A\times C\times U\times V\times T,
+x=(d,a,c,u,v,t)\in D\times A\times C\times U\times V\times T.
 \]
-with the following meanings:
 
 \begin{center}
 \begin{tabular}{@{}lll@{}}
 \toprule
 Slot & Symbol & Source-bound role\\
 \midrule
-1 & \(\mathrm{DIR}=d\) & direction / owner or operational lane\\
-2 & \(\mathrm{ASP}=a\) & lifecycle, temporal aspect, freshness\\
-3 & \(\mathrm{CLASS}=c\) & epistemic / operational object class\\
-4 & \(\mathrm{SUBJ}=u\) & bounded semantic subject or entity set\\
-5 & \(\mathrm{VOICE}=v\) & operation / relational posture\\
-6 & \(\mathrm{STEM}=t\) & stable resolved semantic identity\\
+1 & \(\mathrm{DIR}=d\) & direction / operational memory lane\\
+2 & \(\mathrm{ASP}=a\) & lifecycle / temporal aspect\\
+3 & \(\mathrm{CLASS}=c\) & epistemic or operational object class\\
+4 & \(\mathrm{SUBJ}=u\) & bounded semantic subject\\
+5 & \(\mathrm{VOICE}=v\) & operation / relationship / agent posture\\
+6 & \(\mathrm{STEM}=t\) & durable semantic identity\\
 \bottomrule
 \end{tabular}
 \end{center}
 
-Finite feature bundles may carry \(\mathrm{HYD}\), \(\mathrm{AUTH}\),
-\(\mathrm{ACCESS}\), \(\mathrm{FRESH}\), event/currentness watermarks,
-revision/content digests, epistemic state, signal, model, cost, and provider
-metadata without adding new morphotactic slots.
+The routing contract carries dimensions such as signal, epistemic status, hydration level, freshness, authority, confidence, cost, model, and repository head in bounded feature bundles rather than inventing unlimited new morphotactic slots.
 
-\subsection{Typed transition matrices}
+\subsection{Typed state matrix}
 
-Let the slot families be
-\[
-S_1=D,\quad S_2=A,\quad S_3=C,\quad S_4=U,\quad S_5=V,\quad S_6=T.
-\]
-For \(i=1,\ldots,5\), let
+Let \(S_1=D,S_2=A,S_3=C,S_4=U,S_5=V,S_6=T\). For \(i=1,\ldots,5\), let
 \[
 E_i\subseteq S_i\times S_{i+1}
 \]
-be the admissible transitions declared by the compiled finite-state router.  The
-typed adjacency matrix is
+be the admissible typed transition relation. The six-slot adjacency matrix is
 \[
 M=
 \begin{bmatrix}
@@ -281,16 +214,14 @@ M=
 0&0&0&0&0&0
 \end{bmatrix}.
 \]
-Here \(E_i\) is a typed edge relation, not a scalar.  Its Boolean skeleton is
+Each \(E_i\) is a typed relation, not a scalar. Its Boolean skeleton is
 \[
 \widehat{M}_{ij}=
 \begin{cases}
-1,&j=i+1\text{ and an admissible edge family exists},\\
+1,&j=i+1\text{ and an admitted edge family exists},\\
 0,&\text{otherwise},
 \end{cases}
-\]
-so
-\[
+\qquad
 \widehat M=
 \begin{bmatrix}
 0&1&0&0&0&0\\
@@ -302,400 +233,228 @@ so
 \end{bmatrix}.
 \]
 
-\begin{definition}[Deterministic six-slot transduction]
-Let \(Q_i\) be the automaton state after slot \(i\).  A deterministic slot
-transducer is a partial function
+\begin{definition}[Deterministic transduction]
+Let \(Q_i\) be the state after slot \(i\). A deterministic slot transition is a partial function
 \[
-\delta_i:Q_{i-1}\times S_i\rightarrow Q_i\cup\{\bot\},
+\delta_i:Q_{i-1}\times S_i\rightharpoonup Q_i.
 \]
-with exactly one successor for each admitted \((Q_{i-1},s_i)\) pair.  A complete
-route is
-\[
-q_6=\delta_6(\delta_5(\cdots\delta_1(q_0,d),a\cdots),t),
-\]
-provided no transition returns \(\bot\).
+A complete route exists only when every transition is defined. Otherwise execution returns \(\botstate\) and fails closed.
 \end{definition}
 
-\begin{definition}[Well-formed route]
-A packet \(x=(x_1,\ldots,x_6)\) is well formed only if
-\[
+\begin{definition}[Well-formed six-slot route]
+A packet \(x=(x_1,\ldots,x_6)\) is well formed only if \[
 (x_i,x_{i+1})\in E_i\quad\forall i\in\{1,\ldots,5\},
 \]
-namespace-qualified symbols are unambiguous, and required currentness,
-permission, and authority feature predicates resolve successfully.
+its namespace-qualified symbols are unambiguous, and the required currentness, permission, and authority predicates resolve successfully.
 \end{definition}
 
-\subsection{Routing, dynamic stems, and lazy hydration}
+\subsection{Routing is not truth or authorization}
 
-Define the route compiler
+Let
 \[
-\Route:D\times A\times C\times U\times V\times T\rightarrow\Pow(Q),
+\Route:D\times A\times C\times U\times V\times T\to\mathcal{P}(Q)
 \]
-where \(Q\) is a bounded candidate set of semantic stems, source pointers, or
-capabilities.  If a unique STEM is not yet resolved, the compiler returns a
-bounded candidate set rather than inventing identity.  The source contract's
-Drive-wide design is therefore composition of a stable routing grammar with a
-dynamic semantic stem/alias registry; the lexicon may change while the slot law
-remains stable.
+return a bounded candidate set of semantic stems, source pointers, or capabilities. Then
+\[
+q\in\Route(x)
+\]
+means only that \(q\) is addressable under the routing grammar. It does not imply source ownership, truth, evidence sufficiency, or permission for consequential use.
 
-Let \(H_0,\ldots,H_4\) be the hydration ladder:
-\[
-\begin{aligned}
-H_0&=\text{symbol/routing packet}, & H_1&=\text{micro-synthesis},\\
-H_2&=\text{working synthesis}, & H_3&=\text{full capsule},\\
-H_4&=\text{authoritative source}. &&
-\end{aligned}
-\]
-For objective \(o\), hydration descends only when the current level is
-insufficient and an evidenced relation justifies further resolution:
+Let \(H_0,\ldots,H_4\) be the hydration ladder from routing symbol to authoritative source. For stopping predicate \(\mathrm{Close}(H_k,o)\), hydration advances only while the objective remains unclosed:
 \[
 k_{n+1}=
 \begin{cases}
 k_n,&\mathrm{Close}(H_{k_n},o)=1,\\
-\min(k_n+1,4),&\mathrm{Close}(H_{k_n},o)=0\ \land\ \mathrm{JustifiedDescent}=1.
+\min(k_n+1,4),&\mathrm{Close}(H_{k_n},o)=0.
 \end{cases}
 \]
+This expresses the project's minimum-sufficient hydration rule.
 
-\begin{lemma}[Route does not create authority]
-For any candidate \(q\in\Route(x)\), reachability does not imply ownership,
-truth, permission, or consequential authorization.
-\end{lemma}
+\section{3--6--9 Harmonic Concurrency Proofs}
 
-\begin{proof}
-The FST constrains addressability and admissible route structure.  Authority and
-source truth are independent predicates defined over the candidate transition.
-Therefore membership in \(\Route(x)\) is insufficient to imply either.
-\end{proof}
+\subsection{Orchestration grammar and conflict graph}
 
-\section{3--6--9 Harmonic Concurrency Proofs for WAL Write Paths}
+The founder source defines 3--6--9 as an orchestration grammar: three is a reviewable working cell; six permits paired triads, challenge, or handoff; nine permits three triads to close a larger cycle. The safety mechanism is not the numbers themselves. Safety comes from partitioned ownership, leases, phase separation, source-currentness checks, and fail-closed mutation.
 
-\subsection{Scope of ``harmonic'' and ``zero contention''}
-
-In Aura, 3--6--9 is an orchestration grammar: three is a minimal reviewable
-working cell; six permits paired triads; nine permits a triad of triads with
-separate analysis, execution, and reconciliation lanes.  The numbers themselves
-do not cause safety.
-
-SQLite WAL mode does not provide simultaneous independent writer commits to one
-database file; writer admission can still serialize or wait.  Therefore this
-specification uses \emph{zero contention} in the narrower application-level
-sense: no two simultaneously admitted workers own overlapping protected write
-sets.  It does \textbf{not} claim zero SQLite internal lock waiting, zero
-scheduler latency, or zero I/O contention.
-
-For worker \(w\), define read set \(R_w\), protected write set \(W_w\), database
-or shard owner \(d(w)\), and source generation \(g(w)\).
-
-\begin{definition}[Logical write conflict]
-Workers \(w_i,w_j\) have a logical write conflict iff
+Let \(W\) be workers and let \(L(w,k)\) be worker \(w\)'s requested write/lease set at step \(k\). Define the conflict graph
 \[
-W_{w_i}\cap W_{w_j}\neq\varnothing
+G_k=(W,E_k),\qquad
+(u,v)\in E_k\Longleftrightarrow L(u,k)\cap L(v,k)\neq\varnothing.
 \]
-or an explicit authority/ownership rule prohibits concurrent mutation.
+Let
+\[
+\phi_k:W\to\mathbb{Z}_3
+\]
+assign each worker to one of three mutation phases.
+
+\begin{definition}[Proper phase staggering]
+The schedule is proper when
+\[
+(u,v)\in E_k\Longrightarrow\phi_k(u)\neq\phi_k(v).
+\]
+For triad index \(j\in\{0,1,2\}\) and role \(r\in\{0,1,2\}\), a reusable schedule template is
+\[
+\Phi(j,r)=(j+r)\bmod 3.
+\]
+One triad uses three workers, paired triads use six, and a triad-of-triads uses nine. The template is admissible only when it properly colors the actual conflict graph or when same-phase workers have disjoint write ownership.
 \end{definition}
 
-\begin{definition}[Conflict graph]
-Let \(G=(\mathcal{W},E_G)\) with one vertex per worker and
-\[
-(w_i,w_j)\in E_G
-\iff
-W_{w_i}\cap W_{w_j}\neq\varnothing
-\ \lor\
-\mathrm{PolicyConflict}(w_i,w_j)=1.
-\]
-\end{definition}
+\subsection{Zero-contention WAL theorem}
 
-\begin{definition}[Three-phase coloring]
-A phase map
-\[
-\phi:\mathcal{W}\rightarrow\{0,1,2\}
-\]
-is safe for simultaneous protected mutation when
-\[
-(w_i,w_j)\in E_G\Rightarrow\phi(w_i)\neq\phi(w_j).
-\]
-Read-only work may overlap across phases; the restriction applies to protected
-mutation admission.
-\end{definition}
-
-\begin{assumption}[Exclusive lease and currentness]
-Before mutation, worker \(w\) must hold a current exclusive lease over \(W_w\),
-and its bound generation \(g(w)\) must equal the owner generation at commit
-admission.  Two workers cannot simultaneously hold valid exclusive leases for
-the same protected object.
-\end{assumption}
-
-\begin{assumption}[No hidden write path]
-Every consequential write passes through the same lease/currentness and
-protected-owner gate; no side channel can mutate protected state outside it.
-\end{assumption}
-
-\begin{assumption}[Transaction confinement]
-The WAL transaction emitted by worker \(w\), written \(\WAL(w)\), mutates only
-objects in \(W_w\) and does not widen its write set after lease acquisition.
-\end{assumption}
-
-\subsection{Three-, six-, and nine-worker schedules}
-
-For triad \(T_i=(L_i,B_i,V_i)\)---lead/analysis, builder/synthesis,
-verifier/audit---assign
-\[
-\phi(L_i)=0,\qquad\phi(B_i)=1,\qquad\phi(V_i)=2.
-\]
-For paired triads, workers with the same phase may execute simultaneously only
-if their write sets are disjoint or their operations have been separately
-proven commuting.  For three triads, a convenient coordinate is
-\[
-h(i,k)=3i+k,\qquad i,k\in\{0,1,2\},
-\]
-forming a \(3\times3\) scheduling lattice.  The lattice is an index and review
-structure, not a substitute for the conflict graph.
-
-\begin{theorem}[Zero application-level write-set contention]
-Suppose workers \(w_i,w_j\) are admitted simultaneously for WAL-bound mutation.
-Under safe phase coloring, exclusive leases/currentness, transaction confinement,
-and no hidden write path,
-\[
-W_{w_i}\cap W_{w_j}=\varnothing.
-\]
-Thus simultaneously admitted workers have zero application-level contention on
-protected write ownership.
+\begin{theorem}[Conditional zero application-level WAL write contention]
+Fix execution step \(k\). Assume:
+\begin{enumerate}[label=(A\arabic*)]
+\item \textbf{Exclusive ownership/lease:} every mutation resource has at most one valid lease owner during a mutation window.
+\item \textbf{Proper conflict coloring:} \(\phi_k\) is proper for \(G_k\).
+\item \textbf{Phase isolation:} mutation windows for distinct phases do not overlap.
+\item \textbf{No unleased write:} a worker enters a WAL mutation window only after validating every required lease and source-currentness witness.
+\item \textbf{Append-only lane discipline:} each worker appends within its owned WAL path or otherwise uses a write set proven disjoint from same-phase peers.
+\end{enumerate}
+Then no two workers simultaneously attempt an Aura application-level mutation over the same protected write resource during step \(k\). Hence the application-level same-resource contention count is zero for that step.
 \end{theorem}
 
 \begin{proof}
-Assume instead that
-\(W_{w_i}\cap W_{w_j}\neq\varnothing\).  Then
-\((w_i,w_j)\in E_G\).  Safe phase coloring forbids conflicting workers from
-simultaneous protected mutation admission.  Independently, exclusive lease
-enforcement forbids simultaneous valid ownership of any object in the
-intersection.  Either fact contradicts simultaneous admission.  Therefore the
-intersection must be empty.
+Assume distinct workers \(u\) and \(v\) simultaneously contend for protected resource \(\ell\). Then \(\ell\in L(u,k)\cap L(v,k)\), so \((u,v)\in E_k\). Proper coloring requires \(\phi_k(u)\neq\phi_k(v)\). Phase isolation forbids overlapping mutation windows for different phases, contradicting simultaneous contention. If the workers were assigned the same phase, proper coloring would already be violated. Exclusive leases and the no-unleased-write rule close the path in which a worker bypasses the schedule, while append-only/disjoint ownership closes same-phase WAL overlap. Therefore no same-resource Aura application-level mutation attempt can be simultaneous under the assumptions.
 \end{proof}
 
-\begin{corollary}[No duplicate protected-object WAL owner]
-Under the theorem assumptions, no protected object can be present in the
-mutation payload of two simultaneously admitted worker transactions.
+\begin{corollary}[3-, 6-, and 9-worker cells]
+A three-, six-, or nine-worker schedule is zero-contention in the theorem's application-level sense whenever \(\Phi\) is a proper coloring of the relevant conflict graph, exclusive leases are honored, and same-phase write sets are disjoint. Larger fleets may compose such cells only across disjoint coordinate/resource partitions or with an independently valid coloring.
 \end{corollary}
 
-\begin{proof}
-Transaction confinement gives
-\(\mathrm{writes}(\WAL(w))\subseteq W_w\).  The theorem gives disjoint write
-sets for simultaneously admitted workers, so their WAL mutation payloads cannot
-share a protected object.
-\end{proof}
+\subsection{Bounded empirical observation}
 
-\begin{corollary}[Serializability of disjoint application writes]
-If two concurrently prepared worker transactions have disjoint protected write
-sets, their logical protected-state effect is equivalent to either serial order,
-subject to the database engine's own commit semantics.
-\end{corollary}
-
-\begin{proof}
-Disjoint state updates commute at the application ownership layer.  The database
-may serialize physical commits, but whichever physical order occurs yields the
-same protected-state result because neither transaction writes the other's
-owned objects.
-\end{proof}
-
-\subsection{What the concurrency theorem does not prove}
-
-The theorem does not prove:
-\begin{itemize}
-  \item zero SQLite writer-lock wait or checkpoint contention;
-  \item zero read/read or read/write overlap;
-  \item zero filesystem or device-level contention;
-  \item safety if leases are bypassed, stale, multiply granted, or widened after admission;
-  \item arbitrary-fleet correctness merely because worker count is divisible by three;
-  \item a universal performance advantage for 3, 6, or 9 workers.
-\end{itemize}
-Those are empirical or implementation questions requiring separately bound
-workloads, database topology, agent count, lease schedule, collision definition,
-and run receipts.
+The current repository benchmark executes 5,000 one-row SQLite WAL transactions per trial using separate SQLite connections and reports zero recorded lock retries for worker counts 1 through 25. The best recorded throughput is 19,934.69 writes/s at five workers. This is implementation evidence for that benchmark surface only. It does \emph{not} prove zero internal SQLite waiting, zero operating-system scheduling delay, arbitrary graph three-colorability, or universal fleet collision freedom. The theorem above remains conditional on its explicit assumptions.
 
 \section{Four Prime Directives as Boundary Invariant Constraints}
 
-The founder source records the recursive governance cycle
+The founder source compiles the four named directives into the recursive governance loop
 \[
 \begin{aligned}
 \text{RELATION}&\rightarrow\text{RECOGNITION}\rightarrow\text{GOVERNED CARE}\\
 &\rightarrow\text{RECIPROCITY/RECEIPT}\rightarrow\text{RELATION}'.
 \end{aligned}
 \]
-We compile it into four predicates over a candidate transition
-\(\tau=(s,a,s')\).
+We formalize that project-specific constitutional kernel as four predicates. The mapping below is an AuraOS engineering interpretation, not a universal claim about Anishinaabe philosophy.
 
-\subsection{Gakina-awiiya --- relation closure}
+\subsection{Gakina-awiiya --- We Are One / We Are All Related}
 
-\begin{definition}[Relation predicate]
+\begin{definition}[Relational-closure invariant]
+For transition \(\tau=(X,u,X')\), let
 \[
 \Rel(\tau)=1
 \]
-iff every consequentially affected object is bound to semantic identity and the
-required dependency, ownership, consequence, and responsibility relations are
-present in the active world or explicitly resolved as unknown.
+iff every mutated or newly materialized semantic object remains bound to identity plus the required source, lineage, ownership, or dependency edges, or an unresolved relation is made explicit rather than silently assumed away.
 \end{definition}
 
-This is the software interpretation of ``We Are One / We Are All Related'':
-relation is computational structure.  It does not imply global readability,
-identity collapse, or mutual authorization.
+This invariant prohibits treating a source-bound object as context-free simply because a local representation exists.
 
-\subsection{Giwaabamin --- recognition and provenance}
+\subsection{Giwaabamin --- I See You}
 
-\begin{definition}[Recognition predicate]
+\begin{definition}[Recognition/provenance invariant]
 \[
 \begin{aligned}
-\See(\tau)=&\ \one[\Src(\tau)\ \mathrm{resolved}]
-\cdot\one[\Fresh(\tau)\ \mathrm{resolved}]\\
-&\cdot\one[\mathrm{identity/owner}\ \mathrm{resolved}]
-\cdot\one[\mathrm{privacy\ boundary}\ \mathrm{respected}].
+\See(\tau)={}&\one[\Src(\tau)\text{ resolved}]\,
+\one[\Fresh(\tau)\text{ resolved}]\\
+&\cdot\one[\text{identity/owner resolved}]\,
+\one[\text{privacy boundary respected}].
 \end{aligned}
 \]
 \end{definition}
 
-The invariant is
+Thus
 \[
-\mathrm{Addressable}(x)\not\Rightarrow\mathrm{True}(x),\qquad
+\mathrm{Addressable}(x)\not\Rightarrow\mathrm{True}(x),
+\qquad
 \mathrm{Visible}(x)\not\Rightarrow\Auth(x).
 \]
-Routing, hashes, similarity, embeddings, or model confidence may help locate a
-source but do not satisfy recognition by themselves.
+Recognition is provenance-aware visibility, not possession.
 
-\subsection{Gi-zaagi'in --- governed care}
+\subsection{Gi-zaagi'in --- I Love You}
 
-Let \(\mathrm{Cap}(a)\) mean the system technically can perform \(a\), and let
-\(\nu(s)\) denote negative-space constraints.
-
-\begin{definition}[Governed-care predicate]
+\begin{definition}[Governed-care invariant]
+Let \(\mathrm{Cap}(u)\) mean the system can technically perform \(u\), let \(\Auth(u,X)\) encode required human/community authority, and let \(N(X)\) be negative-space constraints. Define
 \[
 \Care(\tau)=
-\one[\Auth(a,s)=1]
-\cdot
-\one[a\notin\nu(s)]
-\cdot
-\one[\text{required lease/gate conditions hold}].
+\one[\Auth(u,X)=1]
+\one[u\notin N(X)]
+\one[\text{required gate/lease conditions hold}].
+\]
+The governing implication is
+\[
+\mathrm{Cap}(u)\not\Rightarrow\Auth(u,X).
 \]
 \end{definition}
 
-Hence
-\[
-\mathrm{Cap}(a)\not\Rightarrow\Auth(a,s).
-\]
-A technically possible action remains inadmissible when authority, non-harm,
-lease, currentness, or human/community gate conditions are missing.
+Care is implemented as bounded transformation, refusal where authority is absent, and reversible/non-promoting staging where appropriate.
 
-\subsection{Miigwech --- reciprocity, attribution, and receipt}
+\subsection{Miigwech --- Thank You}
 
-\begin{definition}[Reciprocity predicate]
+\begin{definition}[Reciprocity/receipt invariant]
 \[
 \Rec(\tau)=1
 \]
-iff the transition closes with a durable receipt binding at minimum
-\[
-(\text{prior state identity},\text{next state identity},\text{operation},
-\text{source generation},\text{authority},\text{actor},\text{disposition}).
-\]
+iff an accepted transition emits an append-preserving receipt binding at minimum the prior state identity, successor state identity, operation, actor/worker, source/currentness generation, evidence disposition, authority, and result.
 \end{definition}
 
-A digest can witness bytes or structure, but cannot supply missing semantic
-authority.  Therefore
-\[
-\mathrm{RECEIPT}\neq\mathrm{TRUTH},\qquad
-\mathrm{ROUTE}\neq\mathrm{AUTHORITY}.
-\]
+A digest may witness bytes or structure, but it cannot supply missing semantic authority.
 
 \subsection{Prime admissibility kernel}
 
-\begin{definition}[Admissible consequential transition]
+\begin{definition}[Boundary admissibility]
 Define
 \[
 \mathcal{A}(\tau)=\Rel(\tau)\See(\tau)\Care(\tau)\Rec(\tau).
 \]
-A consequential transition is admissible only when
-\[
-\mathcal{A}(\tau)=1.
-\]
-If any required factor is false or unresolved, the operation must fail closed or
-remain non-consequentially staged.
+A consequential transition is Aura-admissible only if \(\mathcal{A}(\tau)=1\). If any required factor is zero or unresolved, execution must fail closed or remain in non-consequential staging.
 \end{definition}
 
-\begin{lemma}[No auxiliary-plane shortcut]
-No routing, retrieval, similarity, consensus, memory, concurrency schedule, or
-receipt subsystem independently implies \(\mathcal{A}(\tau)=1\).
+\begin{lemma}[No routing shortcut to authority]
+No routing, retrieval, similarity, consensus, memory, hash, or receipt subsystem independently implies \(\mathcal{A}(\tau)=1\).
 \end{lemma}
 
 \begin{proof}
-Each subsystem can establish only a subset of the conjunctive predicates.  A
-route may locate a candidate but cannot grant authority; a phase schedule may
-prevent write overlap but cannot make a stale source current; and a receipt may
-record an event but cannot retroactively authorize it.  Therefore no auxiliary
-signal is sufficient for the full admissibility conjunction.
+Each auxiliary mechanism can satisfy only a subset of the conjunction. A route can establish addressability but cannot create human/community authority. A hash can bind bytes but cannot establish semantic truth. A receipt can establish what occurred but cannot retroactively authorize an inadmissible act. Therefore none is sufficient for the full admissibility kernel.
 \end{proof}
 
-\section*{Integrated execution law}
+\begin{proposition}[Recursive closure]
+If every accepted transition satisfies \(\mathcal{A}=1\) and receipts are append-preserving, then the successor relational state retains a route to the evidence and authority context of its predecessor transition.
+\end{proposition}
 
-For objective \(o\), the formal flow is
-\[
-\begin{aligned}
-o&\xrightarrow{\text{relational morph}}\mu
-\xrightarrow{\text{six-slot FST}}x
-\xrightarrow{\Route}Q_o
-\xrightarrow{\Hyd}e\\
-&\xrightarrow{\text{plan/conflict graph}}\{\tau_j\}
-\xrightarrow{\phi,\Lease,\Fresh}\{\tau_j^{\mathrm{admitted}}\}
-\xrightarrow{\mathcal{A}}s'
-\xrightarrow{\Receipt}r.
-\end{aligned}
-\]
-The flow preserves four separations:
-\begin{enumerate}
-  \item compact morphology does not erase source identity;
-  \item routing does not create truth or authority;
-  \item phase scheduling does not create ownership;
-  \item a receipt records evidence of a transition but is not automatic truth.
-\end{enumerate}
+\begin{proof}
+\(\Rel\) preserves required relational attachment, \(\See\) preserves identity/source/currentness visibility, \(\Care\) rejects unauthorized or negative-space-violating transformation, and \(\Rec\) appends the transition witness. Therefore the successor begins as \(\mathrm{RELATION}'\) with predecessor evidence still addressable rather than as an unproven replacement state.
+\end{proof}
 
-\section*{Reference invariants for test harnesses}
+\section*{Open proof obligations and negative space}
 
-A conforming implementation should expose tests for at least:
-\begin{enumerate}
-  \item bound-state changes that correctly invalidate whole-morph admissibility;
-  \item malformed or namespace-ambiguous six-slot packets failing closed;
-  \item route resolution being unable to create authority;
-  \item stale source generation defeating a transition requiring currentness;
-  \item prohibited negative-space predicates defeating technical capability;
-  \item L0 state descending to exact L4 source when adjudication requires it;
-  \item conflicting workers being unable to hold concurrent valid exclusive leases;
-  \item same-phase conflicting mutation being refused;
-  \item disjoint WAL write ownership remaining disjoint under 3-, 6-, and 9-worker schedules;
-  \item SQLite lock/wait metrics being reported as empirical observations rather than inferred from the logical theorem;
-  \item consequential transitions emitting source- and authority-bound receipts.
-\end{enumerate}
+This specification deliberately leaves the following outside its proved surface:
+\begin{itemize}
+\item empirical linguistic validation of Aura's computational morphology against any Indigenous language;
+\item universal zero-contention claims outside the lease/coloring/phase/write-set assumptions of Section 3;
+\item proof that every arbitrary fleet conflict graph is three-colorable;
+\item proof that compact hydration always attains the global minimum-cost sufficient world;
+\item any implication from routing, hashing, model consensus, or benchmark success to human/community authority;
+\item any claim that historical metaphorical ``digital physics'' language describes literal physics.
+\end{itemize}
 
-\section*{Evidence and publication boundary}
+\section*{Source registry}
+\begin{longtable}{@{}p{0.24\linewidth}p{0.68\linewidth}@{}}
+\toprule
+Source & Binding and disposition\\
+\midrule
+Founder bio / vision & Target path \path{docs/staging/ready_review/FOUNDER_BIO_AND_VISION.md}; current source fallback Drive object \texttt{1o-4aSQS4rozVcCyvi32Ps4OSoSlvUASFt5CIbS9hLjs}, revision 8. Staged / Human Gate 1 / non-published.\\
+\addlinespace
+Six-slot routing contract & Drive object \texttt{1YMykOQ-k3Sp7VK12ltawAkO\_qS7u5OnoeWS6TfiS1p4}, revision 8. Active / experimental-canonical routing contract.\\
+\addlinespace
+Prime Directives & \emph{The Prime Directives}, Drive object \texttt{1ut\_03gVB9JfngKiccrWvNEiDYFluFtYVdAi1hSvU5wg}, revision 1. Historical provenance interpreted here as software constraints, not literal physics.\\
+\addlinespace
+WAL benchmark & \path{BENCHMARK_RESULTS.md}, Git blob \texttt{b32c8a4f2e94de360fef85b3e06d47171cbd393c}. Bounded benchmark evidence; suite state W\_VALIDATED in that source.\\
+\addlinespace
+Concurrent predecessor & Current-main formal artifact observed during WC-01 had blob \texttt{11ea3550a8d79e9ce4ce339ef110fa22ef84dbea}; arXiv staging still referenced older blob \texttt{bc94866c0470a81eb869e44aa04cc64cdfed9892}. This Phase-4 repair is intended to make formal and staged source identical on its staging branch.\\
+\bottomrule
+\end{longtable}
 
-The Four Prime Directives are treated as an Indigenous-derived constitutional
-provenance kernel compiled into testable predicates; they do not magically
-guarantee ethical outcomes without concrete enforcement.  The polysynthetic
-morphology is a computational abstraction, not a linguistic universal.  The
-six-slot grammar is an active/experimental-canonical Aura routing contract.  The
-3--6--9 result is a conditional software theorem over explicit conflict sets,
-leases, currentness, and write confinement; it is not proof of a physical
-harmonic law and not proof of zero SQLite engine waiting.
-
-Before external arXiv submission, Human Gate 1 should verify naming, cultural
-wording, source-generation currentness, legal/publication metadata, and any
-quantitative benchmark claims added to later revisions.
-
-\section*{Conclusion}
-
-The compact source-bound law is
-\[
-\boxed{\begin{minipage}{0.88\linewidth}
-Bind meaning relationally; route through the six-slot finite-state law; hydrate
-only when earned; partition protected writes by conflict, lease, and currentness;
-admit only relation-complete, recognized, governed, reciprocal transitions; and
-receipt every consequence without confusing the receipt for truth.
-\end{minipage}}
-\]
+\section*{Disposition}
+\textbf{WC-01 / Triad 1 status encoded by this document: STAGED / NON-PROMOTING.}
+Publication or merge authority remains external to this specification.
 
 \end{document}

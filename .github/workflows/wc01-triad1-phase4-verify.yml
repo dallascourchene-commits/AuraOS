@@ -1,0 +1,51 @@
+name: WC01 Triad1 Phase4 Verify
+
+on:
+  push:
+    branches:
+      - staging/wc-01-triad1-phase4-repair
+
+permissions:
+  contents: read
+
+jobs:
+  latex:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact staging generation
+        uses: actions/checkout@v4
+
+      - name: Install LaTeX toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-extra texlive-fonts-recommended lmodern
+
+      - name: Verify canonical/staged byte identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmp -s docs/formal/AURA_MATHEMATICAL_SPECIFICATION_V1.tex docs/staging/arxiv_submission/AURA_MATHEMATICAL_SPECIFICATION_V1.tex
+          git hash-object docs/formal/AURA_MATHEMATICAL_SPECIFICATION_V1.tex
+          sha256sum docs/formal/AURA_MATHEMATICAL_SPECIFICATION_V1.tex docs/staging/arxiv_submission/AURA_MATHEMATICAL_SPECIFICATION_V1.tex
+
+      - name: Compile twice and validate log
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .wc01-build
+          pdflatex -interaction=nonstopmode -halt-on-error -output-directory=.wc01-build docs/formal/AURA_MATHEMATICAL_SPECIFICATION_V1.tex
+          pdflatex -interaction=nonstopmode -halt-on-error -output-directory=.wc01-build docs/formal/AURA_MATHEMATICAL_SPECIFICATION_V1.tex
+          test -s .wc01-build/AURA_MATHEMATICAL_SPECIFICATION_V1.pdf
+          ! grep -q 'LaTeX Error:' .wc01-build/AURA_MATHEMATICAL_SPECIFICATION_V1.log
+          ! grep -q 'Undefined control sequence' .wc01-build/AURA_MATHEMATICAL_SPECIFICATION_V1.log
+          ! grep -q 'Overfull \\hbox' .wc01-build/AURA_MATHEMATICAL_SPECIFICATION_V1.log
+          sha256sum .wc01-build/AURA_MATHEMATICAL_SPECIFICATION_V1.pdf
+          pdfinfo .wc01-build/AURA_MATHEMATICAL_SPECIFICATION_V1.pdf | grep '^Pages:'
+
+      - name: Upload validation PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: wc01-triad1-phase4-validation-pdf
+          path: .wc01-build/AURA_MATHEMATICAL_SPECIFICATION_V1.pdf
+          if-no-files-found: error
