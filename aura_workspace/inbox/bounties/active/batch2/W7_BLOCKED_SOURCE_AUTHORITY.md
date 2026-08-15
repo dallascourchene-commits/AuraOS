@@ -1,7 +1,11 @@
-# W7 — Batch-2 allocation blocked
+# W7 — Batch-2 allocation blocked by zero dispatch-grade targets
 
-No distinct W7 target is allocated.
+No W7 target is allocated.
 
-Reason: the requested authority artifact `docs/staging/ready_review/LIVE_BOUNTY_TARGETS_BATCH2.md` is unresolved in the current GitHub/Drive generation. The available WC-03 scan is explicitly a shortlist/provenance surface, not target authority.
+The canonical authority artifact `docs/staging/ready_review/LIVE_BOUNTY_TARGETS_BATCH2.md` has now been source-resolved and materialized. Its bounded Batch-2 result is `NO_EXACT_DISPATCHABLE_PYTHON_AST_OR_RUST_CLI_TARGET`.
 
-Fail-closed rule: do not convert a scan candidate into a W7 assignment merely to fill the lane.
+The exact Rust CLI candidate is stale/closed; the open Rust candidates are near matches outside the requested CLI focus; no exact Python AST/parser target survived the source/currentness/funding/identity gates.
+
+Fail-closed rule: do not promote a watch-only or stale candidate merely to fill the W7 lane.
+
+Current allocation: `UNASSIGNED_FAIL_CLOSED`.
