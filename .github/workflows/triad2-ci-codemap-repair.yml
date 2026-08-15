@@ -18,10 +18,17 @@ jobs:
   repair:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout exact main generation
+      - name: Checkout trigger generation
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Rebase onto current main before mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout -B triad2-codemap-repair origin/main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -68,9 +75,10 @@ jobs:
       - name: Run Architect grounding regression suite
         run: python -m pytest -q test_aura_architect_loop.py
 
-      - name: Commit repaired generator and regenerated CODEMAP
+      - name: Commit and currentness-check repaired generation
         shell: bash
         run: |
+          set -euo pipefail
           git config user.name 'aura-triad2-ci'
           git config user.email 'aura-triad2-ci@users.noreply.github.com'
           git add aura_codebase_navigator.py .aura/CODEMAP.json .aura/CODEMAP.md
@@ -79,4 +87,8 @@ jobs:
             exit 0
           fi
           git commit -m 'fix(ci): restore CODEMAP scanned-path grounding contract'
+          git fetch origin main
+          if ! git merge-base --is-ancestor origin/main HEAD; then
+            git rebase origin/main
+          fi
           git push origin HEAD:main
