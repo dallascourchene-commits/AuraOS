@@ -1,3 +1,4 @@
+# Generation 2: archive outside the source tree so tar cannot race its own output.
 name: WO Fleet Phase3 Triad2 Local Pack
 
 on:
@@ -57,13 +58,14 @@ jobs:
           set -euo pipefail
           git status --porcelain=v1 > phase3-working-tree-status.txt
           git diff --binary > phase3-repair.diff
-          tar --exclude=.git --exclude=phase3-patched-tree.tgz --exclude=local-wheelhouse -czf phase3-patched-tree.tgz .
-          sha256sum phase3-patched-tree.tgz > phase3-patched-tree.sha256
+          archive="${RUNNER_TEMP}/phase3-patched-tree.tgz"
+          tar --exclude=.git --exclude=local-wheelhouse -czf "${archive}" .
+          sha256sum "${archive}" > phase3-patched-tree.sha256
       - uses: actions/upload-artifact@v4
         with:
           name: wo-fleet-phase3-triad2-local-pack-${{ github.run_id }}
           path: |
-            phase3-patched-tree.tgz
+            ${{ runner.temp }}/phase3-patched-tree.tgz
             phase3-patched-tree.sha256
             phase3-working-tree-status.txt
             phase3-repair.diff
