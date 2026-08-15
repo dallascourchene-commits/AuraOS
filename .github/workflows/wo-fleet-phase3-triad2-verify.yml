@@ -125,7 +125,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          rm -f tools/wo_fleet_phase3_triad2_contract_patch.py tools/wo_fleet_phase3_triad2_incremental_patch.py
           python - <<'PY'
           from pathlib import Path
           import hashlib, json
