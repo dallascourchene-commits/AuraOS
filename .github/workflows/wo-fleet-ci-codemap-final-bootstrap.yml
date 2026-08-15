@@ -44,6 +44,21 @@ jobs:
       - name: Apply source-bound repair transform
         run: python tools/wo_fleet_ci_codemap_final_repair.py
 
+      - name: Restore complete scanned-path grounding contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("aura_codebase_navigator.py")
+          text = path.read_text(encoding="utf-8")
+          marker = '        "repo_file_count": len(cards),\n        "source_paths_without_topology": missing_source_paths[:100],'
+          replacement = '        "repo_file_count": len(cards),\n        "all_included_paths_sorted": sorted(source_paths),\n        "source_paths_without_topology": missing_source_paths[:100],'
+          if '"all_included_paths_sorted": sorted(source_paths)' not in text:
+              if marker not in text:
+                  raise SystemExit("CODEMAP coverage contract marker missing; fail closed")
+              text = text.replace(marker, replacement, 1)
+              path.write_text(text, encoding="utf-8")
+          PY
+
       - name: Remove bootstrap-only artifacts
         run: |
           rm tools/wo_fleet_ci_codemap_final_repair.py
