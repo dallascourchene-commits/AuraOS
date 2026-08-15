@@ -1,0 +1,108 @@
+diff --git a/CONTRIBUTING.md b/CONTRIBUTING.md
+new file mode 100644
+--- /dev/null
++++ b/CONTRIBUTING.md
+@@ -0,0 +1,75 @@
++# Contributing to Loru
++
++Thanks for helping improve Loru. This repository is designed so the core smoke path can be developed and tested offline on Python 3.11+.
++
++## Set up a development environment
++
++### macOS / Linux
++
++```bash
++python -m venv .venv
++source .venv/bin/activate
++pip install -e ".[dev,gui]"
++```
++
++### Windows PowerShell
++
++```powershell
++python -m venv .venv
++.\.venv\Scripts\activate
++pip install -e ".[dev,gui]"
++```
++
++The GUI extra is useful for desktop changes. For CLI/core-only work, `pip install -e ".[dev]"` is sufficient.
++
++## Run the verification commands
++
++Before opening a PR, run the repository's documented development checks:
++
++```bash
++pytest -q
++ruff check src tests
++loru demo
++```
++
++For GUI work, also launch `loru-gui`. If your change affects screenshots, refresh them with:
++
++```bash
++python scripts/capture_gui_shots.py
++```
++
++## Good-first-issue workflow
++
++1. Pick a small open bounty or good-first issue whose acceptance criteria you can reproduce locally.
++2. Keep the patch scoped to that issue; avoid unrelated refactors.
++3. Add or update tests when behavior changes.
++4. Run the verification commands above and include the relevant output in the PR description.
++5. Link the issue from the PR with `Fixes #N` when the PR fully resolves it.
++
++## MergeOS bounty claim flow
++
++Loru's funded tasks use the MergeOS MRG program. Before claiming a bounty:
++
++1. Follow the `mergeos-bounties` organization.
++2. Star `mergeos-bounties/mergeos`.
++3. Star `mergeos-bounties/mergeos-contracts`.
++4. Comment `I claim this bounty` on the Loru issue.
++5. Comment on MergeOS Claim Token #1 with a link to the Loru issue.
++6. Open the PR against Loru's `master` branch and include `Fixes #N`.
++
++The repository bounty policy is the source of truth for claim and payout rules: [`docs/BOUNTY.md`](docs/BOUNTY.md).
++
++## Pull request checklist
++
++- [ ] The PR is scoped to one issue/bounty or clearly explains why not.
++- [ ] `pytest -q` passes.
++- [ ] `ruff check src tests` passes.
++- [ ] `loru demo` passes for core/CLI changes.
++- [ ] GUI behavior is checked when the GUI is affected.
++- [ ] New datasets/media include license and consent notes where applicable.
++- [ ] Documentation and examples reflect changed behavior.
++- [ ] The PR description includes verification evidence and `Fixes #N` when applicable.
++
++## Data and accessibility care
++
++Loru handles sign-language data. Respect consent, privacy, licensing, and community context for any real recordings or derived datasets. Do not commit private recordings or redistribute media without permission. Synthetic/offline fixtures are preferred for deterministic tests.
++diff --git a/README.md b/README.md
++--- a/README.md
+++++ b/README.md
++@@ -24,4 +24,5 @@
++ - [Repository layout](#repository-layout)
++ - [Development](#development)
+++- [Contributing](#contributing)
++ - [MergeOS bounties](#mergeos-bounties)
++ - [License](#license)
++@@ -154,12 +155,18 @@
++ ## Development
++ 
++ ```powershell
++ pytest -q
++ ruff check src tests
++ loru demo
++ python scripts/capture_gui_shots.py   # refresh GUI screenshots
++ ```
++ 
++ ---
+++
+++## Contributing
+++
+++See [`CONTRIBUTING.md`](CONTRIBUTING.md) for development setup, verification commands, the PR checklist, and the MergeOS bounty claim flow. The canonical bounty policy remains [`docs/BOUNTY.md`](docs/BOUNTY.md).
+++
+++---
++ 
++ ## MergeOS bounties
