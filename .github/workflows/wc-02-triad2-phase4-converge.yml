@@ -1,0 +1,71 @@
+name: WC-02 Triad2 Phase4 materialize converged contracts
+
+on:
+  push:
+    branches:
+      - fix/wc-02-triad2-phase4
+    paths:
+      - '.github/workflows/wc-02-triad2-phase4-converge.yml'
+      - 'tools/wo_fleet_phase3_triad2_contract_patch.py'
+      - 'tools/wo_fleet_phase3_triad2_incremental_patch.py'
+      - 'tools/wo_fleet_phase3_triad2_skillweaver_patch.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wc-02-triad2-phase4-converge
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/wc-02-triad2-phase4
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Rebase to latest Phase4 branch generation
+        run: |
+          set -euo pipefail
+          git fetch origin fix/wc-02-triad2-phase4
+          git checkout -B fix/wc-02-triad2-phase4 origin/fix/wc-02-triad2-phase4
+      - name: Apply converged Phase3 contract repairs
+        run: |
+          set -euo pipefail
+          python tools/wo_fleet_phase3_triad2_contract_patch.py
+          python tools/wo_fleet_phase3_triad2_incremental_patch.py
+          python tools/wo_fleet_phase3_triad2_skillweaver_patch.py
+          python -m py_compile aura_coding_relationship_compass.py aura_codebase_navigator.py aura_skillweaver.py
+          git diff --check
+      - name: Install focused verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' 'jsonschema>=4.23,<5.0' 'trimesh>=4.7.1,<5.0' 'zstandard>=0.23.0,<1.0'
+      - name: Verify repaired contracts before commit
+        run: |
+          set -o pipefail
+          python -m pytest -q \
+            test_aura_fusion.py::test_infer_fusion_target_from_bang_command_prefers_implementation \
+            test_aura_fusion.py::test_codemap_refresh_skips_artifact_write_when_payload_unchanged \
+            test_aura_fusion.py::test_mock_fusion_run_infers_command_target_before_mutation_gate \
+            test_aura_skillweaver.py::TestSkillRegistry::test_registry_has_commands \
+            test_codemap_slimming.py::test_iter_repo_files_skips_runtime_dependency_dirs \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_fully_projected_obligations_preserve_eligible_path
+      - name: Commit only verified implementation repairs
+        run: |
+          set -euo pipefail
+          git config user.name 'Aura Fleet Triad2 W5-W6'
+          git config user.email 'actions@users.noreply.github.com'
+          git add aura_coding_relationship_compass.py aura_codebase_navigator.py aura_skillweaver.py
+          git diff --cached --check
+          git diff --cached --quiet && exit 0
+          git commit -m 'fix(phase4): converge CODEMAP and contract semantics'
+          git fetch origin fix/wc-02-triad2-phase4
+          git rebase origin/fix/wc-02-triad2-phase4
+          git push origin HEAD:fix/wc-02-triad2-phase4
