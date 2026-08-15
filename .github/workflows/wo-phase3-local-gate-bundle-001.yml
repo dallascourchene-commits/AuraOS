@@ -1,0 +1,56 @@
+name: WO Phase3 exact local gate bundle
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wo-phase3-local-gate-bundle-001.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/phase3-compass-bounded-projection
+          fetch-depth: 0
+      - name: Bind exact uncommitted branch base
+        run: test "$(git rev-parse HEAD)" = '25a103b02752f3f58f95946352d40bf798e6cfda'
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Apply deterministic repair without commit
+        shell: bash
+        run: |
+          echo 'ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCnBhdGggPSBQYXRoKCdhdXJhX2NvZGluZ19yZWxhdGlvbnNoaXBfY29tcGFzcy5weScpCnRleHQgPSBwYXRoLnJlYWRfdGV4dChlbmNvZGluZz0ndXRmLTgnKQphbmNob3IgPSAnXG5kZWYgY29tcGlsZV9jb2RpbmdfcmVsYXRpb25zaGlwX2NvbXBhc3MoXG4nCmlmIHRleHQuY291bnQoYW5jaG9yKSAhPSAxOgogICAgcmFpc2UgU3lzdGVtRXhpdCgnY29tcGlsZSBhbmNob3IgZHJpZnQnKQpoZWxwZXJfbGluZXMgPSBbCidkZWYgX2JvdW5kZWRfZW1lcmdlbnRfbmVpZ2hib3Job29kX3ZpZXcobmVpZ2hib3Job29kOiBNYXBwaW5nW3N0ciwgQW55XSkgLT4gZGljdFtzdHIsIEFueV06JywKJyAgICAiIiJQcm9qZWN0IG9ubHkgZmllbGRzIGNvbnN1bWVkIGJ5IGJvdW5kZWQgZW1lcmdlbnQgZGlzY292ZXJ5LiIiIicsCicgICAgcGFydGljaXBhbnRzOiBsaXN0W2RpY3Rbc3RyLCBBbnldXSA9IFtdJywKJyAgICBmb3IgaXRlbSBpbiBuZWlZ2hib3Job29kLmdldCgicGFydGljaXBhbnRzIiwgKCkpIG9yICgpOicsCicgICAgICAgIGlmIG5vdCBpc2luc3RhbmNlKGl0ZW0sIE1hcHBpbmcpOicsCicgICAgICAgICAgICBjb250aW51ZScsCicgICAgICAgIHByb2plY3RlZCA9IHtrZXk6IGl0ZW1ba2V5XSBmb3Iga2V5IGluICgicGFydGljaXBhbnRfaWQiLCAicXVhbGlmaWVkX3N5bWJvbCIsICJzeW1ib2wiLCAicm9sZSIsICJwYXJ0aWNpcGFudF90eXBlIiwgImtpbmQiLCAiY2Fub25pY2FsX3JlZiIsICJzb3VyY2VfaGFzaCIsICJ0ZXN0cyIpIGlmIGtleSBpbiBpdGVtfScsCicgICAgICAgIG1ldGFkYXRhID0gaXRlbS5nZXQoIm1ldGFkYXRhIiknLAonICAgICAgICBpZiBpc2luc3RhbmNlKG1ldGFkYXRhLCBNYXBwaW5nKTonLAonICAgICAgICAgICAgYm91bmRlZF9tZXRhZGF0YSA9IHtrZXk6IG1ldGFkYXRhW2tleV0gZm9yIGtleSBpbiAoImNhbm9uaWNhbF9yZWYiLCAic291cmNlX3JlZiIsICJzb3VyY2VfaGFzaCIsICJmaWxlX3NvdXJjZV9oYXNoIiwgImZpbGVfcGF0aCIsICJ0ZXN0cyIpIGlmIGtleSBpbiBtZXRhZGF0YX0nLAonICAgICAgICAgICAgaWYgYm91bmRlZF9tZXRhZGF0YTonLAonICAgICAgICAgICAgICAgIHByb2plY3RlZFsibWV0YWRhdGEiXSA9IGJvdW5kZWRfbWV0YWRhdGEnLAonICAgICAgICBwYXJ0aWNpcGFudHMuYXBwZW5kKHByb2plY3RlZCknLAonICAgIHJlbGF0aW9ucyA9IFt7a2V5OiBpdGVtW2tleV0gZm9yIGtleSBpbiAoInNvdXJjZV9wYXJ0aWNpcGFudF9pZCIsICJ0YXJnZXRfcGFydGljaXBhbnRfaWQiLCAidHJ1dGhfY2xhc3MiKSBpZiBrZXkgaW4gaXRlbX0gZm9yIGl0ZW0gaW4gKG5laWdoYm9yaG9vZC5nZXQoInJlbGF0aW9ucyIsICgpKSBvciAoKSkgaWYgaXNpbnN0YW5jZShpdGVtLCBNYXBwaW5nKV0nLAonICAgIHJldHVybiB7Im5laWdoYm9yaG9vZF9kaWdlc3QiOiBuZWlZ2hib3Job29kLmdldCgibmVpZ2hib3Job29kX2RpZ2VzdCIpLCAicGFydGljaXBhbnRzIjogcGFydGljaXBhbnRzLCAicmVsYXRpb25zIjogcmVsYXRpb25zfScsCicnLCAnJywKJ2RlZiBfYm91bmRlZF9lbWVyZ2VudF9jb21wYXRpYmlsaXR5X3ZpZXcoY29tcGF0aWJpbGl0eTogTWFwcGluZ1tzdHIsIEFueV0pIC0+IGRpY3Rbc3RyLCBBbnldOicsCicgICAgcmV0dXJuIHtrZXk6IGNvbXBhdGliaWxpdHlba2V5XSBmb3Iga2V5IGluICgib3V0Y29tZSIsICJhc3Nlc3NtZW50X2RpZ2VzdCIsICJjb21wYXRpYmlsaXR5X2RpZ2VzdCIpIGlmIGtleSBpbiBjb21wYXRpYmlsaXR5fScsCicnLCAnJywKJ2RlZiBfYm91bmRlZF9lbWVyZ2VudF9hdGxhc192aWV3KGF0bGFzOiBNYXBwaW5nW3N0ciwgQW55XSkgLT4gZGljdFtzdHIsIEFueV06JywKJyAgICBhc3Nlc3NtZW50cyA9IFtdJywKJyAgICBmb3IgaXRlbSBpbiBhdGxhcy5nZXQoImFzc2Vzc21lbnRzIiwgKCkpIG9yICgpOicsCicgICAgICAgIGlmIG5vdCBpc2luc3RhbmNlKGl0ZW0sIE1hcHBpbmcpOicsCicgICAgICAgICAgICBjb250aW51ZScsCicgICAgICAgIGFzc2Vzc21lbnRzLmFwcGVuZCh7a2V5OiBpdGVtW2tleV0gZm9yIGtleSBpbiAoInNvdXJjZV9wYXJ0aWNpcGFudF9pZCIsICJ0YXJnZXRfcGFydGljaXBhbnRfaWQiLCAicGFydGljaXBhbnRfYV9pZCIsICJwYXJ0aWNpcGFudF9iX2lkIiwgImxlZnRfcGFydGljaXBhbnRfaWQiLCAicmlnaHRfcGFydGljaXBhbnRfaWQiLCAicGFydGljaXBhbnRfaWRzIiwgIndpcmluZ19kaXNwb3NpdGlvbiIpIGlmIGtleSBpbiBpdGVtfSknLAonICAgIHJldHVybiB7ImFzc2Vzc21lbnRzIjogYXNzZXNzbWVudHN9JywKXQpoZWxwZXI9J1xuJy5qb2luKGhlbHBlcl9saW5lcykKdGV4dD10ZXh0LnJlcGxhY2UoYW5jaG9yLCdcbicraGVscGVyKydcblxuXG5kZWYgY29tcGlsZV9jb2RpbmdfcmVsYXRpb25zaGlwX2NvbXBhc3MoXG4nKQpvbGQ9JyAgICBkaXNjb3ZlcnkgPSBkaXNjb3Zlcl9ib3VuZGVkX2VtZXJnZW50X2NhbmRpZGF0ZXMoXG4gICAgICAgIG9iamVjdGl2ZT1ub3JtYWxpemVkX29iamVjdGl2ZSxcbiAgICAgICAgbmVpZ2hib3Job29kPW5laWdoYm9yaG9vZCxcbiAgICAgICAgY29tcGF0aWJpbGl0eT1wYWNrZXRbInR5cGVkX2NvbXBhdGliaWxpdHkiXSxcbiAgICAgICAgYXRsYXM9cGFja2V0WyJhdGxhcyJdLFxuICAgICAgICByZXF1aXJlZF90ZXN0cz1yZXF1aXJlZF90ZXN0cyxcbiAgICAgICAgbWF4X2NhbmRpZGF0ZXM9bWF4X2VtZXJnZW50X2NhbmRpZGF0ZXMsXG4gICAgICAgIG1heF9wYWlyc19jb25zaWRlcmVkPW1heF9uZWlnaGJvcmhvb2RfY2FuZGlkYXRlX3BhaXJzLFxuICAgIClcbicKbmV3PScgICAgZGlzY292ZXJ5X25laWdoYm9yaG9vZCA9IF9ib3VuZGVkX2VtZXJnZW50X25laWdoYm9yaG9vZF92aWV3KG5laWdoYm9yaG9vZClcbiAgICBkaXNjb3ZlcnlfY29tcGF0aWJpbGl0eSA9IF9ib3VuZGVkX2VtZXJnZW50X2NvbXBhdGliaWxpdHlfdmlldyhwYWNrZXRbInR5cGVkX2NvbXBhdGliaWxpdHkiXSlcbiAgICBkaXNjb3ZlcnlfYXRsYXMgPSBfYm91bmRlZF9lbWVyZ2VudF9hdGxhc192aWV3KHBhY2tldFsiYXRsYXMiXSlcbiAgICBkaXNjb3ZlcnkgPSBkaXNjb3Zlcl9ib3VuZGVkX2VtZXJnZW50X2NhbmRpZGF0ZXMoXG4gICAgICAgIG9iamVjdGl2ZT1ub3JtYWxpemVkX29iamVjdGl2ZSxcbiAgICAgICAgbmVpZ2hib3Job29kPWRpc2NvdmVyeV9uZWlnaGJvcmhvb2QsXG4gICAgICAgIGNvbXBhdGliaWxpdHk9ZGlzY292ZXJ5X2NvbXBhdGliaWxpdHksXG4gICAgICAgIGF0bGFzPWRpc2NvdmVyeV9hdGxhcyxcbiAgICAgICAgcmVxdWlyZWRfdGVzdHM9cmVxdWlyZWRfdGVzdHMsXG4gICAgICAgIG1heF9jYW5kaWRhdGVzPW1heF9lbWVyZ2VudF9jYW5kaWRhdGVzLFxuICAgICAgICBtYXhfcGFpcnNfY29uc2lkZXJlZD1tYXhfbmVpZ2hib3Job29kX2NhbmRpZGF0ZV9wYWlycyxcbiAgICApXG4nCmlmIHRleHQuY291bnQob2xkKSE9MToKICAgIHJhaXNlIFN5c3RlbUV4aXQoJ2Rpc2NvdmVyeSBjYWxsIGRyaWZ0JykKcGF0aC53cml0ZV90ZXh0KHRleHQucmVwbGFjZShvbGQsbmV3KSxlbmNvZGluZz0ndXRmLTgnKQo=' | base64 -d > /tmp/phase3_patch.py
+          python /tmp/phase3_patch.py
+          python -m py_compile aura_coding_relationship_compass.py
+          git diff --check
+      - name: Build Python 3.13 local wheelhouse
+        run: |
+          mkdir -p /tmp/wheelhouse
+          python -m pip download --dest /tmp/wheelhouse --only-binary=:all: \
+            --python-version 3.13 --implementation cp \
+            --platform manylinux_2_34_x86_64 --platform manylinux_2_28_x86_64 \
+            --platform manylinux2014_x86_64 --platform manylinux_2_17_x86_64 \
+            --platform manylinux1_x86_64 --abi cp313 --abi abi3 --abi none \
+            'aiosqlite>=0.20,<1' 'ddgs>=6,<10' 'wasmtime>=20,<46' \
+            'arxiv>=1.4,<3' 'watchdog>=3,<5' 'zstandard>=0.23,<1' \
+            'pytest-asyncio>=0.23,<1' 'cryptography>=41,<47'
+      - name: Package uncommitted repaired source tree
+        run: |
+          tar --exclude=.git -czf /tmp/phase3-local-repair-tree.tar.gz .
+          sha256sum /tmp/phase3-local-repair-tree.tar.gz /tmp/wheelhouse/* > /tmp/phase3-local-bundle.sha256
+      - uses: actions/upload-artifact@v7
+        with:
+          name: wo-phase3-local-gate-bundle-${{ github.run_id }}
+          path: |
+            /tmp/phase3-local-repair-tree.tar.gz
+            /tmp/phase3-local-bundle.sha256
+            /tmp/wheelhouse
+          if-no-files-found: error
+          retention-days: 7
