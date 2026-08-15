@@ -4,10 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - main
-      - "analysis/**"
-      - "docs/**"
-      - "fix/construction-demo-runtime-harness-*"
+      - "**"
     paths-ignore:
       - ".aura/CODEMAP.json"
       - ".aura/CODEMAP.md"
@@ -24,12 +21,7 @@ concurrency:
 
 jobs:
   sync-codemap:
-    if: >-
-      github.actor != 'github-actions[bot]' &&
-      (github.event_name == 'push' ||
-       startsWith(github.event.pull_request.head.ref, 'analysis/') ||
-       startsWith(github.event.pull_request.head.ref, 'docs/') ||
-       startsWith(github.event.pull_request.head.ref, 'fix/construction-demo-runtime-harness-'))
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
