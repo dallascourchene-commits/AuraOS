@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1594
-- **total_bytes**: 26054757
-- **text_tokens_est**: 6504108
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 230, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 244, 'support_file': 49}
+- **file_count**: 1595
+- **total_bytes**: 26055969
+- **text_tokens_est**: 6504411
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 230, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 245, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1594,
+  "repo_file_count": 1595,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -191,6 +191,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/phase-c2.yml",
     ".github/workflows/phase-c3.yml",
     ".github/workflows/phase3-compass-bounded-projection-repair.yml",
+    ".github/workflows/phase3-triad2-git-metadata.yml",
     ".github/workflows/phase3-triad2-local-pytest-deps.yml",
     ".github/workflows/phase3-triad2-tested-tree-packager.yml",
     ".github/workflows/pr138-grounded-phase-integration.yml",
@@ -1734,16 +1735,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1594,
-  "bytes": 26054757,
-  "tokens_est": 6504108,
+  "files": 1595,
+  "bytes": 26055969,
+  "tokens_est": 6504411,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 230,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 990,
-    "schema_or_lexicon": 244,
+    "schema_or_lexicon": 245,
     "support_file": 49
   }
 }
