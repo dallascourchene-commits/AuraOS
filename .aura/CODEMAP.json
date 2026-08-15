@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786817373,
+  "generated_at_unix": 1786817804,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1714,8 +1714,8 @@
     {
       "ring": "repo",
       "files": 1597,
-      "bytes": 26061114,
-      "tokens_est": 6505698,
+      "bytes": 26061530,
+      "tokens_est": 6505802,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 230,
@@ -157851,6 +157851,9 @@
       ".github/workflows/phase3-triad2-current-tested-tree.yml",
       ".github/workflows/phase3-triad2-local-tree-export.yml"
     ],
+    "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py": [
+      ".github/workflows/phase3-triad2-current-tested-tree.yml"
+    ],
     "python aura_codebase_navigator.py --refresh-topology": [
       ".github/workflows/phase3-triad2-current-tested-tree.yml",
       ".github/workflows/phase3-triad2-local-tree-export.yml",
@@ -169177,15 +169180,16 @@
       "path": ".github/workflows/phase3-triad2-current-tested-tree.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 2430,
-      "lines": 58,
-      "tokens_est": 608,
+      "bytes": 2846,
+      "lines": 61,
+      "tokens_est": 712,
       "symbol_count": 0,
       "commands": [
         "python -m pip",
         "python tools/wo_fleet_phase3_triad2_contract_patch.py",
         "python tools/wo_fleet_phase3_triad2_incremental_patch.py",
         "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
+        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
         "python -m py_compile",
         "python aura_codebase_navigator.py --refresh-topology",
         "python -m aura_codemap_verify"
@@ -169204,51 +169208,54 @@
         "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
           35
         ],
-        "python -m py_compile": [
+        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py": [
           36
         ],
+        "python -m py_compile": [
+          37
+        ],
         "python aura_codebase_navigator.py --refresh-topology": [
-          39
+          40
         ],
         "python -m aura_codemap_verify": [
-          40
+          41
         ]
       },
       "topology": {},
-      "digest8": "8efc8c5288049b3e",
+      "digest8": "22d7f4061afbb491",
       "vector": [
-        0.299728,
-        0.003762,
-        -0.0765,
-        0.194384,
-        -0.129171,
-        0.104089,
-        0.023828,
-        -0.043893,
-        0.317285,
-        0.016303,
-        -0.214449,
-        0.141712,
-        -0.221974,
-        0.249564,
-        -0.051418,
-        -0.184351,
-        -0.081516,
-        0.058942,
-        0.149237,
-        0.284678,
-        0.189368,
-        0.0765,
-        -0.259597,
-        0.234515,
-        -0.129171,
-        0.013795,
-        0.053926,
-        0.156761,
-        0.121647,
-        0.289695,
-        -0.312268,
-        -0.056434
+        0.241077,
+        0.335927,
+        0.06982,
+        0.135688,
+        -0.330657,
+        -0.061916,
+        -0.051377,
+        0.056646,
+        -0.067185,
+        0.243712,
+        -0.01976,
+        -0.109341,
+        0.146227,
+        0.193652,
+        -0.106706,
+        0.090898,
+        -0.225268,
+        -0.299041,
+        0.175209,
+        0.11461,
+        0.088263,
+        -0.30431,
+        -0.046108,
+        -0.296406,
+        -0.054012,
+        0.135688,
+        -0.122514,
+        0.204191,
+        0.246346,
+        -0.104071,
+        0.048742,
+        0.075089
       ]
     },
     {
@@ -283507,8 +283514,8 @@
   },
   "summary": {
     "file_count": 1597,
-    "total_bytes": 26061114,
-    "text_tokens_est": 6505698,
+    "total_bytes": 26061530,
+    "text_tokens_est": 6505802,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 230,
@@ -442913,6 +442920,6 @@
       }
     ],
     "record_fingerprint": "ad92cc08a26db3200411c459a7f5f8e2",
-    "payload_hash": "a9086591c13392908b1b4849fdcc236f"
+    "payload_hash": "8c013790038f19d33e4602d9dd054176"
   }
 }
