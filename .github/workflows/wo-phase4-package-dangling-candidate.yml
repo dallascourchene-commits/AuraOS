@@ -1,0 +1,51 @@
+name: WO Phase4 Package Exact Retained Candidate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/wo-phase4-package-dangling-candidate.yml
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CANDIDATE: a279c396f3f25044c94c8dc713c3321663d8d902
+      EXPECTED_TREE: 88ae935fe67e771d87f5e1b2e0e38f82e8294df8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: a279c396f3f25044c94c8dc713c3321663d8d902
+          fetch-depth: 1
+      - name: Bind exact retained candidate
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CANDIDATE"
+          test "$(git rev-parse HEAD^{tree})" = "$EXPECTED_TREE"
+          test -z "$(git status --porcelain)"
+      - name: Package exact retained candidate
+        run: |
+          git archive --format=tar.gz --output=/tmp/wc02-phase4-a279.tar.gz HEAD
+          git bundle create /tmp/wc02-phase4-a279.bundle HEAD
+          git show --stat --oneline HEAD > /tmp/wc02-phase4-a279-stat.txt
+          git rev-parse HEAD > /tmp/wc02-phase4-a279-head.txt
+          git rev-parse HEAD^{tree} > /tmp/wc02-phase4-a279-tree.txt
+          sha256sum /tmp/wc02-phase4-a279.tar.gz /tmp/wc02-phase4-a279.bundle \
+            /tmp/wc02-phase4-a279-stat.txt /tmp/wc02-phase4-a279-head.txt \
+            /tmp/wc02-phase4-a279-tree.txt > /tmp/wc02-phase4-a279.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wc02-phase4-a279-exact
+          path: |
+            /tmp/wc02-phase4-a279.tar.gz
+            /tmp/wc02-phase4-a279.bundle
+            /tmp/wc02-phase4-a279-stat.txt
+            /tmp/wc02-phase4-a279-head.txt
+            /tmp/wc02-phase4-a279-tree.txt
+            /tmp/wc02-phase4-a279.sha256
+          if-no-files-found: error
+          retention-days: 14
