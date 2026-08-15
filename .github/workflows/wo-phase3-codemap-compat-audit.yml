@@ -1,0 +1,86 @@
+name: WO Phase3 CODEMAP Compatibility Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/wo-phase3-codemap-compat-audit.yml
+
+permissions:
+  contents: read
+
+jobs:
+  compat-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - branch: w7/paper-x-final-license-normalization
+            expected_head: 9a13ab37ccd6c5b35a573f30b10daea877b8570c
+          - branch: feat/multimodal-c2-work-order-locator
+            expected_head: cbc6a9e78f236983a685f2db1631ceb97f62ff76
+          - branch: wo-wb-037-qdkt-crystal-hardening
+            expected_head: 3072a1f1fb0a5a40dc9491a71b8c7490255cc28b
+          - branch: j05/custodian-drive-event-adapter
+            expected_head: 8fd30b90083a650234931f72ff9299c264c1517f
+          - branch: ci/wo-triad2-ci-codemap-repair-001
+            expected_head: 7bf911a81c82934d270ff5bb99e9a31ef8d65782
+          - branch: repair/wo-fleet-phase3-triad2-001
+            expected_head: d718743df50f32d085e02edf740d5b57a36d3a28
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
+          fetch-depth: 0
+      - name: Bind exact audited head
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ matrix.expected_head }}"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install repository dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pytest pytest-asyncio
+      - name: Materialize validated CODEMAP-only transforms
+        run: |
+          git show origin/ci/wo-triad2-ci-codemap-repair-001:tools/wo_triad2_ci_codemap_repair.py > tools/_phase3_codemap_base.py
+          git show origin/ci/wo-triad2-ci-codemap-repair-001:tools/wo_triad2_ci_codemap_command_index_patch.py > tools/_phase3_command_index.py
+          git show origin/ci/wo-triad2-ci-codemap-repair-001:tools/wo_triad2_ci_codemap_incremental_stability_patch.py > tools/_phase3_incremental.py
+          git show origin/ci/wo-triad2-ci-codemap-repair-001:tools/wo_triad2_ci_codemap_iterator_compat_patch.py > tools/_phase3_iterator.py
+          python - <<'PY'
+          import tools._phase3_codemap_base as patch
+          patch.patch_navigator()
+          patch.patch_verifier()
+          PY
+          python tools/_phase3_command_index.py
+          python tools/_phase3_incremental.py
+          python tools/_phase3_iterator.py
+          rm -f tools/_phase3_codemap_base.py tools/_phase3_command_index.py tools/_phase3_incremental.py tools/_phase3_iterator.py
+      - name: Compile, regenerate, and verify
+        id: verify
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          mkdir -p /tmp/codemap-compat
+          python -m py_compile aura_codebase_navigator.py aura_codemap_verify.py
+          python aura_codebase_navigator.py --refresh-topology 2>&1 | tee /tmp/codemap-compat/regenerate.log
+          git checkout -- Aura_Memory/live_topology_ast.json 2>/dev/null || true
+          python -m aura_codemap_verify 2>&1 | tee /tmp/codemap-compat/verify.log
+          git status --short -- aura_codebase_navigator.py aura_codemap_verify.py .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json > /tmp/codemap-compat/status.txt
+          sha256sum aura_codebase_navigator.py aura_codemap_verify.py .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json > /tmp/codemap-compat/SHA256SUMS
+      - name: Record result
+        if: always()
+        run: |
+          printf 'branch=%s\nhead=%s\ncompat_outcome=%s\n' '${{ matrix.branch }}' '$(git rev-parse HEAD)' '${{ steps.verify.outcome }}' > /tmp/codemap-compat/result.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: codemap-compat-${{ strategy.job-index }}
+          path: /tmp/codemap-compat/
+          if-no-files-found: warn
+          retention-days: 2
