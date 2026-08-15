@@ -1,0 +1,25 @@
+{
+  "scope": "bounded host microbenchmark",
+  "json_projection": {
+    "raw_bytes": 286,
+    "projected_bytes": 78,
+    "byte_reduction_pct": 72.73,
+    "note": "Synthetic JSON byte-size comparison; not tokenizer-measured token compression."
+  },
+  "udp_loopback": {
+    "packets_sent": 200,
+    "packets_received": 200,
+    "datagrams_per_sec": 113403.24,
+    "median_round_trip_us": 7.08,
+    "p95_round_trip_us": 10.126,
+    "note": "Synchronous localhost UDP unicast round trips; not multicast or remote mesh hops."
+  },
+  "sqlite_wal": {
+    "journal_mode": "wal",
+    "rows_expected": 500,
+    "rows_recovered": 500,
+    "integrity_check": "ok",
+    "reopen_checkpoint_ms": 1.493,
+    "note": "Clean reopen + WAL checkpoint; not crash/chaos injection."
+  }
+}
