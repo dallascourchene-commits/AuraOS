@@ -16,8 +16,8 @@ concurrency:
 
 jobs:
   parser_probe:
-    if: github.event.pull_request.number == 193
+    if: ${{ github.event.pull_request.number == 193 && github.event.pull_request.head.ref == 'refactor/unified-memory-continuity' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.sha == '2cdb398e05ca12c1622b20c43f98b04eaf170135' }}
     runs-on: ubuntu-latest
     steps:
       - name: Parser probe
-        run: echo "workflow parser accepted permissions + concurrency"
+        run: echo "workflow parser accepted full exact-head if guard"
