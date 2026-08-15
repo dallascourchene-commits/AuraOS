@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/schemas/identify-response.schema.json
-@@ -0,0 +1,47 @@
+@@ -0,0 +1,46 @@
 +{
 +  "$schema": "https://json-schema.org/draft/2020-12/schema",
 +  "$id": "https://plantguide.local/schemas/identify-response.schema.json",
@@ -49,7 +49,7 @@
 +}
 --- /dev/null
 +++ b/schemas/care-response.schema.json
-@@ -0,0 +1,28 @@
+@@ -0,0 +1,27 @@
 +{
 +  "$schema": "https://json-schema.org/draft/2020-12/schema",
 +  "$id": "https://plantguide.local/schemas/care-response.schema.json",
@@ -79,7 +79,7 @@
 +}
 --- /dev/null
 +++ b/sdk/typescript/index.ts
-@@ -0,0 +1,53 @@
+@@ -0,0 +1,55 @@
 +/** Public contracts matching PlantGuide's Python app SDK payloads. */
 +
 +export interface IdentifyRequest {
@@ -137,14 +137,10 @@
 +}
 --- a/README.md
 +++ b/README.md
-@@
- ## Development
-@@
- plantguide demo photo
- ```
+@@ -248,4 +248,16 @@
  
  ---
-+
+ 
 +## App SDK contracts
 +
 +PlantGuide publishes machine-readable contracts for the stable Python app SDK in `plantguide.integrations.sdk`:
@@ -156,5 +152,5 @@
 +The schemas use JSON Schema Draft 2020-12. `integration_version` identifies the SDK contract generation; optional sample/image fields remain additive. The TypeScript contracts mirror nullable catalog identity fields emitted by the Python code.
 +
 +---
- 
++
  ## MergeOS bounties
