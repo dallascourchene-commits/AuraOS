@@ -80,3 +80,9 @@ python aura_swarm_runner.py
 AuraOS is licensed under the **GNU Affero General Public License v3.0 (GNU AGPLv3)**.
 
 See [`LICENSE`](./LICENSE) for the complete license text.
+
+---
+
+## Canonical Archive & Permanent DOI
+* **Zenodo Record:** https://zenodo.org/records/21941334
+* **Canonical Genesis Seed:** `67d2597bfa7895d997b89eb288a8f6cd5fe54ddc1ea69f676ec5d1a1ab96b002`
