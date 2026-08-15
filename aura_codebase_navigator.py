@@ -234,66 +234,102 @@ def load_or_compile_topology(
     topology_path: Path | None = None,
     refresh: bool = False,
 ) -> tuple[dict[str, Any], str]:
+    """Load or compile a canonical source-indexable deep topology."""
     target = topology_path or DEFAULT_TOPOLOGY_PATH
     absolute = target if target.is_absolute() else root / target
+
+    def valid_deep(payload: dict[str, Any]) -> bool:
+        meta = payload.get("meta") if isinstance(payload.get("meta"), dict) else {}
+        marker = (
+            str(payload.get("status") or "") == "SYS_TOPOLOGY_DEEP_ACTIVE"
+            or str(meta.get("generated_by") or "") == "aura_topology_manager"
+        )
+        return marker and bool(_topology_file_index(payload))
+
     if absolute.exists() and not refresh:
         try:
-            return json.loads(absolute.read_text(encoding="utf-8")), "existing"
+            existing = json.loads(absolute.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
-            pass
-    topology = compile_topology_map(root, absolute)
-    return topology, "compiled"
+            existing = None
+        if isinstance(existing, dict) and valid_deep(existing):
+            return existing, "compiled_deep_topology"
 
+    previous_cwd = Path.cwd()
+    try:
+        os.chdir(root)
+        topology = compile_topology_map(deep=True)
+    finally:
+        os.chdir(previous_cwd)
+    if not isinstance(topology, dict) or not valid_deep(topology):
+        raise RuntimeError("deep topology compilation did not produce a source-indexable graph")
+    if absolute != root / DEFAULT_TOPOLOGY_PATH:
+        absolute.parent.mkdir(parents=True, exist_ok=True)
+        absolute.write_text(json.dumps(topology, indent=2), encoding="utf-8")
+    return topology, "compiled_deep_topology"
 
 def _node_file(node_id: str, node: dict[str, Any]) -> str:
     return str(node.get("file") or node_id.split("::", 1)[0])
 
 
 def _topology_file_index(topology: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    per_file: dict[str, dict[str, Any]] = defaultdict(lambda: {
-        "nodes": 0,
-        "out_edges": 0,
-        "in_edges": 0,
-        "kinds": Counter(),
-        "symbols": [],
+    """Normalize legacy dict/from-to and deep list/source-target schemas."""
+    per_file = defaultdict(lambda: {
+        "node_count": 0, "out_edges": 0, "in_edges": 0,
+        "kinds": Counter(), "symbols": [], "neighbor_files": set(),
+        "edge_kinds": Counter(),
     })
-    nodes = topology.get("nodes", {})
-    if isinstance(nodes, dict):
-        node_items = nodes.items()
+    raw_nodes = topology.get("nodes", {})
+    if isinstance(raw_nodes, dict):
+        node_items = list(raw_nodes.items())
+    elif isinstance(raw_nodes, list):
+        node_items = [
+            (str(node.get("id") or f"node_{i}"), node)
+            for i, node in enumerate(raw_nodes) if isinstance(node, dict)
+        ]
     else:
         node_items = []
-    node_to_file: dict[str, str] = {}
+    node_to_file = {}
     for node_id, node in node_items:
-        if not isinstance(node, dict):
-            continue
         file_path = _node_file(str(node_id), node)
+        if not file_path:
+            continue
         node_to_file[str(node_id)] = file_path
         slot = per_file[file_path]
-        slot["nodes"] += 1
+        slot["node_count"] += 1
         slot["kinds"][str(node.get("kind", "unknown"))] += 1
-        symbol = str(node.get("symbol") or "")
-        if symbol and len(slot["symbols"]) < 12 and symbol not in slot["symbols"]:
+        symbol = str(node.get("symbol") or node.get("label") or "")
+        if symbol and symbol != "global_scope" and symbol not in slot["symbols"] and len(slot["symbols"]) < 12:
             slot["symbols"].append(symbol)
-    for edge in topology.get("edges", []):
+    for edge in topology.get("edges", []) or []:
         if not isinstance(edge, dict):
             continue
-        source_file = node_to_file.get(str(edge.get("from", "")))
-        target_file = node_to_file.get(str(edge.get("to", "")))
-        if source_file:
-            per_file[source_file]["out_edges"] += 1
-        if target_file:
-            per_file[target_file]["in_edges"] += 1
-    out: dict[str, dict[str, Any]] = {}
-    for file_path, payload in per_file.items():
+        source = node_to_file.get(str(edge.get("from") or edge.get("source") or ""))
+        target = node_to_file.get(str(edge.get("to") or edge.get("target") or ""))
+        kind = str(edge.get("kind") or edge.get("type") or "unknown")
+        if source:
+            per_file[source]["out_edges"] += 1
+            per_file[source]["edge_kinds"][kind] += 1
+        if target:
+            per_file[target]["in_edges"] += 1
+            per_file[target]["edge_kinds"][kind] += 1
+        if source and target and source != target:
+            per_file[source]["neighbor_files"].add(target)
+            per_file[target]["neighbor_files"].add(source)
+    out = {}
+    for file_path, slot in per_file.items():
+        out_edges = int(slot["out_edges"])
+        in_edges = int(slot["in_edges"])
+        nodes = int(slot["node_count"])
+        degree = out_edges + in_edges
         out[file_path] = {
-            "nodes": int(payload["nodes"]),
-            "out_edges": int(payload["out_edges"]),
-            "in_edges": int(payload["in_edges"]),
-            "kinds": dict(payload["kinds"]),
-            "symbols": payload["symbols"],
+            "node_count": nodes, "edge_count": degree, "degree": degree,
+            "symbols": sorted(slot["symbols"]),
+            "neighbor_files": sorted(slot["neighbor_files"]),
+            "edge_kinds": dict(sorted(slot["edge_kinds"].items())),
+            "nodes": nodes, "out_edges": out_edges, "in_edges": in_edges,
+            "kinds": dict(sorted(slot["kinds"].items())),
         }
     return out
-
 
 def scan_repository(root: Path) -> list[dict[str, Any]]:
     cards: list[dict[str, Any]] = []
@@ -317,6 +353,7 @@ def _scan_file(root: Path, path: Path) -> dict[str, Any]:
     return {
         "path": rel,
         "role": classify_file(path),
+        "binary": is_binary,
         "bytes": len(raw),
         "lines": text.count("\n") + (1 if text else 0),
         "tokens_est": estimate_tokens(text) if not is_binary else max(1, len(raw) // 4),
@@ -340,6 +377,7 @@ def _coverage_report(cards: list[dict[str, Any]], topology: dict[str, Any] | Non
         unindexed_topology_files = sorted(topology_files - source_paths)
     return {
         "repo_file_count": len(cards),
+        "all_included_paths_sorted": sorted(source_paths),
         "source_paths_without_topology": missing_source_paths[:100],
         "topology_paths_without_source_cards": unindexed_topology_files[:100],
         "coverage_complete_for_repo_scan": True,
@@ -508,6 +546,7 @@ def _compact_file_cards(cards: list[dict[str, Any]]) -> list[dict[str, Any]]:
         compact.append({
             "path": card["path"],
             "role": card["role"],
+            "binary": bool(card.get("binary", False)),
             "bytes": card["bytes"],
             "lines": card["lines"],
             "tokens_est": card["tokens_est"],
@@ -536,12 +575,16 @@ def build_navigation_system(
 ) -> dict[str, Any]:
     started = time.perf_counter()
     cards = scan_repository(root)
-    topology: dict[str, Any] | None = None
+    topology = None
     topology_source = "disabled"
+    topology_index = {}
     if include_topology:
-        topology, topology_source = load_or_compile_topology(root, topology_path=topology_path, refresh=refresh_topology)
-        cards = _attach_topology(cards, _topology_file_index(topology))
-    payload = {
+        topology, topology_source = load_or_compile_topology(
+            root, topology_path=topology_path, refresh=refresh_topology
+        )
+        topology_index = _topology_file_index(topology)
+        cards = _attach_topology(cards, topology_index)
+    return {
         "status": "AURA_CODEMAP_ACTIVE",
         "generated_by": "aura_codebase_navigator",
         "generated_at_unix": int(time.time()),
@@ -553,11 +596,12 @@ def build_navigation_system(
         "command_index": _command_index(cards),
         "top_hubs": _top_hubs(cards),
         "files": _compact_file_cards(cards),
+        "topology": {"source": topology_source, "file_index": topology_index},
         "summary": {
             "file_count": len(cards),
-            "total_bytes": sum(int(card.get("bytes", 0)) for card in cards),
-            "text_tokens_est": sum(int(card.get("tokens_est", 0)) for card in cards),
-            "role_counts": dict(sorted(Counter(str(card.get("role", "support_file")) for card in cards).items())),
+            "total_bytes": sum(int(c.get("bytes", 0)) for c in cards),
+            "text_tokens_est": sum(int(c.get("tokens_est", 0)) for c in cards),
+            "role_counts": dict(sorted(Counter(str(c.get("role", "support_file")) for c in cards).items())),
             "topology_nodes": len((topology or {}).get("nodes", {})),
             "topology_edges": len((topology or {}).get("edges", [])),
             "topology_source": topology_source,
@@ -565,14 +609,12 @@ def build_navigation_system(
         },
         "navigation_protocol": [
             "Read .aura/CODEMAP.md first.",
-            "Use .aura/CODEMAP.json for exact file/symbol/command references.",
-            "Navigate repository -> role -> file -> symbol -> exact source region.",
-            "Do not infer repository-wide behavior from a single file or paper.",
-            "Treat topology and vectors as navigation aids only; exact source and tests remain authority.",
+            "Use command_index for bang commands before opening the REPL monolith.",
+            "Use symbol_index semantic_id/signature_hash entries first, then current line ranges.",
+            "Open only the top query hits plus their topology.neighbor_files.",
+            "After any successful file write, run --refresh on touched paths instead of rebuilding the whole map.",
         ],
     }
-    return payload
-
 
 def search_index(index: dict[str, Any], query: str, *, top_n: int = 12) -> list[dict[str, Any]]:
     query_vector = stable_unit_vector(query)
