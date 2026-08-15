@@ -10,105 +10,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1589
-- **total_bytes**: 26001679
-- **text_tokens_est**: 6490840
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 245, 'support_file': 49}
-- **topology_nodes**: 11393
-- **topology_edges**: 27882
+- **file_count**: 1601
+- **total_bytes**: 26060661
+- **text_tokens_est**: 6505589
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 248, 'support_file': 49}
+- **topology_nodes**: 11477
+- **topology_edges**: 28069
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 33272.27
+- **elapsed_ms**: 28473.36
 
 ## Coverage
 
 ```json
 {
-  "repo_file_count": 1589,
+  "repo_file_count": 1601,
   "source_paths_without_topology": [
-    "_aura_architect_consolidation_benchmark_legacy.py",
-    "_aura_architect_consolidation_benchmark_refined_legacy.py",
-    "_aura_architect_consolidation_benchmark_v2_legacy.py",
-    "apply_graft.py",
-    "arch_reasoner_accel.py",
-    "arxiv_forager.py",
-    "async_palace.py",
-    "aura_adaptive_fusion.py",
-    "aura_adaptive_model_executor.py",
-    "aura_adaptive_model_router.py",
-    "aura_affordance_directory.py",
-    "aura_agent_arena_bridge.py",
-    "aura_agent_arena_cli.py",
-    "aura_agent_arena_errors.py",
-    "aura_agent_arena_fireworks.py",
-    "aura_agent_arena_github_bridge.py",
-    "aura_agent_arena_github_mcp.py",
-    "aura_agent_arena_mcp.py",
-    "aura_agent_arena_mcp_architect.py",
-    "aura_agent_arena_mcp_external_llm.py",
-    "aura_agent_arena_persistence_bridge.py",
-    "aura_agent_arena_review_learning_bridge.py",
-    "aura_agent_arena_review_learning_mcp.py",
-    "aura_agent_ir.py",
-    "aura_agent_ir_compiler.py",
-    "aura_agent_ir_induction.py",
-    "aura_agent_workbench_interface.py",
-    "aura_ai_router.py",
-    "aura_amd_demo_scenario.py",
-    "aura_amd_track3_cli.py",
-    "aura_amd_track3_train.py",
-    "aura_amd_track3_types.py",
-    "aura_amd_track3_worker.py",
-    "aura_anthropic_router.py",
-    "aura_api_rotator.py",
-    "aura_arch_reasoner.py",
-    "aura_architect_benchmark_report.py",
-    "aura_architect_consolidation_benchmark.py",
-    "aura_architect_consolidation_benchmark_refined.py",
-    "aura_architect_consolidation_benchmark_v2.py",
-    "aura_architect_control.py",
-    "aura_architect_council_calling_benchmark.py",
-    "aura_architect_council_v2.py",
-    "aura_architect_council_v3.py",
-    "aura_architect_loop.py",
-    "aura_architecture_harness_git_tree_routing.py",
-    "aura_arena_architect_connector.py",
-    "aura_arena_architect_runtime.py",
-    "aura_arena_attempt_archive.py",
-    "aura_arena_connector_server.py",
-    "aura_arena_crucible.py",
-    "aura_arena_experience.py",
-    "aura_arena_experience_ledger.py",
-    "aura_arena_gate_dialogue.py",
-    "aura_arena_live_cli.py",
-    "aura_arena_persistence_adapters.py",
-    "aura_arena_research_bridge.py",
-    "aura_arena_st3gg_codec.py",
-    "aura_arena_st3gg_egress.py",
-    "aura_arena_st3gg_shadow.py",
-    "aura_arena_state_packet.py",
-    "aura_arena_tool_runtime.py",
-    "aura_arena_wfst_cli.py",
-    "aura_arena_wfst_compiler.py",
-    "aura_arena_wfst_registry.py",
-    "aura_arena_wfst_runtime.py",
-    "aura_arena_wfst_types.py",
-    "aura_associative_core.py",
-    "aura_att_fst_runtime.py",
-    "aura_attention_palace.py",
-    "aura_background_auditor.py",
-    "aura_background_workers.py",
-    "aura_benchmark_gate.py",
-    "aura_benchmark_registry.py",
-    "aura_benchmark_sandbox.py",
-    "aura_bilateral_intent_compiler.py",
-    "aura_bilateral_intent_ingestion.py",
-    "aura_bilateral_live_repair_foundry.py",
-    "aura_bilateral_live_repair_foundry_capture.py",
-    "aura_bilateral_live_repair_foundry_contracts.py",
-    "aura_bilateral_live_repair_foundry_service.py",
-    "aura_bilateral_live_repair_foundry_service_capture.py",
-    "aura_bilateral_live_repair_foundry_service_preview.py",
-    "aura_bilateral_live_repair_foundry_service_runtime.py",
     "aura_blockchain/__init__.py",
     "aura_blockchain/block.py",
     "aura_blockchain/consensus.py",
@@ -116,15 +32,99 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_blockchain/memory_staking.py",
     "aura_blockchain/node.py",
     "aura_blockchain/phasor_ledger.py",
-    "aura_bob_codemap_hooks.py",
-    "aura_builder_context.py",
-    "aura_capability_binding.py",
-    "aura_capability_connectome.py",
-    "aura_capability_connectome_v2.py",
-    "aura_capability_lane_registry.py",
-    "aura_capability_resolver.py",
-    "aura_capability_resolver_v2.py",
-    "aura_capsule_trial_cli.py"
+    "aura_spatial_importers/__init__.py",
+    "aura_spatial_importers/contracts.py",
+    "aura_spatial_importers/gaussian_gltf.py",
+    "aura_spatial_importers/gltf.py",
+    "aura_spatial_importers/ply.py",
+    "aura_spatial_importers/spz.py",
+    "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
+    "benchmarks/refactor_code_quality/generate_fixture.py",
+    "core/aura_task_dispatcher.py",
+    "core/aura_worker_daemon.py",
+    "scripts/aura_advanced_benchmark_runner.py",
+    "scripts/aura_arch_v2_3_capsule_validator.py",
+    "scripts/aura_architecture_harness.py",
+    "scripts/aura_architecture_harness_core.py",
+    "scripts/aura_benchmark_suite.py",
+    "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
+    "scripts/aura_exact_head_transport.py",
+    "scripts/aura_fetch_construction_demo_source.py",
+    "scripts/aura_global_benchmark_daemon.py",
+    "scripts/aura_ifc_storey_index.py",
+    "scripts/aura_industry_benchmark_validation.py",
+    "scripts/aura_mesh_to_gaussian.py",
+    "scripts/aura_navigation_refresh.py",
+    "scripts/aura_prepare_construction_demo_assets.py",
+    "scripts/aura_prepare_construction_demo_assets_core.py",
+    "scripts/aura_review_learning_architect_harness.py",
+    "scripts/aura_runtime_profile_v2_adapter.py",
+    "scripts/aura_runtime_refactor_harness.py",
+    "scripts/aura_security_accuracy_harness.py",
+    "scripts/aura_source_anchor_map.py",
+    "scripts/aura_spatial_continuation_architect_harness.py",
+    "scripts/aura_spatial_s4b_architect_harness.py",
+    "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
+    "scripts/aura_verify_construction_demo_assets.py",
+    "scripts/deploy_huggingface_space.py",
+    "scripts/finalize_refactor_quality_doc_sync.py",
+    "scripts/install_refactor_quality_docs.py",
+    "scripts/update_architect_benchmark_readme.py",
+    "test_support/__init__.py",
+    "test_support/aura_human_agent_arena_suite.py",
+    "tests/conftest.py",
+    "tests/fixtures/amd_track3/demo_one.py",
+    "tests/fixtures/amd_track3/demo_three.py",
+    "tests/fixtures/amd_track3/demo_two.py",
+    "tests/pascal_spatial_presentation_test_contracts.py",
+    "tests/pascal_spatial_presentation_test_lifecycle.py",
+    "tests/pascal_spatial_presentation_test_support.py",
+    "tests/test_aura_adaptive_execution.py",
+    "tests/test_aura_adaptive_fusion_schema.py",
+    "tests/test_aura_adaptive_planner.py",
+    "tests/test_aura_adaptive_security.py",
+    "tests/test_aura_affordance_directory.py",
+    "tests/test_aura_agent_arena_bridge.py",
+    "tests/test_aura_agent_arena_cli.py",
+    "tests/test_aura_agent_arena_github_bridge.py",
+    "tests/test_aura_agent_arena_mcp.py",
+    "tests/test_aura_agent_arena_review_learning.py",
+    "tests/test_aura_agent_workbench_interface.py",
+    "tests/test_aura_ai_router_dynamic.py",
+    "tests/test_aura_amd_track3_demo.py",
+    "tests/test_aura_arch_v2_3_capsule_validator.py",
+    "tests/test_aura_architect_benchmark_report_warning.py",
+    "tests/test_aura_architect_controls_vault_and_surfaces.py",
+    "tests/test_aura_architect_council_v2_contracts.py",
+    "tests/test_aura_architect_council_v3.py",
+    "tests/test_aura_architecture_harness.py",
+    "tests/test_aura_architecture_harness_export_workflow.py",
+    "tests/test_aura_architecture_harness_git_tree_routing.py",
+    "tests/test_aura_architecture_harness_original_github_routing.py",
+    "tests/test_aura_arena_connector_hardening.py",
+    "tests/test_aura_arena_experience_ledger.py",
+    "tests/test_aura_arena_live_cli.py",
+    "tests/test_aura_arena_persistence_adapters.py",
+    "tests/test_aura_arena_st3gg_shadow.py",
+    "tests/test_aura_arena_st3gg_shadow_hardening.py",
+    "tests/test_aura_arena_wfst_phase_a.py",
+    "tests/test_aura_benchmark_four.py",
+    "tests/test_aura_benchmark_four_hardening.py",
+    "tests/test_aura_bilateral_gate_dialogue.py",
+    "tests/test_aura_bilateral_live_repair_foundry.py",
+    "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
+    "tests/test_aura_bilateral_planning_enforcement.py",
+    "tests/test_aura_capability_connectome.py",
+    "tests/test_aura_capability_connectome_v2.py",
+    "tests/test_aura_capability_lane_registry.py",
+    "tests/test_aura_capability_resolver.py",
+    "tests/test_aura_capability_resolver_connectome.py",
+    "tests/test_aura_change_graph.py",
+    "tests/test_aura_civic_commons_arena.py",
+    "tests/test_aura_civic_completion.py",
+    "tests/test_aura_civic_planning_behavior.py",
+    "tests/test_aura_civic_planning_contracts.py",
+    "tests/test_aura_civic_planning_diagnostics.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -138,16 +138,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1589,
-  "bytes": 26001679,
-  "tokens_est": 6490840,
+  "files": 1601,
+  "bytes": 26060661,
+  "tokens_est": 6505589,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 224,
     "native_accelerator": 8,
     "operator_script": 9,
-    "python_module": 990,
-    "schema_or_lexicon": 245,
+    "python_module": 999,
+    "schema_or_lexicon": 248,
     "support_file": 49
   }
 }
@@ -849,6 +849,46 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Highest-connectivity source files
 
+- `aura_node.py` — score `1112.0`; nodes `221`; out `566`; in `325`
+- `aura_ephemeral_workspace_contracts.py` — score `961.0`; nodes `99`; out `421`; in `441`
+- `aura_relationship_contracts.py` — score `830.0`; nodes `91`; out `367`; in `372`
+- `aura_gate.py` — score `826.0`; nodes `69`; out `380`; in `377`
+- `aura_unified_memory_continuity.py` — score `815.0`; nodes `93`; out `350`; in `372`
+- `aura_agent_arena_cli.py` — score `676.0`; nodes `101`; out `295`; in `280`
+- `test_scientific_memory.py` — score `637.0`; nodes `120`; out `358`; in `159`
+- `aura_ephemeral_workspace_runtime_v2.py` — score `631.0`; nodes `57`; out `326`; in `248`
+- `aura_fst_routing.py` — score `597.0`; nodes `36`; out `79`; in `482`
+- `aura_live_architect.py` — score `591.0`; nodes `85`; out `274`; in `232`
+- `aura_spatial_contracts.py` — score `587.0`; nodes `75`; out `232`; in `280`
+- `aura_architect_loop.py` — score `583.0`; nodes `78`; out `228`; in `277`
+- `aura_relational_authority.py` — score `540.0`; nodes `59`; out `241`; in `240`
+- `aura_relational_index.py` — score `536.0`; nodes `81`; out `233`; in `222`
+- `aura_relational_synthesis.py` — score `525.0`; nodes `70`; out `232`; in `223`
+- `aura_intent_refinement.py` — score `512.0`; nodes `64`; out `227`; in `221`
+- `aura_agent_arena_mcp.py` — score `498.0`; nodes `66`; out `229`; in `203`
+- `aura_project_context_compiler.py` — score `457.0`; nodes `85`; out `187`; in `185`
+- `test_aura_functions.py` — score `445.0`; nodes `87`; out `257`; in `101`
+- `aura_gate_adapters.py` — score `437.0`; nodes `42`; out `198`; in `197`
+- `aura_agent_arena_github_bridge.py` — score `426.0`; nodes `43`; out `190`; in `193`
+- `aura_construction_spatial_foundry.py` — score `422.0`; nodes `56`; out `125`; in `241`
+- `aura_bilateral_live_repair_foundry_contracts.py` — score `408.0`; nodes `36`; out `86`; in `286`
+- `aura_human_agent_arena.py` — score `406.0`; nodes `73`; out `175`; in `158`
+- `aura_gate_server.py` — score `399.0`; nodes `57`; out `176`; in `166`
+- `aura_planning_board.py` — score `399.0`; nodes `54`; out `160`; in `185`
+- `aura_scientific_memory.py` — score `387.0`; nodes `46`; out `98`; in `243`
+- `aura_review_arena.py` — score `383.0`; nodes `78`; out `157`; in `148`
+- `aura_event_contracts.py` — score `382.0`; nodes `41`; out `118`; in `223`
+- `aura_unified_memory_continuity_learning.py` — score `377.0`; nodes `38`; out `187`; in `152`
+- `aura_coding_arena_planning.py` — score `371.0`; nodes `21`; out `176`; in `174`
+- `aura_pascal_spatial_presentation_part1.py` — score `361.0`; nodes `27`; out `91`; in `243`
+- `aura_construction_adapter.py` — score `357.0`; nodes `51`; out `147`; in `159`
+- `aura_topological_context_anchor.py` — score `355.0`; nodes `72`; out `142`; in `141`
+- `aura_construction_contracts.py` — score `345.0`; nodes `53`; out `140`; in `152`
+- `aura_music_coding_arena.py` — score `343.0`; nodes `49`; out `150`; in `144`
+- `aura_gate_audit.py` — score `338.0`; nodes `35`; out `160`; in `143`
+- `aura_understand_graph_bridge.py` — score `336.0`; nodes `65`; out `142`; in `129`
+- `test_aura_ojibwe_tutor.py` — score `332.0`; nodes `78`; out `177`; in `77`
+- `aura_coding_arena_planning_integrity.py` — score `321.0`; nodes `21`; out `150`; in `150`
 
 ## Example usage
 
