@@ -1,0 +1,146 @@
+name: W1 Bounty Execution CI Lease
+
+on:
+  push:
+    branches:
+      - w1/bounty-exec-ci-001
+
+permissions:
+  contents: read
+
+jobs:
+  claude-hook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Clone pinned upstream and prove pre-patch absence
+        run: |
+          git clone --no-tags https://github.com/claude-builders-bounty/claude-builders-bounty.git target
+          git -C target checkout 1aeae2adc82d33f971fd7731644348dcdd24b5a6
+          test ! -e target/hooks/block_destructive_commands.py
+          test ! -e target/hooks/test_block_destructive_commands.py
+          echo 'REPRO_PASS: upstream has no destructive-command PreToolUse hook.'
+      - name: Apply staged patch
+        run: |
+          git -C target apply --check "$GITHUB_WORKSPACE/docs/staging/bounties/READY_FOR_PR/claude-hook/READY_FOR_PR.patch"
+          git -C target apply "$GITHUB_WORKSPACE/docs/staging/bounties/READY_FOR_PR/claude-hook/READY_FOR_PR.patch"
+          git -C target diff --check
+      - name: Run complete patch unit suite
+        working-directory: target
+        run: |
+          python -m py_compile hooks/block_destructive_commands.py hooks/test_block_destructive_commands.py
+          python -m unittest -v hooks/test_block_destructive_commands.py
+
+  plantguide-sdk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Clone pinned upstream and prove pre-patch absence
+        run: |
+          git clone --no-tags https://github.com/mergeos-bounties/PlantGuide.git target
+          git -C target checkout 2b9ed0e3169026e5c809bf563c1e3c71f1afc30e
+          test ! -e target/schemas/identify-response.schema.json
+          test ! -e target/schemas/care-response.schema.json
+          test ! -e target/sdk/typescript/index.ts
+          echo 'REPRO_PASS: upstream has no published JSON Schema/TypeScript app contracts.'
+      - name: Apply refined staged patch
+        run: |
+          git -C target apply --check "$GITHUB_WORKSPACE/.w1-ci/plantguide-final.patch"
+          git -C target apply "$GITHUB_WORKSPACE/.w1-ci/plantguide-final.patch"
+          git -C target diff --check
+      - name: Install host CI dependencies
+        working-directory: target
+        run: |
+          python -m pip install -U pip
+          pip install -e '.[dev]'
+          pip install jsonschema
+      - name: Run host CI exactly
+        working-directory: target
+        run: |
+          ruff check src tests
+          pytest -q
+      - name: Validate live Python payloads against schemas
+        working-directory: target
+        run: |
+          python - <<'PY'
+          import copy
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator, RefResolver, ValidationError
+          from plantguide.care.cards import care_card_for_species
+          from plantguide.data.loader import load_species_catalog
+          from plantguide.integrations.sdk import assess_for_app, care_for_app
+
+          identify_schema = json.loads(Path('schemas/identify-response.schema.json').read_text())
+          care_schema = json.loads(Path('schemas/care-response.schema.json').read_text())
+          Draft202012Validator.check_schema(identify_schema)
+          Draft202012Validator.check_schema(care_schema)
+          resolver = RefResolver.from_schema(identify_schema, store={care_schema['$id']: care_schema})
+          identify_validator = Draft202012Validator(identify_schema, resolver=resolver)
+          care_validator = Draft202012Validator(care_schema)
+
+          species = load_species_catalog()[0]
+          tags = species.get('tags') or [species['common_name']]
+          identify_payload = assess_for_app(tags, top_k=3)
+          bare_care = care_card_for_species(species['id'])
+          app_care = care_for_app(species['id'])
+          identify_validator.validate(identify_payload)
+          care_validator.validate(bare_care)
+          care_validator.validate(app_care)
+
+          if identify_payload['matches']:
+              bad = copy.deepcopy(identify_payload)
+              bad['matches'][0]['score'] = 1.1
+              try:
+                  identify_validator.validate(bad)
+              except ValidationError:
+                  pass
+              else:
+                  raise AssertionError('schema accepted score > 1')
+          print('SCHEMA_CONTRACT_PASS')
+          PY
+      - name: Compile TypeScript contracts strictly
+        working-directory: target
+        run: |
+          npm install --global typescript@5.9.2
+          tsc --strict --noEmit --target ES2020 sdk/typescript/index.ts
+
+  loru-contributing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Clone pinned upstream and prove pre-patch absence
+        run: |
+          git clone --no-tags https://github.com/mergeos-bounties/Loru.git target
+          git -C target checkout a2d332c790ea88bb2139c386d913195e7c8dce9e
+          test ! -e target/CONTRIBUTING.md
+          echo 'REPRO_PASS: upstream lacks CONTRIBUTING.md required by bounty #19.'
+      - name: Apply staged documentation patch
+        run: |
+          git -C target apply --check "$GITHUB_WORKSPACE/docs/staging/bounties/READY_FOR_PR/loru-contributing/READY_FOR_PR.patch"
+          git -C target apply "$GITHUB_WORKSPACE/docs/staging/bounties/READY_FOR_PR/loru-contributing/READY_FOR_PR.patch"
+          git -C target diff --check
+      - name: Install host CI dependencies
+        working-directory: target
+        run: |
+          python -m pip install -U pip
+          pip install -e '.[dev]'
+      - name: Run host CI exactly
+        working-directory: target
+        run: |
+          ruff check src tests
+          pytest -q
+      - name: Validate documented smoke path and anchors
+        working-directory: target
+        run: |
+          loru demo
+          grep -q 'CONTRIBUTING.md' README.md
+          grep -q 'ruff check src tests' CONTRIBUTING.md
+          grep -q 'pytest -q' CONTRIBUTING.md
+          grep -q 'docs/BOUNTY.md' CONTRIBUTING.md
