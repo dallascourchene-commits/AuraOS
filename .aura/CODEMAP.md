@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1606
-- **total_bytes**: 26155773
-- **text_tokens_est**: 6529354
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 232, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 991, 'schema_or_lexicon': 253, 'support_file': 49}
+- **file_count**: 1607
+- **total_bytes**: 26162626
+- **text_tokens_est**: 6531068
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 232, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 991, 'schema_or_lexicon': 254, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1606,
+  "repo_file_count": 1607,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -216,6 +216,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
     ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
     ".github/workflows/wo-phase4-final-candidate-materialize.yml",
+    ".github/workflows/wo-phase4-final-candidate-package-v3.yml",
     ".github/workflows/wo-phase4-local-verifier-bundle.yml",
     ".gitignore",
     ".mempalace/aura_thought.txt",
@@ -1746,16 +1747,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1606,
-  "bytes": 26155773,
-  "tokens_est": 6529354,
+  "files": 1607,
+  "bytes": 26162626,
+  "tokens_est": 6531068,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 232,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 991,
-    "schema_or_lexicon": 253,
+    "schema_or_lexicon": 254,
     "support_file": 49
   }
 }
