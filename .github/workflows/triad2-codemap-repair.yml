@@ -1,0 +1,262 @@
+name: Triad2 CODEMAP Repair
+
+on:
+  push:
+    paths:
+      - '.github/workflows/triad2-codemap-repair.yml'
+
+permissions:
+  contents: write
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+  PYTHONPATH: ${{ github.workspace }}
+
+jobs:
+  repair:
+    if: contains(github.event.head_commit.message, '[TRIAD2-CODEMAP-REPAIR]')
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install governed test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pytest pytest-asyncio
+      - name: Patch CODEMAP deep-topology adapter
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('aura_codebase_navigator.py')
+          text = path.read_text(encoding='utf-8')
+
+          def replace_function(source: str, name: str, replacement: str) -> str:
+              pattern = re.compile(rf'^def {re.escape(name)}\(.*?(?=^def |\Z)', re.MULTILINE | re.DOTALL)
+              matches = list(pattern.finditer(source))
+              if len(matches) != 1:
+                  raise SystemExit(f'expected exactly one function {name}, found {len(matches)}')
+              match = matches[0]
+              return source[:match.start()] + replacement.rstrip() + '\n\n' + source[match.end():]
+
+          text = replace_function(text, 'load_or_compile_topology', r'''
+          def load_or_compile_topology(
+              root: Path,
+              *,
+              topology_path: Path | None = None,
+              refresh: bool = False,
+          ) -> tuple[dict[str, Any], str]:
+              """Load a canonical deep topology or compile one from current source.
+
+              The deep compiler is cwd-relative and emits list-form nodes with
+              source/target edges.  CODEMAP provenance describes the topology's
+              compilation class, not whether this invocation loaded or rebuilt it.
+              """
+              target = topology_path or DEFAULT_TOPOLOGY_PATH
+              absolute = target if target.is_absolute() else root / target
+
+              def is_deep(payload: dict[str, Any]) -> bool:
+                  meta = payload.get("meta") if isinstance(payload.get("meta"), dict) else {}
+                  return (
+                      str(payload.get("status") or "") == "SYS_TOPOLOGY_DEEP_ACTIVE"
+                      or str(meta.get("generated_by") or "") == "aura_topology_manager"
+                  ) and bool(_topology_file_index(payload))
+
+              if absolute.exists() and not refresh:
+                  try:
+                      existing = json.loads(absolute.read_text(encoding="utf-8"))
+                  except (OSError, json.JSONDecodeError):
+                      existing = None
+                  if isinstance(existing, dict) and is_deep(existing):
+                      return existing, "compiled_deep_topology"
+
+              previous_cwd = Path.cwd()
+              try:
+                  os.chdir(root)
+                  topology = compile_topology_map(deep=True)
+              finally:
+                  os.chdir(previous_cwd)
+              if not isinstance(topology, dict) or not is_deep(topology):
+                  raise RuntimeError("deep topology compilation did not produce a source-indexable deep graph")
+              if absolute != root / DEFAULT_TOPOLOGY_PATH:
+                  absolute.parent.mkdir(parents=True, exist_ok=True)
+                  absolute.write_text(json.dumps(topology, indent=2), encoding="utf-8")
+              return topology, "compiled_deep_topology"
+          ''')
+
+          text = replace_function(text, '_topology_file_index', r'''
+          def _topology_file_index(topology: dict[str, Any]) -> dict[str, dict[str, Any]]:
+              """Normalize legacy and deep topology schemas into per-file buckets."""
+              per_file: dict[str, dict[str, Any]] = defaultdict(lambda: {
+                  "node_count": 0,
+                  "out_edges": 0,
+                  "in_edges": 0,
+                  "kinds": Counter(),
+                  "symbols": [],
+                  "neighbor_files": set(),
+                  "edge_kinds": Counter(),
+              })
+              raw_nodes = topology.get("nodes", {})
+              if isinstance(raw_nodes, dict):
+                  node_items = list(raw_nodes.items())
+              elif isinstance(raw_nodes, list):
+                  node_items = [
+                      (str(node.get("id") or f"node_{index}"), node)
+                      for index, node in enumerate(raw_nodes)
+                      if isinstance(node, dict)
+                  ]
+              else:
+                  node_items = []
+
+              node_to_file: dict[str, str] = {}
+              for node_id, node in node_items:
+                  if not isinstance(node, dict):
+                      continue
+                  file_path = _node_file(str(node_id), node)
+                  if not file_path:
+                      continue
+                  node_to_file[str(node_id)] = file_path
+                  slot = per_file[file_path]
+                  slot["node_count"] += 1
+                  slot["kinds"][str(node.get("kind", "unknown"))] += 1
+                  symbol = str(node.get("symbol") or node.get("label") or "")
+                  if symbol and symbol != "global_scope" and len(slot["symbols"]) < 12 and symbol not in slot["symbols"]:
+                      slot["symbols"].append(symbol)
+
+              for edge in topology.get("edges", []) or []:
+                  if not isinstance(edge, dict):
+                      continue
+                  source_id = str(edge.get("from") or edge.get("source") or "")
+                  target_id = str(edge.get("to") or edge.get("target") or "")
+                  source_file = node_to_file.get(source_id)
+                  target_file = node_to_file.get(target_id)
+                  kind = str(edge.get("kind") or edge.get("type") or "unknown")
+                  if source_file:
+                      per_file[source_file]["out_edges"] += 1
+                      per_file[source_file]["edge_kinds"][kind] += 1
+                  if target_file:
+                      per_file[target_file]["in_edges"] += 1
+                      per_file[target_file]["edge_kinds"][kind] += 1
+                  if source_file and target_file and source_file != target_file:
+                      per_file[source_file]["neighbor_files"].add(target_file)
+                      per_file[target_file]["neighbor_files"].add(source_file)
+
+              out: dict[str, dict[str, Any]] = {}
+              for file_path, payload in per_file.items():
+                  out_edges = int(payload["out_edges"])
+                  in_edges = int(payload["in_edges"])
+                  node_count = int(payload["node_count"])
+                  degree = out_edges + in_edges
+                  out[file_path] = {
+                      "node_count": node_count,
+                      "edge_count": degree,
+                      "degree": degree,
+                      "symbols": sorted(str(item) for item in payload["symbols"]),
+                      "neighbor_files": sorted(str(item) for item in payload["neighbor_files"]),
+                      "edge_kinds": dict(sorted(payload["edge_kinds"].items())),
+                      # Compatibility aliases used by existing navigation/ranking code.
+                      "nodes": node_count,
+                      "out_edges": out_edges,
+                      "in_edges": in_edges,
+                      "kinds": dict(sorted(payload["kinds"].items())),
+                  }
+              return out
+          ''')
+
+          old = '        "role": classify_file(path),\n        "bytes": len(raw),'
+          new = '        "role": classify_file(path),\n        "binary": is_binary,\n        "bytes": len(raw),'
+          if text.count(old) != 1:
+              raise SystemExit('unable to locate _scan_file role/bytes insertion point')
+          text = text.replace(old, new, 1)
+
+          old = '            "role": card["role"],\n            "bytes": card["bytes"],'
+          new = '            "role": card["role"],\n            "binary": bool(card.get("binary", False)),\n            "bytes": card["bytes"],'
+          if text.count(old) != 1:
+              raise SystemExit('unable to locate compact-card role/bytes insertion point')
+          text = text.replace(old, new, 1)
+
+          text = replace_function(text, 'build_navigation_system', r'''
+          def build_navigation_system(
+              root: Path,
+              *,
+              include_topology: bool = True,
+              topology_path: Path | None = None,
+              refresh_topology: bool = False,
+          ) -> dict[str, Any]:
+              started = time.perf_counter()
+              cards = scan_repository(root)
+              topology: dict[str, Any] | None = None
+              topology_source = "disabled"
+              topology_index: dict[str, dict[str, Any]] = {}
+              if include_topology:
+                  topology, topology_source = load_or_compile_topology(
+                      root,
+                      topology_path=topology_path,
+                      refresh=refresh_topology,
+                  )
+                  topology_index = _topology_file_index(topology)
+                  cards = _attach_topology(cards, topology_index)
+              payload = {
+                  "status": "AURA_CODEMAP_ACTIVE",
+                  "generated_by": "aura_codebase_navigator",
+                  "generated_at_unix": int(time.time()),
+                  "root": root.as_posix(),
+                  "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
+                  "coverage": _coverage_report(cards, topology),
+                  "rings": _navigation_rings(cards),
+                  "symbol_index": _symbol_index(cards),
+                  "command_index": _command_index(cards),
+                  "top_hubs": _top_hubs(cards),
+                  "files": _compact_file_cards(cards),
+                  "topology": {
+                      "source": topology_source,
+                      "file_index": topology_index,
+                  },
+                  "summary": {
+                      "file_count": len(cards),
+                      "total_bytes": sum(int(card.get("bytes", 0)) for card in cards),
+                      "text_tokens_est": sum(int(card.get("tokens_est", 0)) for card in cards),
+                      "role_counts": dict(sorted(Counter(str(card.get("role", "support_file")) for card in cards).items())),
+                      "topology_nodes": len((topology or {}).get("nodes", {})),
+                      "topology_edges": len((topology or {}).get("edges", [])),
+                      "topology_source": topology_source,
+                      "elapsed_ms": round((time.perf_counter() - started) * 1000.0, 2),
+                  },
+                  "navigation_protocol": [
+                      "Read .aura/CODEMAP.md first.",
+                      "Use command_index for bang commands before opening the REPL monolith.",
+                      "Use symbol_index semantic_id/signature_hash entries first, then current line ranges.",
+                      "Open only the top query hits plus their topology.neighbor_files.",
+                      "After any successful file write, run --refresh on touched paths instead of rebuilding the whole map.",
+                  ],
+              }
+              return payload
+          ''')
+
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Regenerate deep topology and CODEMAP
+        run: |
+          python aura_codebase_navigator.py --refresh-topology
+      - name: Verify CODEMAP and grounded Architect contracts
+        run: |
+          python -m aura_codemap_verify
+          python -m pytest -q tests/test_aura_codemap_verify.py test_aura_architect_loop.py
+      - name: Commit repaired source and generated topology
+        run: |
+          git config user.name 'Aura Triad2 CI Repair'
+          git config user.email 'actions@users.noreply.github.com'
+          git add aura_codebase_navigator.py .aura/CODEMAP.json .aura/CODEMAP.md
+          git add topology_map.json Aura_Memory/live_topology_ast.json || true
+          if git diff --cached --quiet; then
+            echo 'No repair delta to commit.'
+            exit 0
+          fi
+          git commit -m 'fix(ci): repair CODEMAP deep-topology adapter and regenerate topology'
+          git push origin HEAD:main
