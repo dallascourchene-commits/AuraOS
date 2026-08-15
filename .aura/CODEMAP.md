@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1605
-- **total_bytes**: 26107484
-- **text_tokens_est**: 6517286
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 231, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 249, 'support_file': 49}
+- **file_count**: 1606
+- **total_bytes**: 26116089
+- **text_tokens_est**: 6519437
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 231, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 996, 'schema_or_lexicon': 249, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1605,
+  "repo_file_count": 1606,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1613,6 +1613,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/wc02_phase4_navigator_compat_patch.py",
     "tools/wc02_phase4_pytest_collection_patch.py",
     "tools/wo_fleet_phase3_triad2_contract_patch.py",
     "tools/wo_fleet_phase3_triad2_incremental_patch.py",
@@ -1745,15 +1746,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1605,
-  "bytes": 26107484,
-  "tokens_est": 6517286,
+  "files": 1606,
+  "bytes": 26116089,
+  "tokens_est": 6519437,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 231,
     "native_accelerator": 8,
     "operator_script": 9,
-    "python_module": 995,
+    "python_module": 996,
     "schema_or_lexicon": 249,
     "support_file": 49
   }
