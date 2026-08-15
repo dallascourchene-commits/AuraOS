@@ -1,0 +1,66 @@
+name: Phase3 Triad2 Local Pytest Dependency Bundle
+
+on:
+  push:
+    branches:
+      - phase3/triad2-local-pytest-deps-001
+    paths:
+      - .github/workflows/phase3-triad2-local-pytest-deps.yml
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Install exact offline local-gate dependency tree
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          rm -rf /tmp/triad2_py313_site
+          mkdir -p /tmp/triad2_py313_site
+          python -m pip install --target /tmp/triad2_py313_site \
+            -r requirements.txt \
+            "jsonschema>=4.23,<5.0" \
+            "pytest>=8.2,<9.0" \
+            "pytest-asyncio>=0.23,<1.0" \
+            "trimesh>=4.7.1,<5.0" \
+            "zstandard>=0.23.0,<1.0"
+          python - <<'PY'
+          import pathlib, sys
+          root = pathlib.Path('/tmp/triad2_py313_site')
+          sys.path.insert(0, str(root))
+          import pytest, numpy, jsonschema, pytest_asyncio, trimesh, zstandard
+          print('python', sys.version)
+          print('pytest', pytest.__version__)
+          print('numpy', numpy.__version__)
+          print('jsonschema', jsonschema.__version__)
+          print('pytest_asyncio', pytest_asyncio.__version__)
+          print('trimesh', trimesh.__version__)
+          print('zstandard', zstandard.__version__)
+          PY
+      - name: Package dependency bundle
+        run: |
+          set -euo pipefail
+          tar -C /tmp -czf /tmp/triad2_py313_site.tar.gz triad2_py313_site
+          sha256sum /tmp/triad2_py313_site.tar.gz > /tmp/triad2_py313_site.sha256
+          python --version > /tmp/triad2_py313_python.txt
+          python -m pip freeze > /tmp/triad2_py313_freeze.txt
+      - name: Upload dependency bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-triad2-local-pytest-deps-${{ github.run_id }}
+          path: |
+            /tmp/triad2_py313_site.tar.gz
+            /tmp/triad2_py313_site.sha256
+            /tmp/triad2_py313_python.txt
+            /tmp/triad2_py313_freeze.txt
+          if-no-files-found: error
+          retention-days: 2
