@@ -1,0 +1,58 @@
+name: Phase3 Triad2 Current Tested Tree Bundle
+
+on:
+  push:
+    branches:
+      - phase3/triad2-local-pytest-deps-001
+    paths:
+      - '.github/workflows/phase3-triad2-current-tested-tree.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  bundle-current-repair:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: de1fbd7636b2a2dccd1bc592a4cbd8300785f0d1
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install generation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' 'jsonschema>=4.23,<5.0' 'trimesh>=4.7.1,<5.0' 'zstandard>=0.23.0,<1.0'
+      - name: Apply exact Phase3 repairs
+        run: |
+          test "$(git rev-parse HEAD)" = 'de1fbd7636b2a2dccd1bc592a4cbd8300785f0d1'
+          python tools/wo_fleet_phase3_triad2_contract_patch.py
+          python tools/wo_fleet_phase3_triad2_incremental_patch.py
+          python tools/wo_fleet_phase3_triad2_skillweaver_patch.py
+          python -m py_compile aura_coding_relationship_compass.py aura_emergent_potential_repl.py aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py aura_fusion.py aura_skillweaver.py
+      - name: Regenerate and verify canonical CODEMAP
+        run: |
+          python aura_codebase_navigator.py --refresh-topology
+          python -m aura_codemap_verify > triad2-current-codemap-verify.txt
+      - name: Package exact uncommitted repaired tree
+        run: |
+          set -euo pipefail
+          git status --porcelain=v1 > triad2-current-working-tree-status.txt
+          git diff --binary > triad2-current-repair.diff
+          tar --exclude=.git -czf /tmp/triad2-current-patched-tree.tgz .
+          sha256sum /tmp/triad2-current-patched-tree.tgz > /tmp/triad2-current-patched-tree.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase3-triad2-current-tested-tree-${{ github.run_id }}
+          path: |
+            /tmp/triad2-current-patched-tree.tgz
+            /tmp/triad2-current-patched-tree.sha256
+            triad2-current-codemap-verify.txt
+            triad2-current-working-tree-status.txt
+            triad2-current-repair.diff
+          if-no-files-found: error
+          retention-days: 2
