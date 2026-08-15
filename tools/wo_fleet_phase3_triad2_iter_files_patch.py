@@ -34,9 +34,16 @@ REPLACEMENT = '''def _iter_repo_files(root: Path, skip_dirs: frozenset[str] = DE
     return sorted(files)
 '''
 
+COMPAT_SIGNATURE = "def _iter_repo_files(root: Path, skip_dirs: frozenset[str] = DEFAULT_SKIP_DIRS) -> list[Path]:"
+
 
 def main() -> int:
     text = TARGET.read_text(encoding="utf-8")
+    # Another fleet transform may have already restored the same compatibility
+    # surface. Treat equivalent convergence as NOOP rather than a collision.
+    if COMPAT_SIGNATURE in text:
+        print("Phase-3 CODEMAP file-walker positional compatibility already satisfied")
+        return 0
     count = text.count(ANCHOR)
     if count != 1:
         raise RuntimeError(f"CODEMAP file-walker compatibility anchor expected once, found {count}")
