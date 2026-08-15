@@ -4,10 +4,42 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGET = ROOT / "aura_codebase_navigator.py"
-START = "def search_index("
-END = "\n\ndef write_navigation_artifacts"
+SEARCH_START = "def search_index("
+SEARCH_END = "\n\ndef write_navigation_artifacts"
 
-REPLACEMENT = '''def search_index(
+ATTACH_OLD = '''def _attach_topology(cards: list[dict[str, Any]], topology_index: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    for card in cards:
+        card["topology"] = topology_index.get(card["path"], {})
+    return cards
+'''
+
+ATTACH_NEW = '''def _attach_topology(
+    cards: list[dict[str, Any]],
+    topology_or_index: dict[str, Any],
+) -> dict[str, dict[str, Any]]:
+    """Attach normalized per-file topology and return the file index.
+
+    Historical callers pass the raw topology graph; current internal callers may
+    already have a normalized file index. Supporting both keeps the helper
+    backward compatible without re-scanning source files.
+    """
+    if "nodes" in topology_or_index or "edges" in topology_or_index:
+        topology_index = _topology_file_index(topology_or_index)
+    else:
+        topology_index = topology_or_index
+    for card in cards:
+        card["topology"] = topology_index.get(str(card.get("path", "")), {})
+    return topology_index
+'''
+
+BUILD_OLD = '''        topology_index = _topology_file_index(topology)
+        cards = _attach_topology(cards, topology_index)
+'''
+BUILD_NEW = '''        topology_index = _topology_file_index(topology)
+        _attach_topology(cards, topology_index)
+'''
+
+SEARCH_REPLACEMENT = '''def search_index(
     index: dict[str, Any],
     query: str,
     *,
@@ -70,20 +102,32 @@ REPLACEMENT = '''def search_index(
 '''
 
 
+def replace_once(text: str, old: str, new: str, label: str) -> str:
+    if new in text:
+        return text
+    count = text.count(old)
+    if count != 1:
+        raise RuntimeError(f"{label}: expected one anchor, found {count}")
+    return text.replace(old, new, 1)
+
+
 def main() -> int:
     text = TARGET.read_text(encoding="utf-8")
-    start = text.find(START)
+    text = replace_once(text, ATTACH_OLD, ATTACH_NEW, "_attach_topology")
+    text = replace_once(text, BUILD_OLD, BUILD_NEW, "build_navigation_system attachment")
+
+    start = text.find(SEARCH_START)
     if start < 0:
         raise RuntimeError("search_index start marker missing")
-    end = text.find(END, start)
+    end = text.find(SEARCH_END, start)
     if end < 0:
         raise RuntimeError("search_index end marker missing")
     current = text[start:end]
-    if current == REPLACEMENT.rstrip("\n"):
-        print("WC-02 navigator search compatibility already applied")
-        return 0
-    TARGET.write_text(text[:start] + REPLACEMENT.rstrip("\n") + text[end:], encoding="utf-8")
-    print("WC-02 navigator search compatibility applied")
+    if current != SEARCH_REPLACEMENT.rstrip("\n"):
+        text = text[:start] + SEARCH_REPLACEMENT.rstrip("\n") + text[end:]
+
+    TARGET.write_text(text, encoding="utf-8")
+    print("WC-02 navigator API compatibility applied")
     return 0
 
 
