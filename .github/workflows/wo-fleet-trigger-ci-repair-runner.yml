@@ -47,6 +47,9 @@ jobs:
       - name: Apply Architect fail-closed repair
         run: python tools/wo_triad2_ci_codemap_failclosed_patch.py
 
+      - name: Restore line-bound bang-command CODEMAP index
+        run: python tools/wo_triad2_ci_codemap_command_index_patch.py
+
       - name: Remove branch-local bootstrap files before regeneration
         run: |
           rm -f tools/wo_triad2_ci_codemap_repair.py
