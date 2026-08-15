@@ -1,0 +1,35 @@
+name: WO Phase4 Current Repair Archive
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/wo-phase4-current-repair-archive.yml
+
+permissions:
+  contents: read
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: bb9c2538910c760c79789b3cafa2a7404e789a2e
+          fetch-depth: 1
+      - name: Bind and archive
+        run: |
+          test "$(git rev-parse HEAD)" = "bb9c2538910c760c79789b3cafa2a7404e789a2e"
+          git archive --format=tar.gz --output=/tmp/repair-bb9c.tar.gz HEAD
+          git rev-parse HEAD > /tmp/repair-bb9c.sha
+          git rev-parse HEAD^{tree} > /tmp/repair-bb9c.tree
+          sha256sum /tmp/repair-bb9c.tar.gz /tmp/repair-bb9c.sha /tmp/repair-bb9c.tree > /tmp/repair-bb9c.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase4-repair-bb9c-archive
+          path: |
+            /tmp/repair-bb9c.tar.gz
+            /tmp/repair-bb9c.sha
+            /tmp/repair-bb9c.tree
+            /tmp/repair-bb9c.sha256
+          retention-days: 2
