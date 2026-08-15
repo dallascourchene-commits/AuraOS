@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: MIIGWECH (Extension-Based Storage)
 DEPENDENCIES: json, __future__, aura_token_economics, contextlib, sqlite3, typing, time, pathlib, aura_hv_cache, hashlib
-FUNCTIONS: _get_hv_substrate, _get_token_economics, _concept_key, _hv_bytes, _db, get_qdkt, commit_to_dkt_shim, log_dkt_commit_shim, __init__, _init_schemas, _load_crystal_cache, _save_crystal_cache, observe, observe_retrieval_usefulness, query, crystallize, fast_path, learning_summary, _route_to_holographic, _route_to_cognitive_evolution, _route_to_causal_ledger, _route_to_changelog, _route_to_token_economics, _write_knowledge_index, _write_workspace_event, _write_retrieval_usefulness, _check_crystallization
+FUNCTIONS: _get_hv_substrate, _get_token_economics, _concept_key, _hv_bytes, _db, _observation_fingerprint, _source_fingerprint, _crystal_fast_path_eligible, get_qdkt, commit_to_dkt_shim, log_dkt_commit_shim, __init__, _init_schemas, _load_crystal_cache, _load_pattern_accumulator, _save_crystal_cache, _save_pattern_accumulator, observe, observe_retrieval_usefulness, query, crystallization_candidate, crystallize, fast_path, learning_summary, _route_to_holographic, _route_to_cognitive_evolution, _route_to_causal_ledger, _route_to_changelog, _route_to_token_economics, _write_knowledge_index, _write_workspace_event, _write_retrieval_usefulness, _check_crystallization
 SYNOPSIS: [CODE]
 def optimized_fallback():
     pass
@@ -28,12 +28,15 @@ from typing import Any
 _MEMPALACE_DB   = Path.home() / ".mempalace" / "aura_memory.db"
 _WORKSPACE_DB   = Path("Aura_Memory/qdkt_index.db")
 _CRYSTAL_JSON   = Path("Aura_Memory/qdkt_crystal_cache.json")
+_ACCUMULATOR_JSON = Path("Aura_Memory/qdkt_pattern_accumulator.json")
 
 _CRYSTAL_CONFIRM_THRESHOLD = 3
 _CRYSTAL_CONFIDENCE_THRESHOLD = 0.75
 
-# Lock-free — pure asyncio single-threaded execution
+# Lock-free — pure asyncio single-threaded execution.
+# Accepted crystals are deliberately separate from pre-crystallization state.
 _CRYSTAL_CACHE: dict[str, dict] = {}
+_PATTERN_ACCUMULATOR: dict[str, dict] = {}
 
 
 def _get_hv_substrate():
@@ -58,6 +61,46 @@ def _concept_key(text: str) -> str:
 
 def _hv_bytes(text: str) -> bytes:
     return hashlib.sha256(text.encode("utf-8")).digest()
+
+
+def _observation_fingerprint(concept: str, payload: dict[str, Any]) -> str:
+    """Stable fingerprint used to distinguish duplicate replay from new evidence."""
+    try:
+        normalized = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
+    except Exception:
+        normalized = repr(sorted(payload.items(), key=lambda item: str(item[0])))
+    return hashlib.sha256(f"{concept}\0{normalized}".encode("utf-8")).hexdigest()[:32]
+
+
+def _source_fingerprint(concept: str, payload: dict[str, Any]) -> str:
+    """Prefer an explicit source identity; otherwise conservatively fingerprint payload."""
+    for field in ("source_id", "source_ref", "evidence_ref", "source_uri", "source"):
+        value = payload.get(field)
+        if value not in (None, ""):
+            return hashlib.sha256(f"{field}:{value}".encode("utf-8")).hexdigest()[:32]
+    if payload.get("file_path") or payload.get("commit_hash"):
+        value = f"{payload.get('file_path', '')}@{payload.get('commit_hash', '')}"
+        return hashlib.sha256(value.encode("utf-8")).hexdigest()[:32]
+    return _observation_fingerprint(concept, payload)
+
+
+def _crystal_fast_path_eligible(entry: dict[str, Any] | None) -> bool:
+    if not entry:
+        return False
+    if entry.get("status", "accepted") != "accepted":
+        return False
+    if entry.get("revalidation_required"):
+        return False
+    if str(entry.get("freshness_state", "CURRENT")).upper() in {
+        "STALE", "REVALIDATE", "REJECTED", "BLOCKED"
+    }:
+        return False
+    # Recurrence-generated legacy entries must never regain authority-like fast path.
+    if str(entry.get("source", "")).lower() in {
+        "auto_threshold", "repetition", "recurrence"
+    }:
+        return False
+    return True
 
 
 _SCHEMA_MEMPALACE = """
@@ -151,6 +194,7 @@ class UnifiedQDKT:
 
     def __init__(self) -> None:
         self._init_schemas()
+        self._load_pattern_accumulator()
         self._load_crystal_cache()
 
     def _init_schemas(self) -> None:
@@ -165,14 +209,71 @@ class UnifiedQDKT:
         except Exception as exc:
             print(f"[QDKT] Workspace schema init warning: {exc}")
 
+    def _load_pattern_accumulator(self) -> None:
+        _PATTERN_ACCUMULATOR.clear()
+        if not _ACCUMULATOR_JSON.exists():
+            return
+        try:
+            with open(_ACCUMULATOR_JSON, encoding="utf-8") as f:
+                data = json.load(f)
+            if isinstance(data, dict):
+                for key, entry in data.items():
+                    if isinstance(entry, dict):
+                        _PATTERN_ACCUMULATOR[str(key)] = entry
+        except Exception:
+            # Accumulator corruption must not create a crystal or fast path.
+            pass
+
     def _load_crystal_cache(self) -> None:
+        """Load accepted crystals and fail-closed migrate conflated legacy state."""
+        _CRYSTAL_CACHE.clear()
+        raw_json: dict[str, dict] = {}
         if _CRYSTAL_JSON.exists():
             try:
                 with open(_CRYSTAL_JSON, encoding="utf-8") as f:
                     data = json.load(f)
-                _CRYSTAL_CACHE.update(data)
+                if isinstance(data, dict):
+                    raw_json = {
+                        str(key): value for key, value in data.items()
+                        if isinstance(value, dict)
+                    }
             except Exception:
-                pass
+                raw_json = {}
+
+        migration_changed = False
+        seen_legacy: set[str] = set()
+        for key, entry in raw_json.items():
+            source = str(entry.get("source", "")).lower()
+            # Explicit/reviewed crystals have provenance that accumulation entries lack.
+            if source and source not in {"auto_threshold", "repetition", "recurrence"}:
+                normalized = dict(entry)
+                normalized.setdefault("status", "accepted")
+                normalized.setdefault("freshness_state", "CURRENT")
+                normalized.setdefault("revalidation_required", False)
+                _CRYSTAL_CACHE[key] = normalized
+                continue
+
+            migrated = dict(entry)
+            migrated.update({
+                "state": "candidate",
+                "migration_reason": (
+                    "legacy_auto_threshold_requires_revalidation"
+                    if source == "auto_threshold"
+                    else "legacy_conflated_cache_unverified"
+                ),
+                "migrated_from": "qdkt_crystal_cache.json",
+                "fast_path_eligible": False,
+            })
+            _PATTERN_ACCUMULATOR[key] = {
+                **_PATTERN_ACCUMULATOR.get(key, {}),
+                **migrated,
+            }
+            seen_legacy.add(key)
+            migration_changed = True
+
+        # Historical DB rows do not encode source/reviewer provenance. If there is no
+        # accepted JSON record proving promotion, retain them as candidates, not truth.
+        legacy_rows: dict[str, dict] = {}
         try:
             with _db(_WORKSPACE_DB) as conn:
                 rows = conn.execute(
@@ -180,19 +281,71 @@ class UnifiedQDKT:
                     "FROM qdkt_crystals"
                 ).fetchall()
             for key, action, conf, count, ts in rows:
-                if key not in _CRYSTAL_CACHE:
-                    _CRYSTAL_CACHE[key] = {
-                        "action": action, "confidence": conf,
-                        "count": count, "last_confirmed": ts,
-                    }
+                legacy_rows[str(key)] = {
+                    "action": action or "", "confidence": conf,
+                    "count": count, "last_confirmed": ts,
+                    "migrated_from": "qdkt_crystals",
+                }
         except Exception:
             pass
+        try:
+            with _db(_MEMPALACE_DB) as conn:
+                rows = conn.execute(
+                    "SELECT concept_key, recommended_action, confidence, "
+                    "observation_count, first_seen, last_confirmed "
+                    "FROM qdkt_crystal_cache"
+                ).fetchall()
+            for key, action, conf, count, first_seen, ts in rows:
+                candidate = legacy_rows.setdefault(str(key), {})
+                candidate.update({
+                    "action": candidate.get("action") or action or "",
+                    "confidence": max(float(candidate.get("confidence") or 0.0), float(conf or 0.0)),
+                    "count": max(int(candidate.get("count") or 0), int(count or 0)),
+                    "first_seen": first_seen,
+                    "last_confirmed": max(float(candidate.get("last_confirmed") or 0.0), float(ts or 0.0)),
+                    "migrated_from": "qdkt_crystals+qdkt_crystal_cache",
+                })
+        except Exception:
+            pass
+
+        for key, row in legacy_rows.items():
+            if key in _CRYSTAL_CACHE:
+                continue
+            if key in seen_legacy:
+                # Preserve richer JSON migration metadata while filling missing fields.
+                target = _PATTERN_ACCUMULATOR[key]
+                for field, value in row.items():
+                    target.setdefault(field, value)
+                continue
+            target = _PATTERN_ACCUMULATOR.setdefault(key, {})
+            target.update({
+                **row,
+                "state": "candidate",
+                "migration_reason": "legacy_db_crystal_unverified",
+                "fast_path_eligible": False,
+            })
+            migration_changed = True
+
+        if migration_changed:
+            self._save_pattern_accumulator()
+            # Sanitize the fast-path file in place while preserving all demoted data in
+            # the separate accumulator JSON. DB rows remain untouched as historical data.
+            self._save_crystal_cache()
 
     def _save_crystal_cache(self) -> None:
         try:
             _CRYSTAL_JSON.parent.mkdir(parents=True, exist_ok=True)
             snapshot = dict(_CRYSTAL_CACHE)
             with open(_CRYSTAL_JSON, "w", encoding="utf-8") as f:
+                json.dump(snapshot, f, indent=2)
+        except Exception:
+            pass
+
+    def _save_pattern_accumulator(self) -> None:
+        try:
+            _ACCUMULATOR_JSON.parent.mkdir(parents=True, exist_ok=True)
+            snapshot = dict(_PATTERN_ACCUMULATOR)
+            with open(_ACCUMULATOR_JSON, "w", encoding="utf-8") as f:
                 json.dump(snapshot, f, indent=2)
         except Exception:
             pass
@@ -246,7 +399,7 @@ class UnifiedQDKT:
         )
         self._write_workspace_event(event_id, event_type, concept_str, rationale,
                                     confidence, ts)
-        self._check_crystallization(concept_str, confidence, payload)
+        self._check_crystallization(concept_str, confidence, payload, event_id=event_id)
 
         return event_id
 
@@ -310,16 +463,28 @@ class UnifiedQDKT:
         results: dict[str, Any] = {
             "concept": concept,
             "fast_path": None,
+            "crystallization_candidate": None,
+            "crystal_state": None,
             "knowledge_index": [],
             "cognitive": [],
             "causal": None,
             "changelog": [],
         }
         key = _concept_key(concept)
+        candidate = _PATTERN_ACCUMULATOR.get(key)
+        if candidate:
+            results["crystallization_candidate"] = dict(candidate)
         crystal = _CRYSTAL_CACHE.get(key)
-        if crystal:
-            results["fast_path"] = crystal
+        if _crystal_fast_path_eligible(crystal):
+            results["fast_path"] = dict(crystal)
             return results
+        if crystal:
+            results["crystal_state"] = {
+                "status": crystal.get("status", "accepted"),
+                "freshness_state": crystal.get("freshness_state", "CURRENT"),
+                "revalidation_required": bool(crystal.get("revalidation_required")),
+                "revalidation_reason": crystal.get("revalidation_reason"),
+            }
         try:
             with _db(_MEMPALACE_DB) as conn:
                 rows = conn.execute(
@@ -379,6 +544,10 @@ class UnifiedQDKT:
             pass
         return results
 
+    def crystallization_candidate(self, concept: str) -> dict | None:
+        candidate = _PATTERN_ACCUMULATOR.get(_concept_key(concept))
+        return dict(candidate) if candidate else None
+
     def crystallize(
         self,
         concept: str,
@@ -386,21 +555,44 @@ class UnifiedQDKT:
         *,
         confidence: float = 1.0,
         source: str = "explicit",
+        evidence_refs: list[str] | None = None,
+        reviewed_by: str | None = None,
+        policy_ref: str | None = None,
+        source_generation: str | int | None = None,
     ) -> None:
+        if str(source).lower() in {"auto_threshold", "repetition", "recurrence"}:
+            raise ValueError(
+                "recurrence may create a crystallization candidate but cannot self-authorize a crystal"
+            )
         key = _concept_key(concept)
+        now = time.time()
         entry = {
             "action": recommended_action,
             "confidence": confidence,
             "count": 1,
-            "first_seen": time.time(),
-            "last_confirmed": time.time(),
+            "first_seen": now,
+            "last_confirmed": now,
             "source": source,
+            "status": "accepted",
+            "freshness_state": "CURRENT",
+            "revalidation_required": False,
+            "evidence_refs": list(evidence_refs or []),
+            "reviewed_by": reviewed_by,
+            "policy_ref": policy_ref,
+            "source_generation": source_generation,
         }
         existing = _CRYSTAL_CACHE.get(key)
         if existing:
             entry["count"] = existing.get("count", 0) + 1
             entry["first_seen"] = existing.get("first_seen", entry["first_seen"])
         _CRYSTAL_CACHE[key] = entry
+        candidate = _PATTERN_ACCUMULATOR.get(key)
+        if candidate:
+            candidate["state"] = "promoted"
+            candidate["promoted_at"] = now
+            candidate["promotion_source"] = source
+            candidate["fast_path_eligible"] = False
+            self._save_pattern_accumulator()
         self._save_crystal_cache()
         try:
             with _db(_WORKSPACE_DB) as conn:
@@ -431,12 +623,18 @@ class UnifiedQDKT:
               f"(confidence={confidence:.2f}, count={entry['count']})")
 
     def fast_path(self, concept: str) -> dict | None:
-        return _CRYSTAL_CACHE.get(_concept_key(concept))
+        crystal = _CRYSTAL_CACHE.get(_concept_key(concept))
+        return dict(crystal) if _crystal_fast_path_eligible(crystal) else None
 
     def learning_summary(self) -> str:
         lines = ["[QDKT UNIFIED LEARNING SUMMARY]", ""]
         n_crystals = len(_CRYSTAL_CACHE)
+        n_candidates = sum(
+            1 for entry in _PATTERN_ACCUMULATOR.values()
+            if entry.get("state") in {"candidate", "revalidation_candidate"}
+        )
         lines.append(f"  Crystallized patterns : {n_crystals}")
+        lines.append(f"  Candidate patterns    : {n_candidates}")
         try:
             with _db(_MEMPALACE_DB) as conn:
                 n_idx = conn.execute(
@@ -643,29 +841,82 @@ class UnifiedQDKT:
             except Exception:
                 pass
 
-    def _check_crystallization(self, concept, confidence, payload):
+    def _check_crystallization(self, concept, confidence, payload, *, event_id=None):
         key = _concept_key(concept)
-        existing = _CRYSTAL_CACHE.get(key)
-        count = (existing.get("count", 0) + 1) if existing else 1
+        existing = _PATTERN_ACCUMULATOR.get(key, {})
+        count = int(existing.get("count", 0)) + 1
         running_conf = (
-            (existing.get("confidence", 0.5) * (count - 1) + confidence) / count
+            (float(existing.get("confidence", 0.5)) * (count - 1) + confidence) / count
             if existing else confidence
         )
-        if (count >= _CRYSTAL_CONFIRM_THRESHOLD and
-                running_conf >= _CRYSTAL_CONFIDENCE_THRESHOLD):
-            action = payload.get("recommended_action") or payload.get("action", "")
-            if action:
-                self.crystallize(concept, action, confidence=running_conf,
-                                 source="auto_threshold")
-                return
+        action = payload.get("recommended_action") or payload.get("action", "")
+        obs_fingerprint = _observation_fingerprint(concept, payload)
+        source_fingerprint = _source_fingerprint(concept, payload)
+        observation_fingerprints = list(existing.get("observation_fingerprints", []))
+        source_fingerprints = list(existing.get("source_fingerprints", []))
+        evidence_event_ids = list(existing.get("evidence_event_ids", []))
+        if obs_fingerprint not in observation_fingerprints:
+            observation_fingerprints.append(obs_fingerprint)
+        if source_fingerprint not in source_fingerprints:
+            source_fingerprints.append(source_fingerprint)
+        if event_id and event_id not in evidence_event_ids:
+            evidence_event_ids.append(event_id)
+
+        candidate_ready = bool(
+            count >= _CRYSTAL_CONFIRM_THRESHOLD
+            and running_conf >= _CRYSTAL_CONFIDENCE_THRESHOLD
+            and action
+        )
+        state = "candidate" if candidate_ready else "accumulating"
+        if candidate_ready and len(source_fingerprints) < _CRYSTAL_CONFIRM_THRESHOLD:
+            candidate_reason = "recurrence_only_or_source_independence_unproven"
+        elif candidate_ready:
+            candidate_reason = "threshold_met_candidate_only"
+        else:
+            candidate_reason = "threshold_not_met"
+
+        crystal = _CRYSTAL_CACHE.get(key)
+        contradiction = bool(
+            payload.get("contradiction")
+            or payload.get("is_contradiction")
+            or payload.get("contradicts_crystal")
+            or payload.get("contradicts")
+        )
+        freshness_state = str(payload.get("freshness_state", "")).upper()
+        stale_source = bool(payload.get("source_stale")) or freshness_state in {
+            "STALE", "REVALIDATE", "REJECTED", "BLOCKED"
+        }
+        if crystal and (contradiction or stale_source):
+            crystal["revalidation_required"] = True
+            crystal["freshness_state"] = "STALE" if stale_source else "REVALIDATE"
+            crystal["revalidation_reason"] = (
+                "stale_source_generation" if stale_source else "contradictory_fresh_evidence"
+            )
+            crystal["revalidation_event_id"] = event_id
+            crystal["last_revalidation_signal"] = time.time()
+            self._save_crystal_cache()
+            state = "revalidation_candidate"
+
         entry = {
-            "action": payload.get("action", ""),
+            "action": action,
             "confidence": running_conf,
             "count": count,
-            "first_seen": (existing or {}).get("first_seen", time.time()),
+            "unique_observation_count": len(observation_fingerprints),
+            "independent_source_count": len(source_fingerprints),
+            "observation_fingerprints": observation_fingerprints[-64:],
+            "source_fingerprints": source_fingerprints[-64:],
+            "evidence_event_ids": evidence_event_ids[-64:],
+            "first_seen": existing.get("first_seen", time.time()),
             "last_confirmed": time.time(),
+            "state": state,
+            "candidate_reason": candidate_reason,
+            "fast_path_eligible": False,
+            "contradiction_count": int(existing.get("contradiction_count", 0)) + (1 if contradiction else 0),
+            "last_source_generation": payload.get("source_generation"),
+            "last_freshness_state": freshness_state or None,
         }
-        _CRYSTAL_CACHE[key] = entry
+        _PATTERN_ACCUMULATOR[key] = entry
+        self._save_pattern_accumulator()
 
 
 # Module-level singleton
