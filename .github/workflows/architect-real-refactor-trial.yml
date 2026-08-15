@@ -4,6 +4,8 @@ on:
   pull_request:
   push:
     branches: ["analysis/**", "refactor/**", main]
+    paths-ignore:
+      - "aura_workspace/outbox/**"
 
 permissions:
   contents: read
@@ -201,6 +203,7 @@ jobs:
           payload = json.loads(source.read_text(encoding="utf-8"))
           permanent_review_files = {
               ".aura/ARCHITECTURE.md",
+              ".aura/SOURCE_ANCHORS.md",
               ".github/workflows/architect-refactor-v2-tests.yml",
               ".github/workflows/sync-analysis-codemap.yml",
               "README.md",
