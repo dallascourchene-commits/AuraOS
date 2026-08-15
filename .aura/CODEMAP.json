@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786815914,
+  "generated_at_unix": 1786816288,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1594,
+    "repo_file_count": 1596,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -173,6 +173,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
+      ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
@@ -187,7 +188,8 @@
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
-      ".github/workflows/wo-phase3-local-wheelhouse.yml",
+      ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
+      ".github/workflows/wo-phase3-local-gate-bundle-001.yml",
       ".gitignore",
       ".mempalace/aura_thought.txt",
       ".mempalace/lexicon.json",
@@ -1710,16 +1712,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1594,
-      "bytes": 26054245,
-      "tokens_est": 6503976,
+      "files": 1596,
+      "bytes": 26068687,
+      "tokens_est": 6507586,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 231,
         "native_accelerator": 8,
         "operator_script": 9,
         "python_module": 990,
-        "schema_or_lexicon": 243,
+        "schema_or_lexicon": 245,
         "support_file": 49
       }
     },
@@ -157517,6 +157519,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
+      ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
@@ -157524,6 +157527,7 @@
       ".github/workflows/sco-temporal-persistence-e9-e12.yml",
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/wo-phase3-local-gate-bundle-001.yml",
       "USER_GUIDE.md",
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md",
       "docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md",
@@ -157570,6 +157574,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
+      ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
@@ -157579,7 +157584,8 @@
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
-      ".github/workflows/wo-phase3-local-wheelhouse.yml",
+      ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
+      ".github/workflows/wo-phase3-local-gate-bundle-001.yml",
       "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
       "docs/AURA_CONSTRUCTION_FOUNDRY_OPERATOR_GUIDE.md",
       "docs/AURA_PUBLIC_DEMO_PLATFORM.md",
@@ -157780,6 +157786,7 @@
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
+      ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
       "USER_GUIDE.md",
       "docs/AURA_ARCHITECTURE_HARNESS.md",
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md"
@@ -157884,6 +157891,12 @@
     "python aura_codebase_navigator.py --refresh-topology": [
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml"
+    ],
+    "python aura_codebase_navigator.py --refresh-topology 2>&1 | tee /tmp/codemap-audit/regenerate.log": [
+      ".github/workflows/wo-phase3-codemap-active-branch-audit.yml"
+    ],
+    "python /tmp/phase3_patch.py": [
+      ".github/workflows/wo-phase3-local-gate-bundle-001.yml"
     ],
     "python aura_coding_arena_server.py --host 127.0.0.1 --port 8080": [
       "AURA_CODING_ARENA_README.md"
@@ -169120,6 +169133,63 @@
       ]
     },
     {
+      "path": ".github/workflows/phase3-local-verification-bundle.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5864,
+      "lines": 108,
+      "tokens_est": 1466,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m pip"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          77
+        ],
+        "python -m pip": [
+          83
+        ]
+      },
+      "topology": {},
+      "digest8": "721d0649e82e3621",
+      "vector": [
+        -0.161666,
+        0.164026,
+        -0.232469,
+        -0.076703,
+        -0.097944,
+        -0.277311,
+        0.081423,
+        -0.130985,
+        0.135705,
+        -0.069623,
+        0.168747,
+        -0.208868,
+        0.220669,
+        0.180547,
+        -0.020061,
+        -0.208868,
+        -0.282031,
+        0.26551,
+        -0.029501,
+        0.01062,
+        -0.164026,
+        0.031861,
+        0.00826,
+        -0.215948,
+        -0.24191,
+        0.26079,
+        0.149866,
+        0.0059,
+        0.239549,
+        0.220669,
+        -0.031861,
+        -0.272591
+      ]
+    },
+    {
       "path": ".github/workflows/pr138-grounded-phase-integration.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -170074,57 +170144,125 @@
       ]
     },
     {
-      "path": ".github/workflows/wo-phase3-local-wheelhouse.yml",
+      "path": ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 1445,
-      "lines": 48,
-      "tokens_est": 362,
+      "bytes": 3120,
+      "lines": 81,
+      "tokens_est": 780,
       "symbol_count": 0,
       "commands": [
-        "python -m pip"
+        "python -m pip",
+        "python aura_codebase_navigator.py --refresh-topology 2>&1 | tee /tmp/codemap-audit/regenerate.log",
+        "python -m aura_codemap_verify"
       ],
       "command_lines": {
         "python -m pip": [
-          23,
-          25
+          45
+        ],
+        "python aura_codebase_navigator.py --refresh-topology 2>&1 | tee /tmp/codemap-audit/regenerate.log": [
+          59
+        ],
+        "python -m aura_codemap_verify": [
+          62
         ]
       },
       "topology": {},
-      "digest8": "81d07b1cb360c65f",
+      "digest8": "36b6279cf9fc85f4",
       "vector": [
-        -0.210294,
-        0.053661,
-        0.155183,
-        0.079767,
-        -0.039158,
-        -0.195791,
-        -0.271207,
-        -0.18999,
-        0.050761,
-        -0.204493,
-        -0.250903,
-        -0.126177,
-        0.100071,
-        -0.163885,
-        -0.262505,
-        0.082667,
-        -0.00145,
-        0.335021,
-        0.187089,
-        0.108773,
-        -0.033357,
-        0.04786,
-        -0.265406,
-        0.256704,
-        0.039158,
-        -0.169686,
-        -0.227698,
-        -0.294412,
-        0.221897,
-        0.088469,
-        -0.053661,
-        -0.09717
+        -0.281239,
+        -0.209483,
+        0.186336,
+        0.119208,
+        0.084488,
+        -0.221057,
+        0.026619,
+        0.163188,
+        0.184021,
+        0.121523,
+        -0.121523,
+        -0.172447,
+        -0.068284,
+        0.292813,
+        -0.10995,
+        0.151615,
+        -0.070599,
+        0.184021,
+        0.010416,
+        0.218742,
+        -0.184021,
+        0.271981,
+        -0.054396,
+        0.130782,
+        0.089117,
+        0.184021,
+        -0.211798,
+        -0.070599,
+        0.214112,
+        -0.269666,
+        0.172447,
+        0.267351
+      ]
+    },
+    {
+      "path": ".github/workflows/wo-phase3-local-gate-bundle-001.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6903,
+      "lines": 57,
+      "tokens_est": 1726,
+      "symbol_count": 0,
+      "commands": [
+        "python /tmp/phase3_patch.py",
+        "python -m py_compile",
+        "python -m pip"
+      ],
+      "command_lines": {
+        "python /tmp/phase3_patch.py": [
+          30
+        ],
+        "python -m py_compile": [
+          31
+        ],
+        "python -m pip": [
+          36
+        ]
+      },
+      "topology": {},
+      "digest8": "a5da58f35cf85f54",
+      "vector": [
+        -0.224622,
+        0.038656,
+        0.005224,
+        0.245517,
+        -0.220443,
+        -0.084625,
+        0.247607,
+        0.224622,
+        -0.214175,
+        0.253875,
+        -0.009403,
+        -0.214175,
+        -0.122236,
+        0.19328,
+        -0.145221,
+        -0.011492,
+        -0.203727,
+        0.166116,
+        -0.10552,
+        0.249696,
+        -0.115968,
+        -0.103431,
+        -0.205817,
+        0.061641,
+        -0.209996,
+        -0.205817,
+        -0.195369,
+        0.084625,
+        0.23298,
+        0.151489,
+        0.06373,
+        0.253875
       ]
     },
     {
@@ -283192,16 +283330,16 @@
     }
   },
   "summary": {
-    "file_count": 1594,
-    "total_bytes": 26054245,
-    "text_tokens_est": 6503976,
+    "file_count": 1596,
+    "total_bytes": 26068687,
+    "text_tokens_est": 6507586,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 231,
       "native_accelerator": 8,
       "operator_script": 9,
       "python_module": 990,
-      "schema_or_lexicon": 243,
+      "schema_or_lexicon": 245,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -283384,6 +283522,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
+      ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
@@ -283398,6 +283537,8 @@
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
+      ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
+      ".github/workflows/wo-phase3-local-gate-bundle-001.yml",
       ".github/workflows/wo-phase3-local-wheelhouse.yml",
       ".gitignore",
       ".mempalace/aura_thought.txt",
@@ -442596,6 +442737,6 @@
       }
     ],
     "record_fingerprint": "ad92cc08a26db3200411c459a7f5f8e2",
-    "payload_hash": "cf2ff3f1a9641d9b772431543253968f"
+    "payload_hash": "8dc67c142fa88b2ac8439d9c6305817c"
   }
 }
