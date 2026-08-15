@@ -1,0 +1,53 @@
+LEDGER=bounty_payout_escrow
+SCHEMA=AURA_BOUNTY_ESCROW_V1
+AUTHORITY=HUMAN_SOVEREIGN_DISPOSITION
+COORDINATE=AD:FLEET:EXECUTE-ALL:001
+WORK_ORDER=WO-FLEET-TRIGGER-ALL-001
+CREATED=2026-08-15
+STATE=OPEN_WITH_BLOCKED_DISPATCH
+
+SOURCE_RECONCILIATION:
+- requested_ready_to_submit_packages=3
+- discovered_ready_to_submit_packages=1
+- discovered_package=claude-hook
+- missing_or_unresolved_packages=2
+- absent_packages_do_not_create_receivables=true
+
+ENTRY_001:
+- package=claude-hook
+- upstream_repository=claude-builders-bounty/claude-builders-bounty
+- upstream_issue=3
+- upstream_issue_state_at_dispatch=OPEN
+- advertised_bounty_usd=100
+- required_claim_step=/opire try
+- human_gate_b_authority=GRANTED_BY_WO-FLEET-TRIGGER-ALL-001
+- claim_attempt=EXECUTED
+- claim_result=BLOCKED_CONNECTOR_403_RESOURCE_NOT_ACCESSIBLE_BY_INTEGRATION
+- external_fork=NOT_CREATED
+- external_branch=NOT_CREATED
+- upstream_pr=NOT_OPENED
+- payout_condition=MERGE_REQUIRED
+- merge_state=NOT_APPLICABLE
+- receivable_usd=0
+- receivable_state=NOT_MINTED
+- payout_usd=0
+- payout_state=NOT_MINTED
+- escrow_state=BLOCKED_BEFORE_CLAIM
+
+NEGATIVE_SPACE:
+- NO_SUCCESSFUL_OPIRE_CLAIM
+- NO_UPSTREAM_PR
+- NO_MERGE
+- NO_WALLET_ACTION
+- NO_PAYOUT_CLAIM
+- NO_RECEIVABLE_MINTED_FROM_ADVERTISED_BOUNTY
+- NO_TWO_MISSING_PACKAGES_INVENTED
+- NO_THIRD_PARTY_REPOSITORY_MUTATION_COMPLETED
+
+NEXT_VALID_TRANSITION:
+- obtain an upstream-capable GitHub identity/integration able to perform the required issue comment and fork/branch/PR operations;
+- revalidate issue state, bounty availability, and package exact-head applicability before retry;
+- mint a receivable only after the upstream claim/PR state actually supports one;
+- mint payout only after the upstream payout condition is satisfied and source-verifiable.
+
+FINAL_STATE=ONE_PACKAGE_SOURCE_RESOLVED / CLAIM_ATTEMPT_BLOCKED_403 / ZERO_RECEIVABLE / ZERO_PAYOUT / TWO_REQUESTED_PACKAGES_UNRESOLVED
