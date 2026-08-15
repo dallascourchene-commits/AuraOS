@@ -1,0 +1,153 @@
+name: WC-02 Active Branch CODEMAP Synchronization
+
+on:
+  push:
+    branches:
+      - fix/wo-fleet-phase3-triad2-001
+    paths:
+      - '.github/workflows/wc02-codemap-active-branch-sync.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wc02-codemap-active-branch-sync
+  cancel-in-progress: false
+
+jobs:
+  synchronize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        branch:
+          - w7/paper-x-final-license-normalization
+          - feat/multimodal-c2-work-order-locator
+          - wo-wb-037-qdkt-crystal-hardening
+          - j05/custodian-drive-event-adapter
+          - docs/benchmark-evidence-map-2026-08-08
+          - materialize/verified-ephemeral-workspace-pr2
+          - fix/standalone-construction-pascal-demo
+          - docs/construction-pascal-demo-operations
+          - refactor/thermal-codemap-materialize
+          - refactor/thermal-kelvin-auto-detection-sync
+          - bilateral-intent-final-b11-b15
+          - ci/wo-triad2-ci-codemap-repair-001
+          - repair/wo-fleet-phase3-triad2-001
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
+          fetch-depth: 0
+
+      - name: Bind starting generation and required repair sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rev-parse HEAD | tee /tmp/wc02-start-sha
+          git fetch origin main ci/wo-triad2-ci-codemap-repair-001
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install branch-declared dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' 'jsonschema>=4.23,<5.0'
+
+      - name: Normalize stale PR-193 materializer to historical manual boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show origin/main:.github/workflows/unified-memory-continuity-deep-v2-target.yml \
+            > .github/workflows/unified-memory-continuity-deep-v2-target.yml
+
+      - name: Regenerate with native branch navigator, then compatibility fallback if required
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/wc02-codemap
+          set +e
+          python aura_codebase_navigator.py --refresh-topology \
+            > /tmp/wc02-codemap/native-regenerate.log 2>&1
+          native_status=$?
+          set -e
+          printf 'native_status=%s\n' "$native_status" | tee /tmp/wc02-codemap/mode.txt
+          if [ "$native_status" -ne 0 ]; then
+            cat /tmp/wc02-codemap/native-regenerate.log
+            git checkout HEAD -- .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json 2>/dev/null || true
+            git checkout HEAD -- Aura_Memory/live_topology_ast.json 2>/dev/null || true
+            git show origin/ci/wo-triad2-ci-codemap-repair-001:tools/wo_triad2_ci_codemap_repair.py > tools/_wc02_codemap_base.py
+            git show origin/ci/wo-triad2-ci-codemap-repair-001:tools/wo_triad2_ci_codemap_command_index_patch.py > tools/_wc02_command_index.py
+            git show origin/ci/wo-triad2-ci-codemap-repair-001:tools/wo_triad2_ci_codemap_incremental_stability_patch.py > tools/_wc02_incremental.py
+            git show origin/ci/wo-triad2-ci-codemap-repair-001:tools/wo_triad2_ci_codemap_iterator_compat_patch.py > tools/_wc02_iterator.py
+            python - <<'PY'
+          import tools._wc02_codemap_base as patch
+          patch.patch_navigator()
+          patch.patch_verifier()
+          PY
+            python tools/_wc02_command_index.py
+            python tools/_wc02_incremental.py
+            python tools/_wc02_iterator.py
+            rm -f tools/_wc02_codemap_base.py tools/_wc02_command_index.py tools/_wc02_incremental.py tools/_wc02_iterator.py
+            python aura_codebase_navigator.py --refresh-topology \
+              2>&1 | tee /tmp/wc02-codemap/compat-regenerate.log
+            echo 'mode=COMPATIBILITY_TRANSFORMS' >> /tmp/wc02-codemap/mode.txt
+          else
+            cat /tmp/wc02-codemap/native-regenerate.log
+            echo 'mode=NATIVE' >> /tmp/wc02-codemap/mode.txt
+          fi
+
+      - name: Regenerate source anchors and verify complete topology
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f scripts/aura_source_anchor_map.py ]; then
+            python scripts/aura_source_anchor_map.py --root .
+            python scripts/aura_source_anchor_map.py --root . --check
+          fi
+          python -m aura_codemap_verify 2>&1 | tee /tmp/wc02-codemap/verify.log
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s topology_map.json
+          git diff --check
+          git status --short | tee /tmp/wc02-codemap/status.txt
+
+      - name: Fail closed if target branch advanced during regeneration
+        shell: bash
+        run: |
+          set -euo pipefail
+          start_sha="$(cat /tmp/wc02-start-sha)"
+          git fetch origin '${{ matrix.branch }}'
+          current_sha="$(git rev-parse 'origin/${{ matrix.branch }}')"
+          test "$current_sha" = "$start_sha"
+
+      - name: Commit synchronized topology to target branch only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Aura Fleet W5 CODEMAP Sync'
+          git config user.email 'actions@users.noreply.github.com'
+          git add .github/workflows/unified-memory-continuity-deep-v2-target.yml
+          git add aura_codebase_navigator.py aura_codemap_verify.py 2>/dev/null || true
+          git add .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
+          if [ -f .aura/SOURCE_ANCHORS.md ]; then git add .aura/SOURCE_ANCHORS.md; fi
+          if [ -f Aura_Memory/live_topology_ast.json ]; then git add -f Aura_Memory/live_topology_ast.json; fi
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'No synchronization delta for ${{ matrix.branch }}' | tee /tmp/wc02-codemap/push.log
+            exit 0
+          fi
+          git commit -m 'chore(wc02): synchronize CODEMAP and retire stale UMC materializer'
+          git push origin HEAD:'${{ matrix.branch }}' 2>&1 | tee /tmp/wc02-codemap/push.log
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wc02-codemap-sync-${{ strategy.job-index }}
+          path: /tmp/wc02-codemap/
+          if-no-files-found: warn
+          retention-days: 14
