@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1599
-- **total_bytes**: 26084521
-- **text_tokens_est**: 6511544
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 231, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 248, 'support_file': 49}
+- **file_count**: 1600
+- **total_bytes**: 26091889
+- **text_tokens_est**: 6513387
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 231, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 249, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1599,
+  "repo_file_count": 1600,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -205,6 +205,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/triad2-codemap-repair.yml",
     ".github/workflows/triad2-full-codemap-repair-v2.yml",
     ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+    ".github/workflows/wc01-triad1-phase4-stage.yml",
     ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
     ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
     ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
@@ -1739,16 +1740,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1599,
-  "bytes": 26084521,
-  "tokens_est": 6511544,
+  "files": 1600,
+  "bytes": 26091889,
+  "tokens_est": 6513387,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 231,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 990,
-    "schema_or_lexicon": 248,
+    "schema_or_lexicon": 249,
     "support_file": 49
   }
 }
