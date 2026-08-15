@@ -139,6 +139,99 @@ def patch_navigator_commands() -> None:
     NAV.write_text(replace_once(text, old_index, new_index, "source-resolvable command index"), encoding="utf-8")
 
 
+def patch_incremental_refresh() -> None:
+    text = NAV.read_text(encoding="utf-8")
+
+    old_cards = '''    cards = [dict(card) for card in payload.get("files", []) if isinstance(card, dict)]
+    card_by_path = {str(card.get("path") or ""): card for card in cards if card.get("path")}
+    changed_rel_paths: list[str] = []
+'''
+    new_cards = '''    cards = [dict(card) for card in payload.get("files", []) if isinstance(card, dict)]
+    card_by_path = {str(card.get("path") or ""): card for card in cards if card.get("path")}
+
+    # Committed file cards are intentionally compact and omit full symbol records.
+    # Rehydrate untouched symbol records from the existing canonical symbol index
+    # before replacing only the changed paths; otherwise an incremental refresh
+    # silently erases unrelated symbols from the rebuilt index.
+    symbol_index = payload.get("symbol_index", {})
+    if isinstance(symbol_index, dict):
+        for name, raw_entries in symbol_index.items():
+            entries = raw_entries if isinstance(raw_entries, list) else [raw_entries]
+            for entry in entries:
+                if not isinstance(entry, dict):
+                    continue
+                file_path = str(entry.get("file") or "")
+                card = card_by_path.get(file_path)
+                if card is None:
+                    continue
+                symbols = card.setdefault("symbols", [])
+                if not isinstance(symbols, list):
+                    symbols = []
+                    card["symbols"] = symbols
+                semantic_id = str(entry.get("semantic_id") or "")
+                if semantic_id and any(
+                    isinstance(existing, dict) and str(existing.get("semantic_id") or "") == semantic_id
+                    for existing in symbols
+                ):
+                    continue
+                symbols.append({
+                    "name": str(name),
+                    "kind": entry.get("kind"),
+                    "line": entry.get("line"),
+                    "end_line": entry.get("end_line"),
+                    "semantic_id": entry.get("semantic_id"),
+                    "signature_hash": entry.get("signature_hash"),
+                })
+
+    changed_rel_paths: list[str] = []
+'''
+    text = replace_once(text, old_cards, new_cards, "incremental symbol rehydration")
+
+    old_hash_refresh = '''    refresh = canonical.get("incremental_refresh")
+    if isinstance(refresh, dict):
+        refresh.pop("payload_hash", None)
+'''
+    new_hash_refresh = '''    # Incremental bookkeeping is evidence about how the current semantic state
+    # was reached, not part of the semantic CODEMAP state itself. Excluding the
+    # entire block lets a true no-op refresh remain byte- and mtime-stable.
+    canonical.pop("incremental_refresh", None)
+'''
+    text = replace_once(text, old_hash_refresh, new_hash_refresh, "semantic payload hash")
+
+    old_existing = '''    else:
+        payload = _load_json(absolute_index)
+        topology = None
+        if include_topology:
+            topology, _ = load_or_compile_topology(
+                repo_root,
+                topology_path=topology_path,
+                refresh=refresh_topology,
+            )
+        payload = refresh_index_for_paths(payload, repo_root, changed_paths, topology=topology)
+    write_navigation_artifacts(payload, absolute_index, absolute_markdown)
+    return payload
+'''
+    new_existing = '''    else:
+        original_payload = _load_json(absolute_index)
+        topology = None
+        if include_topology:
+            topology, _ = load_or_compile_topology(
+                repo_root,
+                topology_path=topology_path,
+                refresh=refresh_topology,
+            )
+        refreshed_payload = refresh_index_for_paths(original_payload, repo_root, changed_paths, topology=topology)
+        if _codemap_payload_hash(refreshed_payload) == _codemap_payload_hash(original_payload):
+            return original_payload
+        payload = refreshed_payload
+    write_navigation_artifacts(payload, absolute_index, absolute_markdown)
+    return payload
+'''
+    text = replace_once(text, old_existing, new_existing, "no-op refresh write suppression")
+
+    NAV.write_text(text, encoding="utf-8")
+
+
 def retire_historical_umc() -> None:
     UMC.parent.mkdir(parents=True, exist_ok=True)
     UMC.write_text('''name: UMC deep review v2 target materialize (historical)\n\n# Historical PR #193 exact-head materializer.\n# PR #193 is merged and its exact reviewed generation is no longer an active\n# development head. Keeping an automatic pull_request_target trigger here caused\n# definition-level/zero-job failures after the historical binding became stale.\n# Preserve this file as auditable provenance, but require explicit manual review\n# before any historical replay.\non:\n  workflow_dispatch:\n\npermissions:\n  contents: read\n\njobs:\n  historical-boundary:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Explain historical boundary\n        shell: bash\n        run: |\n          cat <<'EOF'\n          This workflow is retained as provenance for the merged PR #193 deep-v2\n          materializer. Its former exact-head pull_request_target binding is\n          intentionally retired. Current continuity contracts are validated by\n          the active repository test suites and current CI workflows.\n          EOF\n''', encoding="utf-8")
@@ -147,6 +240,7 @@ def retire_historical_umc() -> None:
 def main() -> int:
     patch_architect()
     patch_navigator_commands()
+    patch_incremental_refresh()
     retire_historical_umc()
     print("WO-FLEET-PHASE3 Triad2 patch applied in working tree")
     return 0
