@@ -1,0 +1,128 @@
+name: WO Fleet Phase3 Triad2 Precommit Verification
+
+on:
+  push:
+    branches:
+      - repair/wo-fleet-phase3-triad2-001
+    paths:
+      - .github/workflows/wo-fleet-phase3-triad2-precommit.yml
+      - tools/wo_fleet_phase3_triad2_patch.py
+
+permissions:
+  contents: read
+
+jobs:
+  precommit-verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: repair/wo-fleet-phase3-triad2-001
+          fetch-depth: 0
+
+      - name: Bind source generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "SOURCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          git status --porcelain=v1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install Python 3.12 verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt \
+            "jsonschema>=4.23,<5.0" \
+            "pytest>=8.2,<9.0" \
+            "pytest-asyncio>=0.23,<1.0" \
+            "trimesh>=4.7.1,<5.0" \
+            "zstandard>=0.23.0,<1.0"
+
+      - name: Apply inherited CODEMAP transform without committing
+        run: python tools/wo_triad2_ci_codemap_repair.py
+
+      - name: Apply Phase3 fail-closed and command-source repair without committing
+        run: python tools/wo_fleet_phase3_triad2_patch.py
+
+      - name: Regenerate CODEMAP and source anchors
+        run: |
+          python aura_codebase_navigator.py --refresh-topology
+          python scripts/aura_source_anchor_map.py --root .
+          python scripts/aura_source_anchor_map.py --root . --check
+          python -m aura_codemap_verify
+
+      - name: Python 3.12 focused contracts
+        run: |
+          python -m pytest -q \
+            tests/test_aura_codemap_verify.py \
+            tests/test_aura_arch_v2_3_capsule_validator.py \
+            test_aura_architect_loop.py \
+            test_aura_fusion.py
+
+      - name: Python 3.12 full pytest-native suite
+        env:
+          PYTHONHASHSEED: "0"
+        run: |
+          python -m pytest -q --disable-warnings \
+            --ignore=test_aura_functions.py \
+            --ignore=test_synthesis_upgrades.py \
+            --ignore=test_syntax_fixes.py \
+            --ignore=test_codemap_hooks_simple.py \
+            --ignore=test_pvm_logic.py \
+            --ignore=test_aura_substrate.py \
+            --deselect=tests/test_aura_human_agent_arena.py::test_affordance_map_declares_source_of_truth \
+            --junitxml=phase3-full-py312.xml
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+
+      - name: Install Python 3.10 verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt \
+            "jsonschema>=4.23,<5.0" \
+            "pytest>=8.2,<9.0" \
+            "pytest-asyncio>=0.23,<1.0" \
+            "trimesh>=4.7.1,<5.0" \
+            "zstandard>=0.23.0,<1.0"
+
+      - name: Python 3.10 focused contracts
+        run: |
+          python -m pytest -q \
+            tests/test_aura_codemap_verify.py \
+            tests/test_aura_arch_v2_3_capsule_validator.py \
+            test_aura_architect_loop.py \
+            test_aura_fusion.py \
+            --junitxml=phase3-focused-py310.xml
+
+      - name: Package exact uncommitted repaired tree for local gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git status --porcelain=v1 > phase3-working-tree-status.txt
+          git diff --binary > phase3-repair.diff
+          tar --exclude=.git --exclude=phase3-patched-tree.tgz -czf phase3-patched-tree.tgz .
+          sha256sum phase3-patched-tree.tgz > phase3-patched-tree.sha256
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wo-fleet-phase3-triad2-precommit-${{ github.run_id }}
+          path: |
+            phase3-patched-tree.tgz
+            phase3-patched-tree.sha256
+            phase3-working-tree-status.txt
+            phase3-repair.diff
+            phase3-full-py312.xml
+            phase3-focused-py310.xml
+          if-no-files-found: error
+          retention-days: 14
