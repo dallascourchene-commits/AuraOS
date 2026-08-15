@@ -7,12 +7,13 @@ on:
       - fix/wo-fleet-phase3-triad2-001
     paths:
       - '.github/workflows/wo-fleet-phase3-triad2-verify.yml'
+      - 'conftest.py'
       - 'tools/wo_fleet_phase3_triad2_contract_patch.py'
       - 'tools/wo_fleet_phase3_triad2_incremental_patch.py'
       - 'tools/wo_fleet_phase3_triad2_skillweaver_patch.py'
       - 'tools/wo_fleet_phase3_triad2_pascal_test_patch.py'
       - 'tools/wc02_phase4_readme_patch.py'
-      - 'tools/wc02_pytest_collection_patch.py'
+      - 'tools/wc02_standalone_smoke_patch.py'
       - 'tests/test_wc02_arch_contract_regressions.py'
 
 permissions:
@@ -55,7 +56,7 @@ jobs:
           python tools/wo_fleet_phase3_triad2_skillweaver_patch.py
           python tools/wo_fleet_phase3_triad2_pascal_test_patch.py
           python tools/wc02_phase4_readme_patch.py
-          python tools/wc02_pytest_collection_patch.py
+          python tools/wc02_standalone_smoke_patch.py
 
       - name: Compile repaired contract surfaces
         run: |
@@ -64,7 +65,7 @@ jobs:
             aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py \
             aura_fusion.py aura_skillweaver.py \
             test_aura_functions.py test_synthesis_upgrades.py test_syntax_fixes.py \
-            tests/test_aura_construction_pascal_spatial_foundry_pr5.py \
+            conftest.py tests/test_aura_construction_pascal_spatial_foundry_pr5.py \
             tests/test_wc02_arch_contract_regressions.py
 
       - name: Regenerate canonical deep CODEMAP topology
@@ -89,6 +90,13 @@ jobs:
             test_aura_skillweaver.py::TestSkillRegistry::test_registry_has_commands \
             test_codemap_slimming.py::test_iter_repo_files_skips_runtime_dependency_dirs \
             --junitxml=triad2-focused-py312.xml 2>&1 | tee triad2-focused-py312.txt
+
+      - name: Python 3.12 standalone smoke entrypoints
+        run: |
+          set -o pipefail
+          python -u test_syntax_fixes.py 2>&1 | tee triad2-smoke-syntax-py312.txt
+          python -u test_synthesis_upgrades.py 2>&1 | tee triad2-smoke-synthesis-py312.txt
+          python -u test_aura_functions.py 2>&1 | tee triad2-smoke-functions-py312.txt
 
       - name: Python 3.12 full pytest suite
         run: |
@@ -124,6 +132,13 @@ jobs:
             test_codemap_slimming.py::test_iter_repo_files_skips_runtime_dependency_dirs \
             --junitxml=triad2-focused-py310.xml 2>&1 | tee triad2-focused-py310.txt
 
+      - name: Python 3.10 standalone smoke entrypoints
+        run: |
+          set -o pipefail
+          python -u test_syntax_fixes.py 2>&1 | tee triad2-smoke-syntax-py310.txt
+          python -u test_synthesis_upgrades.py 2>&1 | tee triad2-smoke-synthesis-py310.txt
+          python -u test_aura_functions.py 2>&1 | tee triad2-smoke-functions-py310.txt
+
       - name: Python 3.10 full pytest suite
         run: |
           set -o pipefail
@@ -137,7 +152,7 @@ jobs:
           git status --porcelain=v1 > triad2-working-tree-status.txt
           git diff --binary > triad2-repair.diff
           archive="${RUNNER_TEMP}/triad2-patched-tree.tgz"
-          tar --exclude=.git --exclude=triad2-local-wheelhouse -czf "${archive}" .
+          tar --exclude=.git -czf "${archive}" .
           sha256sum "${archive}" > triad2-patched-tree.sha256
 
       - name: Upload verification diagnostics and exact local-gate tree
@@ -149,10 +164,16 @@ jobs:
             triad2-codemap-verify.txt
             triad2-focused-py312.txt
             triad2-focused-py312.xml
+            triad2-smoke-syntax-py312.txt
+            triad2-smoke-synthesis-py312.txt
+            triad2-smoke-functions-py312.txt
             triad2-full-py312.txt
             triad2-full-py312.xml
             triad2-focused-py310.txt
             triad2-focused-py310.xml
+            triad2-smoke-syntax-py310.txt
+            triad2-smoke-synthesis-py310.txt
+            triad2-smoke-functions-py310.txt
             triad2-full-py310.txt
             triad2-full-py310.xml
             triad2-working-tree-status.txt
