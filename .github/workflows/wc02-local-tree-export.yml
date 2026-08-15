@@ -1,0 +1,69 @@
+name: WC-02 Local Pytest Tree Export
+
+on:
+  push:
+    branches:
+      - fix/wo-fleet-phase3-triad2-001
+    paths:
+      - '.github/workflows/wc02-local-tree-export.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install generation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' 'jsonschema>=4.23,<5.0' 'trimesh>=4.7.1,<5.0' 'zstandard>=0.23.0,<1.0'
+      - name: Materialize exact WC-02 repaired tree
+        run: |
+          python tools/wo_fleet_phase3_triad2_contract_patch.py
+          python tools/wo_fleet_phase3_triad2_incremental_patch.py
+          python tools/wo_fleet_phase3_triad2_skillweaver_patch.py
+          python tools/wo_fleet_phase3_triad2_pascal_test_patch.py
+          python tools/wc02_phase4_readme_patch.py
+          python aura_codebase_navigator.py --refresh-topology
+          if [ -f scripts/aura_source_anchor_map.py ]; then
+            python scripts/aura_source_anchor_map.py --root .
+            python scripts/aura_source_anchor_map.py --root . --check
+          fi
+          python -m aura_codemap_verify
+          git diff --check
+      - name: Build local Python 3.13 dependency wheel gap
+        run: |
+          mkdir -p wc02-wheelhouse
+          python -m pip download --only-binary=:all: --no-deps --platform manylinux2014_x86_64 --implementation cp --python-version 313 --abi cp313 'zstandard>=0.23.0,<1.0' -d wc02-wheelhouse
+          python -m pip download --only-binary=:all: --no-deps 'aiosqlite>=0.20.0,<1.0' -d wc02-wheelhouse
+          python -m pip download --only-binary=:all: --no-deps 'wasmtime>=20.0,<46.0' -d wc02-wheelhouse
+          python -m pip download --only-binary=:all: --no-deps 'ddgs>=6.0,<10.0' -d wc02-wheelhouse
+          python -m pip download --only-binary=:all: --no-deps 'arxiv>=1.4.0,<3.0' -d wc02-wheelhouse
+          python -m pip download --only-binary=:all: --no-deps 'watchdog>=3.0,<5.0' -d wc02-wheelhouse
+      - name: Package repaired source tree
+        run: |
+          git status --porcelain=v1 > wc02-working-tree-status.txt
+          git diff --binary > wc02-repair.diff
+          tar --exclude=.git --exclude=wc02-wheelhouse -czf wc02-repaired-tree.tgz .
+          sha256sum wc02-repaired-tree.tgz > wc02-repaired-tree.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wc02-local-tree-${{ github.run_id }}
+          path: |
+            wc02-repaired-tree.tgz
+            wc02-repaired-tree.sha256
+            wc02-working-tree-status.txt
+            wc02-repair.diff
+            wc02-wheelhouse/
+          if-no-files-found: error
+          retention-days: 7
