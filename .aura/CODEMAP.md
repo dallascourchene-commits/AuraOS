@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1549
-- **total_bytes**: 25731057
-- **text_tokens_est**: 6423560
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 202, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 983, 'schema_or_lexicon': 237, 'support_file': 49}
+- **file_count**: 1553
+- **total_bytes**: 25746492
+- **text_tokens_est**: 6427418
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 203, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 986, 'schema_or_lexicon': 237, 'support_file': 49}
 - **topology_nodes**: 11393
 - **topology_edges**: 27882
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1549,
+  "repo_file_count": 1553,
   "source_paths_without_topology": [
     "_aura_architect_consolidation_benchmark_legacy.py",
     "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -138,15 +138,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1549,
-  "bytes": 25731057,
-  "tokens_est": 6423560,
+  "files": 1553,
+  "bytes": 25746492,
+  "tokens_est": 6427418,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 202,
+    "knowledge_artifact": 203,
     "native_accelerator": 8,
     "operator_script": 6,
-    "python_module": 983,
+    "python_module": 986,
     "schema_or_lexicon": 237,
     "support_file": 49
   }
@@ -280,6 +280,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "demo_assets/construction_tuwien/ATTRIBUTION.md",
     "demo_assets/construction_tuwien/README.md",
     "deploy/huggingface-space/README.md",
+    "docs/ADVANCED_BENCHMARKS.md",
     "docs/AMD_DEMO_RECORDING_SCRIPT.md",
     "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
     "docs/AURA_AFFORDANCE_DIRECTORY.md",
@@ -431,8 +432,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/prior_art/paper_x_v1.1/AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.md",
     "docs/prior_art/paper_x_v1.1/PAPER_X_V1.1_EVIDENCE_ADDENDUM.md",
     "docs/prior_art/paper_x_v1.1/ZENODO_PUBLICATION_RECORD.md",
-    "forged_roots_audit.md",
-    "papers/AuraOS_Paper_IX_CURRENT.md"
+    "forged_roots_audit.md"
   ]
 }
 ```

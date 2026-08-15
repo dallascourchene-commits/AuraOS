@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786762185,
+  "generated_at_unix": 1786764473,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1549,
+    "repo_file_count": 1553,
     "source_paths_without_topology": [
       "_aura_architect_consolidation_benchmark_legacy.py",
       "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -112,15 +112,15 @@
     "coverage_complete_for_repo_scan": true
   },
   "summary": {
-    "file_count": 1549,
-    "total_bytes": 25731057,
-    "text_tokens_est": 6423560,
+    "file_count": 1553,
+    "total_bytes": 25746492,
+    "text_tokens_est": 6427418,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 202,
+      "knowledge_artifact": 203,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 983,
+      "python_module": 986,
       "schema_or_lexicon": 237,
       "support_file": 49
     },
@@ -139,15 +139,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1549,
-      "bytes": 25731057,
-      "tokens_est": 6423560,
+      "files": 1553,
+      "bytes": 25746492,
+      "tokens_est": 6427418,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 202,
+        "knowledge_artifact": 203,
         "native_accelerator": 8,
         "operator_script": 6,
-        "python_module": 983,
+        "python_module": 986,
         "schema_or_lexicon": 237,
         "support_file": 49
       }
@@ -271,6 +271,7 @@
         "demo_assets/construction_tuwien/ATTRIBUTION.md",
         "demo_assets/construction_tuwien/README.md",
         "deploy/huggingface-space/README.md",
+        "docs/ADVANCED_BENCHMARKS.md",
         "docs/AMD_DEMO_RECORDING_SCRIPT.md",
         "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
         "docs/AURA_AFFORDANCE_DIRECTORY.md",
@@ -422,8 +423,7 @@
         "docs/prior_art/paper_x_v1.1/AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.md",
         "docs/prior_art/paper_x_v1.1/PAPER_X_V1.1_EVIDENCE_ADDENDUM.md",
         "docs/prior_art/paper_x_v1.1/ZENODO_PUBLICATION_RECORD.md",
-        "forged_roots_audit.md",
-        "papers/AuraOS_Paper_IX_CURRENT.md"
+        "forged_roots_audit.md"
       ]
     },
     {
@@ -1508,6 +1508,10 @@
     ],
     "python aura_swarm_runner.py": [
       "README.md"
+    ],
+    "python3 scripts/aura_advanced_benchmark_runner.py": [
+      "README.md",
+      "docs/ADVANCED_BENCHMARKS.md"
     ],
     "python test_syntax_fixes.py": [
       "SYNTAX_FIXES_APPLIED.md"
@@ -3531,6 +3535,22 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "core/aura_task_dispatcher.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 137,
+        "semantic_id": "core/aura_task_dispatcher.py#function:main:f7eb37dc3f2801be",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "core/aura_worker_daemon.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 78,
+        "semantic_id": "core/aura_worker_daemon.py#function:main:5f9ec9e1953dcfd5",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "extract_pdf_text.py",
         "kind": "function",
         "line": 30,
@@ -3560,6 +3580,14 @@
         "line": 433,
         "end_line": 480,
         "semantic_id": "pvm_arch_checker.py#function:main:72695ec0febdf651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "scripts/aura_advanced_benchmark_runner.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 142,
+        "semantic_id": "scripts/aura_advanced_benchmark_runner.py#function:main:dd1b979d7e530770",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -95731,6 +95759,96 @@
         "signature_hash": "d4d8a57e306c4b5e"
       }
     ],
+    "TaskDispatcher": [
+      {
+        "file": "core/aura_task_dispatcher.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 118,
+        "semantic_id": "core/aura_task_dispatcher.py#class:TaskDispatcher:b74f4282485d2a2e",
+        "signature_hash": "3acdb660b906b87a"
+      }
+    ],
+    "TaskDispatcher.__init__": [
+      {
+        "file": "core/aura_task_dispatcher.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 23,
+        "semantic_id": "core/aura_task_dispatcher.py#method:TaskDispatcher.__init__:6223681f7a5e8863",
+        "signature_hash": "c526b84aca6b0e66"
+      }
+    ],
+    "TaskDispatcher.connect": [
+      {
+        "file": "core/aura_task_dispatcher.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 29,
+        "semantic_id": "core/aura_task_dispatcher.py#method:TaskDispatcher.connect:888747bb03cea704",
+        "signature_hash": "e1b0ced341aa1a68"
+      }
+    ],
+    "TaskDispatcher._init_db": [
+      {
+        "file": "core/aura_task_dispatcher.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 51,
+        "semantic_id": "core/aura_task_dispatcher.py#method:TaskDispatcher._init_db:022dfda4d4149382",
+        "signature_hash": "106e582f540e99c0"
+      }
+    ],
+    "TaskDispatcher.enqueue": [
+      {
+        "file": "core/aura_task_dispatcher.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 62,
+        "semantic_id": "core/aura_task_dispatcher.py#method:TaskDispatcher.enqueue:d5816db5587ec153",
+        "signature_hash": "3ddb27e05cdb9192"
+      }
+    ],
+    "TaskDispatcher.claim": [
+      {
+        "file": "core/aura_task_dispatcher.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 97,
+        "semantic_id": "core/aura_task_dispatcher.py#method:TaskDispatcher.claim:0da5debdd6859e0e",
+        "signature_hash": "ac4f32574b418b26"
+      }
+    ],
+    "TaskDispatcher.finish": [
+      {
+        "file": "core/aura_task_dispatcher.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 110,
+        "semantic_id": "core/aura_task_dispatcher.py#method:TaskDispatcher.finish:7d21937428025f73",
+        "signature_hash": "6ff7c54a41fe137b"
+      }
+    ],
+    "TaskDispatcher.status": [
+      {
+        "file": "core/aura_task_dispatcher.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 118,
+        "semantic_id": "core/aura_task_dispatcher.py#method:TaskDispatcher.status:b38900ee220d1080",
+        "signature_hash": "5669d9fd37503ce9"
+      }
+    ],
+    "execute_task": [
+      {
+        "file": "core/aura_worker_daemon.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 43,
+        "semantic_id": "core/aura_worker_daemon.py#function:execute_task:d599afdaa964098a",
+        "signature_hash": "6ab3310deb83438a"
+      }
+    ],
     "execute_dag_plan": [
       {
         "file": "dag_executor.py",
@@ -97993,6 +98111,16 @@
         "end_line": 130,
         "semantic_id": "quantum_dag.py#method:QuantumMerkleDAG.generate_epistemic_system_root:a30a85da9e630454",
         "signature_hash": "76cb2793f94ce8cb"
+      }
+    ],
+    "pct": [
+      {
+        "file": "scripts/aura_advanced_benchmark_runner.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "scripts/aura_advanced_benchmark_runner.py#function:pct:f7460133df7ed74c",
+        "signature_hash": "c0cf578952d9d74a"
       }
     ],
     "validate_arch_v2_3_capsule_semantics": [
@@ -167611,14 +167739,15 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "bytes": 3478,
-      "lines": 89,
-      "tokens_est": 867,
+      "bytes": 4466,
+      "lines": 109,
+      "tokens_est": 1113,
       "symbol_count": 0,
       "commands": [
         "python aura_node.py",
         "python aura_daemon.py",
-        "python aura_swarm_runner.py"
+        "python aura_swarm_runner.py",
+        "python3 scripts/aura_advanced_benchmark_runner.py"
       ],
       "command_lines": {
         "python aura_node.py": [
@@ -167629,43 +167758,46 @@
         ],
         "python aura_swarm_runner.py": [
           69
+        ],
+        "python3 scripts/aura_advanced_benchmark_runner.py": [
+          105
         ]
       },
       "topology": {},
-      "digest8": "4812310ecd019395",
+      "digest8": "e7cb090a94a553b3",
       "vector": [
-        -0.224123,
-        -0.253405,
-        0.192588,
-        0.206103,
-        0.147538,
-        0.156548,
-        0.046176,
-        -0.192588,
-        0.235385,
-        -0.244395,
-        0.120508,
-        0.262415,
-        -0.127266,
-        -0.194841,
-        0.068701,
-        -0.052934,
-        -0.143033,
-        0.179073,
-        -0.079963,
-        0.138528,
-        0.235385,
-        -0.091226,
-        -0.106993,
-        0.217365,
-        -0.176821,
-        -0.235385,
-        0.208356,
-        0.172316,
-        0.165558,
-        -0.167811,
-        -0.043924,
-        -0.206103
+        0.056152,
+        -0.048984,
+        -0.197129,
+        0.156509,
+        0.266423,
+        0.295097,
+        0.273592,
+        0.089604,
+        0.254476,
+        0.28076,
+        -0.211466,
+        -0.285539,
+        -0.135004,
+        0.201908,
+        -0.02031,
+        0.132614,
+        0.053763,
+        0.235361,
+        -0.008363,
+        -0.206687,
+        -0.154119,
+        0.275981,
+        -0.113499,
+        -0.189961,
+        -0.0227,
+        0.211466,
+        0.072878,
+        -0.118278,
+        0.077657,
+        -0.013142,
+        -0.075268,
+        -0.130225
       ]
     },
     {
@@ -197609,6 +197741,98 @@
       ]
     },
     {
+      "path": "core/aura_task_dispatcher.py",
+      "role": "python_module",
+      "bytes": 5309,
+      "lines": 142,
+      "tokens_est": 1328,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7a2f7b96c4c9a268",
+      "vector": [
+        -0.155969,
+        -0.052894,
+        -0.088157,
+        -0.31872,
+        0.071881,
+        0.104432,
+        0.185807,
+        -0.234632,
+        0.155969,
+        0.023056,
+        -0.117994,
+        -0.090869,
+        0.204794,
+        -0.090869,
+        0.074594,
+        0.28617,
+        0.215644,
+        0.017631,
+        -0.234632,
+        -0.283457,
+        0.050181,
+        -0.104432,
+        -0.321432,
+        0.071881,
+        0.082732,
+        0.26447,
+        -0.180382,
+        0.174957,
+        0.161394,
+        0.004069,
+        0.291595,
+        0.134269
+      ]
+    },
+    {
+      "path": "core/aura_worker_daemon.py",
+      "role": "python_module",
+      "bytes": 2453,
+      "lines": 83,
+      "tokens_est": 614,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "da6426532e9deb01",
+      "vector": [
+        -0.162607,
+        -0.129852,
+        0.195362,
+        0.190683,
+        0.120493,
+        -0.080719,
+        -0.136871,
+        0.00351,
+        -0.083058,
+        -0.099436,
+        -0.005849,
+        0.263213,
+        0.113474,
+        0.038605,
+        0.164947,
+        0.00117,
+        0.043284,
+        -0.244495,
+        0.246835,
+        0.176645,
+        0.295968,
+        -0.057322,
+        -0.129852,
+        -0.265552,
+        -0.242156,
+        -0.246835,
+        -0.155588,
+        -0.274911,
+        -0.148569,
+        -0.272571,
+        -0.010529,
+        0.258533
+      ]
+    },
+    {
       "path": "dag_executor.py",
       "role": "python_module",
       "bytes": 2769,
@@ -198394,6 +198618,58 @@
         -0.259647,
         -0.254989,
         -0.024451
+      ]
+    },
+    {
+      "path": "docs/ADVANCED_BENCHMARKS.md",
+      "role": "knowledge_artifact",
+      "bytes": 906,
+      "lines": 18,
+      "tokens_est": 226,
+      "symbol_count": 0,
+      "commands": [
+        "python3 scripts/aura_advanced_benchmark_runner.py"
+      ],
+      "command_lines": {
+        "python3 scripts/aura_advanced_benchmark_runner.py": [
+          14
+        ]
+      },
+      "topology": {},
+      "digest8": "ecb626d8f9892554",
+      "vector": [
+        0.240441,
+        0.158339,
+        0.186488,
+        0.174759,
+        0.195871,
+        -0.102041,
+        0.219329,
+        -0.071546,
+        0.221675,
+        -0.118461,
+        0.275627,
+        -0.137227,
+        -0.092658,
+        0.059817,
+        -0.299085,
+        -0.148956,
+        -0.029322,
+        0.167722,
+        -0.184142,
+        0.261553,
+        0.050434,
+        0.170068,
+        0.261553,
+        -0.059817,
+        0.19118,
+        -0.216983,
+        0.043397,
+        -0.263898,
+        0.188834,
+        0.048088,
+        -0.066854,
+        -0.188834
       ]
     },
     {
@@ -210821,6 +211097,52 @@
         -0.202475,
         -0.125342,
         0.046066
+      ]
+    },
+    {
+      "path": "scripts/aura_advanced_benchmark_runner.py",
+      "role": "python_module",
+      "bytes": 5779,
+      "lines": 147,
+      "tokens_est": 1444,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "277b4413d217ac04",
+      "vector": [
+        0.127771,
+        0.31362,
+        -0.08389,
+        0.158746,
+        0.027103,
+        0.323945,
+        -0.058078,
+        0.081309,
+        0.114865,
+        -0.166489,
+        -0.254251,
+        0.174233,
+        -0.011616,
+        -0.135515,
+        0.308457,
+        0.068403,
+        0.295551,
+        0.073565,
+        -0.267157,
+        0.045172,
+        -0.189721,
+        -0.166489,
+        0.109702,
+        -0.058078,
+        0.070984,
+        -0.112284,
+        -0.040009,
+        0.166489,
+        -0.194883,
+        -0.233601,
+        0.151002,
+        -0.274901
       ]
     },
     {
@@ -252040,6 +252362,8 @@
       "bus_init.cpp",
       "cognitive_router.py",
       "cognitive_search.rs",
+      "core/aura_task_dispatcher.py",
+      "core/aura_worker_daemon.py",
       "dag_executor.py",
       "dag_executor.rs",
       "debug_att.py",
@@ -252057,6 +252381,7 @@
       "docker-compose.aura-gate.yml",
       "docker-compose.showcase.yml",
       "docker-compose.track3.yml",
+      "docs/ADVANCED_BENCHMARKS.md",
       "docs/AMD_DEMO_RECORDING_SCRIPT.md",
       "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
       "docs/AURA_AFFORDANCE_DIRECTORY.md",
@@ -252310,6 +252635,7 @@
       "schemas/aura_workspace_execution_graph_v2.schema.json",
       "schemas/model_cognome_v1.schema.json",
       "scripts/aura-agent-arena",
+      "scripts/aura_advanced_benchmark_runner.py",
       "scripts/aura_arch_v2_3_capsule_validator.py",
       "scripts/aura_architecture_harness.py",
       "scripts/aura_architecture_harness_core.py",
@@ -346788,6 +347114,116 @@
         "file_digest8": "31325b9af6403347"
       },
       {
+        "semantic_id": "core/aura_task_dispatcher.py#class:TaskDispatcher:b74f4282485d2a2e",
+        "name": "TaskDispatcher",
+        "kind": "class",
+        "file": "core/aura_task_dispatcher.py",
+        "line": 19,
+        "end_line": 118,
+        "signature_hash": "3acdb660b906b87a",
+        "file_digest8": "7a2f7b96c4c9a268"
+      },
+      {
+        "semantic_id": "core/aura_task_dispatcher.py#function:main:f7eb37dc3f2801be",
+        "name": "main",
+        "kind": "function",
+        "file": "core/aura_task_dispatcher.py",
+        "line": 121,
+        "end_line": 137,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "7a2f7b96c4c9a268"
+      },
+      {
+        "semantic_id": "core/aura_task_dispatcher.py#method:TaskDispatcher.__init__:6223681f7a5e8863",
+        "name": "TaskDispatcher.__init__",
+        "kind": "method",
+        "file": "core/aura_task_dispatcher.py",
+        "line": 20,
+        "end_line": 23,
+        "signature_hash": "c526b84aca6b0e66",
+        "file_digest8": "7a2f7b96c4c9a268"
+      },
+      {
+        "semantic_id": "core/aura_task_dispatcher.py#method:TaskDispatcher._init_db:022dfda4d4149382",
+        "name": "TaskDispatcher._init_db",
+        "kind": "method",
+        "file": "core/aura_task_dispatcher.py",
+        "line": 31,
+        "end_line": 51,
+        "signature_hash": "106e582f540e99c0",
+        "file_digest8": "7a2f7b96c4c9a268"
+      },
+      {
+        "semantic_id": "core/aura_task_dispatcher.py#method:TaskDispatcher.claim:0da5debdd6859e0e",
+        "name": "TaskDispatcher.claim",
+        "kind": "method",
+        "file": "core/aura_task_dispatcher.py",
+        "line": 64,
+        "end_line": 97,
+        "signature_hash": "ac4f32574b418b26",
+        "file_digest8": "7a2f7b96c4c9a268"
+      },
+      {
+        "semantic_id": "core/aura_task_dispatcher.py#method:TaskDispatcher.connect:888747bb03cea704",
+        "name": "TaskDispatcher.connect",
+        "kind": "method",
+        "file": "core/aura_task_dispatcher.py",
+        "line": 25,
+        "end_line": 29,
+        "signature_hash": "e1b0ced341aa1a68",
+        "file_digest8": "7a2f7b96c4c9a268"
+      },
+      {
+        "semantic_id": "core/aura_task_dispatcher.py#method:TaskDispatcher.enqueue:d5816db5587ec153",
+        "name": "TaskDispatcher.enqueue",
+        "kind": "method",
+        "file": "core/aura_task_dispatcher.py",
+        "line": 53,
+        "end_line": 62,
+        "signature_hash": "3ddb27e05cdb9192",
+        "file_digest8": "7a2f7b96c4c9a268"
+      },
+      {
+        "semantic_id": "core/aura_task_dispatcher.py#method:TaskDispatcher.finish:7d21937428025f73",
+        "name": "TaskDispatcher.finish",
+        "kind": "method",
+        "file": "core/aura_task_dispatcher.py",
+        "line": 99,
+        "end_line": 110,
+        "signature_hash": "6ff7c54a41fe137b",
+        "file_digest8": "7a2f7b96c4c9a268"
+      },
+      {
+        "semantic_id": "core/aura_task_dispatcher.py#method:TaskDispatcher.status:b38900ee220d1080",
+        "name": "TaskDispatcher.status",
+        "kind": "method",
+        "file": "core/aura_task_dispatcher.py",
+        "line": 112,
+        "end_line": 118,
+        "signature_hash": "5669d9fd37503ce9",
+        "file_digest8": "7a2f7b96c4c9a268"
+      },
+      {
+        "semantic_id": "core/aura_worker_daemon.py#function:execute_task:d599afdaa964098a",
+        "name": "execute_task",
+        "kind": "function",
+        "file": "core/aura_worker_daemon.py",
+        "line": 19,
+        "end_line": 43,
+        "signature_hash": "6ab3310deb83438a",
+        "file_digest8": "da6426532e9deb01"
+      },
+      {
+        "semantic_id": "core/aura_worker_daemon.py#function:main:5f9ec9e1953dcfd5",
+        "name": "main",
+        "kind": "function",
+        "file": "core/aura_worker_daemon.py",
+        "line": 46,
+        "end_line": 78,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "da6426532e9deb01"
+      },
+      {
         "semantic_id": "dag_executor.py#function:execute_dag_plan:9bd23b75d712eab2",
         "name": "execute_dag_plan",
         "kind": "function",
@@ -349136,6 +349572,26 @@
         "end_line": 130,
         "signature_hash": "76cb2793f94ce8cb",
         "file_digest8": "a645cbf05a6be557"
+      },
+      {
+        "semantic_id": "scripts/aura_advanced_benchmark_runner.py#function:main:dd1b979d7e530770",
+        "name": "main",
+        "kind": "function",
+        "file": "scripts/aura_advanced_benchmark_runner.py",
+        "line": 33,
+        "end_line": 142,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "277b4413d217ac04"
+      },
+      {
+        "semantic_id": "scripts/aura_advanced_benchmark_runner.py#function:pct:f7460133df7ed74c",
+        "name": "pct",
+        "kind": "function",
+        "file": "scripts/aura_advanced_benchmark_runner.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "c0cf578952d9d74a",
+        "file_digest8": "277b4413d217ac04"
       },
       {
         "semantic_id": "scripts/aura_arch_v2_3_capsule_validator.py#function:_mapping:9ef1cc0ac2a87086",
@@ -409868,7 +410324,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "da4472d840d2be8b4bf430c4367d852f",
-    "payload_hash": "50cdb996c1172aeb37db66d79677a5ed"
+    "record_fingerprint": "eac173a5c0bebb870e16096d3626ddba",
+    "payload_hash": "ebc966094774f608fdc978908495af1b"
   }
 }
