@@ -1,0 +1,160 @@
+--- /dev/null
++++ b/schemas/identify-response.schema.json
+@@ -0,0 +1,47 @@
++{
++  "$schema": "https://json-schema.org/draft/2020-12/schema",
++  "$id": "https://plantguide.local/schemas/identify-response.schema.json",
++  "title": "PlantGuide Identify Response",
++  "type": "object",
++  "additionalProperties": true,
++  "required": ["query_tags", "matches", "model", "integration_version", "ready_for_ui"],
++  "properties": {
++    "query_tags": {"type": "array", "items": {"type": "string"}},
++    "model": {"type": "string"},
++    "integration_version": {"const": "plantguide.sdk.v1"},
++    "ready_for_ui": {"type": "boolean"},
++    "matches": {
++      "type": "array",
++      "items": {"$ref": "#/$defs/match"}
++    },
++    "top_care": {"$ref": "care-response.schema.json"},
++    "top_species_id": {"type": ["string", "null"]},
++    "sample_id": {"type": ["string", "null"]},
++    "source": {"type": "string"},
++    "expected_species": {"type": ["string", "null"]},
++    "hit_top1": {"type": "boolean"}
++  },
++  "$defs": {
++    "match": {
++      "type": "object",
++      "additionalProperties": false,
++      "required": [
++        "species_id", "common_name", "scientific_name", "score", "tag_overlap",
++        "matched_tags", "species_only_tags", "query_only_tags", "confidence", "explanation"
++      ],
++      "properties": {
++        "species_id": {"type": ["string", "null"]},
++        "common_name": {"type": ["string", "null"]},
++        "scientific_name": {"type": ["string", "null"]},
++        "score": {"type": "number", "minimum": 0, "maximum": 1},
++        "tag_overlap": {"type": "array", "items": {"type": "string"}},
++        "matched_tags": {"type": "array", "items": {"type": "string"}},
++        "species_only_tags": {"type": "array", "items": {"type": "string"}},
++        "query_only_tags": {"type": "array", "items": {"type": "string"}},
++        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
++        "explanation": {"type": "string"}
++      }
++    }
++  }
++}
+--- /dev/null
++++ b/schemas/care-response.schema.json
+@@ -0,0 +1,28 @@
++{
++  "$schema": "https://json-schema.org/draft/2020-12/schema",
++  "$id": "https://plantguide.local/schemas/care-response.schema.json",
++  "title": "PlantGuide Care Card",
++  "type": "object",
++  "additionalProperties": false,
++  "required": [
++    "species_id", "common_name", "scientific_name", "summary", "light", "water",
++    "soil", "humidity", "temperature_c", "fertilizer", "toxicity", "common_issues", "tips"
++  ],
++  "properties": {
++    "species_id": {"type": ["string", "null"]},
++    "common_name": {"type": ["string", "null"]},
++    "scientific_name": {"type": ["string", "null"]},
++    "summary": {"type": "string"},
++    "light": {"type": "string"},
++    "water": {"type": "string"},
++    "soil": {"type": "string"},
++    "humidity": {"type": "string"},
++    "temperature_c": {"type": ["string", "number"]},
++    "fertilizer": {"type": "string"},
++    "toxicity": {"type": "string"},
++    "common_issues": {"type": "array", "items": {"type": "string"}},
++    "tips": {"type": "array", "items": {"type": "string"}},
++    "integration_version": {"const": "plantguide.sdk.v1"}
++  }
++}
+--- /dev/null
++++ b/sdk/typescript/index.ts
+@@ -0,0 +1,53 @@
++/** Public contracts matching PlantGuide's Python app SDK payloads. */
++
++export interface IdentifyRequest {
++  tags: string | string[];
++  top_k?: number;
++}
++
++export interface CareRequest {
++  species_id: string;
++}
++
++export interface PlantMatch {
++  species_id: string | null;
++  common_name: string | null;
++  scientific_name: string | null;
++  score: number;
++  tag_overlap: string[];
++  matched_tags: string[];
++  species_only_tags: string[];
++  query_only_tags: string[];
++  confidence: number;
++  explanation: string;
++}
++
++export interface CareCard {
++  species_id: string | null;
++  common_name: string | null;
++  scientific_name: string | null;
++  summary: string;
++  light: string;
++  water: string;
++  soil: string;
++  humidity: string;
++  temperature_c: string | number;
++  fertilizer: string;
++  toxicity: string;
++  common_issues: string[];
++  tips: string[];
++  integration_version?: "plantguide.sdk.v1";
++}
++
++export interface IdentifyResponse {
++  query_tags: string[];
++  matches: PlantMatch[];
++  model: string;
++  integration_version: "plantguide.sdk.v1";
++  ready_for_ui: boolean;
++  top_care?: CareCard;
++  top_species_id?: string | null;
++  sample_id?: string | null;
++  source?: string;
++  expected_species?: string | null;
++  hit_top1?: boolean;
++  [key: string]: unknown;
++}
+--- a/README.md
++++ b/README.md
+@@
+ ## Development
+@@
+ plantguide demo photo
+ ```
+ 
+ ---
++
++## App SDK contracts
++
++PlantGuide publishes machine-readable contracts for the stable Python app SDK in `plantguide.integrations.sdk`:
++
++- `schemas/identify-response.schema.json` — payload returned by `assess_for_app()`.
++- `schemas/care-response.schema.json` — care-card payload returned by `care_card_for_species()` and `care_for_app()`.
++- `sdk/typescript/index.ts` — TypeScript request/response interfaces for app integrations.
++
++The schemas use JSON Schema Draft 2020-12. `integration_version` identifies the SDK contract generation; optional sample/image fields remain additive. The TypeScript contracts mirror nullable catalog identity fields emitted by the Python code.
++
++---
+ 
+ ## MergeOS bounties
