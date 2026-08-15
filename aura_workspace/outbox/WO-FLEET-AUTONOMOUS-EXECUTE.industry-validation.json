@@ -1,49 +1,199 @@
 {
   "advanced": {
-    "json_projection": {"byte_reduction_pct": 72.73, "note": "Synthetic JSON byte-size comparison; not tokenizer-measured token compression.", "projected_bytes": 78, "raw_bytes": 286},
+    "json_projection": {
+      "byte_reduction_pct": 72.73,
+      "note": "Synthetic JSON byte-size comparison; not tokenizer-measured token compression.",
+      "projected_bytes": 78,
+      "raw_bytes": 286
+    },
     "scope": "bounded host microbenchmark",
-    "sqlite_wal": {"integrity_check": "ok", "journal_mode": "wal", "note": "Clean reopen + WAL checkpoint; not crash/chaos injection.", "reopen_checkpoint_ms": 1.493, "rows_expected": 500, "rows_recovered": 500},
-    "udp_loopback": {"datagrams_per_sec": 113403.24, "median_round_trip_us": 7.08, "note": "Synchronous localhost UDP unicast round trips; not multicast or remote mesh hops.", "p95_round_trip_us": 10.126, "packets_received": 200, "packets_sent": 200}
+    "sqlite_wal": {
+      "integrity_check": "ok",
+      "journal_mode": "wal",
+      "note": "Clean reopen + WAL checkpoint; not crash/chaos injection.",
+      "reopen_checkpoint_ms": 1.493,
+      "rows_expected": 500,
+      "rows_recovered": 500
+    },
+    "udp_loopback": {
+      "datagrams_per_sec": 113403.24,
+      "median_round_trip_us": 7.08,
+      "note": "Synchronous localhost UDP unicast round trips; not multicast or remote mesh hops.",
+      "p95_round_trip_us": 10.126,
+      "packets_received": 200,
+      "packets_sent": 200
+    }
   },
   "completed_utc": "2026-08-15T04:09:39Z",
   "execution_note": "Composite validator exceeded the outer tool wall-clock after gate 13; its WAL state was preserved. Gate 14 was resumed from the pending dispatcher task and gate 15 was then verified against the same dispatcher generation. The timeout was orchestration-wall-clock, not a failed benchmark gate.",
-  "fleet": {"dispatcher_integrity_check": "ok", "dispatcher_journal_mode": "wal", "process_slots": 25, "task_counts": {"DONE": 28, "FAILED": 1}, "unique_done_payloads": 25},
+  "fleet": {
+    "dispatcher_integrity_check": "ok",
+    "dispatcher_journal_mode": "wal",
+    "process_slots": 25,
+    "task_counts": {
+      "DONE": 28,
+      "FAILED": 1
+    },
+    "unique_done_payloads": 25
+  },
   "formal": {
-    "environment": {"cpu_count": 5, "platform": "Linux-6.18.35-x86_64-with-glibc2.41", "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]", "sqlite_version": "3.46.1"},
-    "fst": {"accepted": 57144, "iterations": 100000, "iterations_per_s": 1366040.46, "rejected": 42856, "transitions_per_s": 8196242.75},
+    "environment": {
+      "cpu_count": 5,
+      "platform": "Linux-6.18.35-x86_64-with-glibc2.41",
+      "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+      "sqlite_version": "3.46.1"
+    },
+    "fst": {
+      "accepted": 57144,
+      "iterations": 100000,
+      "iterations_per_s": 1366040.46,
+      "rejected": 42856,
+      "transitions_per_s": 8196242.75
+    },
     "generated_utc": "2026-08-15T04:07:46Z",
-    "memory": {"peak_rss_mib": 116.71},
-    "merkle": {"aggregate_witness_sha256": "220db7fe802a29350ee71ad08cc19b86dce79c8a384180860c24861a26a0c307", "depth": 5, "hashes_per_s": 895661.61, "internal_hashes_per_rollup": 121, "leaves_per_rollup": 243, "rollups": 2000, "rollups_per_s": 2460.61, "total_hashes": 728000},
-    "sqlite_wal": {"aggregate_lock_retries": 0, "best_workers": 5, "best_writes_per_s": 19934.69, "trials_passed": 25, "worker_range": [1, 25], "writes_per_trial": 5000},
+    "memory": {
+      "peak_rss_mib": 116.71
+    },
+    "merkle": {
+      "aggregate_witness_sha256": "220db7fe802a29350ee71ad08cc19b86dce79c8a384180860c24861a26a0c307",
+      "depth": 5,
+      "hashes_per_s": 895661.61,
+      "internal_hashes_per_rollup": 121,
+      "leaves_per_rollup": 243,
+      "rollups": 2000,
+      "rollups_per_s": 2460.61,
+      "total_hashes": 728000
+    },
+    "sqlite_wal": {
+      "aggregate_lock_retries": 0,
+      "best_workers": 5,
+      "best_writes_per_s": 19934.69,
+      "trials_passed": 25,
+      "worker_range": [
+        1,
+        25
+      ],
+      "writes_per_trial": 5000
+    },
     "status": "W_VALIDATED"
   },
   "gates": [
-    {"evidence": "formal suite completed and wrote BENCHMARK_RESULTS.md", "gate": "Formal benchmark process", "number": 1, "status": "PASS"},
-    {"evidence": "100000 iterations; accepted=57144 rejected=42856; source assertions passed", "gate": "FST 100k verification", "number": 2, "status": "PASS"},
-    {"evidence": "2000 rollups; depth=5; witness=220db7fe802a29350ee71ad08cc19b86dce79c8a384180860c24861a26a0c307", "gate": "3^n Merkle 2k verification", "number": 3, "status": "PASS"},
-    {"evidence": "25 worker-count trials; exact 5000 rows + WAL mode + integrity_check=ok in formal suite", "gate": "SQLite WAL 1-25 verification", "number": 4, "status": "PASS"},
-    {"evidence": "peak_rss_mib=116.71", "gate": "Peak RSS captured", "number": 5, "status": "PASS"},
-    {"evidence": "advanced benchmark completed", "gate": "Advanced benchmark process", "number": 6, "status": "PASS"},
-    {"evidence": "200/200 synchronous localhost datagrams", "gate": "UDP loopback delivery", "number": 7, "status": "PASS"},
-    {"evidence": "500/500 rows; integrity=ok", "gate": "WAL clean reopen integrity", "number": 8, "status": "PASS"},
-    {"evidence": "dispatcher, daemon, formal runner, advanced runner compiled", "gate": "Python compile", "number": 9, "status": "PASS"},
-    {"evidence": "25 DONE fleet tasks; unique_payloads=25; all payload indices 0..24 observed exactly once", "gate": "25-worker exact-once fleet", "number": 10, "status": "PASS"},
-    {"evidence": "wrong worker finish raised RuntimeError; owner completed task", "gate": "Lease ownership fail-closed", "number": 11, "status": "PASS"},
-    {"evidence": "expired lease requeued, reclaimed by J_EXP_NEW, and completed", "gate": "Expired lease recovery", "number": 12, "status": "PASS"},
-    {"evidence": "shell task status FAILED; unsupported_task_kind; marker not created", "gate": "Unsupported shell task rejected", "number": 13, "status": "PASS"},
-    {"evidence": "advanced_benchmark task completed through explicit daemon allowlist; returncode=0", "gate": "Benchmark dispatch via daemon", "number": 14, "status": "PASS"},
-    {"evidence": "journal_mode=wal; integrity_check=ok", "gate": "Dispatcher WAL integrity", "number": 15, "status": "PASS"}
+    {
+      "evidence": "formal suite completed and wrote BENCHMARK_RESULTS.md",
+      "gate": "Formal benchmark process",
+      "number": 1,
+      "status": "PASS"
+    },
+    {
+      "evidence": "100000 iterations; accepted=57144 rejected=42856; source assertions passed",
+      "gate": "FST 100k verification",
+      "number": 2,
+      "status": "PASS"
+    },
+    {
+      "evidence": "2000 rollups; depth=5; witness=220db7fe802a29350ee71ad08cc19b86dce79c8a384180860c24861a26a0c307",
+      "gate": "3^n Merkle 2k verification",
+      "number": 3,
+      "status": "PASS"
+    },
+    {
+      "evidence": "25 worker-count trials; exact 5000 rows + WAL mode + integrity_check=ok in formal suite",
+      "gate": "SQLite WAL 1-25 verification",
+      "number": 4,
+      "status": "PASS"
+    },
+    {
+      "evidence": "peak_rss_mib=116.71",
+      "gate": "Peak RSS captured",
+      "number": 5,
+      "status": "PASS"
+    },
+    {
+      "evidence": "advanced benchmark completed",
+      "gate": "Advanced benchmark process",
+      "number": 6,
+      "status": "PASS"
+    },
+    {
+      "evidence": "200/200 synchronous localhost datagrams",
+      "gate": "UDP loopback delivery",
+      "number": 7,
+      "status": "PASS"
+    },
+    {
+      "evidence": "500/500 rows; integrity=ok",
+      "gate": "WAL clean reopen integrity",
+      "number": 8,
+      "status": "PASS"
+    },
+    {
+      "evidence": "dispatcher, daemon, formal runner, advanced runner compiled",
+      "gate": "Python compile",
+      "number": 9,
+      "status": "PASS"
+    },
+    {
+      "evidence": "25 DONE fleet tasks; unique_payloads=25; all payload indices 0..24 observed exactly once",
+      "gate": "25-worker exact-once fleet",
+      "number": 10,
+      "status": "PASS"
+    },
+    {
+      "evidence": "wrong worker finish raised RuntimeError; owner completed task",
+      "gate": "Lease ownership fail-closed",
+      "number": 11,
+      "status": "PASS"
+    },
+    {
+      "evidence": "expired lease requeued, reclaimed by J_EXP_NEW, and completed",
+      "gate": "Expired lease recovery",
+      "number": 12,
+      "status": "PASS"
+    },
+    {
+      "evidence": "shell task status FAILED; unsupported_task_kind; marker not created",
+      "gate": "Unsupported shell task rejected",
+      "number": 13,
+      "status": "PASS"
+    },
+    {
+      "evidence": "advanced_benchmark task completed through explicit daemon allowlist; returncode=0",
+      "gate": "Benchmark dispatch via daemon",
+      "number": 14,
+      "status": "PASS"
+    },
+    {
+      "evidence": "journal_mode=wal; integrity_check=ok",
+      "gate": "Dispatcher WAL integrity",
+      "number": 15,
+      "status": "PASS"
+    }
   ],
   "gates_passed": 15,
   "gates_total": 15,
   "qualification": "Repository-defined industry-readiness validation; not third-party certification, external percentile ranking, or hardware-independent guarantee.",
   "schema": "AURA_INDUSTRY_VALIDATION_V1",
   "source_bindings": {
-    "core/aura_task_dispatcher.py": {"git_blob_sha1": "68bb13f98031edfe374b3c74553cc3cdedfa7fa7", "sha256": "0b68ec8b8a2209184292d76be369b5b45511c4087618b9d4cba364018b3f7cbd"},
-    "core/aura_worker_daemon.py": {"git_blob_sha1": "fd1a7f6e4e4ab6fce0a6a1ee24df16cceceb7835", "sha256": "fe75e41335be3c664882e97fe6ea8749e9ca5710f867191cea6cda7946fab307"},
-    "scripts/aura_advanced_benchmark_runner.py": {"git_blob_sha1": "05d711a4594edcb2bc1d59705cdc2edc32882a47", "sha256": "82f16fc830aa9bc412d579ad7d589ae585c34237d8ac048db67820a055993f4b"},
-    "scripts/aura_benchmark_suite.py": {"git_blob_sha1": "cb9ceeddee5ff2e9ce745cf9a76754ae6f26a169", "sha256": "e0bd8f8af38ecb857337191e5b4420de89c7f4c5167e2a5b3eb0c2c851bb30d9"},
-    "scripts/aura_industry_benchmark_validation.py": {"git_blob_sha1": "c1c8f301e8698327a34a72d5817abb3fc8d1ad6e", "sha256": "47c35dbfd64228015318a7abd1b454e4288428b7f8cc0504f72c8ff731c61ecb"}
+    "core/aura_task_dispatcher.py": {
+      "git_blob_sha1": "68bb13f98031edfe374b3c74553cc3cdedfa7fa7",
+      "sha256": "0b68ec8b8a2209184292d76be369b5b45511c4087618b9d4cba364018b3f7cbd"
+    },
+    "core/aura_worker_daemon.py": {
+      "git_blob_sha1": "fd1a7f6e4e4ab6fce0a6a1ee24df16cceceb7835",
+      "sha256": "fe75e41335be3c664882e97fe6ea8749e9ca5710f867191cea6cda7946fab307"
+    },
+    "scripts/aura_advanced_benchmark_runner.py": {
+      "git_blob_sha1": "05d711a4594edcb2bc1d59705cdc2edc32882a47",
+      "sha256": "82f16fc830aa9bc412d579ad7d589ae585c34237d8ac048db67820a055993f4b"
+    },
+    "scripts/aura_benchmark_suite.py": {
+      "git_blob_sha1": "cb9ceeddee5ff2e9ce745cf9a76754ae6f26a169",
+      "sha256": "e0bd8f8af38ecb857337191e5b4420de89c7f4c5167e2a5b3eb0c2c851bb30d9"
+    },
+    "scripts/aura_industry_benchmark_validation.py": {
+      "git_blob_sha1": "c1c8f301e8698327a34a72d5817abb3fc8d1ad6e",
+      "sha256": "47c35dbfd64228015318a7abd1b454e4288428b7f8cc0504f72c8ff731c61ecb"
+    }
   },
   "source_commit_bound_at_run_start": "6c1dc7284eb019010fa4c091e4963e44d1f0e6ee",
   "status": "PASS",
