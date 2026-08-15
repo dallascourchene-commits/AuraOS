@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1585
-- **total_bytes**: 25995408
-- **text_tokens_est**: 6489271
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 241, 'support_file': 49}
+- **file_count**: 1592
+- **total_bytes**: 26031559
+- **text_tokens_est**: 6498311
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 243, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1585,
+  "repo_file_count": 1592,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -203,6 +203,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/triad2-codemap-repair.yml",
     ".github/workflows/triad2-full-codemap-repair-v2.yml",
     ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+    ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
+    ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
     ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
     ".gitignore",
     ".mempalace/aura_thought.txt",
@@ -1597,6 +1599,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py",
+    "tools/wo_fleet_phase3_triad2_contract_patch.py",
+    "tools/wo_fleet_phase3_triad2_incremental_patch.py",
+    "tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
+    "tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1725,16 +1732,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1585,
-  "bytes": 25995408,
-  "tokens_est": 6489271,
+  "files": 1592,
+  "bytes": 26031559,
+  "tokens_est": 6498311,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 224,
     "native_accelerator": 8,
     "operator_script": 9,
-    "python_module": 990,
-    "schema_or_lexicon": 241,
+    "python_module": 995,
+    "schema_or_lexicon": 243,
     "support_file": 49
   }
 }

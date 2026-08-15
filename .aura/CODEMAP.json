@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786812714,
+  "generated_at_unix": 1786817414,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1585,
+    "repo_file_count": 1592,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -185,6 +185,8 @@
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       ".gitignore",
       ".mempalace/aura_thought.txt",
@@ -1579,6 +1581,11 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py",
+      "tools/wo_fleet_phase3_triad2_contract_patch.py",
+      "tools/wo_fleet_phase3_triad2_incremental_patch.py",
+      "tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
+      "tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1701,16 +1708,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1585,
-      "bytes": 25995408,
-      "tokens_est": 6489271,
+      "files": 1592,
+      "bytes": 26031559,
+      "tokens_est": 6498311,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 224,
         "native_accelerator": 8,
         "operator_script": 9,
-        "python_module": 990,
-        "schema_or_lexicon": 241,
+        "python_module": 995,
+        "schema_or_lexicon": 243,
         "support_file": 49
       }
     },
@@ -4344,6 +4351,46 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 19,
+        "semantic_id": "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py#function:main:726427629e4e485d",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/wo_fleet_phase3_triad2_contract_patch.py",
+        "kind": "function",
+        "line": 258,
+        "end_line": 263,
+        "semantic_id": "tools/wo_fleet_phase3_triad2_contract_patch.py#function:main:7d4a8ec3fb6d502f",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/wo_fleet_phase3_triad2_incremental_patch.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 116,
+        "semantic_id": "tools/wo_fleet_phase3_triad2_incremental_patch.py#function:main:a4690621eac51c74",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 33,
+        "semantic_id": "tools/wo_fleet_phase3_triad2_pascal_test_patch.py#function:main:23a67d7176e3ae90",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 68,
+        "semantic_id": "tools/wo_fleet_phase3_triad2_skillweaver_patch.py#function:main:dd821179a98df5b5",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -156363,6 +156410,24 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "replace_once": [
+      {
+        "file": "tools/wo_fleet_phase3_triad2_contract_patch.py",
+        "kind": "function",
+        "line": 250,
+        "end_line": 255,
+        "semantic_id": "tools/wo_fleet_phase3_triad2_contract_patch.py#function:replace_once:72295446c94454d9",
+        "signature_hash": "216e9f6d1c57447e"
+      },
+      {
+        "file": "tools/wo_fleet_phase3_triad2_incremental_patch.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 13,
+        "semantic_id": "tools/wo_fleet_phase3_triad2_incremental_patch.py#function:replace_once:fc7c9dfd48a2fbbd",
+        "signature_hash": "820625feabdd1c16"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -157514,6 +157579,7 @@
       ".github/workflows/sco-temporal-persistence-e9-e12.yml",
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
       "USER_GUIDE.md",
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md",
       "docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md",
@@ -157567,6 +157633,8 @@
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
       "docs/AURA_CONSTRUCTION_FOUNDRY_OPERATOR_GUIDE.md",
@@ -157625,6 +157693,8 @@
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       "LIQUID_INTERNET_IMPLEMENTATION.md",
       "SWARM_COLLECTIVE_IMPLEMENTATION.md",
@@ -157765,6 +157835,8 @@
       ".github/workflows/ci.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       "USER_GUIDE.md",
       "docs/AURA_ARCHITECTURE_HARNESS.md",
@@ -157856,17 +157928,36 @@
     "python scripts/aura_source_anchor_map.py --root . --check": [
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/sync-analysis-codemap.yml",
-      ".github/workflows/triad2-codemap-repair.yml"
+      ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml"
     ],
     "python scripts/aura_navigation_refresh.py --root .": [
       ".github/workflows/sync-analysis-codemap.yml"
     ],
     "python aura_codebase_navigator.py --refresh-topology": [
       ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml"
     ],
     "python scripts/aura_source_anchor_map.py --root .": [
-      ".github/workflows/triad2-codemap-repair.yml"
+      ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml"
+    ],
+    "python tools/wo_fleet_phase3_triad2_contract_patch.py": [
+      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify.yml"
+    ],
+    "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
+      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify.yml"
+    ],
+    "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
+      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify.yml"
+    ],
+    "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py": [
+      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml"
     ],
     "python aura_coding_arena_server.py --host 127.0.0.1 --port 8080": [
       "AURA_CODING_ARENA_README.md"
@@ -169659,9 +169750,9 @@
       "path": ".github/workflows/sync-analysis-codemap.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 5702,
-      "lines": 151,
-      "tokens_est": 1426,
+      "bytes": 5329,
+      "lines": 143,
+      "tokens_est": 1333,
       "symbol_count": 0,
       "commands": [
         "python -m pip",
@@ -169671,56 +169762,56 @@
       ],
       "command_lines": {
         "python -m pip": [
-          56,
-          57
+          48,
+          49
         ],
         "python scripts/aura_navigation_refresh.py --root .": [
-          61
+          53
         ],
         "python scripts/aura_source_anchor_map.py --root . --check": [
-          62,
-          101
+          54,
+          93
         ],
         "python -m aura_codemap_verify": [
-          64,
-          97
+          56,
+          89
         ]
       },
       "topology": {},
-      "digest8": "100085f17b07f31d",
+      "digest8": "dc81d45a00405ea1",
       "vector": [
-        -0.082636,
-        0.093654,
-        -0.280962,
-        -0.007713,
-        0.197225,
-        0.031953,
-        0.071618,
-        0.078229,
-        -0.199428,
-        -0.177392,
-        -0.274352,
-        -0.239094,
-        0.252315,
-        0.221465,
-        -0.067211,
-        -0.263333,
-        -0.076025,
-        -0.258926,
-        -0.155356,
-        -0.014324,
-        0.170781,
-        0.208243,
-        0.214854,
-        -0.192817,
-        -0.23689,
-        0.029749,
-        -0.280962,
-        -0.206039,
-        -0.11569,
-        0.067211,
-        0.027545,
-        0.117894
+        0.036778,
+        0.22382,
+        0.0662,
+        0.135553,
+        -0.068302,
+        0.185991,
+        -0.139756,
+        0.26375,
+        0.257445,
+        -0.236429,
+        0.242734,
+        0.072505,
+        -0.26375,
+        -0.202804,
+        0.01366,
+        -0.154467,
+        -0.236429,
+        -0.093521,
+        -0.110334,
+        0.089318,
+        0.209108,
+        -0.125045,
+        -0.267953,
+        -0.183889,
+        0.26375,
+        0.249039,
+        0.085114,
+        -0.116638,
+        -0.01366,
+        0.028371,
+        0.110334,
+        0.246937
       ]
     },
     {
@@ -169900,6 +169991,190 @@
         -0.190812,
         0.164493,
         -0.088168
+      ]
+    },
+    {
+      "path": ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 7632,
+      "lines": 174,
+      "tokens_est": 1908,
+      "symbol_count": 0,
+      "commands": [
+        "python -m pip",
+        "python tools/wo_fleet_phase3_triad2_contract_patch.py",
+        "python tools/wo_fleet_phase3_triad2_incremental_patch.py",
+        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
+        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
+        "python -m py_compile",
+        "python aura_codebase_navigator.py --refresh-topology",
+        "python scripts/aura_source_anchor_map.py --root .",
+        "python scripts/aura_source_anchor_map.py --root . --check",
+        "python -m aura_codemap_verify",
+        "python -m pytest"
+      ],
+      "command_lines": {
+        "python -m pip": [
+          43,
+          44,
+          112,
+          113
+        ],
+        "python tools/wo_fleet_phase3_triad2_contract_patch.py": [
+          50
+        ],
+        "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
+          51
+        ],
+        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
+          52
+        ],
+        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py": [
+          53
+        ],
+        "python -m py_compile": [
+          58
+        ],
+        "python aura_codebase_navigator.py --refresh-topology": [
+          70
+        ],
+        "python scripts/aura_source_anchor_map.py --root .": [
+          71,
+          72
+        ],
+        "python scripts/aura_source_anchor_map.py --root . --check": [
+          72
+        ],
+        "python -m aura_codemap_verify": [
+          73
+        ],
+        "python -m pytest": [
+          79,
+          95,
+          120,
+          136
+        ]
+      },
+      "topology": {},
+      "digest8": "e4c8cc47c3341db1",
+      "vector": [
+        0.08817,
+        0.297733,
+        -0.200618,
+        0.267065,
+        0.244064,
+        0.047279,
+        0.044724,
+        -0.277288,
+        -0.008945,
+        0.044724,
+        0.282399,
+        0.006389,
+        0.213397,
+        -0.249176,
+        -0.085614,
+        -0.139283,
+        -0.144394,
+        0.049835,
+        0.26451,
+        -0.080503,
+        -0.182729,
+        0.261954,
+        -0.251731,
+        -0.106059,
+        -0.300289,
+        -0.106059,
+        0.111171,
+        -0.126505,
+        -0.149505,
+        0.060058,
+        0.037057,
+        -0.039613
+      ]
+    },
+    {
+      "path": ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 7527,
+      "lines": 172,
+      "tokens_est": 1882,
+      "symbol_count": 0,
+      "commands": [
+        "python -m pip",
+        "python tools/wo_fleet_phase3_triad2_contract_patch.py",
+        "python tools/wo_fleet_phase3_triad2_incremental_patch.py",
+        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
+        "python aura_codebase_navigator.py --refresh-topology",
+        "python -m aura_codemap_verify",
+        "python -m pytest"
+      ],
+      "command_lines": {
+        "python -m pip": [
+          43,
+          44,
+          98,
+          99,
+          135
+        ],
+        "python tools/wo_fleet_phase3_triad2_contract_patch.py": [
+          48
+        ],
+        "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
+          49
+        ],
+        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
+          50
+        ],
+        "python aura_codebase_navigator.py --refresh-topology": [
+          57
+        ],
+        "python -m aura_codemap_verify": [
+          58
+        ],
+        "python -m pytest": [
+          63,
+          80,
+          104,
+          121
+        ]
+      },
+      "topology": {},
+      "digest8": "fdd8feda9218332c",
+      "vector": [
+        -0.318115,
+        -0.132655,
+        -0.003864,
+        0.150686,
+        -0.088866,
+        0.245992,
+        0.06826,
+        0.073411,
+        0.282054,
+        -0.060532,
+        0.274326,
+        0.207354,
+        0.199627,
+        -0.204779,
+        0.00644,
+        0.05538,
+        -0.088866,
+        0.199627,
+        0.034774,
+        -0.106897,
+        -0.171293,
+        0.142959,
+        0.112049,
+        0.243416,
+        -0.20993,
+        -0.207354,
+        0.289781,
+        0.17902,
+        -0.00644,
+        0.176444,
+        0.155838,
+        0.230537
       ]
     },
     {
@@ -258804,6 +259079,241 @@
       ]
     },
     {
+      "path": "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 790,
+      "lines": 24,
+      "tokens_est": 198,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8b0efc59e5c8070f",
+      "vector": [
+        -0.103809,
+        -0.004045,
+        0.230538,
+        -0.009437,
+        0.327606,
+        -0.017526,
+        -0.287161,
+        -0.020223,
+        0.028312,
+        -0.171218,
+        -0.017526,
+        0.128077,
+        -0.227841,
+        0.187396,
+        0.297947,
+        -0.206271,
+        -0.260198,
+        0.141558,
+        -0.165825,
+        0.025615,
+        0.004045,
+        0.004045,
+        -0.254805,
+        0.103809,
+        0.168522,
+        -0.252109,
+        -0.152344,
+        0.173914,
+        0.330303,
+        -0.173914,
+        -0.060668,
+        -0.01483
+      ]
+    },
+    {
+      "path": "tools/wo_fleet_phase3_triad2_contract_patch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11190,
+      "lines": 268,
+      "tokens_est": 2798,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cef80cf1506003ed",
+      "vector": [
+        0.236039,
+        0.203704,
+        -0.035567,
+        -0.141192,
+        -0.158437,
+        -0.24035,
+        0.089458,
+        0.238194,
+        -0.147659,
+        -0.087302,
+        -0.270528,
+        -0.257595,
+        0.220949,
+        -0.143348,
+        -0.175682,
+        -0.067901,
+        0.042034,
+        0.231727,
+        0.005389,
+        0.238194,
+        0.179993,
+        -0.17137,
+        -0.016167,
+        0.164904,
+        0.003233,
+        -0.018323,
+        -0.225261,
+        -0.160592,
+        -0.173526,
+        0.251128,
+        0.119636,
+        -0.272684
+      ]
+    },
+    {
+      "path": "tools/wo_fleet_phase3_triad2_incremental_patch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5075,
+      "lines": 121,
+      "tokens_est": 1269,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c901663647ca6fcc",
+      "vector": [
+        -0.061698,
+        -0.017824,
+        -0.127509,
+        -0.017824,
+        0.201546,
+        -0.190578,
+        0.053471,
+        -0.242678,
+        -0.086377,
+        -0.06444,
+        -0.182351,
+        0.042503,
+        -0.017824,
+        0.171383,
+        0.228967,
+        0.124767,
+        0.215257,
+        0.349621,
+        0.072666,
+        -0.135735,
+        -0.19332,
+        0.20703,
+        -0.042503,
+        0.19332,
+        0.061698,
+        -0.130251,
+        -0.119282,
+        0.15493,
+        -0.344137,
+        -0.327684,
+        -0.24542,
+        -0.198804
+      ]
+    },
+    {
+      "path": "tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1328,
+      "lines": 38,
+      "tokens_est": 332,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "92288675fe853e0e",
+      "vector": [
+        0.179134,
+        0.252959,
+        -0.276843,
+        -0.179134,
+        0.153078,
+        0.05754,
+        -0.070568,
+        0.155249,
+        0.192162,
+        -0.131365,
+        -0.203018,
+        -0.239931,
+        -0.035827,
+        -0.265987,
+        -0.265987,
+        0.05754,
+        -0.129193,
+        -0.02497,
+        -0.159592,
+        0.122679,
+        -0.183476,
+        0.150907,
+        0.127022,
+        -0.127022,
+        0.111823,
+        0.109652,
+        0.226903,
+        -0.259473,
+        -0.109652,
+        0.051026,
+        -0.257301,
+        0.263815
+      ]
+    },
+    {
+      "path": "tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2982,
+      "lines": 73,
+      "tokens_est": 746,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2c098c9ca0cd6092",
+      "vector": [
+        0.177036,
+        0.04338,
+        -0.137174,
+        -0.249726,
+        0.254416,
+        -0.03869,
+        0.184071,
+        0.031655,
+        -0.172346,
+        -0.008207,
+        0.125449,
+        0.158277,
+        -0.238002,
+        -0.261451,
+        -0.200485,
+        -0.066828,
+        0.291934,
+        -0.247381,
+        -0.132484,
+        0.036345,
+        -0.104346,
+        0.291934,
+        -0.200485,
+        -0.012897,
+        -0.059794,
+        -0.252071,
+        -0.099656,
+        0.195795,
+        -0.153588,
+        -0.106691,
+        0.064483,
+        -0.296623
+      ]
+    },
+    {
       "path": "travel_extractors/__init__.py",
       "role": "python_module",
       "binary": false,
@@ -282708,16 +283218,16 @@
     }
   },
   "summary": {
-    "file_count": 1585,
-    "total_bytes": 25995408,
-    "text_tokens_est": 6489271,
+    "file_count": 1592,
+    "total_bytes": 26031559,
+    "text_tokens_est": 6498311,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 224,
       "native_accelerator": 8,
       "operator_script": 9,
-      "python_module": 990,
-      "schema_or_lexicon": 241,
+      "python_module": 995,
+      "schema_or_lexicon": 243,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -282912,6 +283422,8 @@
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       ".gitignore",
       ".mempalace/aura_thought.txt",
@@ -284306,6 +284818,11 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py",
+      "tools/wo_fleet_phase3_triad2_contract_patch.py",
+      "tools/wo_fleet_phase3_triad2_incremental_patch.py",
+      "tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
+      "tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -440852,6 +441369,76 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py#function:main:726427629e4e485d",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py",
+        "line": 12,
+        "end_line": 19,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "8b0efc59e5c8070f"
+      },
+      {
+        "semantic_id": "tools/wo_fleet_phase3_triad2_contract_patch.py#function:main:7d4a8ec3fb6d502f",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/wo_fleet_phase3_triad2_contract_patch.py",
+        "line": 258,
+        "end_line": 263,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "cef80cf1506003ed"
+      },
+      {
+        "semantic_id": "tools/wo_fleet_phase3_triad2_contract_patch.py#function:replace_once:72295446c94454d9",
+        "name": "replace_once",
+        "kind": "function",
+        "file": "tools/wo_fleet_phase3_triad2_contract_patch.py",
+        "line": 250,
+        "end_line": 255,
+        "signature_hash": "216e9f6d1c57447e",
+        "file_digest8": "cef80cf1506003ed"
+      },
+      {
+        "semantic_id": "tools/wo_fleet_phase3_triad2_incremental_patch.py#function:main:a4690621eac51c74",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/wo_fleet_phase3_triad2_incremental_patch.py",
+        "line": 16,
+        "end_line": 116,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "c901663647ca6fcc"
+      },
+      {
+        "semantic_id": "tools/wo_fleet_phase3_triad2_incremental_patch.py#function:replace_once:fc7c9dfd48a2fbbd",
+        "name": "replace_once",
+        "kind": "function",
+        "file": "tools/wo_fleet_phase3_triad2_incremental_patch.py",
+        "line": 9,
+        "end_line": 13,
+        "signature_hash": "820625feabdd1c16",
+        "file_digest8": "c901663647ca6fcc"
+      },
+      {
+        "semantic_id": "tools/wo_fleet_phase3_triad2_pascal_test_patch.py#function:main:23a67d7176e3ae90",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
+        "line": 26,
+        "end_line": 33,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "92288675fe853e0e"
+      },
+      {
+        "semantic_id": "tools/wo_fleet_phase3_triad2_skillweaver_patch.py#function:main:dd821179a98df5b5",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
+        "line": 61,
+        "end_line": 68,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "2c098c9ca0cd6092"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -442102,7 +442689,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "ad92cc08a26db3200411c459a7f5f8e2",
-    "payload_hash": "dfabaec6f3d0099e9674c3b28de5243c"
+    "record_fingerprint": "52c9af549e6a8b91e11eb3415b1e190d",
+    "payload_hash": "e1bfa28192408ac5b58225afa69c68cb"
   }
 }
