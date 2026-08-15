@@ -1,0 +1,42 @@
+name: W1 TeX compile
+on:
+  push:
+    branches:
+      - w1/pdf-materialize-wo-ops-001
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct and verify source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .w1-tex-chunks/part-* > /tmp/papertex.gz.b64
+          base64 -d /tmp/papertex.gz.b64 | gzip -d > PAPER_X_ARXIV_DISCLOSURE.tex
+          echo 'bc6ac5e804e0fbe1655f2f767beb3de4864fe2e6375dd1779d496e5a54628734  PAPER_X_ARXIV_DISCLOSURE.tex' | sha256sum -c -
+      - name: Install TeX
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended lmodern
+      - name: Compile disclosure
+        shell: bash
+        run: |
+          set -euo pipefail
+          latexmk -pdf -interaction=nonstopmode -halt-on-error PAPER_X_ARXIV_DISCLOSURE.tex
+          test -s PAPER_X_ARXIV_DISCLOSURE.pdf
+          file PAPER_X_ARXIV_DISCLOSURE.pdf
+          sha256sum PAPER_X_ARXIV_DISCLOSURE.pdf
+      - name: Commit materialized blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'W1 AuraOS Materializer'
+          git config user.email 'w1@users.noreply.github.com'
+          git add PAPER_X_ARXIV_DISCLOSURE.tex PAPER_X_ARXIV_DISCLOSURE.pdf
+          git commit -m 'chore: materialize Paper X disclosure blobs'
+          git push origin HEAD
