@@ -27,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: fix/wo-fleet-phase3-triad2-001
+          ref: ${{ github.sha }}
           fetch-depth: 0
 
       - name: Set up Python 3.12
@@ -158,6 +158,7 @@ jobs:
               'leaves':[{'path':p,'sha256':h} for p,h in leaves],
               'merkle_root_sha256':layer[0].hex(),
               'source_base':'25a103b02752f3f58f95946352d40bf798e6cfda',
+              'tested_trigger_sha':'${{ github.sha }}',
               'promotion':'fix branch only; no merge performed',
           }
           out=Path('aura_workspace/outbox/WO-FLEET-PHASE3-DEPLOY-001__TRIAD2.receipt')
