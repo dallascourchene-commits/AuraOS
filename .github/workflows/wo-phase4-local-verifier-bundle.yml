@@ -1,0 +1,60 @@
+name: WO Phase4 Local Verifier Bundle
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/wo-phase4-local-verifier-bundle.yml
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        id: py312
+        with:
+          python-version: "3.12"
+      - name: Package Python 3.12 runtime, offline wheels, and exact repair branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=/tmp/phase4-local-verifier
+          mkdir -p "$out/wheelhouse"
+          python -m pip install --upgrade pip
+          python -m pip download --only-binary=:all: -d "$out/wheelhouse" \
+            -r requirements.txt \
+            "jsonschema>=4.23,<5.0" \
+            "pytest>=8.2,<9.0" \
+            "pytest-asyncio>=0.23,<1.0" \
+            "trimesh>=4.7.1,<5.0" \
+            "zstandard>=0.23.0,<1.0"
+          pyroot="$(python -c 'import sys; print(sys.prefix)')"
+          tar -C "$(dirname "$pyroot")" -czf "$out/python312-runtime.tar.gz" "$(basename "$pyroot")"
+          git fetch origin ci/wo-triad2-ci-codemap-repair-001
+          branch_sha="$(git rev-parse origin/ci/wo-triad2-ci-codemap-repair-001)"
+          git archive --format=tar.gz --output="$out/repair-branch.tar.gz" "$branch_sha"
+          printf '%s\n' "$branch_sha" > "$out/repair-branch.sha"
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          root = Path('/tmp/phase4-local-verifier')
+          rows=[]
+          for path in sorted(p for p in root.rglob('*') if p.is_file()):
+              if path.name == 'SHA256SUMS':
+                  continue
+              rows.append(f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.relative_to(root).as_posix()}")
+          (root/'SHA256SUMS').write_text('\n'.join(rows)+'\n', encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wo-phase4-local-verifier-bundle
+          path: /tmp/phase4-local-verifier/
+          if-no-files-found: error
+          retention-days: 2
