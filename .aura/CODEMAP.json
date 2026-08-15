@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786831644,
+  "generated_at_unix": 1786831716,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1601,
+    "repo_file_count": 1602,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -192,6 +192,7 @@
       ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
       ".github/workflows/wo-phase3-codemap-compat-audit.yml",
       ".github/workflows/wo-phase3-local-gate-bundle-001.yml",
+      ".github/workflows/wo-phase4-active-branch-verify.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
       ".github/workflows/wo-phase4-local-verifier-bundle.yml",
       ".gitignore",
@@ -1717,16 +1718,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1601,
-      "bytes": 26113835,
-      "tokens_est": 6518873,
+      "files": 1602,
+      "bytes": 26118313,
+      "tokens_est": 6519993,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 232,
         "native_accelerator": 8,
         "operator_script": 9,
         "python_module": 990,
-        "schema_or_lexicon": 249,
+        "schema_or_lexicon": 250,
         "support_file": 49
       }
     },
@@ -157802,6 +157803,7 @@
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
       ".github/workflows/wo-phase3-codemap-compat-audit.yml",
+      ".github/workflows/wo-phase4-active-branch-verify.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
       "USER_GUIDE.md",
       "docs/AURA_ARCHITECTURE_HARNESS.md",
@@ -170521,6 +170523,59 @@
         0.151489,
         0.06373,
         0.253875
+      ]
+    },
+    {
+      "path": ".github/workflows/wo-phase4-active-branch-verify.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4478,
+      "lines": 94,
+      "tokens_est": 1120,
+      "symbol_count": 0,
+      "commands": [
+        "python -m aura_codemap_verify"
+      ],
+      "command_lines": {
+        "python -m aura_codemap_verify": [
+          47
+        ]
+      },
+      "topology": {},
+      "digest8": "6ca6f4fd72ee55f3",
+      "vector": [
+        0.127121,
+        0.26172,
+        0.26172,
+        -0.052344,
+        0.272402,
+        -0.208308,
+        0.035252,
+        0.039525,
+        0.178397,
+        0.227536,
+        -0.112166,
+        -0.026706,
+        0.114302,
+        -0.063026,
+        0.208308,
+        -0.13994,
+        0.135667,
+        -0.272402,
+        0.007478,
+        0.231809,
+        -0.253174,
+        -0.2254,
+        -0.075845,
+        -0.009614,
+        0.016024,
+        -0.214717,
+        0.206171,
+        -0.197625,
+        0.148486,
+        0.268129,
+        0.127121,
+        0.204035
       ]
     },
     {
@@ -283804,16 +283859,16 @@
     }
   },
   "summary": {
-    "file_count": 1601,
-    "total_bytes": 26113835,
-    "text_tokens_est": 6518873,
+    "file_count": 1602,
+    "total_bytes": 26118313,
+    "text_tokens_est": 6519993,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 232,
       "native_accelerator": 8,
       "operator_script": 9,
       "python_module": 990,
-      "schema_or_lexicon": 249,
+      "schema_or_lexicon": 250,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -284015,6 +284070,7 @@
       ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
       ".github/workflows/wo-phase3-codemap-compat-audit.yml",
       ".github/workflows/wo-phase3-local-gate-bundle-001.yml",
+      ".github/workflows/wo-phase4-active-branch-verify.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
       ".github/workflows/wo-phase4-local-verifier-bundle.yml",
       ".gitignore",
@@ -443215,6 +443271,6 @@
       }
     ],
     "record_fingerprint": "ad92cc08a26db3200411c459a7f5f8e2",
-    "payload_hash": "5528f72534a6daf46d5e93190a4dd577"
+    "payload_hash": "80c7390bb316b99d39d577306b7bcb13"
   }
 }

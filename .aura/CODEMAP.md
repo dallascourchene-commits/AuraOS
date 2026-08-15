@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1601
-- **total_bytes**: 26113835
-- **text_tokens_est**: 6518873
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 232, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 249, 'support_file': 49}
+- **file_count**: 1602
+- **total_bytes**: 26118313
+- **text_tokens_est**: 6519993
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 232, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 250, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1601,
+  "repo_file_count": 1602,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -210,6 +210,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
     ".github/workflows/wo-phase3-codemap-compat-audit.yml",
     ".github/workflows/wo-phase3-local-gate-bundle-001.yml",
+    ".github/workflows/wo-phase4-active-branch-verify.yml",
     ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
     ".github/workflows/wo-phase4-local-verifier-bundle.yml",
     ".gitignore",
@@ -1741,16 +1742,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1601,
-  "bytes": 26113835,
-  "tokens_est": 6518873,
+  "files": 1602,
+  "bytes": 26118313,
+  "tokens_est": 6519993,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 232,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 990,
-    "schema_or_lexicon": 249,
+    "schema_or_lexicon": 250,
     "support_file": 49
   }
 }
