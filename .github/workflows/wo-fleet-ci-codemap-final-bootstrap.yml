@@ -1,0 +1,97 @@
+name: WO Fleet CI CODEMAP Final Repair Bootstrap
+
+on:
+  push:
+    branches:
+      - repair/wo-fleet-ci-codemap-final-001
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wo-fleet-ci-codemap-final-001
+  cancel-in-progress: true
+
+jobs:
+  repair-verify-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: repair/wo-fleet-ci-codemap-final-001
+          fetch-depth: 0
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install repository verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt \
+            "jsonschema>=4.23,<5.0" \
+            "pytest>=8.2,<9.0" \
+            "pytest-asyncio>=0.23,<1.0" \
+            "trimesh>=4.7.1,<5.0" \
+            "zstandard>=0.23.0,<1.0"
+
+      - name: Apply source-bound repair transform
+        run: python tools/wo_fleet_ci_codemap_final_repair.py
+
+      - name: Remove bootstrap-only artifacts
+        run: |
+          rm tools/wo_fleet_ci_codemap_final_repair.py
+          rm .github/workflows/wo-fleet-ci-codemap-final-bootstrap.yml
+
+      - name: Compile repaired Python surfaces
+        run: |
+          python -m py_compile \
+            aura_codebase_navigator.py \
+            aura_codemap_verify.py \
+            aura_real_refactor_trial.py \
+            aura_topological_scanner.py \
+            aura_topology_manager.py
+
+      - name: Regenerate canonical deep CODEMAP topology
+        run: |
+          python aura_codebase_navigator.py --refresh-topology
+          git checkout -- Aura_Memory/live_topology_ast.json || true
+          python -m aura_codemap_verify
+
+      - name: Verify receipt scope exclusion is narrow
+        run: |
+          python - <<'PY'
+          from aura_real_refactor_trial import _is_noncode_execution_receipt
+          assert _is_noncode_execution_receipt("aura_workspace/outbox/WO-README-PROMOTE-AND-PUSH-001.receipt")
+          assert not _is_noncode_execution_receipt("aura_workspace/outbox/result.json")
+          assert not _is_noncode_execution_receipt("README.md")
+          PY
+
+      - name: Run exact previously failing CODEMAP and compatibility surfaces
+        env:
+          PYTHONHASHSEED: "0"
+        run: |
+          python -m pytest -q \
+            tests/test_aura_codemap_verify.py \
+            test_aura_substrate.py \
+            test_aura_architect_loop.py \
+            tests/test_aura_benchmark_four.py \
+            tests/test_aura_benchmark_four_hardening.py
+
+      - name: Commit verified repair branch
+        run: |
+          git config user.name "AuraOS CI Repair Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No repair delta remains on this generation."
+            exit 0
+          fi
+          git commit -m "fix(ci): restore CODEMAP topology and benchmark scope contracts"
+          git push origin HEAD:repair/wo-fleet-ci-codemap-final-001
