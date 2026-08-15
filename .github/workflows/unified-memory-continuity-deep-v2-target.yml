@@ -24,7 +24,10 @@ jobs:
       TRANSPORT_COMMIT: 1de0f438b330ef91bfc99cead2d288d003181e22
       REVIEWED_CHECKPOINT: 968f417cf55895ec788d89c0a97f37e40cf0612a
       TRIGGER_PATH: .aura/refactor_payloads/umc_deep_review.retry
-      EVIDENCE_DIR: ${{ runner.temp }}/umc-deep-review-v2
     steps:
       - name: Parser probe
-        run: echo "workflow parser accepted full header and environment"
+        env:
+          EVIDENCE_DIR: ${{ runner.temp }}/umc-deep-review-v2
+        run: |
+          test "$EVIDENCE_DIR" = "${RUNNER_TEMP}/umc-deep-review-v2"
+          echo "workflow parser accepted runner.temp at step scope"
