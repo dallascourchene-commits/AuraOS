@@ -1,0 +1,40 @@
+name: Phase3 Triad2 Git Metadata Bundle
+
+on:
+  push:
+    branches:
+      - phase3/triad2-local-pytest-deps-001
+    paths:
+      - .github/workflows/phase3-triad2-git-metadata.yml
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      TARGET_HEAD: 1cfe56305c7bbacb58db6e42019887b1ce2ce4ea
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ci/wo-triad2-ci-codemap-repair-001
+          fetch-depth: 1
+      - name: Verify exact predecessor and package git metadata
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_HEAD"
+          test -z "$(git status --porcelain)"
+          tar -czf /tmp/triad2-git-metadata.tar.gz .git
+          sha256sum /tmp/triad2-git-metadata.tar.gz > /tmp/triad2-git-metadata.sha256
+          git rev-parse HEAD > /tmp/triad2-git-head.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase3-triad2-git-metadata-${{ github.run_id }}
+          path: |
+            /tmp/triad2-git-metadata.tar.gz
+            /tmp/triad2-git-metadata.sha256
+            /tmp/triad2-git-head.txt
+          if-no-files-found: error
+          retention-days: 2
