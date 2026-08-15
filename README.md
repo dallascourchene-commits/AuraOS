@@ -86,3 +86,23 @@ See [`LICENSE`](./LICENSE) for the complete license text.
 ## Canonical Archive & Permanent DOI
 * **Zenodo Record:** https://zenodo.org/records/21941334
 * **Canonical Genesis Seed:** `67d2597bfa7895d997b89eb288a8f6cd5fe54ddc1ea69f676ec5d1a1ab96b002`
+
+## Advanced Benchmark Snapshot
+
+See [`docs/ADVANCED_BENCHMARKS.md`](./docs/ADVANCED_BENCHMARKS.md) for methodology and scope boundaries.
+
+These measurements are bounded host microbenchmarks. They do **not** by themselves establish production AuraOS, remote P2P mesh, or crash-injection performance.
+
+| Measurement | Result | Verification boundary |
+| :--- | :--- | :--- |
+| Synthetic JSON state projection | `286 B → 78 B` (**72.73% fewer bytes**) | Byte serialization only; not tokenizer-measured token compression |
+| UDP localhost unicast | **299,701.80 datagrams/s**, median RTT **2.824 µs**, p95 RTT **3.225 µs** | 200 synchronous loopback round trips; not multicast/remote hops |
+| SQLite WAL clean reopen/checkpoint | **0.309 ms**, `500/500` rows, `integrity_check=ok` | Clean reopen/checkpoint; no crash/chaos injection |
+
+## Reproduce
+
+```bash
+python3 scripts/aura_advanced_benchmark_runner.py
+```
+
+Machine-readable results are written to `advanced_benchmark_results.json`.
