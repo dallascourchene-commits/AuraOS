@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1601
-- **total_bytes**: 26084828
-- **text_tokens_est**: 6511620
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 231, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 992, 'schema_or_lexicon': 248, 'support_file': 49}
+- **file_count**: 1605
+- **total_bytes**: 26107305
+- **text_tokens_est**: 6517241
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 231, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 249, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1601,
+  "repo_file_count": 1605,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -205,6 +205,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/triad2-codemap-repair.yml",
     ".github/workflows/triad2-full-codemap-repair-v2.yml",
     ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+    ".github/workflows/wc-02-triad2-phase4-converge.yml",
     ".github/workflows/wc-02-triad2-phase4-materialize.yml",
     ".github/workflows/wc-02-triad2-phase4-verify.yml",
     ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
@@ -1613,6 +1614,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/wc02_phase4_pytest_collection_patch.py",
+    "tools/wo_fleet_phase3_triad2_contract_patch.py",
+    "tools/wo_fleet_phase3_triad2_incremental_patch.py",
+    "tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1741,16 +1745,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1601,
-  "bytes": 26084828,
-  "tokens_est": 6511620,
+  "files": 1605,
+  "bytes": 26107305,
+  "tokens_est": 6517241,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 231,
     "native_accelerator": 8,
     "operator_script": 9,
-    "python_module": 992,
-    "schema_or_lexicon": 248,
+    "python_module": 995,
+    "schema_or_lexicon": 249,
     "support_file": 49
   }
 }
