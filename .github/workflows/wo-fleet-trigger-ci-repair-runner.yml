@@ -59,15 +59,23 @@ jobs:
           python -m aura_codemap_verify
 
       - name: Python 3.12 CODEMAP and PR272/275 contract checks
+        id: contracts312
+        continue-on-error: true
         run: |
+          set -o pipefail
           python -m pytest -q \
             tests/test_aura_codemap_verify.py \
-            tests/test_aura_arch_v2_3_capsule_validator.py
+            tests/test_aura_arch_v2_3_capsule_validator.py \
+            --junitxml=triad2-contracts-py312.xml \
+            2>&1 | tee triad2-contracts-py312.txt
 
       - name: Python 3.12 full pytest-native suite
+        id: full312
+        continue-on-error: true
         env:
           PYTHONHASHSEED: "0"
         run: |
+          set -o pipefail
           python -m pytest -q --disable-warnings --maxfail=1 \
             --ignore=test_aura_functions.py \
             --ignore=test_synthesis_upgrades.py \
@@ -75,7 +83,9 @@ jobs:
             --ignore=test_codemap_hooks_simple.py \
             --ignore=test_pvm_logic.py \
             --ignore=test_aura_substrate.py \
-            --deselect=tests/test_aura_human_agent_arena.py::test_affordance_map_declares_source_of_truth
+            --deselect=tests/test_aura_human_agent_arena.py::test_affordance_map_declares_source_of_truth \
+            --junitxml=triad2-full-py312.xml \
+            2>&1 | tee triad2-full-py312.txt
 
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
@@ -89,10 +99,39 @@ jobs:
           python -m pip install -r requirements.txt pytest pytest-asyncio
 
       - name: Python 3.10 CODEMAP and PR272/275 contract checks
+        id: contracts310
+        continue-on-error: true
         run: |
+          set -o pipefail
           python -m pytest -q \
             tests/test_aura_codemap_verify.py \
-            tests/test_aura_arch_v2_3_capsule_validator.py
+            tests/test_aura_arch_v2_3_capsule_validator.py \
+            --junitxml=triad2-contracts-py310.xml \
+            2>&1 | tee triad2-contracts-py310.txt
+
+      - name: Upload repair diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wo-triad2-ci-codemap-repair-${{ github.run_id }}
+          path: |
+            triad2-contracts-py312.txt
+            triad2-contracts-py312.xml
+            triad2-full-py312.txt
+            triad2-full-py312.xml
+            triad2-contracts-py310.txt
+            triad2-contracts-py310.xml
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Enforce all pre-commit verification gates
+        if: steps.contracts312.outcome != 'success' || steps.full312.outcome != 'success' || steps.contracts310.outcome != 'success'
+        run: |
+          echo "Repair verification is not 100% green; refusing commit and PR progression."
+          echo "Python 3.12 focused: ${{ steps.contracts312.outcome }}"
+          echo "Python 3.12 full: ${{ steps.full312.outcome }}"
+          echo "Python 3.10 focused: ${{ steps.contracts310.outcome }}"
+          exit 1
 
       - name: Commit exact tested repair tree
         run: |
