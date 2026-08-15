@@ -1,0 +1,72 @@
+name: WO Fleet Phase3 Triad2 Local Pack
+
+on:
+  push:
+    branches:
+      - repair/wo-fleet-phase3-triad2-001
+    paths:
+      - .github/workflows/wo-fleet-phase3-triad2-local-pack.yml
+
+permissions:
+  contents: read
+
+jobs:
+  pack:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: repair/wo-fleet-phase3-triad2-001
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install generator dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt \
+            "jsonschema>=4.23,<5.0" \
+            "pytest>=8.2,<9.0" \
+            "pytest-asyncio>=0.23,<1.0" \
+            "trimesh>=4.7.1,<5.0" \
+            "zstandard>=0.23.0,<1.0"
+      - name: Apply exact uncommitted repair generation
+        run: |
+          python tools/wo_triad2_ci_codemap_repair.py
+          python tools/wo_fleet_phase3_triad2_patch.py
+          python aura_codebase_navigator.py --refresh-topology
+          python scripts/aura_source_anchor_map.py --root .
+          python scripts/aura_source_anchor_map.py --root . --check
+          python -m aura_codemap_verify
+      - name: Download Python 3.13 local-runtime wheel gap
+        shell: bash
+        run: |
+          mkdir -p local-wheelhouse
+          python -m pip download --only-binary=:all: --no-deps \
+            --platform manylinux2014_x86_64 \
+            --implementation cp --python-version 313 --abi cp313 \
+            "zstandard>=0.23.0,<1.0" -d local-wheelhouse
+      - name: Package repaired tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git status --porcelain=v1 > phase3-working-tree-status.txt
+          git diff --binary > phase3-repair.diff
+          tar --exclude=.git --exclude=phase3-patched-tree.tgz --exclude=local-wheelhouse -czf phase3-patched-tree.tgz .
+          sha256sum phase3-patched-tree.tgz > phase3-patched-tree.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wo-fleet-phase3-triad2-local-pack-${{ github.run_id }}
+          path: |
+            phase3-patched-tree.tgz
+            phase3-patched-tree.sha256
+            phase3-working-tree-status.txt
+            phase3-repair.diff
+            local-wheelhouse/
+          if-no-files-found: error
+          retention-days: 7
