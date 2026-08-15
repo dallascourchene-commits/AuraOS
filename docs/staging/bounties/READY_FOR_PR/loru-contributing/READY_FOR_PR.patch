@@ -1,0 +1,79 @@
+--- /dev/null
++++ b/CONTRIBUTING.md
+@@ -0,0 +1,53 @@
++# Contributing to Loru
++
++Thanks for helping improve Loru. The project keeps its smoke path offline and CPU-friendly, so contributions should preserve deterministic local tests and avoid requiring network access for CI.
++
++## Setup
++
++Loru requires Python 3.11+.
++
++```bash
++git clone https://github.com/mergeos-bounties/Loru.git
++cd Loru
++python -m venv .venv
++source .venv/bin/activate  # Windows PowerShell: .\.venv\Scripts\Activate.ps1
++pip install -e ".[dev]"
++```
++
++Install optional extras only when your change needs them, for example `.[gui]`, `.[api]`, `.[voice]`, or `.[torch]`.
++
++## Before opening a PR
++
++Run the core checks from the repository root:
++
++```bash
++ruff check src tests
++pytest -q
++loru demo
++```
++
++If you changed the desktop GUI, also install `.[gui]` and exercise `loru-gui`. If you changed optional API/voice/torch behavior, test with the matching extra installed and keep the base install working.
++
++## PR checklist
++
++- [ ] Keep the change focused and link the issue it resolves.
++- [ ] Add or update tests for behavior changes.
++- [ ] `ruff check src tests` passes.
++- [ ] `pytest -q` passes.
++- [ ] `loru demo` still completes for changes touching the core pipeline.
++- [ ] New datasets include license/consent notes; do not commit private recordings or PII.
++- [ ] Optional dependencies fail gracefully when the corresponding extra is not installed.
++- [ ] User-facing behavior or commands are reflected in README/docs where relevant.
++- [ ] PR description includes the evidence required by `docs/BOUNTY.md` when claiming a bounty.
++
++## Good first issues and MergeOS bounties
++
++Look for issues labeled [`good first issue`](https://github.com/mergeos-bounties/Loru/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or [`bounty`](https://github.com/mergeos-bounties/Loru/issues?q=is%3Aissue+is%3Aopen+label%3Abounty).
++
++Bounty contributors must follow the claim flow **before starting work**. The canonical repository instructions are in [`docs/BOUNTY.md`](docs/BOUNTY.md): follow/star the listed MergeOS repositories, claim the Loru issue, link it in MergeOS Claim Token #1, then open a focused PR to `master` with `Fixes #N` and the required evidence.
++
++The issue title is not settlement evidence. MRG credit is issued only after maintainer review and merge under the bounty policy.
++
++## Scope and conduct
++
++Keep contributions respectful, accessible, and privacy-conscious. Sign-language data can be personally identifying; prefer synthetic fixtures for tests and document consent/licensing for real-world datasets.
+--- a/README.md
++++ b/README.md
+@@
+ - [Repository layout](#repository-layout)
+ - [Development](#development)
++- [Contributing](#contributing)
+ - [MergeOS bounties](#mergeos-bounties)
+ - [License](#license)
+@@
+ ## Development
+@@
+ python scripts/capture_gui_shots.py   # refresh GUI screenshots
+ ```
+ 
+ ---
++
++## Contributing
++
++See [CONTRIBUTING.md](CONTRIBUTING.md) for environment setup, required checks, the PR checklist, good-first-issue links, and the MergeOS bounty claim flow.
++
++---
+ 
+ ## MergeOS bounties

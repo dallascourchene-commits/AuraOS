@@ -1,0 +1,72 @@
+{
+  "schema": "AuraWorkReceiptV1",
+  "work_order": "WO-LIVE-BOUNTY-HARVESTER-001",
+  "coordinate": "AD:BOUNTY:HARVEST-EXECUTE:001",
+  "task_local_workers": [
+    "W1",
+    "W2",
+    "W3",
+    "W4",
+    "W5",
+    "W6",
+    "W7",
+    "W8",
+    "W9"
+  ],
+  "aura_parent_observed": "183d7ba6a90a27dc8da4332ada4ae6beb49bb6d2",
+  "started_local": "2026-08-15T02:55:00-05:00",
+  "completed_utc": "2026-08-15T08:05:50.606603+00:00",
+  "status": "HARVEST_COMPLETE_3_READY_FOR_PR_FAIL_CLOSED_RESIDUE",
+  "results": {
+    "platforms_scanned": [
+      "Algora",
+      "Opire",
+      "GitHub"
+    ],
+    "ready_for_pr": 3,
+    "intake_only_or_excluded": 5,
+    "external_claims": 0,
+    "third_party_prs": 0,
+    "wallet_or_bond_actions": 0
+  },
+  "ready_for_pr": [
+    {
+      "target": "claude-builders-bounty/claude-builders-bounty#3",
+      "reward_display": "$100 advertised; Opire-backed per open issue; payment conditional on merge",
+      "patch": "docs/staging/bounties/READY_FOR_PR/claude-hook/READY_FOR_PR.patch",
+      "status": "VERIFIED_ISOLATED"
+    },
+    {
+      "target": "mergeos-bounties/PlantGuide#10",
+      "reward_display": "50 MRG ledger credit after review/merge",
+      "patch": "docs/staging/bounties/READY_FOR_PR/plantguide-sdk/READY_FOR_PR.patch",
+      "status": "VERIFIED_ISOLATED"
+    },
+    {
+      "target": "mergeos-bounties/Loru#19",
+      "reward_display": "25 MRG ledger credit after review/merge",
+      "patch": "docs/staging/bounties/READY_FOR_PR/loru-contributing/READY_FOR_PR.patch",
+      "status": "VERIFIED_DOCUMENTATION"
+    }
+  ],
+  "triads": {
+    "W1-W3": "source/funding currentness + reproduction + structural diff",
+    "W4-W6": "implementation + isolated verification",
+    "W7-W9": "PR packaging + pass validation + Merkle minting"
+  },
+  "merkle": {
+    "manifest": "aura_workspace/outbox/WO-LIVE-BOUNTY-HARVESTER-001.merkle.json",
+    "leaf_count": 6,
+    "root_sha256": "660e222d79914d680733cdd4d67b574f3846f10bd69aad1126e35c19103488de"
+  },
+  "negative_space": [
+    "NO_BOUNTY_CLAIM_OR_RESERVATION_SUBMITTED",
+    "NO_THIRD_PARTY_REPOSITORY_MUTATED",
+    "NO_THIRD_PARTY_PR_OPENED",
+    "NO_WALLET_SIGNATURE_OR_BOND_ACTION",
+    "NO_MRG_TO_USD_CONVERSION_ASSERTED",
+    "NO_ADVERTISED_REWARD_TREATED_AS_PAYMENT_PROOF",
+    "NO_HUMAN_ONLY_BOUNTY_AUTOMATION_ATTEMPTED"
+  ],
+  "rebase_note": "Final Aura staging tree rebased to newer concurrent main generation before ref update; no force update used."
+}
