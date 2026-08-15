@@ -1,0 +1,238 @@
+name: Phase3 Compass bounded projection repair
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/phase3-compass-bounded-projection-repair.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: phase3-compass-bounded-projection-repair
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      TARGET_BRANCH: fix/phase3-compass-bounded-projection
+      PYTHONPATH: ${{ github.workspace }}
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/phase3-compass-bounded-projection
+          fetch-depth: 0
+
+      - name: Bind target branch to declared Phase3 base
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '25a103b02752f3f58f95946352d40bf798e6cfda'
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt \
+            'jsonschema>=4.23,<5.0' \
+            'pytest>=8.2,<9.0' \
+            'pytest-asyncio>=0.23,<1.0' \
+            'trimesh>=4.7.1,<5.0' \
+            'zstandard>=0.23.0,<1.0'
+
+      - name: Apply minimum-sufficient emergent discovery projection
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('aura_coding_relationship_compass.py')
+          text = path.read_text(encoding='utf-8')
+          anchor = '\ndef compile_coding_relationship_compass(\n'
+          if text.count(anchor) != 1:
+              raise SystemExit('compile_coding_relationship_compass anchor drift')
+          helper = r'''
+def _bounded_emergent_neighborhood_view(neighborhood: Mapping[str, Any]) -> dict[str, Any]:
+    """Project only fields consumed by bounded emergent discovery.
+
+    The full relational neighborhood remains available to subsequent verification;
+    this view prevents unrelated participant metadata from expanding the discovery
+    active surface beyond its declared byte budget.
+    """
+    participants: list[dict[str, Any]] = []
+    for item in neighborhood.get("participants", ()) or ():
+        if not isinstance(item, Mapping):
+            continue
+        projected = {
+            key: item[key]
+            for key in (
+                "participant_id",
+                "qualified_symbol",
+                "symbol",
+                "role",
+                "participant_type",
+                "kind",
+                "canonical_ref",
+                "source_hash",
+                "tests",
+            )
+            if key in item
+        }
+        metadata = item.get("metadata")
+        if isinstance(metadata, Mapping):
+            bounded_metadata = {
+                key: metadata[key]
+                for key in (
+                    "canonical_ref",
+                    "source_ref",
+                    "source_hash",
+                    "file_source_hash",
+                    "file_path",
+                    "tests",
+                )
+                if key in metadata
+            }
+            if bounded_metadata:
+                projected["metadata"] = bounded_metadata
+        participants.append(projected)
+
+    relations = [
+        {
+            key: item[key]
+            for key in (
+                "source_participant_id",
+                "target_participant_id",
+                "truth_class",
+            )
+            if key in item
+        }
+        for item in (neighborhood.get("relations", ()) or ())
+        if isinstance(item, Mapping)
+    ]
+    return {
+        "neighborhood_digest": neighborhood.get("neighborhood_digest"),
+        "participants": participants,
+        "relations": relations,
+    }
+
+
+def _bounded_emergent_compatibility_view(compatibility: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        key: compatibility[key]
+        for key in ("outcome", "assessment_digest", "compatibility_digest")
+        if key in compatibility
+    }
+
+
+def _bounded_emergent_atlas_view(atlas: Mapping[str, Any]) -> dict[str, Any]:
+    assessments = []
+    for item in atlas.get("assessments", ()) or ():
+        if not isinstance(item, Mapping):
+            continue
+        assessments.append({
+            key: item[key]
+            for key in (
+                "source_participant_id",
+                "target_participant_id",
+                "participant_a_id",
+                "participant_b_id",
+                "left_participant_id",
+                "right_participant_id",
+                "participant_ids",
+                "wiring_disposition",
+            )
+            if key in item
+        })
+    return {"assessments": assessments}
+'''
+          text = text.replace(anchor, '\n' + helper.rstrip() + '\n\n\ndef compile_coding_relationship_compass(\n')
+
+          old = '''    discovery = discover_bounded_emergent_candidates(\n        objective=normalized_objective,\n        neighborhood=neighborhood,\n        compatibility=packet["typed_compatibility"],\n        atlas=packet["atlas"],\n        required_tests=required_tests,\n        max_candidates=max_emergent_candidates,\n        max_pairs_considered=max_neighborhood_candidate_pairs,\n    )\n'''
+          new = '''    discovery_neighborhood = _bounded_emergent_neighborhood_view(neighborhood)\n    discovery_compatibility = _bounded_emergent_compatibility_view(packet["typed_compatibility"])\n    discovery_atlas = _bounded_emergent_atlas_view(packet["atlas"])\n    discovery = discover_bounded_emergent_candidates(\n        objective=normalized_objective,\n        neighborhood=discovery_neighborhood,\n        compatibility=discovery_compatibility,\n        atlas=discovery_atlas,\n        required_tests=required_tests,\n        max_candidates=max_emergent_candidates,\n        max_pairs_considered=max_neighborhood_candidate_pairs,\n    )\n'''
+          if text.count(old) != 1:
+              raise SystemExit('discovery call anchor drift')
+          text = text.replace(old, new)
+          path.write_text(text, encoding='utf-8')
+          PY
+          python -m py_compile aura_coding_relationship_compass.py
+          ruff check --select E4,E7,E9,F --ignore E721 aura_coding_relationship_compass.py
+
+      - name: Regenerate canonical CODEMAP topology and source anchors
+        run: |
+          python scripts/aura_navigation_refresh.py --root .
+          python scripts/aura_source_anchor_map.py --root .
+          python scripts/aura_source_anchor_map.py --root . --check
+          python -m aura_codemap_verify
+          git diff --check
+
+      - name: Python 3.12 focused regression
+        run: |
+          python -m pytest -q \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_fully_projected_obligations_preserve_eligible_path
+
+      - name: Python 3.12 full pytest-native suite
+        run: |
+          python -m pytest -q --disable-warnings \
+            --ignore=test_aura_functions.py \
+            --ignore=test_synthesis_upgrades.py \
+            --ignore=test_syntax_fixes.py \
+            --ignore=test_codemap_hooks_simple.py \
+            --ignore=test_pvm_logic.py \
+            --ignore=test_aura_substrate.py \
+            --deselect=tests/test_aura_human_agent_arena.py::test_affordance_map_declares_source_of_truth
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.10'
+          cache: pip
+
+      - name: Install Python 3.10 verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt \
+            'jsonschema>=4.23,<5.0' \
+            'pytest>=8.2,<9.0' \
+            'pytest-asyncio>=0.23,<1.0' \
+            'trimesh>=4.7.1,<5.0' \
+            'zstandard>=0.23.0,<1.0'
+
+      - name: Python 3.10 focused regression
+        run: |
+          python -m pytest -q \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_denies_intent_fidelity_when_any_obligation_category_unprojected \
+            tests/test_aura_bilateral_planning_enforcement.py::test_compass_fully_projected_obligations_preserve_eligible_path
+
+      - name: Python 3.10 full pytest-native suite
+        run: |
+          python -m pytest -q --disable-warnings \
+            --ignore=test_aura_functions.py \
+            --ignore=test_synthesis_upgrades.py \
+            --ignore=test_syntax_fixes.py \
+            --ignore=test_codemap_hooks_simple.py \
+            --ignore=test_pvm_logic.py \
+            --ignore=test_aura_substrate.py \
+            --deselect=tests/test_aura_human_agent_arena.py::test_affordance_map_declares_source_of_truth
+
+      - name: Commit exact twice-verified repair tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Aura Phase3 CI Repair'
+          git config user.email 'actions@users.noreply.github.com'
+          git add aura_coding_relationship_compass.py \
+            .aura/CODEMAP.json .aura/CODEMAP.md .aura/SOURCE_ANCHORS.md topology_map.json
+          git add -f Aura_Memory/live_topology_ast.json
+          git diff --cached --check
+          test -n "$(git diff --cached --name-only)"
+          git commit -m 'fix(ci): bound Compass emergent discovery active surface'
+          git push origin HEAD:${TARGET_BRANCH}
