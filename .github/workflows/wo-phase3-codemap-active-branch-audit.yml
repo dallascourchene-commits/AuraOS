@@ -1,0 +1,80 @@
+name: WO Phase3 Active Branch CODEMAP Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/wo-phase3-codemap-active-branch-audit.yml
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        branch:
+          - w7/paper-x-final-license-normalization
+          - feat/multimodal-c2-work-order-locator
+          - wo-wb-037-qdkt-crystal-hardening
+          - j05/custodian-drive-event-adapter
+          - docs/benchmark-evidence-map-2026-08-08
+          - materialize/verified-ephemeral-workspace-pr2
+          - fix/standalone-construction-pascal-demo
+          - docs/construction-pascal-demo-operations
+          - refactor/thermal-codemap-materialize
+          - refactor/thermal-kelvin-auto-detection-sync
+          - bilateral-intent-final-b11-b15
+          - ci/wo-triad2-ci-codemap-repair-001
+          - repair/wo-fleet-phase3-triad2-001
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install repository dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then python -m pip install -r requirements.txt pytest pytest-asyncio; fi
+      - name: Regenerate branch-local CODEMAP in ephemeral checkout
+        id: regen
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          mkdir -p /tmp/codemap-audit
+          printf 'branch=%s\nhead=%s\n' '${{ matrix.branch }}' "$(git rev-parse HEAD)" > /tmp/codemap-audit/result.txt
+          if [ ! -f aura_codebase_navigator.py ]; then
+            echo 'navigator=ABSENT' >> /tmp/codemap-audit/result.txt
+            exit 2
+          fi
+          echo 'navigator=PRESENT' >> /tmp/codemap-audit/result.txt
+          python aura_codebase_navigator.py --refresh-topology 2>&1 | tee /tmp/codemap-audit/regenerate.log
+          git checkout -- Aura_Memory/live_topology_ast.json 2>/dev/null || true
+          if [ -f aura_codemap_verify.py ]; then
+            python -m aura_codemap_verify 2>&1 | tee /tmp/codemap-audit/verify.log
+          else
+            echo 'verifier=ABSENT' | tee /tmp/codemap-audit/verify.log
+          fi
+          git status --short -- .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json Aura_Memory/live_topology_ast.json | tee /tmp/codemap-audit/status.txt
+          for p in .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json; do
+            if [ -f "$p" ]; then sha256sum "$p" >> /tmp/codemap-audit/SHA256SUMS; fi
+          done
+      - name: Record outcome
+        if: always()
+        run: |
+          echo 'regen_outcome=${{ steps.regen.outcome }}' >> /tmp/codemap-audit/result.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: codemap-audit-${{ strategy.job-index }}
+          path: /tmp/codemap-audit/
+          if-no-files-found: warn
+          retention-days: 2
