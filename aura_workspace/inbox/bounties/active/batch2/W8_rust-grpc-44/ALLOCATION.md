@@ -1,17 +1,16 @@
-# W8 — provisional Batch-2 reproduction allocation
+# W8 — withdrawn Batch-2 fallback
 
 Work order: `WO-FLEET-PHASE3-DEPLOY-001`
 Worker: W8
-Target: `tailcallhq/rust-grpc#44` — Update all outdated dependencies
-Upstream issue state at source check: OPEN
-Allocation class: `PROVISIONAL_SOURCE_BOUND_FALLBACK_WEAK_FIT`
+Former provisional target: `tailcallhq/rust-grpc#44` — Update all outdated dependencies
+State: `WITHDRAWN_AFTER_AUTHORITY_SOURCE_RESOLUTION`
 
-This mirrors the concurrent W8 receipt already emitted in Aura Drive. The receipt bound the target to repository `main` commit `e5faeec6e9d833ecf5d46da718d3d0b5e2b9e542`, recorded an offline dependency inventory, and stopped before networked Cargo mutation because the exact requested Batch-2 authority manifest remained unresolved.
+The earlier W8 fallback was created while `docs/staging/ready_review/LIVE_BOUNTY_TARGETS_BATCH2.md` could not be resolved from GitHub or Drive. The exact authority source was subsequently recovered from the ChatGPT Library and materialized into the requested staging path.
 
-No bounty claim, upstream comment, fork, branch, commit, patch, PR, wallet action, or payout is created here.
+That authority source classifies `tailcallhq/rust-grpc#44` as an open Rust near-match that is **not Rust CLI work**, with disposition `WATCH_NEAR_MATCH_NOT_CLI`. It therefore does not satisfy the Batch-2 dispatch rule.
 
-Required before further work:
-1. materialize and verify `docs/staging/ready_review/LIVE_BOUNTY_TARGETS_BATCH2.md`;
-2. confirm it assigns or permits this W8 target;
-3. re-check issue currentness, competing claims/PRs, and acceptance contract;
-4. reproduce against the bound upstream source in a network-capable full checkout.
+The earlier bounded/offline reproduction notes remain provenance only; they do not constitute an active allocation, claim, branch, patch, PR, or receivable.
+
+Current W8 allocation: `UNASSIGNED_FAIL_CLOSED`.
+
+No further work against this target is authorized by Batch 2 unless a later human/source generation explicitly broadens the technical target class and revalidates upstream currentness and competition.
