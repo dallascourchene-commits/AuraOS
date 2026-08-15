@@ -41,6 +41,7 @@ _SOURCE_CARD_FIELDS = (
     "bytes",
     "lines",
     "tokens_est",
+    "binary",
     "symbol_count",
     "commands",
     "command_lines",
