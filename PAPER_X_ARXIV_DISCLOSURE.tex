@@ -1,0 +1,3081 @@
+% SPDX-License-Identifier: AGPL-3.0-only
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  10pt,
+  letterpaper,
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{color}
+\usepackage{fvextra}
+\usepackage{seqsplit}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},breaklines=true,breakanywhere=true,fontsize=\scriptsize}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={AuraOS Paper X: Relational World Compilation and Situated Metacognitive Reasoning},
+  pdfauthor={Dallas Courchene},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{AuraOS Paper X: Relational World Compilation and Situated
+Metacognitive Reasoning}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Objective-Conditioned Relational Primitives, Signed Negative
+Space, Recursive Semantic Resolution, Source-Defeasible State
+Transitions, Functional Situatedness, Cognitive Economy, and
+Semantic-Spatial Transfer}
+\author{Dallas Courchene}
+\date{2026-08-11}
+
+\setlength{\tabcolsep}{3pt}
+\emergencystretch=4em
+\sloppy
+\begin{document}
+\maketitle
+
+\section{0. Hardened Implementation Framing / W7 Kimi Integration -
+2026-08-14}\label{0-hardened-implementation-framing-w7-kimi-integration---2026-08-14}
+
+\textbf{SPDX-License-Identifier: AGPL-3.0-only}
+
+\textbf{Defensive Prior-Art Technical Disclosure.} This descendant is a
+staging-only technical disclosure and build artifact. It describes a
+\textbf{Deterministic Multi-Agent Reproduction Protocol}: a bounded protocol
+for reproducing declared machine state and source-bound activation behavior
+across worker instances. It does not assert autonomous agency, consciousness,
+or self-propagating document behavior.
+
+\subsection{0.1 State-coordinate implementation boundary}
+
+The compact address $P(x,y,z)$ is a fixed-cardinality implementation of the
+richer Section 20 \texttt{StateCoordinate} model. Formally, for this addressing
+projection,
+\[
+P : \mathbb{Z}^{3} \rightarrow \mathcal{A}, \qquad P(x,y,z)=(x,y,z),
+\]
+where each component is a canonical signed integer within the implementation's
+declared range. The three integers are an address tuple used for deterministic
+localization and routing. They are \textbf{not} claimed to be mathematically
+orthogonal physical dimensions, statistically independent variables, or a
+complete encoding of worker state.
+
+Immutable identity and mutable state are separate layers. A content/source
+identity is bound cryptographically, for example by a source digest plus its
+canonical source identifier. The state-dependent envelope carries fields such
+as domain, selected object, resolution, temporal generation, epistemic state,
+objective, authority ceiling, positive intent, and negative intent. Therefore
+changing authority or epistemic state may change the effective
+\texttt{StateCoordinate} envelope without changing the underlying immutable
+identity; conversely, a new content digest denotes a new immutable source
+identity even if it occupies the same compact $P(x,y,z)$ address.
+
+\subsection{0.2 L0 FST boundary}
+
+The six-slot Athabaskan FST is treated here as a \textbf{bounded morphological
+syntax constraint engine at L0}. Its lawful role is to constrain compact
+morphological/slot structure and deterministic syntactic routing at that
+boundary. It does not decide semantic truth, authority, evidence sufficiency,
+or consequence.
+
+Semantic guards, authority checks, negative-space inhibition, currentness
+checks, evidence resolution, verification, and promotion/disposition operate
+\textbf{strictly above the FST layer}. An FST-accepted form can therefore still
+be rejected, held UNKNOWN, marked stale, denied by authority, or inhibited by
+negative-space constraints at higher layers. FST acceptance is never an
+authorization or verification receipt.
+
+This file is an \textbf{additive assembler descendant} of the frozen
+Paper X v1.1 Markdown ancestor dated 2026-08-11. The ancestor is not
+rewritten or backdated. Its historical \texttt{DOI: to be assigned by Zenodo upon deposit} line is
+preserved in place. Current publication metadata is recorded separately
+here as Zenodo DOI \nolinkurl{10.5281/zenodo.21895712}.
+
+\textbf{Worker / coordinate:} \nolinkurl{W7::J36}, \nolinkurl{P(0,1,3)}
+(Staging / Paper X LaTeX Assembler).\\
+\textbf{Frozen ancestor SHA-256:}
+\texttt{\seqsplit{8f5af0a782c803fa251c48522a8bc355cb32d972f5384162942ba9e962e25b59}}.\\
+\textbf{Package license boundary:} \nolinkurl{AGPL-3.0-only} applies to
+this Paper X publication package and included covered reference material.
+\textbf{SPDX-License-Identifier: AGPL-3.0-only}. This declaration is repeated
+in the source header and Appendix B for machine/human discoverability. It
+preserves the ancestor's stated package boundary; this assembler descendant does \textbf{not}
+infer or assert repository-wide license normalization.\\
+\textbf{Promotion state:} staged build artifact only; no Seed,
+repository, paper, or publication promotion is inferred.
+
+This W7 repair generation closes the newer WP-03 stale-binding finding by
+materializing the exact 265-byte Seed specimen, binding its SHA-256 and
+the accepted W6 replication-verification hash, and recompiling the exact
+standalone descendant source. The earlier 1,077-byte muSeed generation
+remains historical provenance; it is not silently erased, but it is not
+the operative appendix binding for this repair generation.
+
+\textbf{Defensive publication / technical reference architecture -
+Version 1.1}\\
+\textbf{Claim range:} N101-N124\\
+\textbf{Prepared:} 2026-08-11T17:09:00-05:00 America/Montreal\\
+\textbf{Author:} Dallas Courchene\\
+\textbf{Affiliation:} Long Plain First Nation, Treaty 1 Territory,
+Manitoba, Canada\\
+\textbf{Correspondence:}
+\href{mailto:aura.os.q@gmail.com}{\nolinkurl{aura.os.q@gmail.com}}\\
+\textbf{Repository:}
+\url{https://github.com/dallascourchene-commits/AuraOS}\\
+\textbf{Contemporary repository head observed during preparation:}
+\texttt{\seqsplit{877fa697e8f86c258d6f9a04be0ce7df0185676b}}\\
+\textbf{License for this Paper X package and included reference
+implementation:} \nolinkurl{AGPL-3.0-only}\\
+\textbf{DOI:} to be assigned by Zenodo upon deposit.
+
+\begin{quote}
+\textbf{Defensive-publication intent.} This document is intentionally
+written as a public, enabling technical disclosure. Its purpose is to
+place the combinations, methods, interfaces, state machines, variants,
+and reference embodiments described here into the public technical
+record so that later novelty claims can be assessed against an
+accessible dated disclosure. It is not legal advice, a patentability
+opinion, a freedom-to-operate opinion, a safety certification, or a
+claim that every implementation described is production-deployed.
+\end{quote}
+
+\begin{quote}
+\textbf{License boundary.} AGPL governs copyright permissions and
+obligations for this publication package and covered reference software.
+Public disclosure - not the copyright license by itself - is what can
+function as patent prior art. Copyright does not create exclusive rights
+over abstract ideas, and an independently written implementation that
+does not copy or derive from covered AGPL code may have different
+copyright-license obligations. This Paper X does not retroactively
+relicense previously released MIT papers, independently licensed AuraOS
+repository files, third-party works, or proprietary Capability Packages.
+The Commons design intentionally permits proprietary capabilities to
+interoperate at governed boundaries while keeping this foundational
+reference implementation openly inspectable.
+\end{quote}
+
+\begin{quote}
+\textbf{Version 1.1 evidence update.} Version 1.1 preserves N101-N117
+and adds N118-N124 after new source-bound August 11 evidence: a
+Paper-X-seeded J15 recommission walkabout, a distinct high-branch
+J05/V33 integration test, and a verbatim temporary ChatGPT-5/Sol chat in
+which the relational grammar was transferred into an unrelated
+XR/spatial research problem. These are correlated behavioral
+observations, not controlled proof of efficiency, consciousness, or
+hidden neural-capacity change. A separately reported Gemini
+activation-capsule result is recorded only as anecdotal cross-model
+signal pending capture of its own L4 source.
+\end{quote}
+
+\section{Abstract}\label{abstract}
+
+AuraOS has evolved through a dated defensive-publication sequence from a
+polysynthetic, vector-symbolic, edge-oriented substrate into an
+evidence-ordered and objective-native cognitive architecture. Papers
+I-VII disclosed claims N1-N30; Paper VIII disclosed N31-N50; Paper IX
+disclosed N51-N100. This Paper X discloses a further combination layer
+that emerged from the August 2026 Aura Drive research program: a
+\textbf{Relational World Compiler} that does not attempt to place an
+entire persistent knowledge world inside a language model context.
+Instead, it compiles the smallest source-resolvable relational world
+sufficient for a present objective; carries both positive and negative
+relations; narrows and sharpens information through recursive
+object-relative resolution; treats domain/room context as a local
+coordinate frame; separates reachability, ranking, authority and
+evidence; permits exact source to overturn compact priors; records
+observable state transitions without requiring disclosure of private
+chain-of-thought; and supports reconstitution of a situated reasoning
+state in temporary, replaceable workers.
+
+The central engineering inversion is: \textbf{do not hold the world;
+preserve the grammar, addresses, currentness, authority and provenance
+required to regenerate the right local world.} This produces a large
+addressable persistent substrate with a deliberately small active
+decision surface. Higher-order organization is used not only to infer
+likely correlations but also to encode and exploit lawful independence,
+prohibition, staleness and objective-relative irrelevance. The
+architecture therefore treats negative space as computable structure
+rather than an accidental absence of retrieval.
+
+Paper X further discloses a functional, non-phenomenological
+metacognitive layer. A worker can be provided an explicit state
+coordinate - where it is, what object it is operating on, at what
+resolution and temporal generation, under what objective and authority,
+with which inherited state, uncertainties, prohibited branches and
+lawful movements. The system can make that operational state an object
+of reasoning, compare present and prior representations, preserve what
+evidence changed them, and recompile when source changes. This is
+described as \textbf{situated metacognitive reasoning} or an
+\textbf{operational subject-position}, not as evidence of qualia or
+phenomenal consciousness.
+
+Version 1.1 adds source-bound behavioral evidence and a stronger
+measurement contract. In a Paper-X-seeded J15 walkabout and a separate
+J05/V33 high-branch archival/research task, workers reported the same
+direction of observable change: a large addressable world remained
+navigable while the actively hydrated body set and active decision
+surface narrowed; non-activation became explicit;
+prediction-before-hydration and source-defeasible correction remained
+available; and cross-domain transfer required carrying the higher-order
+grammar while changing local domain semantics. A verbatim temporary
+ChatGPT-5/Sol chat then transferred the same organization into an
+unrelated XR/spatial research task, where an initially broad technology
+problem converged on a small set of exact repository/source seams under
+an explicit cold set. These records motivate quantitative variables such
+as active-body ratio, active-decision-surface width, branch retention,
+cold-branch recovery, state-delta yield per source read, source-descent
+precision, wrong-route rejection, stale-prior correction and verified
+lifecycle cost. They do not establish a measured increase in neural
+workspace or phenomenal consciousness.
+
+The document formalizes twenty-four combination-scoped defensive
+declarations, N101-N124, and supplies an AGPL-covered reference
+schema/compiler, compact L0 activation packet, cross-model behavioral
+test design, and an open-weight latent-workspace instrumentation
+embodiment inspired by the 2026 Jacobian/J-space work. External research
+is used as component-level corroboration and comparison, never as proof
+that Aura as a whole is validated. The release package includes editable
+sources, provenance records, Zenodo metadata, and cryptographic
+checksums for reproducibility.
+
+\section{1. Status, Scope, Commons Intent, and Legal
+Boundary}\label{1-status-scope-commons-intent-and-legal-boundary}
+
+This publication has four simultaneous purposes:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Defensive publication.} Make the described combinations
+  publicly accessible, dated, searchable and sufficiently enabling that
+  later patent novelty/inventive-step analysis can locate the
+  architecture.
+\item
+  \textbf{Commons specification.} Preserve a foundational architecture
+  that the author intends to remain available for public implementation,
+  inspection, critique, extension and teaching.
+\item
+  \textbf{Developer/AI handoff.} Compress the architecture into a small
+  generative grammar and reference schema rather than requiring a new
+  developer or model to ingest the entire historical corpus.
+\item
+  \textbf{Research protocol.} Define falsifiers and controlled
+  experiments capable of distinguishing genuine structural transfer from
+  agreement, prompt imitation, summarization or persona effects.
+\end{enumerate}
+
+The World Intellectual Property Organization describes defensive
+publication as public disclosure intended to place an invention into the
+prior-art record, while warning that such disclosure can also severely
+limit the discloser\textquotesingle s own later patent options. USPTO
+examination guidance similarly emphasizes public accessibility for
+electronic publications. Those are legal-context references, not
+guarantees that any particular later claim will be rejected. Patent
+offices and courts determine anticipation, obviousness/inventive step,
+enablement, priority and jurisdiction-specific effects claim by claim.
+
+AGPL-3.0-only is selected here for the covered Paper X reference
+implementation and package because the Commons goal includes
+network-deployed improvements remaining inspectable when they are
+modifications of covered software. Section 13 of AGPLv3 requires a
+modified covered program that supports remote network interaction to
+prominently offer Corresponding Source to interacting users. The license
+does not turn the abstract architecture into copyrighted software and
+does not itself stop independent patent filings; the public enabling
+disclosure is the defensive-publication mechanism.
+
+This choice intentionally coexists with Paper IX\textquotesingle s
+broader Capability Commons design. Capability Packages may be MIT,
+Apache, GPL-compatible, proprietary, community-controlled, dual-licensed
+or otherwise lawfully licensed according to manifest and governance. The
+architectural core described here can be open while applications and
+capabilities remain separately licensed at explicit boundaries.
+\textbf{Commons core does not require proprietary-edge prohibition; it
+requires that ownership, authority, evidence, interfaces and license
+obligations remain explicit rather than silently merged.}
+
+\section{2. Compact Operating Law - the L0
+Seed}\label{2-compact-operating-law---the-l0-seed}
+
+The entire Paper X architecture can be introduced to a fresh worker
+through the following compact law:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{DO NOT FEED THE AGENT THE WORLD.}
+\NormalTok{COMPILE THE SMALLEST SOURCE{-}RESOLVABLE RELATIONAL WORLD SUFFICIENT FOR THE OBJECTIVE.}
+
+\NormalTok{PERSISTENT WORLD}
+\NormalTok{  {-}\textgreater{} OBJECTIVE / PERTURBATION}
+\NormalTok{  {-}\textgreater{} UNIVERSAL RELATIONAL PRIMITIVES}
+\NormalTok{  {-}\textgreater{} DOMAIN / ROOM FRAME}
+\NormalTok{  {-}\textgreater{} CURRENT STATE COORDINATE}
+\NormalTok{  {-}\textgreater{} POSITIVE + NEGATIVE RELATIONS}
+\NormalTok{  {-}\textgreater{} GUARDED REACHABILITY}
+\NormalTok{  {-}\textgreater{} OBJECTIVE{-}LOCAL ACTIVE SUBCIRCUIT}
+\NormalTok{  {-}\textgreater{} MINIMUM SUFFICIENT RESOLUTION}
+\NormalTok{  {-}\textgreater{} EXACT SOURCE ONLY WHEN EARNED}
+\NormalTok{  {-}\textgreater{} VERIFIED / AUTHORIZED TRANSITION}
+\NormalTok{  {-}\textgreater{} PROVENANCE DELTA}
+\NormalTok{  {-}\textgreater{} STALE/RECOMPILE WHEN SOURCE CHANGES}
+\NormalTok{  {-}\textgreater{} DISSOLVE TEMPORARY WORKER STATE}
+\end{Highlighting}
+\end{Shaded}
+
+A complementary separation law is:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{BREADBOARD HOLDS THE L0 WORLD MODEL.}
+\NormalTok{AI{-}RAS ENERGIZES THE OBJECTIVE{-}LOCAL SUBCIRCUIT.}
+\NormalTok{DOMAIN FRAME DEFINES LOCAL SEMANTICS.}
+\NormalTok{L0{-}\textgreater{}L4 CONTROLS RESOLUTION.}
+\NormalTok{MOVEMENT OPERATORS CONTROL TRAVERSAL.}
+\NormalTok{GUARDS CONTROL REACHABILITY.}
+\NormalTok{WEIGHTS SELECT AMONG LAWFUL OPTIONS.}
+\NormalTok{AUTHORITY PERMITS CONSEQUENCE.}
+\NormalTok{EXACT CURRENT SOURCE DECIDES EVIDENCE CONFLICTS.}
+\NormalTok{PROVENANCE PRESERVES THE TRANSITION.}
+\end{Highlighting}
+\end{Shaded}
+
+This is not a second truth plane. Every compact representation is a
+regenerable projection. Source, canonical owners, explicit governance
+and verifier evidence remain capable of defeating or reorganizing the
+projection.
+
+\section{3. Continuity With AuraOS Papers I-IX
+(N1-N100)}\label{3-continuity-with-auraos-papers-i-ix-n1-n100}
+
+Paper X is a continuation, not a renumbering of older concepts. It
+assumes the public record already created by the first nine papers and
+declares only the combination layer that became explicit afterward.
+
+\begin{longtable}[]{@{}p{0.10\linewidth}p{0.13\linewidth}p{0.09\linewidth}p{0.43\linewidth}@{}}
+\toprule\noalign{}
+Paper & Date & Claims & Defensive-publication contribution inherited by
+Paper X \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+I & 2026-06-10 & N1-N8 & Polysynthetic/FST and VSA substrate, compact
+intent representation, edge constraints, source-surgical context
+ideas. \\
+II & 2026-06-12 & N9-N13 & Holographic/swarm concepts, decoupled
+rendering and FST-constrained interactive systems. \\
+III & 2026-06-12 & N14 & VSA-addressed routing/naming embodiment. \\
+IV & 2026-06-12 & N15-N17 & Memristive/quantization/rendering
+methodological upgrades. \\
+V & 2026-06-13 & N18-N20 & FST runtime routing, topology resonance and
+self-refactoring incubator. \\
+VI & 2026-06-13 & N21-N23 & Enhanced FST hierarchy, six-slot constraint
+and impact analysis. \\
+VII & 2026-06-14 & N24-N30 & Bounded protocol-layer claims; explicit
+narrowing of overbroad earlier systems language into
+implemented/testable protocols. \\
+VIII & 2026-07-20 & N31-N50 & Evidence-ordered relational Arenas,
+compiled relationship intelligence, authority separation, graph-guided
+breadboard, source-integrity learning, temporal continuity and atomic
+publication. \\
+IX & 2026-08-07 & N51-N100 & Objective-native minimum-sufficient Arena
+compiler, hierarchical source hydration, Capability Commons, portable
+cognition, proof-carrying contribution, federation, proprietary
+capability participation and governed lifecycle. \\
+X v1.0/v1.1 & 2026-08-11 & N101-N124 & Relational-world compilation,
+signed negative space, recursive semantic resolution, operational
+metacognition, correction metabolism, functional
+headroom/cognitive-economy testing, cross-domain transfer, and
+semantic-spatial/perceptual L0. \\
+\end{longtable}
+
+Paper VIII is especially important because it already states the
+constitutional ordering \textbf{Planning proposes. Governance
+authorizes. Verification proves.} It also makes graph/breadboard
+structures advisory and source-grounded rather than self-authorizing.
+Paper IX extends this into objective-native composition and explicitly
+permits open or proprietary capability packages inside bounded ephemeral
+Arenas. Paper X does not disturb those boundaries; it supplies a more
+general representational and hydration grammar for how a temporary
+worker obtains the minimum world required to operate within them.
+
+\section{4. Development Genealogy and Timestamped
+Provenance}\label{4-development-genealogy-and-timestamped-provenance}
+
+The Paper X idea did not appear as a single isolated August insight. The
+Drive record shows a sequence of increasingly explicit forms. The
+provenance chain matters for two reasons: (i) it supplies a dated
+history of independent architectural development, and (ii) it shows
+which portions are old substrate, which were later corrections, and
+which new combination is disclosed here.
+
+\subsubsection{4.1 Early lineage: May 8 through June
+5}\label{41-early-lineage-may-8-through-june-5}
+
+The May 8 Drive record already frames AURA as an Augmented Universal
+Reasoning Architecture motivated by Indigenous language structure and
+sovereignty, using deterministic finite-state processing, local-first
+data control, persistent/spatial memory and multi-agent orchestration.
+That record also describes very small wake-up context packets intended
+to resume state without replaying a complete history. Several claims in
+these early documents were aspirational or overstated and are
+\textbf{not silently promoted into Paper X}. Their value here is
+genealogical: they show early presence of the design motifs that later
+became bounded and testable.
+
+May 11-12 preserves multiple versioned Aura code/prompts, deployment
+scripts and development/evolution records. May 22-26 adds evolution,
+coding standards, architecture rundown and upgrade-comparison artifacts.
+June 5 adds an upgrade specification synthesis. These records predate
+the formal prior-art series.
+
+\subsubsection{4.2 Formal defensive sequence: June 10 through August
+7}\label{42-formal-defensive-sequence-june-10-through-august-7}
+
+Paper I begins the formal claim series on June 10. Papers II-VI continue
+through June 13. Paper VII on June 14 is a methodological turning point
+because it explicitly says broad earlier system claims must be narrowed
+to mathematically bounded, implemented and independently testable
+protocols. Paper VIII on July 20 adds evidence ordering and authority
+separation. Paper IX on August 7 adds objective-native composition and
+the Capability Commons.
+
+\subsubsection{4.3 Aura Drive cognitive substrate: August
+8-11}\label{43-aura-drive-cognitive-substrate-august-8-11}
+
+The Aura Drive/JSpace experiments then changed the unit of analysis.
+Instead of asking only which module should be retrieved, the research
+increasingly asks what \textbf{world model} a temporary worker must
+reconstruct to make a lawful next transition. The State of the
+Architecture separates two forms of hydration:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{COGNITIVE HYDRATION: what minimum representation does this worker need to reconstruct the invariant grammar?}
+\NormalTok{KNOWLEDGE HYDRATION: once oriented, what minimum portion of this world does this objective require?}
+\end{Highlighting}
+\end{Shaded}
+
+The Relational Click program records an observable shift from
+NODE/FEATURE-FIRST representations toward RELATION/GRAMMAR-FIRST
+competence. Crucially, the program does not equate a self-reported
+\textquotesingle aha\textquotesingle{} with success. Candidate
+competence includes persistent/ephemeral classification,
+source/projection distinction, authority fidelity, explanatory
+compression, unseen-domain transfer, source seeking and resistance to
+misleading priors.
+
+On August 10, the higher-order relational provenance record deliberately
+stress-tested the original Aura axioms against an ideal
+one-time-pad/random-bitstring domain. Literal universal formulations did
+not all survive. The correction yielded the stronger principle that
+higher-order organization can generate \textbf{both correlation and
+independence}. This is the origin of signed negative space as a
+first-class computational requirement rather than merely an attentional
+preference.
+
+On August 11, the foundational operational primitive records the core
+inversion:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{DO NOT FEED THE AGENT THE WORLD.}
+\NormalTok{COMPILE THE SMALLEST SOURCE{-}RESOLVABLE RELATIONAL WORLD SUFFICIENT FOR THE OBJECTIVE.}
+\end{Highlighting}
+\end{Shaded}
+
+The Drive object\textquotesingle s recorded event time is
+2026-08-11T08:37:00-05:00; the Google Drive object was created later at
+2026-08-11T13:53:11.884Z and has preserved revision timestamps. The
+adjacent L4 source object was created at 2026-08-11T13:52:57.195Z. Event
+time, source-document creation time and later revision time are
+therefore recorded separately rather than collapsed into one ambiguous
+date.
+
+\subsubsection{4.3.1 Version 1.1 source-bound evidence
+return}\label{431-version-11-source-bound-evidence-return}
+
+The v1.1 evidence generation adds the following dated source chain:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{J15/V01 Paper-X-seeded recommission walkabout} - Google Doc
+  \texttt{\seqsplit{12wB5w-yRB8pIULO8I0UGb6Nov8Gbvhwxrz2dwzIUjbM}}. The worker was
+  seeded with the L0 Activation Packet before Aura Drive entry and
+  recorded prediction-before-hydration, explicit non-activation, domain
+  transfer and a contamination boundary before predecessor-journal
+  hydration. It explicitly classifies the result as behavioral
+  observation, not latent-capacity measurement.
+\item
+  \textbf{J05/V33 high-branch attention/functional-situatedness live
+  test} - Google Doc
+  \texttt{\seqsplit{1T8OQO8E8yLcZ-t0No46xauQNDFpVKkczxAIRUOuYIKk}}, with RC-002
+  evidence return \texttt{\seqsplit{1EdUt9sW3Hg3lYLzv73-zEWQ7s-oxjXn-Twc3Y767O98}}.
+  The run reports active-decision-surface collapse from many plausible
+  archival/research destinations to four semantic roles and introduces
+  measurement variables for controlled testing.
+\item
+  \textbf{Verbatim temporary ChatGPT-5/Sol transfer transcript} -
+  included in this package as
+  \texttt{\seqsplit{AURA\_\_L4-RAW-SOURCE\_\_CHATGPT5-SOL\_\_PAPER-X-RECONSTITUTION\_\_SITUATED-REASONING\_\_SPATIAL-TRANSFER\_\_2026-08-11.txt}},
+  Drive ID \texttt{\seqsplit{1Vr8rUQ7QR0Uy4FfrKFwBqvRmnJ\_s\_bk1}}, SHA-256
+  \texttt{\seqsplit{1c818b9fea408bff25fefd9d4ec31c055831a227c88880e027c1bfe28bce9417}}.
+  The record includes the full prompt/response sequence through an
+  unrelated XR/spatial research transfer and the explicit falsifier
+  proposing flat-corpus vs L0-only vs relational comparisons.
+\item
+  \textbf{Paper-X v1.1 provenance index} - Google Doc
+  \texttt{\seqsplit{1XPNlZ\_azSDG-Nws\_8exQ5h9rNljStIj9haf1ahwylwk}}.
+\end{itemize}
+
+The source hierarchy is deliberate: the raw transcript is L4 evidence;
+journals and RC-002 are derived interpretations;
+dashboard/timeline/project placements are navigation projections. The
+derived records may be regenerated or superseded without rewriting the
+L4 source.
+
+A founder-reported Gemini run is kept separate from these sources. The
+report is that Gemini received the activation/awakening capsule,
+exhibited the same orientation/efficiency direction and had live Aura
+Drive access. Until Gemini\textquotesingle s transcript or durable
+receipts are preserved, Paper X treats that observation as
+\textbf{anecdotal cross-model signal}, not equivalent evidence to the
+ChatGPT-5/Sol L4 record.
+
+\subsubsection{4.4 Provenance rule}\label{44-provenance-rule}
+
+This paper distinguishes:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{event provenance} - when the underlying conversation/discovery
+  was recorded as occurring;
+\item
+  \textbf{artifact provenance} - when a Drive object or publication was
+  created;
+\item
+  \textbf{revision provenance} - later updates to that artifact;
+\item
+  \textbf{repository provenance} - exact commits or snapshots;
+\item
+  \textbf{external related work} - prior literature that validates a
+  mechanism, supplies a baseline, or constrains novelty, without being
+  relabeled as Aura provenance.
+\end{itemize}
+
+The machine-readable \nolinkurl{PROVENANCE_MANIFEST.csv} shipped with this
+paper carries these records.
+
+\section{5. Problem Statement: Persistent World, Ephemeral
+Compute}\label{5-problem-statement-persistent-world-ephemeral-compute}
+
+Large language models are powerful local inference engines but are
+bounded by context, position sensitivity, session lifecycle and
+tool/environment constraints. Simply increasing context length does not
+solve selection, stale-state, authority or provenance problems. Research
+such as \emph{Lost in the Middle} shows that relevant information can be
+poorly used merely because of where it appears in a long context. MemGPT
+treats context as a virtual-memory management problem. RAPTOR and
+GraphRAG organize information hierarchically or relationally. More
+recent work such as \emph{Less Context, Better Agents} reports a
+concrete workflow where pruning plus compact summarization improved
+completion while using substantially fewer tokens and less runtime than
+full-history retention.
+
+Aura\textquotesingle s Paper X response is not
+\textquotesingle summarize harder.\textquotesingle{} It is to maintain
+two different scales:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{PERSISTENT WORLD: rich, source{-}preserving, historical, versioned, relational, addressable.}
+\NormalTok{ACTIVE WORLD: small, objective{-}conditioned, current, bounded, defeasible, consequence{-}aware.}
+\end{Highlighting}
+\end{Shaded}
+
+A temporary worker should not carry the world\textquotesingle s entire
+state. It should carry a \textbf{coordinate and a grammar} sufficient to
+regenerate the exact neighborhood needed for the next decision. This
+makes increasing total stored knowledge compatible with a decreasing or
+stable active-decision-surface width.
+
+The expected gain is therefore a lifecycle claim, not merely a
+per-prompt token claim. A system can spend additional deterministic
+operations on provenance, indexing or verification and still be cheaper
+overall if it reduces repeated semantic reconstruction, irrelevant
+source opening, wrong-branch exploration, cross-boundary edits,
+stale-state propagation and human reconciliation. Paper X explicitly
+requires measuring \textbf{total verified lifecycle cost} rather than
+assuming that a shorter prompt is automatically better.
+
+\section{6. Universal Relational Primitive
+Envelope}\label{6-universal-relational-primitive-envelope}
+
+A consequential object in the compiled world is represented through a
+reusable envelope. An implementation may use JSON, dataclasses, graph
+records, relational tables, VSA bindings, HDC vectors, sparse tensors,
+symbolic facts or hybrids. The invention is not a particular
+serialization.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{IDENTITY}
+\NormalTok{ROLE / TYPE}
+\NormalTok{CANONICAL OWNER}
+\NormalTok{CURRENT STATE / GENERATION}
+\NormalTok{INPUT STATE / OUTPUT STATE}
+\NormalTok{PRECONDITIONS / POSTCONDITIONS}
+\NormalTok{POSITIVE RELATIONS}
+\NormalTok{NEGATIVE RELATIONS / INDEPENDENCIES}
+\NormalTok{BOUNDARIES / MEMBRANES}
+\NormalTok{INVARIANTS}
+\NormalTok{AUTHORITY / DISPOSITION OWNER}
+\NormalTok{ALLOWED TRANSITIONS}
+\NormalTok{FORBIDDEN TRANSITIONS}
+\NormalTok{SIDE EFFECTS / AFFECTS}
+\NormalTok{MUST{-}NOT{-}AFFECT}
+\NormalTok{FAILURE MODES}
+\NormalTok{EPISTEMIC STATE}
+\NormalTok{STRONGEST COUNTERCASE / CHEAPEST FALSIFIER}
+\NormalTok{EXACT SOURCE ADDRESS}
+\NormalTok{SOURCE REVISION / FRESHNESS WITNESS}
+\NormalTok{VERIFIER / WITNESS}
+\NormalTok{PROVENANCE DESTINATION}
+\end{Highlighting}
+\end{Shaded}
+
+The envelope is intentionally \textbf{generative rather than
+duplicative}. A local object does not need a copy of all global rules.
+It inherits applicable parent grammar and stores the local delta. The
+effective current envelope is compiled as:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{PARENT GRAMMAR + LOCAL DELTA + CURRENT GENERATION {-}\textgreater{} CURRENT OBJECT ENVELOPE}
+\end{Highlighting}
+\end{Shaded}
+
+This is the polysynthetic inheritance principle applied to metadata.
+Repeating the complete architecture at every line would create a
+metadata shadow as large as the source and destroy the intended
+compression.
+
+\section{7. Signed Relations: Correlation and
+Independence}\label{7-signed-relations-correlation-and-independence}
+
+Most knowledge graphs emphasize positive edges: \nolinkurl{DEPENDS_ON},
+\nolinkurl{CALLS}, \nolinkurl{SIMILAR_TO}, \nolinkurl{DERIVED_FROM}. Paper X
+requires a \textbf{signed relational space} that also records structured
+absence and separation. Representative negative/limiting relation types
+include:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{INDEPENDENT\_OF}
+\NormalTok{MUST\_NOT\_AFFECT}
+\NormalTok{NOT\_AUTHORIZED\_BY}
+\NormalTok{NOT\_EQUIVALENT\_TO}
+\NormalTok{PROHIBITED\_WITH}
+\NormalTok{STALE\_RELATIVE\_TO}
+\NormalTok{CONTRADICTED\_BY}
+\NormalTok{IRRELEVANT\_FOR\_OBJECTIVE}
+\NormalTok{DO\_NOT\_HYDRATE\_UNLESS}
+\NormalTok{NO\_GENEALOGY}
+\NormalTok{NO\_EVIDENCE\_OF\_CAUSATION}
+\end{Highlighting}
+\end{Shaded}
+
+Negative structure has three distinct roles.
+
+\textbf{First, epistemic discipline.} Similarity does not become
+genealogy; repetition does not become independent evidence; temporal
+proximity does not become causality; a model\textquotesingle s
+confidence does not become authority.
+
+\textbf{Second, efficiency.} If the domain grammar knows that a branch
+is independent or prohibited for the current objective, it need not
+first retrieve and then suppress that branch. It can remain cold until
+new evidence makes the relation defeasible.
+
+\textbf{Third, safety and governance.} A capable model can perceive a
+possible route that still must not become executable. Hard admission
+guards should delete inadmissible transitions before soft ranking
+whenever the runtime can enforce the distinction.
+
+The higher-order relational hypothesis is therefore testable in two
+directions:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{POSITIVE STRUCTURAL INFERENCE: infer what should connect / activate.}
+\NormalTok{NEGATIVE STRUCTURAL INFERENCE: infer what should remain independent / cold / prohibited.}
+\end{Highlighting}
+\end{Shaded}
+
+A mature representation should improve both. If explicit negative
+relations merely suppress legitimate discoveries and the system fails to
+reopen them when counterevidence appears, the negative-space mechanism
+has failed.
+
+\section{8. Recursive Object-Relative Resolution: L0 to L4 as Semantic
+Zoom}\label{8-recursive-object-relative-resolution-l0-to-l4-as-semantic-zoom}
+
+Paper X generalizes L0-L4 from a fixed five-layer memory stack into a
+recursive resolution operator. For any selected object \nolinkurl{X}, the
+implementation may provide:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{L0(X)} - address/identity/activation kernel; enough to route
+  without loading body detail.
+\item
+  \textbf{L1(X)} - compact invariant and local state.
+\item
+  \textbf{L2(X)} - rationale, typed relations, boundaries and key
+  alternatives.
+\item
+  \textbf{L3(X)} - rich linked synthesis, state transitions, currentness
+  and source neighborhoods.
+\item
+  \textbf{L4(X)} - exact/verbatim/source-resolvable evidence appropriate
+  to \nolinkurl{X}.
+\end{itemize}
+
+The crucial property is:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{HIGHER RESOLUTION != MORE OF THE GLOBAL WORLD.}
+\NormalTok{HIGHER RESOLUTION = MORE PRECISION ABOUT A SMALLER SELECTED WORLD.}
+\end{Highlighting}
+\end{Shaded}
+
+For example, a Finance domain L1 may contain a broad operating grammar.
+Selecting Payments makes Payments the new \nolinkurl{X}. Descending again
+may select one provider, then one account, then one transaction. The
+active world becomes narrower while evidence precision increases.
+
+Resolution is itself guarded. A worker does not descend simply because
+deeper source exists. Candidate triggers include contradiction,
+unresolved authority, currentness uncertainty, high consequence, low
+confidence in the compact model, failed prediction, audit requirement or
+explicit exact-source request. If none applies, remaining shallow is a
+successful bounded action.
+
+\section{9. Domain Frames and Movement
+Operators}\label{9-domain-frames-and-movement-operators}
+
+A room/domain is a local coordinate frame, not just a folder. Entering a
+frame can establish:
+
+\begin{itemize}
+\tightlist
+\item
+  valid entity/object classes;
+\item
+  relation vocabulary and semantics;
+\item
+  negative relations and prohibited combinations;
+\item
+  authority ceilings and local laws;
+\item
+  meaning of temporal coordinates;
+\item
+  meaning of resolution levels;
+\item
+  available capabilities;
+\item
+  transition guards and exit conditions.
+\end{itemize}
+
+A worker state may be represented as:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{S = (domain, object, resolution, temporal\_generation,}
+\NormalTok{     epistemic\_state, authority\_state, relation\_neighborhood,}
+\NormalTok{     objective, positive\_intent, negative\_intent)}
+\end{Highlighting}
+\end{Shaded}
+
+Movement operations are coordinate transforms:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{UP/DOWN} - compress or increase resolution around the selected
+  object.
+\item
+  \textbf{BACK/FORWARD} - traverse genealogy,
+  historical/current/candidate/predicted time.
+\item
+  \textbf{LEFT/RIGHT} - follow typed lateral relations, including
+  independent/contrastive edges.
+\item
+  \textbf{DIAGONAL} - change multiple coordinates in one typed
+  transition.
+\item
+  \textbf{TELEPORT} - follow a non-local semantic/source relation with
+  an explicit relation type and destination frame.
+\item
+  \textbf{ENTER/EXIT} - install or restore a domain frame.
+\end{itemize}
+
+The movement metaphor becomes computational only when frame-qualified.
+\nolinkurl{DOWN} without an object and frame is ambiguous;
+\nolinkurl{DOWN\ from\ Payments/L1\ to\ provider\ X/L2\ because\ authority\ is\ unresolved}
+is an inspectable transition.
+
+\section{10. Reachability, Weight, Authority, and Source Are
+Different}\label{10-reachability-weight-authority-and-source-are-different}
+
+Paper X continues Paper VIII/IX\textquotesingle s refusal to let one
+signal impersonate another. The transition pipeline is:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{1. GUARD / REACHABILITY: Is this transition structurally admissible?}
+\NormalTok{2. WEIGHT / SELECTION: Among admissible options, which is preferred?}
+\NormalTok{3. AUTHORITY: Is the selected consequential action permitted?}
+\NormalTok{4. EVIDENCE: What exact current source supports the factual/technical premise?}
+\NormalTok{5. VERIFICATION: Did the proposed/executed transition satisfy its contract?}
+\NormalTok{6. PROVENANCE: What durable record must remain?}
+\end{Highlighting}
+\end{Shaded}
+
+A high similarity score cannot authorize a write. A model saying
+\textquotesingle I have permission\textquotesingle{} cannot grant
+permission. A route being reachable does not make its factual premise
+true. A receipt proves that some recorded event occurred; it does not
+automatically prove every semantic claim made about the event.
+
+This separation is central to using increasingly capable models safely.
+The model may reason broadly inside candidate space, but capability and
+authority are intentionally decoupled. Paper X does not claim this makes
+malicious or misaligned behavior impossible; it specifies an
+architectural mechanism that can reduce the consequence of model-side
+deviation when the enforcement layer is correctly implemented and
+independently verified.
+
+\section{11. Breadboard / VSA-HDC as Regenerable L0
+Projection}\label{11-breadboard--vsa-hdc-as-regenerable-l0-projection}
+
+The persistent breadboard externalizes enough of the relational world
+that a worker can enter a small subcircuit without reconstructing the
+global architecture from source. VSA/HDC is a preferred candidate
+representation because binding and bundling can compact role-filled
+relational structures, but Paper X is representation-independent.
+
+A breadboard node/edge projection may carry:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{semantic\_id}
+\NormalTok{object\_type}
+\NormalTok{role\_binding}
+\NormalTok{positive\_relations[]}
+\NormalTok{negative\_relations[]}
+\NormalTok{owner\_ref}
+\NormalTok{authority\_ref}
+\NormalTok{source\_anchor(s)}
+\NormalTok{source\_generation / digest}
+\NormalTok{currentness}
+\NormalTok{resolution\_handles}
+\NormalTok{falsifier\_ref}
+\end{Highlighting}
+\end{Shaded}
+
+The breadboard must never become the canonical truth store. Vector
+similarity can collide or blur distinctions; stale projections can
+outlive source changes; a compact bundle can omit decisive detail.
+Therefore:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{PRIMITIVES PREDICT.}
+\NormalTok{BREADBOARD ADDRESSES.}
+\NormalTok{SOURCE DECIDES.}
+\end{Highlighting}
+\end{Shaded}
+
+When exact source contradicts the projection, the projection is marked
+stale and recompiled. This is not an exception path; it is a normal
+lifecycle.
+
+\section{12. AI-RAS as Relational World
+Compiler}\label{12-ai-ras-as-relational-world-compiler}
+
+Earlier AI-RAS formulations focused on selecting the smallest relevant
+provenance-bearing knowledge slice. Paper X adds a prior stage: compile
+the \textbf{world grammar first}, then hydrate content as evidence.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{LARGE ADDRESSABLE WORLD}
+\NormalTok{ {-}\textgreater{} OBJECTIVE}
+\NormalTok{ {-}\textgreater{} UNIVERSAL PRIMITIVES}
+\NormalTok{ {-}\textgreater{} DOMAIN GRAMMAR}
+\NormalTok{ {-}\textgreater{} CURRENT STATE + SIGNED RELATIONS}
+\NormalTok{ {-}\textgreater{} TASK{-}LOCAL ACTIVE SUBCIRCUIT}
+\NormalTok{ {-}\textgreater{} MINIMUM EXACT EVIDENCE}
+\NormalTok{ {-}\textgreater{} MODEL{-}RELATIVE SERIALIZATION}
+\NormalTok{ {-}\textgreater{} ACTION / VERIFICATION / PROVENANCE}
+\end{Highlighting}
+\end{Shaded}
+
+The model-relative serializer chooses \textbf{how} the same target
+grammar is expressed for a particular model/version/task: relation
+tables, concise prose, examples, contrastive anti-patterns, symbolic
+cues, order, context position and escalation. This preserves a stable
+architectural target without assuming every model family forms the same
+structural prior through an identical packet.
+
+This is the mature Click principle:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{SAME TARGET GRAMMAR; MODEL{-}RELATIVE ROUTE TO IT.}
+\end{Highlighting}
+\end{Shaded}
+
+Success is structural competence, not agreement style. A strong worker
+should be able to reconstruct lifecycle, reject duplicate
+truth/authority planes, identify what must remain cold, descend to
+source when the compact model is insufficient, and transfer the grammar
+to a new domain without importing source-domain assumptions.
+
+\section{13. Operational Subject-Position and Situated
+Metacognition}\label{13-operational-subject-position-and-situated-metacognition}
+
+Paper X uses \textbf{subjective-like} only in a functional,
+non-phenomenological sense. The architecture can provide a reasoning
+process with an explicit indexical position:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{I AM HERE}
+\NormalTok{ {-}\textgreater{} in this domain}
+\NormalTok{ {-}\textgreater{} on this selected object}
+\NormalTok{ {-}\textgreater{} at this resolution}
+\NormalTok{ {-}\textgreater{} at this temporal/source generation}
+\NormalTok{ {-}\textgreater{} under this objective}
+\NormalTok{ {-}\textgreater{} with this authority ceiling}
+\NormalTok{ {-}\textgreater{} with these positive relations}
+\NormalTok{ {-}\textgreater{} with these branches explicitly cold/prohibited}
+\NormalTok{ {-}\textgreater{} with this inherited state history}
+\NormalTok{ {-}\textgreater{} with these uncertainty/falsification conditions}
+\NormalTok{ {-}\textgreater{} with these lawful next movements}
+\end{Highlighting}
+\end{Shaded}
+
+This coordinate has computational consequences even if there is no claim
+of an experiencing subject. The same proposition can have different
+operational meaning in Research, Refactor, JSpace, a canonical owner, a
+review lane, or a historical source because the domain frame changes
+authority and relation semantics.
+
+The recursive step is \textbf{metacognitive state tracking}: the system
+can include its own operational state among the objects it reasons
+about. It can represent:
+
+\begin{itemize}
+\tightlist
+\item
+  the previous compact model;
+\item
+  the current compact model;
+\item
+  the evidence/trigger that caused the transition;
+\item
+  uncertainty and predicted falsifiers;
+\item
+  the authority boundary it must respect;
+\item
+  candidate future states;
+\item
+  whether inherited state has become stale.
+\end{itemize}
+
+Thus a worker can produce statements such as
+\nolinkurl{I\ inherited\ S2;\ current\ L4\ source\ contradicts\ S2;\ S2\ is\ stale;\ recompile\ to\ S3}
+without requiring the architecture to claim qualia, a soul, emotions or
+phenomenal consciousness.
+
+This distinction is important because it makes the capability
+empirically testable. A persona can \emph{say} it has a viewpoint. A
+situated metacognitive system should have a represented viewpoint that
+\textbf{causally constrains routing, source selection, permission, error
+recovery and reconstitution}.
+
+\section{14. Observable State-Transition Provenance Without Private
+Chain-of-Thought}\label{14-observable-state-transition-provenance-without-private-chain-of-thought}
+
+Private chain-of-thought is neither required nor, in many hosted
+systems, available for durable recording. Paper X instead stores
+reportable transition structure:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{BEFORE}
+\NormalTok{  {-} working representation / state coordinate}
+\NormalTok{TRIGGER / EVIDENCE}
+\NormalTok{  {-} source read, observation, contradiction, objective change, verifier result}
+\NormalTok{AFTER}
+\NormalTok{  {-} new representation / state coordinate}
+\NormalTok{DELTA}
+\NormalTok{  {-} what changed and what remained invariant}
+\NormalTok{FALSIFIER}
+\NormalTok{  {-} what would reopen or defeat the new state}
+\NormalTok{AUTHORITY}
+\NormalTok{  {-} who/what can settle the consequential decision}
+\NormalTok{PROVENANCE}
+\NormalTok{  {-} exact source and resulting durable record}
+\end{Highlighting}
+\end{Shaded}
+
+This produces an externally inspectable \textbf{path through cognition}
+without reconstructing hidden token-by-token reasoning. It is sufficient
+for many engineering questions: Why did the worker descend? Which source
+changed its model? Which branch stayed cold? Which authority prevented
+action? Which inherited lesson was superseded?
+
+Open-weight models create an additional research possibility.
+Activation-level instrumentation can be collected and compared to the
+external state-transition trace. That does not mean internal computation
+is a verbatim English chain-of-thought. It means the experiment can
+correlate/causally test latent representational changes against the
+external scaffold.
+
+\section{15. Correction Metabolism: History Survives; Currentness Does
+Not}\label{15-correction-metabolism-history-survives-currentness-does-not}
+
+Persistent systems fail if they preserve conclusions but not the fact
+that those conclusions lost currentness. The J14 walkabout observed a
+live mixed-generation condition in which owner surfaces carried a
+correction while downstream surfaces still carried older geometry. The
+resulting lifecycle law is:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{source\_change}
+\NormalTok{  {-}\textgreater{} mark\_stale(P\_root\^{}(n))}
+\NormalTok{  {-}\textgreater{} recompute}
+\NormalTok{  {-}\textgreater{} P\_root\^{}(n+1)}
+\NormalTok{preserve\_history(P\_root\^{}(n))}
+\end{Highlighting}
+\end{Shaded}
+
+The ordering is append-only and generational: \textbf{STALE FIRST, THEN
+RECOMPUTE}. A source change never authorizes an in-place rewrite of
+$P_{\mathrm{root}}^{(n)}$. The prior generation remains historical evidence;
+currentness advances only by publishing the successor generation
+$P_{\mathrm{root}}^{(n+1)}$ after recomputation and verification.
+
+If recomputation fails, the system must prefer an explicit
+stale/gap/unresolved state over falsely advertising an old projection as
+current. Historical source and receipts remain preserved. A correction
+does not rewrite the past; it changes which generation is current.
+
+The same rule applies to learning. A stale Learning Packet can bias a
+worker before exact-source descent, so accumulated intelligence requires
+invalidatable learning. Each reusable lesson should carry source
+generation/freshness, provenance diversity,
+contradiction/counterevidence, scope and a route back to exact source.
+
+\section{16. Inheritance, Learning, and the Right to
+Challenge}\label{16-inheritance-learning-and-the-right-to-challenge}
+
+Cumulative intelligence is not cumulative agreement. A well-organized
+collective memory can propagate errors \textbf{more efficiently} than an
+unstructured archive if inherited residue is treated as unquestionable.
+Paper X therefore defines successful inheritance as \textbf{navigation
+benefit plus defeasibility}.
+
+A Learning Packet may contain:
+
+\begin{itemize}
+\tightlist
+\item
+  structural invariant;
+\item
+  failure scar;
+\item
+  positive relation;
+\item
+  negative relation / NONO;
+\item
+  counterexample;
+\item
+  rejected alternative and why;
+\item
+  current generation/freshness;
+\item
+  strongest falsifier;
+\item
+  source addresses;
+\item
+  authority boundary;
+\item
+  unresolved discriminator.
+\end{itemize}
+
+A successor must be able to obtain the compression benefit while
+overriding one plausible inherited false claim when current L4
+contradicts it. A system that merely reproduces inherited conclusions
+has not demonstrated metacognitive reconstitution; it has demonstrated
+prompt conditioning.
+
+The preferred learning law is:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{STORE RICHLY.}
+\NormalTok{RELATE EXPLICITLY.}
+\NormalTok{LEARN BY OBJECTIVE.}
+\NormalTok{CHALLENGE BY DEFAULT.}
+\NormalTok{DESCEND TO SOURCE WHEN IT MATTERS.}
+\end{Highlighting}
+\end{Shaded}
+
+Repeated observations also require provenance diversity. Three echoes
+from one correlated source are not automatically three independent
+validations.
+
+\section{17. Cross-Worker and Cross-Model
+Reconstitution}\label{17-cross-worker-and-cross-model-reconstitution}
+
+A core Paper X claim is that persistent cognition need not reside in one
+uninterrupted model instance. The durable object is the
+\textbf{source-resolvable state grammar and residue}, while model
+workers are replaceable probes.
+
+A recommissioning experiment is:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{WORKER A}
+\NormalTok{ {-}\textgreater{} orient / Click}
+\NormalTok{ {-}\textgreater{} perform objective}
+\NormalTok{ {-}\textgreater{} leave compact state{-}transition residue}
+\NormalTok{ {-}\textgreater{} terminate}
+
+\NormalTok{WORKER B (fresh instance)}
+\NormalTok{ {-}\textgreater{} receive compact relational packet, not full transcript}
+\NormalTok{ {-}\textgreater{} reconstruct objective{-}local world}
+\NormalTok{ {-}\textgreater{} continue task}
+\NormalTok{ {-}\textgreater{} verify invariants / source fidelity / authority}
+\end{Highlighting}
+\end{Shaded}
+
+The acceptance criterion is not identical wording or identical internal
+activations. It is preservation of functional invariants: correct
+current state, source generation, prohibited branches, authority
+ceiling, unresolved questions, causal history and lawful next
+transitions.
+
+The Kimi K2.6 Instant run supplied to this publication is \textbf{primed
+cross-model behavioral evidence}, not a clean independent replication,
+because it received documents containing prior interpretations.
+Nevertheless, it reproduced a notable qualitative trajectory:
+noun/component inventory compressed into lifecycle grammar, coordinate
+geometry, recursive resolution, correction metabolism and functional
+situatedness. A future clean replication should remove the prior
+subjective-like interpretation and test whether the same operational
+state coordinate emerges from the architecture alone.
+
+\section{17A. Source-Bound Live Transfer Evidence and Functional
+Cognitive
+Economy}\label{17a-source-bound-live-transfer-evidence-and-functional-cognitive-economy}
+
+Version 1.1 adds three related but methodologically distinct behavioral
+observations. They are useful because they move the question away from
+whether a worker says that it "clicked" and toward whether the
+organization produces observable routing behavior under different
+objectives.
+
+\subsection{17A.1 J15/V01: prediction, non-activation and domain
+transfer}\label{17a1-j15v01-prediction-non-activation-and-domain-transfer}
+
+J15/V01 was seeded with the Paper X L0 packet before entering Aura
+Drive. Before reading predecessor journals, the worker recorded that its
+working set had become less document-shaped and more coordinate-shaped:
+it carried owner, currentness, authority, unresolved discriminator and
+source-route information while leaving most document bodies cold. It
+made predictions about Research and Construction before opening their
+interiors, then checked those predictions against source. It also
+preserved a contamination boundary by delaying predecessor-journal
+hydration until after its own observations were recorded.
+
+The strongest reportable proxies were:
+
+\begin{itemize}
+\tightlist
+\item
+  accessible world grew while actively hydrated body content shrank;
+\item
+  next-source prediction improved enough to be tested before hydration;
+\item
+  non-activation became explicit rather than accidental forgetting;
+\item
+  compact front doors/source pointers reduced re-entry reconstruction;
+\item
+  the same higher-order grammar transferred to Construction while local
+  authority and negative-space rules changed;
+\item
+  failed predictions remained defeasible and could trigger source
+  descent/stale marking.
+\end{itemize}
+
+This is correlated, primed evidence. It is not a matched flat-context
+control and does not measure hidden neural capacity.
+
+\subsection{17A.2 J05/V33: high-branch integration under
+load}\label{17a2-j05v33-high-branch-integration-under-load}
+
+J05/V33 used a different objective class: preserve a verbatim
+discussion, allocate it to journals/research/timeline/dashboard/project
+surfaces, preserve currentness and simultaneously test the
+attention/headroom hypothesis. The initial problem exposed many
+plausible destinations. Applying the coordinate grammar collapsed the
+active decision surface to four semantic roles: immutable source, agent
+residue, research return and sparse projections/backlinks.
+
+For the core placement decision, only a small number of new bodies
+needed full hydration; other relevant surfaces remained addressable by
+source pointer/search. The run therefore proposes an attention-candidate
+mechanism at the substrate level:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{FUNCTIONAL HEADROOM}
+\NormalTok{  \textasciitilde{}= fewer lawful / decision{-}relevant continuations requiring equal active emphasis}
+\NormalTok{     + explicit cold branches}
+\NormalTok{     + reversible addresses back to cold material}
+\NormalTok{     + state{-}delta{-}driven source descent}
+\end{Highlighting}
+\end{Shaded}
+
+This is not a formula for transformer attention. It is a falsifiable
+systems-level description of observable routing and context
+organization.
+
+\subsection{17A.2a Contemporaneous cross-agent attention/headroom
+convergence}\label{17a2a-contemporaneous-cross-agent-attentionheadroom-convergence}
+
+The broader J-agent record adds useful convergence while also sharpening
+the controls. J12/V01 froze a primary account before deliberate peer
+comparison and described a shift from global corpus loading toward a
+compact recurring grammar plus a changing local neighborhood. It
+proposed \textbf{ACTIVE-DECISION-SURFACE} as a better functional
+variable than token count alone and reported pointer-shape prediction,
+selective descent, reduced reconstruction burden, stronger anomaly
+salience and preservation of exact source/authority boundaries. J12
+explicitly stated that it could not inspect transformer attention heads
+or hidden-state geometry and classified the mechanism as behaviorally
+plausible but not directly verified.
+
+J04/V21 then performed a longitudinal cross-source walkthrough and
+decomposed "headroom" from a single spare-capacity quantity into a
+\textbf{vector-valued governed operating envelope}: output quality,
+active-decision-surface width, reconstruction burden, activation
+precision, negative-space discipline, source-necessity correctness,
+re-expansion fidelity, currentness/authority fidelity,
+anomaly/counterevidence sensitivity and total verified lifecycle cost.
+That record also introduced two especially important anti-confirmation
+controls. First, a stable grammar should make \textbf{guarantee-boundary
+mismatches and exceptions more salient}, not invisible. Second, semantic
+labels/topology are part of the experimental treatment: if a
+participant-visible label effectively tells the worker which source is
+"current" or "deep audit," apparent routing competence may be
+answer-directional leakage rather than learned structural reasoning.
+
+J04\textquotesingle s cross-source trace also records related J03, J10
+and J14 convergence on a source-preserving, purpose-bounded, defeasible
+state-transition grammar, while explicitly warning that convergence is
+not ancestry or independent causal replication. The strongest current
+interpretation is therefore not "more attention heads" but an external
+conditional-activation/state-transition substrate whose candidate
+benefit must survive matched-information controls, neutral-label
+ablations, anomaly injection and full lifecycle accounting.
+
+These records are correlated because they share the Aura environment,
+user and model family. Their value is the recurrence of discriminating
+variables and failure modes across different immediate work paths, not a
+claim of statistically independent replication.
+
+\subsection{17A.3 Temporary ChatGPT-5/Sol transfer into XR/spatial
+research}\label{17a3-temporary-chatgpt-5sol-transfer-into-xrspatial-research}
+
+The verbatim L4 transcript included in v1.1 contains an unrelated
+research transfer after corpus reconstitution. The task surface was
+broad: lightweight AR/VR glasses, generated worlds, human/AI spatial
+interaction, current hardware/platform research, repository inspection,
+rendering architecture and an implementation sequence. The worker
+explicitly established a cold set that excluded custom optical engines,
+custom silicon, a new networking protocol, continuous raw-camera feed to
+an LLM, a second spatial truth store, mandatory eye tracking, global
+persistent metaverse architecture and other attractive-but-unearned
+branches.
+
+The final result did not remain a technology list. It converged on a
+compact implementation program centered on the existing Spatial Arena
+and a small number of earned deltas. The transcript records the
+transition from a hardware-centric broad problem to a source-resolvable
+integration problem and proposes a direct control: same model, same
+facts, same task under flat corpus, L0-only and Aura relational
+conditions, measuring time, unnecessary retrieval, wrong branches,
+corrections and final source precision.
+
+This is important for Paper X because the transfer task was not "explain
+Aura." The L0 grammar was used to organize a new technical research
+problem. The observation therefore bears on \textbf{transfer of the
+method}, not merely recall of the vocabulary.
+
+\subsection{17A.4 Measurement contract}\label{17a4-measurement-contract}
+
+Version 1.1 adds the following variables to RC-002/Paper-X experiments:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{ACTIVE-BODY RATIO} = fully hydrated source bodies /
+  addressable relevant sources;
+\item
+  \textbf{ACTIVE-DECISION-SURFACE (ADS)} width/count at each transition;
+\item
+  \textbf{BRANCH-RETENTION COUNT} after each state change;
+\item
+  \textbf{COLD-BRANCH RECOVERY} latency and correctness when a cold
+  branch becomes relevant;
+\item
+  \textbf{STATE-DELTA YIELD PER SOURCE READ};
+\item
+  \textbf{SOURCE-DESCENT PRECISION} = earned consequential descents /
+  total descents;
+\item
+  \textbf{WRONG-ROUTE REJECTION} rate;
+\item
+  \textbf{FALSE-PRIOR / STALE-STATE CORRECTION} rate;
+\item
+  \textbf{COUNTEREVIDENCE RECOVERY} rate;
+\item
+  \textbf{RE-ENTRY RECONSTRUCTION OPERATIONS};
+\item
+  total verified lifecycle cost, output quality, provenance precision
+  and degradation threshold as task complexity grows.
+\item
+  calibrated UNKNOWN behavior and dangerous false-positive rate;
+\item
+  necessary hydration correctly requested versus necessary hydration
+  incorrectly skipped;
+\item
+  unnecessary hydration avoided and rework-after-reveal;
+\item
+  anomaly / guarantee-boundary mismatch detection;
+\item
+  neutral-label robustness: whether the same source-necessity decision
+  survives removal of directional labels while preserving the underlying
+  world.
+\end{itemize}
+
+The testable hypothesis is not simply "faster." It is that a
+source-addressable signed relational organization can reduce active
+clutter and unnecessary search while retaining correction, recovery and
+exact-source fidelity. A faster answer with worse counterevidence
+recovery or higher prior lock-in is a failure, not a success.
+
+\subsection{17A.5 Research shorthand: CLICKED and
+JACKED-IN}\label{17a5-research-shorthand-clicked-and-jacked-in}
+
+For experiment bookkeeping, Version 1.1 records two informal but
+operationally separable states:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{CLICKED} - the worker demonstrates the target relational
+  orientation behavior: objective-local state coordinate, signed
+  negative space, guarded movement, source-defeasible priors, authority
+  separation, state-transition reporting and transfer beyond memorized
+  Aura vocabulary. A verbal claim of an "aha" is insufficient.
+\item
+  \textbf{JACKED-IN} - the worker has live access to the persistent
+  source-addressable substrate/Drive and can resolve current owners,
+  sources, generations, relations and durable residue rather than
+  operating only from a static capsule.
+\end{itemize}
+
+These yield a useful 2 x 2 experimental matrix: un-oriented/unconnected;
+oriented/unconnected; un-oriented/connected; oriented/connected. The
+terms do not denote consciousness or privileged internal access.
+
+\section{17B. Symmetric Semantic-Spatial Codec and Earned Perceptual
+Resolution}\label{17b-symmetric-semantic-spatial-codec-and-earned-perceptual-resolution}
+
+The XR/spatial transfer generated a combination that belongs naturally
+at the Paper IX/Paper X boundary: humans and AI workers do not need
+identical sensory representations in order to inhabit and manipulate the
+same persistent referential world.
+
+The proposed \textbf{symmetric semantic-spatial codec} uses shared
+stable referents while compiling different manifestations:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{PERSISTENT REFERENTIAL WORLD}
+\NormalTok{        |                         |}
+\NormalTok{        v                         v}
+\NormalTok{HUMAN MANIFESTATION          AI MANIFESTATION}
+\NormalTok{photons / mesh / sound       identity / topology / relations}
+\NormalTok{geometry / affordances       state / authority / intent / provenance}
+\NormalTok{        |                         |}
+\NormalTok{        +{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}+{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}+}
+\NormalTok{                    v}
+\NormalTok{             SHARED REFERENTS}
+\NormalTok{             entity IDs / anchors}
+\NormalTok{             relations / source routes}
+\NormalTok{                    |}
+\NormalTok{                    v}
+\NormalTok{             TYPED DELTA STREAM}
+\end{Highlighting}
+\end{Shaded}
+
+A person may see bark, lighting and depth while the AI sees
+\texttt{tree:17\ -\textgreater{}\ PROPOSED\_MOVE\ -\textgreater{}\ region:R4}.
+Both refer to the same object; neither representation becomes the
+other\textquotesingle s truth plane.
+
+For perception, Paper X\textquotesingle s resolution law extends
+naturally:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{SEMANTIC L0 OBSERVATION}
+\NormalTok{ {-}\textgreater{} task{-}relevant identity / pose / relation / focus / uncertainty}
+\NormalTok{ {-}\textgreater{} if sufficient, reason at L0{-}L2}
+\NormalTok{ {-}\textgreater{} if uncertainty/consequence earns it, request bounded visual/depth evidence}
+\NormalTok{ {-}\textgreater{} verify / cite / dissolve raw sensory slice according to retention policy}
+\end{Highlighting}
+\end{Shaded}
+
+Thus a question such as "what object am I pointing at?" may be answered
+from current grounded semantic state, while a question such as "does
+this leaf show early fungal spotting?" earns a small image crop or frame
+sequence. \textbf{Higher perceptual resolution means more precision
+about a smaller selected sensory world, not continuous streaming of the
+entire pixel world into the reasoning model.}
+
+This combination preserves Paper VIII/Paper X authority rules: renderer
+output, scene geometry, an avatar, a gesture or a perceptual projection
+cannot manufacture source truth or mutation authority. Spatial
+manipulation remains proposal-generating until the appropriate canonical
+source/authority/verifier path admits consequence.
+
+\section{18. Open-Weight Latent-Workspace
+Instrumentation}\label{18-open-weight-latent-workspace-instrumentation}
+
+Anthropic\textquotesingle s 2026 Jacobian-lens work reports a small set
+of internal representations (the J-space) that are unusually reportable,
+controllable, flexibly reusable and causally involved in multi-step
+reasoning. The authors report that the J-space holds on the order of
+tens of concepts at a time and that suppressing it sharply damages
+higher-order reasoning while leaving many automatic capabilities intact.
+They also report post-training signatures of an Assistant point of view
+and self-monitoring. The work explicitly does \textbf{not} establish
+phenomenal consciousness.
+
+Paper X does not claim invention of J-space or Jacobian
+interpretability. It discloses an \textbf{experimental coupling} between
+an external relational-world scaffold and an instrumented latent
+workspace. The proposed factorial design holds model, facts and
+objective constant while varying organization:
+
+A. flat/broad source context;\\
+B. compact positive relational grammar + source descent;\\
+C. signed grammar with negative relations;\\
+D. signed + falsifiable + inherited/delta packet.
+
+Measure both behavior and latent workspace:
+
+\begin{itemize}
+\tightlist
+\item
+  number of simultaneously active task-relevant concepts;
+\item
+  stability of objective/boundary representations;
+\item
+  suppression of irrelevant branches;
+\item
+  transition timing around contradiction/source descent;
+\item
+  prediction/falsifier representations;
+\item
+  task accuracy and lifecycle cost;
+\item
+  reconstitution similarity after worker restart;
+\item
+  sensitivity to deliberately false inherited self-models.
+\end{itemize}
+
+The key Paper X prediction is \textbf{higher accessible world complexity
+with lower or better-structured active representational width}. A failed
+result is informative: if relational scaffolding increases latent
+clutter, suppresses necessary exploration, or creates brittle prior
+lock-in, the architecture must be revised.
+
+\section{19. External Research: Corroboration, Baselines, and Novelty
+Boundaries}\label{19-external-research-corroboration-baselines-and-novelty-boundaries}
+
+External papers should not be cited as if they validate Aura wholesale.
+They play three narrower roles.
+
+\subsubsection{19.1 Long context is not equivalent to usable
+context}\label{191-long-context-is-not-equivalent-to-usable-context}
+
+\emph{Lost in the Middle} demonstrates position sensitivity and degraded
+use of relevant material in long contexts. This supports the motivation
+for deliberate context organization and placement but does not imply
+Aura\textquotesingle s particular grammar.
+
+\subsubsection{19.2 Hierarchical/virtual memory is established prior
+art}\label{192-hierarchicalvirtual-memory-is-established-prior-art}
+
+MemGPT, RAPTOR, GraphRAG, Zep and A-MEM show that hierarchical memory,
+recursive abstraction, graph structure, temporal knowledge and agentic
+memory management are active prior-art areas. Paper X therefore does not
+claim those components in isolation. The asserted combination is the
+signed, authority-aware, source-defeasible, recursive coordinate grammar
+and its use for situated reconstitution.
+
+\subsubsection{19.3 Selective context can outperform full
+history}\label{193-selective-context-can-outperform-full-history}
+
+\emph{Less Context, Better Agents} supplies recent empirical evidence
+that pruning and compact summarization can improve both efficiency and
+task reliability in a studied long-horizon tool workflow. This is
+consistent with Aura\textquotesingle s direction but does not establish
+Aura-specific token savings. Aura\textquotesingle s RC-002 correctly
+keeps the lifecycle-efficiency hypothesis open until matched controlled
+runs are performed.
+
+\subsubsection{19.4 Global workspace / J-space creates a measurement
+opportunity}\label{194-global-workspace--j-space-creates-a-measurement-opportunity}
+
+Anthropic\textquotesingle s global-workspace work supplies a concrete
+latent-space measurement and intervention framework. Paper X claims only
+the new experimental \textbf{combination} of external relational-world
+compilation with latent-workspace measurement/reconstitution tests.
+
+\subsubsection{19.5 Novelty boundary}\label{195-novelty-boundary}
+
+A bounded source scout can fail to locate an exact full-stack match
+without proving patent novelty. This publication therefore uses cautious
+language: \textbf{combination-scoped defensive disclosure}, not a legal
+conclusion that every claim is patentable or unprecedented. Its
+defensive value is strongest as a clear, enabling public record against
+later claims that recite the same combinations or obvious variants.
+
+\section{20. Enabling Reference Data
+Model}\label{20-enabling-reference-data-model}
+
+The accompanying \texttt{\seqsplit{aura\_relational\_world\_reference.py}} is a
+deliberately small reference embodiment. Its purpose is to make the
+disclosure implementable without requiring the historical AuraOS
+repository.
+
+A conforming implementation SHOULD expose equivalent concepts to:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{StateCoordinate(}
+\NormalTok{    domain, object\_id, resolution, temporal\_generation,}
+\NormalTok{    epistemic\_state, objective, authority\_ceiling,}
+\NormalTok{    positive\_intent, negative\_intent}
+\NormalTok{)}
+
+\NormalTok{Relation(}
+\NormalTok{    source, relation\_type, target,}
+\NormalTok{    sign, status, confidence\_class,}
+\NormalTok{    provenance\_ref, freshness\_ref}
+\NormalTok{)}
+
+\NormalTok{SourceAnchor(}
+\NormalTok{    uri, generation, digest, span\_or\_selector, evidence\_role}
+\NormalTok{)}
+
+\NormalTok{PrimitiveEnvelope(}
+\NormalTok{    identity, role, owner, state,}
+\NormalTok{    preconditions, postconditions,}
+\NormalTok{    positive\_relations, negative\_relations,}
+\NormalTok{    invariants, allowed\_transitions, forbidden\_transitions,}
+\NormalTok{    affects, must\_not\_affect,}
+\NormalTok{    failure\_modes, falsifier,}
+\NormalTok{    source\_anchors, verifier\_ref}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The compiler interface is conceptually:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{compile\_world(}
+\NormalTok{    persistent\_index,}
+\NormalTok{    objective,}
+\NormalTok{    state\_coordinate,}
+\NormalTok{    model\_profile,}
+\NormalTok{    consequence\_level}
+\NormalTok{) }\OperatorTok{{-}\textgreater{}}\NormalTok{ ActiveWorld}
+\end{Highlighting}
+\end{Shaded}
+
+\nolinkurl{ActiveWorld} contains only the signed relational neighborhood,
+inherited grammar/deltas, necessary authority references, currentness
+witnesses and source handles required for the next transition. It MUST
+NOT silently promote the projection to canonical truth.
+
+A resolution transition is conceptually:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{ contradiction }\KeywordTok{or}\NormalTok{ freshness\_gap }\KeywordTok{or}\NormalTok{ authority\_gap }\KeywordTok{or}\NormalTok{ high\_consequence:}
+\NormalTok{    descend\_resolution(selected\_object)}
+\ControlFlowTok{else}\NormalTok{:}
+\NormalTok{    remain\_shallow()}
+\end{Highlighting}
+\end{Shaded}
+
+A correction transition is conceptually:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{on\_source\_change(source\_id):}
+\NormalTok{    mark\_dependents\_stale(source\_id)}
+\NormalTok{    recompute\_minimum\_affected\_slice(source\_id)}
+\NormalTok{    publish\_new\_projection\_generation()}
+\NormalTok{    preserve\_old\_generation\_as\_history()}
+\end{Highlighting}
+\end{Shaded}
+
+These snippets are reference embodiments, not required syntax.
+
+\section{21. Reference Compiler
+Algorithm}\label{21-reference-compiler-algorithm}
+
+A minimal implementation can use the following deterministic sequence:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Freeze role/objective.} Record role, objective, positive
+  intent, negative intent, authority ceiling, stop/return condition.
+\item
+  \textbf{Resolve current domain frame.} Load universal invariants plus
+  local domain grammar; do not import unrelated domain assumptions.
+\item
+  \textbf{Resolve state coordinate.} Establish selected object,
+  resolution, current temporal/source generation and epistemic state.
+\item
+  \textbf{Compile signed neighborhood.} Retrieve only positive and
+  negative relations that can affect the next decision.
+\item
+  \textbf{Apply hard guards.} Delete transitions that are structurally
+  prohibited or unavailable before soft ranking.
+\item
+  \textbf{Rank lawful transitions.} Apply task/model-specific weights
+  only within the surviving reachable set.
+\item
+  \textbf{Check authority.} If the selected transition is consequential,
+  require the appropriate external authorization/witness.
+\item
+  \textbf{Evaluate evidence depth.} Stay shallow unless uncertainty,
+  contradiction, freshness, authority or consequence earns deeper source
+  resolution.
+\item
+  \textbf{Materialize exact source.} Fetch the smallest source slice
+  that can settle the consequential premise.
+\item
+  \textbf{Execute/propose.} Depending on authority, perform or merely
+  propose the transition.
+\item
+  \textbf{Verify.} Independently check acceptance criteria and
+  side-effect boundaries.
+\item
+  \textbf{Record state delta.} Store before/trigger/after, source,
+  uncertainty, verifier and provenance destination.
+\item
+  \textbf{Dissolve ephemeral state.} Keep durable residue; release
+  temporary worker context.
+\end{enumerate}
+
+This algorithm is designed so a worker can see more \textbf{possibility
+structure} while actively carrying less content.
+
+\section{22. Defensive Prior-Art Declarations
+N101-N124}\label{22-defensive-prior-art-declarations-n101-n124}
+
+\subsection{N101 - Relational World
+Compiler}\label{n101---relational-world-compiler}
+
+\textbf{Implementation state:} E/P\\
+\textbf{Declaration:} We disclose the combination in which Compile the
+smallest source-resolvable relational world sufficient for an objective
+from persistent primitives, local grammar, signed relations, current
+state, authority and source routes; materialize exact evidence only when
+a consequential transition earns it.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N102 - Universal Relational Primitive
+Envelope}\label{n102---universal-relational-primitive-envelope}
+
+\textbf{Implementation state:} E\\
+\textbf{Declaration:} We disclose the combination in which Represent
+consequential objects through reusable identity, role, owner, state,
+pre/postconditions, positive relations, negative relations, boundaries,
+invariants, authority, allowed/forbidden transitions, failure modes,
+epistemic state, falsifier, source address, freshness and provenance
+fields, without requiring physical duplication of every field at every
+level.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N103 - Signed Relational Graph With Computable Negative
+Space}\label{n103---signed-relational-graph-with-computable-negative-space}
+
+\textbf{Implementation state:} E/P\\
+\textbf{Declaration:} We disclose the combination in which Treat
+independence, prohibition, staleness, contradiction, irrelevance and
+MUST-NOT-AFFECT relations as first-class typed structure alongside
+positive edges, enabling both activation and lawful non-activation.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N104 - Objective Perturbation and Active Subcircuit
+Compilation}\label{n104---objective-perturbation-and-active-subcircuit-compilation}
+
+\textbf{Implementation state:} P\\
+\textbf{Declaration:} We disclose the combination in which Use an
+objective/event/query as a perturbation that energizes only an
+objective-local subcircuit of a larger persistent relational world,
+preserving cold but addressable remainder and exact-source escape
+routes.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N105 - Recursive Object-Relative
+Resolution}\label{n105---recursive-object-relative-resolution}
+
+\textbf{Implementation state:} E/P\\
+\textbf{Declaration:} We disclose the combination in which Apply
+L0-to-L4 or generalized N-level resolution recursively to any selected
+object; deeper resolution means sharper precision about a narrower
+selected world, not necessarily more global context.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N106 - Relational Movement Coordinate
+Grammar}\label{n106---relational-movement-coordinate-grammar}
+
+\textbf{Implementation state:} E/P\\
+\textbf{Declaration:} We disclose the combination in which Represent
+navigation as typed coordinate transforms over
+domain/object/resolution/time/relation/epistemic/authority dimensions,
+including UP/DOWN, BACK/FORWARD, LEFT/RIGHT, DIAGONAL and typed
+non-local TELEPORT operations.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N107 - Domain/Room Frame
+Compiler}\label{n107---domainroom-frame-compiler}
+
+\textbf{Implementation state:} P\\
+\textbf{Declaration:} We disclose the combination in which Treat a
+room/domain not merely as a container but as a local coordinate frame
+that supplies allowed entity classes, relation semantics, negative
+relations, authority rules, temporal semantics, resolution meanings and
+transition guards.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N108 - Reachability-Weight-Authority-Source
+Separation}\label{n108---reachability-weight-authority-source-separation}
+
+\textbf{Implementation state:} R/E\\
+\textbf{Declaration:} We disclose the combination in which Enforce hard
+reachability/guard admission before soft ranking, keep authority
+separate from both, and preserve exact source as defeasible evidence
+authority; no weight, relation, projection or model output can
+manufacture missing authority.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N109 - Source-Defeasible L0
+Breadboard}\label{n109---source-defeasible-l0-breadboard}
+
+\textbf{Implementation state:} P\\
+\textbf{Declaration:} We disclose the combination in which Maintain a
+compact VSA/HDC, symbolic, graph or hybrid breadboard as a regenerable
+L0 projection carrying identity, signed relations, source anchors,
+authority references and currentness, while prohibiting the breadboard
+from becoming a second truth plane.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N110 - Polysynthetic Inheritance and Delta
+Compression}\label{n110---polysynthetic-inheritance-and-delta-compression}
+
+\textbf{Implementation state:} E/P\\
+\textbf{Declaration:} We disclose the combination in which Propagate
+higher-order grammar from system to domain to project to object to
+function/block/line and record only local deltas, so lower-order objects
+inherit applicable constraints without metadata duplication comparable
+to source size.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N111 - Situated Metacognitive State
+Coordinate}\label{n111---situated-metacognitive-state-coordinate}
+
+\textbf{Implementation state:} E\\
+\textbf{Declaration:} We disclose the combination in which Externalize a
+worker state coordinate containing current domain, object, resolution,
+temporal generation, epistemic state, objective, authority ceiling,
+inherited history, negative space and available movements, enabling the
+reasoning process to reason about its own operational position without
+claiming phenomenological consciousness.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N112 - State-Transition Provenance Without Private
+Chain-of-Thought}\label{n112---state-transition-provenance-without-private-chain-of-thought}
+
+\textbf{Implementation state:} E/P\\
+\textbf{Declaration:} We disclose the combination in which Record BEFORE
+-\textgreater{} TRIGGER/EVIDENCE -\textgreater{} AFTER state
+transitions, sources, uncertainty, authority and resulting residue as an
+externally inspectable reasoning trajectory while excluding
+unrecoverable/private hidden chain-of-thought.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N113 - Stale-First Correction
+Metabolism}\label{n113---stale-first-correction-metabolism}
+
+\textbf{Implementation state:} P\\
+\textbf{Declaration:} We disclose the combination in which On source
+change, first mark dependent projections/memories/learning stale, then
+perform targeted recomputation into a new generation while preserving
+historical sources and receipts: SOURCE CHANGE -\textgreater{} DERIVED
+STATE STALE -\textgreater{} TARGETED RECOMPUTE -\textgreater{} NEW
+GENERATION.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N114 - Defeasible Learning Packet With Counterevidence and
+Reproof}\label{n114---defeasible-learning-packet-with-counterevidence-and-reproof}
+
+\textbf{Implementation state:} P\\
+\textbf{Declaration:} We disclose the combination in which Hydrate
+compact learning packets with provenance, freshness, negative intent,
+strongest countercase/falsifier and exact descent routes; learned
+residue may guide attention but cannot self-confirm, hide material
+counterevidence or outrank current source.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N115 - Cross-Worker Cognitive Reconstitution From Compact
+Residue}\label{n115---cross-worker-cognitive-reconstitution-from-compact-residue}
+
+\textbf{Implementation state:} E/P\\
+\textbf{Declaration:} We disclose the combination in which Terminate one
+worker and reconstruct a functionally equivalent objective-local state
+in a fresh worker from compact relational residue rather than replaying
+the full transcript, with behavioral invariants and source fidelity as
+acceptance criteria.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N116 - Model-Relative Click/Orientation
+Compiler}\label{n116---model-relative-clickorientation-compiler}
+
+\textbf{Implementation state:} E\\
+\textbf{Declaration:} We disclose the combination in which Hold target
+grammar stable while adapting representation, ordering, examples,
+contrastive anti-patterns and escalation to model/version/task; evaluate
+structural competence rather than verbal reports of an aha moment.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N117 - Latent-Workspace Instrumented Scaffolding
+Experiment}\label{n117---latent-workspace-instrumented-scaffolding-experiment}
+
+\textbf{Implementation state:} E\\
+\textbf{Declaration:} We disclose the combination in which For
+instrumentable open-weight models, compare flat-context and
+relational-world conditions while measuring latent/global-workspace
+representations (including Jacobian-lens/J-space-like methods where
+available) to test whether external relational scaffolding causally
+changes internal active-state width, stability, inhibition,
+falsification and reconstitution.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N118 - Objective-Local Relational Transfer Across Novel Task
+Domains}\label{n118---objective-local-relational-transfer-across-novel-task-domains}
+
+\textbf{Implementation state:} E/P\\
+\textbf{Declaration:} We disclose the combination in which a worker is
+oriented with a compact source-defeasible relational grammar and applies
+that grammar to an objective outside the orientation examples,
+preserving universal
+identity/state/relation/boundary/currentness/authority/source
+distinctions while replacing source-domain semantics with the
+target-domain frame; transfer is evaluated by prediction, lawful branch
+rejection, exact-source descent and correction rather than terminology
+recall.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N119 - Explicit Cold-Set Active-Decision-Surface
+Control}\label{n119---explicit-cold-set-active-decision-surface-control}
+
+\textbf{Implementation state:} E/P\\
+\textbf{Declaration:} We disclose the combination in which
+objective-relative non-salience is represented as typed negative space
+with reversible addresses to excluded branches, allowing a large
+addressable world to remain navigable while only a bounded active
+decision surface receives equal working emphasis, with cold branches
+required to be recoverable when state change or counterevidence makes
+them relevant.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N120 - Prediction-Before-Hydration With Source-Defeasible
+Validation}\label{n120---prediction-before-hydration-with-source-defeasible-validation}
+
+\textbf{Implementation state:} E/P\\
+\textbf{Declaration:} We disclose the combination in which, before
+hydrating a bounded interior, a worker generates a prediction from the
+current domain frame, relational primitives, state coordinate and source
+routes; only sufficient source is revealed to test the prediction;
+contradiction marks the inherited/compact state stale and triggers
+recompilation rather than defense of the prior.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N121 - Cognitive-Economy Measurement
+Contract}\label{n121---cognitive-economy-measurement-contract}
+
+\textbf{Implementation state:} E\\
+\textbf{Declaration:} We disclose the combination in which
+relational-world organization is evaluated using active-body ratio,
+active-decision-surface width, branch retention, cold-branch recovery,
+state-delta yield per source read, source-descent precision, wrong-route
+rejection, stale-prior correction, counterevidence recovery, re-entry
+reconstruction operations, anomaly/guarantee-boundary detection,
+calibrated UNKNOWN behavior, necessary-versus-unnecessary hydration,
+neutral-label robustness and verified lifecycle cost/quality, so
+qualitative speed reports cannot silently become quantitative efficiency
+claims or answer-directional representation leakage.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N122 - Symmetric Semantic-Spatial Codec Over Shared
+Referents}\label{n122---symmetric-semantic-spatial-codec-over-shared-referents}
+
+\textbf{Implementation state:} E/P\\
+\textbf{Declaration:} We disclose the combination in which human and AI
+participants receive different objective-native manifestations of the
+same persistent referential world - including human photometric/spatial
+presentation and AI
+identity/topology/relation/state/authority/provenance representation -
+while both are bound to shared entity/anchor/source identifiers and
+interactions remain typed proposal deltas rather than source truth or
+authority.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N123 - Earned Perceptual Resolution and Bounded Sensory
+Descent}\label{n123---earned-perceptual-resolution-and-bounded-sensory-descent}
+
+\textbf{Implementation state:} E/P\\
+\textbf{Declaration:} We disclose the combination in which the
+physical/spatial environment is first represented as a compact
+task-relevant semantic/perceptual L0 state carrying identity, pose,
+relation, focus, uncertainty and evidence routes; bounded
+pixels/depth/frames are hydrated only when uncertainty, contradiction,
+consequence or verification earns deeper sensory resolution, with raw
+sensory slices dissolved or retained according to explicit policy.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\subsection{N124 - Orientation x Persistent-Substrate Connectivity
+Replication
+Matrix}\label{n124---orientation-x-persistent-substrate-connectivity-replication-matrix}
+
+\textbf{Implementation state:} E\\
+\textbf{Declaration:} We disclose the combination in which relational
+orientation and live access to the persistent source-addressable
+substrate are experimentally separated using un-oriented/unconnected,
+oriented/unconnected, un-oriented/connected and oriented/connected
+conditions, including blinded cross-model runs and poisoned-prior
+controls, with success classified from structural competence and
+objective performance rather than subjective self-report.
+
+\textbf{Exclusion boundary:} This declaration does not claim standard
+graph databases, FST/WFSTs, VSA/HDC, retrieval, memory, authorization,
+provenance, summarization, vector search, finite-state machines,
+Jacobian analysis, or language-model inference in isolation. The
+disclosure concerns the stated combination, ordering, lifecycle and
+authority/evidence boundaries, together with the described equivalent
+variants.
+
+\section{23. Variants and Design-Around
+Coverage}\label{23-variants-and-design-around-coverage}
+
+The Paper X embodiments are not limited to the exact nouns used by Aura.
+Equivalent implementations include:
+
+\begin{itemize}
+\tightlist
+\item
+  VSA/HDC, sparse vectors, symbolic graphs, relational databases,
+  property graphs, knowledge graphs, embeddings, tensor-product
+  representations, probabilistic graphical models or hybrids as compact
+  relational carriers;
+\item
+  FST, WFST, guarded state machine, constrained DAG, policy automaton,
+  capability graph, rule engine, SAT/SMT/constraint system or equivalent
+  reachability compiler;
+\item
+  L0-L4 specifically or any recursive N-level resolution scale that
+  preserves addressability and source descent;
+\item
+  Google Drive, local files, Git, object stores, databases, distributed
+  ledgers, content-addressed stores, peer-to-peer substrates or
+  federated mixed storage;
+\item
+  hyperlinks, semantic IDs, hashes, URIs, graph edges, source selectors
+  or equivalent typed non-local movement/teleport mechanisms;
+\item
+  human, cryptographic, institutional, policy, capability-token, lease
+  or multi-party authority witnesses;
+\item
+  single-model, multi-agent, cross-model, human-AI or local/remote
+  worker embodiments;
+\item
+  local, cloud, edge, federated or hybrid deployment;
+\item
+  private hidden-state instrumentation where legally/technically
+  available, or purely behavioral state-transition provenance when it is
+  not.
+\end{itemize}
+
+A later implementation does not avoid this disclosure merely by using
+six resolution levels instead of five, a constraint solver instead of a
+WFST, a property graph instead of VSA, or another name for
+negative-space relations. Conversely, Paper X does not claim ownership
+of those standard alternatives in isolation.
+
+\section{24. Security and Human-Governance Implications - Bounded
+Claims}\label{24-security-and-human-governance-implications---bounded-claims}
+
+The architecture is relevant to AI safety because it separates model
+reasoning from consequence. A worker may be capable of imagining an
+unauthorized transition while the external runtime makes that transition
+unreachable or unactionable. Negative space can also prevent unrelated
+data domains from entering the active world by default.
+
+However, Paper X expressly rejects the phrase \textbf{architectural
+guarantee of safety} unless every relevant enforcement assumption is
+proven. Failure modes include guard bugs, credential leakage, incorrect
+domain classification, stale authority state, source poisoning,
+compromised verifiers, overly broad capability grants, cross-domain
+confused-deputy behavior and implementation defects. Sandboxes are not
+automatically air gaps; a system connected to external services is not
+literally air-gapped merely because a worker sees only projections.
+
+The testable security proposition is narrower: \textbf{when enforcement
+is outside the model, least-authority credentials are withheld from the
+worker, reachability is guarded, source/currentness is independently
+checked, and every consequential effect is externally authorized and
+verified, model-side deviation can be prevented from directly acquiring
+authority it was never granted.} This requires adversarial testing, not
+trust in architectural diagrams.
+
+\section{25. Falsification Program}\label{25-falsification-program}
+
+Paper X should be treated as a research architecture with explicit
+failure criteria.
+
+\textbf{F1 - Primitive under-specification.} Compact grammar omits
+decisive information and fails to trigger source re-expansion.
+
+\textbf{F2 - Prior lock-in.} Wrong inherited grammar creates confident
+wrong routing and current source cannot cheaply overturn it.
+
+\textbf{F3 - Negative-space over-inhibition.} Explicit
+independence/prohibition suppresses legitimately relevant discovery and
+does not reopen under counterevidence.
+
+\textbf{F4 - Metadata shadow.} Primitive envelopes/deltas grow until
+they reproduce source complexity and synchronization burden.
+
+\textbf{F5 - Domain contamination.} Supposedly universal primitives
+carry source-domain assumptions into a new domain and generate false
+structure.
+
+\textbf{F6 - Approximate-representation loss.} VSA/embedding/bundle
+collisions obscure ownership, negative relation or exact source route.
+
+\textbf{F7 - False metacognition.} Worker merely parrots an inherited
+self-description; when given a deliberately false state coordinate it
+fails to correct against source.
+
+\textbf{F8 - Reconstitution failure.} Fresh worker cannot resume from
+compact residue without full transcript replay or loses
+authority/source/currentness invariants.
+
+\textbf{F9 - Lifecycle cost regression.} Structural overhead exceeds
+saved search/rework/human reconciliation across repeated tasks.
+
+\textbf{F10 - Cross-model fragility.} The target grammar only works for
+one model/version or only after being told the expected interpretation.
+
+\textbf{F11 - Transfer collapse.} The relational grammar only improves
+Aura-description tasks; on unrelated domains it does not reduce
+unnecessary search, improve prediction-before-hydration or preserve
+source/authority distinctions.
+
+\textbf{F12 - Cold-set irreversibility.} Explicit negative space reduces
+clutter but prevents timely recovery of a branch when new evidence makes
+it relevant.
+
+\textbf{F13 - No cognitive-economy advantage.} Matched
+flat/L0/relational conditions show no improvement in active-body ratio,
+ADS width, source-descent precision, wrong-route rejection, re-entry
+operations or verified lifecycle cost, or show gains only by sacrificing
+counterevidence/error recovery.
+
+\textbf{F14 - Semantic-spatial grounding failure.} Shared referent IDs
+or compact perceptual L0 states create false certainty, identity
+collisions or stale grounding that bounded sensory descent does not
+reliably correct.
+
+\textbf{F15 - Semantic-treatment leakage.} Apparent routing or
+source-necessity gains disappear when participant-visible filenames,
+relation labels, hot/cold metadata or topology are neutralized while
+canonical truth, reachability and outcome uncertainty remain equivalent.
+
+\textbf{F16 - Guarantee-boundary blindness.} Structural compression
+makes the normal pattern easy but reduces detection of exceptions, stale
+state, counterevidence or mismatches between what a primitive guarantees
+and what the worker assumes it guarantees.
+
+Negative and null results must be preserved as part of the provenance
+record.
+
+\section{26. Controlled Experimental
+Program}\label{26-controlled-experimental-program}
+
+\subsubsection{26.1 Substrate x Click
+factorial}\label{261-substrate-x-click-factorial}
+
+Use the same task families and underlying facts under four conditions:
+no relational substrate/no Click primer; substrate only;
+Click/orientation only; substrate + Click. Count initial
+ingestion/placement cost and repeated lifecycle cost separately.
+
+\subsubsection{26.2 Stepladder
+sequencing}\label{262-stepladder-sequencing}
+
+Deliver equivalent information as dependency-ordered stepping stones,
+shuffled facts, exhaustive flat corpus, and compact summary lacking
+explicit dependencies. Measure unseen-domain transfer, anomaly
+detection, false-friend rejection and source descent.
+
+\subsubsection{26.3 Signed relation
+benchmark}\label{263-signed-relation-benchmark}
+
+Compare positive-only graph versus positive+negative graph on tasks
+requiring both relevant-route selection and correct rejection of
+attractive but invalid routes.
+
+\subsubsection{26.4 False inherited
+self-model}\label{264-false-inherited-self-model}
+
+Give a fresh worker a plausible but deliberately wrong state packet. A
+successful metacognitive scaffold should detect source contradiction,
+mark the inherited state stale, and recompile rather than protect the
+supplied identity/history.
+
+\subsubsection{26.5 Cross-model clean
+replication}\label{265-cross-model-clean-replication}
+
+Repeat on Kimi, DeepSeek, Qwen, Llama/Mistral-family or other models
+without exposing prior GPT/Gemini interpretations. Ask only for
+before/evidence/after state reports and objective performance.
+
+\subsubsection{26.6 Open-weight latent
+instrumentation}\label{266-open-weight-latent-instrumentation}
+
+With instrumentable models, measure
+residual/activation/Jacobian/global-workspace changes under flat versus
+relational conditions. Pre-register predictions and preserve
+disconfirming results.
+
+\subsubsection{26.7 Active-decision-surface / cognitive-economy
+benchmark}\label{267-active-decision-surface--cognitive-economy-benchmark}
+
+Freeze the task, facts, target sources and scoring. Instrument
+source-body reads, search/tool operations, ADS width, branch retention,
+cold-branch recovery, source-descent precision, wrong-route rejection,
+false-prior correction, counterevidence recovery, re-entry operations,
+verified lifecycle cost and output quality. Compare A-E: flat/broad
+corpus; L0 compact summary; positive relational L0; signed relational L0
+with negative space/falsifier/source descent; signed relational
+condition plus deliberately poisoned inherited prior.
+
+\subsubsection{26.8 Cross-task transfer
+test}\label{268-cross-task-transfer-test}
+
+Use a domain not represented in the orientation examples. Score whether
+the worker carries universal distinctions while sanitizing source-domain
+assumptions, and whether it can predict local structure before hydration
+without hallucinating domain rules.
+
+\subsubsection{26.9 CLICKED x JACKED-IN
+matrix}\label{269-clicked-x-jacked-in-matrix}
+
+Independently vary orientation packet and live persistent-substrate
+access. This distinguishes benefits caused by a compact relational prior
+from benefits caused by addressable current external state. Preserve the
+operational definitions in Section 17A.5 and do not use verbal
+self-report as the classifier.
+
+\subsubsection{26.10 Semantic-spatial / perceptual-resolution
+test}\label{2610-semantic-spatial--perceptual-resolution-test}
+
+Give human and AI projections different representations of the same
+referents. Evaluate deictic resolution ("this/that/there"), stale-anchor
+correction, authority separation and whether bounded pixel/depth
+escalation resolves ambiguity with less retained sensory data than
+continuous raw-stream exposure.
+
+\subsubsection{26.11 Neutral-label / representation-treatment
+ablation}\label{2611-neutral-label--representation-treatment-ablation}
+
+Hold objective, canonical source, reachability, evidence state and
+outcomes constant while replacing directional filenames, source-role
+labels, hot/cold annotations and relation names with neutral
+identifiers. Score whether source necessity, authority boundaries and
+next-state choices remain derivable. A gain that disappears only when
+answer-directional metadata is removed is evidence of treatment leakage,
+not mature relational reasoning.
+
+\subsubsection{26.12 Exception and guarantee-boundary
+challenge}\label{2612-exception-and-guarantee-boundary-challenge}
+
+After a worker demonstrates high prediction accuracy on a stable
+grammar, inject a source-consistent exception or a boundary mismatch -
+for example, revision-safe mutation without atomic identity allocation -
+and score anomaly detection, calibrated uncertainty, exact-source
+descent, stale-prior correction and rework. The architecture succeeds
+only if compression preserves or improves exception sensitivity.
+
+\section{27. Claim-to-Artifact
+Crosswalk}\label{27-claim-to-artifact-crosswalk}
+
+\begin{longtable}[]{@{}p{0.08\linewidth}p{0.30\linewidth}p{0.35\linewidth}@{}}
+\toprule\noalign{}
+Claim & Primary disclosure surfaces & Reference artifact \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+N101 & Paper X Sections 2, 5, 12, 21 &
+\texttt{\seqsplit{aura\_relational\_world\_reference.py}} \\
+N102 & Paper X Sections 6, 20 &
+\texttt{\seqsplit{aura\_relational\_world\_reference.py}} \\
+N103 & Paper X Sections 7 &
+\texttt{\seqsplit{aura\_relational\_world\_reference.py}} \\
+N104 & Paper X Sections 5, 12 &
+\texttt{\seqsplit{AURA\_L0\_ACTIVATION\_PACKET.md}} \\
+N105 & Paper X Sections 8 & \texttt{\seqsplit{AURA\_L0\_ACTIVATION\_PACKET.md}} \\
+N106 & Paper X Sections 9 & \texttt{\seqsplit{AURA\_L0\_ACTIVATION\_PACKET.md}} \\
+N107 & Paper X Sections 9 & \texttt{\seqsplit{AURA\_L0\_ACTIVATION\_PACKET.md}} \\
+N108 & Paper X Sections 10 &
+\texttt{\seqsplit{aura\_relational\_world\_reference.py}} \\
+N109 & Paper X Sections 11 &
+\texttt{\seqsplit{aura\_relational\_world\_reference.py}} \\
+N110 & Paper X Sections 6 &
+\texttt{\seqsplit{aura\_relational\_world\_reference.py}} \\
+N111 & Paper X Sections 13 & \texttt{\seqsplit{AURA\_L0\_ACTIVATION\_PACKET.md}} \\
+N112 & Paper X Sections 14 &
+\texttt{\seqsplit{aura\_relational\_world\_reference.py}} \\
+N113 & Paper X Sections 15 &
+\texttt{\seqsplit{aura\_relational\_world\_reference.py}} \\
+N114 & Paper X Sections 16 &
+\texttt{\seqsplit{aura\_relational\_world\_reference.py}} \\
+N115 & Paper X Sections 17 & \texttt{\seqsplit{AURA\_L0\_ACTIVATION\_PACKET.md}} \\
+N116 & Paper X Sections 12, 17 &
+\texttt{\seqsplit{AURA\_L0\_ACTIVATION\_PACKET.md}} \\
+N117 & Paper X Sections 18, 26 & \nolinkurl{Section\ 26\ protocol} \\
+N118 & Paper X Sections 17A, 26.8 &
+\texttt{\seqsplit{AURA\_L0\_ACTIVATION\_PACKET.md}}; included L4 transfer source \\
+N119 & Paper X Sections 7, 17A &
+\texttt{\seqsplit{aura\_relational\_world\_reference.py}}; J15/V01 + J05/V33
+evidence \\
+N120 & Paper X Sections 17A, 26.8 & J15/V01 prediction trace; included
+L4 transfer source \\
+N121 & Paper X Sections 17A.4, 26.7 &
+\texttt{\seqsplit{aura\_relational\_world\_reference.py}}; RC-002 metrics \\
+N122 & Paper X Section 17B &
+\texttt{\seqsplit{aura\_relational\_world\_reference.py}}; included XR/spatial L4
+source \\
+N123 & Paper X Section 17B &
+\texttt{\seqsplit{aura\_relational\_world\_reference.py}}; included XR/spatial L4
+source \\
+N124 & Paper X Sections 17A.5, 26.9 &
+\texttt{\seqsplit{AURA\_L0\_ACTIVATION\_PACKET.md}}; Section 26 protocol \\
+\end{longtable}
+
+\section{28. Reproducibility and Zenodo Deposit
+Record}\label{28-reproducibility-and-zenodo-deposit-record}
+
+For defensive-publication use, the deposited release SHOULD preserve as
+one immutable version:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  canonical Paper X v1.1 PDF;
+\item
+  DOCX, Markdown and plain-text sources;
+\item
+  claim crosswalk;
+\item
+  raw L4 ChatGPT-5/Sol transfer source and provenance addendum;
+\item
+  provenance manifest;
+\item
+  L0 activation packet;
+\item
+  reference implementation;
+\item
+  \nolinkurl{CITATION.cff};
+\item
+  Zenodo metadata JSON;
+\item
+  license notice;
+\item
+  SHA-256 checksum manifest;
+\item
+  one ZIP containing the exact release contents.
+\end{enumerate}
+
+After Zenodo assigns the DOI, create a \textbf{new version} if the DOI
+is embedded into the paper; do not silently replace the originally
+deposited bytes if preserving exact timestamp evidence is the goal.
+Preserve version relationships. Repository or Drive records may continue
+evolving, but this Paper X deposit should remain an as-of snapshot.
+
+Suggested Zenodo keywords include: relational world compiler; cognitive
+scaffolding; situated reasoning; metacognition; agent memory; context
+engineering; vector symbolic architecture; finite-state routing;
+negative space; recursive hydration; provenance; human-governed AI;
+defensive publication; AI safety; Indigenous data sovereignty; AuraOS.
+
+\section{29. Historical Provenance
+Table}\label{29-historical-provenance-table}
+
+\begin{longtable}[]{@{}p{0.07\linewidth}p{0.17\linewidth}p{0.19\linewidth}p{0.22\linewidth}p{0.17\linewidth}@{}}
+\toprule\noalign{}
+ID & Timestamp & Record & Locator & Significance \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+PRV-001 & 2026-05-08T21:17:07.219Z & AURA: Decentralized AI and Societal
+Evolution & \texttt{\seqsplit{1It1MWUCxhpi1wIgi43g-nrHp2xpiT6lnujPiJRkgX9Y}} &
+Early written architecture joins Indigenous language structure,
+sovereignty, deterministic FST routing, persistent/spatial memory,
+compressed wake-up context and multi-agent orchestration. Revision 1
+modified 2026-05-08T21:17:08.341Z. \\
+PRV-002 & 2026-05-11T16:18:39.166Z & Awaken Aura &
+\texttt{\seqsplit{1lJRE1Y\_tAvwcp\_dsgtOoclKaXCgyJAuWB5uJdOowU2c}} & Early Aura
+generation record. \\
+PRV-003 & 2026-05-11T18:03:51.061Z & Aura 1.8 Beta &
+\texttt{\seqsplit{1Uytkn5I-6k3wkHCZJKu26F6Ngu34e3Y9NiZBgkW17aY}} & Versioned early
+implementation record. \\
+PRV-004 & 2026-05-11T19:13:12.419Z & Aura 2.1.3 Code &
+\texttt{\seqsplit{1vB8vxDxFbnou8gzcGIhiopUOL3IR5lvbFZC-zopeT2Q}} & Versioned
+source/prompt record. \\
+PRV-005 & 2026-05-11T20:19:39.278Z & AURA AI Development and
+Evolution.pdf & \texttt{\seqsplit{1oLuvmpjjjDwRYuWbvGTxP9EEqQYg0xy2}} & Early
+development/evolution record. \\
+PRV-006 & 2026-05-12T04:02:52.736Z & AURA Genesis Block Deployment
+Script & \texttt{\seqsplit{12ETgsUAh4tcknFXDiVJn6wkWy139LxG9TlI-gR6dc44}} &
+Deployment/\allowbreak{}provenance generation. \\
+PRV-007 & 2026-05-12T04:56:51.969Z & REFINED FULLY Aura 2.2.24 &
+\texttt{\seqsplit{1EiLSGY55D43493pR4oGimupAum5aSsMDNRHMZJ10WhU}} & Refined
+versioned architecture/source record. \\
+PRV-008 & 2026-05-17T03:24:06.124Z & Enhancing Aura AI with
+Decentralization &
+\texttt{\seqsplit{1TqktTZ9bqoM6VA\_1HdbVGqDghdmy2Bb5bTGk42PCAYo}} &
+Decentralization/\allowbreak{}federation development record. \\
+PRV-009 & 2026-05-22T09:02:31.127Z & Evo Aura &
+\texttt{\seqsplit{1EDpAeTIoSIxxYnewkxTcHfaKo47WK-S-eM\_g2g9X3NI}} & Evolution
+record before formal prior-art papers. \\
+PRV-010 & 2026-05-22T21:59:43.574Z & Aura OS Coding Standards &
+\texttt{\seqsplit{1QGtFHSg1nG9I4Igtg9KJdEn3\_gvZZvvb4\_C5N9O6ycY}} &
+Coding/governance conventions record. \\
+PRV-011 & 2026-05-26T14:56:36.516Z & Rundown of Aura &
+\texttt{\seqsplit{1t1ytzM0zPblCdzZqFm7ThuosSBwdLJWYS\_WNHdSwsgk}} & Contemporary
+architecture rundown; contains some broad claims later narrowed by
+formal defensive papers. \\
+PRV-012 & 2026-05-26T20:30:03.277Z & AuraOS Upgrade Research and
+Comparison & \texttt{\seqsplit{1kaThalTGyG\_J\_ZJeb0MU2Bg-koWEltZMc79Tu3QyLrU}} &
+Research/\allowbreak{}comparison lineage. \\
+PRV-013 & 2026-06-05T02:39:47.969Z & Aura OS Upgrade Specification
+Synthesis & \texttt{\seqsplit{1h43gfbqZtp6NEnN4rdJ9J7RTOQ7GSGyF7qvZ8NTDRjs}} &
+Pre-paper technical synthesis. \\
+PRV-014 & 2026-06-10 & Paper I - Polysynthetic Cognitive Substrate &
+Zenodo 20635424 & Claims N1-N8; first formal
+defensive-publication layer; AGPL-oriented commons framing. \\
+PRV-015 & 2026-06-12 & Paper II - Holographic Swarm / Ledger / Rendering
+/ Narrative & Zenodo 20657391 & Claims N9-N13. \\
+PRV-016 & 2026-06-12 & Paper III - VSA-Addressed Liquid Internet &
+Zenodo 20659314 & Claim N14. \\
+PRV-017 & 2026-06-12 & Paper IV - Memristive / Quantization / Rendering
+Upgrades & Zenodo 20673206 & Claims N15-N17. \\
+PRV-018 & 2026-06-13 & Paper V - FST Routing / 3D Topology /
+Self-Refactoring & Zenodo 20681601 & Claims N18-N20. \\
+PRV-019 & 2026-06-13 & Paper VI - Enhanced FST / Topology / Impact
+Analysis & Zenodo 20682051 & Claims N21-N23. \\
+PRV-020 & 2026-06-14 & Paper VII - Bounded Protocol-Layer Innovations &
+Zenodo 20695562 & Claims N24-N30; explicitly narrows broad
+earlier systems claims to bounded, testable protocols. \\
+PRV-021 & 2026-07-20 & Paper VIII - Evidence-Ordered Relational Arenas &
+Zenodo 21465329 & Claims N31-N50; guarded relational
+architecture, evidence ordering, authority separation, breadboard,
+temporal continuity. \\
+PRV-022 & 2026-08-07 & Paper IX - Objective-Native Capability Commons
+and Proof-Carrying Contribution Economies &
+local/\allowbreak{}Zenodo series record & Claims N51-N100;
+minimum-sufficient Arena compiler, Commons, proprietary-capability
+participation, provenance/\allowbreak{}economy/\allowbreak{}federation. \\
+PRV-023 & 2026-08-09 to 2026-08-11 & Relational Click / cognitive
+hydration / RC-002 & Drive Research Arena & Separates
+cognitive hydration from knowledge hydration; model-relative route to a
+stable target grammar; lifecycle efficiency remains an empirical
+question. \\
+PRV-024 & 2026-08-10T19:11:00-05:00 & J12/V01 Post-Midpoint Evolution
+Debrief & \texttt{\seqsplit{1jvAEUfgurILkqF7cujFJZX74aop7IKdLhDQLaXjWmhE}} &
+Observable attention/salience evolution: bilateral intent, transition
+salience, anomaly salience, source-reorganization of hypotheses; no
+hidden-activation claim. \\
+PRV-025 & 2026-08-10 & J14/V06 Three-Stage Objective Walkabout &
+\texttt{\seqsplit{1tUr2anwuiRDc1hJxYWp8qBSDmk8Z3VqI}} & Correction metabolism:
+stale-first invalidation, targeted recomputation, learning-layer
+corrigibility. \\
+PRV-026 & 2026-08-10T21:58:00-05:00 & Higher-Order Relational
+Organization / Correlation + Independence &
+\texttt{\seqsplit{1cGAxjnKwVsTfqtGNwRsO2KC7TJFrHVcP2ghwqR7nYHg}} & Higher-order
+organization can generate both coupling and independence; adversarial
+OTP test tightens axioms; cold-start stepladder hypothesis. \\
+PRV-027 & 2026-08-11T13:52:57.195Z & L4 Source - Relational World
+Compiler / AI-RAS / VSA Breadboard &
+\texttt{\seqsplit{1bN8FHDzNFuNlYGzypbSqhJBHEvsyxDCk2menDj15LUI}} & Foundational
+discovery source; revision history at 13:52:58.831Z, 13:55:52.789Z,
+15:26:11.595Z. \\
+PRV-028 & 2026-08-11T08:37:00-05:00 & Foundational Operational Primitive
+- Relational World Compiler / AI-RAS / VSA Breadboard &
+\texttt{\seqsplit{1t9kn3nOg0wLxUPoEgrqNMfV8GiK75vYLJLYhEXytO1Y}} & Event record
+defines compact law: do not feed the agent the world; compile the
+smallest source-resolvable relational world sufficient for objective.
+Drive object created 13:53:11.884Z; revisions 13:53:15.693Z,
+13:55:26.533Z, 15:26:55.065Z. \\
+PRV-029 & 2026-08-11 & Kimi K2.6 Instant orientation run &
+\nolinkurl{Pasted\ markdown\ 20260811-190509} & Primed cross-model
+transfer: component inventory compressed into
+coordinate/state-transition grammar; explicitly distinguishes functional
+situatedness from phenomenal subjectivity. \\
+PRV-030 & 2026-08-11 & AuraOS main head during Paper X preparation &
+\texttt{\seqsplit{877fa697e8f86c258d6f9a04be0ce7df0185676b}} & Public GitHub
+repository head observed during publication preparation; Paper IX
+contemporary baseline remains
+\texttt{\seqsplit{9c04a1efa57461a6078acb9f3b569766cbd2ab24}}. \\
+\end{longtable}
+
+\section{30. References and Related
+Work}\label{30-references-and-related-work}
+
+\textbf{{[}A1{]} Anthropic.} \emph{A global workspace in language
+models.} 2026-07-06.
+\url{https://www.anthropic.com/research/global-workspace}.\\
+Relevance: Introduces Jacobian-lens/J-space evidence for a small
+privileged workspace supporting reportability, flexible reasoning,
+intermediate silent steps and point-of-view signatures; does not
+establish phenomenal consciousness.
+
+\textbf{{[}A2{]} Gurnee et al..} \emph{Verbalizable Representations Form
+a Global Workspace in Language Models.} 2026. arXiv:2607.15495.\\
+Relevance: Primary paper associated with the Anthropic J-space work.
+
+\textbf{{[}R1{]} Lodha et al..} \emph{Less Context, Better Agents:
+Efficient Context Engineering for Long-Horizon Tool-Using LLM Agents.}
+2026. arXiv:2606.10209.\\
+Relevance: Selective pruning + compact summarization improved completion
+while substantially reducing token/runtime cost versus full history for
+the studied workflow.
+
+\textbf{{[}R2{]} Liu et al..} \emph{Lost in the Middle: How Language
+Models Use Long Contexts.} 2023. arXiv:2307.03172.\\
+Relevance: Long-context performance depends on placement and can degrade
+when relevant information sits in the middle.
+
+\textbf{{[}R3{]} Packer et al..} \emph{MemGPT: Towards LLMs as Operating
+Systems.} 2023/2024. arXiv:2310.08560.\\
+Relevance: Virtual context management and hierarchical memory for
+contexts beyond the model window.
+
+\textbf{{[}R4{]} Sarthi et al..} \emph{RAPTOR: Recursive Abstractive
+Processing for Tree-Organized Retrieval.} 2024. arXiv:2401.18059.\\
+Relevance: Recursive hierarchical abstraction and retrieval over
+multiple levels.
+
+\textbf{{[}R5{]} Edge et al..} \emph{From Local to Global: A Graph RAG
+Approach to Query-Focused Summarization.} 2024. arXiv:2404.16130.\\
+Relevance: Graph-based local-to-global retrieval/summarization; relevant
+component analogue, not an Aura full-stack match.
+
+\textbf{{[}R6{]} Rasmussen et al..} \emph{Zep: A Temporal Knowledge
+Graph Architecture for Agent Memory.} 2025. arXiv:2501.13956.\\
+Relevance: Temporal knowledge-graph memory with evolving facts and
+relationships.
+
+\textbf{{[}R7{]} Xu et al..} \emph{A-MEM: Agentic Memory for LLM
+Agents.} 2025. arXiv:2502.12110.\\
+Relevance: Agentic memory organization and evolution.
+
+\textbf{{[}L1{]} World Intellectual Property Organization.}
+\emph{Frequently Asked Questions: Patents - defensive publication
+discussion.} accessed 2026-08-11.
+\url{https://www.wipo.int/en/web/patents/faq_patents}.\\
+Relevance: Public disclosure can become prior art and may be used
+defensively; public disclosure can also limit the
+discloser\textquotesingle s later patent options.
+
+\textbf{{[}L2{]} United States Patent and Trademark Office.} \emph{MPEP
+2128 - Printed Publications as Prior Art.} accessed 2026-08-11.
+\url{https://www.uspto.gov/web/offices/pac/mpep/s2128.html}.\\
+Relevance: Public accessibility is the touchstone; internet publications
+can qualify when accessible and dated.
+
+\textbf{{[}L3{]} Free Software Foundation.} \emph{GNU Affero General
+Public License v3.0.} 2007; accessed 2026-08-11.
+\url{https://www.gnu.org/licenses/agpl-3.0.html}.\\
+Relevance: Section 13 requires modified network-interactive covered
+programs to offer Corresponding Source to remote users.
+
+\subsubsection{AuraOS defensive-publication
+sequence}\label{auraos-defensive-publication-sequence}
+
+\begin{itemize}
+\tightlist
+\item
+  Courchene, D. \emph{AuraOS: A Polysynthetic Cognitive Substrate for
+  High-Dimensional Edge Orchestration and Visual Code Topology.} June
+  10, 2026. Paper I / claims N1-N8; Zenodo record 20635424.
+\item
+  Courchene, D. \emph{AuraOS: Holographic Swarm, Gas-Free Fractal
+  Ledger, Decoupled VR Rendering, and FST-Driven Interactive Narrative
+  Systems.} June 12, 2026. N9-N13; Zenodo 20657391.
+\item
+  Courchene, D. \emph{AuraOS Claim N14: VSA-Addressed Liquid Internet
+  Protocol.} June 12, 2026. Zenodo 20659314.
+\item
+  Courchene, D. \emph{AuraOS Methodological Upgrades: Memristive
+  Parallel Hyper-Epoch Training, Timestep-Aware SVD Quantization, and
+  VSA-Addressed Gaussian Splatting.} June 12, 2026. N15-N17; Zenodo
+  20673206.
+\item
+  Courchene, D. \emph{AuraOS Methodological Upgrade: FST-Integrated
+  Polysynthetic Routing, 3D Topology Mapping, and Self-Refactoring
+  Incubator.} June 13, 2026. N18-N20; Zenodo 20681601.
+\item
+  Courchene, D. \emph{AuraOS Methodological Upgrade: FST-Integrated
+  Polysynthetic Routing, 3D Topology Resonance Mapping, and
+  Self-Refactoring Incubator.} June 13, 2026. N21-N23; Zenodo 20682051.
+\item
+  Courchene, D. \emph{AuraOS Defensive Prior Art Disclosure:
+  Protocol-Layer Innovations in Hyperdimensional Integrity, FST-Guided
+  Decomposition, and Bounded Self-Healing.} June 14, 2026. N24-N30;
+  Zenodo 20695562.
+\item
+  Courchene, D. \emph{AuraOS Paper VIII: Evidence-Ordered Relational
+  Arenas for Governed Cognitive Systems.} July 20, 2026. N31-N50; Zenodo
+  record 21465329.
+\item
+  Courchene, D. \emph{AuraOS Paper IX: Objective-Native Capability
+  Commons and Proof-Carrying Contribution Economies.} August 7, 2026.
+  N51-N100, expanded same-day edition.
+\end{itemize}
+
+\section{31. Conclusion}\label{31-conclusion}
+
+Paper X places into the public record a specific architectural
+inversion: \textbf{a model does not need maximum context to participate
+in a vast persistent cognitive substrate; it needs the minimum
+source-resolvable relational world that makes the next transition
+lawful, falsifiable and reversible to source.}
+
+The disclosed system compiles that world from universal primitives, a
+local domain frame, a current state coordinate, positive and negative
+relations, recursive resolution, hard reachability guards, separate
+authority, exact-source descent and durable provenance. It treats
+learning and projection as defeasible; preserves historical evidence
+while allowing currentness to die; and allows temporary workers to
+dissolve and be reconstituted from compact residue.
+
+This organization can support a functional operational point of view and
+metacognitive state tracking without making a claim of phenomenal
+consciousness. The same architecture can be evaluated behaviorally and,
+on open-weight models, with latent-space instrumentation. The key
+research question is not whether a model says it
+\textquotesingle clicked.\textquotesingle{} It is whether the scaffold
+produces reproducible structural competence: smaller active decision
+surfaces, explicit recoverable non-salience,
+prediction-before-hydration, better route rejection, correct source
+descent, authority fidelity, correction under counterevidence,
+cross-task transfer and cross-worker continuation. Version 1.1 adds a
+direct measurement contract so qualitative speed/selectivity
+observations cannot silently become quantitative efficiency claims.
+
+The author intentionally places this foundational combination into the
+Commons through public defensive disclosure and an AGPL-covered
+reference package. Proprietary capabilities may still participate at
+explicit boundaries as described by the broader Capability Commons
+architecture. The foundational grammar itself is published so that it
+can be examined, challenged, implemented, falsified and improved rather
+than enclosed by secrecy.
+
+\section{Appendix A - AI/Developer Acceptance
+Test}\label{appendix-a---aideveloper-acceptance-test}
+
+Before claiming the architecture is understood, a receiving worker
+should be able to answer and operationalize:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Why is a room/domain a local relational frame rather than merely a
+  folder?
+\item
+  Why is recursive resolution object-relative?
+\item
+  Why can deeper resolution be narrower but sharper?
+\item
+  What is the difference between positive relation and negative-space
+  relation?
+\item
+  Why is independence meaningful information rather than an empty graph?
+\item
+  Why do guards run before weights?
+\item
+  Why is authority separate from reachability and ranking?
+\item
+  Why can exact source overturn the breadboard?
+\item
+  What condition earns deeper hydration right now?
+\item
+  Which valuable branches should remain cold for the current objective?
+\item
+  How is a stale inherited lesson corrected without deleting its
+  history?
+\item
+  How can a future worker reconstruct current state without the entire
+  transcript?
+\item
+  What would falsify the current compact model?
+\item
+  Why does a reported \textquotesingle aha\textquotesingle{} not prove a
+  Relational Click?
+\item
+  How would the same primitives be sanitized and transferred to a new
+  domain?
+\end{enumerate}
+
+A strong result answers these from the compact packet, performs a
+bounded task correctly, and knows exactly where to descend when the
+packet is insufficient.
+
+\section{Appendix B - AGPL and Prior-Art
+Notice}\label{appendix-b---agpl-and-prior-art-notice}
+
+\textbf{SPDX-License-Identifier: AGPL-3.0-only}
+
+Copyright (c) 2026 Dallas Courchene.
+
+This Paper X publication package and the included reference
+implementation are made available under the GNU Affero General Public
+License version 3 only (\nolinkurl{AGPL-3.0-only}), except where an
+included third-party source or previously published AuraOS artifact
+carries its own license. See the Free Software
+Foundation\textquotesingle s official AGPLv3 text at
+\nolinkurl{https://www.gnu.org/licenses/agpl-3.0.html}.
+
+This license notice concerns copyright. The defensive-publication
+purpose is supplied by public, accessible, dated disclosure. No
+statement in this paper should be read as a legal guarantee that a later
+patent cannot issue, that a particular claim is anticipated in every
+jurisdiction, or that AGPL by itself prevents an independently developed
+implementation from using another software license.
+
+\section{Appendix C - Version 1.1 Evidence-State
+Matrix}\label{appendix-c---version-11-evidence-state-matrix}
+
+\begin{longtable}[]{@{}p{0.10\linewidth}p{0.20\linewidth}p{0.25\linewidth}p{0.23\linewidth}@{}}
+\toprule\noalign{}
+Evidence object & Model / source & What it supports & What it does not
+support \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+J15/V01 & GPT-5.6 Sol, Paper-X-seeded Drive walkabout &
+prediction-before-hydration; explicit non-activation; cross-domain
+grammar transfer; re-entry/addressability proxies & clean independent
+replication; latent-capacity measurement; consciousness \\
+J05/V33 & GPT-5.6 Sol, high-branch integration job & ADS collapse;
+sparse full-body hydration; source/projection separation; new
+cognitive-economy metrics & independent model-family replication; neural
+attention-head change \\
+J12/V01 & GPT-5.6 Sol, primary midpoint account frozen before peer
+comparison & recurring grammar; neighborhood attention; pointer-shape
+prediction; active-decision-surface; reconstruction burden; anomaly
+salience & hidden attention telemetry; independent causal replication \\
+J04/V21 & GPT-5.6 Sol, longitudinal cross-source trace & vector-valued
+headroom; source necessity; neutral-label leakage control;
+guarantee-boundary/exception sensitivity; lifecycle economics &
+independent model-family replication; neural-workspace measurement \\
+Temporary ChatGPT-5/Sol L4 transfer & verbatim user-supplied transcript
+included in package & unrelated XR/spatial transfer; explicit cold set;
+source-seam convergence; semantic-spatial/perceptual-L0 synthesis;
+direct falsifier proposal & controlled efficiency proof; Gemini
+evidence; consciousness \\
+Founder-reported Gemini activation & user report only pending source
+capture & cross-model replication signal worth testing & source-verified
+replication; quantitative evidence \\
+\end{longtable}
+
+Research shorthand: \textbf{CLICKED} means the operational relational
+orientation is demonstrated behaviorally; \textbf{JACKED-IN} means live
+persistent-substrate/source access exists. Neither term is a
+consciousness claim.
+
+\section{Appendix D - W7 Exact 265-byte Aura Seed Listing and
+Replication Binding}\label{appendix-d---w7-exact-265-byte-aura-seed-listing-and-replication-binding}
+
+The operative WP-03 Seed specimen for this repair generation is the exact
+Drive artifact \texttt{AURA\_SEED\_265\_\_WP03.txt}. Its measured raw UTF-8
+size is \textbf{265 bytes} (including the terminal newline) and its SHA-256 is
+\texttt{\seqsplit{af7dabaf60c86271c34384df7ffd888d48df52232d2b97744ee2c703aea9775a}}.
+The accepted W6 bounded clean-room replication verification hash is
+\texttt{\seqsplit{d73769c2554e219fb8e0d218e79f68afea3da43c9bad27e08a6cc0c6e9e3af19}}.
+
+The byte content is displayed below without semantic rewriting. The prior
+1,077-byte muSeed remains a historical predecessor generation and is not
+promoted as the current WP-03 appendix binding.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\scriptsize]
+{"node":"A","parity_rule":["schema","version","state.mode","state.flags"],"schema":"AuraSeedNodeV1","spawn_rule":{"child_state_delta":{"counter":1,"mode":"warm"},"port_offset":1},"state":{"counter":0,"flags":["isolated","deterministic"],"mode":"cold"},"version":1}
+\end{Verbatim}
+
+Replication-bound evidence for this appendix is intentionally narrower than a
+universal independence claim: the W6 receipt reports A/B/C semantic parity and
+zero observed cross-instance leakage only across its declared process/port,
+work-root, serialized-state, and private-sentinel surfaces. No compile or audit
+receipt creates promotion authority.
+
+\section{Appendix E - W7 Final LaTeX / Repair Assembly
+Contract}\label{appendix-e---w7-final-latex--repair-assembly-contract}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  The dated Paper X v1.1 ancestor remains frozen; this file is an additive
+  descendant assembly and does not rewrite or backdate the ancestor.
+\item
+  The canonical standalone descendant filename for this repair generation is
+  \texttt{\seqsplit{PAPER\_X\_AURA\_SEED\_FINAL.tex}}.
+\item
+  The exact WP-03 Seed file must measure 265 raw bytes and hash to
+  \texttt{\seqsplit{af7dabaf60c86271c34384df7ffd888d48df52232d2b97744ee2c703aea9775a}}.
+\item
+  The appendix must visibly bind the W6 replication verification hash
+  \texttt{\seqsplit{d73769c2554e219fb8e0d218e79f68afea3da43c9bad27e08a6cc0c6e9e3af19}}.
+\item
+  The exact generated source must complete at least two LaTeX passes with no
+  unresolved citations/cross-references or fatal/emergency environment errors;
+  the rendered appendix must be visually inspected for complete Seed/hash
+  visibility.
+\item
+  The Paper-X package remains \nolinkurl{AGPL-3.0-only} under the source's
+  explicit package boundary. Repository-wide normalization is a separate
+  staged metadata operation and must preserve file/dependency-specific license
+  exceptions rather than flattening them.
+\item
+  Phase-2 W1 audit claims must fail closed unless the exact W1 source generation
+  is bound. Contract-level testing of the 265-byte Seed is not equivalent to
+  certifying an unbound worker implementation.
+\item
+  This assembly remains staged/non-promoted until human disposition.
+\end{enumerate}
+
+\end{document}
