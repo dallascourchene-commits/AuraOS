@@ -3,9 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-TARGET = ROOT / "aura_coding_relationship_compass.py"
+COMPASS = ROOT / "aura_coding_relationship_compass.py"
+NAVIGATOR = ROOT / "aura_codebase_navigator.py"
 
-ANCHOR = '''    packet["grounding_receipt"] = grounding_receipt
+COMPASS_ANCHOR = '''    packet["grounding_receipt"] = grounding_receipt
     packet["grounding_receipt_digest"] = stable_digest(grounding_receipt)
 
     discovery = discover_bounded_emergent_candidates(
@@ -19,7 +20,7 @@ ANCHOR = '''    packet["grounding_receipt"] = grounding_receipt
     )
 '''
 
-REPLACEMENT = '''    packet["grounding_receipt"] = grounding_receipt
+COMPASS_REPLACEMENT = '''    packet["grounding_receipt"] = grounding_receipt
     packet["grounding_receipt_digest"] = stable_digest(grounding_receipt)
 
     # Bilateral intent fidelity is a deterministic admission gate, not a score.
@@ -90,7 +91,7 @@ REPLACEMENT = '''    packet["grounding_receipt"] = grounding_receipt
         return packet
 
     # Bounded emergent discovery consumes only a narrow projection of the rich
-    # neighborhood/Atlas packet.  Keep the exact original neighborhood for the
+    # neighborhood/Atlas packet. Keep the exact original neighborhood for the
     # downstream verifier, but do not charge unrelated CODEMAP metadata against
     # the 512-KiB discovery input ceiling.
     discovery_participants: list[dict[str, Any]] = []
@@ -163,14 +164,102 @@ REPLACEMENT = '''    packet["grounding_receipt"] = grounding_receipt
     )
 '''
 
+COMMAND_MENTIONS_ANCHOR = '''def _command_mentions(text: str) -> list[str]:
+    commands: list[str] = []
+    for match in re.finditer(r"(?m)^\\s*(python(?:3)?\\s+-m\\s+[A-Za-z0-9_\\.]+|python(?:3)?\\s+[A-Za-z0-9_./-]+\\.py[^\\n]*)", text):
+        command = " ".join(match.group(1).strip().split())
+        if command and command not in commands:
+            commands.append(command)
+    return commands[:20]
+
+
+def _command_locations(text: str, commands: list[str]) -> dict[str, list[int]]:
+    """Return stable 1-based line references for extracted commands."""
+    lines = text.splitlines()
+    locations: dict[str, list[int]] = {}
+    for command in commands:
+        needle = " ".join(command.strip().split())
+        hits = [
+            index
+            for index, line in enumerate(lines, start=1)
+            if " ".join(line.strip().split()).startswith(needle)
+        ]
+        if hits:
+            locations[command] = hits[:8]
+    return locations
+'''
+
+COMMAND_MENTIONS_REPLACEMENT = '''def _command_mentions(text: str) -> list[str]:
+    """Extract executable Python invocations and Aura-style bang commands."""
+    commands: list[str] = []
+    for match in re.finditer(r"(?m)^\\s*(python(?:3)?\\s+-m\\s+[A-Za-z0-9_\\.]+|python(?:3)?\\s+[A-Za-z0-9_./-]+\\.py[^\\n]*)", text):
+        command = " ".join(match.group(1).strip().split())
+        if command and command not in commands:
+            commands.append(command)
+    for match in re.finditer(r"(?<!\\w)![A-Za-z_][\\w-]*", text):
+        command = match.group(0)
+        if command not in commands:
+            commands.append(command)
+    return commands[:20]
+
+
+def _command_locations(text: str, commands: list[str]) -> dict[str, list[int]]:
+    """Return stable 1-based line references for extracted commands."""
+    lines = text.splitlines()
+    locations: dict[str, list[int]] = {}
+    for command in commands:
+        needle = " ".join(command.strip().split())
+        if needle.startswith("!"):
+            hits = [index for index, line in enumerate(lines, start=1) if needle in line]
+        else:
+            hits = [
+                index
+                for index, line in enumerate(lines, start=1)
+                if " ".join(line.strip().split()).startswith(needle)
+            ]
+        if hits:
+            locations[command] = hits[:8]
+    return locations
+'''
+
+COMMAND_INDEX_ANCHOR = '''def _command_index(cards: list[dict[str, Any]]) -> dict[str, list[str]]:
+    out: dict[str, list[str]] = defaultdict(list)
+    for card in cards:
+        for command in card.get("commands", []):
+            if card["path"] not in out[command]:
+                out[command].append(card["path"])
+    return dict(out)
+'''
+
+COMMAND_INDEX_REPLACEMENT = '''def _command_index(cards: list[dict[str, Any]]) -> dict[str, list[str]]:
+    """Map commands to source locations so consumers can resolve enclosing symbols."""
+    out: dict[str, list[str]] = defaultdict(list)
+    for card in cards:
+        path = str(card.get("path") or "")
+        command_lines = card.get("command_lines", {}) if isinstance(card.get("command_lines"), dict) else {}
+        for command in card.get("commands", []):
+            lines = command_lines.get(command, []) if isinstance(command_lines.get(command, []), list) else []
+            locations = [f"{path}:{int(line)}" for line in lines if isinstance(line, int) and line > 0] or [path]
+            for location in locations:
+                if location not in out[command]:
+                    out[command].append(location)
+    return dict(out)
+'''
+
+
+def replace_once(path: Path, anchor: str, replacement: str, label: str) -> None:
+    text = path.read_text(encoding="utf-8")
+    count = text.count(anchor)
+    if count != 1:
+        raise RuntimeError(f"{label} anchor expected once, found {count}")
+    path.write_text(text.replace(anchor, replacement, 1), encoding="utf-8")
+
 
 def main() -> int:
-    text = TARGET.read_text(encoding="utf-8")
-    count = text.count(ANCHOR)
-    if count != 1:
-        raise RuntimeError(f"Phase-3 Compass repair anchor expected once, found {count}")
-    TARGET.write_text(text.replace(ANCHOR, REPLACEMENT, 1), encoding="utf-8")
-    print("Phase-3 Compass intent-fidelity + bounded discovery projection repair applied")
+    replace_once(COMPASS, COMPASS_ANCHOR, COMPASS_REPLACEMENT, "Compass repair")
+    replace_once(NAVIGATOR, COMMAND_MENTIONS_ANCHOR, COMMAND_MENTIONS_REPLACEMENT, "command mentions")
+    replace_once(NAVIGATOR, COMMAND_INDEX_ANCHOR, COMMAND_INDEX_REPLACEMENT, "command index")
+    print("Phase-3 Compass + CODEMAP command-index contract repairs applied")
     return 0
 
 
