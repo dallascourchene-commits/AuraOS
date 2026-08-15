@@ -1,5 +1,5 @@
+# Precommit-only verification. Source repair is intentionally not committed here.
 name: WO Fleet Phase3 Triad2 Verification
-# Generation bound to the converged repair branch head after patch-composition cleanup.
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
       - 'tools/wo_fleet_phase3_triad2_skillweaver_patch.py'
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: wo-fleet-phase3-triad2-001
@@ -23,7 +23,7 @@ env:
   PIP_DISABLE_PIP_VERSION_CHECK: '1'
 
 jobs:
-  verify-and-freeze:
+  verify-precommit:
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
@@ -43,7 +43,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt 'pytest>=8.2,<9.0' 'pytest-asyncio>=0.23,<1.0' 'jsonschema>=4.23,<5.0' 'trimesh>=4.7.1,<5.0' 'zstandard>=0.23.0,<1.0'
 
-      - name: Apply Phase3 contract repairs
+      - name: Apply Phase3 contract repairs without committing
         run: |
           python tools/wo_fleet_phase3_triad2_contract_patch.py
           python tools/wo_fleet_phase3_triad2_incremental_patch.py
@@ -128,59 +128,26 @@ jobs:
             --deselect=tests/test_aura_human_agent_arena.py::test_affordance_map_declares_source_of_truth \
             --junitxml=triad2-full-py310.xml 2>&1 | tee triad2-full-py310.txt
 
-      - name: Mint Triad2 Merkle receipt and freeze verified repair
+      - name: Download Python 3.13 local-runtime wheel gap
+        shell: bash
+        run: |
+          mkdir -p triad2-local-wheelhouse
+          python -m pip download --only-binary=:all: --no-deps \
+            --platform manylinux2014_x86_64 \
+            --implementation cp --python-version 313 --abi cp313 \
+            'zstandard>=0.23.0,<1.0' -d triad2-local-wheelhouse
+
+      - name: Package exact uncommitted repaired tree for local gate
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          import hashlib, json
+          git status --porcelain=v1 > triad2-working-tree-status.txt
+          git diff --binary > triad2-repair.diff
+          archive="${RUNNER_TEMP}/triad2-patched-tree.tgz"
+          tar --exclude=.git --exclude=triad2-local-wheelhouse -czf "${archive}" .
+          sha256sum "${archive}" > triad2-patched-tree.sha256
 
-          paths = [
-              'aura_coding_relationship_compass.py',
-              'aura_codebase_navigator.py',
-              'aura_skillweaver.py',
-              '.aura/CODEMAP.json',
-              '.aura/CODEMAP.md',
-              'topology_map.json',
-          ]
-          leaves=[]
-          for name in paths:
-              p=Path(name)
-              if p.exists():
-                  leaves.append((name, hashlib.sha256(p.read_bytes()).hexdigest()))
-          layer=[bytes.fromhex(h) for _,h in leaves]
-          if not layer:
-              raise SystemExit('no Merkle leaves')
-          while len(layer)>1:
-              if len(layer)%2: layer.append(layer[-1])
-              layer=[hashlib.sha256(layer[i]+layer[i+1]).digest() for i in range(0,len(layer),2)]
-          receipt={
-              'schema':'AuraFleetMerkleReceiptV1',
-              'work_order':'WO-FLEET-PHASE3-DEPLOY-001',
-              'triad':'TRIAD-2',
-              'worker':'W4::J35/V01 coordination lane',
-              'state':'VERIFIED_FIX_BRANCH_COMMITTED',
-              'python':['3.10','3.12'],
-              'verification':'focused + governed pytest suites passed before commit',
-              'leaves':[{'path':p,'sha256':h} for p,h in leaves],
-              'merkle_root_sha256':layer[0].hex(),
-              'source_base':'25a103b02752f3f58f95946352d40bf798e6cfda',
-              'tested_trigger_sha':'${{ github.sha }}',
-              'promotion':'fix branch only; no merge performed',
-          }
-          out=Path('aura_workspace/outbox/WO-FLEET-PHASE3-DEPLOY-001__TRIAD2.receipt')
-          out.parent.mkdir(parents=True,exist_ok=True)
-          out.write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n',encoding='utf-8')
-          PY
-          rm -f triad2-*.txt triad2-*.xml
-          git config user.name 'Aura Fleet Triad2 W4'
-          git config user.email 'actions@users.noreply.github.com'
-          git add -A
-          git commit -m 'fix(phase3): align CODEMAP, Compass, and dual-Python contracts'
-          git push origin HEAD:fix/wo-fleet-phase3-triad2-001
-
-      - name: Upload verification diagnostics
+      - name: Upload verification diagnostics and exact local-gate tree
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -195,5 +162,10 @@ jobs:
             triad2-focused-py310.xml
             triad2-full-py310.txt
             triad2-full-py310.xml
+            triad2-working-tree-status.txt
+            triad2-repair.diff
+            triad2-patched-tree.sha256
+            triad2-local-wheelhouse/
+            ${{ runner.temp }}/triad2-patched-tree.tgz
           if-no-files-found: warn
           retention-days: 30
