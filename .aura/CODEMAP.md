@@ -11,9 +11,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1600
-- **total_bytes**: 26091889
-- **text_tokens_est**: 6513387
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 231, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 249, 'support_file': 49}
+- **total_bytes**: 26098551
+- **text_tokens_est**: 6515053
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 232, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 990, 'schema_or_lexicon': 248, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -205,7 +205,6 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/triad2-codemap-repair.yml",
     ".github/workflows/triad2-full-codemap-repair-v2.yml",
     ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
-    ".github/workflows/wc01-triad1-phase4-stage.yml",
     ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
     ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
     ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
@@ -1112,6 +1111,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/prior_art/paper_x_v1.1/PAPER_X_V1.1_EVIDENCE_ADDENDUM.md",
     "docs/prior_art/paper_x_v1.1/ZENODO_PUBLICATION_RECORD.md",
     "docs/staging/arxiv_submission/AURA_MATHEMATICAL_SPECIFICATION_V1.tex",
+    "docs/staging/arxiv_submission/WC-01-PHASE4-BUNDLE-MANIFEST.md",
     "docs/staging/bounties/GATE_B_DISPATCH_QUEUE.md",
     "docs/staging/bounties/READY_FOR_PR/VERIFICATION_SCORECARD.md",
     "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/PR.md",
@@ -1741,15 +1741,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 {
   "ring": "repo",
   "files": 1600,
-  "bytes": 26091889,
-  "tokens_est": 6513387,
+  "bytes": 26098551,
+  "tokens_est": 6515053,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 231,
+    "knowledge_artifact": 232,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 990,
-    "schema_or_lexicon": 249,
+    "schema_or_lexicon": 248,
     "support_file": 49
   }
 }
