@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1594
-- **total_bytes**: 26041735
-- **text_tokens_est**: 6500856
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 245, 'support_file': 49}
+- **file_count**: 1596
+- **total_bytes**: 26045900
+- **text_tokens_est**: 6501898
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 224, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 245, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1594,
+  "repo_file_count": 1596,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1593,6 +1593,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
+    "tests/test_wc02_arch_contract_regressions.py",
     "third_party/pascal/LICENSE",
     "third_party/pascal/package-metadata/core.package.json",
     "third_party/pascal/package-metadata/editor.package.json",
@@ -1601,6 +1602,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/wc02_phase4_readme_patch.py",
     "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py",
     "tools/wo_fleet_phase3_triad2_contract_patch.py",
     "tools/wo_fleet_phase3_triad2_incremental_patch.py",
@@ -1734,15 +1736,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1594,
-  "bytes": 26041735,
-  "tokens_est": 6500856,
+  "files": 1596,
+  "bytes": 26045900,
+  "tokens_est": 6501898,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 224,
     "native_accelerator": 8,
     "operator_script": 9,
-    "python_module": 995,
+    "python_module": 997,
     "schema_or_lexicon": 245,
     "support_file": 49
   }

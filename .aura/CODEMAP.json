@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786817763,
+  "generated_at_unix": 1786830369,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1594,
+    "repo_file_count": 1596,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1575,6 +1575,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
+      "tests/test_wc02_arch_contract_regressions.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -1583,6 +1584,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/wc02_phase4_readme_patch.py",
       "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py",
       "tools/wo_fleet_phase3_triad2_contract_patch.py",
       "tools/wo_fleet_phase3_triad2_incremental_patch.py",
@@ -1710,15 +1712,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1594,
-      "bytes": 26041735,
-      "tokens_est": 6500856,
+      "files": 1596,
+      "bytes": 26045900,
+      "tokens_est": 6501898,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 224,
         "native_accelerator": 8,
         "operator_script": 9,
-        "python_module": 995,
+        "python_module": 997,
         "schema_or_lexicon": 245,
         "support_file": 49
       }
@@ -4353,6 +4355,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/wc02_phase4_readme_patch.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 33,
+        "semantic_id": "tools/wc02_phase4_readme_patch.py#function:main:6f7e7267d00efc22",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -156412,6 +156422,46 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "test_pr272_minimum_fidelity_names_match_canonical_schema_ledgers": [
+      {
+        "file": "tests/test_wc02_arch_contract_regressions.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 21,
+        "semantic_id": "tests/test_wc02_arch_contract_regressions.py#function:test_pr272_minimum_fidelity_names_match_canonical_schema_ledgers:c1e1579e27b9f489",
+        "signature_hash": "f13d7fac2f8a4172"
+      }
+    ],
+    "test_pr272_schema_remains_draft_2020_12_valid": [
+      {
+        "file": "tests/test_wc02_arch_contract_regressions.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 26,
+        "semantic_id": "tests/test_wc02_arch_contract_regressions.py#function:test_pr272_schema_remains_draft_2020_12_valid:68ba8fae33db985f",
+        "signature_hash": "ebece72121c4b426"
+      }
+    ],
+    "test_pr275_reviewer_history_table_has_five_columns_in_every_row": [
+      {
+        "file": "tests/test_wc02_arch_contract_regressions.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 35,
+        "semantic_id": "tests/test_wc02_arch_contract_regressions.py#function:test_pr275_reviewer_history_table_has_five_columns_in_every_row:7e20ca6e7d22bac5",
+        "signature_hash": "3a36ed6c3a20da14"
+      }
+    ],
+    "test_pr275_template_keeps_current_schema_and_state_keys": [
+      {
+        "file": "tests/test_wc02_arch_contract_regressions.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 46,
+        "semantic_id": "tests/test_wc02_arch_contract_regressions.py#function:test_pr275_template_keeps_current_schema_and_state_keys:a16a3211ec092426",
+        "signature_hash": "e2c57d5d546bacfa"
+      }
+    ],
     "replace_once": [
       {
         "file": "tools/wo_fleet_phase3_triad2_contract_patch.py",
@@ -157584,6 +157634,7 @@
       ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       "USER_GUIDE.md",
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md",
       "docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md",
@@ -157982,6 +158033,9 @@
       ".github/workflows/wo-fleet-phase3-triad2-freeze.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-matrix.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify-v2.yml",
+      ".github/workflows/wo-fleet-phase3-triad2-verify.yml"
+    ],
+    "python tools/wc02_phase4_readme_patch.py": [
       ".github/workflows/wo-fleet-phase3-triad2-verify.yml"
     ],
     "python aura_coding_arena_server.py --host 127.0.0.1 --port 8080": [
@@ -170313,9 +170367,9 @@
       "path": ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 7997,
-      "lines": 176,
-      "tokens_est": 2000,
+      "bytes": 9007,
+      "lines": 189,
+      "tokens_est": 2252,
       "symbol_count": 0,
       "commands": [
         "python -m pip",
@@ -170323,78 +170377,89 @@
         "python tools/wo_fleet_phase3_triad2_incremental_patch.py",
         "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
         "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
+        "python tools/wc02_phase4_readme_patch.py",
+        "python -m py_compile",
         "python aura_codebase_navigator.py --refresh-topology",
         "python -m aura_codemap_verify",
         "python -m pytest"
       ],
       "command_lines": {
         "python -m pip": [
-          44,
-          45,
-          101,
-          102,
-          139
+          46,
+          47,
+          103,
+          104,
+          105,
+          106,
+          131,
+          132
         ],
         "python tools/wo_fleet_phase3_triad2_contract_patch.py": [
-          49
-        ],
-        "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
-          50
-        ],
-        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
           51
         ],
-        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py": [
+        "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
           52
         ],
-        "python aura_codebase_navigator.py --refresh-topology": [
+        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
+          53
+        ],
+        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py": [
+          54
+        ],
+        "python tools/wc02_phase4_readme_patch.py": [
+          55
+        ],
+        "python -m py_compile": [
           59
         ],
+        "python aura_codebase_navigator.py --refresh-topology": [
+          72
+        ],
         "python -m aura_codemap_verify": [
-          60
+          73
         ],
         "python -m pytest": [
-          65,
-          83,
-          107,
-          125
+          78,
+          113,
+          137,
+          157
         ]
       },
       "topology": {},
-      "digest8": "47fa0b4e04bea299",
+      "digest8": "45e27fed0856d078",
       "vector": [
-        -0.194224,
-        0.176681,
-        0.166657,
-        0.041351,
-        -0.071424,
-        0.199236,
-        -0.279432,
-        0.201742,
-        -0.181693,
-        -0.166657,
-        -0.146608,
-        -0.19673,
-        -0.179187,
-        -0.038845,
-        -0.116534,
-        -0.201742,
-        -0.317024,
-        -0.003759,
-        0.008771,
-        -0.134077,
-        -0.199236,
-        0.281938,
-        0.048869,
-        -0.15162,
-        0.201742,
-        -0.164151,
-        0.251865,
-        0.126559,
-        -0.018796,
-        -0.136583,
-        0.063906,
-        0.309505
+        0.064916,
+        0.250754,
+        -0.30676,
+        0.118376,
+        0.103102,
+        0.232934,
+        -0.100556,
+        -0.258391,
+        0.220205,
+        0.090373,
+        -0.176928,
+        0.215114,
+        0.024184,
+        0.014001,
+        0.131105,
+        -0.092919,
+        -0.082736,
+        -0.138742,
+        -0.207477,
+        -0.260937,
+        -0.036913,
+        -0.192202,
+        -0.166745,
+        -0.047096,
+        0.268574,
+        0.06237,
+        0.156562,
+        -0.02673,
+        -0.166745,
+        0.30676,
+        -0.182019,
+        -0.245662
       ]
     },
     {
@@ -258923,6 +258988,53 @@
       ]
     },
     {
+      "path": "tests/test_wc02_arch_contract_regressions.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1850,
+      "lines": 47,
+      "tokens_est": 463,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cb763830ff36f325",
+      "vector": [
+        0.031101,
+        -0.073398,
+        0.187849,
+        0.14804,
+        0.269956,
+        0.27742,
+        0.245075,
+        0.120671,
+        0.115695,
+        -0.145552,
+        0.016172,
+        0.220194,
+        0.172921,
+        -0.043541,
+        0.138088,
+        -0.279908,
+        -0.297324,
+        0.051005,
+        0.068422,
+        0.118183,
+        -0.001244,
+        -0.105743,
+        0.260003,
+        0.043541,
+        0.247563,
+        0.075886,
+        0.240099,
+        -0.1356,
+        -0.021149,
+        0.255027,
+        0.274932,
+        -0.157992
+      ]
+    },
+    {
       "path": "third_party/pascal/LICENSE",
       "role": "support_file",
       "binary": false,
@@ -259296,6 +259408,53 @@
         -0.242578,
         0.019731,
         0.196151
+      ]
+    },
+    {
+      "path": "tools/wc02_phase4_readme_patch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1305,
+      "lines": 38,
+      "tokens_est": 327,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "eec54a7a6f2ae65d",
+      "vector": [
+        0.250434,
+        0.143582,
+        -0.110191,
+        0.261565,
+        0.110191,
+        0.257113,
+        0.2816,
+        -0.030052,
+        0.099061,
+        0.018922,
+        0.252661,
+        -0.072348,
+        0.0256,
+        -0.263791,
+        0.128,
+        -0.01447,
+        -0.116869,
+        -0.007791,
+        -0.268243,
+        0.232626,
+        -0.148035,
+        0.032278,
+        0.181426,
+        -0.225948,
+        -0.170295,
+        0.232626,
+        -0.2304,
+        -0.205913,
+        0.125774,
+        0.13913,
+        -0.223721,
+        -0.032278
       ]
     },
     {
@@ -283438,15 +283597,15 @@
     }
   },
   "summary": {
-    "file_count": 1594,
-    "total_bytes": 26041735,
-    "text_tokens_est": 6500856,
+    "file_count": 1596,
+    "total_bytes": 26045900,
+    "text_tokens_est": 6501898,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 224,
       "native_accelerator": 8,
       "operator_script": 9,
-      "python_module": 995,
+      "python_module": 997,
       "schema_or_lexicon": 245,
       "support_file": 49
     },
@@ -285032,6 +285191,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
+      "tests/test_wc02_arch_contract_regressions.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -285040,10 +285200,10 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/wc02_phase4_readme_patch.py",
       "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py",
       "tools/wo_fleet_phase3_triad2_contract_patch.py",
       "tools/wo_fleet_phase3_triad2_incremental_patch.py",
-      "tools/wo_fleet_phase3_triad2_pascal_patch.py",
       "tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
       "tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
       "travel_extractors/__init__.py",
@@ -441592,6 +441752,56 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tests/test_wc02_arch_contract_regressions.py#function:test_pr272_minimum_fidelity_names_match_canonical_schema_ledgers:c1e1579e27b9f489",
+        "name": "test_pr272_minimum_fidelity_names_match_canonical_schema_ledgers",
+        "kind": "function",
+        "file": "tests/test_wc02_arch_contract_regressions.py",
+        "line": 15,
+        "end_line": 21,
+        "signature_hash": "f13d7fac2f8a4172",
+        "file_digest8": "cb763830ff36f325"
+      },
+      {
+        "semantic_id": "tests/test_wc02_arch_contract_regressions.py#function:test_pr272_schema_remains_draft_2020_12_valid:68ba8fae33db985f",
+        "name": "test_pr272_schema_remains_draft_2020_12_valid",
+        "kind": "function",
+        "file": "tests/test_wc02_arch_contract_regressions.py",
+        "line": 24,
+        "end_line": 26,
+        "signature_hash": "ebece72121c4b426",
+        "file_digest8": "cb763830ff36f325"
+      },
+      {
+        "semantic_id": "tests/test_wc02_arch_contract_regressions.py#function:test_pr275_reviewer_history_table_has_five_columns_in_every_row:7e20ca6e7d22bac5",
+        "name": "test_pr275_reviewer_history_table_has_five_columns_in_every_row",
+        "kind": "function",
+        "file": "tests/test_wc02_arch_contract_regressions.py",
+        "line": 29,
+        "end_line": 35,
+        "signature_hash": "3a36ed6c3a20da14",
+        "file_digest8": "cb763830ff36f325"
+      },
+      {
+        "semantic_id": "tests/test_wc02_arch_contract_regressions.py#function:test_pr275_template_keeps_current_schema_and_state_keys:a16a3211ec092426",
+        "name": "test_pr275_template_keeps_current_schema_and_state_keys",
+        "kind": "function",
+        "file": "tests/test_wc02_arch_contract_regressions.py",
+        "line": 38,
+        "end_line": 46,
+        "signature_hash": "e2c57d5d546bacfa",
+        "file_digest8": "cb763830ff36f325"
+      },
+      {
+        "semantic_id": "tools/wc02_phase4_readme_patch.py#function:main:6f7e7267d00efc22",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/wc02_phase4_readme_patch.py",
+        "line": 23,
+        "end_line": 33,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "eec54a7a6f2ae65d"
+      },
+      {
         "semantic_id": "tools/wo_fleet_phase3_triad2_codemap_compat_patch.py#function:main:726427629e4e485d",
         "name": "main",
         "kind": "function",
@@ -442912,7 +443122,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "52c9af549e6a8b91e11eb3415b1e190d",
-    "payload_hash": "953becd16697318482045e3fd4cd1751"
+    "record_fingerprint": "a5d08e392757f54767e0ca797d6ba282",
+    "payload_hash": "9aa9185abe7bd21f30380535f63a28ba"
   }
 }
