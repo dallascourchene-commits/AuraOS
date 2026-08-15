@@ -8,13 +8,14 @@ on:
       - '.github/workflows/wo-fleet-phase3-triad2-verify.yml'
       - 'tools/wo_fleet_phase3_triad2_contract_patch.py'
       - 'tools/wo_fleet_phase3_triad2_incremental_patch.py'
+      - 'tools/wo_fleet_phase3_triad2_skillweaver_patch.py'
 
 permissions:
   contents: write
 
 concurrency:
   group: wo-fleet-phase3-triad2-001
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   PYTHONPATH: ${{ github.workspace }}
@@ -45,9 +46,10 @@ jobs:
         run: |
           python tools/wo_fleet_phase3_triad2_contract_patch.py
           python tools/wo_fleet_phase3_triad2_incremental_patch.py
+          python tools/wo_fleet_phase3_triad2_skillweaver_patch.py
 
       - name: Compile repaired contract surfaces
-        run: python -m py_compile aura_coding_relationship_compass.py aura_emergent_potential_repl.py aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py aura_fusion.py
+        run: python -m py_compile aura_coding_relationship_compass.py aura_emergent_potential_repl.py aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py aura_fusion.py aura_skillweaver.py
 
       - name: Regenerate canonical deep CODEMAP topology
         run: |
@@ -65,6 +67,7 @@ jobs:
             test_aura_fusion.py::test_infer_fusion_target_from_bang_command_prefers_implementation \
             test_aura_fusion.py::test_mock_fusion_run_infers_command_target_before_mutation_gate \
             test_aura_fusion.py::test_codemap_refresh_skips_artifact_write_when_payload_unchanged \
+            test_aura_skillweaver.py::TestSkillRegistry::test_registry_has_commands \
             --junitxml=triad2-focused-py312.xml 2>&1 | tee triad2-focused-py312.txt
 
       - name: Python 3.12 governed pytest suite
@@ -104,6 +107,7 @@ jobs:
             test_aura_fusion.py::test_infer_fusion_target_from_bang_command_prefers_implementation \
             test_aura_fusion.py::test_mock_fusion_run_infers_command_target_before_mutation_gate \
             test_aura_fusion.py::test_codemap_refresh_skips_artifact_write_when_payload_unchanged \
+            test_aura_skillweaver.py::TestSkillRegistry::test_registry_has_commands \
             --junitxml=triad2-focused-py310.xml 2>&1 | tee triad2-focused-py310.txt
 
       - name: Python 3.10 governed pytest suite
@@ -132,6 +136,7 @@ jobs:
           paths = [
               'aura_coding_relationship_compass.py',
               'aura_codebase_navigator.py',
+              'aura_skillweaver.py',
               '.aura/CODEMAP.json',
               '.aura/CODEMAP.md',
               'topology_map.json',
