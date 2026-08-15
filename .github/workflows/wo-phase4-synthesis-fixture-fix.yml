@@ -1,0 +1,120 @@
+name: WO Phase4 Synthesis Fixture Fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/wo-phase4-synthesis-fixture-fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      TARGET_BRANCH: internal/wc02-phase4-proof
+      EXPECTED_PARENT: a279c396f3f25044c94c8dc713c3321663d8d902
+      PYTHONPATH: ${{ github.workspace }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: internal/wc02-phase4-proof
+          fetch-depth: 0
+      - name: Bind exact prior candidate
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_PARENT"
+          test -z "$(git status --porcelain)"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt \
+            "jsonschema>=4.23,<5.0" "pytest>=8.2,<9.0" \
+            "pytest-asyncio>=0.23,<1.0" "trimesh>=4.7.1,<5.0" "zstandard>=0.23.0,<1.0"
+      - name: Make synthesis rubric fixture RSS deterministic
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('test_synthesis_upgrades.py')
+          text = p.read_text(encoding='utf-8')
+          import_anchor = 'import time\n\nimport numpy as np\n'
+          if text.count(import_anchor) != 1:
+              raise SystemExit(f'import anchor count={text.count(import_anchor)}')
+          text = text.replace(import_anchor, 'import time\nfrom unittest.mock import patch\n\nimport numpy as np\n', 1)
+          rubric_anchor = 'from aura_heal import _RUBRIC_FLOOR, compute_rubric_reward\n\n\n'
+          if text.count(rubric_anchor) != 1:
+              raise SystemExit(f'rubric anchor count={text.count(rubric_anchor)}')
+          wrapper = '''from aura_heal import _RUBRIC_FLOOR, compute_rubric_reward\n\n\n_TEST_RSS_MB = 1024.0\n\n\ndef _compute_rubric_reward(*args, **kwargs):\n    """Bind RAM headroom so rubric unit checks do not depend on pytest's own RSS."""\n    with patch("aura_heal.sample_rss_mb", return_value=_TEST_RSS_MB):\n        return compute_rubric_reward(*args, **kwargs)\n\n\n'''
+          text = text.replace(rubric_anchor, wrapper, 1)
+          start = text.index('def _rubric_valid_code')
+          text = text[:start] + text[start:].replace('compute_rubric_reward(', '_compute_rubric_reward(')
+          p.write_text(text, encoding='utf-8')
+          PY
+      - name: Verify production threshold remains unchanged
+        run: |
+          python - <<'PY'
+          from aura_heal import _RUBRIC_FLOOR
+          assert _RUBRIC_FLOOR == 0.85, _RUBRIC_FLOOR
+          print('RUBRIC_FLOOR=0.85')
+          PY
+      - name: Regenerate navigation artifacts
+        run: |
+          set -euo pipefail
+          python aura_codebase_navigator.py --refresh-topology
+          git checkout -- Aura_Memory/live_topology_ast.json || true
+          python scripts/aura_navigation_refresh.py
+          git checkout -- Aura_Memory/live_topology_ast.json || true
+          python -m aura_codemap_verify
+          git diff --check
+      - name: Validate synthesis harness and focused contracts
+        run: |
+          set -euo pipefail
+          python test_synthesis_upgrades.py
+          python -m pytest -q --disable-warnings \
+            tests/test_wc02_phase4_pytest_collection_contract.py \
+            test_aura_substrate.py \
+            tests/test_aura_codemap_verify.py
+      - name: Commit incremental candidate
+        run: |
+          set -euo pipefail
+          git config user.name 'Aura Fleet Triad2 Phase4'
+          git config user.email 'actions@users.noreply.github.com'
+          git add test_synthesis_upgrades.py .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
+          git diff --cached --check
+          git commit -m 'test(phase4): isolate synthesis rubric RSS fixture'
+          git rev-parse HEAD | tee /tmp/wc02-phase4-final-head.txt
+          git rev-parse HEAD^{tree} | tee /tmp/wc02-phase4-final-tree.txt
+          python -m aura_codemap_verify
+      - name: Fast-forward internal proof branch
+        run: |
+          set -euo pipefail
+          git fetch origin "$TARGET_BRANCH"
+          test "$(git rev-parse FETCH_HEAD)" = "$EXPECTED_PARENT"
+          git push origin HEAD:"$TARGET_BRANCH"
+      - name: Package exact new candidate
+        run: |
+          git archive --format=tar.gz --output=/tmp/wc02-phase4-final.tar.gz HEAD
+          git bundle create /tmp/wc02-phase4-final.bundle HEAD
+          git diff HEAD^ HEAD --binary > /tmp/wc02-phase4-final-increment.patch
+          sha256sum /tmp/wc02-phase4-final.tar.gz /tmp/wc02-phase4-final.bundle \
+            /tmp/wc02-phase4-final-increment.patch /tmp/wc02-phase4-final-head.txt \
+            /tmp/wc02-phase4-final-tree.txt > /tmp/wc02-phase4-final.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wc02-phase4-final-after-synthesis-fix
+          path: |
+            /tmp/wc02-phase4-final.tar.gz
+            /tmp/wc02-phase4-final.bundle
+            /tmp/wc02-phase4-final-increment.patch
+            /tmp/wc02-phase4-final-head.txt
+            /tmp/wc02-phase4-final-tree.txt
+            /tmp/wc02-phase4-final.sha256
+          if-no-files-found: error
+          retention-days: 14
