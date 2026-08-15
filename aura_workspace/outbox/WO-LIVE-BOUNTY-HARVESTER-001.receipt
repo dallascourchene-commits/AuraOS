@@ -2,27 +2,13 @@
   "schema": "AuraWorkReceiptV1",
   "work_order": "WO-LIVE-BOUNTY-HARVESTER-001",
   "coordinate": "AD:BOUNTY:HARVEST-EXECUTE:001",
-  "task_local_workers": [
-    "W1",
-    "W2",
-    "W3",
-    "W4",
-    "W5",
-    "W6",
-    "W7",
-    "W8",
-    "W9"
-  ],
+  "task_local_workers": ["W1","W2","W3","W4","W5","W6","W7","W8","W9"],
   "aura_parent_observed": "183d7ba6a90a27dc8da4332ada4ae6beb49bb6d2",
   "started_local": "2026-08-15T02:55:00-05:00",
   "completed_utc": "2026-08-15T08:05:50.606603+00:00",
-  "status": "HARVEST_COMPLETE_3_READY_FOR_PR_FAIL_CLOSED_RESIDUE",
+  "status": "HARVEST_COMPLETE_3_READY_FOR_PR_FAIL_CLOSED_RESIDUE_RECONCILED",
   "results": {
-    "platforms_scanned": [
-      "Algora",
-      "Opire",
-      "GitHub"
-    ],
+    "platforms_scanned": ["Algora","Opire","GitHub"],
     "ready_for_pr": 3,
     "intake_only_or_excluded": 5,
     "external_claims": 0,
@@ -57,7 +43,8 @@
   "merkle": {
     "manifest": "aura_workspace/outbox/WO-LIVE-BOUNTY-HARVESTER-001.merkle.json",
     "leaf_count": 6,
-    "root_sha256": "660e222d79914d680733cdd4d67b574f3846f10bd69aad1126e35c19103488de"
+    "root_sha256": "660e222d79914d680733cdd4d67b574f3846f10bd69aad1126e35c19103488de",
+    "note": "Unchanged by this receipt-only provenance reconciliation."
   },
   "negative_space": [
     "NO_BOUNTY_CLAIM_OR_RESERVATION_SUBMITTED",
@@ -68,5 +55,24 @@
     "NO_ADVERTISED_REWARD_TREATED_AS_PAYMENT_PROOF",
     "NO_HUMAN_ONLY_BOUNTY_AUTOMATION_ATTEMPTED"
   ],
-  "rebase_note": "Final Aura staging tree rebased to newer concurrent main generation before ref update; no force update used."
+  "operational_scars": [
+    {
+      "artifact": "dallascourchene-commits/AuraOS#287",
+      "event": "Accidental connector-side noop issue creation while switching GitHub actions during the harvest.",
+      "remediation": "Retitled as [VOID] connector-side noop during bounty staging and closed immediately with state_reason=not_planned.",
+      "final_state": "CLOSED_NOT_PLANNED",
+      "project_effect": "NONE; not a task, bounty, proposal, claim, or project artifact."
+    }
+  ],
+  "concurrency_reconciliation": {
+    "preserved_richer_harvest_commit": "27fba5b725240cdb8d797a214abf0b5d8edf4729",
+    "abandoned_unpromoted_competing_commit_prefix": "23639e44",
+    "force_update_used": false,
+    "reason": "A concurrent package from the same parent contained the broader verified three-patch harvest. The narrower competing W1 cutover was never moved to main and was abandoned instead of overwriting the richer generation.",
+    "independent_corroboration": [
+      "Loru #19 source constraints and git-apply applicability independently verified.",
+      "PlantGuide #10 Python contract, AST keys, JSON Schema behavior, strict TypeScript compile, and git-apply applicability independently verified."
+    ]
+  },
+  "rebase_note": "Final Aura staging tree rebased to newer concurrent main generation before ref update; no force update used. Receipt later reconciled without changing the Merkle-protected READY patch set."
 }
