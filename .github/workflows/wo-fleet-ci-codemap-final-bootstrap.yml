@@ -62,6 +62,75 @@ jobs:
               path.write_text(text, encoding="utf-8")
           PY
 
+      - name: Close residual navigator and Architect compatibility contracts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          nav_path = Path("aura_codebase_navigator.py")
+          text = nav_path.read_text(encoding="utf-8")
+
+          old_kind = '                kind = "method" if scope else "function"\n'
+          new_kind = (
+              '                if isinstance(child, ast.AsyncFunctionDef):\n'
+              '                    kind = "async_method" if scope else "async_function"\n'
+              '                else:\n'
+              '                    kind = "method" if scope else "function"\n'
+          )
+          if old_kind in text:
+              text = text.replace(old_kind, new_kind, 1)
+          elif 'kind = "async_method" if scope else "async_function"' not in text:
+              raise SystemExit("async symbol-kind anchor missing; fail closed")
+
+          query_anchor = '    query_terms = {term.lower() for term in re.findall(r"[A-Za-z0-9_]+", query) if len(term) >= 2}\n'
+          query_insert = (
+              query_anchor
+              + '    command_paths = {\n'
+              + '        str(item).split(":", 1)[0]\n'
+              + '        for item in (index.get("command_index", {}).get(query, []) or [])\n'
+              + '    }\n'
+          )
+          if 'command_paths = {' not in text:
+              if query_anchor not in text:
+                  raise SystemExit("command ranking query anchor missing; fail closed")
+              text = text.replace(query_anchor, query_insert, 1)
+
+          score_anchor = '        score = lexical_hits * 3.0 + semantic + graph_bonus * 0.05\n'
+          score_replace = (
+              '        command_bonus = 4.0 if path in command_paths else 0.0\n'
+              '        if (\n'
+              '            command_bonus == 0.0\n'
+              '            and query.startswith("!")\n'
+              '            and query in (card.get("commands", []) or [])\n'
+              '            and role in {"python_module", "operator_script", "native_accelerator"}\n'
+              '        ):\n'
+              '            command_bonus = 1.0\n'
+              '        score = lexical_hits * 3.0 + semantic + graph_bonus * 0.05 + command_bonus\n'
+          )
+          if score_anchor in text:
+              text = text.replace(score_anchor, score_replace, 1)
+          elif 'command_bonus = 4.0 if path in command_paths else 0.0' not in text:
+              raise SystemExit("command ranking score anchor missing; fail closed")
+          nav_path.write_text(text, encoding="utf-8")
+
+          architect_path = Path("aura_architect_loop.py")
+          architect = architect_path.read_text(encoding="utf-8")
+          refresh_anchor = 'def _refresh_plan_codemap_targets(plan: FractalPlanCapsule, repo_root: str | Path) -> None:\n    targets = sorted({'
+          refresh_replace = (
+              'def _refresh_plan_codemap_targets(plan: FractalPlanCapsule, repo_root: str | Path) -> None:\n'
+              '    # Refresh may update an existing navigation snapshot, but it must\n'
+              '    # never manufacture CODEMAP authority for a repository that has none.\n'
+              '    if not (Path(repo_root) / ".aura" / "CODEMAP.json").is_file():\n'
+              '        return\n'
+              '    targets = sorted({'
+          )
+          if refresh_anchor in architect:
+              architect = architect.replace(refresh_anchor, refresh_replace, 1)
+          elif 'never manufacture CODEMAP authority' not in architect:
+              raise SystemExit("Architect fail-closed refresh anchor missing; fail closed")
+          architect_path.write_text(architect, encoding="utf-8")
+          PY
+
       - name: Exclude only append-only outbox receipts from benchmark code scope
         run: |
           python - <<'PY'
@@ -110,6 +179,7 @@ jobs:
             aura_codebase_navigator.py \
             aura_codemap_verify.py \
             aura_real_refactor_trial.py \
+            aura_architect_loop.py \
             aura_topological_scanner.py \
             aura_topology_manager.py
 
