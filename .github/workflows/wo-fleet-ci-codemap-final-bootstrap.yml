@@ -66,6 +66,8 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import textwrap
+
           path = Path("aura_real_refactor_trial.py")
           text = path.read_text(encoding="utf-8")
           helper_anchor = "\n\ndef _junit(path: Path | None) -> dict[str, Any]:"
@@ -79,21 +81,19 @@ jobs:
           if "def _is_noncode_execution_receipt(" not in text:
               if helper_anchor not in text:
                   raise SystemExit("benchmark helper anchor missing; fail closed")
-              # dedent the embedded source helper before insertion
-              import textwrap
               text = text.replace(helper_anchor, textwrap.dedent(helper) + helper_anchor, 1)
           old = '    out_of_scope = sorted(set(changed_files) - allowed)\n'
-          new = '''    ignored_execution_receipts = {
-              path for path in changed_files if _is_noncode_execution_receipt(path)
-          }
-          out_of_scope = sorted(
-              path for path in changed_files
-              if path not in allowed and path not in ignored_execution_receipts
+          new = (
+              "    ignored_execution_receipts = {\n"
+              "        path for path in changed_files if _is_noncode_execution_receipt(path)\n"
+              "    }\n"
+              "    out_of_scope = sorted(\n"
+              "        path for path in changed_files\n"
+              "        if path not in allowed and path not in ignored_execution_receipts\n"
+              "    )\n"
           )
-          '''
           if old in text:
-              import textwrap
-              text = text.replace(old, textwrap.dedent(new), 1)
+              text = text.replace(old, new, 1)
           elif "ignored_execution_receipts" not in text:
               raise SystemExit("benchmark scope anchor missing; fail closed")
           path.write_text(text, encoding="utf-8")
