@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786588720,
+  "generated_at_unix": 1786759393,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -113,8 +113,8 @@
   },
   "summary": {
     "file_count": 1549,
-    "total_bytes": 25757250,
-    "text_tokens_est": 6430013,
+    "total_bytes": 25730810,
+    "text_tokens_est": 6423499,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 202,
@@ -140,8 +140,8 @@
     {
       "ring": "repo",
       "files": 1549,
-      "bytes": 25757250,
-      "tokens_est": 6430013,
+      "bytes": 25730810,
+      "tokens_est": 6423499,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 202,
@@ -1093,7 +1093,6 @@
       ".github/workflows/unified-memory-continuity-deep-final-materialize.yml",
       ".github/workflows/unified-memory-continuity-materialize.yml",
       ".github/workflows/unified-memory-continuity-verified-publish-command.yml",
-      "README.md",
       "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
       "docs/AURA_CONSTRUCTION_FOUNDRY_OPERATOR_GUIDE.md",
       "docs/AURA_PUBLIC_DEMO_PLATFORM.md",
@@ -1260,7 +1259,6 @@
     ],
     "python scripts/aura_architecture_harness.py \\": [
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
-      "README.md",
       "USER_GUIDE.md",
       "docs/AURA_ARCHITECTURE_HARNESS.md",
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
@@ -1290,7 +1288,6 @@
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
       ".github/workflows/sync-analysis-codemap.yml",
-      "README.md",
       "USER_GUIDE.md",
       "docs/AURA_ARCHITECTURE_HARNESS.md",
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md"
@@ -1380,12 +1377,10 @@
     ],
     "python scripts/aura_source_anchor_map.py --root . --check": [
       ".github/workflows/source-anchor-verify.yml",
-      ".github/workflows/sync-analysis-codemap.yml",
-      "README.md"
+      ".github/workflows/sync-analysis-codemap.yml"
     ],
     "python scripts/aura_navigation_refresh.py --root .": [
-      ".github/workflows/sync-analysis-codemap.yml",
-      "README.md"
+      ".github/workflows/sync-analysis-codemap.yml"
     ],
     "python aura_codebase_navigator.py > \"$EVIDENCE_DIR/codemap.log\" 2>&1": [
       ".github/workflows/unified-memory-continuity-verified-publish-command.yml"
@@ -1416,7 +1411,8 @@
     ],
     "python aura_node.py": [
       "AURA_FINAL_REPORT.md",
-      "AURA_SYSTEM_ANALYSIS.md"
+      "AURA_SYSTEM_ANALYSIS.md",
+      "README.md"
     ],
     "python test_memory_guard_leak.py": [
       "AURA_FINAL_REPORT.md",
@@ -1507,22 +1503,11 @@
     "python aura_icm_cli.py list ./icm_workspaces": [
       "ICM_WORKSPACE_README.md"
     ],
-    "python scripts/aura_navigation_refresh.py --root . --refresh path/to/changed.py tests/test_changed.py": [
+    "python aura_daemon.py": [
       "README.md"
     ],
-    "python3 -m venv": [
+    "python aura_swarm_runner.py": [
       "README.md"
-    ],
-    "python aura_human_agent_arena_server.py --repo-root . --demo": [
-      "README.md"
-    ],
-    "python aura_coding_arena_server.py --demo": [
-      "README.md"
-    ],
-    "python aura_showcase_server.py --demo-project winnipeg_pathways": [
-      "README.md",
-      "docs/AURA_SHOWCASE_SPATIAL_INTEGRATION.md",
-      "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
     ],
     "python test_syntax_fixes.py": [
       "SYNTAX_FIXES_APPLIED.md"
@@ -1814,6 +1799,10 @@
     ],
     "python aura_showcase_server.py --host 127.0.0.1 --port 8091": [
       "docs/AURA_SHOWCASE_INTENT_ROUTING_DEMO.md"
+    ],
+    "python aura_showcase_server.py --demo-project winnipeg_pathways": [
+      "docs/AURA_SHOWCASE_SPATIAL_INTEGRATION.md",
+      "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
     ],
     "python aura_coding_waboose_cli.py run \\": [
       "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
@@ -167622,93 +167611,61 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "bytes": 29721,
-      "lines": 715,
-      "tokens_est": 7332,
+      "bytes": 3281,
+      "lines": 83,
+      "tokens_est": 818,
       "symbol_count": 0,
       "commands": [
-        "python scripts/aura_navigation_refresh.py --root .",
-        "python scripts/aura_navigation_refresh.py --root . --refresh path/to/changed.py tests/test_changed.py",
-        "python scripts/aura_source_anchor_map.py --root . --check",
-        "python3 -m venv",
-        "python -m pip",
-        "python -m aura_codemap_verify",
-        "python aura_human_agent_arena_server.py --repo-root . --demo",
-        "python aura_coding_arena_server.py --demo",
-        "python aura_showcase_server.py --demo-project winnipeg_pathways",
-        "python scripts/aura_architecture_harness.py \\"
+        "python aura_node.py",
+        "python aura_daemon.py",
+        "python aura_swarm_runner.py"
       ],
       "command_lines": {
-        "python scripts/aura_navigation_refresh.py --root .": [
-          362,
-          365,
-          586
+        "python aura_node.py": [
+          63
         ],
-        "python scripts/aura_navigation_refresh.py --root . --refresh path/to/changed.py tests/test_changed.py": [
-          365
+        "python aura_daemon.py": [
+          66
         ],
-        "python scripts/aura_source_anchor_map.py --root . --check": [
-          368,
-          587
-        ],
-        "python3 -m venv": [
-          577
-        ],
-        "python -m pip": [
-          579,
-          580
-        ],
-        "python -m aura_codemap_verify": [
-          588
-        ],
-        "python aura_human_agent_arena_server.py --repo-root . --demo": [
-          594
-        ],
-        "python aura_coding_arena_server.py --demo": [
-          595
-        ],
-        "python aura_showcase_server.py --demo-project winnipeg_pathways": [
-          596
-        ],
-        "python scripts/aura_architecture_harness.py \\": [
-          602
+        "python aura_swarm_runner.py": [
+          69
         ]
       },
       "topology": {},
-      "digest8": "4c99e9b7c4b63fda",
+      "digest8": "bdc23cea6b88bfe9",
       "vector": [
-        0.208975,
-        -0.272018,
-        -0.232324,
-        -0.227655,
-        -0.150602,
-        0.043196,
-        0.295367,
-        -0.108574,
-        0.024517,
-        -0.012842,
-        -0.131923,
-        0.159942,
-        0.036191,
-        -0.255674,
-        -0.145932,
-        0.141263,
-        0.103904,
-        -0.045531,
-        0.117913,
-        0.199636,
-        0.281358,
-        0.024517,
-        0.258009,
-        -0.117913,
-        -0.295367,
-        -0.031521,
-        0.180956,
-        -0.204305,
-        -0.054871,
-        -0.236994,
-        0.08289,
-        -0.213645
+        0.23609,
+        -0.174597,
+        -0.231698,
+        -0.135065,
+        0.198755,
+        0.110907,
+        0.214128,
+        -0.240482,
+        0.229501,
+        0.038433,
+        -0.249267,
+        0.080161,
+        0.247071,
+        0.209736,
+        -0.178989,
+        0.240482,
+        -0.231698,
+        0.23609,
+        -0.178989,
+        0.034041,
+        -0.163616,
+        -0.141654,
+        0.080161,
+        0.178989,
+        -0.146046,
+        0.012079,
+        -0.014275,
+        -0.211932,
+        -0.056003,
+        0.238286,
+        -0.045022,
+        -0.110907
       ]
     },
     {
@@ -409912,6 +409869,6 @@
       }
     ],
     "record_fingerprint": "da4472d840d2be8b4bf430c4367d852f",
-    "payload_hash": "109f56fe2356edabd73bc73f788945e6"
+    "payload_hash": "bed0e0070c48448f640546e8ba5682c0"
   }
 }
