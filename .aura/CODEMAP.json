@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786831983,
+  "generated_at_unix": 1786832454,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1603,
+    "repo_file_count": 1604,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1589,6 +1589,7 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/wc02_memory_budget_sync_patch.py",
+      "tools/wc02_navigator_search_compat_patch.py",
       "tools/wc02_phase4_readme_patch.py",
       "tools/wc02_pytest_collection_patch.py",
       "tools/wc02_standalone_smoke_patch.py",
@@ -1719,15 +1720,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1603,
-      "bytes": 26068559,
-      "tokens_est": 6507564,
+      "files": 1604,
+      "bytes": 26072812,
+      "tokens_est": 6508627,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 224,
         "native_accelerator": 8,
         "operator_script": 9,
-        "python_module": 1002,
+        "python_module": 1003,
         "schema_or_lexicon": 247,
         "support_file": 49
       }
@@ -4370,6 +4371,14 @@
         "line": 18,
         "end_line": 46,
         "semantic_id": "tools/wc02_memory_budget_sync_patch.py#function:main:4ebc53e79afeb359",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/wc02_navigator_search_compat_patch.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 87,
+        "semantic_id": "tools/wc02_navigator_search_compat_patch.py#function:main:7a4cd763826691ec",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -158169,6 +158178,9 @@
       ".github/workflows/wc02-local-tree-export.yml",
       ".github/workflows/wo-fleet-phase3-triad2-verify.yml"
     ],
+    "python tools/wc02_navigator_search_compat_patch.py": [
+      ".github/workflows/wo-fleet-phase3-triad2-verify.yml"
+    ],
     "python aura_coding_arena_server.py --host 127.0.0.1 --port 8080": [
       "AURA_CODING_ARENA_README.md"
     ],
@@ -170687,14 +170699,15 @@
       "path": ".github/workflows/wo-fleet-phase3-triad2-verify.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 8802,
-      "lines": 190,
-      "tokens_est": 2201,
+      "bytes": 9091,
+      "lines": 194,
+      "tokens_est": 2273,
       "symbol_count": 0,
       "commands": [
         "python -m pip",
         "python tools/wo_fleet_phase3_triad2_contract_patch.py",
         "python tools/wo_fleet_phase3_triad2_incremental_patch.py",
+        "python tools/wc02_navigator_search_compat_patch.py",
         "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py",
         "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py",
         "python tools/wc02_phase4_readme_patch.py",
@@ -170707,83 +170720,86 @@
       ],
       "command_lines": {
         "python -m pip": [
-          51,
           52,
-          118,
-          119
+          53,
+          121,
+          122
         ],
         "python tools/wo_fleet_phase3_triad2_contract_patch.py": [
-          56
-        ],
-        "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
           57
         ],
-        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
+        "python tools/wo_fleet_phase3_triad2_incremental_patch.py": [
           58
         ],
-        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py": [
+        "python tools/wc02_navigator_search_compat_patch.py": [
           59
         ],
-        "python tools/wc02_phase4_readme_patch.py": [
+        "python tools/wo_fleet_phase3_triad2_skillweaver_patch.py": [
           60
         ],
-        "python tools/wc02_standalone_smoke_patch.py": [
+        "python tools/wo_fleet_phase3_triad2_pascal_test_patch.py": [
           61
         ],
-        "python tools/wc02_memory_budget_sync_patch.py": [
+        "python tools/wc02_phase4_readme_patch.py": [
           62
         ],
+        "python tools/wc02_standalone_smoke_patch.py": [
+          63
+        ],
+        "python tools/wc02_memory_budget_sync_patch.py": [
+          64
+        ],
         "python -m py_compile": [
-          66
+          68
         ],
         "python aura_codebase_navigator.py --refresh-topology": [
-          76
+          78
         ],
         "python -m aura_codemap_verify": [
-          77
+          79
         ],
         "python -m pytest": [
-          82,
-          108,
-          124,
-          150
+          84,
+          111,
+          127,
+          154
         ]
       },
       "topology": {},
-      "digest8": "85782ed873b58283",
+      "digest8": "92a8a9a807e041ae",
       "vector": [
-        0.190727,
-        0.232851,
-        0.293696,
-        -0.162644,
-        0.024572,
-        0.005851,
-        -0.017552,
-        0.188387,
-        -0.101799,
-        -0.193067,
-        -0.050314,
-        0.153284,
-        -0.293696,
-        -0.265614,
-        -0.083077,
-        -0.272634,
-        -0.038613,
-        -0.104139,
-        0.052655,
-        0.143923,
-        -0.267954,
-        -0.22583,
-        -0.015211,
-        -0.183706,
-        -0.265614,
-        -0.207108,
-        -0.253913,
-        0.083077,
-        0.122861,
-        0.139242,
-        -0.097119,
-        -0.164985
+        0.005884,
+        -0.118865,
+        0.029422,
+        -0.015299,
+        0.038837,
+        -0.285983,
+        -0.149464,
+        -0.203601,
+        0.217724,
+        -0.201247,
+        0.008238,
+        0.10945,
+        0.140049,
+        0.088266,
+        0.208309,
+        0.276568,
+        0.222431,
+        -0.285983,
+        0.083559,
+        -0.001177,
+        0.020007,
+        0.285983,
+        0.156526,
+        -0.045898,
+        0.175356,
+        0.248323,
+        0.191832,
+        0.257738,
+        0.165941,
+        -0.10945,
+        0.295398,
+        -0.144757
       ]
     },
     {
@@ -259876,6 +259892,53 @@
       ]
     },
     {
+      "path": "tools/wc02_navigator_search_compat_patch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3964,
+      "lines": 92,
+      "tokens_est": 991,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0e404157e3e735a0",
+      "vector": [
+        -0.259499,
+        0.123517,
+        -0.0034,
+        0.032862,
+        -0.143914,
+        -0.279896,
+        0.080456,
+        -0.184709,
+        -0.121251,
+        0.230036,
+        0.114452,
+        -0.193774,
+        -0.016998,
+        0.200574,
+        -0.141648,
+        0.069124,
+        -0.211905,
+        -0.162045,
+        -0.016998,
+        -0.282163,
+        -0.062325,
+        0.245901,
+        0.035129,
+        -0.168844,
+        0.186975,
+        -0.254966,
+        -0.234569,
+        0.264032,
+        0.207373,
+        0.239102,
+        -0.094054,
+        0.118984
+      ]
+    },
+    {
       "path": "tools/wc02_phase4_readme_patch.py",
       "role": "python_module",
       "binary": false,
@@ -284156,15 +284219,15 @@
     }
   },
   "summary": {
-    "file_count": 1603,
-    "total_bytes": 26068559,
-    "text_tokens_est": 6507564,
+    "file_count": 1604,
+    "total_bytes": 26072812,
+    "text_tokens_est": 6508627,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 224,
       "native_accelerator": 8,
       "operator_script": 9,
-      "python_module": 1002,
+      "python_module": 1003,
       "schema_or_lexicon": 247,
       "support_file": 49
     },
@@ -285764,6 +285827,7 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/wc02_memory_budget_sync_patch.py",
+      "tools/wc02_navigator_search_compat_patch.py",
       "tools/wc02_phase4_readme_patch.py",
       "tools/wc02_pytest_collection_patch.py",
       "tools/wc02_standalone_smoke_patch.py",
@@ -442408,6 +442472,16 @@
         "file_digest8": "e61f923afd2d9504"
       },
       {
+        "semantic_id": "tools/wc02_navigator_search_compat_patch.py#function:main:7a4cd763826691ec",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/wc02_navigator_search_compat_patch.py",
+        "line": 73,
+        "end_line": 87,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "0e404157e3e735a0"
+      },
+      {
         "semantic_id": "tools/wc02_phase4_readme_patch.py#function:main:6f7e7267d00efc22",
         "name": "main",
         "kind": "function",
@@ -443788,7 +443862,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "0cc5df1a9b755628b88e5735ef2e077c",
-    "payload_hash": "864367325084aeca2500c6b1f690cab8"
+    "record_fingerprint": "894b963d89aa6ce8245046ef2c388088",
+    "payload_hash": "9b21d5ad2efc9b1d9bfbfc68047d4194"
   }
 }
