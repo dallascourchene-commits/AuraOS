@@ -44,13 +44,16 @@ jobs:
       - name: Apply deterministic repair transform
         run: python tools/wo_triad2_ci_codemap_repair.py
 
+      - name: Apply Architect fail-closed repair
+        run: python tools/wo_triad2_ci_codemap_failclosed_patch.py
+
       - name: Remove branch-local bootstrap files before regeneration
         run: |
           rm -f tools/wo_triad2_ci_codemap_repair.py
           rm -f .github/workflows/wo-triad2-ci-codemap-repair-bootstrap.yml
 
       - name: Compile repaired Python surfaces
-        run: python -m py_compile aura_codebase_navigator.py aura_codemap_verify.py aura_topological_scanner.py aura_topology_manager.py
+        run: python -m py_compile aura_codebase_navigator.py aura_codemap_verify.py aura_architect_loop.py aura_topological_scanner.py aura_topology_manager.py
 
       - name: Regenerate and verify canonical deep CODEMAP
         run: |
