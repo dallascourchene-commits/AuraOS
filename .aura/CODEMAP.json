@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786833985,
+  "generated_at_unix": 1786834723,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1608,
+    "repo_file_count": 1609,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -201,6 +201,7 @@
       ".github/workflows/wo-phase4-final-candidate-package-v3.yml",
       ".github/workflows/wo-phase4-local-verifier-bundle.yml",
       ".github/workflows/wo-phase4-package-dangling-candidate.yml",
+      ".github/workflows/wo-phase4-synthesis-fixture-fix.yml",
       ".gitignore",
       ".mempalace/aura_thought.txt",
       ".mempalace/lexicon.json",
@@ -1724,16 +1725,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1608,
-      "bytes": 26164475,
-      "tokens_est": 6531531,
+      "files": 1609,
+      "bytes": 26169889,
+      "tokens_est": 6532885,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 232,
         "native_accelerator": 8,
         "operator_script": 9,
         "python_module": 991,
-        "schema_or_lexicon": 255,
+        "schema_or_lexicon": 256,
         "support_file": 49
       }
     },
@@ -157628,6 +157629,7 @@
       ".github/workflows/wo-phase4-final-candidate-materialize.yml",
       ".github/workflows/wo-phase4-final-candidate-package-v3.yml",
       ".github/workflows/wo-phase4-local-verifier-bundle.yml",
+      ".github/workflows/wo-phase4-synthesis-fixture-fix.yml",
       "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
       "docs/AURA_CONSTRUCTION_FOUNDRY_OPERATOR_GUIDE.md",
       "docs/AURA_PUBLIC_DEMO_PLATFORM.md",
@@ -157692,6 +157694,7 @@
       ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml",
       ".github/workflows/wo-phase4-final-candidate-package-v3.yml",
+      ".github/workflows/wo-phase4-synthesis-fixture-fix.yml",
       "LIQUID_INTERNET_IMPLEMENTATION.md",
       "SWARM_COLLECTIVE_IMPLEMENTATION.md",
       "USER_GUIDE.md",
@@ -157841,6 +157844,7 @@
       ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml",
       ".github/workflows/wo-phase4-final-candidate-package-v3.yml",
+      ".github/workflows/wo-phase4-synthesis-fixture-fix.yml",
       "USER_GUIDE.md",
       "docs/AURA_ARCHITECTURE_HARNESS.md",
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md"
@@ -157949,7 +157953,8 @@
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml",
-      ".github/workflows/wo-phase4-final-candidate-package-v3.yml"
+      ".github/workflows/wo-phase4-final-candidate-package-v3.yml",
+      ".github/workflows/wo-phase4-synthesis-fixture-fix.yml"
     ],
     "python tools/wo_triad2_ci_codemap_repair.py": [
       ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
@@ -158034,7 +158039,12 @@
     "python scripts/aura_navigation_refresh.py": [
       ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml",
-      ".github/workflows/wo-phase4-final-candidate-package-v3.yml"
+      ".github/workflows/wo-phase4-final-candidate-package-v3.yml",
+      ".github/workflows/wo-phase4-synthesis-fixture-fix.yml"
+    ],
+    "python test_synthesis_upgrades.py": [
+      ".github/workflows/wo-phase4-synthesis-fixture-fix.yml",
+      "test_synthesis_upgrades.py"
     ],
     "python aura_coding_arena_server.py --host 127.0.0.1 --port 8080": [
       "AURA_CODING_ARENA_README.md"
@@ -158534,9 +158544,6 @@
     ],
     "python test_pvm_logic.py": [
       "test_pvm_logic.py"
-    ],
-    "python test_synthesis_upgrades.py": [
-      "test_synthesis_upgrades.py"
     ],
     "python verify_os.py": [
       "verify_os.py"
@@ -171257,6 +171264,81 @@
         -0.24616,
         0.024941,
         -0.267849
+      ]
+    },
+    {
+      "path": ".github/workflows/wo-phase4-synthesis-fixture-fix.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5414,
+      "lines": 121,
+      "tokens_est": 1354,
+      "symbol_count": 0,
+      "commands": [
+        "python -m pip",
+        "python aura_codebase_navigator.py --refresh-topology",
+        "python scripts/aura_navigation_refresh.py",
+        "python -m aura_codemap_verify",
+        "python test_synthesis_upgrades.py",
+        "python -m pytest"
+      ],
+      "command_lines": {
+        "python -m pip": [
+          36,
+          37
+        ],
+        "python aura_codebase_navigator.py --refresh-topology": [
+          70
+        ],
+        "python scripts/aura_navigation_refresh.py": [
+          72
+        ],
+        "python -m aura_codemap_verify": [
+          74,
+          94
+        ],
+        "python test_synthesis_upgrades.py": [
+          79
+        ],
+        "python -m pytest": [
+          80
+        ]
+      },
+      "topology": {},
+      "digest8": "1314c2a1a9040a1c",
+      "vector": [
+        0.128592,
+        -0.014583,
+        -0.157758,
+        -0.054354,
+        0.176318,
+        -0.057005,
+        0.054354,
+        -0.102079,
+        0.189574,
+        -0.247905,
+        0.014583,
+        0.094124,
+        -0.096776,
+        -0.096776,
+        -0.263813,
+        0.282373,
+        -0.335401,
+        0.120638,
+        -0.128592,
+        0.247905,
+        0.319493,
+        -0.18162,
+        -0.168363,
+        -0.171015,
+        -0.33275,
+        -0.003977,
+        -0.285025,
+        -0.10473,
+        0.014583,
+        -0.115336,
+        0.075565,
+        -0.115336
       ]
     },
     {
@@ -284371,16 +284453,16 @@
     }
   },
   "summary": {
-    "file_count": 1608,
-    "total_bytes": 26164475,
-    "text_tokens_est": 6531531,
+    "file_count": 1609,
+    "total_bytes": 26169889,
+    "text_tokens_est": 6532885,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 232,
       "native_accelerator": 8,
       "operator_script": 9,
       "python_module": 991,
-      "schema_or_lexicon": 255,
+      "schema_or_lexicon": 256,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -284591,6 +284673,7 @@
       ".github/workflows/wo-phase4-final-candidate-package-v3.yml",
       ".github/workflows/wo-phase4-local-verifier-bundle.yml",
       ".github/workflows/wo-phase4-package-dangling-candidate.yml",
+      ".github/workflows/wo-phase4-synthesis-fixture-fix.yml",
       ".gitignore",
       ".mempalace/aura_thought.txt",
       ".mempalace/lexicon.json",
@@ -443809,6 +443892,6 @@
       }
     ],
     "record_fingerprint": "1cd111964994f8a3f79a4f785d639c23",
-    "payload_hash": "7930b2baeb94e044f8f3e72249f2edff"
+    "payload_hash": "21695363880116a702ef75bc99839f3d"
   }
 }
