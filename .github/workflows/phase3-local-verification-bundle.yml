@@ -1,0 +1,107 @@
+name: Phase3 local verification bundle
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/phase3-local-verification-bundle.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase3-local-verification-bundle
+  cancel-in-progress: false
+
+jobs:
+  bundle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/phase3-compass-bounded-projection
+          fetch-depth: 0
+      - name: Bind exact uncommitted base
+        run: test "$(git rev-parse HEAD)" = '25a103b02752f3f58f95946352d40bf798e6cfda'
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Apply deterministic bounded-discovery repair without commit
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('aura_coding_relationship_compass.py')
+          text = path.read_text(encoding='utf-8')
+          anchor = "\ndef compile_coding_relationship_compass(\n"
+          if text.count(anchor) != 1:
+              raise SystemExit('compile anchor drift')
+          helper = '''
+def _bounded_emergent_neighborhood_view(neighborhood: Mapping[str, Any]) -> dict[str, Any]:
+    """Project only fields consumed by bounded emergent discovery."""
+    participants: list[dict[str, Any]] = []
+    for item in neighborhood.get("participants", ()) or ():
+        if not isinstance(item, Mapping):
+            continue
+        projected = {key: item[key] for key in ("participant_id", "qualified_symbol", "symbol", "role", "participant_type", "kind", "canonical_ref", "source_hash", "tests") if key in item}
+        metadata = item.get("metadata")
+        if isinstance(metadata, Mapping):
+            bounded_metadata = {key: metadata[key] for key in ("canonical_ref", "source_ref", "source_hash", "file_source_hash", "file_path", "tests") if key in metadata}
+            if bounded_metadata:
+                projected["metadata"] = bounded_metadata
+        participants.append(projected)
+    relations = [{key: item[key] for key in ("source_participant_id", "target_participant_id", "truth_class") if key in item} for item in (neighborhood.get("relations", ()) or ()) if isinstance(item, Mapping)]
+    return {"neighborhood_digest": neighborhood.get("neighborhood_digest"), "participants": participants, "relations": relations}
+
+
+def _bounded_emergent_compatibility_view(compatibility: Mapping[str, Any]) -> dict[str, Any]:
+    return {key: compatibility[key] for key in ("outcome", "assessment_digest", "compatibility_digest") if key in compatibility}
+
+
+def _bounded_emergent_atlas_view(atlas: Mapping[str, Any]) -> dict[str, Any]:
+    assessments = []
+    for item in atlas.get("assessments", ()) or ():
+        if not isinstance(item, Mapping):
+            continue
+        assessments.append({key: item[key] for key in ("source_participant_id", "target_participant_id", "participant_a_id", "participant_b_id", "left_participant_id", "right_participant_id", "participant_ids", "wiring_disposition") if key in item})
+    return {"assessments": assessments}
+'''
+          text = text.replace(anchor, '\n' + helper.rstrip() + '\n\n\ndef compile_coding_relationship_compass(\n')
+          old = '    discovery = discover_bounded_emergent_candidates(\n        objective=normalized_objective,\n        neighborhood=neighborhood,\n        compatibility=packet["typed_compatibility"],\n        atlas=packet["atlas"],\n        required_tests=required_tests,\n        max_candidates=max_emergent_candidates,\n        max_pairs_considered=max_neighborhood_candidate_pairs,\n    )\n'
+          new = '    discovery_neighborhood = _bounded_emergent_neighborhood_view(neighborhood)\n    discovery_compatibility = _bounded_emergent_compatibility_view(packet["typed_compatibility"])\n    discovery_atlas = _bounded_emergent_atlas_view(packet["atlas"])\n    discovery = discover_bounded_emergent_candidates(\n        objective=normalized_objective,\n        neighborhood=discovery_neighborhood,\n        compatibility=discovery_compatibility,\n        atlas=discovery_atlas,\n        required_tests=required_tests,\n        max_candidates=max_emergent_candidates,\n        max_pairs_considered=max_neighborhood_candidate_pairs,\n    )\n'
+          if text.count(old) != 1:
+              raise SystemExit('discovery call drift')
+          path.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+          python -m py_compile aura_coding_relationship_compass.py
+          git diff --check
+      - name: Build Python 3.13 local wheelhouse
+        shell: bash
+        run: |
+          mkdir -p /tmp/wheelhouse
+          python -m pip download --dest /tmp/wheelhouse \
+            --only-binary=:all: \
+            --python-version 3.13 --implementation cp \
+            --platform manylinux_2_34_x86_64 \
+            --platform manylinux_2_28_x86_64 \
+            --platform manylinux2014_x86_64 \
+            --platform manylinux_2_17_x86_64 \
+            --platform manylinux1_x86_64 \
+            --abi cp313 --abi abi3 --abi none \
+            'aiosqlite>=0.20,<1' 'ddgs>=6,<10' 'wasmtime>=20,<46' \
+            'arxiv>=1.4,<3' 'watchdog>=3,<5' 'zstandard>=0.23,<1' \
+            'pytest-asyncio>=0.23,<1' 'cryptography>=41,<47'
+      - name: Package exact uncommitted repair tree
+        run: |
+          tar --exclude=.git -czf /tmp/phase3-local-repair-tree.tar.gz .
+          sha256sum /tmp/phase3-local-repair-tree.tar.gz /tmp/wheelhouse/* > /tmp/phase3-local-bundle.sha256
+      - uses: actions/upload-artifact@v7
+        with:
+          name: phase3-local-verification-bundle-${{ github.run_id }}
+          path: |
+            /tmp/phase3-local-repair-tree.tar.gz
+            /tmp/phase3-local-bundle.sha256
+            /tmp/wheelhouse
+          if-no-files-found: error
+          retention-days: 7
