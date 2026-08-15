@@ -189,7 +189,7 @@ def _python_symbol_records(text: str, rel_path: str = "") -> list[SymbolRecord]:
     return records[:MAX_SYMBOLS_PER_FILE]
 
 
-def _iter_repo_files(root: Path, *, skip_dirs: frozenset[str] = DEFAULT_SKIP_DIRS) -> list[Path]:
+def _iter_repo_files(root: Path, skip_dirs: frozenset[str] = DEFAULT_SKIP_DIRS) -> list[Path]:
     files: list[Path] = []
     for base, dirs, names in os.walk(root):
         dirs[:] = [name for name in dirs if name not in skip_dirs and not name.endswith(".egg-info")]
@@ -204,25 +204,37 @@ def _iter_repo_files(root: Path, *, skip_dirs: frozenset[str] = DEFAULT_SKIP_DIR
 
 
 def _command_mentions(text: str) -> list[str]:
+    """Extract executable CLI lines and Aura bang-command tokens deterministically."""
     commands: list[str] = []
     for match in re.finditer(r"(?m)^\s*(python(?:3)?\s+-m\s+[A-Za-z0-9_\.]+|python(?:3)?\s+[A-Za-z0-9_./-]+\.py[^\n]*)", text):
         command = " ".join(match.group(1).strip().split())
         if command and command not in commands:
             commands.append(command)
+    for match in re.finditer(r"(?<!\w)![A-Za-z_][\w-]*", text):
+        command = match.group(0)
+        if command not in commands:
+            commands.append(command)
     return commands[:20]
 
 
 def _command_locations(text: str, commands: list[str]) -> dict[str, list[int]]:
-    """Return stable 1-based line references for extracted commands."""
+    """Return stable 1-based source lines for extracted commands."""
     lines = text.splitlines()
     locations: dict[str, list[int]] = {}
     for command in commands:
         needle = " ".join(command.strip().split())
-        hits = [
-            index
-            for index, line in enumerate(lines, start=1)
-            if " ".join(line.strip().split()).startswith(needle)
-        ]
+        if command.startswith("!"):
+            hits = [
+                index
+                for index, line in enumerate(lines, start=1)
+                if command in line
+            ]
+        else:
+            hits = [
+                index
+                for index, line in enumerate(lines, start=1)
+                if " ".join(line.strip().split()).startswith(needle)
+            ]
         if hits:
             locations[command] = hits[:8]
     return locations
@@ -241,9 +253,20 @@ def load_or_compile_topology(
             return json.loads(absolute.read_text(encoding="utf-8")), "existing"
         except (OSError, json.JSONDecodeError):
             pass
-    topology = compile_topology_map(root, absolute)
-    return topology, "compiled"
 
+    # The deep compiler currently binds its scan root and output paths to the
+    # process working directory. Run it from the requested repository root, then
+    # restore the caller's cwd so library use remains side-effect bounded.
+    previous_cwd = Path.cwd()
+    try:
+        os.chdir(root)
+        topology = compile_topology_map(deep=True)
+    finally:
+        os.chdir(previous_cwd)
+
+    generated_by = str((topology.get("meta") or {}).get("generated_by") or "")
+    source = "compiled_deep_topology" if generated_by == "aura_topology_manager" else "compiled_standard_topology"
+    return topology, source
 
 def _node_file(node_id: str, node: dict[str, Any]) -> str:
     return str(node.get("file") or node_id.split("::", 1)[0])
@@ -251,49 +274,85 @@ def _node_file(node_id: str, node: dict[str, Any]) -> str:
 
 def _topology_file_index(topology: dict[str, Any]) -> dict[str, dict[str, Any]]:
     per_file: dict[str, dict[str, Any]] = defaultdict(lambda: {
-        "nodes": 0,
+        "node_count": 0,
+        "edge_count": 0,
+        "degree": 0,
         "out_edges": 0,
         "in_edges": 0,
+        "edge_kinds": Counter(),
         "kinds": Counter(),
         "symbols": [],
+        "neighbor_files": set(),
     })
-    nodes = topology.get("nodes", {})
-    if isinstance(nodes, dict):
-        node_items = nodes.items()
+
+    raw_nodes = topology.get("nodes", {})
+    if isinstance(raw_nodes, dict):
+        node_items = raw_nodes.items()
+    elif isinstance(raw_nodes, list):
+        node_items = (
+            (str(node.get("id") or f"node_{index}"), node)
+            for index, node in enumerate(raw_nodes)
+            if isinstance(node, dict)
+        )
     else:
         node_items = []
+
     node_to_file: dict[str, str] = {}
     for node_id, node in node_items:
         if not isinstance(node, dict):
             continue
         file_path = _node_file(str(node_id), node)
+        if not file_path:
+            continue
         node_to_file[str(node_id)] = file_path
         slot = per_file[file_path]
-        slot["nodes"] += 1
+        slot["node_count"] += 1
         slot["kinds"][str(node.get("kind", "unknown"))] += 1
-        symbol = str(node.get("symbol") or "")
-        if symbol and len(slot["symbols"]) < 12 and symbol not in slot["symbols"]:
+        symbol = str(node.get("symbol") or node.get("label") or "")
+        if symbol and symbol != "global_scope" and len(slot["symbols"]) < 12 and symbol not in slot["symbols"]:
             slot["symbols"].append(symbol)
-    for edge in topology.get("edges", []):
+
+    for edge in topology.get("edges", []) or []:
         if not isinstance(edge, dict):
             continue
-        source_file = node_to_file.get(str(edge.get("from", "")))
-        target_file = node_to_file.get(str(edge.get("to", "")))
+        source_id = str(edge.get("source") or edge.get("from") or "")
+        target_id = str(edge.get("target") or edge.get("to") or "")
+        source_file = node_to_file.get(source_id)
+        target_file = node_to_file.get(target_id)
+        edge_kind = str(edge.get("kind") or edge.get("type") or "unknown")
         if source_file:
-            per_file[source_file]["out_edges"] += 1
+            slot = per_file[source_file]
+            slot["out_edges"] += 1
+            slot["edge_count"] += 1
+            slot["degree"] += 1
+            slot["edge_kinds"][edge_kind] += 1
+            if target_file and target_file != source_file:
+                slot["neighbor_files"].add(target_file)
         if target_file:
-            per_file[target_file]["in_edges"] += 1
+            slot = per_file[target_file]
+            slot["in_edges"] += 1
+            slot["edge_count"] += 1
+            slot["degree"] += 1
+            slot["edge_kinds"][edge_kind] += 1
+            if source_file and source_file != target_file:
+                slot["neighbor_files"].add(source_file)
+
     out: dict[str, dict[str, Any]] = {}
     for file_path, payload in per_file.items():
         out[file_path] = {
-            "nodes": int(payload["nodes"]),
+            "node_count": int(payload["node_count"]),
+            "edge_count": int(payload["edge_count"]),
+            "degree": int(payload["degree"]),
+            "symbols": list(payload["symbols"]),
+            "neighbor_files": sorted(payload["neighbor_files"]),
+            "edge_kinds": dict(sorted(payload["edge_kinds"].items())),
+            # Compatibility fields consumed by the navigation ranking layer.
+            "nodes": int(payload["node_count"]),
             "out_edges": int(payload["out_edges"]),
             "in_edges": int(payload["in_edges"]),
-            "kinds": dict(payload["kinds"]),
-            "symbols": payload["symbols"],
+            "kinds": dict(sorted(payload["kinds"].items())),
         }
     return out
-
 
 def scan_repository(root: Path) -> list[dict[str, Any]]:
     cards: list[dict[str, Any]] = []
@@ -320,6 +379,7 @@ def _scan_file(root: Path, path: Path) -> dict[str, Any]:
         "bytes": len(raw),
         "lines": text.count("\n") + (1 if text else 0),
         "tokens_est": estimate_tokens(text) if not is_binary else max(1, len(raw) // 4),
+        "binary": is_binary,
         "symbols": [record.__dict__ for record in symbols],
         "commands": commands,
         "command_lines": _command_locations(text, commands) if commands else {},
@@ -475,12 +535,18 @@ def refresh_index_for_paths(
 
 
 def _command_index(cards: list[dict[str, Any]]) -> dict[str, list[str]]:
+    """Map commands to exact file:line source locators when available."""
     out: dict[str, list[str]] = defaultdict(list)
     for card in cards:
+        path = str(card.get("path") or "")
+        command_lines = card.get("command_lines", {}) or {}
         for command in card.get("commands", []):
-            if card["path"] not in out[command]:
-                out[command].append(card["path"])
-    return dict(out)
+            lines = command_lines.get(command, []) if isinstance(command_lines, dict) else []
+            locators = [f"{path}:{int(line)}" for line in lines] if lines else [path]
+            for locator in locators:
+                if locator and locator not in out[command]:
+                    out[command].append(locator)
+    return {command: locations for command, locations in sorted(out.items())}
 
 
 def _top_hubs(cards: list[dict[str, Any]], *, limit: int = 100) -> list[dict[str, Any]]:
@@ -503,15 +569,19 @@ def _top_hubs(cards: list[dict[str, Any]], *, limit: int = 100) -> list[dict[str
 
 
 def _compact_file_cards(cards: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Persist enough source metadata for lossless incremental CODEMAP refreshes."""
     compact: list[dict[str, Any]] = []
     for card in cards:
+        symbols = [dict(symbol) for symbol in card.get("symbols", []) if isinstance(symbol, dict)]
         compact.append({
             "path": card["path"],
             "role": card["role"],
             "bytes": card["bytes"],
             "lines": card["lines"],
             "tokens_est": card["tokens_est"],
-            "symbol_count": len(card.get("symbols", [])),
+            "binary": bool(card.get("binary", False)),
+            "symbol_count": len(symbols),
+            "symbols": symbols,
             "commands": card.get("commands", []),
             "command_lines": card.get("command_lines", {}),
             "topology": card.get("topology", {}),
@@ -538,9 +608,11 @@ def build_navigation_system(
     cards = scan_repository(root)
     topology: dict[str, Any] | None = None
     topology_source = "disabled"
+    topology_index: dict[str, dict[str, Any]] = {}
     if include_topology:
         topology, topology_source = load_or_compile_topology(root, topology_path=topology_path, refresh=refresh_topology)
-        cards = _attach_topology(cards, _topology_file_index(topology))
+        topology_index = _topology_file_index(topology)
+        cards = _attach_topology(cards, topology_index)
     payload = {
         "status": "AURA_CODEMAP_ACTIVE",
         "generated_by": "aura_codebase_navigator",
@@ -553,6 +625,12 @@ def build_navigation_system(
         "command_index": _command_index(cards),
         "top_hubs": _top_hubs(cards),
         "files": _compact_file_cards(cards),
+        "topology": {
+            "source": topology_source,
+            "file_index": topology_index,
+            "meta": dict((topology or {}).get("meta") or {}),
+            "diagnostics": dict((topology or {}).get("diagnostics") or {}),
+        },
         "summary": {
             "file_count": len(cards),
             "total_bytes": sum(int(card.get("bytes", 0)) for card in cards),
@@ -630,14 +708,13 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 
 def _codemap_payload_hash(payload: dict[str, Any]) -> str:
+    """Hash logical navigation content, excluding generation/refresh bookkeeping."""
     canonical = json.loads(json.dumps(payload))
     canonical.pop("generated_at_unix", None)
+    canonical.pop("incremental_refresh", None)
     summary = canonical.get("summary")
     if isinstance(summary, dict):
         summary.pop("elapsed_ms", None)
-    refresh = canonical.get("incremental_refresh")
-    if isinstance(refresh, dict):
-        refresh.pop("payload_hash", None)
     raw = json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.blake2b(raw, digest_size=16).hexdigest()
 
@@ -662,18 +739,22 @@ def refresh_codemap_for_paths(
             topology_path=topology_path,
             refresh_topology=refresh_topology,
         )
-    else:
-        payload = _load_json(absolute_index)
-        topology = None
-        if include_topology:
-            topology, _ = load_or_compile_topology(
-                repo_root,
-                topology_path=topology_path,
-                refresh=refresh_topology,
-            )
-        payload = refresh_index_for_paths(payload, repo_root, changed_paths, topology=topology)
-    write_navigation_artifacts(payload, absolute_index, absolute_markdown)
-    return payload
+        write_navigation_artifacts(payload, absolute_index, absolute_markdown)
+        return payload
+
+    existing_payload = _load_json(absolute_index)
+    topology = None
+    if include_topology:
+        topology, _ = load_or_compile_topology(
+            repo_root,
+            topology_path=topology_path,
+            refresh=refresh_topology,
+        )
+    refreshed = refresh_index_for_paths(existing_payload, repo_root, changed_paths, topology=topology)
+    if _codemap_payload_hash(refreshed) == _codemap_payload_hash(existing_payload):
+        return existing_payload
+    write_navigation_artifacts(refreshed, absolute_index, absolute_markdown)
+    return refreshed
 
 
 def main(argv: list[str] | None = None) -> int:
