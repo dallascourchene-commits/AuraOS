@@ -1,0 +1,26 @@
+name: W1 PDF materializer
+on:
+  push:
+    branches:
+      - w1/pdf/materialize/wo-ops-001
+      - w1/pdf-materialize-wo-ops-001
+jobs:
+  materialize:
+    if: ${{ hashFiles('.w1-pdf-ready') != '' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct and verify Paper X PDF
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .w1-pdf-chunks/part-* > /tmp/paper-x.b64
+          base64 -d /tmp/paper-x.b64 > PAPER_X_ARXIV_DISCLOSURE.pdf
+          echo '22abe77f7facd084a0602d51652cb98637b45aa0a9616a59b5e2b9aefec93d76  PAPER_X_ARXIV_DISCLOSURE.pdf' | sha256sum -c -
+          git config user.name 'W1 AuraOS Materializer'
+          git config user.email 'w1@users.noreply.github.com'
+          git add PAPER_X_ARXIV_DISCLOSURE.pdf
+          git commit -m 'chore: materialize verified Paper X PDF blob'
+          git push origin HEAD
