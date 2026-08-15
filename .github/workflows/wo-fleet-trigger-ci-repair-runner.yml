@@ -145,6 +145,12 @@ jobs:
           echo "Python 3.10 focused: ${{ steps.contracts310.outcome }}"
           exit 1
 
+      - name: Remove transient diagnostics before commit
+        run: |
+          rm -f triad2-contracts-py312.txt triad2-contracts-py312.xml
+          rm -f triad2-full-py312.txt triad2-full-py312.xml
+          rm -f triad2-contracts-py310.txt triad2-contracts-py310.xml
+
       - name: Commit exact tested repair tree
         run: |
           git config user.name "AuraOS CI Repair Bot"
