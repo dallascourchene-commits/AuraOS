@@ -5,8 +5,8 @@ These measurements are bounded host microbenchmarks. They do **not** by themselv
 | Measurement | Result | Verification boundary |
 | :--- | :--- | :--- |
 | Synthetic JSON state projection | `286 B → 78 B` (**72.73% fewer bytes**) | Byte serialization only; not tokenizer-measured token compression |
-| UDP localhost unicast | **299,701.80 datagrams/s**, median RTT **2.824 µs**, p95 RTT **3.225 µs** | 200 synchronous loopback round trips; not multicast/remote hops |
-| SQLite WAL clean reopen/checkpoint | **0.309 ms**, `500/500` rows, `integrity_check=ok` | Clean reopen/checkpoint; no crash/chaos injection |
+| UDP localhost unicast | **113,403.24 datagrams/s**, median RTT **7.080 µs**, p95 RTT **10.126 µs** | 200 synchronous loopback round trips; not multicast/remote hops |
+| SQLite WAL clean reopen/checkpoint | **1.493 ms**, `500/500` rows, `integrity_check=ok` | Clean reopen/checkpoint; no crash/chaos injection |
 
 ## Reproduce
 
