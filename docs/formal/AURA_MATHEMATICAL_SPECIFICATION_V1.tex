@@ -1,0 +1,174 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,array,longtable}
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+\title{AuraOS Mathematical Specification V1\\\large Boundary Constraints, Six-Slot FST Routing, and 3--6--9 Phase Concurrency}
+\author{Triad 1 (W1/W2/W3) under Human Sovereign Disposition}
+\date{15 August 2026}
+\newcommand{\Reject}{\bot}
+\begin{document}
+\maketitle
+\begin{abstract}
+This document formalizes a bounded subset of AuraOS: (i) four Prime Directives as engineering boundary constraints, (ii) the six-slot finite-state routing morphology \texttt{DIR $\rightarrow$ ASP $\rightarrow$ CLASS $\rightarrow$ SUBJ $\rightarrow$ VOICE $\rightarrow$ STEM}, and (iii) the 3--6--9 fleet pattern as a phase-staggering scheduling grammar. The specification is deliberately narrower than a claim of a universal physical or mathematical law. Routing is not truth, capability is not authority, a receipt is not truth, and numerical phase labels do not establish numerological or causal performance claims.
+\end{abstract}
+
+\section{Scope and Source Boundary}
+The normative inputs are the staged Founder Bio \& Vision record and the active experimental-canonical Six-Slot FST Routing \& Lazy-Hydration Contract. Their controlling design rule is to compile the smallest source-resolvable relational world sufficient for the objective. A compact route is therefore an addressable projection, never an independent truth plane. Exact source evidence may defeat summaries or cached projections.
+
+Let a governed transition state be
+\[
+S=(R,I,C,A,P,T),
+\]
+where $R$ is relational/source context, $I$ identity and provenance, $C$ capability, $A$ authority, $P$ the proposed operation, and $T$ the successor/receipt context. A consequential transition is admissible only when all required boundary predicates are true.
+
+\section{Four Prime Directives as Boundary Constraints}
+The source record gives the recursive governance sequence
+\[
+\mathrm{RELATION}\rightarrow\mathrm{RECOGNITION}\rightarrow\mathrm{GOVERNED\ CARE}\rightarrow\mathrm{RECIPROCITY/RECEIPT}\rightarrow\mathrm{RELATION}',
+\]
+corresponding respectively to Gakina-awiiya, Giwaabamin, Gi-zaagi'in, and Miigwech. This is treated as a constitutional engineering kernel, not as a mystical or universal physical law.
+
+\subsection{D1: Gakina-awiiya --- Relation}
+No operational object is context-free:
+\[
+D_1(S)=1 \iff \operatorname{src}(S)\neq\varnothing\land \operatorname{id}(S)\neq\varnothing\land \operatorname{constraints}(S)\text{ are represented}.
+\]
+If $D_1=0$, the system may route to discovery/source recovery, but must not promote the state as source-closed.
+
+\subsection{D2: Giwaabamin --- Recognition}
+Recognition preserves identity, provenance, ownership, currentness, and boundaries:
+\[
+D_2(S)=1 \iff \operatorname{identityBound}(S)\land\operatorname{provenanceBound}(S)\land\operatorname{current}(S).
+\]
+Addressability, retrieval, ranking, hashes, or similarity do not satisfy $D_2$ by themselves.
+
+\subsection{D3: Gi-zaagi'in --- Governed Care}
+Capability does not create permission. For a consequential proposal $P$,
+\[
+D_3(S,P)=1 \iff \operatorname{capable}(S,P)\land\operatorname{authorized}(S,P)\land\operatorname{negativeSpaceOK}(S,P)\land\operatorname{leaseOK}(S,P).
+\]
+Thus $\operatorname{capable}(S,P)\not\Rightarrow\operatorname{authorized}(S,P)$. Failure maps to refusal or non-mutating staging.
+
+\subsection{D4: Miigwech --- Reciprocity and Receipt}
+A transition is not closed merely because output bytes exist:
+\[
+D_4(S,S')=1 \iff \operatorname{attribution}(S,S')\land\operatorname{deltaBound}(S,S')\land\operatorname{evidenceBound}(S,S')\land\operatorname{authorityBound}(S,S').
+\]
+The receipt records a transition; it does not become the truth source.
+
+\subsection{Prime-directive admissibility}
+For consequential work,
+\[
+\mathcal{A}(S,P)=D_1(S)\land D_2(S)\land D_3(S,P)\land D_4^{\ast}(S,P),
+\]
+where $D_4^{\ast}$ requires that the transition can close with a source-bound successor receipt. If $\mathcal{A}=0$, mutation is denied or held for human disposition.
+
+\section{Six-Slot FST Routing Contract}
+\subsection{Canonical morphology}
+The established routing skeleton is
+\[
+[\mathrm{DIR}]\rightarrow[\mathrm{ASP}]\rightarrow[\mathrm{CLASS}]\rightarrow[\mathrm{SUBJ}]\rightarrow[\mathrm{VOICE}]\rightarrow[\mathrm{STEM}].
+\]
+Dimensions such as \texttt{HYD}, \texttt{AUTH}, \texttt{FRESH}, \texttt{EPI}, \texttt{SIG}, \texttt{HEAD}, and \texttt{COST} are finite features; they do not create new morphotactic slots.
+
+Define the FST $M=(Q,\Sigma,\delta,q_0,F)$ with
+\[
+Q=\{q_0,q_D,q_A,q_C,q_S,q_V,q_T,q_{\bot}\},\qquad F=\{q_T\}.
+\]
+The structural transition matrix is:
+\begin{center}
+\begin{tabular}{c|cccccc|c}
+\toprule
+State & DIR & ASP & CLASS & SUBJ & VOICE & STEM & Other/invalid\\
+\midrule
+$q_0$ & $q_D$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_\bot$\\
+$q_D$ & $q_\bot$ & $q_A$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_\bot$\\
+$q_A$ & $q_\bot$ & $q_\bot$ & $q_C$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_\bot$\\
+$q_C$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_S$ & $q_\bot$ & $q_\bot$ & $q_\bot$\\
+$q_S$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_V$ & $q_\bot$ & $q_\bot$\\
+$q_V$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_T$ & $q_\bot$\\
+$q_T$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_\bot$ & $q_\bot$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The matrix fixes slot order only; lexical families and hard guards determine token admissibility inside slots.
+
+\subsection{Slot semantics}
+\begin{longtable}{p{0.12\linewidth}p{0.78\linewidth}}
+\toprule
+Slot & Formal role\\\midrule
+DIR & Direction/owner lane: system, journal, topic, discovery, experiment, project, work, capability, source, repository, or provider projection.\\
+ASP & Temporal/lifecycle/currentness aspect: raw, active, current, pending, verified, superseded, archived, future, plus bounded freshness features.\\
+CLASS & Epistemic/operational class: observation, hypothesis, decision, synthesis, evidence, experiment, work order, receipt, map, capability, source, etc.\\
+SUBJ & Bounded semantic subject/entity set; stable semantic IDs are preferred over filenames.\\
+VOICE & Operation/posture: read, route, locate, trace, synth, preflight, verify, build, critic, adjudicate, mutate, promote. Consequential voices remain authority/lease gated.\\
+STEM & Stable resolved semantic identity. If unresolved, the compiler returns a bounded candidate set rather than guessing.\\
+\bottomrule
+\end{longtable}
+
+A complete packet is $A_6=(D,A,C,S,V,T;\Phi)$, where $\Phi$ is a finite feature bundle. The packet can select a semantic neighborhood but grants neither truth nor mutation authority.
+
+\subsection{Lazy hydration invariant}
+Let $L_0,\ldots,L_4$ denote increasing evidence resolution, with $L_4$ canonical source evidence. For objective $O$ and sufficiency predicate $\kappa$,
+\[
+i^\ast=\min\{i:\kappa(O,L_i)=1\}.
+\]
+Hydration stops at $L_{i^\ast}$. It descends further only when the current layer cannot close the objective, becomes stale, or cannot satisfy provenance/authority requirements.
+
+\section{3--6--9 Phase Concurrency}
+\subsection{Interpretation boundary}
+The source material defines 3--6--9 as an orchestration grammar, not numerology and not a universal physical harmonic. The following results formalize only properties that follow from triad partitioning plus lease/currentness constraints.
+
+Let a triad be $\tau_i=\{w_{i,1},w_{i,2},w_{i,3}\}$. Then
+\[
+\mathcal{W}_3=\tau_1,\qquad \mathcal{W}_6=\tau_1\cup\tau_2,\qquad \mathcal{W}_9=\tau_1\cup\tau_2\cup\tau_3.
+\]
+
+\subsection{Lease model}
+A mutation lease $\lambda(w,r,g)$ binds worker $w$ to resource $r$ at source generation $g$. Exclusive mutation requires
+\[
+\lambda(w_i,r,g)\land\lambda(w_j,r,g)\land i\neq j\Rightarrow\Reject.
+\]
+Read-only workers may share a resource without acquiring mutation authority.
+
+\subsection{Theorem 1: intra-phase collision exclusion}
+\textbf{Claim.} If every mutation requires an exclusive atomic lease on $(r,g)$, two workers in the same 3-, 6-, or 9-worker phase cannot both lawfully commit to the same $(r,g)$.
+
+\textbf{Proof.} Assume distinct $w_i,w_j$ both lawfully commit. Lawful commit requires both leases. Lease exclusivity maps the conjunction to $\Reject$, contradicting lawful commit. Hence at most one mutation is admissible. $\square$
+
+\subsection{Theorem 2: stale-generation exclusion}
+For current generation $g'=\operatorname{head}(r)$, a worker based on $g$ may commit only if
+\[
+g=g'\quad\text{or}\quad\operatorname{rebaseVerified}(g\rightarrow g')=1.
+\]
+Increasing worker cardinality therefore increases candidate parallelism, not authority over stale state.
+
+\subsection{Theorem 3: triad composability}
+Let triad $i$ emit bounded result $R_i=(\Delta_i,E_i,A_i,H_i)$ containing delta, evidence, authority state, and receipt hash. If mutation supports are pairwise disjoint,
+\[
+\operatorname{supp}(\Delta_i)\cap\operatorname{supp}(\Delta_j)=\varnothing\Rightarrow\Delta_i\circ\Delta_j=\Delta_j\circ\Delta_i.
+\]
+Thus three bounded triads may execute concurrently and reconcile at nine-worker closure without a global write lock. Overlapping supports require lease/currentness adjudication instead of the commutativity assumption.
+
+\subsection{What these proofs do not establish}
+They do not prove that the labels 3, 6, and 9 create a physical speedup, an optimal fleet size, universal zero-collision behavior, or a universal performance law. Empirical claims require a bound workload, agent count, lease schedule, collision definition, and run receipt.
+
+\section{Recursive Governed Transition}
+The combined route is
+\[
+O\rightarrow\mathrm{RELATION}\rightarrow\mathrm{RECOGNITION}\rightarrow A_6\rightarrow\operatorname{Hydrate}(L_0\ldots L_{i^\ast})\rightarrow\mathrm{GOVERNED\ CARE}\rightarrow P\rightarrow\operatorname{Verify}\rightarrow\mathrm{RECEIPT}\rightarrow S'.
+\]
+Any failed directive, hard guard, currentness check, or authority predicate yields refusal/staging rather than implicit permission.
+
+\section{Conformance Conditions}
+An implementation conforms only if it: (1) preserves six-slot order; (2) uses bounded candidates rather than guessing unresolved STEM identity; (3) separates routing from truth/source authority; (4) can descend to exact source evidence; (5) denies consequential VOICE transitions without authority and lease; (6) binds mutation to current source generation or verified rebase; (7) treats 3--6--9 as scheduling grammar rather than numerology; (8) produces source-bound receipts without treating receipts as truth; and (9) leaves human sovereign disposition outside model consensus or route score.
+
+\section{Provenance}
+\begin{itemize}
+\item Founder Bio \& Vision: Aura Drive \texttt{FOUNDER\_BIO\_AND\_VISION.md}, Drive ID \texttt{1o-4aSQS4rozVcCyvi32Ps4OSoSlvUASFt5CIbS9hLjs}.
+\item Six-slot source: \texttt{03\_AURA\_DRIVE\_\_SIX-SLOT-FST-ROUTING-AND-HYDRATION-CONTRACT\_\_2026-08-08}, Drive ID \texttt{1YMykOQ-k3Sp7VK12ltawAkO_qS7u5OnoeWS6TfiS1p4}.
+\item The Founder Bio explicitly bounds 3--6--9 as an orchestration grammar and states that collision resistance comes from leases, partitioning, currentness, and receipts rather than from the numbers themselves.
+\end{itemize}
+\end{document}
