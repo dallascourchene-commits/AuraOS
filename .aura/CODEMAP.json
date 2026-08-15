@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786766474,
+  "generated_at_unix": 1786767753,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1554,
+    "repo_file_count": 1564,
     "source_paths_without_topology": [
       "_aura_architect_consolidation_benchmark_legacy.py",
       "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -112,16 +112,16 @@
     "coverage_complete_for_repo_scan": true
   },
   "summary": {
-    "file_count": 1554,
-    "total_bytes": 25750619,
-    "text_tokens_est": 6428450,
+    "file_count": 1564,
+    "total_bytes": 25831553,
+    "text_tokens_est": 6448674,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 204,
+      "knowledge_artifact": 207,
       "native_accelerator": 8,
       "operator_script": 6,
-      "python_module": 986,
-      "schema_or_lexicon": 237,
+      "python_module": 989,
+      "schema_or_lexicon": 241,
       "support_file": 49
     },
     "topology_nodes": 11393,
@@ -139,16 +139,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1554,
-      "bytes": 25750619,
-      "tokens_est": 6428450,
+      "files": 1564,
+      "bytes": 25831553,
+      "tokens_est": 6448674,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 204,
+        "knowledge_artifact": 207,
         "native_accelerator": 8,
         "operator_script": 6,
-        "python_module": 986,
-        "schema_or_lexicon": 237,
+        "python_module": 989,
+        "schema_or_lexicon": 241,
         "support_file": 49
       }
     },
@@ -244,6 +244,7 @@
         "AURA_ROUTER.md",
         "AURA_SYSTEM_ANALYSIS.md",
         "AuraOS.tex",
+        "BENCHMARK_RESULTS.md",
         "CODEMAP_AUTO_REFRESH_INTEGRATION.md",
         "CODEMAP_AUTO_REFRESH_README.md",
         "CODEMAP_AUTO_REFRESH_SUMMARY.md",
@@ -410,8 +411,10 @@
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
         "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
         "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
+        "docs/BENCHMARKS.md",
         "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
         "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
+        "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
         "docs/README_PRE_ARCHITECT_BENCHMARK.md",
         "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
         "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
@@ -420,10 +423,7 @@
         "docs/fragments/README_REFACTOR_CODE_QUALITY.md",
         "docs/fragments/USER_GUIDE_REFACTOR_CODE_QUALITY.md",
         "docs/prior_art/README.md",
-        "docs/prior_art/paper_x_v1.1/AURA_L0_ACTIVATION_PACKET.md",
-        "docs/prior_art/paper_x_v1.1/AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.md",
-        "docs/prior_art/paper_x_v1.1/PAPER_X_V1.1_EVIDENCE_ADDENDUM.md",
-        "docs/prior_art/paper_x_v1.1/ZENODO_PUBLICATION_RECORD.md"
+        "docs/prior_art/paper_x_v1.1/AURA_L0_ACTIVATION_PACKET.md"
       ]
     },
     {
@@ -1815,7 +1815,10 @@
     "python aura_showcase_server.py --demo-project winnipeg_pathways --no-auto-start": [
       "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
     ],
-    "python3 scripts/aura_industry_benchmark_validation.py --source-commit 07a01763941998d93c192f467ea4930afbbb21fd": [
+    "python3 scripts/aura_benchmark_suite.py": [
+      "docs/BENCHMARKS.md"
+    ],
+    "python3 scripts/aura_industry_benchmark_validation.py --source-commit 6c1dc7284eb019010fa4c091e4963e44d1f0e6ee": [
       "docs/INDUSTRY_BENCHMARK_SCORECARD.md"
     ],
     "python3 aura_codebase_navigator.py --query \"ephemeral civic runtime\"": [
@@ -3618,6 +3621,14 @@
         "signature_hash": "d5857061120d68cd"
       },
       {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 450,
+        "end_line": 459,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:main:fb3939ae7b7be1e6",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
         "kind": "function",
         "line": 84,
@@ -3642,12 +3653,28 @@
         "signature_hash": "c3265d7d89056dc5"
       },
       {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "function",
+        "line": 335,
+        "end_line": 355,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:main:07ac057dd4f7b71b",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "scripts/aura_ifc_storey_index.py",
         "kind": "function",
         "line": 428,
         "end_line": 443,
         "semantic_id": "scripts/aura_ifc_storey_index.py#function:main:050f32453aeaee28",
         "signature_hash": "0e430dbd1b01e915"
+      },
+      {
+        "file": "scripts/aura_industry_benchmark_validation.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 230,
+        "semantic_id": "scripts/aura_industry_benchmark_validation.py#function:main:ccd4a4d56d2a2d73",
+        "signature_hash": "1107cedc597d81be"
       },
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
@@ -39658,6 +39685,14 @@
         "end_line": 289,
         "semantic_id": "aura_efficiency_benchmark.py#function:run_suite:7bc535912b164086",
         "signature_hash": "6cd3416304a49026"
+      },
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 415,
+        "end_line": 447,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:run_suite:9f9dc3e0ba894b71",
+        "signature_hash": "76fb0180c10aed95"
       }
     ],
     "summarize_results": [
@@ -44496,6 +44531,14 @@
         "end_line": 266,
         "semantic_id": "aura_relationship_contracts.py#function:canonical_json:6ff6ee0dde564a0d",
         "signature_hash": "2af8a10abc3d606e"
+      },
+      {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 63,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:canonical_json:db24948aa4a8caf8",
+        "signature_hash": "c9911db40069043d"
       }
     ],
     "stable_digest": [
@@ -72972,6 +73015,14 @@
         "end_line": 148,
         "semantic_id": "aura_refactor_output_record.py#function:gate:97ed9dd242a874e9",
         "signature_hash": "9877bc9912117642"
+      },
+      {
+        "file": "scripts/aura_industry_benchmark_validation.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 61,
+        "semantic_id": "scripts/aura_industry_benchmark_validation.py#function:gate:0d13c68dd40b6c24",
+        "signature_hash": "27704dd37114a095"
       }
     ],
     "_gate_score": [
@@ -98836,6 +98887,164 @@
         "signature_hash": "cee2a7bb613f105d"
       }
     ],
+    "now_ns": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 48,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:now_ns:a17fb5a36941467f",
+        "signature_hash": "76e0e9d12ad4ebcd"
+      }
+    ],
+    "seconds_since": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:seconds_since:c54758aaf537410f",
+        "signature_hash": "e5a3482e1d6ab6db"
+      }
+    ],
+    "peak_rss_bytes": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 61,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:peak_rss_bytes:93d348e66a594a97",
+        "signature_hash": "97941ee1bbcc387a"
+      }
+    ],
+    "mib": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 65,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:mib:f73dfda0b42ae5fb",
+        "signature_hash": "e9e264a6d9352a4b"
+      }
+    ],
+    "sha256_bytes": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 69,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:sha256_bytes:7a5e6b105dec36e7",
+        "signature_hash": "a7a2ae4abe60af02"
+      },
+      {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 67,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:sha256_bytes:c2792d25a369f46a",
+        "signature_hash": "a7a2ae4abe60af02"
+      }
+    ],
+    "fst_accept": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 98,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:fst_accept:57caa1d601a6354a",
+        "signature_hash": "4cc123a755cac715"
+      }
+    ],
+    "bench_fst": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 130,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:bench_fst:9573e84b3c1f5acb",
+        "signature_hash": "df898f24132309af"
+      }
+    ],
+    "ternary_merkle_root": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 136,
+        "end_line": 149,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:ternary_merkle_root:b614735adb867e54",
+        "signature_hash": "3d110552604e534f"
+      }
+    ],
+    "bench_merkle": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 188,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:bench_merkle:3f61e9a2005822c9",
+        "signature_hash": "4bbcfe6a8f87ce87"
+      }
+    ],
+    "_wal_worker": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 194,
+        "end_line": 220,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:_wal_worker:cccbeba2161eed77",
+        "signature_hash": "11799d7b48077348"
+      }
+    ],
+    "_prepare_wal_db": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 223,
+        "end_line": 235,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:_prepare_wal_db:35c2d8450d59d647",
+        "signature_hash": "87f5aaa82b75abaa"
+      }
+    ],
+    "bench_sqlite_scaling": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 238,
+        "end_line": 286,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:bench_sqlite_scaling:b07a59270e8e6b6c",
+        "signature_hash": "a1d1fd30d088d129"
+      }
+    ],
+    "_fmt": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 292,
+        "end_line": 293,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:_fmt:f89ec2beedf8d5dc",
+        "signature_hash": "4d930e58e5421c82"
+      }
+    ],
+    "render_results": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 296,
+        "end_line": 377,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:render_results:e510905de73e860e",
+        "signature_hash": "c9b09cc61ffe2f81"
+      }
+    ],
+    "render_docs": [
+      {
+        "file": "scripts/aura_benchmark_suite.py",
+        "kind": "function",
+        "line": 380,
+        "end_line": 412,
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:render_docs:48e82bcca87a2402",
+        "signature_hash": "31f568bdbc13f368"
+      }
+    ],
     "_canonical_path": [
       {
         "file": "scripts/aura_exact_head_transport.py",
@@ -99106,6 +99315,126 @@
         "signature_hash": "41db8ed6a02500a5"
       }
     ],
+    "command_exists": [
+      {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 71,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:command_exists:d6099410a9b3fa96",
+        "signature_hash": "22bdd79cc919dc37"
+      }
+    ],
+    "capability_snapshot": [
+      {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 96,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:capability_snapshot:ec5d0e1923438d41",
+        "signature_hash": "ff694009a9d25152"
+      }
+    ],
+    "_requirement_available": [
+      {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "function",
+        "line": 99,
+        "end_line": 120,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:_requirement_available:8b6c2a1537486323",
+        "signature_hash": "087f4124c72dd8c3"
+      }
+    ],
+    "classify_benchmark": [
+      {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 134,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:classify_benchmark:2d661145d4685799",
+        "signature_hash": "9f1a68c70d155fd2"
+      }
+    ],
+    "udp_loopback_probe": [
+      {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "function",
+        "line": 137,
+        "end_line": 192,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:udp_loopback_probe:0d1a3399709df15e",
+        "signature_hash": "2b2b0a337bfedeb5"
+      }
+    ],
+    "udp_loopback_probe.echo": [
+      {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 152,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#method:udp_loopback_probe.echo:99a403ddd4f1d8a1",
+        "signature_hash": "f695c9702323f7f6"
+      }
+    ],
+    "udp_loopback_probe.pct": [
+      {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "method",
+        "line": 179,
+        "end_line": 181,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#method:udp_loopback_probe.pct:2ddc3356c4cd8994",
+        "signature_hash": "9615bbd40b16d8ef"
+      }
+    ],
+    "rss_probe": [
+      {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "function",
+        "line": 195,
+        "end_line": 204,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:rss_probe:10d4c4cf8afb3bd3",
+        "signature_hash": "627b9dcb7d2f63e6"
+      }
+    ],
+    "l0_compression_probe": [
+      {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "function",
+        "line": 207,
+        "end_line": 232,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:l0_compression_probe:9619fc60bc40981b",
+        "signature_hash": "39a239e8371058e7"
+      }
+    ],
+    "verify_trigger": [
+      {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "function",
+        "line": 235,
+        "end_line": 245,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:verify_trigger:81dcedc94171b80f",
+        "signature_hash": "7b8d13b64192d0d8"
+      }
+    ],
+    "execute": [
+      {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "function",
+        "line": 248,
+        "end_line": 290,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:execute:d2fed19f33fb506a",
+        "signature_hash": "47cb24c78b8ff4eb"
+      }
+    ],
+    "poll_once": [
+      {
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "kind": "function",
+        "line": 293,
+        "end_line": 332,
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:poll_once:bf3c90da951c2a63",
+        "signature_hash": "e2147c55503ab339"
+      }
+    ],
     "StoreyIdentity": [
       {
         "file": "scripts/aura_ifc_storey_index.py",
@@ -99244,6 +99573,46 @@
         "end_line": 403,
         "semantic_id": "scripts/aura_ifc_storey_index.py#function:load_ifcopenshell_model:f2ef3fa6c10fc987",
         "signature_hash": "dce06c2e08929f1f"
+      }
+    ],
+    "sha256": [
+      {
+        "file": "scripts/aura_industry_benchmark_validation.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "scripts/aura_industry_benchmark_validation.py#function:sha256:fe36e394afeb5491",
+        "signature_hash": "6c3983f8ef3ca882"
+      }
+    ],
+    "git_blob_sha1": [
+      {
+        "file": "scripts/aura_industry_benchmark_validation.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 40,
+        "semantic_id": "scripts/aura_industry_benchmark_validation.py#function:git_blob_sha1:0beab13b840627f4",
+        "signature_hash": "8095b1b695aeff1f"
+      }
+    ],
+    "clean_db": [
+      {
+        "file": "scripts/aura_industry_benchmark_validation.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 48,
+        "semantic_id": "scripts/aura_industry_benchmark_validation.py#function:clean_db:40f849e1ab70f95b",
+        "signature_hash": "f1f3fdbdcf4e2b41"
+      }
+    ],
+    "run_json": [
+      {
+        "file": "scripts/aura_industry_benchmark_validation.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 55,
+        "semantic_id": "scripts/aura_industry_benchmark_validation.py#function:run_json:29c4cb5cd46ab342",
+        "signature_hash": "212ba61544b06b89"
       }
     ],
     "GaussianCloudArrays": [
@@ -166820,6 +167189,52 @@
       ]
     },
     {
+      "path": "BENCHMARK_RESULTS.md",
+      "role": "knowledge_artifact",
+      "bytes": 3216,
+      "lines": 93,
+      "tokens_est": 804,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bbec51496a8a2d92",
+      "vector": [
+        -0.154693,
+        0.275972,
+        -0.073015,
+        -0.115091,
+        0.191819,
+        -0.023513,
+        -0.013613,
+        -0.22647,
+        0.283397,
+        -0.055689,
+        0.102716,
+        -0.199244,
+        0.179443,
+        0.073015,
+        0.214094,
+        -0.280922,
+        0.048264,
+        0.063115,
+        0.258646,
+        -0.107666,
+        0.159643,
+        -0.117566,
+        0.275972,
+        -0.105191,
+        -0.174493,
+        0.144792,
+        0.228945,
+        0.172018,
+        0.251221,
+        -0.164593,
+        0.246271,
+        0.030939
+      ]
+    },
+    {
       "path": "CODEMAP_AUTO_REFRESH_INTEGRATION.md",
       "role": "knowledge_artifact",
       "bytes": 7483,
@@ -168440,6 +168855,52 @@
         -0.0033,
         -0.163875,
         0.245263
+      ]
+    },
+    {
+      "path": "advanced_benchmark_results.json",
+      "role": "schema_or_lexicon",
+      "bytes": 765,
+      "lines": 26,
+      "tokens_est": 192,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "83b63769e0a1a151",
+      "vector": [
+        0.043562,
+        0.295518,
+        0.01766,
+        -0.116559,
+        0.034143,
+        -0.158944,
+        -0.286099,
+        0.257842,
+        -0.137751,
+        0.064755,
+        -0.1872,
+        -0.1872,
+        -0.076528,
+        0.010596,
+        -0.041208,
+        -0.121268,
+        0.029434,
+        0.208393,
+        -0.071819,
+        -0.27197,
+        -0.064755,
+        -0.283744,
+        0.182491,
+        -0.052981,
+        -0.149525,
+        0.27197,
+        -0.246068,
+        -0.057691,
+        0.274325,
+        -0.248423,
+        -0.189555,
+        0.170717
       ]
     },
     {
@@ -197422,6 +197883,144 @@
       ]
     },
     {
+      "path": "aura_workspace/outbox/WO-FLEET-AUTONOMOUS-EXECUTE.industry-validation.json",
+      "role": "schema_or_lexicon",
+      "bytes": 6622,
+      "lines": 202,
+      "tokens_est": 1656,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "53d9c78dc8e78800",
+      "vector": [
+        0.18806,
+        0.146269,
+        -0.025812,
+        0.180685,
+        -0.286392,
+        0.242143,
+        0.148727,
+        0.259351,
+        -0.119228,
+        -0.006146,
+        -0.168394,
+        -0.210185,
+        -0.229851,
+        0.195435,
+        -0.099561,
+        0.298684,
+        0.04302,
+        0.301142,
+        0.045479,
+        -0.001229,
+        -0.153644,
+        -0.232309,
+        0.244601,
+        -0.148727,
+        -0.124144,
+        -0.035645,
+        -0.023354,
+        -0.109394,
+        0.168394,
+        0.023354,
+        0.006146,
+        -0.301142
+      ]
+    },
+    {
+      "path": "aura_workspace/outbox/WO-FLEET-AUTONOMOUS-EXECUTE.receipt.json",
+      "role": "schema_or_lexicon",
+      "bytes": 4553,
+      "lines": 83,
+      "tokens_est": 1139,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "56b7a2fc6b87a99a",
+      "vector": [
+        0.044702,
+        0.131551,
+        -0.123887,
+        0.2184,
+        0.057474,
+        0.00894,
+        0.108561,
+        -0.323129,
+        -0.164758,
+        -0.215845,
+        -0.238835,
+        0.320575,
+        0.282259,
+        -0.039593,
+        -0.172421,
+        0.223508,
+        0.261824,
+        0.077909,
+        0.0728,
+        -0.098344,
+        0.118779,
+        -0.070245,
+        0.284813,
+        0.205628,
+        -0.180084,
+        -0.042147,
+        -0.108561,
+        0.177529,
+        -0.169866,
+        0.128996,
+        -0.111116,
+        0.190301
+      ]
+    },
+    {
+      "path": "aura_workspace/outbox/WO-UNIVERSAL-GLOBAL-BENCHMARK-DAEMON-EXHAUSTIVE.telemetry.json",
+      "role": "schema_or_lexicon",
+      "bytes": 8165,
+      "lines": 2,
+      "tokens_est": 2041,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6c2004d66f82c995",
+      "vector": [
+        -0.029298,
+        -0.039489,
+        -0.133752,
+        -0.036941,
+        0.126109,
+        0.169419,
+        -0.174515,
+        -0.312088,
+        0.105728,
+        0.131204,
+        0.182157,
+        0.077704,
+        0.317183,
+        0.052227,
+        0.301897,
+        -0.29935,
+        0.024203,
+        -0.238206,
+        0.082799,
+        0.194896,
+        0.245849,
+        -0.011464,
+        -0.098085,
+        0.123561,
+        0.02675,
+        -0.126109,
+        -0.164324,
+        -0.228015,
+        0.25604,
+        -0.220372,
+        0.17961,
+        -0.156681
+      ]
+    },
+    {
       "path": "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "role": "python_module",
       "bytes": 7378,
@@ -198626,7 +199225,7 @@
     {
       "path": "docs/ADVANCED_BENCHMARKS.md",
       "role": "knowledge_artifact",
-      "bytes": 906,
+      "bytes": 907,
       "lines": 18,
       "tokens_est": 226,
       "symbol_count": 0,
@@ -198639,40 +199238,40 @@
         ]
       },
       "topology": {},
-      "digest8": "ecb626d8f9892554",
+      "digest8": "30f6497845efe534",
       "vector": [
-        0.240441,
-        0.158339,
-        0.186488,
-        0.174759,
-        0.195871,
-        -0.102041,
-        0.219329,
-        -0.071546,
-        0.221675,
-        -0.118461,
-        0.275627,
-        -0.137227,
-        -0.092658,
-        0.059817,
-        -0.299085,
-        -0.148956,
-        -0.029322,
-        0.167722,
-        -0.184142,
-        0.261553,
-        0.050434,
-        0.170068,
-        0.261553,
-        -0.059817,
-        0.19118,
-        -0.216983,
-        0.043397,
-        -0.263898,
-        0.188834,
-        0.048088,
-        -0.066854,
-        -0.188834
+        -0.27016,
+        0.263753,
+        -0.045916,
+        -0.060866,
+        -0.005339,
+        -0.163377,
+        -0.216769,
+        0.011746,
+        -0.05873,
+        -0.131343,
+        0.240261,
+        -0.148428,
+        -0.026696,
+        -0.043781,
+        -0.216769,
+        0.075816,
+        0.233854,
+        0.139885,
+        -0.225311,
+        -0.216769,
+        0.250939,
+        -0.174056,
+        0.178327,
+        -0.235989,
+        -0.016017,
+        0.186869,
+        0.225311,
+        -0.233854,
+        0.218904,
+        0.225311,
+        -0.018153,
+        0.17192
       ]
     },
     {
@@ -205692,6 +206291,58 @@
       ]
     },
     {
+      "path": "docs/BENCHMARKS.md",
+      "role": "knowledge_artifact",
+      "bytes": 1430,
+      "lines": 28,
+      "tokens_est": 356,
+      "symbol_count": 0,
+      "commands": [
+        "python3 scripts/aura_benchmark_suite.py"
+      ],
+      "command_lines": {
+        "python3 scripts/aura_benchmark_suite.py": [
+          6
+        ]
+      },
+      "topology": {},
+      "digest8": "d0c5a5a8cd60a973",
+      "vector": [
+        0.197643,
+        0.260587,
+        0.180019,
+        0.265623,
+        0.1347,
+        -0.026436,
+        0.071756,
+        -0.059167,
+        0.232892,
+        -0.096933,
+        0.013848,
+        0.157359,
+        0.031472,
+        0.197643,
+        0.169948,
+        0.293318,
+        0.273176,
+        -0.129664,
+        -0.084345,
+        -0.11204,
+        0.247998,
+        -0.049096,
+        0.124629,
+        0.280729,
+        0.207714,
+        0.159877,
+        0.059167,
+        0.192608,
+        -0.079309,
+        0.162395,
+        -0.169948,
+        -0.280729
+      ]
+    },
+    {
       "path": "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
       "role": "knowledge_artifact",
       "bytes": 16273,
@@ -205740,53 +206391,99 @@
     {
       "path": "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
       "role": "knowledge_artifact",
-      "bytes": 4127,
-      "lines": 71,
-      "tokens_est": 1032,
+      "bytes": 5489,
+      "lines": 73,
+      "tokens_est": 1372,
       "symbol_count": 0,
       "commands": [
-        "python3 scripts/aura_industry_benchmark_validation.py --source-commit 07a01763941998d93c192f467ea4930afbbb21fd"
+        "python3 scripts/aura_industry_benchmark_validation.py --source-commit 6c1dc7284eb019010fa4c091e4963e44d1f0e6ee"
       ],
       "command_lines": {
-        "python3 scripts/aura_industry_benchmark_validation.py --source-commit 07a01763941998d93c192f467ea4930afbbb21fd": [
-          67
+        "python3 scripts/aura_industry_benchmark_validation.py --source-commit 6c1dc7284eb019010fa4c091e4963e44d1f0e6ee": [
+          69
         ]
       },
       "topology": {},
-      "digest8": "b92fac02200e935c",
+      "digest8": "fef9b122c2f3d66a",
       "vector": [
-        -0.126984,
-        -0.005521,
-        0.014355,
-        0.221947,
-        0.012146,
-        0.206488,
-        0.230781,
-        0.277157,
-        -0.173361,
-        0.268324,
-        0.252865,
-        0.029814,
-        -0.02098,
-        -0.239614,
-        -0.210905,
-        -0.246239,
-        0.012146,
-        0.199863,
-        0.09165,
-        0.179987,
-        0.076191,
-        -0.093858,
-        -0.263907,
-        0.067357,
-        -0.226364,
-        0.02098,
-        -0.140235,
-        0.056315,
-        -0.179987,
-        0.257282,
-        0.252865,
-        0.157902
+        0.301319,
+        0.006357,
+        0.141124,
+        0.286062,
+        -0.197065,
+        -0.029242,
+        0.029242,
+        0.113154,
+        -0.273348,
+        -0.001271,
+        -0.324204,
+        0.075012,
+        -0.013985,
+        0.059755,
+        -0.064841,
+        -0.314033,
+        -0.308947,
+        -0.235207,
+        -0.059755,
+        0.125867,
+        -0.113154,
+        0.207236,
+        -0.197065,
+        -0.214865,
+        0.087726,
+        0.047041,
+        -0.03687,
+        -0.125867,
+        0.016528,
+        -0.077555,
+        -0.301319,
+        -0.164009
+      ]
+    },
+    {
+      "path": "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
+      "role": "knowledge_artifact",
+      "bytes": 9220,
+      "lines": 85,
+      "tokens_est": 2298,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2d0fa3cb1f3b59d5",
+      "vector": [
+        -0.307324,
+        -0.087631,
+        -0.203648,
+        -0.277702,
+        0.277702,
+        -0.067883,
+        -0.206117,
+        -0.102441,
+        -0.016045,
+        -0.267829,
+        -0.02345,
+        -0.028387,
+        0.149342,
+        -0.011108,
+        0.203648,
+        0.119721,
+        0.016045,
+        0.243144,
+        -0.070351,
+        -0.250549,
+        0.211054,
+        -0.011108,
+        0.151811,
+        0.257955,
+        -0.238207,
+        0.243144,
+        -0.114784,
+        0.149342,
+        -0.206117,
+        -0.060477,
+        -0.018513,
+        0.183901
       ]
     },
     {
@@ -211339,6 +212036,52 @@
       ]
     },
     {
+      "path": "scripts/aura_benchmark_suite.py",
+      "role": "python_module",
+      "bytes": 18706,
+      "lines": 464,
+      "tokens_est": 4675,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "28521e7aebf0eea8",
+      "vector": [
+        -0.087544,
+        -0.070869,
+        -0.087544,
+        0.170919,
+        -0.157023,
+        0.073648,
+        -0.237619,
+        0.179257,
+        -0.020844,
+        -0.354344,
+        0.006948,
+        -0.176477,
+        -0.179257,
+        -0.029181,
+        0.062531,
+        -0.254294,
+        -0.084765,
+        0.16814,
+        -0.006948,
+        0.054194,
+        0.076427,
+        0.312657,
+        -0.240398,
+        0.054194,
+        -0.259853,
+        0.232061,
+        -0.176477,
+        0.226503,
+        0.232061,
+        0.009727,
+        0.257073,
+        -0.215386
+      ]
+    },
+    {
       "path": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
       "role": "python_module",
       "bytes": 4923,
@@ -211477,6 +212220,52 @@
       ]
     },
     {
+      "path": "scripts/aura_global_benchmark_daemon.py",
+      "role": "python_module",
+      "bytes": 14834,
+      "lines": 360,
+      "tokens_est": 3708,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8bf2e5e7779e8a6f",
+      "vector": [
+        -0.153933,
+        0.07279,
+        0.304286,
+        -0.278034,
+        0.077563,
+        0.304286,
+        0.027445,
+        -0.23269,
+        0.127681,
+        -0.020286,
+        0.015513,
+        0.3019,
+        0.034605,
+        -0.022672,
+        -0.017899,
+        -0.206437,
+        -0.196891,
+        0.251782,
+        0.29474,
+        0.261328,
+        -0.244622,
+        -0.268488,
+        0.07279,
+        0.161093,
+        0.118135,
+        0.07995,
+        -0.091883,
+        -0.099042,
+        0.022672,
+        -0.113362,
+        0.144387,
+        -0.039378
+      ]
+    },
+    {
       "path": "scripts/aura_ifc_storey_index.py",
       "role": "python_module",
       "bytes": 17432,
@@ -211520,6 +212309,52 @@
         -0.287388,
         0.152147,
         -0.003901
+      ]
+    },
+    {
+      "path": "scripts/aura_industry_benchmark_validation.py",
+      "role": "python_module",
+      "bytes": 12060,
+      "lines": 235,
+      "tokens_est": 3015,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "096ecc61af0c3820",
+      "vector": [
+        0.09691,
+        -0.203113,
+        -0.014603,
+        -0.232319,
+        0.033188,
+        -0.120806,
+        0.319936,
+        -0.224354,
+        0.033188,
+        0.139391,
+        0.216388,
+        -0.266835,
+        -0.152667,
+        0.104875,
+        -0.248249,
+        0.051774,
+        -0.094255,
+        0.237629,
+        -0.288075,
+        -0.10753,
+        0.017258,
+        0.322591,
+        -0.131426,
+        -0.006638,
+        -0.171252,
+        0.019913,
+        -0.157977,
+        -0.134081,
+        0.314626,
+        -0.165942,
+        0.030533,
+        0.088945
       ]
     },
     {
@@ -251752,6 +252587,7 @@
       "AURA_ROUTER.md",
       "AURA_SYSTEM_ANALYSIS.md",
       "AuraOS.tex",
+      "BENCHMARK_RESULTS.md",
       "CODEMAP_AUTO_REFRESH_INTEGRATION.md",
       "CODEMAP_AUTO_REFRESH_README.md",
       "CODEMAP_AUTO_REFRESH_SUMMARY.md",
@@ -251782,6 +252618,7 @@
       "_aura_architect_consolidation_benchmark_legacy.py",
       "_aura_architect_consolidation_benchmark_refined_legacy.py",
       "_aura_architect_consolidation_benchmark_v2_legacy.py",
+      "advanced_benchmark_results.json",
       "apply_graft.py",
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
@@ -252410,6 +253247,9 @@
       "aura_wfst_temporal_adapter.py",
       "aura_work_splitter.py",
       "aura_workflow_gates.py",
+      "aura_workspace/outbox/WO-FLEET-AUTONOMOUS-EXECUTE.industry-validation.json",
+      "aura_workspace/outbox/WO-FLEET-AUTONOMOUS-EXECUTE.receipt.json",
+      "aura_workspace/outbox/WO-UNIVERSAL-GLOBAL-BENCHMARK-DAEMON-EXHAUSTIVE.telemetry.json",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/real_refactor_trial/plans.json",
       "benchmarks/refactor_code_quality/generate_fixture.py",
@@ -252575,8 +253415,10 @@
       "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
       "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
       "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
+      "docs/BENCHMARKS.md",
       "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
       "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
+      "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
       "docs/README_PRE_ARCHITECT_BENCHMARK.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
@@ -252695,10 +253537,13 @@
       "scripts/aura_arch_v2_3_capsule_validator.py",
       "scripts/aura_architecture_harness.py",
       "scripts/aura_architecture_harness_core.py",
+      "scripts/aura_benchmark_suite.py",
       "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
       "scripts/aura_exact_head_transport.py",
       "scripts/aura_fetch_construction_demo_source.py",
+      "scripts/aura_global_benchmark_daemon.py",
       "scripts/aura_ifc_storey_index.py",
+      "scripts/aura_industry_benchmark_validation.py",
       "scripts/aura_mesh_to_gaussian.py",
       "scripts/aura_navigation_refresh.py",
       "scripts/aura_prepare_construction_demo_assets.py",
@@ -350370,6 +351215,176 @@
         "file_digest8": "13bcaf16442c7fcd"
       },
       {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:_fmt:f89ec2beedf8d5dc",
+        "name": "_fmt",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 292,
+        "end_line": 293,
+        "signature_hash": "4d930e58e5421c82",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:_prepare_wal_db:35c2d8450d59d647",
+        "name": "_prepare_wal_db",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 223,
+        "end_line": 235,
+        "signature_hash": "87f5aaa82b75abaa",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:_wal_worker:cccbeba2161eed77",
+        "name": "_wal_worker",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 194,
+        "end_line": 220,
+        "signature_hash": "11799d7b48077348",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:bench_fst:9573e84b3c1f5acb",
+        "name": "bench_fst",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 101,
+        "end_line": 130,
+        "signature_hash": "df898f24132309af",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:bench_merkle:3f61e9a2005822c9",
+        "name": "bench_merkle",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 152,
+        "end_line": 188,
+        "signature_hash": "4bbcfe6a8f87ce87",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:bench_sqlite_scaling:b07a59270e8e6b6c",
+        "name": "bench_sqlite_scaling",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 238,
+        "end_line": 286,
+        "signature_hash": "a1d1fd30d088d129",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:fst_accept:57caa1d601a6354a",
+        "name": "fst_accept",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 91,
+        "end_line": 98,
+        "signature_hash": "4cc123a755cac715",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:main:fb3939ae7b7be1e6",
+        "name": "main",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 450,
+        "end_line": 459,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:mib:f73dfda0b42ae5fb",
+        "name": "mib",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 64,
+        "end_line": 65,
+        "signature_hash": "e9e264a6d9352a4b",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:now_ns:a17fb5a36941467f",
+        "name": "now_ns",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 47,
+        "end_line": 48,
+        "signature_hash": "76e0e9d12ad4ebcd",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:peak_rss_bytes:93d348e66a594a97",
+        "name": "peak_rss_bytes",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 55,
+        "end_line": 61,
+        "signature_hash": "97941ee1bbcc387a",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:render_docs:48e82bcca87a2402",
+        "name": "render_docs",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 380,
+        "end_line": 412,
+        "signature_hash": "31f568bdbc13f368",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:render_results:e510905de73e860e",
+        "name": "render_results",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 296,
+        "end_line": 377,
+        "signature_hash": "c9b09cc61ffe2f81",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:run_suite:9f9dc3e0ba894b71",
+        "name": "run_suite",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 415,
+        "end_line": 447,
+        "signature_hash": "76fb0180c10aed95",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:seconds_since:c54758aaf537410f",
+        "name": "seconds_since",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "e5a3482e1d6ab6db",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:sha256_bytes:7a5e6b105dec36e7",
+        "name": "sha256_bytes",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 68,
+        "end_line": 69,
+        "signature_hash": "a7a2ae4abe60af02",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
+        "semantic_id": "scripts/aura_benchmark_suite.py#function:ternary_merkle_root:b614735adb867e54",
+        "name": "ternary_merkle_root",
+        "kind": "function",
+        "file": "scripts/aura_benchmark_suite.py",
+        "line": 136,
+        "end_line": 149,
+        "signature_hash": "3d110552604e534f",
+        "file_digest8": "28521e7aebf0eea8"
+      },
+      {
         "semantic_id": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py#function:main:cd2d8a7ac706963d",
         "name": "main",
         "kind": "function",
@@ -350670,6 +351685,156 @@
         "file_digest8": "5275fcd40fb89053"
       },
       {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:_requirement_available:8b6c2a1537486323",
+        "name": "_requirement_available",
+        "kind": "function",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 99,
+        "end_line": 120,
+        "signature_hash": "087f4124c72dd8c3",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:canonical_json:db24948aa4a8caf8",
+        "name": "canonical_json",
+        "kind": "function",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 62,
+        "end_line": 63,
+        "signature_hash": "c9911db40069043d",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:capability_snapshot:ec5d0e1923438d41",
+        "name": "capability_snapshot",
+        "kind": "function",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 74,
+        "end_line": 96,
+        "signature_hash": "ff694009a9d25152",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:classify_benchmark:2d661145d4685799",
+        "name": "classify_benchmark",
+        "kind": "function",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 123,
+        "end_line": 134,
+        "signature_hash": "9f1a68c70d155fd2",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:command_exists:d6099410a9b3fa96",
+        "name": "command_exists",
+        "kind": "function",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 70,
+        "end_line": 71,
+        "signature_hash": "22bdd79cc919dc37",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:execute:d2fed19f33fb506a",
+        "name": "execute",
+        "kind": "function",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 248,
+        "end_line": 290,
+        "signature_hash": "47cb24c78b8ff4eb",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:l0_compression_probe:9619fc60bc40981b",
+        "name": "l0_compression_probe",
+        "kind": "function",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 207,
+        "end_line": 232,
+        "signature_hash": "39a239e8371058e7",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:main:07ac057dd4f7b71b",
+        "name": "main",
+        "kind": "function",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 335,
+        "end_line": 355,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:poll_once:bf3c90da951c2a63",
+        "name": "poll_once",
+        "kind": "function",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 293,
+        "end_line": 332,
+        "signature_hash": "e2147c55503ab339",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:rss_probe:10d4c4cf8afb3bd3",
+        "name": "rss_probe",
+        "kind": "function",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 195,
+        "end_line": 204,
+        "signature_hash": "627b9dcb7d2f63e6",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:sha256_bytes:c2792d25a369f46a",
+        "name": "sha256_bytes",
+        "kind": "function",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 66,
+        "end_line": 67,
+        "signature_hash": "a7a2ae4abe60af02",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:udp_loopback_probe:0d1a3399709df15e",
+        "name": "udp_loopback_probe",
+        "kind": "function",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 137,
+        "end_line": 192,
+        "signature_hash": "2b2b0a337bfedeb5",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:verify_trigger:81dcedc94171b80f",
+        "name": "verify_trigger",
+        "kind": "function",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 235,
+        "end_line": 245,
+        "signature_hash": "7b8d13b64192d0d8",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#method:udp_loopback_probe.echo:99a403ddd4f1d8a1",
+        "name": "udp_loopback_probe.echo",
+        "kind": "method",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 143,
+        "end_line": 152,
+        "signature_hash": "f695c9702323f7f6",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
+        "semantic_id": "scripts/aura_global_benchmark_daemon.py#method:udp_loopback_probe.pct:2ddc3356c4cd8994",
+        "name": "udp_loopback_probe.pct",
+        "kind": "method",
+        "file": "scripts/aura_global_benchmark_daemon.py",
+        "line": 179,
+        "end_line": 181,
+        "signature_hash": "9615bbd40b16d8ef",
+        "file_digest8": "8bf2e5e7779e8a6f"
+      },
+      {
         "semantic_id": "scripts/aura_ifc_storey_index.py#class:StoreyIdentity:87a789aaa1e0ca31",
         "name": "StoreyIdentity",
         "kind": "class",
@@ -350878,6 +352043,66 @@
         "end_line": 56,
         "signature_hash": "5c1a69a9659e2089",
         "file_digest8": "36c6b5e27a337ff0"
+      },
+      {
+        "semantic_id": "scripts/aura_industry_benchmark_validation.py#function:clean_db:40f849e1ab70f95b",
+        "name": "clean_db",
+        "kind": "function",
+        "file": "scripts/aura_industry_benchmark_validation.py",
+        "line": 43,
+        "end_line": 48,
+        "signature_hash": "f1f3fdbdcf4e2b41",
+        "file_digest8": "096ecc61af0c3820"
+      },
+      {
+        "semantic_id": "scripts/aura_industry_benchmark_validation.py#function:gate:0d13c68dd40b6c24",
+        "name": "gate",
+        "kind": "function",
+        "file": "scripts/aura_industry_benchmark_validation.py",
+        "line": 58,
+        "end_line": 61,
+        "signature_hash": "27704dd37114a095",
+        "file_digest8": "096ecc61af0c3820"
+      },
+      {
+        "semantic_id": "scripts/aura_industry_benchmark_validation.py#function:git_blob_sha1:0beab13b840627f4",
+        "name": "git_blob_sha1",
+        "kind": "function",
+        "file": "scripts/aura_industry_benchmark_validation.py",
+        "line": 38,
+        "end_line": 40,
+        "signature_hash": "8095b1b695aeff1f",
+        "file_digest8": "096ecc61af0c3820"
+      },
+      {
+        "semantic_id": "scripts/aura_industry_benchmark_validation.py#function:main:ccd4a4d56d2a2d73",
+        "name": "main",
+        "kind": "function",
+        "file": "scripts/aura_industry_benchmark_validation.py",
+        "line": 64,
+        "end_line": 230,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "096ecc61af0c3820"
+      },
+      {
+        "semantic_id": "scripts/aura_industry_benchmark_validation.py#function:run_json:29c4cb5cd46ab342",
+        "name": "run_json",
+        "kind": "function",
+        "file": "scripts/aura_industry_benchmark_validation.py",
+        "line": 51,
+        "end_line": 55,
+        "signature_hash": "212ba61544b06b89",
+        "file_digest8": "096ecc61af0c3820"
+      },
+      {
+        "semantic_id": "scripts/aura_industry_benchmark_validation.py#function:sha256:fe36e394afeb5491",
+        "name": "sha256",
+        "kind": "function",
+        "file": "scripts/aura_industry_benchmark_validation.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "6c3983f8ef3ca882",
+        "file_digest8": "096ecc61af0c3820"
       },
       {
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#class:GaussianCloudArrays:7138db6310eefc0f",
@@ -410380,7 +411605,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "eac173a5c0bebb870e16096d3626ddba",
-    "payload_hash": "db08b426b4158e2efa7e9b44c83e920c"
+    "record_fingerprint": "000e0eae78dbbb0d291f2a51bc315347",
+    "payload_hash": "75bf255922122857f4bfc8ed9ed4be07"
   }
 }

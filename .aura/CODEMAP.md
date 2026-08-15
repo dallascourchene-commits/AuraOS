@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1554
-- **total_bytes**: 25750619
-- **text_tokens_est**: 6428450
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 204, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 986, 'schema_or_lexicon': 237, 'support_file': 49}
+- **file_count**: 1564
+- **total_bytes**: 25831553
+- **text_tokens_est**: 6448674
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 207, 'native_accelerator': 8, 'operator_script': 6, 'python_module': 989, 'schema_or_lexicon': 241, 'support_file': 49}
 - **topology_nodes**: 11393
 - **topology_edges**: 27882
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1554,
+  "repo_file_count": 1564,
   "source_paths_without_topology": [
     "_aura_architect_consolidation_benchmark_legacy.py",
     "_aura_architect_consolidation_benchmark_refined_legacy.py",
@@ -138,16 +138,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1554,
-  "bytes": 25750619,
-  "tokens_est": 6428450,
+  "files": 1564,
+  "bytes": 25831553,
+  "tokens_est": 6448674,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 204,
+    "knowledge_artifact": 207,
     "native_accelerator": 8,
     "operator_script": 6,
-    "python_module": 986,
-    "schema_or_lexicon": 237,
+    "python_module": 989,
+    "schema_or_lexicon": 241,
     "support_file": 49
   }
 }
@@ -253,6 +253,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "AURA_ROUTER.md",
     "AURA_SYSTEM_ANALYSIS.md",
     "AuraOS.tex",
+    "BENCHMARK_RESULTS.md",
     "CODEMAP_AUTO_REFRESH_INTEGRATION.md",
     "CODEMAP_AUTO_REFRESH_README.md",
     "CODEMAP_AUTO_REFRESH_SUMMARY.md",
@@ -419,8 +420,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
+    "docs/BENCHMARKS.md",
     "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
     "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
+    "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
     "docs/README_PRE_ARCHITECT_BENCHMARK.md",
     "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
     "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
@@ -429,10 +432,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/fragments/README_REFACTOR_CODE_QUALITY.md",
     "docs/fragments/USER_GUIDE_REFACTOR_CODE_QUALITY.md",
     "docs/prior_art/README.md",
-    "docs/prior_art/paper_x_v1.1/AURA_L0_ACTIVATION_PACKET.md",
-    "docs/prior_art/paper_x_v1.1/AuraOS_Paper_X_Relational_World_Compilation_N101-N124_v1.1_2026-08-11.md",
-    "docs/prior_art/paper_x_v1.1/PAPER_X_V1.1_EVIDENCE_ADDENDUM.md",
-    "docs/prior_art/paper_x_v1.1/ZENODO_PUBLICATION_RECORD.md"
+    "docs/prior_art/paper_x_v1.1/AURA_L0_ACTIVATION_PACKET.md"
   ]
 }
 ```
