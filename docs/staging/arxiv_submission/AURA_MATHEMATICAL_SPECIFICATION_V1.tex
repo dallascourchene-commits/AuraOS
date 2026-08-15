@@ -1,0 +1,401 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{array,booktabs}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{definition}{Definition}
+\newtheorem{invariant}{Invariant}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+
+\title{AuraOS Mathematical Specification V1\\
+\large Boundary-Constrained Relational Computation, Six-Slot FST Routing, and 3--6--9 Phase Concurrency}
+\author{Compiled under WO-FLEET-PHASE3-DEPLOY-001}
+\date{2026-08-15}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This staged specification formalizes three source-bound AuraOS structures:
+(1) the Four Prime Directives as admissibility constraints on state transitions,
+(2) the six-slot finite-state routing order
+\[
+\mathrm{DIR}\rightarrow\mathrm{ASP}\rightarrow\mathrm{CLASS}\rightarrow
+\mathrm{SUBJ}\rightarrow\mathrm{VOICE}\rightarrow\mathrm{STEM},
+\]
+and (3) the 3--6--9 orchestration grammar as a concurrency partition whose
+safety depends on exclusive leases, owner coordinates, source-currentness
+checks, and human authority gates. The specification deliberately does not
+treat routing as truth, receipts as truth, or the numbers 3, 6, and 9 as a
+physical or numerological law. The results proved here are conditional
+software-safety statements under explicit enforcement assumptions.
+\end{abstract}
+
+\section{Status, Scope, and Source Boundary}
+
+This document is \textbf{STAGED / NON-PUBLISHED}. It is a mathematical
+formalization of the current AuraOS staging sources and does not by itself
+promote founder-profile claims, benchmark claims, Indigenous knowledge, or
+design targets into universal facts.
+
+The source generation used for this compilation is:
+\begin{itemize}
+  \item Work order: \texttt{WO-FLEET-PHASE3-DEPLOY-001};
+  \item Coordinate: \texttt{AD:FLEET:PHASE3:001};
+  \item Founder source: \texttt{FOUNDER\_BIO\_AND\_VISION.md}, Google Drive document \texttt{1o-4aSQS4rozVcCyvi32Ps4OSoSlvUASFt5CIbS9hLjs};
+  \item Founder source revision: \texttt{AIroW36UAQOeNzotLqRjGIMbIrWXdsa004pHjk\_DK5KRd97cthvxWaxi0Gk21Ku3puw-7lY89aGyVM9W-KISDzQzQe5zSzAzanuhg3aADYM};
+  \item Repository source head: \texttt{25a103b02752f3f58f95946352d40bf798e6cfda};
+  \item README blob: \texttt{e4e9fb5f8f47046fc30c2a29b8d3168fac394fcc}.
+\end{itemize}
+
+The governing negative-space rules are
+\[
+\mathrm{ROUTE}\neq\mathrm{AUTHORITY},\qquad
+\mathrm{PROJECTION}\neq\mathrm{OWNER},\qquad
+\mathrm{SIMILARITY}\neq\mathrm{EVIDENCE},\qquad
+\mathrm{RECEIPT}\neq\mathrm{TRUTH}.
+\]
+
+\section{State Model and Admissible Transitions}
+
+Let \(X\) be the set of source-resolvable system states, \(A\) the set of
+proposed actions, and \(U\) the set of governed write surfaces. A candidate
+transition is a triple
+\[
+\tau=(x,a,x')\in X\times A\times X.
+\]
+For a consequential action, let \(H(x,a)\in\{0,1\}\) denote explicit human or
+community authority at the applicable governance boundary. Let
+\(C(x,a)\in\{0,1\}\) denote source-currentness: the generation against which
+the action was compiled still equals the current owner generation.
+
+\begin{definition}[Admissibility]
+A candidate transition is admissible only when every required boundary
+predicate is true:
+\[
+\operatorname{Adm}(\tau)=
+D_1(\tau)\land D_2(\tau)\land D_3(\tau)\land D_4(\tau)
+\land C(x,a)\land H(x,a),
+\]
+where \(H\) may be replaced by the narrower authority predicate applicable to
+a non-consequential local operation, but routing, ranking, similarity, memory,
+hashes, or worker consensus may not substitute for that authority.
+\end{definition}
+
+If any required predicate is false or unresolved, the transition is rejected
+or remains staged:
+\[
+\neg\operatorname{Adm}(\tau)\Longrightarrow
+\operatorname{Commit}(\tau)=0.
+\]
+
+\section{Four Prime Directives as Boundary Constraints}
+
+The Four Prime Directives are represented as a recursive governance kernel.
+The names and English glosses below are preserved from the current AuraOS
+provenance source. Their mathematical role here is a set of mechanically
+checkable obligations, not an assertion that the words themselves guarantee
+ethical behavior.
+
+\subsection{\texorpdfstring{\(D_1\): Gakina-awiiya --- Relation}{D1: Gakina-awiiya --- Relation}}
+\emph{Gakina-awiiya --- We Are One / We Are All Related.}
+
+Let \(\mathcal{R}_x\) be the source-resolvable relation graph active for state
+\(x\). Define \(D_1(\tau)=1\) only if every dependency, governed subject,
+affected owner, required permission edge, and declared negative-space
+relation needed to evaluate \(a\) is represented or explicitly marked
+unresolved. Absence may not be silently interpreted as permission.
+
+\subsection{\texorpdfstring{\(D_2\): Giwaabamin --- Recognition}{D2: Giwaabamin --- Recognition}}
+\emph{Giwaabamin --- I See You.}
+
+Let \(P(z)\) carry the provenance tuple for a governed object \(z\):
+\[
+P(z)=(\operatorname{id},\operatorname{owner},\operatorname{source},
+\operatorname{generation},\operatorname{jurisdiction},\operatorname{bounds}).
+\]
+Then \(D_2(\tau)=1\) only when the identities and provenance required by
+\(\tau\) are resolvable and current. Recognition does not transfer ownership:
+\[
+\operatorname{See}(z)\not\Rightarrow\operatorname{Own}(z),\qquad
+\operatorname{RouteTo}(z)\not\Rightarrow\operatorname{AuthorityOver}(z).
+\]
+
+\subsection{\texorpdfstring{\(D_3\): Gi-zaagi'in --- Governed Care}{D3: Gi-zaagi'in --- Governed Care}}
+\emph{Gi-zaagi'in --- I Love You.}
+
+Let \(K(a)\) be technical capability, \(A_u(a)\) authorization, \(N(a)\) the
+satisfied negative-space constraints, and \(R_v(a)\) reversibility when the
+applicable policy requires staging or rollback. Governed care requires
+\[
+D_3(\tau)=A_u(a)\land N(a)\land R_v(a),
+\]
+with the explicit separation
+\[
+K(a)\not\Rightarrow A_u(a).
+\]
+A technically possible action is therefore not automatically lawful,
+authorized, beneficial, or admissible.
+
+\subsection{\texorpdfstring{\(D_4\): Miigwech --- Reciprocity and Receipt}{D4: Miigwech --- Reciprocity and Receipt}}
+\emph{Miigwech --- Thank You.}
+
+For an accepted transition, define an evidence receipt
+\[
+\rho(\tau)=(\operatorname{actor},\operatorname{input\ generation},
+\operatorname{change},\operatorname{evidence},\operatorname{authority},
+\operatorname{successor\ generation}).
+\]
+Then \(D_4(\tau)=1\) only when the transition can close with the required
+attribution and receipt fields. The receipt authenticates the recorded
+transition against its declared evidence surface; it does not become truth:
+\[
+\rho(\tau)\neq \operatorname{Truth}(\tau).
+\]
+
+\subsection{Recursive governance loop}
+
+The source-bound governance sequence is formalized as
+\[
+\mathrm{RELATION}\rightarrow\mathrm{RECOGNITION}\rightarrow
+\mathrm{GOVERNED\ CARE}\rightarrow\mathrm{RECIPROCITY/RECEIPT}
+\rightarrow\mathrm{RELATION}'.
+\]
+If an accepted transition produces \(x'\), then \(x'\) becomes the relational
+input for the next evaluation cycle. The cycle constrains drift only to the
+extent that the predicates above are actually enforced.
+
+\section{Six-Slot FST / WFST Routing Specification}
+
+\subsection{Ordered states}
+
+Let the six routing states be
+\[
+Q=\{q_D,q_A,q_C,q_S,q_V,q_T\},
+\]
+corresponding respectively to
+\[
+(DIR,ASP,CLASS,SUBJ,VOICE,STEM).
+\]
+Let each state \(q_i\) have an associated slot alphabet \(\Sigma_i\). This
+specification intentionally leaves the lexical inventories of the
+\(\Sigma_i\) abstract because the bound sources establish the slot order but
+do not provide a complete canonical inventory for every grammar.
+
+The allowed state-local order is
+\[
+q_D\rightarrow q_A\rightarrow q_C\rightarrow q_S\rightarrow q_V\rightarrow q_T.
+\]
+
+\subsection{Transition matrix}
+
+Ignoring start and accept sentinels, the structural adjacency matrix is
+\[
+M_6=
+\begin{bmatrix}
+0&1&0&0&0&0\\
+0&0&1&0&0&0\\
+0&0&0&1&0&0\\
+0&0&0&0&1&0\\
+0&0&0&0&0&1\\
+0&0&0&0&0&0
+\end{bmatrix}.
+\]
+For each nonterminal routing state \(q_i\) and slot symbol
+\(\sigma\in\Sigma_i\), the machine may advance to its unique next structural
+state only when the state-local hard guard \(G_i\) is satisfied:
+\[
+\delta(q_i,\sigma)=q_{i+1}
+\quad\Longleftrightarrow\quad G_i(x,\sigma)=1.
+\]
+A rejected or unresolved hard guard produces no admitted transition. WFST
+weights, when present, rank among already admitted alternatives; they do not
+override a failed hard guard.
+
+\subsection{Routing/authority separation}
+
+Let \(r\) be a route emitted by the FST/WFST and \(u\) a consequential
+operation named by that route. Then
+\[
+\operatorname{EmitRoute}(r)\not\Rightarrow\operatorname{Authorize}(u).
+\]
+The complete admissibility order is therefore represented as
+\[
+\mathrm{hard\ guards}\rightarrow
+\mathrm{admitted\ state\mbox{-}local\ transitions}\rightarrow
+\mathrm{WFST\ ranking}\rightarrow
+\mathrm{six\mbox{-}slot\ packet}\rightarrow
+\mathrm{explanation}\rightarrow\mathrm{human\ choice},
+\]
+where the final human-choice boundary remains external to the routing
+mechanism.
+
+\section{3--6--9 Phase Concurrency}
+
+\subsection{Scheduling model}
+
+Let \(W\) be a finite worker set. Workers are organized into triads
+\[
+T_j=\{w_{3j},w_{3j+1},w_{3j+2}\}.
+\]
+The 3--6--9 grammar denotes compositional scheduling cells:
+\[
+3=1\text{ triad},\qquad 6=2\text{ coordinated triads},\qquad
+9=3\text{ coordinated triads}.
+\]
+These cells may be assigned distinct analysis, execution, challenge,
+verification, or reconciliation roles. The numbers define a partitioning
+grammar; they do not create authority and they do not independently imply
+collision freedom.
+
+For a proposed mutation \(m\), define
+\[
+m=(w,u,c,g,\ell,\Delta),
+\]
+where \(w\in W\) is the worker, \(u\in U\) the write surface, \(c\) the
+coordinate/owner binding, \(g\) the source generation, \(\ell\) the lease,
+and \(\Delta\) the proposed state delta.
+
+\begin{invariant}[Exclusive lease]
+For each governed write surface \(u\) and live owner generation \(g\), at
+most one mutation-capable worker may hold an unexpired exclusive lease:
+\[
+\sum_{w\in W}\mathbf{1}\{\operatorname{Lease}(w,u,g)=\mathrm{valid}\}\le 1.
+\]
+\end{invariant}
+
+\begin{invariant}[Currentness / compare-and-swap]
+A mutation compiled against generation \(g\) may commit only if \(g\) still
+equals the current owner generation at commit time:
+\[
+\operatorname{Commit}(m)=1\Rightarrow g=\operatorname{CurrentGeneration}(u).
+\]
+\end{invariant}
+
+\begin{invariant}[Coordinate ownership]
+A worker route or visibility of \(u\) does not create write authority:
+\[
+\operatorname{Visible}(w,u)\lor\operatorname{Route}(w,u)
+\not\Rightarrow\operatorname{OwnsCoordinate}(w,u).
+\]
+\end{invariant}
+
+\begin{invariant}[No force overwrite]
+A stale or conflicting generation is rejected rather than force-written:
+\[
+g\ne\operatorname{CurrentGeneration}(u)\Rightarrow\operatorname{Commit}(m)=0.
+\]
+\end{invariant}
+
+\subsection{Safety theorem}
+
+\begin{theorem}[Conflicting-successor exclusion]
+Assume exclusive leases, currentness compare-and-swap, coordinate ownership,
+and no-force-overwrite are enforced. Then two conflicting mutations
+\(m_1,m_2\) against the same write surface \(u\) and same predecessor
+generation \(g\) cannot both be lawfully accepted as direct successors of
+that same generation.
+\end{theorem}
+
+\begin{proof}
+Suppose for contradiction that both \(m_1\) and \(m_2\) commit as conflicting
+direct successors of \((u,g)\).
+
+If they overlap in lease lifetime, the exclusive-lease invariant is violated,
+because two mutation-capable workers would hold a valid lease for the same
+\((u,g)\). Otherwise, one commits first; without loss of generality let it be
+\(m_1\). Its commit advances the current generation from \(g\) to
+\(g'\ne g\). When \(m_2\) reaches the currentness gate, its recorded base
+generation remains \(g\), so
+\[
+g\ne\operatorname{CurrentGeneration}(u)=g'.
+\]
+The currentness and no-force-overwrite invariants therefore require
+\(\operatorname{Commit}(m_2)=0\), contradicting the assumption that both
+commit. Hence both conflicting direct successors cannot be lawfully accepted.
+\end{proof}
+
+\subsection{Phase-staggering lemma}
+
+\begin{lemma}[Contention exposure under partition]
+Let \(k\) runnable workers be partitioned across \(p\) disjoint phase lanes,
+with each write surface assigned to exactly one owner lane during the phase.
+Then the number of workers eligible to contend for a single lane-owned surface
+is bounded by the population of that lane; under balanced partitioning it is
+at most \(\lceil k/p\rceil\).
+\end{lemma}
+
+\begin{proof}
+Because a governed write surface has exactly one owner lane during the phase,
+workers outside that lane are ineligible to mutate it. Therefore contenders
+are a subset of the workers assigned to the owner lane. A balanced partition
+of \(k\) workers among \(p\) lanes has maximum lane size
+\(\lceil k/p\rceil\).
+\end{proof}
+
+\begin{corollary}[Role of 3--6--9]
+Using triads, paired triads, and triads-of-triads can reduce the shared-write
+exposure relative to an unpartitioned fleet when work and write surfaces are
+actually separated by owner coordinates. Collision safety, however, follows
+from the enforcement invariants of the preceding theorem, not from the
+numbers 3, 6, and 9 alone.
+\end{corollary}
+
+\subsection{Conditional diagonal rebase}
+
+Let \(B_0,\ldots,B_n\) be ordered invariant boundaries in a guarded workflow.
+A diagonal rebase from \(B_i\) to \(B_j\), \(j>i+1\), is admissible only if
+all intervening boundary predicates are already independently verified and
+current:
+\[
+\operatorname{Diagonal}(B_i,B_j)=1\Longrightarrow
+\bigwedge_{k=i+1}^{j}\operatorname{VerifiedCurrent}(B_k)=1.
+\]
+If any boundary is unresolved, the guarded linear path is mandatory.
+
+\section{What Has and Has Not Been Proved}
+
+The specification establishes conditional properties of the software
+protocol:
+\begin{enumerate}
+  \item If all required Prime-Directive boundary predicates, currentness, and authority gates are enforced, an inadmissible transition is not lawfully committed.
+  \item The six-slot FST structural order is deterministic at the state-order level described by \(M_6\); lexical inventories and linguistic accuracy are outside this matrix unless separately source-bound.
+  \item Under exclusive leases plus currentness compare-and-swap and no-force-overwrite, conflicting direct successors from one generation cannot both be lawfully accepted.
+  \item 3--6--9 phase partitioning can reduce simultaneous contention exposure, but the numeral pattern alone is not a proof of collision-freedom, throughput, physical ``harmonics,'' or universal optimality.
+\end{enumerate}
+
+No statement in this document proves that receipts are truth, routes are
+authority, compact projections are source owners, or numerical similarity is
+evidence. No statement proves universal ethical behavior independent of the
+mechanisms that enforce the boundary predicates.
+
+\section{Implementation Obligations}
+
+A conforming implementation of this specification should make the following
+conditions testable:
+\begin{align*}
+&\text{Prime-boundary rejection:} && \neg D_i(\tau)\Rightarrow \operatorname{Commit}(\tau)=0;\\
+&\text{Currentness rejection:} && g\ne\operatorname{CurrentGeneration}(u)\Rightarrow\operatorname{Commit}(m)=0;\\
+&\text{Lease uniqueness:} && \#\operatorname{ValidMutationLeases}(u,g)\le 1;\\
+&\text{FST order:} && DIR\prec ASP\prec CLASS\prec SUBJ\prec VOICE\prec STEM;\\
+&\text{No routing authority escalation:} && \operatorname{Route}(w,u)\not\Rightarrow\operatorname{Authorize}(w,u);\\
+&\text{Receipt boundary:} && \operatorname{Receipt}(m)\not\Rightarrow\operatorname{Truth}(m).
+\end{align*}
+
+These obligations are suitable targets for executable contract tests and
+proof-carrying receipts. Their satisfaction must still be bound to the exact
+code generation, test harness, environment, and evidence digest used for a
+particular verification run.
+
+\section{Publication Boundary}
+
+This source is staged for technical review and arXiv-submission preparation.
+It is not a claim that the current founder profile has passed Human Gate 1,
+and it does not convert staged 3--6--9 language into a universal scientific
+law. External publication should retain the source generation, claim
+boundaries, and human-authority statement.
+
+\end{document}
