@@ -14,6 +14,7 @@ import asyncio
 import math
 import sys
 import time
+from unittest.mock import patch
 
 import numpy as np
 
@@ -101,46 +102,55 @@ _header("2. RubricRewardMatrix — compute_rubric_reward")
 from aura_heal import _RUBRIC_FLOOR, compute_rubric_reward
 
 
+_TEST_RSS_MB = 1024.0
+
+
+def _compute_rubric_reward(*args, **kwargs):
+    """Bind RAM headroom so rubric unit checks do not depend on pytest's own RSS."""
+    with patch("aura_heal.sample_rss_mb", return_value=_TEST_RSS_MB):
+        return compute_rubric_reward(*args, **kwargs)
+
+
 def _rubric_valid_code():
-    s, b = compute_rubric_reward("import os\nx = os.getcwd()\n", 38.0)
+    s, b = _compute_rubric_reward("import os\nx = os.getcwd()\n", 38.0)
     assert b["passed"], f"Valid code should pass: score={s:.3f}"
     assert s >= _RUBRIC_FLOOR
 
 def _rubric_syntax_error():
-    s, b = compute_rubric_reward("def :\n    pass", 38.0)
+    s, b = _compute_rubric_reward("def :\n    pass", 38.0)
     assert s == 0.0 and b["reason"] == "SYNTAX_FAIL"
 
 def _rubric_empty_patch():
-    s, b = compute_rubric_reward("", 38.0)
+    s, b = _compute_rubric_reward("", 38.0)
     assert s == 0.0 and b["reason"] == "EMPTY_PATCH", f"Empty patch must score 0: {b}"
 
 def _rubric_whitespace_only():
-    s, b = compute_rubric_reward("   \n\t\n  ", 38.0)
+    s, b = _compute_rubric_reward("   \n\t\n  ", 38.0)
     assert s == 0.0 and b["reason"] == "EMPTY_PATCH"
 
 def _rubric_eval_injection():
-    s, b = compute_rubric_reward("eval('x')\n", 38.0)
+    s, b = _compute_rubric_reward("eval('x')\n", 38.0)
     assert not b["passed"] and b["F_SAT"] == 0.0, f"eval must fail F_SAT: {b}"
     assert s < _RUBRIC_FLOOR
 
 def _rubric_nxsdk_import():
-    _s, b = compute_rubric_reward("import nxsdk\nx=1\n", 38.0)
+    _s, b = _compute_rubric_reward("import nxsdk\nx=1\n", 38.0)
     assert not b["passed"], f"banned import must fail: {b}"
 
 def _rubric_hot_device_blocks():
-    _s, b = compute_rubric_reward("x=1\n", 55.0)
+    _s, b = _compute_rubric_reward("x=1\n", 55.0)
     # F_thermal = exp(-0.15*(55-40)) ≈ 0.105 → total < 0.85 unless F_RAM makes up for it
     assert b["F_thermal"] < 0.2, f"F_thermal at 55°C should be < 0.2: {b}"
 
 def _rubric_f_thermal_formula():
     # F_thermal = exp(-0.15 * max(0, T-40))
     for temp, expected in [(38, math.exp(0)), (45, math.exp(-0.75)), (55, math.exp(-2.25))]:
-        _, b = compute_rubric_reward("x=1\n", float(temp))
+        _, b = _compute_rubric_reward("x=1\n", float(temp))
         assert abs(b["F_thermal"] - expected) < 0.01, f"F_thermal wrong at {temp}°C: {b['F_thermal']:.4f} vs {expected:.4f}"
 
 def _rubric_weight_variants():
-    s1, _ = compute_rubric_reward("x=1\n", 38.0, w_ram=0.4, w_thermal=0.3, w_sat=0.3)
-    s2, _ = compute_rubric_reward("x=1\n", 38.0, w_ram=0.1, w_thermal=0.1, w_sat=0.8)
+    s1, _ = _compute_rubric_reward("x=1\n", 38.0, w_ram=0.4, w_thermal=0.3, w_sat=0.3)
+    s2, _ = _compute_rubric_reward("x=1\n", 38.0, w_ram=0.1, w_thermal=0.1, w_sat=0.8)
     assert 0.0 < s1 <= 1.0 and 0.0 < s2 <= 1.0
 
 _run("rubric", "valid code: score >= 0.85", _rubric_valid_code)
@@ -429,7 +439,7 @@ def _pipeline_tst_to_rubric():
 
     # Validate a real code stub through rubric
     code = f"# morpheme={','.join(morphemes)}\nx = {len(morphemes)}\n"
-    _s, b = compute_rubric_reward(code, 38.0)
+    _s, b = _compute_rubric_reward(code, 38.0)
     assert b["passed"], f"TST-generated stub failed rubric: {b}"
 
 def _pipeline_mlstm_bis():
