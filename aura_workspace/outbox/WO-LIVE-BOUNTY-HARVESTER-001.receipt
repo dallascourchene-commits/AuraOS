@@ -1,0 +1,70 @@
+{
+  "schema": "AuraBountyHarvesterReceiptV1",
+  "work_order": "WO-LIVE-BOUNTY-HARVESTER-001",
+  "coordinate": "AD:BOUNTY:HARVEST-EXECUTE:001",
+  "authority": "HUMAN_SOVEREIGN_DISPOSITION_PLUS_1_DISPATCH",
+  "lead": "W1",
+  "fleet": ["W1","W2","W3","W4","W5","W6","W7","W8","W9"],
+  "repository": "dallascourchene-commits/AuraOS",
+  "staging_branch": "staging/wo-live-bounty-harvester-001",
+  "base_main_sha": "c4f0cdf875d1b1aba221cf4e34c6bd1ce3879ab9",
+  "state": "STAGED_MIXED_READY_ANALYZE_BLOCKED",
+  "scan": {
+    "providers": ["Algora","Opire","GitHub"],
+    "target_lanes": ["Python","TypeScript","AST parsing","SQLite/database optimization","documentation"],
+    "opire_provider_currentness": "RESOLVED_FOR_SELECTED_ANALYZE_SET",
+    "algora_disposition": "BOUNDED_SCAN_NO_TARGET_PROMOTION",
+    "github_disposition": "OPEN_BOUNTY_ISSUES_INGESTED_WITH_SOURCE_CONSTRAINTS"
+  },
+  "ready_for_pr": [
+    {
+      "target": "mergeos-bounties/Loru#19",
+      "reward": "25 MRG",
+      "technical_state": "READY",
+      "submission_state": "CLAIM_PREREQUISITES_PENDING",
+      "verification": "STRUCTURAL_CONTRACT_PASS",
+      "files": ["CONTRIBUTING.md","README.patch","PR_PACKET.md"]
+    }
+  ],
+  "technically_verified_funding_unresolved": [
+    {
+      "target": "claude-builders-bounty/claude-builders-bounty#3",
+      "declared_reward": "$100",
+      "test_result": "5 unittest methods / 14 behavior cases PASS",
+      "promotion": "WITHHELD_FROM_FUNDED_READY"
+    }
+  ],
+  "provider_funded_analyze_queue": [
+    "typeorm/typeorm#3357 — Opire $590",
+    "strapi/strapi#11998 — Opire $70 available / Status Open",
+    "storybookjs/storybook#12641 — Opire $263",
+    "qtop/qtop#433 — Opire $220"
+  ],
+  "excluded": [
+    "AgentShield human-only AI-ineligible challenge",
+    "Tenstorrent T3K hardware-required bring-up",
+    "Thrixel external program/two-game evidence requirement",
+    "funding-unresolved declarations",
+    "security-sensitive exploit lanes not pursued"
+  ],
+  "tests": {
+    "loru_issue_19_contract": "PASS",
+    "destructive_hook_isolated": "PASS",
+    "external_clone": "UNAVAILABLE_DNS_IN_EXECUTION_SANDBOX__GITHUB_CONNECTOR_USED_FOR_EXACT_SOURCE_READS"
+  },
+  "merkle": {
+    "algorithm": "sha256_binary_pair_duplicate_last",
+    "leaf_scope": "12 staged inbox/patch artifacts excluding this receipt",
+    "root": "dd34962a7a4aa69e7372c02a368f4ba897b55f7dea2b9755b2d65da4323995fd"
+  },
+  "effects_not_performed": [
+    "no external bounty claim comments",
+    "no stars/follows/account actions",
+    "no wallet signatures or wallet handling",
+    "no external pull requests",
+    "no external merges",
+    "no payout or settlement claim",
+    "no AuraOS main mutation"
+  ],
+  "final_disposition": "HARVEST_STAGED / ONE_TECHNICALLY_READY_FUNDED_GITHUB_BOUNTY_WITH_CLAIM_PREREQS / FOUR_PROVIDER_FUNDED_ANALYZE_TARGETS / ONE_TECHNICALLY_VERIFIED_FUNDING_UNRESOLVED_PACKET / FAIL_CLOSED"
+}
