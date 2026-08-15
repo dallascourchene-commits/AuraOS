@@ -1,19 +1,19 @@
 # AuraOS
 
-AuraOS is a minimal, local-first substrate for coordinating deterministic nodes, durable state, recursive rollups, and peer-to-peer execution without requiring a gas-metered chain for ordinary operation.
+AuraOS is a minimal, local-first substrate for deterministic state, recursive coordination, and peer-to-peer execution.
 
-## Core features
+## Core Features
 
-- **Zero gas** — local/off-chain coordination and state transitions do not require per-operation gas fees.
-- **3^n rollups** — recursive ternary aggregation compresses many child operations into progressively smaller parent summaries.
-- **SQLite WAL** — write-ahead logging provides durable local state, atomic commits, crash recovery, and concurrent read access.
-- **P2P mesh** — nodes exchange bounded state and work directly across a peer mesh rather than depending on one central coordinator.
+- **Zero gas** — ordinary local and peer coordination does not require per-operation gas fees.
+- **3^n rollups** — recursive ternary rollups compress bounded child work into progressively smaller parent summaries.
+- **SQLite WAL** — write-ahead logging provides durable local state, atomic commits, crash recovery, and concurrent reads.
+- **P2P mesh** — nodes exchange bounded state and work directly without requiring a central coordinator.
 
-## System architecture
+## System Architecture
 
 ```text
                          +----------------------+
-                         |      Operator        |
+                         |       Operator       |
                          +----------+-----------+
                                     |
                                     v
@@ -22,15 +22,21 @@ AuraOS is a minimal, local-first substrate for coordinating deterministic nodes,
                          | identity + local API |
                          +----------+-----------+
                                     |
-                  +-----------------+-----------------+
-                  |                                   |
-                  v                                   v
-        +----------------------+           +----------------------+
-        |     aura_daemon      |           |       P2P mesh       |
-        | state + SQLite WAL   |<--------->| peer synchronization |
-        +----------+-----------+           +----------+-----------+
-                   |                                  |
-                   +----------------+-----------------+
+                    +---------------+---------------+
+                    |                               |
+                    v                               v
+         +----------------------+        +----------------------+
+         |     aura_daemon      |<------>|       P2P mesh       |
+         | lifecycle + services |        | peer synchronization |
+         +----------+-----------+        +----------+-----------+
+                    |                               |
+                    v                               |
+         +----------------------+                   |
+         |      SQLite WAL      |                   |
+         | durable local state  |                   |
+         +----------+-----------+                   |
+                    |                               |
+                    +---------------+---------------+
                                     |
                                     v
                          +----------------------+
@@ -45,32 +51,32 @@ AuraOS is a minimal, local-first substrate for coordinating deterministic nodes,
                          +----------------------+
 ```
 
-The operating rule is simple: keep exact state local, exchange only the bounded information peers need, roll work upward recursively, and preserve receipts for consequential transitions.
-
 ## Quickstart
+
+Run long-lived processes in separate terminals as needed.
 
 ```bash
 # 1. Clone and enter the repository
 git clone https://github.com/dallascourchene-commits/AuraOS.git && cd AuraOS
 
-# 2. Start a node
+# 2. Start an Aura node
 python aura_node.py
 
-# 3. Start the local state daemon
+# 3. Start the Aura daemon
 python aura_daemon.py
 
 # 4. Start the swarm runner
 python aura_swarm_runner.py
 ```
 
-`aura_node.py` is present on the current repository line. `aura_daemon.py` and `aura_swarm_runner.py` are the normalized minimal-core entry points used by the streamlined substrate release and must be materialized with that release before those two commands are runnable.
+## Scientific Disclosure
 
-## Scientific disclosure
-
-> **Paper X — scientific disclosure**
+> **Paper X — Scientific Disclosure**
 >
-> The architecture, research claims, evidence boundaries, and disclosure record for this substrate release are published in [`PAPER_X_ARXIV_DISCLOSURE.pdf`](PAPER_X_ARXIV_DISCLOSURE.pdf). Treat the paper as the scientific disclosure surface; executable source, tests, and receipts remain the implementation evidence.
+> See [`PAPER_X_ARXIV_DISCLOSURE.pdf`](./PAPER_X_ARXIV_DISCLOSURE.pdf) for the scientific disclosure, research claims, evidence boundaries, and architectural context for the AuraOS substrate.
 
 ## License
 
-AuraOS is licensed under the **GNU Affero General Public License, version 3 (AGPLv3)**. Network-accessible modifications must preserve the license's corresponding-source obligations. See [`LICENSE`](LICENSE) for the full license text.
+AuraOS is licensed under the **GNU Affero General Public License v3.0 (GNU AGPLv3)**.
+
+See [`LICENSE`](./LICENSE) for the complete license text.
