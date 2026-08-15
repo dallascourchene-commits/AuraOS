@@ -30,7 +30,6 @@ jobs:
       TRANSPORT_COMMIT: 0f4a334b17864a261fa48068191ad2f2ecb7879b
       REVIEWED_CHECKPOINT: 968f417cf55895ec788d89c0a97f37e40cf0612a
       TRIGGER_PATH: .aura/refactor_payloads/umc_deep_review.retry
-      EVIDENCE_DIR: ${{ runner.temp }}/umc-deep-review-v2
     steps:
       - uses: actions/checkout@v4
         with:
@@ -100,6 +99,8 @@ jobs:
 
       - name: Run exact hash-locked deep materializer
         id: materialize
+        env:
+          EVIDENCE_DIR: ${{ runner.temp }}/umc-deep-review-v2
         shell: bash
         run: |
           set -euo pipefail
