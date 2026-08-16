@@ -1,0 +1,518 @@
+{
+  "document_id": "AURA:STAGE:SUBSTRATE-OS-COUPLING-GRAPH:V0.1",
+  "work_order": "UNORDER-AURA-4D-9X/W3-SUBSTRATE-OS-COUPLING",
+  "worker": {
+    "id": "W3",
+    "triad": "ALPHA",
+    "stage": "05",
+    "role": "DEPENDENCY_ROUTING",
+    "hydration_in": "L1",
+    "hydration_out": "L2"
+  },
+  "status": "STAGED_NONCANONICAL_W4_HANDOFF",
+  "claim_ceiling": "L2 dependency/coupling contract only. This artifact does not implement adapters, execute the FST, perform cryptographic verification, write the Merkle-DAG store, grant authority, deploy, merge, or promote canonical state.",
+  "source_generation": {
+    "commit": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+    "lineage": {
+      "merkle_interface_commit": "b62c82d9fb60dbed8dfde8aa27de0c05a5263939",
+      "core_primitive_commit": "1bbcafb36ee391aeb49edf7c8cccc55d512955d3",
+      "codemap_sync_commit": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17"
+    },
+    "sources": [
+      {
+        "id": "CORE_PRIMITIVES",
+        "path": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+        "blob_sha": "ed3abfa2916c9a040533eb7f6a085d2206aa4a28",
+        "role": "L1 pure OS interface contracts"
+      },
+      {
+        "id": "FST_KERNEL",
+        "path": "aura_fst_routing.py",
+        "blob_sha": "d93febf8f139807440fda23310c2905a0eb7cd63",
+        "role": "six-slot FST routing kernel and slot validator"
+      },
+      {
+        "id": "FST_PROFILE",
+        "path": ".aura/morphology_profiles/six_slot.v1.json",
+        "blob_sha": "1e5312cccce04c92b29267baa1b55710f81b01e4",
+        "role": "current six-slot order and semantics"
+      },
+      {
+        "id": "FALSIFIER_GATE",
+        "path": "staging/02_verification_and_falsification/SPEC_FALSIFIER_ROUTING.md",
+        "blob_sha": "9179796b384450874fea669266e7fb5c52290f20",
+        "role": "generic fail-closed containment and generation-coherence semantics"
+      },
+      {
+        "id": "MERKLE_VERIFY",
+        "path": "staging/02_verification_and_falsification/INTERFACE_ZK_MERKLE_PROOF.json",
+        "blob_sha": "8a41c33fe65c59b4df93ab9defb6d82d104c9cbf",
+        "role": "authorized-root/generation + Merkle inclusion + ZK verification interface"
+      },
+      {
+        "id": "MERKLE_STORE_OWNER",
+        "path": "aura_fractal_ledger.py",
+        "blob_sha": "610454027cd65210d120181274d8a686f2cfcfc4",
+        "role": "current concrete Merkle-DAG persistence owner (FractalLedger)"
+      }
+    ]
+  },
+  "os_primitives": {
+    "IngressPacket": {
+      "fields": [
+        "causal_cone",
+        "origin"
+      ],
+      "contract": "origin is fixed at (0,0,0,0); causal_cone carries W(delta) node identifiers",
+      "authority": "STRUCTURE_ONLY",
+      "mandatory_route": [
+        "G_ORIGIN_ANCHOR",
+        "G_CONE_MEMBERSHIP",
+        "G_CONTAINMENT",
+        "B_FST_SLOT_BINDING"
+      ]
+    },
+    "TriProposalBundle": {
+      "fields": [
+        "g_r",
+        "g_f",
+        "g_c"
+      ],
+      "contract": "preserve competing minimal-delta, falsifier, and consequence-risk proposal surfaces",
+      "authority": "ADVISORY_INPUT_ONLY",
+      "mandatory_route": [
+        "G_TRI_PROPOSAL_COMPLETENESS",
+        "G_CONTAINMENT",
+        "B_FST_SLOT_BINDING"
+      ]
+    },
+    "CausalFence": {
+      "fields": [
+        "r_d",
+        "c_d",
+        "fail_closed_flag"
+      ],
+      "contract": "supplies recovery/consequence boundary to a fail-closed preflight check",
+      "authority": "NO_AUTHORITY_GRANT",
+      "mandatory_route": [
+        "G_CAUSAL_FENCE",
+        "G_EFFECT_AUTHORITY"
+      ]
+    },
+    "ResidualBuffer": {
+      "fields": [
+        "obligations",
+        "pass_receipts"
+      ],
+      "contract": "task-local residual state; membership does not imply authority",
+      "authority": "NO_AUTHORITY_BY_MEMBERSHIP",
+      "mandatory_route": [
+        "G_CONTAINMENT",
+        "G_GENERATION_COHERENCE",
+        "G_MERKLE_ZK",
+        "G_RESIDUAL_PRUNE"
+      ]
+    }
+  },
+  "underworld": {
+    "fst": {
+      "owner": "FSTLexiconRoutingCore",
+      "slot_order": [
+        "DIR",
+        "ASP",
+        "CLASS",
+        "SUBJ",
+        "VOICE",
+        "STEM"
+      ],
+      "slot_semantics": {
+        "DIR": "lifecycle or routing direction",
+        "ASP": "phase or temporal aspect",
+        "CLASS": "effect or artifact class",
+        "SUBJ": "exact target",
+        "VOICE": "agency and authority mode",
+        "STEM": "terminal operation"
+      },
+      "kernel_entry_points": [
+        "from_lexc",
+        "find_optimal_path"
+      ],
+      "verification_gate": "validate_slot_sequence",
+      "verification_law": "No path is returned as valid unless its slot sequence satisfies the configured six-slot order; complete-slot mode requires exact slot_order."
+    },
+    "merkle_store": {
+      "concrete_owner": "FractalLedger",
+      "store_kind": "Merkle-DAG-backed SQLite ledger",
+      "write_entry_point": "append_transaction",
+      "root_entry_point": "compute_consensus_root",
+      "local_presence_check": "verify_proof_of_presence",
+      "cryptographic_verification_interface": "AURA:VERIFY:ZK-MERKLE-CONTAINMENT:V0.1-STAGED",
+      "interface_status": "STAGED_NONCANONICAL_HUMAN_GATE_REQUIRED",
+      "important_boundary": "Merkle inclusion alone does not prove the invariant; a ZK proof alone does not authorize the root or effect; PASS requires all required checks for one coherent generation."
+    }
+  },
+  "fst_slot_bindings": {
+    "DIR": {
+      "source": "IngressPacket.causal_cone",
+      "binding_rule": "derive routing direction only from an admitted edge/node inside W(delta); caller may not inject a raw DIR token that escapes the cone",
+      "status": "ADAPTER_REQUIRED_W4_PLUS"
+    },
+    "ASP": {
+      "source": "EXTERNAL_RUNTIME_PHASE",
+      "binding_rule": "none of the four pure interfaces authoritatively supplies lifecycle/temporal phase",
+      "status": "UNRESOLVED_BLOCK_IF_ABSENT"
+    },
+    "CLASS": {
+      "source": "TriProposalBundle",
+      "binding_rule": "derive effect/artifact class only after G_R/G_F/G_C have been preserved and the containment/adjudication gate has produced an admissible candidate",
+      "status": "ADAPTER_REQUIRED_W4_PLUS"
+    },
+    "SUBJ": {
+      "source": "ResidualBuffer.obligations + IngressPacket.causal_cone",
+      "binding_rule": "exact target must be a still-live obligation inside the admitted causal cone",
+      "status": "ADAPTER_REQUIRED_W4_PLUS"
+    },
+    "VOICE": {
+      "source": "EXTERNAL_AUTHORIZED_CONTROLLER_POLICY",
+      "binding_rule": "CausalFence is not an authority token; VOICE may be minted only from independently resolved current authority/policy",
+      "status": "UNRESOLVED_BLOCK_IF_ABSENT"
+    },
+    "STEM": {
+      "source": "FST_KERNEL",
+      "binding_rule": "terminal operation is kernel-selected after prior slot and verification gates; no OS primitive may supply STEM directly",
+      "status": "KERNEL_OWNED"
+    }
+  },
+  "verification_gates": {
+    "G_ORIGIN_ANCHOR": {
+      "inputs": [
+        "IngressPacket.origin"
+      ],
+      "pass": "origin == [0,0,0,0]",
+      "fail": "origin mismatch is structurally invalid",
+      "on_unknown": "BLOCK"
+    },
+    "G_CONE_MEMBERSHIP": {
+      "inputs": [
+        "IngressPacket.causal_cone",
+        "candidate_route_nodes"
+      ],
+      "pass": "every selected dependency/target is inside the admitted causal cone or an explicitly source-grounded mandatory verification dependency",
+      "on_fail": "FAIL_CLOSED",
+      "on_unknown": "UNKNOWN_BLOCK"
+    },
+    "G_TRI_PROPOSAL_COMPLETENESS": {
+      "inputs": [
+        "TriProposalBundle.g_r",
+        "TriProposalBundle.g_f",
+        "TriProposalBundle.g_c"
+      ],
+      "pass": "all three proposal surfaces are preserved through adjudication",
+      "on_fail": "UNKNOWN_BLOCK",
+      "note": "no losing proposal or falsifier may be silently erased at the coupling boundary"
+    },
+    "G_CONTAINMENT": {
+      "source_contract": "SPEC_FALSIFIER_ROUTING",
+      "inputs": [
+        "ResidualBuffer.obligations",
+        "TriProposalBundle",
+        "current generation/integrity evidence"
+      ],
+      "pass": "every required obligation PASS for one admissible generation",
+      "fail": "first definite FAIL terminates immediately",
+      "unknown": "UNKNOWN remains first-class and cannot be coerced to PASS"
+    },
+    "G_FST_SEQUENCE": {
+      "owner": "FSTLexiconRoutingCore.validate_slot_sequence",
+      "inputs": [
+        "DIR",
+        "ASP",
+        "CLASS",
+        "SUBJ",
+        "VOICE",
+        "STEM"
+      ],
+      "pass": "slot sequence satisfies exact configured order; complete-slot mode requires all six",
+      "on_fail": "NO_VALID_ROUTE"
+    },
+    "G_CAUSAL_FENCE": {
+      "inputs": [
+        "CausalFence.r_d",
+        "CausalFence.c_d",
+        "CausalFence.fail_closed_flag"
+      ],
+      "pass": "fail_closed_flag == true AND independently measured/established R_d < C_d",
+      "on_fail": "FAIL_CLOSED",
+      "on_unknown": "UNKNOWN_BLOCK",
+      "implementation_status": "CONTRACT_ONLY_NOT_IMPLEMENTED_BY_CORE_PRIMITIVE"
+    },
+    "G_GENERATION_COHERENCE": {
+      "source_contract": "SPEC_FALSIFIER_ROUTING",
+      "inputs": [
+        "ResidualBuffer.pass_receipts",
+        "required_world_generation"
+      ],
+      "pass": "all PASS receipts used in one conjunction share the required world generation and satisfy separate freshness policy",
+      "known_mismatch": "FAIL",
+      "missing_generation": "UNKNOWN"
+    },
+    "G_MERKLE_ZK": {
+      "source_contract": "AURA:VERIFY:ZK-MERKLE-CONTAINMENT:V0.1-STAGED",
+      "required_checks": [
+        "authorized_root_binding",
+        "generation_coherence",
+        "merkle_inclusion",
+        "zk_public_input_binding",
+        "zk_verification",
+        "freshness"
+      ],
+      "pass": "all required checks PASS for one coherent generation",
+      "fail_dominates": true,
+      "unknown_is_first_class": true
+    },
+    "G_EFFECT_AUTHORITY": {
+      "inputs": [
+        "current authorized controller/policy",
+        "verified route",
+        "verified current state"
+      ],
+      "pass": "effect authority is independently resolved and current",
+      "on_fail_or_unknown": "BLOCK",
+      "note": "FST routing, Merkle inclusion, ZK verification, CausalFence, and ResidualBuffer membership do not independently mint effect authority."
+    },
+    "G_RESIDUAL_PRUNE": {
+      "inputs": [
+        "ResidualBuffer.obligations",
+        "verified PASS receipts"
+      ],
+      "pass": "remove only obligations discharged by current, generation-coherent, verification-gated receipts",
+      "on_unknown": "KEEP_RESIDUAL"
+    }
+  },
+  "mandatory_flow": {
+    "route_compile": [
+      "IngressPacket",
+      "TriProposalBundle",
+      "ResidualBuffer",
+      "G_ORIGIN_ANCHOR",
+      "G_CONE_MEMBERSHIP",
+      "G_TRI_PROPOSAL_COMPLETENESS",
+      "G_CONTAINMENT",
+      "B_FST_SLOT_BINDING",
+      "G_FST_SEQUENCE",
+      "FST_VALID_ROUTE"
+    ],
+    "effect_preflight": [
+      "FST_VALID_ROUTE",
+      "CausalFence",
+      "G_CAUSAL_FENCE",
+      "G_GENERATION_COHERENCE",
+      "G_MERKLE_ZK",
+      "G_EFFECT_AUTHORITY",
+      "EFFECT_ADMITTED"
+    ],
+    "store_write": [
+      "EFFECT_ADMITTED",
+      "FractalLedger.append_transaction",
+      "POST_WRITE_ROOT_OR_COMMITMENT",
+      "G_MERKLE_ZK",
+      "VERIFIED_STORE_RECEIPT",
+      "ResidualBuffer.pass_receipts",
+      "G_RESIDUAL_PRUNE"
+    ],
+    "store_read": [
+      "FractalLedger.compute_consensus_root/read_candidate_state",
+      "G_MERKLE_ZK",
+      "VERIFIED_CURRENT_STATE",
+      "OS_PRIMITIVE_CONSUMER"
+    ]
+  },
+  "edges": [
+    {
+      "from": "IngressPacket",
+      "to": "G_ORIGIN_ANCHOR",
+      "type": "MUST"
+    },
+    {
+      "from": "IngressPacket",
+      "to": "G_CONE_MEMBERSHIP",
+      "type": "MUST"
+    },
+    {
+      "from": "TriProposalBundle",
+      "to": "G_TRI_PROPOSAL_COMPLETENESS",
+      "type": "MUST"
+    },
+    {
+      "from": "TriProposalBundle",
+      "to": "G_CONTAINMENT",
+      "type": "MUST"
+    },
+    {
+      "from": "ResidualBuffer.obligations",
+      "to": "G_CONTAINMENT",
+      "type": "MUST"
+    },
+    {
+      "from": "G_CONTAINMENT",
+      "to": "B_FST_SLOT_BINDING",
+      "type": "PASS_ONLY"
+    },
+    {
+      "from": "B_FST_SLOT_BINDING",
+      "to": "G_FST_SEQUENCE",
+      "type": "MUST"
+    },
+    {
+      "from": "G_FST_SEQUENCE",
+      "to": "FST_VALID_ROUTE",
+      "type": "PASS_ONLY"
+    },
+    {
+      "from": "CausalFence",
+      "to": "G_CAUSAL_FENCE",
+      "type": "MUST"
+    },
+    {
+      "from": "ResidualBuffer.pass_receipts",
+      "to": "G_GENERATION_COHERENCE",
+      "type": "MUST"
+    },
+    {
+      "from": "G_GENERATION_COHERENCE",
+      "to": "G_MERKLE_ZK",
+      "type": "NONFAIL_AND_EVIDENCE_REQUIRED"
+    },
+    {
+      "from": "FST_VALID_ROUTE",
+      "to": "G_CAUSAL_FENCE",
+      "type": "MUST_BEFORE_EFFECT"
+    },
+    {
+      "from": "G_CAUSAL_FENCE",
+      "to": "G_MERKLE_ZK",
+      "type": "PASS_ONLY"
+    },
+    {
+      "from": "G_MERKLE_ZK",
+      "to": "G_EFFECT_AUTHORITY",
+      "type": "PASS_ONLY"
+    },
+    {
+      "from": "G_EFFECT_AUTHORITY",
+      "to": "FractalLedger.append_transaction",
+      "type": "PASS_ONLY"
+    },
+    {
+      "from": "FractalLedger.append_transaction",
+      "to": "POST_WRITE_ROOT_OR_COMMITMENT",
+      "type": "OUTPUT"
+    },
+    {
+      "from": "POST_WRITE_ROOT_OR_COMMITMENT",
+      "to": "G_MERKLE_ZK",
+      "type": "MUST_POST_VERIFY"
+    },
+    {
+      "from": "G_MERKLE_ZK",
+      "to": "VERIFIED_STORE_RECEIPT",
+      "type": "PASS_ONLY"
+    },
+    {
+      "from": "VERIFIED_STORE_RECEIPT",
+      "to": "ResidualBuffer.pass_receipts",
+      "type": "APPEND_VERIFIED_ONLY"
+    },
+    {
+      "from": "ResidualBuffer.pass_receipts",
+      "to": "G_RESIDUAL_PRUNE",
+      "type": "MUST"
+    }
+  ],
+  "forbidden_bypass_edges": [
+    {
+      "from": "IngressPacket",
+      "to": "FSTLexiconRoutingCore.find_optimal_path",
+      "reason": "must pass cone/containment and slot-binding gates"
+    },
+    {
+      "from": "TriProposalBundle.g_r",
+      "to": "FST_VALID_ROUTE",
+      "reason": "single generator cannot bypass plurality/adjudication"
+    },
+    {
+      "from": "TriProposalBundle.g_f",
+      "to": "FST_VALID_ROUTE",
+      "reason": "single generator cannot bypass plurality/adjudication"
+    },
+    {
+      "from": "TriProposalBundle.g_c",
+      "to": "FST_VALID_ROUTE",
+      "reason": "single generator cannot bypass plurality/adjudication"
+    },
+    {
+      "from": "CausalFence",
+      "to": "VOICE",
+      "reason": "causal timing is not authority"
+    },
+    {
+      "from": "ResidualBuffer.pass_receipts",
+      "to": "EFFECT_ADMITTED",
+      "reason": "receipt membership is not authority/current verification"
+    },
+    {
+      "from": "IngressPacket",
+      "to": "FractalLedger.append_transaction",
+      "reason": "direct store write bypasses verification"
+    },
+    {
+      "from": "TriProposalBundle",
+      "to": "FractalLedger.append_transaction",
+      "reason": "proposal is not executable authority"
+    },
+    {
+      "from": "CausalFence",
+      "to": "FractalLedger.append_transaction",
+      "reason": "timing boundary is not write authority"
+    },
+    {
+      "from": "ResidualBuffer",
+      "to": "FractalLedger.append_transaction",
+      "reason": "task-local state is not persistence authority"
+    },
+    {
+      "from": "FST_VALID_ROUTE",
+      "to": "FractalLedger.append_transaction",
+      "reason": "routing validity alone cannot authorize or verify state"
+    },
+    {
+      "from": "MERKLE_INCLUSION_ONLY",
+      "to": "PASS",
+      "reason": "membership alone does not prove invariant satisfaction"
+    },
+    {
+      "from": "ZK_PROOF_ONLY",
+      "to": "AUTHORIZED_ROOT_OR_EFFECT",
+      "reason": "proof alone does not authorize root, policy, generation, or effect"
+    }
+  ],
+  "w4_handoff": {
+    "target_worker": "W4",
+    "expected_hydration": "L2 -> L3",
+    "directive": "Implement/hydrate only the minimum adapter context necessary to realize this graph. Do not bypass mandatory gates. Resolve ASP and VOICE from current source/authority owners; if either cannot be resolved, return UNKNOWN/BLOCK. Keep direct primitive-to-FST/store calls impossible by construction.",
+    "implementation_residuals": [
+      "No source-backed adapter currently converts the four pure primitive contracts into the six FST slots.",
+      "ASP requires current runtime phase from an owner outside the four pure primitives.",
+      "VOICE requires current authority/policy from an owner outside the four pure primitives.",
+      "CausalFence supplies values but does not itself implement or prove the R_d < C_d gate.",
+      "The staged ZK-Merkle file is an interface contract, not a cryptographic implementation.",
+      "FractalLedger.append_transaction does not itself enforce the staged FST/ZK-Merkle/authority gates; W4+ integration must keep it behind the coupling gate.",
+      "Post-write inclusion/root verification must occur before a new store receipt can enter ResidualBuffer.pass_receipts."
+    ]
+  },
+  "integrity": {
+    "algorithm": "SHA-256",
+    "scope": "canonical JSON of document with integrity field omitted",
+    "digest": "c4281c8b6f004f632d5f7265d5aaaa76e4d8be9642a7027cbd8961745e642fbb"
+  }
+}
