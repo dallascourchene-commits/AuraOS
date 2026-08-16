@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786834723,
+  "generated_at_unix": 1786907046,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1609,
+    "repo_file_count": 1613,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1227,6 +1227,10 @@
       "setup.sh",
       "setup_aura.sh",
       "spatial_mapper.py",
+      "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+      "staging/02_verification_and_falsification/INTERFACE_ZK_MERKLE_PROOF.json",
+      "staging/02_verification_and_falsification/SPEC_FALSIFIER_ROUTING.md",
+      "staging/02_verification_and_falsification/SPEC_REFUTATION_CACHE.md",
       "start_codemap_watcher.sh",
       "symbolic_shield.py",
       "systems_check.py",
@@ -1664,6 +1668,7 @@
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
       "scripts/update_architect_benchmark_readme.py",
+      "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
       "test_support/__init__.py",
       "test_support/aura_human_agent_arena_suite.py",
       "tests/conftest.py",
@@ -1716,8 +1721,7 @@
       "tests/test_aura_change_graph.py",
       "tests/test_aura_civic_commons_arena.py",
       "tests/test_aura_civic_completion.py",
-      "tests/test_aura_civic_planning_behavior.py",
-      "tests/test_aura_civic_planning_contracts.py"
+      "tests/test_aura_civic_planning_behavior.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1725,16 +1729,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1609,
-      "bytes": 26169889,
-      "tokens_est": 6532885,
+      "files": 1613,
+      "bytes": 26210195,
+      "tokens_est": 6542957,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 232,
+        "knowledge_artifact": 234,
         "native_accelerator": 8,
         "operator_script": 9,
-        "python_module": 991,
-        "schema_or_lexicon": 256,
+        "python_module": 992,
+        "schema_or_lexicon": 257,
         "support_file": 49
       }
     },
@@ -101955,6 +101959,266 @@
         "end_line": 153,
         "semantic_id": "spatial_mapper.py#function:aura_tmm_server:a6201fc61ccae978",
         "signature_hash": "c1abdc93385a12b3"
+      }
+    ],
+    "Disposition": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 26,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:Disposition:b359736450ddaeff",
+        "signature_hash": "9386d60514f2578d"
+      }
+    ],
+    "RefutationKey": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 40,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:RefutationKey:cb244900ba460d1a",
+        "signature_hash": "2f09e2f53646b09f"
+      }
+    ],
+    "RefutationKey.__post_init__": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 40,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:RefutationKey.__post_init__:b99e012eecffdaba",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "NegativeRefutation": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 44,
+        "end_line": 47,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:NegativeRefutation:3bdc6abf103dcd11",
+        "signature_hash": "c6515c342bfeb7a2"
+      }
+    ],
+    "NegativeRefutationCache": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 80,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:NegativeRefutationCache:caf28d9dea757881",
+        "signature_hash": "42a0090826f06411"
+      }
+    ],
+    "NegativeRefutationCache.__init__": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 56,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:NegativeRefutationCache.__init__:cf7cda81c3187b34",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "NegativeRefutationCache._key": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:NegativeRefutationCache._key:3c04694920e6d22f",
+        "signature_hash": "a7a907eb03d1cbbb"
+      }
+    ],
+    "NegativeRefutationCache.lookup": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 68,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:NegativeRefutationCache.lookup:7392af3355b72b31",
+        "signature_hash": "b87e14d7b6174735"
+      }
+    ],
+    "NegativeRefutationCache.record": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 71,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:NegativeRefutationCache.record:82f6bb82ba882150",
+        "signature_hash": "73b8ebe37c3448cb"
+      }
+    ],
+    "NegativeRefutationCache.invalidate_generation": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 77,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:NegativeRefutationCache.invalidate_generation:b2b4e89ae5d0ce28",
+        "signature_hash": "97b5a44f0a547e39"
+      }
+    ],
+    "NegativeRefutationCache.__len__": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 80,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:NegativeRefutationCache.__len__:7750ff9f036d8cdf",
+        "signature_hash": "faa6d593407c8ebc"
+      }
+    ],
+    "ObligationResult": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 84,
+        "end_line": 88,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:ObligationResult:c4fd280b90617ddc",
+        "signature_hash": "1133db2658b220b6"
+      }
+    ],
+    "CandidateClosure": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 92,
+        "end_line": 95,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:CandidateClosure:ec21c3b6b0262b12",
+        "signature_hash": "75f70f9769ae3845"
+      }
+    ],
+    "RequiredObligation": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 102,
+        "end_line": 119,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:RequiredObligation:ad8a9ae529492f85",
+        "signature_hash": "b8da5301246a1f55"
+      }
+    ],
+    "RequiredObligation.key": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 119,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:RequiredObligation.key:8819d910e6468099",
+        "signature_hash": "4174f89734aa61d2"
+      }
+    ],
+    "ContainmentEvaluation": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 123,
+        "end_line": 129,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:ContainmentEvaluation:bffc84ba7e7cb1b0",
+        "signature_hash": "4c1064ace7e97788"
+      }
+    ],
+    "order_for_falsification": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "function",
+        "line": 132,
+        "end_line": 139,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#function:order_for_falsification:d0fae56ab0fb8577",
+        "signature_hash": "96c9db4d5546996b"
+      }
+    ],
+    "order_for_falsification.score": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 137,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:order_for_falsification.score:cc89c30b43aed838",
+        "signature_hash": "b85bad0e983ddce2"
+      }
+    ],
+    "evaluate_containment_fast": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "function",
+        "line": 142,
+        "end_line": 193,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#function:evaluate_containment_fast:b7973c77c6110d10",
+        "signature_hash": "e981754468e57b89"
+      }
+    ],
+    "indexed_fact_obligation": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "function",
+        "line": 196,
+        "end_line": 232,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#function:indexed_fact_obligation:47f10ff0da4f1f5a",
+        "signature_hash": "383aed49131ed5c5"
+      }
+    ],
+    "indexed_fact_obligation.evaluator": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "method",
+        "line": 207,
+        "end_line": 221,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:indexed_fact_obligation.evaluator:c4eb2c4d7185d979",
+        "signature_hash": "aedd80661d4016d8"
+      }
+    ],
+    "PassReceipt": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 236,
+        "end_line": 240,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:PassReceipt:1502c8ae10385792",
+        "signature_hash": "26a87ebf7e7806c8"
+      }
+    ],
+    "verify_generation_coherence": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "function",
+        "line": 243,
+        "end_line": 270,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#function:verify_generation_coherence:16bee85aa82344dd",
+        "signature_hash": "9c02b6754c81c366"
+      }
+    ],
+    "_must_not_run": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "function",
+        "line": 309,
+        "end_line": 310,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#function:_must_not_run:c7d77b0217f71322",
+        "signature_hash": "e3bf727b181b7196"
+      }
+    ],
+    "run_harness": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "function",
+        "line": 313,
+        "end_line": 511,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#function:run_harness:8652107673144725",
+        "signature_hash": "a6372d3e1519fc9a"
+      }
+    ],
+    "run_harness.first_eval": [
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "method",
+        "line": 360,
+        "end_line": 362,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:run_harness.first_eval:e222cba85c512ca5",
+        "signature_hash": "f8f63ce94a8ea4b3"
       }
     ],
     "ShieldReport": [
@@ -240882,6 +241146,194 @@
       ]
     },
     {
+      "path": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 17705,
+      "lines": 516,
+      "tokens_est": 4426,
+      "symbol_count": 26,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e9ec02e4400aeb37",
+      "vector": [
+        0.224503,
+        -0.028458,
+        -0.176019,
+        0.022134,
+        -0.254015,
+        0.072726,
+        -0.043214,
+        0.05797,
+        -0.264555,
+        0.247691,
+        -0.194991,
+        0.150723,
+        0.258231,
+        -0.224503,
+        -0.12121,
+        -0.125426,
+        0.180235,
+        0.133858,
+        0.041106,
+        -0.030566,
+        0.235043,
+        -0.093806,
+        0.258231,
+        -0.226611,
+        -0.268771,
+        0.154939,
+        0.129642,
+        0.108562,
+        -0.226611,
+        0.199207,
+        -0.173911,
+        0.146506
+      ]
+    },
+    {
+      "path": "staging/02_verification_and_falsification/INTERFACE_ZK_MERKLE_PROOF.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 9202,
+      "lines": 232,
+      "tokens_est": 2301,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0070e3d4bc1c192a",
+      "vector": [
+        0.168295,
+        -0.257328,
+        0.224755,
+        0.014115,
+        0.166123,
+        0.003257,
+        0.072747,
+        0.231269,
+        0.259499,
+        0.150922,
+        0.0076,
+        0.196525,
+        -0.166123,
+        0.209554,
+        -0.196525,
+        0.229098,
+        0.222583,
+        -0.109663,
+        0.237784,
+        0.270357,
+        -0.051031,
+        -0.19001,
+        -0.042345,
+        -0.146579,
+        0.103148,
+        -0.211726,
+        0.120521,
+        0.07709,
+        -0.248642,
+        -0.209554,
+        -0.051031,
+        -0.198696
+      ]
+    },
+    {
+      "path": "staging/02_verification_and_falsification/SPEC_FALSIFIER_ROUTING.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 7377,
+      "lines": 225,
+      "tokens_est": 1841,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "79678d3cd9bc73ff",
+      "vector": [
+        -0.165728,
+        -0.068534,
+        -0.018691,
+        -0.178188,
+        -0.180681,
+        -0.09844,
+        -0.277874,
+        -0.09844,
+        -0.088471,
+        0.068534,
+        -0.090963,
+        0.016199,
+        0.310272,
+        0.305288,
+        -0.262921,
+        0.113393,
+        -0.066042,
+        -0.056073,
+        -0.160743,
+        0.235508,
+        0.215571,
+        -0.120869,
+        0.295319,
+        0.026168,
+        0.225539,
+        0.170712,
+        -0.223047,
+        0.242984,
+        0.013707,
+        -0.043613,
+        -0.158251,
+        0.245476
+      ]
+    },
+    {
+      "path": "staging/02_verification_and_falsification/SPEC_REFUTATION_CACHE.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 6022,
+      "lines": 205,
+      "tokens_est": 1504,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b26daeb70b2f9577",
+      "vector": [
+        0.003629,
+        0.25768,
+        0.267358,
+        -0.056859,
+        -0.071376,
+        -0.105249,
+        0.143962,
+        0.260099,
+        -0.240743,
+        0.114928,
+        0.298812,
+        -0.160899,
+        0.122186,
+        0.015727,
+        -0.129445,
+        -0.0496,
+        0.139123,
+        -0.267358,
+        0.05202,
+        0.039922,
+        0.296392,
+        0.209289,
+        -0.044761,
+        -0.281875,
+        0.105249,
+        -0.047181,
+        0.228645,
+        0.177835,
+        0.0496,
+        0.30607,
+        -0.175416,
+        -0.035083
+      ]
+    },
+    {
       "path": "start_codemap_watcher.sh",
       "role": "operator_script",
       "binary": false,
@@ -284453,16 +284905,16 @@
     }
   },
   "summary": {
-    "file_count": 1609,
-    "total_bytes": 26169889,
-    "text_tokens_est": 6532885,
+    "file_count": 1613,
+    "total_bytes": 26210195,
+    "text_tokens_est": 6542957,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 232,
+      "knowledge_artifact": 234,
       "native_accelerator": 8,
       "operator_script": 9,
-      "python_module": 991,
-      "schema_or_lexicon": 256,
+      "python_module": 992,
+      "schema_or_lexicon": 257,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -285699,6 +286151,10 @@
       "setup.sh",
       "setup_aura.sh",
       "spatial_mapper.py",
+      "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+      "staging/02_verification_and_falsification/INTERFACE_ZK_MERKLE_PROOF.json",
+      "staging/02_verification_and_falsification/SPEC_FALSIFIER_ROUTING.md",
+      "staging/02_verification_and_falsification/SPEC_REFUTATION_CACHE.md",
       "start_codemap_watcher.sh",
       "symbolic_shield.py",
       "systems_check.py",
@@ -386591,6 +387047,266 @@
         "file_digest8": "90a8a74c75228983"
       },
       {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:CandidateClosure:ec21c3b6b0262b12",
+        "name": "CandidateClosure",
+        "kind": "class",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 92,
+        "end_line": 95,
+        "signature_hash": "75f70f9769ae3845",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:ContainmentEvaluation:bffc84ba7e7cb1b0",
+        "name": "ContainmentEvaluation",
+        "kind": "class",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 123,
+        "end_line": 129,
+        "signature_hash": "4c1064ace7e97788",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:Disposition:b359736450ddaeff",
+        "name": "Disposition",
+        "kind": "class",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 23,
+        "end_line": 26,
+        "signature_hash": "9386d60514f2578d",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:NegativeRefutation:3bdc6abf103dcd11",
+        "name": "NegativeRefutation",
+        "kind": "class",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 44,
+        "end_line": 47,
+        "signature_hash": "c6515c342bfeb7a2",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:NegativeRefutationCache:caf28d9dea757881",
+        "name": "NegativeRefutationCache",
+        "kind": "class",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 50,
+        "end_line": 80,
+        "signature_hash": "42a0090826f06411",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:ObligationResult:c4fd280b90617ddc",
+        "name": "ObligationResult",
+        "kind": "class",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 84,
+        "end_line": 88,
+        "signature_hash": "1133db2658b220b6",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:PassReceipt:1502c8ae10385792",
+        "name": "PassReceipt",
+        "kind": "class",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 236,
+        "end_line": 240,
+        "signature_hash": "26a87ebf7e7806c8",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:RefutationKey:cb244900ba460d1a",
+        "name": "RefutationKey",
+        "kind": "class",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 30,
+        "end_line": 40,
+        "signature_hash": "2f09e2f53646b09f",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:RequiredObligation:ad8a9ae529492f85",
+        "name": "RequiredObligation",
+        "kind": "class",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 102,
+        "end_line": 119,
+        "signature_hash": "b8da5301246a1f55",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#function:_must_not_run:c7d77b0217f71322",
+        "name": "_must_not_run",
+        "kind": "function",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 309,
+        "end_line": 310,
+        "signature_hash": "e3bf727b181b7196",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#function:evaluate_containment_fast:b7973c77c6110d10",
+        "name": "evaluate_containment_fast",
+        "kind": "function",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 142,
+        "end_line": 193,
+        "signature_hash": "e981754468e57b89",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#function:indexed_fact_obligation:47f10ff0da4f1f5a",
+        "name": "indexed_fact_obligation",
+        "kind": "function",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 196,
+        "end_line": 232,
+        "signature_hash": "383aed49131ed5c5",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#function:order_for_falsification:d0fae56ab0fb8577",
+        "name": "order_for_falsification",
+        "kind": "function",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 132,
+        "end_line": 139,
+        "signature_hash": "96c9db4d5546996b",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#function:run_harness:8652107673144725",
+        "name": "run_harness",
+        "kind": "function",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 313,
+        "end_line": 511,
+        "signature_hash": "a6372d3e1519fc9a",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#function:verify_generation_coherence:16bee85aa82344dd",
+        "name": "verify_generation_coherence",
+        "kind": "function",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 243,
+        "end_line": 270,
+        "signature_hash": "9c02b6754c81c366",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:NegativeRefutationCache.__init__:cf7cda81c3187b34",
+        "name": "NegativeRefutationCache.__init__",
+        "kind": "method",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 53,
+        "end_line": 56,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:NegativeRefutationCache.__len__:7750ff9f036d8cdf",
+        "name": "NegativeRefutationCache.__len__",
+        "kind": "method",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 79,
+        "end_line": 80,
+        "signature_hash": "faa6d593407c8ebc",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:NegativeRefutationCache._key:3c04694920e6d22f",
+        "name": "NegativeRefutationCache._key",
+        "kind": "method",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "a7a907eb03d1cbbb",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:NegativeRefutationCache.invalidate_generation:b2b4e89ae5d0ce28",
+        "name": "NegativeRefutationCache.invalidate_generation",
+        "kind": "method",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 73,
+        "end_line": 77,
+        "signature_hash": "97b5a44f0a547e39",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:NegativeRefutationCache.lookup:7392af3355b72b31",
+        "name": "NegativeRefutationCache.lookup",
+        "kind": "method",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 62,
+        "end_line": 68,
+        "signature_hash": "b87e14d7b6174735",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:NegativeRefutationCache.record:82f6bb82ba882150",
+        "name": "NegativeRefutationCache.record",
+        "kind": "method",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 70,
+        "end_line": 71,
+        "signature_hash": "73b8ebe37c3448cb",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:RefutationKey.__post_init__:b99e012eecffdaba",
+        "name": "RefutationKey.__post_init__",
+        "kind": "method",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 36,
+        "end_line": 40,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:RequiredObligation.key:8819d910e6468099",
+        "name": "RequiredObligation.key",
+        "kind": "method",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 113,
+        "end_line": 119,
+        "signature_hash": "4174f89734aa61d2",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:indexed_fact_obligation.evaluator:c4eb2c4d7185d979",
+        "name": "indexed_fact_obligation.evaluator",
+        "kind": "method",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 207,
+        "end_line": 221,
+        "signature_hash": "aedd80661d4016d8",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:order_for_falsification.score:cc89c30b43aed838",
+        "name": "order_for_falsification.score",
+        "kind": "method",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 135,
+        "end_line": 137,
+        "signature_hash": "b85bad0e983ddce2",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:run_harness.first_eval:e222cba85c512ca5",
+        "name": "run_harness.first_eval",
+        "kind": "method",
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "line": 360,
+        "end_line": 362,
+        "signature_hash": "f8f63ce94a8ea4b3",
+        "file_digest8": "e9ec02e4400aeb37"
+      },
+      {
         "semantic_id": "symbolic_shield.py#class:ShieldReport:7040744a73128699",
         "name": "ShieldReport",
         "kind": "class",
@@ -443891,7 +444607,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1cd111964994f8a3f79a4f785d639c23",
-    "payload_hash": "21695363880116a702ef75bc99839f3d"
+    "record_fingerprint": "981ba3d620dde7ac9d26c73e27af6db5",
+    "payload_hash": "b9e5c540e06a2414e815bf129173e275"
   }
 }

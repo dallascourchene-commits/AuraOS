@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1609
-- **total_bytes**: 26169889
-- **text_tokens_est**: 6532885
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 232, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 991, 'schema_or_lexicon': 256, 'support_file': 49}
+- **file_count**: 1613
+- **total_bytes**: 26210195
+- **text_tokens_est**: 6542957
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 992, 'schema_or_lexicon': 257, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1609,
+  "repo_file_count": 1613,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1245,6 +1245,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "setup.sh",
     "setup_aura.sh",
     "spatial_mapper.py",
+    "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+    "staging/02_verification_and_falsification/INTERFACE_ZK_MERKLE_PROOF.json",
+    "staging/02_verification_and_falsification/SPEC_FALSIFIER_ROUTING.md",
+    "staging/02_verification_and_falsification/SPEC_REFUTATION_CACHE.md",
     "start_codemap_watcher.sh",
     "symbolic_shield.py",
     "systems_check.py",
@@ -1682,6 +1686,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/finalize_refactor_quality_doc_sync.py",
     "scripts/install_refactor_quality_docs.py",
     "scripts/update_architect_benchmark_readme.py",
+    "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
     "test_support/__init__.py",
     "test_support/aura_human_agent_arena_suite.py",
     "tests/conftest.py",
@@ -1734,8 +1739,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_change_graph.py",
     "tests/test_aura_civic_commons_arena.py",
     "tests/test_aura_civic_completion.py",
-    "tests/test_aura_civic_planning_behavior.py",
-    "tests/test_aura_civic_planning_contracts.py"
+    "tests/test_aura_civic_planning_behavior.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1749,16 +1753,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1609,
-  "bytes": 26169889,
-  "tokens_est": 6532885,
+  "files": 1613,
+  "bytes": 26210195,
+  "tokens_est": 6542957,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 232,
+    "knowledge_artifact": 234,
     "native_accelerator": 8,
     "operator_script": 9,
-    "python_module": 991,
-    "schema_or_lexicon": 256,
+    "python_module": 992,
+    "schema_or_lexicon": 257,
     "support_file": 49
   }
 }
