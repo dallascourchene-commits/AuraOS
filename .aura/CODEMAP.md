@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1609
-- **total_bytes**: 26169889
-- **text_tokens_est**: 6532885
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 232, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 991, 'schema_or_lexicon': 256, 'support_file': 49}
+- **file_count**: 1610
+- **total_bytes**: 26172193
+- **text_tokens_est**: 6533461
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 233, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 991, 'schema_or_lexicon': 256, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1609,
+  "repo_file_count": 1610,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1621,6 +1621,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/d0-benchmark/README.md",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1749,12 +1750,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1609,
-  "bytes": 26169889,
-  "tokens_est": 6532885,
+  "files": 1610,
+  "bytes": 26172193,
+  "tokens_est": 6533461,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 232,
+    "knowledge_artifact": 233,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 991,
