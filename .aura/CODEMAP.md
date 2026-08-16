@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1614
-- **total_bytes**: 26211921
-- **text_tokens_est**: 6543389
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 993, 'schema_or_lexicon': 257, 'support_file': 49}
+- **file_count**: 1615
+- **total_bytes**: 26213235
+- **text_tokens_est**: 6543718
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 993, 'schema_or_lexicon': 258, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1614,
+  "repo_file_count": 1615,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -227,6 +227,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".mempalace/temp_prompt.txt",
     ".vscode/settings.json",
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+    "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
     "AMD_HACKATHON_SUBMISSION.md",
     "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
     "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -1754,16 +1755,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1614,
-  "bytes": 26211921,
-  "tokens_est": 6543389,
+  "files": 1615,
+  "bytes": 26213235,
+  "tokens_est": 6543718,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 234,
     "native_accelerator": 8,
     "operator_script": 9,
     "python_module": 993,
-    "schema_or_lexicon": 257,
+    "schema_or_lexicon": 258,
     "support_file": 49
   }
 }
