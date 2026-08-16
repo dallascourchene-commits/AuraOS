@@ -1,0 +1,31 @@
+{
+  "document_id": "GATE-A-TRANSITION-W2",
+  "worker_id": "W2",
+  "triad": "ALPHA",
+  "hydration_boundary": "L1->L2",
+  "gate_a_disposition": "APPROVED_BY_HUMAN",
+  "transition": "STAGE_05_TO_STAGE_06",
+  "execution_readiness": "BLOCKED_INCOMPLETE_INGEST_SURFACE",
+  "required_stage_05_artifacts": {
+    "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json": {
+      "status": "MISSING_ON_MAIN"
+    },
+    "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py": {
+      "status": "PRESENT",
+      "git_blob_sha": "ed3abfa2916c9a040533eb7f6a085d2206aa4a28"
+    },
+    "05_staging/ledgers/SUBSTRATE_OS_COUPLING_GRAPH.json": {
+      "status": "MISSING_ON_MAIN"
+    }
+  },
+  "fail_closed_rule": "Stage 06 workers must not infer or fabricate missing Stage 05 ledger artifacts.",
+  "worker_disposition": {
+    "W4": "WAIT_FOR_COMPLETE_STAGE_05_INGEST",
+    "W5": "WAIT_FOR_W4_CONTEXT_AND_COMPLETE_STAGE_05_INGEST",
+    "W6": "WAIT_FOR_W5_BUILD_AND_COMPLETE_STAGE_05_INGEST"
+  },
+  "w2_action": "HANDOFF_RECEIPT_ONLY",
+  "w2_did_not_impersonate": ["W4", "W5", "W6"],
+  "next_required_condition": "AURA_OS_BLOAT_INVENTORY.json and SUBSTRATE_OS_COUPLING_GRAPH.json must be present and readable in 05_staging/ledgers/ before Stage 06 execution begins.",
+  "status": "GATE_A_AUTHORIZED__STAGE06_EXECUTION_BLOCKED_PENDING_ARTIFACTS"
+}
