@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1613
-- **total_bytes**: 26213312
-- **text_tokens_est**: 6543712
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 992, 'schema_or_lexicon': 257, 'support_file': 49}
+- **file_count**: 1619
+- **total_bytes**: 26229737
+- **text_tokens_est**: 6547815
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 8, 'operator_script': 10, 'python_module': 992, 'schema_or_lexicon': 261, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1613,
+  "repo_file_count": 1619,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1249,6 +1249,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "staging/03_governance_and_runtime/DISPATCHER_MULTI_LLM_ROUTER.json",
     "staging/03_governance_and_runtime/SPEC_FAULT_ENVELOPES.md",
     "staging/03_governance_and_runtime/SPEC_TRI_GENERATOR_PLURALITY.md",
+    "staging/SOP-LATTICE-9-UNI.md",
+    "staging/artifacts/W3_dependency_graph_routing.json",
+    "staging/ledgers/W3_lattice_receipt.json",
+    "staging/state_ledger.json",
+    "staging/universal_worker_daemon.sh",
+    "staging/work_orders/W3.json",
     "start_codemap_watcher.sh",
     "symbolic_shield.py",
     "systems_check.py",
@@ -1753,16 +1759,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1613,
-  "bytes": 26213312,
-  "tokens_est": 6543712,
+  "files": 1619,
+  "bytes": 26229737,
+  "tokens_est": 6547815,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 234,
+    "knowledge_artifact": 235,
     "native_accelerator": 8,
-    "operator_script": 9,
+    "operator_script": 10,
     "python_module": 992,
-    "schema_or_lexicon": 257,
+    "schema_or_lexicon": 261,
     "support_file": 49
   }
 }
