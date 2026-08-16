@@ -148,7 +148,9 @@
       "local_presence_check": "verify_proof_of_presence",
       "cryptographic_verification_interface": "AURA:VERIFY:ZK-MERKLE-CONTAINMENT:V0.1-STAGED",
       "interface_status": "STAGED_NONCANONICAL_HUMAN_GATE_REQUIRED",
-      "important_boundary": "Merkle inclusion alone does not prove the invariant; a ZK proof alone does not authorize the root or effect; PASS requires all required checks for one coherent generation."
+      "important_boundary": "Merkle inclusion alone does not prove the invariant; a ZK proof alone does not authorize the root or effect; PASS requires all required checks for one coherent generation.",
+      "read_entry_point": "UNRESOLVED_ADAPTER_REQUIRED",
+      "read_note": "FractalLedger source reviewed here exposes append_transaction, compute_consensus_root, verify_proof_of_presence, and history/statistics helpers; this graph does not invent a generic read_candidate_state API."
     }
   },
   "fst_slot_bindings": {
@@ -321,7 +323,7 @@
       "G_RESIDUAL_PRUNE"
     ],
     "store_read": [
-      "FractalLedger.compute_consensus_root/read_candidate_state",
+      "STORE_READ_CANDIDATE_ADAPTER_REQUIRED",
       "G_MERKLE_ZK",
       "VERIFIED_CURRENT_STATE",
       "OS_PRIMITIVE_CONSUMER"
@@ -513,6 +515,6 @@
   "integrity": {
     "algorithm": "SHA-256",
     "scope": "canonical JSON of document with integrity field omitted",
-    "digest": "c4281c8b6f004f632d5f7265d5aaaa76e4d8be9642a7027cbd8961745e642fbb"
+    "digest": "c0f242a23580441ba4fbb7448598bb5fca2ad5fe3ae347f0341b42fed2a5b384"
   }
 }
