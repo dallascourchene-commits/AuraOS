@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1613
-- **total_bytes**: 26210195
-- **text_tokens_est**: 6542957
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 992, 'schema_or_lexicon': 257, 'support_file': 49}
+- **file_count**: 1614
+- **total_bytes**: 26211921
+- **text_tokens_est**: 6543389
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 993, 'schema_or_lexicon': 257, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1613,
+  "repo_file_count": 1614,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -226,6 +226,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".mempalace/nexus.json",
     ".mempalace/temp_prompt.txt",
     ".vscode/settings.json",
+    "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
     "AMD_HACKATHON_SUBMISSION.md",
     "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
     "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -1641,6 +1642,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
   ],
   "source_paths_without_topology": [
     ".github/phase4/wc02_phase4_current_generation_patch.py",
+    "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
     "aura_blockchain/__init__.py",
     "aura_blockchain/block.py",
     "aura_blockchain/consensus.py",
@@ -1738,8 +1740,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_capability_resolver_connectome.py",
     "tests/test_aura_change_graph.py",
     "tests/test_aura_civic_commons_arena.py",
-    "tests/test_aura_civic_completion.py",
-    "tests/test_aura_civic_planning_behavior.py"
+    "tests/test_aura_civic_completion.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1753,15 +1754,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1613,
-  "bytes": 26210195,
-  "tokens_est": 6542957,
+  "files": 1614,
+  "bytes": 26211921,
+  "tokens_est": 6543389,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 234,
     "native_accelerator": 8,
     "operator_script": 9,
-    "python_module": 992,
+    "python_module": 993,
     "schema_or_lexicon": 257,
     "support_file": 49
   }
@@ -2059,6 +2060,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
   "ring": "code",
   "paths": [
     ".github/phase4/wc02_phase4_current_generation_patch.py",
+    "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
     "_aura_architect_consolidation_benchmark_legacy.py",
     "_aura_architect_consolidation_benchmark_refined_legacy.py",
     "_aura_architect_consolidation_benchmark_v2_legacy.py",
@@ -2456,8 +2458,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_pre_egress_interceptor.py",
     "aura_pricing.py",
     "aura_pricing_registry.py",
-    "aura_privacy_io.py",
-    "aura_project_context_compiler.py"
+    "aura_privacy_io.py"
   ]
 }
 ```
