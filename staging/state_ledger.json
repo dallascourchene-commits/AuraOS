@@ -1,0 +1,32 @@
+{
+  "cycle_cadence_seconds": 60,
+  "document_id": "SOP-LATTICE-9-UNI",
+  "generated_at": "2026-08-16T16:52:00-05:00",
+  "global_status": "STAGED_WITH_ROUTING_RESIDUALS",
+  "l0": {
+    "daemon_sha256": "6067da14f46c5af256bb7de78996b8805a261513ff34ea84b8f1bdb950c3b629",
+    "w3_route_normalized_sha256": "247ff5101031b1a9bc0f06ef6eeaebcba862515aff106bd64c815e9f54070515"
+  },
+  "notes": [
+    "Slot status is staged metadata only; the exact supplied daemon does not consume this ledger.",
+    "No automatic downstream enqueue is claimed until a dispatcher primitive is supplied and verified.",
+    "w3_route_normalized_sha256 is SHA-256 over json.dumps(parsed_route, sort_keys=true, indent=2) plus final newline; it is not the Git blob identifier."
+  ],
+  "slots": {
+    "W1": {"status": "AVAILABLE", "triad": "ALPHA"},
+    "W2": {"status": "AVAILABLE", "triad": "ALPHA"},
+    "W3": {
+      "artifact": "./staging/artifacts/W3_dependency_graph_routing.json",
+      "routing_disposition": "BLOCK_AUTO_CASCADE",
+      "status": "CRYSTALLIZED",
+      "triad": "ALPHA"
+    },
+    "W4": {"status": "AVAILABLE", "triad": "BETA"},
+    "W5": {"status": "AVAILABLE", "triad": "BETA"},
+    "W6": {"awaiting": ["W3", "W5"], "status": "AVAILABLE", "triad": "BETA"},
+    "W7": {"status": "AVAILABLE", "triad": "GAMMA"},
+    "W8": {"awaiting": ["W6", "W7"], "status": "AVAILABLE", "triad": "GAMMA"},
+    "W9": {"awaiting": ["W8"], "status": "AVAILABLE", "triad": "GAMMA"}
+  },
+  "workspace": "./staging/"
+}

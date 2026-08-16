@@ -1,0 +1,37 @@
+{
+  "document_id": "SOP-LATTICE-9-UNI",
+  "hydration_in": "L1",
+  "hydration_out": "L2",
+  "invariants": [
+    "W3 must not hydrate beyond L2 for this transformation.",
+    "Preserve the supplied daemon verbatim.",
+    "Do not claim automatic downstream cascade unless an executable downstream enqueue primitive is present.",
+    "Do not emit a W6 pipeline payload without an actual W1 task payload and required W5 dependency.",
+    "No deployment, protected-branch merge, or canonical promotion."
+  ],
+  "lattice_position": "RIGHT",
+  "payload": {
+    "directive": "Normalize and route the supplied universal 9-lattice SOP at L1->L2; audit graph/dependency executability without launching daemons or fabricating downstream payloads.",
+    "inputs": "DIRECT_USER_CONTROL_PLANE:SOP-LATTICE-9-UNI",
+    "output_dest": "./staging/artifacts/W3_dependency_graph_routing.json",
+    "target_module": "staging/lattice/topology"
+  },
+  "role": "Dependency & Graph Routing",
+  "routing_result": {
+    "blocking_residuals": ["R1", "R2", "R3", "R5"],
+    "disposition": "CRYSTALLIZED_WITH_BLOCKING_RESIDUALS",
+    "downstream_pipeline_signal": "NOT_EMITTED",
+    "guarded_residuals": ["R4"]
+  },
+  "signatures": {
+    "daemon_sha256": "6067da14f46c5af256bb7de78996b8805a261513ff34ea84b8f1bdb950c3b629",
+    "l0_hash": "247ff5101031b1a9bc0f06ef6eeaebcba862515aff106bd64c815e9f54070515",
+    "l0_hash_semantics": "SHA-256 over json.dumps(parsed W3 route, sort_keys=true, indent=2) plus final newline"
+  },
+  "status": "CRYSTALLIZED",
+  "triad": "ALPHA",
+  "updated_at": "2026-08-16T16:52:00-05:00",
+  "upstream_dependencies": [],
+  "work_order_id": "WO-20260816-SOP-LATTICE-9-W3",
+  "worker_slot": "W3"
+}

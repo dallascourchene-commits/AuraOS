@@ -1,0 +1,42 @@
+{
+  "blocking_residuals": [
+    "R1 downstream enqueue/transition primitive absent",
+    "R2 state ledger unused",
+    "R3 hydration bounds unenforced in daemon",
+    "R5 upstream dependency gate absent"
+  ],
+  "checks": {
+    "automatic_cascade_implemented_by_supplied_daemon": false,
+    "duplicate_worker_lease_implemented_by_supplied_daemon": false,
+    "exact_daemon_preserved": true,
+    "hydration_bounds_respected": true,
+    "hydration_guard_implemented_by_supplied_daemon": false,
+    "role": "DEPENDENCY_GRAPH_ROUTING",
+    "state_ledger_consumed_by_supplied_daemon": false,
+    "triad_position": "ALPHA_RIGHT",
+    "upstream_dependency_gate_implemented_by_supplied_daemon": false,
+    "worker_identity_bound": "W3"
+  },
+  "claim_ceiling": "Static W3 L1->L2 staging crystallization and script audit. No terminal daemons launched; no automatic lattice cascade executed; no deployment or canonical promotion.",
+  "disposition": "CRYSTALLIZED_WITH_BLOCKING_RESIDUALS",
+  "document_id": "SOP-LATTICE-9-UNI",
+  "guarded_residuals": [
+    "R4 no single-slot lease/CAS against duplicate WORKER_ID daemons"
+  ],
+  "hydration": {
+    "in": "L1",
+    "observed_max": "L2",
+    "out": "L2"
+  },
+  "receipt_id": "W3-SOP-LATTICE-9-UNI-20260816T165200-0500",
+  "references": {
+    "daemon_git_blob_sha": "a4992c3ac00a5c5c9154209ec28dda1669518e0f",
+    "daemon_sha256": "6067da14f46c5af256bb7de78996b8805a261513ff34ea84b8f1bdb950c3b629",
+    "route_git_blob_sha": "0e8fc772b5927846c2408bd214915eff298579cc",
+    "route_normalized_sha256": "247ff5101031b1a9bc0f06ef6eeaebcba862515aff106bd64c815e9f54070515",
+    "state_ledger_git_blob_sha": "9e775b9e576c8bc3d7bf97af80848f6782c2c42f",
+    "w3_work_order_git_blob_sha": "04b6edb2327694bfcb013f7fea28060d8d0a0f1a"
+  },
+  "timestamp": "2026-08-16T16:52:00-05:00",
+  "worker_id": "W3"
+}

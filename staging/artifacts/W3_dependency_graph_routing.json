@@ -1,0 +1,87 @@
+{
+  "claim_ceiling": "W3 L1->L2 structural routing/audit only. No nine-daemon launch, no deployment, no protected-branch merge, and no claim that the supplied loop implements automatic cascading.",
+  "cycle_cadence_seconds": 60,
+  "document_id": "SOP-LATTICE-9-UNI",
+  "edges": [
+    ["W1", "W2"],
+    ["W1", "W3"],
+    ["W2", "W4"],
+    ["W3", "W6"],
+    ["W4", "W5"],
+    ["W5", "W6"],
+    ["W5", "W7"],
+    ["W6", "W8"],
+    ["W7", "W8"],
+    ["W8", "W9"],
+    ["W9", "SHARED_STAGING_INDEX"]
+  ],
+  "functional_role": "Dependency & Graph Routing",
+  "hydration_bounds": {
+    "higher_layer_read_permitted": false,
+    "in": "L1",
+    "out": "L2"
+  },
+  "lattice_position": "RIGHT",
+  "node_map": {
+    "W1": {"position": "ALPHA_ROOT", "role": "Task Ingestion & Semantic Decomp", "upstream": ["USER", "SYSTEM_TRIGGER"], "downstream": ["W2", "W3"], "hydration": ["L0", "L1"]},
+    "W2": {"position": "ALPHA_LEFT", "role": "Structural AST / Interface Typing", "upstream": ["W1"], "downstream": ["W4"], "hydration": ["L1", "L2"]},
+    "W3": {"position": "ALPHA_RIGHT", "role": "Dependency & Graph Routing", "upstream": ["W1"], "downstream": ["W6"], "hydration": ["L1", "L2"]},
+    "W4": {"position": "BETA_LEFT", "role": "Context & Memory Hydration", "upstream": ["W2"], "downstream": ["W5"], "hydration": ["L2", "L3"]},
+    "W5": {"position": "BETA_CORE", "role": "Verbatim Artifact Execution/Write", "upstream": ["W4"], "downstream": ["W6", "W7"], "hydration": ["L3", "L4"]},
+    "W6": {"position": "BETA_RIGHT", "role": "Unit Assembly & Intermediate Build", "upstream": ["W3", "W5"], "downstream": ["W8"], "hydration": ["L4", "L3"]},
+    "W7": {"position": "GAMMA_LEFT", "role": "State Audit, Schema Invariance Check", "upstream": ["W5"], "downstream": ["W8"], "hydration": ["L4", "L2"]},
+    "W8": {"position": "GAMMA_CORE", "role": "Contract Verification & Test Pass", "upstream": ["W6", "W7"], "downstream": ["W9"], "hydration": ["L2", "L1"]},
+    "W9": {"position": "GAMMA_APEX", "role": "Ledger Crystallization & L0 Commit", "upstream": ["W8"], "downstream": ["SHARED_STAGING_INDEX"], "hydration": ["L1", "L0"]}
+  },
+  "pipeline_autocascade_disposition": "BLOCK",
+  "routing_disposition": "CRYSTALLIZED_WITH_BLOCKING_RESIDUALS",
+  "runbook_static_audit": [
+    {
+      "id": "R1",
+      "severity": "BLOCKING",
+      "finding": "The supplied daemon does not create, enqueue, or transition downstream work-order files.",
+      "effect": "The claimed automatic ALPHA->BETA->GAMMA cascade cannot occur from this script alone.",
+      "disposition": "BLOCK_AUTO_CASCADE_UNTIL_DISPATCH_PRIMITIVE_EXISTS"
+    },
+    {
+      "id": "R2",
+      "severity": "BLOCKING",
+      "finding": "The daemon assigns LEDGER but never reads or writes the state ledger.",
+      "effect": "Global slot availability is not enforced by the supplied loop.",
+      "disposition": "BLOCK_SHARED_SLOT_COORDINATION_CLAIM"
+    },
+    {
+      "id": "R3",
+      "severity": "BLOCKING",
+      "finding": "Hydration bounds are comments/schema metadata only; the daemon contains no executable L0-L4 admission check.",
+      "effect": "The script alone cannot guarantee that a worker stays within its assigned hydration bounds.",
+      "disposition": "REQUIRE_ROLE_SPECIFIC_HYDRATION_GUARD"
+    },
+    {
+      "id": "R4",
+      "severity": "GUARDED",
+      "finding": "The tmp+mv status rewrite is atomic at rename granularity but there is no worker lease/CAS preventing duplicate daemons with the same WORKER_ID.",
+      "effect": "Multiple W3 daemons could race on the same order.",
+      "disposition": "REQUIRE_SINGLE_SLOT_LEASE_OR_CAS_FOR_MULTI_PROCESS_USE"
+    },
+    {
+      "id": "R5",
+      "severity": "BLOCKING",
+      "finding": "Upstream dependencies are present in the schema but are not checked by the daemon before PROCESSING.",
+      "effect": "A worker can process before its declared upstream order crystallizes.",
+      "disposition": "REQUIRE_DEPENDENCY_GATE"
+    }
+  ],
+  "source_instruction": {
+    "kind": "DIRECT_USER_CONTROL_PLANE_SOP",
+    "pipeline_payload_bypass": false
+  },
+  "w3_output_contract": {
+    "artifact_type": "L2_DEPENDENCY_ROUTING_MATRIX",
+    "current_pipeline_signal_emitted": false,
+    "downstream_target": "W6",
+    "requires_actual_upstream_payload_from": "W1"
+  },
+  "worker_id": "W3",
+  "triad": "ALPHA"
+}
