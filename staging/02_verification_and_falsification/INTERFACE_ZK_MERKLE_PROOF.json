@@ -1,0 +1,231 @@
+{
+  "interface_id": "AURA:VERIFY:ZK-MERKLE-CONTAINMENT:V0.1-STAGED",
+  "work_order": "WO-STAGE-002",
+  "worker": "W2/G_F",
+  "status": "STAGED_NONCANONICAL_HUMAN_GATE_REQUIRED",
+  "claim_ceiling": "INTERFACE_CONTRACT_ONLY_NOT_A_CRYPTOGRAPHIC_IMPLEMENTATION_OR_SECURITY_PROOF",
+  "purpose": "Bind a zero-knowledge invariant proof to an authorized committed state and its exact world generation without requiring an ephemeral verifier worker to receive the underlying plaintext state, code, or data.",
+  "security_boundary": {
+    "merkle_inclusion_alone_proves_invariant": false,
+    "zk_proof_alone_authorizes_state_root": false,
+    "pass_requires_both_bindings": true,
+    "trusted_inputs_must_arrive_out_of_band_from_authorized_controller": [
+      "expected_state_root",
+      "expected_world_generation",
+      "expected_invariant_id",
+      "expected_policy_revision",
+      "allowed_proof_system_ids",
+      "allowed_commitment_scheme_ids",
+      "trusted_verifier_key_ids"
+    ],
+    "fail_closed_conditions": [
+      "unsupported_proof_system",
+      "unsupported_commitment_scheme",
+      "unknown_or_untrusted_verifier_key",
+      "malformed_proof",
+      "merkle_path_invalid",
+      "leaf_commitment_mismatch",
+      "state_root_mismatch",
+      "world_generation_mismatch",
+      "invariant_id_mismatch",
+      "policy_revision_mismatch",
+      "zk_verifier_false",
+      "public_input_binding_mismatch",
+      "known_stale_validity_window"
+    ],
+    "unknown_conditions": [
+      "authorized_root_unavailable",
+      "required_generation_unavailable",
+      "verifier_key_resolution_unavailable",
+      "proof_backend_unavailable_without_a_definite_invalidity_result",
+      "freshness_evidence_unavailable"
+    ]
+  },
+  "request_schema": {
+    "type": "object",
+    "required": [
+      "request_id",
+      "invariant_statement",
+      "state_commitment",
+      "merkle_inclusion",
+      "zk_proof",
+      "generation_binding"
+    ],
+    "properties": {
+      "request_id": {
+        "type": "string",
+        "minLength": 1
+      },
+      "invariant_statement": {
+        "type": "object",
+        "required": [
+          "invariant_id",
+          "policy_revision",
+          "public_statement_digest"
+        ],
+        "properties": {
+          "invariant_id": { "type": "string", "minLength": 1 },
+          "policy_revision": { "type": "string", "minLength": 1 },
+          "public_statement_digest": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      },
+      "state_commitment": {
+        "type": "object",
+        "required": [
+          "commitment_scheme_id",
+          "state_root",
+          "leaf_commitment"
+        ],
+        "properties": {
+          "commitment_scheme_id": { "type": "string", "minLength": 1 },
+          "state_root": { "type": "string", "minLength": 1 },
+          "leaf_commitment": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      },
+      "merkle_inclusion": {
+        "type": "object",
+        "required": [
+          "leaf_index",
+          "authentication_path"
+        ],
+        "properties": {
+          "leaf_index": { "type": "integer", "minimum": 0 },
+          "authentication_path": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["sibling_commitment", "side"],
+              "properties": {
+                "sibling_commitment": { "type": "string", "minLength": 1 },
+                "side": { "enum": ["LEFT", "RIGHT"] }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "zk_proof": {
+        "type": "object",
+        "required": [
+          "proof_system_id",
+          "verifier_key_id",
+          "proof_encoding",
+          "proof_payload",
+          "public_inputs"
+        ],
+        "properties": {
+          "proof_system_id": { "type": "string", "minLength": 1 },
+          "verifier_key_id": { "type": "string", "minLength": 1 },
+          "proof_encoding": { "type": "string", "minLength": 1 },
+          "proof_payload": { "type": "string", "minLength": 1 },
+          "public_inputs": {
+            "type": "object",
+            "required": [
+              "state_root",
+              "leaf_commitment",
+              "world_generation",
+              "invariant_id",
+              "policy_revision",
+              "public_statement_digest"
+            ],
+            "properties": {
+              "state_root": { "type": "string", "minLength": 1 },
+              "leaf_commitment": { "type": "string", "minLength": 1 },
+              "world_generation": { "type": "string", "minLength": 1 },
+              "invariant_id": { "type": "string", "minLength": 1 },
+              "policy_revision": { "type": "string", "minLength": 1 },
+              "public_statement_digest": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "generation_binding": {
+        "type": "object",
+        "required": [
+          "world_generation"
+        ],
+        "properties": {
+          "world_generation": { "type": "string", "minLength": 1 },
+          "world_timestamp": { "type": ["integer", "null"] },
+          "valid_after": { "type": ["integer", "null"] },
+          "valid_before": { "type": ["integer", "null"] },
+          "source_head": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "additionalProperties": false
+  },
+  "verification_algorithm": [
+    "Resolve trusted policy inputs independently of the proof submitter.",
+    "Check proof_system_id, commitment_scheme_id and verifier_key_id against trusted allowlists.",
+    "Check request invariant_id and policy_revision against the authorized expected values.",
+    "Check generation_binding.world_generation equals expected_world_generation.",
+    "Check state_commitment.state_root equals expected_state_root.",
+    "Recompute/verify the Merkle authentication path using the selected approved commitment backend; reject on false.",
+    "Check ZK public inputs exactly bind state_root, leaf_commitment, world_generation, invariant_id, policy_revision and public_statement_digest.",
+    "Invoke the approved external ZK verifier backend with the trusted verifier key; reject on verifier false.",
+    "Evaluate freshness/validity-window policy separately; missing evidence remains UNKNOWN unless policy defines absence as FAIL.",
+    "Return PASS only if every required check is PASS for one coherent generation."
+  ],
+  "response_schema": {
+    "type": "object",
+    "required": [
+      "request_id",
+      "disposition",
+      "world_generation",
+      "checks"
+    ],
+    "properties": {
+      "request_id": { "type": "string" },
+      "disposition": { "enum": ["PASS", "FAIL", "UNKNOWN"] },
+      "world_generation": { "type": ["string", "null"] },
+      "checks": {
+        "type": "object",
+        "required": [
+          "authorized_root_binding",
+          "generation_coherence",
+          "merkle_inclusion",
+          "zk_public_input_binding",
+          "zk_verification",
+          "freshness"
+        ],
+        "properties": {
+          "authorized_root_binding": { "enum": ["PASS", "FAIL", "UNKNOWN"] },
+          "generation_coherence": { "enum": ["PASS", "FAIL", "UNKNOWN"] },
+          "merkle_inclusion": { "enum": ["PASS", "FAIL", "UNKNOWN"] },
+          "zk_public_input_binding": { "enum": ["PASS", "FAIL", "UNKNOWN"] },
+          "zk_verification": { "enum": ["PASS", "FAIL", "UNKNOWN"] },
+          "freshness": { "enum": ["PASS", "FAIL", "UNKNOWN"] }
+        },
+        "additionalProperties": false
+      },
+      "first_failing_check": { "type": ["string", "null"] },
+      "first_unknown_check": { "type": ["string", "null"] },
+      "evidence_refs": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    },
+    "additionalProperties": false
+  },
+  "composition_rule": {
+    "fail_dominates": true,
+    "unknown_is_first_class": true,
+    "pass_requires_all_checks_pass": true,
+    "cross_generation_pass_bundle": "FAIL",
+    "missing_generation": "UNKNOWN"
+  },
+  "implementation_notes": [
+    "Do not implement a bespoke proof system or hash primitive from this interface document.",
+    "Cryptographic algorithm identifiers and verifier keys must be supplied by an approved external backend/policy registry.",
+    "Merkle inclusion establishes membership of a commitment in an authorized root; it does not by itself establish invariant satisfaction or plaintext confidentiality.",
+    "The ZK proof establishes only the statement encoded by its circuit/verification key and public inputs; it does not itself authorize the root, policy, generation, or effect.",
+    "An ephemeral worker may receive only the public statement, commitments, authentication path, proof payload, trusted verifier references, and expected generation/root. Underlying plaintext state can remain undisclosed to that worker if the selected proof system and operational environment actually provide that property."
+  ]
+}
