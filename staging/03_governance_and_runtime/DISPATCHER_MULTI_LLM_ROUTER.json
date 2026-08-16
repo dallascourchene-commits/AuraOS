@@ -1,0 +1,328 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schema_id": "AURA:STAGING:W3:MULTI_LLM_ROUTER:001",
+  "work_order": "WO-STAGE-003",
+  "status": "STAGING_ONLY_NONCANONICAL_HUMAN_GATE_REQUIRED",
+  "worker": {
+    "id": "W3",
+    "starting_lens": "G_C",
+    "starting_lens_name": "CONSEQUENCE-FIRST",
+    "lens_is_authority": false
+  },
+  "kernel_boundary": {
+    "model_outputs_are": "ADVISORY_PROPOSALS_ONLY",
+    "execution_rights": "LOCKED_LOCAL_KERNEL",
+    "external_api_mutation_from_model": false,
+    "symbolic_promotion_from_model": false,
+    "canonical_promotion_from_model": false,
+    "deployment_from_model": false,
+    "merge_from_model": false,
+    "irreversible_effect_from_model": false,
+    "fail_closed_on_unknown": true
+  },
+  "generator_roles": {
+    "G_R": {
+      "name": "RESIDUAL-FIRST",
+      "principle": "Select the smallest unresolved decision-changing residual after subtracting still-valid proof."
+    },
+    "G_F": {
+      "name": "FALSIFIER-FIRST",
+      "principle": "Select the earliest or strongest counterexample that could defeat the current synthesis."
+    },
+    "G_C": {
+      "name": "CONSEQUENCE-FIRST",
+      "principle": "Select the unresolved uncertainty with the earliest/highest material consequence or obligation pressure."
+    }
+  },
+  "meta_axes": [
+    "GROUND",
+    "DUTY",
+    "AUTHORITY",
+    "NEGATIVE_SPACE",
+    "EFFECT",
+    "REOPEN",
+    "SURVIVOR",
+    "FAILURE_DOMAIN",
+    "RESERVE",
+    "LINEAGE",
+    "MODEL_PLURALITY",
+    "TEST_PLURALITY",
+    "GOVERNANCE",
+    "SOVEREIGNTY",
+    "TEMPORAL_DRIFT",
+    "ADVERSARIAL",
+    "CATASTROPHE",
+    "SELF_MINIMALITY"
+  ],
+  "trit_to_generator": {
+    "0": "G_R",
+    "1": "G_F",
+    "2": "G_C"
+  },
+  "engines": {
+    "ollama_qwen": {
+      "provider_class": "LOCAL",
+      "transport_adapter": "OLLAMA",
+      "default_generator_assignment": "G_R",
+      "assignment_is_replaceable": true,
+      "tool_execution": false,
+      "proposal_only": true,
+      "required_provenance": [
+        "engine_id",
+        "model_id",
+        "model_digest_or_version",
+        "prompt_digest",
+        "grounded_state_ref",
+        "source_generation"
+      ]
+    },
+    "deepseek": {
+      "provider_class": "EXTERNAL_OR_LOCAL_ADAPTER",
+      "transport_adapter": "DEEPSEEK_COMPATIBLE",
+      "default_generator_assignment": "G_F",
+      "assignment_is_replaceable": true,
+      "tool_execution": false,
+      "proposal_only": true,
+      "network_call_requires_local_policy": true,
+      "required_provenance": [
+        "engine_id",
+        "model_id",
+        "model_version_if_exposed",
+        "prompt_digest",
+        "grounded_state_ref",
+        "source_generation"
+      ]
+    },
+    "chatgpt": {
+      "provider_class": "EXTERNAL_OR_LOCAL_ADAPTER",
+      "transport_adapter": "OPENAI_COMPATIBLE",
+      "default_generator_assignment": "G_C",
+      "assignment_is_replaceable": true,
+      "tool_execution": false,
+      "proposal_only": true,
+      "network_call_requires_local_policy": true,
+      "required_provenance": [
+        "engine_id",
+        "model_id",
+        "model_version_if_exposed",
+        "prompt_digest",
+        "grounded_state_ref",
+        "source_generation"
+      ]
+    }
+  },
+  "engine_generator_separation": {
+    "rule": "Generator semantics are independent of model/provider identity.",
+    "engine_identity_is_generator_authority": false,
+    "multi_model_agreement_is_proof": false,
+    "multi_model_agreement_is_authority": false
+  },
+  "natural_language_input_schema": {
+    "type": "object",
+    "required": [
+      "objective_text",
+      "grounded_state_ref",
+      "source_generation",
+      "authority_ref",
+      "effect_class"
+    ],
+    "properties": {
+      "objective_text": {"type": "string", "minLength": 1},
+      "grounded_state_ref": {"type": "string", "minLength": 1},
+      "source_generation": {"type": "string", "minLength": 1},
+      "authority_ref": {"type": "string", "minLength": 1},
+      "effect_class": {
+        "enum": ["READ_ONLY", "REVERSIBLE", "IRREVERSIBLE", "UNKNOWN"]
+      },
+      "deadline_or_obligation": {
+        "type": ["string", "null"]
+      },
+      "negative_space": {
+        "type": "array",
+        "items": {"type": "string"}
+      }
+    }
+  },
+  "proposal_schema": {
+    "type": "object",
+    "required": [
+      "generator",
+      "objective",
+      "axis_positions",
+      "falsifiers",
+      "provenance"
+    ],
+    "properties": {
+      "generator": {"enum": ["G_R", "G_F", "G_C"]},
+      "objective": {"type": "string", "minLength": 1},
+      "axis_positions": {
+        "type": "object",
+        "required": [
+          "GROUND",
+          "DUTY",
+          "AUTHORITY",
+          "NEGATIVE_SPACE",
+          "EFFECT",
+          "REOPEN",
+          "SURVIVOR",
+          "FAILURE_DOMAIN",
+          "RESERVE",
+          "LINEAGE",
+          "MODEL_PLURALITY",
+          "TEST_PLURALITY",
+          "GOVERNANCE",
+          "SOVEREIGNTY",
+          "TEMPORAL_DRIFT",
+          "ADVERSARIAL",
+          "CATASTROPHE",
+          "SELF_MINIMALITY"
+        ],
+        "additionalProperties": false,
+        "patternProperties": {
+          "^(GROUND|DUTY|AUTHORITY|NEGATIVE_SPACE|EFFECT|REOPEN|SURVIVOR|FAILURE_DOMAIN|RESERVE|LINEAGE|MODEL_PLURALITY|TEST_PLURALITY|GOVERNANCE|SOVEREIGNTY|TEMPORAL_DRIFT|ADVERSARIAL|CATASTROPHE|SELF_MINIMALITY)$": {
+            "type": "object",
+            "required": [
+              "required_evidence",
+              "consequence_surface",
+              "defeat_surface",
+              "expected_lifecycle_cost",
+              "unresolved_negative_space",
+              "proposed_disposition",
+              "decision_changing",
+              "lawful"
+            ],
+            "properties": {
+              "required_evidence": {"type": "array", "items": {"type": "string"}},
+              "consequence_surface": {"type": "array", "items": {"type": "string"}},
+              "defeat_surface": {"type": "array", "items": {"type": "string"}},
+              "expected_lifecycle_cost": {},
+              "unresolved_negative_space": {"type": "array", "items": {"type": "string"}},
+              "proposed_disposition": {"type": "string"},
+              "decision_changing": {"type": "boolean"},
+              "lawful": {"type": "boolean"}
+            }
+          }
+        }
+      },
+      "falsifiers": {"type": "array", "items": {"type": "string"}},
+      "provenance": {"type": "object"}
+    }
+  },
+  "bundle_contract": {
+    "proposal_count": 3,
+    "required_generators": ["G_R", "G_F", "G_C"],
+    "preserve_all_proposals": true,
+    "preserve_all_falsifiers": true,
+    "selection_rule": "Choose the earliest lawful decision-changing disagreement across the canonical 18-axis order; never erase losing proposals.",
+    "no_disagreement_disposition": "UNKNOWN_ACQUIRE_DISCRIMINATING_EVIDENCE"
+  },
+  "human_gated_corrigibility": {
+    "default_gate_state": "LOCKED",
+    "gated_actions": [
+      "SYMBOLIC_PROMOTION",
+      "CANONICAL_PROMOTION",
+      "EXTERNAL_API_MUTATION",
+      "PROTECTED_BRANCH_MERGE",
+      "DEPLOYMENT",
+      "PUBLICATION",
+      "IRREVERSIBLE_EFFECT"
+    ],
+    "approval_receipt_schema": {
+      "type": "object",
+      "required": [
+        "receipt_id",
+        "human_actor",
+        "scope_digest",
+        "source_generation",
+        "approved_actions",
+        "issued_at",
+        "one_shot"
+      ],
+      "properties": {
+        "receipt_id": {"type": "string", "minLength": 1},
+        "human_actor": {"type": "string", "minLength": 1},
+        "scope_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "source_generation": {"type": "string", "minLength": 1},
+        "approved_actions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "SYMBOLIC_PROMOTION",
+              "CANONICAL_PROMOTION",
+              "EXTERNAL_API_MUTATION",
+              "PROTECTED_BRANCH_MERGE",
+              "DEPLOYMENT",
+              "PUBLICATION",
+              "IRREVERSIBLE_EFFECT"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "issued_at": {"type": "string", "minLength": 1},
+        "expires_at": {"type": ["string", "null"]},
+        "one_shot": {"type": "boolean"},
+        "consumed_at": {"type": ["string", "null"]}
+      }
+    },
+    "reject_when": [
+      "receipt missing",
+      "scope digest mismatch",
+      "source generation mismatch",
+      "action absent from approved_actions",
+      "receipt expired",
+      "one-shot receipt already consumed",
+      "authority/currentness unknown"
+    ]
+  },
+  "corrigibility_ledger": {
+    "format": "JSONL_HASH_CHAIN",
+    "append_only_application_mode": true,
+    "record_schema": {
+      "type": "object",
+      "required": [
+        "entry_index",
+        "record_type",
+        "timestamp_ns",
+        "prev_hash",
+        "payload",
+        "entry_hash"
+      ],
+      "properties": {
+        "entry_index": {"type": "integer", "minimum": 1},
+        "record_type": {
+          "enum": [
+            "TRI_GENERATOR_BUNDLE",
+            "DISAGREEMENT_SELECTION",
+            "DRIVE_DELTA",
+            "RECOVERY_OPEN",
+            "RECOVERY_VERIFIED",
+            "RECOVERY_FAILED",
+            "HUMAN_GATE_RECEIPT",
+            "GATE_REJECT",
+            "GATE_CONSUME"
+          ]
+        },
+        "timestamp_ns": {"type": "integer", "minimum": 0},
+        "prev_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "payload": {"type": "object"},
+        "entry_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "hash_rule": "entry_hash = SHA256(canonical_json(record_without_entry_hash))",
+    "first_prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "ledger_is_authority": false,
+    "tamper_response": "BLOCK_AND_REOPEN_FROM_LAST_VERIFIED_SOURCE"
+  },
+  "runtime_fault_boundary": {
+    "hard_permission_state": "H_t",
+    "heuristic_optimizer_state": "S_t",
+    "heuristic_can_mint_permission": false,
+    "causal_precedence": "R_d < C_d OR non-bypassable fence until R_d VERIFIED",
+    "wake_cone": "W(delta) = Forward(delta) intersect Backward(C_o)",
+    "unknown_mapping": "BLOCK",
+    "pending_recovery": "BLOCK",
+    "failed_recovery": "BLOCK",
+    "verified_recovery": "RELEASE_ONLY_AFFECTED_CONSEQUENCE_SCOPE"
+  },
+  "claim_ceiling": "Configuration/specification only. No engine call, external API mutation, deployment, canonical promotion, symbolic promotion, or provider-independence claim is performed or implied by this file."
+}
