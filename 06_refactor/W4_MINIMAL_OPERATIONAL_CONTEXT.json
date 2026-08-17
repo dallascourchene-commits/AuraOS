@@ -1,0 +1,67 @@
+{
+  "active_laws": [
+    "Ingress origin is fixed at (0,0,0,0).",
+    "Selected direction and subject must remain inside admitted causal cone W(delta).",
+    "All G_R/G_F/G_C proposal surfaces remain present through adjudication; one proposal cannot route alone.",
+    "Six-slot order is DIR, ASP, CLASS, SUBJ, VOICE, STEM.",
+    "ASP comes from current external runtime phase; absence => BLOCK.",
+    "VOICE comes from independently resolved current authority/policy; absence/unknown => BLOCK.",
+    "STEM is kernel-owned; unknown effect class => BLOCK.",
+    "Causal fence requires fail_closed_flag=true and independently established R_d < C_d.",
+    "Proof preflight requires authorized root, coherent generation, Merkle inclusion, ZK public-input binding, ZK verification, and freshness.",
+    "Effect authority is checked independently after route/proof closure.",
+    "Residual pruning removes only current verified generation-coherent PASS receipts.",
+    "UNKNOWN never subtracts an obligation; stale/mismatched generation cannot discharge.",
+    "Receipt membership, route validity, causal timing, Merkle inclusion, or ZK proof alone never mint effect authority."
+  ],
+  "candidate_module": {
+    "bytes": 13365,
+    "line_count": 402,
+    "path": "06_refactor/aura_os_minimal.py",
+    "sha256": "349c51dcd6d8db3576de6a97d795f682d7936a8ccef9447c6fbfa1dbdb2ad5db"
+  },
+  "context_budget_bytes": 51200,
+  "d0_failure_lanes": [
+    "JOINT_MARGINAL_MUTANT",
+    "OMISSION_MUTANT",
+    "RECURSIVE_SAME_BLINDSPOT",
+    "SELF_CERTIFIED_KNOWN_ONLY",
+    "STALE_GENERATION_MUTANT"
+  ],
+  "document_id": "AURA:STAGE06:W4:MINIMAL-OPERATIONAL-CONTEXT:V1",
+  "hydration": "L2 -> L3 bounded adapter context",
+  "implementation_residuals_preserved": [
+    "No production ZK verifier is implemented; verification checks enter as externally established booleans.",
+    "No FractalLedger write is implemented in aura_os_minimal.py.",
+    "No generic store read adapter is invented.",
+    "No authority token is minted from CausalFence, routing, receipts, Merkle membership, or proof status."
+  ],
+  "measured_context_bytes_before_self_rewrite": 3163,
+  "source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+  "stage": "06_refactor",
+  "stage05_sources": [
+    {
+      "declared_ledger_sha256": "ff844372576adf0b4a903e688037ce112e4baa28c394a99740f11b7bd01d2854",
+      "path": "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
+      "sha256_file": "4b7270ff5945fcd8ddc3b208a596cd4145f16954fad7a7e41df1afef1ed86883"
+    },
+    {
+      "git_blob_sha1": "ed3abfa2916c9a040533eb7f6a085d2206aa4a28",
+      "path": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py"
+    },
+    {
+      "declared_integrity_sha256": "c0f242a23580441ba4fbb7448598bb5fca2ad5fe3ae347f0341b42fed2a5b384",
+      "path": "SUBSTRATE_OS_COUPLING_GRAPH.json",
+      "sha256_file": "b3c23cf79d2e9c6f4a3a55e8895e648ee6d71c87fd8757752bf4594e9d8c4f3a"
+    }
+  ],
+  "worker": "W4",
+  "zero_token_idle_target": {
+    "interpretation": "Logical zero task-token retention by the Stage 06 substrate while idle; not a claim of secure RAM erasure.",
+    "module_idle_state": "()",
+    "retained_receipt_cache": [],
+    "retained_task_payloads": [],
+    "retained_transcripts": [],
+    "target": true
+  }
+}
