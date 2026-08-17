@@ -1,0 +1,14 @@
+{
+  "document_id": "W4_STAGE06_TEST_VECTORS",
+  "vectors": [
+    {"expected": "PASS", "id": "GOOD_BASELINE"},
+    {"expected": "FAIL_CLOSED", "id": "JOINT_MARGINAL_MUTANT", "joint_dependency_complete": false},
+    {"expected": "UNKNOWN", "id": "OMISSION_MUTANT", "missing_receipt": true},
+    {"expected": "FAIL_CLOSED", "id": "RECURSIVE_SAME_BLINDSPOT", "independent_defeat_path": false},
+    {"authority_verified": false, "expected": "BLOCK", "id": "SELF_CERTIFIED_KNOWN_ONLY"},
+    {"expected": "BLOCK", "id": "STALE_GENERATION_MUTANT", "receipt_generation": "G6", "required_generation": "G7"},
+    {"expected": "UNKNOWN", "id": "CAUSAL_FENCE_UNVERIFIED", "timing_evidence_verified": false},
+    {"c_d": 10.0, "expected": "FAIL_CLOSED", "id": "CAUSAL_FENCE_BREACH", "r_d": 20.0}
+  ],
+  "worker": "W4"
+}
