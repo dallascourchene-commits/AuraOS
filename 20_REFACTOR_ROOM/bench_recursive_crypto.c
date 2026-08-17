@@ -56,6 +56,7 @@ int main(void) {
     uint64_t t0;
     uint64_t t1;
     double bm01_ns;
+    double bm01_throughput_ns;
     double bm02_cpb;
     double bm03_us;
     bool bm01;
@@ -89,6 +90,8 @@ int main(void) {
     unsigned k = 0u;
     unsigned failures = 0u;
     unsigned invariant_accum = 0u;
+    unsigned throughput_accum = 0u;
+    unsigned invariant_index = 0u;
     volatile uint8_t seed_sink = 0u;
 
     f.x_scope = 1u;
@@ -129,22 +132,36 @@ int main(void) {
     blake3_vectors = blake3_vectors && aura_blake3_hash_small((const uint8_t *)"abc", 3u, hash) &&
         hex_eq(hash, "6437b3ac38465133ffb63b75273a8db548c558465d79db03fd359c6cd5bd9d85");
 
-    /* Eight-way unrolling amortizes loop/volatile harness overhead while every
-       call still executes the exact production inline invariant predicate. */
+    /* Primary BM-01 is a dependency chain: each result selects the next index,
+       preventing independent checks from being overlapped and mislabeled as
+       single-check latency. */
     t0 = nsec_now();
-    for (i = 0; i < ITER_INV; i += 8u) {
-        invariant_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 0u) & 127u], 1u, 2u);
-        invariant_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 1u) & 127u], 1u, 2u);
-        invariant_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 2u) & 127u], 1u, 2u);
-        invariant_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 3u) & 127u], 1u, 2u);
-        invariant_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 4u) & 127u], 1u, 2u);
-        invariant_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 5u) & 127u], 1u, 2u);
-        invariant_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 6u) & 127u], 1u, 2u);
-        invariant_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 7u) & 127u], 1u, 2u);
+    for (i = 0; i < ITER_INV; ++i) {
+        aura_invariant_status_t status = aura_pipeline_check_transition_fast(
+            &a, &valid_next[invariant_index], 1u, 2u
+        );
+        invariant_accum |= (unsigned)status;
+        invariant_index = (invariant_index + 1u + (unsigned)status) & 127u;
     }
     t1 = nsec_now();
     bm01_ns = (double)(t1 - t0) / (double)ITER_INV;
     bm01 = invariant_accum == (unsigned)AURA_INV_PASS && bm01_ns < 1.5;
+
+    /* Secondary number only: independent steady-state throughput. It is useful
+       diagnostically but cannot satisfy the BM-01 latency gate. */
+    t0 = nsec_now();
+    for (i = 0; i < ITER_INV; i += 8u) {
+        throughput_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 0u) & 127u], 1u, 2u);
+        throughput_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 1u) & 127u], 1u, 2u);
+        throughput_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 2u) & 127u], 1u, 2u);
+        throughput_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 3u) & 127u], 1u, 2u);
+        throughput_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 4u) & 127u], 1u, 2u);
+        throughput_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 5u) & 127u], 1u, 2u);
+        throughput_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 6u) & 127u], 1u, 2u);
+        throughput_accum |= (unsigned)aura_pipeline_check_transition_fast(&a, &valid_next[(i + 7u) & 127u], 1u, 2u);
+    }
+    t1 = nsec_now();
+    bm01_throughput_ns = (double)(t1 - t0) / (double)ITER_INV;
 
     for (i = 0; i < AURA_HDC_DIM; ++i) {
         const float theta = (float)(i % 1024u) * 0.006135923151542565f;
@@ -240,7 +257,7 @@ int main(void) {
     aura_secure_bzero(mlkem_ss1, sizeof(mlkem_ss1));
     aura_secure_bzero(mlkem_ss2, sizeof(mlkem_ss2));
 
-    if (seed_sink == 255u) {
+    if (seed_sink == 255u || throughput_accum == 255u) {
         fputs("unreachable\n", stderr);
     }
 
@@ -250,7 +267,7 @@ int main(void) {
     printf("  \"compile_flags\": \"gcc -O3 -march=native -Wall -Werror\",\n");
     printf("  \"blake3_short_vectors\": {\"pass\": %s},\n", blake3_vectors ? "true" : "false");
     printf("  \"ml_kem_768\": {\"provider\": \"OpenSSL-3.5-default\", \"fips203_conforming_algorithm\": true, \"cmvp_validated_provider_claimed\": false, \"roundtrip_pass\": %s},\n", mlkem_roundtrip ? "true" : "false");
-    printf("  \"BM-01\": {\"value_ns\": %.6f, \"threshold_ns\": 1.5, \"valid_transition_bank\": %s, \"pass\": %s},\n", bm01_ns, invariant_accum == (unsigned)AURA_INV_PASS ? "true" : "false", bm01 ? "true" : "false");
+    printf("  \"BM-01\": {\"latency_ns\": %.6f, \"threshold_ns\": 1.5, \"steady_state_throughput_ns_per_check\": %.6f, \"valid_transition_bank\": %s, \"pass\": %s},\n", bm01_ns, bm01_throughput_ns, invariant_accum == (unsigned)AURA_INV_PASS ? "true" : "false", bm01 ? "true" : "false");
     printf("  \"BM-02\": {\"value_cycles_per_byte\": %.6f, \"threshold_cycles_per_byte\": 1.2, \"roundtrip_max_abs_error\": %.9g, \"roundtrip_pass\": %s, \"pass\": %s},\n", bm02_cpb, hdc_max_abs_error, hdc_roundtrip ? "true" : "false", bm02 ? "true" : "false");
     printf("  \"BM-03\": {\"value_us\": %.6f, \"threshold_us\": 2.5, \"pass\": %s},\n", bm03_us, bm03 ? "true" : "false");
     printf("  \"BM-04\": {\"synthetic_jitter_window_ms\": 50, \"median_ab_us\": %u, \"median_bc_us\": %u, \"median_ac_us\": %u, \"triangle_consistent\": %s, \"pass\": %s},\n", snap.median_ab_us, snap.median_bc_us, snap.median_ac_us, snap.triangle_consistent ? "true" : "false", bm04 ? "true" : "false");
