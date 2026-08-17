@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1615
-- **total_bytes**: 26213235
-- **text_tokens_est**: 6543718
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 993, 'schema_or_lexicon': 258, 'support_file': 49}
+- **file_count**: 1625
+- **total_bytes**: 26252540
+- **text_tokens_est**: 6553547
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 266, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1615,
+  "repo_file_count": 1625,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -228,6 +228,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".vscode/settings.json",
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
     "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
+    "06_refactor/D0_RESULTS.json",
+    "06_refactor/GATE_B_CANDIDATE_MANIFEST.json",
+    "06_refactor/HARNESS_D0_MUTANTS.py",
+    "06_refactor/STAGE05_SOURCE_BINDINGS.json",
+    "06_refactor/W4_CYCLE_RECEIPT.json",
+    "06_refactor/W4_MINIMAL_OPERATIONAL_CONTEXT.json",
+    "06_refactor/W4_TEST_VECTORS.json",
+    "06_refactor/W5_CYCLE_RECEIPT.json",
+    "06_refactor/W6_CYCLE_RECEIPT.json",
+    "06_refactor/aura_os_minimal.py",
     "AMD_HACKATHON_SUBMISSION.md",
     "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
     "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -1644,6 +1654,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
   "source_paths_without_topology": [
     ".github/phase4/wc02_phase4_current_generation_patch.py",
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+    "06_refactor/HARNESS_D0_MUTANTS.py",
+    "06_refactor/aura_os_minimal.py",
     "aura_blockchain/__init__.py",
     "aura_blockchain/block.py",
     "aura_blockchain/consensus.py",
@@ -1739,9 +1751,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_capability_lane_registry.py",
     "tests/test_aura_capability_resolver.py",
     "tests/test_aura_capability_resolver_connectome.py",
-    "tests/test_aura_change_graph.py",
-    "tests/test_aura_civic_commons_arena.py",
-    "tests/test_aura_civic_completion.py"
+    "tests/test_aura_change_graph.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1755,16 +1765,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1615,
-  "bytes": 26213235,
-  "tokens_est": 6543718,
+  "files": 1625,
+  "bytes": 26252540,
+  "tokens_est": 6553547,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 234,
     "native_accelerator": 8,
     "operator_script": 9,
-    "python_module": 993,
-    "schema_or_lexicon": 258,
+    "python_module": 995,
+    "schema_or_lexicon": 266,
     "support_file": 49
   }
 }
@@ -2062,6 +2072,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
   "paths": [
     ".github/phase4/wc02_phase4_current_generation_patch.py",
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+    "06_refactor/HARNESS_D0_MUTANTS.py",
+    "06_refactor/aura_os_minimal.py",
     "_aura_architect_consolidation_benchmark_legacy.py",
     "_aura_architect_consolidation_benchmark_refined_legacy.py",
     "_aura_architect_consolidation_benchmark_v2_legacy.py",
@@ -2457,9 +2469,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_polysynthetic_intent.py",
     "aura_positional_parser.py",
     "aura_pre_egress_interceptor.py",
-    "aura_pricing.py",
-    "aura_pricing_registry.py",
-    "aura_privacy_io.py"
+    "aura_pricing.py"
   ]
 }
 ```

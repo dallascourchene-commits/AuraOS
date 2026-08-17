@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786920375,
+  "generated_at_unix": 1786929543,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1615,
+    "repo_file_count": 1625,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -210,6 +210,16 @@
       ".vscode/settings.json",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
+      "06_refactor/D0_RESULTS.json",
+      "06_refactor/GATE_B_CANDIDATE_MANIFEST.json",
+      "06_refactor/HARNESS_D0_MUTANTS.py",
+      "06_refactor/STAGE05_SOURCE_BINDINGS.json",
+      "06_refactor/W4_CYCLE_RECEIPT.json",
+      "06_refactor/W4_MINIMAL_OPERATIONAL_CONTEXT.json",
+      "06_refactor/W4_TEST_VECTORS.json",
+      "06_refactor/W5_CYCLE_RECEIPT.json",
+      "06_refactor/W6_CYCLE_RECEIPT.json",
+      "06_refactor/aura_os_minimal.py",
       "AMD_HACKATHON_SUBMISSION.md",
       "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
       "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -1626,6 +1636,8 @@
     "source_paths_without_topology": [
       ".github/phase4/wc02_phase4_current_generation_patch.py",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+      "06_refactor/HARNESS_D0_MUTANTS.py",
+      "06_refactor/aura_os_minimal.py",
       "aura_blockchain/__init__.py",
       "aura_blockchain/block.py",
       "aura_blockchain/consensus.py",
@@ -1721,9 +1733,7 @@
       "tests/test_aura_capability_lane_registry.py",
       "tests/test_aura_capability_resolver.py",
       "tests/test_aura_capability_resolver_connectome.py",
-      "tests/test_aura_change_graph.py",
-      "tests/test_aura_civic_commons_arena.py",
-      "tests/test_aura_civic_completion.py"
+      "tests/test_aura_change_graph.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1731,16 +1741,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1615,
-      "bytes": 26213235,
-      "tokens_est": 6543718,
+      "files": 1625,
+      "bytes": 26252540,
+      "tokens_est": 6553547,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 234,
         "native_accelerator": 8,
         "operator_script": 9,
-        "python_module": 993,
-        "schema_or_lexicon": 258,
+        "python_module": 995,
+        "schema_or_lexicon": 266,
         "support_file": 49
       }
     },
@@ -2023,6 +2033,8 @@
       "paths": [
         ".github/phase4/wc02_phase4_current_generation_patch.py",
         "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+        "06_refactor/HARNESS_D0_MUTANTS.py",
+        "06_refactor/aura_os_minimal.py",
         "_aura_architect_consolidation_benchmark_legacy.py",
         "_aura_architect_consolidation_benchmark_refined_legacy.py",
         "_aura_architect_consolidation_benchmark_v2_legacy.py",
@@ -2418,9 +2430,7 @@
         "aura_polysynthetic_intent.py",
         "aura_positional_parser.py",
         "aura_pre_egress_interceptor.py",
-        "aura_pricing.py",
-        "aura_pricing_registry.py",
-        "aura_privacy_io.py"
+        "aura_pricing.py"
       ]
     }
   ],
@@ -2442,6 +2452,14 @@
         "line": 16,
         "end_line": 98,
         "semantic_id": ".github/phase4/wc02_phase4_current_generation_patch.py#function:main:fa396146ab2337a5",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "kind": "function",
+        "line": 173,
+        "end_line": 185,
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#function:main:98ccb540d22b9c8b",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -3445,6 +3463,14 @@
         "end_line": 30,
         "semantic_id": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py#class:IngressPacket:7e80b57108b27990",
         "signature_hash": "e19ca6cd9220cfbe"
+      },
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 55,
+        "end_line": 57,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:IngressPacket:ef69324c2f52a469",
+        "signature_hash": "e19ca6cd9220cfbe"
       }
     ],
     "TriProposalBundle": [
@@ -3454,6 +3480,14 @@
         "line": 34,
         "end_line": 39,
         "semantic_id": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py#class:TriProposalBundle:bcee9f8fbd26e871",
+        "signature_hash": "e1efa1dc497cdd5f"
+      },
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 61,
+        "end_line": 64,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:TriProposalBundle:f9b58237b4bbe32f",
         "signature_hash": "e1efa1dc497cdd5f"
       }
     ],
@@ -3465,6 +3499,14 @@
         "end_line": 48,
         "semantic_id": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py#class:CausalFence:f777f1ca0ceae082",
         "signature_hash": "b60ed1451ee2ee44"
+      },
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 68,
+        "end_line": 71,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:CausalFence:70824b760f021202",
+        "signature_hash": "b60ed1451ee2ee44"
       }
     ],
     "ResidualBuffer": [
@@ -3475,6 +3517,564 @@
         "end_line": 56,
         "semantic_id": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py#class:ResidualBuffer:d8bfc35e81b32730",
         "signature_hash": "0a6686287444b7d3"
+      },
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 85,
+        "end_line": 87,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:ResidualBuffer:2105760a08e09396",
+        "signature_hash": "0a6686287444b7d3"
+      }
+    ],
+    "fact_obligation": [
+      {
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 63,
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#function:fact_obligation:861a34d0388b8c16",
+        "signature_hash": "b059073bae8e6236"
+      }
+    ],
+    "fact_obligation.evaluator": [
+      {
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 62,
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#method:fact_obligation.evaluator:c6ad30408204cc82",
+        "signature_hash": "8d8c6657360d6302"
+      }
+    ],
+    "sentinel": [
+      {
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 70,
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#function:sentinel:a98874a62fdfb941",
+        "signature_hash": "7c60d32c2d7215fe"
+      }
+    ],
+    "sentinel.evaluator": [
+      {
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 69,
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#method:sentinel.evaluator:79d38aa15c2b9b04",
+        "signature_hash": "b5deebcaf2dbf608"
+      }
+    ],
+    "route_fixture": [
+      {
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 89,
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#function:route_fixture:3fe2a7781036a457",
+        "signature_hash": "1a122bede2c4b2d7"
+      }
+    ],
+    "full_verification": [
+      {
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 95,
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#function:full_verification:d67a6f571abd7558",
+        "signature_hash": "fcb9b52dc0cfa94e"
+      }
+    ],
+    "run_vectors": [
+      {
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 149,
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#function:run_vectors:e654fe1d24197b98",
+        "signature_hash": "fcf5ddc86604d1e5"
+      }
+    ],
+    "run_mutants": [
+      {
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 170,
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#function:run_mutants:e02379818ed581f2",
+        "signature_hash": "0b7a7b320e527e62"
+      }
+    ],
+    "Disposition": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 43,
+        "end_line": 46,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:Disposition:162fd1d86ea18f49",
+        "signature_hash": "9386d60514f2578d"
+      },
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 26,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:Disposition:b359736450ddaeff",
+        "signature_hash": "9386d60514f2578d"
+      }
+    ],
+    "EffectDecision": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 51,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:EffectDecision:8b90440e57f3c83d",
+        "signature_hash": "52b97812a3df1826"
+      }
+    ],
+    "PassReceipt": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 75,
+        "end_line": 81,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:PassReceipt:01747f73e33e3075",
+        "signature_hash": "26a87ebf7e7806c8"
+      },
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 236,
+        "end_line": 240,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:PassReceipt:1502c8ae10385792",
+        "signature_hash": "26a87ebf7e7806c8"
+      }
+    ],
+    "ObligationResult": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 91,
+        "end_line": 93,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:ObligationResult:b72bd3d5b79c858c",
+        "signature_hash": "1133db2658b220b6"
+      },
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 84,
+        "end_line": 88,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:ObligationResult:c4fd280b90617ddc",
+        "signature_hash": "1133db2658b220b6"
+      }
+    ],
+    "RequiredObligation": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 100,
+        "end_line": 105,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:RequiredObligation:d8813a01bb08e41c",
+        "signature_hash": "b8da5301246a1f55"
+      },
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 102,
+        "end_line": 119,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:RequiredObligation:ad8a9ae529492f85",
+        "signature_hash": "b8da5301246a1f55"
+      }
+    ],
+    "ContainmentResult": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 109,
+        "end_line": 114,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:ContainmentResult:72c98aa13296ff63",
+        "signature_hash": "cee113b1d8b8e467"
+      }
+    ],
+    "RouteDecision": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 118,
+        "end_line": 126,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:RouteDecision:befd43bae75405de",
+        "signature_hash": "2f7b1f26be2473f0"
+      },
+      {
+        "file": "aura_coding_arena_3d.py",
+        "kind": "class",
+        "line": 142,
+        "end_line": 156,
+        "semantic_id": "aura_coding_arena_3d.py#class:RouteDecision:2f024dae202bcbf4",
+        "signature_hash": "2f7b1f26be2473f0"
+      },
+      {
+        "file": "aura_fst_routing.py",
+        "kind": "class",
+        "line": 324,
+        "end_line": 383,
+        "semantic_id": "aura_fst_routing.py#class:RouteDecision:fa9ed31012725405",
+        "signature_hash": "2f7b1f26be2473f0"
+      },
+      {
+        "file": "aura_model_cognome.py",
+        "kind": "class",
+        "line": 297,
+        "end_line": 363,
+        "semantic_id": "aura_model_cognome.py#class:RouteDecision:d26c6cc738041af5",
+        "signature_hash": "2f7b1f26be2473f0"
+      }
+    ],
+    "RouteDecision.valid": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 126,
+        "semantic_id": "06_refactor/aura_os_minimal.py#method:RouteDecision.valid:30101e0f0fff88a1",
+        "signature_hash": "6cca0427257ffe2f"
+      }
+    ],
+    "VerificationEvidence": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 130,
+        "end_line": 132,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:VerificationEvidence:6ead65002a08a108",
+        "signature_hash": "0cbf53f569cefe01"
+      }
+    ],
+    "PreflightResult": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 136,
+        "end_line": 138,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:PreflightResult:74446da8e805534b",
+        "signature_hash": "9e5dc43ee419eba7"
+      }
+    ],
+    "ResidualResult": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 142,
+        "end_line": 147,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:ResidualResult:2a1e2c313ef32c81",
+        "signature_hash": "c0fbd85e93816239"
+      }
+    ],
+    "_text": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 154,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:_text:56d55c5f7d4412f9",
+        "signature_hash": "0cd3c0d3d227cce3"
+      },
+      {
+        "file": "aura_arena_attempt_archive.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 74,
+        "semantic_id": "aura_arena_attempt_archive.py#function:_text:1f38e1a4ac35a22f",
+        "signature_hash": "5678165a8e35f45a"
+      },
+      {
+        "file": "aura_arena_state_packet.py",
+        "kind": "function",
+        "line": 165,
+        "end_line": 166,
+        "semantic_id": "aura_arena_state_packet.py#function:_text:c5091da919a489ba",
+        "signature_hash": "0cd3c0d3d227cce3"
+      },
+      {
+        "file": "aura_civic_planning.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 67,
+        "semantic_id": "aura_civic_planning.py#function:_text:9bb0c03c80195b2c",
+        "signature_hash": "c410f907de926258"
+      },
+      {
+        "file": "aura_civic_planning_types.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 53,
+        "semantic_id": "aura_civic_planning_types.py#function:_text:da6c48f57706422c",
+        "signature_hash": "8b14dadd1fd15fb6"
+      },
+      {
+        "file": "aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 162,
+        "semantic_id": "aura_coding_arena_planning_integrity.py#function:_text:d62ccb4487062d7b",
+        "signature_hash": "392b4b1e7376b10f"
+      },
+      {
+        "file": "aura_cognitive_labor_router_core.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 80,
+        "semantic_id": "aura_cognitive_labor_router_core.py#function:_text:633025810a09e6ac",
+        "signature_hash": "0cd3c0d3d227cce3"
+      },
+      {
+        "file": "aura_construction_adapter.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 72,
+        "semantic_id": "aura_construction_adapter.py#function:_text:b0f0bc7ea2b5e616",
+        "signature_hash": "c410f907de926258"
+      },
+      {
+        "file": "aura_construction_authority.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 55,
+        "semantic_id": "aura_construction_authority.py#function:_text:2f813515f218617f",
+        "signature_hash": "c410f907de926258"
+      },
+      {
+        "file": "aura_construction_contracts.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 75,
+        "semantic_id": "aura_construction_contracts.py#function:_text:81de8f7eef6fd4c8",
+        "signature_hash": "c410f907de926258"
+      },
+      {
+        "file": "aura_construction_demo_contracts.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 65,
+        "semantic_id": "aura_construction_demo_contracts.py#function:_text:4f8c230e8ee49d13",
+        "signature_hash": "8fe8c92a9b279821"
+      },
+      {
+        "file": "aura_construction_demo_fixture.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 82,
+        "semantic_id": "aura_construction_demo_fixture.py#function:_text:3f9edf250ad02c64",
+        "signature_hash": "8fe8c92a9b279821"
+      },
+      {
+        "file": "aura_construction_human_agent.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 45,
+        "semantic_id": "aura_construction_human_agent.py#function:_text:8cb79ebaaafe29ae",
+        "signature_hash": "e925189d3373d66a"
+      },
+      {
+        "file": "aura_ephemeral_workspace_contracts.py",
+        "kind": "function",
+        "line": 391,
+        "end_line": 405,
+        "semantic_id": "aura_ephemeral_workspace_contracts.py#function:_text:deee00576ee4aeda",
+        "signature_hash": "b4873d7f93a96187"
+      },
+      {
+        "file": "aura_financial_contracts.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 75,
+        "semantic_id": "aura_financial_contracts.py#function:_text:6ca32455e597d93c",
+        "signature_hash": "c64bec070b690c47"
+      },
+      {
+        "file": "aura_gate.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 124,
+        "semantic_id": "aura_gate.py#function:_text:2d3a90bf30bb81d4",
+        "signature_hash": "c0b120682fd9cc08"
+      },
+      {
+        "file": "aura_gate_adapters.py",
+        "kind": "function",
+        "line": 253,
+        "end_line": 269,
+        "semantic_id": "aura_gate_adapters.py#function:_text:4e5affe88cfc7505",
+        "signature_hash": "8c19472f33080b32"
+      },
+      {
+        "file": "aura_project_context_compiler.py",
+        "kind": "function",
+        "line": 117,
+        "end_line": 124,
+        "semantic_id": "aura_project_context_compiler.py#function:_text:675fc45d9480abde",
+        "signature_hash": "e822e196056eeaa2"
+      },
+      {
+        "file": "aura_spatial_arena.py",
+        "kind": "function",
+        "line": 1014,
+        "end_line": 1020,
+        "semantic_id": "aura_spatial_arena.py#function:_text:c0d177bfea7ac22b",
+        "signature_hash": "7a9232ba071a3ce1"
+      },
+      {
+        "file": "aura_spatial_projection.py",
+        "kind": "function",
+        "line": 345,
+        "end_line": 349,
+        "semantic_id": "aura_spatial_projection.py#function:_text:5f51c1cf54d272fa",
+        "signature_hash": "a42450aefb080c9c"
+      },
+      {
+        "file": "aura_substrate_contracts.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 59,
+        "semantic_id": "aura_substrate_contracts.py#function:_text:56963a67b484dff1",
+        "signature_hash": "c410f907de926258"
+      },
+      {
+        "file": "scripts/aura_ifc_storey_index.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 83,
+        "semantic_id": "scripts/aura_ifc_storey_index.py#function:_text:30118fe325b5eac2",
+        "signature_hash": "62e9fc6a9590ec31"
+      },
+      {
+        "file": "tests/test_aura_gate_deployment.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
+        "signature_hash": "341a9ef31a78fe7b"
+      }
+    ],
+    "_canonical_sha256": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 157,
+        "end_line": 161,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:_canonical_sha256:c6c8b5fe3b16e755",
+        "signature_hash": "d8cbd26b51f4519e"
+      }
+    ],
+    "p_ingress": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 164,
+        "end_line": 178,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_ingress:99a78f0b888c27e8",
+        "signature_hash": "517e17c5a9f1e8fb"
+      }
+    ],
+    "order_for_falsification": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 181,
+        "end_line": 186,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:order_for_falsification:14f1d754f4bd0677",
+        "signature_hash": "1e0dacf7e3bc7621"
+      },
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "function",
+        "line": 132,
+        "end_line": 139,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#function:order_for_falsification:d0fae56ab0fb8577",
+        "signature_hash": "96c9db4d5546996b"
+      }
+    ],
+    "order_for_falsification.key": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 185,
+        "semantic_id": "06_refactor/aura_os_minimal.py#method:order_for_falsification.key:4ef5610066680610",
+        "signature_hash": "f239c5f094573a16"
+      }
+    ],
+    "evaluate_containment": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 189,
+        "end_line": 217,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:evaluate_containment:2baf73be927295b5",
+        "signature_hash": "a9cf097a89716f13"
+      }
+    ],
+    "_proposal_effect_class": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 220,
+        "end_line": 228,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:_proposal_effect_class:4544b97a0aaec747",
+        "signature_hash": "e0750a77528db4c3"
+      }
+    ],
+    "p_router": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 231,
+        "end_line": 272,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_router:4c745faedae4b5ce",
+        "signature_hash": "00a9845361a17355"
+      }
+    ],
+    "_causal_fence_passes": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 275,
+        "end_line": 287,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:_causal_fence_passes:9288b5d5352abcec",
+        "signature_hash": "d758b031ea21f521"
+      }
+    ],
+    "p_fence": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 290,
+        "end_line": 312,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_fence:b9470e049d60774e",
+        "signature_hash": "915ca5efe0f50b21"
+      }
+    ],
+    "p_residual": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 315,
+        "end_line": 387,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_residual:56c214861f6a78e0",
+        "signature_hash": "088cff7e50dddd5e"
+      }
+    ],
+    "idle_state": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 390,
+        "end_line": 392,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:idle_state:85a58966f814b917",
+        "signature_hash": "dd8c0cb149eb4ee8"
       }
     ],
     "_canonical": [
@@ -14227,184 +14827,6 @@
         "end_line": 14,
         "semantic_id": "tests/test_aura_gate_contract_artifacts.py#function:_json:27f1be099b7c044f",
         "signature_hash": "8c3437f6c8f2f2fd"
-      }
-    ],
-    "_text": [
-      {
-        "file": "aura_arena_attempt_archive.py",
-        "kind": "function",
-        "line": 73,
-        "end_line": 74,
-        "semantic_id": "aura_arena_attempt_archive.py#function:_text:1f38e1a4ac35a22f",
-        "signature_hash": "5678165a8e35f45a"
-      },
-      {
-        "file": "aura_arena_state_packet.py",
-        "kind": "function",
-        "line": 165,
-        "end_line": 166,
-        "semantic_id": "aura_arena_state_packet.py#function:_text:c5091da919a489ba",
-        "signature_hash": "0cd3c0d3d227cce3"
-      },
-      {
-        "file": "aura_civic_planning.py",
-        "kind": "function",
-        "line": 64,
-        "end_line": 67,
-        "semantic_id": "aura_civic_planning.py#function:_text:9bb0c03c80195b2c",
-        "signature_hash": "c410f907de926258"
-      },
-      {
-        "file": "aura_civic_planning_types.py",
-        "kind": "function",
-        "line": 48,
-        "end_line": 53,
-        "semantic_id": "aura_civic_planning_types.py#function:_text:da6c48f57706422c",
-        "signature_hash": "8b14dadd1fd15fb6"
-      },
-      {
-        "file": "aura_coding_arena_planning_integrity.py",
-        "kind": "function",
-        "line": 156,
-        "end_line": 162,
-        "semantic_id": "aura_coding_arena_planning_integrity.py#function:_text:d62ccb4487062d7b",
-        "signature_hash": "392b4b1e7376b10f"
-      },
-      {
-        "file": "aura_cognitive_labor_router_core.py",
-        "kind": "function",
-        "line": 56,
-        "end_line": 80,
-        "semantic_id": "aura_cognitive_labor_router_core.py#function:_text:633025810a09e6ac",
-        "signature_hash": "0cd3c0d3d227cce3"
-      },
-      {
-        "file": "aura_construction_adapter.py",
-        "kind": "function",
-        "line": 66,
-        "end_line": 72,
-        "semantic_id": "aura_construction_adapter.py#function:_text:b0f0bc7ea2b5e616",
-        "signature_hash": "c410f907de926258"
-      },
-      {
-        "file": "aura_construction_authority.py",
-        "kind": "function",
-        "line": 49,
-        "end_line": 55,
-        "semantic_id": "aura_construction_authority.py#function:_text:2f813515f218617f",
-        "signature_hash": "c410f907de926258"
-      },
-      {
-        "file": "aura_construction_contracts.py",
-        "kind": "function",
-        "line": 69,
-        "end_line": 75,
-        "semantic_id": "aura_construction_contracts.py#function:_text:81de8f7eef6fd4c8",
-        "signature_hash": "c410f907de926258"
-      },
-      {
-        "file": "aura_construction_demo_contracts.py",
-        "kind": "function",
-        "line": 60,
-        "end_line": 65,
-        "semantic_id": "aura_construction_demo_contracts.py#function:_text:4f8c230e8ee49d13",
-        "signature_hash": "8fe8c92a9b279821"
-      },
-      {
-        "file": "aura_construction_demo_fixture.py",
-        "kind": "function",
-        "line": 77,
-        "end_line": 82,
-        "semantic_id": "aura_construction_demo_fixture.py#function:_text:3f9edf250ad02c64",
-        "signature_hash": "8fe8c92a9b279821"
-      },
-      {
-        "file": "aura_construction_human_agent.py",
-        "kind": "function",
-        "line": 39,
-        "end_line": 45,
-        "semantic_id": "aura_construction_human_agent.py#function:_text:8cb79ebaaafe29ae",
-        "signature_hash": "e925189d3373d66a"
-      },
-      {
-        "file": "aura_ephemeral_workspace_contracts.py",
-        "kind": "function",
-        "line": 391,
-        "end_line": 405,
-        "semantic_id": "aura_ephemeral_workspace_contracts.py#function:_text:deee00576ee4aeda",
-        "signature_hash": "b4873d7f93a96187"
-      },
-      {
-        "file": "aura_financial_contracts.py",
-        "kind": "function",
-        "line": 61,
-        "end_line": 75,
-        "semantic_id": "aura_financial_contracts.py#function:_text:6ca32455e597d93c",
-        "signature_hash": "c64bec070b690c47"
-      },
-      {
-        "file": "aura_gate.py",
-        "kind": "function",
-        "line": 115,
-        "end_line": 124,
-        "semantic_id": "aura_gate.py#function:_text:2d3a90bf30bb81d4",
-        "signature_hash": "c0b120682fd9cc08"
-      },
-      {
-        "file": "aura_gate_adapters.py",
-        "kind": "function",
-        "line": 253,
-        "end_line": 269,
-        "semantic_id": "aura_gate_adapters.py#function:_text:4e5affe88cfc7505",
-        "signature_hash": "8c19472f33080b32"
-      },
-      {
-        "file": "aura_project_context_compiler.py",
-        "kind": "function",
-        "line": 117,
-        "end_line": 124,
-        "semantic_id": "aura_project_context_compiler.py#function:_text:675fc45d9480abde",
-        "signature_hash": "e822e196056eeaa2"
-      },
-      {
-        "file": "aura_spatial_arena.py",
-        "kind": "function",
-        "line": 1014,
-        "end_line": 1020,
-        "semantic_id": "aura_spatial_arena.py#function:_text:c0d177bfea7ac22b",
-        "signature_hash": "7a9232ba071a3ce1"
-      },
-      {
-        "file": "aura_spatial_projection.py",
-        "kind": "function",
-        "line": 345,
-        "end_line": 349,
-        "semantic_id": "aura_spatial_projection.py#function:_text:5f51c1cf54d272fa",
-        "signature_hash": "a42450aefb080c9c"
-      },
-      {
-        "file": "aura_substrate_contracts.py",
-        "kind": "function",
-        "line": 56,
-        "end_line": 59,
-        "semantic_id": "aura_substrate_contracts.py#function:_text:56963a67b484dff1",
-        "signature_hash": "c410f907de926258"
-      },
-      {
-        "file": "scripts/aura_ifc_storey_index.py",
-        "kind": "function",
-        "line": 73,
-        "end_line": 83,
-        "semantic_id": "scripts/aura_ifc_storey_index.py#function:_text:30118fe325b5eac2",
-        "signature_hash": "62e9fc6a9590ec31"
-      },
-      {
-        "file": "tests/test_aura_gate_deployment.py",
-        "kind": "function",
-        "line": 14,
-        "end_line": 15,
-        "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
-        "signature_hash": "341a9ef31a78fe7b"
       }
     ],
     "_bounded": [
@@ -27167,32 +27589,6 @@
         "end_line": 138,
         "semantic_id": "aura_coding_arena_3d.py#method:RouteCandidate.to_dict:0bda1154b86d0616",
         "signature_hash": "5c1a69a9659e2089"
-      }
-    ],
-    "RouteDecision": [
-      {
-        "file": "aura_coding_arena_3d.py",
-        "kind": "class",
-        "line": 142,
-        "end_line": 156,
-        "semantic_id": "aura_coding_arena_3d.py#class:RouteDecision:2f024dae202bcbf4",
-        "signature_hash": "2f7b1f26be2473f0"
-      },
-      {
-        "file": "aura_fst_routing.py",
-        "kind": "class",
-        "line": 324,
-        "end_line": 383,
-        "semantic_id": "aura_fst_routing.py#class:RouteDecision:fa9ed31012725405",
-        "signature_hash": "2f7b1f26be2473f0"
-      },
-      {
-        "file": "aura_model_cognome.py",
-        "kind": "class",
-        "line": 297,
-        "end_line": 363,
-        "semantic_id": "aura_model_cognome.py#class:RouteDecision:d26c6cc738041af5",
-        "signature_hash": "2f7b1f26be2473f0"
       }
     ],
     "RouteDecision.to_dict": [
@@ -102003,16 +102399,6 @@
         "signature_hash": "c1abdc93385a12b3"
       }
     ],
-    "Disposition": [
-      {
-        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
-        "kind": "class",
-        "line": 23,
-        "end_line": 26,
-        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:Disposition:b359736450ddaeff",
-        "signature_hash": "9386d60514f2578d"
-      }
-    ],
     "RefutationKey": [
       {
         "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
@@ -102113,16 +102499,6 @@
         "signature_hash": "faa6d593407c8ebc"
       }
     ],
-    "ObligationResult": [
-      {
-        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
-        "kind": "class",
-        "line": 84,
-        "end_line": 88,
-        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:ObligationResult:c4fd280b90617ddc",
-        "signature_hash": "1133db2658b220b6"
-      }
-    ],
     "CandidateClosure": [
       {
         "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
@@ -102131,16 +102507,6 @@
         "end_line": 95,
         "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:CandidateClosure:ec21c3b6b0262b12",
         "signature_hash": "75f70f9769ae3845"
-      }
-    ],
-    "RequiredObligation": [
-      {
-        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
-        "kind": "class",
-        "line": 102,
-        "end_line": 119,
-        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:RequiredObligation:ad8a9ae529492f85",
-        "signature_hash": "b8da5301246a1f55"
       }
     ],
     "RequiredObligation.key": [
@@ -102161,16 +102527,6 @@
         "end_line": 129,
         "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:ContainmentEvaluation:bffc84ba7e7cb1b0",
         "signature_hash": "4c1064ace7e97788"
-      }
-    ],
-    "order_for_falsification": [
-      {
-        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
-        "kind": "function",
-        "line": 132,
-        "end_line": 139,
-        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#function:order_for_falsification:d0fae56ab0fb8577",
-        "signature_hash": "96c9db4d5546996b"
       }
     ],
     "order_for_falsification.score": [
@@ -102211,16 +102567,6 @@
         "end_line": 221,
         "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:indexed_fact_obligation.evaluator:c4eb2c4d7185d979",
         "signature_hash": "aedd80661d4016d8"
-      }
-    ],
-    "PassReceipt": [
-      {
-        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
-        "kind": "class",
-        "line": 236,
-        "end_line": 240,
-        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:PassReceipt:1502c8ae10385792",
-        "signature_hash": "26a87ebf7e7806c8"
       }
     ],
     "verify_generation_coherence": [
@@ -172021,6 +172367,476 @@
         0.229433,
         -0.178682,
         0.263266
+      ]
+    },
+    {
+      "path": "06_refactor/D0_RESULTS.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4452,
+      "lines": 164,
+      "tokens_est": 1113,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5206e03c555e2978",
+      "vector": [
+        0.173999,
+        -0.169199,
+        0.113999,
+        0.260398,
+        -0.202798,
+        0.262798,
+        -0.286798,
+        0.0396,
+        0.0468,
+        -0.063599,
+        -0.212398,
+        0.087599,
+        0.193198,
+        -0.178799,
+        0.0012,
+        0.075599,
+        0.284398,
+        -0.128399,
+        0.159599,
+        0.257998,
+        0.205198,
+        -0.217198,
+        0.214798,
+        0.145199,
+        0.042,
+        -0.217198,
+        -0.145199,
+        -0.0492,
+        0.054,
+        -0.274798,
+        0.065999,
+        -0.176399
+      ]
+    },
+    {
+      "path": "06_refactor/GATE_B_CANDIDATE_MANIFEST.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1982,
+      "lines": 64,
+      "tokens_est": 496,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1bb2fe27c5a338fa",
+      "vector": [
+        0.142647,
+        -0.070681,
+        -0.325132,
+        0.003855,
+        -0.122085,
+        0.255736,
+        -0.006426,
+        -0.209472,
+        -0.322561,
+        0.032128,
+        -0.016706,
+        0.327702,
+        0.111804,
+        -0.263447,
+        -0.05783,
+        -0.30971,
+        0.278868,
+        0.003855,
+        -0.111804,
+        0.199191,
+        0.006426,
+        -0.080962,
+        0.222323,
+        0.05526,
+        0.05526,
+        0.029557,
+        -0.032128,
+        0.042408,
+        -0.253166,
+        -0.18634,
+        -0.196621,
+        0.132366
+      ]
+    },
+    {
+      "path": "06_refactor/HARNESS_D0_MUTANTS.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8907,
+      "lines": 189,
+      "tokens_est": 2227,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "827de7abc6664850",
+      "vector": [
+        0.061834,
+        -0.209182,
+        -0.301274,
+        0.253912,
+        0.319693,
+        0.030259,
+        -0.11972,
+        -0.209182,
+        -0.14077,
+        -0.127614,
+        -0.05394,
+        -0.177607,
+        -0.224969,
+        -0.135508,
+        0.127614,
+        -0.038153,
+        0.090777,
+        0.251281,
+        0.027628,
+        0.138139,
+        0.330217,
+        0.080252,
+        0.093408,
+        0.16182,
+        -0.193394,
+        0.274962,
+        -0.167082,
+        -0.046046,
+        -0.143401,
+        -0.003947,
+        0.209182,
+        0.172345
+      ]
+    },
+    {
+      "path": "06_refactor/STAGE05_SOURCE_BINDINGS.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2328,
+      "lines": 47,
+      "tokens_est": 582,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1bad050eb2c3eaf3",
+      "vector": [
+        -0.005821,
+        -0.082651,
+        0.220015,
+        0.140856,
+        0.261923,
+        0.173451,
+        0.029103,
+        -0.227,
+        -0.077995,
+        -0.033759,
+        0.185092,
+        -0.285205,
+        -0.103605,
+        0.18742,
+        0.180436,
+        -0.052385,
+        0.220015,
+        -0.005821,
+        -0.282877,
+        -0.124559,
+        0.133872,
+        0.171123,
+        -0.098949,
+        -0.089636,
+        0.024446,
+        0.238641,
+        0.178107,
+        0.240969,
+        0.192077,
+        0.292189,
+        0.245625,
+        0.175779
+      ]
+    },
+    {
+      "path": "06_refactor/W4_CYCLE_RECEIPT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 854,
+      "lines": 26,
+      "tokens_est": 214,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f290cf60f5335915",
+      "vector": [
+        -0.047944,
+        -0.162542,
+        -0.157865,
+        -0.052622,
+        0.23972,
+        -0.192946,
+        -0.03625,
+        0.188268,
+        0.118106,
+        0.043267,
+        -0.057299,
+        -0.281818,
+        0.291173,
+        0.281818,
+        0.22101,
+        -0.150848,
+        -0.260769,
+        0.235043,
+        0.071331,
+        0.05496,
+        -0.097058,
+        -0.113429,
+        0.057299,
+        -0.071331,
+        0.176574,
+        -0.263108,
+        -0.291173,
+        -0.171897,
+        -0.040928,
+        0.202301,
+        0.031573,
+        0.23972
+      ]
+    },
+    {
+      "path": "06_refactor/W4_MINIMAL_OPERATIONAL_CONTEXT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3260,
+      "lines": 68,
+      "tokens_est": 815,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "05b77424b081b266",
+      "vector": [
+        0.066407,
+        0.154951,
+        -0.175921,
+        0.040776,
+        -0.292426,
+        0.089708,
+        0.161941,
+        0.085048,
+        -0.024466,
+        -0.1433,
+        0.294756,
+        -0.255144,
+        -0.194562,
+        -0.14563,
+        0.215533,
+        0.206212,
+        0.115339,
+        -0.283105,
+        0.292426,
+        -0.194562,
+        0.101359,
+        -0.231843,
+        -0.243494,
+        -0.071068,
+        -0.101359,
+        0.038446,
+        -0.036116,
+        0.113009,
+        0.199222,
+        -0.101359,
+        -0.199222,
+        -0.173591
+      ]
+    },
+    {
+      "path": "06_refactor/W4_TEST_VECTORS.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2140,
+      "lines": 98,
+      "tokens_est": 535,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3d53701cee05095e",
+      "vector": [
+        -0.025765,
+        0.281174,
+        0.187076,
+        -0.263251,
+        -0.059371,
+        -0.25877,
+        -0.108661,
+        0.218442,
+        0.276693,
+        -0.036967,
+        0.005601,
+        0.019044,
+        0.191557,
+        -0.068333,
+        0.240846,
+        -0.092978,
+        -0.146748,
+        -0.175874,
+        0.238606,
+        -0.196038,
+        -0.039208,
+        -0.054891,
+        -0.283414,
+        -0.070574,
+        0.113142,
+        -0.285655,
+        0.204999,
+        0.014563,
+        -0.030246,
+        -0.243087,
+        0.169152,
+        -0.191557
+      ]
+    },
+    {
+      "path": "06_refactor/W5_CYCLE_RECEIPT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1232,
+      "lines": 33,
+      "tokens_est": 308,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4bf7f33734519781",
+      "vector": [
+        -0.288009,
+        0.232489,
+        0.172343,
+        -0.223236,
+        -0.288009,
+        -0.209356,
+        0.06593,
+        -0.19779,
+        -0.02429,
+        -0.290323,
+        -0.232489,
+        -0.12839,
+        0.049737,
+        -0.112196,
+        -0.202416,
+        0.12145,
+        -0.246369,
+        0.14227,
+        0.06593,
+        -0.126076,
+        0.03123,
+        0.227863,
+        -0.255623,
+        0.01735,
+        -0.130703,
+        -0.015037,
+        -0.01735,
+        -0.260249,
+        -0.151523,
+        -0.232489,
+        -0.049737,
+        0.049737
+      ]
+    },
+    {
+      "path": "06_refactor/W6_CYCLE_RECEIPT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 785,
+      "lines": 29,
+      "tokens_est": 197,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0ebdeb7bb9d2ad08",
+      "vector": [
+        -0.039382,
+        0.07041,
+        0.244645,
+        0.113372,
+        0.120532,
+        0.258965,
+        0.192136,
+        0.206456,
+        -0.034608,
+        -0.065636,
+        0.005967,
+        0.239871,
+        -0.287607,
+        0.189749,
+        0.056089,
+        -0.256579,
+        0.249418,
+        -0.013127,
+        -0.115759,
+        0.00358,
+        0.270899,
+        0.187362,
+        0.108598,
+        -0.21123,
+        -0.149174,
+        -0.216003,
+        -0.230324,
+        -0.089504,
+        -0.223164,
+        -0.208843,
+        0.13724,
+        0.161107
+      ]
+    },
+    {
+      "path": "06_refactor/aura_os_minimal.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13365,
+      "lines": 403,
+      "tokens_est": 3342,
+      "symbol_count": 27,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9650eaaef942ba83",
+      "vector": [
+        -0.149821,
+        0.016647,
+        0.0986,
+        0.208725,
+        0.029452,
+        0.014086,
+        0.008964,
+        -0.318849,
+        -0.052501,
+        -0.201042,
+        -0.321411,
+        0.167748,
+        -0.321411,
+        0.267629,
+        0.047379,
+        0.116527,
+        0.101161,
+        -0.042257,
+        -0.262507,
+        -0.144699,
+        0.162626,
+        0.093478,
+        -0.316288,
+        0.288117,
+        0.183114,
+        -0.083234,
+        0.090917,
+        0.001281,
+        0.27019,
+        -0.019208,
+        0.111405,
+        -0.034574
       ]
     },
     {
@@ -285041,16 +285857,16 @@
     }
   },
   "summary": {
-    "file_count": 1615,
-    "total_bytes": 26213235,
-    "text_tokens_est": 6543718,
+    "file_count": 1625,
+    "total_bytes": 26252540,
+    "text_tokens_est": 6553547,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 234,
       "native_accelerator": 8,
       "operator_script": 9,
-      "python_module": 993,
-      "schema_or_lexicon": 258,
+      "python_module": 995,
+      "schema_or_lexicon": 266,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -285270,6 +286086,16 @@
       ".vscode/settings.json",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
+      "06_refactor/D0_RESULTS.json",
+      "06_refactor/GATE_B_CANDIDATE_MANIFEST.json",
+      "06_refactor/HARNESS_D0_MUTANTS.py",
+      "06_refactor/STAGE05_SOURCE_BINDINGS.json",
+      "06_refactor/W4_CYCLE_RECEIPT.json",
+      "06_refactor/W4_MINIMAL_OPERATIONAL_CONTEXT.json",
+      "06_refactor/W4_TEST_VECTORS.json",
+      "06_refactor/W5_CYCLE_RECEIPT.json",
+      "06_refactor/W6_CYCLE_RECEIPT.json",
+      "06_refactor/aura_os_minimal.py",
       "AMD_HACKATHON_SUBMISSION.md",
       "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
       "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -286743,6 +287569,366 @@
         "end_line": 39,
         "signature_hash": "e1efa1dc497cdd5f",
         "file_digest8": "9e5805ad7e79d82a"
+      },
+      {
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#function:fact_obligation:861a34d0388b8c16",
+        "name": "fact_obligation",
+        "kind": "function",
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "line": 56,
+        "end_line": 63,
+        "signature_hash": "b059073bae8e6236",
+        "file_digest8": "827de7abc6664850"
+      },
+      {
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#function:full_verification:d67a6f571abd7558",
+        "name": "full_verification",
+        "kind": "function",
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "line": 92,
+        "end_line": 95,
+        "signature_hash": "fcb9b52dc0cfa94e",
+        "file_digest8": "827de7abc6664850"
+      },
+      {
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#function:main:98ccb540d22b9c8b",
+        "name": "main",
+        "kind": "function",
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "line": 173,
+        "end_line": 185,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "827de7abc6664850"
+      },
+      {
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#function:route_fixture:3fe2a7781036a457",
+        "name": "route_fixture",
+        "kind": "function",
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "line": 73,
+        "end_line": 89,
+        "signature_hash": "1a122bede2c4b2d7",
+        "file_digest8": "827de7abc6664850"
+      },
+      {
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#function:run_mutants:e02379818ed581f2",
+        "name": "run_mutants",
+        "kind": "function",
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "line": 152,
+        "end_line": 170,
+        "signature_hash": "0b7a7b320e527e62",
+        "file_digest8": "827de7abc6664850"
+      },
+      {
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#function:run_vectors:e654fe1d24197b98",
+        "name": "run_vectors",
+        "kind": "function",
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "line": 98,
+        "end_line": 149,
+        "signature_hash": "fcf5ddc86604d1e5",
+        "file_digest8": "827de7abc6664850"
+      },
+      {
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#function:sentinel:a98874a62fdfb941",
+        "name": "sentinel",
+        "kind": "function",
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "line": 66,
+        "end_line": 70,
+        "signature_hash": "7c60d32c2d7215fe",
+        "file_digest8": "827de7abc6664850"
+      },
+      {
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#method:fact_obligation.evaluator:c6ad30408204cc82",
+        "name": "fact_obligation.evaluator",
+        "kind": "method",
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "line": 57,
+        "end_line": 62,
+        "signature_hash": "8d8c6657360d6302",
+        "file_digest8": "827de7abc6664850"
+      },
+      {
+        "semantic_id": "06_refactor/HARNESS_D0_MUTANTS.py#method:sentinel.evaluator:79d38aa15c2b9b04",
+        "name": "sentinel.evaluator",
+        "kind": "method",
+        "file": "06_refactor/HARNESS_D0_MUTANTS.py",
+        "line": 67,
+        "end_line": 69,
+        "signature_hash": "b5deebcaf2dbf608",
+        "file_digest8": "827de7abc6664850"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:CausalFence:70824b760f021202",
+        "name": "CausalFence",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 68,
+        "end_line": 71,
+        "signature_hash": "b60ed1451ee2ee44",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:ContainmentResult:72c98aa13296ff63",
+        "name": "ContainmentResult",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 109,
+        "end_line": 114,
+        "signature_hash": "cee113b1d8b8e467",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:Disposition:162fd1d86ea18f49",
+        "name": "Disposition",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 43,
+        "end_line": 46,
+        "signature_hash": "9386d60514f2578d",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:EffectDecision:8b90440e57f3c83d",
+        "name": "EffectDecision",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 49,
+        "end_line": 51,
+        "signature_hash": "52b97812a3df1826",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:IngressPacket:ef69324c2f52a469",
+        "name": "IngressPacket",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 55,
+        "end_line": 57,
+        "signature_hash": "e19ca6cd9220cfbe",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:ObligationResult:b72bd3d5b79c858c",
+        "name": "ObligationResult",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 91,
+        "end_line": 93,
+        "signature_hash": "1133db2658b220b6",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:PassReceipt:01747f73e33e3075",
+        "name": "PassReceipt",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 75,
+        "end_line": 81,
+        "signature_hash": "26a87ebf7e7806c8",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:PreflightResult:74446da8e805534b",
+        "name": "PreflightResult",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 136,
+        "end_line": 138,
+        "signature_hash": "9e5dc43ee419eba7",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:RequiredObligation:d8813a01bb08e41c",
+        "name": "RequiredObligation",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 100,
+        "end_line": 105,
+        "signature_hash": "b8da5301246a1f55",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:ResidualBuffer:2105760a08e09396",
+        "name": "ResidualBuffer",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 85,
+        "end_line": 87,
+        "signature_hash": "0a6686287444b7d3",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:ResidualResult:2a1e2c313ef32c81",
+        "name": "ResidualResult",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 142,
+        "end_line": 147,
+        "signature_hash": "c0fbd85e93816239",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:RouteDecision:befd43bae75405de",
+        "name": "RouteDecision",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 118,
+        "end_line": 126,
+        "signature_hash": "2f7b1f26be2473f0",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:TriProposalBundle:f9b58237b4bbe32f",
+        "name": "TriProposalBundle",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 61,
+        "end_line": 64,
+        "signature_hash": "e1efa1dc497cdd5f",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:VerificationEvidence:6ead65002a08a108",
+        "name": "VerificationEvidence",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 130,
+        "end_line": 132,
+        "signature_hash": "0cbf53f569cefe01",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:_canonical_sha256:c6c8b5fe3b16e755",
+        "name": "_canonical_sha256",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 157,
+        "end_line": 161,
+        "signature_hash": "d8cbd26b51f4519e",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:_causal_fence_passes:9288b5d5352abcec",
+        "name": "_causal_fence_passes",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 275,
+        "end_line": 287,
+        "signature_hash": "d758b031ea21f521",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:_proposal_effect_class:4544b97a0aaec747",
+        "name": "_proposal_effect_class",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 220,
+        "end_line": 228,
+        "signature_hash": "e0750a77528db4c3",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:_text:56d55c5f7d4412f9",
+        "name": "_text",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 150,
+        "end_line": 154,
+        "signature_hash": "0cd3c0d3d227cce3",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:evaluate_containment:2baf73be927295b5",
+        "name": "evaluate_containment",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 189,
+        "end_line": 217,
+        "signature_hash": "a9cf097a89716f13",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:idle_state:85a58966f814b917",
+        "name": "idle_state",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 390,
+        "end_line": 392,
+        "signature_hash": "dd8c0cb149eb4ee8",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:order_for_falsification:14f1d754f4bd0677",
+        "name": "order_for_falsification",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 181,
+        "end_line": 186,
+        "signature_hash": "1e0dacf7e3bc7621",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_fence:b9470e049d60774e",
+        "name": "p_fence",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 290,
+        "end_line": 312,
+        "signature_hash": "915ca5efe0f50b21",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_ingress:99a78f0b888c27e8",
+        "name": "p_ingress",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 164,
+        "end_line": 178,
+        "signature_hash": "517e17c5a9f1e8fb",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_residual:56c214861f6a78e0",
+        "name": "p_residual",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 315,
+        "end_line": 387,
+        "signature_hash": "088cff7e50dddd5e",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_router:4c745faedae4b5ce",
+        "name": "p_router",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 231,
+        "end_line": 272,
+        "signature_hash": "00a9845361a17355",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#method:RouteDecision.valid:30101e0f0fff88a1",
+        "name": "RouteDecision.valid",
+        "kind": "method",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 125,
+        "end_line": 126,
+        "signature_hash": "6cca0427257ffe2f",
+        "file_digest8": "9650eaaef942ba83"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#method:order_for_falsification.key:4ef5610066680610",
+        "name": "order_for_falsification.key",
+        "kind": "method",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 183,
+        "end_line": 185,
+        "signature_hash": "f239c5f094573a16",
+        "file_digest8": "9650eaaef942ba83"
       },
       {
         "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#class:FixtureModelCallback:d2986817eb955d7b",
@@ -444785,7 +445971,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "60f0b7e6d13af4f57b58dd4e397947f8",
-    "payload_hash": "46fb766d6b1416cb3766e3259c48009c"
+    "record_fingerprint": "e447540157a5792aefca065cbe44cae8",
+    "payload_hash": "1f78b9d3aa0836e73e89aa782c28855b"
   }
 }
