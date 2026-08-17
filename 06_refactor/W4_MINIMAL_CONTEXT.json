@@ -1,0 +1,30 @@
+{
+  "claim_ceiling": "Stage 06 operational context only; no canonical promotion or authority minting.",
+  "context_budget_bytes": 50000,
+  "document_id": "W4_STAGE06_MINIMAL_CONTEXT",
+  "hard_boundaries": [
+    "UNKNOWN must not become PASS",
+    "CausalFence does not mint authority",
+    "route validity does not authorize effects",
+    "authority_voice requires independent authority verification",
+    "joint dependency completeness must be explicit",
+    "independent falsifier/defeat path must be explicit",
+    "stale generation receipts cannot discharge obligations",
+    "no third-party framework imports in aura_os_minimal.py",
+    "candidate must remain under 500 physical lines"
+  ],
+  "hydration": "L2->L3",
+  "implementation_targets": {
+    "P_FENCE": "R_d < C_d passes only with independently verified timing evidence and fail_closed_flag=true",
+    "P_INGRESS": "fixed origin + causal cone admission; semantic decomposition remains outside minimal kernel",
+    "P_RESIDUAL": "O\\D; discharge only verified exact-generation PASS receipts; missing/unverified stays residual",
+    "P_ROUTER": "stdlib deterministic six-slot compiler; no numpy/VSA dependency; ASP and VOICE are external resolved inputs"
+  },
+  "source_contracts": [
+    "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
+    "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+    "05_staging/ledgers/SUBSTRATE_OS_COUPLING_GRAPH.json"
+  ],
+  "source_generation": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+  "worker": "W4"
+}
