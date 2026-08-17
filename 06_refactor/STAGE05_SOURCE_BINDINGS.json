@@ -1,0 +1,46 @@
+{
+  "document_id": "AURA:STAGE06:SOURCE-BINDINGS:V1",
+  "stage": "06_refactor",
+  "branch": "stage06/gate-b-minimal-os-candidate",
+  "repository_parent": "10047c3e0b42e403303a75d8e3fd389eb70a8ce4",
+  "execution_source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+  "stage05_inputs": {
+    "AURA_OS_BLOAT_INVENTORY.json": {
+      "source": "ChatGPT Library materialized immutable input",
+      "library_file_id": "file_00000000a9b881fda3b44983f6ce1256",
+      "file_sha256": "4b7270ff5945fcd8ddc3b208a596cd4145f16954fad7a7e41df1afef1ed86883",
+      "declared_ledger_sha256": "ff844372576adf0b4a903e688037ce112e4baa28c394a99740f11b7bd01d2854",
+      "present_on_repository_parent": false
+    },
+    "CORE_PRIMITIVE_INTERFACES.py": {
+      "source": "repository parent lineage",
+      "path": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+      "git_blob_sha1": "ed3abfa2916c9a040533eb7f6a085d2206aa4a28",
+      "present_on_repository_parent": true
+    },
+    "SUBSTRATE_OS_COUPLING_GRAPH.json": {
+      "source": "W3 isolated Stage 05 branch plus materialized immutable input",
+      "source_branch": "wo-w3-substrate-os-coupling",
+      "source_commit": "274e9536df421d31488dc21066395b0574c85a1c",
+      "git_blob_sha1": "6482d1b06b6c840251031bf80a44fa4627082c17",
+      "file_sha256": "b3c23cf79d2e9c6f4a3a55e8895e648ee6d71c87fd8757752bf4594e9d8c4f3a",
+      "declared_integrity_sha256": "c0f242a23580441ba4fbb7448598bb5fca2ad5fe3ae347f0341b42fed2a5b384",
+      "present_on_repository_parent": false
+    }
+  },
+  "lineage_resolution": {
+    "earlier_w6_fail_closed_lineage_used": false,
+    "repaired_stage06_package_used": true,
+    "repaired_package_library_artifact": "06_refactor_GATE_B_CANDIDATE.zip",
+    "repaired_package_created_at_utc": "2026-08-16T22:49:29.509089+00:00"
+  },
+  "repository_staging_boundary": {
+    "candidate_files_are_committed_for_gate_b_review": true,
+    "canonical_promotion": false,
+    "merge": false,
+    "deployment": false,
+    "production_zk_verification": false,
+    "merkle_dag_write": false,
+    "note": "The preserved package-internal GATE_B_CANDIDATE_MANIFEST.json predates repository staging; its historical 'No GitHub commit' nonclaim applies to package creation time. This outer binding records the later isolated review commit without changing package bytes."
+  }
+}
