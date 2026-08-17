@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1626
-- **total_bytes**: 26289524
-- **text_tokens_est**: 6562793
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 9, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 266, 'support_file': 49}
+- **file_count**: 1627
+- **total_bytes**: 26294545
+- **text_tokens_est**: 6564049
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 9, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 267, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1626,
+  "repo_file_count": 1627,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -238,6 +238,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "06_refactor/W5_CYCLE_RECEIPT.json",
     "06_refactor/W6_CYCLE_RECEIPT.json",
     "06_refactor/aura_os_minimal.py",
+    "20_REFACTOR_ROOM/W3_CRYPTO_HARDENING_RECEIPT.json",
     "20_REFACTOR_ROOM/crypto_core.c",
     "AMD_HACKATHON_SUBMISSION.md",
     "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
@@ -1766,16 +1767,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1626,
-  "bytes": 26289524,
-  "tokens_est": 6562793,
+  "files": 1627,
+  "bytes": 26294545,
+  "tokens_est": 6564049,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 234,
     "native_accelerator": 9,
     "operator_script": 9,
     "python_module": 995,
-    "schema_or_lexicon": 266,
+    "schema_or_lexicon": 267,
     "support_file": 49
   }
 }
