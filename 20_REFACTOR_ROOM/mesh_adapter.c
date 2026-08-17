@@ -67,21 +67,34 @@ static uint64_t mix64(uint64_t x) {
     return x;
 }
 
+static bool hop_range_valid(uint16_t base, uint16_t span) {
+    uint32_t last;
+    if (base == 0u || span == 0u) {
+        return false;
+    }
+    last = (uint32_t)base + (uint32_t)span - 1u;
+    return last <= UINT16_MAX;
+}
+
 uint16_t aura_udp_hop_port(uint64_t seed, uint64_t ms, uint16_t base, uint16_t span) {
     uint64_t epoch;
     uint64_t mixed;
-    if (span == 0u) {
-        return base;
+    if (!hop_range_valid(base, span)) {
+        return 0u;
     }
     epoch = ms / 300u;
     mixed = mix64(seed ^ epoch);
-    return (uint16_t)(base + (uint16_t)(mixed % span));
+    return (uint16_t)((uint32_t)base + (uint32_t)(mixed % span));
 }
 
 int aura_udp_bind_hop_socket(uint64_t seed, uint64_t ms, uint16_t base, uint16_t span, uint16_t *bound_port) {
     struct sockaddr_in addr;
     uint16_t port = aura_udp_hop_port(seed, ms, base, span);
-    int fd = socket(AF_INET, SOCK_DGRAM, 0);
+    int fd;
+    if (port == 0u) {
+        return -1;
+    }
+    fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd < 0) {
         return -1;
     }
