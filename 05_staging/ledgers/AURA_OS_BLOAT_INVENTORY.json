@@ -1,0 +1,773 @@
+{
+  "document_id": "AURA_OS_BLOAT_INVENTORY",
+  "schema_version": "1.0.0-W1",
+  "worker": {
+    "slot": "W1",
+    "triad": "ALPHA",
+    "stage": "05_STAGING",
+    "hydration_in": "L0",
+    "hydration_out": "L1"
+  },
+  "generated_at": "2026-08-16T17:31:00-05:00",
+  "directive": "Scan all existing AuraOS directories; binary-classify the pinned repository snapshot into CORE_PRIMITIVE vs FAT_BLOAT; generate a deduplicated primitive-candidate Merkle manifest for W2.",
+  "source_snapshot": {
+    "repository": "dallascourchene-commits/AuraOS",
+    "branch": "main",
+    "head_tree_or_commit_sha": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+    "codemap_path": ".aura/CODEMAP.md",
+    "codemap_blob_sha1": "2df4df6aef9b70452a6cb39d9448a08df9e75698",
+    "codemap_scan_file_count": 1614,
+    "codemap_scan_total_bytes": 26211921,
+    "codemap_roles": {
+      "interface_surface": 64,
+      "knowledge_artifact": 234,
+      "native_accelerator": 8,
+      "operator_script": 9,
+      "python_module": 993,
+      "schema_or_lexicon": 257,
+      "support_file": 49
+    },
+    "generated_navigation_surfaces_outside_codemap_self_scan": [
+      {
+        "path": ".aura/CODEMAP.json",
+        "git_blob_sha1": "5aa775d55f1f7d2a6bff9d5007d5e91ea099af6e",
+        "exists_in_pinned_tree": true,
+        "category": "FAT_BLOAT",
+        "reason_codes": [
+          "GENERATED_NAVIGATION_SURFACE",
+          "NOT_EXECUTABLE_PRIMITIVE"
+        ]
+      },
+      {
+        "path": ".aura/CODEMAP.md",
+        "git_blob_sha1": "2df4df6aef9b70452a6cb39d9448a08df9e75698",
+        "exists_in_pinned_tree": true,
+        "category": "FAT_BLOAT",
+        "reason_codes": [
+          "GENERATED_NAVIGATION_SURFACE",
+          "NOT_EXECUTABLE_PRIMITIVE"
+        ]
+      },
+      {
+        "path": ".aura/SOURCE_ANCHORS.md",
+        "git_blob_sha1": "7d70119c5aca14c931f69a957a2ec2a2b212d536",
+        "exists_in_pinned_tree": true,
+        "category": "FAT_BLOAT",
+        "reason_codes": [
+          "GENERATED_PROVENANCE_NAVIGATION",
+          "NOT_EXECUTABLE_PRIMITIVE"
+        ]
+      },
+      {
+        "path": "topology_map.json",
+        "git_blob_sha1": "7bce9ded50417fccbf368a29e7ec84dc846c55d3",
+        "exists_in_pinned_tree": true,
+        "category": "FAT_BLOAT",
+        "reason_codes": [
+          "GENERATED_TOPOLOGY_SURFACE",
+          "NOT_EXECUTABLE_PRIMITIVE"
+        ]
+      }
+    ],
+    "repository_blob_universe": "ALL_BLOBS(68051090c8fb0bd1fe7316fd61227ce0ef0bfc17)",
+    "repository_blob_count": "NOT_EXPANDED_AT_L1",
+    "codemap_generated_exclusion_count_present": 4
+  },
+  "coverage": {
+    "representation": "PINNED_GIT_TREE_COMPLEMENT_SET",
+    "why": "L0->L1 hydration discipline: exact CORE overrides are explicit; every other blob in the pinned Git tree is FAT_BLOAT for this kernel-reduction work order. The Git tree is the exhaustive universe; CODEMAP's 1,614 count is retained only as its text/source scan count, not misreported as total tracked blobs.",
+    "classification_total": "ALL_BLOBS(68051090c8fb0bd1fe7316fd61227ce0ef0bfc17)",
+    "coverage_complete": true,
+    "core_primitive_count": 5,
+    "fat_bloat_count": "REPOSITORY_BLOB_COUNT_MINUS_5",
+    "core_paths_explicit": [
+      "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+      "aura_command_risk_gate.py",
+      "aura_fst_routing.py",
+      "core/aura_task_dispatcher.py",
+      "pvm_memory_guard.py"
+    ],
+    "fat_bloat_paths": {
+      "encoding": "COMPLEMENT",
+      "definition": "ALL_BLOBS(source_snapshot.head_tree_or_commit_sha) MINUS core_paths_explicit",
+      "default_category": "FAT_BLOAT",
+      "expansion_basis": {
+        "git_tree_sha": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+        "codemap_scan_paths": ".aura/CODEMAP.md::Coverage.all_included_paths_sorted",
+        "codemap_scan_file_count": 1614,
+        "generated_files_excluded_by_codemap_generator": [
+          ".aura/CODEMAP.json",
+          ".aura/CODEMAP.md",
+          ".aura/SOURCE_ANCHORS.md",
+          "topology_map.json"
+        ],
+        "note": "CODEMAP excludes generated map files and also skips selected directories/non-text suffixes. Those tracked Git blobs remain classified by the universal complement rule even when absent from CODEMAP."
+      }
+    },
+    "repository_blob_universe": "ALL_BLOBS(68051090c8fb0bd1fe7316fd61227ce0ef0bfc17)",
+    "repository_blob_count": "DERIVED_FROM_PINNED_TREE_AT_EXPANSION",
+    "codemap_scanned_source_count": 1614,
+    "generated_self_excluded_files_confirmed_present": [
+      ".aura/CODEMAP.json",
+      ".aura/CODEMAP.md",
+      ".aura/SOURCE_ANCHORS.md",
+      "topology_map.json"
+    ]
+  },
+  "classification_contract": {
+    "categories": [
+      "CORE_PRIMITIVE",
+      "FAT_BLOAT"
+    ],
+    "function": "category(path)=CORE_PRIMITIVE iff path is in core_primitive_overrides; otherwise FAT_BLOAT for this pinned snapshot.",
+    "core_definition": "File is primarily and directly an implementation/interface of P_INGRESS, P_ROUTER, P_FENCE, or P_RESIDUAL, with no larger orchestration/state/logging role required to explain its existence.",
+    "fat_bloat_definition": "Forced binary complement for this work order: wrappers, integration surfaces, loggers/ledgers, duplicated/versioned utilities, speculative/secondary state managers, domain applications, tests/docs/config/assets, or any code not directly one of the four primitives.",
+    "important_non_deletion_rule": "FAT_BLOAT is a kernel-reduction classification, NOT a deletion authorization. Tests, docs, schemas, evidence and support assets may remain required evidence even though they are not kernel primitives.",
+    "reason_inference_priority": [
+      {
+        "match": [
+          "logger",
+          "telemetry",
+          "chronicle",
+          "recorded",
+          "audit_trail"
+        ],
+        "reason": "LOGGING_OR_TRANSCRIPT_ACCUMULATION"
+      },
+      {
+        "match": [
+          "bridge",
+          "adapter",
+          "server",
+          "cli",
+          "gateway",
+          "connector"
+        ],
+        "reason": "WRAPPER_OR_INTEGRATION_SURFACE"
+      },
+      {
+        "match": [
+          "registry",
+          "store",
+          "state",
+          "ledger",
+          "manager"
+        ],
+        "reason": "SECONDARY_OR_SPECULATIVE_STATE"
+      },
+      {
+        "match": [
+          "benchmark",
+          "demo",
+          "showcase",
+          "presentation",
+          "research",
+          "paper"
+        ],
+        "reason": "EXPERIMENT_OR_PRESENTATION_SURFACE"
+      },
+      {
+        "match": [
+          "legacy",
+          "_v2",
+          "_v3",
+          "part1",
+          "part2",
+          "part3",
+          "part4",
+          "part5"
+        ],
+        "reason": "VERSIONED_OR_DUPLICATE_SURFACE"
+      },
+      {
+        "match": [
+          "test_",
+          "tests/",
+          "docs/",
+          "schemas/",
+          ".github/",
+          "demo_assets/",
+          "third_party/"
+        ],
+        "reason": "SUPPORT_EVIDENCE_OUTSIDE_KERNEL"
+      },
+      {
+        "match": [
+          "*"
+        ],
+        "reason": "OUTSIDE_FOUR_PRIMITIVE_KERNEL"
+      }
+    ],
+    "universe_rule": "For the exact pinned Git tree, CORE_PRIMITIVE is the five-path explicit override set; every other tracked blob is FAT_BLOAT under this work order's forced binary kernel classification.",
+    "counting_rule": "Do not infer repository blob count from CODEMAP file_count; CODEMAP intentionally excludes generated maps, selected directories, and non-text suffixes."
+  },
+  "core_primitive_overrides": [
+    {
+      "path": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+      "git_blob_sha1": "ed3abfa2916c9a040533eb7f6a085d2206aa4a28",
+      "category": "CORE_PRIMITIVE",
+      "primitive_maps": [
+        "P_INGRESS",
+        "P_ROUTER",
+        "P_FENCE",
+        "P_RESIDUAL"
+      ],
+      "purity": "INTERFACE_ONLY",
+      "symbols": [
+        "IngressPacket",
+        "CausalCone",
+        "TriProposalBundle",
+        "CausalFence",
+        "ResidualBuffer"
+      ],
+      "reason": "Current staged L1 structural contracts explicitly define ingress, causal-cone/proposal routing surfaces, causal fence, and residual buffer; module declares that it performs no routing/hydration/adjudication/persistence.",
+      "execution_gap": true
+    },
+    {
+      "path": "core/aura_task_dispatcher.py",
+      "git_blob_sha1": "68bb13f98031edfe374b3c74553cc3cdedfa7fa7",
+      "category": "CORE_PRIMITIVE",
+      "primitive_maps": [
+        "P_INGRESS"
+      ],
+      "purity": "EXECUTABLE_TRANSPORT_PRIMITIVE",
+      "symbols": [
+        "TaskDispatcher.enqueue",
+        "TaskDispatcher.claim",
+        "TaskDispatcher.finish"
+      ],
+      "reason": "Small stdlib-only queue/lease boundary that directly admits tasks and coordinates a bounded worker claim without importing the larger Aura orchestration surface.",
+      "limitations": [
+        "Transport ingress, not semantic task decomposition.",
+        "UUID/time are operational identities rather than content-addressed semantic IDs."
+      ]
+    },
+    {
+      "path": "aura_fst_routing.py",
+      "git_blob_sha1": "d93febf8f139807440fda23310c2905a0eb7cd63",
+      "category": "CORE_PRIMITIVE",
+      "primitive_maps": [
+        "P_ROUTER"
+      ],
+      "purity": "EXECUTABLE_ROUTING_CORE",
+      "symbols": [
+        "RoutingFrame",
+        "RouteDecision",
+        "AuraFSTRouter",
+        "route",
+        "validate_slot_sequence",
+        "find_optimal_path"
+      ],
+      "reason": "Primary file is explicitly the Aura FST-Lexicon Routing Core and implements formal states/transitions, six-slot constraints, route symbols and deterministic route decisions.",
+      "limitations": [
+        "Carries VSA/numpy weighting that W2 may split from the minimum deterministic routing kernel."
+      ]
+    },
+    {
+      "path": "aura_command_risk_gate.py",
+      "git_blob_sha1": "a1cf98ff362748821b873d2edba4f33d6da7c14d",
+      "category": "CORE_PRIMITIVE",
+      "primitive_maps": [
+        "P_FENCE"
+      ],
+      "purity": "EXECUTABLE_SPECIALIZED_FENCE",
+      "symbols": [
+        "classify_command_risk",
+        "classify_script_risk",
+        "command_risk_packet",
+        "require_human_approval_for_risky_commands"
+      ],
+      "reason": "Small, direct fail-closed command/script effect classifier with explicit blocked/human-approval outputs.",
+      "limitations": [
+        "Specialized command-risk fence; it does not implement the causal R_d < C_d timing fence."
+      ]
+    },
+    {
+      "path": "pvm_memory_guard.py",
+      "git_blob_sha1": "9c4b1c32322fe9d9cf8d8ba9bc03c1e560e274b1",
+      "category": "CORE_PRIMITIVE",
+      "primitive_maps": [
+        "P_FENCE"
+      ],
+      "purity": "EXECUTABLE_RESOURCE_FENCE",
+      "symbols": [
+        "sample_rss_mb",
+        "assert_zero_copy",
+        "MemoryBudget",
+        "MemoryBudgetExceeded"
+      ],
+      "reason": "Direct resource-bound fence for the 4GB PVM ceiling and zero-copy constraints.",
+      "limitations": [
+        "Resource fence only; not the causal consequence fence.",
+        "Contains monitoring machinery W2 should review separately from the minimal predicate."
+      ]
+    }
+  ],
+  "fat_bloat_high_value_extraction_candidates": [
+    {
+      "path": "aura_intent_ingestion.py",
+      "git_blob_sha1": "84bd861cb36b12c07708d3de1b91cd7beccd1399",
+      "file_category": "FAT_BLOAT",
+      "candidate_maps": [
+        "P_INGRESS",
+        "P_ROUTER"
+      ],
+      "extractable_symbols": [
+        "_extract_keywords",
+        "_match_tags",
+        "_extract_polysynthetic_packet",
+        "_build_routing_frame",
+        "_route_decision"
+      ],
+      "reason_codes": [
+        "MULTI_OWNER_MONOLITH",
+        "INGRESS_ROUTER_CONTEXT_MEMORY_HANDOFF_MIXED"
+      ],
+      "note": "Docstring binds ingestion to LEXC/FST routing, affordance lookup, CODEMAP localization, DREAM reranking, context compression, ST3GG, grounding, JSpace, QDKT, and handoff; extract minimal parsing/frame construction rather than retain as one primitive."
+    },
+    {
+      "path": "aura_router.py",
+      "git_blob_sha1": "e6be94dbaeb9a2654bf78dda8478089d53f84452",
+      "file_category": "FAT_BLOAT",
+      "candidate_maps": [
+        "P_ROUTER"
+      ],
+      "extractable_symbols": [
+        "AutoRouter.best_candidates",
+        "AutoRouter.route",
+        "AutoRouter.route_task"
+      ],
+      "reason_codes": [
+        "ROUTER_PLUS_CALIBRATION_LEDGER",
+        "EXECUTION_LOGGER",
+        "MODEL_EGRESS_WRAPPER"
+      ],
+      "note": "Contains useful selection logic but also calibration benchmarking, append-only execution logs, provider egress, cost/savings accounting and retry orchestration."
+    },
+    {
+      "path": "aura_context_crusher.py",
+      "git_blob_sha1": "ece6fd1ec97d3c9e11124737154aec2c83784670",
+      "file_category": "FAT_BLOAT",
+      "candidate_maps": [
+        "P_RESIDUAL"
+      ],
+      "extractable_symbols": [
+        "AuraContextCrusher.compress_context_stream",
+        "compute_cache_prefix_report"
+      ],
+      "reason_codes": [
+        "COMPRESSION_NOT_RESIDUAL_PROOF",
+        "LEDGER_RECALL_WASM_SANITIZER_MIXED"
+      ],
+      "note": "Useful compression/hash/retrieval machinery, but no O\\D residual-obligation subtraction or validity-domain discharge proof. It cannot stand in as P_RESIDUAL without W2/W7 proof."
+    },
+    {
+      "path": "aura_workflow_gates.py",
+      "git_blob_sha1": "0e138b814a5e21f8345cbcde73859e220240203f",
+      "file_category": "FAT_BLOAT",
+      "candidate_maps": [
+        "P_FENCE"
+      ],
+      "extractable_symbols": [
+        "can_transition",
+        "evaluate_gate"
+      ],
+      "reason_codes": [
+        "18_STATE_MANAGER",
+        "TELEMETRY_PLACEHOLDERS",
+        "POLICY_ORCHESTRATION"
+      ],
+      "note": "Contains fence predicates but couples them to an 18-state workflow and token-economy state; candidate is the minimal transition/evidence predicate only."
+    },
+    {
+      "path": "aura_gate.py",
+      "git_blob_sha1": "8a3b908e393bd5d90851f113f2488ac604919269",
+      "file_category": "FAT_BLOAT",
+      "candidate_maps": [
+        "P_FENCE"
+      ],
+      "extractable_symbols": [
+        "_deny",
+        "_canonical_json",
+        "gate_purpose_digest"
+      ],
+      "reason_codes": [
+        "AUTHORITY_WRAPPER",
+        "OIDC_FORGE_EGRESS_LEASE_PERSISTENCE_MIXED",
+        "SQLITE_STATE"
+      ],
+      "note": "Strong authority logic exists, but the file combines OIDC identity, Forge policy, egress, lease lifecycle and persistent state. Extract predicates; do not treat the monolith as the primitive."
+    },
+    {
+      "path": "symbolic_shield.py",
+      "git_blob_sha1": "7447ce295e65e7b9d80b77f51fbe6fdf6a822f9d",
+      "file_category": "FAT_BLOAT",
+      "candidate_maps": [
+        "P_FENCE"
+      ],
+      "extractable_symbols": [
+        "check_syntax",
+        "check_loop_decay",
+        "check_import_safety",
+        "check_memory_safety",
+        "check_banned_calls",
+        "verify_structural_truth"
+      ],
+      "reason_codes": [
+        "STATIC_FENCE_PLUS_VSA_TOPOLOGY",
+        "DEPENDENCY_BLEED"
+      ],
+      "note": "Static AST checks are useful fence atoms; VSA topology comparison and numpy dependency should not be required by the minimal fence."
+    },
+    {
+      "path": "aura_unified_memory_continuity.py",
+      "git_blob_sha1": "fa12a0333d3cabb3168515951cf9cdbd5383ed39",
+      "file_category": "FAT_BLOAT",
+      "candidate_maps": [
+        "P_RESIDUAL"
+      ],
+      "extractable_symbols": [],
+      "reason_codes": [
+        "MULTI_OWNER_CONTINUITY_ADAPTER",
+        "SPECULATIVE_STATE_SURFACE"
+      ],
+      "note": "The module explicitly says it is an adapter over many owners and not a memory store/router/verifier/policy engine. It is not a direct residual reducer."
+    }
+  ],
+  "primitive_gap_analysis": {
+    "P_INGRESS": {
+      "clean_executable_present": true,
+      "canonical_candidate": "core/aura_task_dispatcher.py",
+      "scope_warning": "Clean candidate is transport/lease ingress. Semantic intent decomposition remains entangled in aura_intent_ingestion.py.",
+      "w2_action": "Separate semantic normalize/decompose from routing/CODEMAP/context/handoff before calling P_INGRESS complete."
+    },
+    "P_ROUTER": {
+      "clean_executable_present": true,
+      "canonical_candidate": "aura_fst_routing.py",
+      "scope_warning": "VSA/numpy weighting is coupled to the routing core and may not belong in the minimum primitive.",
+      "w2_action": "Type the deterministic state/transition/six-slot kernel independently from optional weighting/adapters."
+    },
+    "P_FENCE": {
+      "clean_executable_present": true,
+      "canonical_candidates": [
+        "aura_command_risk_gate.py",
+        "pvm_memory_guard.py"
+      ],
+      "scope_warning": "These are specialized effect/resource fences. No clean executable implementation of staged CausalFence(r_d,c_d,fail_closed_flag) was established by W1.",
+      "w2_action": "Define one minimal fail-closed fence interface with pluggable command/resource/causal predicates; do not retain multiple authority state machines as independent fence owners."
+    },
+    "P_RESIDUAL": {
+      "clean_executable_present": false,
+      "interface_candidate": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py::ResidualBuffer",
+      "false_friend": "aura_context_crusher.py",
+      "scope_warning": "Context compression is not equivalent to R_t = O \\ D_t. W1 found no source-grounded executable residual subtraction with validity-domain receipt checks in the pinned repository scan.",
+      "w2_action": "Treat executable P_RESIDUAL as an implementation gap. Do not infer discharge from compression or memory-continuity adapters."
+    }
+  },
+  "deduplicated_merkle_manifest": {
+    "version": "AURA_OS_PRIMITIVE_MERKLE_V1",
+    "source_snapshot_sha": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+    "dedupe_key": "git_blob_sha1",
+    "leaf_hash": "SHA256(canonical_json(candidate_descriptor))",
+    "parent_hash": "SHA256(raw32(left) || raw32(right))",
+    "ordering": "leaf hashes sorted lexicographically at level 0; odd node duplicated",
+    "candidate_blob_count_before_dedupe": 12,
+    "candidate_blob_count_after_dedupe": 12,
+    "leaves": [
+      {
+        "leaf_sha256": "5cd06f41f1301f36a26dea4b885db33aa7b32437447c009ce4809db88e3e9d12",
+        "descriptor": {
+          "domain": "AURA_OS_PRIMITIVE_CANDIDATE_V1",
+          "source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+          "git_blob_sha1": "0e138b814a5e21f8345cbcde73859e220240203f",
+          "paths": [
+            "aura_workflow_gates.py"
+          ],
+          "primitive_maps": [
+            "P_FENCE"
+          ],
+          "candidate_statuses": [
+            "EXTRACT_FROM_FAT_BLOAT"
+          ],
+          "symbols": [
+            "can_transition",
+            "evaluate_gate"
+          ]
+        }
+      },
+      {
+        "leaf_sha256": "346fe24fa68534ddd0fd160b09bff805154322c5f2e6eb6d549ced8370d7410b",
+        "descriptor": {
+          "domain": "AURA_OS_PRIMITIVE_CANDIDATE_V1",
+          "source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+          "git_blob_sha1": "68bb13f98031edfe374b3c74553cc3cdedfa7fa7",
+          "paths": [
+            "core/aura_task_dispatcher.py"
+          ],
+          "primitive_maps": [
+            "P_INGRESS"
+          ],
+          "candidate_statuses": [
+            "CORE_FILE"
+          ],
+          "symbols": [
+            "TaskDispatcher.claim",
+            "TaskDispatcher.enqueue",
+            "TaskDispatcher.finish"
+          ]
+        }
+      },
+      {
+        "leaf_sha256": "24cf633f367004e5120469ffbd54c54ed3a1b6f2ebb60a25df73f648f0873538",
+        "descriptor": {
+          "domain": "AURA_OS_PRIMITIVE_CANDIDATE_V1",
+          "source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+          "git_blob_sha1": "7447ce295e65e7b9d80b77f51fbe6fdf6a822f9d",
+          "paths": [
+            "symbolic_shield.py"
+          ],
+          "primitive_maps": [
+            "P_FENCE"
+          ],
+          "candidate_statuses": [
+            "EXTRACT_FROM_FAT_BLOAT"
+          ],
+          "symbols": [
+            "check_banned_calls",
+            "check_import_safety",
+            "check_loop_decay",
+            "check_memory_safety",
+            "check_syntax",
+            "verify_structural_truth"
+          ]
+        }
+      },
+      {
+        "leaf_sha256": "3b4b4fcf7bf3e2abd02ec4cace5f3fed7770546f80b8537e9121fae0cae76d6c",
+        "descriptor": {
+          "domain": "AURA_OS_PRIMITIVE_CANDIDATE_V1",
+          "source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+          "git_blob_sha1": "84bd861cb36b12c07708d3de1b91cd7beccd1399",
+          "paths": [
+            "aura_intent_ingestion.py"
+          ],
+          "primitive_maps": [
+            "P_INGRESS",
+            "P_ROUTER"
+          ],
+          "candidate_statuses": [
+            "EXTRACT_FROM_FAT_BLOAT"
+          ],
+          "symbols": [
+            "_build_routing_frame",
+            "_extract_keywords",
+            "_extract_polysynthetic_packet",
+            "_match_tags",
+            "_route_decision"
+          ]
+        }
+      },
+      {
+        "leaf_sha256": "e0406857f90d8d93476f5c8af4ab50adbaf2044a250e590ef9b7bf02788c9865",
+        "descriptor": {
+          "domain": "AURA_OS_PRIMITIVE_CANDIDATE_V1",
+          "source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+          "git_blob_sha1": "8a3b908e393bd5d90851f113f2488ac604919269",
+          "paths": [
+            "aura_gate.py"
+          ],
+          "primitive_maps": [
+            "P_FENCE"
+          ],
+          "candidate_statuses": [
+            "EXTRACT_FROM_FAT_BLOAT"
+          ],
+          "symbols": [
+            "_canonical_json",
+            "_deny",
+            "gate_purpose_digest"
+          ]
+        }
+      },
+      {
+        "leaf_sha256": "8e074cbde0c34c1b7893a5c57cdce3c73f22a0b34b5fffd5ebafb7a3e91726ba",
+        "descriptor": {
+          "domain": "AURA_OS_PRIMITIVE_CANDIDATE_V1",
+          "source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+          "git_blob_sha1": "9c4b1c32322fe9d9cf8d8ba9bc03c1e560e274b1",
+          "paths": [
+            "pvm_memory_guard.py"
+          ],
+          "primitive_maps": [
+            "P_FENCE"
+          ],
+          "candidate_statuses": [
+            "CORE_FILE"
+          ],
+          "symbols": [
+            "MemoryBudget",
+            "MemoryBudgetExceeded",
+            "assert_zero_copy",
+            "sample_rss_mb"
+          ]
+        }
+      },
+      {
+        "leaf_sha256": "0b17d6534da5c82ef5c2c713c955691b29522e8a3f356d7178ca173af4ad142d",
+        "descriptor": {
+          "domain": "AURA_OS_PRIMITIVE_CANDIDATE_V1",
+          "source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+          "git_blob_sha1": "a1cf98ff362748821b873d2edba4f33d6da7c14d",
+          "paths": [
+            "aura_command_risk_gate.py"
+          ],
+          "primitive_maps": [
+            "P_FENCE"
+          ],
+          "candidate_statuses": [
+            "CORE_FILE"
+          ],
+          "symbols": [
+            "classify_command_risk",
+            "classify_script_risk",
+            "command_risk_packet",
+            "require_human_approval_for_risky_commands"
+          ]
+        }
+      },
+      {
+        "leaf_sha256": "6fbfc8a987825eacb76880ba8db4329019f782f5fc75d7fdaa5b580d69ddeca5",
+        "descriptor": {
+          "domain": "AURA_OS_PRIMITIVE_CANDIDATE_V1",
+          "source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+          "git_blob_sha1": "d93febf8f139807440fda23310c2905a0eb7cd63",
+          "paths": [
+            "aura_fst_routing.py"
+          ],
+          "primitive_maps": [
+            "P_ROUTER"
+          ],
+          "candidate_statuses": [
+            "CORE_FILE"
+          ],
+          "symbols": [
+            "AuraFSTRouter",
+            "RouteDecision",
+            "RoutingFrame",
+            "find_optimal_path",
+            "route",
+            "validate_slot_sequence"
+          ]
+        }
+      },
+      {
+        "leaf_sha256": "8624988456c18f31c2847aeda25db9895cb2a8826f98f40b070f84f9ca293d7b",
+        "descriptor": {
+          "domain": "AURA_OS_PRIMITIVE_CANDIDATE_V1",
+          "source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+          "git_blob_sha1": "e6be94dbaeb9a2654bf78dda8478089d53f84452",
+          "paths": [
+            "aura_router.py"
+          ],
+          "primitive_maps": [
+            "P_ROUTER"
+          ],
+          "candidate_statuses": [
+            "EXTRACT_FROM_FAT_BLOAT"
+          ],
+          "symbols": [
+            "AutoRouter.best_candidates",
+            "AutoRouter.route",
+            "AutoRouter.route_task"
+          ]
+        }
+      },
+      {
+        "leaf_sha256": "214381a722e3aeb86e25d24eed4a1535ed903e209a23f064ce107384e02ff2fc",
+        "descriptor": {
+          "domain": "AURA_OS_PRIMITIVE_CANDIDATE_V1",
+          "source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+          "git_blob_sha1": "ece6fd1ec97d3c9e11124737154aec2c83784670",
+          "paths": [
+            "aura_context_crusher.py"
+          ],
+          "primitive_maps": [
+            "P_RESIDUAL"
+          ],
+          "candidate_statuses": [
+            "EXTRACT_FROM_FAT_BLOAT"
+          ],
+          "symbols": [
+            "AuraContextCrusher.compress_context_stream",
+            "compute_cache_prefix_report"
+          ]
+        }
+      },
+      {
+        "leaf_sha256": "07245e69b119d2899b400c698430bd116721b31a8b234aebad0b1fe37eea9ad7",
+        "descriptor": {
+          "domain": "AURA_OS_PRIMITIVE_CANDIDATE_V1",
+          "source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+          "git_blob_sha1": "ed3abfa2916c9a040533eb7f6a085d2206aa4a28",
+          "paths": [
+            "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py"
+          ],
+          "primitive_maps": [
+            "P_FENCE",
+            "P_INGRESS",
+            "P_RESIDUAL",
+            "P_ROUTER"
+          ],
+          "candidate_statuses": [
+            "CORE_FILE"
+          ],
+          "symbols": [
+            "CausalCone",
+            "CausalFence",
+            "IngressPacket",
+            "ResidualBuffer",
+            "TriProposalBundle"
+          ]
+        }
+      },
+      {
+        "leaf_sha256": "b366553b10417c878408921155432bef56a38db7cef3597e8ceec97ea3e0bc1f",
+        "descriptor": {
+          "domain": "AURA_OS_PRIMITIVE_CANDIDATE_V1",
+          "source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+          "git_blob_sha1": "fa12a0333d3cabb3168515951cf9cdbd5383ed39",
+          "paths": [
+            "aura_unified_memory_continuity.py"
+          ],
+          "primitive_maps": [
+            "P_RESIDUAL"
+          ],
+          "candidate_statuses": [
+            "EXTRACT_FROM_FAT_BLOAT"
+          ],
+          "symbols": []
+        }
+      }
+    ],
+    "merkle_root_sha256": "a7d9214cf7c0b21fd7afa64f771bd32964424f864caf0fd73c10d919f0ab6aec"
+  },
+  "w2_handoff": {
+    "status": "READY",
+    "required_input": "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
+    "instructions": [
+      "Expand FAT_BLOAT complement only when W2 needs exact path-level typing.",
+      "Type primitive interfaces around the four primitive families; do not preserve wrapper boundaries as primitive boundaries.",
+      "Separate interface-only candidates from executable candidates.",
+      "Treat P_RESIDUAL and exact causal P_FENCE as unresolved implementation gaps until executable semantics and tests exist.",
+      "Preserve tests/evidence/docs needed to validate extracted primitives even though their work-order category is FAT_BLOAT.",
+      "Use Git blob identities/source snapshot before extracting or deduplicating code; same filename is not proof of same content."
+    ]
+  },
+  "w1_limits": [
+    "W1 did not delete, refactor, or rewrite any repository source.",
+    "W1 did not promote any candidate to canonical runtime ownership.",
+    "W1 classification is L1 structural triage, not W2 AST proof or W7 deletion authorization.",
+    "Git CODEMAP is a navigation surface; exact source/tests remain authority."
+  ],
+  "ledger_sha256": "ff844372576adf0b4a903e688037ce112e4baa28c394a99740f11b7bd01d2854"
+}
