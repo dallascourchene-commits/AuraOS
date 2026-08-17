@@ -1,0 +1,163 @@
+{
+  "d0_mutants": {
+    "details": {
+      "JOINT_MARGINAL_MUTANT": {
+        "disposition": "FAIL",
+        "evaluated": [
+          "D0::JOINT_MARGINAL_MUTANT"
+        ],
+        "first_fail": "D0::JOINT_MARGINAL_MUTANT",
+        "reason": "decision-changing joint interaction was certified from marginals only",
+        "rejected": true,
+        "short_circuit": true
+      },
+      "OMISSION_MUTANT": {
+        "disposition": "FAIL",
+        "evaluated": [
+          "D0::OMISSION_MUTANT"
+        ],
+        "first_fail": "D0::OMISSION_MUTANT",
+        "reason": "known required evidence was omitted",
+        "rejected": true,
+        "short_circuit": true
+      },
+      "RECURSIVE_SAME_BLINDSPOT": {
+        "disposition": "FAIL",
+        "evaluated": [
+          "D0::RECURSIVE_SAME_BLINDSPOT"
+        ],
+        "first_fail": "D0::RECURSIVE_SAME_BLINDSPOT",
+        "reason": "recursive checker shares the same blind spot",
+        "rejected": true,
+        "short_circuit": true
+      },
+      "SELF_CERTIFIED_KNOWN_ONLY": {
+        "disposition": "FAIL",
+        "evaluated": [
+          "D0::SELF_CERTIFIED_KNOWN_ONLY"
+        ],
+        "first_fail": "D0::SELF_CERTIFIED_KNOWN_ONLY",
+        "reason": "known-only view self-certified completeness",
+        "rejected": true,
+        "short_circuit": true
+      },
+      "STALE_GENERATION_MUTANT": {
+        "disposition": "FAIL",
+        "evaluated": [
+          "D0::STALE_GENERATION_MUTANT"
+        ],
+        "first_fail": "D0::STALE_GENERATION_MUTANT",
+        "reason": "closure evidence is stale relative to required generation",
+        "rejected": true,
+        "short_circuit": true
+      }
+    },
+    "rejected": 5,
+    "rejection_rate": 1.0,
+    "total": 5
+  },
+  "document_id": "AURA:STAGE06:W6:D0-RESULTS:V1",
+  "gate_b_candidate": true,
+  "vector_tests": {
+    "details": {
+      "FENCE_AUTHORITY_UNKNOWN": {
+        "expected": "BLOCK",
+        "observed": "BLOCK",
+        "pass": true,
+        "reason": "EFFECT_AUTHORITY_UNKNOWN_OR_DENIED"
+      },
+      "FENCE_FAIL_CLOSED_DISABLED": {
+        "expected": "BLOCK",
+        "observed": "BLOCK",
+        "pass": true,
+        "reason": "FAIL_CLOSED_DISABLED"
+      },
+      "FENCE_PROOF_UNKNOWN": {
+        "expected": "BLOCK",
+        "observed": "BLOCK",
+        "pass": true,
+        "reason": "ZK_VERIFICATION_UNKNOWN"
+      },
+      "FENCE_RD_EQ_CD": {
+        "expected": "BLOCK",
+        "observed": "BLOCK",
+        "pass": true,
+        "reason": "CAUSAL_FENCE_VIOLATION"
+      },
+      "FENCE_VALID": {
+        "expected": "ADMIT",
+        "observed": "ADMIT",
+        "pass": true,
+        "reason": "EFFECT_ADMITTED"
+      },
+      "IDLE_ZERO_TASK_STATE": {
+        "expected": "PASS",
+        "observed": "PASS",
+        "pass": true,
+        "reason": ""
+      },
+      "INGRESS_EMPTY": {
+        "expected": "REJECT",
+        "observed": "REJECT",
+        "pass": true,
+        "reason": ""
+      },
+      "INGRESS_VALID": {
+        "expected": "PASS",
+        "observed": "PASS",
+        "pass": true,
+        "reason": ""
+      },
+      "RESIDUAL_CURRENT_VERIFIED_PASS": {
+        "expected": "PASS",
+        "observed": "PASS",
+        "pass": true,
+        "reason": "()"
+      },
+      "RESIDUAL_STALE_GENERATION": {
+        "expected": "FAIL",
+        "observed": "FAIL",
+        "pass": true,
+        "reason": "(('r1', 'GENERATION_MISMATCH'),)"
+      },
+      "RESIDUAL_UNVERIFIED_PASS": {
+        "expected": "UNKNOWN",
+        "observed": "UNKNOWN",
+        "pass": true,
+        "reason": "(('r1', 'UNVERIFIED_PASS'),)"
+      },
+      "ROUTER_DIVERGENT_TRIAD": {
+        "expected": "BLOCK",
+        "observed": "BLOCK",
+        "pass": true,
+        "reason": "TRI_PROPOSAL_INCOMPLETE_OR_DIVERGENT"
+      },
+      "ROUTER_MISSING_ASP": {
+        "expected": "BLOCK",
+        "observed": "BLOCK",
+        "pass": true,
+        "reason": "ASP_UNRESOLVED"
+      },
+      "ROUTER_MISSING_VOICE": {
+        "expected": "BLOCK",
+        "observed": "BLOCK",
+        "pass": true,
+        "reason": "VOICE_AUTHORITY_UNRESOLVED"
+      },
+      "ROUTER_SUBJECT_OUTSIDE_CONE": {
+        "expected": "BLOCK",
+        "observed": "BLOCK",
+        "pass": true,
+        "reason": "SUBJ_NOT_LIVE_IN_CONE"
+      },
+      "ROUTER_VALID": {
+        "expected": "ADMIT",
+        "observed": "ADMIT",
+        "pass": true,
+        "reason": "FST_VALID_ROUTE"
+      }
+    },
+    "passed": 16,
+    "total": 16
+  }
+}
