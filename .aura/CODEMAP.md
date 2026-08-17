@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1625
-- **total_bytes**: 26274794
-- **text_tokens_est**: 6559110
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 266, 'support_file': 49}
+- **file_count**: 1626
+- **total_bytes**: 26289524
+- **text_tokens_est**: 6562793
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 9, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 266, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1625,
+  "repo_file_count": 1626,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -238,6 +238,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "06_refactor/W5_CYCLE_RECEIPT.json",
     "06_refactor/W6_CYCLE_RECEIPT.json",
     "06_refactor/aura_os_minimal.py",
+    "20_REFACTOR_ROOM/crypto_core.c",
     "AMD_HACKATHON_SUBMISSION.md",
     "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
     "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -1765,13 +1766,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1625,
-  "bytes": 26274794,
-  "tokens_est": 6559110,
+  "files": 1626,
+  "bytes": 26289524,
+  "tokens_est": 6562793,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 234,
-    "native_accelerator": 8,
+    "native_accelerator": 9,
     "operator_script": 9,
     "python_module": 995,
     "schema_or_lexicon": 266,
@@ -2074,6 +2075,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
     "06_refactor/D0_MUTANT_HARNESS.py",
     "06_refactor/aura_os_minimal.py",
+    "20_REFACTOR_ROOM/crypto_core.c",
     "_aura_architect_consolidation_benchmark_legacy.py",
     "_aura_architect_consolidation_benchmark_refined_legacy.py",
     "_aura_architect_consolidation_benchmark_v2_legacy.py",
@@ -2468,8 +2470,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_plugin_registry.py",
     "aura_polysynthetic_intent.py",
     "aura_positional_parser.py",
-    "aura_pre_egress_interceptor.py",
-    "aura_pricing.py"
+    "aura_pre_egress_interceptor.py"
   ]
 }
 ```
