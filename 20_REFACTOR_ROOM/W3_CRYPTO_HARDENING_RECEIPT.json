@@ -1,0 +1,98 @@
+{
+  "document_id": "AD:WO:SEC:RECURSIVE-10STAGE-CRYPTO-BENCH:20260816:006:W3",
+  "dispatch_id": "DISP-AURA-20260816-006",
+  "work_order_id": "WO-AURA-PQ-AMTD-006",
+  "worker": "W-3",
+  "domain": "CRYPTO_AND_HARDENING",
+  "authority": "STAGING_WRITE",
+  "repository": "dallascourchene-commits/AuraOS",
+  "base_commit": "343d0ffb84718ff7e618c4244441696451011276",
+  "branch": "wo-aura-pq-amtd-006-w3",
+  "status": "PASS_W3_SCOPE_WITH_PROVIDER_BOUNDARY_RESIDUAL",
+  "outputs": {
+    "20_REFACTOR_ROOM/crypto_core.c": {
+      "bytes": 14730,
+      "lines": 472,
+      "sha256": "2f918720faf6965dfc286ddfc50a9b35110ca73f4fd4148eeabb632f4f00c58d",
+      "git_blob_sha1": "8c931567780db7062801a6eb9df3e4b1c797bd59"
+    },
+    "20_REFACTOR_ROOM/crypto_core.h": {
+      "bytes": 3910,
+      "lines": 93,
+      "sha256": "896b5bb1b14238bfd2ede90afefdb25f6a8aba369ef4a5db257d478d2a67679a",
+      "git_blob_sha1": "a74b6d815ced797de8dfcbe753240d2711a16d2d"
+    }
+  },
+  "implementation": {
+    "ml_kem_768": {
+      "backend": "OpenSSL 3.5+ EVP ML-KEM-768",
+      "wire_sizes": {
+        "public_key_bytes": 1184,
+        "expanded_private_key_bytes": 2400,
+        "ciphertext_bytes": 1088,
+        "shared_secret_bytes": 32
+      },
+      "key_hardening": "Generate via provider; export FIPS-203 expanded dk; re-import explicit dk; scrub application-owned dk copy immediately; destroy original generated handle.",
+      "ntt_boundary": "Provider-owned. OpenSSL upstream documents constant-time ML-KEM implementation methods; W-3 does not claim an independent audit of internal NTT butterfly assembly/C.",
+      "decapsulation_note": "Successful KEM decapsulation is not peer authentication; subsequent traffic must authenticate using a key derived from the shared secret."
+    },
+    "hdc_phasor": {
+      "dimensions": 10000,
+      "representation": "interleaved complex float32 real/imag lanes",
+      "simd": "AVX2 four-complex-lane multiply when available; scalar fallback otherwise",
+      "fst_binding": "raw IEEE-754 lane bits XOR per-lane FST mask",
+      "unbinding": "FST XOR reversal followed by multiplication by complex conjugate; conjugate sign flip uses one SIMD XOR per four complex lanes",
+      "security_ceiling": "Reversible HDC binding transform only; not AEAD and not a substitute for a standard symmetric cipher."
+    },
+    "stage8_zeroization": {
+      "application_memory": "explicit_bzero on supported libc platforms, volatile byte scrub fallback, followed by volatile zero verification",
+      "provider_handles": "EVP_PKEY_CTX_free + EVP_PKEY_free",
+      "provider_internal_lattice_residues": "OPAQUE_NOT_INDEPENDENTLY_VERIFIABLE_FROM_EVP_API"
+    }
+  },
+  "local_verification": {
+    "openssl_runtime": "OpenSSL 3.5.5 27 Jan 2026",
+    "providers_active": ["default"],
+    "default_ml_kem_768_available": true,
+    "fips_yes_ml_kem_768_available": false,
+    "compile_native": {
+      "command": "gcc -O3 -march=native -Wall -Werror crypto_core.c test_crypto_core.c -lcrypto -o test_crypto_core_native",
+      "status": "PASS"
+    },
+    "compile_scalar_fallback": {
+      "command": "gcc -O3 -mno-avx2 -Wall -Werror crypto_core.c test_crypto_core.c -lcrypto -o test_crypto_core_scalar",
+      "status": "PASS"
+    },
+    "asan_ubsan": "PASS",
+    "ml_kem_roundtrips": 32,
+    "public_export_import_roundtrip": "PASS",
+    "hdc_bind_unbind": "PASS",
+    "invalid_phasor_rejection": "PASS",
+    "stage8_application_buffer_zero_check": "PASS",
+    "direct_malloc_or_calloc_calls_in_crypto_core": 0,
+    "native_object_evidence": [
+      "AVX2 complex multiply instructions present (vmovsldup/vmovshdup/vpermilps/vmulps/vaddsubps)",
+      "explicit_bzero dynamic symbol present",
+      "EVP_PKEY_encapsulate/decapsulate symbols present"
+    ]
+  },
+  "acceptance_scope": {
+    "clean_compilation": "PASS_W3_FILES",
+    "zero_dynamic_allocations": "PASS_FOR_APPLICATION_SOURCE_CALLS_ONLY; UNKNOWN_FOR_OPENSSL_PROVIDER_INTERNALS",
+    "ml_kem_fips203_algorithm_integration": "PASS",
+    "independent_constant_time_ntt_proof": "NOT_CLAIMED_PROVIDER_OWNED",
+    "stage8_aura_owned_key_scrub": "PASS",
+    "stage8_provider_internal_residue_scrub": "UNKNOWN_PROVIDER_BOUNDARY",
+    "benchmark_results_json": "NOT_EMITTED_W5_OWNED"
+  },
+  "handoff": {
+    "target_worker": "W-5",
+    "directive": "Benchmark the committed crypto_core.c/.h with -lcrypto. BM-02 may measure HDC bind/unbind throughput. BM-06 may verify Aura-owned buffers after aura_stage8_zeroize, but must not claim zero residual bytes inside opaque OpenSSL provider memory without provider-level instrumentation or source-grounded proof."
+  },
+  "nonclaims": [
+    "No FIPS/CMVP module validation is claimed for the local default OpenSSL provider.",
+    "No independent verification of OpenSSL internal NTT constant-time behavior is claimed.",
+    "No claim that the HDC phasor transform provides authenticated encryption is made.",
+    "No W-1 or W-5 artifact, benchmark result, merge, deployment, or canonical promotion was performed."
+  ]
+}
