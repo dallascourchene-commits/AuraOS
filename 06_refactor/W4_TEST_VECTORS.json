@@ -1,0 +1,97 @@
+{
+  "document_id": "AURA:STAGE06:W4:TEST-VECTORS:V1",
+  "target": "aura_os_minimal.py",
+  "vectors": [
+    {
+      "expected": "PASS",
+      "id": "INGRESS_VALID",
+      "lane": "P_INGRESS"
+    },
+    {
+      "expected": "REJECT",
+      "id": "INGRESS_EMPTY",
+      "lane": "P_INGRESS"
+    },
+    {
+      "expected": "ADMIT",
+      "id": "ROUTER_VALID",
+      "lane": "P_ROUTER"
+    },
+    {
+      "expected": "BLOCK",
+      "id": "ROUTER_MISSING_ASP",
+      "lane": "P_ROUTER",
+      "reason": "ASP_UNRESOLVED"
+    },
+    {
+      "expected": "BLOCK",
+      "id": "ROUTER_MISSING_VOICE",
+      "lane": "P_ROUTER",
+      "reason": "VOICE_AUTHORITY_UNRESOLVED"
+    },
+    {
+      "expected": "BLOCK",
+      "id": "ROUTER_SUBJECT_OUTSIDE_CONE",
+      "lane": "P_ROUTER",
+      "reason": "SUBJ_NOT_LIVE_IN_CONE"
+    },
+    {
+      "expected": "BLOCK",
+      "id": "ROUTER_DIVERGENT_TRIAD",
+      "lane": "P_ROUTER",
+      "reason": "TRI_PROPOSAL_INCOMPLETE_OR_DIVERGENT"
+    },
+    {
+      "expected": "ADMIT",
+      "id": "FENCE_VALID",
+      "lane": "P_FENCE"
+    },
+    {
+      "expected": "BLOCK",
+      "id": "FENCE_RD_EQ_CD",
+      "lane": "P_FENCE",
+      "reason": "CAUSAL_FENCE_VIOLATION"
+    },
+    {
+      "expected": "BLOCK",
+      "id": "FENCE_PROOF_UNKNOWN",
+      "lane": "P_FENCE"
+    },
+    {
+      "expected": "BLOCK",
+      "id": "FENCE_AUTHORITY_UNKNOWN",
+      "lane": "P_FENCE",
+      "reason": "EFFECT_AUTHORITY_UNKNOWN_OR_DENIED"
+    },
+    {
+      "expected": "BLOCK",
+      "id": "FENCE_FAIL_CLOSED_DISABLED",
+      "lane": "P_FENCE",
+      "reason": "FAIL_CLOSED_DISABLED"
+    },
+    {
+      "expected": "PASS",
+      "id": "RESIDUAL_CURRENT_VERIFIED_PASS",
+      "lane": "P_RESIDUAL",
+      "residual_count": 0
+    },
+    {
+      "expected": "FAIL",
+      "id": "RESIDUAL_STALE_GENERATION",
+      "lane": "P_RESIDUAL",
+      "residual_count": 1
+    },
+    {
+      "expected": "UNKNOWN",
+      "id": "RESIDUAL_UNVERIFIED_PASS",
+      "lane": "P_RESIDUAL",
+      "residual_count": 1
+    },
+    {
+      "expected": "PASS",
+      "id": "IDLE_ZERO_TASK_STATE",
+      "lane": "IDLE",
+      "retained_items": 0
+    }
+  ]
+}
