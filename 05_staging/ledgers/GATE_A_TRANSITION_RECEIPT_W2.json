@@ -5,27 +5,49 @@
   "hydration_boundary": "L1->L2",
   "gate_a_disposition": "APPROVED_BY_HUMAN",
   "transition": "STAGE_05_TO_STAGE_06",
-  "execution_readiness": "BLOCKED_INCOMPLETE_INGEST_SURFACE",
+  "execution_readiness": "READY_FOR_W4_MINIMAL_HYDRATION",
   "required_stage_05_artifacts": {
     "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json": {
-      "status": "MISSING_ON_MAIN"
+      "status": "PRESENT_VERIFIED_LIBRARY_RECOVERY",
+      "git_blob_sha": "08be34341192737177c1aa0b5b7c73643d18809d",
+      "library_source_sha256": "4b7270ff5945fcd8ddc3b208a596cd4145f16954fad7a7e41df1afef1ed86883"
     },
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py": {
       "status": "PRESENT",
       "git_blob_sha": "ed3abfa2916c9a040533eb7f6a085d2206aa4a28"
     },
     "05_staging/ledgers/SUBSTRATE_OS_COUPLING_GRAPH.json": {
-      "status": "MISSING_ON_MAIN"
+      "status": "PRESENT_VERIFIED_LIBRARY_RECOVERY",
+      "git_blob_sha": "ef1735f7dbe0ec0f438888281f438e4e16e84be4",
+      "library_source_sha256": "b3c23cf79d2e9c6f4a3a55e8895e648ee6d71c87fd8757752bf4594e9d8c4f3a",
+      "note": "Repository JSON preserves the verified semantic document; formatting is whitespace-normalized relative to the Library source."
     }
   },
-  "fail_closed_rule": "Stage 06 workers must not infer or fabricate missing Stage 05 ledger artifacts.",
-  "worker_disposition": {
-    "W4": "WAIT_FOR_COMPLETE_STAGE_05_INGEST",
-    "W5": "WAIT_FOR_W4_CONTEXT_AND_COMPLETE_STAGE_05_INGEST",
-    "W6": "WAIT_FOR_W5_BUILD_AND_COMPLETE_STAGE_05_INGEST"
+  "source_generation_check": {
+    "pinned_stage05_source_commit": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+    "checked_main_head_before_receipt_update": "2a5a55e0a3bc60550822dfb8e204d03bb5c304f5",
+    "main_ahead_by": 4,
+    "primitive_source_drift": false,
+    "observed_delta_classes": [
+      "CODEMAP_REGENERATION",
+      "STAGE05_LEDGER_ADDITION"
+    ],
+    "disposition": "COHERENT_FOR_STAGE06_PRIMITIVE_HYDRATION"
   },
-  "w2_action": "HANDOFF_RECEIPT_ONLY",
+  "fail_closed_rule": "Stage 06 workers must not infer missing authority, phase, cryptographic verification, causal-fence proof, or residual discharge semantics from interface presence alone.",
+  "worker_disposition": {
+    "W4": "RELEASED_FOR_L2_TO_L3_MINIMAL_CONTEXT_HYDRATION",
+    "W5": "WAIT_FOR_W4_CONTEXT_AND_TEST_VECTORS",
+    "W6": "WAIT_FOR_W5_MINIMAL_BUILD"
+  },
+  "w4_required_residuals": [
+    "Resolve ASP from a current runtime-phase owner or return UNKNOWN/BLOCK.",
+    "Resolve VOICE from a current authority/policy owner or return UNKNOWN/BLOCK.",
+    "Do not treat CausalFence values as proof that R_d < C_d; measurement/evidence is still required.",
+    "Do not treat Merkle inclusion or ZK proof alone as effect authority.",
+    "Keep P_RESIDUAL discharge generation-coherent and verification-gated."
+  ],
+  "w2_action": "VALIDATED_LIBRARY_ARTIFACTS__RESTORED_STAGE05_INGEST__RELEASED_W4",
   "w2_did_not_impersonate": ["W4", "W5", "W6"],
-  "next_required_condition": "AURA_OS_BLOAT_INVENTORY.json and SUBSTRATE_OS_COUPLING_GRAPH.json must be present and readable in 05_staging/ledgers/ before Stage 06 execution begins.",
-  "status": "GATE_A_AUTHORIZED__STAGE06_EXECUTION_BLOCKED_PENDING_ARTIFACTS"
+  "status": "GATE_A_AUTHORIZED__STAGE06_READY_FOR_W4"
 }
