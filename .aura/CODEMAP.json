@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786929218,
+  "generated_at_unix": 1786930000,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1617,
+    "repo_file_count": 1625,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -212,6 +212,14 @@
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
       "05_staging/ledgers/SUBSTRATE_OS_COUPLING_GRAPH.json",
+      "06_refactor/D0_MUTANT_HARNESS.py",
+      "06_refactor/D0_MUTANT_RESULTS.json",
+      "06_refactor/W4_CYCLE_RECEIPT.json",
+      "06_refactor/W4_MINIMAL_CONTEXT.json",
+      "06_refactor/W4_TEST_VECTORS.json",
+      "06_refactor/W5_CYCLE_RECEIPT.json",
+      "06_refactor/W6_CYCLE_RECEIPT.json",
+      "06_refactor/aura_os_minimal.py",
       "AMD_HACKATHON_SUBMISSION.md",
       "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
       "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -1628,6 +1636,8 @@
     "source_paths_without_topology": [
       ".github/phase4/wc02_phase4_current_generation_patch.py",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+      "06_refactor/D0_MUTANT_HARNESS.py",
+      "06_refactor/aura_os_minimal.py",
       "aura_blockchain/__init__.py",
       "aura_blockchain/block.py",
       "aura_blockchain/consensus.py",
@@ -1723,9 +1733,7 @@
       "tests/test_aura_capability_lane_registry.py",
       "tests/test_aura_capability_resolver.py",
       "tests/test_aura_capability_resolver_connectome.py",
-      "tests/test_aura_change_graph.py",
-      "tests/test_aura_civic_commons_arena.py",
-      "tests/test_aura_civic_completion.py"
+      "tests/test_aura_change_graph.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1733,16 +1741,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1617,
-      "bytes": 26258631,
-      "tokens_est": 6555067,
+      "files": 1625,
+      "bytes": 26274794,
+      "tokens_est": 6559110,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 234,
         "native_accelerator": 8,
         "operator_script": 9,
-        "python_module": 993,
-        "schema_or_lexicon": 260,
+        "python_module": 995,
+        "schema_or_lexicon": 266,
         "support_file": 49
       }
     },
@@ -2025,6 +2033,8 @@
       "paths": [
         ".github/phase4/wc02_phase4_current_generation_patch.py",
         "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+        "06_refactor/D0_MUTANT_HARNESS.py",
+        "06_refactor/aura_os_minimal.py",
         "_aura_architect_consolidation_benchmark_legacy.py",
         "_aura_architect_consolidation_benchmark_refined_legacy.py",
         "_aura_architect_consolidation_benchmark_v2_legacy.py",
@@ -2420,9 +2430,7 @@
         "aura_polysynthetic_intent.py",
         "aura_positional_parser.py",
         "aura_pre_egress_interceptor.py",
-        "aura_pricing.py",
-        "aura_pricing_registry.py",
-        "aura_privacy_io.py"
+        "aura_pricing.py"
       ]
     }
   ],
@@ -3447,6 +3455,14 @@
         "end_line": 30,
         "semantic_id": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py#class:IngressPacket:7e80b57108b27990",
         "signature_hash": "e19ca6cd9220cfbe"
+      },
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 48,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:IngressPacket:ef69324c2f52a469",
+        "signature_hash": "e19ca6cd9220cfbe"
       }
     ],
     "TriProposalBundle": [
@@ -3456,6 +3472,14 @@
         "line": 34,
         "end_line": 39,
         "semantic_id": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py#class:TriProposalBundle:bcee9f8fbd26e871",
+        "signature_hash": "e1efa1dc497cdd5f"
+      },
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 52,
+        "end_line": 55,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:TriProposalBundle:f9b58237b4bbe32f",
         "signature_hash": "e1efa1dc497cdd5f"
       }
     ],
@@ -3467,6 +3491,14 @@
         "end_line": 48,
         "semantic_id": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py#class:CausalFence:f777f1ca0ceae082",
         "signature_hash": "b60ed1451ee2ee44"
+      },
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 59,
+        "end_line": 62,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:CausalFence:70824b760f021202",
+        "signature_hash": "b60ed1451ee2ee44"
       }
     ],
     "ResidualBuffer": [
@@ -3477,6 +3509,264 @@
         "end_line": 56,
         "semantic_id": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py#class:ResidualBuffer:d8bfc35e81b32730",
         "signature_hash": "0a6686287444b7d3"
+      },
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 66,
+        "end_line": 68,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:ResidualBuffer:2105760a08e09396",
+        "signature_hash": "0a6686287444b7d3"
+      }
+    ],
+    "base_packet": [
+      {
+        "file": "06_refactor/D0_MUTANT_HARNESS.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#function:base_packet:0665a195fe80a8ab",
+        "signature_hash": "f537563a81a43c8f"
+      }
+    ],
+    "base_bundle": [
+      {
+        "file": "06_refactor/D0_MUTANT_HARNESS.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 29,
+        "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#function:base_bundle:09961d5acdbee3a0",
+        "signature_hash": "7472fc073cef0d8a"
+      }
+    ],
+    "base_residual": [
+      {
+        "file": "06_refactor/D0_MUTANT_HARNESS.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#function:base_residual:dd78131ff0b3126d",
+        "signature_hash": "e34751c5047238c5"
+      }
+    ],
+    "route": [
+      {
+        "file": "06_refactor/D0_MUTANT_HARNESS.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 50,
+        "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#function:route:eb0e206255813d1b",
+        "signature_hash": "3dcdb4dda21086ef"
+      }
+    ],
+    "run": [
+      {
+        "file": "06_refactor/D0_MUTANT_HARNESS.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 119,
+        "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#function:run:e519ffb12dbc0153",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "aura_architect_council_calling_benchmark.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 153,
+        "semantic_id": "aura_architect_council_calling_benchmark.py#function:run:9d292aca952bc334",
+        "signature_hash": "6b6e177e9d5db39c"
+      },
+      {
+        "file": "aura_executable_refactor_benchmark.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 111,
+        "semantic_id": "aura_executable_refactor_benchmark.py#function:run:593019c3d6b43fda",
+        "signature_hash": "9ec5fe12e785259b"
+      },
+      {
+        "file": "aura_persistence_cli.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 109,
+        "semantic_id": "aura_persistence_cli.py#function:run:7f94baca3e3b884a",
+        "signature_hash": "0a9464444ccb9a05"
+      },
+      {
+        "file": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 81,
+        "semantic_id": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py#function:run:829f261652abefae",
+        "signature_hash": "c36bb494ce657c4a"
+      },
+      {
+        "file": "scripts/aura_review_learning_architect_harness.py",
+        "kind": "function",
+        "line": 179,
+        "end_line": 509,
+        "semantic_id": "scripts/aura_review_learning_architect_harness.py#function:run:f4a556c6ac406bab",
+        "signature_hash": "c3d2bfd23e5f766b"
+      },
+      {
+        "file": "scripts/aura_spatial_continuation_architect_harness.py",
+        "kind": "function",
+        "line": 260,
+        "end_line": 547,
+        "semantic_id": "scripts/aura_spatial_continuation_architect_harness.py#function:run:d027184c688b68f8",
+        "signature_hash": "d981aa5a48724e5c"
+      },
+      {
+        "file": "scripts/aura_spatial_s4b_architect_harness.py",
+        "kind": "function",
+        "line": 379,
+        "end_line": 566,
+        "semantic_id": "scripts/aura_spatial_s4b_architect_harness.py#function:run:4995ec9d836e5c14",
+        "signature_hash": "d981aa5a48724e5c"
+      },
+      {
+        "file": "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
+        "kind": "function",
+        "line": 648,
+        "end_line": 732,
+        "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:run:243d8f61a6c67541",
+        "signature_hash": "d981aa5a48724e5c"
+      }
+    ],
+    "run.record": [
+      {
+        "file": "06_refactor/D0_MUTANT_HARNESS.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 66,
+        "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#method:run.record:abecd527ce8c9435",
+        "signature_hash": "71f7160403023862"
+      }
+    ],
+    "Disposition": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 32,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:Disposition:162fd1d86ea18f49",
+        "signature_hash": "9386d60514f2578d"
+      },
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 26,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:Disposition:b359736450ddaeff",
+        "signature_hash": "9386d60514f2578d"
+      }
+    ],
+    "Check": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 36,
+        "end_line": 42,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:Check:1b7989dbc9db1759",
+        "signature_hash": "744326311ff5c7f7"
+      }
+    ],
+    "Check.passed": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "06_refactor/aura_os_minimal.py#method:Check.passed:17a90e11f82b6c07",
+        "signature_hash": "3f0260e8dc67f313"
+      }
+    ],
+    "PassReceipt": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 72,
+        "end_line": 76,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:PassReceipt:01747f73e33e3075",
+        "signature_hash": "26a87ebf7e7806c8"
+      },
+      {
+        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+        "kind": "class",
+        "line": 236,
+        "end_line": 240,
+        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:PassReceipt:1502c8ae10385792",
+        "signature_hash": "26a87ebf7e7806c8"
+      }
+    ],
+    "RouteResult": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 82,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:RouteResult:afdd167adf2fc954",
+        "signature_hash": "c899644c14e55887"
+      }
+    ],
+    "ResidualResult": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "class",
+        "line": 86,
+        "end_line": 89,
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:ResidualResult:2a1e2c313ef32c81",
+        "signature_hash": "c0fbd85e93816239"
+      }
+    ],
+    "p_ingress": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 100,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_ingress:af93bd632dfa1bee",
+        "signature_hash": "6679dd2e9cf67559"
+      }
+    ],
+    "_proposal_surfaces_complete": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 106,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:_proposal_surfaces_complete:2aae5f2aae30852e",
+        "signature_hash": "15ab47e890c94d83"
+      }
+    ],
+    "p_router": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 174,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_router:da7f29f423e5c0c5",
+        "signature_hash": "592eddb324c76dbe"
+      }
+    ],
+    "p_fence": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 177,
+        "end_line": 185,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_fence:cb933a5983f3de35",
+        "signature_hash": "9c6b96dcdf560041"
+      }
+    ],
+    "p_residual": [
+      {
+        "file": "06_refactor/aura_os_minimal.py",
+        "kind": "function",
+        "line": 188,
+        "end_line": 229,
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_residual:27ac8435d31ebcd7",
+        "signature_hash": "a2884b3422d60bd1"
       }
     ],
     "_canonical": [
@@ -11975,72 +12265,6 @@
         "end_line": 99,
         "semantic_id": "aura_architect_council_calling_benchmark.py#function:_run_arm:2780840ce5ac2036",
         "signature_hash": "f1833ad237751243"
-      }
-    ],
-    "run": [
-      {
-        "file": "aura_architect_council_calling_benchmark.py",
-        "kind": "function",
-        "line": 108,
-        "end_line": 153,
-        "semantic_id": "aura_architect_council_calling_benchmark.py#function:run:9d292aca952bc334",
-        "signature_hash": "6b6e177e9d5db39c"
-      },
-      {
-        "file": "aura_executable_refactor_benchmark.py",
-        "kind": "function",
-        "line": 58,
-        "end_line": 111,
-        "semantic_id": "aura_executable_refactor_benchmark.py#function:run:593019c3d6b43fda",
-        "signature_hash": "9ec5fe12e785259b"
-      },
-      {
-        "file": "aura_persistence_cli.py",
-        "kind": "function",
-        "line": 71,
-        "end_line": 109,
-        "semantic_id": "aura_persistence_cli.py#function:run:7f94baca3e3b884a",
-        "signature_hash": "0a9464444ccb9a05"
-      },
-      {
-        "file": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
-        "kind": "function",
-        "line": 38,
-        "end_line": 81,
-        "semantic_id": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py#function:run:829f261652abefae",
-        "signature_hash": "c36bb494ce657c4a"
-      },
-      {
-        "file": "scripts/aura_review_learning_architect_harness.py",
-        "kind": "function",
-        "line": 179,
-        "end_line": 509,
-        "semantic_id": "scripts/aura_review_learning_architect_harness.py#function:run:f4a556c6ac406bab",
-        "signature_hash": "c3d2bfd23e5f766b"
-      },
-      {
-        "file": "scripts/aura_spatial_continuation_architect_harness.py",
-        "kind": "function",
-        "line": 260,
-        "end_line": 547,
-        "semantic_id": "scripts/aura_spatial_continuation_architect_harness.py#function:run:d027184c688b68f8",
-        "signature_hash": "d981aa5a48724e5c"
-      },
-      {
-        "file": "scripts/aura_spatial_s4b_architect_harness.py",
-        "kind": "function",
-        "line": 379,
-        "end_line": 566,
-        "semantic_id": "scripts/aura_spatial_s4b_architect_harness.py#function:run:4995ec9d836e5c14",
-        "signature_hash": "d981aa5a48724e5c"
-      },
-      {
-        "file": "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
-        "kind": "function",
-        "line": 648,
-        "end_line": 732,
-        "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:run:243d8f61a6c67541",
-        "signature_hash": "d981aa5a48724e5c"
       }
     ],
     "_string_list": [
@@ -102005,16 +102229,6 @@
         "signature_hash": "c1abdc93385a12b3"
       }
     ],
-    "Disposition": [
-      {
-        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
-        "kind": "class",
-        "line": 23,
-        "end_line": 26,
-        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:Disposition:b359736450ddaeff",
-        "signature_hash": "9386d60514f2578d"
-      }
-    ],
     "RefutationKey": [
       {
         "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
@@ -102213,16 +102427,6 @@
         "end_line": 221,
         "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#method:indexed_fact_obligation.evaluator:c4eb2c4d7185d979",
         "signature_hash": "aedd80661d4016d8"
-      }
-    ],
-    "PassReceipt": [
-      {
-        "file": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
-        "kind": "class",
-        "line": 236,
-        "end_line": 240,
-        "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:PassReceipt:1502c8ae10385792",
-        "signature_hash": "26a87ebf7e7806c8"
       }
     ],
     "verify_generation_coherence": [
@@ -172117,6 +172321,382 @@
         -0.229818,
         -0.033831,
         0.271815
+      ]
+    },
+    {
+      "path": "06_refactor/D0_MUTANT_HARNESS.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3775,
+      "lines": 125,
+      "tokens_est": 944,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "19e893e4351c8e38",
+      "vector": [
+        0.253192,
+        -0.139564,
+        0.132154,
+        0.100042,
+        -0.302596,
+        0.179087,
+        0.038288,
+        0.050638,
+        0.023467,
+        0.245782,
+        -0.132154,
+        -0.043228,
+        0.156856,
+        0.184027,
+        0.156856,
+        0.161796,
+        0.104982,
+        -0.127214,
+        0.053109,
+        -0.307536,
+        0.040758,
+        0.258133,
+        -0.201319,
+        0.171677,
+        0.119803,
+        -0.030877,
+        -0.176617,
+        0.277894,
+        0.287775,
+        -0.159326,
+        0.107452,
+        -0.255662
+      ]
+    },
+    {
+      "path": "06_refactor/D0_MUTANT_RESULTS.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 998,
+      "lines": 20,
+      "tokens_est": 250,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a10be2f79c88e23d",
+      "vector": [
+        -0.059565,
+        -0.253935,
+        0.074195,
+        0.074195,
+        -0.017765,
+        0.264385,
+        -0.124355,
+        0.207955,
+        -0.145255,
+        0.256025,
+        0.015675,
+        0.224675,
+        -0.210045,
+        0.253935,
+        -0.193325,
+        0.210045,
+        -0.097185,
+        0.228855,
+        0.067925,
+        -0.174515,
+        -0.070015,
+        -0.134805,
+        -0.067925,
+        0.199595,
+        0.184965,
+        -0.220495,
+        0.191235,
+        -0.101365,
+        -0.237215,
+        -0.245575,
+        -0.193325,
+        0.128535
+      ]
+    },
+    {
+      "path": "06_refactor/W4_CYCLE_RECEIPT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 447,
+      "lines": 15,
+      "tokens_est": 112,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c8b79f949d9dada7",
+      "vector": [
+        0.06007,
+        0.256217,
+        -0.052714,
+        -0.099299,
+        0.055166,
+        -0.297898,
+        0.268476,
+        0.270928,
+        -0.231698,
+        0.028196,
+        0.079685,
+        -0.001226,
+        -0.099299,
+        -0.079685,
+        -0.290542,
+        0.145884,
+        0.123818,
+        -0.082136,
+        -0.251313,
+        0.302802,
+        -0.038003,
+        0.167951,
+        0.270928,
+        0.079685,
+        0.11401,
+        0.050263,
+        0.231698,
+        0.275831,
+        -0.057618,
+        0.123818,
+        -0.116462,
+        0.185114
+      ]
+    },
+    {
+      "path": "06_refactor/W4_MINIMAL_CONTEXT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1504,
+      "lines": 31,
+      "tokens_est": 376,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "165453f25de6e309",
+      "vector": [
+        0.296895,
+        -0.006598,
+        -0.283699,
+        0.064657,
+        -0.043545,
+        -0.164942,
+        -0.114799,
+        -0.006598,
+        0.048823,
+        -0.228279,
+        0.328564,
+        -0.064657,
+        -0.162302,
+        -0.294256,
+        -0.075213,
+        0.286338,
+        0.098965,
+        -0.125356,
+        0.014515,
+        0.25467,
+        -0.164942,
+        0.215084,
+        0.08577,
+        -0.273143,
+        0.207167,
+        -0.030349,
+        0.072574,
+        0.046184,
+        -0.120077,
+        0.048823,
+        0.262587,
+        -0.186054
+      ]
+    },
+    {
+      "path": "06_refactor/W4_TEST_VECTORS.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 806,
+      "lines": 15,
+      "tokens_est": 202,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "de1428bcec47b52a",
+      "vector": [
+        -0.090027,
+        -0.065841,
+        0.1384,
+        -0.235145,
+        0.044342,
+        -0.243208,
+        0.235145,
+        -0.305017,
+        -0.176023,
+        -0.213646,
+        -0.044342,
+        0.006718,
+        -0.288893,
+        0.248582,
+        0.063153,
+        -0.307705,
+        -0.004031,
+        -0.130338,
+        0.030905,
+        -0.141087,
+        -0.202897,
+        0.009406,
+        0.151837,
+        -0.259332,
+        0.243208,
+        0.143775,
+        -0.02553,
+        0.079278,
+        0.068528,
+        0.256644,
+        0.181398,
+        0.146462
+      ]
+    },
+    {
+      "path": "06_refactor/W5_CYCLE_RECEIPT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 352,
+      "lines": 13,
+      "tokens_est": 88,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "822b2ac0622ea9dc",
+      "vector": [
+        0.147963,
+        -0.204575,
+        -0.171123,
+        -0.127377,
+        0.250894,
+        0.063045,
+        0.173696,
+        0.310079,
+        0.12995,
+        -0.281773,
+        -0.163403,
+        0.189135,
+        0.001287,
+        0.325519,
+        -0.117084,
+        -0.119657,
+        0.214868,
+        0.009006,
+        -0.099071,
+        0.127377,
+        -0.307506,
+        0.00386,
+        -0.052752,
+        0.29464,
+        -0.258614,
+        -0.093924,
+        -0.189135,
+        0.047606,
+        0.078485,
+        0.00386,
+        -0.160829,
+        0.050179
+      ]
+    },
+    {
+      "path": "06_refactor/W6_CYCLE_RECEIPT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 395,
+      "lines": 18,
+      "tokens_est": 99,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "17f61430e1726a00",
+      "vector": [
+        -0.248138,
+        -0.227823,
+        0.181387,
+        0.335204,
+        0.181387,
+        -0.140757,
+        -0.018864,
+        0.036277,
+        -0.094321,
+        -0.335204,
+        -0.103028,
+        0.091419,
+        0.15817,
+        -0.053691,
+        -0.323595,
+        0.103028,
+        -0.050788,
+        -0.140757,
+        0.062397,
+        0.036277,
+        0.256845,
+        -0.349715,
+        0.062397,
+        0.129148,
+        0.117539,
+        0.111735,
+        0.140757,
+        0.163974,
+        -0.146561,
+        0.044984,
+        -0.239431,
+        -0.114637
+      ]
+    },
+    {
+      "path": "06_refactor/aura_os_minimal.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7886,
+      "lines": 247,
+      "tokens_est": 1972,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "abc65d37f3aa1323",
+      "vector": [
+        -0.115111,
+        -0.021042,
+        -0.28097,
+        -0.11016,
+        0.105209,
+        -0.075503,
+        -0.043321,
+        -0.228984,
+        -0.263641,
+        -0.172048,
+        -0.191852,
+        -0.125013,
+        0.058174,
+        -0.293347,
+        0.033419,
+        -0.120062,
+        0.310676,
+        0.129964,
+        0.199278,
+        0.261166,
+        -0.120062,
+        -0.043321,
+        0.006189,
+        -0.23146,
+        -0.206705,
+        0.194327,
+        -0.216607,
+        -0.201754,
+        0.154719,
+        -0.238886,
+        0.157195,
+        0.050748
       ]
     },
     {
@@ -285137,16 +285717,16 @@
     }
   },
   "summary": {
-    "file_count": 1617,
-    "total_bytes": 26258631,
-    "text_tokens_est": 6555067,
+    "file_count": 1625,
+    "total_bytes": 26274794,
+    "text_tokens_est": 6559110,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 234,
       "native_accelerator": 8,
       "operator_script": 9,
-      "python_module": 993,
-      "schema_or_lexicon": 260,
+      "python_module": 995,
+      "schema_or_lexicon": 266,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -285368,6 +285948,14 @@
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
       "05_staging/ledgers/SUBSTRATE_OS_COUPLING_GRAPH.json",
+      "06_refactor/D0_MUTANT_HARNESS.py",
+      "06_refactor/D0_MUTANT_RESULTS.json",
+      "06_refactor/W4_CYCLE_RECEIPT.json",
+      "06_refactor/W4_MINIMAL_CONTEXT.json",
+      "06_refactor/W4_TEST_VECTORS.json",
+      "06_refactor/W5_CYCLE_RECEIPT.json",
+      "06_refactor/W6_CYCLE_RECEIPT.json",
+      "06_refactor/aura_os_minimal.py",
       "AMD_HACKATHON_SUBMISSION.md",
       "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
       "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -286841,6 +287429,216 @@
         "end_line": 39,
         "signature_hash": "e1efa1dc497cdd5f",
         "file_digest8": "9e5805ad7e79d82a"
+      },
+      {
+        "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#function:base_bundle:09961d5acdbee3a0",
+        "name": "base_bundle",
+        "kind": "function",
+        "file": "06_refactor/D0_MUTANT_HARNESS.py",
+        "line": 24,
+        "end_line": 29,
+        "signature_hash": "7472fc073cef0d8a",
+        "file_digest8": "19e893e4351c8e38"
+      },
+      {
+        "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#function:base_packet:0665a195fe80a8ab",
+        "name": "base_packet",
+        "kind": "function",
+        "file": "06_refactor/D0_MUTANT_HARNESS.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "f537563a81a43c8f",
+        "file_digest8": "19e893e4351c8e38"
+      },
+      {
+        "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#function:base_residual:dd78131ff0b3126d",
+        "name": "base_residual",
+        "kind": "function",
+        "file": "06_refactor/D0_MUTANT_HARNESS.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "e34751c5047238c5",
+        "file_digest8": "19e893e4351c8e38"
+      },
+      {
+        "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#function:route:eb0e206255813d1b",
+        "name": "route",
+        "kind": "function",
+        "file": "06_refactor/D0_MUTANT_HARNESS.py",
+        "line": 36,
+        "end_line": 50,
+        "signature_hash": "3dcdb4dda21086ef",
+        "file_digest8": "19e893e4351c8e38"
+      },
+      {
+        "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#function:run:e519ffb12dbc0153",
+        "name": "run",
+        "kind": "function",
+        "file": "06_refactor/D0_MUTANT_HARNESS.py",
+        "line": 53,
+        "end_line": 119,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "19e893e4351c8e38"
+      },
+      {
+        "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#method:run.record:abecd527ce8c9435",
+        "name": "run.record",
+        "kind": "method",
+        "file": "06_refactor/D0_MUTANT_HARNESS.py",
+        "line": 56,
+        "end_line": 66,
+        "signature_hash": "71f7160403023862",
+        "file_digest8": "19e893e4351c8e38"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:CausalFence:70824b760f021202",
+        "name": "CausalFence",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 59,
+        "end_line": 62,
+        "signature_hash": "b60ed1451ee2ee44",
+        "file_digest8": "abc65d37f3aa1323"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:Check:1b7989dbc9db1759",
+        "name": "Check",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 36,
+        "end_line": 42,
+        "signature_hash": "744326311ff5c7f7",
+        "file_digest8": "abc65d37f3aa1323"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:Disposition:162fd1d86ea18f49",
+        "name": "Disposition",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 28,
+        "end_line": 32,
+        "signature_hash": "9386d60514f2578d",
+        "file_digest8": "abc65d37f3aa1323"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:IngressPacket:ef69324c2f52a469",
+        "name": "IngressPacket",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 46,
+        "end_line": 48,
+        "signature_hash": "e19ca6cd9220cfbe",
+        "file_digest8": "abc65d37f3aa1323"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:PassReceipt:01747f73e33e3075",
+        "name": "PassReceipt",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 72,
+        "end_line": 76,
+        "signature_hash": "26a87ebf7e7806c8",
+        "file_digest8": "abc65d37f3aa1323"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:ResidualBuffer:2105760a08e09396",
+        "name": "ResidualBuffer",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 66,
+        "end_line": 68,
+        "signature_hash": "0a6686287444b7d3",
+        "file_digest8": "abc65d37f3aa1323"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:ResidualResult:2a1e2c313ef32c81",
+        "name": "ResidualResult",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 86,
+        "end_line": 89,
+        "signature_hash": "c0fbd85e93816239",
+        "file_digest8": "abc65d37f3aa1323"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:RouteResult:afdd167adf2fc954",
+        "name": "RouteResult",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 80,
+        "end_line": 82,
+        "signature_hash": "c899644c14e55887",
+        "file_digest8": "abc65d37f3aa1323"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#class:TriProposalBundle:f9b58237b4bbe32f",
+        "name": "TriProposalBundle",
+        "kind": "class",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 52,
+        "end_line": 55,
+        "signature_hash": "e1efa1dc497cdd5f",
+        "file_digest8": "abc65d37f3aa1323"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:_proposal_surfaces_complete:2aae5f2aae30852e",
+        "name": "_proposal_surfaces_complete",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 103,
+        "end_line": 106,
+        "signature_hash": "15ab47e890c94d83",
+        "file_digest8": "abc65d37f3aa1323"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_fence:cb933a5983f3de35",
+        "name": "p_fence",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 177,
+        "end_line": 185,
+        "signature_hash": "9c6b96dcdf560041",
+        "file_digest8": "abc65d37f3aa1323"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_ingress:af93bd632dfa1bee",
+        "name": "p_ingress",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 92,
+        "end_line": 100,
+        "signature_hash": "6679dd2e9cf67559",
+        "file_digest8": "abc65d37f3aa1323"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_residual:27ac8435d31ebcd7",
+        "name": "p_residual",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 188,
+        "end_line": 229,
+        "signature_hash": "a2884b3422d60bd1",
+        "file_digest8": "abc65d37f3aa1323"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#function:p_router:da7f29f423e5c0c5",
+        "name": "p_router",
+        "kind": "function",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 109,
+        "end_line": 174,
+        "signature_hash": "592eddb324c76dbe",
+        "file_digest8": "abc65d37f3aa1323"
+      },
+      {
+        "semantic_id": "06_refactor/aura_os_minimal.py#method:Check.passed:17a90e11f82b6c07",
+        "name": "Check.passed",
+        "kind": "method",
+        "file": "06_refactor/aura_os_minimal.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "3f0260e8dc67f313",
+        "file_digest8": "abc65d37f3aa1323"
       },
       {
         "semantic_id": "_aura_architect_consolidation_benchmark_legacy.py#class:FixtureModelCallback:d2986817eb955d7b",
@@ -444883,7 +445681,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "60f0b7e6d13af4f57b58dd4e397947f8",
-    "payload_hash": "8a5c8de8c48851ea48853cbb1c327913"
+    "record_fingerprint": "f54ee2e4da0bb0db05767925275e2b15",
+    "payload_hash": "dd78ac87f3c603a05e5792bf098e4252"
   }
 }
