@@ -1,0 +1,13 @@
+{
+  "atomicity_note": {
+    "delta_h_equals_1_vs_seed_refresh": "CONFLICT_IF_ATOMIC",
+    "resolution": "perform invariant check on transition control state, then derive/commit the 48-bit session seed slice as post-invariant Stage-10 rebase material"
+  },
+  "hamming_check": "implemented",
+  "scope": "state_pipeline_register_and_recursive_seed",
+  "stage10_seed_derivation": "BLAKE3 60-byte fixed input verified against short official vectors",
+  "stage_1_to_10_check": "implemented",
+  "status": "PASS_WITH_ATOMIC_REBASE_CONSTRAINT",
+  "work_order_id": "WO-AURA-PQ-AMTD-006",
+  "worker": "W-1"
+}
