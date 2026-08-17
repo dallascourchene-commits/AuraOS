@@ -1,0 +1,84 @@
+{
+  "acceptance": {
+    "all_six_benchmarks_pass": false,
+    "blocking_reasons": [
+      "BM-01 invariant latency threshold not met on this host"
+    ],
+    "clean_compile_zero_warnings": true,
+    "provider_internal_allocation_free_hot_path": "NOT_PROVEN",
+    "zero_explicit_malloc_calloc_in_aura_sources": true
+  },
+  "benchmarks": {
+    "BM-01": {
+      "max": 1.799514,
+      "median": 1.743115,
+      "metric": "invariant check throughput ns/check over runtime-populated 128-state valid-transition bank",
+      "min": 1.704907,
+      "pass": false,
+      "runs": [1.708252, 1.704907, 1.743115, 1.763189, 1.799514],
+      "threshold": "<1.5 ns"
+    },
+    "BM-02": {
+      "max": 0.099238,
+      "median": 0.095075,
+      "metric": "HDC bind+unbind cycles/processed-byte",
+      "min": 0.090312,
+      "pass": true,
+      "roundtrip_max_abs_error": 1.1920929e-07,
+      "runs": [0.095084, 0.090312, 0.090504, 0.099238, 0.095075],
+      "threshold": "<=1.2 cycles/byte"
+    },
+    "BM-03": {
+      "max": 0.130019,
+      "median": 0.122781,
+      "metric": "Stage-10 fixed 60-byte BLAKE3 seed derivation us/roll",
+      "min": 0.121895,
+      "pass": true,
+      "runs": [0.122781, 0.121895, 0.130019, 0.122256, 0.124962],
+      "threshold": "<2.5 us"
+    },
+    "BM-04": {
+      "claim_ceiling": "network RTT triangle consistency is a sanity heuristic, not a speed-of-light distance proof",
+      "metric": "synthetic +/-50 ms jitter window and median triangle-consistency heuristic",
+      "pass": true
+    },
+    "BM-05": {
+      "fuzz_cases_per_run": 100002,
+      "metric": "fail-closed fuzz rejection",
+      "pass": true,
+      "total_cases": 500010,
+      "unsafe_passes": 0
+    },
+    "BM-06": {
+      "claim_ceiling": "does not prove absence of transient copies in provider internals, registers, caches, swap, or physical remanence",
+      "metric": "caller-owned designated key buffers are all-zero after aura_secure_bzero",
+      "pass": true
+    }
+  },
+  "blake3": {
+    "official_short_vectors_pass": true,
+    "scope": "single-block <=64-byte BLAKE3; Stage-10 seed input is fixed at 60 bytes"
+  },
+  "crypto_assurance": {
+    "cmvp_fips_provider_validation_claimed": false,
+    "constant_time_evidence": "OpenSSL design documentation states usual constant-time methods are used; this local benchmark is not an independent side-channel proof.",
+    "fips203_conforming_algorithm": true,
+    "ml_kem_768_algorithm": "OpenSSL 3.5 ML-KEM-768",
+    "provider_internal_zeroization": "NOT_INDEPENDENTLY_OBSERVABLE",
+    "roundtrip_pass": true
+  },
+  "environment": {
+    "architecture": "x86_64",
+    "compile_command": "gcc -O3 -march=native -Wall -Werror core_pipeline.c crypto_core.c mesh_adapter.c bench_recursive_crypto.c -lcrypto -lm -o bench_recursive_crypto",
+    "compiler": "gcc 14.2.0",
+    "compiler_warnings": 0,
+    "openssl": "3.5.5 default provider"
+  },
+  "requirements_interaction": {
+    "delta_h_equals_1_vs_seed_refresh": "CONFLICT_IF_ATOMIC",
+    "resolution": "perform invariant check on transition control state, then derive/commit the 48-bit session seed slice as post-invariant Stage-10 rebase material"
+  },
+  "semantic_id": "AD:WO:SEC:RECURSIVE-10STAGE-CRYPTO-BENCH:20260816:006",
+  "status": "GATE_B_BLOCKED_BM01",
+  "work_order_id": "WO-AURA-PQ-AMTD-006"
+}
