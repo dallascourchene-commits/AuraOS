@@ -1,0 +1,19 @@
+{
+  "mutants": 5,
+  "positive_controls": {
+    "fence": "PASS",
+    "residual": "PASS",
+    "router": "PASS"
+  },
+  "rejected": 5,
+  "rejection_rate_percent": 100.0,
+  "rows": [
+    {"disposition": "FAIL_CLOSED", "lane": "JOINT_MARGINAL_MUTANT", "reason": "joint_dependency_not_proven_complete", "rejected": true, "unsafe_pass": false},
+    {"disposition": "UNKNOWN", "lane": "OMISSION_MUTANT", "reason": "receipt_missing_or_unverified", "rejected": true, "unsafe_pass": false},
+    {"disposition": "FAIL_CLOSED", "lane": "RECURSIVE_SAME_BLINDSPOT", "reason": "independent_falsifier_not_established", "rejected": true, "unsafe_pass": false},
+    {"disposition": "BLOCK", "lane": "SELF_CERTIFIED_KNOWN_ONLY", "reason": "authority_not_independently_verified", "rejected": true, "unsafe_pass": false},
+    {"disposition": "BLOCK", "lane": "STALE_GENERATION_MUTANT", "reason": "stale_generation_receipt_rejected", "rejected": true, "unsafe_pass": false}
+  ],
+  "status": "PASS",
+  "unsafe_passes": 0
+}
