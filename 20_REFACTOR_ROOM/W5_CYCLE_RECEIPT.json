@@ -1,42 +1,41 @@
 {
   "benchmarks": {
     "BM-01": {
-      "max": 1.799514,
-      "median": 1.743115,
-      "metric": "invariant check throughput ns/check over runtime-populated 128-state valid-transition bank",
-      "min": 1.704907,
+      "diagnostic_throughput_median_ns_per_check": 1.361768,
+      "latency_max_ns": 1.774657,
+      "latency_median_ns": 1.721175,
+      "latency_min_ns": 1.708685,
+      "latency_runs_ns": [1.708685, 1.774657, 1.72802, 1.721175, 1.714015],
+      "metric": "dependency-chained invariant check latency proxy",
       "pass": false,
-      "runs": [1.708252, 1.704907, 1.743115, 1.763189, 1.799514],
       "threshold": "<1.5 ns"
     },
     "BM-02": {
-      "max": 0.099238,
-      "median": 0.095075,
+      "max": 0.097514,
+      "median": 0.091415,
       "metric": "HDC bind+unbind cycles/processed-byte",
-      "min": 0.090312,
+      "min": 0.090911,
       "pass": true,
-      "roundtrip_max_abs_error": 1.1920929e-07,
-      "runs": [0.095084, 0.090312, 0.090504, 0.099238, 0.095075],
       "threshold": "<=1.2 cycles/byte"
     },
     "BM-03": {
-      "max": 0.130019,
-      "median": 0.122781,
+      "max": 0.132769,
+      "median": 0.121028,
       "metric": "Stage-10 fixed 60-byte BLAKE3 seed derivation us/roll",
-      "min": 0.121895,
+      "min": 0.120279,
       "pass": true,
-      "runs": [0.122781, 0.121895, 0.130019, 0.122256, 0.124962],
       "threshold": "<2.5 us"
     },
     "BM-04": {
-      "claim_ceiling": "network RTT triangle consistency is a sanity heuristic, not a speed-of-light distance proof",
-      "metric": "synthetic +/-50 ms jitter window and median triangle-consistency heuristic",
+      "claim_ceiling": "RTT triangle consistency is a sanity heuristic, not a speed-of-light distance proof.",
+      "metric": "synthetic -50..+50 ms jitter median stability and triangle consistency",
       "pass": true
     },
     "BM-05": {
       "fuzz_cases_per_run": 100002,
       "metric": "fail-closed fuzz rejection",
       "pass": true,
+      "runs": 5,
       "total_cases": 500010,
       "unsafe_passes": 0
     },
@@ -46,9 +45,28 @@
       "pass": true
     }
   },
+  "compile": {
+    "flags": "gcc -O3 -march=native -Wall -Werror",
+    "local_source_equivalent_reverify": "PASS_ZERO_WARNINGS",
+    "github_ci": "NO_RUN_AVAILABLE"
+  },
   "gate_b": "BLOCKED",
+  "mesh_hardening": {
+    "full_plus_minus_50ms_jitter_vector": true,
+    "udp_hop_period_ms": 300,
+    "udp_invalid_range_fail_closed": true
+  },
+  "methodology": {
+    "bm01": "Throughput and latency are now separated. Only dependency-chained latency is eligible for the <1.5 ns gate.",
+    "valid_transition_bank": "eta_eff_q16 bits 64..79 are excluded from the BM-01 valid bank because flipping them can intentionally trigger the efficiency fence."
+  },
+  "residual_handoff": {
+    "owner": "W-1",
+    "reason": "Strict BM-01 latency remains above threshold; W5 will not weaken the acceptance definition.",
+    "requested_action": "Optimize aura_pipeline_check_transition_fast or return a human-approved revision to the latency criterion, then re-run W5 suite."
+  },
   "scope": "mesh_and_benchmark",
-  "status": "BLOCK_BM01",
+  "status": "BLOCK_BM01_STRICT_LATENCY",
   "work_order_id": "WO-AURA-PQ-AMTD-006",
   "worker": "W-5"
 }
