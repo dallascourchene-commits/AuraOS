@@ -2,55 +2,67 @@
   "acceptance": {
     "all_six_benchmarks_pass": false,
     "blocking_reasons": [
-      "BM-01 invariant latency threshold not met on this host"
+      "BM-01 strict dependency-chained invariant latency remains >= 1.5 ns on this host"
     ],
     "clean_compile_zero_warnings": true,
+    "compile_scope": "Local source-equivalent W1/W3 plus exact patched W5 mesh verifier compiled with gcc -O3 -march=native -Wall -Werror",
+    "github_ci_run": false,
     "provider_internal_allocation_free_hot_path": "NOT_PROVEN",
-    "zero_explicit_malloc_calloc_in_aura_sources": true
+    "zero_explicit_malloc_calloc_in_aura_hot_path_sources": true
   },
   "benchmarks": {
     "BM-01": {
-      "max": 1.799514,
-      "median": 1.743115,
-      "metric": "invariant check throughput ns/check over runtime-populated 128-state valid-transition bank",
-      "min": 1.704907,
+      "diagnostic_steady_state_throughput_ns_per_check": {
+        "median": 1.361768,
+        "note": "Eight independent checks may overlap; this is throughput only and cannot satisfy the latency gate."
+      },
+      "max": 1.774657,
+      "median": 1.721175,
+      "metric": "dependency-chained invariant check latency proxy over a runtime-populated bank containing only transitions that satisfy Hamming/stage/efficiency invariants",
+      "min": 1.708685,
       "pass": false,
-      "runs": [1.708252, 1.704907, 1.743115, 1.763189, 1.799514],
+      "runs": [1.708685, 1.774657, 1.72802, 1.721175, 1.714015],
       "threshold": "<1.5 ns"
     },
     "BM-02": {
-      "max": 0.099238,
-      "median": 0.095075,
+      "max": 0.097514,
+      "median": 0.091415,
       "metric": "HDC bind+unbind cycles/processed-byte",
-      "min": 0.090312,
+      "min": 0.090911,
       "pass": true,
-      "roundtrip_max_abs_error": 1.1920929e-07,
-      "runs": [0.095084, 0.090312, 0.090504, 0.099238, 0.095075],
+      "roundtrip_max_abs_error_ceiling": 1e-5,
+      "runs": [0.090911, 0.091169, 0.091641, 0.097514, 0.091415],
       "threshold": "<=1.2 cycles/byte"
     },
     "BM-03": {
-      "max": 0.130019,
-      "median": 0.122781,
+      "max": 0.132769,
+      "median": 0.121028,
       "metric": "Stage-10 fixed 60-byte BLAKE3 seed derivation us/roll",
-      "min": 0.121895,
+      "min": 0.120279,
       "pass": true,
-      "runs": [0.122781, 0.121895, 0.130019, 0.122256, 0.124962],
+      "runs": [0.120279, 0.121028, 0.120919, 0.132769, 0.121346],
       "threshold": "<2.5 us"
     },
     "BM-04": {
-      "claim_ceiling": "network RTT triangle consistency is a sanity heuristic, not a speed-of-light distance proof",
-      "metric": "synthetic +/-50 ms jitter window and median triangle-consistency heuristic",
-      "pass": true
+      "claim_ceiling": "RTT triangle consistency is a sanity heuristic, not a speed-of-light distance proof.",
+      "jitter_samples_us": [-50000, -37500, -25000, -12500, 0, 12500, 25000, 37500, 50000],
+      "median_ab_us": 80000,
+      "median_ac_us": 100000,
+      "median_bc_us": 90000,
+      "metric": "synthetic +/-50 ms jitter window plus median triangle-consistency heuristic",
+      "pass": true,
+      "triangle_consistent": true
     },
     "BM-05": {
       "fuzz_cases_per_run": 100002,
       "metric": "fail-closed fuzz rejection",
       "pass": true,
+      "runs": 5,
       "total_cases": 500010,
       "unsafe_passes": 0
     },
     "BM-06": {
-      "claim_ceiling": "does not prove absence of transient copies in provider internals, registers, caches, swap, or physical remanence",
+      "claim_ceiling": "Does not prove absence of transient copies in provider internals, registers, caches, swap, or physical remanence.",
       "metric": "caller-owned designated key buffers are all-zero after aura_secure_bzero",
       "pass": true
     }
@@ -61,7 +73,7 @@
   },
   "crypto_assurance": {
     "cmvp_fips_provider_validation_claimed": false,
-    "constant_time_evidence": "OpenSSL design documentation states usual constant-time methods are used; this local benchmark is not an independent side-channel proof.",
+    "constant_time_independent_side_channel_proof": false,
     "fips203_conforming_algorithm": true,
     "ml_kem_768_algorithm": "OpenSSL 3.5 ML-KEM-768",
     "provider_internal_zeroization": "NOT_INDEPENDENTLY_OBSERVABLE",
@@ -69,16 +81,38 @@
   },
   "environment": {
     "architecture": "x86_64",
-    "compile_command": "gcc -O3 -march=native -Wall -Werror core_pipeline.c crypto_core.c mesh_adapter.c bench_recursive_crypto.c -lcrypto -lm -o bench_recursive_crypto",
     "compiler": "gcc 14.2.0",
     "compiler_warnings": 0,
-    "openssl": "3.5.5 default provider"
+    "openssl_runtime": "3.5.5",
+    "verification_runs": 5
+  },
+  "mesh_hardening": {
+    "invalid_base_zero_rejected": true,
+    "invalid_range_wrap_rejected": true,
+    "invalid_span_zero_rejected": true,
+    "udp_hop_period_ms": 300
+  },
+  "methodology_correction": {
+    "bm01_prior_issue": "Prior harness used a per-iteration volatile sink and called its result throughput ns/check while the work order specifies latency; its 128-state bank also included an eta_eff_q16 bit flip that can intentionally fail the efficiency invariant.",
+    "bm01_repair": "Primary measurement is now dependency-chained. A separate unrolled throughput diagnostic is retained but cannot satisfy BM-01.",
+    "bm04_prior_issue": "Prior synthetic jitter samples covered only 0 to +20 ms rather than the requested +/-50 ms.",
+    "bm04_repair": "Symmetric -50 to +50 ms samples now exercise the full requested window."
+  },
+  "repository_source_bindings": {
+    "bench_recursive_crypto.c": "631ba3aa103fa8d16778ed6231e0fa2c7aedf5e3",
+    "core_pipeline.c": "bfd3f4e5aa48204be0a8e1029c2bbe324c39a057",
+    "core_pipeline.h": "e695554deab1cd9d63006d2f8b887c3aa02fac01",
+    "crypto_core.c": "3501572b22bcc749d7f8825bd8d1411eef56722c",
+    "crypto_core.h": "dd3ee735e85aebbd5755539b1d932ae37573de45",
+    "mesh_adapter.c": "b0d7baa64a6aad16bb045d933d1f48283ab7fab1",
+    "mesh_adapter.h": "853b307b7288658665489969b60c3beef1b525e4"
   },
   "requirements_interaction": {
     "delta_h_equals_1_vs_seed_refresh": "CONFLICT_IF_ATOMIC",
-    "resolution": "perform invariant check on transition control state, then derive/commit the 48-bit session seed slice as post-invariant Stage-10 rebase material"
+    "resolution_from_W1": "perform invariant check on transition control state, then derive/commit the 48-bit session seed slice as post-invariant Stage-10 rebase material"
   },
   "semantic_id": "AD:WO:SEC:RECURSIVE-10STAGE-CRYPTO-BENCH:20260816:006",
-  "status": "GATE_B_BLOCKED_BM01",
+  "status": "GATE_B_BLOCKED_BM01_STRICT_LATENCY",
+  "verification_boundary": "Measured staging-host verification. Current W5 changes were not executed by GitHub CI; no production-network, CMVP-provider, physical-remanence, or independent side-channel claim is made.",
   "work_order_id": "WO-AURA-PQ-AMTD-006"
 }
