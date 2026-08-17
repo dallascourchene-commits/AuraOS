@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "authority_minting": false,
+    "line_count": 402,
+    "line_limit": 500,
+    "model_egress": false,
+    "module_sha256": "349c51dcd6d8db3576de6a97d795f682d7936a8ccef9447c6fbfa1dbdb2ad5db",
+    "persistent_store": false,
+    "primitive_coverage": [
+      "P_INGRESS",
+      "P_ROUTER",
+      "P_FENCE",
+      "P_RESIDUAL"
+    ],
+    "python_3_10_plus_syntax_compile": "PASS",
+    "stdlib_only": true,
+    "under_line_limit": true
+  },
+  "claim_ceiling": "Stage 06 candidate implementation; external proof booleans are evidence inputs, not a cryptographic implementation.",
+  "output": "aura_os_minimal.py",
+  "receipt_id": "AURA:STAGE06:W5:CYCLE-RECEIPT:V1",
+  "role": "IMPLEMENT_MINIMAL_OS",
+  "semantic_notes": [
+    "P_ROUTER blocks unresolved ASP and VOICE and verifies subject/direction stay within admitted cone.",
+    "P_FENCE requires valid route, fail-closed R_d < C_d, all staged verification checks, and current effect authority.",
+    "P_RESIDUAL mutates the task-local ResidualBuffer to R_t and accepts only current verified coherent PASS receipts.",
+    "IDLE_STATE is empty and no global task/transcript/receipt cache exists."
+  ],
+  "stage": "06_refactor",
+  "status": "PASS",
+  "worker": "W5"
+}
