@@ -1,0 +1,63 @@
+{
+  "artifacts": [
+    {
+      "bytes": 13365,
+      "path": "aura_os_minimal.py",
+      "sha256": "349c51dcd6d8db3576de6a97d795f682d7936a8ccef9447c6fbfa1dbdb2ad5db"
+    },
+    {
+      "bytes": 3260,
+      "path": "W4_MINIMAL_OPERATIONAL_CONTEXT.json",
+      "sha256": "373b4dfbe3fb6207759071dd2af1536b98ebb669786687ef22ec84310d807b92"
+    },
+    {
+      "bytes": 2140,
+      "path": "W4_TEST_VECTORS.json",
+      "sha256": "ca862821d78da26c7a5e28ce8bcbc67ed0ed736ff69b547bcbc509d2a8189814"
+    },
+    {
+      "bytes": 8907,
+      "path": "HARNESS_D0_MUTANTS.py",
+      "sha256": "77cd7dfe2af5104b7f1484157061cde0db042a0abcea62da104f7bac8bb83661"
+    },
+    {
+      "bytes": 4452,
+      "path": "D0_RESULTS.json",
+      "sha256": "d3f9f83d382d16f3f3eb8980934a172d434f8e075f9c72d69ce892a2ffa380c2"
+    },
+    {
+      "bytes": 854,
+      "path": "W4_CYCLE_RECEIPT.json",
+      "sha256": "a30604cfdf884312d184de7754b05e7f103ce2e39fbc523cb5c65d3bb91b255f"
+    },
+    {
+      "bytes": 1232,
+      "path": "W5_CYCLE_RECEIPT.json",
+      "sha256": "5d84486c74aa13f5d7e10d178b32751fa62b571f035541e484a4ed04e96400e9"
+    },
+    {
+      "bytes": 785,
+      "path": "W6_CYCLE_RECEIPT.json",
+      "sha256": "08ca71424ed53458e0f528e946a85c5dcd4af466de1db4a512b2dd94d29f6946"
+    }
+  ],
+  "checks": {
+    "d0_mutants": "5/5 REJECTED",
+    "d0_rejection_rate": 1.0,
+    "logical_zero_token_idle_target": true,
+    "minimal_context_under_50kb": true,
+    "minimal_os_under_500_lines": true,
+    "test_vectors": "16/16 PASS"
+  },
+  "document_id": "AURA:STAGE06:GATE-B-CANDIDATE:V1",
+  "gate_a_disposition": "APPROVED",
+  "nonclaims": [
+    "No GitHub commit or canonical promotion performed.",
+    "No persistence/Merkle-DAG write performed.",
+    "No production ZK verification performed.",
+    "No deployment performed."
+  ],
+  "source_snapshot": "68051090c8fb0bd1fe7316fd61227ce0ef0bfc17",
+  "status": "READY_FOR_GATE_B_REVIEW",
+  "transition": "STAGE05_STAGING -> STAGE06_REFACTOR_SUBSTRATE"
+}
