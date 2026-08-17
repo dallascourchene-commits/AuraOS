@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1625
-- **total_bytes**: 26274794
-- **text_tokens_est**: 6559110
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 8, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 266, 'support_file': 49}
+- **file_count**: 1634
+- **total_bytes**: 26309921
+- **text_tokens_est**: 6567896
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1625,
+  "repo_file_count": 1634,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -238,6 +238,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "06_refactor/W5_CYCLE_RECEIPT.json",
     "06_refactor/W6_CYCLE_RECEIPT.json",
     "06_refactor/aura_os_minimal.py",
+    "20_REFACTOR_ROOM/GATE_B_RECEIPT.json",
+    "20_REFACTOR_ROOM/W1_CYCLE_RECEIPT.json",
+    "20_REFACTOR_ROOM/W3_CYCLE_RECEIPT.json",
+    "20_REFACTOR_ROOM/W5_CYCLE_RECEIPT.json",
+    "20_REFACTOR_ROOM/bench_recursive_crypto.c",
+    "20_REFACTOR_ROOM/benchmark_results.json",
+    "20_REFACTOR_ROOM/core_pipeline.c",
+    "20_REFACTOR_ROOM/crypto_core.c",
+    "20_REFACTOR_ROOM/mesh_adapter.c",
     "AMD_HACKATHON_SUBMISSION.md",
     "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
     "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -1765,16 +1774,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1625,
-  "bytes": 26274794,
-  "tokens_est": 6559110,
+  "files": 1634,
+  "bytes": 26309921,
+  "tokens_est": 6567896,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 234,
-    "native_accelerator": 8,
+    "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 995,
-    "schema_or_lexicon": 266,
+    "schema_or_lexicon": 271,
     "support_file": 49
   }
 }
@@ -2074,6 +2083,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
     "06_refactor/D0_MUTANT_HARNESS.py",
     "06_refactor/aura_os_minimal.py",
+    "20_REFACTOR_ROOM/bench_recursive_crypto.c",
+    "20_REFACTOR_ROOM/core_pipeline.c",
+    "20_REFACTOR_ROOM/crypto_core.c",
+    "20_REFACTOR_ROOM/mesh_adapter.c",
     "_aura_architect_consolidation_benchmark_legacy.py",
     "_aura_architect_consolidation_benchmark_refined_legacy.py",
     "_aura_architect_consolidation_benchmark_v2_legacy.py",
@@ -2465,11 +2478,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_planning_frontier.py",
     "aura_planning_projector.py",
     "aura_planning_regression.py",
-    "aura_plugin_registry.py",
-    "aura_polysynthetic_intent.py",
-    "aura_positional_parser.py",
-    "aura_pre_egress_interceptor.py",
-    "aura_pricing.py"
+    "aura_plugin_registry.py"
   ]
 }
 ```
