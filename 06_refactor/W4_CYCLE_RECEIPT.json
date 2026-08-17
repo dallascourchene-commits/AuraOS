@@ -1,0 +1,25 @@
+{
+  "checks": {
+    "context_actual_bytes": 3260,
+    "context_budget_bytes": 51200,
+    "context_under_budget": true,
+    "coupling_graph_integrity_verified": true,
+    "idle_target": "logical zero retained task tokens; no transcript/cache/global task registry",
+    "test_vectors_staged": 16
+  },
+  "claim_ceiling": "Bounded Stage 06 hydration/test staging only; no authority, persistence, deployment, or canonical promotion.",
+  "inputs": [
+    "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
+    "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+    "SUBSTRATE_OS_COUPLING_GRAPH.json"
+  ],
+  "outputs": [
+    "W4_MINIMAL_OPERATIONAL_CONTEXT.json",
+    "W4_TEST_VECTORS.json"
+  ],
+  "receipt_id": "AURA:STAGE06:W4:CYCLE-RECEIPT:V1",
+  "role": "HYDRATE_MINIMAL_OPERATIONAL_CONTEXT",
+  "stage": "06_refactor",
+  "status": "PASS",
+  "worker": "W4"
+}
