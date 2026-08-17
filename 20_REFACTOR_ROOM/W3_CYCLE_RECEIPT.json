@@ -1,0 +1,29 @@
+{
+  "hdc_bm02": {
+    "max": 0.099238,
+    "median": 0.095075,
+    "metric": "HDC bind+unbind cycles/processed-byte",
+    "min": 0.090312,
+    "pass": true,
+    "roundtrip_max_abs_error": 1.1920929e-07,
+    "runs": [0.095084, 0.090312, 0.090504, 0.099238, 0.095075],
+    "threshold": "<=1.2 cycles/byte"
+  },
+  "ml_kem": {
+    "cmvp_fips_provider_validation_claimed": false,
+    "constant_time_evidence": "OpenSSL design documentation states usual constant-time methods are used; this local benchmark is not an independent side-channel proof.",
+    "fips203_conforming_algorithm": true,
+    "ml_kem_768_algorithm": "OpenSSL 3.5 ML-KEM-768",
+    "provider_internal_zeroization": "NOT_INDEPENDENTLY_OBSERVABLE",
+    "roundtrip_pass": true
+  },
+  "scope": "mlkem_hdc_zeroization",
+  "status": "PASS_WITH_PROVIDER_BOUNDARIES",
+  "work_order_id": "WO-AURA-PQ-AMTD-006",
+  "worker": "W-3",
+  "zeroization_bm06": {
+    "claim_ceiling": "does not prove absence of transient copies in provider internals, registers, caches, swap, or physical remanence",
+    "metric": "caller-owned designated key buffers are all-zero after aura_secure_bzero",
+    "pass": true
+  }
+}
