@@ -1,0 +1,119 @@
+{
+  "document_id": "GATE-B-WO-AURA-PQ-AMTD-006",
+  "dispatch_id": "DISP-AURA-20260816-006",
+  "work_order_id": "WO-AURA-PQ-AMTD-006",
+  "semantic_id": "AD:WO:SEC:RECURSIVE-10STAGE-CRYPTO-BENCH:20260816:006",
+  "stage": "20_REFACTOR_ROOM",
+  "status": "STAGED_NONCANONICAL__GATE_B_BLOCKED_BM01__HUMAN_REVIEW_REQUIRED",
+  "promotion": "NOT_PERFORMED",
+  "deployment": "NOT_PERFORMED",
+  "workers": {
+    "W-1": "PASS_WITH_ATOMIC_REBASE_CONSTRAINT",
+    "W-3": "PASS_WITH_PROVIDER_BOUNDARIES",
+    "W-5": "BLOCK_BM01"
+  },
+  "acceptance_summary": {
+    "benchmarks_passed": 5,
+    "benchmarks_total": 6,
+    "all_six_pass": false,
+    "blocking_gate": "BM-01",
+    "clean_compile_zero_warnings": true,
+    "compile_command": "gcc -O3 -march=native -Wall -Werror core_pipeline.c crypto_core.c mesh_adapter.c bench_recursive_crypto.c -lcrypto -lm -o bench_recursive_crypto",
+    "explicit_malloc_calloc_in_aura_sources": 0,
+    "provider_internal_allocation_free_hot_path": "NOT_PROVEN"
+  },
+  "benchmarks": {
+    "BM-01": {
+      "metric": "invariant check throughput ns/check over runtime-populated 128-state valid-transition bank",
+      "threshold": "<1.5 ns",
+      "min_ns": 1.704907,
+      "median_ns": 1.743115,
+      "max_ns": 1.799514,
+      "pass": false
+    },
+    "BM-02": {
+      "metric": "HDC bind+unbind cycles/processed-byte",
+      "threshold": "<=1.2 cycles/byte",
+      "median_cycles_per_byte": 0.095075,
+      "max_cycles_per_byte": 0.099238,
+      "roundtrip_max_abs_error": 1.1920929e-07,
+      "pass": true
+    },
+    "BM-03": {
+      "metric": "Stage-10 fixed 60-byte BLAKE3 seed derivation",
+      "threshold": "<2.5 us",
+      "median_us": 0.122781,
+      "max_us": 0.130019,
+      "pass": true
+    },
+    "BM-04": {
+      "metric": "synthetic +/-50 ms jitter window and median RTT triangle-consistency heuristic",
+      "pass": true,
+      "claim_ceiling": "RTT triangle consistency is a sanity heuristic and is not a physical speed-of-light distance proof"
+    },
+    "BM-05": {
+      "metric": "fail-closed fuzz rejection",
+      "total_invalid_cases": 500010,
+      "unsafe_passes": 0,
+      "pass": true
+    },
+    "BM-06": {
+      "metric": "caller-owned designated key buffers are all-zero after aura_secure_bzero",
+      "pass": true,
+      "claim_ceiling": "does not establish absence of transient copies in provider internals, CPU registers, caches, swap, DMA-visible memory, or physical remanence"
+    }
+  },
+  "crypto_assurance": {
+    "ml_kem_768_backend": "OpenSSL 3.5 default-provider ML-KEM-768",
+    "fips203_conforming_algorithm": true,
+    "cmvp_or_fips_provider_validation_claimed": false,
+    "encapsulation_decapsulation_roundtrip": "PASS",
+    "constant_time_claim": "SOURCE_BACKED_PROVIDER_DESIGN_ONLY",
+    "independent_side_channel_proof": false,
+    "provider_internal_zeroization_observed": false,
+    "provider_internal_lattice_residue_scrub": "NOT_INDEPENDENTLY_OBSERVABLE"
+  },
+  "hdc_assurance": {
+    "dimension": 10000,
+    "implementation": "AVX2 vectorized complex phasor bind/unbind plus FST pad XOR",
+    "single_cpu_instruction_unbinding_claimed": false,
+    "roundtrip_verified": true
+  },
+  "pipeline_assurance": {
+    "packed_state_bits": 128,
+    "hamming_delta_required": 1,
+    "stage_sequence": "s_next=(s_current mod 10)+1",
+    "eta_q16_minimum": 62259,
+    "eta_effective_threshold": 0.95,
+    "blake3_scope": "single-block <=64-byte implementation; Stage-10 derivation input is fixed at 60 bytes",
+    "blake3_short_vectors": "PASS",
+    "delta_h_vs_seed_refresh": {
+      "status": "CONFLICT_IF_ONE_ATOMIC_128_BIT_TRANSITION",
+      "reason": "refreshing the embedded 48-bit cryptographic seed slice normally changes more than one bit",
+      "staged_resolution": "verify the one-bit control transition first, then derive and commit the new session-seed slice as post-invariant Stage-10 rebase material",
+      "human_gate_required": true
+    }
+  },
+  "mesh_assurance": {
+    "rtt_nodes": 3,
+    "median_window": 9,
+    "udp_hop_period_ms": 300,
+    "transport_scope": "deterministic loopback UDP bind/port rotation only",
+    "packet_send_implementation": false,
+    "covert_transport_claimed": false
+  },
+  "artifacts": [
+    "20_REFACTOR_ROOM/core_pipeline.c",
+    "20_REFACTOR_ROOM/core_pipeline.h",
+    "20_REFACTOR_ROOM/crypto_core.c",
+    "20_REFACTOR_ROOM/crypto_core.h",
+    "20_REFACTOR_ROOM/mesh_adapter.c",
+    "20_REFACTOR_ROOM/mesh_adapter.h",
+    "20_REFACTOR_ROOM/bench_recursive_crypto.c",
+    "20_REFACTOR_ROOM/benchmark_results.json",
+    "20_REFACTOR_ROOM/W1_CYCLE_RECEIPT.json",
+    "20_REFACTOR_ROOM/W3_CYCLE_RECEIPT.json",
+    "20_REFACTOR_ROOM/W5_CYCLE_RECEIPT.json"
+  ],
+  "gate_b_required_action": "Do not promote. Either optimize/redefine BM-01 under an agreed measurement protocol and rerun, or explicitly revise the <1.5 ns acceptance criterion. Separately review the atomic Delta-H=1 versus embedded seed-refresh interaction before canonicalization."
+}
