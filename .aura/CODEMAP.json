@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786938896,
+  "generated_at_unix": 1787156071,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1634,
+    "repo_file_count": 1636,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -495,6 +495,7 @@
       "aura_crypto_puf.py",
       "aura_crystallization.py",
       "aura_current_code_quality_assessment.py",
+      "aura_custodian_drive_event_adapter.py",
       "aura_dikwp_router_pipeline.py",
       "aura_dream_engine.py",
       "aura_dream_retrieval.py",
@@ -1437,6 +1438,7 @@
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
       "tests/test_aura_crucible_phase_b.py",
+      "tests/test_aura_custodian_drive_event_adapter.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_efficiency_benchmark.py",
       "tests/test_aura_emergent_agent_bridge.py",
@@ -1654,6 +1656,7 @@
       "aura_blockchain/memory_staking.py",
       "aura_blockchain/node.py",
       "aura_blockchain/phasor_ledger.py",
+      "aura_custodian_drive_event_adapter.py",
       "aura_spatial_importers/__init__.py",
       "aura_spatial_importers/contracts.py",
       "aura_spatial_importers/gaussian_gltf.py",
@@ -1741,8 +1744,7 @@
       "tests/test_aura_capability_connectome_v2.py",
       "tests/test_aura_capability_lane_registry.py",
       "tests/test_aura_capability_resolver.py",
-      "tests/test_aura_capability_resolver_connectome.py",
-      "tests/test_aura_change_graph.py"
+      "tests/test_aura_capability_resolver_connectome.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1750,15 +1752,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1634,
-      "bytes": 26316194,
-      "tokens_est": 6569465,
+      "files": 1636,
+      "bytes": 26347149,
+      "tokens_est": 6577204,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 234,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 995,
+        "python_module": 997,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -2269,6 +2271,7 @@
         "aura_crypto_puf.py",
         "aura_crystallization.py",
         "aura_current_code_quality_assessment.py",
+        "aura_custodian_drive_event_adapter.py",
         "aura_dikwp_router_pipeline.py",
         "aura_dream_engine.py",
         "aura_dream_retrieval.py",
@@ -2438,8 +2441,7 @@
         "aura_planning_events.py",
         "aura_planning_frontier.py",
         "aura_planning_projector.py",
-        "aura_planning_regression.py",
-        "aura_plugin_registry.py"
+        "aura_planning_regression.py"
       ]
     }
   ],
@@ -39852,6 +39854,346 @@
         "end_line": 178,
         "semantic_id": "aura_current_code_quality_assessment.py#function:assess:c7724e796b72e3cf",
         "signature_hash": "6dfd7031ac01bfea"
+      }
+    ],
+    "CursorConflictError": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#class:CursorConflictError:82ded66c6a76b627",
+        "signature_hash": "685a53cf64a4f402"
+      }
+    ],
+    "DriveChangeFeedClient": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 42,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#class:DriveChangeFeedClient:0757f63f56def874",
+        "signature_hash": "b91e1d9d4a09ce64"
+      }
+    ],
+    "DriveChangeFeedClient.get_start_page_token": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 39,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:DriveChangeFeedClient.get_start_page_token:ea19ab15f500e248",
+        "signature_hash": "cd8e13e6718c7eb7"
+      }
+    ],
+    "DriveChangeFeedClient.list_changes": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:DriveChangeFeedClient.list_changes:384b1a085d6c531f",
+        "signature_hash": "d51476d27c71ceb0"
+      }
+    ],
+    "EventEnvelope": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 103,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#class:EventEnvelope:7acb68a3f78b7401",
+        "signature_hash": "981add6de2141c2b"
+      }
+    ],
+    "EventEnvelope.__post_init__": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 66,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:EventEnvelope.__post_init__:ff3f79a925c6d47d",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EventEnvelope.event_key": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 90,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:EventEnvelope.event_key:aa39a9b766a233a3",
+        "signature_hash": "cf1695c4d34d7657"
+      }
+    ],
+    "EventEnvelope.to_dict": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 103,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:EventEnvelope.to_dict:85bafff97bfdc106",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "_utc_now_iso": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 107,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#function:_utc_now_iso:c3619ee9728a937c",
+        "signature_hash": "50a52cb369b359a4"
+      }
+    ],
+    "normalize_workspace_event": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 140,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#function:normalize_workspace_event:d68039a15d56c045",
+        "signature_hash": "178bec37e2c9ae04"
+      }
+    ],
+    "normalize_drive_change": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 143,
+        "end_line": 168,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#function:normalize_drive_change:2201d368642128b6",
+        "signature_hash": "db29586423003211"
+      }
+    ],
+    "SQLiteCustodianEventStore": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "class",
+        "line": 171,
+        "end_line": 456,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#class:SQLiteCustodianEventStore:b84ab44af8d28511",
+        "signature_hash": "ff650ed255dbcce6"
+      }
+    ],
+    "SQLiteCustodianEventStore.__init__": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 179,
+        "end_line": 182,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.__init__:23c15d439f23db12",
+        "signature_hash": "cf93319cd87db237"
+      }
+    ],
+    "SQLiteCustodianEventStore._connect": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 184,
+        "end_line": 190,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore._connect:5423f71e62b04d0a",
+        "signature_hash": "0b0f85a1398a89ef"
+      }
+    ],
+    "SQLiteCustodianEventStore._initialize": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 192,
+        "end_line": 234,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore._initialize:8d641741c1e84d90",
+        "signature_hash": "f677651ebcdcf247"
+      }
+    ],
+    "SQLiteCustodianEventStore._insert_envelope": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 237,
+        "end_line": 259,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore._insert_envelope:183ab1218b2889c8",
+        "signature_hash": "81b86c62d04c5272"
+      }
+    ],
+    "SQLiteCustodianEventStore.enqueue": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 261,
+        "end_line": 274,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.enqueue:e54ada2f3fff335e",
+        "signature_hash": "bbcd7e9e8efe0ab1"
+      }
+    ],
+    "SQLiteCustodianEventStore.get_cursor": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 276,
+        "end_line": 279,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.get_cursor:6733e7b9beb4b928",
+        "signature_hash": "70f8195ef5d2f6c9"
+      }
+    ],
+    "SQLiteCustodianEventStore.set_cursor_if_absent": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 281,
+        "end_line": 291,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.set_cursor_if_absent:3e7c5c197e82b737",
+        "signature_hash": "0880d814fc62b622"
+      }
+    ],
+    "SQLiteCustodianEventStore.ingest_change_page": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 293,
+        "end_line": 332,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.ingest_change_page:e7370c470ce6dc63",
+        "signature_hash": "1f9811b6e9a52930"
+      }
+    ],
+    "SQLiteCustodianEventStore.claim_pending": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 334,
+        "end_line": 365,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.claim_pending:b73e64bf5e2d85b5",
+        "signature_hash": "3af152538a7c7973"
+      }
+    ],
+    "SQLiteCustodianEventStore._row_to_event_record": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 368,
+        "end_line": 371,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore._row_to_event_record:fb89f968683c928c",
+        "signature_hash": "c2057364c1f7b3c9"
+      }
+    ],
+    "SQLiteCustodianEventStore.mark_done": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 373,
+        "end_line": 380,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.mark_done:ce643f7df966c946",
+        "signature_hash": "b1e12448da138636"
+      }
+    ],
+    "SQLiteCustodianEventStore.mark_error": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 382,
+        "end_line": 390,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.mark_error:9db66dc81774cade",
+        "signature_hash": "d9b58560724a58de"
+      }
+    ],
+    "SQLiteCustodianEventStore.requeue_stale_processing": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 392,
+        "end_line": 402,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.requeue_stale_processing:2f9b731012580c2b",
+        "signature_hash": "ea47251fb23f7c35"
+      }
+    ],
+    "SQLiteCustodianEventStore.pending_count": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 404,
+        "end_line": 409,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.pending_count:dfcb0a34ffda828e",
+        "signature_hash": "60cc48ba4a17ddd7"
+      }
+    ],
+    "SQLiteCustodianEventStore.upsert_resource": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 411,
+        "end_line": 443,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.upsert_resource:f361095364cf86a3",
+        "signature_hash": "50f5b3a339f86e7f"
+      }
+    ],
+    "SQLiteCustodianEventStore.resource_record": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 445,
+        "end_line": 456,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.resource_record:6847efc5422f82e0",
+        "signature_hash": "839ac0d6b6a30287"
+      }
+    ],
+    "CustodianDriveEventAdapter": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "class",
+        "line": 459,
+        "end_line": 541,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#class:CustodianDriveEventAdapter:22b8afdf453f327f",
+        "signature_hash": "017db3f23527afd9"
+      }
+    ],
+    "CustodianDriveEventAdapter.__init__": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 467,
+        "end_line": 468,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:CustodianDriveEventAdapter.__init__:3cfbf3ae9fac836a",
+        "signature_hash": "8ae43bb154118dc6"
+      }
+    ],
+    "CustodianDriveEventAdapter.ingest_workspace_events": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 470,
+        "end_line": 471,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:CustodianDriveEventAdapter.ingest_workspace_events:e9ae13963a87a0d1",
+        "signature_hash": "872a9bc302df2254"
+      }
+    ],
+    "CustodianDriveEventAdapter.initialize_change_cursor": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 473,
+        "end_line": 481,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:CustodianDriveEventAdapter.initialize_change_cursor:9475e7fd2f08967f",
+        "signature_hash": "f9280fa5227f0383"
+      }
+    ],
+    "CustodianDriveEventAdapter.reconcile_changes": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 483,
+        "end_line": 531,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:CustodianDriveEventAdapter.reconcile_changes:c9214b541e34cf38",
+        "signature_hash": "f623b54c963820bb"
+      }
+    ],
+    "CustodianDriveEventAdapter.health": [
+      {
+        "file": "aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 533,
+        "end_line": 541,
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:CustodianDriveEventAdapter.health:9f7462caa2d6cc14",
+        "signature_hash": "b9e9e7bce134ee3c"
       }
     ],
     "DIKWPStage": [
@@ -129580,6 +129922,176 @@
         "signature_hash": "a006a83e5448bfbd"
       }
     ],
+    "FakeDriveClient": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "class",
+        "line": 18,
+        "end_line": 31,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#class:FakeDriveClient:13208c72089b5c66",
+        "signature_hash": "fc2a2c8f82469013"
+      }
+    ],
+    "FakeDriveClient.__init__": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 23,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#method:FakeDriveClient.__init__:7df3a851517107f1",
+        "signature_hash": "66684463293753c4"
+      }
+    ],
+    "FakeDriveClient.get_start_page_token": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 27,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#method:FakeDriveClient.get_start_page_token:0b2250063baf7a2c",
+        "signature_hash": "cd8e13e6718c7eb7"
+      }
+    ],
+    "FakeDriveClient.list_changes": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 31,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#method:FakeDriveClient.list_changes:8c825496bf2e88be",
+        "signature_hash": "8beabffca1635695"
+      }
+    ],
+    "test_workspace_event_normalizes_without_resource_hydration": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 49,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_workspace_event_normalizes_without_resource_hydration:82aecc7097f8f4bd",
+        "signature_hash": "e879697e2b654902"
+      }
+    ],
+    "test_content_hash_key_is_stable_when_provider_id_is_absent": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 71,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_content_hash_key_is_stable_when_provider_id_is_absent:784935e72e9b62a3",
+        "signature_hash": "fbc36eec8c0f5e13"
+      }
+    ],
+    "test_workspace_redelivery_is_idempotent": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 85,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_workspace_redelivery_is_idempotent:f9887ae534da90fe",
+        "signature_hash": "df4f5a03193010cb"
+      }
+    ],
+    "test_idless_workspace_redelivery_without_time_is_still_idempotent": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 105,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_idless_workspace_redelivery_without_time_is_still_idempotent:fb1dee8f7f6aa1a2",
+        "signature_hash": "e3923c3268eced12"
+      }
+    ],
+    "test_change_row_key_is_replay_stable_for_same_page": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 114,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_change_row_key_is_replay_stable_for_same_page:250cdabc3ce68ffb",
+        "signature_hash": "34c4ef86607b5bcf"
+      }
+    ],
+    "test_change_page_and_cursor_advance_in_one_local_transaction": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 117,
+        "end_line": 132,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_change_page_and_cursor_advance_in_one_local_transaction:bcedc4fa987017f8",
+        "signature_hash": "481f151efb5a153d"
+      }
+    ],
+    "test_cursor_conflict_fails_closed_without_inserting_page": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 135,
+        "end_line": 150,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_cursor_conflict_fails_closed_without_inserting_page:441cedc2c461b6d9",
+        "signature_hash": "e7ca83876a8c224a"
+      }
+    ],
+    "test_reconcile_changes_drains_pages_and_uses_new_start_token": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 153,
+        "end_line": 181,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_reconcile_changes_drains_pages_and_uses_new_start_token:8572da7dad39cd3c",
+        "signature_hash": "f03aec6ca406905c"
+      }
+    ],
+    "test_reconcile_reuses_persisted_cursor_after_restart": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 184,
+        "end_line": 204,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_reconcile_reuses_persisted_cursor_after_restart:8e9366558ae47398",
+        "signature_hash": "09eba36fce44eaf5"
+      }
+    ],
+    "test_claim_done_and_stale_processing_recovery": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 207,
+        "end_line": 234,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_claim_done_and_stale_processing_recovery:614dd5e96f15a0eb",
+        "signature_hash": "22bd376103c697a0"
+      }
+    ],
+    "test_failed_consumer_can_retry_or_dead_letter": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 237,
+        "end_line": 251,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_failed_consumer_can_retry_or_dead_letter:986049a6397ade61",
+        "signature_hash": "c33a8db41b6eab2c"
+      }
+    ],
+    "test_resource_registry_keeps_provider_identity_separate_from_semantic_owner": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 254,
+        "end_line": 269,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_resource_registry_keeps_provider_identity_separate_from_semantic_owner:41c6f39706522a3c",
+        "signature_hash": "849a4787f2ce6f88"
+      }
+    ],
+    "test_health_explicitly_has_no_write_or_semantic_mutation_capability": [
+      {
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "kind": "function",
+        "line": 272,
+        "end_line": 281,
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_health_explicitly_has_no_write_or_semantic_mutation_capability:4ec0bf332e0ed475",
+        "signature_hash": "f878cd47037a693d"
+      }
+    ],
     "_complete_chain": [
       {
         "file": "tests/test_aura_dikwp_router_pipeline.py",
@@ -193456,6 +193968,53 @@
       ]
     },
     {
+      "path": "aura_custodian_drive_event_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 21899,
+      "lines": 542,
+      "tokens_est": 5475,
+      "symbol_count": 34,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "34f9876a412d1c24",
+      "vector": [
+        -0.009086,
+        -0.177823,
+        -0.084369,
+        -0.110328,
+        -0.318005,
+        0.086965,
+        -0.245318,
+        -0.136288,
+        0.214167,
+        -0.068793,
+        0.131096,
+        -0.219358,
+        0.118116,
+        0.185611,
+        -0.099944,
+        -0.110328,
+        -0.151864,
+        0.198591,
+        0.081773,
+        0.035045,
+        -0.053217,
+        -0.255702,
+        0.123308,
+        -0.307621,
+        0.035045,
+        0.10254,
+        -0.112924,
+        0.001298,
+        0.027258,
+        -0.330985,
+        -0.286853,
+        0.330985
+      ]
+    },
+    {
       "path": "aura_dikwp_router_pipeline.py",
       "role": "python_module",
       "binary": false,
@@ -253268,6 +253827,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_custodian_drive_event_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9056,
+      "lines": 282,
+      "tokens_est": 2264,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0d5acc146311e4fa",
+      "vector": [
+        0.109094,
+        -0.259939,
+        -0.206066,
+        -0.303038,
+        0.103706,
+        -0.251858,
+        -0.230309,
+        -0.15758,
+        -0.168354,
+        -0.149499,
+        0.21684,
+        0.340749,
+        -0.07677,
+        0.044446,
+        0.063301,
+        0.090238,
+        0.171048,
+        0.022896,
+        -0.063301,
+        0.152192,
+        -0.103706,
+        0.036365,
+        -0.195291,
+        -0.192597,
+        -0.087544,
+        -0.122562,
+        -0.29765,
+        -0.052527,
+        0.154886,
+        -0.276101,
+        0.195291,
+        0.060608
+      ]
+    },
+    {
       "path": "tests/test_aura_dikwp_router_pipeline.py",
       "role": "python_module",
       "binary": false,
@@ -286149,15 +286755,15 @@
     }
   },
   "summary": {
-    "file_count": 1634,
-    "total_bytes": 26316194,
-    "text_tokens_est": 6569465,
+    "file_count": 1636,
+    "total_bytes": 26347149,
+    "text_tokens_est": 6577204,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 234,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 995,
+      "python_module": 997,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -286663,6 +287269,7 @@
       "aura_crypto_puf.py",
       "aura_crystallization.py",
       "aura_current_code_quality_assessment.py",
+      "aura_custodian_drive_event_adapter.py",
       "aura_dikwp_router_pipeline.py",
       "aura_dream_engine.py",
       "aura_dream_retrieval.py",
@@ -287605,6 +288212,7 @@
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
       "tests/test_aura_crucible_phase_b.py",
+      "tests/test_aura_custodian_drive_event_adapter.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_efficiency_benchmark.py",
       "tests/test_aura_emergent_agent_bridge.py",
@@ -321060,6 +321668,346 @@
         "end_line": 189,
         "signature_hash": "1107cedc597d81be",
         "file_digest8": "8380c9820b7aedfa"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#class:CursorConflictError:82ded66c6a76b627",
+        "name": "CursorConflictError",
+        "kind": "class",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 31,
+        "end_line": 32,
+        "signature_hash": "685a53cf64a4f402",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#class:CustodianDriveEventAdapter:22b8afdf453f327f",
+        "name": "CustodianDriveEventAdapter",
+        "kind": "class",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 459,
+        "end_line": 541,
+        "signature_hash": "017db3f23527afd9",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#class:DriveChangeFeedClient:0757f63f56def874",
+        "name": "DriveChangeFeedClient",
+        "kind": "class",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 35,
+        "end_line": 42,
+        "signature_hash": "b91e1d9d4a09ce64",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#class:EventEnvelope:7acb68a3f78b7401",
+        "name": "EventEnvelope",
+        "kind": "class",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 46,
+        "end_line": 103,
+        "signature_hash": "981add6de2141c2b",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#class:SQLiteCustodianEventStore:b84ab44af8d28511",
+        "name": "SQLiteCustodianEventStore",
+        "kind": "class",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 171,
+        "end_line": 456,
+        "signature_hash": "ff650ed255dbcce6",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#function:_utc_now_iso:c3619ee9728a937c",
+        "name": "_utc_now_iso",
+        "kind": "function",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 106,
+        "end_line": 107,
+        "signature_hash": "50a52cb369b359a4",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#function:normalize_drive_change:2201d368642128b6",
+        "name": "normalize_drive_change",
+        "kind": "function",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 143,
+        "end_line": 168,
+        "signature_hash": "db29586423003211",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#function:normalize_workspace_event:d68039a15d56c045",
+        "name": "normalize_workspace_event",
+        "kind": "function",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 110,
+        "end_line": 140,
+        "signature_hash": "178bec37e2c9ae04",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:CustodianDriveEventAdapter.__init__:3cfbf3ae9fac836a",
+        "name": "CustodianDriveEventAdapter.__init__",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 467,
+        "end_line": 468,
+        "signature_hash": "8ae43bb154118dc6",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:CustodianDriveEventAdapter.health:9f7462caa2d6cc14",
+        "name": "CustodianDriveEventAdapter.health",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 533,
+        "end_line": 541,
+        "signature_hash": "b9e9e7bce134ee3c",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:CustodianDriveEventAdapter.ingest_workspace_events:e9ae13963a87a0d1",
+        "name": "CustodianDriveEventAdapter.ingest_workspace_events",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 470,
+        "end_line": 471,
+        "signature_hash": "872a9bc302df2254",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:CustodianDriveEventAdapter.initialize_change_cursor:9475e7fd2f08967f",
+        "name": "CustodianDriveEventAdapter.initialize_change_cursor",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 473,
+        "end_line": 481,
+        "signature_hash": "f9280fa5227f0383",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:CustodianDriveEventAdapter.reconcile_changes:c9214b541e34cf38",
+        "name": "CustodianDriveEventAdapter.reconcile_changes",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 483,
+        "end_line": 531,
+        "signature_hash": "f623b54c963820bb",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:DriveChangeFeedClient.get_start_page_token:ea19ab15f500e248",
+        "name": "DriveChangeFeedClient.get_start_page_token",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 38,
+        "end_line": 39,
+        "signature_hash": "cd8e13e6718c7eb7",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:DriveChangeFeedClient.list_changes:384b1a085d6c531f",
+        "name": "DriveChangeFeedClient.list_changes",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "d51476d27c71ceb0",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:EventEnvelope.__post_init__:ff3f79a925c6d47d",
+        "name": "EventEnvelope.__post_init__",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 58,
+        "end_line": 66,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:EventEnvelope.event_key:aa39a9b766a233a3",
+        "name": "EventEnvelope.event_key",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 69,
+        "end_line": 90,
+        "signature_hash": "cf1695c4d34d7657",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:EventEnvelope.to_dict:85bafff97bfdc106",
+        "name": "EventEnvelope.to_dict",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 92,
+        "end_line": 103,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.__init__:23c15d439f23db12",
+        "name": "SQLiteCustodianEventStore.__init__",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 179,
+        "end_line": 182,
+        "signature_hash": "cf93319cd87db237",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore._connect:5423f71e62b04d0a",
+        "name": "SQLiteCustodianEventStore._connect",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 184,
+        "end_line": 190,
+        "signature_hash": "0b0f85a1398a89ef",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore._initialize:8d641741c1e84d90",
+        "name": "SQLiteCustodianEventStore._initialize",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 192,
+        "end_line": 234,
+        "signature_hash": "f677651ebcdcf247",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore._insert_envelope:183ab1218b2889c8",
+        "name": "SQLiteCustodianEventStore._insert_envelope",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 237,
+        "end_line": 259,
+        "signature_hash": "81b86c62d04c5272",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore._row_to_event_record:fb89f968683c928c",
+        "name": "SQLiteCustodianEventStore._row_to_event_record",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 368,
+        "end_line": 371,
+        "signature_hash": "c2057364c1f7b3c9",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.claim_pending:b73e64bf5e2d85b5",
+        "name": "SQLiteCustodianEventStore.claim_pending",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 334,
+        "end_line": 365,
+        "signature_hash": "3af152538a7c7973",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.enqueue:e54ada2f3fff335e",
+        "name": "SQLiteCustodianEventStore.enqueue",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 261,
+        "end_line": 274,
+        "signature_hash": "bbcd7e9e8efe0ab1",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.get_cursor:6733e7b9beb4b928",
+        "name": "SQLiteCustodianEventStore.get_cursor",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 276,
+        "end_line": 279,
+        "signature_hash": "70f8195ef5d2f6c9",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.ingest_change_page:e7370c470ce6dc63",
+        "name": "SQLiteCustodianEventStore.ingest_change_page",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 293,
+        "end_line": 332,
+        "signature_hash": "1f9811b6e9a52930",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.mark_done:ce643f7df966c946",
+        "name": "SQLiteCustodianEventStore.mark_done",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 373,
+        "end_line": 380,
+        "signature_hash": "b1e12448da138636",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.mark_error:9db66dc81774cade",
+        "name": "SQLiteCustodianEventStore.mark_error",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 382,
+        "end_line": 390,
+        "signature_hash": "d9b58560724a58de",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.pending_count:dfcb0a34ffda828e",
+        "name": "SQLiteCustodianEventStore.pending_count",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 404,
+        "end_line": 409,
+        "signature_hash": "60cc48ba4a17ddd7",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.requeue_stale_processing:2f9b731012580c2b",
+        "name": "SQLiteCustodianEventStore.requeue_stale_processing",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 392,
+        "end_line": 402,
+        "signature_hash": "ea47251fb23f7c35",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.resource_record:6847efc5422f82e0",
+        "name": "SQLiteCustodianEventStore.resource_record",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 445,
+        "end_line": 456,
+        "signature_hash": "839ac0d6b6a30287",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.set_cursor_if_absent:3e7c5c197e82b737",
+        "name": "SQLiteCustodianEventStore.set_cursor_if_absent",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 281,
+        "end_line": 291,
+        "signature_hash": "0880d814fc62b622",
+        "file_digest8": "34f9876a412d1c24"
+      },
+      {
+        "semantic_id": "aura_custodian_drive_event_adapter.py#method:SQLiteCustodianEventStore.upsert_resource:f361095364cf86a3",
+        "name": "SQLiteCustodianEventStore.upsert_resource",
+        "kind": "method",
+        "file": "aura_custodian_drive_event_adapter.py",
+        "line": 411,
+        "end_line": 443,
+        "signature_hash": "50f5b3a339f86e7f",
+        "file_digest8": "34f9876a412d1c24"
       },
       {
         "semantic_id": "aura_dikwp_router_pipeline.py#class:DIKWPEnvelope:247f01284d1cf7f7",
@@ -416202,6 +417150,176 @@
         "file_digest8": "6240366b4593eaad"
       },
       {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#class:FakeDriveClient:13208c72089b5c66",
+        "name": "FakeDriveClient",
+        "kind": "class",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 18,
+        "end_line": 31,
+        "signature_hash": "fc2a2c8f82469013",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_change_page_and_cursor_advance_in_one_local_transaction:bcedc4fa987017f8",
+        "name": "test_change_page_and_cursor_advance_in_one_local_transaction",
+        "kind": "function",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 117,
+        "end_line": 132,
+        "signature_hash": "481f151efb5a153d",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_change_row_key_is_replay_stable_for_same_page:250cdabc3ce68ffb",
+        "name": "test_change_row_key_is_replay_stable_for_same_page",
+        "kind": "function",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 108,
+        "end_line": 114,
+        "signature_hash": "34c4ef86607b5bcf",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_claim_done_and_stale_processing_recovery:614dd5e96f15a0eb",
+        "name": "test_claim_done_and_stale_processing_recovery",
+        "kind": "function",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 207,
+        "end_line": 234,
+        "signature_hash": "22bd376103c697a0",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_content_hash_key_is_stable_when_provider_id_is_absent:784935e72e9b62a3",
+        "name": "test_content_hash_key_is_stable_when_provider_id_is_absent",
+        "kind": "function",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 52,
+        "end_line": 71,
+        "signature_hash": "fbc36eec8c0f5e13",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_cursor_conflict_fails_closed_without_inserting_page:441cedc2c461b6d9",
+        "name": "test_cursor_conflict_fails_closed_without_inserting_page",
+        "kind": "function",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 135,
+        "end_line": 150,
+        "signature_hash": "e7ca83876a8c224a",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_failed_consumer_can_retry_or_dead_letter:986049a6397ade61",
+        "name": "test_failed_consumer_can_retry_or_dead_letter",
+        "kind": "function",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 237,
+        "end_line": 251,
+        "signature_hash": "c33a8db41b6eab2c",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_health_explicitly_has_no_write_or_semantic_mutation_capability:4ec0bf332e0ed475",
+        "name": "test_health_explicitly_has_no_write_or_semantic_mutation_capability",
+        "kind": "function",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 272,
+        "end_line": 281,
+        "signature_hash": "f878cd47037a693d",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_idless_workspace_redelivery_without_time_is_still_idempotent:fb1dee8f7f6aa1a2",
+        "name": "test_idless_workspace_redelivery_without_time_is_still_idempotent",
+        "kind": "function",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 88,
+        "end_line": 105,
+        "signature_hash": "e3923c3268eced12",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_reconcile_changes_drains_pages_and_uses_new_start_token:8572da7dad39cd3c",
+        "name": "test_reconcile_changes_drains_pages_and_uses_new_start_token",
+        "kind": "function",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 153,
+        "end_line": 181,
+        "signature_hash": "f03aec6ca406905c",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_reconcile_reuses_persisted_cursor_after_restart:8e9366558ae47398",
+        "name": "test_reconcile_reuses_persisted_cursor_after_restart",
+        "kind": "function",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 184,
+        "end_line": 204,
+        "signature_hash": "09eba36fce44eaf5",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_resource_registry_keeps_provider_identity_separate_from_semantic_owner:41c6f39706522a3c",
+        "name": "test_resource_registry_keeps_provider_identity_separate_from_semantic_owner",
+        "kind": "function",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 254,
+        "end_line": 269,
+        "signature_hash": "849a4787f2ce6f88",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_workspace_event_normalizes_without_resource_hydration:82aecc7097f8f4bd",
+        "name": "test_workspace_event_normalizes_without_resource_hydration",
+        "kind": "function",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 34,
+        "end_line": 49,
+        "signature_hash": "e879697e2b654902",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#function:test_workspace_redelivery_is_idempotent:f9887ae534da90fe",
+        "name": "test_workspace_redelivery_is_idempotent",
+        "kind": "function",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 74,
+        "end_line": 85,
+        "signature_hash": "df4f5a03193010cb",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#method:FakeDriveClient.__init__:7df3a851517107f1",
+        "name": "FakeDriveClient.__init__",
+        "kind": "method",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 19,
+        "end_line": 23,
+        "signature_hash": "66684463293753c4",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#method:FakeDriveClient.get_start_page_token:0b2250063baf7a2c",
+        "name": "FakeDriveClient.get_start_page_token",
+        "kind": "method",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 25,
+        "end_line": 27,
+        "signature_hash": "cd8e13e6718c7eb7",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
+        "semantic_id": "tests/test_aura_custodian_drive_event_adapter.py#method:FakeDriveClient.list_changes:8c825496bf2e88be",
+        "name": "FakeDriveClient.list_changes",
+        "kind": "method",
+        "file": "tests/test_aura_custodian_drive_event_adapter.py",
+        "line": 29,
+        "end_line": 31,
+        "signature_hash": "8beabffca1635695",
+        "file_digest8": "0d5acc146311e4fa"
+      },
+      {
         "semantic_id": "tests/test_aura_dikwp_router_pipeline.py#function:_complete_chain:c520a1f50d22ba8e",
         "name": "_complete_chain",
         "kind": "function",
@@ -446122,7 +447240,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f54ee2e4da0bb0db05767925275e2b15",
-    "payload_hash": "0fa1918e8b28a9b69a948e98a0f6517d"
+    "record_fingerprint": "bd42c2925650cc676108647f84b0496e",
+    "payload_hash": "f9c72f583299b8249010cc2ff1bb1789"
   }
 }
