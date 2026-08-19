@@ -115,6 +115,11 @@ def normalize_workspace_event(raw: Mapping[str, Any]) -> EventEnvelope:
     may already provide a flattened CloudEvent.  Support both shapes while keeping
     the original provider payload intact.
 
+    CloudEvents defines event identity by the pair ``source`` + ``id``.  When a
+    CloudEvent source is available, bind it into the provider event id so events
+    from distinct Workspace subscriptions cannot collide merely because they reuse
+    the same ``id`` value.
+
     If the provider omits both event id and event time, ``observed_at`` remains
     empty so local wall-clock time cannot destabilize the content-derived
     idempotency key; SQLite separately records the local first-seen timestamp.
@@ -141,14 +146,25 @@ def normalize_workspace_event(raw: Mapping[str, Any]) -> EventEnvelope:
         or data_map.get("resource_name")
         or ""
     )
-    provider_event_id = str(
+    cloud_event_id = str(
         attribute_map.get("ce-id")
         or raw.get("id")
         or raw.get("event_id")
-        or message_map.get("messageId")
-        or message_map.get("message_id")
         or ""
-    )
+    ).strip()
+    cloud_event_source = str(
+        attribute_map.get("ce-source")
+        or raw.get("source")
+        or ""
+    ).strip()
+    if cloud_event_id and cloud_event_source:
+        provider_event_id = f"cloudevent:{cloud_event_source}:{cloud_event_id}"
+    else:
+        provider_event_id = cloud_event_id or str(
+            message_map.get("messageId")
+            or message_map.get("message_id")
+            or ""
+        )
     event_type = str(
         attribute_map.get("ce-type")
         or raw.get("type")
