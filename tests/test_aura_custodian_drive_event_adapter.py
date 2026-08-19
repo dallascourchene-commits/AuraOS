@@ -49,6 +49,33 @@ def test_workspace_event_normalizes_without_resource_hydration():
     assert envelope.event_key == "google:evt-1"
 
 
+def test_workspace_pubsub_message_normalizes_cloudevent_attributes():
+    raw = {
+        "message": {
+            "attributes": {
+                "ce-id": "evt-pubsub-1",
+                "ce-source": "//workspaceevents.googleapis.com/subscriptions/sub-1",
+                "ce-subject": "//drive.googleapis.com/files/file-456",
+                "ce-time": "2026-08-19T22:00:00Z",
+                "ce-type": "google.workspace.drive.file.v3.updated",
+            },
+            "data": "ZXZlbnQtZGF0YQ==",
+            "messageId": "transport-message-1",
+            "publishTime": "2026-08-19T22:00:01Z",
+        },
+        "subscription": "projects/example/subscriptions/sub-1",
+    }
+
+    envelope = normalize_workspace_event(raw)
+
+    assert envelope.provider_event_id == "evt-pubsub-1"
+    assert envelope.event_type == "google.workspace.drive.file.v3.updated"
+    assert envelope.resource_id == "//drive.googleapis.com/files/file-456"
+    assert envelope.observed_at == "2026-08-19T22:00:00Z"
+    assert envelope.event_key == "google:evt-pubsub-1"
+    assert envelope.payload == raw
+
+
 def test_content_hash_key_is_stable_when_provider_id_is_absent():
     first = EventEnvelope(
         provider="google",
