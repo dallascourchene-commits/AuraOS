@@ -110,32 +110,67 @@ def _utc_now_iso() -> str:
 def normalize_workspace_event(raw: Mapping[str, Any]) -> EventEnvelope:
     """Normalize a Workspace Events / Pub/Sub CloudEvent without hydrating Drive.
 
-    Google may evolve resource-data shapes independently of Aura.  This function
-    therefore keeps the original payload intact and only extracts the small set of
-    routing-neutral fields Aura needs for durable intake.  If the provider omits
-    both event id and event time, ``observed_at`` remains empty so local wall-clock
-    time cannot destabilize the content-derived idempotency key; SQLite separately
-    records the local first-seen timestamp.
+    Workspace Events delivered through Pub/Sub carry CloudEvent metadata in
+    ``message.attributes`` (for example ``ce-id`` and ``ce-type``).  Some callers
+    may already provide a flattened CloudEvent.  Support both shapes while keeping
+    the original provider payload intact.
+
+    If the provider omits both event id and event time, ``observed_at`` remains
+    empty so local wall-clock time cannot destabilize the content-derived
+    idempotency key; SQLite separately records the local first-seen timestamp.
     """
     if not isinstance(raw, Mapping):
         raise ValueError("workspace event must be a mapping")
+
+    message = raw.get("message")
+    message_map = message if isinstance(message, Mapping) else {}
+    attributes = message_map.get("attributes")
+    attribute_map = attributes if isinstance(attributes, Mapping) else {}
+
     data = raw.get("data")
+    if data is None and message_map:
+        data = message_map.get("data")
     data_map = data if isinstance(data, Mapping) else {}
+
     resource_id = str(
         raw.get("resource_id")
+        or attribute_map.get("ce-subject")
         or raw.get("subject")
         or data_map.get("resource")
         or data_map.get("resourceName")
         or data_map.get("resource_name")
         or ""
     )
+    provider_event_id = str(
+        attribute_map.get("ce-id")
+        or raw.get("id")
+        or raw.get("event_id")
+        or message_map.get("messageId")
+        or message_map.get("message_id")
+        or ""
+    )
+    event_type = str(
+        attribute_map.get("ce-type")
+        or raw.get("type")
+        or raw.get("event_type")
+        or "google.drive.unknown"
+    )
+    observed_at = str(
+        attribute_map.get("ce-time")
+        or raw.get("time")
+        or raw.get("observed_at")
+        or message_map.get("publishTime")
+        or message_map.get("publish_time")
+        or ""
+    )
+
     return EventEnvelope(
         provider="google",
         source="workspace_events",
-        provider_event_id=str(raw.get("id") or raw.get("event_id") or ""),
-        event_type=str(raw.get("type") or raw.get("event_type") or "google.drive.unknown"),
+        provider_event_id=provider_event_id,
+        event_type=event_type,
         resource_id=resource_id,
-        observed_at=str(raw.get("time") or raw.get("observed_at") or ""),
+        observed_at=observed_at,
         payload=dict(raw),
     )
 
