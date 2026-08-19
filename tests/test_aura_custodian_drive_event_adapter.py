@@ -50,11 +50,12 @@ def test_workspace_event_normalizes_without_resource_hydration():
 
 
 def test_workspace_pubsub_message_normalizes_cloudevent_attributes():
+    source = "//workspaceevents.googleapis.com/subscriptions/sub-1"
     raw = {
         "message": {
             "attributes": {
                 "ce-id": "evt-pubsub-1",
-                "ce-source": "//workspaceevents.googleapis.com/subscriptions/sub-1",
+                "ce-source": source,
                 "ce-subject": "//drive.googleapis.com/files/file-456",
                 "ce-time": "2026-08-19T22:00:00Z",
                 "ce-type": "google.workspace.drive.file.v3.updated",
@@ -68,12 +69,34 @@ def test_workspace_pubsub_message_normalizes_cloudevent_attributes():
 
     envelope = normalize_workspace_event(raw)
 
-    assert envelope.provider_event_id == "evt-pubsub-1"
+    assert envelope.provider_event_id == f"cloudevent:{source}:evt-pubsub-1"
     assert envelope.event_type == "google.workspace.drive.file.v3.updated"
     assert envelope.resource_id == "//drive.googleapis.com/files/file-456"
     assert envelope.observed_at == "2026-08-19T22:00:00Z"
-    assert envelope.event_key == "google:evt-pubsub-1"
+    assert envelope.event_key == f"google:cloudevent:{source}:evt-pubsub-1"
     assert envelope.payload == raw
+
+
+def test_workspace_cloudevent_same_id_from_different_sources_does_not_collide():
+    def wrapped(source):
+        return {
+            "message": {
+                "attributes": {
+                    "ce-id": "shared-id",
+                    "ce-source": source,
+                    "ce-type": "google.workspace.drive.file.v3.updated",
+                }
+            }
+        }
+
+    first = normalize_workspace_event(
+        wrapped("//workspaceevents.googleapis.com/subscriptions/sub-1")
+    )
+    second = normalize_workspace_event(
+        wrapped("//workspaceevents.googleapis.com/subscriptions/sub-2")
+    )
+
+    assert first.event_key != second.event_key
 
 
 def test_content_hash_key_is_stable_when_provider_id_is_absent():
