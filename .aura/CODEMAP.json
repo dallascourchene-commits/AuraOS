@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1787222298,
+  "generated_at_unix": 1787222453,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1640,
+    "repo_file_count": 1641,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -176,6 +176,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/project006-provider-sidecar-reference.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -1756,16 +1757,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1640,
-      "bytes": 26380643,
-      "tokens_est": 6585578,
+      "files": 1641,
+      "bytes": 26381907,
+      "tokens_est": 6585894,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 236,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 999,
-        "schema_or_lexicon": 271,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -159133,6 +159134,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/project006-provider-sidecar-reference.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
@@ -159478,6 +159480,10 @@
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/project006-provider-sidecar-reference.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python tools/apply_sco_construction_completion.py": [
       ".github/workflows/sco-construction-e9-e14-completion.yml"
@@ -160095,9 +160101,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -171031,6 +171034,63 @@
         0.087905,
         -0.204351,
         -0.156402
+      ]
+    },
+    {
+      "path": ".github/workflows/project006-provider-sidecar-reference.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1264,
+      "lines": 41,
+      "tokens_est": 316,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          29
+        ],
+        "python -m unittest": [
+          37
+        ]
+      },
+      "topology": {},
+      "digest8": "6e77ae1cf47a8d12",
+      "vector": [
+        0.074708,
+        -0.130423,
+        0.153215,
+        -0.12789,
+        -0.140553,
+        -0.072176,
+        -0.021526,
+        -0.267177,
+        -0.295034,
+        0.044318,
+        -0.062046,
+        0.17854,
+        0.072176,
+        0.067111,
+        0.257047,
+        -0.289969,
+        0.054448,
+        -0.257047,
+        0.1988,
+        0.089903,
+        0.274774,
+        -0.110163,
+        0.11776,
+        0.322891,
+        -0.186137,
+        -0.277307,
+        -0.165878,
+        -0.074708,
+        -0.064578,
+        0.031656,
+        -0.224125,
+        -0.183605
       ]
     },
     {
@@ -287491,16 +287551,16 @@
     }
   },
   "summary": {
-    "file_count": 1640,
-    "total_bytes": 26380643,
-    "text_tokens_est": 6585578,
+    "file_count": 1641,
+    "total_bytes": 26381907,
+    "text_tokens_est": 6585894,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 236,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 999,
-      "schema_or_lexicon": 271,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287686,6 +287746,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/project006-provider-sidecar-reference.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -448571,6 +448632,6 @@
       }
     ],
     "record_fingerprint": "88e8b3ba580319267d91c5ab7d8d0e44",
-    "payload_hash": "0e0950b8dd70de053cf40fcd4794930d"
+    "payload_hash": "4fb14fac5027956e31703b07e68375de"
   }
 }

@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1640
-- **total_bytes**: 26380643
-- **text_tokens_est**: 6585578
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 236, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1641
+- **total_bytes**: 26381907
+- **text_tokens_est**: 6585894
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 236, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1640,
+  "repo_file_count": 1641,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -194,6 +194,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/phase3-compass-bounded-projection-repair.yml",
     ".github/workflows/phase3-local-verification-bundle.yml",
     ".github/workflows/pr138-grounded-phase-integration.yml",
+    ".github/workflows/project006-provider-sidecar-reference.yml",
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
     ".github/workflows/render-four-tab-demo.yml",
@@ -1780,16 +1781,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1640,
-  "bytes": 26380643,
-  "tokens_est": 6585578,
+  "files": 1641,
+  "bytes": 26381907,
+  "tokens_est": 6585894,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 236,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 999,
-    "schema_or_lexicon": 271,
+    "schema_or_lexicon": 272,
     "support_file": 49
   }
 }
