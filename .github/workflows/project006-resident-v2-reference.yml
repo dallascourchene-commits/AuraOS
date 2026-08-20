@@ -25,7 +25,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Compile reference
         working-directory: tools/project006/resident_v2_reference
-        run: python -m py_compile resident_v2_ipc.py test_resident_v2_ipc.py test_resident_v2_ipc_g6.py
+        run: python -m py_compile resident_v2_ipc.py test_resident_v2_ipc.py test_resident_v2_ipc_g6.py test_resident_v2_ipc_g7.py
       - name: Run exact Resident V2 adversarial suites
         working-directory: tools/project006/resident_v2_reference
-        run: python -m unittest -v test_resident_v2_ipc.py test_resident_v2_ipc_g6.py
+        run: python -m unittest -v test_resident_v2_ipc.py test_resident_v2_ipc_g6.py test_resident_v2_ipc_g7.py
