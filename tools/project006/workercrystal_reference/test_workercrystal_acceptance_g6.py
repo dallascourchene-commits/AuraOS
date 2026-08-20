@@ -1,7 +1,7 @@
 from dataclasses import replace
 import unittest
 
-from workercrystal_acceptance_g6 import (
+from tools.project006.workercrystal_reference.workercrystal_acceptance_g6 import (
     AcceptanceFacts,
     AttemptTerminalFacts,
     ContractViolation,
@@ -196,6 +196,14 @@ class G6ReferenceTests(unittest.TestCase):
         bundle = build_acceptance_bundle(facts, make_terminals())
         body = dict(bundle.operation_body)
         body["unexpected"] = "x"
+        with self.assertRaises(ContractViolation):
+            derive_g6_operation_digest_from_body(body)
+
+    def test_operation_body_rejects_malformed_protected_digest(self) -> None:
+        facts = make_facts()
+        bundle = build_acceptance_bundle(facts, make_terminals())
+        body = dict(bundle.operation_body)
+        body["source_currentness_digest"] = "not-a-digest"
         with self.assertRaises(ContractViolation):
             derive_g6_operation_digest_from_body(body)
 
