@@ -12,6 +12,8 @@ MAX_FRAME_BYTES=256*1024
 MAX_DEPTH=12
 MAX_CONTAINER_ITEMS=2048
 MAX_STRING_BYTES=128*1024
+MAX_SEEN_REQUESTS=4096
+MAX_TRACKED_WORK=4096
 HEADER=struct.Struct('!I')
 NORMAL_TYPES=frozenset({'HEALTH','STATUS','WORK_SUBMIT','WORK_STATUS','WORK_CANCEL'})
 ADMIN_TYPES=frozenset({'ADMIN_DRAIN','ADMIN_RECONCILE'})
@@ -137,13 +139,14 @@ def validate_envelope(obj):
 class ResidentState:
     generation:str
     currentness_ref:str
+    authority_ref:str
     owner_uid:int
     state_epoch:int=1
     draining:bool=False
     work_states:Dict[str,str]=field(default_factory=dict)
     seen:Dict[str,Tuple[str,Dict[str,Any]]]=field(default_factory=dict)
     def snapshot(self):
-        return {'generation':self.generation,'currentness_ref':self.currentness_ref,'state_epoch':self.state_epoch,'draining':self.draining,'accepted_work_count':sum(1 for x in self.work_states.values() if x=='ACCEPTED'),'tracked_work_count':len(self.work_states)}
+        return {'generation':self.generation,'currentness_ref':self.currentness_ref,'authority_ref':self.authority_ref,'state_epoch':self.state_epoch,'draining':self.draining,'accepted_work_count':sum(1 for x in self.work_states.values() if x=='ACCEPTED'),'tracked_work_count':len(self.work_states)}
 
 def _decision_receipt(req,state,decision,reason,result=None):
     core={'receipt_version':RECEIPT_VERSION,'request_id':req.get('request_id','UNBOUND'),'request_digest':sha256_hex(canonical_json_bytes(req)),'decision':decision,'reason_code':reason,'state_snapshot':state.snapshot(),'result':dict(result or {})}
@@ -155,10 +158,14 @@ def process_request(raw,state,now_ms,peer_uid):
     if prior:
         if prior[0]==dig: return dict(prior[1])
         return _decision_receipt(req,state,'REJECT','REQUEST_ID_COLLISION')
+    if len(state.seen)>=MAX_SEEN_REQUESTS:
+        return _decision_receipt(req,state,'REJECT','DEDUP_CAPACITY_EXHAUSTED')
     def finish(decision,reason,result=None):
         receipt=_decision_receipt(req,state,decision,reason,result); state.seen[rid]=(dig,receipt); return receipt
     if req['generation']!=state.generation: return finish('REJECT','STALE_OR_FOREIGN_GENERATION')
     if req['currentness_ref']!=state.currentness_ref: return finish('REJECT','CURRENTNESS_MISMATCH')
+    if req['authority_ref']!=state.authority_ref: return finish('REJECT','AUTHORITY_MISMATCH')
+    if now_ms<req['issued_at_ms']: return finish('REJECT','REQUEST_NOT_YET_VALID')
     if now_ms>req['expires_at_ms']: return finish('REJECT','REQUEST_EXPIRED')
     if req['message_type'] in ADMIN_TYPES and peer_uid!=state.owner_uid: return finish('REJECT','ADMIN_PEER_NOT_OWNER')
     mt,p=req['message_type'],req['payload']
@@ -169,6 +176,7 @@ def process_request(raw,state,now_ms,peer_uid):
         if p['deadline_ms']<now_ms: return finish('REJECT','WORK_DEADLINE_EXPIRED')
         cid=p['capsule_id']
         if cid in state.work_states: return finish('REJECT','CAPSULE_ALREADY_TRACKED')
+        if len(state.work_states)>=MAX_TRACKED_WORK: return finish('REJECT','WORK_CAPACITY_EXHAUSTED')
         state.work_states[cid]='ACCEPTED'; state.state_epoch+=1
         return finish('ACCEPT','WORK_ACCEPTED',{'capsule_id':cid,'route_ref':p['route_ref']})
     if mt=='WORK_STATUS':
