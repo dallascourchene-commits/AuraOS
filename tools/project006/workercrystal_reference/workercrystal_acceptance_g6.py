@@ -19,6 +19,7 @@ G6_BINDING_DOMAIN = "AURA::PROJECT006::LANE-C::ATTEMPT-ACCEPTED-RESULT-BINDING::
 G6_OPERATION_DOMAIN = "AURA::PROJECT006::LANE-C::ACCEPTANCE-OPERATION::G6"
 
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
+_MAX_JCS_SAFE_INTEGER = (1 << 53) - 1
 
 
 class ContractViolation(ValueError):
@@ -42,8 +43,15 @@ def _digest(value: str, field: str) -> str:
 
 
 def _generation(value: int, field: str) -> int:
-    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
-        raise ContractViolation(f"{field} must be a non-negative integer")
+    if (
+        isinstance(value, bool)
+        or not isinstance(value, int)
+        or value < 0
+        or value > _MAX_JCS_SAFE_INTEGER
+    ):
+        raise ContractViolation(
+            f"{field} must be a non-negative JCS-safe integer <= {_MAX_JCS_SAFE_INTEGER}"
+        )
     return value
 
 
@@ -75,7 +83,8 @@ def canonical_json_bytes(value: Mapping[str, Any]) -> bytes:
     """Return deterministic JCS-compatible bytes for this schema's type domain.
 
     Contract objects use fixed ASCII object keys, NFC strings, non-negative
-    integers, booleans, arrays and objects. Floats/null are rejected so the
+    JCS-safe integers, booleans, arrays and objects. Floats/null and integers
+    outside the interoperable IEEE-754 exact range are rejected so the
     reference cannot introduce an unreviewed numeric representation choice.
     """
     normalized = _normalize_json(value)
