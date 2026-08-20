@@ -156,17 +156,71 @@ class G6ReferenceTests(unittest.TestCase):
         with self.assertRaises(ContractViolation):
             build_g6_binding(facts, make_terminals()[0], DF)
 
+    def test_binding_builder_rejects_terminal_outside_required_relation_set(self) -> None:
+        facts = make_facts((C1,))
+        unrelated = AttemptTerminalFacts(C2, 11)
+        with self.assertRaises(ContractViolation):
+            build_g6_binding(facts, unrelated, facts.accepted_result_identity())
+
     def test_operation_builder_rejects_transplanted_accepted_result_identity(self) -> None:
+        facts = make_facts()
+        terminals = make_terminals()
+        bundle = build_acceptance_bundle(facts, terminals)
+        with self.assertRaises(ContractViolation):
+            build_g6_operation_body(facts, DF, bundle.binding_identities, terminals)
+
+    def test_operation_builder_requires_exact_terminal_facts(self) -> None:
         facts = make_facts()
         bundle = build_acceptance_bundle(facts, make_terminals())
         with self.assertRaises(ContractViolation):
-            build_g6_operation_body(facts, DF, bundle.binding_identities)
+            build_g6_operation_body(
+                facts,
+                bundle.accepted_result_identity,
+                bundle.binding_identities,
+            )
+
+    def test_operation_builder_rejects_caller_chosen_binding_identity_sets(self) -> None:
+        facts = make_facts()
+        terminals = make_terminals()
+        bundle = build_acceptance_bundle(facts, terminals)
+        self.assertNotIn(DF, bundle.binding_identities)
+        cases = {
+            "missing": bundle.binding_identities[:-1],
+            "extra": bundle.binding_identities + (DF,),
+            "substituted": (DF,) + bundle.binding_identities[1:],
+        }
+        for label, identities in cases.items():
+            with self.subTest(case=label):
+                with self.assertRaises(ContractViolation):
+                    build_g6_operation_body(
+                        facts,
+                        bundle.accepted_result_identity,
+                        identities,
+                        terminals,
+                    )
+
+    def test_operation_builder_rejects_terminal_set_outside_required_relations(self) -> None:
+        facts = make_facts()
+        terminals = make_terminals()
+        bundle = build_acceptance_bundle(facts, terminals)
+        extra = contribution("attempt-x", "dispatch-x", DE, DF)
+        with self.assertRaises(ContractViolation):
+            build_g6_operation_body(
+                facts,
+                bundle.accepted_result_identity,
+                bundle.binding_identities,
+                terminals + (AttemptTerminalFacts(extra, 12),),
+            )
 
     def test_operation_binding_set_is_permutation_invariant_at_builder_boundary(self) -> None:
         facts = make_facts()
-        bundle = build_acceptance_bundle(facts, make_terminals())
+        terminals = make_terminals()
+        bundle = build_acceptance_bundle(facts, terminals)
         reversed_body = build_g6_operation_body(
-            facts, bundle.accepted_result_identity, reversed(bundle.binding_identities)
+            facts,
+            bundle.accepted_result_identity,
+            reversed(bundle.binding_identities),
+            terminals,
         )
         self.assertEqual(bundle.operation_body, reversed_body)
         self.assertEqual(
