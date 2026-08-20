@@ -1,0 +1,31 @@
+name: Project006 Resident V2 Reference
+
+on:
+  pull_request:
+    paths:
+      - "tools/project006/resident_v2_reference/**"
+      - ".github/workflows/project006-resident-v2-reference.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  resident-v2-reference:
+    name: Resident V2 reference (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile reference
+        working-directory: tools/project006/resident_v2_reference
+        run: python -m py_compile resident_v2_ipc.py test_resident_v2_ipc.py
+      - name: Run exact Resident V2 adversarial suite
+        working-directory: tools/project006/resident_v2_reference
+        run: python -m unittest -v test_resident_v2_ipc.py
