@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786938896,
+  "generated_at_unix": 1787193318,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1634,
+    "repo_file_count": 1637,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1628,6 +1628,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project006/resident_v2_reference/README.md",
+      "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+      "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1750,15 +1753,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1634,
-      "bytes": 26316194,
-      "tokens_est": 6569465,
+      "files": 1637,
+      "bytes": 26334958,
+      "tokens_est": 6574156,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 234,
+        "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 995,
+        "python_module": 997,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -88304,6 +88307,14 @@
         "end_line": 228,
         "semantic_id": "aura_st3gg_contracts.py#function:canonical_json_bytes:45e2aa70586d7f49",
         "signature_hash": "b2bc0a31834a37f8"
+      },
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:canonical_json_bytes:6e577dec0a937bc5",
+        "signature_hash": "4b18c9a81f996748"
       }
     ],
     "digest_text": [
@@ -156926,6 +156937,466 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "IPCError": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 27,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#class:IPCError:4115b7348ea72326",
+        "signature_hash": "0eb299d6f9c68015"
+      }
+    ],
+    "IPCError.__init__": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 27,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#method:IPCError.__init__:ba85d32e86b6a91f",
+        "signature_hash": "1a9bed08b96273bb"
+      }
+    ],
+    "sha256_hex": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 31,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:sha256_hex:64d669a4864b5dcc",
+        "signature_hash": "65e8ebd53f77d3db"
+      }
+    ],
+    "_pairs_no_duplicates": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 37,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:_pairs_no_duplicates:8e3a7dddcbaf898a",
+        "signature_hash": "bac53673d4c60530"
+      }
+    ],
+    "_walk_limits": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 59,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:_walk_limits:4c78527e8f702908",
+        "signature_hash": "b15df93c8ff891cb"
+      }
+    ],
+    "decode_frame_payload": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 70,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:decode_frame_payload:8a4a24851ef8adc0",
+        "signature_hash": "dbe8e407acc1796a"
+      }
+    ],
+    "encode_frame": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 75,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:encode_frame:d09c318219d47517",
+        "signature_hash": "9829b6df4a2ca775"
+      }
+    ],
+    "recv_exact": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 83,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:recv_exact:f9f751bf1f36f4d5",
+        "signature_hash": "bb7d06af848cebab"
+      }
+    ],
+    "recv_frame": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 84,
+        "end_line": 87,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:recv_frame:3433b2daab5a4074",
+        "signature_hash": "21ede8b23e115fe9"
+      }
+    ],
+    "send_frame": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 88,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:send_frame:4b0a65e68bece50c",
+        "signature_hash": "39943c7818ddcf08"
+      }
+    ],
+    "_validate_ref": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 92,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:_validate_ref:0d975c92b3c36309",
+        "signature_hash": "4932aae9984da369"
+      }
+    ],
+    "_require_exact_payload": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 94,
+        "end_line": 97,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:_require_exact_payload:f5e765a7440904e3",
+        "signature_hash": "f167c68ae91ba040"
+      }
+    ],
+    "_validate_payload": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 99,
+        "end_line": 118,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:_validate_payload:04ea853019d1e157",
+        "signature_hash": "b226ab2b155f522c"
+      }
+    ],
+    "validate_envelope": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 120,
+        "end_line": 134,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:validate_envelope:e58339e363a75d3d",
+        "signature_hash": "47b98262247b8810"
+      }
+    ],
+    "ResidentState": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "class",
+        "line": 137,
+        "end_line": 146,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#class:ResidentState:3820825b3f7b9355",
+        "signature_hash": "8fc8648328ed26b5"
+      }
+    ],
+    "ResidentState.snapshot": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "method",
+        "line": 145,
+        "end_line": 146,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#method:ResidentState.snapshot:8d5201cdc8f1bb27",
+        "signature_hash": "6d0c0b0a811ae770"
+      }
+    ],
+    "_decision_receipt": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 148,
+        "end_line": 150,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:_decision_receipt:5a240d7b3df79d8c",
+        "signature_hash": "ec2bb40bd28d14af"
+      }
+    ],
+    "process_request": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 182,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:process_request:8f838eff46bde1bb",
+        "signature_hash": "713cc4a5727b4892"
+      }
+    ],
+    "process_request.finish": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 159,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#method:process_request.finish:7d918e2b673ff772",
+        "signature_hash": "9147e932cac4e136"
+      }
+    ],
+    "make_unix_listener": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 184,
+        "end_line": 188,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:make_unix_listener:d86da662c8e8b5c0",
+        "signature_hash": "7cef85e7ed3d434b"
+      }
+    ],
+    "get_peer_uid": [
+      {
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "kind": "function",
+        "line": 190,
+        "end_line": 196,
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:get_peer_uid:ff88ad93b39e5428",
+        "signature_hash": "bc2bb1f5bb3a9c4c"
+      }
+    ],
+    "req": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 8,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#function:req:03f21c7de6ab2547",
+        "signature_hash": "23f9ac0f5fc27474"
+      }
+    ],
+    "T": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 79,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#class:T:9fe5a41e9e012b0e",
+        "signature_hash": "1a51332cd1dc4f10"
+      }
+    ],
+    "T.state": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.state:3f96dcfc3ead6d5b",
+        "signature_hash": "f690bd7d3b182ac1"
+      }
+    ],
+    "T.test_01_health": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 12,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_01_health:97d4fdcf2788a58f",
+        "signature_hash": "237b654db5f1a05b"
+      }
+    ],
+    "T.test_02_truncated": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 18,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_02_truncated:c98bebed377bafd0",
+        "signature_hash": "a00aa6bd464eff1e"
+      }
+    ],
+    "T.test_03_oversize": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 24,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_03_oversize:855f24012f628fc5",
+        "signature_hash": "ddd2dc4ae7399ca7"
+      }
+    ],
+    "T.test_04_version": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_04_version:7f9e1992a42dcf9d",
+        "signature_hash": "3e5499237df720e5"
+      }
+    ],
+    "T.test_05_unknown_message": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_05_unknown_message:b1ec5331d28f72c2",
+        "signature_hash": "17f82090ffd49a5b"
+      }
+    ],
+    "T.test_06_idempotent": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_06_idempotent:52edc5bde6cd0af0",
+        "signature_hash": "7a286ad9acfb5268"
+      }
+    ],
+    "T.test_07_request_id_collision": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_07_request_id_collision:797e2a190f5b3207",
+        "signature_hash": "502f356558e04550"
+      }
+    ],
+    "T.test_08_stale_generation": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 33,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_08_stale_generation:f242e324e3f55307",
+        "signature_hash": "8154e42d26c0bc98"
+      }
+    ],
+    "T.test_09_currentness": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 34,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_09_currentness:564f0f97ad43898b",
+        "signature_hash": "483956de0ba7081c"
+      }
+    ],
+    "T.test_10_expired": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 35,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_10_expired:7ef94588991318d7",
+        "signature_hash": "3fd8aea9ddb9f6ec"
+      }
+    ],
+    "T.test_11_admin_nonowner": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 36,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_11_admin_nonowner:430bd25bb616fe95",
+        "signature_hash": "80c4cf3a4494495f"
+      }
+    ],
+    "T.test_12_secret": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 39,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_12_secret:045f5f1a9c4cf07f",
+        "signature_hash": "e67d385eaa042be5"
+      }
+    ],
+    "T.test_13_provider_endpoint": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 42,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_13_provider_endpoint:9d74f2abc462c576",
+        "signature_hash": "82cc859cb6313c26"
+      }
+    ],
+    "T.test_14_stale_socket_not_unlinked": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 47,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_14_stale_socket_not_unlinked:6fca9eb811090b8e",
+        "signature_hash": "734f3c718d448eaf"
+      }
+    ],
+    "T.test_15_partial_read": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 54,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_15_partial_read:f35172c17231fe0e",
+        "signature_hash": "cdca0cde490544c0"
+      }
+    ],
+    "T.test_16_submit_status": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 59,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_16_submit_status:e4c9588c31892138",
+        "signature_hash": "366d4ba047b1765e"
+      }
+    ],
+    "T.test_17_work_deadline": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 62,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_17_work_deadline:336492486202c3c9",
+        "signature_hash": "599e62ac120b0a89"
+      }
+    ],
+    "T.test_18_unknown_top": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 65,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_18_unknown_top:1a859c12e858e18e",
+        "signature_hash": "61b83d4a52b7c6a9"
+      }
+    ],
+    "T.test_19_duplicate_json_key": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 67,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_19_duplicate_json_key:59f1b0150934e51e",
+        "signature_hash": "991d3a61b45d1c7c"
+      }
+    ],
+    "T.test_20_no_ip_http_surface": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 73,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_20_no_ip_http_surface:ad5c7cbf23f13317",
+        "signature_hash": "389a10652f4059a5"
+      }
+    ],
+    "T.test_21_digest_reproducible": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 75,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_21_digest_reproducible:2b12d741226da930",
+        "signature_hash": "ba7a955640c81472"
+      }
+    ],
+    "T.test_22_peer_credentials": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 79,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_22_peer_credentials:25c1e0c49d29d0e7",
+        "signature_hash": "e90796dc4a59ef0b"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -159065,6 +159536,9 @@
     ],
     "python test_pvm_logic.py": [
       "test_pvm_logic.py"
+    ],
+    "python3 test_resident_v2_ipc.py": [
+      "tools/project006/resident_v2_reference/README.md"
     ],
     "python verify_os.py": [
       "verify_os.py"
@@ -262245,6 +262719,153 @@
       ]
     },
     {
+      "path": "tools/project006/resident_v2_reference/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1988,
+      "lines": 47,
+      "tokens_est": 497,
+      "symbol_count": 0,
+      "commands": [
+        "python3 test_resident_v2_ipc.py"
+      ],
+      "command_lines": {
+        "python3 test_resident_v2_ipc.py": [
+          29
+        ]
+      },
+      "topology": {},
+      "digest8": "4ecb7690a6ac38a4",
+      "vector": [
+        0.076644,
+        0.352561,
+        -0.246653,
+        0.274523,
+        -0.020903,
+        0.241079,
+        -0.268949,
+        -0.288459,
+        -0.246653,
+        0.073857,
+        -0.059921,
+        0.179764,
+        -0.043199,
+        -0.05156,
+        0.115662,
+        0.006968,
+        0.048773,
+        0.121236,
+        -0.029264,
+        0.034838,
+        -0.05156,
+        -0.338625,
+        0.07107,
+        0.151894,
+        -0.02369,
+        0.02369,
+        -0.17419,
+        0.115662,
+        0.196486,
+        0.151894,
+        -0.344199,
+        -0.09894
+      ]
+    },
+    {
+      "path": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11024,
+      "lines": 197,
+      "tokens_est": 2756,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fbab684104819445",
+      "vector": [
+        -0.20725,
+        0.103059,
+        -0.16648,
+        0.288791,
+        0.132504,
+        0.232166,
+        0.22084,
+        0.209515,
+        -0.103059,
+        -0.270671,
+        0.069083,
+        -0.044168,
+        -0.014723,
+        0.062288,
+        -0.098529,
+        0.035108,
+        -0.062288,
+        -0.19819,
+        0.143829,
+        0.071348,
+        -0.279731,
+        0.150625,
+        0.270671,
+        0.150625,
+        -0.132504,
+        -0.019253,
+        0.218575,
+        0.288791,
+        -0.21631,
+        0.16648,
+        -0.019253,
+        -0.275201
+      ]
+    },
+    {
+      "path": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5752,
+      "lines": 82,
+      "tokens_est": 1438,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "51d2b53302961d0f",
+      "vector": [
+        -0.252551,
+        -0.201343,
+        0.043062,
+        -0.217636,
+        -0.119874,
+        0.254879,
+        -0.173411,
+        -0.117547,
+        0.180394,
+        0.182721,
+        0.296777,
+        0.199015,
+        -0.20367,
+        -0.019785,
+        -0.08496,
+        -0.117547,
+        0.161772,
+        -0.23393,
+        0.212981,
+        -0.131513,
+        0.043062,
+        0.245568,
+        0.182721,
+        0.098926,
+        0.20367,
+        -0.171083,
+        0.199015,
+        0.038406,
+        0.1641,
+        0.09427,
+        -0.019785,
+        0.264189
+      ]
+    },
+    {
       "path": "travel_extractors/__init__.py",
       "role": "python_module",
       "binary": false,
@@ -286149,15 +286770,15 @@
     }
   },
   "summary": {
-    "file_count": 1634,
-    "total_bytes": 26316194,
-    "text_tokens_est": 6569465,
+    "file_count": 1637,
+    "total_bytes": 26334958,
+    "text_tokens_est": 6574156,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 234,
+      "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 995,
+      "python_module": 997,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -287796,6 +288417,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project006/resident_v2_reference/README.md",
+      "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+      "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -444872,6 +445496,476 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#class:IPCError:4115b7348ea72326",
+        "name": "IPCError",
+        "kind": "class",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 26,
+        "end_line": 27,
+        "signature_hash": "0eb299d6f9c68015",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#class:ResidentState:3820825b3f7b9355",
+        "name": "ResidentState",
+        "kind": "class",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 137,
+        "end_line": 146,
+        "signature_hash": "8fc8648328ed26b5",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:_decision_receipt:5a240d7b3df79d8c",
+        "name": "_decision_receipt",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 148,
+        "end_line": 150,
+        "signature_hash": "ec2bb40bd28d14af",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:_pairs_no_duplicates:8e3a7dddcbaf898a",
+        "name": "_pairs_no_duplicates",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 32,
+        "end_line": 37,
+        "signature_hash": "bac53673d4c60530",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:_require_exact_payload:f5e765a7440904e3",
+        "name": "_require_exact_payload",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 94,
+        "end_line": 97,
+        "signature_hash": "f167c68ae91ba040",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:_validate_payload:04ea853019d1e157",
+        "name": "_validate_payload",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 99,
+        "end_line": 118,
+        "signature_hash": "b226ab2b155f522c",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:_validate_ref:0d975c92b3c36309",
+        "name": "_validate_ref",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 90,
+        "end_line": 92,
+        "signature_hash": "4932aae9984da369",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:_walk_limits:4c78527e8f702908",
+        "name": "_walk_limits",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 39,
+        "end_line": 59,
+        "signature_hash": "b15df93c8ff891cb",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:canonical_json_bytes:6e577dec0a937bc5",
+        "name": "canonical_json_bytes",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "4b18c9a81f996748",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:decode_frame_payload:8a4a24851ef8adc0",
+        "name": "decode_frame_payload",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 61,
+        "end_line": 70,
+        "signature_hash": "dbe8e407acc1796a",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:encode_frame:d09c318219d47517",
+        "name": "encode_frame",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 72,
+        "end_line": 75,
+        "signature_hash": "9829b6df4a2ca775",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:get_peer_uid:ff88ad93b39e5428",
+        "name": "get_peer_uid",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 190,
+        "end_line": 196,
+        "signature_hash": "bc2bb1f5bb3a9c4c",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:make_unix_listener:d86da662c8e8b5c0",
+        "name": "make_unix_listener",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 184,
+        "end_line": 188,
+        "signature_hash": "7cef85e7ed3d434b",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:process_request:8f838eff46bde1bb",
+        "name": "process_request",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 152,
+        "end_line": 182,
+        "signature_hash": "713cc4a5727b4892",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:recv_exact:f9f751bf1f36f4d5",
+        "name": "recv_exact",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 77,
+        "end_line": 83,
+        "signature_hash": "bb7d06af848cebab",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:recv_frame:3433b2daab5a4074",
+        "name": "recv_frame",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 84,
+        "end_line": 87,
+        "signature_hash": "21ede8b23e115fe9",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:send_frame:4b0a65e68bece50c",
+        "name": "send_frame",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 88,
+        "end_line": 88,
+        "signature_hash": "39943c7818ddcf08",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:sha256_hex:64d669a4864b5dcc",
+        "name": "sha256_hex",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 31,
+        "end_line": 31,
+        "signature_hash": "65e8ebd53f77d3db",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#function:validate_envelope:e58339e363a75d3d",
+        "name": "validate_envelope",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 120,
+        "end_line": 134,
+        "signature_hash": "47b98262247b8810",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#method:IPCError.__init__:ba85d32e86b6a91f",
+        "name": "IPCError.__init__",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 27,
+        "end_line": 27,
+        "signature_hash": "1a9bed08b96273bb",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#method:ResidentState.snapshot:8d5201cdc8f1bb27",
+        "name": "ResidentState.snapshot",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 145,
+        "end_line": 146,
+        "signature_hash": "6d0c0b0a811ae770",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/resident_v2_ipc.py#method:process_request.finish:7d918e2b673ff772",
+        "name": "process_request.finish",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/resident_v2_ipc.py",
+        "line": 158,
+        "end_line": 159,
+        "signature_hash": "9147e932cac4e136",
+        "file_digest8": "fbab684104819445"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#class:T:9fe5a41e9e012b0e",
+        "name": "T",
+        "kind": "class",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 10,
+        "end_line": 79,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#function:req:03f21c7de6ab2547",
+        "name": "req",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 6,
+        "end_line": 8,
+        "signature_hash": "23f9ac0f5fc27474",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.state:3f96dcfc3ead6d5b",
+        "name": "T.state",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 11,
+        "end_line": 11,
+        "signature_hash": "f690bd7d3b182ac1",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_01_health:97d4fdcf2788a58f",
+        "name": "T.test_01_health",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 12,
+        "end_line": 12,
+        "signature_hash": "237b654db5f1a05b",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_02_truncated:c98bebed377bafd0",
+        "name": "T.test_02_truncated",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 13,
+        "end_line": 18,
+        "signature_hash": "a00aa6bd464eff1e",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_03_oversize:855f24012f628fc5",
+        "name": "T.test_03_oversize",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 19,
+        "end_line": 24,
+        "signature_hash": "ddd2dc4ae7399ca7",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_04_version:7f9e1992a42dcf9d",
+        "name": "T.test_04_version",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "3e5499237df720e5",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_05_unknown_message:b1ec5331d28f72c2",
+        "name": "T.test_05_unknown_message",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "17f82090ffd49a5b",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_06_idempotent:52edc5bde6cd0af0",
+        "name": "T.test_06_idempotent",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "7a286ad9acfb5268",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_07_request_id_collision:797e2a190f5b3207",
+        "name": "T.test_07_request_id_collision",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 31,
+        "end_line": 32,
+        "signature_hash": "502f356558e04550",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_08_stale_generation:f242e324e3f55307",
+        "name": "T.test_08_stale_generation",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 33,
+        "end_line": 33,
+        "signature_hash": "8154e42d26c0bc98",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_09_currentness:564f0f97ad43898b",
+        "name": "T.test_09_currentness",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 34,
+        "end_line": 34,
+        "signature_hash": "483956de0ba7081c",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_10_expired:7ef94588991318d7",
+        "name": "T.test_10_expired",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 35,
+        "end_line": 35,
+        "signature_hash": "3fd8aea9ddb9f6ec",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_11_admin_nonowner:430bd25bb616fe95",
+        "name": "T.test_11_admin_nonowner",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 36,
+        "end_line": 36,
+        "signature_hash": "80c4cf3a4494495f",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_12_secret:045f5f1a9c4cf07f",
+        "name": "T.test_12_secret",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 37,
+        "end_line": 39,
+        "signature_hash": "e67d385eaa042be5",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_13_provider_endpoint:9d74f2abc462c576",
+        "name": "T.test_13_provider_endpoint",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 40,
+        "end_line": 42,
+        "signature_hash": "82cc859cb6313c26",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_14_stale_socket_not_unlinked:6fca9eb811090b8e",
+        "name": "T.test_14_stale_socket_not_unlinked",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 43,
+        "end_line": 47,
+        "signature_hash": "734f3c718d448eaf",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_15_partial_read:f35172c17231fe0e",
+        "name": "T.test_15_partial_read",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 48,
+        "end_line": 54,
+        "signature_hash": "cdca0cde490544c0",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_16_submit_status:e4c9588c31892138",
+        "name": "T.test_16_submit_status",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 55,
+        "end_line": 59,
+        "signature_hash": "366d4ba047b1765e",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_17_work_deadline:336492486202c3c9",
+        "name": "T.test_17_work_deadline",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 60,
+        "end_line": 62,
+        "signature_hash": "599e62ac120b0a89",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_18_unknown_top:1a859c12e858e18e",
+        "name": "T.test_18_unknown_top",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 63,
+        "end_line": 65,
+        "signature_hash": "61b83d4a52b7c6a9",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_19_duplicate_json_key:59f1b0150934e51e",
+        "name": "T.test_19_duplicate_json_key",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 66,
+        "end_line": 67,
+        "signature_hash": "991d3a61b45d1c7c",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_20_no_ip_http_surface:ad5c7cbf23f13317",
+        "name": "T.test_20_no_ip_http_surface",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 68,
+        "end_line": 73,
+        "signature_hash": "389a10652f4059a5",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_21_digest_reproducible:2b12d741226da930",
+        "name": "T.test_21_digest_reproducible",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 74,
+        "end_line": 75,
+        "signature_hash": "ba7a955640c81472",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_22_peer_credentials:25c1e0c49d29d0e7",
+        "name": "T.test_22_peer_credentials",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+        "line": 76,
+        "end_line": 79,
+        "signature_hash": "e90796dc4a59ef0b",
+        "file_digest8": "51d2b53302961d0f"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446122,7 +447216,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f54ee2e4da0bb0db05767925275e2b15",
-    "payload_hash": "0fa1918e8b28a9b69a948e98a0f6517d"
+    "record_fingerprint": "45230868faf67fcb9f5a3e6c477fbe3d",
+    "payload_hash": "3d5fde09afa8063252ed3712c85d0b09"
   }
 }
