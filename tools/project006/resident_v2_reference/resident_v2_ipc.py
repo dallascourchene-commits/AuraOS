@@ -69,6 +69,7 @@ REQUIRED_TOP_LEVEL_FIELDS = frozenset(
 
 REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$")
 REF_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/+-]{0,255}$")
+IDENTITY_DOMAIN_FIELDS = frozenset({"generation", "currentness_ref", "authority_ref"})
 SENSITIVE_KEY_FRAGMENTS = (
     "token",
     "password",
@@ -369,6 +370,11 @@ class ResidentState:
         default_factory=threading.RLock, repr=False, compare=False
     )
 
+    def __setattr__(self, name: str, value: Any) -> None:
+        if name in IDENTITY_DOMAIN_FIELDS and name in self.__dict__:
+            raise AttributeError("IDENTITY_DOMAIN_DIRECT_MUTATION_FORBIDDEN")
+        object.__setattr__(self, name, value)
+
     def snapshot(self) -> Dict[str, Any]:
         with self._lock:
             return {
@@ -489,9 +495,9 @@ def rebase_identity_domain(
             or currentness_ref != state.currentness_ref
             or authority_ref != state.authority_ref
         )
-        state.generation = generation
-        state.currentness_ref = currentness_ref
-        state.authority_ref = authority_ref
+        object.__setattr__(state, "generation", generation)
+        object.__setattr__(state, "currentness_ref", currentness_ref)
+        object.__setattr__(state, "authority_ref", authority_ref)
         if generation_changed:
             _prune_capsule_identities(state)
         if changed:
