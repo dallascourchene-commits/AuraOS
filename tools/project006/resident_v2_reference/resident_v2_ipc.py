@@ -95,6 +95,25 @@ class IPCError(ValueError):
         self.reason = reason
 
 
+_PEER_IDENTITY_SEAL = object()
+
+
+@dataclass(frozen=True)
+class PeerIdentity:
+    """Opaque identity minted by the trusted AF_UNIX transport witness."""
+
+    uid: int
+    _seal: object = field(repr=False, compare=False)
+
+    def __post_init__(self) -> None:
+        if self._seal is not _PEER_IDENTITY_SEAL:
+            raise IPCError("UNTRUSTED_PEER_IDENTITY")
+
+
+def _trusted_peer_identity(uid: int) -> PeerIdentity:
+    return PeerIdentity(uid=uid, _seal=_PEER_IDENTITY_SEAL)
+
+
 def canonical_json_bytes(obj: Any) -> bytes:
     return json.dumps(
         obj,
@@ -400,9 +419,15 @@ def _cache_effect_receipt(
     )
 
 
-def process_request(
-    raw: Dict[str, Any], state: ResidentState, now_ms: int, peer_uid: int
+def _process_request(
+    raw: Dict[str, Any],
+    state: ResidentState,
+    now_ms: int,
+    peer: PeerIdentity,
 ) -> Dict[str, Any]:
+    if not isinstance(peer, PeerIdentity) or peer._seal is not _PEER_IDENTITY_SEAL:
+        raise IPCError("UNTRUSTED_PEER_IDENTITY")
+    peer_uid = peer.uid
     req = validate_envelope(raw)
     digest = sha256_hex(canonical_json_bytes(req))
     request_id = req["request_id"]
@@ -529,15 +554,20 @@ def make_unix_listener(path: str, backlog: int = 32) -> socket.socket:
         raise
 
 
-def get_peer_uid(sock: socket.socket) -> int:
-    """Linux/WSL peer identity witness for a connected AF_UNIX stream socket."""
+def get_peer_identity(sock: socket.socket) -> PeerIdentity:
+    """Mint an opaque peer identity from Linux/WSL SO_PEERCRED."""
     if not hasattr(socket, "SO_PEERCRED"):
         raise IPCError("PEER_CREDENTIALS_UNAVAILABLE")
     raw = sock.getsockopt(
         socket.SOL_SOCKET, socket.SO_PEERCRED, struct.calcsize("3i")
     )
     _pid, uid, _gid = struct.unpack("3i", raw)
-    return uid
+    return _trusted_peer_identity(uid)
+
+
+def get_peer_uid(sock: socket.socket) -> int:
+    """Observation-only compatibility helper; not an authorization input."""
+    return get_peer_identity(sock).uid
 
 
 class ConnectionGate:
@@ -568,8 +598,8 @@ def serve_connected_once(
 ) -> Dict[str, Any]:
     """Serve exactly one already-connected AF_UNIX peer under bounded liveness."""
     with gate.slot():
-        peer_uid = get_peer_uid(sock)
+        peer = get_peer_identity(sock)
         req = recv_frame(sock, timeout_seconds=frame_timeout_seconds)
-        receipt = process_request(req, state, now_ms, peer_uid)
+        receipt = _process_request(req, state, now_ms, peer)
         send_frame(sock, receipt)
         return receipt
