@@ -1,6 +1,6 @@
 # Project006 Resident V2 IPC — staged reference
 
-Status: **reference implementation / Gate-10 repair candidate / not target-host integration**.
+Status: **reference implementation / G4 Stage-9 candidate / not target-host integration**.
 
 This directory implements the Lane-A contract for `PROJECT006-RESIDENT-DEEPSEEK-WORKERCRYSTAL-BB-POC-001` without guessing the source path of the currently running P11 service.
 
@@ -10,19 +10,25 @@ This directory implements the Lane-A contract for `PROJECT006-RESIDENT-DEEPSEEK-
 - Provider URLs, provider credentials, HTTP clients, DNS/IP endpoints, and external networking do not belong in Resident.
 - External provider networking belongs in the separately owned Provider Dispatcher Sidecar.
 - Work enters Resident as bounded references/digests (`capsule_id`, `capsule_digest`, `route_ref`, source/dependency refs), not secrets.
-- Linux/WSL consequence authorization receives an opaque `PeerIdentity` minted from the connected socket's `SO_PEERCRED` witness; there is no public raw-UID `process_request` authorization entry point.
+- The authoritative consequence processor accepts the **connected AF_UNIX socket**, not a caller-supplied UID or peer object. It derives the current peer UID from Linux/WSL `SO_PEERCRED` inside the trusted processing seam.
+- Trusted processing time is sampled after the complete frame is received; callers cannot provide the consequence timestamp.
 - Generation/currentness/authority/issue-expiry are checked at use time.
-- Consequence-bearing request replay is idempotent only for an identical live request digest; conflicting reuse fails closed.
+- State transitions, replay checks, capacity checks, cancellation authorization, receipt caching, and effect-ledger insertion execute under one ResidentState transaction lock.
+- Consequence replay is idempotent only for an identical live digest **and the same authorized peer UID**; conflicting or foreign-peer replay fails closed.
 
-## Independent-review repairs represented in this candidate
+## Independent-review repairs represented in G4
 
-This generation incorporates the independent Gate-10 HOLD/REPAIR findings and the subsequent independent PR security-review finding:
+G4 consumes the predecessor Gate-10 HOLD and current PR review findings without claiming its own certification:
 
-1. **Rejected-request flood isolation.** Rejected and read-only requests do not consume the consequence/idempotency ledger. Accepted consequence-bearing receipts are bounded and reclaimed when request expiry passes or generation/currentness/authority rebases.
-2. **Bounded frame liveness.** One absolute receive deadline covers header and body reads. Timeout is typed as `FRAME_RECEIVE_TIMEOUT`. Server wrappers use a fail-closed finite `ConnectionGate`.
-3. **Cancellation authorization.** `WORK_CANCEL` may be performed only by the capsule-creating peer identity or configured Resident owner identity in this Linux/WSL reference profile. Knowledge of `authority_ref` alone is insufficient.
-4. **Transport-bound peer identity.** Consequence processing accepts an opaque sealed `PeerIdentity`; the production serving seam mints it only from the active AF_UNIX connection via `SO_PEERCRED`. A caller-supplied integer UID is not an authorization input.
-5. **Historical P11 preserved.** This remains additive reference code; no live-P11/source-binding, deployment, reboot-persistence or provider claim is minted here.
+1. **Transport-bound authority.** `_process_request(raw, state, sock)` derives `SO_PEERCRED` itself. The prior arbitrary-UID/sealed-PeerIdentity minting surface is removed.
+2. **Atomic state transitions.** One state-owned re-entrant lock serializes pruning, replay resolution, authorization-dependent state lookup, capacity checks, mutations, receipt construction, and accepted-effect insertion.
+3. **Use-time currentness.** Processing time is sampled after frame receipt, preventing a partial/slow frame from using a stale pre-read timestamp to pass expiry or work-deadline checks.
+4. **Replay reauthorization.** Accepted consequence records bind the authorizing peer UID; replay from another peer returns `REPLAY_PEER_MISMATCH` without reapplying the effect.
+5. **Immutable cache boundary.** Cached receipts are stored as independent canonical JSON values and replay returns a fresh clone, so caller mutation cannot corrupt retained evidence.
+6. **Bounded work tombstones.** Active-work capacity counts only `ACCEPTED` work; terminal records carry `terminal_at_ms` and are bounded/reclaimed while live accepted-effect history prevents unsafe capsule reuse.
+7. **Bounded frame liveness.** One absolute receive deadline covers header and body reads; timeout is typed as `FRAME_RECEIVE_TIMEOUT`; `ConnectionGate` remains fail-closed and finite.
+8. **Schema fail-closed hardening.** Malformed/non-string message types, invalid Unicode, oversized object keys, network-endpoint aliases, and all non-empty extension objects fail closed through typed validation.
+9. **Historical P11 preserved.** This remains additive reference code; no live-P11/source-binding, deployment, reboot-persistence, provider connectivity, or production claim is minted here.
 
 ## Frame
 
@@ -38,12 +44,20 @@ Default absolute receive deadline: 2 seconds per frame in the reference implemen
 
 ```bash
 cd tools/project006/resident_v2_reference
-python3 test_resident_v2_ipc.py
+python -m unittest -v test_resident_v2_ipc.py
 ```
 
-The author-side second-repair candidate passed **37/37 focused tests before the final GitHub write**, including rejected-flood serviceability, expiry reclamation, slow-client timeout, bounded connection capacity, creator/owner cancellation authorization, cross-capsule rejection, forged peer-identity rejection, AF_UNIX peer credentials, framing, replay/collision, currentness/authority and no-IP/no-HTTP surface checks.
+The G4 suite contains **46 focused adversarial tests**. In addition to inherited framing/currentness/cancellation/resource tests, G4 covers transport-only authority arguments, foreign-peer replay, cached-receipt mutation, concurrent capacity and duplicate-effect races, terminal-record reclamation, post-frame time sampling, malformed message-type handling, Unicode/key bounds, and non-empty extension rejection.
 
-That author-side run is **not an independent Gate-10 review and is not claimed as an exact-head rerun**. Final Gate-10 evidence must bind one frozen Git head, enumerate every changed path, and independently execute/review that exact generation. Older 22/22, 23/23, 28/28 and 36/36 snapshots are historical/superseded for final evidence.
+Exact functional CI evidence at commit `e1af6de2fe0831a083ea01417590ea8492cea567`:
+
+- `Project006 Resident V2 Reference` run `32335590247`: **SUCCESS**.
+- Python 3.10 job: compile + exact Resident V2 adversarial suite **SUCCESS**.
+- Python 3.12 job: compile + exact Resident V2 adversarial suite **SUCCESS**.
+- `Verify source anchors` at the same functional head: **SUCCESS**.
+- The CODEMAP synchronization workflow at that functional cut reported generated topology drift; repository automation then produced a CODEMAP-only child. That topology child is evidence synchronization, not an independent functional change.
+
+The CI success is execution evidence, **not author self-certification**. Final Gate-10 review must bind the eventual frozen head/current CODEMAP child and be performed by a worker that did not author G4.
 
 ## Claim ceiling
 
@@ -56,6 +70,6 @@ This branch does **not** claim:
 - WorkerCrystal scaling results;
 - crash-safe durable exactly-once execution;
 - production security or performance superiority;
-- independent Gate-10 approval of this repair generation.
+- independent Gate-10 approval of G4.
 
-The exact live P11 source-generation/path remains a source-binding prerequisite. Transplant/integration must occur only after that binding is positively recovered and collision-checked. The repaired generation must be reviewed by a worker that did not author these changes.
+The exact live P11 source-generation/path remains a source-binding prerequisite. Transplant/integration must occur only after that binding is positively recovered and collision-checked. G4 must be frozen at one exact current head and independently reviewed by a worker that did not author these changes.
