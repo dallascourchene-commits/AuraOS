@@ -359,8 +359,9 @@ class ResidentState:
     work_records: Dict[str, WorkRecord] = field(default_factory=dict)
     seen: Dict[str, SeenRecord] = field(default_factory=dict)
     # capsule_id -> (capsule_digest, generation, currentness_ref, authority_ref)
-    # This fence survives ordinary receipt/tombstone reclamation and is reset only
-    # when the Resident's explicit identity domain changes.
+    # The fence is generation-scoped. currentness_ref/authority_ref are retained
+    # as provenance of first acceptance, but only a generation transition may
+    # retire the fence.
     capsule_identities: Dict[str, Tuple[str, str, str, str]] = field(
         default_factory=dict
     )
@@ -453,17 +454,49 @@ def _prune_work_records(state: ResidentState, now_ms: int) -> int:
 
 
 def _prune_capsule_identities(state: ResidentState) -> int:
-    """Drop capsule fences only after an explicit Resident identity-domain rebase."""
+    """Drop capsule fences only after an explicit generation transition."""
     stale = [
         capsule_id
         for capsule_id, record in state.capsule_identities.items()
         if record[1] != state.generation
-        or record[2] != state.currentness_ref
-        or record[3] != state.authority_ref
     ]
     for capsule_id in stale:
         del state.capsule_identities[capsule_id]
     return len(stale)
+
+
+def rebase_identity_domain(
+    state: ResidentState,
+    *,
+    generation: str,
+    currentness_ref: str,
+    authority_ref: str,
+) -> Dict[str, Any]:
+    """Atomically rebind Resident identity witnesses and retire old-generation fences.
+
+    currentness/authority changes within one generation do not release capsule-ID
+    history. An actual generation transition updates all three witnesses and
+    retires only the previous generation's capsule fences under the same lock
+    used by consequence processing.
+    """
+    _validate_ref("generation", generation)
+    _validate_ref("currentness_ref", currentness_ref)
+    _validate_ref("authority_ref", authority_ref)
+    with state._lock:
+        generation_changed = generation != state.generation
+        changed = (
+            generation_changed
+            or currentness_ref != state.currentness_ref
+            or authority_ref != state.authority_ref
+        )
+        state.generation = generation
+        state.currentness_ref = currentness_ref
+        state.authority_ref = authority_ref
+        if generation_changed:
+            _prune_capsule_identities(state)
+        if changed:
+            state.state_epoch += 1
+        return state.snapshot()
 
 
 def _capsule_has_live_effect_history(state: ResidentState, capsule_id: str) -> bool:
