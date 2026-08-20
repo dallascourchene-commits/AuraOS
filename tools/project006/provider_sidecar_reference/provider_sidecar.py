@@ -14,6 +14,7 @@ from enum import Enum
 import hashlib
 import http.client
 import json
+import math
 import socket
 import ssl
 import threading
@@ -351,22 +352,23 @@ class ProviderSidecarReference:
         with self._condition:
             return self._in_flight, self._queued
 
-    def _admit(self, deadline: float) -> bool:
+    def _admit(self, deadline: float) -> SidecarStatus | None:
+        """Admit or return the typed reason admission failed."""
         with self._condition:
             if self._in_flight < self.concurrency_limit:
                 self._in_flight += 1
-                return True
+                return None
             if self._queued >= self.queue_limit:
-                return False
+                return SidecarStatus.QUEUE_FULL
             self._queued += 1
             try:
                 while self._in_flight >= self.concurrency_limit:
                     remaining = deadline - time.monotonic()
                     if remaining <= 0:
-                        return False
+                        return SidecarStatus.TIMEOUT
                     self._condition.wait(timeout=remaining)
                 self._in_flight += 1
-                return True
+                return None
             finally:
                 self._queued -= 1
 
@@ -420,6 +422,17 @@ class ProviderSidecarReference:
                 circuit.state = CircuitState.OPEN
                 circuit.opened_at = time.monotonic()
 
+    def _record_neutral(self, provider: str) -> None:
+        """Release an admitted probe without treating request-specific 4xx as provider health evidence."""
+        with self._condition:
+            circuit = self._circuits.setdefault(provider, _Circuit())
+            circuit.half_open_probe_active = False
+            if circuit.state is CircuitState.HALF_OPEN:
+                # Preserve the prior OPEN evidence and high-water timestamp. A
+                # later valid request may probe again without client input
+                # manufacturing either provider recovery or provider failure.
+                circuit.state = CircuitState.OPEN
+
     def _record_pressure(self, provider: str) -> None:
         """Release a half-open probe on 429 without treating keys as capacity."""
         with self._condition:
@@ -466,9 +479,12 @@ class ProviderSidecarReference:
             seconds = float(value)
         except (TypeError, ValueError):
             return None
-        if seconds < 0:
+        if not math.isfinite(seconds) or seconds < 0:
             return None
-        return int(seconds * 1000)
+        milliseconds = seconds * 1000
+        if not math.isfinite(milliseconds):
+            return None
+        return int(milliseconds)
 
     def health_report(self, route_ref: str) -> dict[str, Any]:
         """Return zero-secret routing/pressure state for Lane C or health UI."""
@@ -534,11 +550,12 @@ class ProviderSidecarReference:
         if total_deadline_sec <= 0 or retry_budget < 0:
             raise ValueError("deadline must be positive and retry_budget non-negative")
         deadline = time.monotonic() + total_deadline_sec
-        if not self._admit(deadline):
+        admission_failure = self._admit(deadline)
+        if admission_failure is not None:
             return DispatchResult(
                 None,
                 self._receipt(
-                    status=SidecarStatus.QUEUE_FULL,
+                    status=admission_failure,
                     attempt_id=attempt_id,
                     execution_digest=execution_digest,
                     route_ref=ref,
@@ -657,6 +674,26 @@ class ProviderSidecarReference:
                                     route=route,
                                     attempts=attempts,
                                     retry_after_ms=last_retry_after_ms,
+                                ),
+                            )
+                        if 400 <= int(exc.code) < 500:
+                            # Request-specific client errors are not evidence that
+                            # the shared provider is unhealthy. Release a possible
+                            # HALF_OPEN probe without incrementing its breaker.
+                            self._record_neutral(route.provider)
+                            return DispatchResult(
+                                None,
+                                self._receipt(
+                                    status=(
+                                        SidecarStatus.TIMEOUT
+                                        if int(exc.code) == 408
+                                        else SidecarStatus.PROVIDER_UNAVAILABLE
+                                    ),
+                                    attempt_id=attempt_id,
+                                    execution_digest=execution_digest,
+                                    route_ref=ref,
+                                    route=route,
+                                    attempts=attempts,
                                 ),
                             )
                         self._record_failure(route.provider)
