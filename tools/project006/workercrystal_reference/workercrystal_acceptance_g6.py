@@ -272,6 +272,10 @@ def build_g6_binding(
     terminal: AttemptTerminalFacts,
     accepted_result_identity: str,
 ) -> dict[str, Any]:
+    expected_result_identity = facts.accepted_result_identity()
+    supplied_result_identity = _digest(accepted_result_identity, "accepted_result_identity")
+    if supplied_result_identity != expected_result_identity:
+        raise ContractViolation("accepted_result_identity does not match AcceptanceFacts")
     contribution = terminal.contribution.protected_body()
     body: dict[str, Any] = {
         "binding_schema": G6_BINDING_SCHEMA,
@@ -280,7 +284,7 @@ def build_g6_binding(
         "dispatch_receipt_id": contribution["dispatch_receipt_id"],
         "attempt_result_or_contribution_digest": contribution["result_or_contribution_digest"],
         "result_binding_receipt_identity": contribution["result_binding_receipt_identity"],
-        "accepted_result_identity": _digest(accepted_result_identity, "accepted_result_identity"),
+        "accepted_result_identity": expected_result_identity,
         "accepted_result_digest": _digest(facts.result_digest, "result_digest"),
         "terminal_reconciliation_generation": _generation(
             terminal.terminal_reconciliation_generation,
@@ -344,13 +348,15 @@ def build_g6_operation_body(
     accepted_result_identity: str,
     binding_identities: Iterable[str],
 ) -> dict[str, Any]:
+    expected_result_identity = facts.accepted_result_identity()
+    supplied_result_identity = _digest(accepted_result_identity, "accepted_result_identity")
+    if supplied_result_identity != expected_result_identity:
+        raise ContractViolation("accepted_result_identity does not match AcceptanceFacts")
     return {
         "operation_schema": G6_OPERATION_SCHEMA,
         "canonical_profile_id": G6_CANONICAL_PROFILE,
         "operation_kind": "ACCEPT_RESULT",
-        "accepted_result_identity": _digest(
-            accepted_result_identity, "accepted_result_identity"
-        ),
+        "accepted_result_identity": expected_result_identity,
         "accepted_result_digest": _digest(facts.result_digest, "result_digest"),
         "accepted_state_generation": _generation(
             facts.accepted_state_generation, "accepted_state_generation"
