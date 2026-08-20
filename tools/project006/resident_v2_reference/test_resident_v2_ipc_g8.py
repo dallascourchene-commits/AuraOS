@@ -166,6 +166,8 @@ class G8EnforcedAtomicIdentityTransition(unittest.TestCase):
             currentness_ref="currentness:2",
             authority_ref="authority:next-owner",
             owner_uid=1000,
+            expected_authority_ref="authority:local-owner",
+            expected_owner_uid=1000,
         )
         self.assertIn("capsule:g8-r5", s.capsule_identities)
         reused = self.process(
@@ -205,6 +207,8 @@ class G8EnforcedAtomicIdentityTransition(unittest.TestCase):
             currentness_ref="currentness:2",
             authority_ref="authority:next-owner",
             owner_uid=1000,
+            expected_authority_ref="authority:local-owner",
+            expected_owner_uid=1000,
         )
         self.assert_identity(
             s, ("gen-next", "currentness:2", "authority:next-owner")
@@ -228,18 +232,24 @@ class G8EnforcedAtomicIdentityTransition(unittest.TestCase):
                 "currentness_ref": "currentness:2",
                 "authority_ref": "authority:next-owner",
                 "owner_uid": 1000,
+                "expected_authority_ref": "authority:local-owner",
+                "expected_owner_uid": 1000,
             },
             {
                 "generation": "gen-next",
                 "currentness_ref": "bad currentness!",
                 "authority_ref": "authority:next-owner",
                 "owner_uid": 1000,
+                "expected_authority_ref": "authority:local-owner",
+                "expected_owner_uid": 1000,
             },
             {
                 "generation": "gen-next",
                 "currentness_ref": "currentness:2",
                 "authority_ref": "bad authority!",
                 "owner_uid": 1000,
+                "expected_authority_ref": "authority:local-owner",
+                "expected_owner_uid": 1000,
             },
         )
         for index, proposed in enumerate(cases):
