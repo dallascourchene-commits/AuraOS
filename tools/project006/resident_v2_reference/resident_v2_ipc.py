@@ -69,6 +69,9 @@ REQUIRED_TOP_LEVEL_FIELDS = frozenset(
 
 REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$")
 REF_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/+-]{0,255}$")
+IDENTITY_DOMAIN_FIELDS = frozenset(
+    {"generation", "currentness_ref", "authority_ref", "owner_uid"}
+)
 SENSITIVE_KEY_FRAGMENTS = (
     "token",
     "password",
@@ -243,6 +246,17 @@ def _validate_ref(name: str, value: Any) -> str:
     return value
 
 
+def _validate_owner_uid(value: Any) -> int:
+    if (
+        not isinstance(value, int)
+        or isinstance(value, bool)
+        or value < 0
+        or value > 0xFFFFFFFF
+    ):
+        raise IPCError("INVALID_OWNER_UID")
+    return value
+
+
 def _require_exact_payload(payload, required, optional=()):
     required_set = set(required)
     optional_set = set(optional)
@@ -359,8 +373,9 @@ class ResidentState:
     work_records: Dict[str, WorkRecord] = field(default_factory=dict)
     seen: Dict[str, SeenRecord] = field(default_factory=dict)
     # capsule_id -> (capsule_digest, generation, currentness_ref, authority_ref)
-    # This fence survives ordinary receipt/tombstone reclamation and is reset only
-    # when the Resident's explicit identity domain changes.
+    # The fence is generation-scoped. currentness_ref/authority_ref are retained
+    # as provenance of first acceptance, but only a generation transition may
+    # retire the fence.
     capsule_identities: Dict[str, Tuple[str, str, str, str]] = field(
         default_factory=dict
     )
@@ -368,12 +383,18 @@ class ResidentState:
         default_factory=threading.RLock, repr=False, compare=False
     )
 
+    def __setattr__(self, name: str, value: Any) -> None:
+        if name in IDENTITY_DOMAIN_FIELDS and name in self.__dict__:
+            raise AttributeError("IDENTITY_DOMAIN_DIRECT_MUTATION_FORBIDDEN")
+        object.__setattr__(self, name, value)
+
     def snapshot(self) -> Dict[str, Any]:
         with self._lock:
             return {
                 "generation": self.generation,
                 "currentness_ref": self.currentness_ref,
                 "authority_ref": self.authority_ref,
+                "owner_uid": self.owner_uid,
                 "state_epoch": self.state_epoch,
                 "draining": self.draining,
                 "accepted_work_count": sum(
@@ -453,17 +474,88 @@ def _prune_work_records(state: ResidentState, now_ms: int) -> int:
 
 
 def _prune_capsule_identities(state: ResidentState) -> int:
-    """Drop capsule fences only after an explicit Resident identity-domain rebase."""
+    """Drop capsule fences only after an explicit generation transition."""
     stale = [
         capsule_id
         for capsule_id, record in state.capsule_identities.items()
         if record[1] != state.generation
-        or record[2] != state.currentness_ref
-        or record[3] != state.authority_ref
     ]
     for capsule_id in stale:
         del state.capsule_identities[capsule_id]
     return len(stale)
+
+
+def rebase_identity_domain(
+    state: ResidentState,
+    *,
+    generation: str,
+    currentness_ref: str,
+    authority_ref: str,
+    owner_uid: int | None = None,
+    expected_authority_ref: str | None = None,
+    expected_owner_uid: int | None = None,
+) -> Dict[str, Any]:
+    """Atomically rebind Resident identity, authority, and owner credentials.
+
+    Changing ``authority_ref`` requires both a validated target owner UID and a
+    compare-and-swap witness for the current authority/owner pair. The pair is
+    checked under the same lock used by consequence processing, so stale or
+    superseded authority bindings fail before any identity/fence/work mutation.
+    Generation/currentness-only rebases preserve the owner binding.
+    """
+    _validate_ref("generation", generation)
+    _validate_ref("currentness_ref", currentness_ref)
+    _validate_ref("authority_ref", authority_ref)
+    validated_owner_uid = (
+        None if owner_uid is None else _validate_owner_uid(owner_uid)
+    )
+    validated_expected_authority_ref = (
+        None
+        if expected_authority_ref is None
+        else _validate_ref("expected_authority_ref", expected_authority_ref)
+    )
+    validated_expected_owner_uid = (
+        None
+        if expected_owner_uid is None
+        else _validate_owner_uid(expected_owner_uid)
+    )
+
+    with state._lock:
+        authority_changed = authority_ref != state.authority_ref
+        if authority_changed:
+            if (
+                validated_owner_uid is None
+                or validated_expected_authority_ref is None
+                or validated_expected_owner_uid is None
+            ):
+                raise IPCError("AUTHORITY_OWNER_BINDING_REQUIRED")
+            if (
+                validated_expected_authority_ref != state.authority_ref
+                or validated_expected_owner_uid != state.owner_uid
+            ):
+                raise IPCError("AUTHORITY_OWNER_BINDING_STALE")
+        elif validated_owner_uid is not None and validated_owner_uid != state.owner_uid:
+            raise IPCError("OWNER_TRANSFER_REQUIRES_AUTHORITY_CHANGE")
+
+        next_owner_uid = (
+            state.owner_uid if validated_owner_uid is None else validated_owner_uid
+        )
+        generation_changed = generation != state.generation
+        changed = (
+            generation_changed
+            or currentness_ref != state.currentness_ref
+            or authority_changed
+            or next_owner_uid != state.owner_uid
+        )
+        object.__setattr__(state, "generation", generation)
+        object.__setattr__(state, "currentness_ref", currentness_ref)
+        object.__setattr__(state, "authority_ref", authority_ref)
+        object.__setattr__(state, "owner_uid", next_owner_uid)
+        if generation_changed:
+            _prune_capsule_identities(state)
+        if changed:
+            state.state_epoch += 1
+        return state.snapshot()
 
 
 def _capsule_has_live_effect_history(state: ResidentState, capsule_id: str) -> bool:
