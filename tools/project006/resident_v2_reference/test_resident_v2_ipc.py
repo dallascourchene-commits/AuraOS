@@ -35,6 +35,9 @@ class T(unittest.TestCase):
             "gen-current", "currentness:1", "authority:local-owner", owner_uid=1000
         )
 
+    def peer(self, uid=1000):
+        return r._trusted_peer_identity(uid)
+
     def submit(self, s, capsule_id, rid, peer_uid=1000, expires_at_ms=NOW + 1000):
         q = req(
             "WORK_SUBMIT",
@@ -47,11 +50,11 @@ class T(unittest.TestCase):
             },
             expires_at_ms=expires_at_ms,
         )
-        return r.process_request(q, s, NOW, peer_uid)
+        return r._process_request(q, s, NOW, self.peer(peer_uid))
 
     def test_01_health(self):
         self.assertEqual(
-            r.process_request(req(), self.state(), NOW, 1000)["reason_code"],
+            r._process_request(req(), self.state(), NOW, self.peer(1000))["reason_code"],
             "HEALTH_OK",
         )
 
@@ -96,8 +99,8 @@ class T(unittest.TestCase):
                 "deadline_ms": NOW + 5000,
             },
         )
-        first = r.process_request(q, s, NOW, 1000)
-        second = r.process_request(q, s, NOW + 1, 1000)
+        first = r._process_request(q, s, NOW, self.peer(1000))
+        second = r._process_request(q, s, NOW + 1, self.peer(1000))
         self.assertEqual(first, second)
         self.assertEqual(len(s.work_records), 1)
 
@@ -115,38 +118,38 @@ class T(unittest.TestCase):
             },
         )
         self.assertEqual(
-            r.process_request(q, s, NOW, 1000)["reason_code"],
+            r._process_request(q, s, NOW, self.peer(1000))["reason_code"],
             "REQUEST_ID_COLLISION",
         )
 
     def test_08_stale_generation(self):
         self.assertEqual(
-            r.process_request(
-                req(generation="gen-old"), self.state(), NOW, 1000
+            r._process_request(
+                req(generation="gen-old"), self.state(), NOW, self.peer(1000)
             )["reason_code"],
             "STALE_OR_FOREIGN_GENERATION",
         )
 
     def test_09_currentness(self):
         self.assertEqual(
-            r.process_request(
-                req(currentness_ref="currentness:old"), self.state(), NOW, 1000
+            r._process_request(
+                req(currentness_ref="currentness:old"), self.state(), NOW, self.peer(1000)
             )["reason_code"],
             "CURRENTNESS_MISMATCH",
         )
 
     def test_10_expired(self):
         self.assertEqual(
-            r.process_request(
-                req(expires_at_ms=NOW - 1), self.state(), NOW, 1000
+            r._process_request(
+                req(expires_at_ms=NOW - 1), self.state(), NOW, self.peer(1000)
             )["reason_code"],
             "REQUEST_EXPIRED",
         )
 
     def test_11_admin_nonowner(self):
         self.assertEqual(
-            r.process_request(
-                req("ADMIN_RECONCILE"), self.state(), NOW, 2000
+            r._process_request(
+                req("ADMIN_RECONCILE"), self.state(), NOW, self.peer(2000)
             )["reason_code"],
             "ADMIN_PEER_NOT_OWNER",
         )
@@ -188,11 +191,11 @@ class T(unittest.TestCase):
             self.submit(s, "capsule:001", "REQ-SUBMIT01")["reason_code"],
             "WORK_ACCEPTED",
         )
-        status = r.process_request(
+        status = r._process_request(
             req("WORK_STATUS", "REQ-STATUS01", {"capsule_id": "capsule:001"}),
             s,
             NOW,
-            1000,
+            self.peer(1000),
         )
         self.assertEqual(status["result"]["work_state"], "ACCEPTED")
 
@@ -208,7 +211,7 @@ class T(unittest.TestCase):
             },
         )
         self.assertEqual(
-            r.process_request(q, self.state(), NOW, 1000)["reason_code"],
+            r._process_request(q, self.state(), NOW, self.peer(1000))["reason_code"],
             "WORK_DEADLINE_EXPIRED",
         )
 
@@ -237,8 +240,8 @@ class T(unittest.TestCase):
 
     def test_21_digest_reproducible_readonly(self):
         q = req()
-        first = r.process_request(q, self.state(), NOW, 1000)
-        second = r.process_request(q, self.state(), NOW, 1000)
+        first = r._process_request(q, self.state(), NOW, self.peer(1000))
+        second = r._process_request(q, self.state(), NOW, self.peer(1000))
         self.assertEqual(first["decision_digest"], second["decision_digest"])
 
     def test_22_peer_credentials(self):
@@ -290,19 +293,19 @@ class T(unittest.TestCase):
 
     def test_24_authority_mismatch(self):
         self.assertEqual(
-            r.process_request(
-                req(authority_ref="authority:foreign"), self.state(), NOW, 1000
+            r._process_request(
+                req(authority_ref="authority:foreign"), self.state(), NOW, self.peer(1000)
             )["reason_code"],
             "AUTHORITY_MISMATCH",
         )
 
     def test_25_not_yet_valid(self):
         self.assertEqual(
-            r.process_request(
+            r._process_request(
                 req(issued_at_ms=NOW + 1, expires_at_ms=NOW + 1000),
                 self.state(),
                 NOW,
-                1000,
+                self.peer(1000),
             )["reason_code"],
             "REQUEST_NOT_YET_VALID",
         )
@@ -316,7 +319,7 @@ class T(unittest.TestCase):
                 expires_at_ms=NOW + 100_000,
             )
             self.assertEqual(
-                r.process_request(q, s, NOW, 5000)["reason_code"],
+                r._process_request(q, s, NOW, self.peer(5000))["reason_code"],
                 "AUTHORITY_MISMATCH",
             )
         self.assertEqual(len(s.seen), 0)
@@ -344,7 +347,7 @@ class T(unittest.TestCase):
             issued_at_ms=NOW + 2,
             expires_at_ms=NOW + 100,
         )
-        out = r.process_request(q, s, NOW + 2, 1000)
+        out = r._process_request(q, s, NOW + 2, self.peer(1000))
         self.assertEqual(out["reason_code"], "RECONCILE_MARKED")
         self.assertEqual(len(s.seen), 1)
 
@@ -363,12 +366,12 @@ class T(unittest.TestCase):
             },
         )
         self.assertEqual(
-            r.process_request(q, s, NOW, 1000)["reason_code"],
+            r._process_request(q, s, NOW, self.peer(1000))["reason_code"],
             "WORK_CAPACITY_EXHAUSTED",
         )
 
     def test_29_receipt_snapshot_binds_authority(self):
-        out = r.process_request(req(), self.state(), NOW, 1000)
+        out = r._process_request(req(), self.state(), NOW, self.peer(1000))
         self.assertEqual(
             out["state_snapshot"]["authority_ref"], "authority:local-owner"
         )
@@ -413,7 +416,7 @@ class T(unittest.TestCase):
             {"capsule_id": "capsule:owned"},
         )
         self.assertEqual(
-            r.process_request(q, s, NOW, 2001)["reason_code"],
+            r._process_request(q, s, NOW, self.peer(2001))["reason_code"],
             "WORK_CANCELLED",
         )
 
@@ -426,7 +429,7 @@ class T(unittest.TestCase):
             {"capsule_id": "capsule:owned2"},
         )
         self.assertEqual(
-            r.process_request(q, s, NOW, 2002)["reason_code"],
+            r._process_request(q, s, NOW, self.peer(2002))["reason_code"],
             "CANCEL_PEER_NOT_AUTHORIZED",
         )
         self.assertEqual(s.work_records["capsule:owned2"].state, "ACCEPTED")
@@ -440,7 +443,7 @@ class T(unittest.TestCase):
             {"capsule_id": "capsule:owned3"},
         )
         self.assertEqual(
-            r.process_request(q, s, NOW, 1000)["reason_code"],
+            r._process_request(q, s, NOW, self.peer(1000))["reason_code"],
             "WORK_CANCELLED",
         )
 
@@ -454,10 +457,15 @@ class T(unittest.TestCase):
             {"capsule_id": "capsule:b"},
         )
         self.assertEqual(
-            r.process_request(q, s, NOW, 2001)["reason_code"],
+            r._process_request(q, s, NOW, self.peer(2001))["reason_code"],
             "CANCEL_PEER_NOT_AUTHORIZED",
         )
         self.assertEqual(s.work_records["capsule:b"].state, "ACCEPTED")
+
+    def test_37_forged_peer_identity_rejected(self):
+        with self.assertRaisesRegex(r.IPCError, "UNTRUSTED_PEER_IDENTITY"):
+            r.PeerIdentity(uid=1000, _seal=object())
+        self.assertFalse(hasattr(r, "process_request"))
 
 
 if __name__ == "__main__":
