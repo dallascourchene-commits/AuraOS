@@ -8,7 +8,7 @@ def req(mt='HEALTH',rid='REQ-00000001',payload=None,**overrides):
     x.update(overrides); return x
 
 class T(unittest.TestCase):
-    def state(self): return r.ResidentState('gen-current','currentness:1',owner_uid=1000)
+    def state(self): return r.ResidentState('gen-current','currentness:1','authority:local-owner',owner_uid=1000)
     def test_01_health(self): self.assertEqual(r.process_request(req(),self.state(),NOW,1000)['reason_code'],'HEALTH_OK')
     def test_02_truncated(self):
         a,b=socket.socketpair(socket.AF_UNIX,socket.SOCK_STREAM)
@@ -79,27 +79,35 @@ class T(unittest.TestCase):
         finally: a.close(); b.close()
     def test_23_end_to_end_unix_roundtrip(self):
         with tempfile.TemporaryDirectory() as d:
-            path=os.path.join(d,'resident.sock')
-            listener=r.make_unix_listener(path)
+            path=os.path.join(d,'resident.sock'); listener=r.make_unix_listener(path)
             state=self.state(); errors=[]
             def server():
                 try:
                     conn,_=listener.accept()
                     try:
-                        peer_uid=r.get_peer_uid(conn)
-                        q=r.recv_frame(conn)
-                        out=r.process_request(q,state,NOW,peer_uid)
-                        r.send_frame(conn,out)
+                        peer_uid=r.get_peer_uid(conn); q=r.recv_frame(conn); out=r.process_request(q,state,NOW,peer_uid); r.send_frame(conn,out)
                     finally: conn.close()
                 except Exception as e: errors.append(e)
                 finally: listener.close()
-            th=threading.Thread(target=server); th.start()
-            c=socket.socket(socket.AF_UNIX,socket.SOCK_STREAM)
+            th=threading.Thread(target=server); th.start(); c=socket.socket(socket.AF_UNIX,socket.SOCK_STREAM)
             try:
-                c.connect(path); r.send_frame(c,req()); out=r.recv_frame(c)
-                self.assertEqual(out['reason_code'],'HEALTH_OK')
+                c.connect(path); r.send_frame(c,req()); out=r.recv_frame(c); self.assertEqual(out['reason_code'],'HEALTH_OK')
             finally: c.close()
-            th.join(timeout=2)
-            self.assertFalse(th.is_alive()); self.assertEqual(errors,[])
+            th.join(timeout=2); self.assertFalse(th.is_alive()); self.assertEqual(errors,[])
+    def test_24_authority_mismatch(self):
+        self.assertEqual(r.process_request(req(authority_ref='authority:foreign'),self.state(),NOW,1000)['reason_code'],'AUTHORITY_MISMATCH')
+    def test_25_not_yet_valid(self):
+        self.assertEqual(r.process_request(req(issued_at_ms=NOW+1,expires_at_ms=NOW+1000),self.state(),NOW,1000)['reason_code'],'REQUEST_NOT_YET_VALID')
+    def test_26_dedup_capacity_fails_closed(self):
+        s=self.state()
+        for i in range(r.MAX_SEEN_REQUESTS): s.seen[f'X{i}']=('d',{})
+        self.assertEqual(r.process_request(req(rid='REQ-CAPACITY1'),s,NOW,1000)['reason_code'],'DEDUP_CAPACITY_EXHAUSTED')
+    def test_27_work_capacity_fails_closed(self):
+        s=self.state()
+        for i in range(r.MAX_TRACKED_WORK): s.work_states[f'c{i}']='ACCEPTED'
+        q=req('WORK_SUBMIT','REQ-WORKCAP01',{'capsule_id':'capsule:new','capsule_digest':'c'*64,'route_ref':'route:sidecar-default','deadline_ms':NOW+5000})
+        self.assertEqual(r.process_request(q,s,NOW,1000)['reason_code'],'WORK_CAPACITY_EXHAUSTED')
+    def test_28_receipt_snapshot_binds_authority(self):
+        out=r.process_request(req(),self.state(),NOW,1000); self.assertEqual(out['state_snapshot']['authority_ref'],'authority:local-owner')
 
 if __name__=='__main__': unittest.main(verbosity=2)
