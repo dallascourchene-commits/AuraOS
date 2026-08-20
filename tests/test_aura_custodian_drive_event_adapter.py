@@ -99,6 +99,43 @@ def test_workspace_cloudevent_same_id_from_different_sources_does_not_collide():
     assert first.event_key != second.event_key
 
 
+def test_workspace_pubsub_fallback_message_id_is_subscription_scoped():
+    def wrapped(subscription):
+        return {
+            "message": {
+                "messageId": "same-message-id",
+                "attributes": {"ce-type": "google.workspace.drive.file.v3.updated"},
+                "data": "same-payload",
+            },
+            "subscription": subscription,
+        }
+
+    first = normalize_workspace_event(
+        wrapped("projects/p/subscriptions/workspace-a")
+    )
+    second = normalize_workspace_event(
+        wrapped("projects/p/subscriptions/workspace-b")
+    )
+
+    assert first.provider_event_id.startswith("pubsub:")
+    assert second.provider_event_id.startswith("pubsub:")
+    assert first.event_key != second.event_key
+
+
+def test_workspace_pubsub_bare_message_id_does_not_claim_global_uniqueness():
+    raw = {
+        "message": {
+            "messageId": "bare-message-id",
+            "attributes": {"ce-type": "google.workspace.drive.file.v3.updated"},
+            "data": "payload",
+        }
+    }
+    envelope = normalize_workspace_event(raw)
+
+    assert envelope.provider_event_id == ""
+    assert envelope.event_key.startswith("google:sha256:")
+
+
 def test_content_hash_key_is_stable_when_provider_id_is_absent():
     first = EventEnvelope(
         provider="google",
@@ -254,69 +291,244 @@ def test_reconcile_reuses_persisted_cursor_after_restart(tmp_path):
     assert result["cursor"] == "after-resume"
 
 
-def test_claim_done_and_stale_processing_recovery(tmp_path):
-    store = SQLiteCustodianEventStore(tmp_path / "custodian.sqlite3")
+def _enqueue_claimable(store, event_id):
     envelope = EventEnvelope(
         provider="google",
         source="workspace_events",
-        provider_event_id="evt-claim",
+        provider_event_id=event_id,
         event_type="drive.updated",
         resource_id="f1",
     )
     store.enqueue([envelope])
+    return envelope.event_key
 
-    claimed = store.claim_pending(limit=1)
-    assert [row["event_key"] for row in claimed] == ["google:evt-claim"]
-    assert claimed[0]["attempts"] == 1
+
+def test_claim_done_and_stale_processing_recovery(tmp_path):
+    store = SQLiteCustodianEventStore(tmp_path / "custodian.sqlite3")
+    event_key = _enqueue_claimable(store, "evt-claim")
+
+    first = store.claim_pending(limit=1)[0]
+    assert first["event_key"] == event_key
+    assert first["attempts"] == 1
+    assert first["claim_token"]
     assert store.pending_count() == 1
 
-    # Simulate an abandoned claim by aging it beyond the recovery threshold.
     with sqlite3.connect(store.path) as conn:
         conn.execute(
             "UPDATE event_inbox SET claimed_at=? WHERE event_key=?",
-            (time.time() - 60, "google:evt-claim"),
+            (time.time() - 60, event_key),
         )
 
     assert store.requeue_stale_processing(stale_after_seconds=30) == 1
-    reclaimed = store.claim_pending(limit=1)
-    assert reclaimed[0]["attempts"] == 2
-    assert store.mark_done("google:evt-claim") is True
+    reclaimed = store.claim_pending(limit=1)[0]
+    assert reclaimed["attempts"] == 2
+    assert reclaimed["claim_token"] != first["claim_token"]
+    assert store.mark_done(event_key, reclaimed["claim_token"]) is True
     assert store.pending_count() == 0
+
+
+def test_stale_claim_cannot_complete_reclaimed_work(tmp_path):
+    store = SQLiteCustodianEventStore(tmp_path / "custodian.sqlite3")
+    event_key = _enqueue_claimable(store, "evt-fence-done")
+
+    worker_a = store.claim_pending(limit=1)[0]
+    with sqlite3.connect(store.path) as conn:
+        conn.execute(
+            "UPDATE event_inbox SET claimed_at=? WHERE event_key=?",
+            (time.time() - 60, event_key),
+        )
+    assert store.requeue_stale_processing(stale_after_seconds=30) == 1
+    worker_b = store.claim_pending(limit=1)[0]
+
+    assert worker_a["claim_token"] != worker_b["claim_token"]
+    assert store.mark_done(event_key, worker_a["claim_token"]) is False
+    assert store.pending_count() == 1
+    assert store.mark_done(event_key, worker_b["claim_token"]) is True
+    assert store.pending_count() == 0
+
+
+def test_stale_claim_cannot_error_or_retry_reclaimed_work(tmp_path):
+    store = SQLiteCustodianEventStore(tmp_path / "custodian.sqlite3")
+    event_key = _enqueue_claimable(store, "evt-fence-error")
+
+    worker_a = store.claim_pending(limit=1)[0]
+    with sqlite3.connect(store.path) as conn:
+        conn.execute(
+            "UPDATE event_inbox SET claimed_at=? WHERE event_key=?",
+            (time.time() - 60, event_key),
+        )
+    assert store.requeue_stale_processing(stale_after_seconds=30) == 1
+    worker_b = store.claim_pending(limit=1)[0]
+
+    assert (
+        store.mark_error(
+            event_key,
+            "stale-a",
+            claim_token=worker_a["claim_token"],
+            retry=True,
+        )
+        is False
+    )
+    assert store.pending_count() == 1
+    assert (
+        store.mark_error(
+            event_key,
+            "b-retry",
+            claim_token=worker_b["claim_token"],
+            retry=True,
+        )
+        is True
+    )
+    worker_c = store.claim_pending(limit=1)[0]
+    assert worker_c["attempts"] == 3
+    assert worker_c["claim_token"] not in {
+        worker_a["claim_token"],
+        worker_b["claim_token"],
+    }
 
 
 def test_failed_consumer_can_retry_or_dead_letter(tmp_path):
     store = SQLiteCustodianEventStore(tmp_path / "custodian.sqlite3")
-    envelope = EventEnvelope(
-        provider="google",
-        source="workspace_events",
-        provider_event_id="evt-error",
-        event_type="drive.updated",
-    )
-    store.enqueue([envelope])
+    event_key = _enqueue_claimable(store, "evt-error")
 
-    store.claim_pending(limit=1)
-    assert store.mark_error("google:evt-error", "temporary", retry=True) is True
-    assert store.claim_pending(limit=1)[0]["attempts"] == 2
-    assert store.mark_error("google:evt-error", "permanent", retry=False) is True
+    first = store.claim_pending(limit=1)[0]
+    assert (
+        store.mark_error(
+            event_key,
+            "temporary",
+            claim_token=first["claim_token"],
+            retry=True,
+        )
+        is True
+    )
+    second = store.claim_pending(limit=1)[0]
+    assert second["attempts"] == 2
+    assert (
+        store.mark_error(
+            event_key,
+            "permanent",
+            claim_token=second["claim_token"],
+            retry=False,
+        )
+        is True
+    )
     assert store.pending_count() == 0
 
 
-def test_resource_registry_keeps_provider_identity_separate_from_semantic_owner(tmp_path):
+def test_blank_claim_token_is_rejected(tmp_path):
     store = SQLiteCustodianEventStore(tmp_path / "custodian.sqlite3")
-    store.upsert_resource(
+    event_key = _enqueue_claimable(store, "evt-blank-token")
+    store.claim_pending(limit=1)
+
+    with pytest.raises(ValueError):
+        store.mark_done(event_key, "")
+    with pytest.raises(ValueError):
+        store.mark_error(event_key, "error", claim_token="", retry=True)
+
+
+def test_legacy_processing_rows_without_token_are_requeued_on_migration(tmp_path):
+    path = tmp_path / "custodian.sqlite3"
+    store = SQLiteCustodianEventStore(path)
+    event_key = _enqueue_claimable(store, "evt-migration")
+    claim = store.claim_pending(limit=1)[0]
+    assert claim["claim_token"]
+
+    with sqlite3.connect(path) as conn:
+        conn.execute(
+            "UPDATE event_inbox SET claim_token='' WHERE event_key=?",
+            (event_key,),
+        )
+
+    reopened = SQLiteCustodianEventStore(path)
+    assert reopened.pending_count() == 1
+    replacement = reopened.claim_pending(limit=1)[0]
+    assert replacement["claim_token"]
+
+
+def test_resource_registry_is_candidate_cache_not_semantic_owner(tmp_path):
+    store = SQLiteCustodianEventStore(tmp_path / "custodian.sqlite3")
+    store.upsert_resource_candidate(
         "drive-file-1",
-        semantic_id="AD:SYS:JSPACE:001",
-        route="AURA > JSPACE",
-        metadata={"kind": "canonical_owner"},
+        candidate_semantic_id="AD:SYS:JSPACE:001",
+        candidate_route="AURA > JSPACE",
+        metadata={"kind": "provider_observation"},
     )
 
     record = store.resource_record("drive-file-1")
 
     assert record is not None
-    assert record["semantic_id"] == "AD:SYS:JSPACE:001"
-    assert record["route"] == "AURA > JSPACE"
+    assert record["candidate_semantic_id"] == "AD:SYS:JSPACE:001"
+    assert record["candidate_route"] == "AURA > JSPACE"
+    assert record["mapping_verification_state"] == "UNVERIFIED"
+    assert record["canonical_owner_ref"] == ""
+    assert "semantic_id" not in record
+    assert "route" not in record
     assert record["active"] is True
-    assert record["metadata"] == {"kind": "canonical_owner"}
+
+
+def test_owner_bound_candidate_requires_exact_provenance(tmp_path):
+    store = SQLiteCustodianEventStore(tmp_path / "custodian.sqlite3")
+
+    with pytest.raises(ValueError):
+        store.upsert_resource_candidate(
+            "drive-file-1",
+            candidate_semantic_id="AD:SYS:JSPACE:001",
+            candidate_route="AURA > JSPACE",
+            mapping_verification_state="OWNER_BOUND",
+        )
+
+    store.upsert_resource_candidate(
+        "drive-file-1",
+        candidate_semantic_id="AD:SYS:JSPACE:001",
+        candidate_route="AURA > JSPACE",
+        mapping_verification_state="OWNER_BOUND",
+        canonical_owner_ref="AD:SYS:JSPACE:OWNER",
+        canonical_source_ref="drive:owner-source",
+        canonical_generation="g17",
+    )
+    record = store.resource_record("drive-file-1")
+
+    assert record["mapping_verification_state"] == "OWNER_BOUND"
+    assert record["canonical_owner_ref"] == "AD:SYS:JSPACE:OWNER"
+    assert record["canonical_source_ref"] == "drive:owner-source"
+    assert record["canonical_generation"] == "g17"
+
+
+def test_legacy_resource_semantic_fields_migrate_to_unverified_candidate(tmp_path):
+    path = tmp_path / "legacy.sqlite3"
+    with sqlite3.connect(path) as conn:
+        conn.executescript(
+            """
+            CREATE TABLE resource_registry (
+                resource_id TEXT PRIMARY KEY,
+                semantic_id TEXT NOT NULL DEFAULT '',
+                route TEXT NOT NULL DEFAULT '',
+                active INTEGER NOT NULL DEFAULT 1,
+                metadata_json TEXT NOT NULL DEFAULT '{}',
+                updated_at REAL NOT NULL
+            );
+            INSERT INTO resource_registry(
+                resource_id, semantic_id, route, active, metadata_json, updated_at
+            ) VALUES (
+                'drive-file-legacy', 'AD:OLD:001', 'AURA > OLD', 1, '{}', 1.0
+            );
+            """
+        )
+
+    store = SQLiteCustodianEventStore(path)
+    record = store.resource_record("drive-file-legacy")
+
+    assert record["candidate_semantic_id"] == "AD:OLD:001"
+    assert record["candidate_route"] == "AURA > OLD"
+    assert record["mapping_verification_state"] == "LEGACY_UNVERIFIED"
+    assert "semantic_id" not in record
+    assert "route" not in record
+    with sqlite3.connect(path) as conn:
+        old = conn.execute(
+            "SELECT semantic_id, route FROM resource_registry "
+            "WHERE resource_id='drive-file-legacy'"
+        ).fetchone()
+    assert old == ("", "")
 
 
 def test_health_explicitly_has_no_write_or_semantic_mutation_capability(tmp_path):
@@ -329,3 +541,7 @@ def test_health_explicitly_has_no_write_or_semantic_mutation_capability(tmp_path
     assert health["mode"] == "read_only"
     assert health["drive_write_capability"] is False
     assert health["semantic_mutation_capability"] is False
+    assert (
+        health["resource_registry_semantics"]
+        == "provider_local_candidate_cache_only"
+    )
