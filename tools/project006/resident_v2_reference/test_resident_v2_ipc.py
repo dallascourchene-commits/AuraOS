@@ -1,4 +1,5 @@
 import ast
+import inspect
 import os
 import socket
 import struct
@@ -7,6 +8,7 @@ import threading
 import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import resident_v2_ipc as r
 
@@ -30,13 +32,21 @@ def req(mt="HEALTH", rid="REQ-00000001", payload=None, **overrides):
 
 
 class T(unittest.TestCase):
-    def state(self):
+    def state(self, owner_uid=1000):
         return r.ResidentState(
-            "gen-current", "currentness:1", "authority:local-owner", owner_uid=1000
+            "gen-current", "currentness:1", "authority:local-owner", owner_uid=owner_uid
         )
 
-    def peer(self, uid=1000):
-        return r._trusted_peer_identity(uid)
+    def process(self, q, s, uid=1000, now=NOW):
+        a, b = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
+        try:
+            with mock.patch.object(r, "get_peer_uid", return_value=uid), mock.patch.object(
+                r, "_now_ms", return_value=now
+            ):
+                return r._process_request(q, s, b)
+        finally:
+            a.close()
+            b.close()
 
     def submit(self, s, capsule_id, rid, peer_uid=1000, expires_at_ms=NOW + 1000):
         q = req(
@@ -50,13 +60,10 @@ class T(unittest.TestCase):
             },
             expires_at_ms=expires_at_ms,
         )
-        return r._process_request(q, s, NOW, self.peer(peer_uid))
+        return self.process(q, s, peer_uid)
 
     def test_01_health(self):
-        self.assertEqual(
-            r._process_request(req(), self.state(), NOW, self.peer(1000))["reason_code"],
-            "HEALTH_OK",
-        )
+        self.assertEqual(self.process(req(), self.state())["reason_code"], "HEALTH_OK")
 
     def test_02_truncated(self):
         a, b = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -99,8 +106,8 @@ class T(unittest.TestCase):
                 "deadline_ms": NOW + 5000,
             },
         )
-        first = r._process_request(q, s, NOW, self.peer(1000))
-        second = r._process_request(q, s, NOW + 1, self.peer(1000))
+        first = self.process(q, s)
+        second = self.process(q, s, now=NOW + 1)
         self.assertEqual(first, second)
         self.assertEqual(len(s.work_records), 1)
 
@@ -117,40 +124,29 @@ class T(unittest.TestCase):
                 "deadline_ms": NOW + 5000,
             },
         )
-        self.assertEqual(
-            r._process_request(q, s, NOW, self.peer(1000))["reason_code"],
-            "REQUEST_ID_COLLISION",
-        )
+        self.assertEqual(self.process(q, s)["reason_code"], "REQUEST_ID_COLLISION")
 
     def test_08_stale_generation(self):
         self.assertEqual(
-            r._process_request(
-                req(generation="gen-old"), self.state(), NOW, self.peer(1000)
-            )["reason_code"],
+            self.process(req(generation="gen-old"), self.state())["reason_code"],
             "STALE_OR_FOREIGN_GENERATION",
         )
 
     def test_09_currentness(self):
         self.assertEqual(
-            r._process_request(
-                req(currentness_ref="currentness:old"), self.state(), NOW, self.peer(1000)
-            )["reason_code"],
+            self.process(req(currentness_ref="currentness:old"), self.state())["reason_code"],
             "CURRENTNESS_MISMATCH",
         )
 
     def test_10_expired(self):
         self.assertEqual(
-            r._process_request(
-                req(expires_at_ms=NOW - 1), self.state(), NOW, self.peer(1000)
-            )["reason_code"],
+            self.process(req(expires_at_ms=NOW - 1), self.state())["reason_code"],
             "REQUEST_EXPIRED",
         )
 
     def test_11_admin_nonowner(self):
         self.assertEqual(
-            r._process_request(
-                req("ADMIN_RECONCILE"), self.state(), NOW, self.peer(2000)
-            )["reason_code"],
+            self.process(req("ADMIN_RECONCILE"), self.state(), uid=2000)["reason_code"],
             "ADMIN_PEER_NOT_OWNER",
         )
 
@@ -191,11 +187,8 @@ class T(unittest.TestCase):
             self.submit(s, "capsule:001", "REQ-SUBMIT01")["reason_code"],
             "WORK_ACCEPTED",
         )
-        status = r._process_request(
-            req("WORK_STATUS", "REQ-STATUS01", {"capsule_id": "capsule:001"}),
-            s,
-            NOW,
-            self.peer(1000),
+        status = self.process(
+            req("WORK_STATUS", "REQ-STATUS01", {"capsule_id": "capsule:001"}), s
         )
         self.assertEqual(status["result"]["work_state"], "ACCEPTED")
 
@@ -210,10 +203,7 @@ class T(unittest.TestCase):
                 "deadline_ms": NOW - 1,
             },
         )
-        self.assertEqual(
-            r._process_request(q, self.state(), NOW, self.peer(1000))["reason_code"],
-            "WORK_DEADLINE_EXPIRED",
-        )
+        self.assertEqual(self.process(q, self.state())["reason_code"], "WORK_DEADLINE_EXPIRED")
 
     def test_18_unknown_top(self):
         q = req()
@@ -240,8 +230,8 @@ class T(unittest.TestCase):
 
     def test_21_digest_reproducible_readonly(self):
         q = req()
-        first = r._process_request(q, self.state(), NOW, self.peer(1000))
-        second = r._process_request(q, self.state(), NOW, self.peer(1000))
+        first = self.process(q, self.state())
+        second = self.process(q, self.state())
         self.assertEqual(first["decision_digest"], second["decision_digest"])
 
     def test_22_peer_credentials(self):
@@ -256,12 +246,7 @@ class T(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             path = os.path.join(d, "resident.sock")
             listener = r.make_unix_listener(path)
-            state = r.ResidentState(
-                "gen-current",
-                "currentness:1",
-                "authority:local-owner",
-                owner_uid=os.getuid(),
-            )
+            state = self.state(owner_uid=os.getuid())
             gate = r.ConnectionGate(1)
             errors = []
 
@@ -269,7 +254,7 @@ class T(unittest.TestCase):
                 try:
                     conn, _ = listener.accept()
                     try:
-                        r.serve_connected_once(conn, state, NOW, gate)
+                        r.serve_connected_once(conn, state, gate)
                     finally:
                         conn.close()
                 except Exception as exc:
@@ -277,35 +262,31 @@ class T(unittest.TestCase):
                 finally:
                     listener.close()
 
-            thread = threading.Thread(target=server)
-            thread.start()
-            client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-            try:
-                client.connect(path)
-                r.send_frame(client, req())
-                out = r.recv_frame(client)
-                self.assertEqual(out["reason_code"], "HEALTH_OK")
-            finally:
-                client.close()
-            thread.join(timeout=2)
+            with mock.patch.object(r, "_now_ms", return_value=NOW):
+                thread = threading.Thread(target=server)
+                thread.start()
+                client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                try:
+                    client.connect(path)
+                    r.send_frame(client, req())
+                    out = r.recv_frame(client)
+                    self.assertEqual(out["reason_code"], "HEALTH_OK")
+                finally:
+                    client.close()
+                thread.join(timeout=2)
             self.assertFalse(thread.is_alive())
             self.assertEqual(errors, [])
 
     def test_24_authority_mismatch(self):
         self.assertEqual(
-            r._process_request(
-                req(authority_ref="authority:foreign"), self.state(), NOW, self.peer(1000)
-            )["reason_code"],
+            self.process(req(authority_ref="authority:foreign"), self.state())["reason_code"],
             "AUTHORITY_MISMATCH",
         )
 
     def test_25_not_yet_valid(self):
         self.assertEqual(
-            r._process_request(
-                req(issued_at_ms=NOW + 1, expires_at_ms=NOW + 1000),
-                self.state(),
-                NOW,
-                self.peer(1000),
+            self.process(
+                req(issued_at_ms=NOW + 1, expires_at_ms=NOW + 1000), self.state()
             )["reason_code"],
             "REQUEST_NOT_YET_VALID",
         )
@@ -318,15 +299,10 @@ class T(unittest.TestCase):
                 authority_ref="authority:foreign",
                 expires_at_ms=NOW + 100_000,
             )
-            self.assertEqual(
-                r._process_request(q, s, NOW, self.peer(5000))["reason_code"],
-                "AUTHORITY_MISMATCH",
-            )
+            self.assertEqual(self.process(q, s, uid=5000)["reason_code"], "AUTHORITY_MISMATCH")
         self.assertEqual(len(s.seen), 0)
         self.assertEqual(
-            self.submit(s, "capsule:after-reject-flood", "REQ-AFTERREJ")[
-                "reason_code"
-            ],
+            self.submit(s, "capsule:after-reject-flood", "REQ-AFTERREJ")["reason_code"],
             "WORK_ACCEPTED",
         )
 
@@ -347,7 +323,7 @@ class T(unittest.TestCase):
             issued_at_ms=NOW + 2,
             expires_at_ms=NOW + 100,
         )
-        out = r._process_request(q, s, NOW + 2, self.peer(1000))
+        out = self.process(q, s, now=NOW + 2)
         self.assertEqual(out["reason_code"], "RECONCILE_MARKED")
         self.assertEqual(len(s.seen), 1)
 
@@ -365,16 +341,11 @@ class T(unittest.TestCase):
                 "deadline_ms": NOW + 5000,
             },
         )
-        self.assertEqual(
-            r._process_request(q, s, NOW, self.peer(1000))["reason_code"],
-            "WORK_CAPACITY_EXHAUSTED",
-        )
+        self.assertEqual(self.process(q, s)["reason_code"], "WORK_CAPACITY_EXHAUSTED")
 
     def test_29_receipt_snapshot_binds_authority(self):
-        out = r._process_request(req(), self.state(), NOW, self.peer(1000))
-        self.assertEqual(
-            out["state_snapshot"]["authority_ref"], "authority:local-owner"
-        )
+        out = self.process(req(), self.state())
+        self.assertEqual(out["state_snapshot"]["authority_ref"], "authority:local-owner")
 
     def test_30_header_then_stall_times_out(self):
         a, b = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -401,71 +372,228 @@ class T(unittest.TestCase):
     def test_32_connection_gate_fails_closed(self):
         gate = r.ConnectionGate(1)
         with gate.slot():
-            with self.assertRaisesRegex(
-                r.IPCError, "CONNECTION_CAPACITY_EXHAUSTED"
-            ):
+            with self.assertRaisesRegex(r.IPCError, "CONNECTION_CAPACITY_EXHAUSTED"):
                 with gate.slot():
                     pass
 
     def test_33_cancel_creator_allowed(self):
         s = self.state()
         self.submit(s, "capsule:owned", "REQ-OWNED001", peer_uid=2001)
-        q = req(
-            "WORK_CANCEL",
-            "REQ-CANCEL001",
-            {"capsule_id": "capsule:owned"},
-        )
-        self.assertEqual(
-            r._process_request(q, s, NOW, self.peer(2001))["reason_code"],
-            "WORK_CANCELLED",
-        )
+        q = req("WORK_CANCEL", "REQ-CANCEL001", {"capsule_id": "capsule:owned"})
+        self.assertEqual(self.process(q, s, uid=2001)["reason_code"], "WORK_CANCELLED")
 
     def test_34_cancel_nonowner_rejected(self):
         s = self.state()
         self.submit(s, "capsule:owned2", "REQ-OWNED002", peer_uid=2001)
-        q = req(
-            "WORK_CANCEL",
-            "REQ-CANCEL002",
-            {"capsule_id": "capsule:owned2"},
-        )
-        self.assertEqual(
-            r._process_request(q, s, NOW, self.peer(2002))["reason_code"],
-            "CANCEL_PEER_NOT_AUTHORIZED",
-        )
+        q = req("WORK_CANCEL", "REQ-CANCEL002", {"capsule_id": "capsule:owned2"})
+        self.assertEqual(self.process(q, s, uid=2002)["reason_code"], "CANCEL_PEER_NOT_AUTHORIZED")
         self.assertEqual(s.work_records["capsule:owned2"].state, "ACCEPTED")
 
     def test_35_owner_can_cancel_cross_capsule(self):
         s = self.state()
         self.submit(s, "capsule:owned3", "REQ-OWNED003", peer_uid=2001)
-        q = req(
-            "WORK_CANCEL",
-            "REQ-CANCEL003",
-            {"capsule_id": "capsule:owned3"},
-        )
-        self.assertEqual(
-            r._process_request(q, s, NOW, self.peer(1000))["reason_code"],
-            "WORK_CANCELLED",
-        )
+        q = req("WORK_CANCEL", "REQ-CANCEL003", {"capsule_id": "capsule:owned3"})
+        self.assertEqual(self.process(q, s, uid=1000)["reason_code"], "WORK_CANCELLED")
 
     def test_36_cross_capsule_peer_rejected(self):
         s = self.state()
         self.submit(s, "capsule:a", "REQ-SUBA0001", peer_uid=2001)
         self.submit(s, "capsule:b", "REQ-SUBB0001", peer_uid=2002)
-        q = req(
-            "WORK_CANCEL",
-            "REQ-CANCEL004",
-            {"capsule_id": "capsule:b"},
-        )
-        self.assertEqual(
-            r._process_request(q, s, NOW, self.peer(2001))["reason_code"],
-            "CANCEL_PEER_NOT_AUTHORIZED",
-        )
+        q = req("WORK_CANCEL", "REQ-CANCEL004", {"capsule_id": "capsule:b"})
+        self.assertEqual(self.process(q, s, uid=2001)["reason_code"], "CANCEL_PEER_NOT_AUTHORIZED")
         self.assertEqual(s.work_records["capsule:b"].state, "ACCEPTED")
 
-    def test_37_forged_peer_identity_rejected(self):
-        with self.assertRaisesRegex(r.IPCError, "UNTRUSTED_PEER_IDENTITY"):
-            r.PeerIdentity(uid=1000, _seal=object())
-        self.assertFalse(hasattr(r, "process_request"))
+    def test_37_authoritative_processor_has_no_uid_or_time_argument(self):
+        signature = inspect.signature(r._process_request)
+        self.assertEqual(list(signature.parameters), ["raw", "state", "sock"])
+        self.assertFalse(hasattr(r, "PeerIdentity"))
+        self.assertFalse(hasattr(r, "_trusted_peer_identity"))
+
+    def test_38_cached_cancel_replay_reauthorizes_peer(self):
+        s = self.state()
+        self.submit(s, "capsule:replay", "REQ-REPLAY-SUB", peer_uid=2001)
+        q = req("WORK_CANCEL", "REQ-REPLAY-CANCEL", {"capsule_id": "capsule:replay"})
+        first = self.process(q, s, uid=2001)
+        second = self.process(q, s, uid=2002)
+        self.assertEqual(first["reason_code"], "WORK_CANCELLED")
+        self.assertEqual(second["reason_code"], "REPLAY_PEER_MISMATCH")
+
+    def test_39_cached_receipt_isolated_from_caller_mutation(self):
+        s = self.state()
+        q = req(
+            "WORK_SUBMIT",
+            "REQ-CACHEMUT1",
+            {
+                "capsule_id": "capsule:cachemut",
+                "capsule_digest": "d" * 64,
+                "route_ref": "route:sidecar-default",
+                "deadline_ms": NOW + 5000,
+            },
+        )
+        first = self.process(q, s)
+        original_digest = first["decision_digest"]
+        first["reason_code"] = "TAMPERED"
+        first["state_snapshot"]["state_epoch"] = 999999
+        replay = self.process(q, s)
+        self.assertEqual(replay["reason_code"], "WORK_ACCEPTED")
+        self.assertEqual(replay["decision_digest"], original_digest)
+        self.assertNotEqual(replay["state_snapshot"]["state_epoch"], 999999)
+
+    def test_40_state_capacity_transaction_is_atomic(self):
+        s = self.state()
+        q1 = req(
+            "WORK_SUBMIT",
+            "REQ-RACE00001",
+            {
+                "capsule_id": "capsule:race:1",
+                "capsule_digest": "e" * 64,
+                "route_ref": "route:sidecar-default",
+                "deadline_ms": NOW + 5000,
+            },
+        )
+        q2 = req(
+            "WORK_SUBMIT",
+            "REQ-RACE00002",
+            {
+                "capsule_id": "capsule:race:2",
+                "capsule_digest": "f" * 64,
+                "route_ref": "route:sidecar-default",
+                "deadline_ms": NOW + 5000,
+            },
+        )
+        barrier = threading.Barrier(3)
+        results = []
+
+        def run(q):
+            barrier.wait()
+            results.append(r._process_request(q, s, object()))
+
+        with mock.patch.object(r, "get_peer_uid", return_value=1000), mock.patch.object(
+            r, "_now_ms", return_value=NOW
+        ), mock.patch.object(r, "MAX_TRACKED_WORK", 1):
+            t1 = threading.Thread(target=run, args=(q1,))
+            t2 = threading.Thread(target=run, args=(q2,))
+            t1.start()
+            t2.start()
+            barrier.wait()
+            t1.join(timeout=2)
+            t2.join(timeout=2)
+        self.assertEqual(
+            sorted(item["reason_code"] for item in results),
+            ["WORK_ACCEPTED", "WORK_CAPACITY_EXHAUSTED"],
+        )
+        self.assertEqual(
+            sum(1 for record in s.work_records.values() if record.state == "ACCEPTED"), 1
+        )
+
+    def test_41_duplicate_concurrent_effect_is_single_transition(self):
+        s = self.state()
+        q = req(
+            "WORK_SUBMIT",
+            "REQ-DUPRACE01",
+            {
+                "capsule_id": "capsule:dup-race",
+                "capsule_digest": "1" * 64,
+                "route_ref": "route:sidecar-default",
+                "deadline_ms": NOW + 5000,
+            },
+        )
+        barrier = threading.Barrier(3)
+        results = []
+
+        def run():
+            barrier.wait()
+            results.append(r._process_request(q, s, object()))
+
+        with mock.patch.object(r, "get_peer_uid", return_value=1000), mock.patch.object(
+            r, "_now_ms", return_value=NOW
+        ):
+            t1 = threading.Thread(target=run)
+            t2 = threading.Thread(target=run)
+            t1.start()
+            t2.start()
+            barrier.wait()
+            t1.join(timeout=2)
+            t2.join(timeout=2)
+        self.assertEqual([item["reason_code"] for item in results], ["WORK_ACCEPTED", "WORK_ACCEPTED"])
+        self.assertEqual(len(s.work_records), 1)
+        self.assertEqual(len(s.seen), 1)
+        self.assertEqual(results[0], results[1])
+
+    def test_42_cancelled_work_restores_active_capacity_and_terminal_store_is_bounded(self):
+        s = self.state()
+        with mock.patch.object(r, "MAX_TRACKED_WORK", 1), mock.patch.object(
+            r, "MAX_TERMINAL_WORK_RECORDS", 2
+        ):
+            for i in range(4):
+                self.assertEqual(
+                    self.submit(s, f"capsule:term:{i}", f"REQ-TERM-SUB-{i:02d}")["reason_code"],
+                    "WORK_ACCEPTED",
+                )
+                cancel = req(
+                    "WORK_CANCEL",
+                    f"REQ-TERM-CAN-{i:02d}",
+                    {"capsule_id": f"capsule:term:{i}"},
+                )
+                self.assertEqual(self.process(cancel, s)["reason_code"], "WORK_CANCELLED")
+                self.assertLessEqual(
+                    sum(1 for record in s.work_records.values() if record.state != "ACCEPTED"),
+                    2,
+                )
+            self.assertEqual(
+                self.submit(s, "capsule:after-term", "REQ-AFTERTERM")["reason_code"],
+                "WORK_ACCEPTED",
+            )
+
+    def test_43_processing_time_is_sampled_after_frame_receive(self):
+        a, b = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
+        state = self.state(owner_uid=os.getuid())
+        gate = r.ConnectionGate(1)
+        q = req(
+            "WORK_SUBMIT",
+            "REQ-LATEFRAME1",
+            {
+                "capsule_id": "capsule:late",
+                "capsule_digest": "2" * 64,
+                "route_ref": "route:sidecar-default",
+                "deadline_ms": NOW + 1,
+            },
+            expires_at_ms=NOW + 1,
+        )
+        try:
+            a.sendall(r.encode_frame(q))
+            with mock.patch.object(r, "_now_ms", return_value=NOW + 2):
+                out = r.serve_connected_once(b, state, gate)
+            self.assertEqual(out["reason_code"], "REQUEST_EXPIRED")
+        finally:
+            a.close()
+            b.close()
+
+    def test_44_malformed_message_type_is_typed_rejection(self):
+        q = req()
+        q["message_type"] = []
+        with self.assertRaisesRegex(r.IPCError, "UNKNOWN_MESSAGE_TYPE"):
+            r.validate_envelope(q)
+
+    def test_45_unicode_key_and_scalar_limits_are_typed(self):
+        q = req()
+        q["payload"] = {"note": "\ud800"}
+        with self.assertRaisesRegex(r.IPCError, "INVALID_UNICODE_STRING"):
+            r.validate_envelope(q)
+        q = req()
+        q["payload"] = {"x" * (r.MAX_STRING_BYTES + 1): "y"}
+        with self.assertRaisesRegex(r.IPCError, "STRING_TOO_LARGE"):
+            r.validate_envelope(q)
+
+    def test_46_nonempty_extensions_fail_closed(self):
+        q = req()
+        q["extensions"] = {"note": "future"}
+        with self.assertRaisesRegex(r.IPCError, "EXTENSIONS_UNSUPPORTED"):
+            r.validate_envelope(q)
+        q = req()
+        q["extensions"] = {"endpoint": "https://example.invalid"}
+        with self.assertRaisesRegex(r.IPCError, "NETWORK_ENDPOINT_FIELD_FORBIDDEN"):
+            r.validate_envelope(q)
 
 
 if __name__ == "__main__":
