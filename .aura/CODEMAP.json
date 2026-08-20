@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1787209669,
+  "generated_at_unix": 1787209795,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1638,
+    "repo_file_count": 1639,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1632,6 +1632,7 @@
       "tools/project006/resident_v2_reference/README.md",
       "tools/project006/resident_v2_reference/resident_v2_ipc.py",
       "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+      "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1754,15 +1755,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1638,
-      "bytes": 26369813,
-      "tokens_est": 6582872,
+      "files": 1639,
+      "bytes": 26376620,
+      "tokens_est": 6584574,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
+        "python_module": 998,
         "schema_or_lexicon": 272,
         "support_file": 49
       }
@@ -157286,6 +157287,14 @@
         "end_line": 31,
         "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#function:req:03f21c7de6ab2547",
         "signature_hash": "23f9ac0f5fc27474"
+      },
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 23,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#function:req:3c36dcd51c7f97b2",
+        "signature_hash": "17e8f868e86838ee"
       }
     ],
     "T": [
@@ -157816,6 +157825,136 @@
         "end_line": 596,
         "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc.py#method:T.test_46_nonempty_extensions_fail_closed:c0ab347b86fd6e30",
         "signature_hash": "8ccebb10f43b2c4f"
+      }
+    ],
+    "submit": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 39,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#function:submit:01284c92a3f75a53",
+        "signature_hash": "2ee26a0f0d83d2a8"
+      }
+    ],
+    "cancel": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 50,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#function:cancel:1cc20a0c6d6201a1",
+        "signature_hash": "4bef5c8bfa8bf2be"
+      }
+    ],
+    "G6Lifecycle": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "kind": "class",
+        "line": 53,
+        "end_line": 191,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#class:G6Lifecycle:3419db4d8e696b46",
+        "signature_hash": "e11e3c810e93f6a8"
+      }
+    ],
+    "G6Lifecycle.state": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 57,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.state:29fc54915da33a42",
+        "signature_hash": "f690bd7d3b182ac1"
+      }
+    ],
+    "G6Lifecycle.process": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 63,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.process:f2926dcece9d8e11",
+        "signature_hash": "7c41696c6c81a17e"
+      }
+    ],
+    "G6Lifecycle.test_01_second_distinct_cancel_is_nonmutating": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 80,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_01_second_distinct_cancel_is_nonmutating:ed1718fe91943f07",
+        "signature_hash": "7d64aad3aee278bb"
+      }
+    ],
+    "G6Lifecycle.test_02_exact_cancel_replay_remains_idempotent": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 90,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_02_exact_cancel_replay_remains_idempotent:13ee4413cf66fda8",
+        "signature_hash": "1cd890cab9f4ef9f"
+      }
+    ],
+    "G6Lifecycle.test_03_same_digest_reuse_after_housekeeping_rejects": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 106,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_03_same_digest_reuse_after_housekeeping_rejects:2e49be17b00877c3",
+        "signature_hash": "8e0bd20a4749cf69"
+      }
+    ],
+    "G6Lifecycle.test_04_divergent_digest_reuse_after_housekeeping_conflicts": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 124,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_04_divergent_digest_reuse_after_housekeeping_conflicts:eb304fa5fa2378f4",
+        "signature_hash": "bbb8add7287c8060"
+      }
+    ],
+    "G6Lifecycle.test_05_identity_fence_capacity_fails_closed": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 137,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_05_identity_fence_capacity_fails_closed:66eeff889d31837a",
+        "signature_hash": "4d78d29bea982f16"
+      }
+    ],
+    "G6Lifecycle.test_06_explicit_generation_rebase_releases_old_identity_domain": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 161,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_06_explicit_generation_rebase_releases_old_identity_domain:29509aca2c169c66",
+        "signature_hash": "d930fd5af96be6ca"
+      }
+    ],
+    "G6Lifecycle.test_07_concurrent_distinct_cancels_make_one_transition": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 191,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_07_concurrent_distinct_cancels_make_one_transition:c014706b0ee0aff4",
+        "signature_hash": "4fc1f646600bfd45"
+      }
+    ],
+    "G6Lifecycle.test_07_concurrent_distinct_cancels_make_one_transition.run": [
+      {
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 171,
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_07_concurrent_distinct_cancels_make_one_transition.run:53f02193e17a5944",
+        "signature_hash": "5ef8f9554711cb7a"
       }
     ],
     "_coordinates": [
@@ -170870,47 +171009,47 @@
       "path": ".github/workflows/project006-resident-v2-reference.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 966,
+      "bytes": 1021,
       "lines": 32,
-      "tokens_est": 242,
+      "tokens_est": 256,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "a6dbef2b670606df",
+      "digest8": "607120b9de965163",
       "vector": [
-        0.070602,
-        0.216761,
-        0.276215,
-        -0.214284,
-        -0.164738,
-        -0.120147,
-        -0.107761,
-        -0.248965,
-        0.164738,
-        -0.162261,
-        -0.028489,
-        0.196943,
-        0.021057,
-        -0.023534,
-        0.085466,
-        -0.184556,
-        -0.023534,
-        0.055739,
-        0.011148,
-        -0.206852,
-        -0.125102,
-        -0.313374,
-        0.216761,
-        0.206852,
-        -0.271261,
-        0.125102,
-        -0.268783,
-        -0.135011,
-        -0.283647,
-        -0.251443,
-        -0.03592,
-        -0.01858
+        -0.251299,
+        -0.208706,
+        0.035494,
+        0.075248,
+        -0.288213,
+        -0.026976,
+        -0.208706,
+        -0.041173,
+        0.291052,
+        0.274015,
+        -0.149076,
+        -0.038334,
+        -0.052531,
+        -0.092285,
+        0.231422,
+        0.296731,
+        0.066729,
+        0.299571,
+        -0.140557,
+        0.214385,
+        -0.086606,
+        0.078087,
+        -0.345003,
+        0.24278,
+        -0.092285,
+        0.086606,
+        0.112162,
+        0.018457,
+        0.066729,
+        -0.044013,
+        -0.080927,
+        0.166113
       ]
     },
     {
@@ -263332,6 +263471,53 @@
       ]
     },
     {
+      "path": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6752,
+      "lines": 196,
+      "tokens_est": 1688,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d04da7dae5dea15e",
+      "vector": [
+        -0.216136,
+        0.232245,
+        -0.237615,
+        -0.296683,
+        0.08189,
+        -0.165122,
+        -0.132903,
+        0.149013,
+        0.323532,
+        0.095314,
+        0.108739,
+        0.100684,
+        -0.124849,
+        -0.267149,
+        0.111424,
+        -0.07652,
+        -0.299368,
+        0.073835,
+        -0.165122,
+        -0.237615,
+        0.044301,
+        0.216136,
+        -0.044301,
+        0.197341,
+        0.057726,
+        -0.205396,
+        0.084575,
+        0.057726,
+        0.09263,
+        0.288628,
+        0.028192,
+        0.151698
+      ]
+    },
+    {
       "path": "travel_extractors/__init__.py",
       "role": "python_module",
       "binary": false,
@@ -287236,15 +287422,15 @@
     }
   },
   "summary": {
-    "file_count": 1638,
-    "total_bytes": 26369813,
-    "text_tokens_est": 6582872,
+    "file_count": 1639,
+    "total_bytes": 26376620,
+    "text_tokens_est": 6584574,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
+      "python_module": 998,
       "schema_or_lexicon": 272,
       "support_file": 49
     },
@@ -288887,6 +289073,7 @@
       "tools/project006/resident_v2_reference/README.md",
       "tools/project006/resident_v2_reference/resident_v2_ipc.py",
       "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
+      "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -446853,6 +447040,146 @@
         "file_digest8": "f1ec06992279ab2f"
       },
       {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#class:G6Lifecycle:3419db4d8e696b46",
+        "name": "G6Lifecycle",
+        "kind": "class",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "line": 53,
+        "end_line": 191,
+        "signature_hash": "e11e3c810e93f6a8",
+        "file_digest8": "d04da7dae5dea15e"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#function:cancel:1cc20a0c6d6201a1",
+        "name": "cancel",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "line": 42,
+        "end_line": 50,
+        "signature_hash": "4bef5c8bfa8bf2be",
+        "file_digest8": "d04da7dae5dea15e"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#function:req:3c36dcd51c7f97b2",
+        "name": "req",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "line": 10,
+        "end_line": 23,
+        "signature_hash": "17e8f868e86838ee",
+        "file_digest8": "d04da7dae5dea15e"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#function:submit:01284c92a3f75a53",
+        "name": "submit",
+        "kind": "function",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "line": 26,
+        "end_line": 39,
+        "signature_hash": "2ee26a0f0d83d2a8",
+        "file_digest8": "d04da7dae5dea15e"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.process:f2926dcece9d8e11",
+        "name": "G6Lifecycle.process",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "line": 59,
+        "end_line": 63,
+        "signature_hash": "7c41696c6c81a17e",
+        "file_digest8": "d04da7dae5dea15e"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.state:29fc54915da33a42",
+        "name": "G6Lifecycle.state",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "line": 54,
+        "end_line": 57,
+        "signature_hash": "f690bd7d3b182ac1",
+        "file_digest8": "d04da7dae5dea15e"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_01_second_distinct_cancel_is_nonmutating:ed1718fe91943f07",
+        "name": "G6Lifecycle.test_01_second_distinct_cancel_is_nonmutating",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "line": 65,
+        "end_line": 80,
+        "signature_hash": "7d64aad3aee278bb",
+        "file_digest8": "d04da7dae5dea15e"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_02_exact_cancel_replay_remains_idempotent:13ee4413cf66fda8",
+        "name": "G6Lifecycle.test_02_exact_cancel_replay_remains_idempotent",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "line": 82,
+        "end_line": 90,
+        "signature_hash": "1cd890cab9f4ef9f",
+        "file_digest8": "d04da7dae5dea15e"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_03_same_digest_reuse_after_housekeeping_rejects:2e49be17b00877c3",
+        "name": "G6Lifecycle.test_03_same_digest_reuse_after_housekeeping_rejects",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "line": 92,
+        "end_line": 106,
+        "signature_hash": "8e0bd20a4749cf69",
+        "file_digest8": "d04da7dae5dea15e"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_04_divergent_digest_reuse_after_housekeeping_conflicts:eb304fa5fa2378f4",
+        "name": "G6Lifecycle.test_04_divergent_digest_reuse_after_housekeeping_conflicts",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "line": 108,
+        "end_line": 124,
+        "signature_hash": "bbb8add7287c8060",
+        "file_digest8": "d04da7dae5dea15e"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_05_identity_fence_capacity_fails_closed:66eeff889d31837a",
+        "name": "G6Lifecycle.test_05_identity_fence_capacity_fails_closed",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "line": 126,
+        "end_line": 137,
+        "signature_hash": "4d78d29bea982f16",
+        "file_digest8": "d04da7dae5dea15e"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_06_explicit_generation_rebase_releases_old_identity_domain:29509aca2c169c66",
+        "name": "G6Lifecycle.test_06_explicit_generation_rebase_releases_old_identity_domain",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "line": 139,
+        "end_line": 161,
+        "signature_hash": "d930fd5af96be6ca",
+        "file_digest8": "d04da7dae5dea15e"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_07_concurrent_distinct_cancels_make_one_transition.run:53f02193e17a5944",
+        "name": "G6Lifecycle.test_07_concurrent_distinct_cancels_make_one_transition.run",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "line": 169,
+        "end_line": 171,
+        "signature_hash": "5ef8f9554711cb7a",
+        "file_digest8": "d04da7dae5dea15e"
+      },
+      {
+        "semantic_id": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py#method:G6Lifecycle.test_07_concurrent_distinct_cancels_make_one_transition:c014706b0ee0aff4",
+        "name": "G6Lifecycle.test_07_concurrent_distinct_cancels_make_one_transition",
+        "kind": "method",
+        "file": "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+        "line": 163,
+        "end_line": 191,
+        "signature_hash": "4fc1f646600bfd45",
+        "file_digest8": "d04da7dae5dea15e"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -448103,7 +448430,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "479b10e0c879940c89b8bb884c023586",
-    "payload_hash": "ad8d658b2979a2578fd62bb3d6ad6131"
+    "record_fingerprint": "9f7593afc3b398f7561d8e82f7d1813d",
+    "payload_hash": "242c8f7a88dce9e5b68b320c88438548"
   }
 }
