@@ -1,14 +1,14 @@
 # Project006 Provider Dispatcher Sidecar Reference
 
-Status: **AUTHOR STAGING / NOT DEPLOYED / INDEPENDENT REVIEW REQUIRED**
+Status: **AUTHOR REPAIR STAGING / NOT DEPLOYED / FRESH INDEPENDENT REVIEW REQUIRED**
 
 Parent work order: `PROJECT006-RESIDENT-DEEPSEEK-WORKERCRYSTAL-BB-POC-001`
 
 Source floor at branch creation: `50ef5c3970cd0ebaa408b49335b5c7d01dba6c30`
 
-This directory stages a bounded reference for Lane B. It does not claim live
+This directory stages a bounded Lane-B reference. It does not claim live
 Project006 integration, provider connectivity, credential availability, systemd
-deployment, benchmark success, or production readiness.
+deployment, benchmark success, test-pass status, or production readiness.
 
 ## Security boundary
 
@@ -22,9 +22,10 @@ Credentials are consumed only by the provider-facing transport. Health and
 dispatch receipts expose only `configured` and `key_count`; they contain no
 credential prefix, suffix, fingerprint, identifier, or value.
 
-## Independent HOLD addressed by this candidate
+## First independent HOLD
 
-The independent Lane-B source review identified four blockers:
+Drive review `1kakoSXR5EYFMfMOdiNOzQfxkD7OQ-bwu7jAZSO7xHRQ` identified four
+blockers in the canonical source floor:
 
 1. `aura_api_rotator._post_json` retries TLS certificate failures with
    `CERT_NONE` and hostname checking disabled.
@@ -33,48 +34,63 @@ The independent Lane-B source review identified four blockers:
 4. Resident-supplied arbitrary provider endpoints would widen authority.
 
 This reference takes the reviewer's permitted isolation route rather than
-claiming the unsafe transport is repaired globally:
+claiming the unsafe legacy transport is repaired globally.
 
-- `StrictJsonTransport` uses Python's default verified HTTPS context and has no
-  insecure TLS retry path.
-- TLS verification failure becomes typed `TLS_FAILURE` state.
-- health/pressure receipts never use `ProviderRegistry.get_redacted_health_report()`
-  and contain no key material.
-- admission is bounded by explicit in-flight and queue limits.
-- 429 is returned as `RETRYABLE_PROVIDER_PRESSURE`; multiple API keys are not
-  interpreted as multiplied provider/account concurrency.
-- circuit state is explicit and scheduler-visible.
-- dispatch attempt identity binds capsule ID, lease generation, fencing token,
-  currentness reference, and route reference.
-- endpoints are registry-owned and selected from logical roles only.
+## PR #291 independent-review repair generation
+
+The first PR review generation was reviewed independently by Sourcery and
+Greptile. Their returned findings are repair inputs, not author self-review.
+The current author generation addresses those reported issues by staging:
+
+- strict default-verified HTTPS with no `CERT_NONE` or hostname-disabled retry;
+- redirects disabled at the opener, with 3xx mapped to typed `REDIRECT_BLOCKED`;
+- a bounded provider response size with `Content-Length` precheck and bounded
+  body read;
+- JSON content-type enforcement before parsing;
+- zero-secret health/dispatch receipts;
+- explicit bounded in-flight and queue limits;
+- HTTP 429 as `RETRYABLE_PROVIDER_PRESSURE`, without treating API-key count as
+  multiplied provider/account capacity;
+- half-open 429 handling that releases the probe and reopens the circuit rather
+  than wedging recovery;
+- side-effect-free circuit introspection separated from mutating probe admission;
+- dispatch attempt identity bound to capsule ID, lease generation, fencing
+  token, currentness reference, logical route, and a deterministic digest of
+  messages/max_tokens/temperature;
+- explicit route-marker tests in addition to logical-role allowlisting.
 
 The canonical `aura_api_rotator.py` fail-open path and the legacy registry
-health-report key-substring behavior remain unchanged on this branch. Therefore
-other callers of those legacy functions remain outside this candidate's claim
-ceiling. Independent review must decide whether isolated bypass is sufficient
-for Project006 or whether a separate global repair is required before reuse.
+health-report key-substring behavior remain unchanged on this branch. Other
+callers of those legacy functions remain outside this candidate's claim ceiling.
+Independent review must decide whether this isolated bypass is sufficient for
+Project006 or whether a separate global repair is required before reuse.
 
-## Candidate tests
+## Candidate adversarial tests
 
-`test_provider_sidecar.py` stages adversarial tests for:
+`test_provider_sidecar.py` supplies author-created tests for independent
+execution/review covering:
 
-- rejection of URLs/hosts/arbitrary provider names as route references;
-- registry-owned DeepSeek routing for the logical premium route;
-- one-shot fail-closed TLS behavior with no custom insecure context;
-- zero credential material on serialized health/receipt surfaces;
-- attempt identity changes across lease/fence/currentness generations;
-- 429 pressure without API-key concurrency multiplication;
-- bounded admission/queue fail-closed behavior;
-- circuit opening and subsequent blocking.
+- logical-route allowlisting and network-destination marker rejection;
+- registry-owned DeepSeek routing;
+- one-shot fail-closed TLS behavior;
+- redirect blocking;
+- response byte ceilings and JSON content type;
+- zero credential material on serialized status surfaces;
+- lease/fence/currentness/execution-bound attempt identity;
+- 429 pressure without key-count capacity multiplication;
+- half-open 429 recovery state;
+- side-effect-free circuit introspection;
+- bounded queue admission;
+- circuit opening/blocking.
 
-These tests are supplied as author artifacts for independent execution and
-review. Their presence is not a self-certification that they pass.
+Their presence is not a claim that they pass. The Lane-B author will consume
+only external CI/reviewer results as validation evidence.
 
 ## Integration seam
 
 Expected flow:
 
-`Resident AF_UNIX request -> logical route_ref + WorkCapsule lease/fence/currentness -> ProviderSidecarReference -> ProviderRegistry -> strict HTTPS transport -> typed/redacted receipt -> Lane C scheduler`
+`Resident AF_UNIX request -> logical route_ref + WorkCapsule lease/fence/currentness -> ProviderSidecarReference -> ProviderRegistry -> strict bounded HTTPS transport -> typed/redacted receipt -> Lane C scheduler`
 
 Lane B must not absorb Lane A AF_UNIX protocol ownership or Lane C scheduling
 state. Lane C should consume only typed pressure/result receipts and must never
@@ -82,29 +98,31 @@ receive credentials.
 
 ## Rollback
 
-The candidate is isolated on branch `p0plus/project006-provider-sidecar-reference`.
-Rollback before any later deployment is deletion/abandonment of that branch or
-PR. No runtime service, credentials, provider calls, main-branch merge, or live
-Project006 process is changed by this staged reference.
+The candidate is isolated on branch `p0plus/project006-provider-sidecar-reference`
+and PR #291. Before any later deployment, rollback is abandonment/closure of
+that branch/PR. No runtime service, provider credential, main branch, live
+Resident, bounty target, or deployment is changed merely by this staging branch.
 
 ## Claim ceiling
 
-Demonstrated by source materialization only:
+Established only by source materialization and external repository receipts:
 
-- a bounded review candidate exists on a reversible branch;
-- the candidate encodes strict TLS, logical registry routing, bounded admission,
-  circuit/pressure state, lease/fence/currentness-bound attempt identity, and
-  zero-secret receipt structure.
+- a reversible Lane-B review candidate exists;
+- the candidate encodes the intended logical-route, strict/bounded transport,
+  bounded pressure/circuit, execution-bound attempt identity, and zero-secret
+  receipt contract;
+- independent review findings were converted into a new author repair generation.
 
-Not demonstrated until independent evidence exists:
+Not established until new independent evidence exists:
 
-- candidate test pass status;
-- correctness/security of the candidate;
+- candidate tests pass;
+- correctness/security of the repaired candidate;
+- all reviewer findings are actually resolved;
 - safe integration with the running Project006 Resident;
 - canonical egress global repair;
 - live DeepSeek/provider behavior;
 - measured concurrency/cost/rotation performance;
-- systemd deployment, reboot persistence, rollback execution, or production use.
+- systemd deployment, reboot persistence, rollback execution, merge, or production use.
 
-Next boundary: independent review/adversarial execution. The Lane-B author must
-not approve or certify this candidate.
+Next boundary: **fresh independent review of the repaired exact head**. The
+Lane-B author must not approve, resolve-as-correct, or certify its own repair.
