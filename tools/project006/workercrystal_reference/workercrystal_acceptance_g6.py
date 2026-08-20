@@ -222,6 +222,15 @@ class AttemptTerminalFacts:
         return canonical_json_bytes(self.contribution.protected_body())
 
 
+def _required_contribution_keys(facts: AcceptanceFacts) -> set[bytes]:
+    required = canonical_contribution_set(facts.contributing_attempt_bindings)
+    if facts.external_contribution_required and not required:
+        raise ContractViolation("external contribution is required but required attempt set is empty")
+    if not facts.external_contribution_required and required:
+        raise ContractViolation("external contribution is false but required attempt set is non-empty")
+    return {canonical_json_bytes(body) for body in required}
+
+
 _G6_BINDING_BODY_KEYS = frozenset(
     {
         "binding_schema",
@@ -286,6 +295,8 @@ def build_g6_binding(
     if supplied_result_identity != expected_result_identity:
         raise ContractViolation("accepted_result_identity does not match AcceptanceFacts")
     contribution = terminal.contribution.protected_body()
+    if terminal.relation_key() not in _required_contribution_keys(facts):
+        raise ContractViolation("terminal contribution is not in the required contributing attempt set")
     body: dict[str, Any] = {
         "binding_schema": G6_BINDING_SCHEMA,
         "canonical_profile_id": G6_CANONICAL_PROFILE,
@@ -375,15 +386,49 @@ def canonical_binding_identity_set(values: Iterable[str]) -> tuple[str, ...]:
     return tuple(sorted(normalized, key=lambda value: value.encode("utf-8")))
 
 
+def _required_terminal_attempts_by_key(
+    facts: AcceptanceFacts,
+    terminal_attempts: Sequence[AttemptTerminalFacts],
+) -> dict[bytes, AttemptTerminalFacts]:
+    required_keys = _required_contribution_keys(facts)
+    terminals_by_key: dict[bytes, AttemptTerminalFacts] = {}
+    for terminal in terminal_attempts:
+        key = terminal.relation_key()
+        if key in terminals_by_key:
+            raise ContractViolation("terminal_attempts contains duplicate required relation")
+        terminals_by_key[key] = terminal
+    if set(terminals_by_key) != required_keys:
+        raise ContractViolation("terminal_attempts do not exactly equal required contributing attempt set")
+    return terminals_by_key
+
+
 def build_g6_operation_body(
     facts: AcceptanceFacts,
     accepted_result_identity: str,
     binding_identities: Iterable[str],
+    terminal_attempts: Sequence[AttemptTerminalFacts] | None = None,
 ) -> dict[str, Any]:
     expected_result_identity = facts.accepted_result_identity()
     supplied_result_identity = _digest(accepted_result_identity, "accepted_result_identity")
     if supplied_result_identity != expected_result_identity:
         raise ContractViolation("accepted_result_identity does not match AcceptanceFacts")
+    if terminal_attempts is None:
+        raise ContractViolation(
+            "semantic G6 operation construction requires exact terminal attempt facts"
+        )
+    terminals_by_key = _required_terminal_attempts_by_key(facts, terminal_attempts)
+    expected_bindings = [
+        build_g6_binding(facts, terminals_by_key[key], expected_result_identity)
+        for key in sorted(terminals_by_key)
+    ]
+    expected_binding_identities = canonical_binding_identity_set(
+        binding["binding_identity"] for binding in expected_bindings
+    )
+    supplied_binding_identities = canonical_binding_identity_set(binding_identities)
+    if supplied_binding_identities != expected_binding_identities:
+        raise ContractViolation(
+            "binding_identities do not exactly match the required contributing attempt set"
+        )
     return {
         "operation_schema": G6_OPERATION_SCHEMA,
         "canonical_profile_id": G6_CANONICAL_PROFILE,
@@ -396,9 +441,7 @@ def build_g6_operation_body(
         "required_attempt_set_identity": _digest(
             facts.required_attempt_set_identity, "required_attempt_set_identity"
         ),
-        "attempt_accepted_result_binding_identities": list(
-            canonical_binding_identity_set(binding_identities)
-        ),
+        "attempt_accepted_result_binding_identities": list(expected_binding_identities),
         "capsule_id": _nfc(facts.capsule_id, "capsule_id"),
         "capsule_digest": _digest(facts.capsule_digest, "capsule_digest"),
         "capsule_incarnation": _generation(facts.capsule_incarnation, "capsule_incarnation"),
@@ -460,22 +503,7 @@ def build_acceptance_bundle(
 ) -> AcceptanceBundle:
     """Construct the G6 identity graph in the reviewed one-way order."""
     accepted_result_identity = facts.accepted_result_identity()
-
-    required = canonical_contribution_set(facts.contributing_attempt_bindings)
-    required_keys = {canonical_json_bytes(body) for body in required}
-    terminals_by_key: dict[bytes, AttemptTerminalFacts] = {}
-    for terminal in terminal_attempts:
-        key = terminal.relation_key()
-        if key in terminals_by_key:
-            raise ContractViolation("terminal_attempts contains duplicate required relation")
-        terminals_by_key[key] = terminal
-
-    if set(terminals_by_key) != required_keys:
-        raise ContractViolation("terminal_attempts do not exactly equal required contributing attempt set")
-    if facts.external_contribution_required and not required:
-        raise ContractViolation("external contribution is required but required attempt set is empty")
-    if not facts.external_contribution_required and required:
-        raise ContractViolation("external contribution is false but required attempt set is non-empty")
+    terminals_by_key = _required_terminal_attempts_by_key(facts, terminal_attempts)
 
     bindings = [
         build_g6_binding(facts, terminals_by_key[key], accepted_result_identity)
@@ -485,7 +513,10 @@ def build_acceptance_bundle(
         binding["binding_identity"] for binding in bindings
     )
     operation_body = build_g6_operation_body(
-        facts, accepted_result_identity, binding_identities
+        facts,
+        accepted_result_identity,
+        binding_identities,
+        terminal_attempts,
     )
     operation_digest = derive_g6_operation_digest_from_body(operation_body)
     return AcceptanceBundle(
