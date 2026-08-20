@@ -12,6 +12,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from enum import Enum
 import hashlib
+import http.client
 import json
 import socket
 import ssl
@@ -179,6 +180,20 @@ class StrictJsonTransport:
         return ""
 
     @staticmethod
+    def _is_json_media_type(content_type: str) -> bool:
+        media_type = str(content_type or "").split(";", 1)[0].strip().lower()
+        if media_type == "application/json":
+            return True
+        if "/" not in media_type:
+            return False
+        media_type_name, subtype = media_type.split("/", 1)
+        return bool(
+            media_type_name
+            and subtype.endswith("+json")
+            and len(subtype) > len("+json")
+        )
+
+    @staticmethod
     def _content_length(response: Any) -> int | None:
         headers = getattr(response, "headers", None)
         value = headers.get("Content-Length") if headers is not None and hasattr(headers, "get") else None
@@ -212,10 +227,8 @@ class StrictJsonTransport:
         )
         try:
             with self._opener.open(req, timeout=timeout) as response:
-                content_type = self._content_type(response).lower()
-                if self.require_json_content_type and not (
-                    "application/json" in content_type or "+json" in content_type
-                ):
+                content_type = self._content_type(response)
+                if self.require_json_content_type and not self._is_json_media_type(content_type):
                     raise InvalidContentType("provider response content type is not JSON")
                 declared = self._content_length(response)
                 if declared is not None and declared > self.max_response_bytes:
@@ -230,8 +243,11 @@ class StrictJsonTransport:
         except ssl.SSLError as exc:
             raise StrictTLSFailure("provider TLS verification failed") from exc
         except urllib.error.URLError as exc:
-            if isinstance(getattr(exc, "reason", None), ssl.SSLError):
+            reason = getattr(exc, "reason", None)
+            if isinstance(reason, ssl.SSLError):
                 raise StrictTLSFailure("provider TLS verification failed") from exc
+            if isinstance(reason, (TimeoutError, socket.timeout)):
+                raise socket.timeout(str(reason) or "provider request timed out") from exc
             raise
 
         decoded = json.loads(raw.decode("utf-8"))
@@ -536,17 +552,19 @@ class ProviderSidecarReference:
             attempts = 0
             saw_credential = False
             saw_open_circuit = False
-            last_route: ProviderRoute | None = None
+            last_effective_route: ProviderRoute | None = None
             last_status = SidecarStatus.PROVIDER_UNAVAILABLE
             last_retry_after_ms: int | None = None
 
             for route in routes:
-                last_route = route
                 cfg = self.registry.get_provider_config(route.provider) or {}
                 credentials = tuple(self.credential_resolver(route.provider, cfg))
                 if not credentials:
                     continue
                 saw_credential = True
+                # Only a credentialed route may become the terminal route binding.
+                # Later uncredentialed fallback enumeration must never overwrite it.
+                last_effective_route = route
                 if not self._circuit_allows(route.provider):
                     saw_open_circuit = True
                     continue
@@ -648,6 +666,12 @@ class ProviderSidecarReference:
                     except (TimeoutError, socket.timeout):
                         self._record_failure(route.provider)
                         last_status = SidecarStatus.TIMEOUT
+                    except http.client.HTTPException:
+                        # Protocol failures may occur after HALF_OPEN admission
+                        # (e.g. IncompleteRead/BadStatusLine). Always release/reopen
+                        # the probe via _record_failure before returning/retrying.
+                        self._record_failure(route.provider)
+                        last_status = SidecarStatus.PROVIDER_UNAVAILABLE
                     except (urllib.error.URLError, OSError):
                         self._record_failure(route.provider)
                         last_status = SidecarStatus.PROVIDER_UNAVAILABLE
@@ -697,7 +721,7 @@ class ProviderSidecarReference:
                     attempt_id=attempt_id,
                     execution_digest=execution_digest,
                     route_ref=ref,
-                    route=last_route,
+                    route=last_effective_route,
                     attempts=attempts,
                     retry_after_ms=last_retry_after_ms,
                 ),
