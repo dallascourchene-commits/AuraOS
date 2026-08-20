@@ -165,6 +165,7 @@ class G8EnforcedAtomicIdentityTransition(unittest.TestCase):
             generation="gen-current",
             currentness_ref="currentness:2",
             authority_ref="authority:next-owner",
+            owner_uid=1000,
         )
         self.assertIn("capsule:g8-r5", s.capsule_identities)
         reused = self.process(
@@ -203,6 +204,7 @@ class G8EnforcedAtomicIdentityTransition(unittest.TestCase):
             generation="gen-next",
             currentness_ref="currentness:2",
             authority_ref="authority:next-owner",
+            owner_uid=1000,
         )
         self.assert_identity(
             s, ("gen-next", "currentness:2", "authority:next-owner")
@@ -215,6 +217,7 @@ class G8EnforcedAtomicIdentityTransition(unittest.TestCase):
             ),
             ("gen-next", "currentness:2", "authority:next-owner"),
         )
+        self.assertEqual(snapshot["owner_uid"], 1000)
         self.assertEqual(s.state_epoch, before_epoch + 1)
         self.assertNotIn("capsule:g8-r6", s.capsule_identities)
 
@@ -224,16 +227,19 @@ class G8EnforcedAtomicIdentityTransition(unittest.TestCase):
                 "generation": "bad generation!",
                 "currentness_ref": "currentness:2",
                 "authority_ref": "authority:next-owner",
+                "owner_uid": 1000,
             },
             {
                 "generation": "gen-next",
                 "currentness_ref": "bad currentness!",
                 "authority_ref": "authority:next-owner",
+                "owner_uid": 1000,
             },
             {
                 "generation": "gen-next",
                 "currentness_ref": "currentness:2",
                 "authority_ref": "bad authority!",
+                "owner_uid": 1000,
             },
         )
         for index, proposed in enumerate(cases):
@@ -253,6 +259,7 @@ class G8EnforcedAtomicIdentityTransition(unittest.TestCase):
                     s,
                     ("gen-current", "currentness:1", "authority:local-owner"),
                 )
+                self.assertEqual(s.owner_uid, 1000)
                 self.assertEqual(s.state_epoch, before_epoch)
                 self.assertEqual(s.capsule_identities, before_fence)
 
