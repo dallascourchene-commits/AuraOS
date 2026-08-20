@@ -387,6 +387,18 @@ def derive_g6_operation_digest_from_body(body: Mapping[str, Any]) -> str:
         raise ContractViolation("unsupported operation_kind")
     if body["lifecycle_after"] != "COMPLETE":
         raise ContractViolation("lifecycle_after must be COMPLETE")
+    _digest(body["accepted_result_identity"], "accepted_result_identity")
+    _digest(body["accepted_result_digest"], "accepted_result_digest")
+    _generation(body["accepted_state_generation"], "accepted_state_generation")
+    _digest(body["required_attempt_set_identity"], "required_attempt_set_identity")
+    _nfc(body["capsule_id"], "capsule_id")
+    _digest(body["capsule_digest"], "capsule_digest")
+    _generation(body["capsule_incarnation"], "capsule_incarnation")
+    _nfc(body["lease_id"], "lease_id")
+    _generation(body["lease_generation"], "lease_generation")
+    _digest(body["fencing_token_digest"], "fencing_token_digest")
+    _digest(body["source_currentness_digest"], "source_currentness_digest")
+    _digest(body["authority_effect_ceiling_digest"], "authority_effect_ceiling_digest")
     expected_set = canonical_binding_identity_set(
         body["attempt_accepted_result_binding_identities"]
     )
