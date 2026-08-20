@@ -145,7 +145,12 @@ class G6Lifecycle(unittest.TestCase):
             cancel("capsule:rebase", "REQ-G6-CAN-06", expires_at_ms=NOW + 1), s
         )
         later = NOW + r.TERMINAL_WORK_RETENTION_MS + 10
-        s.generation = "gen-next"
+        r.rebase_identity_domain(
+            s,
+            generation="gen-next",
+            currentness_ref="currentness:1",
+            authority_ref="authority:local-owner",
+        )
         out = self.process(
             submit(
                 "capsule:rebase",
