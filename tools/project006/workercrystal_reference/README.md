@@ -13,11 +13,12 @@ This directory is a **reference-only repository realization** of the exact revie
 `workercrystal_acceptance_g6.py` realizes the reviewed one-way identity graph:
 
 1. derive the preserved G5 `accepted_result_identity` from the exact closed accepted-result body;
-2. derive one immutable G6 attempt/result binding per exact required contribution, with `acceptance_operation_digest` **absent** from the binding schema and identity preimage;
-3. canonicalize the exact G6 binding-identity set;
-4. derive the closed G6 acceptance-operation body and digest downstream;
-5. on restart, independently rebuild accepted-result identity, binding records/identities, binding set and operation digest in that order, then compare to stored state;
-6. fail closed on missing/extra/substituted bindings, noncanonical sets, profile aliasing, digest transplantation, malformed protected facts or stored/recomputed mismatch.
+2. require every public G6 binding/operation builder to match that independently recomputed accepted-result identity, preventing identity transplantation;
+3. derive one immutable G6 attempt/result binding per exact required contribution, with `acceptance_operation_digest` **absent** from the binding schema and identity preimage;
+4. canonicalize the exact G6 binding-identity set;
+5. derive the closed G6 acceptance-operation body and digest downstream;
+6. on restart, independently rebuild accepted-result identity, binding records/identities, binding set and operation digest in that order, then compare to stored state;
+7. fail closed on missing/extra/substituted bindings, noncanonical sets, profile aliasing, identity/digest transplantation, malformed protected facts, non-COMPLETE lifecycle, or stored/recomputed mismatch.
 
 The reference deliberately does not implement or infer the upstream source-graph/currentness/authority verifier or the full durable transaction engine. `AcceptanceFacts` and terminal-attempt inputs are the already-resolved protected inputs to this identity/reconstruction layer. A caller must not treat constructing those inputs as proof that upstream admission was lawful.
 
@@ -27,12 +28,13 @@ The reviewed contract requires Unicode NFC + RFC8785 JCS + SHA-256. This referen
 
 ## Author-side checks
 
-`test_workercrystal_acceptance_g6.py` covers:
+`test_workercrystal_acceptance_g6.py` now contains 19 regressions covering:
 
 - accepted-result identity permutation invariance;
 - duplicate verifier/contribution rejection;
 - normative absence of operation digest from the G6 binding schema;
 - G5 profile-alias rejection;
+- binding- and operation-builder accepted-result identity transplant rejection;
 - G6 operation binding-set permutation invariance;
 - rejection of noncanonical stored set order;
 - transplanted operation-digest rejection;
@@ -40,10 +42,11 @@ The reviewed contract requires Unicode NFC + RFC8785 JCS + SHA-256. This referen
 - exact required-attempt set equality;
 - empty-required-set failure when external contribution is required;
 - multiple AcceptedResult relations without mutable attempt backlink state;
-- unknown operation-field rejection;
+- unknown operation-field and malformed protected-digest rejection;
+- non-COMPLETE restart rejection;
 - exact restart reconstruction.
 
-The constructor executed these fixtures before staging and observed **15/15 PASS**. That is author-side evidence only and is not an independent review or repository-wide CI result.
+The original constructor scratch suite observed **15/15 PASS** before repository staging. After the independent Greptile transplant finding and Sourcery lifecycle-test suggestion were incorporated, the constructor reconstructed the exact committed functional blobs, verified their Git blob SHA-1 identities against GitHub, and executed the resulting suite with **19/19 PASS**. This remains author-side evidence only. PR-triggered repository workflows at the reviewed head have been `action_required`, so no repository-wide CI PASS is claimed.
 
 ## Explicit nonclaims
 
