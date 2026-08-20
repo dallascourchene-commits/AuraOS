@@ -79,7 +79,6 @@ SENSITIVE_KEY_FRAGMENTS = (
     "cookie",
     "private_key",
     "credential",
-    "auth",
 )
 NETWORK_KEY_FRAGMENTS = (
     "provider_url",
