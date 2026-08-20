@@ -69,7 +69,9 @@ REQUIRED_TOP_LEVEL_FIELDS = frozenset(
 
 REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$")
 REF_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/+-]{0,255}$")
-IDENTITY_DOMAIN_FIELDS = frozenset({"generation", "currentness_ref", "authority_ref"})
+IDENTITY_DOMAIN_FIELDS = frozenset(
+    {"generation", "currentness_ref", "authority_ref", "owner_uid"}
+)
 SENSITIVE_KEY_FRAGMENTS = (
     "token",
     "password",
@@ -244,6 +246,17 @@ def _validate_ref(name: str, value: Any) -> str:
     return value
 
 
+def _validate_owner_uid(value: Any) -> int:
+    if (
+        not isinstance(value, int)
+        or isinstance(value, bool)
+        or value < 0
+        or value > 0xFFFFFFFF
+    ):
+        raise IPCError("INVALID_OWNER_UID")
+    return value
+
+
 def _require_exact_payload(payload, required, optional=()):
     required_set = set(required)
     optional_set = set(optional)
@@ -381,6 +394,7 @@ class ResidentState:
                 "generation": self.generation,
                 "currentness_ref": self.currentness_ref,
                 "authority_ref": self.authority_ref,
+                "owner_uid": self.owner_uid,
                 "state_epoch": self.state_epoch,
                 "draining": self.draining,
                 "accepted_work_count": sum(
@@ -477,27 +491,43 @@ def rebase_identity_domain(
     generation: str,
     currentness_ref: str,
     authority_ref: str,
+    owner_uid: int | None = None,
 ) -> Dict[str, Any]:
-    """Atomically rebind Resident identity witnesses and retire old-generation fences.
+    """Atomically rebind Resident identity, authority, and owner credentials.
 
-    currentness/authority changes within one generation do not release capsule-ID
-    history. An actual generation transition updates all three witnesses and
-    retires only the previous generation's capsule fences under the same lock
-    used by consequence processing.
+    A currentness/generation-only rebase preserves the current owner credential.
+    Changing ``authority_ref`` requires an explicit validated owner binding, even
+    when the same UID continues to own the Resident. This prevents free-form
+    authority text from silently changing the protected authority witness while
+    privileged consequences continue to trust a credential from another owner.
     """
     _validate_ref("generation", generation)
     _validate_ref("currentness_ref", currentness_ref)
     _validate_ref("authority_ref", authority_ref)
+    validated_owner_uid = (
+        None if owner_uid is None else _validate_owner_uid(owner_uid)
+    )
     with state._lock:
+        authority_changed = authority_ref != state.authority_ref
+        if authority_changed and validated_owner_uid is None:
+            raise IPCError("AUTHORITY_OWNER_BINDING_REQUIRED")
+        next_owner_uid = (
+            state.owner_uid if validated_owner_uid is None else validated_owner_uid
+        )
+        if next_owner_uid != state.owner_uid and not authority_changed:
+            raise IPCError("OWNER_TRANSFER_REQUIRES_AUTHORITY_CHANGE")
+
         generation_changed = generation != state.generation
         changed = (
             generation_changed
             or currentness_ref != state.currentness_ref
-            or authority_ref != state.authority_ref
+            or authority_changed
+            or next_owner_uid != state.owner_uid
         )
         object.__setattr__(state, "generation", generation)
         object.__setattr__(state, "currentness_ref", currentness_ref)
         object.__setattr__(state, "authority_ref", authority_ref)
+        object.__setattr__(state, "owner_uid", next_owner_uid)
         if generation_changed:
             _prune_capsule_identities(state)
         if changed:
