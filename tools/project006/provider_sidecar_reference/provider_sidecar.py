@@ -1,6 +1,6 @@
 """Project006 Provider Dispatcher Sidecar reference.
 
-This module is deliberately isolated from the Resident process.  It accepts only
+This module is deliberately isolated from the Resident process. It accepts only
 logical route references, resolves provider/model/endpoint from Aura's canonical
 ProviderRegistry, keeps credentials inside the provider-facing process, and
 emits typed receipts that never contain credential values.
@@ -46,6 +46,9 @@ class SidecarStatus(str, Enum):
     RETRYABLE_PROVIDER_PRESSURE = "RETRYABLE_PROVIDER_PRESSURE"
     TIMEOUT = "TIMEOUT"
     TLS_FAILURE = "TLS_FAILURE"
+    REDIRECT_BLOCKED = "REDIRECT_BLOCKED"
+    RESPONSE_TOO_LARGE = "RESPONSE_TOO_LARGE"
+    INVALID_CONTENT_TYPE = "INVALID_CONTENT_TYPE"
     PROVIDER_UNAVAILABLE = "PROVIDER_UNAVAILABLE"
     MALFORMED_RESPONSE = "MALFORMED_RESPONSE"
 
@@ -57,7 +60,24 @@ class CircuitState(str, Enum):
 
 
 class StrictTLSFailure(RuntimeError):
-    """Certificate/hostname validation failed; never retry insecurely."""
+    """Certificate or hostname validation failed; never retry insecurely."""
+
+
+class RedirectBlocked(RuntimeError):
+    """Provider attempted an HTTP redirect outside the frozen endpoint request."""
+
+
+class ResponseTooLarge(RuntimeError):
+    """Provider response exceeded the configured byte ceiling."""
+
+
+class InvalidContentType(RuntimeError):
+    """Provider response was not declared as JSON."""
+
+
+class _NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):  # noqa: ANN001
+        return None
 
 
 @dataclass(frozen=True)
@@ -76,7 +96,7 @@ class DispatchBinding:
     fencing_token: str
     currentness_ref: str
 
-    def attempt_id(self, route_ref: str) -> str:
+    def attempt_id(self, route_ref: str, execution_digest: str) -> str:
         material = "\x1f".join(
             (
                 self.capsule_id,
@@ -84,6 +104,7 @@ class DispatchBinding:
                 self.fencing_token,
                 self.currentness_ref,
                 route_ref,
+                execution_digest,
             )
         ).encode("utf-8")
         return hashlib.sha256(material).hexdigest()
@@ -93,6 +114,7 @@ class DispatchBinding:
 class ProviderReceipt:
     status: SidecarStatus
     dispatch_attempt_id: str
+    execution_digest: str
     route_ref: str
     provider: str | None
     model: str | None
@@ -125,7 +147,49 @@ class _Circuit:
 
 
 class StrictJsonTransport:
-    """HTTPS JSON transport that never disables certificate verification."""
+    """Bounded HTTPS JSON transport with verification and redirects fail closed."""
+
+    def __init__(
+        self,
+        *,
+        max_response_bytes: int = 4 * 1024 * 1024,
+        require_json_content_type: bool = True,
+        opener: Any | None = None,
+    ) -> None:
+        if max_response_bytes <= 0:
+            raise ValueError("max_response_bytes must be positive")
+        self.max_response_bytes = int(max_response_bytes)
+        self.require_json_content_type = bool(require_json_content_type)
+        # The standard HTTPSHandler uses Python's verified default SSL context.
+        # Redirects are disabled so a credential-bearing request cannot escape
+        # the exact registry-selected endpoint through a provider-controlled 3xx.
+        self._opener = opener or urllib.request.build_opener(_NoRedirectHandler())
+
+    @staticmethod
+    def _content_type(response: Any) -> str:
+        headers = getattr(response, "headers", None)
+        if headers is not None and hasattr(headers, "get"):
+            value = headers.get("Content-Type")
+            if value:
+                return str(value)
+        if hasattr(response, "getheader"):
+            value = response.getheader("Content-Type")
+            if value:
+                return str(value)
+        return ""
+
+    @staticmethod
+    def _content_length(response: Any) -> int | None:
+        headers = getattr(response, "headers", None)
+        value = headers.get("Content-Length") if headers is not None and hasattr(headers, "get") else None
+        if value is None and hasattr(response, "getheader"):
+            value = response.getheader("Content-Length")
+        if value is None:
+            return None
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return None
 
     def post(
         self,
@@ -147,16 +211,30 @@ class StrictJsonTransport:
             method="POST",
         )
         try:
-            # Intentionally no context override. Python's default HTTPS context
-            # validates the certificate chain and hostname.
-            with urllib.request.urlopen(req, timeout=timeout) as response:
-                decoded = json.loads(response.read().decode("utf-8"))
+            with self._opener.open(req, timeout=timeout) as response:
+                content_type = self._content_type(response).lower()
+                if self.require_json_content_type and not (
+                    "application/json" in content_type or "+json" in content_type
+                ):
+                    raise InvalidContentType("provider response content type is not JSON")
+                declared = self._content_length(response)
+                if declared is not None and declared > self.max_response_bytes:
+                    raise ResponseTooLarge("provider response content length exceeds limit")
+                raw = response.read(self.max_response_bytes + 1)
+                if len(raw) > self.max_response_bytes:
+                    raise ResponseTooLarge("provider response exceeds byte limit")
+        except urllib.error.HTTPError as exc:
+            if 300 <= int(exc.code) < 400:
+                raise RedirectBlocked("provider redirect blocked") from exc
+            raise
         except ssl.SSLError as exc:
             raise StrictTLSFailure("provider TLS verification failed") from exc
         except urllib.error.URLError as exc:
             if isinstance(getattr(exc, "reason", None), ssl.SSLError):
                 raise StrictTLSFailure("provider TLS verification failed") from exc
             raise
+
+        decoded = json.loads(raw.decode("utf-8"))
         if not isinstance(decoded, Mapping):
             raise ValueError("provider response must be a JSON object")
         return decoded
@@ -206,11 +284,31 @@ class ProviderSidecarReference:
     @staticmethod
     def validate_route_ref(route_ref: str) -> str:
         ref = str(route_ref or "").strip().lower()
-        if ref not in _ALLOWED_ROUTE_REFS:
-            raise ValueError("route_ref must be a registered logical role")
         if any(marker in ref for marker in ("://", "/", "\\", "@")):
             raise ValueError("route_ref cannot contain a network destination")
+        if ref not in _ALLOWED_ROUTE_REFS:
+            raise ValueError("route_ref must be a registered logical role")
         return ref
+
+    @staticmethod
+    def execution_digest(
+        messages: Sequence[Mapping[str, str]],
+        *,
+        max_tokens: int,
+        temperature: float,
+    ) -> str:
+        material = {
+            "messages": [dict(item) for item in messages],
+            "max_tokens": int(max_tokens),
+            "temperature": float(temperature),
+        }
+        canonical = json.dumps(
+            material,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+        ).encode("utf-8")
+        return hashlib.sha256(canonical).hexdigest()
 
     def _routes(self, route_ref: str) -> list[ProviderRoute]:
         ref = self.validate_route_ref(route_ref)
@@ -264,11 +362,16 @@ class ProviderSidecarReference:
                 raise RuntimeError("provider admission accounting underflow")
             self._condition.notify()
 
-    def _circuit(self, provider: str) -> _Circuit:
+    def _circuit_state(self, provider: str | None) -> CircuitState:
+        """Pure circuit introspection: reporting must never create/mutate state."""
+        if not provider:
+            return CircuitState.CLOSED
         with self._condition:
-            return self._circuits.setdefault(provider, _Circuit())
+            circuit = self._circuits.get(provider)
+            return circuit.state if circuit is not None else CircuitState.CLOSED
 
     def _circuit_allows(self, provider: str) -> bool:
+        """Mutating admission transition; call only for an actual dispatch probe."""
         now = time.monotonic()
         with self._condition:
             circuit = self._circuits.setdefault(provider, _Circuit())
@@ -297,24 +400,25 @@ class ProviderSidecarReference:
             circuit = self._circuits.setdefault(provider, _Circuit())
             circuit.failures += 1
             circuit.half_open_probe_active = False
-            if circuit.failures >= self.circuit_failure_threshold:
-                circuit.state = CircuitState.OPEN
-                circuit.opened_at = time.monotonic()
-            elif circuit.state is CircuitState.HALF_OPEN:
+            if circuit.state is CircuitState.HALF_OPEN or circuit.failures >= self.circuit_failure_threshold:
                 circuit.state = CircuitState.OPEN
                 circuit.opened_at = time.monotonic()
 
-    def _circuit_state(self, provider: str | None) -> CircuitState:
-        if not provider:
-            return CircuitState.CLOSED
+    def _record_pressure(self, provider: str) -> None:
+        """Release a half-open probe on 429 without treating keys as capacity."""
         with self._condition:
-            return self._circuits.setdefault(provider, _Circuit()).state
+            circuit = self._circuits.setdefault(provider, _Circuit())
+            circuit.half_open_probe_active = False
+            if circuit.state is CircuitState.HALF_OPEN:
+                circuit.state = CircuitState.OPEN
+                circuit.opened_at = time.monotonic()
 
     def _receipt(
         self,
         *,
         status: SidecarStatus,
         attempt_id: str,
+        execution_digest: str,
         route_ref: str,
         route: ProviderRoute | None,
         attempts: int,
@@ -324,6 +428,7 @@ class ProviderSidecarReference:
         return ProviderReceipt(
             status=status,
             dispatch_attempt_id=attempt_id,
+            execution_digest=execution_digest,
             route_ref=route_ref,
             provider=route.provider if route else None,
             model=route.model if route else None,
@@ -335,14 +440,27 @@ class ProviderSidecarReference:
             attempts=attempts,
         )
 
+    @staticmethod
+    def _retry_after_ms(exc: urllib.error.HTTPError) -> int | None:
+        headers = getattr(exc, "headers", None)
+        value = headers.get("Retry-After") if headers is not None and hasattr(headers, "get") else None
+        if value is None:
+            return None
+        try:
+            seconds = float(value)
+        except (TypeError, ValueError):
+            return None
+        if seconds < 0:
+            return None
+        return int(seconds * 1000)
+
     def health_report(self, route_ref: str) -> dict[str, Any]:
         """Return zero-secret routing/pressure state for Lane C or health UI."""
         ref = self.validate_route_ref(route_ref)
         providers: list[dict[str, Any]] = []
         for route in self._routes(ref):
             cfg = self.registry.get_provider_config(route.provider) or {}
-            # Credential values are intentionally discarded immediately; only a
-            # count is exposed. Never include prefixes/suffixes/fingerprints.
+            # Credential values are discarded immediately; only a count escapes.
             key_count = len(tuple(self.credential_resolver(route.provider, cfg)))
             providers.append(
                 {
@@ -376,7 +494,13 @@ class ProviderSidecarReference:
         retry_budget: int = 1,
     ) -> DispatchResult:
         """Dispatch one bounded request and return response + redacted receipt."""
-        attempt_id = binding.attempt_id(str(route_ref or "").strip().lower())
+        execution_digest = self.execution_digest(
+            messages,
+            max_tokens=max_tokens,
+            temperature=temperature,
+        )
+        normalized_ref = str(route_ref or "").strip().lower()
+        attempt_id = binding.attempt_id(normalized_ref, execution_digest)
         try:
             ref = self.validate_route_ref(route_ref)
         except ValueError:
@@ -385,6 +509,7 @@ class ProviderSidecarReference:
                 self._receipt(
                     status=SidecarStatus.INVALID_ROUTE,
                     attempt_id=attempt_id,
+                    execution_digest=execution_digest,
                     route_ref=str(route_ref or ""),
                     route=None,
                     attempts=0,
@@ -399,6 +524,7 @@ class ProviderSidecarReference:
                 self._receipt(
                     status=SidecarStatus.QUEUE_FULL,
                     attempt_id=attempt_id,
+                    execution_digest=execution_digest,
                     route_ref=ref,
                     route=None,
                     attempts=0,
@@ -409,7 +535,11 @@ class ProviderSidecarReference:
             routes = self._routes(ref)
             attempts = 0
             saw_credential = False
+            saw_open_circuit = False
             last_route: ProviderRoute | None = None
+            last_status = SidecarStatus.PROVIDER_UNAVAILABLE
+            last_retry_after_ms: int | None = None
+
             for route in routes:
                 last_route = route
                 cfg = self.registry.get_provider_config(route.provider) or {}
@@ -418,9 +548,10 @@ class ProviderSidecarReference:
                     continue
                 saw_credential = True
                 if not self._circuit_allows(route.provider):
+                    saw_open_circuit = True
                     continue
+
                 # Provider/account concurrency is not multiplied by key count.
-                # A 429 returns pressure to the scheduler rather than key-churn.
                 credential = credentials[0]
                 payload = {
                     "model": route.model,
@@ -428,21 +559,13 @@ class ProviderSidecarReference:
                     "max_tokens": int(max_tokens),
                     "temperature": float(temperature),
                 }
-                for _ in range(retry_budget + 1):
+                for retry_index in range(retry_budget + 1):
                     attempts += 1
                     remaining = deadline - time.monotonic()
                     if remaining <= 0:
                         self._record_failure(route.provider)
-                        return DispatchResult(
-                            None,
-                            self._receipt(
-                                status=SidecarStatus.TIMEOUT,
-                                attempt_id=attempt_id,
-                                route_ref=ref,
-                                route=route,
-                                attempts=attempts,
-                            ),
-                        )
+                        last_status = SidecarStatus.TIMEOUT
+                        break
                     try:
                         response = self.transport.post(
                             route.endpoint,
@@ -457,6 +580,46 @@ class ProviderSidecarReference:
                             self._receipt(
                                 status=SidecarStatus.TLS_FAILURE,
                                 attempt_id=attempt_id,
+                                execution_digest=execution_digest,
+                                route_ref=ref,
+                                route=route,
+                                attempts=attempts,
+                            ),
+                        )
+                    except RedirectBlocked:
+                        self._record_failure(route.provider)
+                        return DispatchResult(
+                            None,
+                            self._receipt(
+                                status=SidecarStatus.REDIRECT_BLOCKED,
+                                attempt_id=attempt_id,
+                                execution_digest=execution_digest,
+                                route_ref=ref,
+                                route=route,
+                                attempts=attempts,
+                            ),
+                        )
+                    except ResponseTooLarge:
+                        self._record_failure(route.provider)
+                        return DispatchResult(
+                            None,
+                            self._receipt(
+                                status=SidecarStatus.RESPONSE_TOO_LARGE,
+                                attempt_id=attempt_id,
+                                execution_digest=execution_digest,
+                                route_ref=ref,
+                                route=route,
+                                attempts=attempts,
+                            ),
+                        )
+                    except InvalidContentType:
+                        self._record_failure(route.provider)
+                        return DispatchResult(
+                            None,
+                            self._receipt(
+                                status=SidecarStatus.INVALID_CONTENT_TYPE,
+                                attempt_id=attempt_id,
+                                execution_digest=execution_digest,
                                 route_ref=ref,
                                 route=route,
                                 attempts=attempts,
@@ -464,36 +627,38 @@ class ProviderSidecarReference:
                         )
                     except urllib.error.HTTPError as exc:
                         if exc.code == 429:
-                            # Account/provider pressure: do not rotate keys as if
-                            # each key enlarged the concurrency budget.
+                            self._record_pressure(route.provider)
+                            last_retry_after_ms = self._retry_after_ms(exc)
                             return DispatchResult(
                                 None,
                                 self._receipt(
                                     status=SidecarStatus.RETRYABLE_PROVIDER_PRESSURE,
                                     attempt_id=attempt_id,
+                                    execution_digest=execution_digest,
                                     route_ref=ref,
                                     route=route,
                                     attempts=attempts,
+                                    retry_after_ms=last_retry_after_ms,
                                 ),
                             )
-                        if exc.code in (500, 502, 503, 504):
-                            self._record_failure(route.provider)
-                            continue
                         self._record_failure(route.provider)
-                        break
+                        last_status = SidecarStatus.PROVIDER_UNAVAILABLE
+                        if exc.code not in (500, 502, 503, 504):
+                            break
                     except (TimeoutError, socket.timeout):
                         self._record_failure(route.provider)
-                        continue
+                        last_status = SidecarStatus.TIMEOUT
                     except (urllib.error.URLError, OSError):
                         self._record_failure(route.provider)
-                        continue
-                    except (ValueError, json.JSONDecodeError):
+                        last_status = SidecarStatus.PROVIDER_UNAVAILABLE
+                    except (ValueError, json.JSONDecodeError, UnicodeDecodeError):
                         self._record_failure(route.provider)
                         return DispatchResult(
                             None,
                             self._receipt(
                                 status=SidecarStatus.MALFORMED_RESPONSE,
                                 attempt_id=attempt_id,
+                                execution_digest=execution_digest,
                                 route_ref=ref,
                                 route=route,
                                 attempts=attempts,
@@ -506,23 +671,35 @@ class ProviderSidecarReference:
                             self._receipt(
                                 status=SidecarStatus.OK,
                                 attempt_id=attempt_id,
+                                execution_digest=execution_digest,
                                 route_ref=ref,
                                 route=route,
                                 attempts=attempts,
                             ),
                         )
 
-            status = SidecarStatus.NO_CREDENTIAL if not saw_credential else SidecarStatus.PROVIDER_UNAVAILABLE
-            if last_route and saw_credential and not self._circuit_allows(last_route.provider):
+                    if self._circuit_state(route.provider) is CircuitState.OPEN:
+                        saw_open_circuit = True
+                        break
+                    if retry_index >= retry_budget:
+                        break
+
+            if not saw_credential:
+                status = SidecarStatus.NO_CREDENTIAL
+            elif saw_open_circuit and last_status is SidecarStatus.PROVIDER_UNAVAILABLE:
                 status = SidecarStatus.CIRCUIT_OPEN
+            else:
+                status = last_status
             return DispatchResult(
                 None,
                 self._receipt(
                     status=status,
                     attempt_id=attempt_id,
+                    execution_digest=execution_digest,
                     route_ref=ref,
                     route=last_route,
                     attempts=attempts,
+                    retry_after_ms=last_retry_after_ms,
                 ),
             )
         finally:
