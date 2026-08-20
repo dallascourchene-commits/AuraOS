@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1638
-- **total_bytes**: 26372108
-- **text_tokens_est**: 6583445
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 998, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1639
+- **total_bytes**: 26379033
+- **text_tokens_est**: 6585176
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1638,
+  "repo_file_count": 1639,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1650,6 +1650,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/project006/provider_sidecar_reference/provider_sidecar.py",
     "tools/project006/provider_sidecar_reference/test_provider_sidecar.py",
     "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3.py",
+    "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1778,15 +1779,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1638,
-  "bytes": 26372108,
-  "tokens_est": 6583445,
+  "files": 1639,
+  "bytes": 26379033,
+  "tokens_est": 6585176,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 235,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 998,
+    "python_module": 999,
     "schema_or_lexicon": 271,
     "support_file": 49
   }
