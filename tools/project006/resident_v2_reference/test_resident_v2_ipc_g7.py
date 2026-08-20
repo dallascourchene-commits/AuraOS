@@ -149,6 +149,7 @@ class G7GenerationScopedIdentityFence(unittest.TestCase):
             generation="gen-current",
             currentness_ref="currentness:1",
             authority_ref="authority:next-owner",
+            owner_uid=1000,
         )
         out = self.process(
             submit(
@@ -171,6 +172,7 @@ class G7GenerationScopedIdentityFence(unittest.TestCase):
             generation="gen-current",
             currentness_ref="currentness:2",
             authority_ref="authority:next-owner",
+            owner_uid=1000,
         )
         out = self.process(
             submit(
@@ -195,6 +197,7 @@ class G7GenerationScopedIdentityFence(unittest.TestCase):
             generation="gen-next",
             currentness_ref="currentness:2",
             authority_ref="authority:next-owner",
+            owner_uid=1000,
         )
         self.assertEqual(snapshot["generation"], "gen-next")
         self.assertEqual(snapshot["currentness_ref"], "currentness:2")
@@ -236,6 +239,7 @@ class G7GenerationScopedIdentityFence(unittest.TestCase):
                 generation="gen-next",
                 currentness_ref="currentness:2",
                 authority_ref="authority:next-owner",
+                owner_uid=1000,
             )
 
         def submit_new():
