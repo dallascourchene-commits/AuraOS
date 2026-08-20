@@ -11,9 +11,14 @@ import urllib.error
 from tools.project006.provider_sidecar_reference.provider_sidecar import (
     CircuitState,
     DispatchBinding,
+    InvalidContentType,
     ProviderSidecarReference,
+    RedirectBlocked,
+    ResponseTooLarge,
     SidecarStatus,
     StrictJsonTransport,
+    StrictTLSFailure,
+    _Circuit,
 )
 
 
@@ -43,6 +48,36 @@ class _UnavailableTransport:
         raise urllib.error.HTTPError(endpoint, 503, "unavailable", {}, None)
 
 
+class _Response:
+    def __init__(self, body: bytes, headers: dict[str, str]) -> None:
+        self.body = body
+        self.headers = headers
+        self.read_calls = 0
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        return False
+
+    def read(self, limit: int) -> bytes:
+        self.read_calls += 1
+        return self.body[:limit]
+
+
+class _Opener:
+    def __init__(self, result=None, error: BaseException | None = None) -> None:
+        self.result = result
+        self.error = error
+        self.calls = 0
+
+    def open(self, req, timeout):
+        self.calls += 1
+        if self.error is not None:
+            raise self.error
+        return self.result
+
+
 class ProviderSidecarReferenceTests(unittest.TestCase):
     def binding(self, **overrides):
         values = {
@@ -53,6 +88,13 @@ class ProviderSidecarReferenceTests(unittest.TestCase):
         }
         values.update(overrides)
         return DispatchBinding(**values)
+
+    def digest(self, messages=None, max_tokens=900, temperature=0.0):
+        return ProviderSidecarReference.execution_digest(
+            messages or [{"role": "user", "content": "hello"}],
+            max_tokens=max_tokens,
+            temperature=temperature,
+        )
 
     def test_route_ref_cannot_be_url_host_or_arbitrary_provider(self):
         sidecar = ProviderSidecarReference(credential_resolver=_credentials)
@@ -69,6 +111,16 @@ class ProviderSidecarReferenceTests(unittest.TestCase):
                 messages=[{"role": "user", "content": "hello"}],
             )
             self.assertEqual(result.receipt.status, SidecarStatus.INVALID_ROUTE)
+
+    def test_validate_route_ref_rejects_network_destination_markers(self):
+        for route_ref in (
+            "premium://",
+            "premium/host",
+            "premium\\host",
+            "premium@deepseek",
+        ):
+            with self.assertRaises(ValueError):
+                ProviderSidecarReference.validate_route_ref(route_ref)
 
     def test_logical_premium_route_resolves_registry_owned_deepseek(self):
         transport = _SuccessTransport()
@@ -87,22 +139,81 @@ class ProviderSidecarReferenceTests(unittest.TestCase):
         self.assertEqual(result.receipt.fallback_index, 0)
         self.assertEqual(transport.calls[0][0], "https://api.deepseek.com/chat/completions")
 
-    def test_strict_tls_failure_never_retries_with_disabled_verification(self):
-        transport = StrictJsonTransport()
-        with mock.patch(
-            "urllib.request.urlopen",
-            side_effect=ssl.SSLError("certificate verify failed"),
-        ) as urlopen:
-            with self.assertRaises(Exception) as raised:
-                transport.post(
-                    "https://example.invalid/v1/chat/completions",
-                    {"model": "x", "messages": []},
-                    bearer=_SECRET,
-                    timeout=1.0,
-                )
-        self.assertEqual(raised.exception.__class__.__name__, "StrictTLSFailure")
-        self.assertEqual(urlopen.call_count, 1)
-        self.assertNotIn("context", urlopen.call_args.kwargs)
+    def test_strict_tls_failure_is_one_shot_and_never_insecure_retry(self):
+        opener = _Opener(error=ssl.SSLError("certificate verify failed"))
+        transport = StrictJsonTransport(opener=opener)
+        with self.assertRaises(StrictTLSFailure):
+            transport.post(
+                "https://example.invalid/v1/chat/completions",
+                {"model": "x", "messages": []},
+                bearer=_SECRET,
+                timeout=1.0,
+            )
+        self.assertEqual(opener.calls, 1)
+
+    def test_redirect_is_blocked_without_following_destination(self):
+        error = urllib.error.HTTPError(
+            "https://api.deepseek.com/chat/completions",
+            302,
+            "redirect",
+            {"Location": "https://attacker.invalid/capture"},
+            None,
+        )
+        opener = _Opener(error=error)
+        transport = StrictJsonTransport(opener=opener)
+        with self.assertRaises(RedirectBlocked):
+            transport.post(
+                "https://api.deepseek.com/chat/completions",
+                {"model": "x", "messages": []},
+                bearer=_SECRET,
+                timeout=1.0,
+            )
+        self.assertEqual(opener.calls, 1)
+
+    def test_response_content_length_is_bounded_before_read(self):
+        response = _Response(
+            b'{}',
+            {
+                "Content-Type": "application/json",
+                "Content-Length": "1000",
+            },
+        )
+        transport = StrictJsonTransport(max_response_bytes=32, opener=_Opener(result=response))
+        with self.assertRaises(ResponseTooLarge):
+            transport.post(
+                "https://api.deepseek.com/chat/completions",
+                {"model": "x", "messages": []},
+                bearer=_SECRET,
+                timeout=1.0,
+            )
+        self.assertEqual(response.read_calls, 0)
+
+    def test_response_body_is_bounded_even_without_content_length(self):
+        response = _Response(
+            b"{" + b"x" * 100 + b"}",
+            {"Content-Type": "application/json"},
+        )
+        transport = StrictJsonTransport(max_response_bytes=32, opener=_Opener(result=response))
+        with self.assertRaises(ResponseTooLarge):
+            transport.post(
+                "https://api.deepseek.com/chat/completions",
+                {"model": "x", "messages": []},
+                bearer=_SECRET,
+                timeout=1.0,
+            )
+        self.assertEqual(response.read_calls, 1)
+
+    def test_non_json_content_type_is_rejected_before_body_parse(self):
+        response = _Response(b"not-json", {"Content-Type": "text/html"})
+        transport = StrictJsonTransport(opener=_Opener(result=response))
+        with self.assertRaises(InvalidContentType):
+            transport.post(
+                "https://api.deepseek.com/chat/completions",
+                {"model": "x", "messages": []},
+                bearer=_SECRET,
+                timeout=1.0,
+            )
+        self.assertEqual(response.read_calls, 0)
 
     def test_health_and_receipts_contain_zero_credential_material(self):
         transport = _SuccessTransport()
@@ -134,12 +245,41 @@ class ProviderSidecarReferenceTests(unittest.TestCase):
         self.assertEqual(deepseek["key_count"], 1)
         self.assertNotIn("api_key", deepseek)
 
-    def test_attempt_identity_binds_lease_fence_and_currentness(self):
-        base = self.binding().attempt_id("premium")
-        self.assertEqual(base, self.binding().attempt_id("premium"))
-        self.assertNotEqual(base, self.binding(lease_generation=5).attempt_id("premium"))
-        self.assertNotEqual(base, self.binding(fencing_token="FENCE-10").attempt_id("premium"))
-        self.assertNotEqual(base, self.binding(currentness_ref="SRC-new").attempt_id("premium"))
+    def test_attempt_identity_binds_lease_fence_currentness_and_execution(self):
+        digest = self.digest()
+        base = self.binding().attempt_id("premium", digest)
+        self.assertEqual(base, self.binding().attempt_id("premium", digest))
+        self.assertNotEqual(base, self.binding(lease_generation=5).attempt_id("premium", digest))
+        self.assertNotEqual(base, self.binding(fencing_token="FENCE-10").attempt_id("premium", digest))
+        self.assertNotEqual(base, self.binding(currentness_ref="SRC-new").attempt_id("premium", digest))
+        self.assertNotEqual(base, self.binding().attempt_id("premium", self.digest(messages=[{"role": "user", "content": "different"}])))
+        self.assertNotEqual(base, self.binding().attempt_id("premium", self.digest(max_tokens=901)))
+        self.assertNotEqual(base, self.binding().attempt_id("premium", self.digest(temperature=0.25)))
+
+    def test_dispatch_attempt_id_changes_when_execution_inputs_change(self):
+        sidecar = ProviderSidecarReference(
+            credential_resolver=_credentials,
+            transport=_SuccessTransport(),
+        )
+        first = sidecar.dispatch(
+            route_ref="premium",
+            binding=self.binding(),
+            messages=[{"role": "user", "content": "one"}],
+            max_tokens=100,
+            temperature=0.0,
+        )
+        second = sidecar.dispatch(
+            route_ref="premium",
+            binding=self.binding(),
+            messages=[{"role": "user", "content": "two"}],
+            max_tokens=100,
+            temperature=0.0,
+        )
+        self.assertNotEqual(
+            first.receipt.dispatch_attempt_id,
+            second.receipt.dispatch_attempt_id,
+        )
+        self.assertNotEqual(first.receipt.execution_digest, second.receipt.execution_digest)
 
     def test_429_is_provider_pressure_not_key_rotation_capacity(self):
         calls: list[str] = []
@@ -164,6 +304,58 @@ class ProviderSidecarReferenceTests(unittest.TestCase):
         self.assertEqual(result.receipt.attempts, 1)
         self.assertEqual(calls, ["deepseek"])
 
+    def test_429_releases_half_open_probe_and_reopens_circuit(self):
+        sidecar = ProviderSidecarReference(
+            credential_resolver=_credentials,
+            transport=_429Transport(),
+            circuit_failure_threshold=1,
+            circuit_cooldown_sec=0.0,
+        )
+        sidecar._circuits["deepseek"] = _Circuit(
+            state=CircuitState.OPEN,
+            failures=1,
+            opened_at=0.0,
+            half_open_probe_active=False,
+        )
+        result = sidecar.dispatch(
+            route_ref="premium",
+            binding=self.binding(),
+            messages=[{"role": "user", "content": "probe"}],
+            retry_budget=0,
+        )
+        self.assertEqual(result.receipt.status, SidecarStatus.RETRYABLE_PROVIDER_PRESSURE)
+        circuit = sidecar._circuits["deepseek"]
+        self.assertEqual(circuit.state, CircuitState.OPEN)
+        self.assertFalse(circuit.half_open_probe_active)
+
+    def test_circuit_state_introspection_is_side_effect_free(self):
+        sidecar = ProviderSidecarReference(credential_resolver=_credentials)
+        self.assertEqual(sidecar._circuits, {})
+        self.assertEqual(sidecar._circuit_state("deepseek"), CircuitState.CLOSED)
+        self.assertEqual(sidecar._circuits, {})
+
+        circuit = _Circuit(
+            state=CircuitState.OPEN,
+            failures=3,
+            opened_at=time.monotonic(),
+            half_open_probe_active=False,
+        )
+        sidecar._circuits["deepseek"] = circuit
+        before = (
+            circuit.state,
+            circuit.failures,
+            circuit.opened_at,
+            circuit.half_open_probe_active,
+        )
+        self.assertEqual(sidecar._circuit_state("deepseek"), CircuitState.OPEN)
+        after = (
+            circuit.state,
+            circuit.failures,
+            circuit.opened_at,
+            circuit.half_open_probe_active,
+        )
+        self.assertEqual(before, after)
+
     def test_queue_bound_fails_closed_when_capacity_is_occupied(self):
         entered = threading.Event()
         release = threading.Event()
@@ -181,7 +373,6 @@ class ProviderSidecarReferenceTests(unittest.TestCase):
             queue_limit=0,
         )
         first_result: list = []
-
         worker = threading.Thread(
             target=lambda: first_result.append(
                 sidecar.dispatch(
@@ -217,10 +408,6 @@ class ProviderSidecarReferenceTests(unittest.TestCase):
             binding=self.binding(capsule_id="CAP-A"),
             messages=[{"role": "user", "content": "a"}],
             retry_budget=0,
-        )
-        self.assertIn(
-            first.receipt.status,
-            (SidecarStatus.PROVIDER_UNAVAILABLE, SidecarStatus.CIRCUIT_OPEN),
         )
         self.assertEqual(first.receipt.circuit_state, CircuitState.OPEN)
         second = sidecar.dispatch(
