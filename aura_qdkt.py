@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: MIIGWECH (Extension-Based Storage)
 DEPENDENCIES: json, __future__, aura_token_economics, contextlib, sqlite3, typing, time, pathlib, aura_hv_cache, hashlib
-FUNCTIONS: _get_hv_substrate, _get_token_economics, _concept_key, _hv_bytes, _db, _observation_fingerprint, _source_fingerprint, _crystal_fast_path_eligible, get_qdkt, commit_to_dkt_shim, log_dkt_commit_shim, __init__, _init_schemas, _load_crystal_cache, _load_pattern_accumulator, _save_crystal_cache, _save_pattern_accumulator, observe, observe_retrieval_usefulness, query, crystallization_candidate, crystallize, fast_path, learning_summary, _route_to_holographic, _route_to_cognitive_evolution, _route_to_causal_ledger, _route_to_changelog, _route_to_token_economics, _write_knowledge_index, _write_workspace_event, _write_retrieval_usefulness, _check_crystallization
+FUNCTIONS: _get_hv_substrate, _get_token_economics, _concept_key, _hv_bytes, _db, _observation_fingerprint, _source_fingerprint, _promotion_provenance_valid, _crystal_fast_path_eligible, get_qdkt, commit_to_dkt_shim, log_dkt_commit_shim, __init__, _init_schemas, _load_crystal_cache, _load_pattern_accumulator, _save_crystal_cache, _save_pattern_accumulator, observe, observe_retrieval_usefulness, query, crystallization_candidate, crystallize, fast_path, learning_summary, _route_to_holographic, _route_to_cognitive_evolution, _route_to_causal_ledger, _route_to_changelog, _route_to_token_economics, _write_knowledge_index, _write_workspace_event, _write_retrieval_usefulness, _check_crystallization
 SYNOPSIS: [CODE]
 def optimized_fallback():
     pass
@@ -73,7 +73,7 @@ def _observation_fingerprint(concept: str, payload: dict[str, Any]) -> str:
 
 
 def _source_fingerprint(concept: str, payload: dict[str, Any]) -> str:
-    """Prefer an explicit source identity; otherwise conservatively fingerprint payload."""
+    """Prefer an explicit source identity; otherwise keep one unproven source group."""
     for field in ("source_id", "source_ref", "evidence_ref", "source_uri", "source"):
         value = payload.get(field)
         if value not in (None, ""):
@@ -81,7 +81,23 @@ def _source_fingerprint(concept: str, payload: dict[str, Any]) -> str:
     if payload.get("file_path") or payload.get("commit_hash"):
         value = f"{payload.get('file_path', '')}@{payload.get('commit_hash', '')}"
         return hashlib.sha256(value.encode("utf-8")).hexdigest()[:32]
-    return _observation_fingerprint(concept, payload)
+    # Varying payload from an unidentified source does not prove independence.
+    return hashlib.sha256(f"unidentified:{concept}".encode("utf-8")).hexdigest()[:32]
+
+
+def _promotion_provenance_valid(entry: dict[str, Any] | None) -> bool:
+    """Require positive promotion provenance; a source label is never authority."""
+    if not entry:
+        return False
+    reviewed_by = str(entry.get("reviewed_by") or "").strip()
+    policy_ref = str(entry.get("policy_ref") or "").strip()
+    source_generation = entry.get("source_generation")
+    evidence_refs = entry.get("evidence_refs")
+    if not reviewed_by or not policy_ref or source_generation in (None, ""):
+        return False
+    if not isinstance(evidence_refs, list):
+        return False
+    return any(str(ref).strip() for ref in evidence_refs)
 
 
 def _crystal_fast_path_eligible(entry: dict[str, Any] | None) -> bool:
@@ -95,10 +111,8 @@ def _crystal_fast_path_eligible(entry: dict[str, Any] | None) -> bool:
         "STALE", "REVALIDATE", "REJECTED", "BLOCKED"
     }:
         return False
-    # Recurrence-generated legacy entries must never regain authority-like fast path.
-    if str(entry.get("source", "")).lower() in {
-        "auto_threshold", "repetition", "recurrence"
-    }:
+    # Promotion provenance, not source naming, controls trusted fast-path eligibility.
+    if not _promotion_provenance_valid(entry):
         return False
     return True
 
@@ -243,9 +257,9 @@ class UnifiedQDKT:
         migration_changed = False
         seen_legacy: set[str] = set()
         for key, entry in raw_json.items():
-            source = str(entry.get("source", "")).lower()
-            # Explicit/reviewed crystals have provenance that accumulation entries lack.
-            if source and source not in {"auto_threshold", "repetition", "recurrence"}:
+            # Legacy promotion survives only when the persisted row itself carries
+            # sufficient positive promotion provenance. Source text alone is metadata.
+            if _promotion_provenance_valid(entry):
                 normalized = dict(entry)
                 normalized.setdefault("status", "accepted")
                 normalized.setdefault("freshness_state", "CURRENT")
@@ -253,13 +267,14 @@ class UnifiedQDKT:
                 _CRYSTAL_CACHE[key] = normalized
                 continue
 
+            source = str(entry.get("source", "")).lower()
             migrated = dict(entry)
             migrated.update({
                 "state": "candidate",
                 "migration_reason": (
                     "legacy_auto_threshold_requires_revalidation"
                     if source == "auto_threshold"
-                    else "legacy_conflated_cache_unverified"
+                    else "legacy_promotion_provenance_unverified"
                 ),
                 "migrated_from": "qdkt_crystal_cache.json",
                 "fast_path_eligible": False,
@@ -560,18 +575,12 @@ class UnifiedQDKT:
         policy_ref: str | None = None,
         source_generation: str | int | None = None,
     ) -> None:
-        if str(source).lower() in {"auto_threshold", "repetition", "recurrence"}:
-            raise ValueError(
-                "recurrence may create a crystallization candidate but cannot self-authorize a crystal"
-            )
-        key = _concept_key(concept)
-        now = time.time()
         entry = {
             "action": recommended_action,
             "confidence": confidence,
             "count": 1,
-            "first_seen": now,
-            "last_confirmed": now,
+            "first_seen": time.time(),
+            "last_confirmed": time.time(),
             "source": source,
             "status": "accepted",
             "freshness_state": "CURRENT",
@@ -581,6 +590,15 @@ class UnifiedQDKT:
             "policy_ref": policy_ref,
             "source_generation": source_generation,
         }
+        if not _promotion_provenance_valid(entry):
+            raise ValueError(
+                "accepted crystals require reviewed_by, policy_ref, evidence_refs, and source_generation; "
+                "source labels never self-authorize promotion"
+            )
+        key = _concept_key(concept)
+        now = time.time()
+        entry["first_seen"] = now
+        entry["last_confirmed"] = now
         existing = _CRYSTAL_CACHE.get(key)
         if existing:
             entry["count"] = existing.get("count", 0) + 1
@@ -883,7 +901,15 @@ class UnifiedQDKT:
             or payload.get("contradicts")
         )
         freshness_state = str(payload.get("freshness_state", "")).upper()
-        stale_source = bool(payload.get("source_stale")) or freshness_state in {
+        observed_source_generation = payload.get("source_generation")
+        bound_source_generation = crystal.get("source_generation") if crystal else None
+        generation_drift = bool(
+            crystal
+            and bound_source_generation not in (None, "")
+            and observed_source_generation not in (None, "")
+            and str(observed_source_generation) != str(bound_source_generation)
+        )
+        stale_source = bool(payload.get("source_stale")) or generation_drift or freshness_state in {
             "STALE", "REVALIDATE", "REJECTED", "BLOCKED"
         }
         if crystal and (contradiction or stale_source):
