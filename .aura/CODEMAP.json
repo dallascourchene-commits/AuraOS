@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1787203719,
+  "generated_at_unix": 1787203878,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1755,8 +1755,8 @@
     {
       "ring": "repo",
       "files": 1638,
-      "bytes": 26366649,
-      "tokens_est": 6582080,
+      "bytes": 26368100,
+      "tokens_est": 6582443,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
@@ -159919,7 +159919,8 @@
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
     ],
     "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
+      "tools/project006/resident_v2_reference/README.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -159947,9 +159948,6 @@
     ],
     "python test_pvm_logic.py": [
       "test_pvm_logic.py"
-    ],
-    "python3 test_resident_v2_ipc.py": [
-      "tools/project006/resident_v2_reference/README.md"
     ],
     "python verify_os.py": [
       "verify_os.py"
@@ -263180,53 +263178,53 @@
       "path": "tools/project006/resident_v2_reference/README.md",
       "role": "knowledge_artifact",
       "binary": false,
-      "bytes": 4296,
-      "lines": 62,
-      "tokens_est": 1074,
+      "bytes": 5747,
+      "lines": 76,
+      "tokens_est": 1437,
       "symbol_count": 0,
       "commands": [
-        "python3 test_resident_v2_ipc.py"
+        "python -m unittest"
       ],
       "command_lines": {
-        "python3 test_resident_v2_ipc.py": [
-          41
+        "python -m unittest": [
+          47
         ]
       },
       "topology": {},
-      "digest8": "1deda900c1d55edf",
+      "digest8": "bb6943e79eee7d28",
       "vector": [
-        0.20992,
-        -0.247033,
-        -0.272548,
-        -0.056829,
-        -0.012758,
-        -0.008118,
-        -0.144972,
-        -0.15889,
-        -0.196002,
-        -0.024355,
-        0.028994,
-        0.237754,
-        0.047551,
-        -0.20992,
-        0.265589,
-        -0.149611,
-        0.070746,
-        0.068427,
-        0.230796,
-        -0.226157,
-        -0.147292,
-        -0.138014,
-        0.200642,
-        -0.15425,
-        -0.084664,
-        0.247033,
-        0.214559,
-        0.165848,
-        0.035953,
-        -0.202961,
-        -0.223837,
-        -0.286465
+        0.280662,
+        -0.090991,
+        -0.032039,
+        0.039728,
+        0.090991,
+        0.137127,
+        0.203768,
+        -0.088428,
+        -0.032039,
+        -0.190953,
+        0.008971,
+        0.05767,
+        0.062797,
+        -0.093554,
+        -0.075612,
+        -0.13969,
+        0.044855,
+        0.142253,
+        0.319109,
+        -0.296041,
+        0.296041,
+        0.298604,
+        0.026913,
+        -0.032039,
+        0.242215,
+        0.265283,
+        0.14738,
+        -0.09868,
+        -0.070486,
+        0.288352,
+        -0.185827,
+        0.285788
       ]
     },
     {
@@ -287229,8 +287227,8 @@
   },
   "summary": {
     "file_count": 1638,
-    "total_bytes": 26366649,
-    "text_tokens_est": 6582080,
+    "total_bytes": 26368100,
+    "text_tokens_est": 6582443,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
@@ -448086,6 +448084,6 @@
       }
     ],
     "record_fingerprint": "b1c832c63e4a86ecc585876ac41a38cc",
-    "payload_hash": "b212b2dce85693529415c22ba8244c1c"
+    "payload_hash": "21831482e98a74344c331608f50356c5"
   }
 }
