@@ -312,13 +312,36 @@ def build_g6_binding(
     return {**body, "binding_identity": derive_g6_binding_identity_from_body(body)}
 
 
-def validate_g6_binding_record(record: Mapping[str, Any]) -> str:
+def _validate_g6_binding_record_structure(record: Mapping[str, Any]) -> str:
+    """Validate schema, scalar syntax and self-hash only; not semantic authority."""
     _validate_exact_keys(record, _G6_BINDING_RECORD_KEYS, "G6 binding record")
     body = {key: record[key] for key in _G6_BINDING_BODY_KEYS}
     derived = derive_g6_binding_identity_from_body(body)
     stored = _digest(record["binding_identity"], "binding_identity")
     if derived != stored:
         raise ContractViolation("G6 binding_identity mismatch")
+    return derived
+
+
+def validate_g6_binding_record(
+    record: Mapping[str, Any],
+    facts: AcceptanceFacts | None = None,
+    terminal: AttemptTerminalFacts | None = None,
+) -> str:
+    """Semantically validate a binding against independently resolved protected facts.
+
+    A self-consistent record hash is not sufficient. Public validation fails
+    closed unless the caller supplies the protected AcceptanceFacts and exact
+    AttemptTerminalFacts needed to reconstruct the expected binding record.
+    """
+    derived = _validate_g6_binding_record_structure(record)
+    if facts is None or terminal is None:
+        raise ContractViolation(
+            "semantic G6 binding validation requires AcceptanceFacts and AttemptTerminalFacts"
+        )
+    expected = build_g6_binding(facts, terminal, facts.accepted_result_identity())
+    if canonical_json_bytes(record) != canonical_json_bytes(expected):
+        raise ContractViolation("G6 binding record does not match protected facts")
     return derived
 
 
@@ -515,7 +538,7 @@ def verify_restart(
 
     by_identity: dict[str, Mapping[str, Any]] = {}
     for record in stored.bindings:
-        identity = validate_g6_binding_record(record)
+        identity = _validate_g6_binding_record_structure(record)
         if identity in by_identity:
             raise ContractViolation("stored bindings contain duplicate identity")
         by_identity[identity] = record
