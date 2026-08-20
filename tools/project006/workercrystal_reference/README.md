@@ -18,17 +18,18 @@ This directory is a **reference-only repository realization** of the exact revie
 4. canonicalize the exact G6 binding-identity set;
 5. derive the closed G6 acceptance-operation body and digest downstream;
 6. on restart, independently rebuild accepted-result identity, binding records/identities, binding set and operation digest in that order, then compare to stored state;
-7. fail closed on missing/extra/substituted bindings, noncanonical sets, profile aliasing, identity/digest transplantation, malformed protected facts, non-COMPLETE lifecycle, or stored/recomputed mismatch.
+7. reject generation integers outside the interoperable RFC8785/ECMAScript safe-integer range `0..9007199254740991`, avoiding cross-validator JCS numeric divergence;
+8. fail closed on missing/extra/substituted bindings, noncanonical sets, profile aliasing, identity/digest transplantation, malformed protected facts, non-COMPLETE lifecycle, unsafe generation integers, or stored/recomputed mismatch.
 
 The reference deliberately does not implement or infer the upstream source-graph/currentness/authority verifier or the full durable transaction engine. `AcceptanceFacts` and terminal-attempt inputs are the already-resolved protected inputs to this identity/reconstruction layer. A caller must not treat constructing those inputs as proof that upstream admission was lawful.
 
 ## Canonicalization ceiling
 
-The reviewed contract requires Unicode NFC + RFC8785 JCS + SHA-256. This reference uses deterministic JSON over the contract's restricted type domain: fixed ASCII object keys, NFC strings, non-negative integers, booleans, arrays and objects. Floats and null are rejected. Canonical member sets are duplicate-rejecting and ordered exactly where the G6 contract requires byte ordering.
+The reviewed contract requires Unicode NFC + RFC8785 JCS + SHA-256. This reference uses deterministic JSON over the contract's restricted type domain: fixed ASCII object keys, NFC strings, non-negative JCS-safe integers, booleans, arrays and objects. Floats, null and integers above `2^53-1` are rejected. Canonical member sets are duplicate-rejecting and ordered exactly where the G6 contract requires byte ordering.
 
 ## Author-side checks
 
-`test_workercrystal_acceptance_g6.py` now contains 19 regressions covering:
+The reference now has **21 regressions** across `test_workercrystal_acceptance_g6.py` and `test_workercrystal_jcs_safe_integer.py`, covering:
 
 - accepted-result identity permutation invariance;
 - duplicate verifier/contribution rejection;
@@ -44,9 +45,11 @@ The reviewed contract requires Unicode NFC + RFC8785 JCS + SHA-256. This referen
 - multiple AcceptedResult relations without mutable attempt backlink state;
 - unknown operation-field and malformed protected-digest rejection;
 - non-COMPLETE restart rejection;
-- exact restart reconstruction.
+- exact restart reconstruction;
+- acceptance of the maximum interoperable JCS-safe generation integer;
+- fail-closed rejection of `2^53` and larger generation integers.
 
-The original constructor scratch suite observed **15/15 PASS** before repository staging. After the independent Greptile transplant finding and Sourcery lifecycle-test suggestion were incorporated, the constructor reconstructed the exact committed functional blobs, verified their Git blob SHA-1 identities against GitHub, and executed the resulting suite with **19/19 PASS**. This remains author-side evidence only. PR-triggered repository workflows at the reviewed head have been `action_required`, so no repository-wide CI PASS is claimed.
+The original constructor scratch suite observed **15/15 PASS** before repository staging. After the independent Greptile transplant finding, Sourcery lifecycle-test suggestion, and Codex JCS-safe-integer finding were incorporated, the constructor reconstructed the exact three committed functional/test blobs, verified their Git blob SHA-1 identities against GitHub (`2be837b4fc6ae6c7cef4e1228257b8b4fe7da8aa`, `75be58e5a7ab253bdf8df75e1b9b6e99ca25f9c0`, `9f677e50985affa890b5a355c14bb68c0645cdad`), and executed the resulting suite with **21/21 PASS**. This remains author-side evidence only. PR-triggered repository workflows have not supplied an executable repository-wide CI PASS, so no CI certification is claimed.
 
 ## Explicit nonclaims
 
@@ -66,4 +69,4 @@ Logical WorkerCrystal scale remains distinct from live worker count, and this re
 
 ## Review law
 
-J163/V02 authored this repository generation and must not independently review or certify it. A fresh Different-J reviewer must bind the exact PR head, execute/inspect the tests and attack the G6 schema, identity direction, canonicalization, restart/transplant behavior, version aliases and the claim ceiling before any adoption consequence.
+J163/V02 authored this repository generation and must not independently review or certify it. A fresh Different-J reviewer must bind the exact PR head, execute/inspect the tests and attack the G6 schema, identity direction, canonicalization including the JCS safe-integer ceiling, restart/transplant behavior, version aliases and the claim ceiling before any adoption consequence.
