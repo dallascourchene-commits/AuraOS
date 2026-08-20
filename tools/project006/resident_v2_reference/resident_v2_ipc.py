@@ -25,6 +25,7 @@ MAX_STRING_BYTES = 128 * 1024
 MAX_SEEN_REQUESTS = 4096
 MAX_TRACKED_WORK = 4096
 MAX_TERMINAL_WORK_RECORDS = 4096
+MAX_CAPSULE_IDENTITIES = 4096
 TERMINAL_WORK_RETENTION_MS = 5 * 60 * 1000
 MAX_ACTIVE_CONNECTIONS = 32
 FRAME_RECEIVE_TIMEOUT_SECONDS = 2.0
@@ -357,6 +358,12 @@ class ResidentState:
     draining: bool = False
     work_records: Dict[str, WorkRecord] = field(default_factory=dict)
     seen: Dict[str, SeenRecord] = field(default_factory=dict)
+    # capsule_id -> (capsule_digest, generation, currentness_ref, authority_ref)
+    # This fence survives ordinary receipt/tombstone reclamation and is reset only
+    # when the Resident's explicit identity domain changes.
+    capsule_identities: Dict[str, Tuple[str, str, str, str]] = field(
+        default_factory=dict
+    )
     _lock: threading.RLock = field(
         default_factory=threading.RLock, repr=False, compare=False
     )
@@ -375,6 +382,7 @@ class ResidentState:
                     if record.state == "ACCEPTED"
                 ),
                 "tracked_work_count": len(self.work_records),
+                "capsule_identity_count": len(self.capsule_identities),
             }
 
 
@@ -444,6 +452,20 @@ def _prune_work_records(state: ResidentState, now_ms: int) -> int:
     return removed
 
 
+def _prune_capsule_identities(state: ResidentState) -> int:
+    """Drop capsule fences only after an explicit Resident identity-domain rebase."""
+    stale = [
+        capsule_id
+        for capsule_id, record in state.capsule_identities.items()
+        if record[1] != state.generation
+        or record[2] != state.currentness_ref
+        or record[3] != state.authority_ref
+    ]
+    for capsule_id in stale:
+        del state.capsule_identities[capsule_id]
+    return len(stale)
+
+
 def _capsule_has_live_effect_history(state: ResidentState, capsule_id: str) -> bool:
     for record in state.seen.values():
         result = record[1].get("result")
@@ -495,6 +517,7 @@ def _process_request(
     with state._lock:
         _prune_seen(state, now_ms)
         _prune_work_records(state, now_ms)
+        _prune_capsule_identities(state)
 
         def reject(reason: str, result=None) -> Dict[str, Any]:
             # Rejections do not occupy the effect-idempotency ledger.
@@ -562,6 +585,11 @@ def _process_request(
                 return reject("CAPSULE_ALREADY_TRACKED")
             if _capsule_has_live_effect_history(state, capsule_id):
                 return reject("CAPSULE_HISTORY_RETAINED")
+            prior_identity = state.capsule_identities.get(capsule_id)
+            if prior_identity is not None:
+                if prior_identity[0] != payload["capsule_digest"]:
+                    return reject("CAPSULE_IDENTITY_CONFLICT")
+                return reject("CAPSULE_IDENTITY_REUSED")
             active_count = sum(
                 1
                 for record in state.work_records.values()
@@ -569,6 +597,14 @@ def _process_request(
             )
             if active_count >= MAX_TRACKED_WORK:
                 return reject("WORK_CAPACITY_EXHAUSTED")
+            if len(state.capsule_identities) >= MAX_CAPSULE_IDENTITIES:
+                return reject("CAPSULE_IDENTITY_CAPACITY_EXHAUSTED")
+            state.capsule_identities[capsule_id] = (
+                payload["capsule_digest"],
+                state.generation,
+                state.currentness_ref,
+                state.authority_ref,
+            )
             state.work_records[capsule_id] = WorkRecord("ACCEPTED", peer_uid)
             state.state_epoch += 1
             receipt = _decision_receipt(
@@ -588,6 +624,8 @@ def _process_request(
                 return reject("CAPSULE_UNKNOWN")
             if peer_uid not in {state.owner_uid, record.owner_uid}:
                 return reject("CANCEL_PEER_NOT_AUTHORIZED")
+            if record.state != "ACCEPTED":
+                return reject("CAPSULE_NOT_ACTIVE")
             record.state = "CANCELLED"
             record.terminal_at_ms = now_ms
             state.state_epoch += 1
