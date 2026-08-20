@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1639
-- **total_bytes**: 26377775
-- **text_tokens_est**: 6584862
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 998, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1640
+- **total_bytes**: 26386796
+- **text_tokens_est**: 6587117
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1639,
+  "repo_file_count": 1640,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1651,6 +1651,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/project006/resident_v2_reference/resident_v2_ipc.py",
     "tools/project006/resident_v2_reference/test_resident_v2_ipc.py",
     "tools/project006/resident_v2_reference/test_resident_v2_ipc_g6.py",
+    "tools/project006/resident_v2_reference/test_resident_v2_ipc_g7.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1779,15 +1780,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1639,
-  "bytes": 26377775,
-  "tokens_est": 6584862,
+  "files": 1640,
+  "bytes": 26386796,
+  "tokens_est": 6587117,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 235,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 998,
+    "python_module": 999,
     "schema_or_lexicon": 272,
     "support_file": 49
   }
