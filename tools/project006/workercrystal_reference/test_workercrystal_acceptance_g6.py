@@ -106,6 +106,17 @@ class G6ReferenceTests(unittest.TestCase):
         with self.assertRaises(ContractViolation):
             validate_g6_binding_record(tampered)
 
+    def test_binding_builder_rejects_transplanted_accepted_result_identity(self) -> None:
+        facts = make_facts()
+        with self.assertRaises(ContractViolation):
+            build_g6_binding(facts, make_terminals()[0], DF)
+
+    def test_operation_builder_rejects_transplanted_accepted_result_identity(self) -> None:
+        facts = make_facts()
+        bundle = build_acceptance_bundle(facts, make_terminals())
+        with self.assertRaises(ContractViolation):
+            build_g6_operation_body(facts, DF, bundle.binding_identities)
+
     def test_operation_binding_set_is_permutation_invariant_at_builder_boundary(self) -> None:
         facts = make_facts()
         bundle = build_acceptance_bundle(facts, make_terminals())
@@ -206,6 +217,21 @@ class G6ReferenceTests(unittest.TestCase):
         body["source_currentness_digest"] = "not-a-digest"
         with self.assertRaises(ContractViolation):
             derive_g6_operation_digest_from_body(body)
+
+    def test_restart_fails_for_non_complete_lifecycle(self) -> None:
+        facts = make_facts()
+        terminals = make_terminals()
+        bundle = build_acceptance_bundle(facts, terminals)
+        stored = StoredAcceptance(
+            accepted_result_identity=bundle.accepted_result_identity,
+            attempt_accepted_result_binding_identities=bundle.binding_identities,
+            bindings=bundle.bindings,
+            operation_body=bundle.operation_body,
+            acceptance_operation_digest=bundle.acceptance_operation_digest,
+            lifecycle="PENDING",
+        )
+        with self.assertRaises(ContractViolation):
+            verify_restart(facts, terminals, stored)
 
     def test_restart_rebuild_succeeds_for_exact_bundle(self) -> None:
         facts = make_facts()
