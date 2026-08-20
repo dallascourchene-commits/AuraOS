@@ -1,4 +1,4 @@
-import ast, os, socket, struct, tempfile, unittest
+import ast, os, socket, struct, tempfile, threading, unittest
 from pathlib import Path
 import resident_v2_ipc as r
 NOW=1_800_000_000_000
@@ -77,5 +77,29 @@ class T(unittest.TestCase):
         a,b=socket.socketpair(socket.AF_UNIX,socket.SOCK_STREAM)
         try: self.assertEqual(r.get_peer_uid(b), os.getuid())
         finally: a.close(); b.close()
+    def test_23_end_to_end_unix_roundtrip(self):
+        with tempfile.TemporaryDirectory() as d:
+            path=os.path.join(d,'resident.sock')
+            listener=r.make_unix_listener(path)
+            state=self.state(); errors=[]
+            def server():
+                try:
+                    conn,_=listener.accept()
+                    try:
+                        peer_uid=r.get_peer_uid(conn)
+                        q=r.recv_frame(conn)
+                        out=r.process_request(q,state,NOW,peer_uid)
+                        r.send_frame(conn,out)
+                    finally: conn.close()
+                except Exception as e: errors.append(e)
+                finally: listener.close()
+            th=threading.Thread(target=server); th.start()
+            c=socket.socket(socket.AF_UNIX,socket.SOCK_STREAM)
+            try:
+                c.connect(path); r.send_frame(c,req()); out=r.recv_frame(c)
+                self.assertEqual(out['reason_code'],'HEALTH_OK')
+            finally: c.close()
+            th.join(timeout=2)
+            self.assertFalse(th.is_alive()); self.assertEqual(errors,[])
 
 if __name__=='__main__': unittest.main(verbosity=2)
