@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1787224386,
+  "generated_at_unix": 1787224788,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1637,
+    "repo_file_count": 1638,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1630,6 +1630,7 @@
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/workercrystal_reference/README.md",
       "tools/project006/workercrystal_reference/test_workercrystal_acceptance_g6.py",
+      "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py",
       "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -1753,15 +1754,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1637,
-      "bytes": 26355476,
-      "tokens_est": 6579287,
+      "files": 1638,
+      "bytes": 26356436,
+      "tokens_est": 6579527,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
+        "python_module": 998,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -4331,8 +4332,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 37,
-        "end_line": 41,
+        "line": 38,
+        "end_line": 42,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:_digest:860a903c8a54e28f",
         "signature_hash": "9018aaa438b0fe0c"
       }
@@ -88319,8 +88320,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 74,
-        "end_line": 89,
+        "line": 82,
+        "end_line": 98,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:canonical_json_bytes:7ad5986029a948dd",
         "signature_hash": "946642516763d58b"
       }
@@ -157175,12 +157176,42 @@
         "signature_hash": "a10c08ec507b80a4"
       }
     ],
+    "JCSSafeIntegerTests": [
+      {
+        "file": "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 21,
+        "semantic_id": "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py#class:JCSSafeIntegerTests:5e445099b7903244",
+        "signature_hash": "5f717b84542fc014"
+      }
+    ],
+    "JCSSafeIntegerTests.test_maximum_safe_generation_is_canonicalizable": [
+      {
+        "file": "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 17,
+        "semantic_id": "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py#method:JCSSafeIntegerTests.test_maximum_safe_generation_is_canonicalizable:346bbc44f02f1572",
+        "signature_hash": "94d1e50ee9d50505"
+      }
+    ],
+    "JCSSafeIntegerTests.test_generation_above_safe_integer_range_fails_closed": [
+      {
+        "file": "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 21,
+        "semantic_id": "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py#method:JCSSafeIntegerTests.test_generation_above_safe_integer_range_fails_closed:0e43bca08813c7ba",
+        "signature_hash": "7284d5fb8b805cd5"
+      }
+    ],
     "ContractViolation": [
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "class",
-        "line": 24,
-        "end_line": 25,
+        "line": 25,
+        "end_line": 26,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#class:ContractViolation:d0d2d51a3d79c637",
         "signature_hash": "a02bf3924c67f01d"
       }
@@ -157189,8 +157220,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 28,
-        "end_line": 34,
+        "line": 29,
+        "end_line": 35,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:_nfc:29b5bc8c11aa8b4a",
         "signature_hash": "aa5eb10865943afd"
       }
@@ -157199,8 +157230,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 44,
-        "end_line": 47,
+        "line": 45,
+        "end_line": 55,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:_generation:c184c74f20450d11",
         "signature_hash": "93fe533a838eb6b7"
       }
@@ -157209,8 +157240,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 50,
-        "end_line": 71,
+        "line": 58,
+        "end_line": 79,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:_normalize_json:1243dfae3a46f3b2",
         "signature_hash": "532848d4e7a0da7b"
       }
@@ -157219,8 +157250,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 92,
-        "end_line": 96,
+        "line": 101,
+        "end_line": 105,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:_hash_domain:27a0f1f38d0466c2",
         "signature_hash": "79a5f025f0bfdfcf"
       }
@@ -157229,8 +157260,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 99,
-        "end_line": 103,
+        "line": 108,
+        "end_line": 112,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:canonical_string_set:b9d736d38a91c20d",
         "signature_hash": "5d5abd27b7cdf7c8"
       }
@@ -157239,8 +157270,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "class",
-        "line": 107,
-        "end_line": 123,
+        "line": 116,
+        "end_line": 132,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#class:ContributionBinding:3b8c7a369348e796",
         "signature_hash": "9fb57fdb8d513f0e"
       }
@@ -157249,8 +157280,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "method",
-        "line": 113,
-        "end_line": 123,
+        "line": 122,
+        "end_line": 132,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#method:ContributionBinding.protected_body:cfed2a46c1b949d2",
         "signature_hash": "ba2396d20a0f4966"
       }
@@ -157259,8 +157290,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 126,
-        "end_line": 133,
+        "line": 135,
+        "end_line": 142,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:canonical_contribution_set:3def82fb1f6fe6d6",
         "signature_hash": "966cf39e699e8179"
       }
@@ -157269,8 +157300,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "class",
-        "line": 137,
-        "end_line": 204,
+        "line": 146,
+        "end_line": 213,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#class:AcceptanceFacts:8ecb621324ad3c6d",
         "signature_hash": "0d20ee24578c96e4"
       }
@@ -157279,8 +157310,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "method",
-        "line": 155,
-        "end_line": 201,
+        "line": 164,
+        "end_line": 210,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#method:AcceptanceFacts.accepted_result_body:e4dc6b9a49f2ef17",
         "signature_hash": "678b96c3eae6aaa1"
       }
@@ -157289,8 +157320,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "method",
-        "line": 203,
-        "end_line": 204,
+        "line": 212,
+        "end_line": 213,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#method:AcceptanceFacts.accepted_result_identity:eff14f43696e8dbb",
         "signature_hash": "1939f4aeb88db1be"
       }
@@ -157299,8 +157330,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "class",
-        "line": 208,
-        "end_line": 213,
+        "line": 217,
+        "end_line": 222,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#class:AttemptTerminalFacts:f856f1fb82b2d202",
         "signature_hash": "e9eedc31c1560e6b"
       }
@@ -157309,8 +157340,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "method",
-        "line": 212,
-        "end_line": 213,
+        "line": 221,
+        "end_line": 222,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#method:AttemptTerminalFacts.relation_key:0234cb0ebcc28cd7",
         "signature_hash": "e72f8bf6967033da"
       }
@@ -157319,8 +157350,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 239,
-        "end_line": 244,
+        "line": 248,
+        "end_line": 253,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:_validate_exact_keys:d865201c0f19b721",
         "signature_hash": "56117959bf782143"
       }
@@ -157329,8 +157360,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 247,
-        "end_line": 267,
+        "line": 256,
+        "end_line": 276,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:derive_g6_binding_identity_from_body:3723f7ca2bb5fda8",
         "signature_hash": "dee1a19f9eafa68e"
       }
@@ -157339,8 +157370,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 270,
-        "end_line": 303,
+        "line": 279,
+        "end_line": 312,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:build_g6_binding:9dbd6f7aaa1e6fe4",
         "signature_hash": "6472da4a632ff3d7"
       }
@@ -157349,8 +157380,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 306,
-        "end_line": 313,
+        "line": 315,
+        "end_line": 322,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:validate_g6_binding_record:f9f332bb7748a1d4",
         "signature_hash": "d1f91742218b5cc5"
       }
@@ -157359,8 +157390,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 339,
-        "end_line": 343,
+        "line": 348,
+        "end_line": 352,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:canonical_binding_identity_set:4765d4774100621a",
         "signature_hash": "7137604dedb0d3b2"
       }
@@ -157369,8 +157400,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 346,
-        "end_line": 383,
+        "line": 355,
+        "end_line": 392,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:build_g6_operation_body:c4eea40ed1829059",
         "signature_hash": "1f64452526123600"
       }
@@ -157379,8 +157410,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 386,
-        "end_line": 413,
+        "line": 395,
+        "end_line": 422,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:derive_g6_operation_digest_from_body:e0f1e822958b530d",
         "signature_hash": "da880ff7f37c697c"
       }
@@ -157389,8 +157420,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "class",
-        "line": 417,
-        "end_line": 422,
+        "line": 426,
+        "end_line": 431,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#class:AcceptanceBundle:a0536b8491ca06a2",
         "signature_hash": "c720f74339a4c8fb"
       }
@@ -157399,8 +157430,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 425,
-        "end_line": 465,
+        "line": 434,
+        "end_line": 474,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:build_acceptance_bundle:c13f0cf19f4e9cad",
         "signature_hash": "db8f5240f0ea7e04"
       }
@@ -157409,8 +157440,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "class",
-        "line": 469,
-        "end_line": 475,
+        "line": 478,
+        "end_line": 484,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#class:StoredAcceptance:4b36a53dfc644e64",
         "signature_hash": "ff08b8f73a3d6ecf"
       }
@@ -157419,8 +157450,8 @@
       {
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
         "kind": "function",
-        "line": 478,
-        "end_line": 532,
+        "line": 487,
+        "end_line": 541,
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:verify_restart:8c007c1ef70e0c89",
         "signature_hash": "3ec66ab2b9428f2b"
       }
@@ -262838,50 +262869,97 @@
       ]
     },
     {
+      "path": "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 718,
+      "lines": 26,
+      "tokens_est": 180,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c6e7d68777a0fd4c",
+      "vector": [
+        0.123996,
+        -0.119085,
+        -0.288505,
+        -0.14855,
+        0.104353,
+        -0.202568,
+        0.114174,
+        -0.263952,
+        0.182925,
+        -0.028237,
+        -0.040514,
+        0.214844,
+        -0.266407,
+        0.133817,
+        -0.25413,
+        -0.143639,
+        0.106808,
+        0.214844,
+        0.008594,
+        -0.232032,
+        0.082255,
+        -0.281139,
+        -0.003683,
+        -0.25413,
+        0.077344,
+        -0.187835,
+        -0.290961,
+        -0.028237,
+        -0.114174,
+        -0.006138,
+        -0.239398,
+        -0.123996
+      ]
+    },
+    {
       "path": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 23637,
-      "lines": 533,
-      "tokens_est": 5910,
+      "bytes": 23879,
+      "lines": 542,
+      "tokens_est": 5970,
       "symbol_count": 27,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "7d379815b92c7928",
+      "digest8": "2fec72b6469a5b18",
       "vector": [
-        -0.158156,
-        0.170229,
-        -0.1654,
-        -0.266813,
-        0.090547,
-        0.307861,
-        0.114693,
-        0.172644,
-        -0.063987,
-        0.129181,
-        -0.136425,
-        0.276472,
-        0.051914,
-        -0.083304,
-        -0.162985,
-        0.097791,
-        0.278886,
-        0.006036,
-        -0.01328,
-        0.04467,
-        -0.199204,
-        -0.112279,
-        -0.100206,
-        -0.088133,
-        -0.259569,
-        0.298203,
-        -0.179888,
-        0.25474,
-        -0.158156,
-        0.018109,
-        0.22818,
-        -0.242667
+        0.192299,
+        -0.060514,
+        -0.106235,
+        0.23802,
+        0.248778,
+        -0.055135,
+        0.289121,
+        -0.055135,
+        0.125061,
+        -0.248778,
+        -0.076651,
+        -0.213815,
+        -0.272984,
+        -0.141198,
+        -0.014792,
+        -0.098167,
+        -0.267605,
+        -0.119682,
+        0.127751,
+        -0.009413,
+        -0.232641,
+        -0.176162,
+        -0.108925,
+        -0.213815,
+        0.326774,
+        -0.020171,
+        -0.213815,
+        -0.055135,
+        0.313326,
+        0.049756,
+        -0.006724,
+        0.068582
       ]
     },
     {
@@ -286789,15 +286867,15 @@
     }
   },
   "summary": {
-    "file_count": 1637,
-    "total_bytes": 26355476,
-    "text_tokens_est": 6579287,
+    "file_count": 1638,
+    "total_bytes": 26356436,
+    "text_tokens_est": 6579527,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
+      "python_module": 998,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -288438,6 +288516,7 @@
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/workercrystal_reference/README.md",
       "tools/project006/workercrystal_reference/test_workercrystal_acceptance_g6.py",
+      "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py",
       "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -445745,274 +445824,304 @@
         "file_digest8": "dd8b82b3008597a0"
       },
       {
+        "semantic_id": "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py#class:JCSSafeIntegerTests:5e445099b7903244",
+        "name": "JCSSafeIntegerTests",
+        "kind": "class",
+        "file": "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py",
+        "line": 12,
+        "end_line": 21,
+        "signature_hash": "5f717b84542fc014",
+        "file_digest8": "c6e7d68777a0fd4c"
+      },
+      {
+        "semantic_id": "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py#method:JCSSafeIntegerTests.test_generation_above_safe_integer_range_fails_closed:0e43bca08813c7ba",
+        "name": "JCSSafeIntegerTests.test_generation_above_safe_integer_range_fails_closed",
+        "kind": "method",
+        "file": "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py",
+        "line": 19,
+        "end_line": 21,
+        "signature_hash": "7284d5fb8b805cd5",
+        "file_digest8": "c6e7d68777a0fd4c"
+      },
+      {
+        "semantic_id": "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py#method:JCSSafeIntegerTests.test_maximum_safe_generation_is_canonicalizable:346bbc44f02f1572",
+        "name": "JCSSafeIntegerTests.test_maximum_safe_generation_is_canonicalizable",
+        "kind": "method",
+        "file": "tools/project006/workercrystal_reference/test_workercrystal_jcs_safe_integer.py",
+        "line": 13,
+        "end_line": 17,
+        "signature_hash": "94d1e50ee9d50505",
+        "file_digest8": "c6e7d68777a0fd4c"
+      },
+      {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#class:AcceptanceBundle:a0536b8491ca06a2",
         "name": "AcceptanceBundle",
         "kind": "class",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 417,
-        "end_line": 422,
+        "line": 426,
+        "end_line": 431,
         "signature_hash": "c720f74339a4c8fb",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#class:AcceptanceFacts:8ecb621324ad3c6d",
         "name": "AcceptanceFacts",
         "kind": "class",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 137,
-        "end_line": 204,
+        "line": 146,
+        "end_line": 213,
         "signature_hash": "0d20ee24578c96e4",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#class:AttemptTerminalFacts:f856f1fb82b2d202",
         "name": "AttemptTerminalFacts",
         "kind": "class",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 208,
-        "end_line": 213,
+        "line": 217,
+        "end_line": 222,
         "signature_hash": "e9eedc31c1560e6b",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#class:ContractViolation:d0d2d51a3d79c637",
         "name": "ContractViolation",
         "kind": "class",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 24,
-        "end_line": 25,
+        "line": 25,
+        "end_line": 26,
         "signature_hash": "a02bf3924c67f01d",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#class:ContributionBinding:3b8c7a369348e796",
         "name": "ContributionBinding",
         "kind": "class",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 107,
-        "end_line": 123,
+        "line": 116,
+        "end_line": 132,
         "signature_hash": "9fb57fdb8d513f0e",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#class:StoredAcceptance:4b36a53dfc644e64",
         "name": "StoredAcceptance",
         "kind": "class",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 469,
-        "end_line": 475,
+        "line": 478,
+        "end_line": 484,
         "signature_hash": "ff08b8f73a3d6ecf",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:_digest:860a903c8a54e28f",
         "name": "_digest",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 37,
-        "end_line": 41,
+        "line": 38,
+        "end_line": 42,
         "signature_hash": "9018aaa438b0fe0c",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:_generation:c184c74f20450d11",
         "name": "_generation",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 44,
-        "end_line": 47,
+        "line": 45,
+        "end_line": 55,
         "signature_hash": "93fe533a838eb6b7",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:_hash_domain:27a0f1f38d0466c2",
         "name": "_hash_domain",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 92,
-        "end_line": 96,
+        "line": 101,
+        "end_line": 105,
         "signature_hash": "79a5f025f0bfdfcf",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:_nfc:29b5bc8c11aa8b4a",
         "name": "_nfc",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 28,
-        "end_line": 34,
+        "line": 29,
+        "end_line": 35,
         "signature_hash": "aa5eb10865943afd",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:_normalize_json:1243dfae3a46f3b2",
         "name": "_normalize_json",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 50,
-        "end_line": 71,
+        "line": 58,
+        "end_line": 79,
         "signature_hash": "532848d4e7a0da7b",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:_validate_exact_keys:d865201c0f19b721",
         "name": "_validate_exact_keys",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 239,
-        "end_line": 244,
+        "line": 248,
+        "end_line": 253,
         "signature_hash": "56117959bf782143",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:build_acceptance_bundle:c13f0cf19f4e9cad",
         "name": "build_acceptance_bundle",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 425,
-        "end_line": 465,
+        "line": 434,
+        "end_line": 474,
         "signature_hash": "db8f5240f0ea7e04",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:build_g6_binding:9dbd6f7aaa1e6fe4",
         "name": "build_g6_binding",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 270,
-        "end_line": 303,
+        "line": 279,
+        "end_line": 312,
         "signature_hash": "6472da4a632ff3d7",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:build_g6_operation_body:c4eea40ed1829059",
         "name": "build_g6_operation_body",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 346,
-        "end_line": 383,
+        "line": 355,
+        "end_line": 392,
         "signature_hash": "1f64452526123600",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:canonical_binding_identity_set:4765d4774100621a",
         "name": "canonical_binding_identity_set",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 339,
-        "end_line": 343,
+        "line": 348,
+        "end_line": 352,
         "signature_hash": "7137604dedb0d3b2",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:canonical_contribution_set:3def82fb1f6fe6d6",
         "name": "canonical_contribution_set",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 126,
-        "end_line": 133,
+        "line": 135,
+        "end_line": 142,
         "signature_hash": "966cf39e699e8179",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:canonical_json_bytes:7ad5986029a948dd",
         "name": "canonical_json_bytes",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 74,
-        "end_line": 89,
+        "line": 82,
+        "end_line": 98,
         "signature_hash": "946642516763d58b",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:canonical_string_set:b9d736d38a91c20d",
         "name": "canonical_string_set",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 99,
-        "end_line": 103,
+        "line": 108,
+        "end_line": 112,
         "signature_hash": "5d5abd27b7cdf7c8",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:derive_g6_binding_identity_from_body:3723f7ca2bb5fda8",
         "name": "derive_g6_binding_identity_from_body",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 247,
-        "end_line": 267,
+        "line": 256,
+        "end_line": 276,
         "signature_hash": "dee1a19f9eafa68e",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:derive_g6_operation_digest_from_body:e0f1e822958b530d",
         "name": "derive_g6_operation_digest_from_body",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 386,
-        "end_line": 413,
+        "line": 395,
+        "end_line": 422,
         "signature_hash": "da880ff7f37c697c",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:validate_g6_binding_record:f9f332bb7748a1d4",
         "name": "validate_g6_binding_record",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 306,
-        "end_line": 313,
+        "line": 315,
+        "end_line": 322,
         "signature_hash": "d1f91742218b5cc5",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#function:verify_restart:8c007c1ef70e0c89",
         "name": "verify_restart",
         "kind": "function",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 478,
-        "end_line": 532,
+        "line": 487,
+        "end_line": 541,
         "signature_hash": "3ec66ab2b9428f2b",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#method:AcceptanceFacts.accepted_result_body:e4dc6b9a49f2ef17",
         "name": "AcceptanceFacts.accepted_result_body",
         "kind": "method",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 155,
-        "end_line": 201,
+        "line": 164,
+        "end_line": 210,
         "signature_hash": "678b96c3eae6aaa1",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#method:AcceptanceFacts.accepted_result_identity:eff14f43696e8dbb",
         "name": "AcceptanceFacts.accepted_result_identity",
         "kind": "method",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 203,
-        "end_line": 204,
+        "line": 212,
+        "end_line": 213,
         "signature_hash": "1939f4aeb88db1be",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#method:AttemptTerminalFacts.relation_key:0234cb0ebcc28cd7",
         "name": "AttemptTerminalFacts.relation_key",
         "kind": "method",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 212,
-        "end_line": 213,
+        "line": 221,
+        "end_line": 222,
         "signature_hash": "e72f8bf6967033da",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py#method:ContributionBinding.protected_body:cfed2a46c1b949d2",
         "name": "ContributionBinding.protected_body",
         "kind": "method",
         "file": "tools/project006/workercrystal_reference/workercrystal_acceptance_g6.py",
-        "line": 113,
-        "end_line": 123,
+        "line": 122,
+        "end_line": 132,
         "signature_hash": "ba2396d20a0f4966",
-        "file_digest8": "7d379815b92c7928"
+        "file_digest8": "2fec72b6469a5b18"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -447265,7 +447374,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "3e794c63d70aabb8e074b626084ca21d",
-    "payload_hash": "f19248b6ee1a952d8e5c29be2e874758"
+    "record_fingerprint": "00a89919dd65c10bb85934b5241ff599",
+    "payload_hash": "ec665a7f8337f835fc9251daebc17579"
   }
 }
