@@ -492,14 +492,16 @@ def rebase_identity_domain(
     currentness_ref: str,
     authority_ref: str,
     owner_uid: int | None = None,
+    expected_authority_ref: str | None = None,
+    expected_owner_uid: int | None = None,
 ) -> Dict[str, Any]:
     """Atomically rebind Resident identity, authority, and owner credentials.
 
-    A currentness/generation-only rebase preserves the current owner credential.
-    Changing ``authority_ref`` requires an explicit validated owner binding, even
-    when the same UID continues to own the Resident. This prevents free-form
-    authority text from silently changing the protected authority witness while
-    privileged consequences continue to trust a credential from another owner.
+    Changing ``authority_ref`` requires both a validated target owner UID and a
+    compare-and-swap witness for the current authority/owner pair. The pair is
+    checked under the same lock used by consequence processing, so stale or
+    superseded authority bindings fail before any identity/fence/work mutation.
+    Generation/currentness-only rebases preserve the owner binding.
     """
     _validate_ref("generation", generation)
     _validate_ref("currentness_ref", currentness_ref)
@@ -507,16 +509,37 @@ def rebase_identity_domain(
     validated_owner_uid = (
         None if owner_uid is None else _validate_owner_uid(owner_uid)
     )
+    validated_expected_authority_ref = (
+        None
+        if expected_authority_ref is None
+        else _validate_ref("expected_authority_ref", expected_authority_ref)
+    )
+    validated_expected_owner_uid = (
+        None
+        if expected_owner_uid is None
+        else _validate_owner_uid(expected_owner_uid)
+    )
+
     with state._lock:
         authority_changed = authority_ref != state.authority_ref
-        if authority_changed and validated_owner_uid is None:
-            raise IPCError("AUTHORITY_OWNER_BINDING_REQUIRED")
+        if authority_changed:
+            if (
+                validated_owner_uid is None
+                or validated_expected_authority_ref is None
+                or validated_expected_owner_uid is None
+            ):
+                raise IPCError("AUTHORITY_OWNER_BINDING_REQUIRED")
+            if (
+                validated_expected_authority_ref != state.authority_ref
+                or validated_expected_owner_uid != state.owner_uid
+            ):
+                raise IPCError("AUTHORITY_OWNER_BINDING_STALE")
+        elif validated_owner_uid is not None and validated_owner_uid != state.owner_uid:
+            raise IPCError("OWNER_TRANSFER_REQUIRES_AUTHORITY_CHANGE")
+
         next_owner_uid = (
             state.owner_uid if validated_owner_uid is None else validated_owner_uid
         )
-        if next_owner_uid != state.owner_uid and not authority_changed:
-            raise IPCError("OWNER_TRANSFER_REQUIRES_AUTHORITY_CHANGE")
-
         generation_changed = generation != state.generation
         changed = (
             generation_changed
