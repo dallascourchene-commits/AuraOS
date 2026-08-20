@@ -100,11 +100,56 @@ class G6ReferenceTests(unittest.TestCase):
 
     def test_g5_profile_alias_is_rejected(self) -> None:
         facts = make_facts()
-        record = build_g6_binding(facts, make_terminals()[0], facts.accepted_result_identity())
+        terminal = make_terminals()[0]
+        record = build_g6_binding(facts, terminal, facts.accepted_result_identity())
         tampered = dict(record)
         tampered["canonical_profile_id"] = G5_CANONICAL_PROFILE
         with self.assertRaises(ContractViolation):
-            validate_g6_binding_record(tampered)
+            validate_g6_binding_record(tampered, facts, terminal)
+
+    def test_semantic_binding_validator_requires_protected_facts(self) -> None:
+        facts = make_facts()
+        terminal = make_terminals()[0]
+        record = build_g6_binding(facts, terminal, facts.accepted_result_identity())
+        with self.assertRaises(ContractViolation):
+            validate_g6_binding_record(record)
+
+    def test_semantic_binding_validator_accepts_exact_record(self) -> None:
+        facts = make_facts()
+        terminal = make_terminals()[0]
+        record = build_g6_binding(facts, terminal, facts.accepted_result_identity())
+        self.assertEqual(
+            validate_g6_binding_record(record, facts, terminal),
+            record["binding_identity"],
+        )
+
+    def test_semantic_binding_validator_rejects_rehashed_protected_fact_transplants(self) -> None:
+        facts = make_facts()
+        terminal = make_terminals()[0]
+        record = build_g6_binding(facts, terminal, facts.accepted_result_identity())
+        mutations = {
+            "accepted_result_identity": DF,
+            "accepted_result_digest": DE,
+            "terminal_reconciliation_generation": terminal.terminal_reconciliation_generation + 1,
+            "capsule_id": "capsule-transplanted",
+            "capsule_digest": DE,
+            "capsule_incarnation": facts.capsule_incarnation + 1,
+            "lease_id": "lease-transplanted",
+            "lease_generation": facts.lease_generation + 1,
+            "fencing_token_digest": DE,
+        }
+        for field, value in mutations.items():
+            with self.subTest(field=field):
+                tampered = dict(record)
+                tampered[field] = value
+                body = {
+                    key: item
+                    for key, item in tampered.items()
+                    if key != "binding_identity"
+                }
+                tampered["binding_identity"] = derive_g6_binding_identity_from_body(body)
+                with self.assertRaises(ContractViolation):
+                    validate_g6_binding_record(tampered, facts, terminal)
 
     def test_binding_builder_rejects_transplanted_accepted_result_identity(self) -> None:
         facts = make_facts()
