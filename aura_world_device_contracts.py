@@ -101,7 +101,7 @@ def _canonical_scope(
     *,
     normalize: bool,
 ) -> tuple[str, ...]:
-    if isinstance(values, (str, bytes, bytearray)):
+    if isinstance(values, (str, bytes, bytearray)) or not isinstance(values, Iterable):
         raise ValueError(f"{name} must be a sequence")
     raw = tuple(_required_text(item, name) for item in values)
     if not raw:
@@ -114,6 +114,13 @@ def _canonical_scope(
     if raw != canonical:
         raise ValueError(f"{name} must use canonical sorted order")
     return raw
+
+
+def _requested_scope(values: Iterable[Any]) -> tuple[str, ...]:
+    if isinstance(values, (str, bytes, bytearray)) or not isinstance(values, Iterable):
+        raise ValueError("required_scope must be a sequence")
+    raw = tuple(_required_text(item, "required_scope") for item in values)
+    return tuple(sorted(set(raw)))
 
 
 def _exact_keys(value: Mapping[str, Any], expected: frozenset[str], name: str) -> None:
@@ -217,6 +224,8 @@ class WorldIdentityRefV1:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "WorldIdentityRefV1":
+        if not isinstance(value, Mapping):
+            raise ValueError("WorldIdentityRefV1 must be a mapping")
         data = dict(value)
         expected = frozenset(
             {
@@ -404,6 +413,8 @@ class DeviceBindingV1:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "DeviceBindingV1":
+        if not isinstance(value, Mapping):
+            raise ValueError("DeviceBindingV1 must be a mapping")
         data = dict(value)
         expected = frozenset(
             {
@@ -429,8 +440,11 @@ class DeviceBindingV1:
             raw_scope, Sequence
         ):
             raise ValueError("granted_scope must be an ordered sequence")
+        raw_world = data["world_identity"]
+        if not isinstance(raw_world, Mapping):
+            raise ValueError("world_identity must be a mapping")
         return cls(
-            world_identity=WorldIdentityRefV1.from_dict(data["world_identity"]),
+            world_identity=WorldIdentityRefV1.from_dict(raw_world),
             device_id=data["device_id"],
             host_capability_ref=data["host_capability_ref"],
             key_cert_ref=data["key_cert_ref"],
@@ -493,9 +507,7 @@ def assess_device_binding(
     if not isinstance(binding, DeviceBindingV1):
         raise ValueError("binding must be a DeviceBindingV1")
     current_time = _finite_timestamp(now, "now")
-    requested = tuple(
-        sorted({_required_text(item, "required_scope") for item in required_scope})
-    )
+    requested = _requested_scope(required_scope)
 
     if expected_world is not None:
         if not isinstance(expected_world, WorldIdentityRefV1):
