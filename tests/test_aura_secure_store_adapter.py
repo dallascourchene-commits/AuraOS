@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from copy import deepcopy
+
 import pytest
 
 from aura_secure_store_adapter import (
@@ -9,6 +11,8 @@ from aura_secure_store_adapter import (
     SecureStoreBackendDescriptorV1,
     SecureStoreCapabilityState,
     SecureStoreOperationStatus,
+    SecureStoreReceiptV1,
+    SecureStoreRefV1,
     SecureStoreSecurityProfile,
     UnsupportedSecureStoreBackend,
 )
@@ -54,6 +58,8 @@ def _binding(world: WorldIdentityRefV1 | None = None, **overrides: object) -> De
 
 
 class FakePlatformBackend:
+    """Contract fixture only; this is not evidence of a real platform keystore."""
+
     def __init__(
         self,
         *,
@@ -101,23 +107,36 @@ def _adapter(
     world: WorldIdentityRefV1 | None = None,
     binding: DeviceBindingV1 | None = None,
     backend: FakePlatformBackend | None = None,
-    trusted_refs: tuple[str, ...] | None = None,
+    trusted_digests: tuple[str, ...] | None = None,
 ) -> tuple[SecureStoreAdapterV1, FakePlatformBackend, WorldIdentityRefV1, DeviceBindingV1]:
     world = world or _world()
     binding = binding or _binding(world)
     backend = backend or FakePlatformBackend()
-    trusted_refs = trusted_refs or (backend.descriptor.backend_ref,)
+    trusted_digests = trusted_digests or (backend.descriptor.digest,)
     return (
         SecureStoreAdapterV1(
             world=world,
             binding=binding,
             backend=backend,
-            trusted_backend_refs=trusted_refs,
+            trusted_backend_descriptor_digests=trusted_digests,
         ),
         backend,
         world,
         binding,
     )
+
+
+def _stored_ref(adapter: SecureStoreAdapterV1, *, secret: bytes = b"fixture-secret") -> SecureStoreRefV1:
+    secret_ref, receipt = adapter.store_secret(
+        operation_id="op-store-fixture",
+        secret_id="slot-a",
+        purpose="device-key-material",
+        secret=secret,
+        now=NOW,
+    )
+    assert receipt.status == SecureStoreOperationStatus.STORED.value
+    assert secret_ref is not None
+    return secret_ref
 
 
 def test_success_path_keeps_secret_out_of_refs_and_receipts() -> None:
@@ -132,6 +151,7 @@ def test_success_path_keeps_secret_out_of_refs_and_receipts() -> None:
         now=NOW,
     )
 
+    assert secret_ref is not None
     assert store_receipt.status == SecureStoreOperationStatus.STORED.value
     assert backend.values[secret_ref.digest] == secret
     assert secret not in repr(secret_ref.to_dict()).encode()
@@ -172,7 +192,25 @@ def test_reference_identity_is_not_derived_from_secret_bytes() -> None:
         now=NOW,
     )
 
+    assert first_ref is not None and second_ref is not None
     assert first_ref == second_ref
+
+
+def test_failed_store_does_not_return_a_usable_looking_reference() -> None:
+    backend = FakePlatformBackend(fail=True)
+    adapter, _, _, _ = _adapter(backend=backend)
+
+    secret_ref, receipt = adapter.store_secret(
+        operation_id="op-store-fail-ref",
+        secret_id="slot-a",
+        purpose="device-key-material",
+        secret=b"secret",
+        now=NOW,
+    )
+
+    assert secret_ref is None
+    assert receipt.status == SecureStoreOperationStatus.BACKEND_ERROR.value
+    assert receipt.secret_ref_digest
 
 
 def test_backend_exception_text_and_secret_are_not_copied_into_receipt() -> None:
@@ -195,11 +233,11 @@ def test_backend_exception_text_and_secret_are_not_copied_into_receipt() -> None
     assert "backend failure containing secret" not in rendered
 
 
-def test_untrusted_backend_fails_before_backend_is_called() -> None:
+def test_untrusted_backend_descriptor_fails_before_backend_is_called() -> None:
     backend = FakePlatformBackend()
-    adapter, _, _, _ = _adapter(backend=backend, trusted_refs=("platform-keystore://different",))
+    adapter, _, _, _ = _adapter(backend=backend, trusted_digests=("different-descriptor-digest",))
 
-    _, receipt = adapter.store_secret(
+    secret_ref, receipt = adapter.store_secret(
         operation_id="op-untrusted",
         secret_id="slot-a",
         purpose="device-key-material",
@@ -207,7 +245,9 @@ def test_untrusted_backend_fails_before_backend_is_called() -> None:
         now=NOW,
     )
 
+    assert secret_ref is None
     assert receipt.status == SecureStoreOperationStatus.BACKEND_UNTRUSTED.value
+    assert receipt.detail_code == "BACKEND_DESCRIPTOR_NOT_TRUSTED"
     assert backend.calls == []
 
 
@@ -219,10 +259,10 @@ def test_unsupported_backend_has_no_plaintext_or_memory_fallback() -> None:
         world=world,
         binding=binding,
         backend=backend,
-        trusted_backend_refs=(backend.descriptor.backend_ref,),
+        trusted_backend_descriptor_digests=(backend.descriptor.digest,),
     )
 
-    _, receipt = adapter.store_secret(
+    secret_ref, receipt = adapter.store_secret(
         operation_id="op-unsupported",
         secret_id="slot-a",
         purpose="device-key-material",
@@ -230,6 +270,7 @@ def test_unsupported_backend_has_no_plaintext_or_memory_fallback() -> None:
         now=NOW,
     )
 
+    assert secret_ref is None
     assert receipt.status == SecureStoreOperationStatus.BACKEND_UNSUPPORTED.value
     assert receipt.detail_code == "BACKEND_UNSUPPORTED"
 
@@ -238,7 +279,7 @@ def test_degraded_backend_fails_closed_without_invocation() -> None:
     backend = FakePlatformBackend(capability_state=SecureStoreCapabilityState.DEGRADED)
     adapter, _, _, _ = _adapter(backend=backend)
 
-    _, receipt = adapter.store_secret(
+    secret_ref, receipt = adapter.store_secret(
         operation_id="op-degraded",
         secret_id="slot-a",
         purpose="device-key-material",
@@ -246,6 +287,7 @@ def test_degraded_backend_fails_closed_without_invocation() -> None:
         now=NOW,
     )
 
+    assert secret_ref is None
     assert receipt.status == SecureStoreOperationStatus.BACKEND_DEGRADED.value
     assert backend.calls == []
 
@@ -257,7 +299,7 @@ def test_non_platform_security_profile_is_not_silently_treated_as_secure_store()
     )
     adapter, _, _, _ = _adapter(backend=backend)
 
-    _, receipt = adapter.store_secret(
+    secret_ref, receipt = adapter.store_secret(
         operation_id="op-profile",
         secret_id="slot-a",
         purpose="device-key-material",
@@ -265,6 +307,7 @@ def test_non_platform_security_profile_is_not_silently_treated_as_secure_store()
         now=NOW,
     )
 
+    assert secret_ref is None
     assert receipt.status == SecureStoreOperationStatus.BACKEND_PROFILE_BLOCKED.value
     assert backend.calls == []
 
@@ -286,7 +329,7 @@ def test_unusable_device_binding_blocks_secure_store_before_backend(
     binding = _binding(world, **binding_overrides)
     adapter, backend, _, _ = _adapter(world=world, binding=binding)
 
-    _, receipt = adapter.store_secret(
+    secret_ref, receipt = adapter.store_secret(
         operation_id=f"op-blocked-{expected_detail}",
         secret_id="slot-a",
         purpose="device-key-material",
@@ -294,6 +337,7 @@ def test_unusable_device_binding_blocks_secure_store_before_backend(
         now=NOW,
     )
 
+    assert secret_ref is None
     assert receipt.status == SecureStoreOperationStatus.BINDING_BLOCKED.value
     assert receipt.detail_code == expected_detail
     assert backend.calls == []
@@ -301,13 +345,7 @@ def test_unusable_device_binding_blocks_secure_store_before_backend(
 
 def test_secret_reference_cannot_be_transplanted_across_world_or_device_context() -> None:
     adapter_a, _, _, _ = _adapter()
-    secret_ref, _ = adapter_a.store_secret(
-        operation_id="op-store-a",
-        secret_id="slot-a",
-        purpose="device-key-material",
-        secret=b"secret",
-        now=NOW,
-    )
+    secret_ref = _stored_ref(adapter_a)
 
     world_b = _world(
         world_id="world-beta",
@@ -328,16 +366,10 @@ def test_secret_reference_cannot_be_transplanted_across_world_or_device_context(
     assert backend_b.calls == []
 
 
-def test_backend_generation_change_invalidates_old_reference() -> None:
+def test_backend_generation_change_invalidates_old_reference_and_requires_new_trust() -> None:
     backend_v1 = FakePlatformBackend(generation="gen-1")
     adapter_v1, _, world, binding = _adapter(backend=backend_v1)
-    secret_ref, _ = adapter_v1.store_secret(
-        operation_id="op-store-v1",
-        secret_id="slot-a",
-        purpose="device-key-material",
-        secret=b"secret",
-        now=NOW,
-    )
+    secret_ref = _stored_ref(adapter_v1)
 
     backend_v2 = FakePlatformBackend(
         backend_ref=backend_v1.descriptor.backend_ref,
@@ -347,7 +379,7 @@ def test_backend_generation_change_invalidates_old_reference() -> None:
         world=world,
         binding=binding,
         backend=backend_v2,
-        trusted_refs=(backend_v2.descriptor.backend_ref,),
+        trusted_digests=(backend_v2.descriptor.digest,),
     )
 
     with pytest.raises(ValueError, match="generation mismatch"):
@@ -355,9 +387,10 @@ def test_backend_generation_change_invalidates_old_reference() -> None:
 
 
 def test_load_rejects_backend_non_byte_secret_without_exposing_value() -> None:
-    backend = FakePlatformBackend(invalid_load=True)
+    backend = FakePlatformBackend()
     adapter, _, _, _ = _adapter(backend=backend)
-    secret_ref = adapter.make_ref(secret_id="slot-a", purpose="device-key-material")
+    secret_ref = _stored_ref(adapter)
+    backend.invalid_load = True
 
     loaded, receipt = adapter.load_secret(
         operation_id="op-invalid-load", secret_ref=secret_ref, now=NOW
@@ -383,14 +416,60 @@ def test_store_requires_explicit_bytes_and_never_coerces_text_secret() -> None:
     assert backend.calls == []
 
 
-def test_delete_is_context_bound_and_reports_not_found_without_secret_material() -> None:
+def test_delete_reports_not_found_after_prior_delete_without_secret_material() -> None:
     adapter, _, _, _ = _adapter()
-    secret_ref = adapter.make_ref(secret_id="slot-a", purpose="device-key-material")
+    secret_ref = _stored_ref(adapter)
 
-    receipt = adapter.delete_secret(
-        operation_id="op-delete-missing", secret_ref=secret_ref, now=NOW
+    first = adapter.delete_secret(
+        operation_id="op-delete-1", secret_ref=secret_ref, now=NOW
+    )
+    second = adapter.delete_secret(
+        operation_id="op-delete-2", secret_ref=secret_ref, now=NOW
     )
 
-    assert receipt.status == SecureStoreOperationStatus.NOT_FOUND.value
-    assert receipt.detail_code == "SECRET_NOT_FOUND"
-    assert "secret" not in {key.lower() for key in receipt.to_dict() if key != "secret_ref_digest"}
+    assert first.status == SecureStoreOperationStatus.DELETED.value
+    assert second.status == SecureStoreOperationStatus.NOT_FOUND.value
+    assert second.detail_code == "SECRET_NOT_FOUND"
+
+
+def test_descriptor_reference_and_receipt_round_trip_exactly_and_reject_schema_tamper() -> None:
+    adapter, backend, _, _ = _adapter()
+    secret_ref, receipt = adapter.store_secret(
+        operation_id="op-round-trip",
+        secret_id="slot-a",
+        purpose="device-key-material",
+        secret=b"secret",
+        now=NOW,
+    )
+    assert secret_ref is not None
+
+    assert SecureStoreBackendDescriptorV1.from_dict(backend.descriptor.to_dict()) == backend.descriptor
+    assert SecureStoreRefV1.from_dict(secret_ref.to_dict()) == secret_ref
+    assert SecureStoreReceiptV1.from_dict(receipt.to_dict()) == receipt
+
+    for value, loader in (
+        (backend.descriptor.to_dict(), SecureStoreBackendDescriptorV1.from_dict),
+        (secret_ref.to_dict(), SecureStoreRefV1.from_dict),
+        (receipt.to_dict(), SecureStoreReceiptV1.from_dict),
+    ):
+        tampered = deepcopy(value)
+        tampered["ambient_authority"] = True
+        with pytest.raises(ValueError, match="schema mismatch"):
+            loader(tampered)
+
+
+def test_receipt_detail_code_is_closed_and_cannot_carry_secret_or_exception_text() -> None:
+    adapter, backend, world, binding = _adapter()
+    secret_ref = _stored_ref(adapter)
+
+    with pytest.raises(ValueError, match="unsupported detail_code"):
+        SecureStoreReceiptV1.create(
+            operation_id="op-injected-detail",
+            operation="LOAD",
+            status="LOADED",
+            secret_ref=secret_ref,
+            backend=backend.descriptor,
+            world=world,
+            binding=binding,
+            detail_code="secret=please-leak-me",
+        )
