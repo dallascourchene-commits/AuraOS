@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786938896,
+  "generated_at_unix": 1787356419,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1634,
+    "repo_file_count": 1636,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -882,6 +882,7 @@
       "aura_topology_sync.py",
       "aura_topology_ws_bridge.py",
       "aura_trace_graph.py",
+      "aura_triadic_helix.py",
       "aura_understand_graph_bridge.py",
       "aura_unified_memory_continuity.py",
       "aura_unified_memory_continuity_learning.py",
@@ -1601,6 +1602,7 @@
       "tests/test_aura_token_economy_orchestrator.py",
       "tests/test_aura_topological_context_anchor.py",
       "tests/test_aura_topology_health.py",
+      "tests/test_aura_triadic_helix.py",
       "tests/test_aura_unified_memory_continuity.py",
       "tests/test_aura_unified_memory_continuity_learning.py",
       "tests/test_aura_unified_memory_continuity_toolchain.py",
@@ -1660,6 +1662,7 @@
       "aura_spatial_importers/gltf.py",
       "aura_spatial_importers/ply.py",
       "aura_spatial_importers/spz.py",
+      "aura_triadic_helix.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "core/aura_task_dispatcher.py",
@@ -1741,8 +1744,7 @@
       "tests/test_aura_capability_connectome_v2.py",
       "tests/test_aura_capability_lane_registry.py",
       "tests/test_aura_capability_resolver.py",
-      "tests/test_aura_capability_resolver_connectome.py",
-      "tests/test_aura_change_graph.py"
+      "tests/test_aura_capability_resolver_connectome.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1750,15 +1752,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1634,
-      "bytes": 26316194,
-      "tokens_est": 6569465,
+      "files": 1636,
+      "bytes": 26332394,
+      "tokens_est": 6573516,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 234,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 995,
+        "python_module": 997,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -4252,6 +4254,14 @@
         "end_line": 89,
         "semantic_id": "aura_st3gg_recall.py#function:_digest:b80292420b5b7c8c",
         "signature_hash": "3ac0b50228ac8b68"
+      },
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 38,
+        "semantic_id": "aura_triadic_helix.py#function:_digest:1531126e18d8ac25",
+        "signature_hash": "9018aaa438b0fe0c"
       },
       {
         "file": "aura_waboose_learning.py",
@@ -88304,6 +88314,14 @@
         "end_line": 228,
         "semantic_id": "aura_st3gg_contracts.py#function:canonical_json_bytes:45e2aa70586d7f49",
         "signature_hash": "b2bc0a31834a37f8"
+      },
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 77,
+        "semantic_id": "aura_triadic_helix.py#function:canonical_json_bytes:c8a0be9ccd3b467b",
+        "signature_hash": "946642516763d58b"
       }
     ],
     "digest_text": [
@@ -93380,6 +93398,246 @@
         "end_line": 73,
         "semantic_id": "aura_trace_graph.py#method:AuraTraceGraph.compile_trace_snapshot:aa8f83f68e487fe9",
         "signature_hash": "5b3c4e675ddcdcc7"
+      }
+    ],
+    "ContractViolation": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "aura_triadic_helix.py#class:ContractViolation:8fc8b392b9d61731",
+        "signature_hash": "a02bf3924c67f01d"
+      }
+    ],
+    "_nfc": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 31,
+        "semantic_id": "aura_triadic_helix.py#function:_nfc:2f0ba1a370d3913d",
+        "signature_hash": "aa5eb10865943afd"
+      }
+    ],
+    "_generation": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 44,
+        "semantic_id": "aura_triadic_helix.py#function:_generation:e60f5b7d353dc2fe",
+        "signature_hash": "93fe533a838eb6b7"
+      }
+    ],
+    "_normalize_json": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 66,
+        "semantic_id": "aura_triadic_helix.py#function:_normalize_json:1ad7f14546be0f93",
+        "signature_hash": "532848d4e7a0da7b"
+      }
+    ],
+    "_hash_domain": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 85,
+        "semantic_id": "aura_triadic_helix.py#function:_hash_domain:b0594c3758621b2f",
+        "signature_hash": "79a5f025f0bfdfcf"
+      }
+    ],
+    "_canonical_string_set": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 92,
+        "semantic_id": "aura_triadic_helix.py#function:_canonical_string_set:617c7748e9ec6db1",
+        "signature_hash": "be6184f477b33aa8"
+      }
+    ],
+    "TriadPosition": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "class",
+        "line": 95,
+        "end_line": 98,
+        "semantic_id": "aura_triadic_helix.py#class:TriadPosition:20774383cc11695d",
+        "signature_hash": "d6caaea5a182f540"
+      }
+    ],
+    "RoundCommitStatus": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "class",
+        "line": 101,
+        "end_line": 105,
+        "semantic_id": "aura_triadic_helix.py#class:RoundCommitStatus:66f5bff6f68e4521",
+        "signature_hash": "2fa35a7c43ee220a"
+      }
+    ],
+    "Epoch": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "class",
+        "line": 109,
+        "end_line": 116,
+        "semantic_id": "aura_triadic_helix.py#class:Epoch:494ae39946072c69",
+        "signature_hash": "658f0cc517b41ea9"
+      }
+    ],
+    "Epoch.__post_init__": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 113,
+        "semantic_id": "aura_triadic_helix.py#method:Epoch.__post_init__:4223d4449e801865",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "Epoch.protected_value": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 116,
+        "semantic_id": "aura_triadic_helix.py#method:Epoch.protected_value:602b0ff67913f9aa",
+        "signature_hash": "a6ac9374cfba2542"
+      }
+    ],
+    "ObjectiveBinding": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "class",
+        "line": 120,
+        "end_line": 141,
+        "semantic_id": "aura_triadic_helix.py#class:ObjectiveBinding:e3c0c4948d8d2183",
+        "signature_hash": "26e9857b6b8843ee"
+      }
+    ],
+    "ObjectiveBinding.protected_body": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 138,
+        "semantic_id": "aura_triadic_helix.py#method:ObjectiveBinding.protected_body:c1612d8832c13413",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "ObjectiveBinding.identity": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 141,
+        "semantic_id": "aura_triadic_helix.py#method:ObjectiveBinding.identity:dae62ca70c873b02",
+        "signature_hash": "fcd7e6c74f7bc0d0"
+      }
+    ],
+    "OutputRef": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "class",
+        "line": 145,
+        "end_line": 176,
+        "semantic_id": "aura_triadic_helix.py#class:OutputRef:e1708258e24374a6",
+        "signature_hash": "de4f8da65f2991fc"
+      }
+    ],
+    "OutputRef.protected_body": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 176,
+        "semantic_id": "aura_triadic_helix.py#method:OutputRef.protected_body:e2e7a2342d28bcc6",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "PositionExecutionIdentity": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "class",
+        "line": 180,
+        "end_line": 202,
+        "semantic_id": "aura_triadic_helix.py#class:PositionExecutionIdentity:d686745b1f449107",
+        "signature_hash": "752fb87be3828b88"
+      }
+    ],
+    "PositionExecutionIdentity.protected_body": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "method",
+        "line": 189,
+        "end_line": 202,
+        "semantic_id": "aura_triadic_helix.py#method:PositionExecutionIdentity.protected_body:5e48fe80451a5589",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "_canonical_output_refs": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "function",
+        "line": 205,
+        "end_line": 210,
+        "semantic_id": "aura_triadic_helix.py#function:_canonical_output_refs:bbe1ee11ec180be9",
+        "signature_hash": "ca4f913fd1d126f7"
+      }
+    ],
+    "TriadRoundCommitReceipt": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "class",
+        "line": 214,
+        "end_line": 297,
+        "semantic_id": "aura_triadic_helix.py#class:TriadRoundCommitReceipt:899bea60e9971ecd",
+        "signature_hash": "61a9ac07cad95a35"
+      }
+    ],
+    "TriadRoundCommitReceipt._slot_shape": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "method",
+        "line": 233,
+        "end_line": 257,
+        "semantic_id": "aura_triadic_helix.py#method:TriadRoundCommitReceipt._slot_shape:0ea313b1999a0c5e",
+        "signature_hash": "73e2fcf36c97083f"
+      }
+    ],
+    "TriadRoundCommitReceipt.protected_body": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "method",
+        "line": 259,
+        "end_line": 290,
+        "semantic_id": "aura_triadic_helix.py#method:TriadRoundCommitReceipt.protected_body:2141cb7f85d449d1",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "TriadRoundCommitReceipt.receipt_digest": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "method",
+        "line": 292,
+        "end_line": 293,
+        "semantic_id": "aura_triadic_helix.py#method:TriadRoundCommitReceipt.receipt_digest:22b56c0dd46d73f2",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "TriadRoundCommitReceipt.to_record": [
+      {
+        "file": "aura_triadic_helix.py",
+        "kind": "method",
+        "line": 295,
+        "end_line": 297,
+        "semantic_id": "aura_triadic_helix.py#method:TriadRoundCommitReceipt.to_record:56569b4721c1128a",
+        "signature_hash": "1933825d816f8971"
       }
     ],
     "_spectral_coordinate": [
@@ -154678,6 +154936,126 @@
         "end_line": 111,
         "semantic_id": "tests/test_aura_topology_health.py#method:TestTopologyHealth.test_symbol_index_healthy:0efdbe02a131900b",
         "signature_hash": "30e02f327572e4a4"
+      }
+    ],
+    "objective": [
+      {
+        "file": "tests/test_aura_triadic_helix.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:objective:c1d2e72abd3b0e65",
+        "signature_hash": "9cbc20b973600eef"
+      }
+    ],
+    "output": [
+      {
+        "file": "tests/test_aura_triadic_helix.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 42,
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:output:f934fc468010edad",
+        "signature_hash": "3bb638a36a174837"
+      }
+    ],
+    "execution": [
+      {
+        "file": "tests/test_aura_triadic_helix.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 54,
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:execution:9c0b48a472857ef7",
+        "signature_hash": "4b6d29df2e400257"
+      }
+    ],
+    "receipt": [
+      {
+        "file": "tests/test_aura_triadic_helix.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 84,
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:receipt:1c485c5a197337b9",
+        "signature_hash": "54694323026873b5"
+      }
+    ],
+    "test_objective_identity_binds_source_currentness_and_authority": [
+      {
+        "file": "tests/test_aura_triadic_helix.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 91,
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_objective_identity_binds_source_currentness_and_authority:7e823201e4f68355",
+        "signature_hash": "030a164166c766b8"
+      }
+    ],
+    "test_round_digest_is_permutation_invariant_for_set_like_inputs": [
+      {
+        "file": "tests/test_aura_triadic_helix.py",
+        "kind": "function",
+        "line": 94,
+        "end_line": 100,
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_round_digest_is_permutation_invariant_for_set_like_inputs:577af1fb5ac00fcd",
+        "signature_hash": "1877e425c0340b38"
+      }
+    ],
+    "test_round_record_computes_receipt_digest_instead_of_accepting_one": [
+      {
+        "file": "tests/test_aura_triadic_helix.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 107,
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_round_record_computes_receipt_digest_instead_of_accepting_one:6ee5366698391bf3",
+        "signature_hash": "b33a1f07867678cf"
+      }
+    ],
+    "test_duplicate_peer_ref_is_rejected_structurally": [
+      {
+        "file": "tests/test_aura_triadic_helix.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 113,
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_duplicate_peer_ref_is_rejected_structurally:1b40ec81fc7afd9d",
+        "signature_hash": "918bdcd6e7927f00"
+      }
+    ],
+    "test_wrong_output_slot_is_rejected": [
+      {
+        "file": "tests/test_aura_triadic_helix.py",
+        "kind": "function",
+        "line": 116,
+        "end_line": 119,
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_wrong_output_slot_is_rejected:6a5ba9456e1c8bc0",
+        "signature_hash": "cfd8668460d05ba7"
+      }
+    ],
+    "test_output_epoch_must_match_round_epoch": [
+      {
+        "file": "tests/test_aura_triadic_helix.py",
+        "kind": "function",
+        "line": 122,
+        "end_line": 125,
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_output_epoch_must_match_round_epoch:eaa5b00b3a540c05",
+        "signature_hash": "a008d7b11539b983"
+      }
+    ],
+    "test_invalid_digest_and_generation_fail_closed": [
+      {
+        "file": "tests/test_aura_triadic_helix.py",
+        "kind": "function",
+        "line": 128,
+        "end_line": 132,
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_invalid_digest_and_generation_fail_closed:2a4f43f263db90dd",
+        "signature_hash": "2146a4668d950884"
+      }
+    ],
+    "test_contract_objects_are_frozen": [
+      {
+        "file": "tests/test_aura_triadic_helix.py",
+        "kind": "function",
+        "line": 135,
+        "end_line": 138,
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_contract_objects_are_frozen:2f8609f05f03a152",
+        "signature_hash": "5c9b0222ed7e4cf6"
       }
     ],
     "_semantic_ledger": [
@@ -223064,6 +223442,53 @@
       ]
     },
     {
+      "path": "aura_triadic_helix.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11873,
+      "lines": 298,
+      "tokens_est": 2969,
+      "symbol_count": 26,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e854d032831cc7bf",
+      "vector": [
+        0.15173,
+        0.031757,
+        0.215245,
+        0.076453,
+        -0.196425,
+        0.281112,
+        0.194073,
+        -0.215245,
+        0.010586,
+        0.170549,
+        -0.21054,
+        -0.099977,
+        0.012938,
+        0.158787,
+        -0.078805,
+        -0.107034,
+        -0.161139,
+        -0.109387,
+        0.224654,
+        0.191721,
+        -0.264645,
+        -0.111739,
+        -0.090567,
+        -0.085863,
+        0.019995,
+        0.139968,
+        -0.299931,
+        0.271702,
+        0.205835,
+        0.015291,
+        -0.290521,
+        -0.248178
+      ]
+    },
+    {
       "path": "aura_understand_graph_bridge.py",
       "role": "python_module",
       "binary": false,
@@ -260976,6 +261401,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_triadic_helix.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4327,
+      "lines": 139,
+      "tokens_est": 1082,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9c2326a48d24909d",
+      "vector": [
+        0.278173,
+        -0.08897,
+        -0.176814,
+        0.134019,
+        -0.019146,
+        -0.039417,
+        0.057437,
+        0.242134,
+        -0.001126,
+        -0.215105,
+        0.140776,
+        0.034912,
+        -0.278173,
+        -0.242134,
+        -0.010136,
+        0.066446,
+        0.125009,
+        0.239882,
+        0.246639,
+        -0.212853,
+        0.104737,
+        -0.251144,
+        0.22862,
+        -0.260154,
+        -0.003379,
+        -0.208348,
+        0.215105,
+        -0.025903,
+        -0.217358,
+        0.095728,
+        -0.156543,
+        0.221863
+      ]
+    },
+    {
       "path": "tests/test_aura_unified_memory_continuity.py",
       "role": "python_module",
       "binary": false,
@@ -286149,15 +286621,15 @@
     }
   },
   "summary": {
-    "file_count": 1634,
-    "total_bytes": 26316194,
-    "text_tokens_est": 6569465,
+    "file_count": 1636,
+    "total_bytes": 26332394,
+    "text_tokens_est": 6573516,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 234,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 995,
+      "python_module": 997,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -287050,6 +287522,7 @@
       "aura_topology_sync.py",
       "aura_topology_ws_bridge.py",
       "aura_trace_graph.py",
+      "aura_triadic_helix.py",
       "aura_understand_graph_bridge.py",
       "aura_unified_memory_continuity.py",
       "aura_unified_memory_continuity_learning.py",
@@ -287769,6 +288242,7 @@
       "tests/test_aura_token_economy_orchestrator.py",
       "tests/test_aura_topological_context_anchor.py",
       "tests/test_aura_topology_health.py",
+      "tests/test_aura_triadic_helix.py",
       "tests/test_aura_unified_memory_continuity.py",
       "tests/test_aura_unified_memory_continuity_learning.py",
       "tests/test_aura_unified_memory_continuity_toolchain.py",
@@ -378352,6 +378826,266 @@
         "file_digest8": "c6fa5dde8c181688"
       },
       {
+        "semantic_id": "aura_triadic_helix.py#class:ContractViolation:8fc8b392b9d61731",
+        "name": "ContractViolation",
+        "kind": "class",
+        "file": "aura_triadic_helix.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "a02bf3924c67f01d",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#class:Epoch:494ae39946072c69",
+        "name": "Epoch",
+        "kind": "class",
+        "file": "aura_triadic_helix.py",
+        "line": 109,
+        "end_line": 116,
+        "signature_hash": "658f0cc517b41ea9",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#class:ObjectiveBinding:e3c0c4948d8d2183",
+        "name": "ObjectiveBinding",
+        "kind": "class",
+        "file": "aura_triadic_helix.py",
+        "line": 120,
+        "end_line": 141,
+        "signature_hash": "26e9857b6b8843ee",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#class:OutputRef:e1708258e24374a6",
+        "name": "OutputRef",
+        "kind": "class",
+        "file": "aura_triadic_helix.py",
+        "line": 145,
+        "end_line": 176,
+        "signature_hash": "de4f8da65f2991fc",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#class:PositionExecutionIdentity:d686745b1f449107",
+        "name": "PositionExecutionIdentity",
+        "kind": "class",
+        "file": "aura_triadic_helix.py",
+        "line": 180,
+        "end_line": 202,
+        "signature_hash": "752fb87be3828b88",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#class:RoundCommitStatus:66f5bff6f68e4521",
+        "name": "RoundCommitStatus",
+        "kind": "class",
+        "file": "aura_triadic_helix.py",
+        "line": 101,
+        "end_line": 105,
+        "signature_hash": "2fa35a7c43ee220a",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#class:TriadPosition:20774383cc11695d",
+        "name": "TriadPosition",
+        "kind": "class",
+        "file": "aura_triadic_helix.py",
+        "line": 95,
+        "end_line": 98,
+        "signature_hash": "d6caaea5a182f540",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#class:TriadRoundCommitReceipt:899bea60e9971ecd",
+        "name": "TriadRoundCommitReceipt",
+        "kind": "class",
+        "file": "aura_triadic_helix.py",
+        "line": 214,
+        "end_line": 297,
+        "signature_hash": "61a9ac07cad95a35",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#function:_canonical_output_refs:bbe1ee11ec180be9",
+        "name": "_canonical_output_refs",
+        "kind": "function",
+        "file": "aura_triadic_helix.py",
+        "line": 205,
+        "end_line": 210,
+        "signature_hash": "ca4f913fd1d126f7",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#function:_canonical_string_set:617c7748e9ec6db1",
+        "name": "_canonical_string_set",
+        "kind": "function",
+        "file": "aura_triadic_helix.py",
+        "line": 88,
+        "end_line": 92,
+        "signature_hash": "be6184f477b33aa8",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#function:_digest:1531126e18d8ac25",
+        "name": "_digest",
+        "kind": "function",
+        "file": "aura_triadic_helix.py",
+        "line": 34,
+        "end_line": 38,
+        "signature_hash": "9018aaa438b0fe0c",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#function:_generation:e60f5b7d353dc2fe",
+        "name": "_generation",
+        "kind": "function",
+        "file": "aura_triadic_helix.py",
+        "line": 41,
+        "end_line": 44,
+        "signature_hash": "93fe533a838eb6b7",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#function:_hash_domain:b0594c3758621b2f",
+        "name": "_hash_domain",
+        "kind": "function",
+        "file": "aura_triadic_helix.py",
+        "line": 80,
+        "end_line": 85,
+        "signature_hash": "79a5f025f0bfdfcf",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#function:_nfc:2f0ba1a370d3913d",
+        "name": "_nfc",
+        "kind": "function",
+        "file": "aura_triadic_helix.py",
+        "line": 25,
+        "end_line": 31,
+        "signature_hash": "aa5eb10865943afd",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#function:_normalize_json:1ad7f14546be0f93",
+        "name": "_normalize_json",
+        "kind": "function",
+        "file": "aura_triadic_helix.py",
+        "line": 47,
+        "end_line": 66,
+        "signature_hash": "532848d4e7a0da7b",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#function:canonical_json_bytes:c8a0be9ccd3b467b",
+        "name": "canonical_json_bytes",
+        "kind": "function",
+        "file": "aura_triadic_helix.py",
+        "line": 69,
+        "end_line": 77,
+        "signature_hash": "946642516763d58b",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#method:Epoch.__post_init__:4223d4449e801865",
+        "name": "Epoch.__post_init__",
+        "kind": "method",
+        "file": "aura_triadic_helix.py",
+        "line": 112,
+        "end_line": 113,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#method:Epoch.protected_value:602b0ff67913f9aa",
+        "name": "Epoch.protected_value",
+        "kind": "method",
+        "file": "aura_triadic_helix.py",
+        "line": 115,
+        "end_line": 116,
+        "signature_hash": "a6ac9374cfba2542",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#method:ObjectiveBinding.identity:dae62ca70c873b02",
+        "name": "ObjectiveBinding.identity",
+        "kind": "method",
+        "file": "aura_triadic_helix.py",
+        "line": 140,
+        "end_line": 141,
+        "signature_hash": "fcd7e6c74f7bc0d0",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#method:ObjectiveBinding.protected_body:c1612d8832c13413",
+        "name": "ObjectiveBinding.protected_body",
+        "kind": "method",
+        "file": "aura_triadic_helix.py",
+        "line": 128,
+        "end_line": 138,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#method:OutputRef.protected_body:e2e7a2342d28bcc6",
+        "name": "OutputRef.protected_body",
+        "kind": "method",
+        "file": "aura_triadic_helix.py",
+        "line": 156,
+        "end_line": 176,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#method:PositionExecutionIdentity.protected_body:5e48fe80451a5589",
+        "name": "PositionExecutionIdentity.protected_body",
+        "kind": "method",
+        "file": "aura_triadic_helix.py",
+        "line": 189,
+        "end_line": 202,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#method:TriadRoundCommitReceipt._slot_shape:0ea313b1999a0c5e",
+        "name": "TriadRoundCommitReceipt._slot_shape",
+        "kind": "method",
+        "file": "aura_triadic_helix.py",
+        "line": 233,
+        "end_line": 257,
+        "signature_hash": "73e2fcf36c97083f",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#method:TriadRoundCommitReceipt.protected_body:2141cb7f85d449d1",
+        "name": "TriadRoundCommitReceipt.protected_body",
+        "kind": "method",
+        "file": "aura_triadic_helix.py",
+        "line": 259,
+        "end_line": 290,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#method:TriadRoundCommitReceipt.receipt_digest:22b56c0dd46d73f2",
+        "name": "TriadRoundCommitReceipt.receipt_digest",
+        "kind": "method",
+        "file": "aura_triadic_helix.py",
+        "line": 292,
+        "end_line": 293,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
+        "semantic_id": "aura_triadic_helix.py#method:TriadRoundCommitReceipt.to_record:56569b4721c1128a",
+        "name": "TriadRoundCommitReceipt.to_record",
+        "kind": "method",
+        "file": "aura_triadic_helix.py",
+        "line": 295,
+        "end_line": 297,
+        "signature_hash": "1933825d816f8971",
+        "file_digest8": "e854d032831cc7bf"
+      },
+      {
         "semantic_id": "aura_understand_graph_bridge.py#class:AuraUnderstandGraph:508bad562a00b73d",
         "name": "AuraUnderstandGraph",
         "kind": "class",
@@ -442292,6 +443026,126 @@
         "file_digest8": "8ba003d34caded85"
       },
       {
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:execution:9c0b48a472857ef7",
+        "name": "execution",
+        "kind": "function",
+        "file": "tests/test_aura_triadic_helix.py",
+        "line": 45,
+        "end_line": 54,
+        "signature_hash": "4b6d29df2e400257",
+        "file_digest8": "9c2326a48d24909d"
+      },
+      {
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:objective:c1d2e72abd3b0e65",
+        "name": "objective",
+        "kind": "function",
+        "file": "tests/test_aura_triadic_helix.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "9cbc20b973600eef",
+        "file_digest8": "9c2326a48d24909d"
+      },
+      {
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:output:f934fc468010edad",
+        "name": "output",
+        "kind": "function",
+        "file": "tests/test_aura_triadic_helix.py",
+        "line": 31,
+        "end_line": 42,
+        "signature_hash": "3bb638a36a174837",
+        "file_digest8": "9c2326a48d24909d"
+      },
+      {
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:receipt:1c485c5a197337b9",
+        "name": "receipt",
+        "kind": "function",
+        "file": "tests/test_aura_triadic_helix.py",
+        "line": 57,
+        "end_line": 84,
+        "signature_hash": "54694323026873b5",
+        "file_digest8": "9c2326a48d24909d"
+      },
+      {
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_contract_objects_are_frozen:2f8609f05f03a152",
+        "name": "test_contract_objects_are_frozen",
+        "kind": "function",
+        "file": "tests/test_aura_triadic_helix.py",
+        "line": 135,
+        "end_line": 138,
+        "signature_hash": "5c9b0222ed7e4cf6",
+        "file_digest8": "9c2326a48d24909d"
+      },
+      {
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_duplicate_peer_ref_is_rejected_structurally:1b40ec81fc7afd9d",
+        "name": "test_duplicate_peer_ref_is_rejected_structurally",
+        "kind": "function",
+        "file": "tests/test_aura_triadic_helix.py",
+        "line": 110,
+        "end_line": 113,
+        "signature_hash": "918bdcd6e7927f00",
+        "file_digest8": "9c2326a48d24909d"
+      },
+      {
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_invalid_digest_and_generation_fail_closed:2a4f43f263db90dd",
+        "name": "test_invalid_digest_and_generation_fail_closed",
+        "kind": "function",
+        "file": "tests/test_aura_triadic_helix.py",
+        "line": 128,
+        "end_line": 132,
+        "signature_hash": "2146a4668d950884",
+        "file_digest8": "9c2326a48d24909d"
+      },
+      {
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_objective_identity_binds_source_currentness_and_authority:7e823201e4f68355",
+        "name": "test_objective_identity_binds_source_currentness_and_authority",
+        "kind": "function",
+        "file": "tests/test_aura_triadic_helix.py",
+        "line": 87,
+        "end_line": 91,
+        "signature_hash": "030a164166c766b8",
+        "file_digest8": "9c2326a48d24909d"
+      },
+      {
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_output_epoch_must_match_round_epoch:eaa5b00b3a540c05",
+        "name": "test_output_epoch_must_match_round_epoch",
+        "kind": "function",
+        "file": "tests/test_aura_triadic_helix.py",
+        "line": 122,
+        "end_line": 125,
+        "signature_hash": "a008d7b11539b983",
+        "file_digest8": "9c2326a48d24909d"
+      },
+      {
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_round_digest_is_permutation_invariant_for_set_like_inputs:577af1fb5ac00fcd",
+        "name": "test_round_digest_is_permutation_invariant_for_set_like_inputs",
+        "kind": "function",
+        "file": "tests/test_aura_triadic_helix.py",
+        "line": 94,
+        "end_line": 100,
+        "signature_hash": "1877e425c0340b38",
+        "file_digest8": "9c2326a48d24909d"
+      },
+      {
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_round_record_computes_receipt_digest_instead_of_accepting_one:6ee5366698391bf3",
+        "name": "test_round_record_computes_receipt_digest_instead_of_accepting_one",
+        "kind": "function",
+        "file": "tests/test_aura_triadic_helix.py",
+        "line": 103,
+        "end_line": 107,
+        "signature_hash": "b33a1f07867678cf",
+        "file_digest8": "9c2326a48d24909d"
+      },
+      {
+        "semantic_id": "tests/test_aura_triadic_helix.py#function:test_wrong_output_slot_is_rejected:6a5ba9456e1c8bc0",
+        "name": "test_wrong_output_slot_is_rejected",
+        "kind": "function",
+        "file": "tests/test_aura_triadic_helix.py",
+        "line": 116,
+        "end_line": 119,
+        "signature_hash": "cfd8668460d05ba7",
+        "file_digest8": "9c2326a48d24909d"
+      },
+      {
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_act_envelope:f7c4a054d880ff8f",
         "name": "_act_envelope",
         "kind": "function",
@@ -446122,7 +446976,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f54ee2e4da0bb0db05767925275e2b15",
-    "payload_hash": "0fa1918e8b28a9b69a948e98a0f6517d"
+    "record_fingerprint": "2133a88f5e2bcddab86100738e104f8e",
+    "payload_hash": "522206186918ec571831abeac5da4b35"
   }
 }
