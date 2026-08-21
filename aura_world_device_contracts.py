@@ -20,7 +20,7 @@ of scope for D-01.
 """
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass
 from enum import Enum
 import math
@@ -51,6 +51,7 @@ class DeviceRevocationState(str, Enum):
 
 class DeviceBindingUseStatus(str, Enum):
     USABLE = "USABLE"
+    WORLD_CONTEXT_REQUIRED = "WORLD_CONTEXT_REQUIRED"
     WORLD_MISMATCH = "WORLD_MISMATCH"
     REVOKED = "REVOKED"
     EXPIRED = "EXPIRED"
@@ -96,13 +97,13 @@ def _finite_timestamp(value: Any, name: str) -> float:
 
 
 def _canonical_scope(
-    values: Iterable[Any],
+    values: Sequence[Any],
     name: str,
     *,
     normalize: bool,
 ) -> tuple[str, ...]:
-    if isinstance(values, (str, bytes, bytearray)) or not isinstance(values, Iterable):
-        raise ValueError(f"{name} must be a sequence")
+    if type(values) not in (list, tuple):
+        raise ValueError(f"{name} must be a list or tuple")
     raw = tuple(_required_text(item, name) for item in values)
     if not raw:
         raise ValueError(f"{name} must not be empty")
@@ -116,9 +117,9 @@ def _canonical_scope(
     return raw
 
 
-def _requested_scope(values: Iterable[Any]) -> tuple[str, ...]:
-    if isinstance(values, (str, bytes, bytearray)) or not isinstance(values, Iterable):
-        raise ValueError("required_scope must be a sequence")
+def _requested_scope(values: Sequence[Any]) -> tuple[str, ...]:
+    if type(values) not in (list, tuple):
+        raise ValueError("required_scope must be a list or tuple")
     raw = tuple(_required_text(item, "required_scope") for item in values)
     return tuple(sorted(set(raw)))
 
@@ -202,13 +203,11 @@ class WorldIdentityRefV1:
         source_generation: str,
     ) -> "WorldIdentityRefV1":
         payload = _world_payload(
-            world_id=_required_text(str(world_id).strip(), "world_id"),
-            provenance_ref=_required_text(str(provenance_ref).strip(), "provenance_ref"),
-            owner_ref=_required_text(str(owner_ref).strip(), "owner_ref"),
-            root_ref=_required_text(str(root_ref).strip(), "root_ref"),
-            source_generation=_required_text(
-                str(source_generation).strip(), "source_generation"
-            ),
+            world_id=_required_text(world_id, "world_id"),
+            provenance_ref=_required_text(provenance_ref, "provenance_ref"),
+            owner_ref=_required_text(owner_ref, "owner_ref"),
+            root_ref=_required_text(root_ref, "root_ref"),
+            source_generation=_required_text(source_generation, "source_generation"),
         )
         return cls(
             world_id=payload["world_id"],
@@ -364,7 +363,7 @@ class DeviceBindingV1:
         device_id: str,
         host_capability_ref: str,
         key_cert_ref: str,
-        granted_scope: Iterable[str],
+        granted_scope: Sequence[str],
         expires_at: float,
         currentness: str | DeviceCurrentness,
         owner_ref: str,
@@ -380,16 +379,16 @@ class DeviceBindingV1:
         )
         payload = _binding_payload(
             world_identity=world_identity,
-            device_id=_required_text(str(device_id).strip(), "device_id"),
+            device_id=_required_text(device_id, "device_id"),
             host_capability_ref=_required_text(
-                str(host_capability_ref).strip(), "host_capability_ref"
+                host_capability_ref, "host_capability_ref"
             ),
-            key_cert_ref=_required_text(str(key_cert_ref).strip(), "key_cert_ref"),
+            key_cert_ref=_required_text(key_cert_ref, "key_cert_ref"),
             granted_scope=scope,
             expires_at=_finite_timestamp(expires_at, "expires_at"),
             currentness=current,
-            owner_ref=_required_text(str(owner_ref).strip(), "owner_ref"),
-            root_ref=_required_text(str(root_ref).strip(), "root_ref"),
+            owner_ref=_required_text(owner_ref, "owner_ref"),
+            root_ref=_required_text(root_ref, "root_ref"),
             revocation_state=revocation,
         )
         return cls(
@@ -436,10 +435,8 @@ class DeviceBindingV1:
         )
         _exact_keys(data, expected, "DeviceBindingV1")
         raw_scope = data["granted_scope"]
-        if isinstance(raw_scope, (str, bytes, bytearray)) or not isinstance(
-            raw_scope, Sequence
-        ):
-            raise ValueError("granted_scope must be an ordered sequence")
+        if type(raw_scope) is not list:
+            raise ValueError("granted_scope must be a JSON list")
         raw_world = data["world_identity"]
         if not isinstance(raw_world, Mapping):
             raise ValueError("world_identity must be a mapping")
@@ -494,14 +491,15 @@ def assess_device_binding(
     binding: DeviceBindingV1,
     *,
     now: float,
-    required_scope: Iterable[str] = (),
+    required_scope: Sequence[str] = (),
     expected_world: WorldIdentityRefV1 | None = None,
 ) -> DeviceBindingAssessmentV1:
     """Fail-closed read-only assessment of a DeviceBindingV1.
 
     This checks only the information already carried by the binding and caller.
     It does not authenticate the key/certificate reference, refresh currentness,
-    verify evidence completeness, or authorize an effect.
+    verify evidence completeness, or authorize an effect. Positive USABLE also
+    requires an exact expected World context supplied by the caller.
     """
 
     if not isinstance(binding, DeviceBindingV1):
@@ -529,6 +527,8 @@ def assess_device_binding(
         status = DeviceBindingUseStatus.UNKNOWN_CURRENTNESS
     if status is None and not set(requested).issubset(binding.granted_scope):
         status = DeviceBindingUseStatus.SCOPE_DENIED
+    if status is None and expected_world is None:
+        status = DeviceBindingUseStatus.WORLD_CONTEXT_REQUIRED
     if status is None:
         status = DeviceBindingUseStatus.USABLE
 
