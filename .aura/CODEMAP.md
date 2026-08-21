@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1636
-- **total_bytes**: 26348068
-- **text_tokens_est**: 6577435
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1638
+- **total_bytes**: 26396723
+- **text_tokens_est**: 6589599
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1636,
+  "repo_file_count": 1638,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -765,6 +765,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_scene_graph_schema.py",
     "aura_scientific_memory.py",
     "aura_secrets.example.json",
+    "aura_secure_store_adapter.py",
     "aura_self_optimize.py",
     "aura_self_reflect.py",
     "aura_shadow_model_router.py",
@@ -1563,6 +1564,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_review_lessons_codex_regressions.py",
     "tests/test_aura_runtime_profile_v2_adapter.py",
     "tests/test_aura_runtime_refactor_harness.py",
+    "tests/test_aura_secure_store_adapter.py",
     "tests/test_aura_shadow_model_router.py",
     "tests/test_aura_shadow_tool_observability.py",
     "tests/test_aura_showcase_attempt_archive.py",
@@ -1674,6 +1676,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_blockchain/memory_staking.py",
     "aura_blockchain/node.py",
     "aura_blockchain/phasor_ledger.py",
+    "aura_secure_store_adapter.py",
     "aura_spatial_importers/__init__.py",
     "aura_spatial_importers/contracts.py",
     "aura_spatial_importers/gaussian_gltf.py",
@@ -1761,8 +1764,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_capability_connectome.py",
     "tests/test_aura_capability_connectome_v2.py",
     "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py",
-    "tests/test_aura_capability_resolver_connectome.py"
+    "tests/test_aura_capability_resolver.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1776,15 +1778,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1636,
-  "bytes": 26348068,
-  "tokens_est": 6577435,
+  "files": 1638,
+  "bytes": 26396723,
+  "tokens_est": 6589599,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 234,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 997,
+    "python_module": 999,
     "schema_or_lexicon": 271,
     "support_file": 49
   }
