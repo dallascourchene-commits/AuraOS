@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1634
-- **total_bytes**: 26316194
-- **text_tokens_est**: 6569465
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1636
+- **total_bytes**: 26347947
+- **text_tokens_est**: 6577404
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1634,
+  "repo_file_count": 1636,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -581,6 +581,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_hermes_arena_mode.py",
     "aura_hivp.py",
     "aura_holographic_manifest.py",
+    "aura_host_discovery.py",
     "aura_hotswap_refactor.py",
     "aura_human_agent_arena.py",
     "aura_human_agent_arena/arena.css",
@@ -1495,6 +1496,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_gate_server.py",
     "tests/test_aura_harness_issue_capsules.py",
     "tests/test_aura_hermes_arena_mode.py",
+    "tests/test_aura_host_discovery.py",
     "tests/test_aura_human_agent_arena.py",
     "tests/test_aura_human_agent_concepts.py",
     "tests/test_aura_human_agent_tensor_integration.py",
@@ -1672,6 +1674,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_blockchain/memory_staking.py",
     "aura_blockchain/node.py",
     "aura_blockchain/phasor_ledger.py",
+    "aura_host_discovery.py",
     "aura_spatial_importers/__init__.py",
     "aura_spatial_importers/contracts.py",
     "aura_spatial_importers/gaussian_gltf.py",
@@ -1759,8 +1762,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_capability_connectome_v2.py",
     "tests/test_aura_capability_lane_registry.py",
     "tests/test_aura_capability_resolver.py",
-    "tests/test_aura_capability_resolver_connectome.py",
-    "tests/test_aura_change_graph.py"
+    "tests/test_aura_capability_resolver_connectome.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1774,15 +1776,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1634,
-  "bytes": 26316194,
-  "tokens_est": 6569465,
+  "files": 1636,
+  "bytes": 26347947,
+  "tokens_est": 6577404,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 234,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 995,
+    "python_module": 997,
     "schema_or_lexicon": 271,
     "support_file": 49
   }
@@ -2375,6 +2377,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_hermes_arena_mode.py",
     "aura_hivp.py",
     "aura_holographic_manifest.py",
+    "aura_host_discovery.py",
     "aura_hotswap_refactor.py",
     "aura_human_agent_arena.py",
     "aura_human_agent_arena_architect.py",
@@ -2477,8 +2480,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_planning_events.py",
     "aura_planning_frontier.py",
     "aura_planning_projector.py",
-    "aura_planning_regression.py",
-    "aura_plugin_registry.py"
+    "aura_planning_regression.py"
   ]
 }
 ```
