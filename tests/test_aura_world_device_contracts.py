@@ -61,6 +61,19 @@ def test_world_identity_schema_rejects_device_or_unknown_fields() -> None:
         WorldIdentityRefV1.from_dict(payload)
 
 
+def test_world_identity_create_rejects_non_string_required_references() -> None:
+    for field_name in (
+        "world_id",
+        "provenance_ref",
+        "owner_ref",
+        "root_ref",
+        "source_generation",
+    ):
+        for bad_value in (None, 7, object()):
+            with pytest.raises(ValueError, match=rf"{field_name} must be a string"):
+                _world(**{field_name: bad_value})
+
+
 def test_two_devices_share_one_world_without_sharing_device_identity() -> None:
     world = _world()
     phone = _binding(world, device_id="device-phone-01")
@@ -74,6 +87,19 @@ def test_two_devices_share_one_world_without_sharing_device_identity() -> None:
     assert phone.world_identity.digest == laptop.world_identity.digest == world.digest
     assert phone.device_id != laptop.device_id
     assert phone.digest != laptop.digest
+
+
+def test_binding_create_rejects_non_string_required_references() -> None:
+    for field_name in (
+        "device_id",
+        "host_capability_ref",
+        "key_cert_ref",
+        "owner_ref",
+        "root_ref",
+    ):
+        for bad_value in (None, 7, object()):
+            with pytest.raises(ValueError, match=rf"{field_name} must be a string"):
+                _binding(**{field_name: bad_value})
 
 
 def test_binding_scope_is_canonicalized_at_creation_and_round_trips() -> None:
@@ -121,7 +147,7 @@ def test_binding_rejects_missing_extra_and_nonsequence_scope() -> None:
 
     bad_scope = binding.to_dict()
     bad_scope["granted_scope"] = "READ_WORLD"
-    with pytest.raises(ValueError, match="ordered sequence"):
+    with pytest.raises(ValueError, match="JSON list"):
         DeviceBindingV1.from_dict(bad_scope)
 
 
@@ -140,11 +166,46 @@ def test_malformed_top_level_and_nested_payloads_fail_with_value_error() -> None
 
 def test_malformed_scope_inputs_fail_closed_without_incidental_type_error() -> None:
     world = _world()
-    with pytest.raises(ValueError, match="granted_scope must be a sequence"):
+    with pytest.raises(ValueError, match="granted_scope must be a list or tuple"):
         _binding(world, granted_scope=7)
 
-    with pytest.raises(ValueError, match="required_scope must be a sequence"):
-        assess_device_binding(_binding(world), now=1_900_000_000.0, required_scope=7)  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="required_scope must be a list or tuple"):
+        assess_device_binding(
+            _binding(world), now=1_900_000_000.0, required_scope=7
+        )  # type: ignore[arg-type]
+
+
+def test_scope_boundaries_reject_unapproved_iterable_shapes() -> None:
+    world = _world()
+    excluded = (
+        {"READ_WORLD": True},
+        {"READ_WORLD"},
+        (item for item in ("READ_WORLD",)),
+        range(1),
+    )
+    for bad_scope in excluded:
+        with pytest.raises(ValueError, match="granted_scope must be a list or tuple"):
+            _binding(world, granted_scope=bad_scope)
+
+    excluded_required = (
+        {"READ_WORLD": True},
+        {"READ_WORLD"},
+        (item for item in ("READ_WORLD",)),
+        range(1),
+    )
+    for bad_scope in excluded_required:
+        with pytest.raises(ValueError, match="required_scope must be a list or tuple"):
+            assess_device_binding(
+                _binding(world),
+                now=1_900_000_000.0,
+                required_scope=bad_scope,
+                expected_world=world,
+            )
+
+    stored = _binding(world).to_dict()
+    stored["granted_scope"] = range(1)
+    with pytest.raises(ValueError, match="granted_scope must be a JSON list"):
+        DeviceBindingV1.from_dict(stored)
 
 
 def test_device_binding_cannot_change_world_owner_or_root() -> None:
@@ -194,6 +255,51 @@ def test_scope_widening_is_denied_at_use_time() -> None:
 
     assert assessment.status == DeviceBindingUseStatus.SCOPE_DENIED.value
     assert assessment.usable is False
+
+
+def test_positive_usable_requires_bound_expected_world_context() -> None:
+    binding = _binding()
+    assessment = assess_device_binding(
+        binding,
+        now=1_900_000_000.0,
+        required_scope=("READ_WORLD",),
+    )
+
+    assert assessment.status == DeviceBindingUseStatus.WORLD_CONTEXT_REQUIRED.value
+    assert assessment.usable is False
+
+
+def test_rehashed_cross_world_binding_cannot_be_positive_without_context() -> None:
+    canonical_world = _world()
+    transplanted_world = _world(
+        world_id="world-beta",
+        provenance_ref="prov://world-beta/gen-1",
+        owner_ref="authority://owner/mallory",
+        root_ref="root://world-beta",
+        source_generation="gen-1",
+    )
+    binding = _binding(
+        transplanted_world,
+        owner_ref=transplanted_world.owner_ref,
+        root_ref=transplanted_world.root_ref,
+    )
+
+    unbound = assess_device_binding(
+        binding,
+        now=1_900_000_000.0,
+        required_scope=("READ_WORLD",),
+    )
+    assert unbound.status == DeviceBindingUseStatus.WORLD_CONTEXT_REQUIRED.value
+    assert unbound.usable is False
+
+    rebound = assess_device_binding(
+        binding,
+        now=1_900_000_000.0,
+        required_scope=("READ_WORLD",),
+        expected_world=canonical_world,
+    )
+    assert rebound.status == DeviceBindingUseStatus.WORLD_MISMATCH.value
+    assert rebound.usable is False
 
 
 def test_expected_world_mismatch_is_denied_even_for_current_binding() -> None:
