@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1787346901,
+  "generated_at_unix": 1787346950,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1753,8 +1753,8 @@
     {
       "ring": "repo",
       "files": 1636,
-      "bytes": 26344756,
-      "tokens_est": 6576607,
+      "bytes": 26348068,
+      "tokens_est": 6577435,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 234,
@@ -156846,22 +156846,42 @@
         "signature_hash": "a38c062fe62f919b"
       }
     ],
-    "test_two_devices_share_one_world_without_sharing_device_identity": [
+    "test_world_identity_create_rejects_non_string_required_references": [
       {
         "file": "tests/test_aura_world_device_contracts.py",
         "kind": "function",
         "line": 64,
-        "end_line": 76,
+        "end_line": 74,
+        "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_world_identity_create_rejects_non_string_required_references:68b8a25bc5ecc9cf",
+        "signature_hash": "e9ea0683be029d60"
+      }
+    ],
+    "test_two_devices_share_one_world_without_sharing_device_identity": [
+      {
+        "file": "tests/test_aura_world_device_contracts.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 89,
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_two_devices_share_one_world_without_sharing_device_identity:d522c0b247f909f6",
         "signature_hash": "bf54c5ac496dc3d7"
+      }
+    ],
+    "test_binding_create_rejects_non_string_required_references": [
+      {
+        "file": "tests/test_aura_world_device_contracts.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 102,
+        "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_binding_create_rejects_non_string_required_references:140d470f0bc887b5",
+        "signature_hash": "d5f40e2e157d8e35"
       }
     ],
     "test_binding_scope_is_canonicalized_at_creation_and_round_trips": [
       {
         "file": "tests/test_aura_world_device_contracts.py",
         "kind": "function",
-        "line": 79,
-        "end_line": 83,
+        "line": 105,
+        "end_line": 109,
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_binding_scope_is_canonicalized_at_creation_and_round_trips:aa03d6e15114d123",
         "signature_hash": "b3f52e5fa0b679cc"
       }
@@ -156870,8 +156890,8 @@
       {
         "file": "tests/test_aura_world_device_contracts.py",
         "kind": "function",
-        "line": 86,
-        "end_line": 97,
+        "line": 112,
+        "end_line": 123,
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_untrusted_noncanonical_scope_order_and_duplicates_fail_closed:2f87d7c5fd054ca7",
         "signature_hash": "07b4b4d0582f76df"
       }
@@ -156880,8 +156900,8 @@
       {
         "file": "tests/test_aura_world_device_contracts.py",
         "kind": "function",
-        "line": 100,
-        "end_line": 106,
+        "line": 126,
+        "end_line": 132,
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_binding_digest_detects_tampering:35a0efcdbcc4ef6b",
         "signature_hash": "2e81a1a487417d87"
       }
@@ -156890,8 +156910,8 @@
       {
         "file": "tests/test_aura_world_device_contracts.py",
         "kind": "function",
-        "line": 109,
-        "end_line": 125,
+        "line": 135,
+        "end_line": 151,
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_binding_rejects_missing_extra_and_nonsequence_scope:fea72733ec0e7cbc",
         "signature_hash": "5f831497dc9c4cc6"
       }
@@ -156900,8 +156920,8 @@
       {
         "file": "tests/test_aura_world_device_contracts.py",
         "kind": "function",
-        "line": 128,
-        "end_line": 138,
+        "line": 154,
+        "end_line": 164,
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_malformed_top_level_and_nested_payloads_fail_with_value_error:b4262fced20c890f",
         "signature_hash": "cd59265dbdf17255"
       }
@@ -156910,18 +156930,28 @@
       {
         "file": "tests/test_aura_world_device_contracts.py",
         "kind": "function",
-        "line": 141,
-        "end_line": 147,
+        "line": 167,
+        "end_line": 175,
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_malformed_scope_inputs_fail_closed_without_incidental_type_error:229fdf52296b54cb",
         "signature_hash": "399ea36c80caca72"
+      }
+    ],
+    "test_scope_boundaries_reject_unapproved_iterable_shapes": [
+      {
+        "file": "tests/test_aura_world_device_contracts.py",
+        "kind": "function",
+        "line": 178,
+        "end_line": 208,
+        "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_scope_boundaries_reject_unapproved_iterable_shapes:45082c4279c3332b",
+        "signature_hash": "99487c08ce68700f"
       }
     ],
     "test_device_binding_cannot_change_world_owner_or_root": [
       {
         "file": "tests/test_aura_world_device_contracts.py",
         "kind": "function",
-        "line": 150,
-        "end_line": 157,
+        "line": 211,
+        "end_line": 218,
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_device_binding_cannot_change_world_owner_or_root:4cd860e32002b711",
         "signature_hash": "02b1d05277ecaf29"
       }
@@ -156930,8 +156960,8 @@
       {
         "file": "tests/test_aura_world_device_contracts.py",
         "kind": "function",
-        "line": 160,
-        "end_line": 185,
+        "line": 221,
+        "end_line": 246,
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_revoked_stale_unknown_and_expired_bindings_are_not_usable:c15bea56903e7830",
         "signature_hash": "b73c8117606a75b4"
       }
@@ -156940,18 +156970,38 @@
       {
         "file": "tests/test_aura_world_device_contracts.py",
         "kind": "function",
-        "line": 188,
-        "end_line": 196,
+        "line": 249,
+        "end_line": 257,
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_scope_widening_is_denied_at_use_time:34b227c47f1f7334",
         "signature_hash": "8cbc4ed60c77b2e6"
+      }
+    ],
+    "test_positive_usable_requires_bound_expected_world_context": [
+      {
+        "file": "tests/test_aura_world_device_contracts.py",
+        "kind": "function",
+        "line": 260,
+        "end_line": 269,
+        "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_positive_usable_requires_bound_expected_world_context:7d8bc3297210150d",
+        "signature_hash": "791bed0b74feb14a"
+      }
+    ],
+    "test_rehashed_cross_world_binding_cannot_be_positive_without_context": [
+      {
+        "file": "tests/test_aura_world_device_contracts.py",
+        "kind": "function",
+        "line": 272,
+        "end_line": 302,
+        "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_rehashed_cross_world_binding_cannot_be_positive_without_context:907f1e987570e6e9",
+        "signature_hash": "19dd86c30759dc46"
       }
     ],
     "test_expected_world_mismatch_is_denied_even_for_current_binding": [
       {
         "file": "tests/test_aura_world_device_contracts.py",
         "kind": "function",
-        "line": 199,
-        "end_line": 215,
+        "line": 305,
+        "end_line": 321,
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_expected_world_mismatch_is_denied_even_for_current_binding:4b507120978e97d9",
         "signature_hash": "b1e58d02ade639e5"
       }
@@ -156960,8 +157010,8 @@
       {
         "file": "tests/test_aura_world_device_contracts.py",
         "kind": "function",
-        "line": 218,
-        "end_line": 230,
+        "line": 324,
+        "end_line": 336,
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_current_scoped_binding_can_be_assessed_usable_without_authority_claim:80c9577a05634c34",
         "signature_hash": "46d43cec65946044"
       }
@@ -156970,8 +157020,8 @@
       {
         "file": "tests/test_aura_world_device_contracts.py",
         "kind": "function",
-        "line": 233,
-        "end_line": 239,
+        "line": 339,
+        "end_line": 345,
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_tampering_nested_world_identity_is_detected:a2d282246b9e5714",
         "signature_hash": "6a0dcf31450b75f3"
       }
@@ -156980,8 +157030,8 @@
       {
         "file": "tests/test_aura_world_device_contracts.py",
         "kind": "function",
-        "line": 242,
-        "end_line": 248,
+        "line": 348,
+        "end_line": 354,
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_records_expose_references_not_secret_key_fields:65156dd9c1abddbb",
         "signature_hash": "12a00664c3dfeaad"
       }
@@ -262161,47 +262211,47 @@
       "path": "tests/test_aura_world_device_contracts.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 8461,
-      "lines": 249,
-      "tokens_est": 2116,
-      "symbol_count": 18,
+      "bytes": 11773,
+      "lines": 355,
+      "tokens_est": 2944,
+      "symbol_count": 23,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "6bd09a02dbf682ef",
+      "digest8": "776655344262d268",
       "vector": [
-        0.003381,
-        -0.176913,
-        -0.190435,
-        -0.174659,
-        -0.174659,
-        -0.073244,
-        0.235509,
-        -0.282836,
-        0.163391,
-        0.086766,
-        0.206211,
-        0.203957,
-        -0.264806,
-        -0.285089,
-        0.057469,
-        0.028171,
-        0.167898,
-        -0.208465,
-        0.197196,
-        0.025917,
-        0.061976,
-        -0.246777,
-        0.246777,
-        0.070991,
-        0.095781,
-        -0.116064,
-        -0.176913,
-        0.120571,
-        -0.228748,
-        0.282836,
-        0.118318,
-        -0.007888
+        -0.163797,
+        -0.196832,
+        0.020647,
+        0.139021,
+        0.072952,
+        -0.128009,
+        0.18582,
+        -0.188573,
+        0.304194,
+        0.177561,
+        -0.152785,
+        0.128009,
+        0.130762,
+        -0.27116,
+        -0.097728,
+        -0.072952,
+        -0.161044,
+        -0.103233,
+        0.064693,
+        -0.334476,
+        0.108739,
+        0.0234,
+        0.14728,
+        -0.293183,
+        0.009635,
+        0.150032,
+        0.34824,
+        0.293183,
+        -0.067446,
+        0.133515,
+        -0.006882,
+        0.169303
       ]
     },
     {
@@ -286674,8 +286724,8 @@
   },
   "summary": {
     "file_count": 1636,
-    "total_bytes": 26344756,
-    "text_tokens_est": 6576607,
+    "total_bytes": 26348068,
+    "text_tokens_est": 6577435,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 234,
@@ -445265,7 +445315,7 @@
         "line": 29,
         "end_line": 44,
         "signature_hash": "312fbe8b97b69b7a",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:_world:4d7cb0ae9f2783ff",
@@ -445275,147 +445325,197 @@
         "line": 17,
         "end_line": 26,
         "signature_hash": "54962b7a248b8552",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_binding_create_rejects_non_string_required_references:140d470f0bc887b5",
+        "name": "test_binding_create_rejects_non_string_required_references",
+        "kind": "function",
+        "file": "tests/test_aura_world_device_contracts.py",
+        "line": 92,
+        "end_line": 102,
+        "signature_hash": "d5f40e2e157d8e35",
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_binding_digest_detects_tampering:35a0efcdbcc4ef6b",
         "name": "test_binding_digest_detects_tampering",
         "kind": "function",
         "file": "tests/test_aura_world_device_contracts.py",
-        "line": 100,
-        "end_line": 106,
+        "line": 126,
+        "end_line": 132,
         "signature_hash": "2e81a1a487417d87",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_binding_rejects_missing_extra_and_nonsequence_scope:fea72733ec0e7cbc",
         "name": "test_binding_rejects_missing_extra_and_nonsequence_scope",
         "kind": "function",
         "file": "tests/test_aura_world_device_contracts.py",
-        "line": 109,
-        "end_line": 125,
+        "line": 135,
+        "end_line": 151,
         "signature_hash": "5f831497dc9c4cc6",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_binding_scope_is_canonicalized_at_creation_and_round_trips:aa03d6e15114d123",
         "name": "test_binding_scope_is_canonicalized_at_creation_and_round_trips",
         "kind": "function",
         "file": "tests/test_aura_world_device_contracts.py",
-        "line": 79,
-        "end_line": 83,
+        "line": 105,
+        "end_line": 109,
         "signature_hash": "b3f52e5fa0b679cc",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_current_scoped_binding_can_be_assessed_usable_without_authority_claim:80c9577a05634c34",
         "name": "test_current_scoped_binding_can_be_assessed_usable_without_authority_claim",
         "kind": "function",
         "file": "tests/test_aura_world_device_contracts.py",
-        "line": 218,
-        "end_line": 230,
+        "line": 324,
+        "end_line": 336,
         "signature_hash": "46d43cec65946044",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_device_binding_cannot_change_world_owner_or_root:4cd860e32002b711",
         "name": "test_device_binding_cannot_change_world_owner_or_root",
         "kind": "function",
         "file": "tests/test_aura_world_device_contracts.py",
-        "line": 150,
-        "end_line": 157,
+        "line": 211,
+        "end_line": 218,
         "signature_hash": "02b1d05277ecaf29",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_expected_world_mismatch_is_denied_even_for_current_binding:4b507120978e97d9",
         "name": "test_expected_world_mismatch_is_denied_even_for_current_binding",
         "kind": "function",
         "file": "tests/test_aura_world_device_contracts.py",
-        "line": 199,
-        "end_line": 215,
+        "line": 305,
+        "end_line": 321,
         "signature_hash": "b1e58d02ade639e5",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_malformed_scope_inputs_fail_closed_without_incidental_type_error:229fdf52296b54cb",
         "name": "test_malformed_scope_inputs_fail_closed_without_incidental_type_error",
         "kind": "function",
         "file": "tests/test_aura_world_device_contracts.py",
-        "line": 141,
-        "end_line": 147,
+        "line": 167,
+        "end_line": 175,
         "signature_hash": "399ea36c80caca72",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_malformed_top_level_and_nested_payloads_fail_with_value_error:b4262fced20c890f",
         "name": "test_malformed_top_level_and_nested_payloads_fail_with_value_error",
         "kind": "function",
         "file": "tests/test_aura_world_device_contracts.py",
-        "line": 128,
-        "end_line": 138,
+        "line": 154,
+        "end_line": 164,
         "signature_hash": "cd59265dbdf17255",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_positive_usable_requires_bound_expected_world_context:7d8bc3297210150d",
+        "name": "test_positive_usable_requires_bound_expected_world_context",
+        "kind": "function",
+        "file": "tests/test_aura_world_device_contracts.py",
+        "line": 260,
+        "end_line": 269,
+        "signature_hash": "791bed0b74feb14a",
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_records_expose_references_not_secret_key_fields:65156dd9c1abddbb",
         "name": "test_records_expose_references_not_secret_key_fields",
         "kind": "function",
         "file": "tests/test_aura_world_device_contracts.py",
-        "line": 242,
-        "end_line": 248,
+        "line": 348,
+        "end_line": 354,
         "signature_hash": "12a00664c3dfeaad",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_rehashed_cross_world_binding_cannot_be_positive_without_context:907f1e987570e6e9",
+        "name": "test_rehashed_cross_world_binding_cannot_be_positive_without_context",
+        "kind": "function",
+        "file": "tests/test_aura_world_device_contracts.py",
+        "line": 272,
+        "end_line": 302,
+        "signature_hash": "19dd86c30759dc46",
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_revoked_stale_unknown_and_expired_bindings_are_not_usable:c15bea56903e7830",
         "name": "test_revoked_stale_unknown_and_expired_bindings_are_not_usable",
         "kind": "function",
         "file": "tests/test_aura_world_device_contracts.py",
-        "line": 160,
-        "end_line": 185,
+        "line": 221,
+        "end_line": 246,
         "signature_hash": "b73c8117606a75b4",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_scope_boundaries_reject_unapproved_iterable_shapes:45082c4279c3332b",
+        "name": "test_scope_boundaries_reject_unapproved_iterable_shapes",
+        "kind": "function",
+        "file": "tests/test_aura_world_device_contracts.py",
+        "line": 178,
+        "end_line": 208,
+        "signature_hash": "99487c08ce68700f",
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_scope_widening_is_denied_at_use_time:34b227c47f1f7334",
         "name": "test_scope_widening_is_denied_at_use_time",
         "kind": "function",
         "file": "tests/test_aura_world_device_contracts.py",
-        "line": 188,
-        "end_line": 196,
+        "line": 249,
+        "end_line": 257,
         "signature_hash": "8cbc4ed60c77b2e6",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_tampering_nested_world_identity_is_detected:a2d282246b9e5714",
         "name": "test_tampering_nested_world_identity_is_detected",
         "kind": "function",
         "file": "tests/test_aura_world_device_contracts.py",
-        "line": 233,
-        "end_line": 239,
+        "line": 339,
+        "end_line": 345,
         "signature_hash": "6a0dcf31450b75f3",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_two_devices_share_one_world_without_sharing_device_identity:d522c0b247f909f6",
         "name": "test_two_devices_share_one_world_without_sharing_device_identity",
         "kind": "function",
         "file": "tests/test_aura_world_device_contracts.py",
-        "line": 64,
-        "end_line": 76,
+        "line": 77,
+        "end_line": 89,
         "signature_hash": "bf54c5ac496dc3d7",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_untrusted_noncanonical_scope_order_and_duplicates_fail_closed:2f87d7c5fd054ca7",
         "name": "test_untrusted_noncanonical_scope_order_and_duplicates_fail_closed",
         "kind": "function",
         "file": "tests/test_aura_world_device_contracts.py",
-        "line": 86,
-        "end_line": 97,
+        "line": 112,
+        "end_line": 123,
         "signature_hash": "07b4b4d0582f76df",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_world_identity_create_rejects_non_string_required_references:68b8a25bc5ecc9cf",
+        "name": "test_world_identity_create_rejects_non_string_required_references",
+        "kind": "function",
+        "file": "tests/test_aura_world_device_contracts.py",
+        "line": 64,
+        "end_line": 74,
+        "signature_hash": "e9ea0683be029d60",
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_world_identity_is_deterministic_and_round_trips_exactly:85a0c8aea16f0c86",
@@ -445425,7 +445525,7 @@
         "line": 47,
         "end_line": 53,
         "signature_hash": "0a979571f13ecad9",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_aura_world_device_contracts.py#function:test_world_identity_schema_rejects_device_or_unknown_fields:9d2198f1f6ca1199",
@@ -445435,7 +445535,7 @@
         "line": 56,
         "end_line": 61,
         "signature_hash": "a38c062fe62f919b",
-        "file_digest8": "6bd09a02dbf682ef"
+        "file_digest8": "776655344262d268"
       },
       {
         "semantic_id": "tests/test_bilateral_intent_pr1_evidence.py#function:_git_blob_sha:9438dd2bd66edc61",
@@ -447088,7 +447188,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "eececb8f1fe07753bc31ce12e793f8f2",
-    "payload_hash": "a971bb6ec540e041071c50fd1f2325b6"
+    "record_fingerprint": "92f5cebf61832ebc641da24ba8104c3f",
+    "payload_hash": "ed8c81a983f4b06717a8e0ed6a6567ba"
   }
 }
