@@ -125,6 +125,28 @@ def test_binding_rejects_missing_extra_and_nonsequence_scope() -> None:
         DeviceBindingV1.from_dict(bad_scope)
 
 
+def test_malformed_top_level_and_nested_payloads_fail_with_value_error() -> None:
+    with pytest.raises(ValueError, match="WorldIdentityRefV1 must be a mapping"):
+        WorldIdentityRefV1.from_dict([])  # type: ignore[arg-type]
+
+    with pytest.raises(ValueError, match="DeviceBindingV1 must be a mapping"):
+        DeviceBindingV1.from_dict([])  # type: ignore[arg-type]
+
+    payload = _binding().to_dict()
+    payload["world_identity"] = []
+    with pytest.raises(ValueError, match="world_identity must be a mapping"):
+        DeviceBindingV1.from_dict(payload)
+
+
+def test_malformed_scope_inputs_fail_closed_without_incidental_type_error() -> None:
+    world = _world()
+    with pytest.raises(ValueError, match="granted_scope must be a sequence"):
+        _binding(world, granted_scope=7)
+
+    with pytest.raises(ValueError, match="required_scope must be a sequence"):
+        assess_device_binding(_binding(world), now=1_900_000_000.0, required_scope=7)  # type: ignore[arg-type]
+
+
 def test_device_binding_cannot_change_world_owner_or_root() -> None:
     world = _world()
 
