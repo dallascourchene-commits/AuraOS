@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1787349594,
+  "generated_at_unix": 1787349640,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1755,8 +1755,8 @@
     {
       "ring": "repo",
       "files": 1638,
-      "bytes": 26395419,
-      "tokens_est": 6589273,
+      "bytes": 26396723,
+      "tokens_est": 6589599,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 234,
@@ -150321,7 +150321,7 @@
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "class",
         "line": 60,
-        "end_line": 102,
+        "end_line": 109,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#class:FakePlatformBackend:78ace6298d90912b",
         "signature_hash": "199daf58a818729e"
       }
@@ -150331,27 +150331,27 @@
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "method",
         "line": 63,
-        "end_line": 82,
-        "semantic_id": "tests/test_aura_secure_store_adapter.py#method:FakePlatformBackend.__init__:ebfea3d308849ce6",
-        "signature_hash": "a307d9b14542597d"
+        "end_line": 84,
+        "semantic_id": "tests/test_aura_secure_store_adapter.py#method:FakePlatformBackend.__init__:1e87ef4768a331d6",
+        "signature_hash": "093948650d1d6cf8"
       }
     ],
-    "FakePlatformBackend.store": [
+    "FakePlatformBackend.store_new": [
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "method",
-        "line": 84,
-        "end_line": 88,
-        "semantic_id": "tests/test_aura_secure_store_adapter.py#method:FakePlatformBackend.store:a001ed9b18730d1a",
-        "signature_hash": "9e95ebe30a427b5b"
+        "line": 86,
+        "end_line": 95,
+        "semantic_id": "tests/test_aura_secure_store_adapter.py#method:FakePlatformBackend.store_new:abcd25785f0a91c0",
+        "signature_hash": "c0ad0ae7e1f72120"
       }
     ],
     "FakePlatformBackend.load": [
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "method",
-        "line": 90,
-        "end_line": 96,
+        "line": 97,
+        "end_line": 103,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#method:FakePlatformBackend.load:2e78bd174f8a8b01",
         "signature_hash": "08158f23b50af04b"
       }
@@ -150360,8 +150360,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "method",
-        "line": 98,
-        "end_line": 102,
+        "line": 105,
+        "end_line": 109,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#method:FakePlatformBackend.delete:2f0763832020c941",
         "signature_hash": "d784184935f4e0db"
       }
@@ -150370,8 +150370,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 105,
-        "end_line": 126,
+        "line": 112,
+        "end_line": 133,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:_adapter:dd4ddecc20f070f0",
         "signature_hash": "3888897ac3b74672"
       }
@@ -150380,8 +150380,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 129,
-        "end_line": 139,
+        "line": 136,
+        "end_line": 146,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:_stored_ref:7e6d8be9aeb6f4da",
         "signature_hash": "e6acf414e1cd0825"
       }
@@ -150390,38 +150390,48 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 142,
-        "end_line": 174,
+        "line": 149,
+        "end_line": 181,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_success_path_keeps_secret_out_of_refs_and_receipts:9cf5995847fe09ef",
         "signature_hash": "37d93507de3f85fc"
       }
     ],
-    "test_reference_identity_is_not_derived_from_secret_bytes": [
+    "test_second_store_cannot_overwrite_without_rotation_lifecycle": [
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 177,
-        "end_line": 196,
-        "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_reference_identity_is_not_derived_from_secret_bytes:28a1760acc14bad2",
-        "signature_hash": "2270b283c8d7d7a9"
+        "line": 184,
+        "end_line": 210,
+        "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_second_store_cannot_overwrite_without_rotation_lifecycle:ddc129f404ec2899",
+        "signature_hash": "103d53d24197fc68"
       }
     ],
     "test_failed_store_does_not_return_a_usable_looking_reference": [
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 199,
-        "end_line": 213,
+        "line": 213,
+        "end_line": 227,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_failed_store_does_not_return_a_usable_looking_reference:b985dd438076581c",
         "signature_hash": "deec35c0f69c5e99"
+      }
+    ],
+    "test_invalid_backend_store_result_fails_closed_without_reference": [
+      {
+        "file": "tests/test_aura_secure_store_adapter.py",
+        "kind": "function",
+        "line": 230,
+        "end_line": 245,
+        "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_invalid_backend_store_result_fails_closed_without_reference:fad1786e9715116b",
+        "signature_hash": "e9d27910df9bb5ea"
       }
     ],
     "test_backend_exception_text_and_secret_are_not_copied_into_receipt": [
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 216,
-        "end_line": 233,
+        "line": 248,
+        "end_line": 265,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_backend_exception_text_and_secret_are_not_copied_into_receipt:deadf65b79005ff8",
         "signature_hash": "228db05f4da3ffe2"
       }
@@ -150430,8 +150440,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 236,
-        "end_line": 251,
+        "line": 268,
+        "end_line": 283,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_untrusted_backend_descriptor_fails_before_backend_is_called:d39f75e0ca830955",
         "signature_hash": "ce2f872bbd109994"
       }
@@ -150440,8 +150450,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 254,
-        "end_line": 275,
+        "line": 286,
+        "end_line": 307,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_unsupported_backend_has_no_plaintext_or_memory_fallback:514026a8acf7e6b0",
         "signature_hash": "92734fb95bfc58b1"
       }
@@ -150450,8 +150460,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 278,
-        "end_line": 292,
+        "line": 310,
+        "end_line": 324,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_degraded_backend_fails_closed_without_invocation:b29a1e0fd407037c",
         "signature_hash": "e9b85b0dcaf32895"
       }
@@ -150460,8 +150470,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 295,
-        "end_line": 312,
+        "line": 327,
+        "end_line": 344,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_non_platform_security_profile_is_not_silently_treated_as_secure_store:4ea16192325f6bb9",
         "signature_hash": "4e4a621a8b4ce1f5"
       }
@@ -150470,8 +150480,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 325,
-        "end_line": 343,
+        "line": 357,
+        "end_line": 375,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_unusable_device_binding_blocks_secure_store_before_backend:d0d2937c3ae4a989",
         "signature_hash": "2b611327eb7d5b9b"
       }
@@ -150480,8 +150490,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 346,
-        "end_line": 366,
+        "line": 378,
+        "end_line": 398,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_secret_reference_cannot_be_transplanted_across_world_or_device_context:342cef0e63e8721d",
         "signature_hash": "ad6b11d1ed333997"
       }
@@ -150490,8 +150500,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 369,
-        "end_line": 386,
+        "line": 401,
+        "end_line": 418,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_backend_generation_change_invalidates_old_reference_and_requires_new_trust:ee1d034435145282",
         "signature_hash": "b8f0211fc8f42460"
       }
@@ -150500,8 +150510,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 389,
-        "end_line": 402,
+        "line": 421,
+        "end_line": 434,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_load_rejects_backend_non_byte_secret_without_exposing_value:b33c21855740c4a1",
         "signature_hash": "e47e398dde7b62d7"
       }
@@ -150510,8 +150520,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 405,
-        "end_line": 416,
+        "line": 437,
+        "end_line": 448,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_store_requires_explicit_bytes_and_never_coerces_text_secret:97fe5e8e03bb10c8",
         "signature_hash": "4cf0591f7edcbab1"
       }
@@ -150520,8 +150530,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 419,
-        "end_line": 432,
+        "line": 451,
+        "end_line": 464,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_delete_reports_not_found_after_prior_delete_without_secret_material:e67b9fc51be54f77",
         "signature_hash": "f61fae984977f4d6"
       }
@@ -150530,8 +150540,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 435,
-        "end_line": 458,
+        "line": 467,
+        "end_line": 490,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_descriptor_reference_and_receipt_round_trip_exactly_and_reject_schema_tamper:ce2bc371e481e3e5",
         "signature_hash": "435b515873d49661"
       }
@@ -150540,8 +150550,8 @@
       {
         "file": "tests/test_aura_secure_store_adapter.py",
         "kind": "function",
-        "line": 461,
-        "end_line": 475,
+        "line": 493,
+        "end_line": 507,
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_receipt_detail_code_is_closed_and_cannot_carry_secret_or_exception_text:96dd8ef22ba85ba4",
         "signature_hash": "2481d59cecd70db5"
       }
@@ -259646,47 +259656,47 @@
       "path": "tests/test_aura_secure_store_adapter.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 16147,
-      "lines": 476,
-      "tokens_est": 4037,
-      "symbol_count": 25,
+      "bytes": 17451,
+      "lines": 508,
+      "tokens_est": 4363,
+      "symbol_count": 26,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "f7190daa64fcf1bc",
+      "digest8": "e2eb42fa2edb6302",
       "vector": [
-        0.04854,
-        0.192488,
-        -0.138926,
-        0.145621,
-        -0.03515,
-        0.162359,
-        -0.108797,
-        0.249397,
-        -0.051888,
-        -0.082016,
-        -0.276178,
-        -0.326392,
-        -0.209226,
-        0.306306,
-        -0.078669,
-        0.085364,
-        -0.249397,
-        0.078669,
-        -0.339782,
-        0.015064,
-        -0.10545,
-        0.031802,
-        0.102102,
-        -0.159011,
-        0.068626,
-        -0.162359,
-        0.369911,
-        0.038498,
-        -0.011717,
-        0.242702,
-        0.038498,
-        -0.115493
+        0.016428,
+        -0.157963,
+        0.04423,
+        -0.163018,
+        0.001264,
+        0.228731,
+        -0.036647,
+        0.072031,
+        0.223676,
+        0.203457,
+        -0.079614,
+        0.266642,
+        0.145326,
+        0.279279,
+        -0.046757,
+        0.269169,
+        0.089723,
+        0.221149,
+        -0.274224,
+        -0.243895,
+        0.157963,
+        -0.114997,
+        -0.254005,
+        0.087196,
+        0.041702,
+        0.31719,
+        -0.077086,
+        -0.125107,
+        0.254005,
+        -0.140271,
+        -0.140271,
+        0.12258
       ]
     },
     {
@@ -287590,8 +287600,8 @@
   },
   "summary": {
     "file_count": 1638,
-    "total_bytes": 26395419,
-    "text_tokens_est": 6589273,
+    "total_bytes": 26396723,
+    "text_tokens_est": 6589599,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 234,
@@ -439061,19 +439071,19 @@
         "kind": "class",
         "file": "tests/test_aura_secure_store_adapter.py",
         "line": 60,
-        "end_line": 102,
+        "end_line": 109,
         "signature_hash": "199daf58a818729e",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:_adapter:dd4ddecc20f070f0",
         "name": "_adapter",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 105,
-        "end_line": 126,
+        "line": 112,
+        "end_line": 133,
         "signature_hash": "3888897ac3b74672",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:_binding:7f248914a8d8715a",
@@ -439083,17 +439093,17 @@
         "line": 42,
         "end_line": 57,
         "signature_hash": "312fbe8b97b69b7a",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:_stored_ref:7e6d8be9aeb6f4da",
         "name": "_stored_ref",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 129,
-        "end_line": 139,
+        "line": 136,
+        "end_line": 146,
         "signature_hash": "e6acf414e1cd0825",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:_world:0631cccc3608101a",
@@ -439103,207 +439113,217 @@
         "line": 30,
         "end_line": 39,
         "signature_hash": "54962b7a248b8552",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_backend_exception_text_and_secret_are_not_copied_into_receipt:deadf65b79005ff8",
         "name": "test_backend_exception_text_and_secret_are_not_copied_into_receipt",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 216,
-        "end_line": 233,
+        "line": 248,
+        "end_line": 265,
         "signature_hash": "228db05f4da3ffe2",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_backend_generation_change_invalidates_old_reference_and_requires_new_trust:ee1d034435145282",
         "name": "test_backend_generation_change_invalidates_old_reference_and_requires_new_trust",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 369,
-        "end_line": 386,
+        "line": 401,
+        "end_line": 418,
         "signature_hash": "b8f0211fc8f42460",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_degraded_backend_fails_closed_without_invocation:b29a1e0fd407037c",
         "name": "test_degraded_backend_fails_closed_without_invocation",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 278,
-        "end_line": 292,
+        "line": 310,
+        "end_line": 324,
         "signature_hash": "e9b85b0dcaf32895",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_delete_reports_not_found_after_prior_delete_without_secret_material:e67b9fc51be54f77",
         "name": "test_delete_reports_not_found_after_prior_delete_without_secret_material",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 419,
-        "end_line": 432,
+        "line": 451,
+        "end_line": 464,
         "signature_hash": "f61fae984977f4d6",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_descriptor_reference_and_receipt_round_trip_exactly_and_reject_schema_tamper:ce2bc371e481e3e5",
         "name": "test_descriptor_reference_and_receipt_round_trip_exactly_and_reject_schema_tamper",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 435,
-        "end_line": 458,
+        "line": 467,
+        "end_line": 490,
         "signature_hash": "435b515873d49661",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_failed_store_does_not_return_a_usable_looking_reference:b985dd438076581c",
         "name": "test_failed_store_does_not_return_a_usable_looking_reference",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 199,
-        "end_line": 213,
+        "line": 213,
+        "end_line": 227,
         "signature_hash": "deec35c0f69c5e99",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
+      },
+      {
+        "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_invalid_backend_store_result_fails_closed_without_reference:fad1786e9715116b",
+        "name": "test_invalid_backend_store_result_fails_closed_without_reference",
+        "kind": "function",
+        "file": "tests/test_aura_secure_store_adapter.py",
+        "line": 230,
+        "end_line": 245,
+        "signature_hash": "e9d27910df9bb5ea",
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_load_rejects_backend_non_byte_secret_without_exposing_value:b33c21855740c4a1",
         "name": "test_load_rejects_backend_non_byte_secret_without_exposing_value",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 389,
-        "end_line": 402,
+        "line": 421,
+        "end_line": 434,
         "signature_hash": "e47e398dde7b62d7",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_non_platform_security_profile_is_not_silently_treated_as_secure_store:4ea16192325f6bb9",
         "name": "test_non_platform_security_profile_is_not_silently_treated_as_secure_store",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 295,
-        "end_line": 312,
+        "line": 327,
+        "end_line": 344,
         "signature_hash": "4e4a621a8b4ce1f5",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_receipt_detail_code_is_closed_and_cannot_carry_secret_or_exception_text:96dd8ef22ba85ba4",
         "name": "test_receipt_detail_code_is_closed_and_cannot_carry_secret_or_exception_text",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 461,
-        "end_line": 475,
+        "line": 493,
+        "end_line": 507,
         "signature_hash": "2481d59cecd70db5",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
-        "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_reference_identity_is_not_derived_from_secret_bytes:28a1760acc14bad2",
-        "name": "test_reference_identity_is_not_derived_from_secret_bytes",
+        "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_second_store_cannot_overwrite_without_rotation_lifecycle:ddc129f404ec2899",
+        "name": "test_second_store_cannot_overwrite_without_rotation_lifecycle",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 177,
-        "end_line": 196,
-        "signature_hash": "2270b283c8d7d7a9",
-        "file_digest8": "f7190daa64fcf1bc"
+        "line": 184,
+        "end_line": 210,
+        "signature_hash": "103d53d24197fc68",
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_secret_reference_cannot_be_transplanted_across_world_or_device_context:342cef0e63e8721d",
         "name": "test_secret_reference_cannot_be_transplanted_across_world_or_device_context",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 346,
-        "end_line": 366,
+        "line": 378,
+        "end_line": 398,
         "signature_hash": "ad6b11d1ed333997",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_store_requires_explicit_bytes_and_never_coerces_text_secret:97fe5e8e03bb10c8",
         "name": "test_store_requires_explicit_bytes_and_never_coerces_text_secret",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 405,
-        "end_line": 416,
+        "line": 437,
+        "end_line": 448,
         "signature_hash": "4cf0591f7edcbab1",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_success_path_keeps_secret_out_of_refs_and_receipts:9cf5995847fe09ef",
         "name": "test_success_path_keeps_secret_out_of_refs_and_receipts",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 142,
-        "end_line": 174,
+        "line": 149,
+        "end_line": 181,
         "signature_hash": "37d93507de3f85fc",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_unsupported_backend_has_no_plaintext_or_memory_fallback:514026a8acf7e6b0",
         "name": "test_unsupported_backend_has_no_plaintext_or_memory_fallback",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 254,
-        "end_line": 275,
+        "line": 286,
+        "end_line": 307,
         "signature_hash": "92734fb95bfc58b1",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_untrusted_backend_descriptor_fails_before_backend_is_called:d39f75e0ca830955",
         "name": "test_untrusted_backend_descriptor_fails_before_backend_is_called",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 236,
-        "end_line": 251,
+        "line": 268,
+        "end_line": 283,
         "signature_hash": "ce2f872bbd109994",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#function:test_unusable_device_binding_blocks_secure_store_before_backend:d0d2937c3ae4a989",
         "name": "test_unusable_device_binding_blocks_secure_store_before_backend",
         "kind": "function",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 325,
-        "end_line": 343,
+        "line": 357,
+        "end_line": 375,
         "signature_hash": "2b611327eb7d5b9b",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
-        "semantic_id": "tests/test_aura_secure_store_adapter.py#method:FakePlatformBackend.__init__:ebfea3d308849ce6",
+        "semantic_id": "tests/test_aura_secure_store_adapter.py#method:FakePlatformBackend.__init__:1e87ef4768a331d6",
         "name": "FakePlatformBackend.__init__",
         "kind": "method",
         "file": "tests/test_aura_secure_store_adapter.py",
         "line": 63,
-        "end_line": 82,
-        "signature_hash": "a307d9b14542597d",
-        "file_digest8": "f7190daa64fcf1bc"
+        "end_line": 84,
+        "signature_hash": "093948650d1d6cf8",
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#method:FakePlatformBackend.delete:2f0763832020c941",
         "name": "FakePlatformBackend.delete",
         "kind": "method",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 98,
-        "end_line": 102,
+        "line": 105,
+        "end_line": 109,
         "signature_hash": "d784184935f4e0db",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_secure_store_adapter.py#method:FakePlatformBackend.load:2e78bd174f8a8b01",
         "name": "FakePlatformBackend.load",
         "kind": "method",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 90,
-        "end_line": 96,
+        "line": 97,
+        "end_line": 103,
         "signature_hash": "08158f23b50af04b",
-        "file_digest8": "f7190daa64fcf1bc"
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
-        "semantic_id": "tests/test_aura_secure_store_adapter.py#method:FakePlatformBackend.store:a001ed9b18730d1a",
-        "name": "FakePlatformBackend.store",
+        "semantic_id": "tests/test_aura_secure_store_adapter.py#method:FakePlatformBackend.store_new:abcd25785f0a91c0",
+        "name": "FakePlatformBackend.store_new",
         "kind": "method",
         "file": "tests/test_aura_secure_store_adapter.py",
-        "line": 84,
-        "end_line": 88,
-        "signature_hash": "9e95ebe30a427b5b",
-        "file_digest8": "f7190daa64fcf1bc"
+        "line": 86,
+        "end_line": 95,
+        "signature_hash": "c0ad0ae7e1f72120",
+        "file_digest8": "e2eb42fa2edb6302"
       },
       {
         "semantic_id": "tests/test_aura_shadow_model_router.py#function:candidate:2c8026203668f9f4",
@@ -448836,7 +448856,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "85692bc6fd08fc35c6262afa14953344",
-    "payload_hash": "e4ff793d9b3c40297cc2caae14979430"
+    "record_fingerprint": "1cb53ad0c2cab6df9494796f63ef738c",
+    "payload_hash": "0e40ca4ad012d23549933e401d8f2296"
   }
 }
