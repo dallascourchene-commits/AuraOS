@@ -69,6 +69,7 @@ class FakePlatformBackend:
         profile: SecureStoreSecurityProfile = SecureStoreSecurityProfile.PLATFORM_SECURE_STORE,
         fail: bool = False,
         invalid_load: bool = False,
+        invalid_store_result: bool = False,
     ) -> None:
         self.descriptor = SecureStoreBackendDescriptorV1.create(
             backend_ref=backend_ref,
@@ -80,12 +81,18 @@ class FakePlatformBackend:
         self.calls: list[tuple[str, str]] = []
         self.fail = fail
         self.invalid_load = invalid_load
+        self.invalid_store_result = invalid_store_result
 
-    def store(self, key: str, secret: bytes) -> None:
-        self.calls.append(("store", key))
+    def store_new(self, key: str, secret: bytes) -> bool:
+        self.calls.append(("store_new", key))
         if self.fail:
             raise RuntimeError(f"backend failure containing secret={secret!r}")
+        if self.invalid_store_result:
+            return "created"  # type: ignore[return-value]
+        if key in self.values:
+            return False
         self.values[key] = bytes(secret)
+        return True
 
     def load(self, key: str) -> bytes | None:
         self.calls.append(("load", key))
@@ -174,26 +181,33 @@ def test_success_path_keeps_secret_out_of_refs_and_receipts() -> None:
         loaded.reveal_bytes()
 
 
-def test_reference_identity_is_not_derived_from_secret_bytes() -> None:
-    adapter, _, _, _ = _adapter()
+def test_second_store_cannot_overwrite_without_rotation_lifecycle() -> None:
+    adapter, backend, _, _ = _adapter()
+    first_secret = b"first-secret-value"
+    replacement = b"different-secret-value"
 
-    first_ref, _ = adapter.store_secret(
+    first_ref, first_receipt = adapter.store_secret(
         operation_id="op-store-a",
         secret_id="same-slot",
         purpose="same-purpose",
-        secret=b"first-secret-value",
+        secret=first_secret,
         now=NOW,
     )
-    second_ref, _ = adapter.store_secret(
+    second_ref, second_receipt = adapter.store_secret(
         operation_id="op-store-b",
         secret_id="same-slot",
         purpose="same-purpose",
-        secret=b"different-secret-value",
+        secret=replacement,
         now=NOW,
     )
 
-    assert first_ref is not None and second_ref is not None
-    assert first_ref == second_ref
+    assert first_ref is not None
+    assert first_receipt.status == SecureStoreOperationStatus.STORED.value
+    assert second_ref is None
+    assert second_receipt.status == SecureStoreOperationStatus.ALREADY_EXISTS.value
+    assert second_receipt.detail_code == "SECRET_ALREADY_EXISTS"
+    assert backend.values[first_ref.digest] == first_secret
+    assert replacement not in backend.values.values()
 
 
 def test_failed_store_does_not_return_a_usable_looking_reference() -> None:
@@ -211,6 +225,24 @@ def test_failed_store_does_not_return_a_usable_looking_reference() -> None:
     assert secret_ref is None
     assert receipt.status == SecureStoreOperationStatus.BACKEND_ERROR.value
     assert receipt.secret_ref_digest
+
+
+def test_invalid_backend_store_result_fails_closed_without_reference() -> None:
+    backend = FakePlatformBackend(invalid_store_result=True)
+    adapter, _, _, _ = _adapter(backend=backend)
+
+    secret_ref, receipt = adapter.store_secret(
+        operation_id="op-invalid-store-result",
+        secret_id="slot-a",
+        purpose="device-key-material",
+        secret=b"secret",
+        now=NOW,
+    )
+
+    assert secret_ref is None
+    assert receipt.status == SecureStoreOperationStatus.BACKEND_ERROR.value
+    assert receipt.detail_code == "BACKEND_RETURNED_INVALID_STORE_RESULT"
+    assert backend.values == {}
 
 
 def test_backend_exception_text_and_secret_are_not_copied_into_receipt() -> None:
