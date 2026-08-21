@@ -13,6 +13,9 @@ Hard boundaries:
 - No plaintext secret, secret hash, secret-derived identifier, exception text,
   or backend-returned secret is included in receipts or canonical references.
 - No file/in-memory/plaintext fallback is treated as a secure store.
+- D-02 may create a new secret slot only through an atomic create-if-absent
+  backend primitive. It cannot overwrite or rotate an existing secret; rotation
+  and replacement semantics belong to D-03.
 - Secret zeroization in Python is best-effort only and is not a memory-security
   guarantee.
 
@@ -66,6 +69,7 @@ class SecureStoreOperationStatus(str, Enum):
     LOADED = "LOADED"
     DELETED = "DELETED"
     NOT_FOUND = "NOT_FOUND"
+    ALREADY_EXISTS = "ALREADY_EXISTS"
     BINDING_BLOCKED = "BINDING_BLOCKED"
     BACKEND_UNTRUSTED = "BACKEND_UNTRUSTED"
     BACKEND_UNSUPPORTED = "BACKEND_UNSUPPORTED"
@@ -81,7 +85,9 @@ _STATIC_DETAIL_CODES = frozenset(
         "DEGRADED_FAIL_CLOSED",
         "SECURITY_PROFILE_NOT_ADMITTED",
         "BACKEND_EXCEPTION_REDACTED",
+        "BACKEND_RETURNED_INVALID_STORE_RESULT",
         "BACKEND_RETURNED_INVALID_SECRET",
+        "SECRET_ALREADY_EXISTS",
         "SECRET_NOT_FOUND",
         "STORED_BY_ADMITTED_BACKEND",
         "LOADED_FROM_ADMITTED_BACKEND",
@@ -531,7 +537,14 @@ class OpaqueSecretV1:
 class SecureStoreBackend(Protocol):
     descriptor: SecureStoreBackendDescriptorV1
 
-    def store(self, key: str, secret: bytes) -> None: ...
+    def store_new(self, key: str, secret: bytes) -> bool:
+        """Atomically create ``key`` only if absent; never overwrite.
+
+        Return True only if a new value was committed, False if the key already
+        existed. Any backend unable to provide this atomic contract is not an
+        admitted D-02 backend.
+        """
+        ...
 
     def load(self, key: str) -> bytes | None: ...
 
@@ -548,7 +561,7 @@ class UnsupportedSecureStoreBackend:
         capability_state=SecureStoreCapabilityState.UNSUPPORTED,
     )
 
-    def store(self, key: str, secret: bytes) -> None:
+    def store_new(self, key: str, secret: bytes) -> bool:
         raise RuntimeError("secure store unsupported")
 
     def load(self, key: str) -> bytes | None:
@@ -677,7 +690,7 @@ class SecureStoreAdapterV1:
                 detail_code=detail,
             )
         try:
-            self._backend.store(candidate_ref.digest, value)
+            created = self._backend.store_new(candidate_ref.digest, value)
         except Exception:
             return None, self._receipt(
                 operation_id=operation_id,
@@ -685,6 +698,22 @@ class SecureStoreAdapterV1:
                 status=SecureStoreOperationStatus.BACKEND_ERROR,
                 secret_ref=candidate_ref,
                 detail_code="BACKEND_EXCEPTION_REDACTED",
+            )
+        if type(created) is not bool:
+            return None, self._receipt(
+                operation_id=operation_id,
+                operation=SecureStoreOperation.STORE,
+                status=SecureStoreOperationStatus.BACKEND_ERROR,
+                secret_ref=candidate_ref,
+                detail_code="BACKEND_RETURNED_INVALID_STORE_RESULT",
+            )
+        if not created:
+            return None, self._receipt(
+                operation_id=operation_id,
+                operation=SecureStoreOperation.STORE,
+                status=SecureStoreOperationStatus.ALREADY_EXISTS,
+                secret_ref=candidate_ref,
+                detail_code="SECRET_ALREADY_EXISTS",
             )
         return candidate_ref, self._receipt(
             operation_id=operation_id,
