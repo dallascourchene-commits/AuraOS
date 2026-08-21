@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786938896,
+  "generated_at_unix": 1787350771,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1634,
+    "repo_file_count": 1636,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -563,6 +563,7 @@
       "aura_hermes_arena_mode.py",
       "aura_hivp.py",
       "aura_holographic_manifest.py",
+      "aura_host_discovery.py",
       "aura_hotswap_refactor.py",
       "aura_human_agent_arena.py",
       "aura_human_agent_arena/arena.css",
@@ -1477,6 +1478,7 @@
       "tests/test_aura_gate_server.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
+      "tests/test_aura_host_discovery.py",
       "tests/test_aura_human_agent_arena.py",
       "tests/test_aura_human_agent_concepts.py",
       "tests/test_aura_human_agent_tensor_integration.py",
@@ -1654,6 +1656,7 @@
       "aura_blockchain/memory_staking.py",
       "aura_blockchain/node.py",
       "aura_blockchain/phasor_ledger.py",
+      "aura_host_discovery.py",
       "aura_spatial_importers/__init__.py",
       "aura_spatial_importers/contracts.py",
       "aura_spatial_importers/gaussian_gltf.py",
@@ -1741,8 +1744,7 @@
       "tests/test_aura_capability_connectome_v2.py",
       "tests/test_aura_capability_lane_registry.py",
       "tests/test_aura_capability_resolver.py",
-      "tests/test_aura_capability_resolver_connectome.py",
-      "tests/test_aura_change_graph.py"
+      "tests/test_aura_capability_resolver_connectome.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1750,15 +1752,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1634,
-      "bytes": 26316194,
-      "tokens_est": 6569465,
+      "files": 1636,
+      "bytes": 26347947,
+      "tokens_est": 6577404,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 234,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 995,
+        "python_module": 997,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -2336,6 +2338,7 @@
         "aura_hermes_arena_mode.py",
         "aura_hivp.py",
         "aura_holographic_manifest.py",
+        "aura_host_discovery.py",
         "aura_hotswap_refactor.py",
         "aura_human_agent_arena.py",
         "aura_human_agent_arena_architect.py",
@@ -2438,8 +2441,7 @@
         "aura_planning_events.py",
         "aura_planning_frontier.py",
         "aura_planning_projector.py",
-        "aura_planning_regression.py",
-        "aura_plugin_registry.py"
+        "aura_planning_regression.py"
       ]
     }
   ],
@@ -4100,6 +4102,14 @@
         "end_line": 111,
         "semantic_id": "aura_gate_oidc.py#function:_digest:809c79a216a8ac6d",
         "signature_hash": "25839c0ce6ae0837"
+      },
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 139,
+        "end_line": 143,
+        "semantic_id": "aura_host_discovery.py#function:_digest:e32f01ef6d28ae69",
+        "signature_hash": "c0ff28b16ce65315"
       },
       {
         "file": "aura_hybrid_refactor_benchmark.py",
@@ -14594,6 +14604,14 @@
         "signature_hash": "8c19472f33080b32"
       },
       {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 85,
+        "semantic_id": "aura_host_discovery.py#function:_text:4992b05da3001084",
+        "signature_hash": "1382ee5cc065df25"
+      },
+      {
         "file": "aura_project_context_compiler.py",
         "kind": "function",
         "line": 117,
@@ -19956,6 +19974,14 @@
         "end_line": 55,
         "semantic_id": "aura_construction_state.py#function:_timestamp:dd89b9dd2c2c86e0",
         "signature_hash": "7be91c9284b0d195"
+      },
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 146,
+        "end_line": 152,
+        "semantic_id": "aura_host_discovery.py#function:_timestamp:d7f06d41580fce4f",
+        "signature_hash": "34792faeb566185f"
       },
       {
         "file": "aura_intent_refinement.py",
@@ -26346,6 +26372,14 @@
         "end_line": 427,
         "semantic_id": "aura_cockpit_planner.py#function:_canonical_value:43181d45fa23d4cb",
         "signature_hash": "2914ae5610b4bd01"
+      },
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 125,
+        "semantic_id": "aura_host_discovery.py#function:_canonical_value:6f3250fc56e418ab",
+        "signature_hash": "18fbc2f25c3674ca"
       }
     ],
     "_context_cost_accounting": [
@@ -28522,6 +28556,14 @@
         "end_line": 245,
         "semantic_id": "aura_continuity_packet.py#function:_exact_keys:424311b723822b0b",
         "signature_hash": "bf2e88027ae0e9d6"
+      },
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 128,
+        "end_line": 136,
+        "semantic_id": "aura_host_discovery.py#function:_exact_keys:836c4467fb0179b8",
+        "signature_hash": "52dfc744a7c2fe51"
       },
       {
         "file": "aura_spatial_receipts.py",
@@ -54070,6 +54112,274 @@
         "end_line": 342,
         "semantic_id": "aura_holographic_manifest.py#function:verify_holographic_system_integrity:8ab0eafa2150c704",
         "signature_hash": "127156c837640c3a"
+      }
+    ],
+    "ObservationState": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "class",
+        "line": 67,
+        "end_line": 71,
+        "semantic_id": "aura_host_discovery.py#class:ObservationState:d85ba2843776fc2c",
+        "signature_hash": "6f8f205854e49ca9"
+      }
+    ],
+    "_state": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 92,
+        "semantic_id": "aura_host_discovery.py#function:_state:6b82919f37fba1d8",
+        "signature_hash": "2857a913234006e0"
+      },
+      {
+        "file": "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py#function:_state:fc84b404b01d0888",
+        "signature_hash": "e7a0fd0a90453616"
+      }
+    ],
+    "HostObservationV1": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "class",
+        "line": 156,
+        "end_line": 220,
+        "semantic_id": "aura_host_discovery.py#class:HostObservationV1:3eb235453ba93b7e",
+        "signature_hash": "29bdbb82f6299066"
+      }
+    ],
+    "HostObservationV1.__post_init__": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 176,
+        "semantic_id": "aura_host_discovery.py#method:HostObservationV1.__post_init__:6023cedbcdedd12e",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "HostObservationV1.observed": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "method",
+        "line": 179,
+        "end_line": 185,
+        "semantic_id": "aura_host_discovery.py#method:HostObservationV1.observed:87f6439f800bedb9",
+        "signature_hash": "7e8d878256a2116d"
+      }
+    ],
+    "HostObservationV1.missing": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "method",
+        "line": 188,
+        "end_line": 203,
+        "semantic_id": "aura_host_discovery.py#method:HostObservationV1.missing:6165dd88745babb9",
+        "signature_hash": "606eb73f9f101bcc"
+      }
+    ],
+    "HostObservationV1.to_dict": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "method",
+        "line": 205,
+        "end_line": 208,
+        "semantic_id": "aura_host_discovery.py#method:HostObservationV1.to_dict:7b24a6e6b032738e",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "HostObservationV1.from_dict": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 220,
+        "semantic_id": "aura_host_discovery.py#method:HostObservationV1.from_dict:c8f47cb4306e6b9f",
+        "signature_hash": "e8824d1702c73cba"
+      }
+    ],
+    "_discovery_payload": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 223,
+        "end_line": 238,
+        "semantic_id": "aura_host_discovery.py#function:_discovery_payload:8d05e8d5a2faa940",
+        "signature_hash": "2b58a3cd506b1862"
+      }
+    ],
+    "HostDiscoveryV1": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "class",
+        "line": 242,
+        "end_line": 347,
+        "semantic_id": "aura_host_discovery.py#class:HostDiscoveryV1:6ebaf8f7060da635",
+        "signature_hash": "38e8abba71f76417"
+      }
+    ],
+    "HostDiscoveryV1.__post_init__": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "method",
+        "line": 251,
+        "end_line": 278,
+        "semantic_id": "aura_host_discovery.py#method:HostDiscoveryV1.__post_init__:4a92b0c4ff2d025d",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "HostDiscoveryV1.create": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "method",
+        "line": 281,
+        "end_line": 305,
+        "semantic_id": "aura_host_discovery.py#method:HostDiscoveryV1.create:37de209a2b45f66a",
+        "signature_hash": "3d045f0e2e20247c"
+      }
+    ],
+    "HostDiscoveryV1.to_dict": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "method",
+        "line": 307,
+        "end_line": 314,
+        "semantic_id": "aura_host_discovery.py#method:HostDiscoveryV1.to_dict:8d1e38e42bf2e32b",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "HostDiscoveryV1.from_dict": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "method",
+        "line": 317,
+        "end_line": 347,
+        "semantic_id": "aura_host_discovery.py#method:HostDiscoveryV1.from_dict:a21482a897e06081",
+        "signature_hash": "e8824d1702c73cba"
+      }
+    ],
+    "_observe_text": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 350,
+        "end_line": 357,
+        "semantic_id": "aura_host_discovery.py#function:_observe_text:34bb3d10ebb32bd4",
+        "signature_hash": "f32f4bfb848af6a0"
+      }
+    ],
+    "_observe_cpu_logical": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 360,
+        "end_line": 375,
+        "semantic_id": "aura_host_discovery.py#function:_observe_cpu_logical:0fe2ad06670110ae",
+        "signature_hash": "680952b2abd841ec"
+      }
+    ],
+    "_observe_cpu_physical": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 378,
+        "end_line": 383,
+        "semantic_id": "aura_host_discovery.py#function:_observe_cpu_physical:1ea94b1a6b5ad4a4",
+        "signature_hash": "89c1f65740c499d6"
+      }
+    ],
+    "_observe_ram_bytes": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 386,
+        "end_line": 407,
+        "semantic_id": "aura_host_discovery.py#function:_observe_ram_bytes:37034ba3a5ebff67",
+        "signature_hash": "81c0aa27ccf93150"
+      }
+    ],
+    "_observe_storage": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 410,
+        "end_line": 428,
+        "semantic_id": "aura_host_discovery.py#function:_observe_storage:c77d088e052691e7",
+        "signature_hash": "c270d0e5ff207fe2"
+      }
+    ],
+    "_observe_thermal": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 431,
+        "end_line": 458,
+        "semantic_id": "aura_host_discovery.py#function:_observe_thermal:04e30053522cbd58",
+        "signature_hash": "833e3f050690d3db"
+      }
+    ],
+    "_observe_accelerators": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 461,
+        "end_line": 486,
+        "semantic_id": "aura_host_discovery.py#function:_observe_accelerators:dc97e890d41ba715",
+        "signature_hash": "07c9457a6e826b76"
+      }
+    ],
+    "_observe_linux_power_supply": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 489,
+        "end_line": 557,
+        "semantic_id": "aura_host_discovery.py#function:_observe_linux_power_supply:d7f3de277b7be48f",
+        "signature_hash": "837dad3dfd64cd21"
+      }
+    ],
+    "_observe_network_class": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 560,
+        "end_line": 573,
+        "semantic_id": "aura_host_discovery.py#function:_observe_network_class:ff49dd6562c03f0b",
+        "signature_hash": "799ae574f2d7f25d"
+      }
+    ],
+    "_observe_python_runtime": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 576,
+        "end_line": 584,
+        "semantic_id": "aura_host_discovery.py#function:_observe_python_runtime:62698be8fa4b9f5f",
+        "signature_hash": "9ec06e3959ca00a3"
+      }
+    ],
+    "_observe_runtime_binaries": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 587,
+        "end_line": 605,
+        "semantic_id": "aura_host_discovery.py#function:_observe_runtime_binaries:a377776d6cea0cbd",
+        "signature_hash": "b0e00644576d5f84"
+      }
+    ],
+    "discover_host_v1": [
+      {
+        "file": "aura_host_discovery.py",
+        "kind": "function",
+        "line": 608,
+        "end_line": 646,
+        "semantic_id": "aura_host_discovery.py#function:discover_host_v1:15bcbe80f7e8fda8",
+        "signature_hash": "16a25328678664b2"
       }
     ],
     "HotswapSafetyReport": [
@@ -127000,16 +127310,6 @@
         "signature_hash": "db0c2fc56c37e3ba"
       }
     ],
-    "_state": [
-      {
-        "file": "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py",
-        "kind": "function",
-        "line": 18,
-        "end_line": 24,
-        "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py#function:_state:fc84b404b01d0888",
-        "signature_hash": "e7a0fd0a90453616"
-      }
-    ],
     "_json_body": [
       {
         "file": "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py",
@@ -139024,6 +139324,136 @@
         "end_line": 743,
         "semantic_id": "tests/test_aura_hermes_arena_mode.py#method:TestWriteRules.test_cli_write_rules_command:7b96520d8e8246f3",
         "signature_hash": "ad0777f69516add4"
+      }
+    ],
+    "_observations": [
+      {
+        "file": "tests/test_aura_host_discovery.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 20,
+        "semantic_id": "tests/test_aura_host_discovery.py#function:_observations:6ac40ee5a2d9c4f4",
+        "signature_hash": "f942e86d58f7aa8d"
+      }
+    ],
+    "test_observation_state_does_not_launder_missing_evidence_into_a_value": [
+      {
+        "file": "tests/test_aura_host_discovery.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 35,
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_observation_state_does_not_launder_missing_evidence_into_a_value:f2d85e10088cec2a",
+        "signature_hash": "0ceaf8e0b7bcc77c"
+      }
+    ],
+    "test_host_discovery_round_trip_is_exact_and_digest_checked": [
+      {
+        "file": "tests/test_aura_host_discovery.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 50,
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_host_discovery_round_trip_is_exact_and_digest_checked:ab2f946d3ead8f21",
+        "signature_hash": "75d26cc29520b7f3"
+      }
+    ],
+    "test_host_discovery_schema_is_closed": [
+      {
+        "file": "tests/test_aura_host_discovery.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 70,
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_host_discovery_schema_is_closed:b125f18d2a50e040",
+        "signature_hash": "4c0a1a87dede00e2"
+      }
+    ],
+    "test_source_generation_is_digest_bound": [
+      {
+        "file": "tests/test_aura_host_discovery.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 85,
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_source_generation_is_digest_bound:2add7df727e26f12",
+        "signature_hash": "8687ec384be8a9e8"
+      }
+    ],
+    "test_discover_host_composes_observations_without_authority": [
+      {
+        "file": "tests/test_aura_host_discovery.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 133,
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_discover_host_composes_observations_without_authority:006a658dc4a9ace6",
+        "signature_hash": "d17bb6f480388c10"
+      }
+    ],
+    "test_thermal_nan_fallback_is_not_observed": [
+      {
+        "file": "tests/test_aura_host_discovery.py",
+        "kind": "function",
+        "line": 136,
+        "end_line": 143,
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_thermal_nan_fallback_is_not_observed:db763f92ba32f7df",
+        "signature_hash": "be60ac54b3191a87"
+      }
+    ],
+    "test_thermal_finite_value_is_observed": [
+      {
+        "file": "tests/test_aura_host_discovery.py",
+        "kind": "function",
+        "line": 146,
+        "end_line": 152,
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_thermal_finite_value_is_observed:e1903744c62eabdc",
+        "signature_hash": "790f693b55f61050"
+      }
+    ],
+    "test_required_binary_probe_accepts_names_only_and_does_not_store_paths": [
+      {
+        "file": "tests/test_aura_host_discovery.py",
+        "kind": "function",
+        "line": 155,
+        "end_line": 165,
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_required_binary_probe_accepts_names_only_and_does_not_store_paths:ca8db73cf374a66f",
+        "signature_hash": "54708e469cd4e0c0"
+      }
+    ],
+    "test_accelerator_absence_is_unknown_not_proof_of_no_accelerator": [
+      {
+        "file": "tests/test_aura_host_discovery.py",
+        "kind": "function",
+        "line": 168,
+        "end_line": 175,
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_accelerator_absence_is_unknown_not_proof_of_no_accelerator:e18d6e5f61fa376f",
+        "signature_hash": "0edb28ed81595588"
+      }
+    ],
+    "test_network_inventory_does_not_claim_reachability": [
+      {
+        "file": "tests/test_aura_host_discovery.py",
+        "kind": "function",
+        "line": 178,
+        "end_line": 183,
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_network_inventory_does_not_claim_reachability:973fc05c28d28ac7",
+        "signature_hash": "d8756ed7fcaffadf"
+      }
+    ],
+    "test_nonfinite_and_noncanonical_observation_values_fail_closed": [
+      {
+        "file": "tests/test_aura_host_discovery.py",
+        "kind": "function",
+        "line": 186,
+        "end_line": 190,
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_nonfinite_and_noncanonical_observation_values_fail_closed:f8868727f4f7f7f8",
+        "signature_hash": "000b80ee4ef295b5"
+      }
+    ],
+    "test_malformed_serialization_fails_with_value_error": [
+      {
+        "file": "tests/test_aura_host_discovery.py",
+        "kind": "function",
+        "line": 193,
+        "end_line": 197,
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_malformed_serialization_fails_with_value_error:fe9cea2f69fe6cf2",
+        "signature_hash": "d26f2190c9cbc25d"
       }
     ],
     "_demo_codemap": [
@@ -199193,6 +199623,53 @@
       ]
     },
     {
+      "path": "aura_host_discovery.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 24193,
+      "lines": 647,
+      "tokens_est": 6049,
+      "symbol_count": 31,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8b1facadb7abd3f9",
+      "vector": [
+        -0.091455,
+        0.075998,
+        0.261485,
+        -0.088879,
+        -0.287247,
+        -0.186775,
+        0.186775,
+        0.32589,
+        -0.052812,
+        -0.150708,
+        0.052812,
+        -0.155861,
+        0.209961,
+        -0.114641,
+        -0.099184,
+        -0.021898,
+        0.150708,
+        -0.155861,
+        0.194504,
+        -0.050236,
+        0.215113,
+        0.075998,
+        -0.243452,
+        0.225418,
+        0.001288,
+        0.300128,
+        -0.150708,
+        0.264061,
+        0.153284,
+        0.055388,
+        -0.238299,
+        -0.124946
+      ]
+    },
+    {
       "path": "aura_hotswap_refactor.py",
       "role": "python_module",
       "binary": false,
@@ -255148,6 +255625,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_host_discovery.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7560,
+      "lines": 198,
+      "tokens_est": 1890,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2d6494190bf5c266",
+      "vector": [
+        -0.149017,
+        -0.237324,
+        0.18434,
+        0.190963,
+        0.133564,
+        -0.164471,
+        -0.05188,
+        0.175509,
+        0.043049,
+        -0.016557,
+        -0.202001,
+        -0.263816,
+        0.151225,
+        -0.22187,
+        -0.003311,
+        -0.135771,
+        -0.007727,
+        0.277062,
+        0.146809,
+        -0.19317,
+        -0.087203,
+        0.188755,
+        -0.266023,
+        0.182132,
+        0.197586,
+        -0.241739,
+        -0.213039,
+        0.003311,
+        0.126941,
+        0.18434,
+        0.224078,
+        -0.208624
+      ]
+    },
+    {
       "path": "tests/test_aura_human_agent_arena.py",
       "role": "python_module",
       "binary": false,
@@ -286149,15 +286673,15 @@
     }
   },
   "summary": {
-    "file_count": 1634,
-    "total_bytes": 26316194,
-    "text_tokens_est": 6569465,
+    "file_count": 1636,
+    "total_bytes": 26347947,
+    "text_tokens_est": 6577404,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 234,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 995,
+      "python_module": 997,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -286731,6 +287255,7 @@
       "aura_hermes_arena_mode.py",
       "aura_hivp.py",
       "aura_holographic_manifest.py",
+      "aura_host_discovery.py",
       "aura_hotswap_refactor.py",
       "aura_human_agent_arena.py",
       "aura_human_agent_arena/arena.css",
@@ -287645,6 +288170,7 @@
       "tests/test_aura_gate_server.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
+      "tests/test_aura_host_discovery.py",
       "tests/test_aura_human_agent_arena.py",
       "tests/test_aura_human_agent_concepts.py",
       "tests/test_aura_human_agent_tensor_integration.py",
@@ -335470,6 +335996,316 @@
         "end_line": 213,
         "signature_hash": "9e364a91ecd4c854",
         "file_digest8": "669008f6a7dd2970"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#class:HostDiscoveryV1:6ebaf8f7060da635",
+        "name": "HostDiscoveryV1",
+        "kind": "class",
+        "file": "aura_host_discovery.py",
+        "line": 242,
+        "end_line": 347,
+        "signature_hash": "38e8abba71f76417",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#class:HostObservationV1:3eb235453ba93b7e",
+        "name": "HostObservationV1",
+        "kind": "class",
+        "file": "aura_host_discovery.py",
+        "line": 156,
+        "end_line": 220,
+        "signature_hash": "29bdbb82f6299066",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#class:ObservationState:d85ba2843776fc2c",
+        "name": "ObservationState",
+        "kind": "class",
+        "file": "aura_host_discovery.py",
+        "line": 67,
+        "end_line": 71,
+        "signature_hash": "6f8f205854e49ca9",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_canonical_value:6f3250fc56e418ab",
+        "name": "_canonical_value",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 95,
+        "end_line": 125,
+        "signature_hash": "18fbc2f25c3674ca",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_digest:e32f01ef6d28ae69",
+        "name": "_digest",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 139,
+        "end_line": 143,
+        "signature_hash": "c0ff28b16ce65315",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_discovery_payload:8d05e8d5a2faa940",
+        "name": "_discovery_payload",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 223,
+        "end_line": 238,
+        "signature_hash": "2b58a3cd506b1862",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_exact_keys:836c4467fb0179b8",
+        "name": "_exact_keys",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 128,
+        "end_line": 136,
+        "signature_hash": "52dfc744a7c2fe51",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_observe_accelerators:dc97e890d41ba715",
+        "name": "_observe_accelerators",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 461,
+        "end_line": 486,
+        "signature_hash": "07c9457a6e826b76",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_observe_cpu_logical:0fe2ad06670110ae",
+        "name": "_observe_cpu_logical",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 360,
+        "end_line": 375,
+        "signature_hash": "680952b2abd841ec",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_observe_cpu_physical:1ea94b1a6b5ad4a4",
+        "name": "_observe_cpu_physical",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 378,
+        "end_line": 383,
+        "signature_hash": "89c1f65740c499d6",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_observe_linux_power_supply:d7f3de277b7be48f",
+        "name": "_observe_linux_power_supply",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 489,
+        "end_line": 557,
+        "signature_hash": "837dad3dfd64cd21",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_observe_network_class:ff49dd6562c03f0b",
+        "name": "_observe_network_class",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 560,
+        "end_line": 573,
+        "signature_hash": "799ae574f2d7f25d",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_observe_python_runtime:62698be8fa4b9f5f",
+        "name": "_observe_python_runtime",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 576,
+        "end_line": 584,
+        "signature_hash": "9ec06e3959ca00a3",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_observe_ram_bytes:37034ba3a5ebff67",
+        "name": "_observe_ram_bytes",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 386,
+        "end_line": 407,
+        "signature_hash": "81c0aa27ccf93150",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_observe_runtime_binaries:a377776d6cea0cbd",
+        "name": "_observe_runtime_binaries",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 587,
+        "end_line": 605,
+        "signature_hash": "b0e00644576d5f84",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_observe_storage:c77d088e052691e7",
+        "name": "_observe_storage",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 410,
+        "end_line": 428,
+        "signature_hash": "c270d0e5ff207fe2",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_observe_text:34bb3d10ebb32bd4",
+        "name": "_observe_text",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 350,
+        "end_line": 357,
+        "signature_hash": "f32f4bfb848af6a0",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_observe_thermal:04e30053522cbd58",
+        "name": "_observe_thermal",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 431,
+        "end_line": 458,
+        "signature_hash": "833e3f050690d3db",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_state:6b82919f37fba1d8",
+        "name": "_state",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 88,
+        "end_line": 92,
+        "signature_hash": "2857a913234006e0",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_text:4992b05da3001084",
+        "name": "_text",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 74,
+        "end_line": 85,
+        "signature_hash": "1382ee5cc065df25",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:_timestamp:d7f06d41580fce4f",
+        "name": "_timestamp",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 146,
+        "end_line": 152,
+        "signature_hash": "34792faeb566185f",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#function:discover_host_v1:15bcbe80f7e8fda8",
+        "name": "discover_host_v1",
+        "kind": "function",
+        "file": "aura_host_discovery.py",
+        "line": 608,
+        "end_line": 646,
+        "signature_hash": "16a25328678664b2",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#method:HostDiscoveryV1.__post_init__:4a92b0c4ff2d025d",
+        "name": "HostDiscoveryV1.__post_init__",
+        "kind": "method",
+        "file": "aura_host_discovery.py",
+        "line": 251,
+        "end_line": 278,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#method:HostDiscoveryV1.create:37de209a2b45f66a",
+        "name": "HostDiscoveryV1.create",
+        "kind": "method",
+        "file": "aura_host_discovery.py",
+        "line": 281,
+        "end_line": 305,
+        "signature_hash": "3d045f0e2e20247c",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#method:HostDiscoveryV1.from_dict:a21482a897e06081",
+        "name": "HostDiscoveryV1.from_dict",
+        "kind": "method",
+        "file": "aura_host_discovery.py",
+        "line": 317,
+        "end_line": 347,
+        "signature_hash": "e8824d1702c73cba",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#method:HostDiscoveryV1.to_dict:8d1e38e42bf2e32b",
+        "name": "HostDiscoveryV1.to_dict",
+        "kind": "method",
+        "file": "aura_host_discovery.py",
+        "line": 307,
+        "end_line": 314,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#method:HostObservationV1.__post_init__:6023cedbcdedd12e",
+        "name": "HostObservationV1.__post_init__",
+        "kind": "method",
+        "file": "aura_host_discovery.py",
+        "line": 163,
+        "end_line": 176,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#method:HostObservationV1.from_dict:c8f47cb4306e6b9f",
+        "name": "HostObservationV1.from_dict",
+        "kind": "method",
+        "file": "aura_host_discovery.py",
+        "line": 211,
+        "end_line": 220,
+        "signature_hash": "e8824d1702c73cba",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#method:HostObservationV1.missing:6165dd88745babb9",
+        "name": "HostObservationV1.missing",
+        "kind": "method",
+        "file": "aura_host_discovery.py",
+        "line": 188,
+        "end_line": 203,
+        "signature_hash": "606eb73f9f101bcc",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#method:HostObservationV1.observed:87f6439f800bedb9",
+        "name": "HostObservationV1.observed",
+        "kind": "method",
+        "file": "aura_host_discovery.py",
+        "line": 179,
+        "end_line": 185,
+        "signature_hash": "7e8d878256a2116d",
+        "file_digest8": "8b1facadb7abd3f9"
+      },
+      {
+        "semantic_id": "aura_host_discovery.py#method:HostObservationV1.to_dict:7b24a6e6b032738e",
+        "name": "HostObservationV1.to_dict",
+        "kind": "method",
+        "file": "aura_host_discovery.py",
+        "line": 205,
+        "end_line": 208,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "8b1facadb7abd3f9"
       },
       {
         "semantic_id": "aura_hotswap_refactor.py#class:HotswapSafetyReport:f4892a255f65b44a",
@@ -425792,6 +426628,136 @@
         "file_digest8": "dda64b532d513374"
       },
       {
+        "semantic_id": "tests/test_aura_host_discovery.py#function:_observations:6ac40ee5a2d9c4f4",
+        "name": "_observations",
+        "kind": "function",
+        "file": "tests/test_aura_host_discovery.py",
+        "line": 16,
+        "end_line": 20,
+        "signature_hash": "f942e86d58f7aa8d",
+        "file_digest8": "2d6494190bf5c266"
+      },
+      {
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_accelerator_absence_is_unknown_not_proof_of_no_accelerator:e18d6e5f61fa376f",
+        "name": "test_accelerator_absence_is_unknown_not_proof_of_no_accelerator",
+        "kind": "function",
+        "file": "tests/test_aura_host_discovery.py",
+        "line": 168,
+        "end_line": 175,
+        "signature_hash": "0edb28ed81595588",
+        "file_digest8": "2d6494190bf5c266"
+      },
+      {
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_discover_host_composes_observations_without_authority:006a658dc4a9ace6",
+        "name": "test_discover_host_composes_observations_without_authority",
+        "kind": "function",
+        "file": "tests/test_aura_host_discovery.py",
+        "line": 88,
+        "end_line": 133,
+        "signature_hash": "d17bb6f480388c10",
+        "file_digest8": "2d6494190bf5c266"
+      },
+      {
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_host_discovery_round_trip_is_exact_and_digest_checked:ab2f946d3ead8f21",
+        "name": "test_host_discovery_round_trip_is_exact_and_digest_checked",
+        "kind": "function",
+        "file": "tests/test_aura_host_discovery.py",
+        "line": 38,
+        "end_line": 50,
+        "signature_hash": "75d26cc29520b7f3",
+        "file_digest8": "2d6494190bf5c266"
+      },
+      {
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_host_discovery_schema_is_closed:b125f18d2a50e040",
+        "name": "test_host_discovery_schema_is_closed",
+        "kind": "function",
+        "file": "tests/test_aura_host_discovery.py",
+        "line": 53,
+        "end_line": 70,
+        "signature_hash": "4c0a1a87dede00e2",
+        "file_digest8": "2d6494190bf5c266"
+      },
+      {
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_malformed_serialization_fails_with_value_error:fe9cea2f69fe6cf2",
+        "name": "test_malformed_serialization_fails_with_value_error",
+        "kind": "function",
+        "file": "tests/test_aura_host_discovery.py",
+        "line": 193,
+        "end_line": 197,
+        "signature_hash": "d26f2190c9cbc25d",
+        "file_digest8": "2d6494190bf5c266"
+      },
+      {
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_network_inventory_does_not_claim_reachability:973fc05c28d28ac7",
+        "name": "test_network_inventory_does_not_claim_reachability",
+        "kind": "function",
+        "file": "tests/test_aura_host_discovery.py",
+        "line": 178,
+        "end_line": 183,
+        "signature_hash": "d8756ed7fcaffadf",
+        "file_digest8": "2d6494190bf5c266"
+      },
+      {
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_nonfinite_and_noncanonical_observation_values_fail_closed:f8868727f4f7f7f8",
+        "name": "test_nonfinite_and_noncanonical_observation_values_fail_closed",
+        "kind": "function",
+        "file": "tests/test_aura_host_discovery.py",
+        "line": 186,
+        "end_line": 190,
+        "signature_hash": "000b80ee4ef295b5",
+        "file_digest8": "2d6494190bf5c266"
+      },
+      {
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_observation_state_does_not_launder_missing_evidence_into_a_value:f2d85e10088cec2a",
+        "name": "test_observation_state_does_not_launder_missing_evidence_into_a_value",
+        "kind": "function",
+        "file": "tests/test_aura_host_discovery.py",
+        "line": 23,
+        "end_line": 35,
+        "signature_hash": "0ceaf8e0b7bcc77c",
+        "file_digest8": "2d6494190bf5c266"
+      },
+      {
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_required_binary_probe_accepts_names_only_and_does_not_store_paths:ca8db73cf374a66f",
+        "name": "test_required_binary_probe_accepts_names_only_and_does_not_store_paths",
+        "kind": "function",
+        "file": "tests/test_aura_host_discovery.py",
+        "line": 155,
+        "end_line": 165,
+        "signature_hash": "54708e469cd4e0c0",
+        "file_digest8": "2d6494190bf5c266"
+      },
+      {
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_source_generation_is_digest_bound:2add7df727e26f12",
+        "name": "test_source_generation_is_digest_bound",
+        "kind": "function",
+        "file": "tests/test_aura_host_discovery.py",
+        "line": 73,
+        "end_line": 85,
+        "signature_hash": "8687ec384be8a9e8",
+        "file_digest8": "2d6494190bf5c266"
+      },
+      {
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_thermal_finite_value_is_observed:e1903744c62eabdc",
+        "name": "test_thermal_finite_value_is_observed",
+        "kind": "function",
+        "file": "tests/test_aura_host_discovery.py",
+        "line": 146,
+        "end_line": 152,
+        "signature_hash": "790f693b55f61050",
+        "file_digest8": "2d6494190bf5c266"
+      },
+      {
+        "semantic_id": "tests/test_aura_host_discovery.py#function:test_thermal_nan_fallback_is_not_observed:db763f92ba32f7df",
+        "name": "test_thermal_nan_fallback_is_not_observed",
+        "kind": "function",
+        "file": "tests/test_aura_host_discovery.py",
+        "line": 136,
+        "end_line": 143,
+        "signature_hash": "be60ac54b3191a87",
+        "file_digest8": "2d6494190bf5c266"
+      },
+      {
         "semantic_id": "tests/test_aura_human_agent_arena.py#function:test_affordance_map_declares_source_of_truth:536687ffbeaccb86",
         "name": "test_affordance_map_declares_source_of_truth",
         "kind": "function",
@@ -446122,7 +447088,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f54ee2e4da0bb0db05767925275e2b15",
-    "payload_hash": "0fa1918e8b28a9b69a948e98a0f6517d"
+    "record_fingerprint": "355458b19a34faf20f11707e488a155b",
+    "payload_hash": "214159d986fcd9e1593686259a6f39f3"
   }
 }
