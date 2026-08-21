@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1637
-- **total_bytes**: 26374255
-- **text_tokens_est**: 6583982
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 998, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1638
+- **total_bytes**: 26387570
+- **text_tokens_est**: 6587311
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1637,
+  "repo_file_count": 1638,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1564,6 +1564,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_review_lessons_codex_regressions.py",
     "tests/test_aura_runtime_profile_v2_adapter.py",
     "tests/test_aura_runtime_refactor_harness.py",
+    "tests/test_aura_secure_store_adapter.py",
     "tests/test_aura_shadow_model_router.py",
     "tests/test_aura_shadow_tool_observability.py",
     "tests/test_aura_showcase_attempt_archive.py",
@@ -1777,15 +1778,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1637,
-  "bytes": 26374255,
-  "tokens_est": 6583982,
+  "files": 1638,
+  "bytes": 26387570,
+  "tokens_est": 6587311,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 234,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 998,
+    "python_module": 999,
     "schema_or_lexicon": 271,
     "support_file": 49
   }
