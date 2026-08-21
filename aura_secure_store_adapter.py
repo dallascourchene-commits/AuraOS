@@ -8,7 +8,7 @@ untrusted, stale, or otherwise unusable.
 Hard boundaries:
 - SECURE STORAGE != AUTHORIZATION, CURRENTNESS, TRUTH, OR HUMAN AUTHORITY.
 - DEVICE KEY != HUMAN/COMMUNITY AUTHORITY.
-- Backend metadata is an externally supplied capability claim; the adapter does
+- Backend metadata is an externally supplied capability claim; this adapter does
   not attest that a backend is genuinely hardware-backed or otherwise secure.
 - No plaintext secret, secret hash, secret-derived identifier, exception text,
   or backend-returned secret is included in receipts or canonical references.
@@ -24,10 +24,11 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from enum import Enum
-from typing import Any, Iterable, Protocol, runtime_checkable
+from typing import Any, Iterable, Mapping, Protocol, runtime_checkable
 
 from aura_event_contracts import PATCH_AUTHORITY, VSA_PATCH_AUTHORITY, stable_digest
 from aura_world_device_contracts import (
+    DeviceBindingUseStatus,
     DeviceBindingV1,
     WorldIdentityRefV1,
     assess_device_binding,
@@ -73,6 +74,24 @@ class SecureStoreOperationStatus(str, Enum):
     BACKEND_ERROR = "BACKEND_ERROR"
 
 
+_STATIC_DETAIL_CODES = frozenset(
+    {
+        "BACKEND_DESCRIPTOR_NOT_TRUSTED",
+        "BACKEND_UNSUPPORTED",
+        "DEGRADED_FAIL_CLOSED",
+        "SECURITY_PROFILE_NOT_ADMITTED",
+        "BACKEND_EXCEPTION_REDACTED",
+        "BACKEND_RETURNED_INVALID_SECRET",
+        "SECRET_NOT_FOUND",
+        "STORED_BY_ADMITTED_BACKEND",
+        "LOADED_FROM_ADMITTED_BACKEND",
+        "SECRET_DELETED",
+    }
+)
+_BINDING_DETAIL_CODES = frozenset(item.value for item in DeviceBindingUseStatus)
+_ALLOWED_DETAIL_CODES = _STATIC_DETAIL_CODES | _BINDING_DETAIL_CODES
+
+
 def _required_text(value: Any, field_name: str) -> str:
     if type(value) is not str:
         raise ValueError(f"{field_name} must be a string")
@@ -98,13 +117,22 @@ def _enum_value(value: str | Enum, enum_type: type[Enum], field_name: str) -> st
     return raw
 
 
-def _trusted_refs(values: Iterable[Any]) -> frozenset[str]:
+def _detail_code(value: Any) -> str:
+    raw = _required_text(value, "detail_code")
+    if raw not in _ALLOWED_DETAIL_CODES:
+        raise ValueError(f"unsupported detail_code: {raw}")
+    return raw
+
+
+def _trusted_descriptor_digests(values: Iterable[Any]) -> frozenset[str]:
     if type(values) not in (list, tuple, set, frozenset):
-        raise ValueError("trusted_backend_refs must be an explicit collection")
-    refs = frozenset(_required_text(item, "trusted_backend_ref") for item in values)
-    if not refs:
-        raise ValueError("trusted_backend_refs must not be empty")
-    return refs
+        raise ValueError("trusted_backend_descriptor_digests must be an explicit collection")
+    digests = frozenset(
+        _required_text(item, "trusted_backend_descriptor_digest") for item in values
+    )
+    if not digests:
+        raise ValueError("trusted_backend_descriptor_digests must not be empty")
+    return digests
 
 
 def _secret_bytes(value: Any) -> bytes:
@@ -118,13 +146,21 @@ def _secret_bytes(value: Any) -> bytes:
     return data
 
 
+def _exact_keys(value: Mapping[str, Any], expected: frozenset[str], name: str) -> None:
+    actual = set(value)
+    if actual != expected:
+        missing = sorted(expected - actual)
+        extra = sorted(actual - expected)
+        raise ValueError(f"{name} schema mismatch; missing={missing}, extra={extra}")
+
+
 @dataclass(frozen=True)
 class SecureStoreBackendDescriptorV1:
     """Non-secret externally asserted backend capability metadata.
 
-    Trust in this descriptor comes from the caller's trusted-backend reference
-    set and platform/provider verification. The digest proves descriptor content
-    identity only; it does not prove the backend's security properties.
+    The descriptor digest proves only metadata identity. Operational trust is
+    supplied by the caller as an exact trusted descriptor digest after whatever
+    platform/provider verification that caller requires.
     """
 
     backend_ref: str
@@ -145,8 +181,7 @@ class SecureStoreBackendDescriptorV1:
             raise ValueError("unsupported SecureStoreBackendDescriptorV1 version")
         if self.patch_authority != PATCH_AUTHORITY or self.vsa_patch_authority is not False:
             raise ValueError("SecureStoreBackendDescriptorV1 authority boundary changed")
-        expected = stable_digest(self._payload())
-        if self.digest != expected:
+        if self.digest != stable_digest(self._payload()):
             raise ValueError("SecureStoreBackendDescriptorV1 digest mismatch")
 
     @classmethod
@@ -193,10 +228,33 @@ class SecureStoreBackendDescriptorV1:
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "SecureStoreBackendDescriptorV1":
+        if not isinstance(value, Mapping):
+            raise ValueError("SecureStoreBackendDescriptorV1 must be a mapping")
+        data = dict(value)
+        _exact_keys(
+            data,
+            frozenset(
+                {
+                    "backend_ref",
+                    "backend_generation",
+                    "security_profile",
+                    "capability_state",
+                    "digest",
+                    "version",
+                    "patch_authority",
+                    "vsa_patch_authority",
+                }
+            ),
+            "SecureStoreBackendDescriptorV1",
+        )
+        return cls(**data)
+
 
 @dataclass(frozen=True)
 class SecureStoreRefV1:
-    """Non-secret reference binding one secret slot to exact World/device/backend context."""
+    """Non-secret slot reference bound to exact World/device/backend context."""
 
     secret_id: str
     purpose: str
@@ -223,8 +281,7 @@ class SecureStoreRefV1:
             raise ValueError("unsupported SecureStoreRefV1 version")
         if self.patch_authority != PATCH_AUTHORITY or self.vsa_patch_authority is not False:
             raise ValueError("SecureStoreRefV1 authority boundary changed")
-        expected = stable_digest(self._payload())
-        if self.digest != expected:
+        if self.digest != stable_digest(self._payload()):
             raise ValueError("SecureStoreRefV1 digest mismatch")
 
     @classmethod
@@ -282,6 +339,31 @@ class SecureStoreRefV1:
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "SecureStoreRefV1":
+        if not isinstance(value, Mapping):
+            raise ValueError("SecureStoreRefV1 must be a mapping")
+        data = dict(value)
+        _exact_keys(
+            data,
+            frozenset(
+                {
+                    "secret_id",
+                    "purpose",
+                    "world_digest",
+                    "device_binding_digest",
+                    "backend_ref",
+                    "backend_generation",
+                    "digest",
+                    "version",
+                    "patch_authority",
+                    "vsa_patch_authority",
+                }
+            ),
+            "SecureStoreRefV1",
+        )
+        return cls(**data)
+
 
 @dataclass(frozen=True)
 class SecureStoreReceiptV1:
@@ -307,17 +389,16 @@ class SecureStoreReceiptV1:
             "backend_descriptor_digest",
             "world_digest",
             "device_binding_digest",
-            "detail_code",
         ):
             _required_text(getattr(self, field_name), field_name)
         _enum_value(self.operation, SecureStoreOperation, "operation")
         _enum_value(self.status, SecureStoreOperationStatus, "status")
+        _detail_code(self.detail_code)
         if self.version != SECURE_STORE_RECEIPT_VERSION:
             raise ValueError("unsupported SecureStoreReceiptV1 version")
         if self.patch_authority != PATCH_AUTHORITY or self.vsa_patch_authority is not False:
             raise ValueError("SecureStoreReceiptV1 authority boundary changed")
-        expected = stable_digest(self._payload())
-        if self.digest != expected:
+        if self.digest != stable_digest(self._payload()):
             raise ValueError("SecureStoreReceiptV1 digest mismatch")
 
     @classmethod
@@ -344,7 +425,7 @@ class SecureStoreReceiptV1:
             "backend_descriptor_digest": backend.digest,
             "world_digest": world.digest,
             "device_binding_digest": binding.digest,
-            "detail_code": _required_text(detail_code, "detail_code"),
+            "detail_code": _detail_code(detail_code),
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
@@ -377,6 +458,33 @@ class SecureStoreReceiptV1:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "SecureStoreReceiptV1":
+        if not isinstance(value, Mapping):
+            raise ValueError("SecureStoreReceiptV1 must be a mapping")
+        data = dict(value)
+        _exact_keys(
+            data,
+            frozenset(
+                {
+                    "operation_id",
+                    "operation",
+                    "status",
+                    "secret_ref_digest",
+                    "backend_descriptor_digest",
+                    "world_digest",
+                    "device_binding_digest",
+                    "detail_code",
+                    "digest",
+                    "version",
+                    "patch_authority",
+                    "vsa_patch_authority",
+                }
+            ),
+            "SecureStoreReceiptV1",
+        )
+        return cls(**data)
 
 
 class OpaqueSecretV1:
@@ -458,7 +566,7 @@ class SecureStoreAdapterV1:
         *,
         world: WorldIdentityRefV1,
         binding: DeviceBindingV1,
-        trusted_backend_refs: Iterable[str],
+        trusted_backend_descriptor_digests: Iterable[str],
         backend: SecureStoreBackend | None = None,
     ) -> None:
         if not isinstance(world, WorldIdentityRefV1):
@@ -469,7 +577,9 @@ class SecureStoreAdapterV1:
             raise ValueError("binding World does not match expected World")
         self._world = world
         self._binding = binding
-        self._trusted_backend_refs = _trusted_refs(trusted_backend_refs)
+        self._trusted_backend_descriptor_digests = _trusted_descriptor_digests(
+            trusted_backend_descriptor_digests
+        )
         self._backend: SecureStoreBackend = backend or UnsupportedSecureStoreBackend()
         descriptor = getattr(self._backend, "descriptor", None)
         if not isinstance(descriptor, SecureStoreBackendDescriptorV1):
@@ -480,7 +590,7 @@ class SecureStoreAdapterV1:
     def descriptor(self) -> SecureStoreBackendDescriptorV1:
         return self._descriptor
 
-    def make_ref(self, *, secret_id: str, purpose: str) -> SecureStoreRefV1:
+    def _make_ref(self, *, secret_id: str, purpose: str) -> SecureStoreRefV1:
         return SecureStoreRefV1.create(
             secret_id=secret_id,
             purpose=purpose,
@@ -490,8 +600,11 @@ class SecureStoreAdapterV1:
         )
 
     def _context_status(self, *, now: float) -> tuple[SecureStoreOperationStatus | None, str]:
-        if self._descriptor.backend_ref not in self._trusted_backend_refs:
-            return SecureStoreOperationStatus.BACKEND_UNTRUSTED, "BACKEND_REF_NOT_TRUSTED"
+        if self._descriptor.digest not in self._trusted_backend_descriptor_digests:
+            return (
+                SecureStoreOperationStatus.BACKEND_UNTRUSTED,
+                "BACKEND_DESCRIPTOR_NOT_TRUSTED",
+            )
         assessment = assess_device_binding(
             self._binding,
             now=now,
@@ -505,8 +618,11 @@ class SecureStoreAdapterV1:
         if self._descriptor.capability_state == SecureStoreCapabilityState.DEGRADED.value:
             return SecureStoreOperationStatus.BACKEND_DEGRADED, "DEGRADED_FAIL_CLOSED"
         if self._descriptor.security_profile != SecureStoreSecurityProfile.PLATFORM_SECURE_STORE.value:
-            return SecureStoreOperationStatus.BACKEND_PROFILE_BLOCKED, "SECURITY_PROFILE_NOT_ADMITTED"
-        return None, "READY"
+            return (
+                SecureStoreOperationStatus.BACKEND_PROFILE_BLOCKED,
+                "SECURITY_PROFILE_NOT_ADMITTED",
+            )
+        return None, "STORED_BY_ADMITTED_BACKEND"
 
     def _validate_ref(self, secret_ref: SecureStoreRefV1) -> None:
         if not isinstance(secret_ref, SecureStoreRefV1):
@@ -548,33 +664,33 @@ class SecureStoreAdapterV1:
         purpose: str,
         secret: bytes | bytearray,
         now: float,
-    ) -> tuple[SecureStoreRefV1, SecureStoreReceiptV1]:
+    ) -> tuple[SecureStoreRefV1 | None, SecureStoreReceiptV1]:
         value = _secret_bytes(secret)
-        secret_ref = self.make_ref(secret_id=secret_id, purpose=purpose)
+        candidate_ref = self._make_ref(secret_id=secret_id, purpose=purpose)
         blocked, detail = self._context_status(now=now)
         if blocked is not None:
-            return secret_ref, self._receipt(
+            return None, self._receipt(
                 operation_id=operation_id,
                 operation=SecureStoreOperation.STORE,
                 status=blocked,
-                secret_ref=secret_ref,
+                secret_ref=candidate_ref,
                 detail_code=detail,
             )
         try:
-            self._backend.store(secret_ref.digest, value)
+            self._backend.store(candidate_ref.digest, value)
         except Exception:
-            return secret_ref, self._receipt(
+            return None, self._receipt(
                 operation_id=operation_id,
                 operation=SecureStoreOperation.STORE,
                 status=SecureStoreOperationStatus.BACKEND_ERROR,
-                secret_ref=secret_ref,
+                secret_ref=candidate_ref,
                 detail_code="BACKEND_EXCEPTION_REDACTED",
             )
-        return secret_ref, self._receipt(
+        return candidate_ref, self._receipt(
             operation_id=operation_id,
             operation=SecureStoreOperation.STORE,
             status=SecureStoreOperationStatus.STORED,
-            secret_ref=secret_ref,
+            secret_ref=candidate_ref,
             detail_code="STORED_BY_ADMITTED_BACKEND",
         )
 
