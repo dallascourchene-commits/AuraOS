@@ -5,7 +5,10 @@ import unittest
 
 from tools.project006.drive_command_executor_hook import (
     CommandHookError,
+    EFFECT_ADMISSION_VERSION,
+    EFFECT_CLASS,
     EXECUTOR_ID,
+    REQUIRED_CAPABILITY,
     execute_admitted_command,
     validate_admitted_command,
 )
@@ -66,13 +69,39 @@ def _command() -> dict:
             "source_refs": [],
             "authority_refs": [],
         },
-        "requested_capability": {"semantic_id_or_alias": "optional"},
+        "requested_capability": {
+            "semantic_id_or_alias": REQUIRED_CAPABILITY
+        },
         "human_disposition": {"required": False},
     }
 
 
+def _allow_admission(events: list[str] | None = None, **overrides):
+    def provider(command, digest, executor_id, effect_class):
+        if events is not None:
+            events.append("admission")
+        receipt = {
+            "admission_version": EFFECT_ADMISSION_VERSION,
+            "command_digest": digest,
+            "authority_ref": command["authority_ref"],
+            "workspace_scope": command["workspace_scope"],
+            "executor_id": executor_id,
+            "effect_class": effect_class,
+            "currentness": "CURRENT",
+            "authority_decision": "ALLOW",
+            "cost_decision": "ALLOW",
+            "policy_ref": "drive-policy-current-1",
+            "authority_admission_ref": "authority-admission-current-1",
+            "provider_cost_admission_ref": "cost-admission-current-1",
+        }
+        receipt.update(overrides)
+        return receipt
+
+    return provider
+
+
 class DriveCommandExecutorHookTests(unittest.TestCase):
-    def test_authorized_d0_emits_ack_before_one_executor_call_and_returns_result(
+    def test_authorized_d0_requires_admission_then_ack_then_one_executor_call(
         self,
     ) -> None:
         events: list[str] = []
@@ -82,13 +111,14 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         result = execute_admitted_command(
             _command(),
             executor_factory=lambda: executor,
+            effect_admission=_allow_admission(events),
             emit_ack=lambda record: (
                 events.append("ack"),
                 acks.append(dict(record)),
             ),
         )
 
-        self.assertEqual(events, ["ack", "generate"])
+        self.assertEqual(events, ["admission", "ack", "generate"])
         self.assertEqual(len(acks), 1)
         self.assertEqual(acks[0]["record_type"], "ACK")
         self.assertEqual(acks[0]["command_id"], "cmd-minimal-001")
@@ -96,17 +126,20 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         self.assertEqual(result["command_id"], "cmd-minimal-001")
         self.assertEqual(result["idempotency_key"], "cmd-minimal-001")
         self.assertEqual(result["executor_id"], EXECUTOR_ID)
+        self.assertEqual(result["effect_class"], EFFECT_CLASS)
         self.assertEqual(result["execution_identity"], "UNKNOWN")
         self.assertEqual(result["provider"], "deepseek")
         self.assertEqual(result["model"], "deepseek-test")
         self.assertEqual(result["result"], "bounded-result")
-        self.assertIn(
-            _command()["objective"]["text"], executor.prompts[0]
+        self.assertEqual(
+            result["authority_admission_ref"],
+            "authority-admission-current-1",
         )
-        self.assertEqual(executor.kwargs[0]["temperature"], 0.0)
-        self.assertFalse(executor.kwargs[0]["pre_egress"])
-        self.assertFalse(executor.kwargs[0]["resonance_egress"])
-        self.assertFalse(executor.kwargs[0]["context_crush"])
+        self.assertEqual(
+            result["provider_cost_admission_ref"],
+            "cost-admission-current-1",
+        )
+        self.assertIn(_command()["objective"]["text"], executor.prompts[0])
 
     def test_message_authorization_failure_never_constructs_executor(self) -> None:
         command = _command()
@@ -162,6 +195,14 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         ):
             validate_admitted_command(command)
 
+    def test_requested_capability_is_a_ceiling(self) -> None:
+        command = _command()
+        command["requested_capability"]["semantic_id_or_alias"] = "optional"
+        with self.assertRaisesRegex(
+            CommandHookError, "REQUESTED_CAPABILITY_MISMATCH"
+        ):
+            validate_admitted_command(command)
+
     def test_human_gated_command_is_not_executed(self) -> None:
         command = _command()
         command["human_disposition"]["required"] = True
@@ -170,7 +211,7 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         ):
             validate_admitted_command(command)
 
-    def test_structured_provider_control_injection_rejects(self) -> None:
+    def test_structured_provider_and_admission_control_injection_rejects(self) -> None:
         injections = {
             "provider_url": "https://evil.example/v1",
             "api_key": "secret",
@@ -181,6 +222,9 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
             "currentness": "caller-currentness",
             "fencing_token": "caller-fence",
             "model": "caller-model",
+            "authority_admission_ref": "caller-auth-admission",
+            "provider_cost_admission_ref": "caller-cost-admission",
+            "effect_admission": {"authority_decision": "ALLOW"},
         }
         for field, value in injections.items():
             with self.subTest(field=field):
@@ -192,7 +236,7 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
                 ):
                     validate_admitted_command(command)
 
-    def test_original_canary_broad_external_denial_rejects_before_ack_or_executor(
+    def test_original_canary_broad_external_denial_rejects_before_all_effect_gates(
         self,
     ) -> None:
         command = _command()
@@ -216,13 +260,12 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
                 executor_factory=lambda: (
                     events.append("factory") or _FakeExecutor(events)
                 ),
+                effect_admission=_allow_admission(events),
                 emit_ack=lambda _record: events.append("ack"),
             )
         self.assertEqual(events, [])
 
-    def test_narrow_unrelated_external_denial_allows_deepseek_egress(
-        self,
-    ) -> None:
+    def test_narrow_external_denial_can_reach_host_admission_gate(self) -> None:
         command = _command()
         command["objective"]["negative_intent"] = [
             "no unrelated external communication",
@@ -232,11 +275,12 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         result = execute_admitted_command(
             command,
             executor_factory=lambda: _FakeExecutor([]),
+            effect_admission=_allow_admission(),
             emit_ack=lambda _record: None,
         )
         self.assertEqual(result["record_type"], "RESULT")
 
-    def test_explicit_single_deepseek_exception_allows_broad_denial(
+    def test_explicit_single_deepseek_exception_can_reach_host_admission_gate(
         self,
     ) -> None:
         command = _command()
@@ -250,6 +294,7 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         result = execute_admitted_command(
             command,
             executor_factory=lambda: _FakeExecutor([]),
+            effect_admission=_allow_admission(),
             emit_ack=lambda _record: None,
         )
         self.assertEqual(result["record_type"], "RESULT")
@@ -269,39 +314,144 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         result = execute_admitted_command(
             command,
             executor_factory=lambda: executor,
+            effect_admission=_allow_admission(),
             emit_ack=lambda _record: None,
         )
         self.assertEqual(result["provider"], "deepseek")
         self.assertEqual(result["model"], "deepseek-test")
 
-    def test_missing_ack_sink_prevents_executor_construction(self) -> None:
-        called = False
-
-        def factory():
-            nonlocal called
-            called = True
-            return _FakeExecutor([])
-
+    def test_missing_ack_sink_prevents_admission_and_executor(self) -> None:
+        events: list[str] = []
         with self.assertRaisesRegex(CommandHookError, "ACK_SINK_REQUIRED"):
-            execute_admitted_command(_command(), executor_factory=factory)
-        self.assertFalse(called)
+            execute_admitted_command(
+                _command(),
+                executor_factory=lambda: (
+                    events.append("factory") or _FakeExecutor(events)
+                ),
+                effect_admission=_allow_admission(events),
+            )
+        self.assertEqual(events, [])
+
+    def test_missing_effect_admission_prevents_ack_and_executor(self) -> None:
+        events: list[str] = []
+        with self.assertRaisesRegex(
+            CommandHookError, "EFFECT_ADMISSION_REQUIRED"
+        ):
+            execute_admitted_command(
+                _command(),
+                executor_factory=lambda: (
+                    events.append("factory") or _FakeExecutor(events)
+                ),
+                emit_ack=lambda _record: events.append("ack"),
+            )
+        self.assertEqual(events, [])
+
+    def test_authority_not_allow_prevents_ack_and_executor(self) -> None:
+        events: list[str] = []
+        with self.assertRaisesRegex(
+            CommandHookError, "AUTHORITY_ADMISSION_NOT_ALLOW"
+        ):
+            execute_admitted_command(
+                _command(),
+                executor_factory=lambda: (
+                    events.append("factory") or _FakeExecutor(events)
+                ),
+                effect_admission=_allow_admission(
+                    events, authority_decision="BLOCKED"
+                ),
+                emit_ack=lambda _record: events.append("ack"),
+            )
+        self.assertEqual(events, ["admission"])
+
+    def test_cost_unknown_prevents_ack_and_executor(self) -> None:
+        events: list[str] = []
+        with self.assertRaisesRegex(
+            CommandHookError, "PROVIDER_COST_ADMISSION_NOT_ALLOW"
+        ):
+            execute_admitted_command(
+                _command(),
+                executor_factory=lambda: (
+                    events.append("factory") or _FakeExecutor(events)
+                ),
+                effect_admission=_allow_admission(
+                    events, cost_decision="UNKNOWN"
+                ),
+                emit_ack=lambda _record: events.append("ack"),
+            )
+        self.assertEqual(events, ["admission"])
+
+    def test_stale_effect_admission_prevents_ack_and_executor(self) -> None:
+        events: list[str] = []
+        with self.assertRaisesRegex(
+            CommandHookError, "EFFECT_ADMISSION_NOT_CURRENT"
+        ):
+            execute_admitted_command(
+                _command(),
+                executor_factory=lambda: (
+                    events.append("factory") or _FakeExecutor(events)
+                ),
+                effect_admission=_allow_admission(
+                    events, currentness="STALE"
+                ),
+                emit_ack=lambda _record: events.append("ack"),
+            )
+        self.assertEqual(events, ["admission"])
+
+    def test_admission_binding_mismatch_prevents_ack_and_executor(self) -> None:
+        for field, value in {
+            "command_digest": "0" * 64,
+            "executor_id": "other-executor",
+            "effect_class": "OTHER_EFFECT",
+            "workspace_scope": "OTHER_SCOPE",
+            "authority_ref": "other-authority",
+        }.items():
+            with self.subTest(field=field):
+                events: list[str] = []
+                with self.assertRaisesRegex(
+                    CommandHookError, "EFFECT_ADMISSION_BINDING_MISMATCH"
+                ):
+                    execute_admitted_command(
+                        _command(),
+                        executor_factory=lambda: (
+                            events.append("factory") or _FakeExecutor(events)
+                        ),
+                        effect_admission=_allow_admission(
+                            events, **{field: value}
+                        ),
+                        emit_ack=lambda _record: events.append("ack"),
+                    )
+                self.assertEqual(events, ["admission"])
+
+    def test_admission_unknown_field_rejects_fail_closed(self) -> None:
+        events: list[str] = []
+        with self.assertRaisesRegex(
+            CommandHookError, "EFFECT_ADMISSION_SHAPE_INVALID"
+        ):
+            execute_admitted_command(
+                _command(),
+                executor_factory=lambda: _FakeExecutor(events),
+                effect_admission=_allow_admission(events, surprise="x"),
+                emit_ack=lambda _record: events.append("ack"),
+            )
+        self.assertEqual(events, ["admission"])
 
     def test_ack_sink_failure_prevents_executor_construction(self) -> None:
-        called = False
-
-        def factory():
-            nonlocal called
-            called = True
-            return _FakeExecutor([])
+        events: list[str] = []
 
         def bad_ack(_record):
+            events.append("ack")
             raise RuntimeError("writer failed with private internals")
 
         with self.assertRaisesRegex(CommandHookError, "ACK_EMIT_FAILED"):
             execute_admitted_command(
-                _command(), executor_factory=factory, emit_ack=bad_ack
+                _command(),
+                executor_factory=lambda: (
+                    events.append("factory") or _FakeExecutor(events)
+                ),
+                effect_admission=_allow_admission(events),
+                emit_ack=bad_ack,
             )
-        self.assertFalse(called)
+        self.assertEqual(events, ["admission", "ack"])
 
     def test_provider_error_is_typed_and_raw_error_is_not_serialized(
         self,
@@ -311,6 +461,7 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         result = execute_admitted_command(
             _command(),
             executor_factory=lambda: executor,
+            effect_admission=_allow_admission(),
             emit_ack=lambda _record: None,
         )
         self.assertEqual(result["record_type"], "ERROR")
@@ -329,6 +480,7 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         result = execute_admitted_command(
             _command(),
             executor_factory=factory,
+            effect_admission=_allow_admission(),
             emit_ack=lambda _record: None,
         )
         self.assertEqual(result["record_type"], "ERROR")
@@ -338,17 +490,17 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         self.assertEqual(result["error_type"], "RuntimeError")
         self.assertNotIn("secret path", repr(result))
 
-    def test_request_digest_binds_identity_objective_and_intent(self) -> None:
-        first = execute_admitted_command(
-            _command(),
-            executor_factory=lambda: _FakeExecutor([]),
-            emit_ack=lambda _record: None,
-        )
-        second = execute_admitted_command(
-            _command(),
-            executor_factory=lambda: _FakeExecutor([]),
-            emit_ack=lambda _record: None,
-        )
+    def test_request_digest_binds_identity_objective_intent_and_capability(self) -> None:
+        def run(command):
+            return execute_admitted_command(
+                command,
+                executor_factory=lambda: _FakeExecutor([]),
+                effect_admission=_allow_admission(),
+                emit_ack=lambda _record: None,
+            )
+
+        first = run(_command())
+        second = run(_command())
         self.assertEqual(
             first["execution_request_digest"],
             second["execution_request_digest"],
@@ -356,41 +508,26 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
 
         mutated = _command()
         mutated["objective"]["text"] += " Different objective."
-        third = execute_admitted_command(
-            mutated,
-            executor_factory=lambda: _FakeExecutor([]),
-            emit_ack=lambda _record: None,
-        )
         self.assertNotEqual(
             first["execution_request_digest"],
-            third["execution_request_digest"],
+            run(mutated)["execution_request_digest"],
         )
 
         mutated_id = _command()
         mutated_id["command_id"] = "cmd-minimal-002"
         mutated_id["idempotency_key"] = "cmd-minimal-002"
-        fourth = execute_admitted_command(
-            mutated_id,
-            executor_factory=lambda: _FakeExecutor([]),
-            emit_ack=lambda _record: None,
-        )
         self.assertNotEqual(
             first["execution_request_digest"],
-            fourth["execution_request_digest"],
+            run(mutated_id)["execution_request_digest"],
         )
 
         mutated_intent = _command()
         mutated_intent["objective"]["negative_intent"] = [
             "no unrelated external communication"
         ]
-        fifth = execute_admitted_command(
-            mutated_intent,
-            executor_factory=lambda: _FakeExecutor([]),
-            emit_ack=lambda _record: None,
-        )
         self.assertNotEqual(
             first["execution_request_digest"],
-            fifth["execution_request_digest"],
+            run(mutated_intent)["execution_request_digest"],
         )
 
     def test_validation_and_execution_do_not_mutate_input(self) -> None:
@@ -400,6 +537,7 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         execute_admitted_command(
             command,
             executor_factory=lambda: _FakeExecutor([]),
+            effect_admission=_allow_admission(),
             emit_ack=lambda _record: None,
         )
         self.assertEqual(command, original)
