@@ -1,0 +1,38 @@
+name: Project006 Provider Handoff Integration
+
+on:
+  push:
+    branches:
+      - p0plus/project006-provider-handoff-integration-v1
+  pull_request:
+    paths:
+      - 'tools/project006/provider_sidecar_reference/**'
+      - '.github/workflows/project006-provider-handoff-integration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-provider-handoff:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile exact integration files
+        run: |
+          python -m py_compile \
+            tools/project006/provider_sidecar_reference/provider_sidecar.py \
+            tools/project006/provider_sidecar_reference/provider_handoff.py \
+            tools/project006/provider_sidecar_reference/test_provider_handoff.py
+      - name: Run provider-sidecar and handoff suites
+        run: |
+          python -m unittest -v \
+            tools.project006.provider_sidecar_reference.test_provider_sidecar \
+            tools.project006.provider_sidecar_reference.test_provider_handoff
