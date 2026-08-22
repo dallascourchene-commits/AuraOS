@@ -14,6 +14,7 @@ SCHEDULER_CANONICAL_PROFILE = "AURAOS_V9_SCHEDULER_CANONICAL_JSON_V1"
 
 SCHEDULER_STATE_DOMAIN = "AURA::V9::SCHEDULER::STATE::V1"
 PHASE_DECISION_DOMAIN = "AURA::V9::SCHEDULER::PHASE-DECISION::V1"
+WORKLOAD_CONTENT_DOMAIN_V1 = "AURA::V9::C2A::WORKLOAD-CONTENT::V1"
 
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
 _MAX_JCS_SAFE_INTEGER = (1 << 53) - 1
@@ -119,6 +120,43 @@ def _canonical_string_set(values: Iterable[str], field: str) -> tuple[str, ...]:
     return tuple(sorted(normalized, key=lambda item: item.encode("utf-8")))
 
 
+def _canonical_string_sequence(values: Iterable[str], field: str) -> tuple[str, ...]:
+    """NFC-normalize an owner-ordered sequence without sorting it."""
+    normalized = tuple(_nfc(value, field) for value in values)
+    if len(set(normalized)) != len(normalized):
+        raise ContractViolation(f"{field} contains duplicate canonical members")
+    return normalized
+
+
+def _validate_acyclic_edges(
+    edges: Sequence[tuple[str, str]], field: str
+) -> None:
+    """Deterministic Kahn validation over the canonical directed edge graph."""
+    nodes = {node for edge in edges for node in edge}
+    if not nodes:
+        return
+    indegree = {node: 0 for node in nodes}
+    outgoing: dict[str, list[str]] = {node: [] for node in nodes}
+    for source, target in edges:
+        outgoing[source].append(target)
+        indegree[target] += 1
+    ready = sorted(
+        (node for node, degree in indegree.items() if degree == 0),
+        key=lambda item: item.encode("utf-8"),
+    )
+    visited = 0
+    while ready:
+        node = ready.pop(0)
+        visited += 1
+        for target in sorted(outgoing[node], key=lambda item: item.encode("utf-8")):
+            indegree[target] -= 1
+            if indegree[target] == 0:
+                ready.append(target)
+                ready.sort(key=lambda item: item.encode("utf-8"))
+    if visited != len(nodes):
+        raise ContractViolation(f"{field} contains a directed cycle")
+
+
 def _canonical_edge_set(
     values: Iterable[tuple[str, str]], field: str
 ) -> tuple[tuple[str, str], ...]:
@@ -133,7 +171,7 @@ def _canonical_edge_set(
         normalized.append((source, target))
     if len(set(normalized)) != len(normalized):
         raise ContractViolation(f"{field} contains duplicate canonical members")
-    return tuple(
+    result = tuple(
         sorted(
             normalized,
             key=lambda edge: (
@@ -142,6 +180,8 @@ def _canonical_edge_set(
             ),
         )
     )
+    _validate_acyclic_edges(result, field)
+    return result
 
 
 class SchedulerPhase(str, Enum):
@@ -167,6 +207,24 @@ class PhaseReason(str, Enum):
     REDUCTION_READY = "REDUCTION_READY"
     READY_WORK = "READY_WORK"
     ASSURANCE_FALLBACK = "ASSURANCE_FALLBACK"
+
+
+class SourceAccessStatus(str, Enum):
+    ALLOWED = "ALLOWED"
+    DENIED = "DENIED"
+    UNKNOWN = "UNKNOWN"
+
+
+class ReadinessValidationState(str, Enum):
+    CURRENT = "CURRENT"
+    STALE = "STALE"
+    UNKNOWN = "UNKNOWN"
+
+
+class ReadinessAdmissionState(str, Enum):
+    ALLOWED = "ALLOWED"
+    DENIED = "DENIED"
+    UNKNOWN = "UNKNOWN"
 
 
 @dataclass(frozen=True)
@@ -201,7 +259,142 @@ class WorkloadStateV1:
                 )
             ),
             "critical_path_refs": list(
-                _canonical_string_set(self.critical_path_refs, "critical_path_refs")
+                _canonical_string_sequence(
+                    self.critical_path_refs, "critical_path_refs"
+                )
+            ),
+        }
+
+    def workload_state_digest(self) -> str:
+        return _hash_domain(WORKLOAD_CONTENT_DOMAIN_V1, self.protected_body())
+
+
+def workload_state_digest(workload: WorkloadStateV1) -> str:
+    if not isinstance(workload, WorkloadStateV1):
+        raise ContractViolation("workload must be a WorkloadStateV1")
+    return workload.workload_state_digest()
+
+
+@dataclass(frozen=True)
+class WorkloadReadinessBindingV1:
+    workload_owner_ref: str
+    workload_generation: int
+    workload_currentness_digest: str
+    workload_state_digest: str
+    validation_state: ReadinessValidationState
+    workload_state_receipt_ref: str | None = None
+    workload_state_receipt_digest: str | None = None
+
+    def protected_body(self) -> dict[str, Any]:
+        if not isinstance(self.validation_state, ReadinessValidationState):
+            raise ContractViolation(
+                "workload_readiness.validation_state must be a ReadinessValidationState"
+            )
+        receipt_ref = self.workload_state_receipt_ref
+        receipt_digest = self.workload_state_receipt_digest
+        if (receipt_ref is None) != (receipt_digest is None):
+            raise ContractViolation(
+                "workload readiness receipt ref/digest must both be present or absent"
+            )
+        body: dict[str, Any] = {
+            "workload_owner_ref": _nfc(
+                self.workload_owner_ref, "workload_readiness.workload_owner_ref"
+            ),
+            "workload_generation": _count(
+                self.workload_generation, "workload_readiness.workload_generation"
+            ),
+            "workload_currentness_digest": _digest(
+                self.workload_currentness_digest,
+                "workload_readiness.workload_currentness_digest",
+            ),
+            "workload_state_digest": _digest(
+                self.workload_state_digest,
+                "workload_readiness.workload_state_digest",
+            ),
+            "validation_state": self.validation_state.value,
+        }
+        if receipt_ref is not None:
+            body["workload_state_receipt_ref"] = _nfc(
+                receipt_ref, "workload_readiness.workload_state_receipt_ref"
+            )
+            body["workload_state_receipt_digest"] = _digest(
+                receipt_digest,
+                "workload_readiness.workload_state_receipt_digest",
+            )
+        return body
+
+
+@dataclass(frozen=True)
+class WorkloadReadinessAuthorityV1:
+    workload_owner_ref: str
+    workload_generation: int
+    workload_currentness_digest: str
+    admission_state: ReadinessAdmissionState
+    configured_receipt_ref: str | None = None
+    configured_receipt_digest: str | None = None
+
+    def protected_body(self) -> dict[str, Any]:
+        if not isinstance(self.admission_state, ReadinessAdmissionState):
+            raise ContractViolation(
+                "workload_readiness_authority.admission_state must be a ReadinessAdmissionState"
+            )
+        receipt_ref = self.configured_receipt_ref
+        receipt_digest = self.configured_receipt_digest
+        if (receipt_ref is None) != (receipt_digest is None):
+            raise ContractViolation(
+                "configured workload readiness receipt ref/digest must both be present or absent"
+            )
+        body: dict[str, Any] = {
+            "workload_owner_ref": _nfc(
+                self.workload_owner_ref,
+                "workload_readiness_authority.workload_owner_ref",
+            ),
+            "workload_generation": _count(
+                self.workload_generation,
+                "workload_readiness_authority.workload_generation",
+            ),
+            "workload_currentness_digest": _digest(
+                self.workload_currentness_digest,
+                "workload_readiness_authority.workload_currentness_digest",
+            ),
+            "admission_state": self.admission_state.value,
+        }
+        if receipt_ref is not None:
+            body["configured_receipt_ref"] = _nfc(
+                receipt_ref,
+                "workload_readiness_authority.configured_receipt_ref",
+            )
+            body["configured_receipt_digest"] = _digest(
+                receipt_digest,
+                "workload_readiness_authority.configured_receipt_digest",
+            )
+        return body
+
+
+@dataclass(frozen=True)
+class SourceAccessStateV1:
+    status: SourceAccessStatus
+    owner_ref: str
+    source_generation: int
+    currentness_digest: str
+    evidence_ref: str
+    evidence_digest: str
+
+    def protected_body(self) -> dict[str, Any]:
+        if not isinstance(self.status, SourceAccessStatus):
+            raise ContractViolation("source_access.status must be a SourceAccessStatus")
+        return {
+            "status": self.status.value,
+            "owner_ref": _nfc(self.owner_ref, "source_access.owner_ref"),
+            "source_generation": _count(
+                self.source_generation, "source_access.source_generation"
+            ),
+            "currentness_digest": _digest(
+                self.currentness_digest, "source_access.currentness_digest"
+            ),
+            "evidence_ref": _nfc(self.evidence_ref, "source_access.evidence_ref"),
+            "evidence_digest": _digest(
+                self.evidence_digest, "source_access.evidence_digest"
             ),
         }
 
@@ -376,6 +569,8 @@ class SchedulerStateV1:
     recursion_depth: int
 
     workload: WorkloadStateV1
+    workload_readiness_binding: WorkloadReadinessBindingV1
+    workload_readiness_authority: WorkloadReadinessAuthorityV1
     evidence: EvidenceStateV1
     workers: WorkerStateV1
     resources: ResourceStateV1
@@ -388,6 +583,7 @@ class SchedulerStateV1:
     source_locality_refs: Sequence[str]
     source_generation: int
     source_current: bool
+    source_access: SourceAccessStateV1
     currentness_digest: str
     semantic_environment: str
 
@@ -410,6 +606,18 @@ class SchedulerStateV1:
     def protected_body(self) -> dict[str, Any]:
         if not isinstance(self.current_phase, SchedulerPhase):
             raise ContractViolation("current_phase must be a SchedulerPhase")
+        if not isinstance(self.workload, WorkloadStateV1):
+            raise ContractViolation("workload must be a WorkloadStateV1")
+        if not isinstance(self.workload_readiness_binding, WorkloadReadinessBindingV1):
+            raise ContractViolation(
+                "workload_readiness_binding must be a WorkloadReadinessBindingV1"
+            )
+        if not isinstance(self.workload_readiness_authority, WorkloadReadinessAuthorityV1):
+            raise ContractViolation(
+                "workload_readiness_authority must be a WorkloadReadinessAuthorityV1"
+            )
+        if not isinstance(self.source_access, SourceAccessStateV1):
+            raise ContractViolation("source_access must be a SourceAccessStateV1")
         for field, value in (
             ("source_current", self.source_current),
             ("authority_current", self.authority_current),
@@ -446,6 +654,8 @@ class SchedulerStateV1:
                 ),
             },
             "workload": self.workload.protected_body(),
+            "workload_readiness_binding": self.workload_readiness_binding.protected_body(),
+            "workload_readiness_authority": self.workload_readiness_authority.protected_body(),
             "evidence": self.evidence.protected_body(),
             "workers": self.workers.protected_body(),
             "resources": self.resources.protected_body(),
@@ -477,6 +687,7 @@ class SchedulerStateV1:
                     self.source_generation, "source_generation"
                 ),
                 "source_current": self.source_current,
+                "source_access": self.source_access.protected_body(),
                 "currentness_digest": _digest(
                     self.currentness_digest, "currentness_digest"
                 ),
@@ -552,12 +763,60 @@ class PhaseDecisionV1:
         return _hash_domain(PHASE_DECISION_DOMAIN, self.protected_body())
 
 
+def _source_access_allowed(state: SchedulerStateV1) -> bool:
+    access = state.source_access
+    return (
+        access.status is SourceAccessStatus.ALLOWED
+        and access.source_generation == state.source_generation
+        and access.currentness_digest == state.currentness_digest
+    )
+
+
+def _workload_readiness_admitted(state: SchedulerStateV1) -> bool:
+    binding = state.workload_readiness_binding
+    authority = state.workload_readiness_authority
+    try:
+        observed_digest = state.workload.workload_state_digest()
+        binding_body = binding.protected_body()
+        authority_body = authority.protected_body()
+    except ContractViolation:
+        return False
+
+    if binding.validation_state is not ReadinessValidationState.CURRENT:
+        return False
+    if authority.admission_state is not ReadinessAdmissionState.ALLOWED:
+        return False
+    if binding.workload_state_digest != observed_digest:
+        return False
+    if binding.workload_owner_ref != authority.workload_owner_ref:
+        return False
+    if binding.workload_generation != authority.workload_generation:
+        return False
+    if binding.workload_currentness_digest != authority.workload_currentness_digest:
+        return False
+    if binding.workload_generation != state.source_generation:
+        return False
+    if binding.workload_currentness_digest != state.currentness_digest:
+        return False
+
+    configured_ref = authority_body.get("configured_receipt_ref")
+    configured_digest = authority_body.get("configured_receipt_digest")
+    bound_ref = binding_body.get("workload_state_receipt_ref")
+    bound_digest = binding_body.get("workload_state_receipt_digest")
+    if configured_ref is None:
+        if bound_ref is not None or bound_digest is not None:
+            return False
+    elif bound_ref != configured_ref or bound_digest != configured_digest:
+        return False
+    return True
+
+
 def classify_phase(state: SchedulerStateV1) -> PhaseDecisionV1:
     """Classify one bounded scheduler phase without selecting topology or workers.
 
-    Hard source/currentness/authority/privacy/step-basis guards dominate workflow
-    progression. Recovery conditions dominate ordinary discovery/synthesis work.
-    The remaining rules are explicit and ordered so the decision can be replayed
+    Source-access and exact workload-readiness admission are first hard guards,
+    alongside source/currentness/authority/privacy/step-basis predicates. Recovery
+    then dominates ordinary workflow progression. The decision remains replayable
     from the protected SchedulerStateV1 alone.
     """
 
@@ -567,11 +826,13 @@ def classify_phase(state: SchedulerStateV1) -> PhaseDecisionV1:
     state_digest = state.state_digest()
 
     if (
-        not state.source_current
+        not _source_access_allowed(state)
+        or not state.source_current
         or not state.authority_current
         or not state.privacy_admissible
         or not state.creation_stage_ready
         or not state.step_basis_current
+        or not _workload_readiness_admitted(state)
     ):
         phase = SchedulerPhase.REBASE
         reason = PhaseReason.HARD_GUARD_REBASE
