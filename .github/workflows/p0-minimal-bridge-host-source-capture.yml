@@ -28,7 +28,6 @@ jobs:
           python3 - "$ROOT" "$OUT" <<'PY'
           import ast
           import hashlib
-          import os
           from pathlib import Path
           import re
           import stat
@@ -61,7 +60,7 @@ jobs:
                   text = data.decode('utf-8')
                   st = resolved.stat()
               except Exception as exc:
-                  metadata.append(f'READABLE=false')
+                  metadata.append('READABLE=false')
                   metadata.append(f'ERROR_TYPE={type(exc).__name__}')
                   continue
               metadata.extend([
@@ -79,9 +78,7 @@ jobs:
                   metadata.append('AST_PARSE=false')
                   metadata.append(f'AST_ERROR_LINE={exc.lineno}')
                   tree = None
-              snap = []
-              snap.append(f'FILE {name}')
-              snap.append(f'SHA256 {hashlib.sha256(data).hexdigest()}')
+              snap = [f'FILE {name}', f'SHA256 {hashlib.sha256(data).hexdigest()}']
               if tree is not None:
                   snap.append('STRUCTURE')
                   defs = []
@@ -104,7 +101,7 @@ jobs:
                   for row in sorted(imports):
                       snap.append(f'{row[0]}\t{row[1]}')
                   for line_no, kind, def_name, args in sorted(defs):
-                      snap.append(f'{line_no]}\t{kind}\t{def_name}({args})')
+                      snap.append(f'{line_no}\t{kind}\t{def_name}({args})')
               hits = set()
               for i, line in enumerate(lines, 1):
                   lower = line.lower()
