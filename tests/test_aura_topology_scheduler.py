@@ -502,6 +502,19 @@ def test_readiness_owner_generation_and_currentness_must_match_authority():
     ).phase is SchedulerPhase.REBASE
 
 
+def test_canonically_equivalent_readiness_owner_refs_preserve_execute():
+    item = workload()
+    nfd_owner = "drive://wo-c2/cafe\u0301"
+    nfc_owner = "drive://wo-c2/café"
+    s = state(
+        workload=item,
+        workload_readiness_binding=readiness_binding(item, owner_ref=nfd_owner),
+        workload_readiness_authority=readiness_authority(owner_ref=nfc_owner),
+    )
+    assert s.workload_readiness_binding.protected_body()["workload_owner_ref"] == nfc_owner
+    assert classify_phase(s).phase is SchedulerPhase.EXECUTE
+
+
 def test_current_status_alone_cannot_override_denied_admission():
     s = state()
     denied = replace(
@@ -592,6 +605,8 @@ def test_invalid_basis_points_creation_stage_and_digest_fail_closed():
             resources=replace(resources(), battery_basis_points=10001),
         ).state_digest()
     with pytest.raises(ContractViolation, match="creation_stage"):
+        replace(state(), creation_stage=11).protected_body()
+    with pytest.raises(ContractViolation, match="creation_stage"):
         replace(state(), creation_stage=11).state_digest()
     with pytest.raises(ContractViolation, match="objective_digest"):
         replace(state(), objective_digest="bad").state_digest()
@@ -599,7 +614,9 @@ def test_invalid_basis_points_creation_stage_and_digest_fail_closed():
 
 def test_bool_is_not_accepted_as_integer():
     with pytest.raises(ContractViolation, match="source_generation"):
-        state(source_generation=True).state_digest()
+        replace(state(), source_generation=True).state_digest()
+    with pytest.raises(ContractViolation, match="workload_readiness.workload_generation"):
+        state(source_generation=True).workload_readiness_binding.protected_body()
 
 
 def test_state_and_new_relations_are_frozen():
