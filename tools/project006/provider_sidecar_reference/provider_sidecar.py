@@ -332,33 +332,47 @@ class ProviderSidecarReference:
         ).encode("utf-8")
         return hashlib.sha256(canonical).hexdigest()
 
-    def _routes(self, route_ref: str) -> list[ProviderRoute]:
+    def _provider_order(self, route_ref: str) -> tuple[str, tuple[str, ...]]:
+        """Resolve only the logical ordered provider list for one route ref."""
         ref = self.validate_route_ref(route_ref)
-        routes: list[ProviderRoute] = []
         try:
-            provider_order = tuple(self.registry.provider_order(ref))
+            return ref, tuple(self.registry.provider_order(ref))
         except Exception as exc:
             raise LocalResolutionFailure from exc
+
+    def _resolve_route(
+        self,
+        route_ref: str,
+        provider: str,
+        fallback_index: int,
+    ) -> ProviderRoute | None:
+        """Resolve one reached fallback candidate without touching later candidates."""
+        try:
+            cfg = self.registry.get_provider_config(provider)
+            if not cfg or str(cfg.get("api") or "openai") != "openai":
+                return None
+            endpoint = str(cfg.get("base_url") or cfg.get("url") or "")
+            if not endpoint.lower().startswith("https://"):
+                return None
+            model = self.registry.resolve_model(provider, route_ref)
+        except Exception as exc:
+            raise LocalResolutionFailure from exc
+        return ProviderRoute(
+            route_ref=route_ref,
+            provider=provider,
+            model=model,
+            endpoint=endpoint,
+            fallback_index=fallback_index,
+        )
+
+    def _routes(self, route_ref: str) -> list[ProviderRoute]:
+        """Eager route enumeration retained for bounded health-report inspection."""
+        ref, provider_order = self._provider_order(route_ref)
+        routes: list[ProviderRoute] = []
         for index, provider in enumerate(provider_order):
-            try:
-                cfg = self.registry.get_provider_config(provider)
-                if not cfg or str(cfg.get("api") or "openai") != "openai":
-                    continue
-                endpoint = str(cfg.get("base_url") or cfg.get("url") or "")
-                if not endpoint.lower().startswith("https://"):
-                    continue
-                model = self.registry.resolve_model(provider, ref)
-            except Exception as exc:
-                raise LocalResolutionFailure from exc
-            routes.append(
-                ProviderRoute(
-                    route_ref=ref,
-                    provider=provider,
-                    model=model,
-                    endpoint=endpoint,
-                    fallback_index=index,
-                )
-            )
+            route = self._resolve_route(ref, provider, index)
+            if route is not None:
+                routes.append(route)
         return routes
 
     def _credentials_for_route(self, route: ProviderRoute) -> tuple[str, ...]:
@@ -593,7 +607,7 @@ class ProviderSidecarReference:
         deadline = time.monotonic() + total_deadline_sec
 
         try:
-            routes = self._routes(ref)
+            _, provider_order = self._provider_order(ref)
         except LocalResolutionFailure:
             return DispatchResult(
                 None,
@@ -607,53 +621,69 @@ class ProviderSidecarReference:
                 ),
             )
 
-        resolved_routes: list[tuple[ProviderRoute, tuple[str, ...]]] = []
-        for route in routes:
-            try:
-                credentials = self._credentials_for_route(route)
-            except LocalResolutionFailure:
-                return DispatchResult(
-                    None,
-                    self._receipt(
-                        status=SidecarStatus.LOCAL_RESOLUTION_ERROR,
-                        attempt_id=attempt_id,
-                        execution_digest=execution_digest,
-                        route_ref=ref,
-                        route=route,
-                        attempts=0,
-                    ),
-                )
-            resolved_routes.append((route, credentials))
-
-        admission_failure = self._admit(deadline)
-        if admission_failure is not None:
-            return DispatchResult(
-                None,
-                self._receipt(
-                    status=admission_failure,
-                    attempt_id=attempt_id,
-                    execution_digest=execution_digest,
-                    route_ref=ref,
-                    route=None,
-                    attempts=0,
-                ),
-            )
+        attempts = 0
+        saw_credential = False
+        saw_open_circuit = False
+        last_effective_route: ProviderRoute | None = None
+        last_status = SidecarStatus.PROVIDER_UNAVAILABLE
+        last_retry_after_ms: int | None = None
+        admission_held = False
 
         try:
-            attempts = 0
-            saw_credential = False
-            saw_open_circuit = False
-            last_effective_route: ProviderRoute | None = None
-            last_status = SidecarStatus.PROVIDER_UNAVAILABLE
-            last_retry_after_ms: int | None = None
+            for index, provider in enumerate(provider_order):
+                try:
+                    route = self._resolve_route(ref, provider, index)
+                    if route is None:
+                        continue
+                    credentials = self._credentials_for_route(route)
+                except LocalResolutionFailure:
+                    # A local failure must never leak a cause, create/mutate the
+                    # unresolved candidate's circuit, or erase truthful prior
+                    # transport accounting. If dispatch admission was already
+                    # acquired for an earlier runnable fallback, release it
+                    # before taking the pressure snapshot for the error receipt.
+                    if admission_held:
+                        self._release()
+                        admission_held = False
+                    return DispatchResult(
+                        None,
+                        self._receipt(
+                            status=SidecarStatus.LOCAL_RESOLUTION_ERROR,
+                            attempt_id=attempt_id,
+                            execution_digest=execution_digest,
+                            route_ref=ref,
+                            route=last_effective_route,
+                            attempts=attempts,
+                        ),
+                    )
 
-            for route, credentials in resolved_routes:
                 if not credentials:
                     continue
                 saw_credential = True
                 # Only a credentialed route may become the terminal route binding.
                 # Later uncredentialed fallback enumeration must never overwrite it.
                 last_effective_route = route
+
+                # Global admission is dispatch-scoped and acquired only once the
+                # first runnable candidate is actually reached. It remains held
+                # across lawful fallback attempts, then is released exactly once.
+                if not admission_held:
+                    admission_failure = self._admit(deadline)
+                    if admission_failure is not None:
+                        return DispatchResult(
+                            None,
+                            self._receipt(
+                                status=admission_failure,
+                                attempt_id=attempt_id,
+                                execution_digest=execution_digest,
+                                route_ref=ref,
+                                route=route,
+                                attempts=attempts,
+                            ),
+                        )
+                    admission_held = True
+
+                # Candidate-local resolution is complete before circuit mutation.
                 if not self._circuit_allows(route.provider):
                     saw_open_circuit = True
                     continue
@@ -836,4 +866,5 @@ class ProviderSidecarReference:
                 ),
             )
         finally:
-            self._release()
+            if admission_held:
+                self._release()
