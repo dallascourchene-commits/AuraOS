@@ -43,6 +43,7 @@ class SidecarStatus(str, Enum):
     OK = "OK"
     INVALID_ROUTE = "INVALID_ROUTE"
     NO_CREDENTIAL = "NO_CREDENTIAL"
+    LOCAL_RESOLUTION_ERROR = "LOCAL_RESOLUTION_ERROR"
     QUEUE_FULL = "QUEUE_FULL"
     CIRCUIT_OPEN = "CIRCUIT_OPEN"
     RETRYABLE_PROVIDER_PRESSURE = "RETRYABLE_PROVIDER_PRESSURE"
@@ -75,6 +76,10 @@ class ResponseTooLarge(RuntimeError):
 
 class InvalidContentType(RuntimeError):
     """Provider response was not declared as JSON."""
+
+
+class LocalResolutionFailure(RuntimeError):
+    """Local provider capability resolution failed; never serialize the cause."""
 
 
 class _NoRedirectHandler(urllib.request.HTTPRedirectHandler):
@@ -330,23 +335,38 @@ class ProviderSidecarReference:
     def _routes(self, route_ref: str) -> list[ProviderRoute]:
         ref = self.validate_route_ref(route_ref)
         routes: list[ProviderRoute] = []
-        for index, provider in enumerate(self.registry.provider_order(ref)):
-            cfg = self.registry.get_provider_config(provider)
-            if not cfg or str(cfg.get("api") or "openai") != "openai":
-                continue
-            endpoint = str(cfg.get("base_url") or cfg.get("url") or "")
-            if not endpoint.lower().startswith("https://"):
-                continue
+        try:
+            provider_order = tuple(self.registry.provider_order(ref))
+        except Exception as exc:
+            raise LocalResolutionFailure from exc
+        for index, provider in enumerate(provider_order):
+            try:
+                cfg = self.registry.get_provider_config(provider)
+                if not cfg or str(cfg.get("api") or "openai") != "openai":
+                    continue
+                endpoint = str(cfg.get("base_url") or cfg.get("url") or "")
+                if not endpoint.lower().startswith("https://"):
+                    continue
+                model = self.registry.resolve_model(provider, ref)
+            except Exception as exc:
+                raise LocalResolutionFailure from exc
             routes.append(
                 ProviderRoute(
                     route_ref=ref,
                     provider=provider,
-                    model=self.registry.resolve_model(provider, ref),
+                    model=model,
                     endpoint=endpoint,
                     fallback_index=index,
                 )
             )
         return routes
+
+    def _credentials_for_route(self, route: ProviderRoute) -> tuple[str, ...]:
+        try:
+            cfg = self.registry.get_provider_config(route.provider) or {}
+            return tuple(self.credential_resolver(route.provider, cfg))
+        except Exception as exc:
+            raise LocalResolutionFailure from exc
 
     def _pressure_snapshot(self) -> tuple[int, int]:
         with self._condition:
@@ -486,33 +506,54 @@ class ProviderSidecarReference:
             return None
         return int(milliseconds)
 
-    def health_report(self, route_ref: str) -> dict[str, Any]:
-        """Return zero-secret routing/pressure state for Lane C or health UI."""
-        ref = self.validate_route_ref(route_ref)
-        providers: list[dict[str, Any]] = []
-        for route in self._routes(ref):
-            cfg = self.registry.get_provider_config(route.provider) or {}
-            # Credential values are discarded immediately; only a count escapes.
-            key_count = len(tuple(self.credential_resolver(route.provider, cfg)))
-            providers.append(
-                {
-                    "provider": route.provider,
-                    "model": route.model,
-                    "configured": key_count > 0,
-                    "key_count": key_count,
-                    "fallback_index": route.fallback_index,
-                    "circuit_state": self._circuit_state(route.provider).value,
-                }
-            )
+    def _health_payload(
+        self,
+        *,
+        route_ref: str,
+        status: SidecarStatus,
+        providers: list[dict[str, Any]],
+    ) -> dict[str, Any]:
         in_flight, queued = self._pressure_snapshot()
         return {
-            "route_ref": ref,
+            "status": status.value,
+            "route_ref": route_ref,
             "concurrency_limit": self.concurrency_limit,
             "queue_limit": self.queue_limit,
             "in_flight": in_flight,
             "queue_depth": queued,
             "providers": providers,
         }
+
+    def health_report(self, route_ref: str) -> dict[str, Any]:
+        """Return zero-secret routing/pressure state for Lane C or health UI."""
+        ref = self.validate_route_ref(route_ref)
+        providers: list[dict[str, Any]] = []
+        try:
+            routes = self._routes(ref)
+            for route in routes:
+                credentials = self._credentials_for_route(route)
+                key_count = len(credentials)
+                providers.append(
+                    {
+                        "provider": route.provider,
+                        "model": route.model,
+                        "configured": key_count > 0,
+                        "key_count": key_count,
+                        "fallback_index": route.fallback_index,
+                        "circuit_state": self._circuit_state(route.provider).value,
+                    }
+                )
+        except LocalResolutionFailure:
+            return self._health_payload(
+                route_ref=ref,
+                status=SidecarStatus.LOCAL_RESOLUTION_ERROR,
+                providers=[],
+            )
+        return self._health_payload(
+            route_ref=ref,
+            status=SidecarStatus.OK,
+            providers=providers,
+        )
 
     def dispatch(
         self,
@@ -565,7 +606,20 @@ class ProviderSidecarReference:
             )
 
         try:
-            routes = self._routes(ref)
+            try:
+                routes = self._routes(ref)
+            except LocalResolutionFailure:
+                return DispatchResult(
+                    None,
+                    self._receipt(
+                        status=SidecarStatus.LOCAL_RESOLUTION_ERROR,
+                        attempt_id=attempt_id,
+                        execution_digest=execution_digest,
+                        route_ref=ref,
+                        route=None,
+                        attempts=0,
+                    ),
+                )
             attempts = 0
             saw_credential = False
             saw_open_circuit = False
@@ -574,8 +628,20 @@ class ProviderSidecarReference:
             last_retry_after_ms: int | None = None
 
             for route in routes:
-                cfg = self.registry.get_provider_config(route.provider) or {}
-                credentials = tuple(self.credential_resolver(route.provider, cfg))
+                try:
+                    credentials = self._credentials_for_route(route)
+                except LocalResolutionFailure:
+                    return DispatchResult(
+                        None,
+                        self._receipt(
+                            status=SidecarStatus.LOCAL_RESOLUTION_ERROR,
+                            attempt_id=attempt_id,
+                            execution_digest=execution_digest,
+                            route_ref=ref,
+                            route=route,
+                            attempts=0,
+                        ),
+                    )
                 if not credentials:
                     continue
                 saw_credential = True
