@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1647
-- **total_bytes**: 26451601
-- **text_tokens_est**: 6603322
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1005, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1648
+- **total_bytes**: 26454695
+- **text_tokens_est**: 6604096
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1005, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1647,
+  "repo_file_count": 1648,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -172,6 +172,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/model-cognome-replay-probes.yml",
     ".github/workflows/model-cognome-telemetry.yml",
     ".github/workflows/model-connectome-bridge.yml",
+    ".github/workflows/p0-minimal-bridge-host-source-capture.yml",
     ".github/workflows/p1-1-authority-contracts.yml",
     ".github/workflows/p2-1-apply-review-fixes.yml",
     ".github/workflows/p2-1-planning-board-contracts.yml",
@@ -1787,16 +1788,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1647,
-  "bytes": 26451601,
-  "tokens_est": 6603322,
+  "files": 1648,
+  "bytes": 26454695,
+  "tokens_est": 6604096,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 235,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1005,
-    "schema_or_lexicon": 273,
+    "schema_or_lexicon": 274,
     "support_file": 49
   }
 }
