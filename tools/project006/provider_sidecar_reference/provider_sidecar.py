@@ -591,6 +591,40 @@ class ProviderSidecarReference:
         if total_deadline_sec <= 0 or retry_budget < 0:
             raise ValueError("deadline must be positive and retry_budget non-negative")
         deadline = time.monotonic() + total_deadline_sec
+
+        try:
+            routes = self._routes(ref)
+        except LocalResolutionFailure:
+            return DispatchResult(
+                None,
+                self._receipt(
+                    status=SidecarStatus.LOCAL_RESOLUTION_ERROR,
+                    attempt_id=attempt_id,
+                    execution_digest=execution_digest,
+                    route_ref=ref,
+                    route=None,
+                    attempts=0,
+                ),
+            )
+
+        resolved_routes: list[tuple[ProviderRoute, tuple[str, ...]]] = []
+        for route in routes:
+            try:
+                credentials = self._credentials_for_route(route)
+            except LocalResolutionFailure:
+                return DispatchResult(
+                    None,
+                    self._receipt(
+                        status=SidecarStatus.LOCAL_RESOLUTION_ERROR,
+                        attempt_id=attempt_id,
+                        execution_digest=execution_digest,
+                        route_ref=ref,
+                        route=route,
+                        attempts=0,
+                    ),
+                )
+            resolved_routes.append((route, credentials))
+
         admission_failure = self._admit(deadline)
         if admission_failure is not None:
             return DispatchResult(
@@ -606,20 +640,6 @@ class ProviderSidecarReference:
             )
 
         try:
-            try:
-                routes = self._routes(ref)
-            except LocalResolutionFailure:
-                return DispatchResult(
-                    None,
-                    self._receipt(
-                        status=SidecarStatus.LOCAL_RESOLUTION_ERROR,
-                        attempt_id=attempt_id,
-                        execution_digest=execution_digest,
-                        route_ref=ref,
-                        route=None,
-                        attempts=0,
-                    ),
-                )
             attempts = 0
             saw_credential = False
             saw_open_circuit = False
@@ -627,21 +647,7 @@ class ProviderSidecarReference:
             last_status = SidecarStatus.PROVIDER_UNAVAILABLE
             last_retry_after_ms: int | None = None
 
-            for route in routes:
-                try:
-                    credentials = self._credentials_for_route(route)
-                except LocalResolutionFailure:
-                    return DispatchResult(
-                        None,
-                        self._receipt(
-                            status=SidecarStatus.LOCAL_RESOLUTION_ERROR,
-                            attempt_id=attempt_id,
-                            execution_digest=execution_digest,
-                            route_ref=ref,
-                            route=route,
-                            attempts=0,
-                        ),
-                    )
+            for route, credentials in resolved_routes:
                 if not credentials:
                     continue
                 saw_credential = True
