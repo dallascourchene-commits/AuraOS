@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - p0-minimal-bridge-host-source-capture-20260822
+    paths:
+      - '.github/workflows/p0-minimal-bridge-host-source-capture.yml'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   capture-local-bridge-source:
@@ -15,56 +17,126 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - name: Capture exact local bridge scripts without runtime effects
+      - name: Capture redacted local bridge structure without runtime effects
         shell: bash
         run: |
           set -euo pipefail
           OUT="$GITHUB_WORKSPACE/host-source-snapshot"
           ROOT="/home/john_of_wick/.config/aura-drive/bin"
+          rm -rf "$OUT"
           mkdir -p "$OUT"
-          : > "$OUT/metadata.txt"
-          for name in aura_drive_swarm_inbox_v1.py aura_drive_bus_writer_v1.py; do
-            src="$ROOT/$name"
-            printf 'FILE=%s\n' "$name" >> "$OUT/metadata.txt"
-            if [ ! -r "$src" ]; then
-              printf 'READABLE=false\n' >> "$OUT/metadata.txt"
-              continue
-            fi
-            resolved="$(realpath -- "$src")"
-            case "$resolved" in
-              "$ROOT"/*) ;;
-              *) printf 'BOUNDARY_REJECT=%s\n' "$resolved" >> "$OUT/metadata.txt"; continue ;;
-            esac
-            printf 'READABLE=true\nRESOLVED=%s\n' "$resolved" >> "$OUT/metadata.txt"
-            stat -Lc 'STAT=%F|%U|%G|%a|%s|%n' -- "$resolved" >> "$OUT/metadata.txt"
-            sha256sum -- "$resolved" >> "$OUT/metadata.txt"
-            if grep -Eq 'AIza[0-9A-Za-z_-]{20,}|sk-[0-9A-Za-z_-]{12,}|gh[pousr]_[0-9A-Za-z]{20,}|ya29\.[0-9A-Za-z_-]{20,}|1//[0-9A-Za-z_-]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}' "$resolved"; then
-              printf 'RAW_SOURCE_WITHHELD=credential-like-literal-detected\n' >> "$OUT/metadata.txt"
-              python3 - "$resolved" "$OUT/${name}.ast.txt" <<'PY'
-          import ast, sys
-          src, out = sys.argv[1], sys.argv[2]
-          text = open(src, encoding='utf-8').read()
-          tree = ast.parse(text, filename=src)
-          rows = []
-          for node in ast.walk(tree):
-              if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-                  rows.append((getattr(node, 'lineno', 0), type(node).__name__, node.name))
-              elif isinstance(node, (ast.Import, ast.ImportFrom)):
-                  rows.append((getattr(node, 'lineno', 0), type(node).__name__, ast.unparse(node)))
-          with open(out, 'w', encoding='utf-8') as fh:
-              for line, kind, value in sorted(rows):
-                  fh.write(f'{line}\t{kind}\t{value}\n')
+          python3 - "$ROOT" "$OUT" <<'PY'
+          import ast
+          import hashlib
+          import os
+          from pathlib import Path
+          import re
+          import stat
+          import sys
+
+          root = Path(sys.argv[1]).resolve()
+          out = Path(sys.argv[2])
+          names = ('aura_drive_swarm_inbox_v1.py', 'aura_drive_bus_writer_v1.py')
+          keywords = (
+              'message_authorized', 'execution_authorized', 'authority_ref',
+              'command_id', 'idempotency_key', 'objective', 'sha256', 'receipt',
+              'seen', 'processed', 'consumed', 'response', 'writer', 'inbox',
+              'drive', 'result', 'error',
+          )
+          secret_line = re.compile(
+              r'(?i)(api[_-]?key|client[_-]?secret|refresh[_-]?token|access[_-]?token|bearer|password|credential)'
+          )
+          token_literal = re.compile(
+              r'(AIza[0-9A-Za-z_-]{20,}|sk-[0-9A-Za-z_-]{12,}|gh[pousr]_[0-9A-Za-z]{20,}|ya29\.[0-9A-Za-z_-]{20,}|1//[0-9A-Za-z_-]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,})'
+          )
+
+          metadata = []
+          for name in names:
+              requested = root / name
+              metadata.append(f'FILE={name}')
+              try:
+                  resolved = requested.resolve(strict=True)
+                  resolved.relative_to(root)
+                  data = resolved.read_bytes()
+                  text = data.decode('utf-8')
+                  st = resolved.stat()
+              except Exception as exc:
+                  metadata.append(f'READABLE=false')
+                  metadata.append(f'ERROR_TYPE={type(exc).__name__}')
+                  continue
+              metadata.extend([
+                  'READABLE=true',
+                  f'RESOLVED={resolved}',
+                  f'SHA256={hashlib.sha256(data).hexdigest()}',
+                  f'SIZE={st.st_size}',
+                  f'MODE={oct(stat.S_IMODE(st.st_mode))}',
+                  f'UID={st.st_uid}',
+              ])
+              lines = text.splitlines()
+              try:
+                  tree = ast.parse(text, filename=str(resolved))
+              except SyntaxError as exc:
+                  metadata.append('AST_PARSE=false')
+                  metadata.append(f'AST_ERROR_LINE={exc.lineno}')
+                  tree = None
+              snap = []
+              snap.append(f'FILE {name}')
+              snap.append(f'SHA256 {hashlib.sha256(data).hexdigest()}')
+              if tree is not None:
+                  snap.append('STRUCTURE')
+                  defs = []
+                  imports = []
+                  for node in ast.walk(tree):
+                      if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                          args = [a.arg for a in (*node.args.posonlyargs, *node.args.args, *node.args.kwonlyargs)]
+                          if node.args.vararg:
+                              args.append('*' + node.args.vararg.arg)
+                          if node.args.kwarg:
+                              args.append('**' + node.args.kwarg.arg)
+                          defs.append((node.lineno, 'function', node.name, ','.join(args)))
+                      elif isinstance(node, ast.ClassDef):
+                          defs.append((node.lineno, 'class', node.name, ''))
+                      elif isinstance(node, ast.Import):
+                          imports.append((node.lineno, 'import ' + ', '.join(alias.name for alias in node.names)))
+                      elif isinstance(node, ast.ImportFrom):
+                          module = node.module or ''
+                          imports.append((node.lineno, f'from {module} import ' + ', '.join(alias.name for alias in node.names)))
+                  for row in sorted(imports):
+                      snap.append(f'{row[0]}\t{row[1]}')
+                  for line_no, kind, def_name, args in sorted(defs):
+                      snap.append(f'{line_no]}\t{kind}\t{def_name}({args})')
+              hits = set()
+              for i, line in enumerate(lines, 1):
+                  lower = line.lower()
+                  if any(k in lower for k in keywords):
+                      for j in range(max(1, i - 5), min(len(lines), i + 5) + 1):
+                          hits.add(j)
+              snap.append('KEYWORD_BOUNDED_EXCERPTS')
+              last = None
+              for j in sorted(hits):
+                  if last is not None and j > last + 1:
+                      snap.append('---')
+                  line = lines[j - 1]
+                  if secret_line.search(line):
+                      rendered = '[WITHHELD_SECRET_SENSITIVE_LINE]'
+                  else:
+                      rendered = token_literal.sub('[REDACTED_TOKEN_LITERAL]', line)
+                  snap.append(f'{j:04d}: {rendered}')
+                  last = j
+              (out / f'{name}.snapshot.txt').write_text('\n'.join(snap) + '\n', encoding='utf-8')
+          metadata.extend(['NO_SERVICE_MUTATION=true', 'NO_PROVIDER_CALL=true', 'NO_ENV_DUMP=true', 'RAW_SOURCE_PUBLICATION=false'])
+          (out / 'metadata.txt').write_text('\n'.join(metadata) + '\n', encoding='utf-8')
           PY
-            else
-              cp -- "$resolved" "$OUT/$name"
-              printf 'RAW_SOURCE_CAPTURED=true\n' >> "$OUT/metadata.txt"
-            fi
-          done
-          printf 'NO_SERVICE_MUTATION=true\nNO_PROVIDER_CALL=true\nNO_ENV_DUMP=true\n' >> "$OUT/metadata.txt"
-      - name: Upload bounded host source snapshot
-        uses: actions/upload-artifact@v4
-        with:
-          name: p0-minimal-bridge-host-source-snapshot
-          path: host-source-snapshot/
-          if-no-files-found: error
-          retention-days: 1
+      - name: Commit redacted snapshot to temporary branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add host-source-snapshot/
+          if git diff --cached --quiet; then
+            echo 'NO_SNAPSHOT_CHANGE'
+            exit 0
+          fi
+          git commit -m 'p0: capture redacted local bridge source structure'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
