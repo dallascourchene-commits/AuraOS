@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786938896,
+  "generated_at_unix": 1787404470,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1634,
+    "repo_file_count": 1635,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -608,6 +608,7 @@
       "aura_live_architect_cockpit_adapter.py",
       "aura_llm_call_logger.py",
       "aura_llm_egress.py",
+      "aura_local_inference_gateway.py",
       "aura_luminance_engine.py",
       "aura_matrix_benchmark.py",
       "aura_mcp_gateway.py",
@@ -1654,6 +1655,7 @@
       "aura_blockchain/memory_staking.py",
       "aura_blockchain/node.py",
       "aura_blockchain/phasor_ledger.py",
+      "aura_local_inference_gateway.py",
       "aura_spatial_importers/__init__.py",
       "aura_spatial_importers/contracts.py",
       "aura_spatial_importers/gaussian_gltf.py",
@@ -1741,8 +1743,7 @@
       "tests/test_aura_capability_connectome_v2.py",
       "tests/test_aura_capability_lane_registry.py",
       "tests/test_aura_capability_resolver.py",
-      "tests/test_aura_capability_resolver_connectome.py",
-      "tests/test_aura_change_graph.py"
+      "tests/test_aura_capability_resolver_connectome.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1750,15 +1751,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1634,
-      "bytes": 26316194,
-      "tokens_est": 6569465,
+      "files": 1635,
+      "bytes": 26343310,
+      "tokens_est": 6576244,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 234,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 995,
+        "python_module": 996,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -2369,6 +2370,7 @@
         "aura_live_architect_cockpit_adapter.py",
         "aura_llm_call_logger.py",
         "aura_llm_egress.py",
+        "aura_local_inference_gateway.py",
         "aura_luminance_engine.py",
         "aura_matrix_benchmark.py",
         "aura_mcp_gateway.py",
@@ -2438,8 +2440,7 @@
         "aura_planning_events.py",
         "aura_planning_frontier.py",
         "aura_planning_projector.py",
-        "aura_planning_regression.py",
-        "aura_plugin_registry.py"
+        "aura_planning_regression.py"
       ]
     }
   ],
@@ -8027,6 +8028,14 @@
         "line": 106,
         "end_line": 107,
         "semantic_id": "aura_gate_oidc.py#function:_canonical_json:519ba8e5ddc6c34c",
+        "signature_hash": "caa6df7371712507"
+      },
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "aura_local_inference_gateway.py#function:_canonical_json:5964c6f2f97b7b66",
         "signature_hash": "caa6df7371712507"
       },
       {
@@ -35788,6 +35797,14 @@
         "end_line": 131,
         "semantic_id": "aura_construction_pascal_spatial_foundry_p4_server.py#function:_sha256_bytes:d897d03a366ba299",
         "signature_hash": "14fa37530afca5ef"
+      },
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 46,
+        "semantic_id": "aura_local_inference_gateway.py#function:_sha256_bytes:8f51988bef729c04",
+        "signature_hash": "14fa37530afca5ef"
       }
     ],
     "_bilateral_identity_digest": [
@@ -60474,6 +60491,446 @@
         "end_line": 725,
         "semantic_id": "aura_llm_egress.py#function:generate_architect_model:1593affd62f7e159",
         "signature_hash": "172fe98fbf0de25f"
+      }
+    ],
+    "PolicyResolutionError": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 34,
+        "semantic_id": "aura_local_inference_gateway.py#class:PolicyResolutionError:01b360f8f7f8ea01",
+        "signature_hash": "1653674e9ca1dc0d"
+      }
+    ],
+    "StalePolicyError": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "aura_local_inference_gateway.py#class:StalePolicyError:83df84e3c539d87b",
+        "signature_hash": "91e3bc2bebc9f10e"
+      }
+    ],
+    "_sha256_json": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "aura_local_inference_gateway.py#function:_sha256_json:de549de3635ee690",
+        "signature_hash": "583097ecac7a5ede"
+      }
+    ],
+    "_require_nonempty_text": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 56,
+        "semantic_id": "aura_local_inference_gateway.py#function:_require_nonempty_text:a2199a8a93e14218",
+        "signature_hash": "83862ec49f904a6b"
+      }
+    ],
+    "_require_string_tuple": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 65,
+        "semantic_id": "aura_local_inference_gateway.py#function:_require_string_tuple:8209189d1be65f96",
+        "signature_hash": "677e93ef0179e3d8"
+      }
+    ],
+    "PolicyDecision": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "class",
+        "line": 69,
+        "end_line": 81,
+        "semantic_id": "aura_local_inference_gateway.py#class:PolicyDecision:e3f9605a8cda9992",
+        "signature_hash": "757ca18c2da9dedc"
+      }
+    ],
+    "PolicyDecision.to_dict": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 81,
+        "semantic_id": "aura_local_inference_gateway.py#method:PolicyDecision.to_dict:dff559e349e7abc1",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "ModelPolicyResolver": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "class",
+        "line": 84,
+        "end_line": 184,
+        "semantic_id": "aura_local_inference_gateway.py#class:ModelPolicyResolver:abc08eb9ef7e8030",
+        "signature_hash": "b47521d89a7c147c"
+      }
+    ],
+    "ModelPolicyResolver.__init__": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 101,
+        "semantic_id": "aura_local_inference_gateway.py#method:ModelPolicyResolver.__init__:aba496e7e1fae819",
+        "signature_hash": "3206b5d06ecf4fa7"
+      }
+    ],
+    "ModelPolicyResolver.resolve": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 124,
+        "semantic_id": "aura_local_inference_gateway.py#method:ModelPolicyResolver.resolve:59fff40dfb93af4f",
+        "signature_hash": "a778fed3c1cf0deb"
+      }
+    ],
+    "ModelPolicyResolver._validate_policy_ref": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 135,
+        "semantic_id": "aura_local_inference_gateway.py#method:ModelPolicyResolver._validate_policy_ref:2165c31e00e63f54",
+        "signature_hash": "af1503d07633a324"
+      }
+    ],
+    "ModelPolicyResolver._validate_payload": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 184,
+        "semantic_id": "aura_local_inference_gateway.py#method:ModelPolicyResolver._validate_payload:72b99ac7ef51b4a4",
+        "signature_hash": "71950d5229e541f4"
+      }
+    ],
+    "InferenceRequestV1": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "class",
+        "line": 188,
+        "end_line": 218,
+        "semantic_id": "aura_local_inference_gateway.py#class:InferenceRequestV1:761d49e8ce194b50",
+        "signature_hash": "773132de05bd2981"
+      }
+    ],
+    "InferenceRequestV1.protected_dict": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 200,
+        "end_line": 214,
+        "semantic_id": "aura_local_inference_gateway.py#method:InferenceRequestV1.protected_dict:527be004b30671bf",
+        "signature_hash": "df215df67cc194ec"
+      }
+    ],
+    "InferenceRequestV1.digest": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 217,
+        "end_line": 218,
+        "semantic_id": "aura_local_inference_gateway.py#method:InferenceRequestV1.digest:db8a326ad56207dc",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "CompiledContextV1": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "class",
+        "line": 222,
+        "end_line": 246,
+        "semantic_id": "aura_local_inference_gateway.py#class:CompiledContextV1:d57fafd0cf7078fc",
+        "signature_hash": "5c71904528965cfb"
+      }
+    ],
+    "CompiledContextV1.protected_dict": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 231,
+        "end_line": 242,
+        "semantic_id": "aura_local_inference_gateway.py#method:CompiledContextV1.protected_dict:4506c530fd521085",
+        "signature_hash": "df215df67cc194ec"
+      }
+    ],
+    "CompiledContextV1.digest": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 245,
+        "end_line": 246,
+        "semantic_id": "aura_local_inference_gateway.py#method:CompiledContextV1.digest:2ef464f01a346367",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "BackendCapabilityV1": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "class",
+        "line": 250,
+        "end_line": 272,
+        "semantic_id": "aura_local_inference_gateway.py#class:BackendCapabilityV1:172d78d106fcaefe",
+        "signature_hash": "e89022fdfb47e0a2"
+      }
+    ],
+    "BackendCapabilityV1.protected_dict": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 258,
+        "end_line": 268,
+        "semantic_id": "aura_local_inference_gateway.py#method:BackendCapabilityV1.protected_dict:6345fed5194850dc",
+        "signature_hash": "df215df67cc194ec"
+      }
+    ],
+    "BackendCapabilityV1.digest": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 271,
+        "end_line": 272,
+        "semantic_id": "aura_local_inference_gateway.py#method:BackendCapabilityV1.digest:7b1a518871f774ec",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "BackendResultV1": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "class",
+        "line": 276,
+        "end_line": 282,
+        "semantic_id": "aura_local_inference_gateway.py#class:BackendResultV1:3e6e8bc3ab69dc6e",
+        "signature_hash": "5ef751dd725fe0cf"
+      }
+    ],
+    "BackendAdapter": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "class",
+        "line": 285,
+        "end_line": 290,
+        "semantic_id": "aura_local_inference_gateway.py#class:BackendAdapter:ea52b980b5dc779e",
+        "signature_hash": "509ebe56c1c694b9"
+      }
+    ],
+    "BackendAdapter.invoke": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 289,
+        "end_line": 290,
+        "semantic_id": "aura_local_inference_gateway.py#method:BackendAdapter.invoke:b374003218d57180",
+        "signature_hash": "aaba10bfe090364d"
+      }
+    ],
+    "DeterministicBackend": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "class",
+        "line": 293,
+        "end_line": 318,
+        "semantic_id": "aura_local_inference_gateway.py#class:DeterministicBackend:164c6fbfd0746e8c",
+        "signature_hash": "244323e09d0640d1"
+      }
+    ],
+    "DeterministicBackend.__init__": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 296,
+        "end_line": 308,
+        "semantic_id": "aura_local_inference_gateway.py#method:DeterministicBackend.__init__:073628efb3a6bf03",
+        "signature_hash": "0c5c7149ba2ab403"
+      }
+    ],
+    "DeterministicBackend.invoke": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 310,
+        "end_line": 318,
+        "semantic_id": "aura_local_inference_gateway.py#method:DeterministicBackend.invoke:23098bc6e545e6ae",
+        "signature_hash": "aaba10bfe090364d"
+      }
+    ],
+    "FakeLocalBackend": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "class",
+        "line": 321,
+        "end_line": 350,
+        "semantic_id": "aura_local_inference_gateway.py#class:FakeLocalBackend:ffe86699d2bfa37f",
+        "signature_hash": "3d0ed0e027571ff5"
+      }
+    ],
+    "FakeLocalBackend.__init__": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 326,
+        "end_line": 341,
+        "semantic_id": "aura_local_inference_gateway.py#method:FakeLocalBackend.__init__:ca7446d3ff23aa6d",
+        "signature_hash": "09d671a10469dd7a"
+      }
+    ],
+    "FakeLocalBackend.invoke": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 343,
+        "end_line": 350,
+        "semantic_id": "aura_local_inference_gateway.py#method:FakeLocalBackend.invoke:30aa6302452ca71e",
+        "signature_hash": "aaba10bfe090364d"
+      }
+    ],
+    "ExternalBackendForTest": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "class",
+        "line": 353,
+        "end_line": 371,
+        "semantic_id": "aura_local_inference_gateway.py#class:ExternalBackendForTest:22fb63f3897cd76e",
+        "signature_hash": "4fcbc3cea94f59ce"
+      }
+    ],
+    "ExternalBackendForTest.__init__": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 358,
+        "end_line": 367,
+        "semantic_id": "aura_local_inference_gateway.py#method:ExternalBackendForTest.__init__:fef6a1cc780a3d27",
+        "signature_hash": "bdbcfdc6e9c35d50"
+      }
+    ],
+    "ExternalBackendForTest.invoke": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 369,
+        "end_line": 371,
+        "semantic_id": "aura_local_inference_gateway.py#method:ExternalBackendForTest.invoke:88211e7f182b95da",
+        "signature_hash": "aaba10bfe090364d"
+      }
+    ],
+    "request_from_route_capsule": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "function",
+        "line": 374,
+        "end_line": 389,
+        "semantic_id": "aura_local_inference_gateway.py#function:request_from_route_capsule:115ff744893cdc34",
+        "signature_hash": "e746fb5d1b2a005d"
+      }
+    ],
+    "LocalInferenceGateway": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "class",
+        "line": 392,
+        "end_line": 679,
+        "semantic_id": "aura_local_inference_gateway.py#class:LocalInferenceGateway:e0928b245ca63d1d",
+        "signature_hash": "a04248cf31ea8ac9"
+      }
+    ],
+    "LocalInferenceGateway.__init__": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 395,
+        "end_line": 404,
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway.__init__:6bc3998b3353275b",
+        "signature_hash": "3e504daeb8c6068c"
+      }
+    ],
+    "LocalInferenceGateway.run": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 406,
+        "end_line": 531,
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway.run:f6d16f43ae388714",
+        "signature_hash": "1cd4841a26a0b1b7"
+      }
+    ],
+    "LocalInferenceGateway._validate_request": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 534,
+        "end_line": 544,
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway._validate_request:92325335fcd1f859",
+        "signature_hash": "70213db7dcc9975f"
+      }
+    ],
+    "LocalInferenceGateway._context_problem": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 547,
+        "end_line": 566,
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway._context_problem:f23867f74bdc2c22",
+        "signature_hash": "94a0a120898b4775"
+      }
+    ],
+    "LocalInferenceGateway._find_backend": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 568,
+        "end_line": 572,
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway._find_backend:c3539d30a93d1b91",
+        "signature_hash": "717f2d16b774f9be"
+      }
+    ],
+    "LocalInferenceGateway._ordered_backend_classes": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 575,
+        "end_line": 583,
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway._ordered_backend_classes:dfc3f5d43ae6f320",
+        "signature_hash": "13be09c8f1fd378b"
+      }
+    ],
+    "LocalInferenceGateway._base_receipt": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 586,
+        "end_line": 621,
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway._base_receipt:9a8e489267ce92e1",
+        "signature_hash": "caec8260e58ce427"
+      }
+    ],
+    "LocalInferenceGateway._blocked_receipt": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 623,
+        "end_line": 632,
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway._blocked_receipt:704a21e91fcaa5f3",
+        "signature_hash": "0f1b7db324b76b29"
+      }
+    ],
+    "LocalInferenceGateway._success_receipt": [
+      {
+        "file": "aura_local_inference_gateway.py",
+        "kind": "method",
+        "line": 635,
+        "end_line": 679,
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway._success_receipt:5955516b656bc86f",
+        "signature_hash": "56ecae1a71591e0c"
       }
     ],
     "LuminanceEngine": [
@@ -202518,6 +202975,53 @@
       ]
     },
     {
+      "path": "aura_local_inference_gateway.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 27116,
+      "lines": 680,
+      "tokens_est": 6779,
+      "symbol_count": 46,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5e49e719a14b164d",
+      "vector": [
+        0.067798,
+        -0.198464,
+        0.208325,
+        0.242841,
+        -0.235445,
+        -0.26996,
+        -0.117106,
+        0.087521,
+        -0.117106,
+        -0.20586,
+        -0.230514,
+        0.062867,
+        0.122037,
+        -0.213256,
+        0.284752,
+        0.119571,
+        -0.250237,
+        0.065333,
+        -0.043144,
+        -0.195998,
+        -0.235445,
+        -0.17381,
+        -0.016025,
+        -0.107244,
+        0.07766,
+        0.178741,
+        -0.294614,
+        0.223118,
+        -0.055471,
+        0.200929,
+        -0.030817,
+        -0.107244
+      ]
+    },
+    {
       "path": "aura_luminance_engine.py",
       "role": "python_module",
       "binary": false,
@@ -286149,15 +286653,15 @@
     }
   },
   "summary": {
-    "file_count": 1634,
-    "total_bytes": 26316194,
-    "text_tokens_est": 6569465,
+    "file_count": 1635,
+    "total_bytes": 26343310,
+    "text_tokens_est": 6576244,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 234,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 995,
+      "python_module": 996,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -286776,6 +287280,7 @@
       "aura_live_architect_cockpit_adapter.py",
       "aura_llm_call_logger.py",
       "aura_llm_egress.py",
+      "aura_local_inference_gateway.py",
       "aura_luminance_engine.py",
       "aura_matrix_benchmark.py",
       "aura_mcp_gateway.py",
@@ -342280,6 +342785,466 @@
         "end_line": 237,
         "signature_hash": "c60e873712100b5c",
         "file_digest8": "1be17c0eca0cd809"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#class:BackendAdapter:ea52b980b5dc779e",
+        "name": "BackendAdapter",
+        "kind": "class",
+        "file": "aura_local_inference_gateway.py",
+        "line": 285,
+        "end_line": 290,
+        "signature_hash": "509ebe56c1c694b9",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#class:BackendCapabilityV1:172d78d106fcaefe",
+        "name": "BackendCapabilityV1",
+        "kind": "class",
+        "file": "aura_local_inference_gateway.py",
+        "line": 250,
+        "end_line": 272,
+        "signature_hash": "e89022fdfb47e0a2",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#class:BackendResultV1:3e6e8bc3ab69dc6e",
+        "name": "BackendResultV1",
+        "kind": "class",
+        "file": "aura_local_inference_gateway.py",
+        "line": 276,
+        "end_line": 282,
+        "signature_hash": "5ef751dd725fe0cf",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#class:CompiledContextV1:d57fafd0cf7078fc",
+        "name": "CompiledContextV1",
+        "kind": "class",
+        "file": "aura_local_inference_gateway.py",
+        "line": 222,
+        "end_line": 246,
+        "signature_hash": "5c71904528965cfb",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#class:DeterministicBackend:164c6fbfd0746e8c",
+        "name": "DeterministicBackend",
+        "kind": "class",
+        "file": "aura_local_inference_gateway.py",
+        "line": 293,
+        "end_line": 318,
+        "signature_hash": "244323e09d0640d1",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#class:ExternalBackendForTest:22fb63f3897cd76e",
+        "name": "ExternalBackendForTest",
+        "kind": "class",
+        "file": "aura_local_inference_gateway.py",
+        "line": 353,
+        "end_line": 371,
+        "signature_hash": "4fcbc3cea94f59ce",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#class:FakeLocalBackend:ffe86699d2bfa37f",
+        "name": "FakeLocalBackend",
+        "kind": "class",
+        "file": "aura_local_inference_gateway.py",
+        "line": 321,
+        "end_line": 350,
+        "signature_hash": "3d0ed0e027571ff5",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#class:InferenceRequestV1:761d49e8ce194b50",
+        "name": "InferenceRequestV1",
+        "kind": "class",
+        "file": "aura_local_inference_gateway.py",
+        "line": 188,
+        "end_line": 218,
+        "signature_hash": "773132de05bd2981",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#class:LocalInferenceGateway:e0928b245ca63d1d",
+        "name": "LocalInferenceGateway",
+        "kind": "class",
+        "file": "aura_local_inference_gateway.py",
+        "line": 392,
+        "end_line": 679,
+        "signature_hash": "a04248cf31ea8ac9",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#class:ModelPolicyResolver:abc08eb9ef7e8030",
+        "name": "ModelPolicyResolver",
+        "kind": "class",
+        "file": "aura_local_inference_gateway.py",
+        "line": 84,
+        "end_line": 184,
+        "signature_hash": "b47521d89a7c147c",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#class:PolicyDecision:e3f9605a8cda9992",
+        "name": "PolicyDecision",
+        "kind": "class",
+        "file": "aura_local_inference_gateway.py",
+        "line": 69,
+        "end_line": 81,
+        "signature_hash": "757ca18c2da9dedc",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#class:PolicyResolutionError:01b360f8f7f8ea01",
+        "name": "PolicyResolutionError",
+        "kind": "class",
+        "file": "aura_local_inference_gateway.py",
+        "line": 33,
+        "end_line": 34,
+        "signature_hash": "1653674e9ca1dc0d",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#class:StalePolicyError:83df84e3c539d87b",
+        "name": "StalePolicyError",
+        "kind": "class",
+        "file": "aura_local_inference_gateway.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "91e3bc2bebc9f10e",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#function:_canonical_json:5964c6f2f97b7b66",
+        "name": "_canonical_json",
+        "kind": "function",
+        "file": "aura_local_inference_gateway.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "caa6df7371712507",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#function:_require_nonempty_text:a2199a8a93e14218",
+        "name": "_require_nonempty_text",
+        "kind": "function",
+        "file": "aura_local_inference_gateway.py",
+        "line": 53,
+        "end_line": 56,
+        "signature_hash": "83862ec49f904a6b",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#function:_require_string_tuple:8209189d1be65f96",
+        "name": "_require_string_tuple",
+        "kind": "function",
+        "file": "aura_local_inference_gateway.py",
+        "line": 59,
+        "end_line": 65,
+        "signature_hash": "677e93ef0179e3d8",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#function:_sha256_bytes:8f51988bef729c04",
+        "name": "_sha256_bytes",
+        "kind": "function",
+        "file": "aura_local_inference_gateway.py",
+        "line": 45,
+        "end_line": 46,
+        "signature_hash": "14fa37530afca5ef",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#function:_sha256_json:de549de3635ee690",
+        "name": "_sha256_json",
+        "kind": "function",
+        "file": "aura_local_inference_gateway.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "583097ecac7a5ede",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#function:request_from_route_capsule:115ff744893cdc34",
+        "name": "request_from_route_capsule",
+        "kind": "function",
+        "file": "aura_local_inference_gateway.py",
+        "line": 374,
+        "end_line": 389,
+        "signature_hash": "e746fb5d1b2a005d",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:BackendAdapter.invoke:b374003218d57180",
+        "name": "BackendAdapter.invoke",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 289,
+        "end_line": 290,
+        "signature_hash": "aaba10bfe090364d",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:BackendCapabilityV1.digest:7b1a518871f774ec",
+        "name": "BackendCapabilityV1.digest",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 271,
+        "end_line": 272,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:BackendCapabilityV1.protected_dict:6345fed5194850dc",
+        "name": "BackendCapabilityV1.protected_dict",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 258,
+        "end_line": 268,
+        "signature_hash": "df215df67cc194ec",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:CompiledContextV1.digest:2ef464f01a346367",
+        "name": "CompiledContextV1.digest",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 245,
+        "end_line": 246,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:CompiledContextV1.protected_dict:4506c530fd521085",
+        "name": "CompiledContextV1.protected_dict",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 231,
+        "end_line": 242,
+        "signature_hash": "df215df67cc194ec",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:DeterministicBackend.__init__:073628efb3a6bf03",
+        "name": "DeterministicBackend.__init__",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 296,
+        "end_line": 308,
+        "signature_hash": "0c5c7149ba2ab403",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:DeterministicBackend.invoke:23098bc6e545e6ae",
+        "name": "DeterministicBackend.invoke",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 310,
+        "end_line": 318,
+        "signature_hash": "aaba10bfe090364d",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:ExternalBackendForTest.__init__:fef6a1cc780a3d27",
+        "name": "ExternalBackendForTest.__init__",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 358,
+        "end_line": 367,
+        "signature_hash": "bdbcfdc6e9c35d50",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:ExternalBackendForTest.invoke:88211e7f182b95da",
+        "name": "ExternalBackendForTest.invoke",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 369,
+        "end_line": 371,
+        "signature_hash": "aaba10bfe090364d",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:FakeLocalBackend.__init__:ca7446d3ff23aa6d",
+        "name": "FakeLocalBackend.__init__",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 326,
+        "end_line": 341,
+        "signature_hash": "09d671a10469dd7a",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:FakeLocalBackend.invoke:30aa6302452ca71e",
+        "name": "FakeLocalBackend.invoke",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 343,
+        "end_line": 350,
+        "signature_hash": "aaba10bfe090364d",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:InferenceRequestV1.digest:db8a326ad56207dc",
+        "name": "InferenceRequestV1.digest",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 217,
+        "end_line": 218,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:InferenceRequestV1.protected_dict:527be004b30671bf",
+        "name": "InferenceRequestV1.protected_dict",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 200,
+        "end_line": 214,
+        "signature_hash": "df215df67cc194ec",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway.__init__:6bc3998b3353275b",
+        "name": "LocalInferenceGateway.__init__",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 395,
+        "end_line": 404,
+        "signature_hash": "3e504daeb8c6068c",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway._base_receipt:9a8e489267ce92e1",
+        "name": "LocalInferenceGateway._base_receipt",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 586,
+        "end_line": 621,
+        "signature_hash": "caec8260e58ce427",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway._blocked_receipt:704a21e91fcaa5f3",
+        "name": "LocalInferenceGateway._blocked_receipt",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 623,
+        "end_line": 632,
+        "signature_hash": "0f1b7db324b76b29",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway._context_problem:f23867f74bdc2c22",
+        "name": "LocalInferenceGateway._context_problem",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 547,
+        "end_line": 566,
+        "signature_hash": "94a0a120898b4775",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway._find_backend:c3539d30a93d1b91",
+        "name": "LocalInferenceGateway._find_backend",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 568,
+        "end_line": 572,
+        "signature_hash": "717f2d16b774f9be",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway._ordered_backend_classes:dfc3f5d43ae6f320",
+        "name": "LocalInferenceGateway._ordered_backend_classes",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 575,
+        "end_line": 583,
+        "signature_hash": "13be09c8f1fd378b",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway._success_receipt:5955516b656bc86f",
+        "name": "LocalInferenceGateway._success_receipt",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 635,
+        "end_line": 679,
+        "signature_hash": "56ecae1a71591e0c",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway._validate_request:92325335fcd1f859",
+        "name": "LocalInferenceGateway._validate_request",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 534,
+        "end_line": 544,
+        "signature_hash": "70213db7dcc9975f",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:LocalInferenceGateway.run:f6d16f43ae388714",
+        "name": "LocalInferenceGateway.run",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 406,
+        "end_line": 531,
+        "signature_hash": "1cd4841a26a0b1b7",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:ModelPolicyResolver.__init__:aba496e7e1fae819",
+        "name": "ModelPolicyResolver.__init__",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 100,
+        "end_line": 101,
+        "signature_hash": "3206b5d06ecf4fa7",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:ModelPolicyResolver._validate_payload:72b99ac7ef51b4a4",
+        "name": "ModelPolicyResolver._validate_payload",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 138,
+        "end_line": 184,
+        "signature_hash": "71950d5229e541f4",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:ModelPolicyResolver._validate_policy_ref:2165c31e00e63f54",
+        "name": "ModelPolicyResolver._validate_policy_ref",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 127,
+        "end_line": 135,
+        "signature_hash": "af1503d07633a324",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:ModelPolicyResolver.resolve:59fff40dfb93af4f",
+        "name": "ModelPolicyResolver.resolve",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 103,
+        "end_line": 124,
+        "signature_hash": "a778fed3c1cf0deb",
+        "file_digest8": "5e49e719a14b164d"
+      },
+      {
+        "semantic_id": "aura_local_inference_gateway.py#method:PolicyDecision.to_dict:dff559e349e7abc1",
+        "name": "PolicyDecision.to_dict",
+        "kind": "method",
+        "file": "aura_local_inference_gateway.py",
+        "line": 80,
+        "end_line": 81,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "5e49e719a14b164d"
       },
       {
         "semantic_id": "aura_luminance_engine.py#class:LuminanceEngine:875e086b47ec6946",
@@ -446122,7 +447087,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f54ee2e4da0bb0db05767925275e2b15",
-    "payload_hash": "0fa1918e8b28a9b69a948e98a0f6517d"
+    "record_fingerprint": "2c0f2ec6e5564f92e5b8a44e24b8126e",
+    "payload_hash": "b1bf947baa2420a1cba55969bf704f6c"
   }
 }
