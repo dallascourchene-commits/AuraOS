@@ -7,6 +7,8 @@ on:
   pull_request:
     paths:
       - 'tools/project006/provider_sidecar_reference/**'
+      - 'tools/project006/local_runner_preflight.py'
+      - 'tools/project006/test_local_runner_preflight.py'
       - '.github/workflows/project006-provider-handoff-integration.yml'
   workflow_dispatch:
 
@@ -34,12 +36,15 @@ jobs:
             tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py \
             tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3.py \
             tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py \
-            tools/project006/provider_sidecar_reference/test_provider_handoff.py
-      - name: Run exact WP04 sidecar and handoff suites
+            tools/project006/provider_sidecar_reference/test_provider_handoff.py \
+            tools/project006/local_runner_preflight.py \
+            tools/project006/test_local_runner_preflight.py
+      - name: Run exact WP04 sidecar, handoff, and WP10 preflight suites
         run: |
           python -m unittest -v \
             tools.project006.provider_sidecar_reference.test_provider_sidecar \
             tools.project006.provider_sidecar_reference.test_provider_sidecar_repair_r1 \
             tools.project006.provider_sidecar_reference.test_provider_sidecar_repair_g3 \
             tools.project006.provider_sidecar_reference.test_provider_sidecar_repair_g3_followup \
-            tools.project006.provider_sidecar_reference.test_provider_handoff
+            tools.project006.provider_sidecar_reference.test_provider_handoff \
+            tools.project006.test_local_runner_preflight
