@@ -1,0 +1,70 @@
+name: P0 Minimal Bridge Host Source Capture
+
+on:
+  push:
+    branches:
+      - p0-minimal-bridge-host-source-capture-20260822
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture-local-bridge-source:
+    runs-on: self-hosted
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Capture exact local bridge scripts without runtime effects
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$GITHUB_WORKSPACE/host-source-snapshot"
+          ROOT="/home/john_of_wick/.config/aura-drive/bin"
+          mkdir -p "$OUT"
+          : > "$OUT/metadata.txt"
+          for name in aura_drive_swarm_inbox_v1.py aura_drive_bus_writer_v1.py; do
+            src="$ROOT/$name"
+            printf 'FILE=%s\n' "$name" >> "$OUT/metadata.txt"
+            if [ ! -r "$src" ]; then
+              printf 'READABLE=false\n' >> "$OUT/metadata.txt"
+              continue
+            fi
+            resolved="$(realpath -- "$src")"
+            case "$resolved" in
+              "$ROOT"/*) ;;
+              *) printf 'BOUNDARY_REJECT=%s\n' "$resolved" >> "$OUT/metadata.txt"; continue ;;
+            esac
+            printf 'READABLE=true\nRESOLVED=%s\n' "$resolved" >> "$OUT/metadata.txt"
+            stat -Lc 'STAT=%F|%U|%G|%a|%s|%n' -- "$resolved" >> "$OUT/metadata.txt"
+            sha256sum -- "$resolved" >> "$OUT/metadata.txt"
+            if grep -Eq 'AIza[0-9A-Za-z_-]{20,}|sk-[0-9A-Za-z_-]{12,}|gh[pousr]_[0-9A-Za-z]{20,}|ya29\.[0-9A-Za-z_-]{20,}|1//[0-9A-Za-z_-]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}' "$resolved"; then
+              printf 'RAW_SOURCE_WITHHELD=credential-like-literal-detected\n' >> "$OUT/metadata.txt"
+              python3 - "$resolved" "$OUT/${name}.ast.txt" <<'PY'
+          import ast, sys
+          src, out = sys.argv[1], sys.argv[2]
+          text = open(src, encoding='utf-8').read()
+          tree = ast.parse(text, filename=src)
+          rows = []
+          for node in ast.walk(tree):
+              if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                  rows.append((getattr(node, 'lineno', 0), type(node).__name__, node.name))
+              elif isinstance(node, (ast.Import, ast.ImportFrom)):
+                  rows.append((getattr(node, 'lineno', 0), type(node).__name__, ast.unparse(node)))
+          with open(out, 'w', encoding='utf-8') as fh:
+              for line, kind, value in sorted(rows):
+                  fh.write(f'{line}\t{kind}\t{value}\n')
+          PY
+            else
+              cp -- "$resolved" "$OUT/$name"
+              printf 'RAW_SOURCE_CAPTURED=true\n' >> "$OUT/metadata.txt"
+            fi
+          done
+          printf 'NO_SERVICE_MUTATION=true\nNO_PROVIDER_CALL=true\nNO_ENV_DUMP=true\n' >> "$OUT/metadata.txt"
+      - name: Upload bounded host source snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: p0-minimal-bridge-host-source-snapshot
+          path: host-source-snapshot/
+          if-no-files-found: error
+          retention-days: 1
