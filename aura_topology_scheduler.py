@@ -61,6 +61,13 @@ def _positive_count(value: int, field: str) -> int:
     return result
 
 
+def _creation_stage(value: int, field: str) -> int:
+    result = _positive_count(value, field)
+    if result > 10:
+        raise ContractViolation(f"{field} must be <= 10")
+    return result
+
+
 def _basis_points(value: int, field: str) -> int:
     result = _count(value, field)
     if result > _MAX_BASIS_POINTS:
@@ -725,7 +732,7 @@ class SchedulerStateV1:
                 ),
             },
             "creation_process": {
-                "creation_stage": _positive_count(
+                "creation_stage": _creation_stage(
                     self.creation_stage, "creation_stage"
                 ),
                 "creation_stage_ready": self.creation_stage_ready,
@@ -734,11 +741,7 @@ class SchedulerStateV1:
         }
 
     def state_digest(self) -> str:
-        body = self.protected_body()
-        stage = body["creation_process"]["creation_stage"]
-        if stage > 10:
-            raise ContractViolation("creation_stage must be <= 10")
-        return _hash_domain(SCHEDULER_STATE_DOMAIN, body)
+        return _hash_domain(SCHEDULER_STATE_DOMAIN, self.protected_body())
 
 
 @dataclass(frozen=True)
@@ -764,11 +767,16 @@ class PhaseDecisionV1:
 
 
 def _source_access_allowed(state: SchedulerStateV1) -> bool:
-    access = state.source_access
+    try:
+        access_body = state.source_access.protected_body()
+        state_generation = _count(state.source_generation, "source_generation")
+        state_currentness = _digest(state.currentness_digest, "currentness_digest")
+    except ContractViolation:
+        return False
     return (
-        access.status is SourceAccessStatus.ALLOWED
-        and access.source_generation == state.source_generation
-        and access.currentness_digest == state.currentness_digest
+        access_body["status"] == SourceAccessStatus.ALLOWED.value
+        and access_body["source_generation"] == state_generation
+        and access_body["currentness_digest"] == state_currentness
     )
 
 
@@ -779,6 +787,8 @@ def _workload_readiness_admitted(state: SchedulerStateV1) -> bool:
         observed_digest = state.workload.workload_state_digest()
         binding_body = binding.protected_body()
         authority_body = authority.protected_body()
+        state_generation = _count(state.source_generation, "source_generation")
+        state_currentness = _digest(state.currentness_digest, "currentness_digest")
     except ContractViolation:
         return False
 
@@ -786,17 +796,20 @@ def _workload_readiness_admitted(state: SchedulerStateV1) -> bool:
         return False
     if authority.admission_state is not ReadinessAdmissionState.ALLOWED:
         return False
-    if binding.workload_state_digest != observed_digest:
+    if binding_body["workload_state_digest"] != observed_digest:
         return False
-    if binding.workload_owner_ref != authority.workload_owner_ref:
+    if binding_body["workload_owner_ref"] != authority_body["workload_owner_ref"]:
         return False
-    if binding.workload_generation != authority.workload_generation:
+    if binding_body["workload_generation"] != authority_body["workload_generation"]:
         return False
-    if binding.workload_currentness_digest != authority.workload_currentness_digest:
+    if (
+        binding_body["workload_currentness_digest"]
+        != authority_body["workload_currentness_digest"]
+    ):
         return False
-    if binding.workload_generation != state.source_generation:
+    if binding_body["workload_generation"] != state_generation:
         return False
-    if binding.workload_currentness_digest != state.currentness_digest:
+    if binding_body["workload_currentness_digest"] != state_currentness:
         return False
 
     configured_ref = authority_body.get("configured_receipt_ref")
