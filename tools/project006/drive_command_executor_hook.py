@@ -82,11 +82,26 @@ class CommandHookError(ValueError):
 
 
 class _Executor(Protocol):
+    """Narrow structural type matching the existing ExternalLLM.generate API."""
+
     provider: str
     model: str
 
     def generate(
-        self, prompt: str, **kwargs: Any
+        self,
+        prompt: str,
+        *,
+        max_tokens: int = 1300,
+        temperature: float = 0.1,
+        router_context: str | None = None,
+        slot_matrix: Any | None = None,
+        pre_egress: bool = True,
+        call_type: str = "generate",
+        paper_ledger: str | None = None,
+        resonance_egress: bool = True,
+        grammar_stencil: str = "root ::=",
+        context_crush: bool = True,
+        context_crush_ledger: str | None = None,
     ) -> tuple[str | None, str | None, float]: ...
 
 
