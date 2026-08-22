@@ -1,18 +1,9 @@
 """Minimal admitted Aura Drive command -> existing DeepSeek egress hook.
 
-This module is deliberately *not* a Drive client, scheduler, lease owner, provider
-registry, or durable execution ledger.  The installed ``aura_drive_swarm_inbox_v1``
-remains responsible for Drive ingestion and its existing replay/idempotency checks;
-``aura_drive_bus_writer_v1`` remains responsible for bounded outbound Drive writes.
-
-The hook accepts one already-ingested/admitted ``AuraCommandEnvelopeV1-candidate``,
-keeps the first executable bridge at D0/internal scope, emits an ACK immediately
-before invoking Aura's existing canonical ``ExternalLLM`` egress pinned to DeepSeek,
-and returns one RESULT or redacted typed ERROR record for the existing writer.
-
-No caller-supplied provider endpoint, route, credential, lease, fence, or model may
-cross this boundary.  This source module does not prove that it is installed in the
-laptop Drive bridge process and does not claim a live provider call from tests.
+This is deliberately not a Drive client, scheduler, durable execution ledger, or
+provider registry. The installed inbox owns ingestion/replay state and the installed
+bus writer owns Drive output. This module only validates one already-admitted D0
+command and adapts it to Aura's existing canonical DeepSeek egress.
 """
 from __future__ import annotations
 
@@ -30,9 +21,9 @@ EXECUTOR_ID = "AURA_CANONICAL_EGRESS_DEEPSEEK_D0_V1"
 _MAX_ID_CHARS = 256
 _MAX_REF_CHARS = 1024
 _MAX_OBJECTIVE_CHARS = 128_000
+_MAX_INTENT_ITEMS = 128
+_MAX_INTENT_ITEM_CHARS = 4096
 
-# These names are rejected wherever they occur as structured fields.  Textual
-# discussion of a provider is not authority; structured provider control is.
 _FORBIDDEN_CONTROL_KEYS = frozenset(
     {
         "api_key",
@@ -62,6 +53,21 @@ _FORBIDDEN_CONTROL_KEYS = frozenset(
     }
 )
 
+# These phrases are incompatible with an effect whose sole implementation is an
+# external DeepSeek provider call unless the same item contains a narrow explicit
+# DeepSeek exception. Narrow prohibitions such as "no unrelated external
+# communication" do not match these prefixes and remain valid.
+_BROAD_EXTERNAL_DENIALS = (
+    "no external communication",
+    "no external communications",
+    "no network communication",
+    "no network communications",
+    "no network access",
+    "no external calls",
+    "no provider calls",
+    "no api calls",
+)
+
 
 class CommandHookError(ValueError):
     """Typed fail-closed command/hook admission failure."""
@@ -75,7 +81,9 @@ class _Executor(Protocol):
     provider: str
     model: str
 
-    def generate(self, prompt: str, **kwargs: Any) -> tuple[str | None, str | None, float]: ...
+    def generate(
+        self, prompt: str, **kwargs: Any
+    ) -> tuple[str | None, str | None, float]: ...
 
 
 def _canonical_digest(value: Any) -> str:
@@ -94,10 +102,20 @@ def _require_text(name: str, value: Any, *, maximum: int) -> str:
         raise CommandHookError(f"INVALID_{name.upper()}")
     if not value or len(value) > maximum:
         raise CommandHookError(f"INVALID_{name.upper()}")
-    # Preserve ordinary whitespace/newlines while rejecting hidden C0 controls.
     if any(ord(ch) < 32 and ch not in "\t\n\r" for ch in value):
         raise CommandHookError(f"INVALID_{name.upper()}")
     return value
+
+
+def _intent_list(name: str, value: Any) -> tuple[str, ...]:
+    if value is None:
+        return ()
+    if not isinstance(value, (list, tuple)) or len(value) > _MAX_INTENT_ITEMS:
+        raise CommandHookError(f"INVALID_{name.upper()}")
+    items: list[str] = []
+    for item in value:
+        items.append(_require_text(name, item, maximum=_MAX_INTENT_ITEM_CHARS))
+    return tuple(items)
 
 
 def _reject_structured_provider_control(value: Any) -> None:
@@ -112,12 +130,31 @@ def _reject_structured_provider_control(value: Any) -> None:
             _reject_structured_provider_control(child)
 
 
-def validate_admitted_command(raw: Mapping[str, Any]) -> dict[str, Any]:
-    """Validate the first primitive's already-admitted ChatGPT/D0 command shape.
+def _has_explicit_deepseek_exception(text: str) -> bool:
+    low = " ".join(text.casefold().split())
+    return (
+        "deepseek" in low
+        and ("except" in low or "beyond" in low or "other than" in low)
+        and ("authorized" in low or "required" in low)
+    )
 
-    Authority/currentness ownership remains outside this hook.  This function only
-    refuses to execute unless the admitted envelope carries the positive booleans
-    and non-empty authority reference supplied by the upstream owner-bound path.
+
+def _validate_intent_consistency(negative_intent: tuple[str, ...]) -> None:
+    for item in negative_intent:
+        low = " ".join(item.casefold().split())
+        if any(low.startswith(prefix) for prefix in _BROAD_EXTERNAL_DENIALS):
+            if not _has_explicit_deepseek_exception(low):
+                raise CommandHookError(
+                    "INTENT_CONTRADICTION_EXTERNAL_EGRESS_FORBIDDEN"
+                )
+
+
+def validate_admitted_command(raw: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate one already-admitted owner-bound ChatGPT/D0 command.
+
+    Upstream remains responsible for proving current owner authority and durable
+    idempotency state. This adapter fails closed on contradictory intent and on
+    caller-supplied provider authority.
     """
     if not isinstance(raw, Mapping):
         raise CommandHookError("COMMAND_NOT_OBJECT")
@@ -132,7 +169,9 @@ def validate_admitted_command(raw: Mapping[str, Any]) -> dict[str, Any]:
     if raw.get("execution_authorized") is not True:
         raise CommandHookError("EXECUTION_NOT_AUTHORIZED")
 
-    command_id = _require_text("command_id", raw.get("command_id"), maximum=_MAX_ID_CHARS)
+    command_id = _require_text(
+        "command_id", raw.get("command_id"), maximum=_MAX_ID_CHARS
+    )
     idempotency_key = _require_text(
         "idempotency_key", raw.get("idempotency_key"), maximum=_MAX_ID_CHARS
     )
@@ -153,6 +192,17 @@ def validate_admitted_command(raw: Mapping[str, Any]) -> dict[str, Any]:
     if objective.get("requested_effect") != "D0":
         raise CommandHookError("MINIMAL_BRIDGE_D0_ONLY")
 
+    positive_intent = _intent_list(
+        "positive_intent", objective.get("positive_intent")
+    )
+    negative_intent = _intent_list(
+        "negative_intent", objective.get("negative_intent")
+    )
+    success_criteria = _intent_list(
+        "success_criteria", objective.get("success_criteria")
+    )
+    _validate_intent_consistency(negative_intent)
+
     constraints = raw.get("constraints")
     if not isinstance(constraints, Mapping):
         raise CommandHookError("INVALID_CONSTRAINTS")
@@ -168,9 +218,11 @@ def validate_admitted_command(raw: Mapping[str, Any]) -> dict[str, Any]:
 
     target_ref = objective.get("target_ref")
     if target_ref is not None:
-        target_ref = _require_text("target_ref", target_ref, maximum=_MAX_REF_CHARS)
+        target_ref = _require_text(
+            "target_ref", target_ref, maximum=_MAX_REF_CHARS
+        )
 
-    normalized = {
+    return {
         "schema": COMMAND_SCHEMA,
         "queue_state": AUTHORIZED_QUEUE_STATE,
         "command_id": command_id,
@@ -180,27 +232,33 @@ def validate_admitted_command(raw: Mapping[str, Any]) -> dict[str, Any]:
         "objective_text": objective_text,
         "target_ref": target_ref,
         "requested_effect": "D0",
+        "positive_intent": positive_intent,
+        "negative_intent": negative_intent,
+        "success_criteria": success_criteria,
         "workspace_scope": "AURA_DRIVE_ONLY",
     }
-    return normalized
 
 
 def _build_prompt(command: Mapping[str, Any]) -> str:
-    """Documented minimal compiler: preserve the objective text verbatim."""
     target = command.get("target_ref")
     target_line = f"\nTARGET_REF: {target}" if target else ""
+    negative = command.get("negative_intent") or ()
+    negative_block = ""
+    if negative:
+        negative_block = "\nNEGATIVE_INTENT:\n" + "\n".join(
+            f"- {item}" for item in negative
+        )
     return (
         "You are Aura's external DeepSeek development worker. Complete only the "
         "bounded D0 task below. Do not claim file, host, provider, deployment, or "
         "other effects you did not actually perform. Do not request or expose "
         "credentials. Return a concise development result suitable for the caller.\n\n"
         f"OBJECTIVE:\n{command['objective_text']}"
-        f"{target_line}"
+        f"{target_line}{negative_block}"
     )
 
 
 def _default_executor_factory() -> _Executor:
-    # Lazy import keeps parser/admission tests network- and credential-independent.
     from aura_llm_egress import ExternalLLM
 
     return ExternalLLM(
@@ -212,7 +270,9 @@ def _default_executor_factory() -> _Executor:
     )
 
 
-def _record_base(command: Mapping[str, Any], request_digest: str) -> dict[str, Any]:
+def _record_base(
+    command: Mapping[str, Any], request_digest: str
+) -> dict[str, Any]:
     return {
         "hook_version": HOOK_VERSION,
         "command_id": command["command_id"],
@@ -221,8 +281,7 @@ def _record_base(command: Mapping[str, Any], request_digest: str) -> dict[str, A
         "requested_effect": "D0",
         "executor_id": EXECUTOR_ID,
         "execution_request_digest": request_digest,
-        # ExternalLLM does not expose an owner-issued provider-attempt identity.
-        # UNKNOWN is intentionally preserved instead of minting one locally.
+        # Existing ExternalLLM exposes no owner-issued attempt identity.
         "execution_identity": "UNKNOWN",
     }
 
@@ -233,22 +292,24 @@ def execute_admitted_command(
     executor_factory: Callable[[], _Executor] = _default_executor_factory,
     emit_ack: Callable[[Mapping[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
-    """Execute one admitted D0 command through Aura's existing DeepSeek egress.
+    """Execute one admitted D0 command through existing DeepSeek egress.
 
-    ``emit_ack`` is called *before* executor construction/provider work.  A failing
-    ACK sink therefore fails closed without starting the model call.  The returned
-    terminal record is deliberately separate so the installed inbox can persist it
-    under its own existing transaction/idempotency law before asking the existing
-    Drive writer to publish it.
+    The host integration must durably reconcile its own execution-state row before
+    calling this function. ``emit_ack`` is invoked before executor construction so a
+    required ACK failure cannot silently begin provider work.
     """
     command = validate_admitted_command(raw)
     request_digest = _canonical_digest(command)
     base = _record_base(command, request_digest)
-    ack = {**base, "record_type": "ACK", "status": "EXECUTOR_CALLBACK_ACCEPTED"}
+    ack = {
+        **base,
+        "record_type": "ACK",
+        "status": "EXECUTOR_CALLBACK_ACCEPTED",
+    }
     if emit_ack is not None:
         try:
             emit_ack(ack)
-        except Exception as exc:  # do not leak sink/Drive internals
+        except Exception as exc:
             raise CommandHookError("ACK_EMIT_FAILED") from exc
 
     try:
@@ -262,10 +323,9 @@ def execute_admitted_command(
             "error_type": type(exc).__name__,
         }
 
-    prompt = _build_prompt(command)
     try:
         text, error, latency = executor.generate(
-            prompt,
+            _build_prompt(command),
             max_tokens=900,
             temperature=0.0,
             pre_egress=False,
@@ -288,7 +348,6 @@ def execute_admitted_command(
             "record_type": "ERROR",
             "status": "EXECUTOR_FAILED",
             "error_code": "DEEPSEEK_EXECUTOR_FAILURE",
-            # Raw provider errors are intentionally not serialized to Drive.
             "error_type": "PROVIDER_OR_EMPTY_RESULT",
         }
 
@@ -299,14 +358,19 @@ def execute_admitted_command(
         "status": "OK",
         "provider": str(getattr(executor, "provider", "deepseek")),
         "model": str(getattr(executor, "model", "UNKNOWN")),
-        "result_digest": hashlib.sha256(safe_text.encode("utf-8")).hexdigest(),
+        "result_digest": hashlib.sha256(
+            safe_text.encode("utf-8")
+        ).hexdigest(),
         "latency_ms": max(0, int(float(latency) * 1000)),
         "result": safe_text,
     }
 
 
 def _emit_stdout(record: Mapping[str, Any]) -> None:
-    print(json.dumps(dict(record), sort_keys=True, ensure_ascii=False), flush=True)
+    print(
+        json.dumps(dict(record), sort_keys=True, ensure_ascii=False),
+        flush=True,
+    )
 
 
 def _safe_command_id(raw: Any) -> str | None:
