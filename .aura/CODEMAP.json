@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1787390173,
+  "generated_at_unix": 1787414163,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1647,
+    "repo_file_count": 1650,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1299,6 +1299,7 @@
       "test_codemap_auto_refresh.py",
       "test_codemap_hooks_simple.py",
       "test_codemap_slimming.py",
+      "test_drive_command_executor_hook.py",
       "test_forge.py",
       "test_fractal_ledger.py",
       "test_fst_lexc.py",
@@ -1630,6 +1631,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project006/drive_command_executor_hook.py",
       "tools/project006/local_runner_preflight.py",
       "tools/project006/local_runner_preflight_v2.py",
       "tools/project006/provider_sidecar_reference/README.md",
@@ -1640,6 +1642,7 @@
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py",
+      "tools/project006/test_drive_command_executor_hook.py",
       "tools/project006/test_local_runner_preflight.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -1706,6 +1709,7 @@
       "scripts/install_refactor_quality_docs.py",
       "scripts/update_architect_benchmark_readme.py",
       "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+      "test_drive_command_executor_hook.py",
       "test_support/__init__.py",
       "test_support/aura_human_agent_arena_suite.py",
       "tests/conftest.py",
@@ -1754,8 +1758,7 @@
       "tests/test_aura_capability_connectome_v2.py",
       "tests/test_aura_capability_lane_registry.py",
       "tests/test_aura_capability_resolver.py",
-      "tests/test_aura_capability_resolver_connectome.py",
-      "tests/test_aura_change_graph.py"
+      "tests/test_aura_capability_resolver_connectome.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1763,15 +1766,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1647,
-      "bytes": 26451601,
-      "tokens_est": 6603322,
+      "files": 1650,
+      "bytes": 26492015,
+      "tokens_est": 6613426,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1005,
+        "python_module": 1008,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -3458,6 +3461,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 538,
+        "end_line": 571,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:main:faa970b4fa8aa340",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -27132,6 +27143,14 @@
         "line": 137,
         "end_line": 139,
         "semantic_id": "aura_construction_architect_refactor.py#function:_canonical_digest:be0ef5279214bc45",
+        "signature_hash": "0513d5eea6b714f2"
+      },
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 138,
+        "end_line": 147,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_canonical_digest:fbf1aa86896000a7",
         "signature_hash": "0513d5eea6b714f2"
       },
       {
@@ -52011,6 +52030,14 @@
         "end_line": 63,
         "semantic_id": "aura_gate_oidc.py#function:_require_text:78662a81d2bc47ed",
         "signature_hash": "5a34bc621c690ee0"
+      },
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 158,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_require_text:87c718ac148fb4fe",
+        "signature_hash": "758f5c2bdfbbc128"
       }
     ],
     "_decode_base64url": [
@@ -157163,6 +157190,176 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "CommandHookError": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "class",
+        "line": 101,
+        "end_line": 106,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#class:CommandHookError:03b6fad3ce560c86",
+        "signature_hash": "55ae0d254e1b591b"
+      }
+    ],
+    "CommandHookError.__init__": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 106,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#method:CommandHookError.__init__:a8701fb988f5947f",
+        "signature_hash": "025780840ff5ba63"
+      }
+    ],
+    "_Executor": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "class",
+        "line": 109,
+        "end_line": 130,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#class:_Executor:46051bacc6997a8c",
+        "signature_hash": "85f8f8707ac25f56"
+      }
+    ],
+    "_Executor.generate": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 130,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#method:_Executor.generate:500a764f18733afe",
+        "signature_hash": "6fe22113aec3ca69"
+      }
+    ],
+    "_intent_list": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 161,
+        "end_line": 170,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_intent_list:999ce38ca2d897fc",
+        "signature_hash": "cc37b81ef0efbc42"
+      }
+    ],
+    "_reject_structured_provider_control": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 173,
+        "end_line": 183,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_reject_structured_provider_control:708c62a1611b4d45",
+        "signature_hash": "8e8a97cef2c87e19"
+      }
+    ],
+    "_has_explicit_deepseek_exception": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 186,
+        "end_line": 193,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_has_explicit_deepseek_exception:36a97b4fab54edaf",
+        "signature_hash": "26e89b3c4a6d152f"
+      }
+    ],
+    "_validate_intent_consistency": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 196,
+        "end_line": 204,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_validate_intent_consistency:791496edbbc2ab3d",
+        "signature_hash": "74c4c5788090e948"
+      }
+    ],
+    "_requested_capability": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 207,
+        "end_line": 216,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_requested_capability:d11cde06750ad226",
+        "signature_hash": "49b90356091fedc8"
+      }
+    ],
+    "validate_admitted_command": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 219,
+        "end_line": 312,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:validate_admitted_command:58099d8217873f91",
+        "signature_hash": "dd24ec47e74af5e5"
+      }
+    ],
+    "_validate_effect_admission": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 315,
+        "end_line": 355,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_validate_effect_admission:e7cc9a96f834cbfa",
+        "signature_hash": "ff905c17cb244d63"
+      }
+    ],
+    "_build_prompt": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 358,
+        "end_line": 375,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_build_prompt:4652408e73a929e8",
+        "signature_hash": "a18c0a8a79ab84e6"
+      }
+    ],
+    "_default_executor_factory": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 378,
+        "end_line": 388,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_default_executor_factory:06eda0ac7c70d39a",
+        "signature_hash": "c4eaf74b984d17c5"
+      }
+    ],
+    "_record_base": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 391,
+        "end_line": 414,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_record_base:bf744da4f7ff3164",
+        "signature_hash": "bede869fedf82f28"
+      }
+    ],
+    "execute_admitted_command": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 417,
+        "end_line": 518,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:execute_admitted_command:cb88a75a63119332",
+        "signature_hash": "793403bcd31b3769"
+      }
+    ],
+    "_emit_stdout": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 521,
+        "end_line": 526,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_emit_stdout:9b026f4cdc37c485",
+        "signature_hash": "f9eb7bff5c8362c0"
+      }
+    ],
+    "_safe_command_id": [
+      {
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 529,
+        "end_line": 535,
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_safe_command_id:b704cfab611e05be",
+        "signature_hash": "57197d63ed2eeeed"
+      }
+    ],
     "_file_identity": [
       {
         "file": "tools/project006/local_runner_preflight.py",
@@ -158833,6 +159030,376 @@
         "end_line": 392,
         "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py#method:ProviderSidecarLocalResolutionRepairTests.test_f6_uncredentialed_first_candidate_falls_through_to_valid_second.resolver:e7c6f247a33f66e1",
         "signature_hash": "3a93e7dc1b066a3a"
+      }
+    ],
+    "_FakeExecutor": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 38,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#class:_FakeExecutor:31f37948b18deef5",
+        "signature_hash": "6d30a22a321aa2e5"
+      }
+    ],
+    "_FakeExecutor.__init__": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 32,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:_FakeExecutor.__init__:c2e304d8d005219d",
+        "signature_hash": "197d26b54aee12c0"
+      }
+    ],
+    "_FakeExecutor.generate": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 38,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:_FakeExecutor.generate:39786f112d41287a",
+        "signature_hash": "c4cc05be9b3515f6"
+      }
+    ],
+    "_command": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 76,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#function:_command:4f27079d47b0d64c",
+        "signature_hash": "90b398bd2685bd31"
+      }
+    ],
+    "_allow_admission": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 100,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#function:_allow_admission:4dd35beda6617998",
+        "signature_hash": "d9e7856a3e63a5a8"
+      }
+    ],
+    "_allow_admission.provider": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 98,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:_allow_admission.provider:6d96a73d4c57b5c3",
+        "signature_hash": "1d7c56022e271318"
+      }
+    ],
+    "DriveCommandExecutorHookTests": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "class",
+        "line": 103,
+        "end_line": 554,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#class:DriveCommandExecutorHookTests:2074889ac22e692b",
+        "signature_hash": "0144204a1c37ab74"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_authorized_d0_requires_admission_then_ack_then_one_executor_call": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 142,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_authorized_d0_requires_admission_then_ack_then_one_executor_call:cfcfdf286cade400",
+        "signature_hash": "bed0d832576eef7d"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_message_authorization_failure_never_constructs_executor": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 144,
+        "end_line": 158,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_message_authorization_failure_never_constructs_executor:06e52f7f5bc8c036",
+        "signature_hash": "cea342f332bce4ad"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_message_authorization_failure_never_constructs_executor.factory": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 152,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_message_authorization_failure_never_constructs_executor.factory:d374a0eeaff9583f",
+        "signature_hash": "f870021800588f2a"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_execution_authorization_failure_never_constructs_executor": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 160,
+        "end_line": 171,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_execution_authorization_failure_never_constructs_executor:fd32ec2f88421466",
+        "signature_hash": "ffc0466c6afc17e3"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_first_bridge_is_d0_only": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 173,
+        "end_line": 179,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_first_bridge_is_d0_only:f4b81d0a369ecb44",
+        "signature_hash": "5560284da82532a9"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_first_bridge_is_chatgpt_and_aura_drive_only": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 181,
+        "end_line": 196,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_first_bridge_is_chatgpt_and_aura_drive_only:d8f30e2083b622f8",
+        "signature_hash": "3084e9c4b6c9bd4f"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_requested_capability_is_a_ceiling": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 198,
+        "end_line": 204,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_requested_capability_is_a_ceiling:8d4fc9f153337244",
+        "signature_hash": "5f724dbfe710743a"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_human_gated_command_is_not_executed": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 206,
+        "end_line": 212,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_human_gated_command_is_not_executed:1e3f24748847f862",
+        "signature_hash": "ef2b7d529e302c66"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_structured_provider_and_admission_control_injection_rejects": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 214,
+        "end_line": 237,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_structured_provider_and_admission_control_injection_rejects:ca5a65d59458fac6",
+        "signature_hash": "5c0c008285e2ab26"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_original_canary_broad_external_denial_rejects_before_all_effect_gates": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 239,
+        "end_line": 266,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_original_canary_broad_external_denial_rejects_before_all_effect_gates:cb850b72fa850d7a",
+        "signature_hash": "15f1647e6a102fab"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_narrow_external_denial_can_reach_host_admission_gate": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 268,
+        "end_line": 281,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_narrow_external_denial_can_reach_host_admission_gate:eb58e4e8d2ab4f95",
+        "signature_hash": "5a02052105eeafa8"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_explicit_single_deepseek_exception_can_reach_host_admission_gate": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 283,
+        "end_line": 300,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_explicit_single_deepseek_exception_can_reach_host_admission_gate:81f7ed28dc6af80b",
+        "signature_hash": "1097fefcd4236d0b"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_malformed_negative_intent_rejects": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 302,
+        "end_line": 308,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_malformed_negative_intent_rejects:ad9d7e1dc3820a07",
+        "signature_hash": "2856df500d431d81"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_model_signature_is_observational": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 310,
+        "end_line": 321,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_model_signature_is_observational:d12fc875bf6673de",
+        "signature_hash": "28443bf5da160804"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_missing_ack_sink_prevents_admission_and_executor": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 323,
+        "end_line": 333,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_missing_ack_sink_prevents_admission_and_executor:6a225f7fe99afed0",
+        "signature_hash": "e580756df0eb1d36"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_missing_effect_admission_prevents_ack_and_executor": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 335,
+        "end_line": 347,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_missing_effect_admission_prevents_ack_and_executor:109d251031a02435",
+        "signature_hash": "678c3f2573b73ad7"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_authority_not_allow_prevents_ack_and_executor": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 349,
+        "end_line": 364,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_authority_not_allow_prevents_ack_and_executor:30724133ab240598",
+        "signature_hash": "65eae89fef6faa45"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_cost_unknown_prevents_ack_and_executor": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 366,
+        "end_line": 381,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_cost_unknown_prevents_ack_and_executor:58707f929270dca5",
+        "signature_hash": "33952c2bd4ff5ba0"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_stale_effect_admission_prevents_ack_and_executor": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 383,
+        "end_line": 398,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_stale_effect_admission_prevents_ack_and_executor:bddef0c1816a8794",
+        "signature_hash": "6234585d8045d76d"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_admission_binding_mismatch_prevents_ack_and_executor": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 400,
+        "end_line": 423,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_admission_binding_mismatch_prevents_ack_and_executor:294d58569fb06369",
+        "signature_hash": "b64e213e8e77b65e"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_admission_unknown_field_rejects_fail_closed": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 425,
+        "end_line": 436,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_admission_unknown_field_rejects_fail_closed:694063477b0ce5ad",
+        "signature_hash": "ebd18a052ad2fe0a"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_ack_sink_failure_prevents_executor_construction": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 438,
+        "end_line": 454,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_ack_sink_failure_prevents_executor_construction:b3f8ed95c227040d",
+        "signature_hash": "2924b66707d8abfc"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_ack_sink_failure_prevents_executor_construction.bad_ack": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 441,
+        "end_line": 443,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_ack_sink_failure_prevents_executor_construction.bad_ack:2cefbf1d5e54507c",
+        "signature_hash": "e532576d8f28d6de"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_provider_error_is_typed_and_raw_error_is_not_serialized": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 456,
+        "end_line": 472,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_provider_error_is_typed_and_raw_error_is_not_serialized:26798d78abc55bb3",
+        "signature_hash": "56819b4ded769313"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_executor_constructor_failure_is_typed_without_message": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 474,
+        "end_line": 491,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_executor_constructor_failure_is_typed_without_message:b10e427ad4ab007f",
+        "signature_hash": "3f1921f7af096d03"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_executor_constructor_failure_is_typed_without_message.factory": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 477,
+        "end_line": 478,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_executor_constructor_failure_is_typed_without_message.factory:6c938aa7aeeec49e",
+        "signature_hash": "f870021800588f2a"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_request_digest_binds_identity_objective_intent_and_capability": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 493,
+        "end_line": 531,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_request_digest_binds_identity_objective_intent_and_capability:ff5f3e83d9dc4c40",
+        "signature_hash": "3354df9acd7bb75a"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_request_digest_binds_identity_objective_intent_and_capability.run": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 494,
+        "end_line": 500,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_request_digest_binds_identity_objective_intent_and_capability.run:caf8ffd946ccd936",
+        "signature_hash": "4fb4da20a3f70ec6"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_validation_and_execution_do_not_mutate_input": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 533,
+        "end_line": 543,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_validation_and_execution_do_not_mutate_input:86d18c03539e80bb",
+        "signature_hash": "4c390fadd064d11c"
+      }
+    ],
+    "DriveCommandExecutorHookTests.test_empty_objective_rejects_before_executor": [
+      {
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "kind": "method",
+        "line": 545,
+        "end_line": 554,
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_empty_objective_rejects_before_executor:ce4952e954fe9334",
+        "signature_hash": "c3314c95f87c8cd4"
       }
     ],
     "LocalRunnerPreflightTests": [
@@ -248176,6 +248743,53 @@
       ]
     },
     {
+      "path": "test_drive_command_executor_hook.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 263,
+      "lines": 8,
+      "tokens_est": 66,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4c687945a576f5cc",
+      "vector": [
+        0.272727,
+        0.156364,
+        0.037576,
+        0.301818,
+        -0.29697,
+        -0.195152,
+        0.04,
+        0.04,
+        0.173333,
+        -0.185455,
+        0.221818,
+        0.05697,
+        -0.144243,
+        0.231515,
+        -0.02303,
+        0.132121,
+        -0.047273,
+        0.190303,
+        0.26303,
+        -0.301818,
+        -0.141818,
+        0.122424,
+        0.248485,
+        0.224243,
+        -0.197576,
+        -0.107879,
+        0.170909,
+        -0.129697,
+        -0.095758,
+        -0.132121,
+        0.025455,
+        -0.008485
+      ]
+    },
+    {
       "path": "test_forge.py",
       "role": "python_module",
       "binary": false,
@@ -264329,6 +264943,53 @@
       ]
     },
     {
+      "path": "tools/project006/drive_command_executor_hook.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 19632,
+      "lines": 576,
+      "tokens_est": 4908,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "736d11ba2dde41d7",
+      "vector": [
+        0.263904,
+        0.192898,
+        -0.195265,
+        0.178697,
+        0.114792,
+        -0.088757,
+        -0.074556,
+        -0.013018,
+        0.114792,
+        -0.143195,
+        -0.211833,
+        0.069822,
+        -0.107692,
+        0.29704,
+        0.240236,
+        0.285206,
+        0.166863,
+        -0.119526,
+        -0.235502,
+        -0.173964,
+        -0.039053,
+        0.285206,
+        0.034319,
+        0.062722,
+        0.164496,
+        -0.29704,
+        -0.067455,
+        0.055621,
+        -0.133727,
+        -0.010651,
+        -0.185798,
+        -0.287573
+      ]
+    },
+    {
       "path": "tools/project006/local_runner_preflight.py",
       "role": "python_module",
       "binary": false,
@@ -264796,6 +265457,53 @@
         0.16574,
         0.042399,
         -0.140044
+      ]
+    },
+    {
+      "path": "tools/project006/test_drive_command_executor_hook.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 20519,
+      "lines": 559,
+      "tokens_est": 5130,
+      "symbol_count": 37,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cd417695f36e77f2",
+      "vector": [
+        0.120597,
+        0.29436,
+        0.195808,
+        -0.23471,
+        0.258051,
+        -0.226929,
+        0.278799,
+        0.084288,
+        0.237303,
+        -0.035012,
+        0.042792,
+        0.271018,
+        -0.193214,
+        0.23471,
+        -0.060947,
+        0.156905,
+        0.073914,
+        -0.24249,
+        -0.125784,
+        0.307327,
+        -0.050573,
+        0.169873,
+        -0.009077,
+        0.125784,
+        -0.00389,
+        0.130971,
+        0.289173,
+        -0.014264,
+        0.045386,
+        0.146531,
+        0.047979,
+        0.014264
       ]
     },
     {
@@ -288750,15 +289458,15 @@
     }
   },
   "summary": {
-    "file_count": 1647,
-    "total_bytes": 26451601,
-    "text_tokens_est": 6603322,
+    "file_count": 1650,
+    "total_bytes": 26492015,
+    "text_tokens_est": 6613426,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1005,
+      "python_module": 1008,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -290068,6 +290776,7 @@
       "test_codemap_auto_refresh.py",
       "test_codemap_hooks_simple.py",
       "test_codemap_slimming.py",
+      "test_drive_command_executor_hook.py",
       "test_forge.py",
       "test_fractal_ledger.py",
       "test_fst_lexc.py",
@@ -290399,6 +291108,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project006/drive_command_executor_hook.py",
       "tools/project006/local_runner_preflight.py",
       "tools/project006/local_runner_preflight_v2.py",
       "tools/project006/provider_sidecar_reference/README.md",
@@ -290409,6 +291119,7 @@
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py",
+      "tools/project006/test_drive_command_executor_hook.py",
       "tools/project006/test_local_runner_preflight.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -447486,6 +448197,206 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#class:CommandHookError:03b6fad3ce560c86",
+        "name": "CommandHookError",
+        "kind": "class",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 101,
+        "end_line": 106,
+        "signature_hash": "55ae0d254e1b591b",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#class:_Executor:46051bacc6997a8c",
+        "name": "_Executor",
+        "kind": "class",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 109,
+        "end_line": 130,
+        "signature_hash": "85f8f8707ac25f56",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_build_prompt:4652408e73a929e8",
+        "name": "_build_prompt",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 358,
+        "end_line": 375,
+        "signature_hash": "a18c0a8a79ab84e6",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_canonical_digest:fbf1aa86896000a7",
+        "name": "_canonical_digest",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 138,
+        "end_line": 147,
+        "signature_hash": "0513d5eea6b714f2",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_default_executor_factory:06eda0ac7c70d39a",
+        "name": "_default_executor_factory",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 378,
+        "end_line": 388,
+        "signature_hash": "c4eaf74b984d17c5",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_emit_stdout:9b026f4cdc37c485",
+        "name": "_emit_stdout",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 521,
+        "end_line": 526,
+        "signature_hash": "f9eb7bff5c8362c0",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_has_explicit_deepseek_exception:36a97b4fab54edaf",
+        "name": "_has_explicit_deepseek_exception",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 186,
+        "end_line": 193,
+        "signature_hash": "26e89b3c4a6d152f",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_intent_list:999ce38ca2d897fc",
+        "name": "_intent_list",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 161,
+        "end_line": 170,
+        "signature_hash": "cc37b81ef0efbc42",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_record_base:bf744da4f7ff3164",
+        "name": "_record_base",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 391,
+        "end_line": 414,
+        "signature_hash": "bede869fedf82f28",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_reject_structured_provider_control:708c62a1611b4d45",
+        "name": "_reject_structured_provider_control",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 173,
+        "end_line": 183,
+        "signature_hash": "8e8a97cef2c87e19",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_requested_capability:d11cde06750ad226",
+        "name": "_requested_capability",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 207,
+        "end_line": 216,
+        "signature_hash": "49b90356091fedc8",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_require_text:87c718ac148fb4fe",
+        "name": "_require_text",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 150,
+        "end_line": 158,
+        "signature_hash": "758f5c2bdfbbc128",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_safe_command_id:b704cfab611e05be",
+        "name": "_safe_command_id",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 529,
+        "end_line": 535,
+        "signature_hash": "57197d63ed2eeeed",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_validate_effect_admission:e7cc9a96f834cbfa",
+        "name": "_validate_effect_admission",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 315,
+        "end_line": 355,
+        "signature_hash": "ff905c17cb244d63",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:_validate_intent_consistency:791496edbbc2ab3d",
+        "name": "_validate_intent_consistency",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 196,
+        "end_line": 204,
+        "signature_hash": "74c4c5788090e948",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:execute_admitted_command:cb88a75a63119332",
+        "name": "execute_admitted_command",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 417,
+        "end_line": 518,
+        "signature_hash": "793403bcd31b3769",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:main:faa970b4fa8aa340",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 538,
+        "end_line": 571,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#function:validate_admitted_command:58099d8217873f91",
+        "name": "validate_admitted_command",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 219,
+        "end_line": 312,
+        "signature_hash": "dd24ec47e74af5e5",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#method:CommandHookError.__init__:a8701fb988f5947f",
+        "name": "CommandHookError.__init__",
+        "kind": "method",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 104,
+        "end_line": 106,
+        "signature_hash": "025780840ff5ba63",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_hook.py#method:_Executor.generate:500a764f18733afe",
+        "name": "_Executor.generate",
+        "kind": "method",
+        "file": "tools/project006/drive_command_executor_hook.py",
+        "line": 115,
+        "end_line": 130,
+        "signature_hash": "6fe22113aec3ca69",
+        "file_digest8": "736d11ba2dde41d7"
+      },
+      {
         "semantic_id": "tools/project006/local_runner_preflight.py#function:_canonical_digest:a725766ed40de685",
         "name": "_canonical_digest",
         "kind": "function",
@@ -449466,6 +450377,376 @@
         "file_digest8": "15701220c113d48b"
       },
       {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#class:DriveCommandExecutorHookTests:2074889ac22e692b",
+        "name": "DriveCommandExecutorHookTests",
+        "kind": "class",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 103,
+        "end_line": 554,
+        "signature_hash": "0144204a1c37ab74",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#class:_FakeExecutor:31f37948b18deef5",
+        "name": "_FakeExecutor",
+        "kind": "class",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 17,
+        "end_line": 38,
+        "signature_hash": "6d30a22a321aa2e5",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#function:_allow_admission:4dd35beda6617998",
+        "name": "_allow_admission",
+        "kind": "function",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 79,
+        "end_line": 100,
+        "signature_hash": "d9e7856a3e63a5a8",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#function:_command:4f27079d47b0d64c",
+        "name": "_command",
+        "kind": "function",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 41,
+        "end_line": 76,
+        "signature_hash": "90b398bd2685bd31",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_ack_sink_failure_prevents_executor_construction.bad_ack:2cefbf1d5e54507c",
+        "name": "DriveCommandExecutorHookTests.test_ack_sink_failure_prevents_executor_construction.bad_ack",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 441,
+        "end_line": 443,
+        "signature_hash": "e532576d8f28d6de",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_ack_sink_failure_prevents_executor_construction:b3f8ed95c227040d",
+        "name": "DriveCommandExecutorHookTests.test_ack_sink_failure_prevents_executor_construction",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 438,
+        "end_line": 454,
+        "signature_hash": "2924b66707d8abfc",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_admission_binding_mismatch_prevents_ack_and_executor:294d58569fb06369",
+        "name": "DriveCommandExecutorHookTests.test_admission_binding_mismatch_prevents_ack_and_executor",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 400,
+        "end_line": 423,
+        "signature_hash": "b64e213e8e77b65e",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_admission_unknown_field_rejects_fail_closed:694063477b0ce5ad",
+        "name": "DriveCommandExecutorHookTests.test_admission_unknown_field_rejects_fail_closed",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 425,
+        "end_line": 436,
+        "signature_hash": "ebd18a052ad2fe0a",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_authority_not_allow_prevents_ack_and_executor:30724133ab240598",
+        "name": "DriveCommandExecutorHookTests.test_authority_not_allow_prevents_ack_and_executor",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 349,
+        "end_line": 364,
+        "signature_hash": "65eae89fef6faa45",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_authorized_d0_requires_admission_then_ack_then_one_executor_call:cfcfdf286cade400",
+        "name": "DriveCommandExecutorHookTests.test_authorized_d0_requires_admission_then_ack_then_one_executor_call",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 104,
+        "end_line": 142,
+        "signature_hash": "bed0d832576eef7d",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_cost_unknown_prevents_ack_and_executor:58707f929270dca5",
+        "name": "DriveCommandExecutorHookTests.test_cost_unknown_prevents_ack_and_executor",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 366,
+        "end_line": 381,
+        "signature_hash": "33952c2bd4ff5ba0",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_empty_objective_rejects_before_executor:ce4952e954fe9334",
+        "name": "DriveCommandExecutorHookTests.test_empty_objective_rejects_before_executor",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 545,
+        "end_line": 554,
+        "signature_hash": "c3314c95f87c8cd4",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_execution_authorization_failure_never_constructs_executor:fd32ec2f88421466",
+        "name": "DriveCommandExecutorHookTests.test_execution_authorization_failure_never_constructs_executor",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 160,
+        "end_line": 171,
+        "signature_hash": "ffc0466c6afc17e3",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_executor_constructor_failure_is_typed_without_message.factory:6c938aa7aeeec49e",
+        "name": "DriveCommandExecutorHookTests.test_executor_constructor_failure_is_typed_without_message.factory",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 477,
+        "end_line": 478,
+        "signature_hash": "f870021800588f2a",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_executor_constructor_failure_is_typed_without_message:b10e427ad4ab007f",
+        "name": "DriveCommandExecutorHookTests.test_executor_constructor_failure_is_typed_without_message",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 474,
+        "end_line": 491,
+        "signature_hash": "3f1921f7af096d03",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_explicit_single_deepseek_exception_can_reach_host_admission_gate:81f7ed28dc6af80b",
+        "name": "DriveCommandExecutorHookTests.test_explicit_single_deepseek_exception_can_reach_host_admission_gate",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 283,
+        "end_line": 300,
+        "signature_hash": "1097fefcd4236d0b",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_first_bridge_is_chatgpt_and_aura_drive_only:d8f30e2083b622f8",
+        "name": "DriveCommandExecutorHookTests.test_first_bridge_is_chatgpt_and_aura_drive_only",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 181,
+        "end_line": 196,
+        "signature_hash": "3084e9c4b6c9bd4f",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_first_bridge_is_d0_only:f4b81d0a369ecb44",
+        "name": "DriveCommandExecutorHookTests.test_first_bridge_is_d0_only",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 173,
+        "end_line": 179,
+        "signature_hash": "5560284da82532a9",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_human_gated_command_is_not_executed:1e3f24748847f862",
+        "name": "DriveCommandExecutorHookTests.test_human_gated_command_is_not_executed",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 206,
+        "end_line": 212,
+        "signature_hash": "ef2b7d529e302c66",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_malformed_negative_intent_rejects:ad9d7e1dc3820a07",
+        "name": "DriveCommandExecutorHookTests.test_malformed_negative_intent_rejects",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 302,
+        "end_line": 308,
+        "signature_hash": "2856df500d431d81",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_message_authorization_failure_never_constructs_executor.factory:d374a0eeaff9583f",
+        "name": "DriveCommandExecutorHookTests.test_message_authorization_failure_never_constructs_executor.factory",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 149,
+        "end_line": 152,
+        "signature_hash": "f870021800588f2a",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_message_authorization_failure_never_constructs_executor:06e52f7f5bc8c036",
+        "name": "DriveCommandExecutorHookTests.test_message_authorization_failure_never_constructs_executor",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 144,
+        "end_line": 158,
+        "signature_hash": "cea342f332bce4ad",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_missing_ack_sink_prevents_admission_and_executor:6a225f7fe99afed0",
+        "name": "DriveCommandExecutorHookTests.test_missing_ack_sink_prevents_admission_and_executor",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 323,
+        "end_line": 333,
+        "signature_hash": "e580756df0eb1d36",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_missing_effect_admission_prevents_ack_and_executor:109d251031a02435",
+        "name": "DriveCommandExecutorHookTests.test_missing_effect_admission_prevents_ack_and_executor",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 335,
+        "end_line": 347,
+        "signature_hash": "678c3f2573b73ad7",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_model_signature_is_observational:d12fc875bf6673de",
+        "name": "DriveCommandExecutorHookTests.test_model_signature_is_observational",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 310,
+        "end_line": 321,
+        "signature_hash": "28443bf5da160804",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_narrow_external_denial_can_reach_host_admission_gate:eb58e4e8d2ab4f95",
+        "name": "DriveCommandExecutorHookTests.test_narrow_external_denial_can_reach_host_admission_gate",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 268,
+        "end_line": 281,
+        "signature_hash": "5a02052105eeafa8",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_original_canary_broad_external_denial_rejects_before_all_effect_gates:cb850b72fa850d7a",
+        "name": "DriveCommandExecutorHookTests.test_original_canary_broad_external_denial_rejects_before_all_effect_gates",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 239,
+        "end_line": 266,
+        "signature_hash": "15f1647e6a102fab",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_provider_error_is_typed_and_raw_error_is_not_serialized:26798d78abc55bb3",
+        "name": "DriveCommandExecutorHookTests.test_provider_error_is_typed_and_raw_error_is_not_serialized",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 456,
+        "end_line": 472,
+        "signature_hash": "56819b4ded769313",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_request_digest_binds_identity_objective_intent_and_capability.run:caf8ffd946ccd936",
+        "name": "DriveCommandExecutorHookTests.test_request_digest_binds_identity_objective_intent_and_capability.run",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 494,
+        "end_line": 500,
+        "signature_hash": "4fb4da20a3f70ec6",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_request_digest_binds_identity_objective_intent_and_capability:ff5f3e83d9dc4c40",
+        "name": "DriveCommandExecutorHookTests.test_request_digest_binds_identity_objective_intent_and_capability",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 493,
+        "end_line": 531,
+        "signature_hash": "3354df9acd7bb75a",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_requested_capability_is_a_ceiling:8d4fc9f153337244",
+        "name": "DriveCommandExecutorHookTests.test_requested_capability_is_a_ceiling",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 198,
+        "end_line": 204,
+        "signature_hash": "5f724dbfe710743a",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_stale_effect_admission_prevents_ack_and_executor:bddef0c1816a8794",
+        "name": "DriveCommandExecutorHookTests.test_stale_effect_admission_prevents_ack_and_executor",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 383,
+        "end_line": 398,
+        "signature_hash": "6234585d8045d76d",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_structured_provider_and_admission_control_injection_rejects:ca5a65d59458fac6",
+        "name": "DriveCommandExecutorHookTests.test_structured_provider_and_admission_control_injection_rejects",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 214,
+        "end_line": 237,
+        "signature_hash": "5c0c008285e2ab26",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:DriveCommandExecutorHookTests.test_validation_and_execution_do_not_mutate_input:86d18c03539e80bb",
+        "name": "DriveCommandExecutorHookTests.test_validation_and_execution_do_not_mutate_input",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 533,
+        "end_line": 543,
+        "signature_hash": "4c390fadd064d11c",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:_FakeExecutor.__init__:c2e304d8d005219d",
+        "name": "_FakeExecutor.__init__",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 21,
+        "end_line": 32,
+        "signature_hash": "197d26b54aee12c0",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:_FakeExecutor.generate:39786f112d41287a",
+        "name": "_FakeExecutor.generate",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 34,
+        "end_line": 38,
+        "signature_hash": "c4cc05be9b3515f6",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:_allow_admission.provider:6d96a73d4c57b5c3",
+        "name": "_allow_admission.provider",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_hook.py",
+        "line": 80,
+        "end_line": 98,
+        "signature_hash": "1d7c56022e271318",
+        "file_digest8": "cd417695f36e77f2"
+      },
+      {
         "semantic_id": "tools/project006/test_local_runner_preflight.py#class:LocalRunnerPreflightTests:3efc565f71afeb08",
         "name": "LocalRunnerPreflightTests",
         "kind": "class",
@@ -450776,7 +452057,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "ae5093a44bcc1af4e5484511527aac7c",
-    "payload_hash": "4aefb92a7f7e809328b2357b10c9ed0a"
+    "record_fingerprint": "592b3abb4051e45ebf5f4232976a3a66",
+    "payload_hash": "de0c24978ffae0b85bc8292dbfb5889a"
   }
 }
