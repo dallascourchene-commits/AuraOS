@@ -61,7 +61,8 @@ jobs:
             aura_agent_arena_mcp_external_llm.py \
             tests/test_aura_external_llm_session.py \
             tests/test_aura_local_inference_gateway.py \
-            tests/test_aura_local_inference_gateway_repair002.py
+            tests/test_aura_local_inference_gateway_repair002.py \
+            tests/test_aura_local_inference_gateway_repair003.py
       - name: Run focused slice-session and local inference tests
         run: |
           set -o pipefail
@@ -69,6 +70,7 @@ jobs:
             tests/test_aura_external_llm_session.py \
             tests/test_aura_local_inference_gateway.py \
             tests/test_aura_local_inference_gateway_repair002.py \
+            tests/test_aura_local_inference_gateway_repair003.py \
             2>&1 | tee external-session-tests.log
       - name: Verify additive MCP discovery
         run: |
