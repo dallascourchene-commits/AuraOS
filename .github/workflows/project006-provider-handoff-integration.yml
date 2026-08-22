@@ -30,9 +30,16 @@ jobs:
           python -m py_compile \
             tools/project006/provider_sidecar_reference/provider_sidecar.py \
             tools/project006/provider_sidecar_reference/provider_handoff.py \
+            tools/project006/provider_sidecar_reference/test_provider_sidecar.py \
+            tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py \
+            tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3.py \
+            tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py \
             tools/project006/provider_sidecar_reference/test_provider_handoff.py
-      - name: Run provider-sidecar and handoff suites
+      - name: Run exact WP04 sidecar and handoff suites
         run: |
           python -m unittest -v \
             tools.project006.provider_sidecar_reference.test_provider_sidecar \
+            tools.project006.provider_sidecar_reference.test_provider_sidecar_repair_r1 \
+            tools.project006.provider_sidecar_reference.test_provider_sidecar_repair_g3 \
+            tools.project006.provider_sidecar_reference.test_provider_sidecar_repair_g3_followup \
             tools.project006.provider_sidecar_reference.test_provider_handoff
