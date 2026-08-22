@@ -5,13 +5,18 @@ source for model context, choose work decomposition, grant provider permission,
 or mutate production state. Callers supply a bounded context compiler and
 backend adapters; the gateway binds an exact model policy before any backend can
 run and emits deterministic nonauthority receipts.
+
+P0 intentionally executes only deterministic/no-model and local-model classes.
+External escalation remains owned by the existing external-session/provider plane.
 """
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 import hashlib
 import json
+import math
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any, Callable, Mapping, Protocol
 
 POLICY_SCHEMA = "AURA_MODEL_POLICY_V1"
@@ -21,6 +26,7 @@ CAPABILITY_SCHEMA = "AURA_LOCAL_INFERENCE_BACKEND_CAPABILITY_V1"
 RECEIPT_SCHEMA = "AURA_LOCAL_INFERENCE_RECEIPT_V1"
 
 SUPPORTED_POLICY_BACKENDS = {"no_model", "local_model", "external_model"}
+P0_EXECUTABLE_BACKENDS = frozenset({"no_model", "local_model"})
 BACKEND_CLASS_BY_POLICY_VALUE = {
     "no_model": "no_model",
     "local_model": "local_model",
@@ -38,8 +44,49 @@ class StalePolicyError(PolicyResolutionError):
     """Raised when an expected policy digest no longer matches."""
 
 
+def _json_snapshot(value: Any, field_name: str = "identity") -> Any:
+    """Deep-copy identity-bearing values into immutable, finite JSON data."""
+    if value is None or isinstance(value, (str, bool, int)):
+        return value
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise ValueError(f"{field_name}_nonfinite")
+        return value
+    if isinstance(value, Mapping):
+        frozen: dict[str, Any] = {}
+        for key, child in value.items():
+            if not isinstance(key, str):
+                raise ValueError(f"{field_name}_mapping_key_must_be_string")
+            frozen[key] = _json_snapshot(child, f"{field_name}.{key}")
+        return MappingProxyType(frozen)
+    if isinstance(value, (list, tuple)):
+        return tuple(_json_snapshot(child, f"{field_name}[]") for child in value)
+    raise ValueError(f"{field_name}_unsupported_type:{type(value).__name__}")
+
+
+def _json_plain(value: Any) -> Any:
+    """Convert an admitted immutable JSON snapshot back to plain JSON values."""
+    if value is None or isinstance(value, (str, bool, int)):
+        return value
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise ValueError("identity_nonfinite")
+        return value
+    if isinstance(value, Mapping):
+        return {key: _json_plain(child) for key, child in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_plain(child) for child in value]
+    raise ValueError(f"identity_unsupported_type:{type(value).__name__}")
+
+
 def _canonical_json(value: Any) -> str:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return json.dumps(
+        _json_plain(value),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    )
 
 
 def _sha256_bytes(value: bytes) -> str:
@@ -65,6 +112,10 @@ def _require_string_tuple(values: Any, field_name: str) -> tuple[str, ...]:
     return normalized
 
 
+def _safe_text(value: Any) -> str | None:
+    return value if isinstance(value, str) else None
+
+
 @dataclass(frozen=True)
 class PolicyDecision:
     policy_ref: str
@@ -82,7 +133,7 @@ class PolicyDecision:
 
 
 class ModelPolicyResolver:
-    """Resolve one exact repository-local model policy and fail closed."""
+    """Resolve one exact repository-owned model policy and fail closed."""
 
     _required_keys = frozenset(
         {
@@ -99,14 +150,17 @@ class ModelPolicyResolver:
 
     def __init__(self, repo_root: str | Path = ".") -> None:
         self.repo_root = Path(repo_root).resolve()
+        self.policy_root = (self.repo_root / ".aura" / "model_policies").resolve()
 
     def resolve(self, policy_ref: str, *, expected_sha256: str | None = None) -> PolicyDecision:
         normalized_ref = self._validate_policy_ref(policy_ref)
-        path = (self.repo_root / normalized_ref).resolve()
+        declared_path = self.repo_root / normalized_ref
+        self._reject_symlink_path(declared_path)
+        path = declared_path.resolve()
         try:
-            path.relative_to(self.repo_root)
+            path.relative_to(self.policy_root)
         except ValueError as exc:
-            raise PolicyResolutionError("policy_ref_outside_repository") from exc
+            raise PolicyResolutionError("policy_ref_outside_policy_owner") from exc
         try:
             raw = path.read_bytes()
         except OSError as exc:
@@ -122,6 +176,17 @@ class ModelPolicyResolver:
         if expected_sha256 is None:
             return decision
         return PolicyDecision(**{**decision.to_dict(), "currentness": "EXACT_DIGEST_MATCH"})
+
+    def _reject_symlink_path(self, declared_path: Path) -> None:
+        try:
+            relative = declared_path.relative_to(self.repo_root)
+        except ValueError as exc:
+            raise PolicyResolutionError("policy_ref_outside_repository") from exc
+        cursor = self.repo_root
+        for part in relative.parts:
+            cursor = cursor / part
+            if cursor.is_symlink():
+                raise PolicyResolutionError("policy_symlink_forbidden")
 
     @classmethod
     def _validate_policy_ref(cls, policy_ref: str) -> str:
@@ -164,13 +229,14 @@ class ModelPolicyResolver:
         backend_values = (default, fallback)
         if "external_model" in backend_values and not external_allowed:
             raise PolicyResolutionError("external_backend_forbidden_by_policy")
+
+        # P0 records policy external eligibility but never executes that class here.
         allowed: list[str] = []
         for value in backend_values:
             backend_class = BACKEND_CLASS_BY_POLICY_VALUE[value]
-            if backend_class not in allowed:
+            if backend_class in P0_EXECUTABLE_BACKENDS and backend_class not in allowed:
                 allowed.append(backend_class)
-        if external_allowed and "external_model" not in allowed:
-            allowed.append("external_model")
+
         return PolicyDecision(
             policy_ref=policy_ref,
             policy_blob_digest=digest,
@@ -238,7 +304,7 @@ class CompiledContextV1:
             "privacy_refs": list(self.privacy_refs),
             "reopen_refs": list(self.reopen_refs),
             "privacy_exclusions": list(self.privacy_exclusions),
-            "payload": dict(self.payload),
+            "payload": _json_plain(self.payload),
         }
 
     @property
@@ -264,7 +330,7 @@ class BackendCapabilityV1:
             "available": self.available,
             "network_required": self.network_required,
             "artifact_ref": self.artifact_ref,
-            "resource_state": dict(self.resource_state),
+            "resource_state": _json_plain(self.resource_state),
         }
 
     @property
@@ -351,7 +417,7 @@ class FakeLocalBackend:
 
 
 class ExternalBackendForTest:
-    """Negative-test adapter proving external labels cannot bypass policy."""
+    """Negative-test adapter proving external labels cannot bypass the P0 gateway."""
 
     counts_as_model_call = True
 
@@ -389,8 +455,66 @@ def request_from_route_capsule(
     )
 
 
+def _snapshot_context(context: CompiledContextV1) -> CompiledContextV1:
+    if not isinstance(context, CompiledContextV1):
+        raise ValueError("context_schema_invalid")
+    return CompiledContextV1(
+        source_refs=_require_string_tuple(context.source_refs, "source_refs"),
+        currentness_refs=_require_string_tuple(context.currentness_refs, "currentness_refs"),
+        authority_refs=_require_string_tuple(context.authority_refs, "authority_refs"),
+        privacy_refs=_require_string_tuple(context.privacy_refs, "privacy_refs"),
+        reopen_refs=_require_string_tuple(context.reopen_refs, "reopen_refs"),
+        privacy_exclusions=_require_string_tuple(context.privacy_exclusions, "privacy_exclusions"),
+        payload=_json_snapshot(context.payload, "context_payload"),
+    )
+
+
+def _snapshot_capability(capability: BackendCapabilityV1) -> BackendCapabilityV1:
+    if not isinstance(capability, BackendCapabilityV1):
+        raise ValueError("backend_capability_schema_invalid")
+    backend_id = _require_nonempty_text(capability.backend_id, "backend_id")
+    backend_class = _require_nonempty_text(capability.backend_class, "backend_class")
+    if backend_class not in SUPPORTED_POLICY_BACKENDS:
+        raise ValueError("backend_capability_class_unknown")
+    if not isinstance(capability.available, bool) or not isinstance(capability.network_required, bool):
+        raise ValueError("backend_capability_boolean_invalid")
+    if capability.artifact_ref is not None and not isinstance(capability.artifact_ref, str):
+        raise ValueError("backend_artifact_ref_invalid")
+    return BackendCapabilityV1(
+        backend_id=backend_id,
+        backend_class=backend_class,
+        available=capability.available,
+        network_required=capability.network_required,
+        artifact_ref=capability.artifact_ref,
+        resource_state=_json_snapshot(capability.resource_state, "backend_resource_state"),
+    )
+
+
+def _snapshot_result(result: Any) -> BackendResultV1:
+    if not isinstance(result, BackendResultV1):
+        raise ValueError("backend_result_schema_invalid")
+    if not isinstance(result.satisfied, bool):
+        raise ValueError("backend_result_satisfied_invalid")
+    if not isinstance(result.output, str):
+        raise ValueError("backend_result_output_invalid")
+    uncertainty = _require_string_tuple(result.uncertainty, "backend_result_uncertainty")
+    counterevidence = _require_string_tuple(result.counterevidence, "backend_result_counterevidence")
+    measurement_class = _require_nonempty_text(result.measurement_class, "measurement_class")
+    measurements = _json_snapshot(result.measurements, "backend_result_measurements")
+    if not isinstance(measurements, Mapping):
+        raise ValueError("backend_result_measurements_must_be_mapping")
+    return BackendResultV1(
+        satisfied=result.satisfied,
+        output=result.output,
+        uncertainty=uncertainty,
+        counterevidence=counterevidence,
+        measurements=measurements,
+        measurement_class=measurement_class,
+    )
+
+
 class LocalInferenceGateway:
-    """Bind policy -> bounded context -> eligible backend -> nonauthority receipt."""
+    """Bind policy -> bounded context -> eligible P0 backend -> nonauthority receipt."""
 
     def __init__(
         self,
@@ -415,34 +539,64 @@ class LocalInferenceGateway:
         except (PolicyResolutionError, ValueError) as exc:
             return self._blocked_receipt(request, "BLOCKED_POLICY_INVALID", details={"error": str(exc)})
 
-        if request.backend_hint == "external_model" and not policy.external_allowed:
-            return self._blocked_receipt(request, "BLOCKED_POLICY_EXTERNAL_FORBIDDEN", policy=policy)
+        if request.backend_hint == "external_model":
+            status = (
+                "BLOCKED_POLICY_EXTERNAL_FORBIDDEN"
+                if not policy.external_allowed
+                else "BLOCKED_EXTERNAL_DELEGATION_REQUIRED"
+            )
+            return self._blocked_receipt(request, status, policy=policy)
 
         try:
-            context = self.context_compiler(request)
+            compiled = self.context_compiler(request)
+            context = _snapshot_context(compiled)
         except Exception as exc:  # context-owner failure never authorizes broader hydration
             return self._blocked_receipt(
                 request,
                 "BLOCKED_CONTEXT_UNAVAILABLE",
                 policy=policy,
-                details={"error_type": type(exc).__name__},
+                details={"error_type": type(exc).__name__, "error": str(exc)},
             )
-        if not isinstance(context, CompiledContextV1):
-            return self._blocked_receipt(request, "BLOCKED_CONTEXT_SCHEMA", policy=policy)
+
         context_problem = self._context_problem(request, context)
         if context_problem:
             return self._blocked_receipt(request, context_problem, policy=policy, context=context)
 
         attempts: list[dict[str, Any]] = []
+        aggregate_uncertainty: list[str] = []
+        aggregate_counterevidence: list[str] = []
         model_calls = 0
+
         for backend_class in self._ordered_backend_classes(policy):
-            if backend_class == "external_model" and not policy.external_allowed:
-                continue
             adapter = self._find_backend(backend_class)
             if adapter is None:
-                attempts.append({"backend_class": backend_class, "status": "UNAVAILABLE", "capability_digest": None})
+                attempts.append(
+                    {"backend_class": backend_class, "status": "UNAVAILABLE", "capability_digest": None}
+                )
                 continue
-            capability = adapter.capability
+            try:
+                capability = _snapshot_capability(adapter.capability)
+            except Exception as exc:
+                attempts.append(
+                    {
+                        "backend_class": backend_class,
+                        "status": "BLOCKED_CAPABILITY_INVALID",
+                        "error_type": type(exc).__name__,
+                        "capability_digest": None,
+                    }
+                )
+                continue
+
+            if capability.backend_class != backend_class:
+                attempts.append(
+                    {
+                        "backend_class": backend_class,
+                        "backend_id": capability.backend_id,
+                        "status": "BLOCKED_CAPABILITY_CLASS_MISMATCH",
+                        "capability_digest": capability.digest,
+                    }
+                )
+                continue
             if not capability.available:
                 attempts.append(
                     {
@@ -453,30 +607,21 @@ class LocalInferenceGateway:
                     }
                 )
                 continue
-            if backend_class == "local_model" and capability.network_required:
+            if capability.network_required:
                 attempts.append(
                     {
                         "backend_class": backend_class,
                         "backend_id": capability.backend_id,
-                        "status": "BLOCKED_LOCAL_BACKEND_REQUIRES_NETWORK",
+                        "status": "BLOCKED_P0_BACKEND_REQUIRES_NETWORK",
                         "capability_digest": capability.digest,
                     }
                 )
                 continue
-            if backend_class == "external_model":
-                missing = set(policy.escalation_requirements) - set(request.escalation_evidence)
-                if missing:
-                    attempts.append(
-                        {
-                            "backend_class": backend_class,
-                            "backend_id": capability.backend_id,
-                            "status": "BLOCKED_ESCALATION_EVIDENCE",
-                            "missing": sorted(missing),
-                            "capability_digest": capability.digest,
-                        }
-                    )
-                    continue
-            if adapter.counts_as_model_call:
+
+            # Model-call accounting is authority-derived from the admitted backend class,
+            # never from adapter-controlled metadata.
+            counts_as_model_call = backend_class == "local_model"
+            if counts_as_model_call:
                 if model_calls >= policy.max_calls:
                     attempts.append(
                         {
@@ -488,8 +633,9 @@ class LocalInferenceGateway:
                     )
                     continue
                 model_calls += 1
+
             try:
-                result = adapter.invoke(request, context)
+                result = _snapshot_result(adapter.invoke(request, context))
             except Exception as exc:
                 attempts.append(
                     {
@@ -501,6 +647,9 @@ class LocalInferenceGateway:
                     }
                 )
                 continue
+
+            aggregate_uncertainty.extend(result.uncertainty)
+            aggregate_counterevidence.extend(result.counterevidence)
             attempts.append(
                 {
                     "backend_class": backend_class,
@@ -508,7 +657,9 @@ class LocalInferenceGateway:
                     "status": "SATISFIED" if result.satisfied else "INSUFFICIENT",
                     "capability_digest": capability.digest,
                     "measurement_class": result.measurement_class,
-                    "measurements": dict(result.measurements),
+                    "measurements": _json_plain(result.measurements),
+                    "uncertainty": list(result.uncertainty),
+                    "counterevidence": list(result.counterevidence),
                 }
             )
             if result.satisfied:
@@ -527,11 +678,16 @@ class LocalInferenceGateway:
             "BLOCKED_NO_ELIGIBLE_BACKEND",
             policy=policy,
             context=context,
-            details={"attempts": attempts, "model_calls": model_calls},
+            details={"attempts": attempts},
+            model_calls=model_calls,
+            uncertainty=aggregate_uncertainty,
+            counterevidence=aggregate_counterevidence,
         )
 
     @staticmethod
     def _validate_request(request: InferenceRequestV1) -> None:
+        if not isinstance(request, InferenceRequestV1):
+            raise ValueError("request_schema_invalid")
         _require_nonempty_text(request.request_id, "request_id")
         _require_nonempty_text(request.objective, "objective")
         _require_nonempty_text(request.model_policy_ref, "model_policy_ref")
@@ -542,6 +698,14 @@ class LocalInferenceGateway:
             raise ValueError("required_evidence_unknown")
         if request.backend_hint is not None and request.backend_hint not in SUPPORTED_POLICY_BACKENDS:
             raise ValueError("backend_hint_unknown")
+        for field_name in (
+            "expected_policy_sha256",
+            "bound_context_digest",
+            "coordinate_hint",
+        ):
+            value = getattr(request, field_name)
+            if value is not None and not isinstance(value, str):
+                raise ValueError(f"{field_name}_invalid")
 
     @staticmethod
     def _context_problem(request: InferenceRequestV1, context: CompiledContextV1) -> str | None:
@@ -556,17 +720,28 @@ class LocalInferenceGateway:
                 return "BLOCKED_REQUIRED_EVIDENCE_UNRESOLVED"
         if request.bound_context_digest is not None and request.bound_context_digest != context.digest:
             return "BLOCKED_CONTEXT_DIGEST_MISMATCH"
+
+        # The baseline privacy proof is mandatory even when the caller asks for none.
+        if not FORBIDDEN_CONTEXT_CLASSES <= set(context.privacy_exclusions):
+            return "BLOCKED_PRIVACY_EXCLUSIONS_INCOMPLETE"
         if not set(request.required_privacy_exclusions) <= set(context.privacy_exclusions):
             return "BLOCKED_PRIVACY_EXCLUSIONS_INCOMPLETE"
-        included_classes = context.payload.get("included_classes", [])
-        if not isinstance(included_classes, (list, tuple, set)):
+
+        included_classes = context.payload.get("included_classes", ())
+        if not isinstance(included_classes, (list, tuple)):
+            return "BLOCKED_CONTEXT_SCHEMA"
+        if any(not isinstance(value, str) for value in included_classes):
             return "BLOCKED_CONTEXT_SCHEMA"
         if FORBIDDEN_CONTEXT_CLASSES & set(included_classes):
             return "BLOCKED_FORBIDDEN_CONTEXT_CLASS"
         return None
 
     def _find_backend(self, backend_class: str) -> BackendAdapter | None:
-        matches = [backend for backend in self.backends if backend.capability.backend_class == backend_class]
+        matches: list[BackendAdapter] = []
+        for backend in self.backends:
+            capability = getattr(backend, "capability", None)
+            if isinstance(capability, BackendCapabilityV1) and capability.backend_class == backend_class:
+                matches.append(backend)
         if len(matches) != 1:
             return None
         return matches[0]
@@ -576,11 +751,31 @@ class LocalInferenceGateway:
         ordered: list[str] = []
         for policy_value in (policy.default, policy.fallback):
             backend_class = BACKEND_CLASS_BY_POLICY_VALUE[policy_value]
-            if backend_class not in ordered:
+            if backend_class in P0_EXECUTABLE_BACKENDS and backend_class not in ordered:
                 ordered.append(backend_class)
-        if policy.external_allowed and "external_model" not in ordered:
-            ordered.append("external_model")
         return tuple(ordered)
+
+    @staticmethod
+    def _safe_request_digest(request: Any) -> str:
+        try:
+            return request.digest
+        except Exception:
+            safe = {
+                "schema_id": REQUEST_SCHEMA,
+                "schema_version": 1,
+                "invalid_request": True,
+                "request_id": _safe_text(getattr(request, "request_id", None)),
+                "objective": _safe_text(getattr(request, "objective", None)),
+                "model_policy_ref": _safe_text(getattr(request, "model_policy_ref", None)),
+                "invalid_field_types": {
+                    "required_evidence": type(getattr(request, "required_evidence", None)).__name__,
+                    "required_privacy_exclusions": type(
+                        getattr(request, "required_privacy_exclusions", None)
+                    ).__name__,
+                    "escalation_evidence": type(getattr(request, "escalation_evidence", None)).__name__,
+                },
+            }
+            return _sha256_json(safe)
 
     @staticmethod
     def _base_receipt(
@@ -590,24 +785,32 @@ class LocalInferenceGateway:
         policy: PolicyDecision | None,
         context: CompiledContextV1 | None,
         details: Mapping[str, Any] | None = None,
+        model_calls: int = 0,
+        uncertainty: tuple[str, ...] | list[str] = (),
+        counterevidence: tuple[str, ...] | list[str] = (),
     ) -> dict[str, Any]:
+        request_id = _safe_text(getattr(request, "request_id", None))
+        request_policy_ref = _safe_text(getattr(request, "model_policy_ref", None))
+        expected_policy_sha256 = _safe_text(getattr(request, "expected_policy_sha256", None))
+        bound_context_digest = _safe_text(getattr(request, "bound_context_digest", None))
+
         receipt = {
             "schema_id": RECEIPT_SCHEMA,
             "schema_version": 1,
             "status": status,
-            "request_digest": request.digest,
-            "request_id": request.request_id,
-            "policy_ref": policy.policy_ref if policy else request.model_policy_ref,
-            "policy_digest": policy.policy_blob_digest if policy else request.expected_policy_sha256,
+            "request_digest": LocalInferenceGateway._safe_request_digest(request),
+            "request_id": request_id,
+            "policy_ref": policy.policy_ref if policy else request_policy_ref,
+            "policy_digest": policy.policy_blob_digest if policy else expected_policy_sha256,
             "policy_currentness": policy.currentness if policy else "UNKNOWN",
-            "context_digest": context.digest if context else request.bound_context_digest,
+            "context_digest": context.digest if context else bound_context_digest,
             "context_reopen_refs": list(context.reopen_refs) if context else [],
             "backend": None,
             "backend_capability_digest": None,
-            "model_calls": 0,
+            "model_calls": model_calls,
             "output_digest": None,
-            "uncertainty": [],
-            "counterevidence": [],
+            "uncertainty": list(uncertainty),
+            "counterevidence": list(counterevidence),
             "measurement_class": "UNKNOWN",
             "measurements": {},
             "effect_state": NONAUTHORITY_EFFECT_STATE,
@@ -615,7 +818,7 @@ class LocalInferenceGateway:
             "runtime_authority": False,
             "provider_authority": False,
             "human_gate": False,
-            "details": dict(details or {}),
+            "details": _json_plain(details or {}),
         }
         receipt["receipt_digest"] = _sha256_json(receipt)
         return receipt
@@ -628,8 +831,20 @@ class LocalInferenceGateway:
         policy: PolicyDecision | None = None,
         context: CompiledContextV1 | None = None,
         details: Mapping[str, Any] | None = None,
+        model_calls: int = 0,
+        uncertainty: tuple[str, ...] | list[str] = (),
+        counterevidence: tuple[str, ...] | list[str] = (),
     ) -> dict[str, Any]:
-        return self._base_receipt(request, status=status, policy=policy, context=context, details=details)
+        return self._base_receipt(
+            request,
+            status=status,
+            policy=policy,
+            context=context,
+            details=details,
+            model_calls=model_calls,
+            uncertainty=uncertainty,
+            counterevidence=counterevidence,
+        )
 
     @staticmethod
     def _success_receipt(
@@ -666,7 +881,7 @@ class LocalInferenceGateway:
             "uncertainty": list(result.uncertainty),
             "counterevidence": list(result.counterevidence),
             "measurement_class": result.measurement_class,
-            "measurements": dict(result.measurements),
+            "measurements": _json_plain(result.measurements),
             "attempts": list(attempts),
             "effect_state": NONAUTHORITY_EFFECT_STATE,
             "production_mutation": False,
