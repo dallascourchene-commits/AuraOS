@@ -1,0 +1,39 @@
+name: Repair006 Focused Scheduler Evidence
+
+on:
+  push:
+    branches:
+      - v9/c2a-scheduler-state-6c9a
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  focused-scheduler-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pytest only
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Record exact environment and frozen blob identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "HEAD=$(git rev-parse HEAD)"
+          echo "PYTHON=$(python --version 2>&1)"
+          echo "PYTEST=$(python -m pytest --version 2>&1)"
+          echo "SOURCE_BLOB=$(git hash-object aura_topology_scheduler.py)"
+          echo "TEST_BLOB=$(git hash-object tests/test_aura_topology_scheduler.py)"
+          test "$(git hash-object aura_topology_scheduler.py)" = "6f615c51485cf11a2c7f9fba71f4860b3118b1cd"
+          test "$(git hash-object tests/test_aura_topology_scheduler.py)" = "7959f6714ccafdef30a8ed29862d3a07cf95cdf6"
+      - name: Execute exact focused scheduler test path
+        run: python -m pytest -ra tests/test_aura_topology_scheduler.py
