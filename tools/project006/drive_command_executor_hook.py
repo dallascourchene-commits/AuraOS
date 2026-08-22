@@ -1,9 +1,10 @@
 """Minimal admitted Aura Drive command -> existing DeepSeek egress hook.
 
-This is deliberately not a Drive client, scheduler, durable execution ledger, or
-provider registry. The installed inbox owns ingestion/replay state and the installed
-bus writer owns Drive output. This module only validates one already-admitted D0
-command and adapts it to Aura's existing canonical DeepSeek egress.
+This is deliberately not a Drive client, scheduler, durable execution ledger, policy
+engine, or provider registry. The installed inbox owns ingestion/replay state, a
+host-owned policy/cost gate owns effect admission, and the installed bus writer owns
+Drive output. This module validates one already-admitted D0 command and adapts an
+exactly admitted internal DeepSeek effect to Aura's existing canonical egress.
 """
 from __future__ import annotations
 
@@ -17,6 +18,9 @@ HOOK_VERSION = "AURA_DRIVE_DEEPSEEK_D0_HOOK_V1"
 COMMAND_SCHEMA = "AuraCommandEnvelopeV1-candidate"
 AUTHORIZED_QUEUE_STATE = "AUTHORIZED_FOR_DISPATCH_WHEN_OWNER_BOUND"
 EXECUTOR_ID = "AURA_CANONICAL_EGRESS_DEEPSEEK_D0_V1"
+EFFECT_CLASS = "INTERNAL_DEEPSEEK_PROVIDER_INFERENCE_EGRESS"
+EFFECT_ADMISSION_VERSION = "P0_D_EFFECT_ADMISSION_V1"
+REQUIRED_CAPABILITY = "EXISTING_AURA_DEEPSEEK_EXECUTOR"
 
 _MAX_ID_CHARS = 256
 _MAX_REF_CHARS = 1024
@@ -54,13 +58,34 @@ _FORBIDDEN_CONTROL_KEYS = frozenset(
         "lease_generation",
         "currentness_ref",
         "validation_receipt_ref",
+        # Effect admission is a host-owned input to execute_admitted_command().
+        # The Drive command cannot self-authorize by supplying these fields.
+        "effect_admission",
+        "effect_admission_ref",
+        "authority_admission",
+        "authority_admission_ref",
+        "provider_cost_admission",
+        "provider_cost_admission_ref",
     }
 )
 
-# These phrases are incompatible with an effect whose sole implementation is an
-# external DeepSeek provider call unless the same item contains a narrow explicit
-# DeepSeek exception. Narrow prohibitions such as "no unrelated external
-# communication" do not match these prefixes and remain valid.
+_EFFECT_ADMISSION_KEYS = frozenset(
+    {
+        "admission_version",
+        "command_digest",
+        "authority_ref",
+        "workspace_scope",
+        "executor_id",
+        "effect_class",
+        "currentness",
+        "authority_decision",
+        "cost_decision",
+        "policy_ref",
+        "authority_admission_ref",
+        "provider_cost_admission_ref",
+    }
+)
+
 _BROAD_EXTERNAL_DENIALS = (
     "no external communication",
     "no external communications",
@@ -105,7 +130,13 @@ class _Executor(Protocol):
     ) -> tuple[str | None, str | None, float]: ...
 
 
+EffectAdmissionProvider = Callable[
+    [Mapping[str, Any], str, str, str], Mapping[str, Any]
+]
+
+
 def _canonical_digest(value: Any) -> str:
+    """Return deterministic SHA-256 over canonical JSON."""
     body = json.dumps(
         value,
         sort_keys=True,
@@ -117,6 +148,7 @@ def _canonical_digest(value: Any) -> str:
 
 
 def _require_text(name: str, value: Any, *, maximum: int) -> str:
+    """Require bounded nonempty text without hidden C0 controls."""
     if not isinstance(value, str):
         raise CommandHookError(f"INVALID_{name.upper()}")
     if not value or len(value) > maximum:
@@ -127,17 +159,19 @@ def _require_text(name: str, value: Any, *, maximum: int) -> str:
 
 
 def _intent_list(name: str, value: Any) -> tuple[str, ...]:
+    """Normalize a bounded intent list while preserving order and text."""
     if value is None:
         return ()
     if not isinstance(value, (list, tuple)) or len(value) > _MAX_INTENT_ITEMS:
         raise CommandHookError(f"INVALID_{name.upper()}")
-    items: list[str] = []
-    for item in value:
-        items.append(_require_text(name, item, maximum=_MAX_INTENT_ITEM_CHARS))
-    return tuple(items)
+    return tuple(
+        _require_text(name, item, maximum=_MAX_INTENT_ITEM_CHARS)
+        for item in value
+    )
 
 
 def _reject_structured_provider_control(value: Any) -> None:
+    """Reject caller-controlled provider, execution, or admission authority keys."""
     if isinstance(value, Mapping):
         for raw_key, child in value.items():
             key = str(raw_key).strip().lower()
@@ -150,6 +184,7 @@ def _reject_structured_provider_control(value: Any) -> None:
 
 
 def _has_explicit_deepseek_exception(text: str) -> bool:
+    """Recognize a narrow explicit exception to a broad external-effect denial."""
     low = " ".join(text.casefold().split())
     return (
         "deepseek" in low
@@ -159,6 +194,7 @@ def _has_explicit_deepseek_exception(text: str) -> bool:
 
 
 def _validate_intent_consistency(negative_intent: tuple[str, ...]) -> None:
+    """Fail closed when command prohibitions contradict required DeepSeek egress."""
     for item in negative_intent:
         low = " ".join(item.casefold().split())
         if any(low.startswith(prefix) for prefix in _BROAD_EXTERNAL_DENIALS):
@@ -168,12 +204,24 @@ def _validate_intent_consistency(negative_intent: tuple[str, ...]) -> None:
                 )
 
 
+def _requested_capability(value: Any) -> str:
+    """Extract the command capability ceiling from the supported candidate shape."""
+    if isinstance(value, Mapping):
+        value = value.get("semantic_id_or_alias")
+    capability = _require_text(
+        "requested_capability", value, maximum=_MAX_REF_CHARS
+    )
+    if capability != REQUIRED_CAPABILITY:
+        raise CommandHookError("REQUESTED_CAPABILITY_MISMATCH")
+    return capability
+
+
 def validate_admitted_command(raw: Mapping[str, Any]) -> dict[str, Any]:
     """Validate one already-admitted owner-bound ChatGPT/D0 command.
 
     Upstream remains responsible for proving current owner authority and durable
-    idempotency state. This adapter fails closed on contradictory intent and on
-    caller-supplied provider authority.
+    idempotency state. This adapter preserves policy operands and fails closed on
+    contradictory intent, capability widening, or caller-supplied effect authority.
     """
     if not isinstance(raw, Mapping):
         raise CommandHookError("COMMAND_NOT_OBJECT")
@@ -225,8 +273,13 @@ def validate_admitted_command(raw: Mapping[str, Any]) -> dict[str, Any]:
     constraints = raw.get("constraints")
     if not isinstance(constraints, Mapping):
         raise CommandHookError("INVALID_CONSTRAINTS")
-    if constraints.get("workspace_scope") != "AURA_DRIVE_ONLY":
+    workspace_scope = _require_text(
+        "workspace_scope", constraints.get("workspace_scope"), maximum=_MAX_REF_CHARS
+    )
+    if workspace_scope != "AURA_DRIVE_ONLY":
         raise CommandHookError("MINIMAL_BRIDGE_WORKSPACE_SCOPE_MISMATCH")
+
+    capability = _requested_capability(raw.get("requested_capability"))
 
     human_disposition = raw.get("human_disposition")
     if human_disposition is not None:
@@ -254,11 +307,56 @@ def validate_admitted_command(raw: Mapping[str, Any]) -> dict[str, Any]:
         "positive_intent": positive_intent,
         "negative_intent": negative_intent,
         "success_criteria": success_criteria,
-        "workspace_scope": "AURA_DRIVE_ONLY",
+        "workspace_scope": workspace_scope,
+        "requested_capability": capability,
     }
 
 
+def _validate_effect_admission(
+    raw: Mapping[str, Any],
+    *,
+    command: Mapping[str, Any],
+    request_digest: str,
+) -> dict[str, str]:
+    """Validate a host-owned authority+cost admission receipt for this exact effect."""
+    if not isinstance(raw, Mapping):
+        raise CommandHookError("EFFECT_ADMISSION_INVALID")
+    if set(raw) != _EFFECT_ADMISSION_KEYS:
+        raise CommandHookError("EFFECT_ADMISSION_SHAPE_INVALID")
+
+    normalized = {
+        key: _require_text(
+            key,
+            raw.get(key),
+            maximum=_MAX_REF_CHARS,
+        )
+        for key in _EFFECT_ADMISSION_KEYS
+    }
+    expected = {
+        "admission_version": EFFECT_ADMISSION_VERSION,
+        "command_digest": request_digest,
+        "authority_ref": str(command["authority_ref"]),
+        "workspace_scope": str(command["workspace_scope"]),
+        "executor_id": EXECUTOR_ID,
+        "effect_class": EFFECT_CLASS,
+        "currentness": "CURRENT",
+        "authority_decision": "ALLOW",
+        "cost_decision": "ALLOW",
+    }
+    for key, expected_value in expected.items():
+        if normalized[key] != expected_value:
+            if key == "currentness":
+                raise CommandHookError("EFFECT_ADMISSION_NOT_CURRENT")
+            if key == "authority_decision":
+                raise CommandHookError("AUTHORITY_ADMISSION_NOT_ALLOW")
+            if key == "cost_decision":
+                raise CommandHookError("PROVIDER_COST_ADMISSION_NOT_ALLOW")
+            raise CommandHookError("EFFECT_ADMISSION_BINDING_MISMATCH")
+    return normalized
+
+
 def _build_prompt(command: Mapping[str, Any]) -> str:
+    """Compile the bounded objective while retaining accepted negative intent."""
     target = command.get("target_ref")
     target_line = f"\nTARGET_REF: {target}" if target else ""
     negative = command.get("negative_intent") or ()
@@ -278,6 +376,7 @@ def _build_prompt(command: Mapping[str, Any]) -> str:
 
 
 def _default_executor_factory() -> _Executor:
+    """Construct the existing canonical egress pinned to DeepSeek without fallback."""
     from aura_llm_egress import ExternalLLM
 
     return ExternalLLM(
@@ -290,16 +389,26 @@ def _default_executor_factory() -> _Executor:
 
 
 def _record_base(
-    command: Mapping[str, Any], request_digest: str
+    command: Mapping[str, Any],
+    request_digest: str,
+    admission: Mapping[str, str],
 ) -> dict[str, Any]:
+    """Build safe lineage fields shared by ACK/RESULT/ERROR records."""
     return {
         "hook_version": HOOK_VERSION,
         "command_id": command["command_id"],
         "idempotency_key": command["idempotency_key"],
         "authority_ref": command["authority_ref"],
         "requested_effect": "D0",
+        "requested_capability": command["requested_capability"],
         "executor_id": EXECUTOR_ID,
+        "effect_class": EFFECT_CLASS,
         "execution_request_digest": request_digest,
+        "effect_admission_digest": _canonical_digest(admission),
+        "authority_admission_ref": admission["authority_admission_ref"],
+        "provider_cost_admission_ref": admission[
+            "provider_cost_admission_ref"
+        ],
         # Existing ExternalLLM exposes no owner-issued attempt identity.
         "execution_identity": "UNKNOWN",
     }
@@ -310,18 +419,41 @@ def execute_admitted_command(
     *,
     executor_factory: Callable[[], _Executor] = _default_executor_factory,
     emit_ack: Callable[[Mapping[str, Any]], None] | None = None,
+    effect_admission: EffectAdmissionProvider | None = None,
 ) -> dict[str, Any]:
-    """Execute one admitted D0 command through existing DeepSeek egress.
+    """Execute one admitted D0 command after host-owned policy and cost admission.
 
-    The host integration must durably reconcile its own execution-state row before
-    calling this function. ``emit_ack`` is invoked before executor construction so a
-    required ACK failure cannot silently begin provider work.
+    The host must reconcile durable execution state outside this module. A caller
+    cannot self-authorize through Drive fields: the separate ``effect_admission``
+    callback must return a current receipt bound to this exact command digest,
+    workspace, executor, effect class, owner authority, and provider-cost decision.
+    Only then may ACK be emitted and the existing DeepSeek egress be constructed.
     """
     command = validate_admitted_command(raw)
     if emit_ack is None:
         raise CommandHookError("ACK_SINK_REQUIRED")
+    if effect_admission is None:
+        raise CommandHookError("EFFECT_ADMISSION_REQUIRED")
+
     request_digest = _canonical_digest(command)
-    base = _record_base(command, request_digest)
+    try:
+        raw_admission = effect_admission(
+            command,
+            request_digest,
+            EXECUTOR_ID,
+            EFFECT_CLASS,
+        )
+    except CommandHookError:
+        raise
+    except Exception as exc:
+        raise CommandHookError("EFFECT_ADMISSION_FAILED") from exc
+    admission = _validate_effect_admission(
+        raw_admission,
+        command=command,
+        request_digest=request_digest,
+    )
+
+    base = _record_base(command, request_digest, admission)
     ack = {
         **base,
         "record_type": "ACK",
@@ -387,6 +519,7 @@ def execute_admitted_command(
 
 
 def _emit_stdout(record: Mapping[str, Any]) -> None:
+    """Emit one deterministic JSONL record."""
     print(
         json.dumps(dict(record), sort_keys=True, ensure_ascii=False),
         flush=True,
@@ -394,6 +527,7 @@ def _emit_stdout(record: Mapping[str, Any]) -> None:
 
 
 def _safe_command_id(raw: Any) -> str | None:
+    """Return a bounded command ID for top-level error lineage when available."""
     if isinstance(raw, Mapping):
         value = raw.get("command_id")
         if isinstance(value, str) and value and len(value) <= _MAX_ID_CHARS:
@@ -402,6 +536,7 @@ def _safe_command_id(raw: Any) -> str | None:
 
 
 def main() -> int:
+    """Run one JSON-stdin command and emit ACK plus one terminal JSONL record."""
     raw: Any = None
     try:
         raw = json.load(sys.stdin)
