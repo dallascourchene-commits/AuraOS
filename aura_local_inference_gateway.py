@@ -543,9 +543,24 @@ class AuraLocalInferenceGateway:
         maximum = raw.get("maximum_model_calls")
         status = raw.get("status")
 
+        allowed = {
+            "schema_version",
+            "owner_ref",
+            "reservation_id",
+            "request_id",
+            "objective_id",
+            "policy_blob_digest",
+            "model_call_count",
+            "maximum_model_calls",
+            "status",
+        }
+        if set(raw) != allowed:
+            return None, "model_call_budget_lease_mismatch"
+
         identity_ok = (
             schema == BUDGET_LEASE_SCHEMA
             and owner_ref == self.budget_owner_ref
+            and reservation_id is not None
             and request_id == request.request_id
             and objective_id == request.objective_id
             and policy_digest == policy.policy_blob_digest
@@ -562,7 +577,7 @@ class AuraLocalInferenceGateway:
                 return None, "model_call_budget_lease_mismatch"
             return ModelCallBudgetLeaseV1(
                 owner_ref=self.budget_owner_ref,
-                reservation_id=reservation_id or "EXHAUSTED",
+                reservation_id=reservation_id,
                 request_id=request.request_id,
                 objective_id=request.objective_id,
                 policy_blob_digest=policy.policy_blob_digest,
@@ -571,21 +586,7 @@ class AuraLocalInferenceGateway:
                 status="EXHAUSTED",
             ), "maximum_model_calls_exhausted"
 
-        if status != "RESERVED" or reservation_id is None or count < 1:
-            return None, "model_call_budget_lease_mismatch"
-
-        allowed = {
-            "schema_version",
-            "owner_ref",
-            "reservation_id",
-            "request_id",
-            "objective_id",
-            "policy_blob_digest",
-            "model_call_count",
-            "maximum_model_calls",
-            "status",
-        }
-        if set(raw) != allowed:
+        if status != "RESERVED" or count < 1:
             return None, "model_call_budget_lease_mismatch"
 
         return ModelCallBudgetLeaseV1(
