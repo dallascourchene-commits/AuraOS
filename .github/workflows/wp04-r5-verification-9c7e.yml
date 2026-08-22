@@ -1,0 +1,63 @@
+name: WP04 R5 exact sidecar verification 9C7E
+
+on:
+  push:
+    branches:
+      - p0plus/wp04-r5-verification-9c7e
+
+permissions:
+  contents: read
+
+jobs:
+  exact-sidecar-r5:
+    name: R5 sidecar suites (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.12']
+    env:
+      PYTHONHASHSEED: '0'
+    steps:
+      - name: Checkout verification branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Fence exact inherited generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected_parent='f616e314ee5aaa4d85f14012aa6b324d0a2ec558'
+          actual_parent="$(git rev-parse HEAD^)"
+          test "$actual_parent" = "$expected_parent"
+          changed="$(git diff --name-only HEAD^ HEAD)"
+          test "$changed" = '.github/workflows/wp04-r5-verification-9c7e.yml'
+          test "$(git hash-object tools/project006/provider_sidecar_reference/provider_sidecar.py)" = 'df74ec24e548d7051a61d7b3091264769730eaf5'
+          test "$(git hash-object tools/project006/provider_sidecar_reference/test_provider_sidecar.py)" = '07bf55525a4cca1cb72e4d33061c5f49eb7cf235'
+          test "$(git hash-object tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3.py)" = '3c7fff19f4a9acd77817565098aa66ad8db984db'
+          test "$(git hash-object tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py)" = '59578b71e2b42188331ef31c6a3ea73e3f05b2e4'
+          test "$(git hash-object tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py)" = '1228388c1fa17d0d9d82ccf435414d0c404d6633'
+
+      - name: Compile exact sidecar slice
+        run: |
+          python -m py_compile \
+            aura_provider_registry.py \
+            tools/project006/provider_sidecar_reference/provider_sidecar.py \
+            tools/project006/provider_sidecar_reference/test_provider_sidecar.py \
+            tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3.py \
+            tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py \
+            tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py
+
+      - name: Execute Repair-002 R5 sidecar suites
+        run: |
+          python -m unittest -v \
+            tools.project006.provider_sidecar_reference.test_provider_sidecar \
+            tools.project006.provider_sidecar_reference.test_provider_sidecar_repair_r1 \
+            tools.project006.provider_sidecar_reference.test_provider_sidecar_repair_g3 \
+            tools.project006.provider_sidecar_reference.test_provider_sidecar_repair_g3_followup
