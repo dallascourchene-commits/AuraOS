@@ -2,8 +2,9 @@
 
 P0 deliberately owns neither source slicing nor provider/runtime authority. It
 binds an already-bounded context to Aura's existing route-component registry,
-requires independent capability validation before any model callback, revalidates
-policy immediately before effect, and emits candidate-only receipts.
+requires explicit owner-bound capability and budget evidence before any model
+callback, revalidates policy immediately before effect, and emits candidate-only
+receipts.
 """
 from __future__ import annotations
 
@@ -17,6 +18,8 @@ from aura_route_capsule_registry import load_registry_component
 
 GATEWAY_VERSION = "AURA_LOCAL_INFERENCE_GATEWAY_V1"
 POLICY_SCHEMA = "AURA_MODEL_POLICY_V1"
+CAPABILITY_ATTESTATION_SCHEMA = "AURA_MODEL_CAPABILITY_ATTESTATION_V1"
+BUDGET_LEASE_SCHEMA = "AURA_MODEL_CALL_BUDGET_LEASE_V1"
 
 _BACKEND_FOR_POLICY_TARGET = {
     "no_model": "deterministic",
@@ -64,11 +67,13 @@ def _canonical_digest(value: Any) -> str:
 
 def canonical_context_digest(context_payload: Mapping[str, Any]) -> str:
     """Digest protected context content, excluding its self-reported digest label."""
-    protected = {
-        str(key): value
-        for key, value in context_payload.items()
-        if str(key) != "context_slice_digest"
-    }
+    protected: dict[str, Any] = {}
+    for key, value in context_payload.items():
+        if not isinstance(key, str):
+            raise TypeError("context_keys_must_be_strings")
+        if key == "context_slice_digest":
+            continue
+        protected[key] = value
     return _canonical_digest(protected)
 
 
@@ -86,6 +91,13 @@ def _string_tuple(value: Any, *, field_name: str) -> tuple[str, ...]:
         seen.add(item)
         result.append(item)
     return tuple(result)
+
+
+def _nonempty(value: Any) -> str | None:
+    if not isinstance(value, str):
+        return None
+    value = value.strip()
+    return value or None
 
 
 @dataclass(frozen=True)
@@ -257,6 +269,36 @@ class BackendAdapter:
 
 
 @dataclass(frozen=True)
+class CapabilityAttestationV1:
+    owner_ref: str
+    capability_ref: str
+    backend_id: str
+    backend_class: str
+    policy_blob_digest: str
+    status: str = "VERIFIED"
+    schema_version: str = CAPABILITY_ATTESTATION_SCHEMA
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class ModelCallBudgetLeaseV1:
+    owner_ref: str
+    reservation_id: str
+    request_id: str
+    objective_id: str
+    policy_blob_digest: str
+    model_call_count: int
+    maximum_model_calls: int
+    status: str = "RESERVED"
+    schema_version: str = BUDGET_LEASE_SCHEMA
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
 class InferenceReceiptV1:
     request_id: str
     objective_id: str
@@ -272,6 +314,11 @@ class InferenceReceiptV1:
     status: str
     output_digest: str | None
     uncertainty: str | None
+    backend_capability_ref: str | None = None
+    capability_owner_ref: str | None = None
+    capability_attestation_digest: str | None = None
+    budget_owner_ref: str | None = None
+    budget_reservation_id: str | None = None
     effect_state: str = "CANDIDATE_ONLY"
     measurements: Mapping[str, Any] = field(
         default_factory=lambda: {
@@ -290,18 +337,33 @@ class InferenceReceiptV1:
         return result
 
 
+CapabilityAttestor = Callable[
+    [BackendAdapter, PolicyDecision], CapabilityAttestationV1 | Mapping[str, Any]
+]
+ModelCallBudgetOwner = Callable[
+    [InferenceRequestV1, PolicyDecision, BackendAdapter], ModelCallBudgetLeaseV1 | Mapping[str, Any]
+]
+
+
 class AuraLocalInferenceGateway:
-    """Route bounded requests under exact policy and verified capability bindings."""
+    """Route bounded requests under exact policy and injected owner bindings."""
 
     def __init__(
         self,
         repo_root: str | Path = ".",
         *,
         policy_resolver: ModelPolicyResolver | None = None,
+        capability_owner_ref: str | None = None,
+        capability_attestor: CapabilityAttestor | None = None,
+        budget_owner_ref: str | None = None,
+        model_call_budget_owner: ModelCallBudgetOwner | None = None,
     ) -> None:
         self.repo_root = Path(repo_root).resolve()
         self.policy_resolver = policy_resolver or ModelPolicyResolver(self.repo_root)
-        self._model_call_usage: dict[tuple[str, str, str], int] = {}
+        self.capability_owner_ref = _nonempty(capability_owner_ref)
+        self.capability_attestor = capability_attestor
+        self.budget_owner_ref = _nonempty(budget_owner_ref)
+        self.model_call_budget_owner = model_call_budget_owner
 
     @staticmethod
     def _safe_request_digest(request: InferenceRequestV1) -> str:
@@ -319,6 +381,10 @@ class AuraLocalInferenceGateway:
         policy: PolicyDecision | None = None,
         model_call_count: int = 0,
         attempted_backend: BackendAdapter | None = None,
+        capability_attestation_digest: str | None = None,
+        capability_owner_ref: str | None = None,
+        budget_owner_ref: str | None = None,
+        budget_reservation_id: str | None = None,
     ) -> dict[str, Any]:
         receipt = InferenceReceiptV1(
             request_id=request.request_id,
@@ -331,6 +397,11 @@ class AuraLocalInferenceGateway:
             selected_backend_id=attempted_backend.backend_id if attempted_backend else None,
             selected_backend_class=attempted_backend.backend_class if attempted_backend else None,
             backend_artifact_ref=attempted_backend.artifact_ref if attempted_backend else None,
+            backend_capability_ref=attempted_backend.capability_ref if attempted_backend else None,
+            capability_owner_ref=capability_owner_ref,
+            capability_attestation_digest=capability_attestation_digest,
+            budget_owner_ref=budget_owner_ref,
+            budget_reservation_id=budget_reservation_id,
             model_call_count=model_call_count,
             status="BLOCKED_UNKNOWN",
             output_digest=None,
@@ -409,19 +480,123 @@ class AuraLocalInferenceGateway:
         return rebound
 
     @staticmethod
-    def _capability_verified(
+    def _mapping(value: CapabilityAttestationV1 | ModelCallBudgetLeaseV1 | Mapping[str, Any]) -> Mapping[str, Any]:
+        if isinstance(value, (CapabilityAttestationV1, ModelCallBudgetLeaseV1)):
+            return value.to_dict()
+        if isinstance(value, Mapping):
+            return value
+        raise TypeError("owner_result_must_be_mapping")
+
+    def _attest_capability(
+        self,
         adapter: BackendAdapter,
         policy: PolicyDecision,
-        capability_validator: Callable[[BackendAdapter, PolicyDecision], bool] | None,
-    ) -> bool:
+    ) -> tuple[str | None, str | None]:
         if adapter.backend_class == "deterministic":
-            return not adapter.network_required
-        if capability_validator is None:
-            return False
+            if adapter.network_required:
+                return None, "deterministic_backend_declares_network_requirement"
+            return None, None
+        if self.capability_owner_ref is None or self.capability_attestor is None:
+            return None, "backend_capability_owner_required"
+        capability_ref = _nonempty(adapter.capability_ref)
+        if capability_ref is None:
+            return None, "backend_capability_ref_required"
         try:
-            return capability_validator(adapter, policy) is True
+            raw = self._mapping(self.capability_attestor(adapter, policy))
+            expected = {
+                "schema_version": CAPABILITY_ATTESTATION_SCHEMA,
+                "owner_ref": self.capability_owner_ref,
+                "capability_ref": capability_ref,
+                "backend_id": adapter.backend_id,
+                "backend_class": adapter.backend_class,
+                "policy_blob_digest": policy.policy_blob_digest,
+                "status": "VERIFIED",
+            }
+            if dict(raw) != expected:
+                return None, "backend_capability_attestation_mismatch"
+            return _canonical_digest(expected), None
         except Exception:
-            return False
+            return None, "backend_capability_attestation_invalid"
+
+    def _reserve_model_call(
+        self,
+        request: InferenceRequestV1,
+        policy: PolicyDecision,
+        adapter: BackendAdapter,
+    ) -> tuple[ModelCallBudgetLeaseV1 | None, str | None]:
+        if policy.maximum_model_calls <= 0:
+            return None, "maximum_model_calls_exhausted"
+        if self.budget_owner_ref is None or self.model_call_budget_owner is None:
+            return None, "model_call_budget_owner_required"
+        try:
+            raw = dict(self._mapping(self.model_call_budget_owner(request, policy, adapter)))
+        except Exception:
+            return None, "model_call_budget_owner_failed"
+
+        schema = raw.get("schema_version")
+        owner_ref = raw.get("owner_ref")
+        reservation_id = _nonempty(raw.get("reservation_id"))
+        request_id = raw.get("request_id")
+        objective_id = raw.get("objective_id")
+        policy_digest = raw.get("policy_blob_digest")
+        count = raw.get("model_call_count")
+        maximum = raw.get("maximum_model_calls")
+        status = raw.get("status")
+
+        identity_ok = (
+            schema == BUDGET_LEASE_SCHEMA
+            and owner_ref == self.budget_owner_ref
+            and request_id == request.request_id
+            and objective_id == request.objective_id
+            and policy_digest == policy.policy_blob_digest
+            and maximum == policy.maximum_model_calls
+            and not isinstance(count, bool)
+            and isinstance(count, int)
+            and 0 <= count <= policy.maximum_model_calls
+        )
+        if not identity_ok:
+            return None, "model_call_budget_lease_mismatch"
+
+        if status == "EXHAUSTED":
+            if count != policy.maximum_model_calls:
+                return None, "model_call_budget_lease_mismatch"
+            return ModelCallBudgetLeaseV1(
+                owner_ref=self.budget_owner_ref,
+                reservation_id=reservation_id or "EXHAUSTED",
+                request_id=request.request_id,
+                objective_id=request.objective_id,
+                policy_blob_digest=policy.policy_blob_digest,
+                model_call_count=count,
+                maximum_model_calls=policy.maximum_model_calls,
+                status="EXHAUSTED",
+            ), "maximum_model_calls_exhausted"
+
+        if status != "RESERVED" or reservation_id is None or count < 1:
+            return None, "model_call_budget_lease_mismatch"
+
+        allowed = {
+            "schema_version",
+            "owner_ref",
+            "reservation_id",
+            "request_id",
+            "objective_id",
+            "policy_blob_digest",
+            "model_call_count",
+            "maximum_model_calls",
+            "status",
+        }
+        if set(raw) != allowed:
+            return None, "model_call_budget_lease_mismatch"
+
+        return ModelCallBudgetLeaseV1(
+            owner_ref=self.budget_owner_ref,
+            reservation_id=reservation_id,
+            request_id=request.request_id,
+            objective_id=request.objective_id,
+            policy_blob_digest=policy.policy_blob_digest,
+            model_call_count=count,
+            maximum_model_calls=policy.maximum_model_calls,
+        ), None
 
     def run(
         self,
@@ -450,9 +625,6 @@ class AuraLocalInferenceGateway:
             return self._blocked(request, reason=context_error, policy=policy)
         assert context is not None
 
-        usage_key = (request.request_id, request.objective_id, policy.policy_blob_digest)
-        model_call_count = self._model_call_usage.get(usage_key, 0)
-
         adapters = {
             "deterministic": deterministic_backend,
             "local_model": local_backend,
@@ -465,6 +637,10 @@ class AuraLocalInferenceGateway:
 
         last_reason = "no_eligible_backend"
         last_attempted: BackendAdapter | None = None
+        model_call_count = 0
+        last_attestation_digest: str | None = None
+        last_budget_reservation_id: str | None = None
+
         for index, target in enumerate(targets):
             backend_class = _BACKEND_FOR_POLICY_TARGET[target]
 
@@ -474,7 +650,6 @@ class AuraLocalInferenceGateway:
             if backend_class not in policy.allowed_backend_classes:
                 last_reason = "backend_class_forbidden_by_policy"
                 continue
-
             if index > 0 and policy.escalation_requirements:
                 missing = set(policy.escalation_requirements) - escalation
                 if missing:
@@ -491,16 +666,6 @@ class AuraLocalInferenceGateway:
             if adapter.network_required and backend_class != "external":
                 last_reason = "local_backend_declares_network_requirement"
                 continue
-            if not self._capability_verified(adapter, policy, capability_validator):
-                last_reason = "backend_capability_unverified"
-                continue
-
-            if (
-                backend_class in {"local_model", "external"}
-                and model_call_count >= policy.maximum_model_calls
-            ):
-                last_reason = "maximum_model_calls_exhausted"
-                continue
 
             rebound = self._revalidate_policy(request, policy)
             if rebound is None:
@@ -515,8 +680,54 @@ class AuraLocalInferenceGateway:
             last_attempted = adapter
 
             if backend_class in {"local_model", "external"}:
-                model_call_count += 1
-                self._model_call_usage[usage_key] = model_call_count
+                if capability_validator is not None:
+                    return self._blocked(
+                        request,
+                        reason="legacy_capability_validator_untrusted",
+                        policy=policy,
+                        model_call_count=model_call_count,
+                        attempted_backend=adapter,
+                    )
+                attestation_digest, capability_error = self._attest_capability(adapter, policy)
+                if capability_error:
+                    last_reason = capability_error
+                    continue
+                last_attestation_digest = attestation_digest
+
+                lease, budget_error = self._reserve_model_call(request, policy, adapter)
+                if lease is not None:
+                    model_call_count = lease.model_call_count
+                    last_budget_reservation_id = lease.reservation_id
+                if budget_error:
+                    return self._blocked(
+                        request,
+                        reason=budget_error,
+                        policy=policy,
+                        model_call_count=model_call_count,
+                        attempted_backend=adapter,
+                        capability_attestation_digest=last_attestation_digest,
+                        capability_owner_ref=self.capability_owner_ref,
+                        budget_owner_ref=self.budget_owner_ref,
+                        budget_reservation_id=last_budget_reservation_id,
+                    )
+
+                # Owner callbacks are effects too. Rebind once more after both owners
+                # and immediately before the backend callback so neither owner can
+                # smuggle policy movement across the execution boundary.
+                rebound = self._revalidate_policy(request, policy)
+                if rebound is None:
+                    return self._blocked(
+                        request,
+                        reason="policy_digest_mismatch",
+                        policy=policy,
+                        model_call_count=model_call_count,
+                        attempted_backend=adapter,
+                        capability_attestation_digest=last_attestation_digest,
+                        capability_owner_ref=self.capability_owner_ref,
+                        budget_owner_ref=self.budget_owner_ref,
+                        budget_reservation_id=last_budget_reservation_id,
+                    )
+                policy = rebound
 
             payload = {
                 "version": GATEWAY_VERSION,
@@ -529,6 +740,10 @@ class AuraLocalInferenceGateway:
                     "network_required": adapter.network_required,
                     "artifact_ref": adapter.artifact_ref,
                     "capability_ref": adapter.capability_ref,
+                    "capability_owner_ref": self.capability_owner_ref,
+                    "capability_attestation_digest": last_attestation_digest,
+                    "budget_owner_ref": self.budget_owner_ref,
+                    "budget_reservation_id": last_budget_reservation_id,
                 },
                 "effect_state": "CANDIDATE_ONLY",
             }
@@ -546,6 +761,10 @@ class AuraLocalInferenceGateway:
                     policy=policy,
                     model_call_count=model_call_count,
                     attempted_backend=adapter,
+                    capability_attestation_digest=last_attestation_digest,
+                    capability_owner_ref=self.capability_owner_ref,
+                    budget_owner_ref=self.budget_owner_ref,
+                    budget_reservation_id=last_budget_reservation_id,
                 )
 
             receipt = InferenceReceiptV1(
@@ -559,6 +778,19 @@ class AuraLocalInferenceGateway:
                 selected_backend_id=adapter.backend_id,
                 selected_backend_class=adapter.backend_class,
                 backend_artifact_ref=adapter.artifact_ref,
+                backend_capability_ref=adapter.capability_ref,
+                capability_owner_ref=(
+                    self.capability_owner_ref
+                    if backend_class in {"local_model", "external"}
+                    else None
+                ),
+                capability_attestation_digest=last_attestation_digest,
+                budget_owner_ref=(
+                    self.budget_owner_ref
+                    if backend_class in {"local_model", "external"}
+                    else None
+                ),
+                budget_reservation_id=last_budget_reservation_id,
                 model_call_count=model_call_count,
                 status="COMPLETED_CANDIDATE",
                 output_digest=output_digest,
@@ -578,15 +810,23 @@ class AuraLocalInferenceGateway:
             policy=policy,
             model_call_count=model_call_count,
             attempted_backend=last_attempted,
+            capability_attestation_digest=last_attestation_digest,
+            capability_owner_ref=self.capability_owner_ref,
+            budget_owner_ref=self.budget_owner_ref,
+            budget_reservation_id=last_budget_reservation_id,
         )
 
 
 __all__ = [
     "AuraLocalInferenceGateway",
     "BackendAdapter",
+    "BUDGET_LEASE_SCHEMA",
+    "CAPABILITY_ATTESTATION_SCHEMA",
+    "CapabilityAttestationV1",
     "GATEWAY_VERSION",
     "InferenceReceiptV1",
     "InferenceRequestV1",
+    "ModelCallBudgetLeaseV1",
     "ModelPolicyResolver",
     "POLICY_SCHEMA",
     "PolicyDecision",
