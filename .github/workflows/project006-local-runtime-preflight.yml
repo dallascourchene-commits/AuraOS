@@ -1,0 +1,56 @@
+name: Project006 Local Runtime Preflight
+
+on:
+  push:
+    branches:
+      - p0plus/project006-provider-handoff-integration-v1
+    paths:
+      - '.github/workflows/project006-local-runtime-preflight.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/project006-local-runtime-preflight.yml'
+      - 'tools/project006/local_runner_preflight.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  wp10-local-runtime-preflight:
+    runs-on: self-hosted
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run non-secret WP10 local runtime preflight
+        shell: bash
+        run: |
+          set +e
+          python3 tools/project006/local_runner_preflight.py > wp10-local-runtime-preflight.json
+          rc=$?
+          echo "WP10_PREFLIGHT_PROCESS_RC=${rc}"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('wp10-local-runtime-preflight.json')
+          if not p.exists() or not p.read_text(encoding='utf-8').strip():
+              print('WP10_PREFLIGHT_RECEIPT_MISSING')
+              raise SystemExit(0)
+          receipt = json.loads(p.read_text(encoding='utf-8'))
+          print('schema=' + str(receipt.get('schema')))
+          print('ready_state=' + str(receipt.get('ready_state')))
+          print('service_state=' + str(receipt.get('service_state')))
+          print('credential_presence=' + str(receipt.get('provider_credential_presence_state')))
+          print('socket_bound=' + str(bool((receipt.get('resident_socket_protection_evidence') or {}).get('is_socket'))))
+          print('resident_source_bound=' + str(bool((receipt.get('installed_resident_source_identity') or {}).get('sha256'))))
+          print('provider_source_bound=' + str(bool((receipt.get('provider_sidecar_source_identity') or {}).get('sha256'))))
+          print('blocker_codes=' + ','.join(b.get('code','UNKNOWN') for b in receipt.get('blockers', [])))
+          print('receipt_digest=' + str(receipt.get('receipt_digest')))
+          PY
+          exit 0
+      - name: Upload WP10 runtime receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: wp10-local-runtime-preflight
+          path: wp10-local-runtime-preflight.json
+          if-no-files-found: warn
+          retention-days: 7
