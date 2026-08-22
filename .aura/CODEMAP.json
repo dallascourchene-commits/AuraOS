@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1787202816,
+  "generated_at_unix": 1787222524,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1641,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -176,6 +176,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/project006-provider-sidecar-reference.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -1628,6 +1629,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project006/provider_sidecar_reference/G5_EVIDENCE_GENERATION.md",
       "tools/project006/provider_sidecar_reference/README.md",
       "tools/project006/provider_sidecar_reference/provider_sidecar.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar.py",
@@ -1755,16 +1757,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26379033,
-      "tokens_est": 6585176,
+      "files": 1641,
+      "bytes": 26382064,
+      "tokens_est": 6585934,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 235,
+        "knowledge_artifact": 236,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 999,
-        "schema_or_lexicon": 271,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -159132,6 +159134,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/project006-provider-sidecar-reference.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
@@ -159477,6 +159480,10 @@
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/project006-provider-sidecar-reference.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python tools/apply_sco_construction_completion.py": [
       ".github/workflows/sco-construction-e9-e14-completion.yml"
@@ -160094,9 +160101,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -171030,6 +171034,63 @@
         0.087905,
         -0.204351,
         -0.156402
+      ]
+    },
+    {
+      "path": ".github/workflows/project006-provider-sidecar-reference.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1421,
+      "lines": 39,
+      "tokens_est": 356,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          28
+        ],
+        "python -m unittest": [
+          35
+        ]
+      },
+      "topology": {},
+      "digest8": "4144e4c28f888a1a",
+      "vector": [
+        0.052457,
+        0.136899,
+        -0.259724,
+        -0.234136,
+        -0.116428,
+        -0.257165,
+        0.047339,
+        -0.172723,
+        -0.108752,
+        -0.252048,
+        -0.182958,
+        -0.034545,
+        0.287872,
+        -0.042221,
+        -0.165046,
+        0.24693,
+        -0.152252,
+        0.034545,
+        -0.072927,
+        -0.287872,
+        -0.049898,
+        -0.205988,
+        0.29043,
+        0.116428,
+        -0.190635,
+        0.24693,
+        -0.159929,
+        -0.113869,
+        -0.229018,
+        -0.008956,
+        -0.055015,
+        -0.121546
       ]
     },
     {
@@ -263304,6 +263365,53 @@
       ]
     },
     {
+      "path": "tools/project006/provider_sidecar_reference/G5_EVIDENCE_GENERATION.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1610,
+      "lines": 20,
+      "tokens_est": 402,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "228e50a9a641ed91",
+      "vector": [
+        -0.265545,
+        -0.167901,
+        -0.172664,
+        -0.198861,
+        0.251256,
+        0.155993,
+        0.055967,
+        0.082164,
+        -0.246493,
+        -0.198861,
+        0.115506,
+        -0.003572,
+        -0.06073,
+        -0.155993,
+        -0.267927,
+        -0.103598,
+        0.039296,
+        0.246493,
+        -0.01548,
+        0.160756,
+        0.155993,
+        -0.246493,
+        -0.163138,
+        0.303651,
+        0.020243,
+        -0.008336,
+        0.222677,
+        -0.222677,
+        -0.010717,
+        0.041678,
+        0.291743,
+        -0.177427
+      ]
+    },
+    {
       "path": "tools/project006/provider_sidecar_reference/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -287443,16 +287551,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26379033,
-    "text_tokens_est": 6585176,
+    "file_count": 1641,
+    "total_bytes": 26382064,
+    "text_tokens_est": 6585934,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 235,
+      "knowledge_artifact": 236,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 999,
-      "schema_or_lexicon": 271,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287638,6 +287746,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/project006-provider-sidecar-reference.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -289090,6 +289199,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project006/provider_sidecar_reference/G5_EVIDENCE_GENERATION.md",
       "tools/project006/provider_sidecar_reference/README.md",
       "tools/project006/provider_sidecar_reference/provider_sidecar.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar.py",
@@ -448522,6 +448632,6 @@
       }
     ],
     "record_fingerprint": "88e8b3ba580319267d91c5ab7d8d0e44",
-    "payload_hash": "a9f42f34eb9316187a3663c6a2001330"
+    "payload_hash": "4c7ae90e12ce7243c8029149abeaf7e4"
   }
 }

@@ -1,0 +1,38 @@
+name: Project006 Provider Sidecar Reference
+
+on:
+  pull_request:
+    paths:
+      - "tools/project006/provider_sidecar_reference/**"
+      - ".github/workflows/project006-provider-sidecar-reference.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  provider-sidecar-reference:
+    name: Provider Sidecar reference (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile reference
+        run: >-
+          python -m py_compile
+          tools/project006/provider_sidecar_reference/provider_sidecar.py
+          tools/project006/provider_sidecar_reference/test_provider_sidecar.py
+          tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3.py
+          tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py
+      - name: Run exact Provider Sidecar adversarial suites
+        run: >-
+          python -m unittest -v
+          tools.project006.provider_sidecar_reference.test_provider_sidecar
+          tools.project006.provider_sidecar_reference.test_provider_sidecar_repair_g3
+          tools.project006.provider_sidecar_reference.test_provider_sidecar_repair_g3_followup
