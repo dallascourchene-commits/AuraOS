@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1787389913,
+  "generated_at_unix": 1787390035,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1645,
+    "repo_file_count": 1646,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -176,6 +176,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/project006-local-runtime-preflight.yml",
       ".github/workflows/project006-provider-handoff-integration.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
@@ -1761,16 +1762,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1645,
-      "bytes": 26439115,
-      "tokens_est": 6600199,
+      "files": 1646,
+      "bytes": 26441265,
+      "tokens_est": 6600737,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1004,
-        "schema_or_lexicon": 272,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -160305,6 +160306,9 @@
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
     ],
+    "python3 tools/project006/local_runner_preflight.py > wp10-local-runtime-preflight.json": [
+      ".github/workflows/project006-local-runtime-preflight.yml"
+    ],
     "python -m unittest": [
       ".github/workflows/project006-provider-handoff-integration.yml",
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
@@ -171858,6 +171862,59 @@
         0.087905,
         -0.204351,
         -0.156402
+      ]
+    },
+    {
+      "path": ".github/workflows/project006-local-runtime-preflight.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2150,
+      "lines": 53,
+      "tokens_est": 538,
+      "symbol_count": 0,
+      "commands": [
+        "python3 tools/project006/local_runner_preflight.py > wp10-local-runtime-preflight.json"
+      ],
+      "command_lines": {
+        "python3 tools/project006/local_runner_preflight.py > wp10-local-runtime-preflight.json": [
+          24
+        ]
+      },
+      "topology": {},
+      "digest8": "a8c952de74cea85f",
+      "vector": [
+        0.043893,
+        0.058943,
+        -0.134189,
+        -0.126664,
+        0.136697,
+        0.191877,
+        0.129172,
+        0.206926,
+        -0.299729,
+        -0.252074,
+        -0.176828,
+        -0.066467,
+        -0.101582,
+        -0.071484,
+        -0.018811,
+        -0.109107,
+        0.081516,
+        -0.008779,
+        0.214451,
+        -0.00627,
+        0.156762,
+        -0.317287,
+        0.191877,
+        0.079008,
+        -0.237025,
+        0.221975,
+        0.011287,
+        0.317287,
+        0.204418,
+        -0.179336,
+        0.237025,
+        -0.267123
       ]
     },
     {
@@ -288563,16 +288620,16 @@
     }
   },
   "summary": {
-    "file_count": 1645,
-    "total_bytes": 26439115,
-    "text_tokens_est": 6600199,
+    "file_count": 1646,
+    "total_bytes": 26441265,
+    "text_tokens_est": 6600737,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1004,
-      "schema_or_lexicon": 272,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288758,6 +288815,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/project006-local-runtime-preflight.yml",
       ".github/workflows/project006-provider-handoff-integration.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
@@ -450498,6 +450556,6 @@
       }
     ],
     "record_fingerprint": "03c9d6e6b8d113e9a69c5ad5b9b52986",
-    "payload_hash": "7bc2e21222a8200745ddc2d7e9dc1eae"
+    "payload_hash": "fbb4e60ce6f2af7bee698337a3ec1b5c"
   }
 }

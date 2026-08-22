@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1645
-- **total_bytes**: 26439115
-- **text_tokens_est**: 6600199
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1646
+- **total_bytes**: 26441265
+- **text_tokens_est**: 6600737
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1645,
+  "repo_file_count": 1646,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -194,6 +194,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/phase3-compass-bounded-projection-repair.yml",
     ".github/workflows/phase3-local-verification-bundle.yml",
     ".github/workflows/pr138-grounded-phase-integration.yml",
+    ".github/workflows/project006-local-runtime-preflight.yml",
     ".github/workflows/project006-provider-handoff-integration.yml",
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
@@ -1785,16 +1786,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1645,
-  "bytes": 26439115,
-  "tokens_est": 6600199,
+  "files": 1646,
+  "bytes": 26441265,
+  "tokens_est": 6600737,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 235,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1004,
-    "schema_or_lexicon": 272,
+    "schema_or_lexicon": 273,
     "support_file": 49
   }
 }
