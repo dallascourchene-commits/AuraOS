@@ -10,20 +10,20 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1637
-- **total_bytes**: 26380553
-- **text_tokens_est**: 6585556
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 998, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1638
+- **total_bytes**: 26386246
+- **text_tokens_est**: 6586979
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 6165.11
+- **elapsed_ms**: 6468.3
 
 ## Coverage
 
 ```json
 {
-  "repo_file_count": 1637,
+  "repo_file_count": 1638,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1509,6 +1509,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_jspace_codec.py",
     "tests/test_aura_local_inference_gateway.py",
     "tests/test_aura_local_inference_gateway_repair002.py",
+    "tests/test_aura_local_inference_gateway_repair003.py",
     "tests/test_aura_mesh_to_gaussian.py",
     "tests/test_aura_model_cognome.py",
     "tests/test_aura_model_cognome_call_logger.py",
@@ -1777,15 +1778,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1637,
-  "bytes": 26380553,
-  "tokens_est": 6585556,
+  "files": 1638,
+  "bytes": 26386246,
+  "tokens_est": 6586979,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 234,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 998,
+    "python_module": 999,
     "schema_or_lexicon": 271,
     "support_file": 49
   }

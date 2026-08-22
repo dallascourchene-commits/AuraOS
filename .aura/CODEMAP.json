@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1787408922,
+  "generated_at_unix": 1787409949,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1637,
+    "repo_file_count": 1638,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1491,6 +1491,7 @@
       "tests/test_aura_jspace_codec.py",
       "tests/test_aura_local_inference_gateway.py",
       "tests/test_aura_local_inference_gateway_repair002.py",
+      "tests/test_aura_local_inference_gateway_repair003.py",
       "tests/test_aura_mesh_to_gaussian.py",
       "tests/test_aura_model_cognome.py",
       "tests/test_aura_model_cognome_call_logger.py",
@@ -1753,15 +1754,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1637,
-      "bytes": 26380553,
-      "tokens_est": 6585556,
+      "files": 1638,
+      "bytes": 26386246,
+      "tokens_est": 6586979,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 234,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 998,
+        "python_module": 999,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -16352,6 +16353,14 @@
         "line": 49,
         "end_line": 60,
         "semantic_id": "tests/test_aura_local_inference_gateway_repair002.py#function:_request:4efef65c56275953",
+        "signature_hash": "6da3ed3dd1c36fc6"
+      },
+      {
+        "file": "tests/test_aura_local_inference_gateway_repair003.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 63,
+        "semantic_id": "tests/test_aura_local_inference_gateway_repair003.py#function:_request:d2917aa043b2c9e0",
         "signature_hash": "6da3ed3dd1c36fc6"
       }
     ],
@@ -60712,7 +60721,7 @@
         "file": "aura_local_inference_gateway.py",
         "kind": "class",
         "line": 348,
-        "end_line": 818,
+        "end_line": 825,
         "semantic_id": "aura_local_inference_gateway.py#class:AuraLocalInferenceGateway:202482be92000ca9",
         "signature_hash": "abd72132d0089b7f"
       }
@@ -60802,7 +60811,7 @@
         "file": "aura_local_inference_gateway.py",
         "kind": "method",
         "line": 521,
-        "end_line": 600,
+        "end_line": 607,
         "semantic_id": "aura_local_inference_gateway.py#method:AuraLocalInferenceGateway._reserve_model_call:ba690f1cb7c684be",
         "signature_hash": "c557f41feef39251"
       }
@@ -60811,8 +60820,8 @@
       {
         "file": "aura_local_inference_gateway.py",
         "kind": "method",
-        "line": 602,
-        "end_line": 818,
+        "line": 609,
+        "end_line": 825,
         "semantic_id": "aura_local_inference_gateway.py#method:AuraLocalInferenceGateway.run:c0d0d2a2d59915a3",
         "signature_hash": "0e8f51a3b7442a8c"
       }
@@ -140797,6 +140806,14 @@
         "end_line": 41,
         "semantic_id": "tests/test_aura_local_inference_gateway_repair002.py#function:_write_policy:e4442bd6fb6aae44",
         "signature_hash": "b57874147af121ed"
+      },
+      {
+        "file": "tests/test_aura_local_inference_gateway_repair003.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 41,
+        "semantic_id": "tests/test_aura_local_inference_gateway_repair003.py#function:_write_policy:6510e3460a243257",
+        "signature_hash": "b57874147af121ed"
       }
     ],
     "_context": [
@@ -140815,6 +140832,14 @@
         "end_line": 46,
         "semantic_id": "tests/test_aura_local_inference_gateway_repair002.py#function:_context:65ead0c98db5ae94",
         "signature_hash": "525fc93a4ec676eb"
+      },
+      {
+        "file": "tests/test_aura_local_inference_gateway_repair003.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 49,
+        "semantic_id": "tests/test_aura_local_inference_gateway_repair003.py#function:_context:26d36d8f1ee85a5d",
+        "signature_hash": "525fc93a4ec676eb"
       }
     ],
     "_attest": [
@@ -140832,6 +140857,14 @@
         "line": 63,
         "end_line": 70,
         "semantic_id": "tests/test_aura_local_inference_gateway_repair002.py#function:_attest:55ca67d5c35f281a",
+        "signature_hash": "1561e6cf357a6f6b"
+      },
+      {
+        "file": "tests/test_aura_local_inference_gateway_repair003.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 73,
+        "semantic_id": "tests/test_aura_local_inference_gateway_repair003.py#function:_attest:ab13467b6404c170",
         "signature_hash": "1561e6cf357a6f6b"
       }
     ],
@@ -140890,6 +140923,14 @@
         "line": 83,
         "end_line": 90,
         "semantic_id": "tests/test_aura_local_inference_gateway_repair002.py#function:_local:87caf9ba5e0a0411",
+        "signature_hash": "b182cec671d9a3f3"
+      },
+      {
+        "file": "tests/test_aura_local_inference_gateway_repair003.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 93,
+        "semantic_id": "tests/test_aura_local_inference_gateway_repair003.py#function:_local:927704b928f94641",
         "signature_hash": "b182cec671d9a3f3"
       }
     ],
@@ -141191,6 +141232,14 @@
         "end_line": 80,
         "semantic_id": "tests/test_aura_local_inference_gateway_repair002.py#function:_gateway:0798eff82490dbeb",
         "signature_hash": "07ef5ecba54e7876"
+      },
+      {
+        "file": "tests/test_aura_local_inference_gateway_repair003.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 83,
+        "semantic_id": "tests/test_aura_local_inference_gateway_repair003.py#function:_gateway:c0d8c59f16405ba5",
+        "signature_hash": "07ef5ecba54e7876"
       }
     ],
     "_exact_lease": [
@@ -141200,6 +141249,14 @@
         "line": 93,
         "end_line": 104,
         "semantic_id": "tests/test_aura_local_inference_gateway_repair002.py#function:_exact_lease:54c65ea5911e4f48",
+        "signature_hash": "49db20545528bd13"
+      },
+      {
+        "file": "tests/test_aura_local_inference_gateway_repair003.py",
+        "kind": "function",
+        "line": 96,
+        "end_line": 114,
+        "semantic_id": "tests/test_aura_local_inference_gateway_repair003.py#function:_exact_lease:bae98ef51f6a4ec4",
         "signature_hash": "49db20545528bd13"
       }
     ],
@@ -141280,6 +141337,46 @@
         "line": 204,
         "end_line": 212,
         "semantic_id": "tests/test_aura_local_inference_gateway_repair002.py#method:test_reserved_exact_shape_still_allows_one_candidate_effect.budget_owner:1e4ae5287383c97e",
+        "signature_hash": "969361b276943a94"
+      }
+    ],
+    "test_exhausted_rejects_whitespace_padded_reservation_identity_without_effect": [
+      {
+        "file": "tests/test_aura_local_inference_gateway_repair003.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 149,
+        "semantic_id": "tests/test_aura_local_inference_gateway_repair003.py#function:test_exhausted_rejects_whitespace_padded_reservation_identity_without_effect:a91f2d6967abfc3d",
+        "signature_hash": "9bc2e8c9be7a5ac6"
+      }
+    ],
+    "test_exhausted_rejects_whitespace_padded_reservation_identity_without_effect.budget_owner": [
+      {
+        "file": "tests/test_aura_local_inference_gateway_repair003.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 137,
+        "semantic_id": "tests/test_aura_local_inference_gateway_repair003.py#method:test_exhausted_rejects_whitespace_padded_reservation_identity_without_effect.budget_owner:7f355d57dc2fea1e",
+        "signature_hash": "969361b276943a94"
+      }
+    ],
+    "test_reserved_rejects_whitespace_padded_reservation_identity_without_effect": [
+      {
+        "file": "tests/test_aura_local_inference_gateway_repair003.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 184,
+        "semantic_id": "tests/test_aura_local_inference_gateway_repair003.py#function:test_reserved_rejects_whitespace_padded_reservation_identity_without_effect:9fcbdbefa7d3f0a1",
+        "signature_hash": "44a6320412b8662c"
+      }
+    ],
+    "test_reserved_rejects_whitespace_padded_reservation_identity_without_effect.budget_owner": [
+      {
+        "file": "tests/test_aura_local_inference_gateway_repair003.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 172,
+        "semantic_id": "tests/test_aura_local_inference_gateway_repair003.py#method:test_reserved_rejects_whitespace_padded_reservation_identity_without_effect.budget_owner:f5b6216789ce62ce",
         "signature_hash": "969361b276943a94"
       }
     ],
@@ -167894,9 +167991,9 @@
       "path": ".github/workflows/architect-external-llm-session.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 4133,
-      "lines": 110,
-      "tokens_est": 1034,
+      "bytes": 4267,
+      "lines": 112,
+      "tokens_est": 1067,
       "symbol_count": 0,
       "commands": [
         "python -m pip",
@@ -167913,47 +168010,47 @@
           47
         ],
         "python -m pytest": [
-          68
+          69
         ],
         "python aura_agent_arena_mcp_external_llm.py --list-tools > external-llm-tools.json": [
-          75
+          77
         ]
       },
       "topology": {},
-      "digest8": "1a9f7f45485e2992",
+      "digest8": "b4e0fe0f5fcac437",
       "vector": [
-        0.086523,
-        -0.060695,
-        0.277649,
-        0.326722,
-        -0.153675,
-        0.10202,
-        -0.143344,
-        0.10202,
-        -0.073609,
-        -0.071026,
-        0.065861,
-        -0.213079,
-        -0.246656,
-        -0.324139,
-        -0.179503,
-        -0.228576,
-        0.034868,
-        -0.192417,
-        -0.006457,
-        0.145927,
-        0.060695,
-        -0.122682,
-        -0.065861,
-        0.220828,
-        -0.13043,
-        -0.00904,
-        -0.143344,
-        -0.329305,
-        0.107185,
-        -0.300894,
-        -0.145927,
-        -0.169172
+        -0.101167,
+        -0.303502,
+        -0.251045,
+        0.221069,
+        0.266032,
+        0.306,
+        -0.15862,
+        -0.19609,
+        -0.141134,
+        0.098669,
+        0.078686,
+        0.198587,
+        -0.191094,
+        0.181102,
+        -0.0612,
+        -0.113657,
+        0.201085,
+        0.04871,
+        -0.228563,
+        0.211077,
+        0.208579,
+        0.123649,
+        -0.246049,
+        -0.006245,
+        -0.106163,
+        -0.096171,
+        -0.038718,
+        -0.013739,
+        -0.093673,
+        -0.248547,
+        0.013739,
+        0.211077
       ]
     },
     {
@@ -203372,14 +203469,14 @@
       "path": "aura_local_inference_gateway.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 32202,
-      "lines": 837,
-      "tokens_est": 8051,
+      "bytes": 32442,
+      "lines": 844,
+      "tokens_est": 8111,
       "symbol_count": 33,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "900bc8795f37fafc",
+      "digest8": "6d513715186e05b0",
       "vector": [
         0.277461,
         0.263871,
@@ -256657,6 +256754,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_local_inference_gateway_repair003.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5319,
+      "lines": 185,
+      "tokens_est": 1330,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "862a165cdf569c84",
+      "vector": [
+        -0.201098,
+        0.102355,
+        0.126439,
+        0.131256,
+        0.160156,
+        -0.162564,
+        -0.177014,
+        -0.203506,
+        -0.295024,
+        -0.193873,
+        0.022879,
+        -0.275757,
+        0.251674,
+        0.196281,
+        0.201098,
+        0.251674,
+        0.24204,
+        -0.09513,
+        0.177014,
+        0.008429,
+        -0.128847,
+        -0.068638,
+        0.08068,
+        -0.03733,
+        -0.282982,
+        -0.172198,
+        0.09513,
+        0.025288,
+        -0.203506,
+        0.03733,
+        -0.030104,
+        0.304657
+      ]
+    },
+    {
       "path": "tests/test_aura_mesh_to_gaussian.py",
       "role": "python_module",
       "binary": false,
@@ -287141,22 +287285,22 @@
     }
   },
   "summary": {
-    "file_count": 1637,
-    "total_bytes": 26380553,
-    "text_tokens_est": 6585556,
+    "file_count": 1638,
+    "total_bytes": 26386246,
+    "text_tokens_est": 6586979,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 234,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 998,
+      "python_module": 999,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
     "topology_nodes": 11478,
     "topology_edges": 28068,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 6165.11
+    "elapsed_ms": 6468.3
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
