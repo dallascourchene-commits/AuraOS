@@ -6,6 +6,10 @@ on:
       - p0plus/project006-provider-handoff-integration-v1
     paths:
       - '.github/workflows/project006-local-runtime-preflight.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/project006-local-runtime-preflight.yml'
+      - 'tools/project006/local_runner_preflight.py'
   workflow_dispatch:
 
 permissions:
