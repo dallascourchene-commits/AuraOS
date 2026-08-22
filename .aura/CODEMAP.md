@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1646
-- **total_bytes**: 26441412
-- **text_tokens_est**: 6600774
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1647
+- **total_bytes**: 26451601
+- **text_tokens_est**: 6603322
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1005, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1646,
+  "repo_file_count": 1647,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1649,6 +1649,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/project006/local_runner_preflight.py",
+    "tools/project006/local_runner_preflight_v2.py",
     "tools/project006/provider_sidecar_reference/README.md",
     "tools/project006/provider_sidecar_reference/provider_handoff.py",
     "tools/project006/provider_sidecar_reference/provider_sidecar.py",
@@ -1786,15 +1787,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1646,
-  "bytes": 26441412,
-  "tokens_est": 6600774,
+  "files": 1647,
+  "bytes": 26451601,
+  "tokens_est": 6603322,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 235,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1004,
+    "python_module": 1005,
     "schema_or_lexicon": 273,
     "support_file": 49
   }

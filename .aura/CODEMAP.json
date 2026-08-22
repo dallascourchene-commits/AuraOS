@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1787390109,
+  "generated_at_unix": 1787390173,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1646,
+    "repo_file_count": 1647,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1631,6 +1631,7 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/local_runner_preflight.py",
+      "tools/project006/local_runner_preflight_v2.py",
       "tools/project006/provider_sidecar_reference/README.md",
       "tools/project006/provider_sidecar_reference/provider_handoff.py",
       "tools/project006/provider_sidecar_reference/provider_sidecar.py",
@@ -1762,15 +1763,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1646,
-      "bytes": 26441412,
-      "tokens_est": 6600774,
+      "files": 1647,
+      "bytes": 26451601,
+      "tokens_est": 6603322,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1004,
+        "python_module": 1005,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -3466,6 +3467,14 @@
         "end_line": 415,
         "semantic_id": "tools/project006/local_runner_preflight.py#function:main:ca2a7003a9f28838",
         "signature_hash": "0e430dbd1b01e915"
+      },
+      {
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "kind": "function",
+        "line": 197,
+        "end_line": 271,
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:main:c843390fd97b683f",
+        "signature_hash": "1107cedc597d81be"
       },
       {
         "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
@@ -82920,6 +82929,14 @@
         "end_line": 114,
         "semantic_id": "aura_single_seed_lift.py#function:_digest_bytes:5a6f2bddfc4c7f06",
         "signature_hash": "7a3edcdfc24bbe7d"
+      },
+      {
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 27,
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:_digest_bytes:46626af841db38db",
+        "signature_hash": "2b0bc77148c059b6"
       }
     ],
     "_safe_label": [
@@ -89332,6 +89349,14 @@
         "end_line": 39,
         "semantic_id": "aura_substrate_manifest.py#function:_file:e5c90f84a2b8538e",
         "signature_hash": "125f2afd753fa79b"
+      },
+      {
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 45,
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:_file:56e2d7a52748ada1",
+        "signature_hash": "e83754e0b44d408c"
       }
     ],
     "_phase": [
@@ -157206,6 +157231,14 @@
         "end_line": 262,
         "semantic_id": "tools/project006/local_runner_preflight.py#function:_credential_presence:6843379fec6a57be",
         "signature_hash": "999138e64df05a83"
+      },
+      {
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "kind": "function",
+        "line": 182,
+        "end_line": 194,
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:_credential_presence:d6afb16db2cdbfaf",
+        "signature_hash": "999138e64df05a83"
       }
     ],
     "_load_package_state": [
@@ -157236,6 +157269,56 @@
         "end_line": 312,
         "semantic_id": "tools/project006/local_runner_preflight.py#method:collect_preflight.block:51a8623c97ed7cf8",
         "signature_hash": "f45f3da6dc046eb8"
+      }
+    ],
+    "_systemd": [
+      {
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 105,
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:_systemd:717c5fe9a1e88747",
+        "signature_hash": "7233d5f8ef4a789a"
+      }
+    ],
+    "_process": [
+      {
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 124,
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:_process:169b45a7e285a8bb",
+        "signature_hash": "6bee725b59f240a5"
+      }
+    ],
+    "_wsl": [
+      {
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "kind": "function",
+        "line": 127,
+        "end_line": 138,
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:_wsl:d3a96cbec5b4a556",
+        "signature_hash": "745646bb6c44aad6"
+      }
+    ],
+    "_socket": [
+      {
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "kind": "function",
+        "line": 141,
+        "end_line": 179,
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:_socket:f20a107a385de189",
+        "signature_hash": "10308441ebe9ee5b"
+      }
+    ],
+    "main.block": [
+      {
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "kind": "method",
+        "line": 209,
+        "end_line": 210,
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#method:main.block:c646d3555095e796",
+        "signature_hash": "82fe7f1a55dc1988"
       }
     ],
     "HandoffError": [
@@ -264293,6 +264376,53 @@
       ]
     },
     {
+      "path": "tools/project006/local_runner_preflight_v2.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10189,
+      "lines": 276,
+      "tokens_est": 2548,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4811d18ee38d8287",
+      "vector": [
+        0.058787,
+        0.070784,
+        -0.18116,
+        -0.217152,
+        0.303533,
+        0.053988,
+        -0.101977,
+        0.082782,
+        -0.063586,
+        0.073184,
+        -0.277139,
+        -0.075583,
+        -0.015597,
+        0.101977,
+        -0.267541,
+        0.073184,
+        0.147567,
+        -0.22675,
+        0.217152,
+        0.121173,
+        -0.039591,
+        -0.075583,
+        -0.265141,
+        0.281938,
+        -0.214752,
+        0.22675,
+        0.099578,
+        0.22435,
+        0.185959,
+        0.255543,
+        -0.233948,
+        0.123573
+      ]
+    },
+    {
       "path": "tools/project006/provider_sidecar_reference/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -288620,15 +288750,15 @@
     }
   },
   "summary": {
-    "file_count": 1646,
-    "total_bytes": 26441412,
-    "text_tokens_est": 6600774,
+    "file_count": 1647,
+    "total_bytes": 26451601,
+    "text_tokens_est": 6603322,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1004,
+      "python_module": 1005,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -290270,6 +290400,7 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/local_runner_preflight.py",
+      "tools/project006/local_runner_preflight_v2.py",
       "tools/project006/provider_sidecar_reference/README.md",
       "tools/project006/provider_sidecar_reference/provider_handoff.py",
       "tools/project006/provider_sidecar_reference/provider_sidecar.py",
@@ -447505,6 +447636,96 @@
         "file_digest8": "305ced885281ef52"
       },
       {
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:_credential_presence:d6afb16db2cdbfaf",
+        "name": "_credential_presence",
+        "kind": "function",
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "line": 182,
+        "end_line": 194,
+        "signature_hash": "999138e64df05a83",
+        "file_digest8": "4811d18ee38d8287"
+      },
+      {
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:_digest_bytes:46626af841db38db",
+        "name": "_digest_bytes",
+        "kind": "function",
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "line": 26,
+        "end_line": 27,
+        "signature_hash": "2b0bc77148c059b6",
+        "file_digest8": "4811d18ee38d8287"
+      },
+      {
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:_file:56e2d7a52748ada1",
+        "name": "_file",
+        "kind": "function",
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "line": 30,
+        "end_line": 45,
+        "signature_hash": "e83754e0b44d408c",
+        "file_digest8": "4811d18ee38d8287"
+      },
+      {
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:_process:169b45a7e285a8bb",
+        "name": "_process",
+        "kind": "function",
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "line": 108,
+        "end_line": 124,
+        "signature_hash": "6bee725b59f240a5",
+        "file_digest8": "4811d18ee38d8287"
+      },
+      {
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:_socket:f20a107a385de189",
+        "name": "_socket",
+        "kind": "function",
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "line": 141,
+        "end_line": 179,
+        "signature_hash": "10308441ebe9ee5b",
+        "file_digest8": "4811d18ee38d8287"
+      },
+      {
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:_systemd:717c5fe9a1e88747",
+        "name": "_systemd",
+        "kind": "function",
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "line": 48,
+        "end_line": 105,
+        "signature_hash": "7233d5f8ef4a789a",
+        "file_digest8": "4811d18ee38d8287"
+      },
+      {
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:_wsl:d3a96cbec5b4a556",
+        "name": "_wsl",
+        "kind": "function",
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "line": 127,
+        "end_line": 138,
+        "signature_hash": "745646bb6c44aad6",
+        "file_digest8": "4811d18ee38d8287"
+      },
+      {
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#function:main:c843390fd97b683f",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "line": 197,
+        "end_line": 271,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "4811d18ee38d8287"
+      },
+      {
+        "semantic_id": "tools/project006/local_runner_preflight_v2.py#method:main.block:c646d3555095e796",
+        "name": "main.block",
+        "kind": "method",
+        "file": "tools/project006/local_runner_preflight_v2.py",
+        "line": 209,
+        "end_line": 210,
+        "signature_hash": "82fe7f1a55dc1988",
+        "file_digest8": "4811d18ee38d8287"
+      },
+      {
         "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#class:HandoffError:7aa436d895b7de69",
         "name": "HandoffError",
         "kind": "class",
@@ -450555,7 +450776,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "03c9d6e6b8d113e9a69c5ad5b9b52986",
-    "payload_hash": "fac6759f8fb13b485e5e8d8d6937e93c"
+    "record_fingerprint": "ae5093a44bcc1af4e5484511527aac7c",
+    "payload_hash": "4aefb92a7f7e809328b2357b10c9ed0a"
   }
 }
