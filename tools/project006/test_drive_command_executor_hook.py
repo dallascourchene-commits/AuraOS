@@ -175,6 +175,10 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
             "provider_url": "https://evil.example/v1",
             "api_key": "secret",
             "route_ref": "attacker-route",
+            "route": "attacker-route",
+            "lease": "caller-lease",
+            "fence": "caller-fence",
+            "currentness": "caller-currentness",
             "fencing_token": "caller-fence",
             "model": "caller-model",
         }
@@ -228,6 +232,7 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         result = execute_admitted_command(
             command,
             executor_factory=lambda: _FakeExecutor([]),
+            emit_ack=lambda _record: None,
         )
         self.assertEqual(result["record_type"], "RESULT")
 
@@ -245,6 +250,7 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         result = execute_admitted_command(
             command,
             executor_factory=lambda: _FakeExecutor([]),
+            emit_ack=lambda _record: None,
         )
         self.assertEqual(result["record_type"], "RESULT")
 
@@ -261,10 +267,24 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         command["caller"]["model_signature"] = "attacker/provider-model"
         executor = _FakeExecutor([])
         result = execute_admitted_command(
-            command, executor_factory=lambda: executor
+            command,
+            executor_factory=lambda: executor,
+            emit_ack=lambda _record: None,
         )
         self.assertEqual(result["provider"], "deepseek")
         self.assertEqual(result["model"], "deepseek-test")
+
+    def test_missing_ack_sink_prevents_executor_construction(self) -> None:
+        called = False
+
+        def factory():
+            nonlocal called
+            called = True
+            return _FakeExecutor([])
+
+        with self.assertRaisesRegex(CommandHookError, "ACK_SINK_REQUIRED"):
+            execute_admitted_command(_command(), executor_factory=factory)
+        self.assertFalse(called)
 
     def test_ack_sink_failure_prevents_executor_construction(self) -> None:
         called = False
@@ -289,7 +309,9 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         secret_error = "Authorization: Bearer sk-never-serialize"
         executor = _FakeExecutor([], text=None, error=secret_error)
         result = execute_admitted_command(
-            _command(), executor_factory=lambda: executor
+            _command(),
+            executor_factory=lambda: executor,
+            emit_ack=lambda _record: None,
         )
         self.assertEqual(result["record_type"], "ERROR")
         self.assertEqual(
@@ -305,7 +327,9 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
             raise RuntimeError("secret path or provider detail")
 
         result = execute_admitted_command(
-            _command(), executor_factory=factory
+            _command(),
+            executor_factory=factory,
+            emit_ack=lambda _record: None,
         )
         self.assertEqual(result["record_type"], "ERROR")
         self.assertEqual(
@@ -316,10 +340,14 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
 
     def test_request_digest_binds_identity_objective_and_intent(self) -> None:
         first = execute_admitted_command(
-            _command(), executor_factory=lambda: _FakeExecutor([])
+            _command(),
+            executor_factory=lambda: _FakeExecutor([]),
+            emit_ack=lambda _record: None,
         )
         second = execute_admitted_command(
-            _command(), executor_factory=lambda: _FakeExecutor([])
+            _command(),
+            executor_factory=lambda: _FakeExecutor([]),
+            emit_ack=lambda _record: None,
         )
         self.assertEqual(
             first["execution_request_digest"],
@@ -329,7 +357,9 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         mutated = _command()
         mutated["objective"]["text"] += " Different objective."
         third = execute_admitted_command(
-            mutated, executor_factory=lambda: _FakeExecutor([])
+            mutated,
+            executor_factory=lambda: _FakeExecutor([]),
+            emit_ack=lambda _record: None,
         )
         self.assertNotEqual(
             first["execution_request_digest"],
@@ -340,7 +370,9 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         mutated_id["command_id"] = "cmd-minimal-002"
         mutated_id["idempotency_key"] = "cmd-minimal-002"
         fourth = execute_admitted_command(
-            mutated_id, executor_factory=lambda: _FakeExecutor([])
+            mutated_id,
+            executor_factory=lambda: _FakeExecutor([]),
+            emit_ack=lambda _record: None,
         )
         self.assertNotEqual(
             first["execution_request_digest"],
@@ -354,6 +386,7 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         fifth = execute_admitted_command(
             mutated_intent,
             executor_factory=lambda: _FakeExecutor([]),
+            emit_ack=lambda _record: None,
         )
         self.assertNotEqual(
             first["execution_request_digest"],
@@ -365,7 +398,9 @@ class DriveCommandExecutorHookTests(unittest.TestCase):
         original = copy.deepcopy(command)
         validate_admitted_command(command)
         execute_admitted_command(
-            command, executor_factory=lambda: _FakeExecutor([])
+            command,
+            executor_factory=lambda: _FakeExecutor([]),
+            emit_ack=lambda _record: None,
         )
         self.assertEqual(command, original)
 
