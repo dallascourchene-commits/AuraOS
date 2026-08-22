@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786938896,
+  "generated_at_unix": 1787359613,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1634,
+    "repo_file_count": 1636,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -898,6 +898,7 @@
       "aura_wasm_bridge.py",
       "aura_wfst_temporal_adapter.py",
       "aura_work_splitter.py",
+      "aura_worker_presence.py",
       "aura_workflow_gates.py",
       "aura_workspace/inbox/bounties/BATCH2_TARGETS.md",
       "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
@@ -1614,6 +1615,7 @@
       "tests/test_aura_waboose_semantic_rules.py",
       "tests/test_aura_wfst_temporal_adapter.py",
       "tests/test_aura_work_splitter.py",
+      "tests/test_aura_worker_presence.py",
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
@@ -1660,6 +1662,7 @@
       "aura_spatial_importers/gltf.py",
       "aura_spatial_importers/ply.py",
       "aura_spatial_importers/spz.py",
+      "aura_worker_presence.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "core/aura_task_dispatcher.py",
@@ -1741,8 +1744,7 @@
       "tests/test_aura_capability_connectome_v2.py",
       "tests/test_aura_capability_lane_registry.py",
       "tests/test_aura_capability_resolver.py",
-      "tests/test_aura_capability_resolver_connectome.py",
-      "tests/test_aura_change_graph.py"
+      "tests/test_aura_capability_resolver_connectome.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1750,15 +1752,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1634,
-      "bytes": 26316194,
-      "tokens_est": 6569465,
+      "files": 1636,
+      "bytes": 26338630,
+      "tokens_est": 6575075,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 234,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 995,
+        "python_module": 997,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -15770,6 +15772,14 @@
         "end_line": 162,
         "semantic_id": "aura_arena_state_packet.py#function:_hash:a45b3759164d8cd0",
         "signature_hash": "96a25c63c8c0337f"
+      },
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 61,
+        "semantic_id": "aura_worker_presence.py#function:_hash:53f9ba2cf052ad75",
+        "signature_hash": "bdea58dd7600a12d"
       }
     ],
     "ArenaExperienceLedger": [
@@ -88304,6 +88314,14 @@
         "end_line": 228,
         "semantic_id": "aura_st3gg_contracts.py#function:canonical_json_bytes:45e2aa70586d7f49",
         "signature_hash": "b2bc0a31834a37f8"
+      },
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 59,
+        "semantic_id": "aura_worker_presence.py#function:canonical_json_bytes:bf029b230d0fa227",
+        "signature_hash": "df0702a2b85b29f4"
       }
     ],
     "digest_text": [
@@ -89074,6 +89092,14 @@
         "end_line": 98,
         "semantic_id": "aura_substrate_contracts.py#function:_pairs:fb7fd318a67bd49b",
         "signature_hash": "8396e802e0b4f5bd"
+      },
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 197,
+        "end_line": 197,
+        "semantic_id": "aura_worker_presence.py#function:_pairs:e31060df97ed315b",
+        "signature_hash": "cc22175840330bfc"
       }
     ],
     "SubstrateFileRecord": [
@@ -96364,6 +96390,276 @@
         "end_line": 82,
         "semantic_id": "aura_work_splitter.py#function:work_split_to_phase_capsules:d6bcda5ed30cb731",
         "signature_hash": "0682f589fe515bcc"
+      }
+    ],
+    "ContractViolation": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 17,
+        "semantic_id": "aura_worker_presence.py#class:ContractViolation:29dbf34d102770da",
+        "signature_hash": "a02bf3924c67f01d"
+      }
+    ],
+    "RuntimePresenceState": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 21,
+        "semantic_id": "aura_worker_presence.py#class:RuntimePresenceState:ddbc32a9f47e441c",
+        "signature_hash": "7c2bbd0862a539fe"
+      }
+    ],
+    "_s": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 32,
+        "semantic_id": "aura_worker_presence.py#function:_s:ab71cb352fc15184",
+        "signature_hash": "099a7d515b635c50"
+      }
+    ],
+    "_o": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 34,
+        "semantic_id": "aura_worker_presence.py#function:_o:4182db72e0640bf3",
+        "signature_hash": "19a4994972a4696e"
+      }
+    ],
+    "_d": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 38,
+        "semantic_id": "aura_worker_presence.py#function:_d:fc6e4b8e3a0cfe9d",
+        "signature_hash": "21dbfe339ec4080e"
+      }
+    ],
+    "_n": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 42,
+        "semantic_id": "aura_worker_presence.py#function:_n:b6dbc1995d9c83a7",
+        "signature_hash": "2610392eed20e92f"
+      }
+    ],
+    "_canon": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 56,
+        "semantic_id": "aura_worker_presence.py#function:_canon:af12856881b753b6",
+        "signature_hash": "98964031a0562100"
+      }
+    ],
+    "WorkerPresenceV1": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "class",
+        "line": 64,
+        "end_line": 95,
+        "semantic_id": "aura_worker_presence.py#class:WorkerPresenceV1:85357662a36f5b95",
+        "signature_hash": "dc22b1f2dd17dbf9"
+      }
+    ],
+    "WorkerPresenceV1.protected_body": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 94,
+        "semantic_id": "aura_worker_presence.py#method:WorkerPresenceV1.protected_body:c205936684a9af6c",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "WorkerPresenceV1.digest": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 95,
+        "semantic_id": "aura_worker_presence.py#method:WorkerPresenceV1.digest:f9c2952d79b71ba4",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "HeartbeatV1": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "class",
+        "line": 98,
+        "end_line": 110,
+        "semantic_id": "aura_worker_presence.py#class:HeartbeatV1:a64403559f3a21a4",
+        "signature_hash": "ea6c4ca987fa42d0"
+      }
+    ],
+    "HeartbeatV1.validate": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 110,
+        "semantic_id": "aura_worker_presence.py#method:HeartbeatV1.validate:84bcf90cd110b4e1",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ActivityObservationV1": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "class",
+        "line": 113,
+        "end_line": 118,
+        "semantic_id": "aura_worker_presence.py#class:ActivityObservationV1:1f2ee3af5047b641",
+        "signature_hash": "335827a014a6186f"
+      }
+    ],
+    "ActivityObservationV1.protected_body": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 118,
+        "semantic_id": "aura_worker_presence.py#method:ActivityObservationV1.protected_body:ea184741598c88bb",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "ReapDecisionV1": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "class",
+        "line": 121,
+        "end_line": 122,
+        "semantic_id": "aura_worker_presence.py#class:ReapDecisionV1:6ad6142db036b102",
+        "signature_hash": "33ee4b337cb79e73"
+      }
+    ],
+    "WorkerCensusV1": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "class",
+        "line": 125,
+        "end_line": 139,
+        "semantic_id": "aura_worker_presence.py#class:WorkerCensusV1:e624588fe4393076",
+        "signature_hash": "3d72eb2c8d338feb"
+      }
+    ],
+    "WorkerCensusV1.protected_body": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 138,
+        "semantic_id": "aura_worker_presence.py#method:WorkerCensusV1.protected_body:794379bc9dc55af9",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "WorkerCensusV1.digest": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 139,
+        "semantic_id": "aura_worker_presence.py#method:WorkerCensusV1.digest:e125c33171c2242d",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "join_runtime_worker": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 141,
+        "end_line": 148,
+        "semantic_id": "aura_worker_presence.py#function:join_runtime_worker:53c8e8ec16020075",
+        "signature_hash": "f8f687021ab3e790"
+      }
+    ],
+    "effective_state": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 155,
+        "semantic_id": "aura_worker_presence.py#function:effective_state:a94d75411b347668",
+        "signature_hash": "8a8b047eb671f046"
+      }
+    ],
+    "runtime_live": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 157,
+        "end_line": 158,
+        "semantic_id": "aura_worker_presence.py#function:runtime_live:e0e617088bff0a61",
+        "signature_hash": "46be60a2b28b2efe"
+      }
+    ],
+    "accept_heartbeat": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 160,
+        "end_line": 177,
+        "semantic_id": "aura_worker_presence.py#function:accept_heartbeat:4c895cf405875965",
+        "signature_hash": "88c03ca6ec36fa71"
+      }
+    ],
+    "reap_presence": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 179,
+        "end_line": 182,
+        "semantic_id": "aura_worker_presence.py#function:reap_presence:3b51ae1129319fc4",
+        "signature_hash": "ffc0c54acdc43c09"
+      }
+    ],
+    "rejoin_runtime_worker": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 184,
+        "end_line": 195,
+        "semantic_id": "aura_worker_presence.py#function:rejoin_runtime_worker:bb5f6c5b792dc392",
+        "signature_hash": "d12ba7cefa5bbfa8"
+      }
+    ],
+    "build_worker_census": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 198,
+        "end_line": 210,
+        "semantic_id": "aura_worker_presence.py#function:build_worker_census:2f5dcb2de141eec9",
+        "signature_hash": "7e55d747140ebbee"
+      }
+    ],
+    "build_worker_census.inc": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "method",
+        "line": 200,
+        "end_line": 201,
+        "semantic_id": "aura_worker_presence.py#method:build_worker_census.inc:ba1d371216e955c3",
+        "signature_hash": "3905ac765a587781"
+      }
+    ],
+    "scheduler_worker_projection": [
+      {
+        "file": "aura_worker_presence.py",
+        "kind": "function",
+        "line": 212,
+        "end_line": 217,
+        "semantic_id": "aura_worker_presence.py#function:scheduler_worker_projection:62c3adfa1c998cac",
+        "signature_hash": "bd7ed563cd1d2267"
       }
     ],
     "WorkflowState": [
@@ -156264,6 +156560,206 @@
         "end_line": 29,
         "semantic_id": "tests/test_aura_work_splitter.py#method:TestWorkSplitter.test_invariants:7fee68810f4ee0c5",
         "signature_hash": "c76baef49d04ad72"
+      }
+    ],
+    "d": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:d:7ae3ad6d025ec4af",
+        "signature_hash": "dfbd4b8723a2bc71"
+      }
+    ],
+    "joined": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 10,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:joined:a9354a1ab26873ab",
+        "signature_hash": "1a7d7634a3cb3066"
+      }
+    ],
+    "hb": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 13,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:hb:7930d7c80c63bc4b",
+        "signature_hash": "95a61cdcbb3e859d"
+      }
+    ],
+    "accept": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 16,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:accept:758a83250483a095",
+        "signature_hash": "d8f43824bf8e249f"
+      }
+    ],
+    "test_join_uses_resident_receive_time_and_is_live": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 22,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_join_uses_resident_receive_time_and_is_live:d9ca3376aab4a4e7",
+        "signature_hash": "41f82473be751ad3"
+      }
+    ],
+    "test_worker_clock_cannot_extend_lease": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 28,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_worker_clock_cannot_extend_lease:856cb3ca2fb69143",
+        "signature_hash": "884a5f0c639ea4ac"
+      }
+    ],
+    "test_replay_rejected": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_replay_rejected:f387a88ed6652c30",
+        "signature_hash": "eb5f31ab6e30e9e4"
+      }
+    ],
+    "test_stale_generation_or_fence_rejected": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 43,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_stale_generation_or_fence_rejected:8ffa2bcfa9f819af",
+        "signature_hash": "7ec9db4089ef4523"
+      }
+    ],
+    "test_claim_currentness_authority_fail_closed": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 55,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_claim_currentness_authority_fail_closed:8b166d32cc2d421c",
+        "signature_hash": "68aa5dd15132410a"
+      }
+    ],
+    "test_late_heartbeat_does_not_resurrect_expired_lease": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 61,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_late_heartbeat_does_not_resurrect_expired_lease:3a08fa1411b40f73",
+        "signature_hash": "86ac5da65442b727"
+      }
+    ],
+    "test_stale_offline_boundaries": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 68,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_stale_offline_boundaries:fe23214ed15617f3",
+        "signature_hash": "026d5f570ff54670"
+      }
+    ],
+    "test_reaper_and_rejoin_retire_old_fence": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 85,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_reaper_and_rejoin_retire_old_fence:020283338740b9f8",
+        "signature_hash": "53e0856ab1e4bfaf"
+      }
+    ],
+    "test_activity_observation_never_counts_as_runtime_live": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 90,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_activity_observation_never_counts_as_runtime_live:8fa0366e17bbbb76",
+        "signature_hash": "23f0b20e3b41393c"
+      }
+    ],
+    "test_census_distinguishes_working_reviewing_stale": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 99,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_census_distinguishes_working_reviewing_stale:fa9711225d5c86b0",
+        "signature_hash": "463df38d25dde81f"
+      }
+    ],
+    "test_census_rejects_duplicate_worker": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 104,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_census_rejects_duplicate_worker:f25f2d7ba883b386",
+        "signature_hash": "ca7e80f66972928d"
+      }
+    ],
+    "test_census_digest_order_invariant": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 108,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_census_digest_order_invariant:5cb8d2ed84e45511",
+        "signature_hash": "edac0c58c6b11b4e"
+      }
+    ],
+    "test_census_does_not_expose_session_or_fence": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 114,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_census_does_not_expose_session_or_fence:a3f7eb4883ff2826",
+        "signature_hash": "cf19dda61b2f444f"
+      }
+    ],
+    "test_scheduler_projection_excludes_stale_and_has_no_authority_action": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 116,
+        "end_line": 120,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_scheduler_projection_excludes_stale_and_has_no_authority_action:b22ec6e19bdc244a",
+        "signature_hash": "44c847400c7518f4"
+      }
+    ],
+    "test_worker_cannot_self_assert_stale_offline": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 122,
+        "end_line": 126,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_worker_cannot_self_assert_stale_offline:394a50a38fbfe155",
+        "signature_hash": "4f8c4d9281c7fe21"
+      }
+    ],
+    "test_control_characters_fail_closed": [
+      {
+        "file": "tests/test_aura_worker_presence.py",
+        "kind": "function",
+        "line": 128,
+        "end_line": 132,
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_control_characters_fail_closed:3d615c4ac86a81f1",
+        "signature_hash": "94d96fadf7ef2729"
       }
     ],
     "authorized_decision": [
@@ -224348,6 +224844,53 @@
       ]
     },
     {
+      "path": "aura_worker_presence.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14854,
+      "lines": 218,
+      "tokens_est": 3714,
+      "symbol_count": 30,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "abbdf0c4f2d72c7d",
+      "vector": [
+        0.159111,
+        0.336857,
+        0.035836,
+        -0.012901,
+        -0.067371,
+        0.245118,
+        -0.127576,
+        -0.173446,
+        0.064505,
+        0.124709,
+        -0.061638,
+        -0.219316,
+        -0.230783,
+        -0.09604,
+        0.121842,
+        0.024368,
+        -0.081706,
+        0.182046,
+        0.173446,
+        -0.14191,
+        -0.202114,
+        0.081706,
+        0.328257,
+        -0.161978,
+        0.242251,
+        -0.182046,
+        -0.144777,
+        -0.250851,
+        -0.213582,
+        -0.13331,
+        0.047303,
+        -0.293854
+      ]
+    },
+    {
       "path": "aura_workflow_gates.py",
       "role": "python_module",
       "binary": false,
@@ -261587,6 +262130,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_worker_presence.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7582,
+      "lines": 133,
+      "tokens_est": 1896,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2bfba1f5dc0f1384",
+      "vector": [
+        0.303155,
+        0.177966,
+        0.155873,
+        0.01841,
+        -0.052776,
+        -0.072414,
+        -0.285972,
+        0.229514,
+        0.067504,
+        0.170602,
+        0.001227,
+        0.106779,
+        -0.224605,
+        -0.02332,
+        0.22706,
+        0.303155,
+        0.042957,
+        0.278608,
+        0.01841,
+        -0.251607,
+        -0.028229,
+        0.02332,
+        0.114144,
+        -0.217241,
+        -0.116598,
+        -0.22215,
+        -0.298246,
+        0.271244,
+        -0.136236,
+        -0.01841,
+        0.121508,
+        0.077323
+      ]
+    },
+    {
       "path": "tests/test_aura_workflow_authority_bridge.py",
       "role": "python_module",
       "binary": false,
@@ -286149,15 +286739,15 @@
     }
   },
   "summary": {
-    "file_count": 1634,
-    "total_bytes": 26316194,
-    "text_tokens_est": 6569465,
+    "file_count": 1636,
+    "total_bytes": 26338630,
+    "text_tokens_est": 6575075,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 234,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 995,
+      "python_module": 997,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -287066,6 +287656,7 @@
       "aura_wasm_bridge.py",
       "aura_wfst_temporal_adapter.py",
       "aura_work_splitter.py",
+      "aura_worker_presence.py",
       "aura_workflow_gates.py",
       "aura_workspace/inbox/bounties/BATCH2_TARGETS.md",
       "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
@@ -287782,6 +288373,7 @@
       "tests/test_aura_waboose_semantic_rules.py",
       "tests/test_aura_wfst_temporal_adapter.py",
       "tests/test_aura_work_splitter.py",
+      "tests/test_aura_worker_presence.py",
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
@@ -381802,6 +382394,306 @@
         "file_digest8": "175f8f6bee3e112c"
       },
       {
+        "semantic_id": "aura_worker_presence.py#class:ActivityObservationV1:1f2ee3af5047b641",
+        "name": "ActivityObservationV1",
+        "kind": "class",
+        "file": "aura_worker_presence.py",
+        "line": 113,
+        "end_line": 118,
+        "signature_hash": "335827a014a6186f",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#class:ContractViolation:29dbf34d102770da",
+        "name": "ContractViolation",
+        "kind": "class",
+        "file": "aura_worker_presence.py",
+        "line": 17,
+        "end_line": 17,
+        "signature_hash": "a02bf3924c67f01d",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#class:HeartbeatV1:a64403559f3a21a4",
+        "name": "HeartbeatV1",
+        "kind": "class",
+        "file": "aura_worker_presence.py",
+        "line": 98,
+        "end_line": 110,
+        "signature_hash": "ea6c4ca987fa42d0",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#class:ReapDecisionV1:6ad6142db036b102",
+        "name": "ReapDecisionV1",
+        "kind": "class",
+        "file": "aura_worker_presence.py",
+        "line": 121,
+        "end_line": 122,
+        "signature_hash": "33ee4b337cb79e73",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#class:RuntimePresenceState:ddbc32a9f47e441c",
+        "name": "RuntimePresenceState",
+        "kind": "class",
+        "file": "aura_worker_presence.py",
+        "line": 19,
+        "end_line": 21,
+        "signature_hash": "7c2bbd0862a539fe",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#class:WorkerCensusV1:e624588fe4393076",
+        "name": "WorkerCensusV1",
+        "kind": "class",
+        "file": "aura_worker_presence.py",
+        "line": 125,
+        "end_line": 139,
+        "signature_hash": "3d72eb2c8d338feb",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#class:WorkerPresenceV1:85357662a36f5b95",
+        "name": "WorkerPresenceV1",
+        "kind": "class",
+        "file": "aura_worker_presence.py",
+        "line": 64,
+        "end_line": 95,
+        "signature_hash": "dc22b1f2dd17dbf9",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:_canon:af12856881b753b6",
+        "name": "_canon",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 44,
+        "end_line": 56,
+        "signature_hash": "98964031a0562100",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:_d:fc6e4b8e3a0cfe9d",
+        "name": "_d",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 35,
+        "end_line": 38,
+        "signature_hash": "21dbfe339ec4080e",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:_hash:53f9ba2cf052ad75",
+        "name": "_hash",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 60,
+        "end_line": 61,
+        "signature_hash": "bdea58dd7600a12d",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:_n:b6dbc1995d9c83a7",
+        "name": "_n",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 39,
+        "end_line": 42,
+        "signature_hash": "2610392eed20e92f",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:_o:4182db72e0640bf3",
+        "name": "_o",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 34,
+        "end_line": 34,
+        "signature_hash": "19a4994972a4696e",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:_pairs:e31060df97ed315b",
+        "name": "_pairs",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 197,
+        "end_line": 197,
+        "signature_hash": "cc22175840330bfc",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:_s:ab71cb352fc15184",
+        "name": "_s",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 27,
+        "end_line": 32,
+        "signature_hash": "099a7d515b635c50",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:accept_heartbeat:4c895cf405875965",
+        "name": "accept_heartbeat",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 160,
+        "end_line": 177,
+        "signature_hash": "88c03ca6ec36fa71",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:build_worker_census:2f5dcb2de141eec9",
+        "name": "build_worker_census",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 198,
+        "end_line": 210,
+        "signature_hash": "7e55d747140ebbee",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:canonical_json_bytes:bf029b230d0fa227",
+        "name": "canonical_json_bytes",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 58,
+        "end_line": 59,
+        "signature_hash": "df0702a2b85b29f4",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:effective_state:a94d75411b347668",
+        "name": "effective_state",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 150,
+        "end_line": 155,
+        "signature_hash": "8a8b047eb671f046",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:join_runtime_worker:53c8e8ec16020075",
+        "name": "join_runtime_worker",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 141,
+        "end_line": 148,
+        "signature_hash": "f8f687021ab3e790",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:reap_presence:3b51ae1129319fc4",
+        "name": "reap_presence",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 179,
+        "end_line": 182,
+        "signature_hash": "ffc0c54acdc43c09",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:rejoin_runtime_worker:bb5f6c5b792dc392",
+        "name": "rejoin_runtime_worker",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 184,
+        "end_line": 195,
+        "signature_hash": "d12ba7cefa5bbfa8",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:runtime_live:e0e617088bff0a61",
+        "name": "runtime_live",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 157,
+        "end_line": 158,
+        "signature_hash": "46be60a2b28b2efe",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#function:scheduler_worker_projection:62c3adfa1c998cac",
+        "name": "scheduler_worker_projection",
+        "kind": "function",
+        "file": "aura_worker_presence.py",
+        "line": 212,
+        "end_line": 217,
+        "signature_hash": "bd7ed563cd1d2267",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#method:ActivityObservationV1.protected_body:ea184741598c88bb",
+        "name": "ActivityObservationV1.protected_body",
+        "kind": "method",
+        "file": "aura_worker_presence.py",
+        "line": 115,
+        "end_line": 118,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#method:HeartbeatV1.validate:84bcf90cd110b4e1",
+        "name": "HeartbeatV1.validate",
+        "kind": "method",
+        "file": "aura_worker_presence.py",
+        "line": 103,
+        "end_line": 110,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#method:WorkerCensusV1.digest:e125c33171c2242d",
+        "name": "WorkerCensusV1.digest",
+        "kind": "method",
+        "file": "aura_worker_presence.py",
+        "line": 139,
+        "end_line": 139,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#method:WorkerCensusV1.protected_body:794379bc9dc55af9",
+        "name": "WorkerCensusV1.protected_body",
+        "kind": "method",
+        "file": "aura_worker_presence.py",
+        "line": 131,
+        "end_line": 138,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#method:WorkerPresenceV1.digest:f9c2952d79b71ba4",
+        "name": "WorkerPresenceV1.digest",
+        "kind": "method",
+        "file": "aura_worker_presence.py",
+        "line": 95,
+        "end_line": 95,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#method:WorkerPresenceV1.protected_body:c205936684a9af6c",
+        "name": "WorkerPresenceV1.protected_body",
+        "kind": "method",
+        "file": "aura_worker_presence.py",
+        "line": 74,
+        "end_line": 94,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
+        "semantic_id": "aura_worker_presence.py#method:build_worker_census.inc:ba1d371216e955c3",
+        "name": "build_worker_census.inc",
+        "kind": "method",
+        "file": "aura_worker_presence.py",
+        "line": 200,
+        "end_line": 201,
+        "signature_hash": "3905ac765a587781",
+        "file_digest8": "abbdf0c4f2d72c7d"
+      },
+      {
         "semantic_id": "aura_workflow_gates.py#class:WorkflowGate:7e842d5cd888d24d",
         "name": "WorkflowGate",
         "kind": "class",
@@ -444182,6 +445074,206 @@
         "file_digest8": "d8b87d550cadf167"
       },
       {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:accept:758a83250483a095",
+        "name": "accept",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 14,
+        "end_line": 16,
+        "signature_hash": "d8f43824bf8e249f",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:d:7ae3ad6d025ec4af",
+        "name": "d",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "dfbd4b8723a2bc71",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:hb:7930d7c80c63bc4b",
+        "name": "hb",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 11,
+        "end_line": 13,
+        "signature_hash": "95a61cdcbb3e859d",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:joined:a9354a1ab26873ab",
+        "name": "joined",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 6,
+        "end_line": 10,
+        "signature_hash": "1a7d7634a3cb3066",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_activity_observation_never_counts_as_runtime_live:8fa0366e17bbbb76",
+        "name": "test_activity_observation_never_counts_as_runtime_live",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 87,
+        "end_line": 90,
+        "signature_hash": "23f0b20e3b41393c",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_census_digest_order_invariant:5cb8d2ed84e45511",
+        "name": "test_census_digest_order_invariant",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 106,
+        "end_line": 108,
+        "signature_hash": "edac0c58c6b11b4e",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_census_distinguishes_working_reviewing_stale:fa9711225d5c86b0",
+        "name": "test_census_distinguishes_working_reviewing_stale",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 92,
+        "end_line": 99,
+        "signature_hash": "463df38d25dde81f",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_census_does_not_expose_session_or_fence:a3f7eb4883ff2826",
+        "name": "test_census_does_not_expose_session_or_fence",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 110,
+        "end_line": 114,
+        "signature_hash": "cf19dda61b2f444f",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_census_rejects_duplicate_worker:f25f2d7ba883b386",
+        "name": "test_census_rejects_duplicate_worker",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 101,
+        "end_line": 104,
+        "signature_hash": "ca7e80f66972928d",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_claim_currentness_authority_fail_closed:8b166d32cc2d421c",
+        "name": "test_claim_currentness_authority_fail_closed",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 45,
+        "end_line": 55,
+        "signature_hash": "68aa5dd15132410a",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_control_characters_fail_closed:3d615c4ac86a81f1",
+        "name": "test_control_characters_fail_closed",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 128,
+        "end_line": 132,
+        "signature_hash": "94d96fadf7ef2729",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_join_uses_resident_receive_time_and_is_live:d9ca3376aab4a4e7",
+        "name": "test_join_uses_resident_receive_time_and_is_live",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 18,
+        "end_line": 22,
+        "signature_hash": "41f82473be751ad3",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_late_heartbeat_does_not_resurrect_expired_lease:3a08fa1411b40f73",
+        "name": "test_late_heartbeat_does_not_resurrect_expired_lease",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 57,
+        "end_line": 61,
+        "signature_hash": "86ac5da65442b727",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_reaper_and_rejoin_retire_old_fence:020283338740b9f8",
+        "name": "test_reaper_and_rejoin_retire_old_fence",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 70,
+        "end_line": 85,
+        "signature_hash": "53e0856ab1e4bfaf",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_replay_rejected:f387a88ed6652c30",
+        "name": "test_replay_rejected",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "eb5f31ab6e30e9e4",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_scheduler_projection_excludes_stale_and_has_no_authority_action:b22ec6e19bdc244a",
+        "name": "test_scheduler_projection_excludes_stale_and_has_no_authority_action",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 116,
+        "end_line": 120,
+        "signature_hash": "44c847400c7518f4",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_stale_generation_or_fence_rejected:8ffa2bcfa9f819af",
+        "name": "test_stale_generation_or_fence_rejected",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 37,
+        "end_line": 43,
+        "signature_hash": "7ec9db4089ef4523",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_stale_offline_boundaries:fe23214ed15617f3",
+        "name": "test_stale_offline_boundaries",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 63,
+        "end_line": 68,
+        "signature_hash": "026d5f570ff54670",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_worker_cannot_self_assert_stale_offline:394a50a38fbfe155",
+        "name": "test_worker_cannot_self_assert_stale_offline",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 122,
+        "end_line": 126,
+        "signature_hash": "4f8c4d9281c7fe21",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
+        "semantic_id": "tests/test_aura_worker_presence.py#function:test_worker_clock_cannot_extend_lease:856cb3ca2fb69143",
+        "name": "test_worker_clock_cannot_extend_lease",
+        "kind": "function",
+        "file": "tests/test_aura_worker_presence.py",
+        "line": 24,
+        "end_line": 28,
+        "signature_hash": "884a5f0c639ea4ac",
+        "file_digest8": "2bfba1f5dc0f1384"
+      },
+      {
         "semantic_id": "tests/test_aura_workflow_authority_bridge.py#function:authorized_decision:9a5ad4ea05b62755",
         "name": "authorized_decision",
         "kind": "function",
@@ -446122,7 +447214,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f54ee2e4da0bb0db05767925275e2b15",
-    "payload_hash": "0fa1918e8b28a9b69a948e98a0f6517d"
+    "record_fingerprint": "858cdf4b56669f065effe2a67b221fb2",
+    "payload_hash": "4e9fc94677c87ed3f1daa55e1bcb1054"
   }
 }
