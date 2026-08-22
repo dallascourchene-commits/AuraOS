@@ -535,7 +535,14 @@ class AuraLocalInferenceGateway:
 
         schema = raw.get("schema_version")
         owner_ref = raw.get("owner_ref")
-        reservation_id = _nonempty(raw.get("reservation_id"))
+        raw_reservation_id = raw.get("reservation_id")
+        reservation_id = (
+            raw_reservation_id
+            if isinstance(raw_reservation_id, str)
+            and raw_reservation_id != ""
+            and raw_reservation_id == raw_reservation_id.strip()
+            else None
+        )
         request_id = raw.get("request_id")
         objective_id = raw.get("objective_id")
         policy_digest = raw.get("policy_blob_digest")
