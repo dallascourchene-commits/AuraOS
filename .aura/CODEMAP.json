@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1787365538,
+  "generated_at_unix": 1787371170,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1640,
+    "repo_file_count": 1641,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -202,6 +202,7 @@
       ".github/workflows/wo-phase4-local-verifier-bundle.yml",
       ".github/workflows/wo-phase4-package-dangling-candidate.yml",
       ".github/workflows/wo-phase4-synthesis-fixture-fix.yml",
+      ".github/workflows/wp04-r5-verification-9c7e.yml",
       ".gitignore",
       ".mempalace/aura_thought.txt",
       ".mempalace/lexicon.json",
@@ -1756,16 +1757,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1640,
-      "bytes": 26399528,
-      "tokens_est": 6590300,
+      "files": 1641,
+      "bytes": 26402417,
+      "tokens_est": 6591023,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1000,
-        "schema_or_lexicon": 271,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -159555,6 +159556,7 @@
       ".github/workflows/wo-phase4-final-candidate-materialize-v2.yml",
       ".github/workflows/wo-phase4-final-candidate-materialize.yml",
       ".github/workflows/wo-phase4-final-candidate-package-v3.yml",
+      ".github/workflows/wp04-r5-verification-9c7e.yml",
       "USER_GUIDE.md",
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md",
       "docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md",
@@ -160037,6 +160039,10 @@
       ".github/workflows/wo-phase4-synthesis-fixture-fix.yml",
       "test_synthesis_upgrades.py"
     ],
+    "python -m unittest": [
+      ".github/workflows/wp04-r5-verification-9c7e.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
     "python aura_coding_arena_server.py --host 127.0.0.1 --port 8080": [
       "AURA_CODING_ARENA_README.md"
     ],
@@ -160505,9 +160511,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -173330,6 +173333,63 @@
         -0.115336,
         0.075565,
         -0.115336
+      ]
+    },
+    {
+      "path": ".github/workflows/wp04-r5-verification-9c7e.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2889,
+      "lines": 64,
+      "tokens_est": 723,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          49
+        ],
+        "python -m unittest": [
+          59
+        ]
+      },
+      "topology": {},
+      "digest8": "d91ca384b57018e7",
+      "vector": [
+        -0.067265,
+        -0.072342,
+        0.19672,
+        -0.247486,
+        0.006346,
+        0.178951,
+        0.270331,
+        -0.158645,
+        0.156106,
+        0.1358,
+        -0.250024,
+        0.323635,
+        -0.257639,
+        -0.133262,
+        0.191643,
+        0.044421,
+        0.112955,
+        0.194181,
+        0.039344,
+        0.178951,
+        -0.067265,
+        0.12057,
+        -0.039344,
+        0.199258,
+        0.044421,
+        0.102802,
+        -0.247486,
+        -0.285561,
+        -0.303329,
+        -0.148492,
+        0.112955,
+        -0.024114
       ]
     },
     {
@@ -287901,16 +287961,16 @@
     }
   },
   "summary": {
-    "file_count": 1640,
-    "total_bytes": 26399528,
-    "text_tokens_est": 6590300,
+    "file_count": 1641,
+    "total_bytes": 26402417,
+    "text_tokens_est": 6591023,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1000,
-      "schema_or_lexicon": 271,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288122,6 +288182,7 @@
       ".github/workflows/wo-phase4-local-verifier-bundle.yml",
       ".github/workflows/wo-phase4-package-dangling-candidate.yml",
       ".github/workflows/wo-phase4-synthesis-fixture-fix.yml",
+      ".github/workflows/wp04-r5-verification-9c7e.yml",
       ".gitignore",
       ".mempalace/aura_thought.txt",
       ".mempalace/lexicon.json",
@@ -449401,6 +449462,6 @@
       }
     ],
     "record_fingerprint": "d393b5b0a4850b11b49e82c6fa76ffde",
-    "payload_hash": "184a6b58cd0f090320a2345e17db91b4"
+    "payload_hash": "c7b2bb58de1fbd510cb27c76e75e8ae9"
   }
 }

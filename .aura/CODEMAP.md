@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1640
-- **total_bytes**: 26399528
-- **text_tokens_est**: 6590300
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1000, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1641
+- **total_bytes**: 26402417
+- **text_tokens_est**: 6591023
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1000, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1640,
+  "repo_file_count": 1641,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -220,6 +220,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/wo-phase4-local-verifier-bundle.yml",
     ".github/workflows/wo-phase4-package-dangling-candidate.yml",
     ".github/workflows/wo-phase4-synthesis-fixture-fix.yml",
+    ".github/workflows/wp04-r5-verification-9c7e.yml",
     ".gitignore",
     ".mempalace/aura_thought.txt",
     ".mempalace/lexicon.json",
@@ -1780,16 +1781,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1640,
-  "bytes": 26399528,
-  "tokens_est": 6590300,
+  "files": 1641,
+  "bytes": 26402417,
+  "tokens_est": 6591023,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 235,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1000,
-    "schema_or_lexicon": 271,
+    "schema_or_lexicon": 272,
     "support_file": 49
   }
 }
