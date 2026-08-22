@@ -1,9 +1,9 @@
 """Policy-bound, backend-neutral inference membrane for Aura.
 
-This module deliberately does not own source slicing, model/provider credentials,
-patch authority, worker liveness, or Human/Gate disposition. It consumes an
-already-bounded context slice and an exact model-policy reference, then routes
-only through injected callbacks that satisfy that policy.
+P0 deliberately owns neither source slicing nor provider/runtime authority. It
+binds an already-bounded context to Aura's existing route-component registry,
+requires independent capability validation before any model callback, revalidates
+policy immediately before effect, and emits candidate-only receipts.
 """
 from __future__ import annotations
 
@@ -12,6 +12,8 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any, Callable, Mapping
+
+from aura_route_capsule_registry import load_registry_component
 
 GATEWAY_VERSION = "AURA_LOCAL_INFERENCE_GATEWAY_V1"
 POLICY_SCHEMA = "AURA_MODEL_POLICY_V1"
@@ -46,7 +48,6 @@ def _sha256_bytes(value: bytes) -> str:
 
 
 def _canonical_json_bytes(value: Any) -> bytes:
-    """Strict canonical JSON. Unsupported/cyclic values are rejected."""
     body = json.dumps(
         value,
         ensure_ascii=False,
@@ -59,6 +60,16 @@ def _canonical_json_bytes(value: Any) -> bytes:
 
 def _canonical_digest(value: Any) -> str:
     return _sha256_bytes(_canonical_json_bytes(value))
+
+
+def canonical_context_digest(context_payload: Mapping[str, Any]) -> str:
+    """Digest protected context content, excluding its self-reported digest label."""
+    protected = {
+        str(key): value
+        for key, value in context_payload.items()
+        if str(key) != "context_slice_digest"
+    }
+    return _canonical_digest(protected)
 
 
 def _string_tuple(value: Any, *, field_name: str) -> tuple[str, ...]:
@@ -99,24 +110,10 @@ class PolicyDecision:
 
 
 class ModelPolicyResolver:
-    """Load one exact repository policy reference and fail closed on ambiguity."""
+    """Resolve model policy through Aura's existing route-component registry."""
 
     def __init__(self, repo_root: str | Path = ".") -> None:
         self.repo_root = Path(repo_root).resolve()
-        self.policy_root = (self.repo_root / ".aura" / "model_policies").resolve()
-
-    def _resolve_path(self, policy_ref: str) -> Path:
-        ref = str(policy_ref or "").strip().replace("\\", "/")
-        if not ref or ref.startswith("/"):
-            raise PolicyResolutionError("policy_ref_invalid")
-        path = (self.repo_root / ref).resolve()
-        try:
-            path.relative_to(self.policy_root)
-        except ValueError as exc:
-            raise PolicyResolutionError("policy_ref_outside_model_policy_root") from exc
-        if path.suffix.lower() != ".json":
-            raise PolicyResolutionError("policy_ref_must_be_json")
-        return path
 
     def resolve(
         self,
@@ -124,23 +121,32 @@ class ModelPolicyResolver:
         *,
         expected_blob_digest: str | None = None,
     ) -> PolicyDecision:
-        path = self._resolve_path(policy_ref)
         try:
-            raw = path.read_bytes()
-        except OSError as exc:
+            component = load_registry_component(
+                self.repo_root,
+                policy_ref,
+                field_name="model_policy_ref",
+            )
+        except FileNotFoundError as exc:
             raise PolicyResolutionError("policy_unreadable") from exc
+        except (TypeError, ValueError, OSError) as exc:
+            message = str(exc).casefold()
+            if (
+                "symlink" in message
+                or "escape" in message
+                or "repository-relative" in message
+                or "unsafe path" in message
+            ):
+                code = "policy_ref_unsafe"
+            else:
+                code = "policy_registry_resolution_failed"
+            raise PolicyResolutionError(code) from exc
 
-        blob_digest = _sha256_bytes(raw)
-        if expected_blob_digest is not None and blob_digest != str(expected_blob_digest):
+        digest = component.digest
+        if expected_blob_digest is not None and digest != str(expected_blob_digest):
             raise PolicyResolutionError("policy_digest_mismatch")
 
-        try:
-            payload = json.loads(raw.decode("utf-8"))
-        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-            raise PolicyResolutionError("policy_malformed_json") from exc
-        if not isinstance(payload, dict):
-            raise PolicyResolutionError("policy_must_be_object")
-
+        payload = component.payload
         unknown = set(payload) - _ALLOWED_POLICY_FIELDS
         missing = _ALLOWED_POLICY_FIELDS - set(payload)
         if missing:
@@ -148,17 +154,21 @@ class ModelPolicyResolver:
         if unknown:
             raise PolicyResolutionError("policy_unknown_fields")
 
-        if payload["schema_version"] != POLICY_SCHEMA:
+        if component.schema_version != POLICY_SCHEMA:
             raise PolicyResolutionError("policy_schema_unknown")
-        if payload["kind"] != "model_policy":
+        if component.kind != "model_policy":
             raise PolicyResolutionError("policy_kind_invalid")
         if not isinstance(payload["component_id"], str) or not payload["component_id"].strip():
             raise PolicyResolutionError("policy_component_id_invalid")
 
         default = payload["default"]
         fallback = payload["fallback"]
+        if not isinstance(default, str):
+            raise PolicyResolutionError("policy_default_must_be_string")
         if default not in _BACKEND_FOR_POLICY_TARGET:
             raise PolicyResolutionError("policy_default_unknown")
+        if not isinstance(fallback, str):
+            raise PolicyResolutionError("policy_fallback_must_be_string")
         if fallback not in _BACKEND_FOR_POLICY_TARGET:
             raise PolicyResolutionError("policy_fallback_unknown")
 
@@ -190,10 +200,10 @@ class ModelPolicyResolver:
             backend_classes.append("external")
 
         return PolicyDecision(
-            policy_ref=str(policy_ref).replace("\\", "/"),
-            policy_blob_digest=blob_digest,
+            policy_ref=component.relative_path,
+            policy_blob_digest=digest,
             schema_version=POLICY_SCHEMA,
-            component_id=payload["component_id"].strip(),
+            component_id=component.component_id,
             default=default,
             fallback=fallback,
             external_allowed=external_allowed,
@@ -243,6 +253,7 @@ class BackendAdapter:
     available: bool = True
     network_required: bool = False
     artifact_ref: str | None = None
+    capability_ref: str | None = None
 
 
 @dataclass(frozen=True)
@@ -280,11 +291,7 @@ class InferenceReceiptV1:
 
 
 class AuraLocalInferenceGateway:
-    """Route one bounded request under an exact current model-policy decision.
-
-    Context is supplied by an injected compiler/owner. The gateway never opens
-    repository source to build context itself.
-    """
+    """Route bounded requests under exact policy and verified capability bindings."""
 
     def __init__(
         self,
@@ -294,10 +301,14 @@ class AuraLocalInferenceGateway:
     ) -> None:
         self.repo_root = Path(repo_root).resolve()
         self.policy_resolver = policy_resolver or ModelPolicyResolver(self.repo_root)
+        self._model_call_usage: dict[tuple[str, str, str], int] = {}
 
     @staticmethod
-    def _request_digest(request: InferenceRequestV1) -> str:
-        return _canonical_digest(request.protected_dict())
+    def _safe_request_digest(request: InferenceRequestV1) -> str:
+        try:
+            return _canonical_digest(request.protected_dict())
+        except (TypeError, ValueError, RecursionError):
+            return "UNAVAILABLE_NONCANONICAL_REQUEST"
 
     @classmethod
     def _blocked(
@@ -307,18 +318,19 @@ class AuraLocalInferenceGateway:
         reason: str,
         policy: PolicyDecision | None = None,
         model_call_count: int = 0,
+        attempted_backend: BackendAdapter | None = None,
     ) -> dict[str, Any]:
         receipt = InferenceReceiptV1(
             request_id=request.request_id,
             objective_id=request.objective_id,
-            request_digest=cls._request_digest(request),
+            request_digest=cls._safe_request_digest(request),
             policy_ref=request.policy_ref,
             policy_blob_digest=policy.policy_blob_digest if policy else None,
             policy_currentness=policy.currentness if policy else "UNKNOWN",
             context_slice_digest=request.context_slice_digest,
-            selected_backend_id=None,
-            selected_backend_class=None,
-            backend_artifact_ref=None,
+            selected_backend_id=attempted_backend.backend_id if attempted_backend else None,
+            selected_backend_class=attempted_backend.backend_class if attempted_backend else None,
+            backend_artifact_ref=attempted_backend.artifact_ref if attempted_backend else None,
             model_call_count=model_call_count,
             status="BLOCKED_UNKNOWN",
             output_digest=None,
@@ -346,10 +358,16 @@ class AuraLocalInferenceGateway:
             return None, "context_compiler_failed"
         if not isinstance(context, Mapping):
             return None, "context_compiler_invalid_result"
-        observed_digest = context.get("context_slice_digest")
-        if not isinstance(observed_digest, str) or not observed_digest:
+        claimed = context.get("context_slice_digest")
+        if not isinstance(claimed, str) or not claimed:
             return None, "context_slice_digest_missing"
-        if observed_digest != request.context_slice_digest:
+        try:
+            observed = canonical_context_digest(context)
+        except (TypeError, ValueError, RecursionError):
+            return None, "context_not_canonicalizable"
+        if claimed != observed:
+            return None, "context_claimed_digest_mismatch"
+        if observed != request.context_slice_digest:
             return None, "context_slice_digest_mismatch"
         return context, None
 
@@ -379,7 +397,6 @@ class AuraLocalInferenceGateway:
         request: InferenceRequestV1,
         policy: PolicyDecision,
     ) -> PolicyDecision | None:
-        """Re-read the exact policy immediately before each backend effect."""
         try:
             rebound = self.policy_resolver.resolve(
                 request.policy_ref,
@@ -391,6 +408,21 @@ class AuraLocalInferenceGateway:
             return None
         return rebound
 
+    @staticmethod
+    def _capability_verified(
+        adapter: BackendAdapter,
+        policy: PolicyDecision,
+        capability_validator: Callable[[BackendAdapter, PolicyDecision], bool] | None,
+    ) -> bool:
+        if adapter.backend_class == "deterministic":
+            return not adapter.network_required
+        if capability_validator is None:
+            return False
+        try:
+            return capability_validator(adapter, policy) is True
+        except Exception:
+            return False
+
     def run(
         self,
         request: InferenceRequestV1,
@@ -399,36 +431,40 @@ class AuraLocalInferenceGateway:
         deterministic_backend: BackendAdapter | None = None,
         local_backend: BackendAdapter | None = None,
         external_backend: BackendAdapter | None = None,
+        capability_validator: Callable[[BackendAdapter, PolicyDecision], bool] | None = None,
     ) -> dict[str, Any]:
         try:
             policy = self.policy_resolver.resolve(
                 request.policy_ref,
                 expected_blob_digest=request.expected_policy_digest,
             )
-            request_digest = self._request_digest(request)
         except PolicyResolutionError as exc:
             return self._blocked(request, reason=exc.code)
-        except (TypeError, ValueError):
-            return self._blocked(request, reason="request_not_canonicalizable")
+
+        request_digest = self._safe_request_digest(request)
+        if request_digest.startswith("UNAVAILABLE_"):
+            return self._blocked(request, reason="request_not_canonicalizable", policy=policy)
 
         context, context_error = self._context_payload(request, context_compiler)
         if context_error:
             return self._blocked(request, reason=context_error, policy=policy)
         assert context is not None
 
+        usage_key = (request.request_id, request.objective_id, policy.policy_blob_digest)
+        model_call_count = self._model_call_usage.get(usage_key, 0)
+
         adapters = {
             "deterministic": deterministic_backend,
             "local_model": local_backend,
             "external": external_backend,
         }
-        model_call_count = 0
         escalation = set(request.escalation_evidence)
-
         targets = [policy.default]
         if policy.fallback != policy.default:
             targets.append(policy.fallback)
 
         last_reason = "no_eligible_backend"
+        last_attempted: BackendAdapter | None = None
         for index, target in enumerate(targets):
             backend_class = _BACKEND_FOR_POLICY_TARGET[target]
 
@@ -455,11 +491,16 @@ class AuraLocalInferenceGateway:
             if adapter.network_required and backend_class != "external":
                 last_reason = "local_backend_declares_network_requirement"
                 continue
+            if not self._capability_verified(adapter, policy, capability_validator):
+                last_reason = "backend_capability_unverified"
+                continue
 
-            if backend_class in {"local_model", "external"}:
-                if model_call_count >= policy.maximum_model_calls:
-                    last_reason = "maximum_model_calls_exhausted"
-                    continue
+            if (
+                backend_class in {"local_model", "external"}
+                and model_call_count >= policy.maximum_model_calls
+            ):
+                last_reason = "maximum_model_calls_exhausted"
+                continue
 
             rebound = self._revalidate_policy(request, policy)
             if rebound is None:
@@ -468,11 +509,14 @@ class AuraLocalInferenceGateway:
                     reason="policy_digest_mismatch",
                     policy=policy,
                     model_call_count=model_call_count,
+                    attempted_backend=adapter,
                 )
             policy = rebound
+            last_attempted = adapter
 
             if backend_class in {"local_model", "external"}:
                 model_call_count += 1
+                self._model_call_usage[usage_key] = model_call_count
 
             payload = {
                 "version": GATEWAY_VERSION,
@@ -484,6 +528,7 @@ class AuraLocalInferenceGateway:
                     "backend_class": adapter.backend_class,
                     "network_required": adapter.network_required,
                     "artifact_ref": adapter.artifact_ref,
+                    "capability_ref": adapter.capability_ref,
                 },
                 "effect_state": "CANDIDATE_ONLY",
             }
@@ -500,6 +545,7 @@ class AuraLocalInferenceGateway:
                     reason="backend_output_not_canonicalizable",
                     policy=policy,
                     model_call_count=model_call_count,
+                    attempted_backend=adapter,
                 )
 
             receipt = InferenceReceiptV1(
@@ -531,6 +577,7 @@ class AuraLocalInferenceGateway:
             reason=last_reason,
             policy=policy,
             model_call_count=model_call_count,
+            attempted_backend=last_attempted,
         )
 
 
@@ -544,4 +591,5 @@ __all__ = [
     "POLICY_SCHEMA",
     "PolicyDecision",
     "PolicyResolutionError",
+    "canonical_context_digest",
 ]
