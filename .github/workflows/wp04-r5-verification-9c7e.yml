@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - p0plus/wp04-r5-verification-9c7e
+  pull_request:
+    branches:
+      - p0plus/project006-provider-sidecar-reference
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
@@ -19,10 +23,11 @@ jobs:
     env:
       PYTHONHASHSEED: '0'
     steps:
-      - name: Checkout verification branch
+      - name: Checkout exact verification branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          ref: p0plus/wp04-r5-verification-9c7e
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -33,10 +38,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          expected_parent='f616e314ee5aaa4d85f14012aa6b324d0a2ec558'
-          actual_parent="$(git rev-parse HEAD^)"
-          test "$actual_parent" = "$expected_parent"
-          changed="$(git diff --name-only HEAD^ HEAD)"
+          exact_base='f616e314ee5aaa4d85f14012aa6b324d0a2ec558'
+          git merge-base --is-ancestor "$exact_base" HEAD
+          changed="$(git diff --name-only "$exact_base" HEAD)"
           test "$changed" = '.github/workflows/wp04-r5-verification-9c7e.yml'
           test "$(git hash-object tools/project006/provider_sidecar_reference/provider_sidecar.py)" = 'df74ec24e548d7051a61d7b3091264769730eaf5'
           test "$(git hash-object tools/project006/provider_sidecar_reference/test_provider_sidecar.py)" = '07bf55525a4cca1cb72e4d33061c5f49eb7cf235'
