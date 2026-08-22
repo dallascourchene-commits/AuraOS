@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1636
-- **total_bytes**: 26353773
-- **text_tokens_est**: 6578860
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1634
+- **total_bytes**: 26316194
+- **text_tokens_est**: 6569465
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1636,
+  "repo_file_count": 1634,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -626,7 +626,6 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_live_architect_cockpit_adapter.py",
     "aura_llm_call_logger.py",
     "aura_llm_egress.py",
-    "aura_local_inference_gateway.py",
     "aura_luminance_engine.py",
     "aura_matrix_benchmark.py",
     "aura_mcp_gateway.py",
@@ -1507,7 +1506,6 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_intent_ingestion_bilateral.py",
     "tests/test_aura_intent_refinement.py",
     "tests/test_aura_jspace_codec.py",
-    "tests/test_aura_local_inference_gateway.py",
     "tests/test_aura_mesh_to_gaussian.py",
     "tests/test_aura_model_cognome.py",
     "tests/test_aura_model_cognome_call_logger.py",
@@ -1674,7 +1672,6 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_blockchain/memory_staking.py",
     "aura_blockchain/node.py",
     "aura_blockchain/phasor_ledger.py",
-    "aura_local_inference_gateway.py",
     "aura_spatial_importers/__init__.py",
     "aura_spatial_importers/contracts.py",
     "aura_spatial_importers/gaussian_gltf.py",
@@ -1762,7 +1759,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_capability_connectome_v2.py",
     "tests/test_aura_capability_lane_registry.py",
     "tests/test_aura_capability_resolver.py",
-    "tests/test_aura_capability_resolver_connectome.py"
+    "tests/test_aura_capability_resolver_connectome.py",
+    "tests/test_aura_change_graph.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1776,15 +1774,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1636,
-  "bytes": 26353773,
-  "tokens_est": 6578860,
+  "files": 1634,
+  "bytes": 26316194,
+  "tokens_est": 6569465,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 234,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 997,
+    "python_module": 995,
     "schema_or_lexicon": 271,
     "support_file": 49
   }
@@ -2410,7 +2408,6 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_live_architect_cockpit_adapter.py",
     "aura_llm_call_logger.py",
     "aura_llm_egress.py",
-    "aura_local_inference_gateway.py",
     "aura_luminance_engine.py",
     "aura_matrix_benchmark.py",
     "aura_mcp_gateway.py",
@@ -2480,7 +2477,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_planning_events.py",
     "aura_planning_frontier.py",
     "aura_planning_projector.py",
-    "aura_planning_regression.py"
+    "aura_planning_regression.py",
+    "aura_plugin_registry.py"
   ]
 }
 ```
