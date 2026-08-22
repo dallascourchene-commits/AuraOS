@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1634
-- **total_bytes**: 26316194
-- **text_tokens_est**: 6569465
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1636
+- **total_bytes**: 26348296
+- **text_tokens_est**: 6577491
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1634,
+  "repo_file_count": 1636,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -895,6 +895,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_topology_health.py",
     "aura_topology_manager.py",
     "aura_topology_prior_memory.py",
+    "aura_topology_scheduler.py",
     "aura_topology_snapshot_builder.py",
     "aura_topology_state_machine.py",
     "aura_topology_sync.py",
@@ -1619,6 +1620,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_token_economy_orchestrator.py",
     "tests/test_aura_topological_context_anchor.py",
     "tests/test_aura_topology_health.py",
+    "tests/test_aura_topology_scheduler.py",
     "tests/test_aura_unified_memory_continuity.py",
     "tests/test_aura_unified_memory_continuity_learning.py",
     "tests/test_aura_unified_memory_continuity_toolchain.py",
@@ -1678,6 +1680,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_spatial_importers/gltf.py",
     "aura_spatial_importers/ply.py",
     "aura_spatial_importers/spz.py",
+    "aura_topology_scheduler.py",
     "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
     "benchmarks/refactor_code_quality/generate_fixture.py",
     "core/aura_task_dispatcher.py",
@@ -1759,8 +1762,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_capability_connectome_v2.py",
     "tests/test_aura_capability_lane_registry.py",
     "tests/test_aura_capability_resolver.py",
-    "tests/test_aura_capability_resolver_connectome.py",
-    "tests/test_aura_change_graph.py"
+    "tests/test_aura_capability_resolver_connectome.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1774,15 +1776,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1634,
-  "bytes": 26316194,
-  "tokens_est": 6569465,
+  "files": 1636,
+  "bytes": 26348296,
+  "tokens_est": 6577491,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 234,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 995,
+    "python_module": 997,
     "schema_or_lexicon": 271,
     "support_file": 49
   }

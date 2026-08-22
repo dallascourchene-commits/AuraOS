@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1786938896,
+  "generated_at_unix": 1787356981,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1634,
+    "repo_file_count": 1636,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -877,6 +877,7 @@
       "aura_topology_health.py",
       "aura_topology_manager.py",
       "aura_topology_prior_memory.py",
+      "aura_topology_scheduler.py",
       "aura_topology_snapshot_builder.py",
       "aura_topology_state_machine.py",
       "aura_topology_sync.py",
@@ -1601,6 +1602,7 @@
       "tests/test_aura_token_economy_orchestrator.py",
       "tests/test_aura_topological_context_anchor.py",
       "tests/test_aura_topology_health.py",
+      "tests/test_aura_topology_scheduler.py",
       "tests/test_aura_unified_memory_continuity.py",
       "tests/test_aura_unified_memory_continuity_learning.py",
       "tests/test_aura_unified_memory_continuity_toolchain.py",
@@ -1660,6 +1662,7 @@
       "aura_spatial_importers/gltf.py",
       "aura_spatial_importers/ply.py",
       "aura_spatial_importers/spz.py",
+      "aura_topology_scheduler.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "core/aura_task_dispatcher.py",
@@ -1741,8 +1744,7 @@
       "tests/test_aura_capability_connectome_v2.py",
       "tests/test_aura_capability_lane_registry.py",
       "tests/test_aura_capability_resolver.py",
-      "tests/test_aura_capability_resolver_connectome.py",
-      "tests/test_aura_change_graph.py"
+      "tests/test_aura_capability_resolver_connectome.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1750,15 +1752,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1634,
-      "bytes": 26316194,
-      "tokens_est": 6569465,
+      "files": 1636,
+      "bytes": 26348296,
+      "tokens_est": 6577491,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 234,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 995,
+        "python_module": 997,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -4252,6 +4254,14 @@
         "end_line": 89,
         "semantic_id": "aura_st3gg_recall.py#function:_digest:b80292420b5b7c8c",
         "signature_hash": "3ac0b50228ac8b68"
+      },
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 40,
+        "semantic_id": "aura_topology_scheduler.py#function:_digest:9edded6712215d90",
+        "signature_hash": "9018aaa438b0fe0c"
       },
       {
         "file": "aura_waboose_learning.py",
@@ -31540,6 +31550,14 @@
         "end_line": 123,
         "semantic_id": "aura_qdkt_compatibility_types.py#function:_count:6407ce45fc7f3f97",
         "signature_hash": "c73bf67a669ce693"
+      },
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 53,
+        "semantic_id": "aura_topology_scheduler.py#function:_count:413e310d075a3306",
+        "signature_hash": "99cd72e34109f6d6"
       }
     ],
     "route_initial_refactor": [
@@ -88304,6 +88322,14 @@
         "end_line": 228,
         "semantic_id": "aura_st3gg_contracts.py#function:canonical_json_bytes:45e2aa70586d7f49",
         "signature_hash": "b2bc0a31834a37f8"
+      },
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 96,
+        "end_line": 104,
+        "semantic_id": "aura_topology_scheduler.py#function:canonical_json_bytes:f78d89ebdaa83837",
+        "signature_hash": "946642516763d58b"
       }
     ],
     "digest_text": [
@@ -92490,6 +92516,296 @@
         "end_line": 42,
         "semantic_id": "aura_topology_prior_memory.py#method:AuraTopologyPriorMemory.load_prior_crystal:3f3bd38819d08512",
         "signature_hash": "11d0700bace1ea81"
+      }
+    ],
+    "ContractViolation": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "aura_topology_scheduler.py#class:ContractViolation:e8e3c3af94310a40",
+        "signature_hash": "a02bf3924c67f01d"
+      }
+    ],
+    "_nfc": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 33,
+        "semantic_id": "aura_topology_scheduler.py#function:_nfc:b954ee05dd2781cd",
+        "signature_hash": "aa5eb10865943afd"
+      }
+    ],
+    "_positive_count": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 60,
+        "semantic_id": "aura_topology_scheduler.py#function:_positive_count:69b81b3d05381f03",
+        "signature_hash": "9ba08409772a5451"
+      }
+    ],
+    "_basis_points": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 67,
+        "semantic_id": "aura_topology_scheduler.py#function:_basis_points:5557ab671e9fef86",
+        "signature_hash": "13ba74aadef79aae"
+      }
+    ],
+    "_normalize_json": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 93,
+        "semantic_id": "aura_topology_scheduler.py#function:_normalize_json:35684d51ebd91ed0",
+        "signature_hash": "532848d4e7a0da7b"
+      }
+    ],
+    "_hash_domain": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 107,
+        "end_line": 112,
+        "semantic_id": "aura_topology_scheduler.py#function:_hash_domain:4d643e7af5d50f94",
+        "signature_hash": "79a5f025f0bfdfcf"
+      }
+    ],
+    "_canonical_string_set": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 119,
+        "semantic_id": "aura_topology_scheduler.py#function:_canonical_string_set:23bf341712d50338",
+        "signature_hash": "be6184f477b33aa8"
+      }
+    ],
+    "_canonical_edge_set": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 122,
+        "end_line": 144,
+        "semantic_id": "aura_topology_scheduler.py#function:_canonical_edge_set:9042ff1c9128fcee",
+        "signature_hash": "c8db6d6815b6a781"
+      }
+    ],
+    "SchedulerPhase": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "class",
+        "line": 147,
+        "end_line": 156,
+        "semantic_id": "aura_topology_scheduler.py#class:SchedulerPhase:949e42b7075cae4b",
+        "signature_hash": "43c7f1adcbdc5f43"
+      }
+    ],
+    "PhaseReason": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "class",
+        "line": 159,
+        "end_line": 169,
+        "semantic_id": "aura_topology_scheduler.py#class:PhaseReason:e193c3a87c79c346",
+        "signature_hash": "1fcac4f8e0c30c8d"
+      }
+    ],
+    "WorkloadStateV1": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "class",
+        "line": 173,
+        "end_line": 206,
+        "semantic_id": "aura_topology_scheduler.py#class:WorkloadStateV1:0cb46389b1d9bb86",
+        "signature_hash": "f95d8b8c9e35ca64"
+      }
+    ],
+    "WorkloadStateV1.protected_body": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "method",
+        "line": 181,
+        "end_line": 206,
+        "semantic_id": "aura_topology_scheduler.py#method:WorkloadStateV1.protected_body:843f5b51ff91b6ab",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "EvidenceStateV1": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "class",
+        "line": 210,
+        "end_line": 244,
+        "semantic_id": "aura_topology_scheduler.py#class:EvidenceStateV1:1be6955adbc0cee3",
+        "signature_hash": "3cb51cb96a95d57e"
+      }
+    ],
+    "EvidenceStateV1.protected_body": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "method",
+        "line": 220,
+        "end_line": 244,
+        "semantic_id": "aura_topology_scheduler.py#method:EvidenceStateV1.protected_body:4f73c969376cc424",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "WorkerStateV1": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "class",
+        "line": 248,
+        "end_line": 281,
+        "semantic_id": "aura_topology_scheduler.py#class:WorkerStateV1:426ae9b1d0b6471a",
+        "signature_hash": "bdfca89b2fd9c26b"
+      }
+    ],
+    "WorkerStateV1.protected_body": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "method",
+        "line": 256,
+        "end_line": 281,
+        "semantic_id": "aura_topology_scheduler.py#method:WorkerStateV1.protected_body:b03ceaa8fd58ad6b",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "ResourceStateV1": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "class",
+        "line": 285,
+        "end_line": 319,
+        "semantic_id": "aura_topology_scheduler.py#class:ResourceStateV1:9b855f03566b7f66",
+        "signature_hash": "fa40f3e2d7be652e"
+      }
+    ],
+    "ResourceStateV1.protected_body": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "method",
+        "line": 295,
+        "end_line": 319,
+        "semantic_id": "aura_topology_scheduler.py#method:ResourceStateV1.protected_body:39c353527b074a80",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "NetworkStateV1": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "class",
+        "line": 323,
+        "end_line": 341,
+        "semantic_id": "aura_topology_scheduler.py#class:NetworkStateV1:74e4a6c8a21ab101",
+        "signature_hash": "2faecf70d1f0b5d0"
+      }
+    ],
+    "NetworkStateV1.protected_body": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "method",
+        "line": 330,
+        "end_line": 341,
+        "semantic_id": "aura_topology_scheduler.py#method:NetworkStateV1.protected_body:6879f24b0b302ce0",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "FailureStateV1": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "class",
+        "line": 345,
+        "end_line": 363,
+        "semantic_id": "aura_topology_scheduler.py#class:FailureStateV1:f7e9484a85981ad7",
+        "signature_hash": "9d601192fe8f3b4b"
+      }
+    ],
+    "FailureStateV1.protected_body": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "method",
+        "line": 351,
+        "end_line": 363,
+        "semantic_id": "aura_topology_scheduler.py#method:FailureStateV1.protected_body:5dcfc388b39c6a53",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "SchedulerStateV1": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "class",
+        "line": 367,
+        "end_line": 530,
+        "semantic_id": "aura_topology_scheduler.py#class:SchedulerStateV1:bd2478e417246296",
+        "signature_hash": "ab72382a52dbd748"
+      }
+    ],
+    "SchedulerStateV1.protected_body": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "method",
+        "line": 410,
+        "end_line": 523,
+        "semantic_id": "aura_topology_scheduler.py#method:SchedulerStateV1.protected_body:e93f8d4f686cdbe1",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "SchedulerStateV1.state_digest": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "method",
+        "line": 525,
+        "end_line": 530,
+        "semantic_id": "aura_topology_scheduler.py#method:SchedulerStateV1.state_digest:af382b4f567230ab",
+        "signature_hash": "c6ea24c71eee3a1b"
+      }
+    ],
+    "PhaseDecisionV1": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "class",
+        "line": 534,
+        "end_line": 552,
+        "semantic_id": "aura_topology_scheduler.py#class:PhaseDecisionV1:cc4c3607351d3612",
+        "signature_hash": "697fa2bf713ca899"
+      }
+    ],
+    "PhaseDecisionV1.protected_body": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "method",
+        "line": 539,
+        "end_line": 549,
+        "semantic_id": "aura_topology_scheduler.py#method:PhaseDecisionV1.protected_body:fa94f1dc783dfc57",
+        "signature_hash": "ba2396d20a0f4966"
+      }
+    ],
+    "PhaseDecisionV1.decision_digest": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "method",
+        "line": 551,
+        "end_line": 552,
+        "semantic_id": "aura_topology_scheduler.py#method:PhaseDecisionV1.decision_digest:9ba4c54511547807",
+        "signature_hash": "af940db68c44de13"
+      }
+    ],
+    "classify_phase": [
+      {
+        "file": "aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 555,
+        "end_line": 611,
+        "semantic_id": "aura_topology_scheduler.py#function:classify_phase:ddf2f1266b8df7a2",
+        "signature_hash": "08249ff70609085a"
       }
     ],
     "AuraTopologySnapshotBuilder": [
@@ -125504,6 +125820,14 @@
         "end_line": 12,
         "semantic_id": "tests/test_aura_construction_contracts.py#function:evidence:a7e99cea64606d49",
         "signature_hash": "4be851cb61f4aeb9"
+      },
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 48,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:evidence:4b0957ce0e536944",
+        "signature_hash": "1190fcee4f1a3a43"
       }
     ],
     "claim": [
@@ -127638,6 +127962,14 @@
         "end_line": 43,
         "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_server.py#function:state:f36d665e567b7907",
         "signature_hash": "4f98deada91b795f"
+      },
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 131,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:state:00247f438b98adff",
+        "signature_hash": "a84b8f7bf3e87132"
       }
     ],
     "decoded": [
@@ -154678,6 +155010,166 @@
         "end_line": 111,
         "semantic_id": "tests/test_aura_topology_health.py#method:TestTopologyHealth.test_symbol_index_healthy:0efdbe02a131900b",
         "signature_hash": "30e02f327572e4a4"
+      }
+    ],
+    "workload": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 34,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:workload:869ba4ee93cd255a",
+        "signature_hash": "1b41d4fa4f19fbab"
+      }
+    ],
+    "workers": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 59,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:workers:ebb094738297c04b",
+        "signature_hash": "ce0ade106acfc839"
+      }
+    ],
+    "resources": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 72,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:resources:16c13cd6b291fb24",
+        "signature_hash": "c856283ac83252eb"
+      }
+    ],
+    "network": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 82,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:network:a2327c539ade54c4",
+        "signature_hash": "ad8e0965703be54a"
+      }
+    ],
+    "failure": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 92,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:failure:8397068e413a63a8",
+        "signature_hash": "54a4e59c05ca025b"
+      }
+    ],
+    "test_phase_classifier_explicit_order": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 217,
+        "end_line": 220,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_phase_classifier_explicit_order:fcd2e6231ffda11e",
+        "signature_hash": "e181801839cdcd6d"
+      }
+    ],
+    "test_hard_guard_dominates_recovery_and_workflow_signals": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 223,
+        "end_line": 230,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_hard_guard_dominates_recovery_and_workflow_signals:ed32e4abc83f4120",
+        "signature_hash": "b7e282593ad5a0d7"
+      }
+    ],
+    "test_recovery_dominates_discovery_and_candidate_work": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 233,
+        "end_line": 239,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_recovery_dominates_discovery_and_candidate_work:55a69fc10c77ef8f",
+        "signature_hash": "d115048392b8571b"
+      }
+    ],
+    "test_state_digest_is_permutation_invariant_for_set_like_inputs": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 242,
+        "end_line": 259,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_state_digest_is_permutation_invariant_for_set_like_inputs:9532e8769742378b",
+        "signature_hash": "848ab14070bc9e16"
+      }
+    ],
+    "test_state_digest_binds_source_currentness_authority_and_creation_basis": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 262,
+        "end_line": 267,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_state_digest_binds_source_currentness_authority_and_creation_basis:06aeca446a95dc24",
+        "signature_hash": "08b07d0b24eac7f7"
+      }
+    ],
+    "test_phase_decision_contains_no_topology_or_worker_recommendation": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 270,
+        "end_line": 275,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_phase_decision_contains_no_topology_or_worker_recommendation:aef15a65201c7d5a",
+        "signature_hash": "0f683dbda2e96db5"
+      }
+    ],
+    "test_duplicate_and_self_dependency_edges_fail_closed": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 278,
+        "end_line": 289,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_duplicate_and_self_dependency_edges_fail_closed:4d56b5593f97b838",
+        "signature_hash": "f13abe1ddcd678ff"
+      }
+    ],
+    "test_invalid_basis_points_creation_stage_and_digest_fail_closed": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 292,
+        "end_line": 301,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_invalid_basis_points_creation_stage_and_digest_fail_closed:44c987235aeaad84",
+        "signature_hash": "87911300843e70f3"
+      }
+    ],
+    "test_bool_is_not_accepted_as_integer": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 304,
+        "end_line": 306,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_bool_is_not_accepted_as_integer:8b6ca499bdadc07b",
+        "signature_hash": "eb3965a325a142ad"
+      }
+    ],
+    "test_state_is_frozen": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 309,
+        "end_line": 312,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_state_is_frozen:51bafa7fd260ecce",
+        "signature_hash": "62f3b87a50d0d8fd"
+      }
+    ],
+    "test_decision_digest_is_deterministic_and_state_bound": [
+      {
+        "file": "tests/test_aura_topology_scheduler.py",
+        "kind": "function",
+        "line": 315,
+        "end_line": 320,
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_decision_digest_is_deterministic_and_state_bound:3e897d878e4381ec",
+        "signature_hash": "669407daa8ed30d6"
       }
     ],
     "_semantic_ledger": [
@@ -222662,6 +223154,53 @@
       ]
     },
     {
+      "path": "aura_topology_scheduler.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 22084,
+      "lines": 612,
+      "tokens_est": 5521,
+      "symbol_count": 32,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4a2714e29dcf9535",
+      "vector": [
+        0.192383,
+        0.25452,
+        0.25691,
+        0.24974,
+        -0.304707,
+        -0.113518,
+        0.158925,
+        0.010754,
+        0.103959,
+        -0.24496,
+        -0.261689,
+        0.218672,
+        0.187604,
+        -0.041822,
+        -0.070501,
+        -0.106349,
+        -0.051382,
+        0.094399,
+        -0.068111,
+        -0.08484,
+        0.137417,
+        -0.259299,
+        -0.146976,
+        0.048992,
+        0.111128,
+        -0.292757,
+        -0.25691,
+        0.053772,
+        0.008364,
+        0.146976,
+        0.158925,
+        -0.225841
+      ]
+    },
+    {
       "path": "aura_topology_snapshot_builder.py",
       "role": "python_module",
       "binary": false,
@@ -260976,6 +261515,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_topology_scheduler.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10018,
+      "lines": 321,
+      "tokens_est": 2505,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "89916693a849d73e",
+      "vector": [
+        0.301141,
+        0.081686,
+        0.098755,
+        -0.213359,
+        0.159714,
+        -0.198728,
+        0.223112,
+        -0.154838,
+        -0.254811,
+        0.193852,
+        -0.04511,
+        -0.171906,
+        -0.113385,
+        0.142646,
+        0.064617,
+        -0.237743,
+        0.108508,
+        0.025603,
+        -0.240181,
+        -0.081686,
+        -0.128015,
+        -0.279195,
+        0.125577,
+        0.040233,
+        0.274318,
+        -0.218236,
+        0.132892,
+        0.27188,
+        0.089001,
+        -0.169468,
+        0.201167,
+        -0.023165
+      ]
+    },
+    {
       "path": "tests/test_aura_unified_memory_continuity.py",
       "role": "python_module",
       "binary": false,
@@ -286149,15 +286735,15 @@
     }
   },
   "summary": {
-    "file_count": 1634,
-    "total_bytes": 26316194,
-    "text_tokens_est": 6569465,
+    "file_count": 1636,
+    "total_bytes": 26348296,
+    "text_tokens_est": 6577491,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 234,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 995,
+      "python_module": 997,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -287045,6 +287631,7 @@
       "aura_topology_health.py",
       "aura_topology_manager.py",
       "aura_topology_prior_memory.py",
+      "aura_topology_scheduler.py",
       "aura_topology_snapshot_builder.py",
       "aura_topology_state_machine.py",
       "aura_topology_sync.py",
@@ -287769,6 +288356,7 @@
       "tests/test_aura_token_economy_orchestrator.py",
       "tests/test_aura_topological_context_anchor.py",
       "tests/test_aura_topology_health.py",
+      "tests/test_aura_topology_scheduler.py",
       "tests/test_aura_unified_memory_continuity.py",
       "tests/test_aura_unified_memory_continuity_learning.py",
       "tests/test_aura_unified_memory_continuity_toolchain.py",
@@ -377462,6 +378050,326 @@
         "file_digest8": "26708dbb45b6e6a0"
       },
       {
+        "semantic_id": "aura_topology_scheduler.py#class:ContractViolation:e8e3c3af94310a40",
+        "name": "ContractViolation",
+        "kind": "class",
+        "file": "aura_topology_scheduler.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "a02bf3924c67f01d",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#class:EvidenceStateV1:1be6955adbc0cee3",
+        "name": "EvidenceStateV1",
+        "kind": "class",
+        "file": "aura_topology_scheduler.py",
+        "line": 210,
+        "end_line": 244,
+        "signature_hash": "3cb51cb96a95d57e",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#class:FailureStateV1:f7e9484a85981ad7",
+        "name": "FailureStateV1",
+        "kind": "class",
+        "file": "aura_topology_scheduler.py",
+        "line": 345,
+        "end_line": 363,
+        "signature_hash": "9d601192fe8f3b4b",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#class:NetworkStateV1:74e4a6c8a21ab101",
+        "name": "NetworkStateV1",
+        "kind": "class",
+        "file": "aura_topology_scheduler.py",
+        "line": 323,
+        "end_line": 341,
+        "signature_hash": "2faecf70d1f0b5d0",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#class:PhaseDecisionV1:cc4c3607351d3612",
+        "name": "PhaseDecisionV1",
+        "kind": "class",
+        "file": "aura_topology_scheduler.py",
+        "line": 534,
+        "end_line": 552,
+        "signature_hash": "697fa2bf713ca899",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#class:PhaseReason:e193c3a87c79c346",
+        "name": "PhaseReason",
+        "kind": "class",
+        "file": "aura_topology_scheduler.py",
+        "line": 159,
+        "end_line": 169,
+        "signature_hash": "1fcac4f8e0c30c8d",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#class:ResourceStateV1:9b855f03566b7f66",
+        "name": "ResourceStateV1",
+        "kind": "class",
+        "file": "aura_topology_scheduler.py",
+        "line": 285,
+        "end_line": 319,
+        "signature_hash": "fa40f3e2d7be652e",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#class:SchedulerPhase:949e42b7075cae4b",
+        "name": "SchedulerPhase",
+        "kind": "class",
+        "file": "aura_topology_scheduler.py",
+        "line": 147,
+        "end_line": 156,
+        "signature_hash": "43c7f1adcbdc5f43",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#class:SchedulerStateV1:bd2478e417246296",
+        "name": "SchedulerStateV1",
+        "kind": "class",
+        "file": "aura_topology_scheduler.py",
+        "line": 367,
+        "end_line": 530,
+        "signature_hash": "ab72382a52dbd748",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#class:WorkerStateV1:426ae9b1d0b6471a",
+        "name": "WorkerStateV1",
+        "kind": "class",
+        "file": "aura_topology_scheduler.py",
+        "line": 248,
+        "end_line": 281,
+        "signature_hash": "bdfca89b2fd9c26b",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#class:WorkloadStateV1:0cb46389b1d9bb86",
+        "name": "WorkloadStateV1",
+        "kind": "class",
+        "file": "aura_topology_scheduler.py",
+        "line": 173,
+        "end_line": 206,
+        "signature_hash": "f95d8b8c9e35ca64",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#function:_basis_points:5557ab671e9fef86",
+        "name": "_basis_points",
+        "kind": "function",
+        "file": "aura_topology_scheduler.py",
+        "line": 63,
+        "end_line": 67,
+        "signature_hash": "13ba74aadef79aae",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#function:_canonical_edge_set:9042ff1c9128fcee",
+        "name": "_canonical_edge_set",
+        "kind": "function",
+        "file": "aura_topology_scheduler.py",
+        "line": 122,
+        "end_line": 144,
+        "signature_hash": "c8db6d6815b6a781",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#function:_canonical_string_set:23bf341712d50338",
+        "name": "_canonical_string_set",
+        "kind": "function",
+        "file": "aura_topology_scheduler.py",
+        "line": 115,
+        "end_line": 119,
+        "signature_hash": "be6184f477b33aa8",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#function:_count:413e310d075a3306",
+        "name": "_count",
+        "kind": "function",
+        "file": "aura_topology_scheduler.py",
+        "line": 43,
+        "end_line": 53,
+        "signature_hash": "99cd72e34109f6d6",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#function:_digest:9edded6712215d90",
+        "name": "_digest",
+        "kind": "function",
+        "file": "aura_topology_scheduler.py",
+        "line": 36,
+        "end_line": 40,
+        "signature_hash": "9018aaa438b0fe0c",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#function:_hash_domain:4d643e7af5d50f94",
+        "name": "_hash_domain",
+        "kind": "function",
+        "file": "aura_topology_scheduler.py",
+        "line": 107,
+        "end_line": 112,
+        "signature_hash": "79a5f025f0bfdfcf",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#function:_nfc:b954ee05dd2781cd",
+        "name": "_nfc",
+        "kind": "function",
+        "file": "aura_topology_scheduler.py",
+        "line": 27,
+        "end_line": 33,
+        "signature_hash": "aa5eb10865943afd",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#function:_normalize_json:35684d51ebd91ed0",
+        "name": "_normalize_json",
+        "kind": "function",
+        "file": "aura_topology_scheduler.py",
+        "line": 70,
+        "end_line": 93,
+        "signature_hash": "532848d4e7a0da7b",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#function:_positive_count:69b81b3d05381f03",
+        "name": "_positive_count",
+        "kind": "function",
+        "file": "aura_topology_scheduler.py",
+        "line": 56,
+        "end_line": 60,
+        "signature_hash": "9ba08409772a5451",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#function:canonical_json_bytes:f78d89ebdaa83837",
+        "name": "canonical_json_bytes",
+        "kind": "function",
+        "file": "aura_topology_scheduler.py",
+        "line": 96,
+        "end_line": 104,
+        "signature_hash": "946642516763d58b",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#function:classify_phase:ddf2f1266b8df7a2",
+        "name": "classify_phase",
+        "kind": "function",
+        "file": "aura_topology_scheduler.py",
+        "line": 555,
+        "end_line": 611,
+        "signature_hash": "08249ff70609085a",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#method:EvidenceStateV1.protected_body:4f73c969376cc424",
+        "name": "EvidenceStateV1.protected_body",
+        "kind": "method",
+        "file": "aura_topology_scheduler.py",
+        "line": 220,
+        "end_line": 244,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#method:FailureStateV1.protected_body:5dcfc388b39c6a53",
+        "name": "FailureStateV1.protected_body",
+        "kind": "method",
+        "file": "aura_topology_scheduler.py",
+        "line": 351,
+        "end_line": 363,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#method:NetworkStateV1.protected_body:6879f24b0b302ce0",
+        "name": "NetworkStateV1.protected_body",
+        "kind": "method",
+        "file": "aura_topology_scheduler.py",
+        "line": 330,
+        "end_line": 341,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#method:PhaseDecisionV1.decision_digest:9ba4c54511547807",
+        "name": "PhaseDecisionV1.decision_digest",
+        "kind": "method",
+        "file": "aura_topology_scheduler.py",
+        "line": 551,
+        "end_line": 552,
+        "signature_hash": "af940db68c44de13",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#method:PhaseDecisionV1.protected_body:fa94f1dc783dfc57",
+        "name": "PhaseDecisionV1.protected_body",
+        "kind": "method",
+        "file": "aura_topology_scheduler.py",
+        "line": 539,
+        "end_line": 549,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#method:ResourceStateV1.protected_body:39c353527b074a80",
+        "name": "ResourceStateV1.protected_body",
+        "kind": "method",
+        "file": "aura_topology_scheduler.py",
+        "line": 295,
+        "end_line": 319,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#method:SchedulerStateV1.protected_body:e93f8d4f686cdbe1",
+        "name": "SchedulerStateV1.protected_body",
+        "kind": "method",
+        "file": "aura_topology_scheduler.py",
+        "line": 410,
+        "end_line": 523,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#method:SchedulerStateV1.state_digest:af382b4f567230ab",
+        "name": "SchedulerStateV1.state_digest",
+        "kind": "method",
+        "file": "aura_topology_scheduler.py",
+        "line": 525,
+        "end_line": 530,
+        "signature_hash": "c6ea24c71eee3a1b",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#method:WorkerStateV1.protected_body:b03ceaa8fd58ad6b",
+        "name": "WorkerStateV1.protected_body",
+        "kind": "method",
+        "file": "aura_topology_scheduler.py",
+        "line": 256,
+        "end_line": 281,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
+        "semantic_id": "aura_topology_scheduler.py#method:WorkloadStateV1.protected_body:843f5b51ff91b6ab",
+        "name": "WorkloadStateV1.protected_body",
+        "kind": "method",
+        "file": "aura_topology_scheduler.py",
+        "line": 181,
+        "end_line": 206,
+        "signature_hash": "ba2396d20a0f4966",
+        "file_digest8": "4a2714e29dcf9535"
+      },
+      {
         "semantic_id": "aura_topology_snapshot_builder.py#class:AuraTopologySnapshotBuilder:057ba34f0f1e5ed9",
         "name": "AuraTopologySnapshotBuilder",
         "kind": "class",
@@ -442292,6 +443200,186 @@
         "file_digest8": "8ba003d34caded85"
       },
       {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:evidence:4b0957ce0e536944",
+        "name": "evidence",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 37,
+        "end_line": 48,
+        "signature_hash": "1190fcee4f1a3a43",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:failure:8397068e413a63a8",
+        "name": "failure",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 85,
+        "end_line": 92,
+        "signature_hash": "54a4e59c05ca025b",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:network:a2327c539ade54c4",
+        "name": "network",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 75,
+        "end_line": 82,
+        "signature_hash": "ad8e0965703be54a",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:resources:16c13cd6b291fb24",
+        "name": "resources",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 62,
+        "end_line": 72,
+        "signature_hash": "c856283ac83252eb",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:state:00247f438b98adff",
+        "name": "state",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 95,
+        "end_line": 131,
+        "signature_hash": "a84b8f7bf3e87132",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_bool_is_not_accepted_as_integer:8b6ca499bdadc07b",
+        "name": "test_bool_is_not_accepted_as_integer",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 304,
+        "end_line": 306,
+        "signature_hash": "eb3965a325a142ad",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_decision_digest_is_deterministic_and_state_bound:3e897d878e4381ec",
+        "name": "test_decision_digest_is_deterministic_and_state_bound",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 315,
+        "end_line": 320,
+        "signature_hash": "669407daa8ed30d6",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_duplicate_and_self_dependency_edges_fail_closed:4d56b5593f97b838",
+        "name": "test_duplicate_and_self_dependency_edges_fail_closed",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 278,
+        "end_line": 289,
+        "signature_hash": "f13abe1ddcd678ff",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_hard_guard_dominates_recovery_and_workflow_signals:ed32e4abc83f4120",
+        "name": "test_hard_guard_dominates_recovery_and_workflow_signals",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 223,
+        "end_line": 230,
+        "signature_hash": "b7e282593ad5a0d7",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_invalid_basis_points_creation_stage_and_digest_fail_closed:44c987235aeaad84",
+        "name": "test_invalid_basis_points_creation_stage_and_digest_fail_closed",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 292,
+        "end_line": 301,
+        "signature_hash": "87911300843e70f3",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_phase_classifier_explicit_order:fcd2e6231ffda11e",
+        "name": "test_phase_classifier_explicit_order",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 217,
+        "end_line": 220,
+        "signature_hash": "e181801839cdcd6d",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_phase_decision_contains_no_topology_or_worker_recommendation:aef15a65201c7d5a",
+        "name": "test_phase_decision_contains_no_topology_or_worker_recommendation",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 270,
+        "end_line": 275,
+        "signature_hash": "0f683dbda2e96db5",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_recovery_dominates_discovery_and_candidate_work:55a69fc10c77ef8f",
+        "name": "test_recovery_dominates_discovery_and_candidate_work",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 233,
+        "end_line": 239,
+        "signature_hash": "d115048392b8571b",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_state_digest_binds_source_currentness_authority_and_creation_basis:06aeca446a95dc24",
+        "name": "test_state_digest_binds_source_currentness_authority_and_creation_basis",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 262,
+        "end_line": 267,
+        "signature_hash": "08b07d0b24eac7f7",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_state_digest_is_permutation_invariant_for_set_like_inputs:9532e8769742378b",
+        "name": "test_state_digest_is_permutation_invariant_for_set_like_inputs",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 242,
+        "end_line": 259,
+        "signature_hash": "848ab14070bc9e16",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:test_state_is_frozen:51bafa7fd260ecce",
+        "name": "test_state_is_frozen",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 309,
+        "end_line": 312,
+        "signature_hash": "62f3b87a50d0d8fd",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:workers:ebb094738297c04b",
+        "name": "workers",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 51,
+        "end_line": 59,
+        "signature_hash": "ce0ade106acfc839",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
+        "semantic_id": "tests/test_aura_topology_scheduler.py#function:workload:869ba4ee93cd255a",
+        "name": "workload",
+        "kind": "function",
+        "file": "tests/test_aura_topology_scheduler.py",
+        "line": 25,
+        "end_line": 34,
+        "signature_hash": "1b41d4fa4f19fbab",
+        "file_digest8": "89916693a849d73e"
+      },
+      {
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_act_envelope:f7c4a054d880ff8f",
         "name": "_act_envelope",
         "kind": "function",
@@ -446122,7 +447210,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f54ee2e4da0bb0db05767925275e2b15",
-    "payload_hash": "0fa1918e8b28a9b69a948e98a0f6517d"
+    "record_fingerprint": "7ce0fbd759eb3d1023160d3085b7c77d",
+    "payload_hash": "3345643606935390cae6df97df03fcbf"
   }
 }
