@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1787365538,
+  "generated_at_unix": 1787389422,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1640,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -176,6 +176,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/project006-provider-handoff-integration.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -1629,7 +1630,9 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/provider_sidecar_reference/README.md",
+      "tools/project006/provider_sidecar_reference/provider_handoff.py",
       "tools/project006/provider_sidecar_reference/provider_sidecar.py",
+      "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
@@ -1756,16 +1759,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1640,
-      "bytes": 26399528,
-      "tokens_est": 6590300,
+      "files": 1643,
+      "bytes": 26416784,
+      "tokens_est": 6594616,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1000,
-        "schema_or_lexicon": 271,
+        "python_module": 1002,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3451,6 +3454,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "kind": "function",
+        "line": 237,
+        "end_line": 256,
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:main:8cb9777d472c521a",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -157084,6 +157095,96 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "HandoffError": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "kind": "class",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#class:HandoffError:7aa436d895b7de69",
+        "signature_hash": "083126e17ff910bf"
+      }
+    ],
+    "_sha256_json": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 66,
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:_sha256_json:6a0620197424b88b",
+        "signature_hash": "583097ecac7a5ede"
+      }
+    ],
+    "_require_ref": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 75,
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:_require_ref:f1e3931090008d3f",
+        "signature_hash": "35fbd7b9677c892c"
+      }
+    ],
+    "_require_digest": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 82,
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:_require_digest:b68f3883752ce8ea",
+        "signature_hash": "cbcc976fe25fd5ba"
+      }
+    ],
+    "_require_int": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 90,
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:_require_int:92c6d1f236fb8e59",
+        "signature_hash": "c53724a27bd8ddfe"
+      }
+    ],
+    "_validate_messages": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 111,
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:_validate_messages:e09f368ddc000869",
+        "signature_hash": "bb9bb6c2541afc9b"
+      }
+    ],
+    "validate_handoff": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 179,
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:validate_handoff:b8a8e652d3fe747c",
+        "signature_hash": "dae0b566d0d916ae"
+      }
+    ],
+    "dispatch_handoff": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "kind": "function",
+        "line": 182,
+        "end_line": 224,
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:dispatch_handoff:e312b4d718c65484",
+        "signature_hash": "4da805ffe3c79000"
+      }
+    ],
+    "_credential_resolver": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "kind": "function",
+        "line": 227,
+        "end_line": 234,
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:_credential_resolver:19e1188dc8d85191",
+        "signature_hash": "b296c433c3defcfe"
+      }
+    ],
     "SidecarStatus": [
       {
         "file": "tools/project006/provider_sidecar_reference/provider_sidecar.py",
@@ -157506,6 +157607,14 @@
     ],
     "_credentials": [
       {
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#function:_credentials:ea7115a93580f854",
+        "signature_hash": "a3e30e8eb281aff5"
+      },
+      {
         "file": "tools/project006/provider_sidecar_reference/test_provider_sidecar.py",
         "kind": "function",
         "line": 28,
@@ -157532,6 +157641,14 @@
     ],
     "_SuccessTransport": [
       {
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 41,
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#class:_SuccessTransport:5410c47f76faf0b6",
+        "signature_hash": "e6797875abf014b9"
+      },
+      {
         "file": "tools/project006/provider_sidecar_reference/test_provider_sidecar.py",
         "kind": "class",
         "line": 32,
@@ -157549,6 +157666,14 @@
       }
     ],
     "_SuccessTransport.__init__": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:_SuccessTransport.__init__:697178a405705296",
+        "signature_hash": "3d77650513b79756"
+      },
       {
         "file": "tools/project006/provider_sidecar_reference/test_provider_sidecar.py",
         "kind": "method",
@@ -157568,6 +157693,14 @@
     ],
     "_SuccessTransport.post": [
       {
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 41,
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:_SuccessTransport.post:8d4e212e93e71fb8",
+        "signature_hash": "759f8e7cb4ecc01c"
+      },
+      {
         "file": "tools/project006/provider_sidecar_reference/test_provider_sidecar.py",
         "kind": "method",
         "line": 36,
@@ -157582,6 +157715,86 @@
         "end_line": 35,
         "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py#method:_SuccessTransport.post:2f160fbe1f582e60",
         "signature_hash": "759f8e7cb4ecc01c"
+      }
+    ],
+    "_handoff": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 61,
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#function:_handoff:20ac31081654865f",
+        "signature_hash": "32a453f855736dbc"
+      }
+    ],
+    "ProviderHandoffTests": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "kind": "class",
+        "line": 64,
+        "end_line": 165,
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#class:ProviderHandoffTests:9305513457e4995f",
+        "signature_hash": "dd2f6474846e6f4d"
+      }
+    ],
+    "ProviderHandoffTests.test_valid_handoff_executes_provider_sidecar_and_binds_receipt": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 91,
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:ProviderHandoffTests.test_valid_handoff_executes_provider_sidecar_and_binds_receipt:e8cc09e1c81b0842",
+        "signature_hash": "55c7130740d797a6"
+      }
+    ],
+    "ProviderHandoffTests.test_missing_lease_generation_fails_closed_before_provider_call": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 104,
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:ProviderHandoffTests.test_missing_lease_generation_fails_closed_before_provider_call:74f0c3c233d5ad06",
+        "signature_hash": "a356d5351673a25d"
+      }
+    ],
+    "ProviderHandoffTests.test_missing_validation_receipt_fails_closed": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 110,
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:ProviderHandoffTests.test_missing_validation_receipt_fails_closed:22691c8240cd9452",
+        "signature_hash": "27f3d5e98765b171"
+      }
+    ],
+    "ProviderHandoffTests.test_arbitrary_endpoint_or_credential_field_is_rejected": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 121,
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:ProviderHandoffTests.test_arbitrary_endpoint_or_credential_field_is_rejected:4d829eed7d580bf3",
+        "signature_hash": "2ef1218937574b7c"
+      }
+    ],
+    "ProviderHandoffTests.test_fencing_token_changes_handoff_and_provider_attempt_identity": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 145,
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:ProviderHandoffTests.test_fencing_token_changes_handoff_and_provider_attempt_identity:e665ee4f79684722",
+        "signature_hash": "5a0d83cede168611"
+      }
+    ],
+    "ProviderHandoffTests.test_message_change_changes_provider_attempt_identity": [
+      {
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 165,
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:ProviderHandoffTests.test_message_change_changes_provider_attempt_identity:fa98011d7ad3d647",
+        "signature_hash": "57e26bc627f81b28"
       }
     ],
     "_429Transport": [
@@ -159543,6 +159756,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/project006-provider-handoff-integration.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
@@ -159888,6 +160102,10 @@
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/project006-provider-handoff-integration.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python tools/apply_sco_construction_completion.py": [
       ".github/workflows/sco-construction-e9-e14-completion.yml"
@@ -160505,9 +160723,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -171441,6 +171656,63 @@
         0.087905,
         -0.204351,
         -0.156402
+      ]
+    },
+    {
+      "path": ".github/workflows/project006-provider-handoff-integration.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1237,
+      "lines": 39,
+      "tokens_est": 310,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          30
+        ],
+        "python -m unittest": [
+          36
+        ]
+      },
+      "topology": {},
+      "digest8": "a9567afbb1b9819d",
+      "vector": [
+        0.298564,
+        -0.135035,
+        -0.120169,
+        0.07557,
+        -0.276264,
+        -0.308475,
+        0.073092,
+        0.236621,
+        -0.25892,
+        -0.117691,
+        0.085481,
+        0.065659,
+        0.172201,
+        0.063182,
+        -0.154857,
+        -0.038404,
+        0.07557,
+        -0.087959,
+        -0.125124,
+        0.174678,
+        -0.177156,
+        -0.209366,
+        -0.154857,
+        -0.033449,
+        -0.308475,
+        0.167245,
+        0.224233,
+        0.293608,
+        -0.22671,
+        0.021061,
+        0.115213,
+        0.058226
       ]
     },
     {
@@ -263762,6 +264034,53 @@
       ]
     },
     {
+      "path": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9806,
+      "lines": 261,
+      "tokens_est": 2452,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1c7d59ae6ad0be00",
+      "vector": [
+        0.086435,
+        0.001067,
+        -0.003201,
+        0.246499,
+        -0.133387,
+        -0.250767,
+        -0.126984,
+        -0.167534,
+        0.167534,
+        0.028812,
+        -0.120582,
+        -0.182473,
+        -0.203815,
+        0.171802,
+        -0.272109,
+        0.182473,
+        0.223023,
+        0.065093,
+        -0.088569,
+        0.259304,
+        -0.094971,
+        -0.146192,
+        -0.25717,
+        0.094971,
+        -0.13979,
+        0.186742,
+        -0.069361,
+        0.261438,
+        -0.246499,
+        -0.237962,
+        -0.240096,
+        -0.120582
+      ]
+    },
+    {
       "path": "tools/project006/provider_sidecar_reference/provider_sidecar.py",
       "role": "python_module",
       "binary": false,
@@ -263806,6 +264125,53 @@
         0.11472,
         0.247181,
         0.062682
+      ]
+    },
+    {
+      "path": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6213,
+      "lines": 170,
+      "tokens_est": 1554,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "622e6a2150a5a782",
+      "vector": [
+        -0.221755,
+        -0.092491,
+        -0.248499,
+        0.232898,
+        -0.090262,
+        0.063518,
+        -0.215069,
+        -0.235127,
+        0.228441,
+        -0.275243,
+        0.056832,
+        0.052374,
+        -0.239584,
+        -0.244042,
+        0.232898,
+        -0.083576,
+        -0.139293,
+        -0.177181,
+        -0.061289,
+        -0.005572,
+        -0.141522,
+        0.166038,
+        -0.014486,
+        0.277472,
+        -0.257414,
+        -0.023401,
+        0.065746,
+        0.195011,
+        -0.23067,
+        0.206154,
+        0.11032,
+        -0.063518
       ]
     },
     {
@@ -287901,16 +288267,16 @@
     }
   },
   "summary": {
-    "file_count": 1640,
-    "total_bytes": 26399528,
-    "text_tokens_est": 6590300,
+    "file_count": 1643,
+    "total_bytes": 26416784,
+    "text_tokens_est": 6594616,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1000,
-      "schema_or_lexicon": 271,
+      "python_module": 1002,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288096,6 +288462,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/project006-provider-handoff-integration.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -289549,7 +289916,9 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/provider_sidecar_reference/README.md",
+      "tools/project006/provider_sidecar_reference/provider_handoff.py",
       "tools/project006/provider_sidecar_reference/provider_sidecar.py",
+      "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
@@ -446630,6 +446999,106 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#class:HandoffError:7aa436d895b7de69",
+        "name": "HandoffError",
+        "kind": "class",
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "083126e17ff910bf",
+        "file_digest8": "1c7d59ae6ad0be00"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:_credential_resolver:19e1188dc8d85191",
+        "name": "_credential_resolver",
+        "kind": "function",
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "line": 227,
+        "end_line": 234,
+        "signature_hash": "b296c433c3defcfe",
+        "file_digest8": "1c7d59ae6ad0be00"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:_require_digest:b68f3883752ce8ea",
+        "name": "_require_digest",
+        "kind": "function",
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "line": 78,
+        "end_line": 82,
+        "signature_hash": "cbcc976fe25fd5ba",
+        "file_digest8": "1c7d59ae6ad0be00"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:_require_int:92c6d1f236fb8e59",
+        "name": "_require_int",
+        "kind": "function",
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "line": 85,
+        "end_line": 90,
+        "signature_hash": "c53724a27bd8ddfe",
+        "file_digest8": "1c7d59ae6ad0be00"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:_require_ref:f1e3931090008d3f",
+        "name": "_require_ref",
+        "kind": "function",
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "line": 69,
+        "end_line": 75,
+        "signature_hash": "35fbd7b9677c892c",
+        "file_digest8": "1c7d59ae6ad0be00"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:_sha256_json:6a0620197424b88b",
+        "name": "_sha256_json",
+        "kind": "function",
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "line": 58,
+        "end_line": 66,
+        "signature_hash": "583097ecac7a5ede",
+        "file_digest8": "1c7d59ae6ad0be00"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:_validate_messages:e09f368ddc000869",
+        "name": "_validate_messages",
+        "kind": "function",
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "line": 93,
+        "end_line": 111,
+        "signature_hash": "bb9bb6c2541afc9b",
+        "file_digest8": "1c7d59ae6ad0be00"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:dispatch_handoff:e312b4d718c65484",
+        "name": "dispatch_handoff",
+        "kind": "function",
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "line": 182,
+        "end_line": 224,
+        "signature_hash": "4da805ffe3c79000",
+        "file_digest8": "1c7d59ae6ad0be00"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:main:8cb9777d472c521a",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "line": 237,
+        "end_line": 256,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "1c7d59ae6ad0be00"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/provider_handoff.py#function:validate_handoff:b8a8e652d3fe747c",
+        "name": "validate_handoff",
+        "kind": "function",
+        "file": "tools/project006/provider_sidecar_reference/provider_handoff.py",
+        "line": 114,
+        "end_line": 179,
+        "signature_hash": "dae0b566d0d916ae",
+        "file_digest8": "1c7d59ae6ad0be00"
+      },
+      {
         "semantic_id": "tools/project006/provider_sidecar_reference/provider_sidecar.py#class:CircuitState:dd1a0732a49659f1",
         "name": "CircuitState",
         "kind": "class",
@@ -447068,6 +447537,126 @@
         "end_line": 87,
         "signature_hash": "7616db00ab78cfed",
         "file_digest8": "26458b135ce0f3db"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#class:ProviderHandoffTests:9305513457e4995f",
+        "name": "ProviderHandoffTests",
+        "kind": "class",
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "line": 64,
+        "end_line": 165,
+        "signature_hash": "dd2f6474846e6f4d",
+        "file_digest8": "622e6a2150a5a782"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#class:_SuccessTransport:5410c47f76faf0b6",
+        "name": "_SuccessTransport",
+        "kind": "class",
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "line": 24,
+        "end_line": 41,
+        "signature_hash": "e6797875abf014b9",
+        "file_digest8": "622e6a2150a5a782"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#function:_credentials:ea7115a93580f854",
+        "name": "_credentials",
+        "kind": "function",
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "a3e30e8eb281aff5",
+        "file_digest8": "622e6a2150a5a782"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#function:_handoff:20ac31081654865f",
+        "name": "_handoff",
+        "kind": "function",
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "line": 44,
+        "end_line": 61,
+        "signature_hash": "32a453f855736dbc",
+        "file_digest8": "622e6a2150a5a782"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:ProviderHandoffTests.test_arbitrary_endpoint_or_credential_field_is_rejected:4d829eed7d580bf3",
+        "name": "ProviderHandoffTests.test_arbitrary_endpoint_or_credential_field_is_rejected",
+        "kind": "method",
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "line": 112,
+        "end_line": 121,
+        "signature_hash": "2ef1218937574b7c",
+        "file_digest8": "622e6a2150a5a782"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:ProviderHandoffTests.test_fencing_token_changes_handoff_and_provider_attempt_identity:e665ee4f79684722",
+        "name": "ProviderHandoffTests.test_fencing_token_changes_handoff_and_provider_attempt_identity",
+        "kind": "method",
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "line": 123,
+        "end_line": 145,
+        "signature_hash": "5a0d83cede168611",
+        "file_digest8": "622e6a2150a5a782"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:ProviderHandoffTests.test_message_change_changes_provider_attempt_identity:fa98011d7ad3d647",
+        "name": "ProviderHandoffTests.test_message_change_changes_provider_attempt_identity",
+        "kind": "method",
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "line": 147,
+        "end_line": 165,
+        "signature_hash": "57e26bc627f81b28",
+        "file_digest8": "622e6a2150a5a782"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:ProviderHandoffTests.test_missing_lease_generation_fails_closed_before_provider_call:74f0c3c233d5ad06",
+        "name": "ProviderHandoffTests.test_missing_lease_generation_fails_closed_before_provider_call",
+        "kind": "method",
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "line": 93,
+        "end_line": 104,
+        "signature_hash": "a356d5351673a25d",
+        "file_digest8": "622e6a2150a5a782"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:ProviderHandoffTests.test_missing_validation_receipt_fails_closed:22691c8240cd9452",
+        "name": "ProviderHandoffTests.test_missing_validation_receipt_fails_closed",
+        "kind": "method",
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "line": 106,
+        "end_line": 110,
+        "signature_hash": "27f3d5e98765b171",
+        "file_digest8": "622e6a2150a5a782"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:ProviderHandoffTests.test_valid_handoff_executes_provider_sidecar_and_binds_receipt:e8cc09e1c81b0842",
+        "name": "ProviderHandoffTests.test_valid_handoff_executes_provider_sidecar_and_binds_receipt",
+        "kind": "method",
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "line": 65,
+        "end_line": 91,
+        "signature_hash": "55c7130740d797a6",
+        "file_digest8": "622e6a2150a5a782"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:_SuccessTransport.__init__:697178a405705296",
+        "name": "_SuccessTransport.__init__",
+        "kind": "method",
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "622e6a2150a5a782"
+      },
+      {
+        "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_handoff.py#method:_SuccessTransport.post:8d4e212e93e71fb8",
+        "name": "_SuccessTransport.post",
+        "kind": "method",
+        "file": "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
+        "line": 28,
+        "end_line": 41,
+        "signature_hash": "759f8e7cb4ecc01c",
+        "file_digest8": "622e6a2150a5a782"
       },
       {
         "semantic_id": "tools/project006/provider_sidecar_reference/test_provider_sidecar.py#class:ProviderSidecarReferenceTests.test_queue_bound_fails_closed_when_capacity_is_occupied.BlockingTransport:ad4ada0275cec6f3",
@@ -449400,7 +449989,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "d393b5b0a4850b11b49e82c6fa76ffde",
-    "payload_hash": "184a6b58cd0f090320a2345e17db91b4"
+    "record_fingerprint": "dbe7df1c8d05675cc32e2b2fcb709d8c",
+    "payload_hash": "6a02fe204004dd0387525b5d6f1b4114"
   }
 }

@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1640
-- **total_bytes**: 26399528
-- **text_tokens_est**: 6590300
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1000, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1643
+- **total_bytes**: 26416784
+- **text_tokens_est**: 6594616
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1002, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1640,
+  "repo_file_count": 1643,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -194,6 +194,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/phase3-compass-bounded-projection-repair.yml",
     ".github/workflows/phase3-local-verification-bundle.yml",
     ".github/workflows/pr138-grounded-phase-integration.yml",
+    ".github/workflows/project006-provider-handoff-integration.yml",
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
     ".github/workflows/render-four-tab-demo.yml",
@@ -1647,7 +1648,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/project006/provider_sidecar_reference/README.md",
+    "tools/project006/provider_sidecar_reference/provider_handoff.py",
     "tools/project006/provider_sidecar_reference/provider_sidecar.py",
+    "tools/project006/provider_sidecar_reference/test_provider_handoff.py",
     "tools/project006/provider_sidecar_reference/test_provider_sidecar.py",
     "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3.py",
     "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
@@ -1780,16 +1783,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1640,
-  "bytes": 26399528,
-  "tokens_est": 6590300,
+  "files": 1643,
+  "bytes": 26416784,
+  "tokens_est": 6594616,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 235,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1000,
-    "schema_or_lexicon": 271,
+    "python_module": 1002,
+    "schema_or_lexicon": 272,
     "support_file": 49
   }
 }
