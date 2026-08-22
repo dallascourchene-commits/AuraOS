@@ -40,8 +40,13 @@ jobs:
           set -euo pipefail
           exact_base='f616e314ee5aaa4d85f14012aa6b324d0a2ec558'
           git merge-base --is-ancestor "$exact_base" HEAD
-          changed="$(git diff --name-only "$exact_base" HEAD)"
-          test "$changed" = '.github/workflows/wp04-r5-verification-9c7e.yml'
+          printf '%s\n' \
+            '.aura/CODEMAP.json' \
+            '.aura/CODEMAP.md' \
+            '.github/workflows/wp04-r5-verification-9c7e.yml' \
+            > /tmp/expected_changed
+          git diff --name-only "$exact_base" HEAD | sort > /tmp/actual_changed
+          diff -u /tmp/expected_changed /tmp/actual_changed
           test "$(git hash-object tools/project006/provider_sidecar_reference/provider_sidecar.py)" = 'df74ec24e548d7051a61d7b3091264769730eaf5'
           test "$(git hash-object tools/project006/provider_sidecar_reference/test_provider_sidecar.py)" = '07bf55525a4cca1cb72e4d33061c5f49eb7cf235'
           test "$(git hash-object tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3.py)" = '3c7fff19f4a9acd77817565098aa66ad8db984db'
