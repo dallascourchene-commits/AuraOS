@@ -42,6 +42,10 @@ _FORBIDDEN_CONTROL_KEYS = frozenset(
         "host",
         "hostname",
         "route_ref",
+        "route",
+        "lease",
+        "fence",
+        "currentness",
         "provider",
         "provider_name",
         "model",
@@ -299,6 +303,8 @@ def execute_admitted_command(
     required ACK failure cannot silently begin provider work.
     """
     command = validate_admitted_command(raw)
+    if emit_ack is None:
+        raise CommandHookError("ACK_SINK_REQUIRED")
     request_digest = _canonical_digest(command)
     base = _record_base(command, request_digest)
     ack = {
@@ -306,11 +312,10 @@ def execute_admitted_command(
         "record_type": "ACK",
         "status": "EXECUTOR_CALLBACK_ACCEPTED",
     }
-    if emit_ack is not None:
-        try:
-            emit_ack(ack)
-        except Exception as exc:
-            raise CommandHookError("ACK_EMIT_FAILED") from exc
+    try:
+        emit_ack(ack)
+    except Exception as exc:
+        raise CommandHookError("ACK_EMIT_FAILED") from exc
 
     try:
         executor = executor_factory()
