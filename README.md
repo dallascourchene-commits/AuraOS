@@ -1,5 +1,47 @@
 # AuraOS
 
+> [!IMPORTANT]
+> ## Current architectural status — Paper X now supersedes this implementation
+>
+> **Paper X is the final culmination of the foundational AuraOS work and is now the current architectural specification for AuraOS.** The code in this GitHub repository preserves important implementation lineage, benchmark surfaces, runtime primitives, and working components, but it does **not yet fully embody the architecture that now exists across Paper X, Aura Drive, and Aura Drive 2.**
+>
+> AuraOS was originally developed before we understood that the original runtime itself should be integrated into the Aura Drive semantic/coordinate substrate. As Aura Drive and Aura Drive 2 developed, that changed the design substantially: instead of repeatedly asking an LLM or swarm to reconstruct routine state and orchestration, the local AuraOS substrate can increasingly take over deterministic, source-bound, repeatable work and wake a model only for the unresolved residual.
+>
+> The redesign target is for the Drive-integrated AuraOS substrate to absorb roughly **40–80% of suitable routine orchestration work** where it is cheaper and lawful to do so — for example: assembling Work Capsules, gathering and routing research, resolving semantic coordinates, performing L0→L4 hydration, maintaining provenance/currentness, compiling affected cones, preparing receipts, reconciling state, and packaging successor handoffs. **That 40–80% range is an engineering target/hypothesis, not yet a universal measured benchmark.** Each class of work still has to earn migration through matched cost/correctness tests.
+>
+> This matters because Paper X already reports bounded evidence of substantial reuse at several layers, including provider-side cache reuse and a separately accounted Aura-level coordinate-result hit that avoided a repeated provider call. The next redesign phase is intended to push more repeatable work *below* the expensive model layer so that the savings compound across repeated objectives rather than being limited to prompt caching alone.
+>
+> The current direction can be summarized as:
+>
+> ```text
+> Human / Agent Intent
+>        ↓
+> Aura Drive semantic + coordinate world
+>        ↓
+> AuraOS local deterministic / low-cost execution
+>        ↓
+> LLM / swarm only for unresolved residual work
+>        ↓
+> Construct → Challenge → Verify
+>        ↓
+> atomic consequence commit + SuccessorFrame
+>        ↓
+> reusable coordinates / receipts / affected-cone state
+> ```
+>
+> **Google Drive is the current working carrier for Aura Drive; it is not intended to become Aura's permanent semantic root or mandatory infrastructure dependency.** Paper X remains provider-neutral: identity, source, currentness, authority, coordinates, receipts, and reopenability must survive migration to local filesystems, databases, object stores, peer fabrics, or other future carriers.
+>
+> ### What this means for this repository right now
+>
+> - **Paper X supersedes the current repository as the architectural authority.** See [`PAPER_X_ARXIV_DISCLOSURE.pdf`](./PAPER_X_ARXIV_DISCLOSURE.pdf) and the canonical Zenodo record below.
+> - **The existing code is not being discarded.** It is the implementation lineage that is now being reconciled, simplified, and rebuilt against the newer Paper X / Aura Drive architecture.
+> - **The GitHub implementation is currently behind the working Aura Drive architecture.** Some newer mechanisms, equations, memory/coordinate systems, HyperDrive/HyperScale refinements, regenerative state rules, and the unified ephemeral Arena model are not yet fully represented in this codebase.
+> - **AuraOS is now being radically redesigned** so the deterministic runtime, semantic coordinate memory, caches, work-capsule machinery, research gathering, affected-cone recomputation, verification, and execution surfaces operate as one integrated substrate rather than as separate generations of the project.
+> - **Existing benchmark results in this README remain scoped evidence for the code/harness that produced them.** They should not be read as proof that the repository already implements the complete Paper X architecture.
+> - The redesign goal is not “use more agents.” It is to **reuse more verified work, hydrate less irrelevant state, perform more routine work deterministically, and spend expensive model inference only where it can change the governed consequence.**
+>
+> In short: **Paper X closed the foundational design phase. The current engineering phase is to rebuild AuraOS so the code catches up to that design.**
+
 AuraOS is a minimal, local-first substrate for deterministic state, recursive coordination, and peer-to-peer execution. It is designed around a simple operating law: **do not feed the system the world; compile the smallest source-resolvable relational world sufficient for the objective.**
 
 AuraOS keeps **addressability and routing separate from truth and authority**. A route may identify a lawful next operation without creating source truth, capability, permission, a commit, a merge, or human disposition.
