@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1643
-- **total_bytes**: 26358926
-- **text_tokens_est**: 6580127
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1000, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1647
+- **total_bytes**: 26371591
+- **text_tokens_est**: 6583292
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1002, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1643,
+  "repo_file_count": 1647,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -61,6 +61,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".aura/intents/example.aura.md",
     ".aura/memory_apertures/coding_localize.v1.json",
     ".aura/model_policies/local_first.v1.json",
+    ".aura/model_policies/thinkpad_resident_moe.v1.json",
     ".aura/morphology_profiles/six_slot.v1.json",
     ".aura/output_schemas/localization_packet.v1.json",
     ".aura/plan_revision_deltas/bilateral_intent_guardrail_foundry_final_revision_2.v1.json",
@@ -943,6 +944,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "bus_init.cpp",
     "cognitive_router.py",
     "cognitive_search.rs",
+    "core/aura_resident_idle_policy.py",
     "core/aura_task_dispatcher.py",
     "core/aura_worker_daemon.py",
     "dag_executor.py",
@@ -1109,6 +1111,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/PR_KIT.md",
     "docs/README_PRE_ARCHITECT_BENCHMARK.md",
     "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
+    "docs/THINKPAD-RESIDENT-MOE-AUTONOMY.md",
     "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
     "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
     "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
@@ -1564,6 +1567,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_relationship_compass_finalization.py",
     "tests/test_aura_relationship_contracts.py",
     "tests/test_aura_research_cockpit_adapter.py",
+    "tests/test_aura_resident_idle_policy.py",
     "tests/test_aura_review_arena.py",
     "tests/test_aura_review_arena_mcp.py",
     "tests/test_aura_review_learning_mcp_codex.py",
@@ -1689,6 +1693,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_spatial_importers/spz.py",
     "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
     "benchmarks/refactor_code_quality/generate_fixture.py",
+    "core/aura_resident_idle_policy.py",
     "core/aura_task_dispatcher.py",
     "core/aura_worker_daemon.py",
     "examples/arena_expert_fabric/checks.py",
@@ -1768,8 +1773,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_bilateral_gate_dialogue.py",
     "tests/test_aura_bilateral_live_repair_foundry.py",
     "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-    "tests/test_aura_bilateral_planning_enforcement.py",
-    "tests/test_aura_capability_connectome.py"
+    "tests/test_aura_bilateral_planning_enforcement.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1783,16 +1787,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1643,
-  "bytes": 26358926,
-  "tokens_est": 6580127,
+  "files": 1647,
+  "bytes": 26371591,
+  "tokens_est": 6583292,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 238,
+    "knowledge_artifact": 239,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1000,
-    "schema_or_lexicon": 271,
+    "python_module": 1002,
+    "schema_or_lexicon": 272,
     "support_file": 49
   }
 }

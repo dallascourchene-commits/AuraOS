@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788041395,
+  "generated_at_unix": 1788043256,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1643,
+    "repo_file_count": 1647,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -43,6 +43,7 @@
       ".aura/intents/example.aura.md",
       ".aura/memory_apertures/coding_localize.v1.json",
       ".aura/model_policies/local_first.v1.json",
+      ".aura/model_policies/thinkpad_resident_moe.v1.json",
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
       ".aura/plan_revision_deltas/bilateral_intent_guardrail_foundry_final_revision_2.v1.json",
@@ -925,6 +926,7 @@
       "bus_init.cpp",
       "cognitive_router.py",
       "cognitive_search.rs",
+      "core/aura_resident_idle_policy.py",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
       "dag_executor.py",
@@ -1091,6 +1093,7 @@
       "docs/PR_KIT.md",
       "docs/README_PRE_ARCHITECT_BENCHMARK.md",
       "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
+      "docs/THINKPAD-RESIDENT-MOE-AUTONOMY.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
@@ -1546,6 +1549,7 @@
       "tests/test_aura_relationship_compass_finalization.py",
       "tests/test_aura_relationship_contracts.py",
       "tests/test_aura_research_cockpit_adapter.py",
+      "tests/test_aura_resident_idle_policy.py",
       "tests/test_aura_review_arena.py",
       "tests/test_aura_review_arena_mcp.py",
       "tests/test_aura_review_learning_mcp_codex.py",
@@ -1671,6 +1675,7 @@
       "aura_spatial_importers/spz.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/refactor_code_quality/generate_fixture.py",
+      "core/aura_resident_idle_policy.py",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
       "examples/arena_expert_fabric/checks.py",
@@ -1750,8 +1755,7 @@
       "tests/test_aura_bilateral_gate_dialogue.py",
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-      "tests/test_aura_bilateral_planning_enforcement.py",
-      "tests/test_aura_capability_connectome.py"
+      "tests/test_aura_bilateral_planning_enforcement.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1759,16 +1763,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1643,
-      "bytes": 26358926,
-      "tokens_est": 6580127,
+      "files": 1647,
+      "bytes": 26371591,
+      "tokens_est": 6583292,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 238,
+        "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1000,
-        "schema_or_lexicon": 271,
+        "python_module": 1002,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -96721,6 +96725,36 @@
         "signature_hash": "d4d8a57e306c4b5e"
       }
     ],
+    "HostState": [
+      {
+        "file": "core/aura_resident_idle_policy.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 20,
+        "semantic_id": "core/aura_resident_idle_policy.py#class:HostState:0cec7b7399df6587",
+        "signature_hash": "70c86d366d30245e"
+      }
+    ],
+    "MaintenanceWork": [
+      {
+        "file": "core/aura_resident_idle_policy.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 29,
+        "semantic_id": "core/aura_resident_idle_policy.py#class:MaintenanceWork:7f15a3576a9e09f7",
+        "signature_hash": "143828bbe594e83d"
+      }
+    ],
+    "choose_background_route": [
+      {
+        "file": "core/aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 75,
+        "semantic_id": "core/aura_resident_idle_policy.py#function:choose_background_route:0b2c9045c772f5ab",
+        "signature_hash": "82bf00e5c6413991"
+      }
+    ],
     "TaskDispatcher": [
       {
         "file": "core/aura_task_dispatcher.py",
@@ -148983,6 +149017,116 @@
         "signature_hash": "f0e8313f70572fd4"
       }
     ],
+    "host": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 8,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:host:80971ba390fc51e0",
+        "signature_hash": "3517bd88e7ac44a2"
+      }
+    ],
+    "test_deterministic_first": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_deterministic_first:29b4b340a8b8bd2a",
+        "signature_hash": "b8c81db1bb59fcf7"
+      }
+    ],
+    "test_primary_warm_model": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 17,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_primary_warm_model:18cdc52102618d34",
+        "signature_hash": "8f0914ee5a8a414d"
+      }
+    ],
+    "test_battery_defers": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_battery_defers:aab09562af53fdae",
+        "signature_hash": "436971a4b815610f"
+      }
+    ],
+    "test_thermal_defers": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_thermal_defers:96909f9ef798ef40",
+        "signature_hash": "2e8a717c260a4b81"
+      }
+    ],
+    "test_foreground_defers": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_foreground_defers:1eca2af9b28b3115",
+        "signature_hash": "2cfe76d33d1801a6"
+      }
+    ],
+    "test_d1_requires_human_gate": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_d1_requires_human_gate:00abada3cdf79fc3",
+        "signature_hash": "d20e94b9bc199098"
+      }
+    ],
+    "test_background_cannot_promote_beyond_gate10": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_background_cannot_promote_beyond_gate10:1e72e8ead52d47ce",
+        "signature_hash": "5a5b1836a2a2ef0f"
+      }
+    ],
+    "test_gptoss_near_fit_not_normal": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_gptoss_near_fit_not_normal:74020e1e85c82fb0",
+        "signature_hash": "080e289ceede1af3"
+      }
+    ],
+    "test_gptoss_requires_exact_available_ram": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 47,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_gptoss_requires_exact_available_ram:cfeab0991844f3eb",
+        "signature_hash": "d99280c8332e0ffe"
+      }
+    ],
+    "test_airllm_is_separate_admission": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 53,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_airllm_is_separate_admission:cc9a4fd906d8a00f",
+        "signature_hash": "d7ffa0201a616200"
+      }
+    ],
     "_commit": [
       {
         "file": "tests/test_aura_review_arena.py",
@@ -163173,6 +163317,53 @@
         -0.293963,
         -0.103214,
         -0.241703
+      ]
+    },
+    {
+      "path": ".aura/model_policies/thinkpad_resident_moe.v1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3700,
+      "lines": 99,
+      "tokens_est": 925,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b0fe4f77c7ccb913",
+      "vector": [
+        -0.20641,
+        -0.25725,
+        0.017286,
+        -0.088461,
+        0.045756,
+        0.20641,
+        -0.245048,
+        -0.212511,
+        0.159637,
+        0.141335,
+        -0.116932,
+        -0.129133,
+        0.169805,
+        0.110831,
+        -0.249116,
+        0.208444,
+        -0.135234,
+        0.112865,
+        0.173872,
+        -0.009151,
+        -0.216578,
+        -0.15557,
+        0.208444,
+        0.186074,
+        -0.049823,
+        0.220645,
+        -0.249116,
+        -0.253183,
+        -0.249116,
+        0.019319,
+        -0.171839,
+        0.175906
       ]
     },
     {
@@ -225985,6 +226176,53 @@
       ]
     },
     {
+      "path": "core/aura_resident_idle_policy.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2517,
+      "lines": 76,
+      "tokens_est": 630,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8d2755bf1c706d14",
+      "vector": [
+        0.114218,
+        0.032462,
+        0.1046,
+        -0.080554,
+        0.051699,
+        -0.183952,
+        -0.296968,
+        0.268113,
+        0.248876,
+        0.268113,
+        0.054103,
+        0.287349,
+        0.181547,
+        -0.22483,
+        -0.006011,
+        0.150287,
+        0.022844,
+        0.176738,
+        -0.080554,
+        0.107005,
+        -0.152692,
+        -0.025248,
+        -0.109409,
+        0.227234,
+        -0.054103,
+        -0.232044,
+        -0.006011,
+        0.232044,
+        0.270517,
+        0.037271,
+        0.272922,
+        0.222425
+      ]
+    },
+    {
       "path": "core/aura_task_dispatcher.py",
       "role": "python_module",
       "binary": false,
@@ -234569,6 +234807,53 @@
         -0.189079,
         -0.036163,
         -0.209744
+      ]
+    },
+    {
+      "path": "docs/THINKPAD-RESIDENT-MOE-AUTONOMY.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 4267,
+      "lines": 67,
+      "tokens_est": 1064,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9ca9a64a844d709c",
+      "vector": [
+        -0.263436,
+        -0.104204,
+        -0.026929,
+        -0.279828,
+        0.115912,
+        -0.033954,
+        -0.036296,
+        0.29622,
+        0.193187,
+        -0.19787,
+        -0.125279,
+        -0.263436,
+        -0.101862,
+        0.008196,
+        0.256411,
+        -0.158062,
+        0.263436,
+        -0.18382,
+        0.132304,
+        0.24002,
+        -0.055029,
+        -0.108887,
+        0.14167,
+        -0.167428,
+        -0.214262,
+        -0.298561,
+        0.111229,
+        -0.043321,
+        0.022246,
+        0.090154,
+        -0.132304,
+        0.24002
       ]
     },
     {
@@ -258714,6 +258999,53 @@
         -0.185514,
         0.27884,
         -0.206
+      ]
+    },
+    {
+      "path": "tests/test_aura_resident_idle_policy.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2181,
+      "lines": 54,
+      "tokens_est": 546,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1e950449d77a37b3",
+      "vector": [
+        0.054982,
+        -0.295965,
+        0.015208,
+        -0.242153,
+        0.115812,
+        0.155586,
+        0.204719,
+        -0.293625,
+        0.031585,
+        0.099435,
+        -0.153247,
+        -0.101775,
+        0.022227,
+        -0.047963,
+        0.246832,
+        0.090076,
+        0.146228,
+        0.111133,
+        0.216417,
+        -0.071359,
+        0.267889,
+        -0.092416,
+        0.258531,
+        0.228115,
+        -0.209398,
+        -0.221096,
+        0.139209,
+        -0.230455,
+        -0.218757,
+        0.076038,
+        -0.237474,
+        -0.090076
       ]
     },
     {
@@ -286898,16 +287230,16 @@
     }
   },
   "summary": {
-    "file_count": 1643,
-    "total_bytes": 26358926,
-    "text_tokens_est": 6580127,
+    "file_count": 1647,
+    "total_bytes": 26371591,
+    "text_tokens_est": 6583292,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 238,
+      "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1000,
-      "schema_or_lexicon": 271,
+      "python_module": 1002,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286960,6 +287292,7 @@
       ".aura/intents/example.aura.md",
       ".aura/memory_apertures/coding_localize.v1.json",
       ".aura/model_policies/local_first.v1.json",
+      ".aura/model_policies/thinkpad_resident_moe.v1.json",
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
       ".aura/plan_revision_deltas/bilateral_intent_guardrail_foundry_final_revision_2.v1.json",
@@ -287842,6 +288175,7 @@
       "bus_init.cpp",
       "cognitive_router.py",
       "cognitive_search.rs",
+      "core/aura_resident_idle_policy.py",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
       "dag_executor.py",
@@ -288008,6 +288342,7 @@
       "docs/PR_KIT.md",
       "docs/README_PRE_ARCHITECT_BENCHMARK.md",
       "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
+      "docs/THINKPAD-RESIDENT-MOE-AUTONOMY.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
@@ -288463,6 +288798,7 @@
       "tests/test_aura_relationship_compass_finalization.py",
       "tests/test_aura_relationship_contracts.py",
       "tests/test_aura_research_cockpit_adapter.py",
+      "tests/test_aura_resident_idle_policy.py",
       "tests/test_aura_review_arena.py",
       "tests/test_aura_review_arena_mcp.py",
       "tests/test_aura_review_learning_mcp_codex.py",
@@ -382910,6 +383246,36 @@
         "file_digest8": "31325b9af6403347"
       },
       {
+        "semantic_id": "core/aura_resident_idle_policy.py#class:HostState:0cec7b7399df6587",
+        "name": "HostState",
+        "kind": "class",
+        "file": "core/aura_resident_idle_policy.py",
+        "line": 13,
+        "end_line": 20,
+        "signature_hash": "70c86d366d30245e",
+        "file_digest8": "8d2755bf1c706d14"
+      },
+      {
+        "semantic_id": "core/aura_resident_idle_policy.py#class:MaintenanceWork:7f15a3576a9e09f7",
+        "name": "MaintenanceWork",
+        "kind": "class",
+        "file": "core/aura_resident_idle_policy.py",
+        "line": 24,
+        "end_line": 29,
+        "signature_hash": "143828bbe594e83d",
+        "file_digest8": "8d2755bf1c706d14"
+      },
+      {
+        "semantic_id": "core/aura_resident_idle_policy.py#function:choose_background_route:0b2c9045c772f5ab",
+        "name": "choose_background_route",
+        "kind": "function",
+        "file": "core/aura_resident_idle_policy.py",
+        "line": 37,
+        "end_line": 75,
+        "signature_hash": "82bf00e5c6413991",
+        "file_digest8": "8d2755bf1c706d14"
+      },
+      {
         "semantic_id": "core/aura_task_dispatcher.py#class:TaskDispatcher:b74f4282485d2a2e",
         "name": "TaskDispatcher",
         "kind": "class",
@@ -436980,6 +437346,116 @@
         "file_digest8": "32dc9837c40012d5"
       },
       {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:host:80971ba390fc51e0",
+        "name": "host",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 4,
+        "end_line": 8,
+        "signature_hash": "3517bd88e7ac44a2",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_airllm_is_separate_admission:cc9a4fd906d8a00f",
+        "name": "test_airllm_is_separate_admission",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 50,
+        "end_line": 53,
+        "signature_hash": "d7ffa0201a616200",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_background_cannot_promote_beyond_gate10:1e72e8ead52d47ce",
+        "name": "test_background_cannot_promote_beyond_gate10",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "5a5b1836a2a2ef0f",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_battery_defers:aab09562af53fdae",
+        "name": "test_battery_defers",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "436971a4b815610f",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_d1_requires_human_gate:00abada3cdf79fc3",
+        "name": "test_d1_requires_human_gate",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "d20e94b9bc199098",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_deterministic_first:29b4b340a8b8bd2a",
+        "name": "test_deterministic_first",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 11,
+        "end_line": 12,
+        "signature_hash": "b8c81db1bb59fcf7",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_foreground_defers:1eca2af9b28b3115",
+        "name": "test_foreground_defers",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "2cfe76d33d1801a6",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_gptoss_near_fit_not_normal:74020e1e85c82fb0",
+        "name": "test_gptoss_near_fit_not_normal",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "080e289ceede1af3",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_gptoss_requires_exact_available_ram:cfeab0991844f3eb",
+        "name": "test_gptoss_requires_exact_available_ram",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 44,
+        "end_line": 47,
+        "signature_hash": "d99280c8332e0ffe",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_primary_warm_model:18cdc52102618d34",
+        "name": "test_primary_warm_model",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 15,
+        "end_line": 17,
+        "signature_hash": "8f0914ee5a8a414d",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_thermal_defers:96909f9ef798ef40",
+        "name": "test_thermal_defers",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "2e8a717c260a4b81",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
         "semantic_id": "tests/test_aura_review_arena.py#function:_commit:eaf51295dfeaa12c",
         "name": "_commit",
         "kind": "function",
@@ -447170,7 +447646,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "3da945aa09c194f6758f6cb7e9e66ad5",
-    "payload_hash": "011d83c95f2a9f616521be70269b08e2"
+    "record_fingerprint": "395aadb776c2f9f22aeb186f7da44af1",
+    "payload_hash": "4d31dc06dd113a4a6ae309654d8b8988"
   }
 }
