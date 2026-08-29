@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/aura-visitor-capsule.v1.schema.json",
+  "title": "AuraVisitorCapsuleV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "place_sid", "visit_id", "audience", "purpose", "source_generation", "policy_generation", "issued_at", "expires_at", "capability_handle", "l0", "capsule_digest"],
+  "properties": {
+    "schema": {"const": "AuraVisitorCapsuleV1"},
+    "place_sid": {"type": "string", "minLength": 1},
+    "visit_id": {"type": "string", "minLength": 1},
+    "audience": {"type": "string", "minLength": 1},
+    "purpose": {"type": "string", "minLength": 1},
+    "source_generation": {"type": "string", "minLength": 1},
+    "policy_generation": {"type": "string", "minLength": 1},
+    "issued_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "capability_handle": {"type": "string", "pattern": "^cap:"},
+    "l0": {"type": "object"},
+    "permitted_actions": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "source_digest": {"type": "string"},
+    "capsule_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "realization": {"const": "ISOLATED_VISIT_ARENA"},
+    "storage_mount": {"const": false},
+    "direct_owner_write": {"const": false},
+    "credential_disclosure": {"const": false},
+    "source_corpus_included": {"const": false},
+    "crypto_profile": {"type": "string"}
+  }
+}
