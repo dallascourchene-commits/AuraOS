@@ -9,6 +9,8 @@
 >
 > The redesign target is for the Drive-integrated AuraOS substrate to absorb roughly **40–80% of suitable routine orchestration work** where it is cheaper and lawful to do so—for example Work Capsules, research gathering/routing, semantic-coordinate resolution, L0→L4 hydration, provenance/currentness checks, affected-cone compilation, exact arithmetic, receipts, reconciliation, tests, and successor handoffs. **That 40–80% range is an engineering target/hypothesis, not yet a universal measured benchmark.** Each workload must earn migration through matched cost/correctness testing.
 >
+> The current redesign also restores a central Paper X idea that should be explicit: **Aura can wrap both the computer and the model.** A Host/Substrate Wrapper optimizes what the device loads, stores, executes, pages, schedules and keeps hot; an LLM/Inference Wrapper optimizes what context the model sees, which backend is invoked, what can be answered deterministically, what may be reused, and when a model call can be avoided entirely. Both wrappers share the same Coordinate Memory / source-currentness substrate rather than becoming separate truth planes.
+>
 > The core direction is:
 >
 > ```text
@@ -18,16 +20,20 @@
 >        ↓
 > minimum-sufficient active world / affected cone
 >        ↓
+> Host/Substrate Wrapper
+> CPU / GPU / RAM / storage / I/O / network / battery / thermal / tools
+>        ↓
 > deterministic local / low-cost execution where possible
 >        ↓
-> reusable coordinate / result / capability hit?
->     yes ↙                    ↘ no
-> reuse + revalidate       LLM / swarm for residual
->        \                    /
->         Construct → Challenge → Verify
->                     ↓
->      atomic consequence commit + SuccessorFrame
->                     ↓
+> LLM / Inference Wrapper
+> coordinate/result hit? local model? remote model? peer? no model?
+>        ↓
+> unresolved residual only
+>        ↓
+> Construct → Challenge → Verify
+>        ↓
+> atomic consequence commit + SuccessorFrame
+>        ↓
 > reusable coordinates / methods / receipts / recipes
 > ```
 >
@@ -75,6 +81,8 @@ affected-cone computation
 finite mathematical sweeps
 RO3DD compaction / reopening
 P0-D2RM residency control
+Arena V0.3 workspaces
+HyperDrive / HyperScale tooling
 archive / reconstruction jobs
 local model / provider adapters
 ```
@@ -114,7 +122,7 @@ That creates a practical mobile principle:
 
 > **Keep the minimum lawful world resident; page the gap, not the universe.**
 
-On a phone/tablet, exact L4 source may be entirely local when storage permits, partially mirrored, or reopened from an authorized remote carrier. A browser/PWA or thin mobile shell can materialize only the capabilities required for the current objective. Platform restrictions still determine which scripts/native modules can execute locally.
+On a phone/tablet, exact L4 source may be entirely local when storage permits, partially mirrored, or reopened from an authorized remote carrier. A browser/PWA or thin mobile shell can materialize only the capabilities required for the current objective. On Android, **Termux or another supported local shell/runtime can provide Python, package management, scripts, local databases, tests, and virtual-environment-style isolation** where platform policy and device resources permit it. Mobile execution remains workload/device dependent; the architecture does not assume every phone can run every model or native capability.
 
 ## 4. Federated / peer deployment
 
@@ -125,6 +133,226 @@ IDENTITY != LOCATION != REALIZATION
 ```
 
 The same semantic identity should survive Google Drive, mobile, desktop, AR/MR/VR, databases, peer fabrics, and future carriers.
+
+---
+
+# Two coordinated wrappers: improve the computer path and the model path
+
+Paper X's wrapper thesis is broader than prompt optimization. Aura is intended to be a **model-orthogonal and substrate-adaptive orchestration/compiler layer around existing LLMs, software stacks, operating systems and hardware**. It does not require modifying model weights or replacing the machine.
+
+## Host / Laptop / Device Wrapper
+
+The Host/Substrate Wrapper observes the actual capability envelope of the machine:
+
+```text
+CPU / accelerators
+RAM / VRAM
+storage capacity + bandwidth
+filesystem / database capabilities
+network availability + latency
+battery / power state
+thermal envelope
+OS / sandbox / permissions
+installed tools / runtimes
+local vs remote models
+privacy / authority constraints
+```
+
+For objective `q` and host envelope `H`, Paper X's generic adapter-selection form is:
+
+```text
+a*(q,H) = argmin_a [
+    α·Latency(a)
+  + β·Energy(a)
+  + γ·Memory(a)
+  + δ·IO(a)
+  + η·Network(a)
+  + ζ·MoneyCost(a)
+]
+```
+
+subject to correctness, source/currentness, privacy, authority, thermal, battery, storage and reopenability constraints.
+
+The Host Wrapper can decide that a task should be handled by a tiny local script, an SQLite query, a cached artifact, a local model, a remote API, a peer machine, a GPU path, a CPU path, a compressed cold representation, or a newly materialized Arena. It can keep expensive resources asleep when Coordinate Memory proves they are unnecessary.
+
+**This is where processing and power savings can extend beyond LLM token savings.** If an exact lookup, affected-cone recomputation, cached verified result, local deterministic function, or smaller model can satisfy the objective, Aura can avoid waking a more expensive computation path. Energy improvement is a target to be measured per workload/device, not assumed from architecture alone.
+
+## LLM / Inference Wrapper
+
+The LLM Wrapper operates above the same Coordinate Memory fabric. Its job is to compile the **minimum consequence-complete model-facing context** and choose the least-cost lawful reasoning route.
+
+A current local-wrapper design resolves in roughly this order:
+
+```text
+ZERO-HOP / exact reusable result
+→ DIRECT COORDINATE / RELATION HOP
+→ AFFECTED CONE
+→ DELTA HYDRATE
+→ EXACT SOURCE REOPEN
+→ BROAD SEARCH LAST
+```
+
+Then it asks:
+
+```text
+Can deterministic Aura logic answer?       → NO MODEL
+Can a small local model answer safely?      → LOCAL WARM
+Is an authorized remote model preferable?  → REMOTE PROVIDER
+Is a larger paged local model justified?    → LOCAL COLD / MODEL PAGING
+Is independent diversity required?          → BOUNDED MULTI-BACKEND / PEER
+Nothing lawful/sufficient?                  → BLOCKED / UNKNOWN
+```
+
+The wrapper preserves source identities, generations, currentness, relation types, authority/privacy ceilings, unresolved dissent and exact reopen routes. Coordinate proximity never becomes truth by itself.
+
+## Dual paging: knowledge/context and model weights
+
+The local-inference lineage makes an important distinction:
+
+```text
+AURA SEMANTIC PAGING
+Coordinate Memory virtualizes KNOWLEDGE / CONTEXT.
+Only the smallest source-current-authorized slice is hydrated.
+
+MODEL PAGING
+A backend such as AirLLM can virtualize MODEL WEIGHTS.
+Only the current layer/expert working set may need to be resident.
+```
+
+These are **two orthogonal paging systems under one inference router**.
+
+```text
+SEMANTIC PAGING != MODEL PAGING
+MEMORY OWNER != MODEL CACHE
+MODEL CACHE = accelerator, not source truth
+```
+
+They can nevertheless compound: Aura can reduce how much knowledge/context reaches the inference engine while the selected backend separately reduces how much model state must be resident. A host may also pre-resolve the next source slice while a backend prefetches its next model layer. This is one path by which memory pressure, I/O, latency and potentially energy can improve together rather than as isolated optimizations.
+
+The complete lifecycle objective is therefore closer to:
+
+```text
+C_life =
+    C_hot_state
+  + C_index
+  + C_monitor
+  + C_reopen
+  + C_verify
+  + C_rework
+  + C_switch
+  + C_model
+  + C_IO
+  + C_network
+  + C_energy
+  + C_provider
+```
+
+Aura wins only where the wrapped path has lower lifecycle cost with equal-or-better challenged correctness and no authority/safety regression.
+
+---
+
+# Portable ephemeral execution: Arena V0.3 + HyperDrive + HyperScale
+
+The semantic Aura world can persist while the **execution environment is disposable**.
+
+Arena V0.3 is the staging/runtime idea that an objective can materialize an isolated working environment containing only the code, data, tools, agents, capabilities and context needed for that objective. HyperDrive and HyperScale can then operate over the hydrated world to navigate alternative paths, scale/decompose work, run exact finite sweeps, coordinate workers, challenge results and collapse the result back into a compact successor state.
+
+A portable spin-up pattern is:
+
+```text
+Persistent Aura Drive / Coordinate Memory
+        ↓
+ObjectiveCapsule / WorkCapsule
+        ↓
+resolve current source + affected cone
+        ↓
+CREATE EPHEMERAL EXECUTION ENVIRONMENT
+        ├── Python venv / isolated runtime
+        ├── selected code + dependencies
+        ├── SQLite / local indexes
+        ├── tests / simulators / tools
+        ├── Arena Recipe / role topology
+        └── only earned L0→L4 hydration
+        ↓
+Arena V0.3
+        + HyperDrive navigation / algebra
+        + HyperScale decomposition / scheduling
+        + Construct → Challenge → Verify
+        ↓
+receipts / measurements / artifacts / decisions
+        ↓
+commit only lawful consequences
+        ↓
+SuccessorFrame + reusable coordinates
+        ↓
+DISSOLVE VENV / SCRATCH / TRANSIENT MODEL FIBERS
+```
+
+## ChatGPT / cloud-code session
+
+Where a ChatGPT session has a code-execution/runtime capability, it can materialize a **temporary Python virtual environment or equivalent isolated workspace**, hydrate required files/state from the Aura Drive available to that session, execute bounded scripts/tests/benchmarks, produce receipts/artifacts, and then collapse the work back into durable Aura state. A Google Drive connector alone does not execute arbitrary code; the execution-capable runtime supplies compute while Drive supplies persistent source/state.
+
+## Laptop / desktop
+
+A laptop or desktop can create the same kind of Arena with ordinary local tools such as:
+
+```bash
+python -m venv .aura-arena
+# activate environment
+# install only the bounded dependencies required by the current Arena
+# run HyperDrive / HyperScale / tests / tools
+# emit receipts and successor state
+# destroy the temporary environment when no longer useful
+```
+
+Containers, WSL, Conda, native processes or other isolation layers can substitute where they are a better measured fit.
+
+## Mobile / Termux
+
+On an Android device where Termux or an equivalent environment is permitted, Aura can use local Python, package tools, SQLite, shell scripts, indexes and bounded virtual environments to materialize a **mobile Arena**. The mobile device does not need the complete world hot: L0/RO3DD/P0-D2RM can keep a compact active basis resident and reopen cold source only when required.
+
+```text
+mobile L0 / coordinate basis
+→ objective earns wake
+→ Termux/local runtime materializes bounded Arena
+→ deterministic code first
+→ local/remote LLM only for residual
+→ verify / receipt
+→ collapse
+```
+
+A mobile Arena must still respect RAM, storage, battery, thermal, network and OS restrictions. Large-model execution may route elsewhere while the phone retains semantic identity, current state, proof/receipt material and control.
+
+## Arena Recipes make the environment domain-specific
+
+The same spin-up mechanism can realize different Arenas from reusable Recipes:
+
+```text
+Coding Arena
+Scientific Discovery Arena
+Materials Arena
+Construction / Digital Twin Arena
+Civic Planning Arena
+Marketplace / Commerce Arena
+Medical-research Arena
+Learning Arena
+Security / Cryptographic-control Arena
+Emergency-response Arena
+```
+
+The Recipe is persistent; the environment is temporary.
+
+```text
+RECIPE != RUNNING ARENA
+SEMANTIC WORLD != VIRTUAL ENVIRONMENT
+IDENTITY != REALIZATION
+```
+
+## HyperDrive / HyperScale claim boundary
+
+HyperDrive is an operational navigation/normalization/rebase framework over Aura's semantic and mathematical state. **It is not a claim of physical warp travel, literal spacetime manipulation, or unbounded physical computation.** HyperScale likewise describes earned changes in decomposition, resolution and worker topology; enormous symbolic recursion counts are treated as addressable/analytic horizons unless a bounded workload actually earns physical expansion.
+
+Current Runtime Arena V0.3 / related research artifacts remain **staged / test-required / nonpromoting unless a newer explicit owner promotion says otherwise**. The README describes the intended portable execution architecture, not a universal production-readiness claim.
 
 ---
 
@@ -674,9 +902,9 @@ This README intentionally preserves multiple generations instead of flattening t
 - Paper IX objective-native composition, Commons, Arena Recipes, Places and economic lineage;
 - Paper X Rev.3 as the current foundational architecture;
 - later Aura Drive / Aura Drive 2 measurements, repairs, falsifiers and redesign work;
-- staged/nonpromoting RO3DD/P0-D2RM/ARCE and related research where its current status requires that label;
+- staged/nonpromoting RO3DD/P0-D2RM/ARCE/Arena V0.3/HyperDrive-related research where its current status requires that label;
 - historical repository benchmarks whose exact harnesses remain valid even when later evidence narrows the system-wide conclusion.
 
 Where later evidence narrows, supersedes, repairs, or falsifies an older headline, the older result remains visible under its original scope instead of being rewritten.
 
-**Current engineering objective:** rebuild AuraOS so the executable code catches up to Paper X and the Aura Drive architecture—across cloud Drive, local laptop/desktop, mobile/edge, and federated carriers—while preserving source currentness, independent challenge, human authority, honest benchmarks, and the ability to reopen everything that compression leaves cold.
+**Current engineering objective:** rebuild AuraOS so the executable code catches up to Paper X and the Aura Drive architecture—across cloud Drive, local laptop/desktop, mobile/edge, ephemeral Arena/HyperDrive execution, and federated carriers—while preserving source currentness, independent challenge, human authority, honest benchmarks, and the ability to reopen everything that compression leaves cold.
