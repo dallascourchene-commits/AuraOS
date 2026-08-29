@@ -32,7 +32,7 @@
 >        ↓
 > Construct → Challenge → Verify
 >        ↓
-> atomic consequence commit + SuccessorFrame
+> gated / atomic consequence commit target + SuccessorFrame
 >        ↓
 > reusable coordinates / methods / receipts / recipes
 > ```
@@ -44,6 +44,30 @@
 - **Paper X Rev.3 PDF:** https://zenodo.org/records/22134815/files/PAPER-X%20%285%29.pdf?download=1
 - **Canonical Zenodo record:** https://zenodo.org/records/22134815
 - **DOI:** https://doi.org/10.5281/zenodo.22134815
+
+## Maturity / authority map
+
+To avoid silently promoting research into production fact, this README uses the following hierarchy:
+
+```text
+PUBLISHED ARCHITECTURAL AUTHORITY
+Paper X Rev.3
+
+CURRENT IMPLEMENTATION / REDESIGN EVIDENCE
+AuraOS repository + Aura Drive / Aura Drive 2 measurements, repairs and work orders
+
+STAGED / NONPROMOTING RESEARCH UNLESS A NEWER OWNER RECORD EXPLICITLY PROMOTES IT
+RO3DD
+P0-D2RM
+Runtime Arena V0.3 and related portable-execution work
+HyperDrive / HyperScale runtime extensions where their source status is staged
+ARCE encryption/control research
+
+SCOPED EMPIRICAL EVIDENCE
+valid only for the exact harness / workload / generation that produced it
+```
+
+Exact finite mathematics, published disclosures, implementation tests, architectural hypotheses, staged candidates, and deployed/live evidence are deliberately **not collapsed into one maturity level**.
 
 ## Founder & contact
 
@@ -93,9 +117,9 @@ Exact performance depends on hardware and workload; “local is faster” is not
 
 ## 3. Mobile / edge — a compressed resident Aura Drive
 
-A full Aura semantic world does **not** require every byte of exact source to remain hot in RAM. Paper X's L0→L4 hierarchy, **RO3DD** source-rooted consequence quotient, and **P0-D2RM** dual-basis regenerative memory make a mobile resident form possible.
+A full Aura semantic world does **not** require every byte of exact source to remain hot in RAM. Paper X's L0→L4 hierarchy provides the canonical paging frame; **staged RO3DD and P0-D2RM research** explores stronger source-rooted compaction, dual-basis challenge coverage, and regenerative HOT/WARM/COLD residency for constrained devices.
 
-A mobile Aura Drive can use a residency ladder such as:
+A mobile Aura Drive can use a candidate residency ladder such as:
 
 ```text
 HOT
@@ -116,7 +140,7 @@ large datasets / media / historical generations
 reconstruction artifacts
 ```
 
-RO3DD keeps an **objective-conditioned active decision kernel** only when omitted distinctions are consequence-inert or deterministically force reopen/reproof before they matter. P0-D2RM goes further by retaining both the minimum basis needed to make the current decision and an independently rooted basis capable of defeating that decision. Its HOT/WARM/COLD states are **residency projections, not deletion**.
+RO3DD proposes keeping an **objective-conditioned active decision kernel** only when omitted distinctions are consequence-inert or deterministically force reopen/reproof before they matter. P0-D2RM proposes retaining both the minimum basis needed to make the current decision and an independently rooted basis capable of defeating that decision. Its HOT/WARM/COLD states are **residency projections, not deletion**. Both remain staged/nonpromoting unless a newer explicit owner promotion says otherwise.
 
 That creates a practical mobile principle:
 
@@ -255,7 +279,7 @@ Aura wins only where the wrapped path has lower lifecycle cost with equal-or-bet
 
 The semantic Aura world can persist while the **execution environment is disposable**.
 
-Arena V0.3 is the staging/runtime idea that an objective can materialize an isolated working environment containing only the code, data, tools, agents, capabilities and context needed for that objective. HyperDrive and HyperScale can then operate over the hydrated world to navigate alternative paths, scale/decompose work, run exact finite sweeps, coordinate workers, challenge results and collapse the result back into a compact successor state.
+Arena V0.3 is a staged runtime design in which an objective can materialize an isolated working environment containing only the code, data, tools, agents, capabilities and context needed for that objective. HyperDrive and HyperScale can operate over the hydrated world as bounded navigation/decomposition/rebase machinery: navigate alternatives, scale/decompose work, run exact finite sweeps where declared, coordinate workers, challenge results and collapse the result back into a compact successor state.
 
 A portable spin-up pattern is:
 
@@ -281,7 +305,7 @@ Arena V0.3
         ↓
 receipts / measurements / artifacts / decisions
         ↓
-commit only lawful consequences
+gated commit only after applicable source/currentness/authority/verification checks
         ↓
 SuccessorFrame + reusable coordinates
         ↓
@@ -309,7 +333,7 @@ Containers, WSL, Conda, native processes or other isolation layers can substitut
 
 ## Mobile / Termux
 
-On an Android device where Termux or an equivalent environment is permitted, Aura can use local Python, package tools, SQLite, shell scripts, indexes and bounded virtual environments to materialize a **mobile Arena**. The mobile device does not need the complete world hot: L0/RO3DD/P0-D2RM can keep a compact active basis resident and reopen cold source only when required.
+On an Android device where Termux or an equivalent environment is permitted, Aura can use local Python, package tools, SQLite, shell scripts, indexes and bounded virtual environments to materialize a **mobile Arena**. The mobile device does not need the complete world hot: L0 plus staged RO3DD/P0-D2RM techniques can keep a compact active basis resident and reopen cold source only when required.
 
 ```text
 mobile L0 / coordinate basis
@@ -352,7 +376,7 @@ IDENTITY != REALIZATION
 
 HyperDrive is an operational navigation/normalization/rebase framework over Aura's semantic and mathematical state. **It is not a claim of physical warp travel, literal spacetime manipulation, or unbounded physical computation.** HyperScale likewise describes earned changes in decomposition, resolution and worker topology; enormous symbolic recursion counts are treated as addressable/analytic horizons unless a bounded workload actually earns physical expansion.
 
-Current Runtime Arena V0.3 / related research artifacts remain **staged / test-required / nonpromoting unless a newer explicit owner promotion says otherwise**. The README describes the intended portable execution architecture, not a universal production-readiness claim.
+**Runtime Arena V0.3, HyperDrive implementations/operational recipes, and HyperScale runtime extensions are staged / test-required / nonpromoting wherever their governing source records carry that status, unless a newer explicit owner promotion supersedes it.** Exact finite mathematical results remain valid only in their declared mathematical scope; they are not silently promoted into production-speed claims.
 
 ---
 
@@ -420,6 +444,8 @@ reopen handles
 
 ## RO3DD
 
+**Status: STAGED / NONCANONICAL / TEST-REQUIRED / NONPROMOTING unless a newer explicit owner record promotes it.**
+
 **RO3DD** (letter O) is the source-rooted reopenable consequence-quotient design. Its rule is approximately:
 
 > retain the compact decision kernel only when every omitted distinction is consequence-inert for the objective or guaranteed to force exact reopen/reproof before the first consequence-changing use.
@@ -435,7 +461,9 @@ RECALL != REUSE
 
 ## P0-D2RM
 
-**P0-D2RM — Point-0 Dual-Basis Defeasible Regenerative Memory** adds a critical safety property: memory should retain both **why a state may be used** and **how that state may still be defeated**.
+**Status: STAGED / DERIVED / NONCANONICAL / TEST-REQUIRED / NONPROMOTING unless a newer explicit owner record promotes it.**
+
+**P0-D2RM — Point-0 Dual-Basis Defeasible Regenerative Memory** adds a critical safety hypothesis: memory should retain both **why a state may be used** and **how that state may still be defeated**.
 
 Its compact persistent core can be thought of as:
 
@@ -448,7 +476,7 @@ shared source ground
 + exact reopen routes
 ```
 
-The model/KV cache is an accelerator, **not the memory owner**. A model can be replaced and the durable semantic state can still be regenerated from source.
+The model/KV cache is an accelerator, **not the memory owner**. A model can be replaced and the durable semantic state can still be regenerated from source where the underlying contracts and source access remain valid.
 
 ---
 
@@ -551,7 +579,7 @@ Arena_q = Compile(
 )
 ```
 
-The current design collapses separate application engines into **one ephemeral Arena Engine plus reusable Arena Recipes**.
+The current redesign collapses separate application engines into **one ephemeral Arena Engine plus reusable Arena Recipes**.
 
 > **An Arena Recipe is the reusable pattern, not the implementation.**
 
@@ -902,9 +930,10 @@ This README intentionally preserves multiple generations instead of flattening t
 - Paper IX objective-native composition, Commons, Arena Recipes, Places and economic lineage;
 - Paper X Rev.3 as the current foundational architecture;
 - later Aura Drive / Aura Drive 2 measurements, repairs, falsifiers and redesign work;
-- staged/nonpromoting RO3DD/P0-D2RM/ARCE/Arena V0.3/HyperDrive-related research where its current status requires that label;
+- staged/nonpromoting RO3DD/P0-D2RM/ARCE and related research where its current status requires that label;
+- staged/test-required Arena V0.3 / HyperDrive / HyperScale runtime work where governing sources retain that status;
 - historical repository benchmarks whose exact harnesses remain valid even when later evidence narrows the system-wide conclusion.
 
 Where later evidence narrows, supersedes, repairs, or falsifies an older headline, the older result remains visible under its original scope instead of being rewritten.
 
-**Current engineering objective:** rebuild AuraOS so the executable code catches up to Paper X and the Aura Drive architecture—across cloud Drive, local laptop/desktop, mobile/edge, ephemeral Arena/HyperDrive execution, and federated carriers—while preserving source currentness, independent challenge, human authority, honest benchmarks, and the ability to reopen everything that compression leaves cold.
+**Current engineering objective:** rebuild AuraOS so the executable code catches up to Paper X and the Aura Drive architecture—across cloud Drive, local laptop/desktop, mobile/edge, and federated carriers—while preserving source currentness, independent challenge, human authority, honest benchmarks, and the ability to reopen everything that compression leaves cold.
