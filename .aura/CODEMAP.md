@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1634
-- **total_bytes**: 26349449
-- **text_tokens_est**: 6577733
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1639
+- **total_bytes**: 26326346
+- **text_tokens_est**: 6571987
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1634,
+  "repo_file_count": 1639,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -36,6 +36,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".aura/RESEARCH_MANIFEST.json",
     ".aura/ROLES.md",
     ".aura/SECURITY.md",
+    ".aura/VNEXT_CORE_MANIFEST.json",
     ".aura/amd_track3_demo_tasks.json",
     ".aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md",
     ".aura/arena_routes/coding.v1.json",
@@ -908,6 +909,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_usage_normalizer.py",
     "aura_validation.py",
     "aura_visual_grounding_bridge.py",
+    "aura_vnext/__init__.py",
+    "aura_vnext/qdkt_guard.py",
     "aura_vpt_tokenizer.py",
     "aura_vsa_encoding_profile.py",
     "aura_vsa_rendering.py",
@@ -1190,6 +1193,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "requirements-amd-track3.txt",
     "requirements-spatial-s4b.txt",
     "requirements.txt",
+    "schemas/aura-proposed-delta.v1.schema.json",
+    "schemas/aura-visitor-capsule.v1.schema.json",
     "schemas/aura_coding_relationship_compass.schema.json",
     "schemas/aura_coding_waboose_contract.schema.json",
     "schemas/aura_compass_act_capsule.schema.json",
@@ -1678,6 +1683,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_spatial_importers/gltf.py",
     "aura_spatial_importers/ply.py",
     "aura_spatial_importers/spz.py",
+    "aura_vnext/__init__.py",
+    "aura_vnext/qdkt_guard.py",
     "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
     "benchmarks/refactor_code_quality/generate_fixture.py",
     "core/aura_task_dispatcher.py",
@@ -1758,9 +1765,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_capability_connectome.py",
     "tests/test_aura_capability_connectome_v2.py",
     "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py",
-    "tests/test_aura_capability_resolver_connectome.py",
-    "tests/test_aura_change_graph.py"
+    "tests/test_aura_capability_resolver.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1774,16 +1779,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1634,
-  "bytes": 26349449,
-  "tokens_est": 6577733,
+  "files": 1639,
+  "bytes": 26326346,
+  "tokens_est": 6571987,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 234,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 995,
-    "schema_or_lexicon": 271,
+    "python_module": 997,
+    "schema_or_lexicon": 274,
     "support_file": 49
   }
 }

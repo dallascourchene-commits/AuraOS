@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788016347,
+  "generated_at_unix": 1788031539,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1634,
+    "repo_file_count": 1639,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -18,6 +18,7 @@
       ".aura/RESEARCH_MANIFEST.json",
       ".aura/ROLES.md",
       ".aura/SECURITY.md",
+      ".aura/VNEXT_CORE_MANIFEST.json",
       ".aura/amd_track3_demo_tasks.json",
       ".aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md",
       ".aura/arena_routes/coding.v1.json",
@@ -890,6 +891,8 @@
       "aura_usage_normalizer.py",
       "aura_validation.py",
       "aura_visual_grounding_bridge.py",
+      "aura_vnext/__init__.py",
+      "aura_vnext/qdkt_guard.py",
       "aura_vpt_tokenizer.py",
       "aura_vsa_encoding_profile.py",
       "aura_vsa_rendering.py",
@@ -1172,6 +1175,8 @@
       "requirements-amd-track3.txt",
       "requirements-spatial-s4b.txt",
       "requirements.txt",
+      "schemas/aura-proposed-delta.v1.schema.json",
+      "schemas/aura-visitor-capsule.v1.schema.json",
       "schemas/aura_coding_relationship_compass.schema.json",
       "schemas/aura_coding_waboose_contract.schema.json",
       "schemas/aura_compass_act_capsule.schema.json",
@@ -1660,6 +1665,8 @@
       "aura_spatial_importers/gltf.py",
       "aura_spatial_importers/ply.py",
       "aura_spatial_importers/spz.py",
+      "aura_vnext/__init__.py",
+      "aura_vnext/qdkt_guard.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "core/aura_task_dispatcher.py",
@@ -1740,9 +1747,7 @@
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
       "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py",
-      "tests/test_aura_capability_resolver_connectome.py",
-      "tests/test_aura_change_graph.py"
+      "tests/test_aura_capability_resolver.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1750,16 +1755,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1634,
-      "bytes": 26349449,
-      "tokens_est": 6577733,
+      "files": 1639,
+      "bytes": 26326346,
+      "tokens_est": 6571987,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 234,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 995,
-        "schema_or_lexicon": 271,
+        "python_module": 997,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -73220,6 +73225,14 @@
         "end_line": 285,
         "semantic_id": "aura_qdkt_observations.py#class:QDKTObservation:8304b452a08a449a",
         "signature_hash": "d843013d0c326bc4"
+      },
+      {
+        "file": "aura_vnext/qdkt_guard.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 28,
+        "semantic_id": "aura_vnext/qdkt_guard.py#class:QDKTObservation:5e8ba29c8c3f6086",
+        "signature_hash": "d843013d0c326bc4"
       }
     ],
     "QDKTObservation.__post_init__": [
@@ -95264,6 +95277,46 @@
         "end_line": 64,
         "semantic_id": "aura_visual_grounding_bridge.py#method:AuraVisualGroundingBridge.export_interaction_frame:98e249447dbe017f",
         "signature_hash": "129d4d32b8f81ce0"
+      }
+    ],
+    "QDKTState": [
+      {
+        "file": "aura_vnext/qdkt_guard.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 44,
+        "semantic_id": "aura_vnext/qdkt_guard.py#class:QDKTState:e9e3fe4df1324c3e",
+        "signature_hash": "de41bd8db5fa6a5f"
+      }
+    ],
+    "QDKTGuardedProjection": [
+      {
+        "file": "aura_vnext/qdkt_guard.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 119,
+        "semantic_id": "aura_vnext/qdkt_guard.py#class:QDKTGuardedProjection:a01564b3a166ab04",
+        "signature_hash": "b8b3f16ea204c8a7"
+      }
+    ],
+    "QDKTGuardedProjection.project": [
+      {
+        "file": "aura_vnext/qdkt_guard.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 111,
+        "semantic_id": "aura_vnext/qdkt_guard.py#method:QDKTGuardedProjection.project:f6cacb207be1b912",
+        "signature_hash": "74b55d73614bf8e0"
+      }
+    ],
+    "QDKTGuardedProjection._seal": [
+      {
+        "file": "aura_vnext/qdkt_guard.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 119,
+        "semantic_id": "aura_vnext/qdkt_guard.py#method:QDKTGuardedProjection._seal:c4c1fdbf9c546279",
+        "signature_hash": "dd0b31b6ae339bff"
       }
     ],
     "HeightBoundedVPTTokenizer": [
@@ -158594,7 +158647,6 @@
     "python aura_node.py": [
       "AURA_FINAL_REPORT.md",
       "AURA_SYSTEM_ANALYSIS.md",
-      "README.md",
       "docs/staging/ready_review/README_STAGED.md"
     ],
     "python test_memory_guard_leak.py": [
@@ -158685,30 +158737,6 @@
     ],
     "python aura_icm_cli.py list ./icm_workspaces": [
       "ICM_WORKSPACE_README.md"
-    ],
-    "python -m venv": [
-      "README.md"
-    ],
-    "python aura_daemon.py": [
-      "README.md",
-      "docs/staging/ready_review/README_STAGED.md"
-    ],
-    "python aura_swarm_runner.py": [
-      "README.md",
-      "docs/staging/ready_review/README_STAGED.md"
-    ],
-    "python3 scripts/aura_industry_benchmark_validation.py": [
-      "README.md",
-      "docs/staging/ready_review/README_STAGED.md"
-    ],
-    "python3 scripts/aura_advanced_benchmark_runner.py": [
-      "README.md",
-      "docs/ADVANCED_BENCHMARKS.md",
-      "docs/staging/ready_review/README_STAGED.md"
-    ],
-    "python3 scripts/aura_security_accuracy_harness.py": [
-      "README.md",
-      "docs/staging/ready_review/README_STAGED.md"
     ],
     "python test_syntax_fixes.py": [
       "SYNTAX_FIXES_APPLIED.md"
@@ -158874,6 +158902,10 @@
     ],
     "python scripts/aura_fetch_construction_demo_source.py \\": [
       "demo_assets/construction_tuwien/README.md"
+    ],
+    "python3 scripts/aura_advanced_benchmark_runner.py": [
+      "docs/ADVANCED_BENCHMARKS.md",
+      "docs/staging/ready_review/README_STAGED.md"
     ],
     "python aura_amd_track3_cli.py `": [
       "docs/AMD_TRACK3_CRUCIBLE_DEMO.md"
@@ -159041,6 +159073,18 @@
     ],
     "python -m unittest": [
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
+    "python aura_daemon.py": [
+      "docs/staging/ready_review/README_STAGED.md"
+    ],
+    "python aura_swarm_runner.py": [
+      "docs/staging/ready_review/README_STAGED.md"
+    ],
+    "python3 scripts/aura_industry_benchmark_validation.py": [
+      "docs/staging/ready_review/README_STAGED.md"
+    ],
+    "python3 scripts/aura_security_accuracy_harness.py": [
+      "docs/staging/ready_review/README_STAGED.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -161701,6 +161745,53 @@
         -0.1071,
         -0.085915,
         -0.234208
+      ]
+    },
+    {
+      "path": ".aura/VNEXT_CORE_MANIFEST.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1571,
+      "lines": 48,
+      "tokens_est": 393,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "953dd3bb396d8ec9",
+      "vector": [
+        0.241936,
+        -0.006268,
+        -0.299599,
+        -0.302107,
+        -0.24695,
+        0.083988,
+        0.091509,
+        0.2294,
+        0.184272,
+        -0.106552,
+        -0.051396,
+        0.121595,
+        0.031339,
+        0.081481,
+        -0.181765,
+        0.251964,
+        -0.191794,
+        0.011282,
+        0.068945,
+        0.03886,
+        0.011282,
+        0.224386,
+        -0.241936,
+        0.314642,
+        -0.008775,
+        0.201822,
+        -0.141652,
+        -0.259486,
+        -0.249457,
+        -0.013789,
+        0.081481,
+        0.126609
       ]
     },
     {
@@ -174749,77 +174840,47 @@
       "path": "README.md",
       "role": "knowledge_artifact",
       "binary": false,
-      "bytes": 47880,
-      "lines": 939,
-      "tokens_est": 11905,
+      "bytes": 15659,
+      "lines": 388,
+      "tokens_est": 3878,
       "symbol_count": 0,
-      "commands": [
-        "python -m venv",
-        "python aura_node.py",
-        "python aura_daemon.py",
-        "python aura_swarm_runner.py",
-        "python3 scripts/aura_industry_benchmark_validation.py",
-        "python3 scripts/aura_advanced_benchmark_runner.py",
-        "python3 scripts/aura_security_accuracy_harness.py"
-      ],
-      "command_lines": {
-        "python -m venv": [
-          324
-        ],
-        "python aura_node.py": [
-          885
-        ],
-        "python aura_daemon.py": [
-          886
-        ],
-        "python aura_swarm_runner.py": [
-          887
-        ],
-        "python3 scripts/aura_industry_benchmark_validation.py": [
-          895
-        ],
-        "python3 scripts/aura_advanced_benchmark_runner.py": [
-          896
-        ],
-        "python3 scripts/aura_security_accuracy_harness.py": [
-          897
-        ]
-      },
+      "commands": [],
+      "command_lines": {},
       "topology": {},
-      "digest8": "2ab90f6a6a735010",
+      "digest8": "8861214a2e44362c",
       "vector": [
-        -0.005725,
-        -0.017175,
-        0.243881,
-        0.019465,
-        0.241592,
-        -0.163733,
-        -0.280521,
-        0.285101,
-        -0.207242,
-        0.227852,
-        0.065264,
-        -0.069844,
-        0.207242,
-        0.204952,
-        -0.042364,
-        0.232432,
-        0.028625,
-        0.083584,
-        0.232432,
-        0.101904,
-        -0.129383,
-        0.280521,
-        -0.269071,
-        -0.030915,
-        0.250751,
-        -0.044654,
-        -0.269071,
-        -0.152283,
-        -0.204952,
-        -0.005725,
-        -0.062974,
-        0.049234
+        -0.204125,
+        0.296796,
+        0.04884,
+        0.041326,
+        -0.04884,
+        -0.088914,
+        -0.154033,
+        0.071381,
+        0.229171,
+        -0.028803,
+        -0.093923,
+        -0.0814,
+        -0.159043,
+        0.254218,
+        -0.27175,
+        0.003757,
+        0.264236,
+        0.241695,
+        -0.086409,
+        -0.319337,
+        0.121473,
+        -0.078895,
+        -0.144015,
+        0.284273,
+        -0.30431,
+        0.266741,
+        0.008766,
+        -0.226667,
+        -0.001252,
+        -0.128987,
+        -0.04884,
+        0.003757
       ]
     },
     {
@@ -223699,6 +223760,100 @@
       ]
     },
     {
+      "path": "aura_vnext/__init__.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 795,
+      "lines": 30,
+      "tokens_est": 199,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "52cd66a964390893",
+      "vector": [
+        0.102773,
+        0.161839,
+        0.232717,
+        -0.270519,
+        0.109861,
+        0.29887,
+        0.116949,
+        -0.220904,
+        0.209091,
+        0.227992,
+        -0.213816,
+        -0.083873,
+        0.100411,
+        0.13585,
+        -0.227992,
+        -0.088598,
+        -0.001181,
+        0.1453,
+        -0.015357,
+        0.029533,
+        0.050796,
+        -0.07206,
+        0.159476,
+        -0.25398,
+        0.043708,
+        -0.265793,
+        0.041346,
+        -0.093323,
+        0.242167,
+        0.279969,
+        0.119312,
+        -0.284694
+      ]
+    },
+    {
+      "path": "aura_vnext/qdkt_guard.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4351,
+      "lines": 120,
+      "tokens_est": 1088,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2a27906751ca3674",
+      "vector": [
+        0.054786,
+        -0.23663,
+        0.054786,
+        0.157364,
+        -0.224973,
+        0.052455,
+        -0.294913,
+        0.297244,
+        -0.29025,
+        0.138714,
+        -0.117732,
+        0.183009,
+        0.217979,
+        0.127057,
+        -0.190003,
+        -0.15037,
+        0.115401,
+        0.208654,
+        0.059449,
+        -0.157364,
+        -0.075768,
+        0.173684,
+        -0.017485,
+        0.015154,
+        -0.136383,
+        -0.13172,
+        -0.259943,
+        0.103744,
+        0.171352,
+        -0.29025,
+        -0.115401,
+        0.22031
+      ]
+    },
+    {
       "path": "aura_vpt_tokenizer.py",
       "role": "python_module",
       "binary": false,
@@ -238776,6 +238931,100 @@
         0.23786,
         -0.249351,
         0.083883
+      ]
+    },
+    {
+      "path": "schemas/aura-proposed-delta.v1.schema.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 889,
+      "lines": 20,
+      "tokens_est": 223,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "86625f37b1416e65",
+      "vector": [
+        -0.125276,
+        0.27366,
+        0.003649,
+        -0.154466,
+        0.207982,
+        -0.11068,
+        0.057165,
+        0.015811,
+        -0.186089,
+        -0.040137,
+        0.27366,
+        -0.11068,
+        0.232307,
+        0.212847,
+        0.127708,
+        0.161764,
+        0.169061,
+        0.045002,
+        -0.285823,
+        0.217712,
+        -0.176359,
+        0.178791,
+        -0.173926,
+        0.212847,
+        0.135006,
+        0.008514,
+        -0.288255,
+        -0.268795,
+        0.193387,
+        -0.083922,
+        -0.205549,
+        -0.0523
+      ]
+    },
+    {
+      "path": "schemas/aura-visitor-capsule.v1.schema.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1512,
+      "lines": 31,
+      "tokens_est": 378,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5b2686c065c781c0",
+      "vector": [
+        0.006057,
+        0.010903,
+        0.21443,
+        0.197469,
+        0.185354,
+        0.299232,
+        -0.262888,
+        -0.056939,
+        0.163548,
+        0.248351,
+        -0.054516,
+        -0.156279,
+        0.037555,
+        0.267734,
+        -0.224121,
+        -0.226544,
+        0.161125,
+        0.09086,
+        0.163548,
+        0.197469,
+        -0.197469,
+        -0.260465,
+        0.129627,
+        0.006057,
+        -0.275003,
+        0.020595,
+        -0.066631,
+        -0.144165,
+        -0.03271,
+        0.030287,
+        -0.076322,
+        -0.308924
       ]
     },
     {
@@ -286156,16 +286405,16 @@
     }
   },
   "summary": {
-    "file_count": 1634,
-    "total_bytes": 26349449,
-    "text_tokens_est": 6577733,
+    "file_count": 1639,
+    "total_bytes": 26326346,
+    "text_tokens_est": 6571987,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 234,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 995,
-      "schema_or_lexicon": 271,
+      "python_module": 997,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286193,6 +286442,7 @@
       ".aura/RESEARCH_MANIFEST.json",
       ".aura/ROLES.md",
       ".aura/SECURITY.md",
+      ".aura/VNEXT_CORE_MANIFEST.json",
       ".aura/amd_track3_demo_tasks.json",
       ".aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md",
       ".aura/arena_routes/coding.v1.json",
@@ -287065,6 +287315,8 @@
       "aura_usage_normalizer.py",
       "aura_validation.py",
       "aura_visual_grounding_bridge.py",
+      "aura_vnext/__init__.py",
+      "aura_vnext/qdkt_guard.py",
       "aura_vpt_tokenizer.py",
       "aura_vsa_encoding_profile.py",
       "aura_vsa_rendering.py",
@@ -287347,6 +287599,8 @@
       "requirements-amd-track3.txt",
       "requirements-spatial-s4b.txt",
       "requirements.txt",
+      "schemas/aura-proposed-delta.v1.schema.json",
+      "schemas/aura-visitor-capsule.v1.schema.json",
       "schemas/aura_coding_relationship_compass.schema.json",
       "schemas/aura_coding_waboose_contract.schema.json",
       "schemas/aura_compass_act_capsule.schema.json",
@@ -380539,6 +380793,56 @@
         "file_digest8": "5ffff6374c624538"
       },
       {
+        "semantic_id": "aura_vnext/qdkt_guard.py#class:QDKTGuardedProjection:a01564b3a166ab04",
+        "name": "QDKTGuardedProjection",
+        "kind": "class",
+        "file": "aura_vnext/qdkt_guard.py",
+        "line": 47,
+        "end_line": 119,
+        "signature_hash": "b8b3f16ea204c8a7",
+        "file_digest8": "2a27906751ca3674"
+      },
+      {
+        "semantic_id": "aura_vnext/qdkt_guard.py#class:QDKTObservation:5e8ba29c8c3f6086",
+        "name": "QDKTObservation",
+        "kind": "class",
+        "file": "aura_vnext/qdkt_guard.py",
+        "line": 19,
+        "end_line": 28,
+        "signature_hash": "d843013d0c326bc4",
+        "file_digest8": "2a27906751ca3674"
+      },
+      {
+        "semantic_id": "aura_vnext/qdkt_guard.py#class:QDKTState:e9e3fe4df1324c3e",
+        "name": "QDKTState",
+        "kind": "class",
+        "file": "aura_vnext/qdkt_guard.py",
+        "line": 32,
+        "end_line": 44,
+        "signature_hash": "de41bd8db5fa6a5f",
+        "file_digest8": "2a27906751ca3674"
+      },
+      {
+        "semantic_id": "aura_vnext/qdkt_guard.py#method:QDKTGuardedProjection._seal:c4c1fdbf9c546279",
+        "name": "QDKTGuardedProjection._seal",
+        "kind": "method",
+        "file": "aura_vnext/qdkt_guard.py",
+        "line": 114,
+        "end_line": 119,
+        "signature_hash": "dd0b31b6ae339bff",
+        "file_digest8": "2a27906751ca3674"
+      },
+      {
+        "semantic_id": "aura_vnext/qdkt_guard.py#method:QDKTGuardedProjection.project:f6cacb207be1b912",
+        "name": "QDKTGuardedProjection.project",
+        "kind": "method",
+        "file": "aura_vnext/qdkt_guard.py",
+        "line": 50,
+        "end_line": 111,
+        "signature_hash": "74b55d73614bf8e0",
+        "file_digest8": "2a27906751ca3674"
+      },
+      {
         "semantic_id": "aura_vpt_tokenizer.py#class:HeightBoundedVPTTokenizer:e8fe375190a26e42",
         "name": "HeightBoundedVPTTokenizer",
         "kind": "class",
@@ -446129,7 +446433,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f54ee2e4da0bb0db05767925275e2b15",
-    "payload_hash": "34bdcc84b0db6ecd879743f5f6b8d834"
+    "record_fingerprint": "23103585e6ed0089c9e3fac91f68ad7d",
+    "payload_hash": "e5da0e36f7107bac39adf55563e2b26c"
   }
 }
