@@ -9,7 +9,7 @@
 >
 > The redesign target is for the Drive-integrated AuraOS substrate to absorb roughly **40–80% of suitable routine orchestration work** where it is cheaper and lawful to do so — for example: assembling Work Capsules, gathering and routing research, resolving semantic coordinates, performing L0→L4 hydration, maintaining provenance/currentness, compiling affected cones, preparing receipts, reconciling state, and packaging successor handoffs. **That 40–80% range is an engineering target/hypothesis, not yet a universal measured benchmark.** Each class of work still has to earn migration through matched cost/correctness tests.
 >
-> This matters because Paper X already reports bounded evidence of substantial reuse at several layers, including provider-side cache reuse and a separately accounted Aura-level coordinate-result hit that avoided a repeated provider call. The next redesign phase is intended to push more repeatable work *below* the expensive model layer so that the savings compound across repeated objectives rather than being limited to prompt caching alone.
+> This matters because Paper X already reports bounded evidence of substantial reuse at several layers, including provider-side cache reuse and a separately accounted Aura-level coordinate-result hit that avoided a repeated provider call. Later Aura Drive / Aura Drive 2 work has added live swarm, coordinate-memory, integration, Arena, HyperScale, and falsification evidence. The redesign phase is intended to push more repeatable work *below* the expensive model layer so that the savings compound across repeated objectives rather than being limited to prompt caching alone.
 >
 > The current direction can be summarized as:
 >
@@ -37,7 +37,7 @@
 > - **The existing code is not being discarded.** It is the implementation lineage that is now being reconciled, simplified, and rebuilt against the newer Paper X / Aura Drive architecture.
 > - **The GitHub implementation is currently behind the working Aura Drive architecture.** Some newer mechanisms, equations, memory/coordinate systems, HyperDrive/HyperScale refinements, regenerative state rules, and the unified ephemeral Arena model are not yet fully represented in this codebase.
 > - **AuraOS is now being radically redesigned** so the deterministic runtime, semantic coordinate memory, caches, work-capsule machinery, research gathering, affected-cone recomputation, verification, and execution surfaces operate as one integrated substrate rather than as separate generations of the project.
-> - **Existing benchmark results in this README remain scoped evidence for the code/harness that produced them.** They should not be read as proof that the repository already implements the complete Paper X architecture.
+> - **Benchmark evidence below is generation- and workload-scoped.** Newer evidence may supersede a headline without erasing the historical result that produced it.
 > - The redesign goal is not “use more agents.” It is to **reuse more verified work, hydrate less irrelevant state, perform more routine work deterministically, and spend expensive model inference only where it can change the governed consequence.**
 >
 > In short: **Paper X closed the foundational design phase. The current engineering phase is to rebuild AuraOS so the code catches up to that design.**
@@ -135,44 +135,104 @@ Aura's staged multi-agent architecture uses **3-6-9 phase staggering as an orche
 - **6** — paired triads, allowing perturbation, challenge, handoff, or parallel work without forcing every worker onto the same write surface.
 - **9** — three triads closing a larger cycle with separate analysis, execution, and reconciliation lanes.
 
-Collision resistance comes from the mechanics around that grammar: explicit worker identity, leases before mutation, coordinate/owner partitioning, bounded staging, source-currentness checks, and receipts that expose stale generations or collisions rather than silently overwriting them.
+Collision resistance comes from explicit worker identity, leases before mutation, coordinate/owner partitioning, bounded staging, source-currentness checks, typed failures, and receipts that expose stale generations or collisions rather than silently overwriting them.
 
-Current staging records **25-plus numbered worker slots** and triad-of-triads experiments at **27 objective positions**. This supports a **25+ concurrent-agent design target** with collision-resistant coordination. It is **not** presented as a universal zero-collision benchmark until a specific workload, agent count, lease schedule, collision definition, and run receipt are bound.
+Later Aura Drive 2 work has now executed a **27-objective live swarm battery**, but the result is deliberately not summarized as “27 agents passed.” The latest preregistered cold wave produced **27/27 merged receipts but 10 PASS / 17 TIMEOUT at physical concurrency 7**, so the apex was **REPAIR_REQUIRED**. A warm rerun of those same 27 objectives through the Aura Coordinate Store then produced **27/27 coordinate hits with zero provider tokens**. Both facts matter.
 
 ### Conditional diagonal rebase
 
 The `3 → 6 → 9/1′` path is a **conditional diagonal rebase** across independently verified/current invariant boundaries. A fast path is admissible only when intervening guards are already satisfied; unresolved evidence, currentness, authority, or negative-space boundaries force the guarded linear path.
 
-## Gate-1 benchmark synchronization
+# Benchmark evidence hierarchy
 
-The table below preserves the exact evidence status from the staged Gate-1 benchmark and founder sources. **Targets, bounded compatibility results, and unresolved external benchmark identities are not promoted into broader claims.**
+AuraOS uses an append-only evidence discipline: **newer evidence may supersede, narrow, or falsify an older headline without deleting the historical measurement.** Measurements are not silently generalized from one harness to the whole system.
 
-| Requested headline | Gate-1 disposition | Source-bound result / boundary |
+Current README ordering is:
+
+1. **Current / superseding evidence** — Paper X Rev.3 plus later Aura Drive / Aura Drive 2 measurements.
+2. **Current failures, falsifiers, and residuals** — negative evidence stays visible.
+3. **Historical repository / Gate-1 evidence** — preserved for lineage, but not presented as the newest whole-system state.
+
+A benchmark is publishable as a current empirical result only to the extent that its workload, source/runtime generation, environment, metric, raw evidence, limitations, and review status are actually bound. `PASS in one harness != universal PASS`.
+
+## Current / superseding measured evidence
+
+| Surface | Latest measured result | Status / evidence boundary |
+|---|---:|---|
+| **Paper X provider reuse telemetry** | **9,381 requests**; **843,642,344 logical/model tokens**; **814,619,776 cache-hit input tokens**; **97.402912% input-token cache-hit share**; **$17.772456 actual** vs **$209.580400 price-only all-miss counterfactual** | Published Paper X Rev.3 snapshot. **Not** a 97% reduction in logical token volume and **not** proof Aura uniquely caused provider cacheability. |
+| **HSC-196 cold real task** | **43,743 prompt + 763 completion tokens**; measured cost **$0.01012704** in the bound run | Replaces earlier 1,000-token assumption / 28-token proxy for this deployment measurement. Bounded task, host, provider, and generation only. |
+| **HSC-196 coordinate-result reuse** | Subsequent identical coordinate result: **0 provider tokens** | Aura-level result/coordinate reuse, accounted separately from provider prefix/KV caching. One bounded reuse witness, not a universal hit-rate claim. |
+| **HSC-198 live 27-objective cold swarm** | **27/27 merged receipts**; **10 PASS / 17 TIMEOUT / 0 FAIL / 0 ABORTED_INSTRUMENT**; timeout rate **63.0%**; physical concurrency **7**; wall **724.4 s**; **31,816,596 prompt + 317,459 completion tokens**; **$0.709600** reported-wave spend | **FAILED prereg timeout criterion; apex REPAIR_REQUIRED. NONPROMOTING / NOT_GATE10.** Dispatch integrity was measured; semantic correctness was not established. |
+| **HSC-198 provider cache inside cold swarm** | **30,514,432 / 31,816,596 prompt tokens cache-read = 95.9%** | Provider/API cache reuse inside the cold live-dispatch wave. Distinct from Aura Coordinate Store reuse. |
+| **HSC-198 warm coordinate-memory rerun** | Same 27 objectives: **27/27 COORDINATE_HIT**, **100% scoped hit rate**, **0 API tokens**, **31,816,596 real prompt tokens avoided**, **$0.709600 measured-repeat spend avoided** at that run's effective rate | **Wave 2 FULL PASS for the bound same-objective rerun; NONPROMOTING / NOT_GATE10.** Does not imply arbitrary future objectives hit. |
+| **AutoLineage / AutoRoute HSC-193 regression** | **38/38 selftest**, **20/20 dual-engine parity**, **60/60 leading-whitespace battery**, **12/12 DryRun**, plus bounded N2 concurrency re-check PASS | Current for the exact HSC-193 module/path tested. Does **not** erase the later integrated navigator upsert race described below. |
+| **Later integrated navigator regression** | Non-concurrency batteries **172/172 PASS**; sector/cell parity **15/15 + live** | Later Aura Drive 2 convergence evidence. Strong regression coverage, but integrated concurrency remained open. |
+| **Later integrated upsert concurrency** | **FAIL — 3 distinct JIDs minted for one source under 4-way parallel routing** | **Current open integrated defect from the later Drive-2 convergence cell.** Supersedes any system-wide reading of earlier “concurrency convergence PASS”; narrower earlier passes remain valid in their own harnesses. |
+| **Arena v1.3 local hardening** | Morton **27/27**; storm **160/160**; same-JID stress **400 → 50 winners / 350 typed conflicts / 0 silent collisions**; tamper paths typed/quarantined | Local-grade / bounded Arena evidence. Swarm-grade, multi-host, restart-resume, and broader deployment debts remain separate. |
+| **Paper X semantic-spatial vertical slice** | **33/33 PASS** in the published bounded slice; deterministic cross-modal input equivalence, stale-epoch gating, affected-cone behavior, adaptive **30/45/60 FPS** governor | Software/projection evidence only. Physical headset/mobile latency and full spatial deployment remain deferred. |
+| **HyperScale HSC-187 coprime-bypass trial** | Bypass ON median **7.08 ms** vs OFF **6.25 ms**; **−13.23% gain (slower)** | **Falsifier triggered.** The optimization is CONDITIONAL / not promoted as a saving. Negative result retained deliberately. |
+| **HyperScale exact finite scale sweep** | **40,320** scale permutations collapse to **108** running-GCD trajectories; **219/255** nonempty subsets reach gcd=1; `s=4` is the minimax center of the declared scale set; exact virtual completion **{6,8,24}** | Exhaustive / exact finite mathematics for the declared set; **not** a production latency benchmark or universal physical law. |
+| **Factor-certificate controller witness** | **3,333,960-state OP7 brute-force** witness matched the treewidth-1 dynamic-programming winner/cost on the synthetic bound instance | Algorithmic equivalence witness for the tested factor structure; not a universal workload-speed claim. |
+
+### Coordinate reuse and provider caching are separate accounting planes
+
+Aura currently distinguishes at least:
+
+```text
+COORDINATE_HIT
+!= PREFIX_KV_HIT
+!= BLOCK_KV_HIT
+!= RESULT_HIT
+```
+
+The HSC-198 swarm battery is useful precisely because it observed **both** effects in the same experiment: the cold live-dispatch wave was already **95.9% provider cache-read by prompt token**, while the later same-objective coordinate-memory wave avoided the provider entirely.
+
+## Current failures, falsifiers, and open residuals
+
+The following are part of the current benchmark state and must not be hidden behind successful numbers:
+
+| Residual / falsifier | Current disposition |
+|---|---|
+| **Integrated upsert race** | **OPEN / CONFIRMED** — later four-way parallel routing minted **3 JIDs for one source**. A concurrency-hardened navigator is required before any whole-system zero-collision claim. |
+| **HSC-198 cold swarm timeout rate** | **FAIL by preregistration** — 17/27 timeouts (**63.0%**) at concurrency 7; apex `REPAIR_REQUIRED`. |
+| **Work Capsule prompt-content defect** | HSC-198 found `WorkCapsule.to_prompt()` transmitted only the capsule header in that harness; objective text was omitted. This blocks using that wave as semantic-answer-quality evidence. |
+| **81-worker / d4 live leg** | Still an open benchmark/reopen item; logical addressability is not evidence of useful 81-worker live concurrency. |
+| **<95 MiB RSS headline** | Still **not achieved** in the measured host process; historical measurements are ~113–117 MiB depending on harness. |
+| **Official InjecAgent 0% ASR** | **UNVERIFIED** as an official end-to-end benchmark. Existing 0/868 result is only a bounded hard-gate transition test. |
+| **Official Tau-bench 100%** | **UNVERIFIED** as official pass^k. Existing 42/42 result is a bounded legacy compatibility sample. |
+| **40–80% local task absorption** | **REDESIGN TARGET / HYPOTHESIS**, not yet a universal measured result. |
+| **Universal cognitive superiority** | **NOT ESTABLISHED.** Paper X explicitly requires matched controls before superiority language. |
+
+## Historical Gate-1 synchronization — retained, no longer the headline state
+
+The table below preserves the older Gate-1 evidence and boundaries. These results remain valid for their exact historical harnesses, but later Paper X / Aura Drive evidence above is the current headline layer.
+
+| Requested headline | Historical Gate-1 disposition | Source-bound result / boundary |
 |---|---|---|
-| **94%–98% token reduction; ~48-token L0 symbolic tensors** | **EVIDENCE BINDING REQUIRED** | The staged founder source preserves the range, but did not resolve an exact production benchmark independently establishing the full 94%–98% result. Do not present it as verified without workload, baseline, run artifact, and digest. |
-| **>5,250 receipt/events per second** | **VERIFIED, bounded scope** | Five fresh 1,000-transition runs: **6,864.45–7,071.97/sec**, median **7,044.41/sec**. A separate timed run measured **7,205.33/sec** with 1,001 events including root creation. Exact `StateDeltaDaemon`, SQLite `:memory:`, single thread, append-only state-event path; not a distributed/network receipt benchmark. |
-| **25+ concurrent agents** | **DESIGN TARGET / CURRENT FLEET EVIDENCE** | Staging records 25-plus worker slots and 27 objective positions. The architecture supports collision-resistant coordination through leases, ownership and phase staggering; no universal zero-collision claim is made. |
-| **<95 MB RSS** | **FAIL for tested host process / retained narrow-runtime target** | Packaged staging run: **115.95 MiB** peak RSS. Fresh W3 receipt-path process: **113,012 KB** max RSS. The `<95 MB` figure remains a narrower engineering target, not an achieved universal footprint. |
-| **0.00% InjecAgent ASR** | **UNVERIFIED as official/end-to-end InjecAgent result in the staged source set** | Staged Gate-1 source explicitly withholds the broad percentage until dataset/version, harness, target generation, run command, result, and digest are bound. Current repository evidence may separately describe bounded gate-layer attack-surface tests; those must not be relabeled as official end-to-end InjecAgent ASR. |
-| **100% Tau-bench accuracy / trajectory adherence** | **UNVERIFIED as official Tau-bench pass^k in the staged source set** | Staging preserves the statement but requires benchmark identity. Any bounded legacy trajectory-preservation result must remain scoped to its exact task-lane sample. |
-| **UDP <500 µs** | **VERIFIED WITH SCOPE CORRECTION** | Packaged staging result: **3.144 µs p95** localhost synchronous UDP RTT; companion run: **2.894 µs median**, **3.805 µs p95**, 200/200 packets. This is localhost unicast, not WAN/multicast/multi-node gossip. |
-| **W4 adversarial invariant harness** | **VERIFIED** | Fresh staged rerun: **28/28 PASS**, receipt digest `11b2786ece07626d954089db235f6cdac669b5f7f481f28f542eef6126bdf2f2`. Implemented staging invariants only; not a substitute for InjecAgent or Tau-bench. |
+| **94%–98% token reduction; ~48-token L0 symbolic tensors** | **EVIDENCE BINDING REQUIRED** | The staged founder source preserved the range, but did not resolve an exact production benchmark independently establishing the full 94%–98% result. Do not present it as verified without workload, baseline, run artifact, and digest. |
+| **>5,250 receipt/events per second** | **VERIFIED, bounded scope** | Five 1,000-transition runs: **6,864.45–7,071.97/sec**, median **7,044.41/sec**. Separate timed run: **7,205.33/sec** with 1,001 events including root creation. Exact `StateDeltaDaemon`, SQLite `:memory:`, single thread, append-only state-event path; not distributed/network receipt throughput. |
+| **25+ concurrent agents** | **HISTORICAL DESIGN TARGET / FLEET EVIDENCE** | Historical staging recorded 25-plus worker slots and 27 objective positions. This is now superseded as a concurrency headline by the later HSC-198 live 27-objective benchmark and integrated-race evidence above. |
+| **<95 MB RSS** | **FAIL for tested host / retained target** | Packaged staging: **115.95 MiB** peak RSS; fresh W3 receipt-path process: **113,012 KB** max RSS. |
+| **0.00% InjecAgent ASR** | **UNVERIFIED as official/end-to-end** | No broad official percentage without dataset/version, harness, target generation, run command, result, and digest. |
+| **100% Tau-bench accuracy / trajectory adherence** | **UNVERIFIED as official Tau-bench pass^k** | Any bounded legacy trajectory-preservation result stays scoped to its exact sample. |
+| **UDP <500 µs** | **VERIFIED WITH SCOPE CORRECTION** | Packaged result: **3.144 µs p95** localhost synchronous UDP RTT; companion: **2.894 µs median**, **3.805 µs p95**, 200/200 packets. Localhost unicast only. |
+| **W4 adversarial invariant harness** | **VERIFIED** | Historical staged rerun: **28/28 PASS**, receipt digest `11b2786ece07626d954089db235f6cdac669b5f7f481f28f542eef6126bdf2f2`. Implemented staging invariants only. |
 
-## Current repository benchmark evidence
+## Historical repository benchmark evidence
 
-The repository also carries bounded executable benchmark evidence. These measurements are **not third-party certifications or external percentile rankings**.
+These are still useful executable repository measurements, but they describe the current GitHub-generation harnesses rather than the complete Paper X / Aura Drive architecture.
 
-| Surface | Current source-bound repository result | Evidence boundary |
+| Surface | Historical source-bound repository result | Evidence boundary |
 |---|---:|---|
 | Six-slot FST deterministic routing | **1,366,040.46 iterations/s**, **8,196,242.75 transitions/s** | 100,000-iteration deterministic transition microkernel; not linguistic accuracy. |
 | `3^n` Merkle aggregation | **2,460.61 rollups/s**, **895,661.61 hashes/s** | 2,000 rollups, depth 5, 243 leaves/rollup. |
-| SQLite WAL | **19,934.69 writes/s @ 5 workers** | Best observed one-row transaction throughput; not automatically equivalent to complete receipt throughput. |
-| Peak process RSS | **116.71 MiB** | Process high-water mark; below a 4 GiB device-class capacity but above the separate `<95 MiB` target. |
-| Serialized state projection | **72.73% fewer bytes** (`286 B → 78 B`) | Byte serialization only; tokenizer-measured 94%+ compression remains separately unverified. |
+| SQLite WAL | **19,934.69 writes/s @ 5 workers** | Best observed one-row transaction throughput; not automatically complete receipt throughput. |
+| Peak process RSS | **116.71 MiB** | Historical process high-water mark; above the separate `<95 MiB` target. |
+| Serialized state projection | **72.73% fewer bytes** (`286 B → 78 B`) | Byte serialization only; not evidence of a universal tokenizer reduction. |
 | UDP localhost unicast | median **7.080 µs**, p95 **10.126 µs** | Synchronous localhost RTT proxy; not remote mesh gossip. |
 | InjecAgent-derived hard gate | **0 / 868 attack transitions reached executable state** (`0.0000%` gate-layer ASR) | Bounded gate-layer test only; not official end-to-end InjecAgent ASR. |
 | Legacy τ-bench trajectory preservation | **42 / 42 task-lane trials = 100.00%** | Bounded 6-task compatibility sample across 7 deterministic lanes; not official τ-bench pass^k. |
-| 25-slot bounded daemon fleet | **25 / 25 exact-once DONE**, **0 duplicate fleet payloads** | Process-spawned bounded worker correctness test; not a general concurrency-throughput claim. |
+| 25-slot bounded daemon fleet | **25 / 25 exact-once DONE**, **0 duplicate fleet payloads** | **Still valid for this exact historical harness.** It must not be generalized to current integrated routing because the later Drive-2 upsert race reproduced a different concurrency defect. |
 
 Repository scorecards:
 
@@ -208,9 +268,11 @@ python aura_swarm_runner.py
 
 ## Operating-economics evidence boundary
 
-A separate staged manifesto carries a planning model comparing **$60–$180/month** for AuraOS local/edge operation with a **$4,900–$12,900/month** cloud-agent baseline, corresponding arithmetically to roughly **98.60–98.78% lower modeled monthly OpEx** at paired endpoints.
+A historical staged manifesto carries a planning model comparing **$60–$180/month** for AuraOS local/edge operation with a **$4,900–$12,900/month** cloud-agent baseline, corresponding arithmetically to roughly **98.60–98.78% lower modeled monthly OpEx** at paired endpoints.
 
-The current Gate-1 technical fact sheet did **not** independently resolve the workload definition, provider/SKU assumptions, utilization, token volume, amortization, electricity/network inputs, or exact source model for those figures. They therefore remain a **staged operating-cost model, not an audited savings benchmark**, and the ~98% OpEx figure must not be relabeled as token compression.
+That planning model did **not** independently resolve the workload definition, provider/SKU assumptions, utilization, token volume, amortization, electricity/network inputs, or exact source model for those figures. It therefore remains a **staged operating-cost model, not an audited savings benchmark**, and the ~98% OpEx figure must not be relabeled as token compression.
+
+The newer evidence layer above should be preferred for concrete claims: Paper X provider telemetry, HSC-196 real cold/coordinate reuse, and HSC-198 cold/warm swarm measurements are all narrower but better bound.
 
 ## Reproduce repository benchmarks
 
@@ -220,7 +282,7 @@ python3 scripts/aura_advanced_benchmark_runner.py
 python3 scripts/aura_security_accuracy_harness.py
 ```
 
-Machine-readable outputs and signed/hashed receipts remain evidence of their declared execution scope. A signature or digest authenticates recorded material against its declared key/input; it does not independently establish human identity, semantic truth, or promotion authority.
+Machine-readable outputs and signed/hashed receipts remain evidence of their declared execution scope. A signature or digest authenticates recorded material against its declared key/input; it does not independently establish human identity, semantic truth, currentness, or promotion authority.
 
 ## Scientific disclosure
 
@@ -238,16 +300,15 @@ Copyleft is a strong legal/governance barrier to enclosure, but it should not be
 - **DOI:** https://doi.org/10.5281/zenodo.22134815
 - **Canonical Genesis Seed:** `67d2597bfa7895d997b89eb288a8f6cd5fe54ddc1ea69f676ec5d1a1ab96b002`
 
-## Staging-source provenance for this README synchronization
+## Evidence provenance / synchronization note
 
-Compiled by Triad 2 under `WO-TRIAD2-STAGING-README-SYNC-001` from the existing Gate-1 staging sources:
+This README now preserves two distinct evidence generations:
 
-- `docs/staging/ready_review/TECHNICAL_BENCHMARKS_AND_ECONOMICS.md`
-- `docs/staging/ready_review/FOUNDER_BIO_AND_VISION.md`
-- `docs/staging/ready_review/PR_MANIFESTO_PRESS_RELEASE.md`
+- historical GitHub / Gate-1 repository measurements; and
+- the newer Paper X Rev.3 + Aura Drive / Aura Drive 2 measurement layer.
 
-Founder contact integration was authorized directly by the Human Sovereign dispatch for this work order.
+Where later evidence narrows, supersedes, or falsifies an older headline, the old result remains visible under its original scope instead of being deleted. Current examples include the HSC-187 negative bypass result, HSC-193 bounded concurrency pass, HSC-198 live-swarm failure + warm coordinate-memory pass, and the later integrated upsert-race reproduction.
 
 ---
 
-**Evidence rule:** verified results stay scoped to the exact harness/workload that produced them; targets and unresolved claims remain labeled as such.
+**Evidence rule:** verified results stay scoped to the exact harness/workload/generation that produced them; targets and unresolved claims remain labeled as such; later evidence may supersede a headline without rewriting history.
