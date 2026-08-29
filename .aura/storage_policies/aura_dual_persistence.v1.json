@@ -1,0 +1,56 @@
+{
+  "schema": "AuraDualPersistencePolicyV1",
+  "status": "STAGED_NONPROMOTING",
+  "law": [
+    "TWO_DURABLE_REALIZATIONS_ONE_SEMANTIC_IDENTITY",
+    "REPLICA_IS_NOT_AUTHORITY",
+    "SYNCED_BEFORE_WORK_DISPATCH",
+    "TWO_SIDED_DIVERGENCE_FAILS_CLOSED",
+    "NO_SILENT_OVERWRITE",
+    "NATIVE_GOOGLE_OBJECTS_USE_CANONICAL_EXPORT_DIGEST",
+    "LOCAL_AURA_DRIVE_2_IS_RUNTIME_REALIZATION_NOT_SECOND_TRUTH_PLANE"
+  ],
+  "replicas": {
+    "local": {
+      "required": true,
+      "roles": [
+        "runtime_source_materialization",
+        "coordinate_cognition_cache",
+        "k27_residency",
+        "arena_temporal_state",
+        "model_runtime_state"
+      ]
+    },
+    "cloud": {
+      "required": true,
+      "roles": [
+        "durable_federation",
+        "cross_agent_access",
+        "shared_arena_surface",
+        "off_host_recovery"
+      ]
+    }
+  },
+  "dispatch_gate": "SYNC_STATE == SYNCED && GENERATION_MATCH && DIGEST_MATCH",
+  "conflict_policy": {
+    "one_sided_change": "propagate_to_unchanged_replica_then_verify_digest",
+    "two_sided_change": "preserve_both_compile_affected_cone_review_no_effect",
+    "missing_replica": "materialize_missing_replica_without_changing_source_owner"
+  },
+  "native_google_workspace": {
+    "byte_identity_required": false,
+    "required_identity": [
+      "provider_file_id",
+      "provider_revision",
+      "canonical_export_digest",
+      "semantic_sid",
+      "source_generation"
+    ]
+  },
+  "background": {
+    "event_driven_first": true,
+    "full_rescan_is_recovery_only": true,
+    "deterministic_first": true,
+    "llm_required_for_basic_sync": false
+  }
+}
