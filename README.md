@@ -9,14 +9,16 @@
 >
 > The redesign target is for the Drive-integrated AuraOS substrate to absorb roughly **40–80% of suitable routine orchestration work** where it is cheaper and lawful to do so — for example: assembling Work Capsules, gathering and routing research, resolving semantic coordinates, performing L0→L4 hydration, maintaining provenance/currentness, compiling affected cones, preparing receipts, reconciling state, and packaging successor handoffs. **That 40–80% range is an engineering target/hypothesis, not yet a universal measured benchmark.** Each class of work still has to earn migration through matched cost/correctness tests.
 >
-> This matters because Paper X already reports bounded evidence of substantial reuse at several layers, including provider-side cache reuse and a separately accounted Aura-level coordinate-result hit that avoided a repeated provider call. Later Aura Drive / Aura Drive 2 work has added live swarm, coordinate-memory, integration, Arena, HyperScale, and falsification evidence. The redesign phase is intended to push more repeatable work *below* the expensive model layer so that the savings compound across repeated objectives rather than being limited to prompt caching alone.
+> This matters because Paper X already reports bounded evidence of substantial reuse at several layers, including provider-side cache reuse and a separately accounted Aura-level coordinate-result hit that avoided a repeated provider call. Later Aura Drive / Aura Drive 2 work has added live swarm, coordinate-memory, integration, Arena, HyperScale, falsification, encryption/control, and repair evidence. The redesign phase is intended to push more repeatable work *below* the expensive model layer so that the savings compound across repeated objectives rather than being limited to prompt caching alone.
 >
 > The current direction can be summarized as:
 >
 > ```text
 > Human / Agent Intent
 >        ↓
-> Aura Drive semantic + coordinate world
+> Aura semantic + coordinate world
+>        ↓
+> minimum-sufficient active world / affected cone
 >        ↓
 > AuraOS local deterministic / low-cost execution
 >        ↓
@@ -29,22 +31,47 @@
 > reusable coordinates / receipts / affected-cone state
 > ```
 >
-> **Google Drive is the current working carrier for Aura Drive; it is not intended to become Aura's permanent semantic root or mandatory infrastructure dependency.** Paper X remains provider-neutral: identity, source, currentness, authority, coordinates, receipts, and reopenability must survive migration to local filesystems, databases, object stores, peer fabrics, or other future carriers.
+> **Google Drive is a valid deployable carrier for the Paper X architecture, not a mandatory permanent semantic root.** The Paper X world can be instantiated in Drive as source-bound documents, semantic coordinates, receipts, Work Capsules, lineage, currentness state, Arena/Commons definitions, research, rules, manifests, and reopenable evidence. A ChatGPT window with the Google Drive connector can enter that world, read it, hydrate the relevant slices, create and update its structured artifacts, and therefore participate directly in building and maintaining an Aura Drive without requiring a custom local client.
+>
+> **Aura Drive 2 on a local laptop is the accelerated executable realization of the same architecture.** Local files, SQLite/state stores, indexes, hashes, scripts, test harnesses, code, and deterministic preprocessors can run directly on the machine instead of paying a cloud/connector round trip for every operation. That can materially reduce latency and cognitive load because routine work can be performed by code before a model is asked to reason. Exact speed still depends on workload and hardware; the architectural advantage is that local execution is available and does not require the language model to mentally simulate deterministic computation.
+>
+> Google Drive itself is a storage/collaboration carrier, **not an arbitrary-code execution engine**. The distinction is deliberate:
+>
+> ```text
+> ChatGPT window
+>     │
+>     ├── Google Drive connector ──► Aura Drive in Google Drive
+>     │                              documents / coordinates / receipts /
+>     │                              manifests / research / work state
+>     │
+>     └── can build and maintain that Drive through connector operations
+>
+> Local laptop
+>     │
+>     └── Aura Drive 2 + AuraOS runtime
+>            ├── same semantic/source-bound world
+>            ├── local files + SQLite/indexes
+>            ├── Python / shell / test harnesses / compilers
+>            ├── hashes / Merkle work / affected-cone computation
+>            └── lower-latency deterministic preprocessing
+> ```
+>
+> The two modes are therefore complementary. A cloud-accessible Aura Drive makes the architecture reachable from ordinary ChatGPT windows and multiple collaborators; a local Aura Drive 2 can execute more of the deterministic substrate close to the data and wake expensive models only for unresolved residuals. Paper X remains carrier-neutral: identity, source, currentness, authority, coordinates, receipts, and reopenability must survive migration among Google Drive, local filesystems, databases, object stores, peer fabrics, and future carriers.
 >
 > ### What this means for this repository right now
 >
 > - **Paper X supersedes the current repository as the architectural authority.** See [**Paper X Rev.3 — PDF**](https://zenodo.org/records/22134815/files/PAPER-X%20%285%29.pdf?download=1) and the [**canonical Zenodo record**](https://zenodo.org/records/22134815).
 > - **The existing code is not being discarded.** It is the implementation lineage that is now being reconciled, simplified, and rebuilt against the newer Paper X / Aura Drive architecture.
-> - **The GitHub implementation is currently behind the working Aura Drive architecture.** Some newer mechanisms, equations, memory/coordinate systems, HyperDrive/HyperScale refinements, regenerative state rules, and the unified ephemeral Arena model are not yet fully represented in this codebase.
-> - **AuraOS is now being radically redesigned** so the deterministic runtime, semantic coordinate memory, caches, work-capsule machinery, research gathering, affected-cone recomputation, verification, and execution surfaces operate as one integrated substrate rather than as separate generations of the project.
+> - **The GitHub implementation is currently behind the working Aura Drive architecture.** Some newer mechanisms, equations, memory/coordinate systems, HyperDrive/HyperScale refinements, regenerative state rules, unified ephemeral Arena model, Commons/economic mechanisms, and encryption/control work are not yet fully represented in this codebase.
+> - **AuraOS is now being radically redesigned** so deterministic runtime, semantic coordinate memory, caches, Work Capsules, research gathering, affected-cone recomputation, verification, Arena/Commons execution, and successor-state machinery operate as one integrated substrate rather than as separate generations of the project.
 > - **Benchmark evidence below is generation- and workload-scoped.** Newer evidence may supersede a headline without erasing the historical result that produced it.
 > - The redesign goal is not “use more agents.” It is to **reuse more verified work, hydrate less irrelevant state, perform more routine work deterministically, and spend expensive model inference only where it can change the governed consequence.**
 >
 > In short: **Paper X closed the foundational design phase. The current engineering phase is to rebuild AuraOS so the code catches up to that design.**
 
-AuraOS is a minimal, local-first substrate for deterministic state, recursive coordination, and peer-to-peer execution. It is designed around a simple operating law: **do not feed the system the world; compile the smallest source-resolvable relational world sufficient for the objective.**
+AuraOS is a minimal, local-first substrate for deterministic state, recursive coordination, reusable computation, governed collaboration, and peer-to-peer/federated execution. It is designed around a simple operating law: **do not feed the system the world; compile the smallest source-resolvable relational world sufficient for the objective.**
 
-AuraOS keeps **addressability and routing separate from truth and authority**. A route may identify a lawful next operation without creating source truth, capability, permission, a commit, a merge, or human disposition.
+AuraOS keeps **addressability, routing, similarity, evidence, truth, authority, provenance, attribution, and payment separate**. A route may identify a lawful next operation without creating source truth, capability, permission, a commit, a merge, or human disposition.
 
 ## Founder & contact
 
@@ -53,10 +80,12 @@ AuraOS keeps **addressability and routing separate from truth and authority**. A
 **Affiliation:** Long Plain First Nation, Treaty 1 Territory, Manitoba, Canada  
 **Founder contact:** aura.os.q@gmail.com
 
-AuraOS is being developed around local-first execution, bounded hardware, source provenance, human authority, and community accessibility. The architecture treats constrained RAM, CPU, bandwidth, battery, latency, and thermal envelopes as design inputs rather than deployment afterthoughts.
+AuraOS is being developed around local-first execution, bounded hardware, source provenance, human authority, and community accessibility. The architecture treats constrained RAM, CPU, bandwidth, battery, latency, thermal envelopes, network availability, and model/provider cost as design inputs rather than deployment afterthoughts.
 
 ## Core features
 
+- **Google-Drive deployable Paper X world** — the semantic/source/provenance architecture can live in Drive and be built or maintained by connected ChatGPT windows.
+- **Local Aura Drive 2 execution** — the same world can be materialized locally so scripts, code, indexes, databases, hashes, tests, and deterministic compilers reduce model workload.
 - **Local-first deterministic state** — durable state and receipts remain inspectable close to the operator.
 - **Six-slot FST / WFST routing** — bounded state-local routing through `DIR → ASP → CLASS → SUBJ → VOICE → STEM`.
 - **3^n recursive rollups** — bounded child work can be compressed into progressively smaller parent summaries.
@@ -64,6 +93,9 @@ AuraOS is being developed around local-first execution, bounded hardware, source
 - **Bounded worker fleets** — identities, leases, coordinates, inboxes/outboxes, staging lanes, and receipts reduce collision surface.
 - **Human-gated authority** — routing, ranking, similarity, hashes, memory, or worker consensus never create consequential authority by themselves.
 - **Source-defeasible hydration** — compact representations must remain defeasible by exact/current source evidence.
+- **Proof-carrying Commons** — capabilities, recipes, provenance, attribution, rights, and explicit settlement can remain separable and auditable.
+- **Near-gas-free ledger lineage** — Merkle-DAG / RAM-staking designs explore ledger settlement without token gas while retaining the fact that physical compute/storage/network costs still exist.
+- **Crypto-agile security architecture** — Aura-specific context binding surrounds standard reviewed cryptographic primitives rather than replacing them with geometry or custom ciphers.
 
 ## Runtime architecture
 
@@ -125,7 +157,7 @@ hard guards
 → human choice
 ```
 
-The FST/WFST layer is a routing and syntax mechanism. It does **not** mint source truth, capability, authority, commits, pushes, merges, or human disposition.
+The FST/WFST layer is a routing and syntax mechanism. It does **not** mint source truth, capability, authority, commits, pushes, merges, cryptographic security, or human disposition.
 
 ## 3-6-9 orchestration and concurrency
 
@@ -142,6 +174,39 @@ Later Aura Drive 2 work has now executed a **27-objective live swarm battery**, 
 ### Conditional diagonal rebase
 
 The `3 → 6 → 9/1′` path is a **conditional diagonal rebase** across independently verified/current invariant boundaries. A fast path is admissible only when intervening guards are already satisfied; unresolved evidence, currentness, authority, or negative-space boundaries force the guarded linear path.
+
+## Coordinate memory, provider caching, and cognitive-load reduction
+
+Aura distinguishes several reuse planes:
+
+```text
+COORDINATE_HIT
+!= PREFIX_KV_HIT
+!= BLOCK_KV_HIT
+!= RESULT_HIT
+```
+
+The aim of Coordinate Memory is broader than “cache this prompt.” A reusable semantic coordinate can bind identity, source generation, currentness, relations, evidence, authority, invalidators, result state, and exact reopen routes. On a local Aura Drive 2, deterministic code can resolve or validate much of that state before a language model is invoked.
+
+Examples of work that can move below the model layer include:
+
+```text
+hashing / Merkle ancestry
+schema validation
+semantic-coordinate lookup
+SQLite queries
+source-generation checks
+affected-cone computation
+file/index traversal
+receipt generation
+manifest validation
+exact arithmetic / finite sweeps
+static analysis / tests
+archive packing / reconstruction
+known-route selection
+```
+
+That is what “reducing cognitive load” means here: **do not spend model inference re-deriving what deterministic machinery can calculate, retrieve, validate, or reconstruct exactly.**
 
 # Benchmark evidence hierarchy
 
@@ -174,17 +239,6 @@ A benchmark is publishable as a current empirical result only to the extent that
 | **HyperScale exact finite scale sweep** | **40,320** scale permutations collapse to **108** running-GCD trajectories; **219/255** nonempty subsets reach gcd=1; `s=4` is the minimax center of the declared scale set; exact virtual completion **{6,8,24}** | Exhaustive / exact finite mathematics for the declared set; **not** a production latency benchmark or universal physical law. |
 | **Factor-certificate controller witness** | **3,333,960-state OP7 brute-force** witness matched the treewidth-1 dynamic-programming winner/cost on the synthetic bound instance | Algorithmic equivalence witness for the tested factor structure; not a universal workload-speed claim. |
 
-### Coordinate reuse and provider caching are separate accounting planes
-
-Aura currently distinguishes at least:
-
-```text
-COORDINATE_HIT
-!= PREFIX_KV_HIT
-!= BLOCK_KV_HIT
-!= RESULT_HIT
-```
-
 The HSC-198 swarm battery is useful precisely because it observed **both** effects in the same experiment: the cold live-dispatch wave was already **95.9% provider cache-read by prompt token**, while the later same-objective coordinate-memory wave avoided the provider entirely.
 
 ## Current failures, falsifiers, and open residuals
@@ -203,7 +257,133 @@ The following are part of the current benchmark state and must not be hidden beh
 | **40–80% local task absorption** | **REDESIGN TARGET / HYPOTHESIS**, not yet a universal measured result. |
 | **Universal cognitive superiority** | **NOT ESTABLISHED.** Paper X explicitly requires matched controls before superiority language. |
 
-## Historical Gate-1 synchronization — retained, no longer the headline state
+## Independent challenge and repair are part of the architecture
+
+Aura's safety story is not “the first agent is smart enough.” It is that a candidate can be challenged against source and remain blocked, repaired, or explicitly unresolved.
+
+Recent Drive-2 repair evidence includes a source-first independent challenge that re-executed the relevant checks and verified **6/6 repairs landed with 0 failed**, while still retaining four LOW/INFO residual precision defects. Other recent folds have preserved challenger objections and `FAILED_TO_VERIFY` states rather than silently upgrading them after a persuasive synthesis.
+
+The intended law is:
+
+```text
+confident model output
+        ↓
+independent challenge
+        ↓
+exact source / test / currentness / authority re-grounding
+        ↓
+PASS | REPAIR | BLOCK | FAILED_TO_VERIFY
+        ↓
+human / canonical-owner disposition where required
+```
+
+Aura therefore does not promise an infallible AI. It tries to make confident wrongness **detectable, challengeable, source-defeasible, and unable to silently promote itself to authority.**
+
+# Near-gas-free ledger lineage and Commons settlement
+
+Aura's earlier N10 lineage disclosed a **Gas-Free Fractal Ledger** design built around a Merkle-DAG, Proof-of-Presence concepts, and RAM-staking rather than token gas. The useful economic idea survives, but the mature claim boundary is stricter:
+
+> **“Gas-free” means no mandatory token-denominated gas fee in that design; it does not mean zero physical cost. RAM, storage, bandwidth, verification, hardware wear, and administration still cost resources.**
+
+A simplified lineage model is:
+
+```text
+transaction / attestation
+        ↓
+Merkle-DAG dependency / receipt structure
+        ↓
+resource-bounded admission (e.g. RAM stake / local quota)
+        ↓
+verification / consensus appropriate to the deployment
+        ↓
+append-only provenance / settlement evidence
+```
+
+The mature Aura Commons does **not require a blockchain or token**. Paper IX/X separate source licence, provenance, attribution, and economic entitlement. Settlement can use a shared subscription pool, per-verified-result payment, bounty, per-use licence, maintenance/security reward, upstream-dependency share, Arena Recipe share, cooperative allocation, conventional payment rails, or a lawful smart-contract/ledger adapter.
+
+This is important because the ledger is an optional settlement/provenance mechanism, **not the truth plane**.
+
+The old thermodynamic/physical-entropy Proof-of-Presence ideas are retained as historical lineage, but they are not treated as automatically secure cryptographic roots. The newer ARCE work explicitly gives auxiliary physical entropy **zero credited security bits until its entropy, threat model, conditioning, privacy, restart behavior, and common-cause failure have been independently characterized.**
+
+# Encryption and cryptographic control: standard primitives, Aura context
+
+Aura's newer encryption/control work is **staged, noncanonical, test-required, and cryptographic-review-required**. Its important architectural move is not inventing a magical Aura cipher. It is separating two layers:
+
+```text
+STANDARD CRYPTOGRAPHIC HARDNESS
+AES / standardized AEAD
+ML-KEM / ML-DSA where appropriate
+standardized hybrid TLS constructions
+SHA-2 / approved transcript hashes
+Ascon-class lightweight primitives where permitted
+OS / hardware-protected key storage
+
+        +
+
+AURA CONTEXT BINDING
+semantic identity
+source generation / currentness
+authority / purpose
+domain separation
+W0 witness / receipts
+blind indexes
+replay / nonce state
+epoch / generation leases
+reopen / invalidation paths
+crypto-agile migration
+```
+
+Candidate ARCE profiles currently explore:
+
+- **high-assurance** standardized post-quantum/traditional mechanisms, including ML-KEM/ML-DSA-class profiles and standardized hybrid TLS groups;
+- **AES-256 / protocol-appropriate AEAD** for high-assurance symmetric protection where applicable;
+- **Ascon-based lightweight profiles** for constrained hardware when the permitted security level and measured device cost justify them;
+- **generation-bound crypto agility**, so a live session binds an exact protocol/suite/build/policy/trust-anchor generation and cannot silently mutate mid-session;
+- **short-lived purpose/epoch compartments**, exact nonce/replay state, and effect-time rebinding;
+- **HMAC blind indexes** so dependency/affected-cone lookups can cross a boundary without exposing raw semantic URIs;
+- **W0 / Merkle-style causal seals** for tamper-evident state and receipts.
+
+Aura's toroidal, tesseract, Morton, 27-cell, and other geometric structures may help organize encrypted blocks, locality, interleaving, redundancy, reconstruction, or wake neighborhoods. They are **not cryptographic hardness**:
+
+```text
+Toroidal / tesseract / 27-cell interlacing
+!= encryption
+!= entropy
+!= authentication
+```
+
+Likewise, a 27-bit or 27-cell layout is not a cryptographic security boundary. Actual confidentiality and authenticity must come from reviewed standard cryptographic constructions with correct key, nonce, replay, implementation, and lifecycle handling.
+
+# Arena, Places, and Commons direction
+
+Papers VIII–IX already established the bridge from bounded domain Arenas toward objective-native composition. The current redesign treats “Coding Arena,” “Scientific Arena,” “Construction Arena,” “Marketplace,” “Civic Arena,” and similar names primarily as **Arena Recipes** rather than separate permanent application engines.
+
+```text
+objective
+→ canonical semantics / evidence / rights / authority
+→ resolve reusable capabilities + Arena Recipe
+→ compile minimum sufficient ephemeral Arena
+→ humans + agents + tools work together
+→ verify / commit / attribute
+→ retain reconstructible successor state
+→ dissolve temporary application surface
+```
+
+Paper IX's enduring rule is: **a Recipe is the reusable pattern, not the implementation.** Roles can be rebound to current capabilities, versions, evidence, jurisdiction, privacy, cost, devices, and rights each time the objective runs.
+
+Aura Places extend the same idea to persistent human/community/business/creator spaces. A signed Place persists; each visitor receives a visitor-specific **ephemeral Visit** compiled from relationship, objective, permissions, entitlements, device/network/accessibility state, and context. Places can support media, live rooms, collaboration, product showrooms, virtual try-on, digital twins, direct commerce, subscriptions, support, repair/returns, community events, Arena Recipes, and provenance/attribution without forcing every visitor into one global persistent world.
+
+The economic layer follows meaningful verified contribution rather than traffic volume alone. Superseded work can remain attributable when it materially enabled a successor, while any actual payment remains subject to an explicit lawful settlement rule.
+
+```text
+LICENCE
+!= PROVENANCE
+!= ATTRIBUTION
+!= ECONOMIC ENTITLEMENT
+!= TRUTH / AUTHORITY
+```
+
+# Historical Gate-1 synchronization — retained, no longer the headline state
 
 The table below preserves the older Gate-1 evidence and boundaries. These results remain valid for their exact historical harnesses, but later Paper X / Aura Drive evidence above is the current headline layer.
 
@@ -246,6 +426,8 @@ Repository scorecards:
 AuraOS targets consumer-grade and constrained hardware by keeping the addressable world larger than the **active decision surface**. The design goal is to hydrate only the source-resolvable material needed for the current objective, then return to deeper evidence when the decision requires it.
 
 The measured host-process RSS figures above do **not** establish whole-device or mobile-kernel memory usage. The `<95 MiB` narrow-runtime objective remains explicitly unresolved rather than being rewritten as achieved.
+
+The local Aura Drive 2 design adds a second edge advantage: exact local computation can be pushed below the model. A local script that checks a source generation, computes a digest, runs a finite sweep, validates a schema, queries an index, or executes a test does not need a language model to spend context explaining how to perform that deterministic operation.
 
 ## Quickstart
 
@@ -302,12 +484,15 @@ Copyleft is a strong legal/governance barrier to enclosure, but it should not be
 
 ## Evidence provenance / synchronization note
 
-This README now preserves two distinct evidence generations:
+This README preserves multiple evidence generations rather than flattening them:
 
-- historical GitHub / Gate-1 repository measurements; and
-- the newer Paper X Rev.3 + Aura Drive / Aura Drive 2 measurement layer.
+- historical GitHub / Gate-1 repository measurements;
+- Paper X Rev.3 publication evidence;
+- later Aura Drive / Aura Drive 2 measurements and falsifiers;
+- staged/nonpromoting ARCE and encryption/control research;
+- earlier ledger/blockchain lineage whose security/economic claims are narrowed by later work.
 
-Where later evidence narrows, supersedes, or falsifies an older headline, the old result remains visible under its original scope instead of being deleted. Current examples include the HSC-187 negative bypass result, HSC-193 bounded concurrency pass, HSC-198 live-swarm failure + warm coordinate-memory pass, and the later integrated upsert-race reproduction.
+Where later evidence narrows, supersedes, repairs, or falsifies an older headline, the old result remains visible under its original scope instead of being deleted. Current examples include the HSC-187 negative bypass result, HSC-193 bounded concurrency pass, HSC-198 live-swarm failure + warm coordinate-memory pass, the later integrated upsert-race reproduction, and the demotion of unvalidated physical entropy from a cryptographic root to an auxiliary input with zero credited security until independently characterized.
 
 ---
 
