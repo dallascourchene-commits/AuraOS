@@ -296,6 +296,49 @@ These are **bounded system/reference results**, not universal claims of cognitiv
 | Web4 reference | 25/25 local deterministic gates | bounded capability/economic contract semantics | production marketplace/L2/bridge |
 | Campaign/Media Foundry | 34/34 local gates | evidence-bound CampaignGraph / affected-media logic | generated provider footage or deployed AR/XR |
 
+### Fresh 9-task routing/hydration ablation
+
+A fresh local ablation compared three deterministic orientation conditions on the checked 16-object × 6-domain reference graph:
+
+```text
+R = regular/broad orientation
+B = rebase-only hard dependency closure, no domain-lens narrowing
+A = full Aura structural route:
+    hard closure + selected domain lenses + bounded WorkCapsule + ExpertBundle
+```
+
+Each object-domain projection was assigned the same synthetic 4 KiB hydration cost; the Aura condition also paid a 2 KiB WorkCapsule cost per task. This isolates routing/hydration structure and **does not** pretend to measure model reasoning quality, provider token billing, or production latency.
+
+Across nine frozen Aura maintenance/research tasks:
+
+| Condition | Projection-equivalents hydrated | Equal-cost bytes |
+|---|---:|---:|
+| R — regular broad | 864 | 3,538,944 |
+| B — rebase-only | 342 | 1,400,832 |
+| A — full Aura structural route | 114 | 485,376 |
+
+Observed structural reductions:
+
+```text
+A vs R: 86.2847% fewer equal-cost hydrated bytes
+A vs B: 65.3509% fewer equal-cost hydrated bytes
+B vs R: 60.4167% fewer equal-cost hydrated bytes
+```
+
+The full-Aura ExpertBundle policy routed the nine tasks as:
+
+```text
+3 × NO_MODEL
+2 × LOCAL_FAST
+2 × AIRLLM_LARGE_LOCAL
+1 × OPENROUTER_PINNED
+1 × OPENROUTER_TRIAD
+```
+
+The `OPENROUTER_TRIAD` policy lane represents three independent-model calls, so the nine-task policy would imply eight model calls total if all selected backends were available/authorized. **No provider or AirLLM inference was executed in this ablation.**
+
+These numbers quantify deterministic work removed **before** model inference. They are not evidence that Aura makes an LLM 86% smarter, 86% cheaper, or 86% faster end-to-end.
+
 ### Current reference discrepancy kept visible
 
 The GEN16 prose reports a `24/96` example for scope-before-route. The currently checked executable reference yields `22/96` for its present seed/domain selection.
