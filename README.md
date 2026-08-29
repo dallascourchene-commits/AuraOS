@@ -140,6 +140,111 @@ A worker can receive the minimum current packet for a bounded mission yet contin
 
 ---
 
+# Try a bounded Mini Aura Research Arena
+
+Paper X is meant to be **falsifiable by an unfamiliar agent**, not merely readable. The repository now stages a small, provider-neutral Mini Aura reference experiment so a code-capable agent can instantiate the disclosed control pattern, execute finite claims, challenge them, emit machine-readable results, and stop.
+
+```bash
+cd examples/mini_aura_reference_arena
+python -m venv .aura-mini
+# activate .aura-mini for your shell
+python mini_aura_reference.py --out results_local.json
+```
+
+The Python entrypoint invokes an independent Node exact-count lane automatically. Expected bounded invariants include:
+
+- a depth-10 3-ary synthetic semantic world with **88,573** nodes and an **11-node** reverse-reachable affected cone after one leaf source mutation;
+- incremental current state identical to full rebuild while unrelated state remains unchanged;
+- **81/81** AMNF applicability signatures with zero mismatch;
+- **40,320** HyperScale permutations collapsing to **108** running-GCD trajectories;
+- **219/255** nonempty scale subsets reaching gcd 1 and minimax center `s=4`;
+- exact Python ↔ Node agreement on those finite HyperScale results;
+- zero true-winner exclusions in a valid-bound Progressive Action Cone test;
+- zero winner changes across **25,000** Decision-Capsule perturbations sampled inside the certified radius.
+
+A fresh 2026-08-29 Arena rerun passed **10/10** core public checks, including an independent Python ↔ Node exact-count parity gate. Its local timing and pruning magnitude are **not universal performance claims**. In particular, an older independent Research Arena record reported a mean of `5.36/1000` candidates explored by its Action Cone, while the fresh independently written valid-bound workload required about `136.076/1000`. The safety property transferred; the efficiency magnitude did not. That difference is evidence, not something to hide.
+
+The older supplied experiment archive also exposed a reproducibility distinction worth making explicit: its receipt digests correctly bind the recorded Objective Capsule and results, but its packaged `arena_benchmark.py` is a replay notice rather than the program that generated those measurements. Aura therefore distinguishes:
+
+```text
+RECORDED RESULT != REEXECUTABLE RESULT
+REPLAY_ONLY MUST BE EXPLICIT
+REFERENCE EXECUTION CLAIMS REQUIRE RUNNABLE BYTES + ENVIRONMENT + INPUTS + RECEIPT
+```
+
+And the claim ceiling remains:
+
+```text
+REFERENCE REIMPLEMENTATION != CANONICAL AURAOS
+RECONSTRUCTION PASS != COMPARATIVE SUPERIORITY
+NO CODE RUNTIME -> UNEXECUTED_NO_RUNTIME
+```
+
+The stronger acceptance target is a matched B0-B3/A1-A3 benchmark plus a blind fresh-agent chain: Agent A receives Paper X + the pinned reference capsule, reconstructs/tests/collapses, terminates completely, and a different fresh Agent B resumes from the compact `SuccessorFrame` without Agent A's transcript.
+
+---
+
+# Newest Arena generations: Web4 capability composition and evidence-bound media
+
+The shared Arena workflow continued moving while this README was being prepared. These are staged architecture/results, not production deployment claims.
+
+## GEN10 — Aura Web4 / capability-and-research economy
+
+The staged composition law is:
+
+```text
+USER-GOVERNED INTENT
+→ SOURCE-BOUND WORLD
+→ MINIMUM LAWFUL CAPABILITY COMPOSITION
+→ EPHEMERAL ARENA
+→ VERIFIED EFFECT
+→ DURABLE COGNITION / LINEAGE / RIGHTS
+→ OPTIONAL SETTLEMENT
+```
+
+One Arena may compose open Commons capabilities, self-built tools, paid/proprietary capabilities and research-pool capabilities at the same time. Proprietary implementation may remain sealed while its interface, terms, attestation and execution receipt cross the Arena boundary.
+
+Economic separation is constitutional:
+
+```text
+FREE LICENSE != ZERO LIFECYCLE COST
+PAID != BETTER
+PRICE != AUTHORITY
+LINEAGE != DEBT
+ATTRIBUTION != ENTITLEMENT
+USER GAS ZERO != SYSTEM COST ZERO
+WRAPPED ASSET != NATIVE ASSET
+BLOCKCHAIN != AURA TRUTH
+```
+
+The current GEN10 witness is **25/25 local deterministic gates**. It does not establish a production blockchain, bridge, wallet, paymaster, marketplace, smart-contract security audit, regulatory compliance or universal fairness result.
+
+## GEN11 — Evidence-Bound CampaignGraph / Media Foundry
+
+A campaign is compiled from one source/currentness-bound evidence graph rather than treating every output as an unrelated prompt:
+
+```text
+MESSAGE ONCE -> EVIDENCE ONCE -> MANY REGENERABLE CAMPAIGN SURFACES
+```
+
+Press release, FAQ, pitch, social copy, shots, clips, captions and longer cuts become projections of the same CampaignGraph.
+
+```text
+THE PROMPT IS NOT THE SOURCE CODE OF THE MOVIE.
+RENDERING != TRUTH.
+GENERATED CONCEPT DEMO != DEPLOYED CAPABILITY.
+```
+
+A source/claim change should identify dependent copy/shots, reopen the **minimum media cone**, regenerate only that cone, verify it and emit a new receipt. The staged worker-tool law is similarly regenerative:
+
+```text
+WORK -> TOOL DELTA -> TEST -> PROVENANCE -> COORDINATE -> CAPABILITY PACKAGE -> REUSE
+```
+
+A worker-created tool is not automatically trusted or promoted merely because it exists. GEN11 reports **34/34 local Arena gates** and explicitly reports that no real generative-video provider call occurred in that generation.
+
+---
+
 # J59 → HyperScale → HyperDrive: where the large-number phase actually fits
 
 A key historical bridge is the **J59 journal series from 2026-08-15**. It explains why later HyperScale and HyperDrive exist.
@@ -422,6 +527,9 @@ A later 27-objective live swarm battery returned 27/27 receipts but only 10 PASS
 | Exact scale sweep | 40,320 permutations → 108 running-GCD trajectories; 219/255 subsets reach gcd=1; `s=4` minimax; virtual completion `{6,8,24}` | exact finite mathematics, not production speed |
 | GEN7 Places/currentness integration | Rev.4→4.1 22/22; Place/Space authorization 10/10; HyperDrive Python + Node controls PASS | same-host method evidence |
 | GEN8 Resident/MissionContract | 30/30 local gates; command durably queued | no command-bound ACK/RESULT at bounded check; no live-host claim |
+| GEN10 Web4 capability/economy | 25/25 local deterministic gates | staged; no production marketplace/blockchain/bridge claim |
+| GEN11 CampaignGraph/Media Foundry | 34/34 local Arena gates | staged; no real generative-video provider call in that generation |
+| Mini Aura public reference | 10/10 core checks; 88,573→11 affected cone; Python↔Node HyperScale parity | bounded independent reimplementation; not canonical AuraOS |
 
 Open/current failures include the integrated upsert race, the HSC-198 cold timeouts, a prompt-content defect in that harness, unproven 81-worker live concurrency, unmet `<95 MiB` RSS target, and unverified official benchmark headline claims. They remain visible instead of being edited away.
 
@@ -443,7 +551,7 @@ The Omni paper preserves the dated claim genealogy rather than forcing readers t
 | VIII | N31-N50 | evidence-ordered relational Arenas, authority/source separation, atomic publication |
 | IX | N51-N100 | objective-native Arenas, Capability Packages, Commons, attestation, Places, federation/economy |
 | X Rev.3 | N101-N195 | relational-world compilation, World Seed, Coordinate Memory, wrappers, cache fabric, host compiler, spatial codec, Commons, reconstruction/repair |
-| X Omni successor | consolidated continuation | J59→HyperDrive genealogy, Host+Inference wrappers, longitudinal amortization, unified/joinable Arena, cognitive materialization, Places/Spaces/LifeOS, Resident/command fabric, explicit settlement adapters and updated falsifiers |
+| X Omni successor | consolidated continuation | J59→HyperDrive genealogy, Host+Inference wrappers, longitudinal amortization, unified/joinable Arena, cognitive materialization, Places/Spaces/LifeOS, Resident/command fabric, Web4 capability composition, CampaignGraph/media regeneration, explicit Mini Aura falsification package, settlement adapters and updated falsifiers |
 
 The current Omni compilation preserves earlier positive, null and negative results, including later corrections such as the carry equation repair: for balanced odd radix `r`, `P(carry)=(r²-1)/(4r²)=1/4-1/(4r²)`, so 25% is an asymptotic ceiling approached from below, not a finite-radix floor.
 
