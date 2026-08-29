@@ -33,7 +33,7 @@
 >
 > ### What this means for this repository right now
 >
-> - **Paper X supersedes the current repository as the architectural authority.** See [`PAPER_X_ARXIV_DISCLOSURE.pdf`](./PAPER_X_ARXIV_DISCLOSURE.pdf) and the canonical Zenodo record below.
+> - **Paper X supersedes the current repository as the architectural authority.** See [**Paper X Rev.3 — PDF**](https://zenodo.org/records/22134815/files/PAPER-X%20%285%29.pdf?download=1) and the [**canonical Zenodo record**](https://zenodo.org/records/22134815).
 > - **The existing code is not being discarded.** It is the implementation lineage that is now being reconciled, simplified, and rebuilt against the newer Paper X / Aura Drive architecture.
 > - **The GitHub implementation is currently behind the working Aura Drive architecture.** Some newer mechanisms, equations, memory/coordinate systems, HyperDrive/HyperScale refinements, regenerative state rules, and the unified ephemeral Arena model are not yet fully represented in this codebase.
 > - **AuraOS is now being radically redesigned** so the deterministic runtime, semantic coordinate memory, caches, work-capsule machinery, research gathering, affected-cone recomputation, verification, and execution surfaces operate as one integrated substrate rather than as separate generations of the project.
@@ -51,7 +51,7 @@ AuraOS keeps **addressability and routing separate from truth and authority**. A
 **Founder:** Dallas Fabian Courchene-Martin  
 **Role:** Founder, AuraOS; Indigenous systems builder  
 **Affiliation:** Long Plain First Nation, Treaty 1 Territory, Manitoba, Canada  
-**Founder contact:** dallascourchene@gmail.com
+**Founder contact:** aura.os.q@gmail.com
 
 AuraOS is being developed around local-first execution, bounded hardware, source provenance, human authority, and community accessibility. The architecture treats constrained RAM, CPU, bandwidth, battery, latency, and thermal envelopes as design inputs rather than deployment afterthoughts.
 
@@ -224,7 +224,7 @@ Machine-readable outputs and signed/hashed receipts remain evidence of their dec
 
 ## Scientific disclosure
 
-See [`PAPER_X_ARXIV_DISCLOSURE.pdf`](./PAPER_X_ARXIV_DISCLOSURE.pdf) for the scientific disclosure, research claims, evidence boundaries, and architectural context for the AuraOS substrate.
+See [**Paper X Rev.3 — PDF**](https://zenodo.org/records/22134815/files/PAPER-X%20%285%29.pdf?download=1) for the scientific disclosure, research claims, evidence boundaries, and architectural context for the AuraOS substrate. The canonical publication record is [Zenodo 22134815](https://zenodo.org/records/22134815).
 
 ## AGPLv3 public commons
 
@@ -234,7 +234,8 @@ Copyleft is a strong legal/governance barrier to enclosure, but it should not be
 
 ## Canonical archive
 
-- **Zenodo record:** https://zenodo.org/records/21941334
+- **Paper X Rev.3:** https://zenodo.org/records/22134815
+- **DOI:** https://doi.org/10.5281/zenodo.22134815
 - **Canonical Genesis Seed:** `67d2597bfa7895d997b89eb288a8f6cd5fe54ddc1ea69f676ec5d1a1ab96b002`
 
 ## Staging-source provenance for this README synchronization
