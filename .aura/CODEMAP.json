@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788032288,
+  "generated_at_unix": 1788032387,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1753,8 +1753,8 @@
     {
       "ring": "repo",
       "files": 1636,
-      "bytes": 26333950,
-      "tokens_est": 6573889,
+      "bytes": 26339768,
+      "tokens_est": 6575337,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
@@ -158776,6 +158776,14 @@
     "python aura_icm_cli.py list ./icm_workspaces": [
       "ICM_WORKSPACE_README.md"
     ],
+    "python -m venv": [
+      "README.md",
+      "examples/mini_aura_reference_arena/README.md"
+    ],
+    "python mini_aura_reference.py --out results_local.json": [
+      "README.md",
+      "examples/mini_aura_reference_arena/README.md"
+    ],
     "python aura_daemon.py": [
       "README.md",
       "docs/staging/ready_review/README_STAGED.md"
@@ -159128,12 +159136,6 @@
     ],
     "python -m unittest": [
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
-    ],
-    "python -m venv": [
-      "examples/mini_aura_reference_arena/README.md"
-    ],
-    "python mini_aura_reference.py --out results_local.json": [
-      "examples/mini_aura_reference_arena/README.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -174842,11 +174844,13 @@
       "path": "README.md",
       "role": "knowledge_artifact",
       "binary": false,
-      "bytes": 24342,
-      "lines": 508,
-      "tokens_est": 6052,
+      "bytes": 30160,
+      "lines": 616,
+      "tokens_est": 7500,
       "symbol_count": 0,
       "commands": [
+        "python -m venv",
+        "python mini_aura_reference.py --out results_local.json",
         "python aura_node.py",
         "python aura_daemon.py",
         "python aura_swarm_runner.py",
@@ -174855,60 +174859,66 @@
         "python3 scripts/aura_security_accuracy_harness.py"
       ],
       "command_lines": {
+        "python -m venv": [
+          149
+        ],
+        "python mini_aura_reference.py --out results_local.json": [
+          151
+        ],
         "python aura_node.py": [
-          458
+          566
         ],
         "python aura_daemon.py": [
-          459
+          567
         ],
         "python aura_swarm_runner.py": [
-          460
+          568
         ],
         "python3 scripts/aura_industry_benchmark_validation.py": [
-          466
+          574
         ],
         "python3 scripts/aura_advanced_benchmark_runner.py": [
-          467
+          575
         ],
         "python3 scripts/aura_security_accuracy_harness.py": [
-          468
+          576
         ]
       },
       "topology": {},
-      "digest8": "16a9e145921d8310",
+      "digest8": "8fb3c761a10a305f",
       "vector": [
-        -0.199584,
-        0.248605,
-        0.271948,
-        0.278951,
-        0.295292,
-        0.208922,
-        -0.001167,
-        -0.038516,
-        -0.169238,
-        0.215925,
-        -0.25094,
-        -0.199584,
-        -0.176241,
-        0.047854,
-        -0.18091,
-        -0.106212,
-        0.0782,
-        -0.117883,
-        -0.029179,
-        0.271948,
-        -0.136558,
-        0.16457,
-        -0.278951,
-        0.022176,
-        -0.092206,
-        -0.141226,
-        0.092206,
-        0.010504,
-        0.276617,
-        -0.043185,
-        0.124886,
-        0.09454
+        -0.182096,
+        0.182096,
+        0.044376,
+        -0.127008,
+        0.270849,
+        0.065799,
+        -0.234123,
+        0.231063,
+        -0.029074,
+        0.148431,
+        -0.319816,
+        -0.273909,
+        0.026014,
+        -0.133129,
+        -0.145371,
+        0.013772,
+        0.148431,
+        0.307574,
+        -0.053558,
+        0.123948,
+        -0.154552,
+        0.084162,
+        0.123948,
+        0.00153,
+        -0.203519,
+        0.099464,
+        0.240244,
+        0.078041,
+        0.255547,
+        -0.215761,
+        0.240244,
+        -0.154552
       ]
     },
     {
@@ -286350,8 +286360,8 @@
   },
   "summary": {
     "file_count": 1636,
-    "total_bytes": 26333950,
-    "text_tokens_est": 6573889,
+    "total_bytes": 26339768,
+    "text_tokens_est": 6575337,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
@@ -446415,6 +446425,6 @@
       }
     ],
     "record_fingerprint": "4a75aa852b220d92c20d629855fa567d",
-    "payload_hash": "5387a273be622afc44d3f5605f189c6c"
+    "payload_hash": "c9a37823e74fbe5cff97b5f3449ceb01"
   }
 }
