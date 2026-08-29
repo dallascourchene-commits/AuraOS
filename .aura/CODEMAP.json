@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788041121,
+  "generated_at_unix": 1788041395,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1760,8 +1760,8 @@
     {
       "ring": "repo",
       "files": 1643,
-      "bytes": 26358541,
-      "tokens_est": 6580027,
+      "bytes": 26358926,
+      "tokens_est": 6580127,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
@@ -158983,6 +158983,14 @@
       "README.md",
       "examples/arena_navigation_domain_lens/README.md"
     ],
+    "python checks.py": [
+      "README.md",
+      "examples/arena_expert_fabric/README.md"
+    ],
+    "python paired_rba_systems_benchmark.py": [
+      "README.md",
+      "examples/arena_expert_fabric/README.md"
+    ],
     "python test_syntax_fixes.py": [
       "SYNTAX_FIXES_APPLIED.md"
     ],
@@ -159330,12 +159338,6 @@
     ],
     "python3 scripts/aura_security_accuracy_harness.py": [
       "docs/staging/ready_review/README_STAGED.md"
-    ],
-    "python checks.py": [
-      "examples/arena_expert_fabric/README.md"
-    ],
-    "python paired_rba_systems_benchmark.py": [
-      "examples/arena_expert_fabric/README.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -175044,61 +175046,69 @@
       "path": "README.md",
       "role": "knowledge_artifact",
       "binary": false,
-      "bytes": 21402,
-      "lines": 656,
-      "tokens_est": 5313,
+      "bytes": 21787,
+      "lines": 608,
+      "tokens_est": 5413,
       "symbol_count": 0,
       "commands": [
         "python -m venv",
         "python mini_aura_reference.py --out results_local.json",
-        "python domain_lens_reference.py"
+        "python domain_lens_reference.py",
+        "python checks.py",
+        "python paired_rba_systems_benchmark.py"
       ],
       "command_lines": {
         "python -m venv": [
-          430
+          384
         ],
         "python mini_aura_reference.py --out results_local.json": [
-          432
+          386
         ],
         "python domain_lens_reference.py": [
-          449
+          403
+        ],
+        "python checks.py": [
+          410
+        ],
+        "python paired_rba_systems_benchmark.py": [
+          411
         ]
       },
       "topology": {},
-      "digest8": "25c61ef2dc17ba24",
+      "digest8": "ef2d7a779a81b58e",
       "vector": [
-        0.204268,
-        -0.09619,
-        0.236692,
-        0.119967,
-        0.247499,
-        -0.178329,
-        0.063766,
-        -0.020535,
-        0.087543,
-        0.186976,
-        -0.16536,
-        0.191299,
-        -0.128613,
-        -0.117805,
-        -0.180491,
-        0.128613,
-        0.15239,
-        -0.253984,
-        0.135098,
-        0.273438,
-        0.236692,
-        0.113482,
-        -0.02702,
-        -0.117805,
-        0.212914,
-        -0.245338,
-        -0.145906,
-        0.022696,
-        0.156714,
-        -0.212914,
-        0.253984,
-        -0.26263
+        0.217838,
+        0.290022,
+        0.248774,
+        -0.032225,
+        -0.186903,
+        0.083784,
+        -0.26682,
+        -0.207527,
+        -0.261664,
+        -0.12761,
+        -0.140499,
+        -0.259086,
+        0.246196,
+        0.08894,
+        0.027069,
+        -0.174013,
+        0.132765,
+        -0.009023,
+        -0.024491,
+        -0.094096,
+        0.305489,
+        0.222994,
+        0.184325,
+        -0.225572,
+        -0.137921,
+        0.199793,
+        0.055426,
+        -0.065738,
+        -0.137921,
+        0.163701,
+        0.003867,
+        0.104408
       ]
     },
     {
@@ -286889,8 +286899,8 @@
   },
   "summary": {
     "file_count": 1643,
-    "total_bytes": 26358541,
-    "text_tokens_est": 6580027,
+    "total_bytes": 26358926,
+    "text_tokens_est": 6580127,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
@@ -447161,6 +447171,6 @@
       }
     ],
     "record_fingerprint": "3da945aa09c194f6758f6cb7e9e66ad5",
-    "payload_hash": "453c675dfcbb0fd412664089017fbc7e"
+    "payload_hash": "011d83c95f2a9f616521be70269b08e2"
   }
 }
