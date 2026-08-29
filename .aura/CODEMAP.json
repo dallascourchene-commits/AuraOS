@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788040920,
+  "generated_at_unix": 1788041121,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1138,6 +1138,10 @@
       "download_papers.py",
       "download_zenodo_papers.py",
       "english_lexicon.json",
+      "examples/arena_expert_fabric/README.md",
+      "examples/arena_expert_fabric/checks.py",
+      "examples/arena_expert_fabric/expert_fabric.py",
+      "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
       "examples/arena_navigation_domain_lens/README.md",
       "examples/arena_navigation_domain_lens/domain_lens_reference.py",
       "examples/aura_gate_policy.json",
@@ -1669,6 +1673,9 @@
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
+      "examples/arena_expert_fabric/checks.py",
+      "examples/arena_expert_fabric/expert_fabric.py",
+      "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
       "examples/arena_navigation_domain_lens/domain_lens_reference.py",
       "examples/mini_aura_reference_arena/mini_aura_reference.py",
       "scripts/aura_advanced_benchmark_runner.py",
@@ -1744,10 +1751,7 @@
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_bilateral_planning_enforcement.py",
-      "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_connectome.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1755,15 +1759,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26344250,
-      "tokens_est": 6576454,
+      "files": 1643,
+      "bytes": 26358541,
+      "tokens_est": 6580027,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
+        "python_module": 1000,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -3621,6 +3625,14 @@
         "end_line": 109,
         "semantic_id": "aura_persistence_cli.py#function:run:7f94baca3e3b884a",
         "signature_hash": "0a9464444ccb9a05"
+      },
+      {
+        "file": "examples/arena_expert_fabric/checks.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 42,
+        "semantic_id": "examples/arena_expert_fabric/checks.py#function:run:abc10591a9d15d9c",
+        "signature_hash": "26799ab4ad82cbfb"
       },
       {
         "file": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
@@ -21163,6 +21175,14 @@
         "end_line": 54,
         "semantic_id": "aura_blockchain/demo.py#function:ok:19258f32ac3c53be",
         "signature_hash": "cfdee8d8536334d2"
+      },
+      {
+        "file": "examples/arena_expert_fabric/checks.py",
+        "kind": "function",
+        "line": 3,
+        "end_line": 5,
+        "semantic_id": "examples/arena_expert_fabric/checks.py#function:ok:9c62605c42000f6f",
+        "signature_hash": "c661175925b26c89"
       }
     ],
     "info": [
@@ -90203,6 +90223,14 @@
         "end_line": 47,
         "semantic_id": "aura_tcwaa.py#class:Task:80278b012b1d880e",
         "signature_hash": "e8124b632950c68c"
+      },
+      {
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 28,
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#class:Task:e08be0759318eaab",
+        "signature_hash": "e8124b632950c68c"
       }
     ],
     "ThermalCostWeightedAPIArbitration": [
@@ -96793,6 +96821,84 @@
         "signature_hash": "9509d08361c59676"
       }
     ],
+    "h16": [
+      {
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:h16:e5e4c0592f171f78",
+        "signature_hash": "4c6394195175f3b5"
+      }
+    ],
+    "k27": [
+      {
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 17,
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:k27:5d4565b79d5f4c38",
+        "signature_hash": "822e70766cec9340"
+      }
+    ],
+    "Backend": [
+      {
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 33,
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#class:Backend:5e1c8b6fb1006f78",
+        "signature_hash": "a95bc105f69d7b78"
+      }
+    ],
+    "cache_key": [
+      {
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 54,
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:cache_key:ce15fb240cb21e1b",
+        "signature_hash": "397aa3aaf2ed9053"
+      }
+    ],
+    "choose": [
+      {
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 95,
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:choose:65e1a041f781dcb4",
+        "signature_hash": "d6c7719d29f3f83d"
+      }
+    ],
+    "closure": [
+      {
+        "file": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 31,
+        "semantic_id": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py#function:closure:45c97446fbdf25dd",
+        "signature_hash": "eed28545da76b977"
+      },
+      {
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "kind": "function",
+        "line": 84,
+        "end_line": 90,
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:closure:f8357a72cd107230",
+        "signature_hash": "eed28545da76b977"
+      }
+    ],
+    "total": [
+      {
+        "file": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 70,
+        "semantic_id": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py#function:total:094932bcd1042987",
+        "signature_hash": "9c3a87261661d2a5"
+      }
+    ],
     "temp": [
       {
         "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
@@ -96831,16 +96937,6 @@
         "end_line": 81,
         "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:lens:a14b5dbdf5a90a03",
         "signature_hash": "48a711946df85ea3"
-      }
-    ],
-    "closure": [
-      {
-        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
-        "kind": "function",
-        "line": 84,
-        "end_line": 90,
-        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:closure:f8357a72cd107230",
-        "signature_hash": "eed28545da76b977"
       }
     ],
     "affected": [
@@ -159234,6 +159330,12 @@
     ],
     "python3 scripts/aura_security_accuracy_harness.py": [
       "docs/staging/ready_review/README_STAGED.md"
+    ],
+    "python checks.py": [
+      "examples/arena_expert_fabric/README.md"
+    ],
+    "python paired_rba_systems_benchmark.py": [
+      "examples/arena_expert_fabric/README.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -236761,6 +236863,204 @@
       ]
     },
     {
+      "path": "examples/arena_expert_fabric/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1732,
+      "lines": 49,
+      "tokens_est": 433,
+      "symbol_count": 0,
+      "commands": [
+        "python checks.py",
+        "python paired_rba_systems_benchmark.py"
+      ],
+      "command_lines": {
+        "python checks.py": [
+          20
+        ],
+        "python paired_rba_systems_benchmark.py": [
+          21
+        ]
+      },
+      "topology": {},
+      "digest8": "057a209a057a1a3b",
+      "vector": [
+        -0.079571,
+        -0.21496,
+        0.160329,
+        -0.274341,
+        0.16508,
+        -0.001188,
+        0.16983,
+        0.155579,
+        -0.017814,
+        -0.236337,
+        0.136577,
+        0.112824,
+        0.131826,
+        -0.233962,
+        0.160329,
+        0.16508,
+        0.146078,
+        -0.001188,
+        -0.105699,
+        0.229212,
+        0.276717,
+        -0.274341,
+        -0.032066,
+        -0.252964,
+        -0.203084,
+        0.108074,
+        0.039192,
+        -0.283842,
+        0.11995,
+        -0.257715,
+        0.179331,
+        -0.060569
+      ]
+    },
+    {
+      "path": "examples/arena_expert_fabric/checks.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3428,
+      "lines": 46,
+      "tokens_est": 857,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3fbd2615f93f7048",
+      "vector": [
+        0.006133,
+        -0.008587,
+        0.138615,
+        0.04784,
+        0.224482,
+        -0.082187,
+        -0.165601,
+        -0.222029,
+        -0.015947,
+        0.266189,
+        0.114081,
+        0.239202,
+        0.089547,
+        0.072374,
+        -0.302989,
+        -0.148428,
+        -0.231842,
+        -0.158241,
+        0.133708,
+        -0.273549,
+        -0.180322,
+        0.020854,
+        0.312803,
+        -0.057654,
+        0.217122,
+        -0.072374,
+        0.175415,
+        -0.099361,
+        -0.271096,
+        -0.224482,
+        -0.199948,
+        0.116534
+      ]
+    },
+    {
+      "path": "examples/arena_expert_fabric/expert_fabric.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3940,
+      "lines": 96,
+      "tokens_est": 985,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b047f65f580303fe",
+      "vector": [
+        0.007589,
+        0.241751,
+        0.055288,
+        -0.263433,
+        -0.228742,
+        0.07697,
+        0.120334,
+        -0.096484,
+        0.009757,
+        0.118165,
+        -0.222238,
+        -0.256928,
+        0.265601,
+        0.170202,
+        0.055288,
+        0.152856,
+        0.016261,
+        -0.170202,
+        0.222238,
+        0.256928,
+        0.265601,
+        0.05312,
+        -0.272106,
+        0.202724,
+        -0.263433,
+        -0.102988,
+        0.081306,
+        0.272106,
+        -0.107325,
+        0.105156,
+        -0.118165,
+        0.035775
+      ]
+    },
+    {
+      "path": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5191,
+      "lines": 86,
+      "tokens_est": 1298,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fe1bfb127b599af5",
+      "vector": [
+        0.007601,
+        -0.135739,
+        -0.233471,
+        -0.185691,
+        -0.12488,
+        0.207409,
+        0.170488,
+        0.014117,
+        0.035835,
+        -0.153113,
+        0.26822,
+        -0.068412,
+        -0.185691,
+        -0.194378,
+        0.168316,
+        0.035835,
+        -0.237814,
+        0.235642,
+        -0.218268,
+        0.183519,
+        -0.272563,
+        0.263876,
+        -0.059725,
+        0.237814,
+        0.253017,
+        0.074928,
+        -0.237814,
+        -0.187862,
+        -0.120536,
+        -0.01846,
+        0.163972,
+        -0.027148
+      ]
+    },
+    {
       "path": "examples/arena_navigation_domain_lens/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -286588,15 +286888,15 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26344250,
-    "text_tokens_est": 6576454,
+    "file_count": 1643,
+    "total_bytes": 26358541,
+    "text_tokens_est": 6580027,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
+      "python_module": 1000,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -287745,6 +288045,10 @@
       "download_papers.py",
       "download_zenodo_papers.py",
       "english_lexicon.json",
+      "examples/arena_expert_fabric/README.md",
+      "examples/arena_expert_fabric/checks.py",
+      "examples/arena_expert_fabric/expert_fabric.py",
+      "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
       "examples/arena_navigation_domain_lens/README.md",
       "examples/arena_navigation_domain_lens/domain_lens_reference.py",
       "examples/aura_gate_policy.json",
@@ -382716,6 +383020,106 @@
         "file_digest8": "30acae6183bec6ce"
       },
       {
+        "semantic_id": "examples/arena_expert_fabric/checks.py#function:ok:9c62605c42000f6f",
+        "name": "ok",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/checks.py",
+        "line": 3,
+        "end_line": 5,
+        "signature_hash": "c661175925b26c89",
+        "file_digest8": "3fbd2615f93f7048"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/checks.py#function:run:abc10591a9d15d9c",
+        "name": "run",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/checks.py",
+        "line": 7,
+        "end_line": 42,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "3fbd2615f93f7048"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#class:Backend:5e1c8b6fb1006f78",
+        "name": "Backend",
+        "kind": "class",
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "line": 31,
+        "end_line": 33,
+        "signature_hash": "a95bc105f69d7b78",
+        "file_digest8": "b047f65f580303fe"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#class:Task:e08be0759318eaab",
+        "name": "Task",
+        "kind": "class",
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "line": 20,
+        "end_line": 28,
+        "signature_hash": "e8124b632950c68c",
+        "file_digest8": "b047f65f580303fe"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:cache_key:ce15fb240cb21e1b",
+        "name": "cache_key",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "line": 51,
+        "end_line": 54,
+        "signature_hash": "397aa3aaf2ed9053",
+        "file_digest8": "b047f65f580303fe"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:choose:65e1a041f781dcb4",
+        "name": "choose",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "line": 56,
+        "end_line": 95,
+        "signature_hash": "d6c7719d29f3f83d",
+        "file_digest8": "b047f65f580303fe"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:h16:e5e4c0592f171f78",
+        "name": "h16",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "4c6394195175f3b5",
+        "file_digest8": "b047f65f580303fe"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:k27:5d4565b79d5f4c38",
+        "name": "k27",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "line": 12,
+        "end_line": 17,
+        "signature_hash": "822e70766cec9340",
+        "file_digest8": "b047f65f580303fe"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py#function:closure:45c97446fbdf25dd",
+        "name": "closure",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+        "line": 25,
+        "end_line": 31,
+        "signature_hash": "eed28545da76b977",
+        "file_digest8": "fe1bfb127b599af5"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py#function:total:094932bcd1042987",
+        "name": "total",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+        "line": 70,
+        "end_line": 70,
+        "signature_hash": "9c3a87261661d2a5",
+        "file_digest8": "fe1bfb127b599af5"
+      },
+      {
         "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:affected:f1aba1ca222bfa78",
         "name": "affected",
         "kind": "function",
@@ -446756,7 +447160,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "61455e11585feef4fef2a74950e85092",
-    "payload_hash": "9c8b7edb5fade43f8e6965425f3b7a70"
+    "record_fingerprint": "3da945aa09c194f6758f6cb7e9e66ad5",
+    "payload_hash": "453c675dfcbb0fd412664089017fbc7e"
   }
 }

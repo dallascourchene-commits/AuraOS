@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1639
-- **total_bytes**: 26344250
-- **text_tokens_est**: 6576454
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1643
+- **total_bytes**: 26358541
+- **text_tokens_est**: 6580027
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1000, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1639,
+  "repo_file_count": 1643,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1156,6 +1156,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "download_papers.py",
     "download_zenodo_papers.py",
     "english_lexicon.json",
+    "examples/arena_expert_fabric/README.md",
+    "examples/arena_expert_fabric/checks.py",
+    "examples/arena_expert_fabric/expert_fabric.py",
+    "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
     "examples/arena_navigation_domain_lens/README.md",
     "examples/arena_navigation_domain_lens/domain_lens_reference.py",
     "examples/aura_gate_policy.json",
@@ -1687,6 +1691,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "benchmarks/refactor_code_quality/generate_fixture.py",
     "core/aura_task_dispatcher.py",
     "core/aura_worker_daemon.py",
+    "examples/arena_expert_fabric/checks.py",
+    "examples/arena_expert_fabric/expert_fabric.py",
+    "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
     "examples/arena_navigation_domain_lens/domain_lens_reference.py",
     "examples/mini_aura_reference_arena/mini_aura_reference.py",
     "scripts/aura_advanced_benchmark_runner.py",
@@ -1762,10 +1769,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_bilateral_live_repair_foundry.py",
     "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
     "tests/test_aura_bilateral_planning_enforcement.py",
-    "tests/test_aura_capability_connectome.py",
-    "tests/test_aura_capability_connectome_v2.py",
-    "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py"
+    "tests/test_aura_capability_connectome.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1779,15 +1783,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1639,
-  "bytes": 26344250,
-  "tokens_est": 6576454,
+  "files": 1643,
+  "bytes": 26358541,
+  "tokens_est": 6580027,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 237,
+    "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 997,
+    "python_module": 1000,
     "schema_or_lexicon": 271,
     "support_file": 49
   }
