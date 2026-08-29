@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1647
-- **total_bytes**: 26371591
-- **text_tokens_est**: 6583292
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1002, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1651
+- **total_bytes**: 26385404
+- **text_tokens_est**: 6586747
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1647,
+  "repo_file_count": 1651,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -93,6 +93,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
     ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json",
     ".aura/source_anchor_manifest.v1.json",
+    ".aura/storage_policies/aura_dual_persistence.v1.json",
     ".aura/tool_bundles/coding_localize.v1.json",
     ".aura/topology_baseline.json",
     ".aura/understand_graph.json",
@@ -944,6 +945,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "bus_init.cpp",
     "cognitive_router.py",
     "cognitive_search.rs",
+    "core/aura_dual_persistence.py",
     "core/aura_resident_idle_policy.py",
     "core/aura_task_dispatcher.py",
     "core/aura_worker_daemon.py",
@@ -968,6 +970,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AMD_DEMO_RECORDING_SCRIPT.md",
     "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
     "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
+    "docs/AURA-DUAL-PERSISTENCE-FABRIC.md",
     "docs/AURA_AFFORDANCE_DIRECTORY.md",
     "docs/AURA_AGENT_ARENA_BRIDGE.md",
     "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md",
@@ -1468,6 +1471,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_continuity_packet_merge_gate.py",
     "tests/test_aura_crucible_phase_b.py",
     "tests/test_aura_dikwp_router_pipeline.py",
+    "tests/test_aura_dual_persistence.py",
     "tests/test_aura_efficiency_benchmark.py",
     "tests/test_aura_emergent_agent_bridge.py",
     "tests/test_aura_emergent_agent_bridge_mcp.py",
@@ -1693,6 +1697,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_spatial_importers/spz.py",
     "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
     "benchmarks/refactor_code_quality/generate_fixture.py",
+    "core/aura_dual_persistence.py",
     "core/aura_resident_idle_policy.py",
     "core/aura_task_dispatcher.py",
     "core/aura_worker_daemon.py",
@@ -1772,8 +1777,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_benchmark_four_hardening.py",
     "tests/test_aura_bilateral_gate_dialogue.py",
     "tests/test_aura_bilateral_live_repair_foundry.py",
-    "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-    "tests/test_aura_bilateral_planning_enforcement.py"
+    "tests/test_aura_bilateral_live_repair_foundry_hardening.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1787,16 +1791,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1647,
-  "bytes": 26371591,
-  "tokens_est": 6583292,
+  "files": 1651,
+  "bytes": 26385404,
+  "tokens_est": 6586747,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 239,
+    "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1002,
-    "schema_or_lexicon": 272,
+    "python_module": 1004,
+    "schema_or_lexicon": 273,
     "support_file": 49
   }
 }
@@ -1944,6 +1948,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AMD_DEMO_RECORDING_SCRIPT.md",
     "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
     "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
+    "docs/AURA-DUAL-PERSISTENCE-FABRIC.md",
     "docs/AURA_AFFORDANCE_DIRECTORY.md",
     "docs/AURA_AGENT_ARENA_BRIDGE.md",
     "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md",
@@ -2080,8 +2085,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-    "docs/BENCHMARKS.md",
-    "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md"
+    "docs/BENCHMARKS.md"
   ]
 }
 ```

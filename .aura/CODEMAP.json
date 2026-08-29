@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788043256,
+  "generated_at_unix": 1788045039,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1647,
+    "repo_file_count": 1651,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -75,6 +75,7 @@
       ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
       ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json",
       ".aura/source_anchor_manifest.v1.json",
+      ".aura/storage_policies/aura_dual_persistence.v1.json",
       ".aura/tool_bundles/coding_localize.v1.json",
       ".aura/topology_baseline.json",
       ".aura/understand_graph.json",
@@ -926,6 +927,7 @@
       "bus_init.cpp",
       "cognitive_router.py",
       "cognitive_search.rs",
+      "core/aura_dual_persistence.py",
       "core/aura_resident_idle_policy.py",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
@@ -950,6 +952,7 @@
       "docs/AMD_DEMO_RECORDING_SCRIPT.md",
       "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
       "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
+      "docs/AURA-DUAL-PERSISTENCE-FABRIC.md",
       "docs/AURA_AFFORDANCE_DIRECTORY.md",
       "docs/AURA_AGENT_ARENA_BRIDGE.md",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md",
@@ -1450,6 +1453,7 @@
       "tests/test_aura_continuity_packet_merge_gate.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
+      "tests/test_aura_dual_persistence.py",
       "tests/test_aura_efficiency_benchmark.py",
       "tests/test_aura_emergent_agent_bridge.py",
       "tests/test_aura_emergent_agent_bridge_mcp.py",
@@ -1675,6 +1679,7 @@
       "aura_spatial_importers/spz.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/refactor_code_quality/generate_fixture.py",
+      "core/aura_dual_persistence.py",
       "core/aura_resident_idle_policy.py",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
@@ -1754,8 +1759,7 @@
       "tests/test_aura_benchmark_four_hardening.py",
       "tests/test_aura_bilateral_gate_dialogue.py",
       "tests/test_aura_bilateral_live_repair_foundry.py",
-      "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-      "tests/test_aura_bilateral_planning_enforcement.py"
+      "tests/test_aura_bilateral_live_repair_foundry_hardening.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1763,16 +1767,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1647,
-      "bytes": 26371591,
-      "tokens_est": 6583292,
+      "files": 1651,
+      "bytes": 26385404,
+      "tokens_est": 6586747,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 239,
+        "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1002,
-        "schema_or_lexicon": 272,
+        "python_module": 1004,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -1910,6 +1914,7 @@
         "docs/AMD_DEMO_RECORDING_SCRIPT.md",
         "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
         "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
+        "docs/AURA-DUAL-PERSISTENCE-FABRIC.md",
         "docs/AURA_AFFORDANCE_DIRECTORY.md",
         "docs/AURA_AGENT_ARENA_BRIDGE.md",
         "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md",
@@ -2046,8 +2051,7 @@
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
         "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
         "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-        "docs/BENCHMARKS.md",
-        "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md"
+        "docs/BENCHMARKS.md"
       ]
     },
     {
@@ -92613,6 +92617,14 @@
         "end_line": 81,
         "semantic_id": "aura_topology_sync.py#class:SyncState:ba886a2f9d16a1dd",
         "signature_hash": "862cb1ef29f9fd3a"
+      },
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 16,
+        "semantic_id": "core/aura_dual_persistence.py#class:SyncState:8a5ba37b8325ca2f",
+        "signature_hash": "47e5a9e731ddb8c1"
       }
     ],
     "SyncState.to_dict": [
@@ -96723,6 +96735,76 @@
         "end_line": 243,
         "semantic_id": "cognitive_router.py#method:CognitiveRouter.simulate_with_astar_pruning:1d438c974288711e",
         "signature_hash": "d4d8a57e306c4b5e"
+      }
+    ],
+    "Replica": [
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 24,
+        "semantic_id": "core/aura_dual_persistence.py#class:Replica:cb1b6eb89f282603",
+        "signature_hash": "bec032fc1e6d77bc"
+      }
+    ],
+    "ArtifactReplicaRecord": [
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 35,
+        "semantic_id": "core/aura_dual_persistence.py#class:ArtifactReplicaRecord:3fc21357d89a0bda",
+        "signature_hash": "a624f7d2d766161a"
+      }
+    ],
+    "ReconcilePlan": [
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "class",
+        "line": 39,
+        "end_line": 44,
+        "semantic_id": "core/aura_dual_persistence.py#class:ReconcilePlan:96e15f0598fd7445",
+        "signature_hash": "e117573a423a08ed"
+      }
+    ],
+    "reconcile": [
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 140,
+        "semantic_id": "core/aura_dual_persistence.py#function:reconcile:2413b919eeacf0d0",
+        "signature_hash": "8b09f9314b2f31f7"
+      }
+    ],
+    "can_dispatch_work": [
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "function",
+        "line": 143,
+        "end_line": 145,
+        "semantic_id": "core/aura_dual_persistence.py#function:can_dispatch_work:cc951ba9bcbf3d11",
+        "signature_hash": "abac5fa386fb598a"
+      }
+    ],
+    "currentness_token": [
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "function",
+        "line": 148,
+        "end_line": 153,
+        "semantic_id": "core/aura_dual_persistence.py#function:currentness_token:285d1325afd26c4f",
+        "signature_hash": "289444470adda028"
+      }
+    ],
+    "native_cloud_digest": [
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 160,
+        "semantic_id": "core/aura_dual_persistence.py#function:native_cloud_digest:85a92d4865346bcf",
+        "signature_hash": "9f834669ab7a16c5"
       }
     ],
     "HostState": [
@@ -129957,6 +130039,146 @@
         "end_line": 98,
         "semantic_id": "tests/test_aura_dikwp_router_pipeline.py#function:test_future_parent_and_non_proposal_wisdom_are_rejected:90a50235f2910564",
         "signature_hash": "94a018118917474f"
+      }
+    ],
+    "replica": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tests/test_aura_dual_persistence.py#function:replica:cceae1477a6a9fc5",
+        "signature_hash": "2a1c0fdbcd264c58"
+      }
+    ],
+    "AuraDualPersistenceTests": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "class",
+        "line": 18,
+        "end_line": 88,
+        "semantic_id": "tests/test_aura_dual_persistence.py#class:AuraDualPersistenceTests:825f677c12ea362c",
+        "signature_hash": "b19fad9a2f011fe9"
+      }
+    ],
+    "AuraDualPersistenceTests.record": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 22,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.record:201cea6e85cce302",
+        "signature_hash": "c903133fe9b75f0a"
+      }
+    ],
+    "AuraDualPersistenceTests.test_synced_is_dispatchable": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 26,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_synced_is_dispatchable:3f11fef63edce533",
+        "signature_hash": "1fbca7a64557e722"
+      }
+    ],
+    "AuraDualPersistenceTests.test_local_only_materializes_cloud": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 31,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_local_only_materializes_cloud:744939c23c7415a7",
+        "signature_hash": "ecfc7b4bbf3469c3"
+      }
+    ],
+    "AuraDualPersistenceTests.test_cloud_only_materializes_local": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 36,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_cloud_only_materializes_local:39e2868815e6988f",
+        "signature_hash": "fd9dd30288ff6089"
+      }
+    ],
+    "AuraDualPersistenceTests.test_local_ahead_is_one_sided_safe_update": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 43,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_local_ahead_is_one_sided_safe_update:a5c6f58ff18e17f1",
+        "signature_hash": "dcbff402586542ad"
+      }
+    ],
+    "AuraDualPersistenceTests.test_cloud_ahead_is_one_sided_safe_update": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 50,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_cloud_ahead_is_one_sided_safe_update:e176b3a09354be31",
+        "signature_hash": "20d1eded60ad9dd7"
+      }
+    ],
+    "AuraDualPersistenceTests.test_two_sided_divergence_fails_closed": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 59,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_two_sided_divergence_fails_closed:bd0b2b404ff2a62a",
+        "signature_hash": "76284bca31c4720f"
+      }
+    ],
+    "AuraDualPersistenceTests.test_divergence_without_base_fails_closed": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 67,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_divergence_without_base_fails_closed:d38beb5c38ee81e2",
+        "signature_hash": "332e154c7dc3be3f"
+      }
+    ],
+    "AuraDualPersistenceTests.test_generation_mismatch_blocks_dispatch": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 72,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_generation_mismatch_blocks_dispatch:71fe72fb0405f378",
+        "signature_hash": "5822e7d2ba11e9f0"
+      }
+    ],
+    "AuraDualPersistenceTests.test_missing_digest_is_invalid": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 78,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_missing_digest_is_invalid:3004c68f30e1bcec",
+        "signature_hash": "044dda1038ae99c5"
+      }
+    ],
+    "AuraDualPersistenceTests.test_currentness_token_requires_synced_pair": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 83,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_currentness_token_requires_synced_pair:49bbea823967ecd8",
+        "signature_hash": "982877dda999b4ae"
+      }
+    ],
+    "AuraDualPersistenceTests.test_native_google_object_uses_canonical_export_digest": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 88,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_native_google_object_uses_canonical_export_digest:c346fee212e8188e",
+        "signature_hash": "56d417ed21153d73"
       }
     ],
     "test_default_suite_loads": [
@@ -164821,6 +165043,53 @@
         -0.242323,
         0.224374,
         0.080774
+      ]
+    },
+    {
+      "path": ".aura/storage_policies/aura_dual_persistence.v1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1621,
+      "lines": 57,
+      "tokens_est": 406,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5ae4aa40af5784ba",
+      "vector": [
+        0.064062,
+        -0.228446,
+        -0.267125,
+        0.109993,
+        -0.303386,
+        -0.291299,
+        -0.146254,
+        0.182515,
+        -0.117245,
+        -0.044722,
+        0.148671,
+        -0.134167,
+        0.226029,
+        -0.078566,
+        -0.158341,
+        -0.170428,
+        0.073731,
+        0.0278,
+        0.288882,
+        0.095488,
+        -0.126915,
+        0.015713,
+        -0.083401,
+        0.230864,
+        0.223611,
+        0.201855,
+        0.26229,
+        -0.151089,
+        0.226029,
+        -0.066479,
+        -0.206689,
+        -0.073731
       ]
     },
     {
@@ -226176,6 +226445,53 @@
       ]
     },
     {
+      "path": "core/aura_dual_persistence.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4789,
+      "lines": 161,
+      "tokens_est": 1198,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fb69f626979333b7",
+      "vector": [
+        0.093586,
+        0.257064,
+        0.013031,
+        -0.171771,
+        0.169402,
+        -0.178879,
+        0.11017,
+        -0.183617,
+        0.247587,
+        -0.027246,
+        0.017769,
+        -0.081739,
+        0.17651,
+        -0.093586,
+        0.249956,
+        0.050939,
+        0.062785,
+        -0.0462,
+        -0.145709,
+        0.209679,
+        0.221525,
+        -0.07937,
+        -0.107801,
+        0.23811,
+        0.0462,
+        0.226264,
+        -0.280757,
+        0.27128,
+        0.273649,
+        -0.30208,
+        -0.126755,
+        -0.178879
+      ]
+    },
+    {
       "path": "core/aura_resident_idle_policy.py",
       "role": "python_module",
       "binary": false,
@@ -227373,6 +227689,53 @@
         0.090506,
         -0.289364,
         -0.075209
+      ]
+    },
+    {
+      "path": "docs/AURA-DUAL-PERSISTENCE-FABRIC.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 4064,
+      "lines": 129,
+      "tokens_est": 1016,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "60e851bea11a354c",
+      "vector": [
+        -0.088722,
+        -0.058764,
+        -0.169379,
+        0.178597,
+        0.206251,
+        -0.063373,
+        -0.017284,
+        0.180902,
+        0.197033,
+        -0.150943,
+        -0.293821,
+        0.012675,
+        -0.169379,
+        -0.095636,
+        0.279994,
+        -0.192424,
+        -0.270776,
+        -0.2316,
+        -0.167075,
+        -0.245427,
+        0.047242,
+        -0.137116,
+        0.111767,
+        0.226991,
+        0.005761,
+        -0.199337,
+        0.217773,
+        -0.213164,
+        0.017284,
+        0.206251,
+        0.065678,
+        -0.259254
       ]
     },
     {
@@ -254346,6 +254709,53 @@
         0.103192,
         -0.152923,
         -0.27725
+      ]
+    },
+    {
+      "path": "tests/test_aura_dual_persistence.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3339,
+      "lines": 93,
+      "tokens_est": 835,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "65152496de2fcf64",
+      "vector": [
+        0.083175,
+        -0.17455,
+        -0.13472,
+        0.188608,
+        -0.226095,
+        0.21438,
+        -0.132377,
+        0.141749,
+        -0.101919,
+        0.263582,
+        -0.13472,
+        -0.298727,
+        -0.019915,
+        -0.242496,
+        0.09489,
+        0.09489,
+        -0.247182,
+        -0.113633,
+        0.167521,
+        -0.240153,
+        0.165178,
+        -0.146435,
+        0.087861,
+        -0.202666,
+        -0.233124,
+        -0.137063,
+        -0.219066,
+        -0.146435,
+        -0.202666,
+        -0.080832,
+        -0.005857,
+        -0.249525
       ]
     },
     {
@@ -287230,16 +287640,16 @@
     }
   },
   "summary": {
-    "file_count": 1647,
-    "total_bytes": 26371591,
-    "text_tokens_est": 6583292,
+    "file_count": 1651,
+    "total_bytes": 26385404,
+    "text_tokens_est": 6586747,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 239,
+      "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1002,
-      "schema_or_lexicon": 272,
+      "python_module": 1004,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287324,6 +287734,7 @@
       ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
       ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json",
       ".aura/source_anchor_manifest.v1.json",
+      ".aura/storage_policies/aura_dual_persistence.v1.json",
       ".aura/tool_bundles/coding_localize.v1.json",
       ".aura/topology_baseline.json",
       ".aura/understand_graph.json",
@@ -288175,6 +288586,7 @@
       "bus_init.cpp",
       "cognitive_router.py",
       "cognitive_search.rs",
+      "core/aura_dual_persistence.py",
       "core/aura_resident_idle_policy.py",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
@@ -288199,6 +288611,7 @@
       "docs/AMD_DEMO_RECORDING_SCRIPT.md",
       "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
       "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
+      "docs/AURA-DUAL-PERSISTENCE-FABRIC.md",
       "docs/AURA_AFFORDANCE_DIRECTORY.md",
       "docs/AURA_AGENT_ARENA_BRIDGE.md",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md",
@@ -288699,6 +289112,7 @@
       "tests/test_aura_continuity_packet_merge_gate.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
+      "tests/test_aura_dual_persistence.py",
       "tests/test_aura_efficiency_benchmark.py",
       "tests/test_aura_emergent_agent_bridge.py",
       "tests/test_aura_emergent_agent_bridge_mcp.py",
@@ -383246,6 +383660,86 @@
         "file_digest8": "31325b9af6403347"
       },
       {
+        "semantic_id": "core/aura_dual_persistence.py#class:ArtifactReplicaRecord:3fc21357d89a0bda",
+        "name": "ArtifactReplicaRecord",
+        "kind": "class",
+        "file": "core/aura_dual_persistence.py",
+        "line": 28,
+        "end_line": 35,
+        "signature_hash": "a624f7d2d766161a",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#class:ReconcilePlan:96e15f0598fd7445",
+        "name": "ReconcilePlan",
+        "kind": "class",
+        "file": "core/aura_dual_persistence.py",
+        "line": 39,
+        "end_line": 44,
+        "signature_hash": "e117573a423a08ed",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#class:Replica:cb1b6eb89f282603",
+        "name": "Replica",
+        "kind": "class",
+        "file": "core/aura_dual_persistence.py",
+        "line": 20,
+        "end_line": 24,
+        "signature_hash": "bec032fc1e6d77bc",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#class:SyncState:8a5ba37b8325ca2f",
+        "name": "SyncState",
+        "kind": "class",
+        "file": "core/aura_dual_persistence.py",
+        "line": 8,
+        "end_line": 16,
+        "signature_hash": "47e5a9e731ddb8c1",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#function:can_dispatch_work:cc951ba9bcbf3d11",
+        "name": "can_dispatch_work",
+        "kind": "function",
+        "file": "core/aura_dual_persistence.py",
+        "line": 143,
+        "end_line": 145,
+        "signature_hash": "abac5fa386fb598a",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#function:currentness_token:285d1325afd26c4f",
+        "name": "currentness_token",
+        "kind": "function",
+        "file": "core/aura_dual_persistence.py",
+        "line": 148,
+        "end_line": 153,
+        "signature_hash": "289444470adda028",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#function:native_cloud_digest:85a92d4865346bcf",
+        "name": "native_cloud_digest",
+        "kind": "function",
+        "file": "core/aura_dual_persistence.py",
+        "line": 156,
+        "end_line": 160,
+        "signature_hash": "9f834669ab7a16c5",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#function:reconcile:2413b919eeacf0d0",
+        "name": "reconcile",
+        "kind": "function",
+        "file": "core/aura_dual_persistence.py",
+        "line": 47,
+        "end_line": 140,
+        "signature_hash": "8b09f9314b2f31f7",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
         "semantic_id": "core/aura_resident_idle_policy.py#class:HostState:0cec7b7399df6587",
         "name": "HostState",
         "kind": "class",
@@ -417676,6 +418170,146 @@
         "file_digest8": "9555cd63aedd6df1"
       },
       {
+        "semantic_id": "tests/test_aura_dual_persistence.py#class:AuraDualPersistenceTests:825f677c12ea362c",
+        "name": "AuraDualPersistenceTests",
+        "kind": "class",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 18,
+        "end_line": 88,
+        "signature_hash": "b19fad9a2f011fe9",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#function:replica:cceae1477a6a9fc5",
+        "name": "replica",
+        "kind": "function",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "2a1c0fdbcd264c58",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.record:201cea6e85cce302",
+        "name": "AuraDualPersistenceTests.record",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 19,
+        "end_line": 22,
+        "signature_hash": "c903133fe9b75f0a",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_cloud_ahead_is_one_sided_safe_update:e176b3a09354be31",
+        "name": "AuraDualPersistenceTests.test_cloud_ahead_is_one_sided_safe_update",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 45,
+        "end_line": 50,
+        "signature_hash": "20d1eded60ad9dd7",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_cloud_only_materializes_local:39e2868815e6988f",
+        "name": "AuraDualPersistenceTests.test_cloud_only_materializes_local",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 33,
+        "end_line": 36,
+        "signature_hash": "fd9dd30288ff6089",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_currentness_token_requires_synced_pair:49bbea823967ecd8",
+        "name": "AuraDualPersistenceTests.test_currentness_token_requires_synced_pair",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 80,
+        "end_line": 83,
+        "signature_hash": "982877dda999b4ae",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_divergence_without_base_fails_closed:d38beb5c38ee81e2",
+        "name": "AuraDualPersistenceTests.test_divergence_without_base_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 61,
+        "end_line": 67,
+        "signature_hash": "332e154c7dc3be3f",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_generation_mismatch_blocks_dispatch:71fe72fb0405f378",
+        "name": "AuraDualPersistenceTests.test_generation_mismatch_blocks_dispatch",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 69,
+        "end_line": 72,
+        "signature_hash": "5822e7d2ba11e9f0",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_local_ahead_is_one_sided_safe_update:a5c6f58ff18e17f1",
+        "name": "AuraDualPersistenceTests.test_local_ahead_is_one_sided_safe_update",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 38,
+        "end_line": 43,
+        "signature_hash": "dcbff402586542ad",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_local_only_materializes_cloud:744939c23c7415a7",
+        "name": "AuraDualPersistenceTests.test_local_only_materializes_cloud",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 28,
+        "end_line": 31,
+        "signature_hash": "ecfc7b4bbf3469c3",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_missing_digest_is_invalid:3004c68f30e1bcec",
+        "name": "AuraDualPersistenceTests.test_missing_digest_is_invalid",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 74,
+        "end_line": 78,
+        "signature_hash": "044dda1038ae99c5",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_native_google_object_uses_canonical_export_digest:c346fee212e8188e",
+        "name": "AuraDualPersistenceTests.test_native_google_object_uses_canonical_export_digest",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 85,
+        "end_line": 88,
+        "signature_hash": "56d417ed21153d73",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_synced_is_dispatchable:3f11fef63edce533",
+        "name": "AuraDualPersistenceTests.test_synced_is_dispatchable",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 24,
+        "end_line": 26,
+        "signature_hash": "1fbca7a64557e722",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_two_sided_divergence_fails_closed:bd0b2b404ff2a62a",
+        "name": "AuraDualPersistenceTests.test_two_sided_divergence_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 52,
+        "end_line": 59,
+        "signature_hash": "76284bca31c4720f",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
         "semantic_id": "tests/test_aura_efficiency_benchmark.py#function:test_aura_full_mode_includes_grounding_metadata:36ad280e7568cec0",
         "name": "test_aura_full_mode_includes_grounding_metadata",
         "kind": "function",
@@ -447646,7 +448280,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "395aadb776c2f9f22aeb186f7da44af1",
-    "payload_hash": "4d31dc06dd113a4a6ae309654d8b8988"
+    "record_fingerprint": "8e273775ab4b51992c04d414523b0371",
+    "payload_hash": "07f71b0e4602ee7e1c8b50def2414937"
   }
 }
