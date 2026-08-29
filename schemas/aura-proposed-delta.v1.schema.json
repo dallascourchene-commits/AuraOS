@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/aura-proposed-delta.v1.schema.json",
+  "title": "AuraProposedDeltaV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "visit_id", "capsule_digest", "source_generation", "proposal_id", "changes", "effect", "owner_commit_authorized"],
+  "properties": {
+    "schema": {"const": "AuraProposedDeltaV1"},
+    "visit_id": {"type": "string", "minLength": 1},
+    "capsule_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_generation": {"type": "string", "minLength": 1},
+    "proposal_id": {"type": "string", "minLength": 1},
+    "changes": {"type": "array", "items": {"type": "object"}},
+    "created_at": {"type": "string", "format": "date-time"},
+    "effect": {"const": "PROPOSAL_ONLY"},
+    "owner_commit_authorized": {"const": false}
+  }
+}
