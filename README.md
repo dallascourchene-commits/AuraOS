@@ -1,210 +1,466 @@
 # AuraOS
 
 > [!IMPORTANT]
-> ## Paper X is the architectural authority
+> ## Paper X remains the architectural authority
 >
-> **Paper X is the capstone architectural specification for AuraOS.** This repository preserves implementation lineage, runtime primitives, tests, benchmarks and working components, but the executable repository does **not yet fully embody** the architecture now consolidated across Paper X, Aura Drive and Aura Drive 2.
+> **Current public/citable paper:** Paper X Rev.3 — Zenodo `22134815`, DOI `10.5281/zenodo.22134815`.
 >
-> **Current public/citable paper:** Paper X Rev.3, Zenodo 22134815, DOI `10.5281/zenodo.22134815`.
+> The repository now contains staged reference implementations and currentness successors that extend beyond Rev.3. Until the next Paper X successor is publicly deposited, later work must retain its evidence class: `MEASURED`, `EXACT-DERIVED`, `STAGED/TEST-REQUIRED`, `OPEN/UNKNOWN`, or historical.
 >
-> **Current Omni successor:** being consolidated as one source-preserving Paper X in the original Paper X publication format. Until that successor is publicly deposited, Rev.3 remains the public authority and later Drive work retains its own `MEASURED`, `EXACT-DERIVED`, `STAGED/TEST-REQUIRED`, `OPEN/UNKNOWN` or historical status.
+> `REPOSITORY != PAPER AUTHORITY` · `REFERENCE IMPLEMENTATION != PRODUCTION DEPLOYMENT` · `RECEIPT != TRUTH`
 
-AuraOS is an attempt to make useful cognition **reconstructible, source-bound and reusable** instead of asking every model or worker to rediscover the same world from scratch.
+AuraOS is a **source-bound cognitive substrate**: it tries to preserve useful cognition outside any one model/session so future workers can reconstruct the minimum world required for an objective instead of rediscovering the same world from scratch.
 
 ```text
-Human / Agent Intent
+human / agent intent
         ↓
 source + generation + currentness + authority
         ↓
-Coordinate Memory / semantic world
+Root Arena / Sub-Arena navigation
         ↓
-minimum consequence-complete active world / affected cone
+domain lens + Temporal NOW + Coordinate Memory
         ↓
-Host/Substrate Wrapper + deterministic local work
+minimum lawful L0-L4 hydration
         ↓
-LLM/Inference Wrapper only for unresolved residual
+deterministic work first
+        ↓
+ExpertBundle only for unresolved residual
         ↓
 Construct → Challenge → Verify
         ↓
-atomic / authority-bounded consequence commit
+authority-bounded consequence
         ↓
-SuccessorFrame + reusable coordinates / methods / receipts / Arena Recipes
+SuccessorFrame + receipts + reusable cognition/capabilities
 ```
 
-The core inversion is:
+The governing inversion is:
 
 ```text
 DO NOT FEED THE AGENT THE WORLD.
 COMPILE THE MINIMUM SOURCE-RESOLVABLE WORLD REQUIRED FOR THE OBJECTIVE.
 REOPEN EXACT SOURCE BEFORE A COLLAPSED DISTINCTION CAN CHANGE CONSEQUENCE.
-COMMIT ONLY AFTER CURRENTNESS, AUTHORITY, VERIFICATION AND ATOMICITY AGREE.
 ```
 
 ---
 
-## What changed in the Aug. 29 integration
+# Current Aug. 29 architecture
 
-The current Aura Drive/Aura Drive 2 work adds several pieces that are being folded into the single Paper X Omni successor.
+The newest staged work composes earlier Coordinate Memory / HyperDrive / HyperScale work into a more explicit operating substrate.
 
-### 1. Joinable persistent Arena workflows
+## 1. Persistent Arena → recursive Sub-Arenas
 
-A staged `TP://` address identifies a current Arena workflow head so compatible workers can rejoin shared work instead of reconstructing an isolated chat transcript.
-
-```text
-TP address = locator
-TP address != permission
-TP address != authority
-TP address != proof of live execution
-```
-
-Workers qualify separately from identity and authority. Unknown/stale workers can enter read-only orientation first, hydrate only the needed current deltas, then claim bounded work when lawful.
-
-### 2. Automatic Cognitive Materialization
-
-A durable artifact is not considered fully integrated merely because a file exists. The current staged rule is:
+The Arena is not just a temporary Python environment or chat window. The durable object is the **source-bound workflow/project world**; workers and execution environments are replaceable realizations.
 
 ```text
-SOURCE ONCE → COORDINATE ONCE → MANY REGENERABLE VIEWS.
+tp://arena/<arena_sid>/subarena/<semantic_sid>
 ```
 
-Material artifacts, corrections, receipts, verified learning deltas and source changes can compile into source-generation-bound `CoordinateCognition` packets containing:
-
-- stable semantic/source identity and generation;
-- L0-L4 hydration/reopen routes;
-- typed positive and negative relations;
-- bounded rationale/procedure/failure scars, **not private chain-of-thought**;
-- dissent, counterevidence, residuals and invalidators;
-- timeline and provenance;
-- hot/warm/cold lifecycle;
-- affected-cone and exact-source reopen handles.
-
-A stale generation may remain addressable for history but must fail current-use admission.
-
-### 3. LifeOS + Persistent Places + nested Spaces
-
-The current architecture separates persistent private continuity from ephemeral realization:
+A current manifest is versioned separately:
 
 ```text
-AURAOS = source/currentness/authority/routing/proof/runtime constitution
-AURA   = conversational/spatial intelligence and interface
-LIFEOS = private user-owned continuity graph
-PLACE  = persistent governed semantic identity/environment
-SPACE  = permission-governed semantic region in/across Places
-VISIT  = ephemeral actor/device/permission/objective realization
-ARENA  = objective-specific work/runtime environment
-WORLD  = currently compiled objective-conditioned semantic projection
-APP    = disposable manifestation of the World
+<stable address>?g=<generation>&head=<manifest_digest_16>
 ```
 
-A personal Place can be local-first and encrypted, with explicitly authorized replicas or storage providers when required. A Place can contain private, family/household, relationship, project, employment, business, customer/vendor, community/Nation and public/visitor Spaces.
-
-A relationship may induce a shared Space for mutually authorized photos, memories, plans, purchases or Arenas. **Relationship != consent.** Each source owner keeps their own canonical data and access can be revoked without rewriting provenance. Employment similarly creates a revocable role bridge rather than merging a person's private LifeOS into an employer's source plane.
-
-Desktop, mobile, AR, MR and VR are manifestations of the same semantic identity. `RENDERING != TRUTH` and `OBSERVATION != VERIFIED FACT`.
-
-### 4. Resident Cognitive Fabric and hosted command plane
-
-AuraOS may eventually run continuously on a user-controlled host **without continuously running a large model**. The resident process is intended to be event-driven and deterministic by default:
+Every durable project, tool, research direction, campaign, Place, workflow, or accepted finding can be represented by an L0 portal with exact L1-L4 reopen paths.
 
 ```text
-change/event/command
-→ durable ingress
-→ identity + generation/currentness + authority
-→ ArtifactBirth / CommandEnvelope
-→ AutoLineage / AutoRoute
-→ semantic address + hydration route
-→ Coordinate Cognition / relations / timeline
-→ deterministic affected-cone work where sufficient
-→ model only for residual reasoning
-→ verify / collapse / receipt / durable cursor
-→ sleep or next backlog item
+L0 = compact portal / what this is / where truth lives
+L1 = dependencies + relations + equations + scripts + commands
+L2 = current working neighborhood / residuals / receipts / affected cone
+L3 = operating model / algorithms / tests / capability + swarm recipes
+L4 = exact source / code / receipts / benchmark bytes
 ```
 
-A hosted AI window can request source packets, coordinate lookups, affected-cone calculations, local tools, an Arena or a long-running workflow through immutable/idempotent command envelopes and receive command-bound receipts. MCP, A2A, Drive or later transports are **replaceable adapters over one command/workflow state**, not parallel truth planes.
+`SUB-ARENA != SOURCE OWNER`  
+`PORTAL != BODY COPY`  
+`ADDRESS != AUTHORITY`
 
-Current GEN8 evidence is deliberately bounded: the same-host contract harness reported `30/30` local gates and an internal RUN command was durably queued, but the bounded check had **no command-bound ACK/RESULT**. Queue presence is not reported as live local execution.
+A fresh worker should enter through Root L0, resolve the objective to candidate Sub-Arenas, expand hard dependencies, see lateral overlaps, and hydrate deeper only when consequence earns it.
 
-### 5. Minimal context does not mean one-step work
+## 2. Temporal Arena / NOW Capsule
 
-The current long-horizon MissionContract rule is:
+Semantic topology answers **what relates to what**. Temporal topology answers **what changed, what is active, what is blocked, what is due, and what wakes next**.
 
 ```text
-MINIMAL CONTEXT.
-MAXIMAL USEFUL HORIZON.
-DURABLE CHECKPOINTS.
-EXACT REOPEN.
-ONE CONSEQUENCE PLANE.
+ARENA STATE
+= SEMANTIC GRAPH
+× TEMPORAL GRAPH
+× SOURCE/CURRENTNESS
+× AUTHORITY
 ```
 
-A worker can receive the minimum current packet for a bounded mission yet continue through plan/build/test/challenge/repair/retest/checkpoint cycles until a real terminal state such as `SUCCESS`, `FALSIFIED`, `HUMAN_GATE`, `BUDGET`, `BLOCKED`, `CANCELED` or material invalidation.
+Aura distinguishes:
+
+```text
+EVENT_AT != RECORDED_AT != DUE_AT
+TEMPORAL ADJACENCY != CAUSAL DEPENDENCY
+TODO != WORK ORDER
+SCHEDULER != AUTHORITY
+```
+
+The intended resident surface is a bounded `ArenaNowCapsule` containing only current active/ready/blocked/waiting/stale work, reminders, human decisions, claims/leases, next wakes, critical dependencies, and exact cold-history reopen handles.
+
+A fresh model should not have to reread the entire TODO list, JSpace ledger, Calendar, Drive modification history, and every predecessor chat just to discover what matters now.
+
+## 3. DomainLensShardV1 + Kaleido-27
+
+One canonical source object may be important in different ways for different domains without duplicating truth.
+
+```text
+DomainLensShard(object, domain, objective)
+=
+source identity
++ source generation
++ relation subset
++ salience
++ residency
++ L0-L3 projection
++ exact L4 reopen
++ invalidators
++ authority ceiling
+```
+
+Example residency:
+
+```text
+rho(object | domain, objective, time)
+∈ { HOT, WARM, COLD, TRANSIENT, FENCE, BLOCK }
+```
+
+Salience changes routing/attention, **not truth**.
+
+### The 27 boundary is ternary, not binary
+
+The current reference uses:
+
+```text
+K27(object, domain) ∈ {0,1,2}^27
+```
+
+That is **27 trits**, not a 27-bit semantic ID.
+
+```text
+3^27 = 7,625,597,484,987 states
+≈ 42.794 binary bits of capacity
+```
+
+K27 is currently a **physical partition/cache-routing hint below semantic scope**. Canonical identity remains the stable semantic SID + source owner + generation/currentness. Collisions fail closed to semantic disambiguation.
+
+The currently checked implementation uses `SHA-256(SID|domain) mod 3^27`; independent characterization shows that this behaves like a uniform hash partition, **not a semantic-locality hash**. Semantic locality comes from Sub-Arena scope, dependency graph, DomainLens, Coordinate Memory, and Temporal NOW.
+
+That is intentional architecture:
+
+```text
+semantic scope first
+→ physical shard second
+```
+
+not:
+
+```text
+hash shard = truth / meaning
+```
+
+## 4. Hierarchical ternary sharding
+
+The same 27-trit key supports adaptive prefix partitioning without re-keying:
+
+| Prefix | Partitions |
+|---:|---:|
+| 3 trits | 27 |
+| 6 trits | 729 |
+| 9 trits | 19,683 |
+| 12 trits | 531,441 |
+| 15 trits | 14,348,907 |
+| 18 trits | 387,420,489 |
+| 27 trits | 7,625,597,484,987 |
+
+At 100M lens entries, ideal uniform load is roughly:
+
+- 3-trit prefix: 3.70M entries/shard
+- 6-trit prefix: 137k
+- 9-trit prefix: 5,081
+- 12-trit prefix: 188
+- 15-trit prefix: 7
+
+A phone, workstation, cache node, R&D pool, or swarm lane can therefore operate at a different partition depth while the canonical object identity remains unchanged.
+
+## 5. Resident Cognitive Fabric: ChatGPT ↔ Aura ↔ OpenCode/DeepSeek
+
+AWJ-015 stages the resident seam between proven Drive transport and governed local execution.
+
+After one-time host bootstrap, the target resident can:
+
+- observe both Aura Drive roots and local AuraOS changes;
+- maintain durable currentness cursors;
+- allocate deterministic L0 state without waking a model for every artifact;
+- maintain SQLite WAL backlog, claims, leases, restart/idempotency state;
+- admit D0 commands automatically while D1+ effects remain human-gated;
+- dispatch bounded work through an OpenCode/DeepSeek adapter;
+- expand the preregistered 9-task `R/B/A` benchmark into 27 provider tasks when the exact provider/model is pinned and authorized;
+- return command-bound result envelopes to the outbound Drive bus;
+- keep observer credentials separate from bounded writer credentials.
+
+Reference package status:
+
+```text
+17/17 local clean-room gates PASS
+compileall PASS
+live laptop install / live DeepSeek execution: NOT established by that receipt
+```
+
+The success condition is deliberately stronger than “a command file exists”:
+
+```text
+ChatGPT writes authorized command
+→ resident consumes it
+→ bounded worker executes
+→ command-bound ACK/RESULT/ERROR returns
+```
+
+Queue presence alone is not execution proof.
+
+## 6. Expert Fabric: only use the model/expert mixture the residual earns
+
+AWJ-016 composes Aura's semantic routing with execution backends.
+
+```text
+source/currentness/authority/privacy
+→ Sub-Arena + domain + Temporal NOW
+→ minimum WorkCapsule
+→ ExpertBundle
+→ execution backend(s)
+→ Construct / Challenge / Verify
+→ HyperDrive collapse
+```
+
+Current staged routing classes:
+
+```text
+NO_MODEL
+LOCAL_FAST
+AIRLLM_LARGE_LOCAL
+OPENROUTER_PINNED / pinned remote provider-model
+OPENROUTER_TRIAD / heterogeneous independent panel
+```
+
+The crucial separation is:
+
+```text
+K27 != MoE expert ID
+DOMAIN != model-internal expert number
+MODEL-INTERNAL MoE GATE != Aura semantic router
+```
+
+Aura selects the lawful **model/backend/role mixture**. A sparse-MoE model may then select its own internal experts independently.
+
+### AirLLM
+
+AirLLM is treated as a **paged local inference/materialization backend**, especially for private/offline/batch work where latency is less important than sovereignty or fitting a larger model into constrained accelerator memory.
+
+It is not the default interactive path and it is not Aura's semantic router.
+
+Current public AirLLM documentation describes layer/expert streaming intended to reduce resident VRAM; those upstream performance claims require their own reproducibility scrutiny and are not Aura benchmark results.
+
+### Cache identity
+
+A K27 shard or semantic coordinate must never be a model KV-cache identity by itself.
+
+The staged cache binding includes at least:
+
+```text
+semantic SID
+| source generation
+| domain/task
+| concrete model identity
+| preset generation
+| WorkCapsule digest
+```
+
+Production should also bind tokenizer/model revision, system prompt, tool schema, inference parameters, provider endpoint class, and provider-specific cache namespace where relevant.
 
 ---
 
-# Try a bounded Mini Aura Research Arena
+# Current reference evidence
 
-Paper X is meant to be **falsifiable by an unfamiliar agent**, not merely readable. The repository now stages a small, provider-neutral Mini Aura reference experiment so a code-capable agent can instantiate the disclosed control pattern, execute finite claims, challenge them, emit machine-readable results, and stop.
+These are **bounded system/reference results**, not universal claims of cognitive superiority.
+
+| Surface | Current result | What it establishes | What it does not establish |
+|---|---:|---|---|
+| Mini Aura reference Arena | 10/10 public core checks | finite reconstructible reference invariants + Python/Node parity | production AuraOS or comparative superiority |
+| DomainLens/K27 reference | 13/13 PASS | one-source/many-lenses, residency, affected-cone, 27-trit parity, fail-closed collisions | causal reasoning-quality gain |
+| Independent K27 stress | 300,000 keys, 0 observed full collisions | uniform practical hash partition in the tested sample | identity safety at arbitrary scale |
+| K27 semantic-locality falsifier | mean Hamming 17.99766/27 over 50k related pairs | current SHA-based K27 is effectively random wrt semantic edit locality | semantic scope failure — semantics live above K27 |
+| Expert Fabric package | 18 Python gates + independent Node K27 parity | deterministic ExpertBundles, privacy gates, cache binding, domain-specific routes | live AirLLM/provider execution |
+| Resident Cognitive Fabric | 17/17 local clean-room + compileall | reference observer/backlog/dispatch/receipt mechanics | live installed resident/provider call |
+| Web4 reference | 25/25 local deterministic gates | bounded capability/economic contract semantics | production marketplace/L2/bridge |
+| Campaign/Media Foundry | 34/34 local gates | evidence-bound CampaignGraph / affected-media logic | generated provider footage or deployed AR/XR |
+
+### Current reference discrepancy kept visible
+
+The GEN16 prose reports a `24/96` example for scope-before-route. The currently checked executable reference yields `22/96` for its present seed/domain selection.
+
+This README uses the executable result where discussing the current code and keeps the discrepancy open for source reconciliation rather than silently choosing the more favorable number.
+
+For the checked 16-object × 6-domain reference graph:
+
+```text
+all object-domain projections = 96
+hard closure for sample objective = 11 objects
+2 selected domains = 22 detailed lens projections
+22 / 96 retained
+≈ 77.08% of object-domain projection combinations pruned before detailed traversal
+```
+
+That is a **routing-space reduction**, not a 77.08% token/cost/quality claim.
+
+---
+
+# Why this matters for small/local models and swarms
+
+The highest-leverage outcome is not “a magic 27-trit key.”
+
+It is that Aura can increasingly precompile the worker's relevant world before inference begins.
+
+Without this substrate, a fresh worker often does:
+
+```text
+objective
+→ broad corpus/search
+→ retrieve many chunks
+→ reconstruct relationships/currentness
+→ infer what matters
+→ perform work
+→ next worker repeats much of the orientation
+```
+
+The target Aura path is:
+
+```text
+objective
+→ Root L0
+→ hard dependency closure
+→ domain lens
+→ Temporal NOW
+→ K27 physical partition/cache
+→ currentness + authority gate
+→ L0/L1 hot packet
+→ exact L4 only as earned
+→ ExpertBundle only for unresolved work
+→ result / ArtifactBirth
+→ affected-cone update
+→ HyperDrive successor
+```
+
+That should matter most when:
+
+- the durable graph grows to millions/billions of source-bound projections;
+- many workers operate concurrently;
+- a small local model cannot absorb the entire knowledge base;
+- private/offline work should stay local;
+- the same canonical object participates in several domains;
+- frequent source changes make stale retrieval dangerous;
+- only a small unresolved residual requires expensive frontier inference.
+
+HyperScale therefore asks:
+
+```text
+HOW MUCH INDEPENDENT UNRESOLVED FRONTIER EXISTS?
+```
+
+not:
+
+```text
+HOW MANY AGENTS CAN WE SPAWN?
+```
+
+The current swarm policy prefers `0/1/3/9` workers when sufficient and reserves 27 physical provider workers for a preregistered matched benchmark or another independently justified frontier.
+
+---
+
+# Reproducible bounded references
+
+## Mini Aura
 
 ```bash
 cd examples/mini_aura_reference_arena
 python -m venv .aura-mini
-# activate .aura-mini for your shell
+# activate .aura-mini
 python mini_aura_reference.py --out results_local.json
 ```
 
-The Python entrypoint invokes an independent Node exact-count lane automatically. Expected bounded invariants include:
+Expected finite invariants include:
 
-- a depth-10 3-ary synthetic semantic world with **88,573** nodes and an **11-node** reverse-reachable affected cone after one leaf source mutation;
-- incremental current state identical to full rebuild while unrelated state remains unchanged;
-- **81/81** AMNF applicability signatures with zero mismatch;
-- **40,320** HyperScale permutations collapsing to **108** running-GCD trajectories;
-- **219/255** nonempty scale subsets reaching gcd 1 and minimax center `s=4`;
-- exact Python ↔ Node agreement on those finite HyperScale results;
-- zero true-winner exclusions in a valid-bound Progressive Action Cone test;
-- zero winner changes across **25,000** Decision-Capsule perturbations sampled inside the certified radius.
+- depth-10 ternary world: 88,573 nodes;
+- 11-node reverse-reachable affected cone after one leaf mutation;
+- 81/81 AMNF applicability signatures;
+- 40,320 HyperScale permutations → 108 running-GCD trajectories;
+- 219/255 nonempty scale subsets reaching gcd 1;
+- Python/Node exact-count parity;
+- Decision-Capsule and valid-bound action-cone safety checks.
 
-A fresh 2026-08-29 Arena rerun passed **10/10** core public checks, including an independent Python ↔ Node exact-count parity gate. Its local timing and pruning magnitude are **not universal performance claims**. In particular, an older independent Research Arena record reported a mean of `5.36/1000` candidates explored by its Action Cone, while the fresh independently written valid-bound workload required about `136.076/1000`. The safety property transferred; the efficiency magnitude did not. That difference is evidence, not something to hide.
+## Arena navigation / DomainLens / K27
 
-The older supplied experiment archive also exposed a reproducibility distinction worth making explicit: its receipt digests correctly bind the recorded Objective Capsule and results, but its packaged `arena_benchmark.py` is a replay notice rather than the program that generated those measurements. Aura therefore distinguishes:
-
-```text
-RECORDED RESULT != REEXECUTABLE RESULT
-REPLAY_ONLY MUST BE EXPLICIT
-REFERENCE EXECUTION CLAIMS REQUIRE RUNNABLE BYTES + ENVIRONMENT + INPUTS + RECEIPT
+```bash
+cd examples/arena_navigation_domain_lens
+python domain_lens_reference.py
 ```
 
-And the claim ceiling remains:
+The reference also invokes/compares an independent Node 27-trit lane.
 
-```text
-REFERENCE REIMPLEMENTATION != CANONICAL AURAOS
-RECONSTRUCTION PASS != COMPARATIVE SUPERIORITY
-NO CODE RUNTIME -> UNEXECUTED_NO_RUNTIME
-```
-
-The stronger acceptance target is a matched B0-B3/A1-A3 benchmark plus a blind fresh-agent chain: Agent A receives Paper X + the pinned reference capsule, reconstructs/tests/collapses, terminates completely, and a different fresh Agent B resumes from the compact `SuccessorFrame` without Agent A's transcript.
+The code is intentionally bounded. It tests control semantics, not production AuraOS performance.
 
 ---
 
-# Newest Arena generations: Web4 capability composition and evidence-bound media
+# LifeOS, Places, Worlds and disposable apps
 
-The shared Arena workflow continued moving while this README was being prepared. These are staged architecture/results, not production deployment claims.
+The human-facing direction remains:
 
-## GEN10 — Aura Web4 / capability-and-research economy
+```text
+AURAOS = governed source/currentness/authority substrate
+AURA   = conversational/spatial intelligence/interface
+LIFEOS = private user-owned continuity substrate
+PLACE  = persistent governed semantic identity/environment
+SPACE  = permission-governed semantic region
+VISIT  = ephemeral actor/device/permission/objective realization
+ARENA  = objective-specific runtime/workspace
+WORLD  = current objective-conditioned semantic projection
+APP    = disposable realization of the World
+```
 
-The staged composition law is:
+The persistent layer is the governed Place/Space/Coordinate Cognition.
+
+The UI can be regenerated for desktop, phone, accessible 2D, headless agents, AR/MR/XR, or later devices.
+
+```text
+RENDERING != TRUTH
+OBSERVATION != VERIFIED FACT
+RELATIONSHIP != CONSENT
+PRIVATE LIFEOS != PUBLIC PROFILE
+```
+
+---
+
+# Aura Web4 / Commons / capability economy
+
+The staged capability-composition model allows one Arena to combine:
+
+- free/open Commons capabilities;
+- self-built tools;
+- community/public-good capabilities;
+- paid/proprietary capabilities;
+- source-bound R&D-pool outputs.
 
 ```text
 USER-GOVERNED INTENT
-→ SOURCE-BOUND WORLD
 → MINIMUM LAWFUL CAPABILITY COMPOSITION
 → EPHEMERAL ARENA
 → VERIFIED EFFECT
-→ DURABLE COGNITION / LINEAGE / RIGHTS
+→ COGNITION / LINEAGE / RIGHTS
 → OPTIONAL SETTLEMENT
 ```
 
-One Arena may compose open Commons capabilities, self-built tools, paid/proprietary capabilities and research-pool capabilities at the same time. Proprietary implementation may remain sealed while its interface, terms, attestation and execution receipt cross the Arena boundary.
-
-Economic separation is constitutional:
+Economic and authority boundaries remain explicit:
 
 ```text
 FREE LICENSE != ZERO LIFECYCLE COST
@@ -212,70 +468,50 @@ PAID != BETTER
 PRICE != AUTHORITY
 LINEAGE != DEBT
 ATTRIBUTION != ENTITLEMENT
-USER GAS ZERO != SYSTEM COST ZERO
+USER-VISIBLE GAS ≈ 0 != SYSTEM COST 0
 WRAPPED ASSET != NATIVE ASSET
 BLOCKCHAIN != AURA TRUTH
 ```
 
-The current GEN10 witness is **25/25 local deterministic gates**. It does not establish a production blockchain, bridge, wallet, paymaster, marketplace, smart-contract security audit, regulatory compliance or universal fairness result.
-
-## GEN11 — Evidence-Bound CampaignGraph / Media Foundry
-
-A campaign is compiled from one source/currentness-bound evidence graph rather than treating every output as an unrelated prompt:
-
-```text
-MESSAGE ONCE -> EVIDENCE ONCE -> MANY REGENERABLE CAMPAIGN SURFACES
-```
-
-Press release, FAQ, pitch, social copy, shots, clips, captions and longer cuts become projections of the same CampaignGraph.
-
-```text
-THE PROMPT IS NOT THE SOURCE CODE OF THE MOVIE.
-RENDERING != TRUTH.
-GENERATED CONCEPT DEMO != DEPLOYED CAPABILITY.
-```
-
-A source/claim change should identify dependent copy/shots, reopen the **minimum media cone**, regenerate only that cone, verify it and emit a new receipt. The staged worker-tool law is similarly regenerative:
-
-```text
-WORK -> TOOL DELTA -> TEST -> PROVENANCE -> COORDINATE -> CAPABILITY PACKAGE -> REUSE
-```
-
-A worker-created tool is not automatically trusted or promoted merely because it exists. GEN11 reports **34/34 local Arena gates** and explicitly reports that no real generative-video provider call occurred in that generation.
+Optional L2/paymaster/batched-settlement concepts remain staged; no production bridge, wallet, paymaster, custody system, or audited settlement contract is claimed here.
 
 ---
 
-# J59 → HyperScale → HyperDrive: where the large-number phase actually fits
+# Creator Studio / evidence-bound media
 
-A key historical bridge is the **J59 journal series from 2026-08-15**. It explains why later HyperScale and HyperDrive exist.
+Aura Creator Studio is a reference application of the same architecture.
 
-| J59 stage | Declared objective horizon | Surviving control question |
-|---|---:|---|
-| V01 | 81 | triads-of-triads hydration, closure and identity rebind |
-| V02 | 243 | adaptive routing and self-correction |
-| V03 | 729 | triad rebase and meta-adaptation stabilization |
-| V04 | 2,187 | proof-carrying corrigible equilibrium |
-| V05 | 6,561 | bidirectional reproof, obligation frontier, corrigible quiescence |
-| V06 | 19,683 | minimum reproof membrane, obligation ownership, reproof-preserving forgetting |
-| V07 | 59,049 | successor-neutral readjudicability |
-| V08 | 177,147 | current adjudication reachability across changing source/authority topology |
-| V09 | 531,441 | irreversible-effect-frontier control across non-atomic/delegated effects |
+```text
+MESSAGE ONCE
+→ EVIDENCE ONCE
+→ MANY REGENERABLE CAMPAIGN SURFACES
+```
 
-The journals explicitly bound these numbers as **forcing/checkpoint geometry rather than ontology**. They describe one correlated analytical/falsification genealogy, not 531,441 independent model workers or experiments.
+A durable media project contains claims, evidence, story graph, shots, continuity, rights, provider attempts, accepted assets, currentness, and provenance.
 
-What survived the exponential-number phase is much more useful than the number itself:
+```text
+THE PROMPT IS NOT THE SOURCE CODE OF THE MOVIE.
+GENERATED CONCEPT VISUALIZATION != IMPLEMENTATION EVIDENCE.
+```
 
-- expansion must return through challenge, synthesis and rebase;
-- completed subtrees can collapse by reference without losing exact reopenability;
-- a future defeater must reach the affected consequence and that consequence must descend to the minimum current proof/source basis;
-- forgetting is lawful only when reproof remains reachable before consequence;
-- continuity follows current rightful adjudication reachability, not a stale identifier or predecessor PASS;
-- every materially irreversible edge must remain reachable by current revocation/currentness/authority controls;
-- after irreversibility, late defeat creates explicit repair/reconciliation obligations rather than rewriting history.
+Change one source-bound claim → reopen only the dependent press/social/video cone → regenerate/verify only that cone.
 
-This is the genealogy later formalized as HyperScale/HyperDrive, affected-cone invalidation, `SuccessorFrame`, RO3DD/P0-D2RM and current consequence gates.
+---
 
-Modern rule:
+# J59 → HyperScale → HyperDrive
+
+Aura's earlier large-number triadic journals are best read as forcing/checkpoint geometry, not as a requirement to launch astronomical numbers of model workers.
+
+What survived:
+
+- expansion must return through challenge/synthesis/rebase;
+- completed subtrees can collapse by reference with exact reopen;
+- forgetting is lawful only when reproof remains reachable;
+- source/currentness changes reopen the minimum affected consequence cone;
+- independent frontier, not symbolic recursion count, determines real scaling;
+- after an irreversible consequence, later defeat creates explicit repair/reconciliation rather than rewriting history.
+
+Modern operational rule:
 
 ```text
 EXPAND ONLY WHEN AN UNRESOLVED RESIDUAL EARNS IT.
@@ -285,331 +521,92 @@ COLLAPSE TO THE MINIMUM RECONSTRUCTIBLE SUCCESSOR STATE.
 REOPEN THE SMALLEST AFFECTED CONE ON INVALIDATION.
 ```
 
-Astronomical recursion is **not** an ordinary runtime requirement.
+---
+
+# Current open benchmark: regular vs rebase-only vs full Aura
+
+The strongest next causal test is deliberately matched.
+
+For each frozen task:
+
+```text
+R = ordinary fresh worker
+    objective only; no Aura orientation/reuse
+
+B = rebase-only worker
+    same model/tools + compact frozen successor/rebase packet
+    but no live Coordinate Memory / DomainLens / HyperDrive expert assistance
+
+A = full Aura worker
+    same model/tools
+    + source/currentness
+    + Root/Sub-Arena navigation
+    + Coordinate Memory
+    + DomainLens/K27 only where earned
+    + Temporal NOW
+    + deterministic/no-model path
+    + ExpertBundle
+    + Construct/Challenge/Verify
+    + HyperDrive successor
+```
+
+The preregistered design uses 9 matched tasks × `R/B/A` = **27 provider calls**.
+
+A causal comparison requires the **same exact provider/model/version/config** across R/B/A. If that cannot be held fixed, the result must be classified noncausal.
+
+Measure at least:
+
+- source fidelity / unsupported relation rate;
+- final task quality;
+- context bytes/tokens hydrated;
+- exact-source L4 opens;
+- broad searches;
+- duplicate work;
+- wall time;
+- provider/model cost;
+- currentness errors;
+- worker-resume fidelity;
+- revalidation/reopen cost;
+- total lifecycle cost, not only first-call latency.
+
+Until command-bound results exist, this remains the key open benchmark—not a completed superiority claim.
 
 ---
 
-# Two coordinated wrappers: improve the computer path and the model path
+# Evidence discipline
 
-Aura can wrap both the host and inference layers without modifying model weights.
-
-## Host/Substrate Wrapper
-
-The host wrapper can route work according to CPU/GPU/NPU, RAM/VRAM, storage/I/O, network, battery, thermals, OS/sandbox, installed tools, local/remote models, privacy and authority.
+Aura deliberately preserves negative results and boundary conditions.
 
 ```text
-a*(q,H) = argmin_a [
-    α·Latency(a)
-  + β·Energy(a)
-  + γ·Memory(a)
-  + δ·IO(a)
-  + η·Network(a)
-  + ζ·MoneyCost(a)
-]
-```
-
-subject to correctness, source/currentness, privacy, authority, battery/thermal/storage constraints and reopenability.
-
-The cheapest lawful route may be an exact coordinate/result hit, SQLite query, deterministic script, local model, remote model, peer, GPU/CPU path or newly materialized Arena.
-
-## LLM/Inference Wrapper
-
-The inference wrapper resolves roughly:
-
-```text
-ZERO-HOP / verified reusable result
-→ DIRECT COORDINATE / RELATION HOP
-→ AFFECTED CONE
-→ DELTA HYDRATE
-→ EXACT SOURCE REOPEN
-→ BROAD SEARCH LAST
-```
-
-Then it chooses `NO MODEL`, a small local model, remote provider, paged local model, bounded independent multi-backend review, or `BLOCKED/UNKNOWN`.
-
-Semantic paging of knowledge/context, model-weight paging and ephemeral execution-environment paging are different optimization planes and must not be confused with truth or source ownership.
-
----
-
-# Coordinate Memory, amortized cognition and 1 → 100 million participants
-
-Provider prompt/KV caching is only one reuse plane.
-
-```text
-COORDINATE_HIT
-!= PREFIX_KV_HIT
-!= BLOCK_KV_HIT
-!= RESULT_HIT
-```
-
-Coordinate Memory binds reusable cognition to semantic identity, source generation/currentness, evidence/dissent, authority ceiling, invalidators and exact reopen handles. A provider cache mostly answers whether tokens were already processed; it is not the source or authority owner.
-
-For an initial verified foundation `F`, reusable fraction `r_t`, new work `W_t` and lookup/revalidation/coordination `V_t`:
-
-```text
-C_total(T) ≈ F + Σ[(1-r_t)·W_t + V_t]
-C_average(T) = F/T + average[(1-r_t)·W_t + V_t]
-```
-
-An illustrative scenario - **not a forecast** - assumes a $10 independently reconstructed process, 70% lawful reuse, 5% revalidation cost on the reusable portion and $0.10 later lookup/coordination cost:
-
-| Compatible participants | Independent recomputation | Illustrative reuse path | Avoided recomputation |
-|---:|---:|---:|---:|
-| 1 | $10.00 | $10.00 | $0 |
-| 10 | $100.00 | $41.05 | $58.95 |
-| 100 | $1,000.00 | $351.55 | $648.45 |
-| 1,000 | $10,000.00 | $3,456.55 | $6,543.45 |
-| 1,000,000 | $10,000,000 | $3,450,006.55 | $6,549,993.45 |
-| 100,000,000 | $1,000,000,000 | $345,000,006.55 | $654,999,993.45 |
-
-The example illustrates the hypothesis: **verified work can become infrastructure**. It does not predict actual future Aura economics, hit rates, energy savings or 100-million-user throughput. Revalidation, coordination, stale-state repair, independent replication and necessary recomputation remain real costs.
-
-Negative results can amortize too: a verified failed path can prevent many later workers from paying to rediscover the same dead end while its invalidators specify when it deserves reopening.
-
----
-
-# One Arena Engine, many Recipes
-
-The durable semantic world can persist while execution environments are disposable.
-
-```text
-Persistent Aura World / Coordinate Memory
-        ↓
-ObjectiveCapsule / WorkCapsule
-        ↓
-minimum current source + affected cone
-        ↓
-materialize bounded environment
-  Python / shell / SQLite / tests / tools / models / data
-        ↓
-Arena V0.3 + HyperDrive + HyperScale
-        ↓
-Construct → Challenge → Verify
-        ↓
-receipts / measurements / artifacts / decisions
-        ↓
-gated consequence commit + SuccessorFrame
-        ↓
-dissolve scratch/runtime; keep source-bound result
-```
-
-Arena Recipes persist as reusable patterns. Runtime resolves roles against current capabilities, rights, policy, jurisdiction, evidence, cost, privacy and device envelope.
-
-The first staged product-facing pattern is **Aura Creator Studio / Video Arena V0.1**:
-
-```text
-creative objective
-→ claims/sources
-→ story + shot graph
-→ continuity / preserve constraints
-→ rights / consent
-→ cost-quality route
-→ human spend gate
-→ provider generation/editing
-→ deterministic local assembly/captions
-→ verify / provenance
-→ Artifact Cognition
-→ reusable Arena Recipe
-```
-
-**The prompt is not the source code of the movie.** The semantic project is durable; provider prompts are replaceable compiled outputs. A targeted edit should reopen only the affected shot/dependency cone when that is sufficient.
-
-Current method witness: `24/24` same-host Python/SQLite/FFmpeg gates; **no provider API was executed in that generation**, so this is not a generated-video or production-quality claim.
-
----
-
-# Aura Places and the human/spatial layer
-
-A Place persists as a signed/versioned/governed semantic definition. A Visit is an ephemeral realization compiled for one visitor, objective, device, language, accessibility mode, relationship and permission set.
-
-A Place may include media, public/private/invited/subscriber rooms, collaboration, commerce, support/returns, digital twins, assets, Arena Recipes, creator tools and provenance-bearing portfolios.
-
-```text
-PlaceManifest(version)
- + visitor / objective / relationship
- + permissions / entitlements
- + device / network / accessibility
-        ↓
-Ephemeral Visit
-        ↓
-transfer only missing assets / deltas
-        ↓
-interaction + minimized receipts
-        ↓
-dissolve temporary state
-```
-
-Local-first personal data can remain on owner-controlled devices or explicitly chosen encrypted storage. Public projections and shared Spaces expose only authorized claims/assets, not an entire private LifeOS.
-
----
-
-# Aura Commons, lineage, attribution and settlement
-
-Aura Commons is a federated discovery/composition/accounting layer over canonical owners - not a second truth plane and not merely an app store.
-
-It can coordinate capabilities, methods, Arena Recipes, package identities, licences, rights/entitlements, verification/security evidence, provenance/attestation, bounties, Places/assets, revocation/migration/dispute paths and optional settlement adapters.
-
-Meaningful-use attribution can consider whether a contribution executed, was verified, survived into the accepted output, was consumed downstream, prevented a failure, enabled later work, remains causally foundational after supersession, or supplies maintenance/security value.
-
-Hard separation:
-
-```text
-LICENCE
-!= PROVENANCE
-!= ATTRIBUTION
-!= ECONOMIC ENTITLEMENT
-!= TRUTH / AUTHORITY
-```
-
-Lineage does **not** automatically create debt. Payment requires an explicit lawful agreement/rule.
-
-## Optional near-gas-free Layer-2 settlement
-
-Aura's earlier Gas-Free Fractal Ledger lineage is retained, but the mature boundary is stricter:
-
-```text
-USER-PERCEIVED NEAR-ZERO GAS
-!= ZERO PHYSICAL COST
-!= ZERO SETTLEMENT RISK
-!= NATIVE-ASSET EQUIVALENCE
-```
-
-High-frequency lineage micro-obligations can be netted/batched off-chain and periodically settled through conventional payment rails, cooperative ledgers, stablecoins, smart contracts or an optional L2/rollup. Ethereum rollups provide an external example of batching many operations so fixed L1 publication cost is spread across transactions. ERC-4337 bundlers/paymasters provide an external pattern for bundling user operations and sponsoring user-facing fees.
-
-Existing cryptocurrencies may be exposed through bridge/wrapped-asset adapters, but a wrapped asset is **not the native asset**, and Aura cannot erase the smart-contract, counterparty, liquidity, systemic or withdrawal risks of the bridge/source chain.
-
-A numerical batching example in Paper X is intentionally hypothetical and must not be read as a production fee forecast.
-
----
-
-# Encryption and cryptographic control
-
-Aura's newer ARCE work is staged/test-required. The security rule is to combine reviewed standard cryptographic primitives with Aura's source/currentness/authority context rather than treating Aura geometry as a cipher.
-
-```text
-STANDARD CRYPTO HARDNESS
-AEAD / approved hashes / standard PQ or hybrid mechanisms / protected key storage
-        +
-AURA CONTEXT BINDING
-semantic identity / generation / purpose / authority / replay state / receipts / invalidators
-```
-
-Toroidal, tesseract, Morton, 27-cell or other geometric structures can organize locality/redundancy/reconstruction but are **not encryption, entropy or authentication**.
-
----
-
-# 3-6-9 orchestration and swarm scaling
-
-Aura uses 3-6-9 as an orchestration grammar, not a numerological or universal physical law.
-
-- `3` - smallest reviewable Construct / Challenge / Verify cell.
-- `6` - paired triads for perturbation/challenge/parallel work.
-- `9` - three triads closing a larger analysis/execution/reconciliation cycle.
-
-Physical worker count is separate from logical topology. Useful scale is governed by independence, conflict, latency, budget, evidence value and lifecycle cost.
-
-A later 27-objective live swarm battery returned 27/27 receipts but only 10 PASS / 17 TIMEOUT at concurrency 7, so the preregistered cold wave failed. The same-objective warm rerun then produced 27/27 Coordinate Hits with zero provider tokens. Both the failure and reuse result remain part of the evidence record.
-
----
-
-# Current evidence ceiling
-
-`PASS in one harness != universal PASS`.
-
-| Surface | Current/scoped result | Boundary |
-|---|---:|---|
-| Longitudinal provider export through Aug. 28 | 11,020 requests; 1,210,407,839 logical/model tokens; 1,175,105,664 cache-hit input tokens; 97.828502% input cache-hit share; $22.535003 billed | real provider accounting, not controlled Aura attribution |
-| Published Paper X snapshot | 9,381 requests; 843,642,344 logical/model tokens; 97.402912% input cache-hit share; $17.772456 billed | provider reuse; not 97% logical-token reduction |
-| HSC-196 coordinate-result reuse | identical scoped result: 0 provider tokens on reuse | scoped same-result reuse only |
-| HSC-198 cold swarm | 27/27 receipts; 10 PASS / 17 TIMEOUT | failed preregistered timeout criterion |
-| HSC-198 warm Coordinate Store | 27/27 Coordinate Hits; 0 API tokens | same-objective rerun only |
-| HyperScale HSC-187 | bypass ON 7.08 ms vs OFF 6.25 ms = 13.23% slower | falsifier; optimization not promoted |
-| Exact scale sweep | 40,320 permutations → 108 running-GCD trajectories; 219/255 subsets reach gcd=1; `s=4` minimax; virtual completion `{6,8,24}` | exact finite mathematics, not production speed |
-| GEN7 Places/currentness integration | Rev.4→4.1 22/22; Place/Space authorization 10/10; HyperDrive Python + Node controls PASS | same-host method evidence |
-| GEN8 Resident/MissionContract | 30/30 local gates; command durably queued | no command-bound ACK/RESULT at bounded check; no live-host claim |
-| GEN10 Web4 capability/economy | 25/25 local deterministic gates | staged; no production marketplace/blockchain/bridge claim |
-| GEN11 CampaignGraph/Media Foundry | 34/34 local Arena gates | staged; no real generative-video provider call in that generation |
-| Mini Aura public reference | 10/10 core checks; 88,573→11 affected cone; Python↔Node HyperScale parity | bounded independent reimplementation; not canonical AuraOS |
-
-Open/current failures include the integrated upsert race, the HSC-198 cold timeouts, a prompt-content defect in that harness, unproven 81-worker live concurrency, unmet `<95 MiB` RSS target, and unverified official benchmark headline claims. They remain visible instead of being edited away.
-
----
-
-# Paper and prior-art lineage
-
-The Omni paper preserves the dated claim genealogy rather than forcing readers to reconstruct it across ten publications:
-
-| Paper | Claim family | Main contribution carried forward |
-|---|---|---|
-| I | N1-N8 | edge/autopoietic neuro-symbolic substrate, VSA, linguistic/FST lineage |
-| II | N9-N13 | holographic header, fractal-ledger lineage, swarm/VSA/spatial/FST concepts |
-| III | N14 | VSA-addressed liquid/semantic routing concept |
-| IV | N15-N17 | training/quantization/spatial-stream embodiments |
-| V | N18-N20 | FST lexicon routing, topology mapping, self-refactoring lineage |
-| VI | N21-N23 | formal FST lexicon / polysynthetic routing reduction |
-| VII | N24-N30 | integrity, crystallization, tests, cost routing, local mesh, bounded self-healing |
-| VIII | N31-N50 | evidence-ordered relational Arenas, authority/source separation, atomic publication |
-| IX | N51-N100 | objective-native Arenas, Capability Packages, Commons, attestation, Places, federation/economy |
-| X Rev.3 | N101-N195 | relational-world compilation, World Seed, Coordinate Memory, wrappers, cache fabric, host compiler, spatial codec, Commons, reconstruction/repair |
-| X Omni successor | consolidated continuation | J59→HyperDrive genealogy, Host+Inference wrappers, longitudinal amortization, unified/joinable Arena, cognitive materialization, Places/Spaces/LifeOS, Resident/command fabric, Web4 capability composition, CampaignGraph/media regeneration, explicit Mini Aura falsification package, settlement adapters and updated falsifiers |
-
-The current Omni compilation preserves earlier positive, null and negative results, including later corrections such as the carry equation repair: for balanced odd radix `r`, `P(carry)=(r²-1)/(4r²)=1/4-1/(4r²)`, so 25% is an asymptotic ceiling approached from below, not a finite-radix floor.
-
----
-
-# Quickstart for the historical repository runtime
-
-```bash
-git clone https://github.com/dallascourchene-commits/AuraOS.git
-cd AuraOS
-
-python aura_node.py
-python aura_daemon.py
-python aura_swarm_runner.py
-```
-
-Historical benchmark runners:
-
-```bash
-python3 scripts/aura_industry_benchmark_validation.py
-python3 scripts/aura_advanced_benchmark_runner.py
-python3 scripts/aura_security_accuracy_harness.py
-```
-
-The repository runtime is implementation lineage; it is not yet the complete Paper X / Aura Drive architecture described here.
-
-Repository scorecards:
-
-- [`docs/INDUSTRY_BENCHMARK_SCORECARD.md`](./docs/INDUSTRY_BENCHMARK_SCORECARD.md)
-- [`docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md`](./docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md)
-- [`docs/SECURITY_AND_ACCURACY_SCORECARD.md`](./docs/SECURITY_AND_ACCURACY_SCORECARD.md)
-- [`docs/ADVANCED_BENCHMARKS.md`](./docs/ADVANCED_BENCHMARKS.md)
-
----
-
-# Licensing and claim discipline
-
-AuraOS's current licensing posture is **GNU Affero General Public License v3.0 / AGPL-3.0-only where marked**, subject to source-specific third-party and historical-license boundaries.
-
-A public repository, an open-source licence, provenance, economic entitlement and technical truth are different objects.
-
-The public story follows the same rule as Paper X:
-
-```text
-IMPLEMENTED != TESTED != MEASURED != EXACT-DERIVED != PUBLISHED
-REQUEST != EXECUTION
-ADDRESS != SOURCE != AUTHORITY
+SIMILARITY != EVIDENCE
 RECEIPT != TRUTH
-CACHE HIT != COGNITIVE SUPERIORITY
-SYMBOLIC HORIZON != PHYSICAL WORKERS
+CACHE HIT != TRUTH
+QUEUE PRESENCE != EXECUTION
+STAGED != DEPLOYED
+RECORDED RESULT != REEXECUTABLE RESULT
+MODEL OUTPUT != PROMOTED SOURCE
 ```
 
-The current engineering objective is to make the executable AuraOS repository catch up to the Paper X/Aura Drive architecture across cloud Drive, local desktop/laptop, mobile/edge and federated carriers while retaining current source resolution, independent challenge, human authority, honest benchmarks and exact reopenability.
+A powerful architecture is only useful if a fresh skeptic can reconstruct what happened, find the exact source, change it, observe the affected cone, and reproduce or falsify the claimed result.
 
-## Canonical public Paper X
+---
 
-- Paper X Rev.3 PDF: https://zenodo.org/records/22134815/files/PAPER-X%20%285%29.pdf?download=1
-- Zenodo record: https://zenodo.org/records/22134815
-- DOI: https://doi.org/10.5281/zenodo.22134815
+# Public challenge
 
-**The one-paper Omni successor is being finalized separately. Rev.3 remains the public/citable Paper X until that successor receives its own public deposit.**
+Read Paper X Rev.3.
+
+Run the bounded references.
+
+Change a source.
+
+Verify whether only the dependent state reopens.
+
+Kill the first worker.
+
+Give a different worker the compact successor state.
+
+Measure what it must rediscover.
+
+Then compare the matched regular / rebase-only / full-Aura conditions.
+
+**The goal is not to make the model remember more. The goal is to make the system forget safely, reopen exactly, and stop paying to rediscover cognition that is already current, lawful, source-bound, and reusable.**
