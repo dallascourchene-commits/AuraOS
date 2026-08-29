@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788029753,
+  "generated_at_unix": 1788032288,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1634,
+    "repo_file_count": 1636,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1138,6 +1138,8 @@
       "download_zenodo_papers.py",
       "english_lexicon.json",
       "examples/aura_gate_policy.json",
+      "examples/mini_aura_reference_arena/README.md",
+      "examples/mini_aura_reference_arena/mini_aura_reference.py",
       "extract_new_papers.py",
       "extract_pdf_text.py",
       "fix_db.py",
@@ -1664,6 +1666,7 @@
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
+      "examples/mini_aura_reference_arena/mini_aura_reference.py",
       "scripts/aura_advanced_benchmark_runner.py",
       "scripts/aura_arch_v2_3_capsule_validator.py",
       "scripts/aura_architecture_harness.py",
@@ -1741,8 +1744,7 @@
       "tests/test_aura_capability_connectome_v2.py",
       "tests/test_aura_capability_lane_registry.py",
       "tests/test_aura_capability_resolver.py",
-      "tests/test_aura_capability_resolver_connectome.py",
-      "tests/test_aura_change_graph.py"
+      "tests/test_aura_capability_resolver_connectome.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1750,15 +1752,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1634,
-      "bytes": 26325911,
-      "tokens_est": 6571880,
+      "files": 1636,
+      "bytes": 26333950,
+      "tokens_est": 6573889,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 234,
+        "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 995,
+        "python_module": 996,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -3173,6 +3175,14 @@
         "line": 46,
         "end_line": 78,
         "semantic_id": "core/aura_worker_daemon.py#function:main:5f9ec9e1953dcfd5",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 112,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:main:d01a5daa59a950c4",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -96772,6 +96782,86 @@
         "signature_hash": "9509d08361c59676"
       }
     ],
+    "omega": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 12,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:omega:32cf494305e89d8b",
+        "signature_hash": "10a63c5704ace81e"
+      }
+    ],
+    "ds": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:ds:097f601fc16ec71c",
+        "signature_hash": "eb56edab62740c32"
+      }
+    ],
+    "hyperscale": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 30,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:hyperscale:3dca0cb5d4fa0144",
+        "signature_hash": "64ca9c961f742184"
+      }
+    ],
+    "affected": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 46,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:affected:524d3c53840664dd",
+        "signature_hash": "f61a3c1a25e6880c"
+      }
+    ],
+    "affected.rebuild": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 39,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#method:affected.rebuild:b67c227e561d5df1",
+        "signature_hash": "330ca4eb78c04904"
+      }
+    ],
+    "amnf": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 54,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:amnf:f6936a2d8cbe33cd",
+        "signature_hash": "a0d39e7e8424d583"
+      }
+    ],
+    "action_cone": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 73,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:action_cone:33805bec5d23880c",
+        "signature_hash": "eb35820672eab145"
+      }
+    ],
+    "decision": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 96,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:decision:4c082db2ca65d38c",
+        "signature_hash": "3f12de2cf5ff654f"
+      }
+    ],
     "extract_with_pypdf2": [
       {
         "file": "extract_pdf_text.py",
@@ -159038,6 +159128,12 @@
     ],
     "python -m unittest": [
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
+    "python -m venv": [
+      "examples/mini_aura_reference_arena/README.md"
+    ],
+    "python mini_aura_reference.py --out results_local.json": [
+      "examples/mini_aura_reference_arena/README.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -236577,6 +236673,110 @@
       ]
     },
     {
+      "path": "examples/mini_aura_reference_arena/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1718,
+      "lines": 33,
+      "tokens_est": 428,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv",
+        "python mini_aura_reference.py --out results_local.json"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          8
+        ],
+        "python mini_aura_reference.py --out results_local.json": [
+          10
+        ]
+      },
+      "topology": {},
+      "digest8": "25380cc8cac34af9",
+      "vector": [
+        -0.053543,
+        -0.296445,
+        -0.009141,
+        -0.040484,
+        -0.171076,
+        0.108392,
+        -0.160629,
+        -0.158017,
+        -0.186747,
+        -0.124063,
+        0.009141,
+        0.228537,
+        -0.168464,
+        -0.079661,
+        0.011753,
+        0.048319,
+        0.158017,
+        0.20503,
+        0.066602,
+        0.23376,
+        0.066602,
+        0.150181,
+        0.314728,
+        -0.150181,
+        -0.312116,
+        -0.322563,
+        -0.160629,
+        0.131898,
+        -0.202418,
+        -0.079661,
+        0.043095,
+        0.327787
+      ]
+    },
+    {
+      "path": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6321,
+      "lines": 114,
+      "tokens_est": 1581,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "52621ba8f501b6fc",
+      "vector": [
+        -0.17336,
+        0.094451,
+        -0.249877,
+        0.182924,
+        -0.175751,
+        -0.168577,
+        0.23553,
+        -0.017934,
+        -0.2977,
+        0.27618,
+        0.185316,
+        0.013151,
+        0.204445,
+        0.106407,
+        0.084886,
+        0.254659,
+        -0.204445,
+        -0.080104,
+        0.166186,
+        0.077713,
+        0.269006,
+        -0.123145,
+        0.072931,
+        0.209227,
+        0.302483,
+        -0.118363,
+        -0.027498,
+        0.130319,
+        -0.015543,
+        0.063366,
+        -0.056192,
+        -0.27618
+      ]
+    },
+    {
       "path": "extract_new_papers.py",
       "role": "python_module",
       "binary": false,
@@ -286149,15 +286349,15 @@
     }
   },
   "summary": {
-    "file_count": 1634,
-    "total_bytes": 26325911,
-    "text_tokens_est": 6571880,
+    "file_count": 1636,
+    "total_bytes": 26333950,
+    "text_tokens_est": 6573889,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 234,
+      "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 995,
+      "python_module": 996,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -287306,6 +287506,8 @@
       "download_zenodo_papers.py",
       "english_lexicon.json",
       "examples/aura_gate_policy.json",
+      "examples/mini_aura_reference_arena/README.md",
+      "examples/mini_aura_reference_arena/mini_aura_reference.py",
       "extract_new_papers.py",
       "extract_pdf_text.py",
       "fix_db.py",
@@ -382272,6 +382474,96 @@
         "file_digest8": "30acae6183bec6ce"
       },
       {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:action_cone:33805bec5d23880c",
+        "name": "action_cone",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 56,
+        "end_line": 73,
+        "signature_hash": "eb35820672eab145",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:affected:524d3c53840664dd",
+        "name": "affected",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 32,
+        "end_line": 46,
+        "signature_hash": "f61a3c1a25e6880c",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:amnf:f6936a2d8cbe33cd",
+        "name": "amnf",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 48,
+        "end_line": 54,
+        "signature_hash": "a0d39e7e8424d583",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:decision:4c082db2ca65d38c",
+        "name": "decision",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 75,
+        "end_line": 96,
+        "signature_hash": "3f12de2cf5ff654f",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:ds:097f601fc16ec71c",
+        "name": "ds",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "eb56edab62740c32",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:hyperscale:3dca0cb5d4fa0144",
+        "name": "hyperscale",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 16,
+        "end_line": 30,
+        "signature_hash": "64ca9c961f742184",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:main:d01a5daa59a950c4",
+        "name": "main",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 98,
+        "end_line": 112,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:omega:32cf494305e89d8b",
+        "name": "omega",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 7,
+        "end_line": 12,
+        "signature_hash": "10a63c5704ace81e",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#method:affected.rebuild:b67c227e561d5df1",
+        "name": "affected.rebuild",
+        "kind": "method",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 36,
+        "end_line": 39,
+        "signature_hash": "330ca4eb78c04904",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
         "semantic_id": "extract_pdf_text.py#function:extract_with_pdfplumber:142fef666c8970d8",
         "name": "extract_with_pdfplumber",
         "kind": "function",
@@ -446122,7 +446414,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f54ee2e4da0bb0db05767925275e2b15",
-    "payload_hash": "d9c881e27e3c21ba9f65d95c4fccc2e4"
+    "record_fingerprint": "4a75aa852b220d92c20d629855fa567d",
+    "payload_hash": "5387a273be622afc44d3f5605f189c6c"
   }
 }

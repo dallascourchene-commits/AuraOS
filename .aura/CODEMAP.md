@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1634
-- **total_bytes**: 26325911
-- **text_tokens_est**: 6571880
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1636
+- **total_bytes**: 26333950
+- **text_tokens_est**: 6573889
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 996, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1634,
+  "repo_file_count": 1636,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1156,6 +1156,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "download_zenodo_papers.py",
     "english_lexicon.json",
     "examples/aura_gate_policy.json",
+    "examples/mini_aura_reference_arena/README.md",
+    "examples/mini_aura_reference_arena/mini_aura_reference.py",
     "extract_new_papers.py",
     "extract_pdf_text.py",
     "fix_db.py",
@@ -1682,6 +1684,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "benchmarks/refactor_code_quality/generate_fixture.py",
     "core/aura_task_dispatcher.py",
     "core/aura_worker_daemon.py",
+    "examples/mini_aura_reference_arena/mini_aura_reference.py",
     "scripts/aura_advanced_benchmark_runner.py",
     "scripts/aura_arch_v2_3_capsule_validator.py",
     "scripts/aura_architecture_harness.py",
@@ -1759,8 +1762,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_capability_connectome_v2.py",
     "tests/test_aura_capability_lane_registry.py",
     "tests/test_aura_capability_resolver.py",
-    "tests/test_aura_capability_resolver_connectome.py",
-    "tests/test_aura_change_graph.py"
+    "tests/test_aura_capability_resolver_connectome.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1774,15 +1776,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1634,
-  "bytes": 26325911,
-  "tokens_est": 6571880,
+  "files": 1636,
+  "bytes": 26333950,
+  "tokens_est": 6573889,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 234,
+    "knowledge_artifact": 235,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 995,
+    "python_module": 996,
     "schema_or_lexicon": 271,
     "support_file": 49
   }
