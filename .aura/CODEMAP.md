@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1636
-- **total_bytes**: 26339768
-- **text_tokens_est**: 6575337
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 996, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1639
+- **total_bytes**: 26353008
+- **text_tokens_est**: 6578641
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1636,
+  "repo_file_count": 1639,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -965,6 +965,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/ADVANCED_BENCHMARKS.md",
     "docs/AMD_DEMO_RECORDING_SCRIPT.md",
     "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
+    "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
     "docs/AURA_AFFORDANCE_DIRECTORY.md",
     "docs/AURA_AGENT_ARENA_BRIDGE.md",
     "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md",
@@ -1155,6 +1156,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "download_papers.py",
     "download_zenodo_papers.py",
     "english_lexicon.json",
+    "examples/arena_navigation_domain_lens/README.md",
+    "examples/arena_navigation_domain_lens/domain_lens_reference.py",
     "examples/aura_gate_policy.json",
     "examples/mini_aura_reference_arena/README.md",
     "examples/mini_aura_reference_arena/mini_aura_reference.py",
@@ -1684,6 +1687,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "benchmarks/refactor_code_quality/generate_fixture.py",
     "core/aura_task_dispatcher.py",
     "core/aura_worker_daemon.py",
+    "examples/arena_navigation_domain_lens/domain_lens_reference.py",
     "examples/mini_aura_reference_arena/mini_aura_reference.py",
     "scripts/aura_advanced_benchmark_runner.py",
     "scripts/aura_arch_v2_3_capsule_validator.py",
@@ -1761,8 +1765,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_capability_connectome.py",
     "tests/test_aura_capability_connectome_v2.py",
     "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py",
-    "tests/test_aura_capability_resolver_connectome.py"
+    "tests/test_aura_capability_resolver.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1776,15 +1779,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1636,
-  "bytes": 26339768,
-  "tokens_est": 6575337,
+  "files": 1639,
+  "bytes": 26353008,
+  "tokens_est": 6578641,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 235,
+    "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 996,
+    "python_module": 997,
     "schema_or_lexicon": 271,
     "support_file": 49
   }
@@ -1932,6 +1935,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/ADVANCED_BENCHMARKS.md",
     "docs/AMD_DEMO_RECORDING_SCRIPT.md",
     "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
+    "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
     "docs/AURA_AFFORDANCE_DIRECTORY.md",
     "docs/AURA_AGENT_ARENA_BRIDGE.md",
     "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md",
@@ -2069,8 +2073,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
     "docs/BENCHMARKS.md",
-    "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
-    "docs/INDUSTRY_BENCHMARK_SCORECARD.md"
+    "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md"
   ]
 }
 ```
