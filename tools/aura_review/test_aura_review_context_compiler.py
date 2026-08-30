@@ -1,6 +1,7 @@
 import unittest
 
 from tools.aura_review.aura_review_context_compiler import (
+    COORDINATE_BINDING_SCHEMA,
     ContextCompileRefusal,
     CoordinateLocatorV1,
     GraphEdgeV1,
@@ -98,10 +99,16 @@ class T(unittest.TestCase):
         self.assertTrue(c["context_budget_exhausted"])
         self.assertEqual(len(paths), 3)
 
-    def test_coordinate_is_locator_only(self):
+    def test_coordinate_is_locator_only_with_generation_binding(self):
         c = compile(coordinate_locators=(CoordinateLocatorV1("tools/a.py", "WS1/L2/abc", "coord-gen"),))
         self.assertFalse(c["coordinate_is_authority"])
+        self.assertFalse(c["coordinate_is_currentness"])
+        self.assertFalse(c["coordinate_is_source_truth"])
+        self.assertEqual(COORDINATE_BINDING_SCHEMA, c["coordinate_locator_binding_schema"])
         self.assertEqual(c["nodes"][0]["coordinates"], ("WS1/L2/abc",))
+        self.assertEqual(c["nodes"][0]["coordinate_bindings"], (("WS1/L2/abc", "coord-gen"),))
+        self.assertEqual(1, c["coordinate_locator_count"])
+        self.assertEqual(64, len(c["coordinate_locator_generation_digest"]))
 
     def test_coordinate_authority_widening_refused(self):
         with self.assertRaisesRegex(ContextCompileRefusal, "COORDINATE_AUTHORITY_WIDENING"):
@@ -145,7 +152,6 @@ class T(unittest.TestCase):
         with self.assertRaisesRegex(ContextCompileRefusal, "INVALID_CURRENTNESS_REF"):
             compile(currentness_ref=" ")
 
-    # V2 convergence regressions.
     def test_production_requires_expected_graph_generations(self):
         with self.assertRaisesRegex(ContextCompileRefusal, "CURRENTNESS_EVIDENCE_REQUIRED"):
             compile(
@@ -177,6 +183,45 @@ class T(unittest.TestCase):
         c = compile(workgraph_edges=edges, max_nodes=2, optional_depth=1)
         self.assertEqual(1, c["required_node_count"])
         self.assertEqual({"tools/a.py"}, {n["path"] for n in c["nodes"]})
+
+    def test_coordinate_generation_changes_context_identity(self):
+        a = compile(coordinate_locators=(CoordinateLocatorV1("tools/a.py", "WS1/L2/abc", "cg1"),))
+        b = compile(coordinate_locators=(CoordinateLocatorV1("tools/a.py", "WS1/L2/abc", "cg2"),))
+        self.assertEqual(a["nodes"][0]["coordinates"], b["nodes"][0]["coordinates"])
+        self.assertNotEqual(a["coordinate_locator_generation_digest"], b["coordinate_locator_generation_digest"])
+        self.assertNotEqual(a["context_digest"], b["context_digest"])
+        self.assertFalse(a["coordinate_is_authority"])
+        self.assertFalse(a["coordinate_is_currentness"])
+        self.assertFalse(a["coordinate_is_source_truth"])
+
+    def test_conflicting_generations_for_same_locator_fail_closed(self):
+        with self.assertRaisesRegex(ContextCompileRefusal, "COORDINATE_GENERATION_CONFLICT"):
+            compile(
+                coordinate_locators=(
+                    CoordinateLocatorV1("tools/a.py", "WS1/L2/abc", "cg1"),
+                    CoordinateLocatorV1("tools/a.py", "WS1/L2/abc", "cg2"),
+                )
+            )
+
+    def test_projection_refuses_self_consistent_legacy_coordinate_context(self):
+        c = compile(coordinate_locators=(CoordinateLocatorV1("tools/a.py", "WS1/L2/abc", "cg1"),))
+        c.pop("coordinate_locator_binding_schema")
+        body = dict(c)
+        body.pop("context_digest")
+        import hashlib, json
+        c["context_digest"] = hashlib.sha256(
+            json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("utf-8")
+        ).hexdigest()
+        with self.assertRaisesRegex(ContextCompileRefusal, "COORDINATE_BINDING_SCHEMA_MISMATCH"):
+            project_review_capsule_inputs(c)
+
+    def test_coordinate_locator_order_does_not_change_identity(self):
+        loc1 = CoordinateLocatorV1("tools/a.py", "WS1/L2/a", "cg1")
+        loc2 = CoordinateLocatorV1("tools/a.py", "WS1/L2/b", "cg2")
+        a = compile(coordinate_locators=(loc1, loc2))
+        b = compile(coordinate_locators=(loc2, loc1))
+        self.assertEqual(a["coordinate_locator_generation_digest"], b["coordinate_locator_generation_digest"])
+        self.assertEqual(a["context_digest"], b["context_digest"])
 
 
 if __name__ == "__main__":
