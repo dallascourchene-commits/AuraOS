@@ -1,9 +1,11 @@
 import unittest
 
 from tools.aura_adopt.aura_adoption_bootstrap import (
-    AdoptionRoute,
     CompileError,
+    ComputeProfile,
     EntryPreference,
+    EntrySurface,
+    EvidenceBinding,
     FirstTask,
     HostWitness,
     compile_entry_route,
@@ -11,17 +13,29 @@ from tools.aura_adopt.aura_adoption_bootstrap import (
 )
 
 
+EVIDENCE = EvidenceBinding("drive:host-witness", "a" * 64, "gen-1")
+
+
 class AdoptionBootstrapTests(unittest.TestCase):
-    def creator_task(self):
+    def deterministic_creator_task(self):
         return FirstTask(
-            task_id="creator.short.local.v1",
+            task_id="creator.short.deterministic.v1",
             domain="creator-studio",
             browser_supported=True,
             offline_supported=True,
             minimum_storage_mb=32,
         )
 
-    def test_low_storage_phone_gets_zero_install_web_without_key(self):
+    def model_creator_task(self):
+        return FirstTask(
+            task_id="creator.script.reason.v1",
+            domain="creator-studio",
+            browser_supported=True,
+            model_inference_required=True,
+            minimum_storage_mb=32,
+        )
+
+    def test_low_storage_phone_separates_web_surface_from_remote_free_compute(self):
         host = HostWitness(
             host_class="android-low-storage",
             browser_available=True,
@@ -30,38 +44,48 @@ class AdoptionBootstrapTests(unittest.TestCase):
             free_storage_mb=512,
             ram_mb=2048,
             android=True,
+            local_compute_class="CONSTRAINED",
+            free_remote_route_available=True,
         )
-        d = compile_entry_route(host, self.creator_task())
-        self.assertEqual(AdoptionRoute.ZERO_INSTALL_WEB_PWA, d.route)
+        d = compile_entry_route(host, self.model_creator_task(), EVIDENCE)
+        self.assertEqual(EntrySurface.ZERO_INSTALL_WEB_PWA, d.entry_surface)
+        self.assertEqual(ComputeProfile.REMOTE_FREE_FIRST, d.compute_profile)
         self.assertEqual((), d.required_actions)
         self.assertIn("MANDATORY_INSTALL", d.avoided_actions)
-        self.assertIn("MANDATORY_API_KEY", d.avoided_actions)
+        self.assertIn("MANDATORY_LOCAL_MODEL_DOWNLOAD", d.avoided_actions)
 
-    def test_native_required_android_requests_install_and_only_needed_permission(self):
+    def test_native_required_android_is_surface_independent_of_compute(self):
         host = HostWitness(
             host_class="android-capable",
             browser_available=True,
             browser_wasm=True,
-            network_online=True,
-            free_storage_mb=12000,
-            ram_mb=8192,
+            network_online=False,
+            free_storage_mb=4096,
+            ram_mb=4096,
             android=True,
+            native_shell_installed=False,
+            native_install_available=True,
+            local_runtime_available=True,
+            local_model_available=True,
+            local_compute_class="CONSTRAINED",
         )
         task = FirstTask(
-            task_id="creator.camera.native.v1",
+            task_id="creator.camera.offline.v1",
             domain="creator-studio",
             browser_supported=False,
             native_required=True,
+            model_inference_required=True,
             required_permissions=frozenset({"CAMERA"}),
         )
-        d = compile_entry_route(host, task)
-        self.assertEqual(AdoptionRoute.NATIVE_ANDROID_APK, d.route)
+        d = compile_entry_route(host, task, EVIDENCE)
+        self.assertEqual(EntrySurface.NATIVE_ANDROID_APK, d.entry_surface)
+        self.assertEqual(ComputeProfile.CONSTRAINED_LOCAL, d.compute_profile)
         self.assertEqual(
             ("INSTALL_NATIVE_ANDROID_SHELL", "GRANT_PERMISSION:CAMERA"),
             d.required_actions,
         )
 
-    def test_developer_explicitly_gets_github_cli(self):
+    def test_developer_surface_can_pair_with_full_local_compute(self):
         host = HostWitness(
             host_class="desktop-dev",
             browser_available=True,
@@ -70,54 +94,51 @@ class AdoptionBootstrapTests(unittest.TestCase):
             free_storage_mb=100000,
             ram_mb=32768,
             dev_cli_available=True,
-        )
-        d = compile_entry_route(host, self.creator_task(), EntryPreference(developer_mode=True))
-        self.assertEqual(AdoptionRoute.DEV_CLI_GITHUB, d.route)
-        self.assertIn("BINARY_TRUST_REQUIREMENT", d.avoided_actions)
-
-    def test_local_model_avoids_key_when_browser_cannot_satisfy(self):
-        host = HostWitness(
-            host_class="linux-local",
-            browser_available=False,
-            browser_wasm=False,
-            network_online=False,
-            free_storage_mb=20000,
-            ram_mb=16384,
             local_runtime_available=True,
             local_model_available=True,
+            local_compute_class="FULL",
         )
-        task = FirstTask(
-            task_id="reason.local.v1",
-            domain="general",
-            browser_supported=False,
-            local_model_required=True,
+        d = compile_entry_route(
+            host,
+            self.model_creator_task(),
+            EVIDENCE,
+            EntryPreference(developer_mode=True),
         )
-        d = compile_entry_route(host, task)
-        self.assertEqual(AdoptionRoute.FULL_LOCAL, d.route)
-        self.assertIn("MANDATORY_API_KEY", d.avoided_actions)
+        self.assertEqual(EntrySurface.DEV_CLI_GITHUB, d.entry_surface)
+        self.assertEqual(ComputeProfile.FULL_LOCAL, d.compute_profile)
 
-    def test_offline_missing_model_fails_degraded_not_fake_ready(self):
+    def test_unknown_surface_fails_closed(self):
         host = HostWitness(
-            host_class="offline-phone",
+            host_class="unknown-device",
+            browser_available=None,
+            browser_wasm=None,
+            network_online=None,
+            free_storage_mb=None,
+            ram_mb=None,
+            android=None,
+            dev_cli_available=None,
+            local_compute_class="UNKNOWN",
+        )
+        d = compile_entry_route(host, self.deterministic_creator_task(), EVIDENCE)
+        self.assertEqual(EntrySurface.NO_SUPPORTED_SURFACE, d.entry_surface)
+        self.assertIn("NO_SUPPORTED_OR_PROVEN_ENTRY_SURFACE", d.blockers)
+
+    def test_creator_domain_is_not_required(self):
+        host = HostWitness(
+            host_class="desktop-browser",
             browser_available=True,
             browser_wasm=True,
-            network_online=False,
-            free_storage_mb=1000,
-            ram_mb=2048,
-            android=True,
+            network_online=True,
+            free_storage_mb=5000,
+            ram_mb=8192,
+            local_compute_class="CONSTRAINED",
         )
-        task = FirstTask(
-            task_id="reason.offline.v1",
-            domain="general",
-            browser_supported=False,
-            local_model_required=True,
-            remote_model_allowed=False,
-        )
-        d = compile_entry_route(host, task)
-        self.assertEqual(AdoptionRoute.OFFLINE_DEGRADED, d.route)
-        self.assertIn("LOCAL_MODEL_UNAVAILABLE_OFFLINE", d.blockers)
+        task = FirstTask(task_id="notes.local.v1", domain="knowledge", browser_supported=True)
+        d = compile_entry_route(host, task, EVIDENCE)
+        self.assertEqual("knowledge", d.domain)
+        self.assertEqual(EntrySurface.ZERO_INSTALL_WEB_PWA, d.entry_surface)
 
-    def test_permission_is_not_requested_for_browser_route(self):
+    def test_permission_is_deferred_for_browser_path(self):
         host = HostWitness(
             host_class="desktop-browser",
             browser_available=True,
@@ -125,6 +146,7 @@ class AdoptionBootstrapTests(unittest.TestCase):
             network_online=True,
             free_storage_mb=10000,
             ram_mb=8192,
+            local_compute_class="CONSTRAINED",
         )
         task = FirstTask(
             task_id="creator.caption.v1",
@@ -132,9 +154,50 @@ class AdoptionBootstrapTests(unittest.TestCase):
             browser_supported=True,
             required_permissions=frozenset({"CAMERA"}),
         )
-        d = compile_entry_route(host, task)
-        self.assertEqual(AdoptionRoute.ZERO_INSTALL_WEB_PWA, d.route)
+        d = compile_entry_route(host, task, EVIDENCE)
+        self.assertEqual(EntrySurface.ZERO_INSTALL_WEB_PWA, d.entry_surface)
         self.assertEqual((), d.required_actions)
+
+    def test_no_free_or_credentialed_remote_route_does_not_pretend_free(self):
+        host = HostWitness(
+            host_class="thin-browser",
+            browser_available=True,
+            browser_wasm=True,
+            network_online=True,
+            free_storage_mb=512,
+            ram_mb=1024,
+            local_runtime_available=False,
+            local_model_available=False,
+            local_compute_class="NONE",
+            free_remote_route_available=False,
+        )
+        d = compile_entry_route(host, self.model_creator_task(), EVIDENCE)
+        self.assertEqual(ComputeProfile.OFFLINE_DEGRADED, d.compute_profile)
+        self.assertIn("NO_CURRENT_REMOTE_ROUTE_EVIDENCE", d.blockers)
+        self.assertIn("SELECT_OR_ADD_REMOTE_ROUTE_IF_REQUIRED", d.required_actions)
+
+    def test_offline_preference_prevents_remote_escalation(self):
+        host = HostWitness(
+            host_class="phone",
+            browser_available=True,
+            browser_wasm=True,
+            network_online=True,
+            free_storage_mb=1000,
+            ram_mb=2048,
+            local_compute_class="CONSTRAINED",
+            free_remote_route_available=True,
+        )
+        d = compile_entry_route(
+            host,
+            self.model_creator_task(),
+            EVIDENCE,
+            EntryPreference(prefer_offline=True),
+        )
+        self.assertEqual(ComputeProfile.OFFLINE_DEGRADED, d.compute_profile)
+        self.assertIn(
+            "MODEL_TASK_LOCAL_CAPABILITY_INSUFFICIENT_FOR_OFFLINE_PREFERENCE",
+            d.blockers,
+        )
 
     def test_unknown_metrics_remain_unknown(self):
         host = HostWitness(
@@ -144,8 +207,9 @@ class AdoptionBootstrapTests(unittest.TestCase):
             network_online=True,
             free_storage_mb=None,
             ram_mb=None,
+            local_compute_class="UNKNOWN",
         )
-        d = compile_entry_route(host, self.creator_task())
+        d = compile_entry_route(host, self.deterministic_creator_task(), EVIDENCE)
         self.assertIsNone(d.friction_components["downloaded_bytes"])
         self.assertIsNone(d.friction_components["time_to_first_accepted_value_ms"])
         self.assertIsNone(d.friction_components["monetary_cost_microunits"])
@@ -158,12 +222,15 @@ class AdoptionBootstrapTests(unittest.TestCase):
             network_online=True,
             free_storage_mb=2000,
             ram_mb=4096,
+            local_compute_class="CONSTRAINED",
         )
-        d = compile_entry_route(host, self.creator_task())
+        d = compile_entry_route(host, self.deterministic_creator_task(), EVIDENCE)
         with self.assertRaises(CompileError):
-            friction_receipt(d, route_id="r1", build_head="abc", observed={"api_key": "x"})
+            friction_receipt(
+                d, route_id="r1", build_head="abc", observed={"api_key": "x"}
+            )
 
-    def test_receipt_is_nonexecuting(self):
+    def test_receipt_effect_fields_are_hard_false(self):
         host = HostWitness(
             host_class="browser",
             browser_available=True,
@@ -171,11 +238,41 @@ class AdoptionBootstrapTests(unittest.TestCase):
             network_online=True,
             free_storage_mb=2000,
             ram_mb=4096,
+            local_compute_class="CONSTRAINED",
         )
-        d = compile_entry_route(host, self.creator_task())
-        r = friction_receipt(d, route_id="r1", build_head="abc", observed={"steps": 1})
-        self.assertFalse(r["effect_authorized"])
-        self.assertFalse(r["execution_proven"])
+        d = compile_entry_route(host, self.deterministic_creator_task(), EVIDENCE)
+        r = friction_receipt(
+            d, route_id="r1", build_head="abc", observed={"steps": 1}
+        )
+        for key in (
+            "installation_performed",
+            "permission_granted",
+            "provider_call_made",
+            "credential_stored",
+            "public_deployment",
+            "binary_distributed",
+            "effect_authorized",
+            "execution_proven",
+        ):
+            self.assertFalse(r[key])
+
+    def test_evidence_binding_is_part_of_decision_identity(self):
+        host = HostWitness(
+            host_class="browser",
+            browser_available=True,
+            browser_wasm=True,
+            network_online=True,
+            free_storage_mb=2000,
+            ram_mb=4096,
+            local_compute_class="CONSTRAINED",
+        )
+        d1 = compile_entry_route(host, self.deterministic_creator_task(), EVIDENCE)
+        d2 = compile_entry_route(
+            host,
+            self.deterministic_creator_task(),
+            EvidenceBinding("drive:host-witness", "b" * 64, "gen-2"),
+        )
+        self.assertNotEqual(d1.decision_digest, d2.decision_digest)
 
 
 if __name__ == "__main__":
