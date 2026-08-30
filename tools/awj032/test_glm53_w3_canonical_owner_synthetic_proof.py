@@ -99,7 +99,7 @@ class CanonicalOwnerSyntheticProofTests(unittest.TestCase):
     def test_truthy_integer_cannot_impersonate_numerical_proof(self):
         changed = replace(CANONICAL_PR406_NUMERICAL_EVIDENCE, independent_scale_semantic_oracle_passed=1)
         self.assert_code(
-            "PR406_NUMERICAL_EVIDENCE_MISMATCH",
+            "PR406_REQUIRED_NUMERICAL_PROOF_MISSING:independent_scale_semantic_oracle_passed",
             lambda: prove_canonical_native_synthetic_w3(
                 canonical_owner_admission=self.admission(), numerical_evidence=changed
             ),
