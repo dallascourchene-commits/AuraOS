@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788115190,
+  "generated_at_unix": 1788115863,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1642,
+    "repo_file_count": 1645,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -137,6 +137,7 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-review-ghr002.yml",
+      ".github/workflows/aura-review-ghr015.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1632,7 +1633,9 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_review/aura_review_cache_policy.py",
       "tools/aura_review/aura_review_context_compiler.py",
+      "tools/aura_review/test_aura_review_cache_policy.py",
       "tools/aura_review/test_aura_review_context_compiler.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -1758,16 +1761,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1642,
-      "bytes": 26441339,
-      "tokens_est": 6600687,
+      "files": 1645,
+      "bytes": 26479690,
+      "tokens_est": 6610276,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
-        "schema_or_lexicon": 272,
+        "python_module": 1001,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -3900,6 +3903,14 @@
         "signature_hash": "711cdedc61c63424"
       },
       {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 56,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_canonical:38d9d5261e04587c",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
         "file": "tools/aura_review/aura_review_context_compiler.py",
         "kind": "function",
         "line": 33,
@@ -4348,6 +4359,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_digest:603c344a0dedebf7",
+        "signature_hash": "d4a8cba568e54ac5"
       },
       {
         "file": "tools/aura_review/aura_review_context_compiler.py",
@@ -12206,6 +12225,14 @@
         "end_line": 231,
         "semantic_id": "scripts/aura_runtime_refactor_harness.py#function:_strict_bool:067556175e0ce7cf",
         "signature_hash": "5783a317e3383652"
+      },
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 72,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_strict_bool:e4ceb1888229f6ee",
+        "signature_hash": "1ff0eee54a2d7611"
       }
     ],
     "_clean_lanes": [
@@ -14672,6 +14699,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 52,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_text:993dacb32d01b5dc",
+        "signature_hash": "21d3244d1c80a19c"
       },
       {
         "file": "tools/aura_review/aura_review_context_compiler.py",
@@ -46992,6 +47027,14 @@
         "end_line": 238,
         "semantic_id": "aura_unified_memory_continuity.py#function:_enum:509e86581fac3df1",
         "signature_hash": "114c3a1d7b56df0a"
+      },
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 66,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_enum:4fde80b92e4dfd41",
+        "signature_hash": "a5871e051b7dbb36"
       }
     ],
     "redact_secrets": [
@@ -133554,6 +133597,14 @@
         "end_line": 29,
         "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:observation:231f671c5509f472",
         "signature_hash": "b6d2f925be861055"
+      },
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 71,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:observation:27a53bfdf5adf65e",
+        "signature_hash": "61d3569e51463c06"
       }
     ],
     "expected_project_refs": [
@@ -145538,6 +145589,14 @@
         "end_line": 40,
         "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:record:0b231c7d7dcac91f",
         "signature_hash": "ea245189ec910910"
+      },
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 51,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:record:ad724aba063b74a8",
+        "signature_hash": "c9a856c09298089c"
       }
     ],
     "test_exact_existing_result_and_snapshot_are_verified": [
@@ -149794,6 +149853,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_shadow_model_router.py#function:context:5df706d8ad1c9d52",
         "signature_hash": "5aa7478988a5dfbf"
+      },
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 19,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:context:e1a965986882ea0c",
+        "signature_hash": "af3135a523ec029f"
       }
     ],
     "test_store_projects_complete_graph_pinned_candidate": [
@@ -157208,6 +157275,316 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "ReviewCacheRefusal": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 26,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:ReviewCacheRefusal:d1226d608a34e21c",
+        "signature_hash": "e909fbb71cc8da26"
+      }
+    ],
+    "ReviewCacheRefusal.__init__": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 26,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ReviewCacheRefusal.__init__:a591b472656f2e38",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "CacheResponsibility": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 32,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:CacheResponsibility:6e4eb98cde824ef3",
+        "signature_hash": "c6702d8d2706f537"
+      }
+    ],
+    "CacheTier": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 38,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:CacheTier:5415bb620c91d7f4",
+        "signature_hash": "63bae7758d562dba"
+      }
+    ],
+    "GenerationAxis": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 46,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:GenerationAxis:3d4ced6b5dc6e703",
+        "signature_hash": "a70fd41bee6961e2"
+      }
+    ],
+    "_validate_affected_cone": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 84,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_validate_affected_cone:4b864c0c62fe87c6",
+        "signature_hash": "7a2a49b3adfbf752"
+      }
+    ],
+    "ReviewContextCacheKeyV2": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "class",
+        "line": 88,
+        "end_line": 131,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:ReviewContextCacheKeyV2:cea1c4531a7cce57",
+        "signature_hash": "944cfdcfce98a31a"
+      }
+    ],
+    "ReviewContextCacheKeyV2.__post_init__": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 125,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ReviewContextCacheKeyV2.__post_init__:121b87245e7e6407",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ReviewContextCacheKeyV2.key_digest": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 131,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ReviewContextCacheKeyV2.key_digest:dbe65710cbd551b4",
+        "signature_hash": "c8889e34db8afd31"
+      }
+    ],
+    "ReviewContextCacheRecordV2": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "class",
+        "line": 135,
+        "end_line": 175,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:ReviewContextCacheRecordV2:d7d4c74bf36d70a3",
+        "signature_hash": "b9b387d67fe0aad3"
+      }
+    ],
+    "ReviewContextCacheRecordV2.__post_init__": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 169,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ReviewContextCacheRecordV2.__post_init__:223d55b94fb235cd",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ReviewContextCacheRecordV2.record_digest": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 172,
+        "end_line": 175,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ReviewContextCacheRecordV2.record_digest:56177f4a1dd690fc",
+        "signature_hash": "1e6da455d09b03f6"
+      }
+    ],
+    "ResolvedCacheOwnerExpectationV2": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "class",
+        "line": 179,
+        "end_line": 192,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:ResolvedCacheOwnerExpectationV2:56e1e41438cf293e",
+        "signature_hash": "e9be6c589da42a5e"
+      }
+    ],
+    "ResolvedCacheOwnerExpectationV2.__post_init__": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 190,
+        "end_line": 192,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ResolvedCacheOwnerExpectationV2.__post_init__:cbf86f8fec1fd004",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "TrustedCacheReadObservationV2": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "class",
+        "line": 196,
+        "end_line": 229,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:TrustedCacheReadObservationV2:ee851ab3e87d49ce",
+        "signature_hash": "6aa8fce4c1c72b09"
+      }
+    ],
+    "TrustedCacheReadObservationV2.__post_init__": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 214,
+        "end_line": 225,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:TrustedCacheReadObservationV2.__post_init__:0f6abeea6fd4e21e",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "TrustedCacheReadObservationV2.observation_digest": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 228,
+        "end_line": 229,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:TrustedCacheReadObservationV2.observation_digest:74b7dcb01d7deaa5",
+        "signature_hash": "28f677c5b8842bca"
+      }
+    ],
+    "ResolvedReadObserverExpectationV2": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "class",
+        "line": 233,
+        "end_line": 244,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:ResolvedReadObserverExpectationV2:f0cfd7db969ecd95",
+        "signature_hash": "2f81c3f3391da7c6"
+      }
+    ],
+    "ResolvedReadObserverExpectationV2.__post_init__": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 242,
+        "end_line": 244,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ResolvedReadObserverExpectationV2.__post_init__:b3b49f6580f1773a",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "TrustedQDKTRouterInputV2": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "class",
+        "line": 248,
+        "end_line": 281,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:TrustedQDKTRouterInputV2:a584e0938835b3f2",
+        "signature_hash": "ab867d6f3fa0cb9f"
+      }
+    ],
+    "TrustedQDKTRouterInputV2.__post_init__": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 259,
+        "end_line": 277,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:TrustedQDKTRouterInputV2.__post_init__:e31f3aaa27a349af",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "TrustedQDKTRouterInputV2.input_digest": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 280,
+        "end_line": 281,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:TrustedQDKTRouterInputV2.input_digest:d109248a947515fd",
+        "signature_hash": "31618ada81f2c4b0"
+      }
+    ],
+    "ResolvedQDKTInputExpectationV2": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "class",
+        "line": 285,
+        "end_line": 297,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:ResolvedQDKTInputExpectationV2:35ca5101cd079715",
+        "signature_hash": "fa0060ba430d602a"
+      }
+    ],
+    "ResolvedQDKTInputExpectationV2.__post_init__": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 295,
+        "end_line": 297,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ResolvedQDKTInputExpectationV2.__post_init__:1b1baa355fe5afae",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "compile_cache_key": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 300,
+        "end_line": 338,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:compile_cache_key:fc4222046f791a1f",
+        "signature_hash": "62df6d57ae7857c2"
+      }
+    ],
+    "cache_key_delta": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 341,
+        "end_line": 403,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:cache_key_delta:c0f168ac6ac4544a",
+        "signature_hash": "ef761d708d0aee3e"
+      }
+    ],
+    "_owner_matches": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 406,
+        "end_line": 424,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_owner_matches:5bae4ea51fa2a5c6",
+        "signature_hash": "97ac7d99c7b737ac"
+      }
+    ],
+    "admit_cache_candidate": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 427,
+        "end_line": 459,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:admit_cache_candidate:b0a2dccb98f54d0d",
+        "signature_hash": "30c75af95facab04"
+      }
+    ],
+    "observe_cache_use": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 462,
+        "end_line": 496,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:observe_cache_use:c1fcd6f49c03ef3f",
+        "signature_hash": "3c4d67bc638358cd"
+      }
+    ],
+    "_trusted_router_input": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 499,
+        "end_line": 517,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_trusted_router_input:f4946c265a19f21f",
+        "signature_hash": "8de059d857ac347d"
+      }
+    ],
+    "compile_qdkt_review_plan": [
+      {
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 520,
+        "end_line": 588,
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:compile_qdkt_review_plan:afb21b70ec05cc95",
+        "signature_hash": "c361444c9962679f"
+      }
+    ],
     "ContextCompileRefusal": [
       {
         "file": "tools/aura_review/aura_review_context_compiler.py",
@@ -157336,6 +157713,386 @@
         "end_line": 368,
         "semantic_id": "tools/aura_review/aura_review_context_compiler.py#function:project_review_capsule_inputs:f466aad37625a0bb",
         "signature_hash": "45b2a8639c5b79b3"
+      }
+    ],
+    "key": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 28,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:key:4775634231b04c54",
+        "signature_hash": "155db364aa824c1c"
+      }
+    ],
+    "owner_expectation": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 38,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:owner_expectation:8fcaf568a42824ac",
+        "signature_hash": "3c9469ee1d728baa"
+      }
+    ],
+    "observer_expectation": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 60,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:observer_expectation:f81905389354fd68",
+        "signature_hash": "d87662db1ca9acb8"
+      }
+    ],
+    "router_input": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 79,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:router_input:6c59625ce9a4c81e",
+        "signature_hash": "ecce35204f299d30"
+      }
+    ],
+    "router_expectation": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 88,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:router_expectation:0b415693821cb131",
+        "signature_hash": "d0e6734551d7572d"
+      }
+    ],
+    "CachePolicyV2Tests": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "class",
+        "line": 91,
+        "end_line": 217,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#class:CachePolicyV2Tests:0f938f31ec4c3ee7",
+        "signature_hash": "2929c5b4fa8db779"
+      }
+    ],
+    "CachePolicyV2Tests.test_01_valid_context_key": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 93,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_01_valid_context_key:8377e51d8879617d",
+        "signature_hash": "4db53749a6a70fef"
+      }
+    ],
+    "CachePolicyV2Tests.test_02_fixture_context_refused": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 97,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_02_fixture_context_refused:46c02d71f219b150",
+        "signature_hash": "5a006fc7d5efb9e0"
+      }
+    ],
+    "CachePolicyV2Tests.test_03_mutated_context_refused": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 101,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_03_mutated_context_refused:052de896001cb396",
+        "signature_hash": "f32dcee3aeaa0a81"
+      }
+    ],
+    "CachePolicyV2Tests.test_04_model_prefix_owner_rejected": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 105,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_04_model_prefix_owner_rejected:45e576136c6ba6b8",
+        "signature_hash": "f1c3ae903aea1f44"
+      }
+    ],
+    "CachePolicyV2Tests.test_05_review_receipt_owner_rejected": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 109,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_05_review_receipt_owner_rejected:d1543697065aa9a3",
+        "signature_hash": "b310ed842745e744"
+      }
+    ],
+    "CachePolicyV2Tests.test_06_coordinate_generation_changes_key": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 116,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_06_coordinate_generation_changes_key:d1430bf99158eb33",
+        "signature_hash": "4f57275bdce61d3d"
+      }
+    ],
+    "CachePolicyV2Tests.test_07_source_generation_delta": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 120,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_07_source_generation_delta:6c737de3cdacc4f5",
+        "signature_hash": "c9175ec6df0474b9"
+      }
+    ],
+    "CachePolicyV2Tests.test_08_target_head_delta": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 123,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_08_target_head_delta:1eee7946468450d2",
+        "signature_hash": "0ccfe94e36ee6910"
+      }
+    ],
+    "CachePolicyV2Tests.test_09_principal_delta_blocks_cross_principal": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 127,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_09_principal_delta_blocks_cross_principal:8fbec60dcb853f06",
+        "signature_hash": "66152d83ffa9b648"
+      }
+    ],
+    "CachePolicyV2Tests.test_10_review_runtime_delta": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 130,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_10_review_runtime_delta:5d05ec27ff683fa9",
+        "signature_hash": "46c7a94c9ff596c2"
+      }
+    ],
+    "CachePolicyV2Tests.test_11_exact_key_delta_reuses": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 133,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_11_exact_key_delta_reuses:fac6fa6d65d72d75",
+        "signature_hash": "8063d8d70adf59ad"
+      }
+    ],
+    "CachePolicyV2Tests.test_12_multiple_axes_union": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 137,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_12_multiple_axes_union:7953d98a4204f076",
+        "signature_hash": "fbd80614c41f1258"
+      }
+    ],
+    "CachePolicyV2Tests.test_13_cache_miss_rehydrates": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 140,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_13_cache_miss_rehydrates:17184854ed3904af",
+        "signature_hash": "1fbf86a6faadb731"
+      }
+    ],
+    "CachePolicyV2Tests.test_14_missing_owner_trust_rehydrates": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 143,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_14_missing_owner_trust_rehydrates:e7d0a36c40dde5c7",
+        "signature_hash": "1508694b07d357cb"
+      }
+    ],
+    "CachePolicyV2Tests.test_15_wrong_key_rehydrates": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 145,
+        "end_line": 146,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_15_wrong_key_rehydrates:4609b8123639941a",
+        "signature_hash": "49ac5dfdd0e3ab00"
+      }
+    ],
+    "CachePolicyV2Tests.test_16_revoked_record_rehydrates": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 149,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_16_revoked_record_rehydrates:ee545463f45174b8",
+        "signature_hash": "03034cabccefa2f3"
+      }
+    ],
+    "CachePolicyV2Tests.test_17_wrong_owner_signature_rehydrates": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 151,
+        "end_line": 152,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_17_wrong_owner_signature_rehydrates:b29325701983d038",
+        "signature_hash": "5a90fb3d85a2738a"
+      }
+    ],
+    "CachePolicyV2Tests.test_18_principal_mismatch_rehydrates": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 155,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_18_principal_mismatch_rehydrates:195ed9951db9f959",
+        "signature_hash": "f82a0235a9e016e3"
+      }
+    ],
+    "CachePolicyV2Tests.test_19_materialized_digest_may_differ_from_logical": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 159,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_19_materialized_digest_may_differ_from_logical:57ac1c930a837a47",
+        "signature_hash": "884f897ad70f1c66"
+      }
+    ],
+    "CachePolicyV2Tests.test_20_exact_trusted_record_is_only_eligible_not_hit": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 161,
+        "end_line": 162,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_20_exact_trusted_record_is_only_eligible_not_hit:a828c72d43502310",
+        "signature_hash": "ce4a2bb8596de774"
+      }
+    ],
+    "CachePolicyV2Tests.test_21_unobserved_read_refused": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 167,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_21_unobserved_read_refused:1928a94bbd393a07",
+        "signature_hash": "fafc370614ccf8c0"
+      }
+    ],
+    "CachePolicyV2Tests.test_22_wrong_observer_signature_refused": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 172,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_22_wrong_observer_signature_refused:2260d2793e642a32",
+        "signature_hash": "3b0c737daded2521"
+      }
+    ],
+    "CachePolicyV2Tests.test_23_wrong_materialized_content_refused": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 177,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_23_wrong_materialized_content_refused:c1057f5dcd3859a6",
+        "signature_hash": "fad0ffa40493b3a0"
+      }
+    ],
+    "CachePolicyV2Tests.test_24_exact_observed_read_has_zero_review_authority": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 179,
+        "end_line": 181,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_24_exact_observed_read_has_zero_review_authority:f95f5046dd69116a",
+        "signature_hash": "722bd6080092fed5"
+      }
+    ],
+    "CachePolicyV2Tests.test_25_missing_qdkt_input_is_conservative": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 185,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_25_missing_qdkt_input_is_conservative:f633d11177c43ea3",
+        "signature_hash": "e789a310d0193719"
+      }
+    ],
+    "CachePolicyV2Tests.test_26_untrusted_qdkt_signature_is_conservative": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 189,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_26_untrusted_qdkt_signature_is_conservative:4de755a418109005",
+        "signature_hash": "fa307f9a136bc19a"
+      }
+    ],
+    "CachePolicyV2Tests.test_27_stale_qdkt_currentness_is_conservative": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 191,
+        "end_line": 193,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_27_stale_qdkt_currentness_is_conservative:c5ff8b89fdda0079",
+        "signature_hash": "bc6d71163ea1245a"
+      }
+    ],
+    "CachePolicyV2Tests.test_28_trusted_low_risk_pre_github_ready": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 195,
+        "end_line": 197,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_28_trusted_low_risk_pre_github_ready:8d97c3ef2df25ed9",
+        "signature_hash": "61b2be65631df029"
+      }
+    ],
+    "CachePolicyV2Tests.test_29_github_lane_requires_both_reviewers": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 199,
+        "end_line": 201,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_29_github_lane_requires_both_reviewers:b85374d3dca602f4",
+        "signature_hash": "2aaf6c88c53c835c"
+      }
+    ],
+    "CachePolicyV2Tests.test_30_mandatory_paths_preserved_under_low_risk": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 203,
+        "end_line": 206,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_30_mandatory_paths_preserved_under_low_risk:7892e54d25e86a61",
+        "signature_hash": "d3304de9425412e6"
+      }
+    ],
+    "CachePolicyV2Tests.test_31_mandatory_count_tamper_refused": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 208,
+        "end_line": 213,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_31_mandatory_count_tamper_refused:b38e7f44f564d142",
+        "signature_hash": "1cdcbde6d37a7987"
+      }
+    ],
+    "CachePolicyV2Tests.test_32_qdkt_and_cache_never_grant_effect_or_promotion": [
+      {
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "kind": "method",
+        "line": 215,
+        "end_line": 217,
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_32_qdkt_and_cache_never_grant_effect_or_promotion:0d0647b6fd289e5a",
+        "signature_hash": "d37a43d4fc790e50"
       }
     ],
     "ce": [
@@ -158759,6 +159516,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-review-ghr015.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -168251,6 +169009,60 @@
         0.10333,
         -0.262298,
         -0.26684
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-review-ghr015.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1099,
+      "lines": 32,
+      "tokens_est": 275,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          26,
+          27
+        ]
+      },
+      "topology": {},
+      "digest8": "f5ff477b3cb5ef71",
+      "vector": [
+        0.314391,
+        -0.093199,
+        -0.043493,
+        -0.078287,
+        -0.244802,
+        -0.031066,
+        -0.232376,
+        -0.237346,
+        0.070831,
+        -0.065861,
+        0.252258,
+        0.234861,
+        0.180184,
+        -0.058405,
+        0.137934,
+        0.073316,
+        -0.264685,
+        -0.272141,
+        -0.239832,
+        -0.314391,
+        0.135449,
+        0.083258,
+        0.210008,
+        -0.098169,
+        -0.045978,
+        0.093199,
+        -0.125508,
+        0.098169,
+        -0.063375,
+        0.130478,
+        0.167758,
+        0.244802
       ]
     },
     {
@@ -263162,6 +263974,53 @@
       ]
     },
     {
+      "path": "tools/aura_review/aura_review_cache_policy.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 23345,
+      "lines": 589,
+      "tokens_est": 5837,
+      "symbol_count": 36,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "613a6d504f6cdd2c",
+      "vector": [
+        -0.102052,
+        0.31941,
+        -0.276998,
+        0.16832,
+        0.01723,
+        0.080846,
+        -0.157717,
+        0.049038,
+        0.067593,
+        0.112655,
+        -0.096751,
+        -0.24519,
+        -0.022531,
+        -0.096751,
+        0.300855,
+        0.311458,
+        -0.239889,
+        -0.067593,
+        -0.13121,
+        -0.20808,
+        -0.099401,
+        0.05699,
+        0.13121,
+        0.157717,
+        0.009277,
+        -0.155066,
+        -0.221334,
+        0.271697,
+        0.192176,
+        -0.05699,
+        0.314108,
+        0.025182
+      ]
+    },
+    {
       "path": "tools/aura_review/aura_review_context_compiler.py",
       "role": "python_module",
       "binary": false,
@@ -263206,6 +264065,53 @@
         0.291494,
         -0.315673,
         -0.044329
+      ]
+    },
+    {
+      "path": "tools/aura_review/test_aura_review_cache_policy.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13907,
+      "lines": 221,
+      "tokens_est": 3477,
+      "symbol_count": 41,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "91ff2a312d5fcb5d",
+      "vector": [
+        0.001369,
+        0.198501,
+        0.031486,
+        0.162908,
+        -0.036962,
+        -0.269688,
+        -0.288854,
+        -0.327185,
+        0.075294,
+        -0.157432,
+        -0.151956,
+        -0.094459,
+        0.269688,
+        0.203977,
+        -0.14648,
+        0.184812,
+        0.036962,
+        -0.247784,
+        -0.209453,
+        0.182074,
+        0.149218,
+        -0.061604,
+        0.16017,
+        -0.05339,
+        -0.132791,
+        0.286116,
+        -0.023273,
+        0.275164,
+        0.231357,
+        0.088983,
+        -0.06708,
+        -0.004107
       ]
     },
     {
@@ -287254,16 +288160,16 @@
     }
   },
   "summary": {
-    "file_count": 1642,
-    "total_bytes": 26441339,
-    "text_tokens_est": 6600687,
+    "file_count": 1645,
+    "total_bytes": 26479690,
+    "text_tokens_est": 6610276,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
-      "schema_or_lexicon": 272,
+      "python_module": 1001,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287410,6 +288316,7 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-review-ghr002.yml",
+      ".github/workflows/aura-review-ghr015.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -288905,7 +289812,9 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_review/aura_review_cache_policy.py",
       "tools/aura_review/aura_review_context_compiler.py",
+      "tools/aura_review/test_aura_review_cache_policy.py",
       "tools/aura_review/test_aura_review_context_compiler.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -446245,6 +447154,366 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:CacheResponsibility:6e4eb98cde824ef3",
+        "name": "CacheResponsibility",
+        "kind": "class",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 29,
+        "end_line": 32,
+        "signature_hash": "c6702d8d2706f537",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:CacheTier:5415bb620c91d7f4",
+        "name": "CacheTier",
+        "kind": "class",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 35,
+        "end_line": 38,
+        "signature_hash": "63bae7758d562dba",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:GenerationAxis:3d4ced6b5dc6e703",
+        "name": "GenerationAxis",
+        "kind": "class",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 41,
+        "end_line": 46,
+        "signature_hash": "a70fd41bee6961e2",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:ResolvedCacheOwnerExpectationV2:56e1e41438cf293e",
+        "name": "ResolvedCacheOwnerExpectationV2",
+        "kind": "class",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 179,
+        "end_line": 192,
+        "signature_hash": "e9be6c589da42a5e",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:ResolvedQDKTInputExpectationV2:35ca5101cd079715",
+        "name": "ResolvedQDKTInputExpectationV2",
+        "kind": "class",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 285,
+        "end_line": 297,
+        "signature_hash": "fa0060ba430d602a",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:ResolvedReadObserverExpectationV2:f0cfd7db969ecd95",
+        "name": "ResolvedReadObserverExpectationV2",
+        "kind": "class",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 233,
+        "end_line": 244,
+        "signature_hash": "2f81c3f3391da7c6",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:ReviewCacheRefusal:d1226d608a34e21c",
+        "name": "ReviewCacheRefusal",
+        "kind": "class",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 22,
+        "end_line": 26,
+        "signature_hash": "e909fbb71cc8da26",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:ReviewContextCacheKeyV2:cea1c4531a7cce57",
+        "name": "ReviewContextCacheKeyV2",
+        "kind": "class",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 88,
+        "end_line": 131,
+        "signature_hash": "944cfdcfce98a31a",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:ReviewContextCacheRecordV2:d7d4c74bf36d70a3",
+        "name": "ReviewContextCacheRecordV2",
+        "kind": "class",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 135,
+        "end_line": 175,
+        "signature_hash": "b9b387d67fe0aad3",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:TrustedCacheReadObservationV2:ee851ab3e87d49ce",
+        "name": "TrustedCacheReadObservationV2",
+        "kind": "class",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 196,
+        "end_line": 229,
+        "signature_hash": "6aa8fce4c1c72b09",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:TrustedQDKTRouterInputV2:a584e0938835b3f2",
+        "name": "TrustedQDKTRouterInputV2",
+        "kind": "class",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 248,
+        "end_line": 281,
+        "signature_hash": "ab867d6f3fa0cb9f",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_canonical:38d9d5261e04587c",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 55,
+        "end_line": 56,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_digest:603c344a0dedebf7",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "d4a8cba568e54ac5",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_enum:4fde80b92e4dfd41",
+        "name": "_enum",
+        "kind": "function",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 63,
+        "end_line": 66,
+        "signature_hash": "a5871e051b7dbb36",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_owner_matches:5bae4ea51fa2a5c6",
+        "name": "_owner_matches",
+        "kind": "function",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 406,
+        "end_line": 424,
+        "signature_hash": "97ac7d99c7b737ac",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_strict_bool:e4ceb1888229f6ee",
+        "name": "_strict_bool",
+        "kind": "function",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 69,
+        "end_line": 72,
+        "signature_hash": "1ff0eee54a2d7611",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_text:993dacb32d01b5dc",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 49,
+        "end_line": 52,
+        "signature_hash": "21d3244d1c80a19c",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_trusted_router_input:f4946c265a19f21f",
+        "name": "_trusted_router_input",
+        "kind": "function",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 499,
+        "end_line": 517,
+        "signature_hash": "8de059d857ac347d",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:_validate_affected_cone:4b864c0c62fe87c6",
+        "name": "_validate_affected_cone",
+        "kind": "function",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 75,
+        "end_line": 84,
+        "signature_hash": "7a2a49b3adfbf752",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:admit_cache_candidate:b0a2dccb98f54d0d",
+        "name": "admit_cache_candidate",
+        "kind": "function",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 427,
+        "end_line": 459,
+        "signature_hash": "30c75af95facab04",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:cache_key_delta:c0f168ac6ac4544a",
+        "name": "cache_key_delta",
+        "kind": "function",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 341,
+        "end_line": 403,
+        "signature_hash": "ef761d708d0aee3e",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:compile_cache_key:fc4222046f791a1f",
+        "name": "compile_cache_key",
+        "kind": "function",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 300,
+        "end_line": 338,
+        "signature_hash": "62df6d57ae7857c2",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:compile_qdkt_review_plan:afb21b70ec05cc95",
+        "name": "compile_qdkt_review_plan",
+        "kind": "function",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 520,
+        "end_line": 588,
+        "signature_hash": "c361444c9962679f",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#function:observe_cache_use:c1fcd6f49c03ef3f",
+        "name": "observe_cache_use",
+        "kind": "function",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 462,
+        "end_line": 496,
+        "signature_hash": "3c4d67bc638358cd",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ResolvedCacheOwnerExpectationV2.__post_init__:cbf86f8fec1fd004",
+        "name": "ResolvedCacheOwnerExpectationV2.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 190,
+        "end_line": 192,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ResolvedQDKTInputExpectationV2.__post_init__:1b1baa355fe5afae",
+        "name": "ResolvedQDKTInputExpectationV2.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 295,
+        "end_line": 297,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ResolvedReadObserverExpectationV2.__post_init__:b3b49f6580f1773a",
+        "name": "ResolvedReadObserverExpectationV2.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 242,
+        "end_line": 244,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ReviewCacheRefusal.__init__:a591b472656f2e38",
+        "name": "ReviewCacheRefusal.__init__",
+        "kind": "method",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 23,
+        "end_line": 26,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ReviewContextCacheKeyV2.__post_init__:121b87245e7e6407",
+        "name": "ReviewContextCacheKeyV2.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 111,
+        "end_line": 125,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ReviewContextCacheKeyV2.key_digest:dbe65710cbd551b4",
+        "name": "ReviewContextCacheKeyV2.key_digest",
+        "kind": "method",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 128,
+        "end_line": 131,
+        "signature_hash": "c8889e34db8afd31",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ReviewContextCacheRecordV2.__post_init__:223d55b94fb235cd",
+        "name": "ReviewContextCacheRecordV2.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 156,
+        "end_line": 169,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:ReviewContextCacheRecordV2.record_digest:56177f4a1dd690fc",
+        "name": "ReviewContextCacheRecordV2.record_digest",
+        "kind": "method",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 172,
+        "end_line": 175,
+        "signature_hash": "1e6da455d09b03f6",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:TrustedCacheReadObservationV2.__post_init__:0f6abeea6fd4e21e",
+        "name": "TrustedCacheReadObservationV2.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 214,
+        "end_line": 225,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:TrustedCacheReadObservationV2.observation_digest:74b7dcb01d7deaa5",
+        "name": "TrustedCacheReadObservationV2.observation_digest",
+        "kind": "method",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 228,
+        "end_line": 229,
+        "signature_hash": "28f677c5b8842bca",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:TrustedQDKTRouterInputV2.__post_init__:e31f3aaa27a349af",
+        "name": "TrustedQDKTRouterInputV2.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 259,
+        "end_line": 277,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
+        "semantic_id": "tools/aura_review/aura_review_cache_policy.py#method:TrustedQDKTRouterInputV2.input_digest:d109248a947515fd",
+        "name": "TrustedQDKTRouterInputV2.input_digest",
+        "kind": "method",
+        "file": "tools/aura_review/aura_review_cache_policy.py",
+        "line": 280,
+        "end_line": 281,
+        "signature_hash": "31618ada81f2c4b0",
+        "file_digest8": "613a6d504f6cdd2c"
+      },
+      {
         "semantic_id": "tools/aura_review/aura_review_context_compiler.py#class:ContextCompileRefusal:ae5d7084904ba1a9",
         "name": "ContextCompileRefusal",
         "kind": "class",
@@ -446403,6 +447672,416 @@
         "end_line": 66,
         "signature_hash": "175e4972e4d2d582",
         "file_digest8": "5377debf4ebb8ea5"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#class:CachePolicyV2Tests:0f938f31ec4c3ee7",
+        "name": "CachePolicyV2Tests",
+        "kind": "class",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 91,
+        "end_line": 217,
+        "signature_hash": "2929c5b4fa8db779",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:context:e1a965986882ea0c",
+        "name": "context",
+        "kind": "function",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 10,
+        "end_line": 19,
+        "signature_hash": "af3135a523ec029f",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:key:4775634231b04c54",
+        "name": "key",
+        "kind": "function",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 22,
+        "end_line": 28,
+        "signature_hash": "155db364aa824c1c",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:observation:27a53bfdf5adf65e",
+        "name": "observation",
+        "kind": "function",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 63,
+        "end_line": 71,
+        "signature_hash": "61d3569e51463c06",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:observer_expectation:f81905389354fd68",
+        "name": "observer_expectation",
+        "kind": "function",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 54,
+        "end_line": 60,
+        "signature_hash": "d87662db1ca9acb8",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:owner_expectation:8fcaf568a42824ac",
+        "name": "owner_expectation",
+        "kind": "function",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 31,
+        "end_line": 38,
+        "signature_hash": "3c9469ee1d728baa",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:record:ad724aba063b74a8",
+        "name": "record",
+        "kind": "function",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 41,
+        "end_line": 51,
+        "signature_hash": "c9a856c09298089c",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:router_expectation:0b415693821cb131",
+        "name": "router_expectation",
+        "kind": "function",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 82,
+        "end_line": 88,
+        "signature_hash": "d0e6734551d7572d",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#function:router_input:6c59625ce9a4c81e",
+        "name": "router_input",
+        "kind": "function",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 74,
+        "end_line": 79,
+        "signature_hash": "ecce35204f299d30",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_01_valid_context_key:8377e51d8879617d",
+        "name": "CachePolicyV2Tests.test_01_valid_context_key",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 92,
+        "end_line": 93,
+        "signature_hash": "4db53749a6a70fef",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_02_fixture_context_refused:46c02d71f219b150",
+        "name": "CachePolicyV2Tests.test_02_fixture_context_refused",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 95,
+        "end_line": 97,
+        "signature_hash": "5a006fc7d5efb9e0",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_03_mutated_context_refused:052de896001cb396",
+        "name": "CachePolicyV2Tests.test_03_mutated_context_refused",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 99,
+        "end_line": 101,
+        "signature_hash": "f32dcee3aeaa0a81",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_04_model_prefix_owner_rejected:45e576136c6ba6b8",
+        "name": "CachePolicyV2Tests.test_04_model_prefix_owner_rejected",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 103,
+        "end_line": 105,
+        "signature_hash": "f1c3ae903aea1f44",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_05_review_receipt_owner_rejected:d1543697065aa9a3",
+        "name": "CachePolicyV2Tests.test_05_review_receipt_owner_rejected",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 107,
+        "end_line": 109,
+        "signature_hash": "b310ed842745e744",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_06_coordinate_generation_changes_key:d1430bf99158eb33",
+        "name": "CachePolicyV2Tests.test_06_coordinate_generation_changes_key",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 111,
+        "end_line": 116,
+        "signature_hash": "4f57275bdce61d3d",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_07_source_generation_delta:6c737de3cdacc4f5",
+        "name": "CachePolicyV2Tests.test_07_source_generation_delta",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 118,
+        "end_line": 120,
+        "signature_hash": "c9175ec6df0474b9",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_08_target_head_delta:1eee7946468450d2",
+        "name": "CachePolicyV2Tests.test_08_target_head_delta",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 122,
+        "end_line": 123,
+        "signature_hash": "0ccfe94e36ee6910",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_09_principal_delta_blocks_cross_principal:8fbec60dcb853f06",
+        "name": "CachePolicyV2Tests.test_09_principal_delta_blocks_cross_principal",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 125,
+        "end_line": 127,
+        "signature_hash": "66152d83ffa9b648",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_10_review_runtime_delta:5d05ec27ff683fa9",
+        "name": "CachePolicyV2Tests.test_10_review_runtime_delta",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 129,
+        "end_line": 130,
+        "signature_hash": "46c7a94c9ff596c2",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_11_exact_key_delta_reuses:fac6fa6d65d72d75",
+        "name": "CachePolicyV2Tests.test_11_exact_key_delta_reuses",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 132,
+        "end_line": 133,
+        "signature_hash": "8063d8d70adf59ad",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_12_multiple_axes_union:7953d98a4204f076",
+        "name": "CachePolicyV2Tests.test_12_multiple_axes_union",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 135,
+        "end_line": 137,
+        "signature_hash": "fbd80614c41f1258",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_13_cache_miss_rehydrates:17184854ed3904af",
+        "name": "CachePolicyV2Tests.test_13_cache_miss_rehydrates",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 139,
+        "end_line": 140,
+        "signature_hash": "1fbf86a6faadb731",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_14_missing_owner_trust_rehydrates:e7d0a36c40dde5c7",
+        "name": "CachePolicyV2Tests.test_14_missing_owner_trust_rehydrates",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 142,
+        "end_line": 143,
+        "signature_hash": "1508694b07d357cb",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_15_wrong_key_rehydrates:4609b8123639941a",
+        "name": "CachePolicyV2Tests.test_15_wrong_key_rehydrates",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 145,
+        "end_line": 146,
+        "signature_hash": "49ac5dfdd0e3ab00",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_16_revoked_record_rehydrates:ee545463f45174b8",
+        "name": "CachePolicyV2Tests.test_16_revoked_record_rehydrates",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 148,
+        "end_line": 149,
+        "signature_hash": "03034cabccefa2f3",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_17_wrong_owner_signature_rehydrates:b29325701983d038",
+        "name": "CachePolicyV2Tests.test_17_wrong_owner_signature_rehydrates",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 151,
+        "end_line": 152,
+        "signature_hash": "5a90fb3d85a2738a",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_18_principal_mismatch_rehydrates:195ed9951db9f959",
+        "name": "CachePolicyV2Tests.test_18_principal_mismatch_rehydrates",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 154,
+        "end_line": 155,
+        "signature_hash": "f82a0235a9e016e3",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_19_materialized_digest_may_differ_from_logical:57ac1c930a837a47",
+        "name": "CachePolicyV2Tests.test_19_materialized_digest_may_differ_from_logical",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 157,
+        "end_line": 159,
+        "signature_hash": "884f897ad70f1c66",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_20_exact_trusted_record_is_only_eligible_not_hit:a828c72d43502310",
+        "name": "CachePolicyV2Tests.test_20_exact_trusted_record_is_only_eligible_not_hit",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 161,
+        "end_line": 162,
+        "signature_hash": "ce4a2bb8596de774",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_21_unobserved_read_refused:1928a94bbd393a07",
+        "name": "CachePolicyV2Tests.test_21_unobserved_read_refused",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 164,
+        "end_line": 167,
+        "signature_hash": "fafc370614ccf8c0",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_22_wrong_observer_signature_refused:2260d2793e642a32",
+        "name": "CachePolicyV2Tests.test_22_wrong_observer_signature_refused",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 169,
+        "end_line": 172,
+        "signature_hash": "3b0c737daded2521",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_23_wrong_materialized_content_refused:c1057f5dcd3859a6",
+        "name": "CachePolicyV2Tests.test_23_wrong_materialized_content_refused",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 174,
+        "end_line": 177,
+        "signature_hash": "fad0ffa40493b3a0",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_24_exact_observed_read_has_zero_review_authority:f95f5046dd69116a",
+        "name": "CachePolicyV2Tests.test_24_exact_observed_read_has_zero_review_authority",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 179,
+        "end_line": 181,
+        "signature_hash": "722bd6080092fed5",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_25_missing_qdkt_input_is_conservative:f633d11177c43ea3",
+        "name": "CachePolicyV2Tests.test_25_missing_qdkt_input_is_conservative",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 183,
+        "end_line": 185,
+        "signature_hash": "e789a310d0193719",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_26_untrusted_qdkt_signature_is_conservative:4de755a418109005",
+        "name": "CachePolicyV2Tests.test_26_untrusted_qdkt_signature_is_conservative",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 187,
+        "end_line": 189,
+        "signature_hash": "fa307f9a136bc19a",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_27_stale_qdkt_currentness_is_conservative:c5ff8b89fdda0079",
+        "name": "CachePolicyV2Tests.test_27_stale_qdkt_currentness_is_conservative",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 191,
+        "end_line": 193,
+        "signature_hash": "bc6d71163ea1245a",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_28_trusted_low_risk_pre_github_ready:8d97c3ef2df25ed9",
+        "name": "CachePolicyV2Tests.test_28_trusted_low_risk_pre_github_ready",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 195,
+        "end_line": 197,
+        "signature_hash": "61b2be65631df029",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_29_github_lane_requires_both_reviewers:b85374d3dca602f4",
+        "name": "CachePolicyV2Tests.test_29_github_lane_requires_both_reviewers",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 199,
+        "end_line": 201,
+        "signature_hash": "2aaf6c88c53c835c",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_30_mandatory_paths_preserved_under_low_risk:7892e54d25e86a61",
+        "name": "CachePolicyV2Tests.test_30_mandatory_paths_preserved_under_low_risk",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 203,
+        "end_line": 206,
+        "signature_hash": "d3304de9425412e6",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_31_mandatory_count_tamper_refused:b38e7f44f564d142",
+        "name": "CachePolicyV2Tests.test_31_mandatory_count_tamper_refused",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 208,
+        "end_line": 213,
+        "signature_hash": "1cdcbde6d37a7987",
+        "file_digest8": "91ff2a312d5fcb5d"
+      },
+      {
+        "semantic_id": "tools/aura_review/test_aura_review_cache_policy.py#method:CachePolicyV2Tests.test_32_qdkt_and_cache_never_grant_effect_or_promotion:0d0647b6fd289e5a",
+        "name": "CachePolicyV2Tests.test_32_qdkt_and_cache_never_grant_effect_or_promotion",
+        "kind": "method",
+        "file": "tools/aura_review/test_aura_review_cache_policy.py",
+        "line": 215,
+        "end_line": 217,
+        "signature_hash": "d37a43d4fc790e50",
+        "file_digest8": "91ff2a312d5fcb5d"
       },
       {
         "semantic_id": "tools/aura_review/test_aura_review_context_compiler.py#class:T:b9f2be6f4bf44149",
@@ -447965,7 +449644,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "45c30cb996b7e877c52d8de03a62ed68",
-    "payload_hash": "f01f31d7ee92d2eb614c9afa5f9fcbe0"
+    "record_fingerprint": "4c2197143abc8b3d1c8ffe4f97ffc975",
+    "payload_hash": "0bb52120998daa48903facd4225d8f12"
   }
 }
