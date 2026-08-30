@@ -155,6 +155,29 @@ class LocalArtifactOutboxTests(unittest.TestCase):
             self.assertFalse(second.enqueued)
             self.assertEqual(outbox.count(), 1)
 
+    def test_same_event_identity_with_different_bytes_fails_collision(self):
+        self.write_file(body=b"hello")
+        with LocalArtifactOutbox(self.db) as outbox:
+            outbox.stage(
+                self.root,
+                self.intent(),
+                expected_currentness_ref="board-r7",
+                currentness="CURRENT",
+                observations=self.stable_observations(),
+                min_stable_ns=100,
+            )
+            self.write_file(body=b"changed")
+            with self.assertRaisesRegex(LocalArtifactRefusal, "OUTBOX_EVENT_ID_COLLISION"):
+                outbox.stage(
+                    self.root,
+                    self.intent(observed_at="2026-08-30T15:42:00Z"),
+                    expected_currentness_ref="board-r7",
+                    currentness="CURRENT",
+                    observations=self.stable_observations(),
+                    min_stable_ns=100,
+                )
+            self.assertEqual(outbox.count(), 1)
+
     def test_delete_requires_prior_lineage_and_enqueues_tombstone(self):
         prior = "artifact-sha256-" + "a" * 64
         with LocalArtifactOutbox(self.db) as outbox:
@@ -261,6 +284,27 @@ class LocalArtifactOutboxTests(unittest.TestCase):
             self.assertEqual(outbox.pending(), [])
             with self.assertRaisesRegex(LocalArtifactRefusal, "DELIVERY_RECEIPT_BINDING_MISMATCH"):
                 outbox.mark_delivered(result.event_id, "different-receipt")
+
+    def test_competing_connection_cannot_rebind_delivery_receipt(self):
+        self.write_file()
+        first = LocalArtifactOutbox(self.db)
+        second = LocalArtifactOutbox(self.db)
+        try:
+            result = first.stage(
+                self.root,
+                self.intent(),
+                expected_currentness_ref="board-r7",
+                currentness="CURRENT",
+                observations=self.stable_observations(),
+                min_stable_ns=100,
+            )
+            first.mark_delivered(result.event_id, "as06-receipt-a")
+            second.mark_delivered(result.event_id, "as06-receipt-a")
+            with self.assertRaisesRegex(LocalArtifactRefusal, "DELIVERY_RECEIPT_BINDING_MISMATCH"):
+                second.mark_delivered(result.event_id, "as06-receipt-b")
+        finally:
+            second.close()
+            first.close()
 
 
 if __name__ == "__main__":
