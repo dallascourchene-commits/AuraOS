@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788102852,
+  "generated_at_unix": 1788107607,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1642,
+    "repo_file_count": 1645,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -147,6 +147,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/cs-arena-sync-as02-c0.yml",
+      ".github/workflows/cs-arena-sync-as04.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -328,6 +329,7 @@
       "aura_arena_experience_ledger.py",
       "aura_arena_gate_dialogue.py",
       "aura_arena_live_cli.py",
+      "aura_arena_local_artifact_outbox.py",
       "aura_arena_persistence_adapters.py",
       "aura_arena_research_bridge.py",
       "aura_arena_st3gg_codec.py",
@@ -1358,6 +1360,7 @@
       "tests/test_aura_arena_connector_hardening.py",
       "tests/test_aura_arena_experience_ledger.py",
       "tests/test_aura_arena_live_cli.py",
+      "tests/test_aura_arena_local_artifact_outbox.py",
       "tests/test_aura_arena_persistence_adapters.py",
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
@@ -1656,6 +1659,7 @@
       "06_refactor/D0_MUTANT_HARNESS.py",
       "06_refactor/aura_os_minimal.py",
       "aura_arena_artifact_event_core.py",
+      "aura_arena_local_artifact_outbox.py",
       "aura_blockchain/__init__.py",
       "aura_blockchain/block.py",
       "aura_blockchain/consensus.py",
@@ -1738,6 +1742,7 @@
       "tests/test_aura_arena_connector_hardening.py",
       "tests/test_aura_arena_experience_ledger.py",
       "tests/test_aura_arena_live_cli.py",
+      "tests/test_aura_arena_local_artifact_outbox.py",
       "tests/test_aura_arena_persistence_adapters.py",
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
@@ -1748,9 +1753,7 @@
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_bilateral_planning_enforcement.py",
-      "tests/test_aura_blind_gate10_benchmark.py",
-      "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py"
+      "tests/test_aura_blind_gate10_benchmark.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1758,16 +1761,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1642,
-      "bytes": 26439705,
-      "tokens_est": 6600279,
+      "files": 1645,
+      "bytes": 26481421,
+      "tokens_est": 6610710,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
-        "schema_or_lexicon": 272,
+        "python_module": 1001,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -2113,6 +2116,7 @@
         "aura_arena_experience_ledger.py",
         "aura_arena_gate_dialogue.py",
         "aura_arena_live_cli.py",
+        "aura_arena_local_artifact_outbox.py",
         "aura_arena_persistence_adapters.py",
         "aura_arena_research_bridge.py",
         "aura_arena_st3gg_codec.py",
@@ -2446,8 +2450,7 @@
         "aura_planning_board.py",
         "aura_planning_events.py",
         "aura_planning_frontier.py",
-        "aura_planning_projector.py",
-        "aura_planning_regression.py"
+        "aura_planning_projector.py"
       ]
     }
   ],
@@ -3956,6 +3959,14 @@
         "end_line": 67,
         "semantic_id": "aura_arena_gate_dialogue.py#function:_digest:3e91147678285ab4",
         "signature_hash": "6a2769a8ecbe738e"
+      },
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 44,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#function:_digest:636f4191ee706adf",
+        "signature_hash": "218a3c5a87d1b770"
       },
       {
         "file": "aura_benchmark_registry.py",
@@ -14814,6 +14825,14 @@
         "signature_hash": "5678165a8e35f45a"
       },
       {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 39,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#function:_text:587749371851c082",
+        "signature_hash": "ac128e8b251db088"
+      },
+      {
         "file": "aura_arena_state_packet.py",
         "kind": "function",
         "line": 165,
@@ -16666,6 +16685,256 @@
         "end_line": 169,
         "semantic_id": "tests/test_aura_gate_server.py#function:_request:d1b39064eed6962e",
         "signature_hash": "26a0e2e2f29eaf6a"
+      }
+    ],
+    "LocalOutboxRefusal": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 30,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#class:LocalOutboxRefusal:16f5b3db55d3a492",
+        "signature_hash": "4cfa7f49536d1926"
+      }
+    ],
+    "LocalOutboxRefusal.__init__": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalOutboxRefusal.__init__:0e5599ba15ced88c",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_proof_dict": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 48,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#function:_proof_dict:5be1da85121ae4d8",
+        "signature_hash": "d9771d84aeadc5f1"
+      }
+    ],
+    "LocalWatchConfig": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "class",
+        "line": 52,
+        "end_line": 82,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#class:LocalWatchConfig:e5a09626f469ab0f",
+        "signature_hash": "cd8cf2bd49c8449b"
+      }
+    ],
+    "LocalWatchConfig.__post_init__": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 82,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalWatchConfig.__post_init__:ab41062c1e57815d",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "LocalArtifactOutboxRecord": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "class",
+        "line": 86,
+        "end_line": 114,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#class:LocalArtifactOutboxRecord:652942787ad5c429",
+        "signature_hash": "f87a07d28d6038fb"
+      }
+    ],
+    "LocalArtifactOutboxRecord.to_dict": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 114,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutboxRecord.to_dict:ea45409ad245a10f",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "LocalIngestResult": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "class",
+        "line": 118,
+        "end_line": 120,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#class:LocalIngestResult:4a3d79bdc96f8ec1",
+        "signature_hash": "dc01abe28515e1e1"
+      }
+    ],
+    "LocalArtifactOutbox": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "class",
+        "line": 123,
+        "end_line": 514,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#class:LocalArtifactOutbox:b174eb213a8fac2c",
+        "signature_hash": "9d219a9f6091a500"
+      }
+    ],
+    "LocalArtifactOutbox.__init__": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 134,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.__init__:8ebcb3a164d7d8b9",
+        "signature_hash": "25140b654debb9c0"
+      }
+    ],
+    "LocalArtifactOutbox.close": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 137,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.close:276399a403905148",
+        "signature_hash": "818fdb66f3084fa5"
+      }
+    ],
+    "LocalArtifactOutbox._init_db": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 168,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox._init_db:74e722f7f8299fd7",
+        "signature_hash": "106e582f540e99c0"
+      }
+    ],
+    "LocalArtifactOutbox._resource_for_path": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 170,
+        "end_line": 179,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox._resource_for_path:630def64ca0279af",
+        "signature_hash": "0b07a3741ea8b879"
+      }
+    ],
+    "LocalArtifactOutbox.sample": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 184,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.sample:8bddf6e42cb1e0dc",
+        "signature_hash": "0bb2cec9d9e27da3"
+      }
+    ],
+    "LocalArtifactOutbox._currentness_is_admitted": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 186,
+        "end_line": 189,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox._currentness_is_admitted:fa90a27517b06471",
+        "signature_hash": "87732a8680f38ec0"
+      }
+    ],
+    "LocalArtifactOutbox._mirror_preflight": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 191,
+        "end_line": 216,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox._mirror_preflight:60b691a6d0e16e75",
+        "signature_hash": "b775a221bba07bfe"
+      }
+    ],
+    "LocalArtifactOutbox._read_bound_bytes": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 218,
+        "end_line": 234,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox._read_bound_bytes:e944db4915054bdf",
+        "signature_hash": "44e7769b4d7fcef7"
+      }
+    ],
+    "LocalArtifactOutbox._record_from_json": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 237,
+        "end_line": 248,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox._record_from_json:054e1c752f31f3e9",
+        "signature_hash": "2bc47104943356df"
+      }
+    ],
+    "LocalArtifactOutbox._enqueue": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 250,
+        "end_line": 342,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox._enqueue:c71c974e671b25df",
+        "signature_hash": "7a487bc15a902570"
+      }
+    ],
+    "LocalArtifactOutbox.ingest_file_notification": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 344,
+        "end_line": 395,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.ingest_file_notification:b525b4e95d042885",
+        "signature_hash": "e31f2339dcda6ee5"
+      }
+    ],
+    "LocalArtifactOutbox.ingest_tombstone": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 397,
+        "end_line": 432,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.ingest_tombstone:01468f7e306920fa",
+        "signature_hash": "ae81cf967aadae7c"
+      }
+    ],
+    "LocalArtifactOutbox.ingest_rename": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 434,
+        "end_line": 474,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.ingest_rename:c42bf3d02c1d834e",
+        "signature_hash": "01992e53799478c7"
+      }
+    ],
+    "LocalArtifactOutbox.pending": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 476,
+        "end_line": 483,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.pending:e694005597b57123",
+        "signature_hash": "9aa0239c82098747"
+      }
+    ],
+    "LocalArtifactOutbox.ack": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 485,
+        "end_line": 507,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.ack:43673f86e547f477",
+        "signature_hash": "0d09e2d8626da6e9"
+      }
+    ],
+    "LocalArtifactOutbox.generation_for": [
+      {
+        "file": "aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 509,
+        "end_line": 514,
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.generation_for:8c9241c30c4ccd15",
+        "signature_hash": "313486881eac51b5"
       }
     ],
     "_mapping_state": [
@@ -117588,6 +117857,336 @@
         "signature_hash": "c8e2033dec9c3404"
       }
     ],
+    "obs": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 12,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#function:obs:bd4358f1211b2794",
+        "signature_hash": "c8f29363e1985ed8"
+      }
+    ],
+    "LocalOutboxTests": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 447,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#class:LocalOutboxTests:5ddd438cc3a0512c",
+        "signature_hash": "8d6104b6e149dc95"
+      }
+    ],
+    "LocalOutboxTests.setUp": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 31,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.setUp:8ea1c1543e2c3813",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "LocalOutboxTests.tearDown": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 35,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.tearDown:c35f08c8d65dc235",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "LocalOutboxTests.stable": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.stable:c0ad9ef308603a0a",
+        "signature_hash": "a932826896cd9d82"
+      }
+    ],
+    "LocalOutboxTests.current": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.current:cfd7b107f93dcf20",
+        "signature_hash": "be443a6c6080aaf6"
+      }
+    ],
+    "LocalOutboxTests.cloud_lineage": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.cloud_lineage:5a1620d0e8fd89cb",
+        "signature_hash": "b3afe41e8acaf648"
+      }
+    ],
+    "LocalOutboxTests.mirror_kwargs": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 51,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.mirror_kwargs:4ef6229b04dafc23",
+        "signature_hash": "739f3c133d5dab1b"
+      }
+    ],
+    "LocalOutboxTests.test_outside_root_refused": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 59,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_outside_root_refused:e64592543adbc0fe",
+        "signature_hash": "fad63e149ad26ed4"
+      }
+    ],
+    "LocalOutboxTests.test_partial_write_not_quiescent": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 70,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_partial_write_not_quiescent:b134906179a030be",
+        "signature_hash": "1eb781f9ab752335"
+      }
+    ],
+    "LocalOutboxTests.test_short_stability_window_refused": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 83,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_short_stability_window_refused:4bd731bd6f5a738f",
+        "signature_hash": "8b93c59f5aa6dc9c"
+      }
+    ],
+    "LocalOutboxTests.test_closed_evidence_allows_single_sample": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 96,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_closed_evidence_allows_single_sample:bd80303d2c3f3c97",
+        "signature_hash": "cf550e4603996213"
+      }
+    ],
+    "LocalOutboxTests.test_atomic_publish_allows_single_sample": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 109,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_atomic_publish_allows_single_sample:1bf7629fa41fa4d6",
+        "signature_hash": "02b56996b6ca9f56"
+      }
+    ],
+    "LocalOutboxTests.test_duplicate_notification_is_idempotent_without_generation_bump": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 124,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_duplicate_notification_is_idempotent_without_generation_bump:7ba49c8eccad11d8",
+        "signature_hash": "7b6c3a12dddd23d5"
+      }
+    ],
+    "LocalOutboxTests.test_same_name_new_content_versions_without_collision": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 139,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_same_name_new_content_versions_without_collision:773354ecd4f05e38",
+        "signature_hash": "6e9f3a184d62c445"
+      }
+    ],
+    "LocalOutboxTests.test_restart_replays_pending_exactly": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 141,
+        "end_line": 151,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_restart_replays_pending_exactly:bfb5453d520c647a",
+        "signature_hash": "093b167d722b2060"
+      }
+    ],
+    "LocalOutboxTests.test_ack_is_idempotent_and_removes_pending": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 163,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_ack_is_idempotent_and_removes_pending:dd6b2017e38859ca",
+        "signature_hash": "30a5314d909498f3"
+      }
+    ],
+    "LocalOutboxTests.test_ack_conflict_fails_closed": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 165,
+        "end_line": 173,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_ack_conflict_fails_closed:de6b87bb7b1a0426",
+        "signature_hash": "08a873001049ae97"
+      }
+    ],
+    "LocalOutboxTests.test_tombstone_requires_prior_lineage_and_no_bytes": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 175,
+        "end_line": 186,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_tombstone_requires_prior_lineage_and_no_bytes:cb5b686c0a49b55b",
+        "signature_hash": "e4033f1f0c9ec37d"
+      }
+    ],
+    "LocalOutboxTests.test_rename_binds_old_resource_lineage": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 188,
+        "end_line": 196,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_rename_binds_old_resource_lineage:a1475b8323e37bc6",
+        "signature_hash": "7da63dca41a22a17"
+      }
+    ],
+    "LocalOutboxTests.test_inbound_mirror_to_same_surface_is_suppressed": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 198,
+        "end_line": 211,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_inbound_mirror_to_same_surface_is_suppressed:0e624572f6bb0d9d",
+        "signature_hash": "f2a4c44ebf0f0243"
+      }
+    ],
+    "LocalOutboxTests.test_records_never_claim_execution_or_provider_authority": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 213,
+        "end_line": 222,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_records_never_claim_execution_or_provider_authority:a1ebe0409ca9d968",
+        "signature_hash": "8e79abdc63b11480"
+      }
+    ],
+    "LocalOutboxTests.test_unknown_currentness_config_is_refused": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 224,
+        "end_line": 231,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_unknown_currentness_config_is_refused:06922c4dea63fd35",
+        "signature_hash": "ed1f17af6ad41cae"
+      }
+    ],
+    "LocalOutboxTests.test_sqlite_wal_and_full_sync_enabled": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 233,
+        "end_line": 237,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_sqlite_wal_and_full_sync_enabled:af9de3faea77d21e",
+        "signature_hash": "7ba80b7b8c5eeb86"
+      }
+    ],
+    "LocalOutboxTests.test_stale_exact_currentness_rebases_without_generation_or_enqueue": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 239,
+        "end_line": 253,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_stale_exact_currentness_rebases_without_generation_or_enqueue:594012c7e5fc0e8b",
+        "signature_hash": "baee965645300eae"
+      }
+    ],
+    "LocalOutboxTests.test_qualitative_stale_currentness_rebases_without_generation_or_enqueue": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 255,
+        "end_line": 268,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_qualitative_stale_currentness_rebases_without_generation_or_enqueue:d39c02bf431792fe",
+        "signature_hash": "d3375393e8733344"
+      }
+    ],
+    "LocalOutboxTests.test_inbound_cloud_lineage_is_extended_not_reset": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 270,
+        "end_line": 298,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_inbound_cloud_lineage_is_extended_not_reset:d663b98315af36c6",
+        "signature_hash": "4dfee1ea26419c32"
+      }
+    ],
+    "LocalOutboxTests.test_inbound_mirror_binding_mismatch_fails_closed": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 300,
+        "end_line": 316,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_inbound_mirror_binding_mismatch_fails_closed:ecf276cb0c67dbb0",
+        "signature_hash": "3ca2c731d89f47d4"
+      }
+    ],
+    "LocalOutboxTests.test_mirrored_rename_preserves_origin_generation_fence_without_local_generation": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 318,
+        "end_line": 339,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_mirrored_rename_preserves_origin_generation_fence_without_local_generation:4edc86b49905c4f1",
+        "signature_hash": "7acf00582560afff"
+      }
+    ],
+    "LocalOutboxTests.test_mirrored_tombstone_preserves_origin_generation_fence_and_prior_lineage": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 341,
+        "end_line": 360,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_mirrored_tombstone_preserves_origin_generation_fence_and_prior_lineage:5b30c9fa5c716684",
+        "signature_hash": "3b000033a10dc5e5"
+      }
+    ],
+    "LocalOutboxTests.test_mirrored_rename_and_tombstone_binding_mismatch_are_zero_state": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 362,
+        "end_line": 390,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_mirrored_rename_and_tombstone_binding_mismatch_are_zero_state:71a2e5ac11d7bf46",
+        "signature_hash": "957e83c798fd39f3"
+      }
+    ],
+    "LocalOutboxTests.test_mirrored_rename_and_tombstone_self_loop_suppress_without_state": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 392,
+        "end_line": 412,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_mirrored_rename_and_tombstone_self_loop_suppress_without_state:68ff28fcef3ce758",
+        "signature_hash": "f8ac151fd9c4a243"
+      }
+    ],
+    "LocalOutboxTests.test_local_mutations_after_mirrored_rename_and_tombstone_use_independent_generation": [
+      {
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "kind": "method",
+        "line": 414,
+        "end_line": 447,
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_local_mutations_after_mirrored_rename_and_tombstone_use_independent_generation:bf861e22aa5e4322",
+        "signature_hash": "a62022b7b7096215"
+      }
+    ],
     "_Coding": [
       {
         "file": "tests/test_aura_arena_persistence_adapters.py",
@@ -169044,6 +169643,53 @@
       ]
     },
     {
+      "path": ".github/workflows/cs-arena-sync-as04.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 853,
+      "lines": 25,
+      "tokens_est": 214,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1bcba587531b1a9f",
+      "vector": [
+        -0.202411,
+        -0.105254,
+        0.072868,
+        -0.232483,
+        -0.197784,
+        -0.031229,
+        0.250989,
+        0.278749,
+        -0.128386,
+        0.246363,
+        -0.052048,
+        0.026603,
+        -0.089061,
+        -0.190844,
+        -0.065928,
+        0.21629,
+        0.170025,
+        0.188531,
+        0.290315,
+        -0.024289,
+        0.202411,
+        -0.033542,
+        0.271809,
+        -0.070555,
+        0.033542,
+        -0.267182,
+        -0.271809,
+        0.105254,
+        0.038169,
+        -0.135326,
+        -0.190844,
+        -0.218604
+      ]
+    },
+    {
       "path": ".github/workflows/f1-financial-exact-contracts.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -181140,6 +181786,53 @@
         0.196374,
         -0.286145,
         0.019076
+      ]
+    },
+    {
+      "path": "aura_arena_local_artifact_outbox.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 22189,
+      "lines": 515,
+      "tokens_est": 5548,
+      "symbol_count": 27,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "32a5fa197fa77e3a",
+      "vector": [
+        -0.238734,
+        0.213894,
+        0.095217,
+        -0.103497,
+        0.169735,
+        -0.252533,
+        0.241494,
+        0.097977,
+        0.269093,
+        -0.00414,
+        -0.202855,
+        -0.332571,
+        -0.028979,
+        0.235974,
+        0.023459,
+        0.078658,
+        0.120057,
+        -0.114537,
+        0.040019,
+        -0.260813,
+        0.114537,
+        -0.153176,
+        0.274613,
+        -0.222174,
+        0.051059,
+        0.197335,
+        0.01794,
+        0.037259,
+        0.277373,
+        -0.056578,
+        -0.216654,
+        0.026219
       ]
     },
     {
@@ -250458,6 +251151,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_arena_local_artifact_outbox.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 18674,
+      "lines": 452,
+      "tokens_est": 4669,
+      "symbol_count": 33,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4b33a0a28a0969fd",
+      "vector": [
+        0.303503,
+        -0.079228,
+        -0.184052,
+        0.020721,
+        -0.191366,
+        -0.018283,
+        0.20843,
+        0.262061,
+        0.281563,
+        0.210868,
+        -0.162112,
+        -0.147486,
+        0.074352,
+        0.067039,
+        -0.030472,
+        0.037786,
+        0.09873,
+        -0.049974,
+        0.276688,
+        -0.159674,
+        0.081666,
+        0.23037,
+        -0.27425,
+        -0.01097,
+        0.108481,
+        0.25231,
+        0.286439,
+        -0.037786,
+        0.249872,
+        -0.181614,
+        -0.174301,
+        -0.001219
+      ]
+    },
+    {
       "path": "tests/test_aura_arena_persistence_adapters.py",
       "role": "python_module",
       "binary": false,
@@ -287428,16 +288168,16 @@
     }
   },
   "summary": {
-    "file_count": 1642,
-    "total_bytes": 26439705,
-    "text_tokens_est": 6600279,
+    "file_count": 1645,
+    "total_bytes": 26481421,
+    "text_tokens_est": 6610710,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
-      "schema_or_lexicon": 272,
+      "python_module": 1001,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287594,6 +288334,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/cs-arena-sync-as02-c0.yml",
+      ".github/workflows/cs-arena-sync-as04.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -287775,6 +288516,7 @@
       "aura_arena_experience_ledger.py",
       "aura_arena_gate_dialogue.py",
       "aura_arena_live_cli.py",
+      "aura_arena_local_artifact_outbox.py",
       "aura_arena_persistence_adapters.py",
       "aura_arena_research_bridge.py",
       "aura_arena_st3gg_codec.py",
@@ -288805,6 +289547,7 @@
       "tests/test_aura_arena_connector_hardening.py",
       "tests/test_aura_arena_experience_ledger.py",
       "tests/test_aura_arena_live_cli.py",
+      "tests/test_aura_arena_local_artifact_outbox.py",
       "tests/test_aura_arena_persistence_adapters.py",
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
@@ -299487,6 +300230,276 @@
         "end_line": 156,
         "signature_hash": "c3265d7d89056dc5",
         "file_digest8": "c6ee50f35934a95b"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#class:LocalArtifactOutbox:b174eb213a8fac2c",
+        "name": "LocalArtifactOutbox",
+        "kind": "class",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 123,
+        "end_line": 514,
+        "signature_hash": "9d219a9f6091a500",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#class:LocalArtifactOutboxRecord:652942787ad5c429",
+        "name": "LocalArtifactOutboxRecord",
+        "kind": "class",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 86,
+        "end_line": 114,
+        "signature_hash": "f87a07d28d6038fb",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#class:LocalIngestResult:4a3d79bdc96f8ec1",
+        "name": "LocalIngestResult",
+        "kind": "class",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 118,
+        "end_line": 120,
+        "signature_hash": "dc01abe28515e1e1",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#class:LocalOutboxRefusal:16f5b3db55d3a492",
+        "name": "LocalOutboxRefusal",
+        "kind": "class",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 26,
+        "end_line": 30,
+        "signature_hash": "4cfa7f49536d1926",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#class:LocalWatchConfig:e5a09626f469ab0f",
+        "name": "LocalWatchConfig",
+        "kind": "class",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 52,
+        "end_line": 82,
+        "signature_hash": "cd8cf2bd49c8449b",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#function:_digest:636f4191ee706adf",
+        "name": "_digest",
+        "kind": "function",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 42,
+        "end_line": 44,
+        "signature_hash": "218a3c5a87d1b770",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#function:_proof_dict:5be1da85121ae4d8",
+        "name": "_proof_dict",
+        "kind": "function",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 47,
+        "end_line": 48,
+        "signature_hash": "d9771d84aeadc5f1",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#function:_text:587749371851c082",
+        "name": "_text",
+        "kind": "function",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 33,
+        "end_line": 39,
+        "signature_hash": "ac128e8b251db088",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.__init__:8ebcb3a164d7d8b9",
+        "name": "LocalArtifactOutbox.__init__",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 126,
+        "end_line": 134,
+        "signature_hash": "25140b654debb9c0",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox._currentness_is_admitted:fa90a27517b06471",
+        "name": "LocalArtifactOutbox._currentness_is_admitted",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 186,
+        "end_line": 189,
+        "signature_hash": "87732a8680f38ec0",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox._enqueue:c71c974e671b25df",
+        "name": "LocalArtifactOutbox._enqueue",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 250,
+        "end_line": 342,
+        "signature_hash": "7a487bc15a902570",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox._init_db:74e722f7f8299fd7",
+        "name": "LocalArtifactOutbox._init_db",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 139,
+        "end_line": 168,
+        "signature_hash": "106e582f540e99c0",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox._mirror_preflight:60b691a6d0e16e75",
+        "name": "LocalArtifactOutbox._mirror_preflight",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 191,
+        "end_line": 216,
+        "signature_hash": "b775a221bba07bfe",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox._read_bound_bytes:e944db4915054bdf",
+        "name": "LocalArtifactOutbox._read_bound_bytes",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 218,
+        "end_line": 234,
+        "signature_hash": "44e7769b4d7fcef7",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox._record_from_json:054e1c752f31f3e9",
+        "name": "LocalArtifactOutbox._record_from_json",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 237,
+        "end_line": 248,
+        "signature_hash": "2bc47104943356df",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox._resource_for_path:630def64ca0279af",
+        "name": "LocalArtifactOutbox._resource_for_path",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 170,
+        "end_line": 179,
+        "signature_hash": "0b07a3741ea8b879",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.ack:43673f86e547f477",
+        "name": "LocalArtifactOutbox.ack",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 485,
+        "end_line": 507,
+        "signature_hash": "0d09e2d8626da6e9",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.close:276399a403905148",
+        "name": "LocalArtifactOutbox.close",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 136,
+        "end_line": 137,
+        "signature_hash": "818fdb66f3084fa5",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.generation_for:8c9241c30c4ccd15",
+        "name": "LocalArtifactOutbox.generation_for",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 509,
+        "end_line": 514,
+        "signature_hash": "313486881eac51b5",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.ingest_file_notification:b525b4e95d042885",
+        "name": "LocalArtifactOutbox.ingest_file_notification",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 344,
+        "end_line": 395,
+        "signature_hash": "e31f2339dcda6ee5",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.ingest_rename:c42bf3d02c1d834e",
+        "name": "LocalArtifactOutbox.ingest_rename",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 434,
+        "end_line": 474,
+        "signature_hash": "01992e53799478c7",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.ingest_tombstone:01468f7e306920fa",
+        "name": "LocalArtifactOutbox.ingest_tombstone",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 397,
+        "end_line": 432,
+        "signature_hash": "ae81cf967aadae7c",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.pending:e694005597b57123",
+        "name": "LocalArtifactOutbox.pending",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 476,
+        "end_line": 483,
+        "signature_hash": "9aa0239c82098747",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutbox.sample:8bddf6e42cb1e0dc",
+        "name": "LocalArtifactOutbox.sample",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 182,
+        "end_line": 184,
+        "signature_hash": "0bb2cec9d9e27da3",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalArtifactOutboxRecord.to_dict:ea45409ad245a10f",
+        "name": "LocalArtifactOutboxRecord.to_dict",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 100,
+        "end_line": 114,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalOutboxRefusal.__init__:0e5599ba15ced88c",
+        "name": "LocalOutboxRefusal.__init__",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "32a5fa197fa77e3a"
+      },
+      {
+        "semantic_id": "aura_arena_local_artifact_outbox.py#method:LocalWatchConfig.__post_init__:ab41062c1e57815d",
+        "name": "LocalWatchConfig.__post_init__",
+        "kind": "method",
+        "file": "aura_arena_local_artifact_outbox.py",
+        "line": 64,
+        "end_line": 82,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "32a5fa197fa77e3a"
       },
       {
         "semantic_id": "aura_arena_persistence_adapters.py#class:ArenaPersistenceCoordinator:c76892d1befd6831",
@@ -405369,6 +406382,336 @@
         "file_digest8": "a69bafc6dfedda7a"
       },
       {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#class:LocalOutboxTests:5ddd438cc3a0512c",
+        "name": "LocalOutboxTests",
+        "kind": "class",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 15,
+        "end_line": 447,
+        "signature_hash": "8d6104b6e149dc95",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#function:obs:bd4358f1211b2794",
+        "name": "obs",
+        "kind": "function",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 10,
+        "end_line": 12,
+        "signature_hash": "c8f29363e1985ed8",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.cloud_lineage:5a1620d0e8fd89cb",
+        "name": "LocalOutboxTests.cloud_lineage",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 43,
+        "end_line": 44,
+        "signature_hash": "b3afe41e8acaf648",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.current:cfd7b107f93dcf20",
+        "name": "LocalOutboxTests.current",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "be443a6c6080aaf6",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.mirror_kwargs:4ef6229b04dafc23",
+        "name": "LocalOutboxTests.mirror_kwargs",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 46,
+        "end_line": 51,
+        "signature_hash": "739f3c133d5dab1b",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.setUp:8ea1c1543e2c3813",
+        "name": "LocalOutboxTests.setUp",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 16,
+        "end_line": 31,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.stable:c0ad9ef308603a0a",
+        "name": "LocalOutboxTests.stable",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "a932826896cd9d82",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.tearDown:c35f08c8d65dc235",
+        "name": "LocalOutboxTests.tearDown",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 33,
+        "end_line": 35,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_ack_conflict_fails_closed:de6b87bb7b1a0426",
+        "name": "LocalOutboxTests.test_ack_conflict_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 165,
+        "end_line": 173,
+        "signature_hash": "08a873001049ae97",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_ack_is_idempotent_and_removes_pending:dd6b2017e38859ca",
+        "name": "LocalOutboxTests.test_ack_is_idempotent_and_removes_pending",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 153,
+        "end_line": 163,
+        "signature_hash": "30a5314d909498f3",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_atomic_publish_allows_single_sample:1bf7629fa41fa4d6",
+        "name": "LocalOutboxTests.test_atomic_publish_allows_single_sample",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 98,
+        "end_line": 109,
+        "signature_hash": "02b56996b6ca9f56",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_closed_evidence_allows_single_sample:bd80303d2c3f3c97",
+        "name": "LocalOutboxTests.test_closed_evidence_allows_single_sample",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 85,
+        "end_line": 96,
+        "signature_hash": "cf550e4603996213",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_duplicate_notification_is_idempotent_without_generation_bump:7ba49c8eccad11d8",
+        "name": "LocalOutboxTests.test_duplicate_notification_is_idempotent_without_generation_bump",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 111,
+        "end_line": 124,
+        "signature_hash": "7b6c3a12dddd23d5",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_inbound_cloud_lineage_is_extended_not_reset:d663b98315af36c6",
+        "name": "LocalOutboxTests.test_inbound_cloud_lineage_is_extended_not_reset",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 270,
+        "end_line": 298,
+        "signature_hash": "4dfee1ea26419c32",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_inbound_mirror_binding_mismatch_fails_closed:ecf276cb0c67dbb0",
+        "name": "LocalOutboxTests.test_inbound_mirror_binding_mismatch_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 300,
+        "end_line": 316,
+        "signature_hash": "3ca2c731d89f47d4",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_inbound_mirror_to_same_surface_is_suppressed:0e624572f6bb0d9d",
+        "name": "LocalOutboxTests.test_inbound_mirror_to_same_surface_is_suppressed",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 198,
+        "end_line": 211,
+        "signature_hash": "f2a4c44ebf0f0243",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_local_mutations_after_mirrored_rename_and_tombstone_use_independent_generation:bf861e22aa5e4322",
+        "name": "LocalOutboxTests.test_local_mutations_after_mirrored_rename_and_tombstone_use_independent_generation",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 414,
+        "end_line": 447,
+        "signature_hash": "a62022b7b7096215",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_mirrored_rename_and_tombstone_binding_mismatch_are_zero_state:71a2e5ac11d7bf46",
+        "name": "LocalOutboxTests.test_mirrored_rename_and_tombstone_binding_mismatch_are_zero_state",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 362,
+        "end_line": 390,
+        "signature_hash": "957e83c798fd39f3",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_mirrored_rename_and_tombstone_self_loop_suppress_without_state:68ff28fcef3ce758",
+        "name": "LocalOutboxTests.test_mirrored_rename_and_tombstone_self_loop_suppress_without_state",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 392,
+        "end_line": 412,
+        "signature_hash": "f8ac151fd9c4a243",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_mirrored_rename_preserves_origin_generation_fence_without_local_generation:4edc86b49905c4f1",
+        "name": "LocalOutboxTests.test_mirrored_rename_preserves_origin_generation_fence_without_local_generation",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 318,
+        "end_line": 339,
+        "signature_hash": "7acf00582560afff",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_mirrored_tombstone_preserves_origin_generation_fence_and_prior_lineage:5b30c9fa5c716684",
+        "name": "LocalOutboxTests.test_mirrored_tombstone_preserves_origin_generation_fence_and_prior_lineage",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 341,
+        "end_line": 360,
+        "signature_hash": "3b000033a10dc5e5",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_outside_root_refused:e64592543adbc0fe",
+        "name": "LocalOutboxTests.test_outside_root_refused",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 53,
+        "end_line": 59,
+        "signature_hash": "fad63e149ad26ed4",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_partial_write_not_quiescent:b134906179a030be",
+        "name": "LocalOutboxTests.test_partial_write_not_quiescent",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 61,
+        "end_line": 70,
+        "signature_hash": "1eb781f9ab752335",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_qualitative_stale_currentness_rebases_without_generation_or_enqueue:d39c02bf431792fe",
+        "name": "LocalOutboxTests.test_qualitative_stale_currentness_rebases_without_generation_or_enqueue",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 255,
+        "end_line": 268,
+        "signature_hash": "d3375393e8733344",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_records_never_claim_execution_or_provider_authority:a1ebe0409ca9d968",
+        "name": "LocalOutboxTests.test_records_never_claim_execution_or_provider_authority",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 213,
+        "end_line": 222,
+        "signature_hash": "8e79abdc63b11480",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_rename_binds_old_resource_lineage:a1475b8323e37bc6",
+        "name": "LocalOutboxTests.test_rename_binds_old_resource_lineage",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 188,
+        "end_line": 196,
+        "signature_hash": "7da63dca41a22a17",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_restart_replays_pending_exactly:bfb5453d520c647a",
+        "name": "LocalOutboxTests.test_restart_replays_pending_exactly",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 141,
+        "end_line": 151,
+        "signature_hash": "093b167d722b2060",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_same_name_new_content_versions_without_collision:773354ecd4f05e38",
+        "name": "LocalOutboxTests.test_same_name_new_content_versions_without_collision",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 126,
+        "end_line": 139,
+        "signature_hash": "6e9f3a184d62c445",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_short_stability_window_refused:4bd731bd6f5a738f",
+        "name": "LocalOutboxTests.test_short_stability_window_refused",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 72,
+        "end_line": 83,
+        "signature_hash": "8b93c59f5aa6dc9c",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_sqlite_wal_and_full_sync_enabled:af9de3faea77d21e",
+        "name": "LocalOutboxTests.test_sqlite_wal_and_full_sync_enabled",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 233,
+        "end_line": 237,
+        "signature_hash": "7ba80b7b8c5eeb86",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_stale_exact_currentness_rebases_without_generation_or_enqueue:594012c7e5fc0e8b",
+        "name": "LocalOutboxTests.test_stale_exact_currentness_rebases_without_generation_or_enqueue",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 239,
+        "end_line": 253,
+        "signature_hash": "baee965645300eae",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_tombstone_requires_prior_lineage_and_no_bytes:cb5b686c0a49b55b",
+        "name": "LocalOutboxTests.test_tombstone_requires_prior_lineage_and_no_bytes",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 175,
+        "end_line": 186,
+        "signature_hash": "e4033f1f0c9ec37d",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_local_artifact_outbox.py#method:LocalOutboxTests.test_unknown_currentness_config_is_refused:06922c4dea63fd35",
+        "name": "LocalOutboxTests.test_unknown_currentness_config_is_refused",
+        "kind": "method",
+        "file": "tests/test_aura_arena_local_artifact_outbox.py",
+        "line": 224,
+        "end_line": 231,
+        "signature_hash": "ed1f17af6ad41cae",
+        "file_digest8": "4b33a0a28a0969fd"
+      },
+      {
         "semantic_id": "tests/test_aura_arena_persistence_adapters.py#class:_Act:8ba09e92ee394963",
         "name": "_Act",
         "kind": "class",
@@ -448299,7 +449642,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "eb0380ea37b7cb019c947b166260c373",
-    "payload_hash": "8f2a182c03e31bf01a01da8a7b8c46eb"
+    "record_fingerprint": "15a97e1d16c550eac1e0bf4cefa8e027",
+    "payload_hash": "a0d739de457e1818e7176617b9f88d59"
   }
 }
