@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788108573,
+  "generated_at_unix": 1788109910,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1674,
+    "repo_file_count": 1677,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -148,6 +148,7 @@
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-05a-backend-evidence.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
+      ".github/workflows/awj032-glm53-g2-host-preflight.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1657,12 +1658,14 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_backend_io_evidence_guard.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/glm53_host_canary_preflight.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_backend_io_evidence_guard.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
+      "tools/awj032/test_glm53_host_canary_preflight.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
@@ -1790,16 +1793,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1674,
-      "bytes": 26550449,
-      "tokens_est": 6628009,
+      "files": 1677,
+      "bytes": 26575569,
+      "tokens_est": 6634290,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1020,
-        "schema_or_lexicon": 277,
+        "python_module": 1022,
+        "schema_or_lexicon": 278,
         "support_file": 49
       }
     },
@@ -3964,6 +3967,14 @@
         "signature_hash": "711cdedc61c63424"
       },
       {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 48,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_canonical:e126a552494c55c4",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
         "file": "tools/awj032/glm53_per_expert_index_pager.py",
         "kind": "function",
         "line": 50,
@@ -4412,6 +4423,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_digest:0ac647d9fa2eaf0b",
+        "signature_hash": "514f786724465716"
       },
       {
         "file": "tools/awj032/glm53_per_expert_index_pager.py",
@@ -14744,6 +14763,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_text:afa18f9eb9102271",
+        "signature_hash": "a4ea29b9a7789fe0"
       },
       {
         "file": "tools/awj032/glm53_per_expert_index_pager.py",
@@ -26442,6 +26469,14 @@
         "end_line": 68,
         "semantic_id": "aura_spatial_importers/contracts.py#function:_positive_int:cb9f2b4384fccde6",
         "signature_hash": "5cca323f428421e2"
+      },
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 71,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_positive_int:1a2cb0b0dc0d0682",
+        "signature_hash": "9fa9d0d235d67d55"
       }
     ],
     "_span_line_bounds": [
@@ -149698,6 +149733,14 @@
         "end_line": 8,
         "semantic_id": "tests/test_aura_resident_idle_policy.py#function:host:80971ba390fc51e0",
         "signature_hash": "3517bd88e7ac44a2"
+      },
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 38,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#function:host:6622501f6044ac09",
+        "signature_hash": "5ed40324021d126d"
       }
     ],
     "test_deterministic_first": [
@@ -158174,6 +158217,14 @@
         "end_line": 33,
         "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#function:_nonneg_int:f48cb7594595e3f0",
         "signature_hash": "8da88530f542cb0c"
+      },
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 64,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_nonneg_int:ea5a236d46671f01",
+        "signature_hash": "de511ebb37461ace"
       }
     ],
     "W4BackendEvidence": [
@@ -158304,6 +158355,226 @@
         "end_line": 293,
         "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_read:8252b4d27465b795",
         "signature_hash": "3313625eaf98b5c7"
+      }
+    ],
+    "HostPreflightError": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#class:HostPreflightError:2abeaa5f83cfd0b7",
+        "signature_hash": "8692b19bc8707a72"
+      }
+    ],
+    "HostPreflightError.__init__": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:HostPreflightError.__init__:8234e1509c141986",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_nonneg_float": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 77,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_nonneg_float:544c43d8cf2cfa21",
+        "signature_hash": "a278207a45aeae82"
+      }
+    ],
+    "_positive_float": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 84,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_positive_float:f02f4bb6342b0bf4",
+        "signature_hash": "b2fece0b5243771f"
+      }
+    ],
+    "HostSnapshot": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "class",
+        "line": 88,
+        "end_line": 169,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#class:HostSnapshot:b7766e62c449b7ab",
+        "signature_hash": "8df2c62422f7b939"
+      }
+    ],
+    "HostSnapshot.__post_init__": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 165,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:HostSnapshot.__post_init__:c82bda212322b62e",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "HostSnapshot.digest": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 169,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:HostSnapshot.digest:e1adeeb482a736f4",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "RepresentationStoragePlan": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "class",
+        "line": 173,
+        "end_line": 210,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#class:RepresentationStoragePlan:964335c064398893",
+        "signature_hash": "2a9bb36b07ba2166"
+      }
+    ],
+    "RepresentationStoragePlan.__post_init__": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 184,
+        "end_line": 197,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:RepresentationStoragePlan.__post_init__:db9a23e48b9d28fe",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RepresentationStoragePlan.c2_required_free_bytes": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 200,
+        "end_line": 201,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:RepresentationStoragePlan.c2_required_free_bytes:b175ba89d66bd518",
+        "signature_hash": "eee07e4c5328c605"
+      }
+    ],
+    "RepresentationStoragePlan.c3_required_free_bytes": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 206,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:RepresentationStoragePlan.c3_required_free_bytes:7ed7642b0fab6716",
+        "signature_hash": "4b52dbb337ff4b2f"
+      }
+    ],
+    "RepresentationStoragePlan.digest": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 209,
+        "end_line": 210,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:RepresentationStoragePlan.digest:6ae846233b17f235",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "ColdExpertIOBound": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "class",
+        "line": 214,
+        "end_line": 235,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#class:ColdExpertIOBound:2082eb821c004eea",
+        "signature_hash": "f287e058744acf82"
+      }
+    ],
+    "ColdExpertIOBound.__post_init__": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 221,
+        "end_line": 227,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:ColdExpertIOBound.__post_init__:852feadd33344048",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ColdExpertIOBound.cold_expert_bytes_per_token": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 230,
+        "end_line": 231,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:ColdExpertIOBound.cold_expert_bytes_per_token:e5b549be8d746e0f",
+        "signature_hash": "f7eeb4945c48baad"
+      }
+    ],
+    "ColdExpertIOBound.digest": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 234,
+        "end_line": 235,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:ColdExpertIOBound.digest:f4915d917ab24ac0",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "PerformanceTarget": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "class",
+        "line": 239,
+        "end_line": 245,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#class:PerformanceTarget:aeaeb0b5d3e8762a",
+        "signature_hash": "e288acd1c56ad442"
+      }
+    ],
+    "PerformanceTarget.__post_init__": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 243,
+        "end_line": 245,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:PerformanceTarget.__post_init__:e4458efd472cfe48",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "HostCanaryPreflightReceipt": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "class",
+        "line": 249,
+        "end_line": 279,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#class:HostCanaryPreflightReceipt:54404547ce24895c",
+        "signature_hash": "8559d132a0ff9c3c"
+      }
+    ],
+    "HostCanaryPreflightReceipt.to_dict": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 278,
+        "end_line": 279,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:HostCanaryPreflightReceipt.to_dict:16e52c501c753100",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "_target_min_reuse": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "function",
+        "line": 282,
+        "end_line": 294,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_target_min_reuse:a9e462457c9685a5",
+        "signature_hash": "d94047a41d282372"
+      }
+    ],
+    "compile_host_canary_preflight": [
+      {
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "kind": "function",
+        "line": 297,
+        "end_line": 373,
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:compile_host_canary_preflight:1edc55fcf94b8962",
+        "signature_hash": "e1b3ee5c49e74421"
       }
     ],
     "PagerError": [
@@ -159522,6 +159793,200 @@
         "signature_hash": "a6a2281c320c3c5b"
       }
     ],
+    "storage": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#function:storage:a711ff8b4cdd20a4",
+        "signature_hash": "62a3b863edfe993b"
+      }
+    ],
+    "io_bound": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 60,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#function:io_bound:c91f8654ce50d053",
+        "signature_hash": "e62092ef3a64416e"
+      }
+    ],
+    "FakeBackend": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 80,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#class:FakeBackend:23bf5254a7356080",
+        "signature_hash": "25ede4c2b5b1e33f"
+      },
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#class:FakeBackend:bf8ef4712d835197",
+        "signature_hash": "25ede4c2b5b1e33f"
+      }
+    ],
+    "FakeBackend.__init__": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 66,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:FakeBackend.__init__:5c4be6d56f83a9c9",
+        "signature_hash": "5b593ff8131eee03"
+      },
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 20,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:FakeBackend.__init__:f43b9beb62496f21",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "FakeBackend.io_attestation": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 80,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:FakeBackend.io_attestation:1ac815eb9061c9b7",
+        "signature_hash": "d3cfe7ec781686af"
+      },
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:FakeBackend.io_attestation:5bacca2e43ff8d98",
+        "signature_hash": "d3cfe7ec781686af"
+      }
+    ],
+    "w4": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "function",
+        "line": 83,
+        "end_line": 87,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#function:w4:9843ffe306c7ff86",
+        "signature_hash": "d331f1dfa1f2ffd2"
+      }
+    ],
+    "HostCanaryPreflightTests": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "class",
+        "line": 90,
+        "end_line": 207,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#class:HostCanaryPreflightTests:4015dfcce7fbfc0d",
+        "signature_hash": "4686b1805a332008"
+      }
+    ],
+    "HostCanaryPreflightTests.test_preregistered_cold_expert_floor_matches_work_order": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 92,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_preregistered_cold_expert_floor_matches_work_order:e9612df4ddf92e68",
+        "signature_hash": "fd6319c7586ae7de"
+      }
+    ],
+    "HostCanaryPreflightTests.test_complete_measurements_compile_nonpromoting_plan": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 119,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_complete_measurements_compile_nonpromoting_plan:21b08b003ff1407f",
+        "signature_hash": "f64bc880ea0b6461"
+      }
+    ],
+    "HostCanaryPreflightTests.test_storage_shortage_blocks_c2_without_deleting_source": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 131,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_storage_shortage_blocks_c2_without_deleting_source:8739f8caa266d90d",
+        "signature_hash": "980823f3fc9252c4"
+      }
+    ],
+    "HostCanaryPreflightTests.test_c2_can_fit_while_c3_full_materialization_does_not": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 144,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_c2_can_fit_while_c3_full_materialization_does_not:e1a6c4c2e1f7a506",
+        "signature_hash": "e340463a4cf7b578"
+      }
+    ],
+    "HostCanaryPreflightTests.test_unattested_or_incomplete_w4_is_not_planning_evidence": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 153,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_unattested_or_incomplete_w4_is_not_planning_evidence:b6db1ab2ecc606f7",
+        "signature_hash": "214eec87f87e17ad"
+      }
+    ],
+    "HostCanaryPreflightTests.test_w4_authority_widening_is_rejected": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 162,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_w4_authority_widening_is_rejected:bc320ad3ec138971",
+        "signature_hash": "3e50fcb24174b72d"
+      }
+    ],
+    "HostCanaryPreflightTests.test_physical_io_amplification_clamps_reuse_to_zero": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 172,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_physical_io_amplification_clamps_reuse_to_zero:e62034ce42d0264a",
+        "signature_hash": "664556df64baea51"
+      }
+    ],
+    "HostCanaryPreflightTests.test_positive_physical_bytes_require_elapsed_time": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 181,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_positive_physical_bytes_require_elapsed_time:35e9b21303e5d879",
+        "signature_hash": "751c790e4b601929"
+      }
+    ],
+    "HostCanaryPreflightTests.test_performance_targets_are_policy_inputs_not_invented_thresholds": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 190,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_performance_targets_are_policy_inputs_not_invented_thresholds:91f5a7e01b609c38",
+        "signature_hash": "fbd4887fa0a5e988"
+      }
+    ],
+    "HostCanaryPreflightTests.test_gpu_absence_is_explicit_not_fabricated": [
+      {
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "kind": "method",
+        "line": 192,
+        "end_line": 207,
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_gpu_absence_is_explicit_not_fabricated:2e71aecdf619990c",
+        "signature_hash": "08efbf5d9afd9104"
+      }
+    ],
     "FakeSliceBackend": [
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
@@ -159982,26 +160447,6 @@
         "signature_hash": "51ee7e5abf66a8ce"
       }
     ],
-    "FakeBackend": [
-      {
-        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
-        "kind": "class",
-        "line": 17,
-        "end_line": 34,
-        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#class:FakeBackend:bf8ef4712d835197",
-        "signature_hash": "25ede4c2b5b1e33f"
-      }
-    ],
-    "FakeBackend.__init__": [
-      {
-        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
-        "kind": "method",
-        "line": 18,
-        "end_line": 20,
-        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:FakeBackend.__init__:f43b9beb62496f21",
-        "signature_hash": "3d77650513b79756"
-      }
-    ],
     "FakeBackend.read_tensor": [
       {
         "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
@@ -160010,16 +160455,6 @@
         "end_line": 24,
         "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:FakeBackend.read_tensor:cccb277ff74882ba",
         "signature_hash": "b5e86620f84079e9"
-      }
-    ],
-    "FakeBackend.io_attestation": [
-      {
-        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
-        "kind": "method",
-        "line": 26,
-        "end_line": 34,
-        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:FakeBackend.io_attestation:5bacca2e43ff8d98",
-        "signature_hash": "d3cfe7ec781686af"
       }
     ],
     "UnattestedBackend": [
@@ -161320,6 +161755,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
+      ".github/workflows/awj032-glm53-g2-host-preflight.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
@@ -171460,6 +171896,59 @@
         0.075468,
         0.236997,
         0.088708
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-g2-host-preflight.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1287,
+      "lines": 37,
+      "tokens_est": 322,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          26
+        ]
+      },
+      "topology": {},
+      "digest8": "3a851082ef43f1a4",
+      "vector": [
+        0.008176,
+        0.22074,
+        0.087595,
+        0.19271,
+        -0.026863,
+        0.269794,
+        -0.136649,
+        -0.258114,
+        -0.043214,
+        0.064237,
+        -0.171687,
+        0.288481,
+        0.103946,
+        0.202053,
+        -0.251107,
+        -0.022191,
+        0.07358,
+        -0.225412,
+        0.225412,
+        -0.075916,
+        -0.162343,
+        0.265122,
+        -0.127305,
+        0.237091,
+        -0.04555,
+        -0.155336,
+        -0.197381,
+        -0.18103,
+        0.213733,
+        -0.110954,
+        0.274465,
+        0.024527
       ]
     },
     {
@@ -266951,6 +267440,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_host_canary_preflight.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14967,
+      "lines": 374,
+      "tokens_est": 3742,
+      "symbol_count": 27,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fc95b9405738770f",
+      "vector": [
+        -0.078934,
+        -0.273234,
+        -0.159083,
+        0.149368,
+        -0.156654,
+        -0.256233,
+        0.035217,
+        0.146939,
+        0.265948,
+        -0.195514,
+        -0.278091,
+        0.071648,
+        -0.159083,
+        -0.093507,
+        -0.108079,
+        -0.219801,
+        0.127509,
+        -0.032788,
+        0.023073,
+        -0.115365,
+        0.197943,
+        -0.29995,
+        0.008501,
+        0.273234,
+        -0.132367,
+        0.217373,
+        -0.083792,
+        0.270805,
+        -0.120223,
+        0.06679,
+        -0.263519,
+        0.06679
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_packed_expert_pager.py",
       "role": "python_module",
       "binary": false,
@@ -267230,6 +267766,53 @@
         0.046165,
         -0.170935,
         -0.185908
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_host_canary_preflight.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8866,
+      "lines": 212,
+      "tokens_est": 2217,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "51c2e87d6f2aa1e2",
+      "vector": [
+        -0.165811,
+        0.23265,
+        0.026993,
+        0.047558,
+        -0.024422,
+        -0.065553,
+        0.276352,
+        -0.163241,
+        -0.080978,
+        0.101543,
+        0.168382,
+        -0.263499,
+        -0.186377,
+        0.176094,
+        -0.217226,
+        -0.145246,
+        0.194089,
+        0.155529,
+        0.240362,
+        -0.142675,
+        0.0527,
+        0.145246,
+        -0.137533,
+        0.073266,
+        -0.194089,
+        -0.16067,
+        -0.276352,
+        0.214655,
+        0.163241,
+        0.134963,
+        0.309772,
+        -0.209514
       ]
     },
     {
@@ -291372,16 +291955,16 @@
     }
   },
   "summary": {
-    "file_count": 1674,
-    "total_bytes": 26550449,
-    "text_tokens_est": 6628009,
+    "file_count": 1677,
+    "total_bytes": 26575569,
+    "text_tokens_est": 6634290,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1020,
-      "schema_or_lexicon": 277,
+      "python_module": 1022,
+      "schema_or_lexicon": 278,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -291539,6 +292122,7 @@
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-05a-backend-evidence.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
+      ".github/workflows/awj032-glm53-g2-host-preflight.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -293048,12 +293632,14 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_backend_io_evidence_guard.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/glm53_host_canary_preflight.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_backend_io_evidence_guard.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
+      "tools/awj032/test_glm53_host_canary_preflight.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
@@ -451475,6 +452061,276 @@
         "file_digest8": "e47f5028c4e7cc25"
       },
       {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#class:ColdExpertIOBound:2082eb821c004eea",
+        "name": "ColdExpertIOBound",
+        "kind": "class",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 214,
+        "end_line": 235,
+        "signature_hash": "f287e058744acf82",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#class:HostCanaryPreflightReceipt:54404547ce24895c",
+        "name": "HostCanaryPreflightReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 249,
+        "end_line": 279,
+        "signature_hash": "8559d132a0ff9c3c",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#class:HostPreflightError:2abeaa5f83cfd0b7",
+        "name": "HostPreflightError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 31,
+        "end_line": 35,
+        "signature_hash": "8692b19bc8707a72",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#class:HostSnapshot:b7766e62c449b7ab",
+        "name": "HostSnapshot",
+        "kind": "class",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 88,
+        "end_line": 169,
+        "signature_hash": "8df2c62422f7b939",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#class:PerformanceTarget:aeaeb0b5d3e8762a",
+        "name": "PerformanceTarget",
+        "kind": "class",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 239,
+        "end_line": 245,
+        "signature_hash": "e288acd1c56ad442",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#class:RepresentationStoragePlan:964335c064398893",
+        "name": "RepresentationStoragePlan",
+        "kind": "class",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 173,
+        "end_line": 210,
+        "signature_hash": "2a9bb36b07ba2166",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_canonical:e126a552494c55c4",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 38,
+        "end_line": 48,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_digest:0ac647d9fa2eaf0b",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_nonneg_float:544c43d8cf2cfa21",
+        "name": "_nonneg_float",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 74,
+        "end_line": 77,
+        "signature_hash": "a278207a45aeae82",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_nonneg_int:ea5a236d46671f01",
+        "name": "_nonneg_int",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 61,
+        "end_line": 64,
+        "signature_hash": "de511ebb37461ace",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_positive_float:f02f4bb6342b0bf4",
+        "name": "_positive_float",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 80,
+        "end_line": 84,
+        "signature_hash": "b2fece0b5243771f",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_positive_int:1a2cb0b0dc0d0682",
+        "name": "_positive_int",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 67,
+        "end_line": 71,
+        "signature_hash": "9fa9d0d235d67d55",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_target_min_reuse:a9e462457c9685a5",
+        "name": "_target_min_reuse",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 282,
+        "end_line": 294,
+        "signature_hash": "d94047a41d282372",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:_text:afa18f9eb9102271",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 55,
+        "end_line": 58,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#function:compile_host_canary_preflight:1edc55fcf94b8962",
+        "name": "compile_host_canary_preflight",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 297,
+        "end_line": 373,
+        "signature_hash": "e1b3ee5c49e74421",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:ColdExpertIOBound.__post_init__:852feadd33344048",
+        "name": "ColdExpertIOBound.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 221,
+        "end_line": 227,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:ColdExpertIOBound.cold_expert_bytes_per_token:e5b549be8d746e0f",
+        "name": "ColdExpertIOBound.cold_expert_bytes_per_token",
+        "kind": "method",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 230,
+        "end_line": 231,
+        "signature_hash": "f7eeb4945c48baad",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:ColdExpertIOBound.digest:f4915d917ab24ac0",
+        "name": "ColdExpertIOBound.digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 234,
+        "end_line": 235,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:HostCanaryPreflightReceipt.to_dict:16e52c501c753100",
+        "name": "HostCanaryPreflightReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 278,
+        "end_line": 279,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:HostPreflightError.__init__:8234e1509c141986",
+        "name": "HostPreflightError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 32,
+        "end_line": 35,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:HostSnapshot.__post_init__:c82bda212322b62e",
+        "name": "HostSnapshot.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 118,
+        "end_line": 165,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:HostSnapshot.digest:e1adeeb482a736f4",
+        "name": "HostSnapshot.digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 168,
+        "end_line": 169,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:PerformanceTarget.__post_init__:e4458efd472cfe48",
+        "name": "PerformanceTarget.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 243,
+        "end_line": 245,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:RepresentationStoragePlan.__post_init__:db9a23e48b9d28fe",
+        "name": "RepresentationStoragePlan.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 184,
+        "end_line": 197,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:RepresentationStoragePlan.c2_required_free_bytes:b175ba89d66bd518",
+        "name": "RepresentationStoragePlan.c2_required_free_bytes",
+        "kind": "method",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 200,
+        "end_line": 201,
+        "signature_hash": "eee07e4c5328c605",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:RepresentationStoragePlan.c3_required_free_bytes:7ed7642b0fab6716",
+        "name": "RepresentationStoragePlan.c3_required_free_bytes",
+        "kind": "method",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 204,
+        "end_line": 206,
+        "signature_hash": "4b52dbb337ff4b2f",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_canary_preflight.py#method:RepresentationStoragePlan.digest:6ae846233b17f235",
+        "name": "RepresentationStoragePlan.digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_host_canary_preflight.py",
+        "line": 209,
+        "end_line": 210,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "fc95b9405738770f"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_packed_expert_pager.py#class:ExpertRangeError:a8c6d962660c0c2f",
         "name": "ExpertRangeError",
         "kind": "class",
@@ -452733,6 +453589,186 @@
         "end_line": 97,
         "signature_hash": "b67b9af0cf1f2b78",
         "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#class:FakeBackend:23bf5254a7356080",
+        "name": "FakeBackend",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 63,
+        "end_line": 80,
+        "signature_hash": "25ede4c2b5b1e33f",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#class:HostCanaryPreflightTests:4015dfcce7fbfc0d",
+        "name": "HostCanaryPreflightTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 90,
+        "end_line": 207,
+        "signature_hash": "4686b1805a332008",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#function:host:6622501f6044ac09",
+        "name": "host",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 9,
+        "end_line": 38,
+        "signature_hash": "5ed40324021d126d",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#function:io_bound:c91f8654ce50d053",
+        "name": "io_bound",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 54,
+        "end_line": 60,
+        "signature_hash": "e62092ef3a64416e",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#function:storage:a711ff8b4cdd20a4",
+        "name": "storage",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 41,
+        "end_line": 51,
+        "signature_hash": "62a3b863edfe993b",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#function:w4:9843ffe306c7ff86",
+        "name": "w4",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 83,
+        "end_line": 87,
+        "signature_hash": "d331f1dfa1f2ffd2",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:FakeBackend.__init__:5c4be6d56f83a9c9",
+        "name": "FakeBackend.__init__",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 64,
+        "end_line": 66,
+        "signature_hash": "5b593ff8131eee03",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:FakeBackend.io_attestation:1ac815eb9061c9b7",
+        "name": "FakeBackend.io_attestation",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 68,
+        "end_line": 80,
+        "signature_hash": "d3cfe7ec781686af",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_c2_can_fit_while_c3_full_materialization_does_not:e1a6c4c2e1f7a506",
+        "name": "HostCanaryPreflightTests.test_c2_can_fit_while_c3_full_materialization_does_not",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 133,
+        "end_line": 144,
+        "signature_hash": "e340463a4cf7b578",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_complete_measurements_compile_nonpromoting_plan:21b08b003ff1407f",
+        "name": "HostCanaryPreflightTests.test_complete_measurements_compile_nonpromoting_plan",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 94,
+        "end_line": 119,
+        "signature_hash": "f64bc880ea0b6461",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_gpu_absence_is_explicit_not_fabricated:2e71aecdf619990c",
+        "name": "HostCanaryPreflightTests.test_gpu_absence_is_explicit_not_fabricated",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 192,
+        "end_line": 207,
+        "signature_hash": "08efbf5d9afd9104",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_performance_targets_are_policy_inputs_not_invented_thresholds:91f5a7e01b609c38",
+        "name": "HostCanaryPreflightTests.test_performance_targets_are_policy_inputs_not_invented_thresholds",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 183,
+        "end_line": 190,
+        "signature_hash": "fbd4887fa0a5e988",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_physical_io_amplification_clamps_reuse_to_zero:e62034ce42d0264a",
+        "name": "HostCanaryPreflightTests.test_physical_io_amplification_clamps_reuse_to_zero",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 164,
+        "end_line": 172,
+        "signature_hash": "664556df64baea51",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_positive_physical_bytes_require_elapsed_time:35e9b21303e5d879",
+        "name": "HostCanaryPreflightTests.test_positive_physical_bytes_require_elapsed_time",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 174,
+        "end_line": 181,
+        "signature_hash": "751c790e4b601929",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_preregistered_cold_expert_floor_matches_work_order:e9612df4ddf92e68",
+        "name": "HostCanaryPreflightTests.test_preregistered_cold_expert_floor_matches_work_order",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 91,
+        "end_line": 92,
+        "signature_hash": "fd6319c7586ae7de",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_storage_shortage_blocks_c2_without_deleting_source:8739f8caa266d90d",
+        "name": "HostCanaryPreflightTests.test_storage_shortage_blocks_c2_without_deleting_source",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 121,
+        "end_line": 131,
+        "signature_hash": "980823f3fc9252c4",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_unattested_or_incomplete_w4_is_not_planning_evidence:b6db1ab2ecc606f7",
+        "name": "HostCanaryPreflightTests.test_unattested_or_incomplete_w4_is_not_planning_evidence",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 146,
+        "end_line": 153,
+        "signature_hash": "214eec87f87e17ad",
+        "file_digest8": "51c2e87d6f2aa1e2"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_canary_preflight.py#method:HostCanaryPreflightTests.test_w4_authority_widening_is_rejected:bc320ad3ec138971",
+        "name": "HostCanaryPreflightTests.test_w4_authority_widening_is_rejected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_canary_preflight.py",
+        "line": 155,
+        "end_line": 162,
+        "signature_hash": "3e50fcb24174b72d",
+        "file_digest8": "51c2e87d6f2aa1e2"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:FakeSliceBackend:bf8532e42602b3b5",
@@ -454665,7 +455701,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "113264333b75c618f4e8e2d01da909fa",
-    "payload_hash": "b0572275bda329bbca2676a5b51e179c"
+    "record_fingerprint": "08dadded8cf5c87c181e3735281af385",
+    "payload_hash": "07c4f300dacc3bdf7424e6f4ab5c01c2"
   }
 }
