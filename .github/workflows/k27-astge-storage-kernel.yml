@@ -1,0 +1,60 @@
+name: K27 ASTGE storage kernel
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - ".github/workflows/k27-astge-storage-kernel.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: k27-astge-storage-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  storage-kernel:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Verify Rust toolchain
+        run: |
+          rustc --version
+          cargo --version
+
+      - name: Format check
+        run: cargo fmt --manifest-path crates/aura-k27-astge/Cargo.toml -- --check
+
+      - name: Compile and test byte-defined storage invariants
+        run: cargo test --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets --verbose
+
+      - name: Clippy fail closed
+        run: cargo clippy --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+
+      - name: Emit claim ceiling
+        run: |
+          echo "K27_ASTGE_STORAGE_KERNEL_EXECUTED=true"
+          echo "CSR_PAGE_BYTES=4096"
+          echo "NODE_RECORD_BYTES=64"
+          echo "TREE_SITTER_INGESTION_PROVEN=false"
+          echo "MMAP_QUERY_PROVEN=false"
+          echo "PERFORMANCE_SUPERIORITY_PROVEN=false"
+          echo "AURAOS_RUNTIME_INTEGRATION_PROVEN=false"
+          echo "EXTERNAL_EFFECT_AUTHORIZED=false"
