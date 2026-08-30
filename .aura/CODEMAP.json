@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788108375,
+  "generated_at_unix": 1788109654,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1665,
+    "repo_file_count": 1668,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -145,6 +145,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj032-glm53-mtp-classification.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1654,9 +1655,11 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_checkpoint_layout_probe.py",
       "tools/awj032/glm53_checkpoint_source_binding.py",
+      "tools/awj032/glm53_mtp_checkpoint_classifier.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_checkpoint_layout_probe.py",
       "tools/awj032/test_glm53_checkpoint_source_binding.py",
+      "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1781,16 +1784,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1665,
-      "bytes": 26470214,
-      "tokens_est": 6607946,
+      "files": 1668,
+      "bytes": 26489675,
+      "tokens_est": 6612812,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1014,
-        "schema_or_lexicon": 274,
+        "python_module": 1016,
+        "schema_or_lexicon": 275,
         "support_file": 49
       }
     },
@@ -3960,6 +3963,14 @@
         "line": 32,
         "end_line": 42,
         "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:_canonical:e60c8017bb0c9dc5",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 46,
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:_canonical:e5fceea554726212",
         "signature_hash": "8d5bf5695239b859"
       }
     ],
@@ -8140,6 +8151,14 @@
         "line": 48,
         "end_line": 49,
         "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_sha:116e5b617174946a",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:_sha:2e16b081148789ac",
         "signature_hash": "e47bc2e8d0ade77b"
       }
     ],
@@ -26417,6 +26436,14 @@
         "end_line": 68,
         "semantic_id": "aura_spatial_importers/contracts.py#function:_positive_int:cb9f2b4384fccde6",
         "signature_hash": "5cca323f428421e2"
+      },
+      {
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 65,
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:_positive_int:622bc6619c3ba936",
+        "signature_hash": "9fa9d0d235d67d55"
       }
     ],
     "_span_line_bounds": [
@@ -118829,6 +118856,14 @@
         "end_line": 21,
         "semantic_id": "tools/awj032/test_glm53_checkpoint_source_binding.py#function:sha:9bc9aaacae3a7b28",
         "signature_hash": "71ab04e06cf55736"
+      },
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#function:sha:6acd704f5e81a6ed",
+        "signature_hash": "7004b52b15541d0c"
       }
     ],
     "git_oid": [
@@ -158381,6 +158416,106 @@
         "signature_hash": "4f0b5aec3649bb99"
       }
     ],
+    "MTPClassificationError": [
+      {
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#class:MTPClassificationError:f36f1d7dc9fe9424",
+        "signature_hash": "9c673dd900ff56e8"
+      }
+    ],
+    "MTPClassificationError.__init__": [
+      {
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#method:MTPClassificationError.__init__:6431b366b08be582",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_sha_field": [
+      {
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 59,
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:_sha_field:8897f0392a8a7052",
+        "signature_hash": "de26700e2f26c864"
+      }
+    ],
+    "_weight_map": [
+      {
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 76,
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:_weight_map:a46660caf63b62b1",
+        "signature_hash": "1536b13ab43e8d1b"
+      }
+    ],
+    "_has_key_family": [
+      {
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 80,
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:_has_key_family:2ff7126334d6b9d2",
+        "signature_hash": "1157ded0ab88f656"
+      }
+    ],
+    "_layer_indices": [
+      {
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "kind": "function",
+        "line": 83,
+        "end_line": 90,
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:_layer_indices:e25567fbe166fb4c",
+        "signature_hash": "3b4fdd0e6cbb31f5"
+      }
+    ],
+    "MTPClassificationReceipt": [
+      {
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "kind": "class",
+        "line": 94,
+        "end_line": 112,
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#class:MTPClassificationReceipt:5316fb4eb9818737",
+        "signature_hash": "ffec9352cdfbc546"
+      }
+    ],
+    "MTPClassificationReceipt.to_dict": [
+      {
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 112,
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#method:MTPClassificationReceipt.to_dict:31f8f65a7954b3f4",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "classify_mtp_checkpoint": [
+      {
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 201,
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:classify_mtp_checkpoint:0b11d1a8456cd658",
+        "signature_hash": "ce4f7b1bfd6fa59c"
+      }
+    ],
+    "apply_mtp_classification": [
+      {
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "kind": "function",
+        "line": 204,
+        "end_line": 253,
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:apply_mtp_classification:7381de2669383895",
+        "signature_hash": "1400997cfb973839"
+      }
+    ],
     "make_tree": [
       {
         "file": "tools/awj032/test_airllm_source_admission.py",
@@ -158529,6 +158664,14 @@
         "end_line": 25,
         "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#function:config:26563543af8f19b3",
         "signature_hash": "2a76accc26aabd44"
+      },
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 21,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#function:config:544fb681188077e2",
+        "signature_hash": "e10410c95f91ea98"
       }
     ],
     "complete_per_expert_weight_map": [
@@ -158709,6 +158852,14 @@
         "end_line": 17,
         "semantic_id": "tools/awj032/test_glm53_checkpoint_source_binding.py#function:raw:305f1ee830b9da44",
         "signature_hash": "6d8447119862b607"
+      },
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#function:raw:1e4286d4e0b014b7",
+        "signature_hash": "6d8447119862b607"
       }
     ],
     "SourceBindingTests": [
@@ -158789,6 +158940,136 @@
         "end_line": 89,
         "semantic_id": "tools/awj032/test_glm53_checkpoint_source_binding.py#method:SourceBindingTests.test_probe_receives_only_bound_parsed_sources.fake_probe:eece51bc838ec2d9",
         "signature_hash": "e326352b503b9926"
+      }
+    ],
+    "weight_map": [
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 47,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#function:weight_map:9159a5356993478d",
+        "signature_hash": "4f0a2387e094674d"
+      }
+    ],
+    "bundle_and_report": [
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#function:bundle_and_report:8c69ec9089e55448",
+        "signature_hash": "1e6df63702baf945"
+      }
+    ],
+    "GLM53MTPCheckpointClassifierTests": [
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "class",
+        "line": 78,
+        "end_line": 165,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#class:GLM53MTPCheckpointClassifierTests:50b4a1c2a565ccf5",
+        "signature_hash": "cf3c37dbf1f7f8d8"
+      }
+    ],
+    "GLM53MTPCheckpointClassifierTests.test_source_bound_mtp_signature_clears_only_mtp_blocker": [
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 94,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_source_bound_mtp_signature_clears_only_mtp_blocker:09b8872fb1bc99af",
+        "signature_hash": "1d99113a87291733"
+      }
+    ],
+    "GLM53MTPCheckpointClassifierTests.test_unrelated_blocker_survives_overlay": [
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 103,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_unrelated_blocker_survives_overlay:f532da5ca0777eb1",
+        "signature_hash": "dd302ee36f480b95"
+      }
+    ],
+    "GLM53MTPCheckpointClassifierTests.test_missing_marker_family_fails_closed": [
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 110,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_missing_marker_family_fails_closed:678699dedc86a534",
+        "signature_hash": "895ca8a375d561a8"
+      }
+    ],
+    "GLM53MTPCheckpointClassifierTests.test_extra_post_decoder_layer_fails_closed": [
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 117,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_extra_post_decoder_layer_fails_closed:c52e0b9ecd764051",
+        "signature_hash": "f9f9c251492b74e0"
+      }
+    ],
+    "GLM53MTPCheckpointClassifierTests.test_nextn_declaration_must_be_exactly_one": [
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 124,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_nextn_declaration_must_be_exactly_one:db101b0882acec86",
+        "signature_hash": "5fec1d7a71be6f19"
+      }
+    ],
+    "GLM53MTPCheckpointClassifierTests.test_source_bundle_substitution_rejected": [
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 132,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_source_bundle_substitution_rejected:93fd888dc1eb2786",
+        "signature_hash": "dbe66082e4b1cde9"
+      }
+    ],
+    "GLM53MTPCheckpointClassifierTests.test_weight_map_substitution_rejected": [
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 140,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_weight_map_substitution_rejected:3ac1902e40681e97",
+        "signature_hash": "e34ce845a9b82941"
+      }
+    ],
+    "GLM53MTPCheckpointClassifierTests.test_overlay_requires_current_mtp_blocker": [
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 149,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_overlay_requires_current_mtp_blocker:1ad06013eb318c82",
+        "signature_hash": "f35ddab48e313d87"
+      }
+    ],
+    "GLM53MTPCheckpointClassifierTests.test_classification_digest_ignores_observation_clock": [
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "method",
+        "line": 151,
+        "end_line": 158,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_classification_digest_ignores_observation_clock:a8fcdb9d61a27fb2",
+        "signature_hash": "64396807b076d9db"
+      }
+    ],
+    "GLM53MTPCheckpointClassifierTests.test_serialized_receipt_never_promotes": [
+      {
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "kind": "method",
+        "line": 160,
+        "end_line": 165,
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_serialized_receipt_never_promotes:36fe0d6e75330e2e",
+        "signature_hash": "5d20b6cb28fcb2fc"
       }
     ],
     "_coordinates": [
@@ -159908,6 +160189,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj032-glm53-mtp-classification.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
@@ -169896,6 +170178,59 @@
         0.183493,
         0.241705,
         0.036699
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-mtp-classification.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1702,
+      "lines": 44,
+      "tokens_est": 426,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          28
+        ]
+      },
+      "topology": {},
+      "digest8": "72d9373f79aa086c",
+      "vector": [
+        -0.069259,
+        -0.190147,
+        0.01637,
+        0.152369,
+        0.154888,
+        0.290887,
+        -0.104518,
+        0.089407,
+        -0.074296,
+        0.240517,
+        0.091925,
+        0.096962,
+        -0.295924,
+        -0.01637,
+        -0.23548,
+        0.051629,
+        -0.275776,
+        -0.109555,
+        -0.169999,
+        -0.119629,
+        -0.006296,
+        0.28585,
+        -0.175036,
+        0.31859,
+        -0.061703,
+        0.011333,
+        0.164962,
+        -0.149851,
+        0.129703,
+        0.295924,
+        -0.122147,
+        -0.250591
       ]
     },
     {
@@ -265387,6 +265722,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10359,
+      "lines": 254,
+      "tokens_est": 2590,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "08fccc14a9cc9b7c",
+      "vector": [
+        0.19397,
+        0.175497,
+        -0.228277,
+        -0.003959,
+        0.00132,
+        -0.072574,
+        -0.051461,
+        -0.167579,
+        -0.186053,
+        0.186053,
+        -0.281058,
+        0.093686,
+        0.064657,
+        0.149106,
+        0.072574,
+        -0.22036,
+        0.072574,
+        -0.077852,
+        0.096325,
+        -0.296893,
+        0.178136,
+        0.273141,
+        -0.323283,
+        -0.025071,
+        0.069935,
+        -0.270502,
+        -0.273141,
+        0.093686,
+        -0.288976,
+        -0.154384,
+        -0.122716,
+        -0.046183
+      ]
+    },
+    {
       "path": "tools/awj032/test_airllm_source_admission.py",
       "role": "python_module",
       "binary": false,
@@ -265525,6 +265907,53 @@
         -0.095897,
         -0.154163,
         0.207574
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7400,
+      "lines": 170,
+      "tokens_est": 1850,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8a8769d86a6da0a5",
+      "vector": [
+        0.128172,
+        -0.03832,
+        0.130815,
+        -0.09646,
+        -0.225953,
+        -0.239167,
+        -0.321092,
+        -0.244453,
+        -0.130815,
+        0.109673,
+        0.286736,
+        0.265594,
+        -0.167813,
+        0.091174,
+        0.284093,
+        0.043605,
+        0.099102,
+        0.1546,
+        -0.033034,
+        -0.207454,
+        0.088531,
+        -0.138743,
+        0.099102,
+        -0.077961,
+        0.292022,
+        0.247095,
+        -0.138743,
+        -0.122887,
+        0.151957,
+        -0.088531,
+        0.186312,
+        0.128172
       ]
     },
     {
@@ -289526,16 +289955,16 @@
     }
   },
   "summary": {
-    "file_count": 1665,
-    "total_bytes": 26470214,
-    "text_tokens_est": 6607946,
+    "file_count": 1668,
+    "total_bytes": 26489675,
+    "text_tokens_est": 6612812,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1014,
-      "schema_or_lexicon": 274,
+      "python_module": 1016,
+      "schema_or_lexicon": 275,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -289690,6 +290119,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj032-glm53-mtp-classification.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -291199,9 +291629,11 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_checkpoint_layout_probe.py",
       "tools/awj032/glm53_checkpoint_source_binding.py",
+      "tools/awj032/glm53_mtp_checkpoint_classifier.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_checkpoint_layout_probe.py",
       "tools/awj032/test_glm53_checkpoint_source_binding.py",
+      "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -449730,6 +450162,136 @@
         "file_digest8": "4c5329ae8558e933"
       },
       {
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#class:MTPClassificationError:f36f1d7dc9fe9424",
+        "name": "MTPClassificationError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "line": 29,
+        "end_line": 33,
+        "signature_hash": "9c673dd900ff56e8",
+        "file_digest8": "08fccc14a9cc9b7c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#class:MTPClassificationReceipt:5316fb4eb9818737",
+        "name": "MTPClassificationReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "line": 94,
+        "end_line": 112,
+        "signature_hash": "ffec9352cdfbc546",
+        "file_digest8": "08fccc14a9cc9b7c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:_canonical:e5fceea554726212",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "line": 36,
+        "end_line": 46,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "08fccc14a9cc9b7c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:_has_key_family:2ff7126334d6b9d2",
+        "name": "_has_key_family",
+        "kind": "function",
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "line": 79,
+        "end_line": 80,
+        "signature_hash": "1157ded0ab88f656",
+        "file_digest8": "08fccc14a9cc9b7c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:_layer_indices:e25567fbe166fb4c",
+        "name": "_layer_indices",
+        "kind": "function",
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "line": 83,
+        "end_line": 90,
+        "signature_hash": "3b4fdd0e6cbb31f5",
+        "file_digest8": "08fccc14a9cc9b7c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:_positive_int:622bc6619c3ba936",
+        "name": "_positive_int",
+        "kind": "function",
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "line": 62,
+        "end_line": 65,
+        "signature_hash": "9fa9d0d235d67d55",
+        "file_digest8": "08fccc14a9cc9b7c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:_sha:2e16b081148789ac",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "08fccc14a9cc9b7c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:_sha_field:8897f0392a8a7052",
+        "name": "_sha_field",
+        "kind": "function",
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "line": 53,
+        "end_line": 59,
+        "signature_hash": "de26700e2f26c864",
+        "file_digest8": "08fccc14a9cc9b7c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:_weight_map:a46660caf63b62b1",
+        "name": "_weight_map",
+        "kind": "function",
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "line": 68,
+        "end_line": 76,
+        "signature_hash": "1536b13ab43e8d1b",
+        "file_digest8": "08fccc14a9cc9b7c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:apply_mtp_classification:7381de2669383895",
+        "name": "apply_mtp_classification",
+        "kind": "function",
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "line": 204,
+        "end_line": 253,
+        "signature_hash": "1400997cfb973839",
+        "file_digest8": "08fccc14a9cc9b7c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#function:classify_mtp_checkpoint:0b11d1a8456cd658",
+        "name": "classify_mtp_checkpoint",
+        "kind": "function",
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "line": 115,
+        "end_line": 201,
+        "signature_hash": "ce4f7b1bfd6fa59c",
+        "file_digest8": "08fccc14a9cc9b7c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#method:MTPClassificationError.__init__:6431b366b08be582",
+        "name": "MTPClassificationError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "08fccc14a9cc9b7c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_mtp_checkpoint_classifier.py#method:MTPClassificationReceipt.to_dict:31f8f65a7954b3f4",
+        "name": "MTPClassificationReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_mtp_checkpoint_classifier.py",
+        "line": 111,
+        "end_line": 112,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "08fccc14a9cc9b7c"
+      },
+      {
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#class:GateTests:ca7ae84afcba696b",
         "name": "GateTests",
         "kind": "class",
@@ -450148,6 +450710,166 @@
         "end_line": 68,
         "signature_hash": "8903bce39863704d",
         "file_digest8": "ec34d4ade3bb5c4c"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#class:GLM53MTPCheckpointClassifierTests:50b4a1c2a565ccf5",
+        "name": "GLM53MTPCheckpointClassifierTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 78,
+        "end_line": 165,
+        "signature_hash": "cf3c37dbf1f7f8d8",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#function:bundle_and_report:8c69ec9089e55448",
+        "name": "bundle_and_report",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 58,
+        "end_line": 75,
+        "signature_hash": "1e6df63702baf945",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#function:config:544fb681188077e2",
+        "name": "config",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 9,
+        "end_line": 21,
+        "signature_hash": "e10410c95f91ea98",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#function:raw:1e4286d4e0b014b7",
+        "name": "raw",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "6d8447119862b607",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#function:sha:6acd704f5e81a6ed",
+        "name": "sha",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "7004b52b15541d0c",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#function:weight_map:9159a5356993478d",
+        "name": "weight_map",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 24,
+        "end_line": 47,
+        "signature_hash": "4f0a2387e094674d",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_classification_digest_ignores_observation_clock:a8fcdb9d61a27fb2",
+        "name": "GLM53MTPCheckpointClassifierTests.test_classification_digest_ignores_observation_clock",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 151,
+        "end_line": 158,
+        "signature_hash": "64396807b076d9db",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_extra_post_decoder_layer_fails_closed:c52e0b9ecd764051",
+        "name": "GLM53MTPCheckpointClassifierTests.test_extra_post_decoder_layer_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 112,
+        "end_line": 117,
+        "signature_hash": "f9f9c251492b74e0",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_missing_marker_family_fails_closed:678699dedc86a534",
+        "name": "GLM53MTPCheckpointClassifierTests.test_missing_marker_family_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 105,
+        "end_line": 110,
+        "signature_hash": "895ca8a375d561a8",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_nextn_declaration_must_be_exactly_one:db101b0882acec86",
+        "name": "GLM53MTPCheckpointClassifierTests.test_nextn_declaration_must_be_exactly_one",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 119,
+        "end_line": 124,
+        "signature_hash": "5fec1d7a71be6f19",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_overlay_requires_current_mtp_blocker:1ad06013eb318c82",
+        "name": "GLM53MTPCheckpointClassifierTests.test_overlay_requires_current_mtp_blocker",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 142,
+        "end_line": 149,
+        "signature_hash": "f35ddab48e313d87",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_serialized_receipt_never_promotes:36fe0d6e75330e2e",
+        "name": "GLM53MTPCheckpointClassifierTests.test_serialized_receipt_never_promotes",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 160,
+        "end_line": 165,
+        "signature_hash": "5d20b6cb28fcb2fc",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_source_bound_mtp_signature_clears_only_mtp_blocker:09b8872fb1bc99af",
+        "name": "GLM53MTPCheckpointClassifierTests.test_source_bound_mtp_signature_clears_only_mtp_blocker",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 79,
+        "end_line": 94,
+        "signature_hash": "1d99113a87291733",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_source_bundle_substitution_rejected:93fd888dc1eb2786",
+        "name": "GLM53MTPCheckpointClassifierTests.test_source_bundle_substitution_rejected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 126,
+        "end_line": 132,
+        "signature_hash": "dbe66082e4b1cde9",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_unrelated_blocker_survives_overlay:f532da5ca0777eb1",
+        "name": "GLM53MTPCheckpointClassifierTests.test_unrelated_blocker_survives_overlay",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 96,
+        "end_line": 103,
+        "signature_hash": "dd302ee36f480b95",
+        "file_digest8": "8a8769d86a6da0a5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py#method:GLM53MTPCheckpointClassifierTests.test_weight_map_substitution_rejected:3ac1902e40681e97",
+        "name": "GLM53MTPCheckpointClassifierTests.test_weight_map_substitution_rejected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_mtp_checkpoint_classifier.py",
+        "line": 134,
+        "end_line": 140,
+        "signature_hash": "e34ce845a9b82941",
+        "file_digest8": "8a8769d86a6da0a5"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -451400,7 +452122,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "901a5affa6f14f2693eac5c7b5a73671",
-    "payload_hash": "23d00ab8d72e27667b425dee588f9ff3"
+    "record_fingerprint": "844adfd81e8a5b7d2a613415045e2d68",
+    "payload_hash": "9f8c8e0b0048a703a14715273a171ae4"
   }
 }
