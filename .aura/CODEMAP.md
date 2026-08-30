@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1658
-- **total_bytes**: 26418741
-- **text_tokens_est**: 6595075
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1660
+- **total_bytes**: 26437425
+- **text_tokens_est**: 6599747
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1658,
+  "repo_file_count": 1660,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -946,6 +946,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "bus_init.cpp",
     "cognitive_router.py",
     "cognitive_search.rs",
+    "core/aura_continuation_harness.py",
     "core/aura_cost_first_orchestration.py",
     "core/aura_dual_persistence.py",
     "core/aura_resident_idle_policy.py",
@@ -1472,6 +1473,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_construction_refactor_plan.py",
     "tests/test_aura_construction_spatial_foundry.py",
     "tests/test_aura_construction_state.py",
+    "tests/test_aura_continuation_harness.py",
     "tests/test_aura_continuity_packet.py",
     "tests/test_aura_continuity_packet_digest_hardening.py",
     "tests/test_aura_continuity_packet_merge_gate.py",
@@ -1704,6 +1706,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_spatial_importers/spz.py",
     "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
     "benchmarks/refactor_code_quality/generate_fixture.py",
+    "core/aura_continuation_harness.py",
     "core/aura_cost_first_orchestration.py",
     "core/aura_dual_persistence.py",
     "core/aura_resident_idle_policy.py",
@@ -1783,8 +1786,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_st3gg_shadow.py",
     "tests/test_aura_arena_st3gg_shadow_hardening.py",
     "tests/test_aura_arena_wfst_phase_a.py",
-    "tests/test_aura_benchmark_four.py",
-    "tests/test_aura_benchmark_four_hardening.py"
+    "tests/test_aura_benchmark_four.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1798,15 +1800,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1658,
-  "bytes": 26418741,
-  "tokens_est": 6595075,
+  "files": 1660,
+  "bytes": 26437425,
+  "tokens_est": 6599747,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 242,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1008,
+    "python_module": 1010,
     "schema_or_lexicon": 274,
     "support_file": 49
   }

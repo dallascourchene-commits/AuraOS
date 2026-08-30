@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788052534,
+  "generated_at_unix": 1788099621,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1658,
+    "repo_file_count": 1660,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -928,6 +928,7 @@
       "bus_init.cpp",
       "cognitive_router.py",
       "cognitive_search.rs",
+      "core/aura_continuation_harness.py",
       "core/aura_cost_first_orchestration.py",
       "core/aura_dual_persistence.py",
       "core/aura_resident_idle_policy.py",
@@ -1454,6 +1455,7 @@
       "tests/test_aura_construction_refactor_plan.py",
       "tests/test_aura_construction_spatial_foundry.py",
       "tests/test_aura_construction_state.py",
+      "tests/test_aura_continuation_harness.py",
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
@@ -1686,6 +1688,7 @@
       "aura_spatial_importers/spz.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/refactor_code_quality/generate_fixture.py",
+      "core/aura_continuation_harness.py",
       "core/aura_cost_first_orchestration.py",
       "core/aura_dual_persistence.py",
       "core/aura_resident_idle_policy.py",
@@ -1765,8 +1768,7 @@
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
       "tests/test_aura_arena_wfst_phase_a.py",
-      "tests/test_aura_benchmark_four.py",
-      "tests/test_aura_benchmark_four_hardening.py"
+      "tests/test_aura_benchmark_four.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1774,15 +1776,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1658,
-      "bytes": 26418741,
-      "tokens_est": 6595075,
+      "files": 1660,
+      "bytes": 26437425,
+      "tokens_est": 6599747,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 242,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1008,
+        "python_module": 1010,
         "schema_or_lexicon": 274,
         "support_file": 49
       }
@@ -3892,6 +3894,14 @@
         "signature_hash": "8d5bf5695239b859"
       },
       {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "function",
+        "line": 83,
+        "end_line": 84,
+        "semantic_id": "core/aura_continuation_harness.py#function:_canonical:b3c57bf9fcb7ed8d",
+        "signature_hash": "b88def36631a48f9"
+      },
+      {
         "file": "scripts/aura_review_learning_architect_harness.py",
         "kind": "function",
         "line": 30,
@@ -4316,6 +4326,14 @@
         "end_line": 218,
         "semantic_id": "benchmarks/refactor_code_quality/generate_fixture.py#function:_digest:9fb5457b4c90d731",
         "signature_hash": "77d602ca1e012315"
+      },
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 88,
+        "semantic_id": "core/aura_continuation_harness.py#function:_digest:f662c9bf106cdb74",
+        "signature_hash": "cc91748782ef0f60"
       },
       {
         "file": "scripts/aura_architecture_harness_core.py",
@@ -61824,6 +61842,14 @@
         "signature_hash": "8cef37446fc195df"
       },
       {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 92,
+        "semantic_id": "core/aura_continuation_harness.py#function:_now:b9dee8c631ea72d5",
+        "signature_hash": "2c72b9bcad25974e"
+      },
+      {
         "file": "test_travel_sidecar_stack.py",
         "kind": "function",
         "line": 14,
@@ -96760,6 +96786,356 @@
         "signature_hash": "d4d8a57e306c4b5e"
       }
     ],
+    "HarnessError": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "core/aura_continuation_harness.py#class:HarnessError:dde827943dcf3a93",
+        "signature_hash": "db7749915d3ea718"
+      }
+    ],
+    "ClaimConflict": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "core/aura_continuation_harness.py#class:ClaimConflict:1c80c04501ac92cb",
+        "signature_hash": "f448d21896396765"
+      }
+    ],
+    "StaleFence": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 34,
+        "semantic_id": "core/aura_continuation_harness.py#class:StaleFence:ec1ce877537b4830",
+        "signature_hash": "ffbbdf2b502c235d"
+      }
+    ],
+    "InvalidTransition": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "core/aura_continuation_harness.py#class:InvalidTransition:f5ef70007ed771b7",
+        "signature_hash": "3a16fd632dd90ee1"
+      }
+    ],
+    "WorkerIdentity": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "class",
+        "line": 42,
+        "end_line": 45,
+        "semantic_id": "core/aura_continuation_harness.py#class:WorkerIdentity:be0f1ceea893be66",
+        "signature_hash": "d23c9642b795f328"
+      }
+    ],
+    "WorkCell": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 61,
+        "semantic_id": "core/aura_continuation_harness.py#class:WorkCell:6d031e5dfadd635a",
+        "signature_hash": "234272598936c719"
+      }
+    ],
+    "ClaimReceipt": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "class",
+        "line": 65,
+        "end_line": 70,
+        "semantic_id": "core/aura_continuation_harness.py#class:ClaimReceipt:711286d5d2d81b1a",
+        "signature_hash": "e806e7b68101f49c"
+      }
+    ],
+    "HarnessTick": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "class",
+        "line": 74,
+        "end_line": 80,
+        "semantic_id": "core/aura_continuation_harness.py#class:HarnessTick:42e0b20f4871399d",
+        "signature_hash": "0c6977cdf13002a6"
+      }
+    ],
+    "JsonWorkGraphStore": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "class",
+        "line": 95,
+        "end_line": 165,
+        "semantic_id": "core/aura_continuation_harness.py#class:JsonWorkGraphStore:1b36352c8447a345",
+        "signature_hash": "a64972fbf669bca9"
+      }
+    ],
+    "JsonWorkGraphStore.__init__": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 112,
+        "semantic_id": "core/aura_continuation_harness.py#method:JsonWorkGraphStore.__init__:f3d7e757e55239ad",
+        "signature_hash": "a7fb208f0f617f92"
+      }
+    ],
+    "JsonWorkGraphStore._read_unlocked": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 118,
+        "semantic_id": "core/aura_continuation_harness.py#method:JsonWorkGraphStore._read_unlocked:247d2d14d07f94ed",
+        "signature_hash": "2267e19c91f04aed"
+      }
+    ],
+    "JsonWorkGraphStore._write_unlocked": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 123,
+        "semantic_id": "core/aura_continuation_harness.py#method:JsonWorkGraphStore._write_unlocked:ea5e205d4d3dc5ab",
+        "signature_hash": "5a6fac6c6370b225"
+      }
+    ],
+    "JsonWorkGraphStore._acquire": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 141,
+        "semantic_id": "core/aura_continuation_harness.py#method:JsonWorkGraphStore._acquire:6102e256bed3b7d4",
+        "signature_hash": "98552fbca4ed98fc"
+      }
+    ],
+    "JsonWorkGraphStore._release": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 147,
+        "semantic_id": "core/aura_continuation_harness.py#method:JsonWorkGraphStore._release:d7ef3e6175880b01",
+        "signature_hash": "7a97fb0d50e2b094"
+      }
+    ],
+    "JsonWorkGraphStore.mutate": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 158,
+        "semantic_id": "core/aura_continuation_harness.py#method:JsonWorkGraphStore.mutate:3c6ed42b231ef199",
+        "signature_hash": "382e77216f9aedee"
+      }
+    ],
+    "JsonWorkGraphStore.snapshot": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 160,
+        "end_line": 165,
+        "semantic_id": "core/aura_continuation_harness.py#method:JsonWorkGraphStore.snapshot:035795c4de4ffa8f",
+        "signature_hash": "6d0c0b0a811ae770"
+      }
+    ],
+    "ContinuationHarness": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "class",
+        "line": 168,
+        "end_line": 328,
+        "semantic_id": "core/aura_continuation_harness.py#class:ContinuationHarness:8faeceda2b73402e",
+        "signature_hash": "28925a5b1826554f"
+      }
+    ],
+    "ContinuationHarness.__init__": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 173,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.__init__:071c0dfe318504ee",
+        "signature_hash": "c4939c5f90b30eda"
+      }
+    ],
+    "ContinuationHarness._event": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 177,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness._event:d1c89b5aafa29806",
+        "signature_hash": "a344d954df3a2015"
+      }
+    ],
+    "ContinuationHarness.add_cell": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 179,
+        "end_line": 191,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.add_cell:4fa3a1b3ac56b2c5",
+        "signature_hash": "742b5ca022f974c9"
+      }
+    ],
+    "ContinuationHarness.add_cell.op": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 184,
+        "end_line": 190,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.add_cell.op:c8d5f4f7d3c2b434",
+        "signature_hash": "06649f494df3b3d2"
+      }
+    ],
+    "ContinuationHarness._deps_closed": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 194,
+        "end_line": 195,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness._deps_closed:93dd5c4c5b42f1d7",
+        "signature_hash": "18d2396432106a74"
+      }
+    ],
+    "ContinuationHarness._compatible": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 198,
+        "end_line": 199,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness._compatible:a0504aca66e13796",
+        "signature_hash": "cf7e5a747968783d"
+      }
+    ],
+    "ContinuationHarness._ready": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 201,
+        "end_line": 208,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness._ready:df4311a0ec5827b4",
+        "signature_hash": "e184216c50f7973a"
+      }
+    ],
+    "ContinuationHarness._assert_fence": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 216,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness._assert_fence:ab40449ae19d901f",
+        "signature_hash": "8162e75bc5808376"
+      }
+    ],
+    "ContinuationHarness.claim_next": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 218,
+        "end_line": 240,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.claim_next:19b9f01175e7d7ca",
+        "signature_hash": "d099135ca2c1af69"
+      }
+    ],
+    "ContinuationHarness.claim_next.op": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 220,
+        "end_line": 239,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.claim_next.op:e44e306ef17c4cd9",
+        "signature_hash": "06649f494df3b3d2"
+      }
+    ],
+    "ContinuationHarness.heartbeat": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 242,
+        "end_line": 255,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.heartbeat:d08ba5636a7b6c14",
+        "signature_hash": "439719ab7b7a6aa5"
+      }
+    ],
+    "ContinuationHarness.heartbeat.op": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 244,
+        "end_line": 254,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.heartbeat.op:bea583bedb948f91",
+        "signature_hash": "06649f494df3b3d2"
+      }
+    ],
+    "ContinuationHarness._validate_handoff": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 258,
+        "end_line": 262,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness._validate_handoff:cc9c093f85868292",
+        "signature_hash": "0499f7a0822705cd"
+      }
+    ],
+    "ContinuationHarness.complete": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 264,
+        "end_line": 288,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.complete:d3ad80d298997efa",
+        "signature_hash": "5cf51090783eabdb"
+      }
+    ],
+    "ContinuationHarness.complete.op": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 267,
+        "end_line": 287,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.complete.op:1dbe76a59aa4b1cb",
+        "signature_hash": "06649f494df3b3d2"
+      }
+    ],
+    "ContinuationHarness.compile_successor": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 290,
+        "end_line": 308,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.compile_successor:3d55b8ca70c4d6d4",
+        "signature_hash": "66e8e562db6c3c26"
+      }
+    ],
+    "ContinuationHarness.compile_successor.op": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 296,
+        "end_line": 307,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.compile_successor.op:cfa49fd4f638c9cf",
+        "signature_hash": "06649f494df3b3d2"
+      }
+    ],
+    "ContinuationHarness.tick": [
+      {
+        "file": "core/aura_continuation_harness.py",
+        "kind": "method",
+        "line": 310,
+        "end_line": 328,
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.tick:d37cf0955b44d8d2",
+        "signature_hash": "836c013a6f4ddca5"
+      }
+    ],
     "CognitionRequest": [
       {
         "file": "core/aura_cost_first_orchestration.py",
@@ -129686,6 +130062,156 @@
         "end_line": 257,
         "semantic_id": "tests/test_aura_construction_state.py#function:test_queries_reject_boolean_and_string_time_aliases:05361f2dd88b20aa",
         "signature_hash": "ba15edeffcb20a76"
+      }
+    ],
+    "ContinuationHarnessTests": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 105,
+        "semantic_id": "tests/test_aura_continuation_harness.py#class:ContinuationHarnessTests:2a05099704eecee2",
+        "signature_hash": "51dc46befbae9cc7"
+      }
+    ],
+    "ContinuationHarnessTests.setUp": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 22,
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.setUp:e72b3b1403b4acf3",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "ContinuationHarnessTests.tearDown": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.tearDown:271bf7a3256e38da",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "ContinuationHarnessTests.test_priority_and_capability_selection": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_priority_and_capability_selection:023063f3d4e04745",
+        "signature_hash": "4936a04b7c1c4413"
+      }
+    ],
+    "ContinuationHarnessTests.test_two_workers_cannot_claim_same_cell": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 35,
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_two_workers_cannot_claim_same_cell:55b6d2009b12a81f",
+        "signature_hash": "70c1e3d4175904a6"
+      }
+    ],
+    "ContinuationHarnessTests.test_stale_claim_recovery_uses_new_fence": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 44,
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_stale_claim_recovery_uses_new_fence:04e2e173b35fad9e",
+        "signature_hash": "8f2f925e59203b42"
+      }
+    ],
+    "ContinuationHarnessTests.test_heartbeat_extends_lease": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 51,
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_heartbeat_extends_lease:0a14565a535159aa",
+        "signature_hash": "0eacf55f225a12a5"
+      }
+    ],
+    "ContinuationHarnessTests.test_dependency_wakeup_after_close": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 59,
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_dependency_wakeup_after_close:4226766a4768f8cd",
+        "signature_hash": "12703eece73a3814"
+      }
+    ],
+    "ContinuationHarnessTests.test_no_change_tick_is_zero_provider_calls": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 65,
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_no_change_tick_is_zero_provider_calls:b6ddcfbd5b2ce6fb",
+        "signature_hash": "b96f163bb5ea2d1e"
+      }
+    ],
+    "ContinuationHarnessTests.test_d1_cell_is_not_autonomously_claimed": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 71,
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_d1_cell_is_not_autonomously_claimed:12cd9961c4e90edb",
+        "signature_hash": "57e177d2f7a3868b"
+      }
+    ],
+    "ContinuationHarnessTests.test_successor_compiler_deduplicates_explicit_residual": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 78,
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_successor_compiler_deduplicates_explicit_residual:7915b7f3b30d6a45",
+        "signature_hash": "33049dbd9a65c6d9"
+      }
+    ],
+    "ContinuationHarnessTests.test_restart_replays_persisted_workgraph_without_duplicate_claim": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 85,
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_restart_replays_persisted_workgraph_without_duplicate_claim:09429f857373482a",
+        "signature_hash": "55ec3249852411f7"
+      }
+    ],
+    "ContinuationHarnessTests.test_completion_requires_full_handoff": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 91,
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_completion_requires_full_handoff:0e0bcd69b2ca3974",
+        "signature_hash": "36e5039abcb8cb48"
+      }
+    ],
+    "ContinuationHarnessTests.test_stale_worker_cannot_complete_after_recovery": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 98,
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_stale_worker_cannot_complete_after_recovery:fb4fac2ec5ad6b17",
+        "signature_hash": "213c398303f0781e"
+      }
+    ],
+    "ContinuationHarnessTests.test_artifact_index_is_content_deduplicated": [
+      {
+        "file": "tests/test_aura_continuation_harness.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 105,
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_artifact_index_is_content_deduplicated:762c80205e220bad",
+        "signature_hash": "bee3db2b31ebbaa7"
       }
     ],
     "_j0_packet": [
@@ -226855,6 +227381,53 @@
       ]
     },
     {
+      "path": "core/aura_continuation_harness.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13947,
+      "lines": 329,
+      "tokens_est": 3487,
+      "symbol_count": 38,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "33ec6d720f513469",
+      "vector": [
+        -0.106184,
+        0.14524,
+        0.181856,
+        0.020749,
+        0.291701,
+        0.184297,
+        -0.130594,
+        0.162327,
+        0.172092,
+        0.252645,
+        0.003662,
+        -0.059805,
+        -0.09642,
+        -0.218471,
+        -0.294142,
+        -0.101302,
+        0.07201,
+        0.16721,
+        0.142799,
+        -0.179415,
+        0.081774,
+        0.267291,
+        -0.269732,
+        -0.257527,
+        0.057364,
+        -0.247763,
+        0.162327,
+        0.140358,
+        -0.02319,
+        0.255086,
+        -0.19162,
+        -0.069569
+      ]
+    },
+    {
       "path": "core/aura_cost_first_orchestration.py",
       "role": "python_module",
       "binary": false,
@@ -255119,6 +255692,53 @@
         -0.131775,
         -0.195943,
         -0.131775
+      ]
+    },
+    {
+      "path": "tests/test_aura_continuation_harness.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4737,
+      "lines": 110,
+      "tokens_est": 1185,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2056f30f387a8e7f",
+      "vector": [
+        0.11777,
+        0.018368,
+        -0.126413,
+        -0.068069,
+        0.245263,
+        -0.225815,
+        -0.182597,
+        0.256068,
+        0.230137,
+        -0.068069,
+        0.180436,
+        0.225815,
+        -0.210689,
+        0.195562,
+        -0.206367,
+        0.098321,
+        -0.215011,
+        -0.273355,
+        0.061586,
+        -0.078873,
+        -0.160988,
+        0.055103,
+        0.232298,
+        0.074551,
+        0.150183,
+        0.221493,
+        -0.106965,
+        -0.076712,
+        0.238781,
+        -0.249585,
+        -0.199884,
+        0.106965
       ]
     },
     {
@@ -288332,15 +288952,15 @@
     }
   },
   "summary": {
-    "file_count": 1658,
-    "total_bytes": 26418741,
-    "text_tokens_est": 6595075,
+    "file_count": 1660,
+    "total_bytes": 26437425,
+    "text_tokens_est": 6599747,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 242,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1008,
+      "python_module": 1010,
       "schema_or_lexicon": 274,
       "support_file": 49
     },
@@ -289279,6 +289899,7 @@
       "bus_init.cpp",
       "cognitive_router.py",
       "cognitive_search.rs",
+      "core/aura_continuation_harness.py",
       "core/aura_cost_first_orchestration.py",
       "core/aura_dual_persistence.py",
       "core/aura_resident_idle_policy.py",
@@ -289805,6 +290426,7 @@
       "tests/test_aura_construction_refactor_plan.py",
       "tests/test_aura_construction_spatial_foundry.py",
       "tests/test_aura_construction_state.py",
+      "tests/test_aura_continuation_harness.py",
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
@@ -384359,6 +384981,386 @@
         "file_digest8": "31325b9af6403347"
       },
       {
+        "semantic_id": "core/aura_continuation_harness.py#class:ClaimConflict:1c80c04501ac92cb",
+        "name": "ClaimConflict",
+        "kind": "class",
+        "file": "core/aura_continuation_harness.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "f448d21896396765",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#class:ClaimReceipt:711286d5d2d81b1a",
+        "name": "ClaimReceipt",
+        "kind": "class",
+        "file": "core/aura_continuation_harness.py",
+        "line": 65,
+        "end_line": 70,
+        "signature_hash": "e806e7b68101f49c",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#class:ContinuationHarness:8faeceda2b73402e",
+        "name": "ContinuationHarness",
+        "kind": "class",
+        "file": "core/aura_continuation_harness.py",
+        "line": 168,
+        "end_line": 328,
+        "signature_hash": "28925a5b1826554f",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#class:HarnessError:dde827943dcf3a93",
+        "name": "HarnessError",
+        "kind": "class",
+        "file": "core/aura_continuation_harness.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "db7749915d3ea718",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#class:HarnessTick:42e0b20f4871399d",
+        "name": "HarnessTick",
+        "kind": "class",
+        "file": "core/aura_continuation_harness.py",
+        "line": 74,
+        "end_line": 80,
+        "signature_hash": "0c6977cdf13002a6",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#class:InvalidTransition:f5ef70007ed771b7",
+        "name": "InvalidTransition",
+        "kind": "class",
+        "file": "core/aura_continuation_harness.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "3a16fd632dd90ee1",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#class:JsonWorkGraphStore:1b36352c8447a345",
+        "name": "JsonWorkGraphStore",
+        "kind": "class",
+        "file": "core/aura_continuation_harness.py",
+        "line": 95,
+        "end_line": 165,
+        "signature_hash": "a64972fbf669bca9",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#class:StaleFence:ec1ce877537b4830",
+        "name": "StaleFence",
+        "kind": "class",
+        "file": "core/aura_continuation_harness.py",
+        "line": 33,
+        "end_line": 34,
+        "signature_hash": "ffbbdf2b502c235d",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#class:WorkCell:6d031e5dfadd635a",
+        "name": "WorkCell",
+        "kind": "class",
+        "file": "core/aura_continuation_harness.py",
+        "line": 49,
+        "end_line": 61,
+        "signature_hash": "234272598936c719",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#class:WorkerIdentity:be0f1ceea893be66",
+        "name": "WorkerIdentity",
+        "kind": "class",
+        "file": "core/aura_continuation_harness.py",
+        "line": 42,
+        "end_line": 45,
+        "signature_hash": "d23c9642b795f328",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#function:_canonical:b3c57bf9fcb7ed8d",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "core/aura_continuation_harness.py",
+        "line": 83,
+        "end_line": 84,
+        "signature_hash": "b88def36631a48f9",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#function:_digest:f662c9bf106cdb74",
+        "name": "_digest",
+        "kind": "function",
+        "file": "core/aura_continuation_harness.py",
+        "line": 87,
+        "end_line": 88,
+        "signature_hash": "cc91748782ef0f60",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#function:_now:b9dee8c631ea72d5",
+        "name": "_now",
+        "kind": "function",
+        "file": "core/aura_continuation_harness.py",
+        "line": 91,
+        "end_line": 92,
+        "signature_hash": "2c72b9bcad25974e",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.__init__:071c0dfe318504ee",
+        "name": "ContinuationHarness.__init__",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 169,
+        "end_line": 173,
+        "signature_hash": "c4939c5f90b30eda",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness._assert_fence:ab40449ae19d901f",
+        "name": "ContinuationHarness._assert_fence",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 211,
+        "end_line": 216,
+        "signature_hash": "8162e75bc5808376",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness._compatible:a0504aca66e13796",
+        "name": "ContinuationHarness._compatible",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 198,
+        "end_line": 199,
+        "signature_hash": "cf7e5a747968783d",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness._deps_closed:93dd5c4c5b42f1d7",
+        "name": "ContinuationHarness._deps_closed",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 194,
+        "end_line": 195,
+        "signature_hash": "18d2396432106a74",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness._event:d1c89b5aafa29806",
+        "name": "ContinuationHarness._event",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 176,
+        "end_line": 177,
+        "signature_hash": "a344d954df3a2015",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness._ready:df4311a0ec5827b4",
+        "name": "ContinuationHarness._ready",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 201,
+        "end_line": 208,
+        "signature_hash": "e184216c50f7973a",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness._validate_handoff:cc9c093f85868292",
+        "name": "ContinuationHarness._validate_handoff",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 258,
+        "end_line": 262,
+        "signature_hash": "0499f7a0822705cd",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.add_cell.op:c8d5f4f7d3c2b434",
+        "name": "ContinuationHarness.add_cell.op",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 184,
+        "end_line": 190,
+        "signature_hash": "06649f494df3b3d2",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.add_cell:4fa3a1b3ac56b2c5",
+        "name": "ContinuationHarness.add_cell",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 179,
+        "end_line": 191,
+        "signature_hash": "742b5ca022f974c9",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.claim_next.op:e44e306ef17c4cd9",
+        "name": "ContinuationHarness.claim_next.op",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 220,
+        "end_line": 239,
+        "signature_hash": "06649f494df3b3d2",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.claim_next:19b9f01175e7d7ca",
+        "name": "ContinuationHarness.claim_next",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 218,
+        "end_line": 240,
+        "signature_hash": "d099135ca2c1af69",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.compile_successor.op:cfa49fd4f638c9cf",
+        "name": "ContinuationHarness.compile_successor.op",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 296,
+        "end_line": 307,
+        "signature_hash": "06649f494df3b3d2",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.compile_successor:3d55b8ca70c4d6d4",
+        "name": "ContinuationHarness.compile_successor",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 290,
+        "end_line": 308,
+        "signature_hash": "66e8e562db6c3c26",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.complete.op:1dbe76a59aa4b1cb",
+        "name": "ContinuationHarness.complete.op",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 267,
+        "end_line": 287,
+        "signature_hash": "06649f494df3b3d2",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.complete:d3ad80d298997efa",
+        "name": "ContinuationHarness.complete",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 264,
+        "end_line": 288,
+        "signature_hash": "5cf51090783eabdb",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.heartbeat.op:bea583bedb948f91",
+        "name": "ContinuationHarness.heartbeat.op",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 244,
+        "end_line": 254,
+        "signature_hash": "06649f494df3b3d2",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.heartbeat:d08ba5636a7b6c14",
+        "name": "ContinuationHarness.heartbeat",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 242,
+        "end_line": 255,
+        "signature_hash": "439719ab7b7a6aa5",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:ContinuationHarness.tick:d37cf0955b44d8d2",
+        "name": "ContinuationHarness.tick",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 310,
+        "end_line": 328,
+        "signature_hash": "836c013a6f4ddca5",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:JsonWorkGraphStore.__init__:f3d7e757e55239ad",
+        "name": "JsonWorkGraphStore.__init__",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 98,
+        "end_line": 112,
+        "signature_hash": "a7fb208f0f617f92",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:JsonWorkGraphStore._acquire:6102e256bed3b7d4",
+        "name": "JsonWorkGraphStore._acquire",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 125,
+        "end_line": 141,
+        "signature_hash": "98552fbca4ed98fc",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:JsonWorkGraphStore._read_unlocked:247d2d14d07f94ed",
+        "name": "JsonWorkGraphStore._read_unlocked",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 114,
+        "end_line": 118,
+        "signature_hash": "2267e19c91f04aed",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:JsonWorkGraphStore._release:d7ef3e6175880b01",
+        "name": "JsonWorkGraphStore._release",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 143,
+        "end_line": 147,
+        "signature_hash": "7a97fb0d50e2b094",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:JsonWorkGraphStore._write_unlocked:ea5e205d4d3dc5ab",
+        "name": "JsonWorkGraphStore._write_unlocked",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 120,
+        "end_line": 123,
+        "signature_hash": "5a6fac6c6370b225",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:JsonWorkGraphStore.mutate:3c6ed42b231ef199",
+        "name": "JsonWorkGraphStore.mutate",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 149,
+        "end_line": 158,
+        "signature_hash": "382e77216f9aedee",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
+        "semantic_id": "core/aura_continuation_harness.py#method:JsonWorkGraphStore.snapshot:035795c4de4ffa8f",
+        "name": "JsonWorkGraphStore.snapshot",
+        "kind": "method",
+        "file": "core/aura_continuation_harness.py",
+        "line": 160,
+        "end_line": 165,
+        "signature_hash": "6d0c0b0a811ae770",
+        "file_digest8": "33ec6d720f513469"
+      },
+      {
         "semantic_id": "core/aura_cost_first_orchestration.py#class:CognitionRequest:f88b9300b6e59d32",
         "name": "CognitionRequest",
         "kind": "class",
@@ -418439,6 +419441,156 @@
         "file_digest8": "bad5d89eef49ca7a"
       },
       {
+        "semantic_id": "tests/test_aura_continuation_harness.py#class:ContinuationHarnessTests:2a05099704eecee2",
+        "name": "ContinuationHarnessTests",
+        "kind": "class",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 15,
+        "end_line": 105,
+        "signature_hash": "51dc46befbae9cc7",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.setUp:e72b3b1403b4acf3",
+        "name": "ContinuationHarnessTests.setUp",
+        "kind": "method",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 16,
+        "end_line": 22,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.tearDown:271bf7a3256e38da",
+        "name": "ContinuationHarnessTests.tearDown",
+        "kind": "method",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_artifact_index_is_content_deduplicated:762c80205e220bad",
+        "name": "ContinuationHarnessTests.test_artifact_index_is_content_deduplicated",
+        "kind": "method",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 100,
+        "end_line": 105,
+        "signature_hash": "bee3db2b31ebbaa7",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_completion_requires_full_handoff:0e0bcd69b2ca3974",
+        "name": "ContinuationHarnessTests.test_completion_requires_full_handoff",
+        "kind": "method",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 87,
+        "end_line": 91,
+        "signature_hash": "36e5039abcb8cb48",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_d1_cell_is_not_autonomously_claimed:12cd9961c4e90edb",
+        "name": "ContinuationHarnessTests.test_d1_cell_is_not_autonomously_claimed",
+        "kind": "method",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 67,
+        "end_line": 71,
+        "signature_hash": "57e177d2f7a3868b",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_dependency_wakeup_after_close:4226766a4768f8cd",
+        "name": "ContinuationHarnessTests.test_dependency_wakeup_after_close",
+        "kind": "method",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 53,
+        "end_line": 59,
+        "signature_hash": "12703eece73a3814",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_heartbeat_extends_lease:0a14565a535159aa",
+        "name": "ContinuationHarnessTests.test_heartbeat_extends_lease",
+        "kind": "method",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 46,
+        "end_line": 51,
+        "signature_hash": "0eacf55f225a12a5",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_no_change_tick_is_zero_provider_calls:b6ddcfbd5b2ce6fb",
+        "name": "ContinuationHarnessTests.test_no_change_tick_is_zero_provider_calls",
+        "kind": "method",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 61,
+        "end_line": 65,
+        "signature_hash": "b96f163bb5ea2d1e",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_priority_and_capability_selection:023063f3d4e04745",
+        "name": "ContinuationHarnessTests.test_priority_and_capability_selection",
+        "kind": "method",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "4936a04b7c1c4413",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_restart_replays_persisted_workgraph_without_duplicate_claim:09429f857373482a",
+        "name": "ContinuationHarnessTests.test_restart_replays_persisted_workgraph_without_duplicate_claim",
+        "kind": "method",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 80,
+        "end_line": 85,
+        "signature_hash": "55ec3249852411f7",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_stale_claim_recovery_uses_new_fence:04e2e173b35fad9e",
+        "name": "ContinuationHarnessTests.test_stale_claim_recovery_uses_new_fence",
+        "kind": "method",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 37,
+        "end_line": 44,
+        "signature_hash": "8f2f925e59203b42",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_stale_worker_cannot_complete_after_recovery:fb4fac2ec5ad6b17",
+        "name": "ContinuationHarnessTests.test_stale_worker_cannot_complete_after_recovery",
+        "kind": "method",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 93,
+        "end_line": 98,
+        "signature_hash": "213c398303f0781e",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_successor_compiler_deduplicates_explicit_residual:7915b7f3b30d6a45",
+        "name": "ContinuationHarnessTests.test_successor_compiler_deduplicates_explicit_residual",
+        "kind": "method",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 73,
+        "end_line": 78,
+        "signature_hash": "33049dbd9a65c6d9",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
+        "semantic_id": "tests/test_aura_continuation_harness.py#method:ContinuationHarnessTests.test_two_workers_cannot_claim_same_cell:55b6d2009b12a81f",
+        "name": "ContinuationHarnessTests.test_two_workers_cannot_claim_same_cell",
+        "kind": "method",
+        "file": "tests/test_aura_continuation_harness.py",
+        "line": 32,
+        "end_line": 35,
+        "signature_hash": "70c1e3d4175904a6",
+        "file_digest8": "2056f30f387a8e7f"
+      },
+      {
         "semantic_id": "tests/test_aura_continuity_packet.py#function:_all_mapping_keys:3e987804ade6738b",
         "name": "_all_mapping_keys",
         "kind": "function",
@@ -449339,7 +450491,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "3904fe51d6dad5e2ad8c2b727b3a0f74",
-    "payload_hash": "4fae0f7341633bd75ea6b066e0d124e2"
+    "record_fingerprint": "c1764847ec9be616c197228d6cd0e184",
+    "payload_hash": "7bb5df2b4524e2d88f07f3795ade2719"
   }
 }
