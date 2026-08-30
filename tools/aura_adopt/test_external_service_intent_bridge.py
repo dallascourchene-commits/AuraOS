@@ -7,6 +7,10 @@ from tools.aura_adopt.external_service_intent_bridge import (
     ScopeEvidenceV1,
     compile_external_service_intent_plan,
 )
+from tools.aura_adopt.capability_escalation_router import (
+    CapabilityEscalationDecisionV1,
+    EscalationDisposition,
+)
 
 D1="1"*64
 D2="2"*64
@@ -183,6 +187,25 @@ class CrossCloudIntentTests(unittest.TestCase):
             effect_authorized: bool = False
             execution_proven: bool = False
         got=compile_external_service_intent_plan(storage(), Decision())
+        self.assertEqual(got["disposition"], "NO_EXTERNAL_SERVICE_ACTIONS")
+
+    def test_actual_zf07_decision_dataclass_is_composable(self):
+        decision = CapabilityEscalationDecisionV1(
+            residual_id="residual:test",
+            capability_ref="cap:test",
+            recipe_plan_digest=D1,
+            residual_source_generation="gen-1",
+            residual_source_currentness_ref="current:model",
+            router_currentness_digest=D3,
+            disposition=EscalationDisposition.LOCAL_ROUTE_READY,
+            selected_route_id="route:local",
+            options=(),
+            blockers=(),
+            earned_action_classes=(),
+            decision_digest=D2,
+        )
+        got=compile_external_service_intent_plan(storage(), decision)
+        self.assertEqual(got["model_disposition"], "LOCAL_ROUTE_READY")
         self.assertEqual(got["disposition"], "NO_EXTERNAL_SERVICE_ACTIONS")
 
     def test_every_effect_flag_remains_false(self):
