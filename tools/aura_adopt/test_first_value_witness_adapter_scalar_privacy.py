@@ -76,13 +76,17 @@ class FirstValueWitnessScalarPrivacyTests(unittest.TestCase):
             compile_receipt(evidence_class="study:alice@example.com")
         self.assertEqual("EVIDENCE_CLASS_NOT_ALLOWED", ctx.exception.code)
 
-    def test_consented_study_label_does_not_authenticate_consequence(self):
-        receipt = compile_receipt(evidence_class="CONSENTED_STUDY")
+    def test_consented_study_mode_is_bounded_and_does_not_authenticate_consequence(self):
+        receipt = compile_receipt(
+            evidence_class="CONSENTED_STUDY",
+            privacy_telemetry_mode="CONSENTED_STUDY_LOCAL_NO_CONTENT_UPLOAD",
+        )
         verify_accept = next(event for event in receipt.stage_events if event.stage == "VERIFY_ACCEPT")
         save_reopen = next(event for event in receipt.stage_events if event.stage == "SAVE_REOPEN")
         self.assertEqual(afr.StageStatus.UNKNOWN, verify_accept.status)
         self.assertEqual(afr.StageStatus.UNKNOWN, save_reopen.status)
         self.assertIsNone(receipt.accepted_value.result)
+        self.assertEqual("CONSENTED_STUDY_LOCAL_NO_CONTENT_UPLOAD", receipt.privacy_telemetry_mode)
         self.assertFalse(receipt.effect_authorized)
         self.assertFalse(receipt.execution_proven)
 
