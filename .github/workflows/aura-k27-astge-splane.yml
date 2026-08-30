@@ -1,0 +1,38 @@
+name: Aura K27 ASTGE S-Plane Contract
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - ".github/workflows/aura-k27-astge-splane.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  splane-contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Verify toolchain and run S-plane contract
+        run: |
+          rustc --version
+          cargo --version
+          cargo test --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets --locked
