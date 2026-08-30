@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "aura://schemas/adoption-friction-receipt-v1",
+  "title": "AdoptionFrictionReceiptV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "harness_schema", "route_id", "mission_head", "build_refs",
+    "decision", "cohort", "starting_state", "stage_events", "total_steps",
+    "total_wall_time_ms", "total_downloaded_bytes", "peak_retained_bytes",
+    "total_retries", "total_monetary_cost_microunits", "permissions",
+    "mandatory_account", "mandatory_key", "clarification_events", "support_events",
+    "route_changes", "accepted_value", "capability_refs", "recipe_refs",
+    "privacy_telemetry_mode", "friction_vector", "weights", "weighting_method",
+    "total_score", "invalidators", "reopen_trigger", "evidence_class",
+    "failure_signature", "logical_id", "effect_authorized", "execution_proven"
+  ],
+  "properties": {
+    "schema": {"const": "AdoptionFrictionReceiptV1"},
+    "harness_schema": {"const": "AdoptionFrictionHarnessV1"},
+    "route_id": {"type": "string", "minLength": 1},
+    "mission_head": {"type": "string", "minLength": 1},
+    "build_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "compiler_schema", "compiler_receipt_digest", "projection_digest",
+        "source_binding_digest", "source_binding_authenticated", "disposition",
+        "entry_surface", "compute_profile", "first_use_capability",
+        "required_actions", "blockers", "claim_ceiling"
+      ],
+      "properties": {
+        "compiler_schema": {"const": "AuraAdoptionBootstrapReceiptV1"},
+        "compiler_receipt_digest": {"type": "string", "minLength": 1},
+        "projection_digest": {"type": "string", "minLength": 1},
+        "source_binding_digest": {"type": "string", "minLength": 1},
+        "source_binding_authenticated": {"const": false},
+        "disposition": {"type": "string", "minLength": 1},
+        "entry_surface": {"type": "string", "minLength": 1},
+        "compute_profile": {"type": "string", "minLength": 1},
+        "first_use_capability": {"type": "string", "minLength": 1},
+        "required_actions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "blockers": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "claim_ceiling": {"type": "string", "minLength": 1}
+      }
+    },
+    "cohort": {"type": "object"},
+    "starting_state": {"type": "object"},
+    "stage_events": {
+      "type": "array",
+      "minItems": 13,
+      "maxItems": 13,
+      "prefixItems": [
+        {"$ref": "#/$defs/stageDiscover"}, {"$ref": "#/$defs/stageTrust"},
+        {"$ref": "#/$defs/stageOpenInstall"}, {"$ref": "#/$defs/stagePermission"},
+        {"$ref": "#/$defs/stageStorage"}, {"$ref": "#/$defs/stageAccount"},
+        {"$ref": "#/$defs/stageKey"}, {"$ref": "#/$defs/stageInput"},
+        {"$ref": "#/$defs/stageResolve"}, {"$ref": "#/$defs/stageExecute"},
+        {"$ref": "#/$defs/stageVerify"}, {"$ref": "#/$defs/stageSave"},
+        {"$ref": "#/$defs/stageShare"}
+      ],
+      "items": false
+    },
+    "total_steps": {"$ref": "#/$defs/nonnegativeOrUnknown"},
+    "total_wall_time_ms": {"$ref": "#/$defs/nonnegativeOrUnknown"},
+    "total_downloaded_bytes": {"$ref": "#/$defs/nonnegativeOrUnknown"},
+    "peak_retained_bytes": {"$ref": "#/$defs/nonnegativeOrUnknown"},
+    "total_retries": {"type": "integer", "minimum": 0},
+    "total_monetary_cost_microunits": {"$ref": "#/$defs/nonnegativeOrUnknown"},
+    "permissions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "mandatory_account": {"type": "boolean"},
+    "mandatory_key": {"type": "boolean"},
+    "clarification_events": {"type": "integer", "minimum": 0},
+    "support_events": {"type": "integer", "minimum": 0},
+    "route_changes": {"type": "array", "items": {"type": "string"}},
+    "accepted_value": {
+      "type": "object", "additionalProperties": false,
+      "required": ["criterion", "result", "verifier"],
+      "properties": {
+        "criterion": {"type": "string", "minLength": 1},
+        "result": {"type": ["boolean", "null"]},
+        "verifier": {"type": "string", "minLength": 1}
+      }
+    },
+    "capability_refs": {"type": "array", "items": {"type": "string"}},
+    "recipe_refs": {"type": "array", "items": {"type": "string"}},
+    "privacy_telemetry_mode": {"type": "string", "minLength": 1},
+    "friction_vector": {"$ref": "#/$defs/frictionVector"},
+    "weights": {"$ref": "#/$defs/weights"},
+    "weighting_method": {"type": "string", "minLength": 1},
+    "total_score": {"type": ["number", "null"], "minimum": 0},
+    "invalidators": {"type": "array", "items": {"type": "string"}},
+    "reopen_trigger": {"type": "string", "minLength": 1},
+    "evidence_class": {"enum": ["SYNTHETIC", "LOCAL_TEST", "CONSENTED_STUDY"]},
+    "failure_signature": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "logical_id": {"type": "string", "pattern": "^afr-[0-9a-f]{32}$"},
+    "effect_authorized": {"const": false},
+    "execution_proven": {"const": false}
+  },
+  "$defs": {
+    "nonnegativeOrUnknown": {"type": ["integer", "null"], "minimum": 0},
+    "stageBase": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stage", "status", "steps", "wall_time_ms", "downloaded_bytes", "retained_bytes", "monetary_cost_microunits", "retries", "reason", "failure_code"],
+      "properties": {
+        "stage": {"type": "string"},
+        "status": {"enum": ["COMPLETED", "UNKNOWN", "NOT_APPLICABLE", "BLOCKED"]},
+        "steps": {"$ref": "#/$defs/nonnegativeOrUnknown"},
+        "wall_time_ms": {"$ref": "#/$defs/nonnegativeOrUnknown"},
+        "downloaded_bytes": {"$ref": "#/$defs/nonnegativeOrUnknown"},
+        "retained_bytes": {"$ref": "#/$defs/nonnegativeOrUnknown"},
+        "monetary_cost_microunits": {"$ref": "#/$defs/nonnegativeOrUnknown"},
+        "retries": {"type": "integer", "minimum": 0},
+        "reason": {"type": ["string", "null"]},
+        "failure_code": {"type": ["string", "null"]}
+      }
+    },
+    "stageDiscover": {"allOf": [{"$ref": "#/$defs/stageBase"}, {"properties": {"stage": {"const": "DISCOVER"}}}]},
+    "stageTrust": {"allOf": [{"$ref": "#/$defs/stageBase"}, {"properties": {"stage": {"const": "TRUST"}}}]},
+    "stageOpenInstall": {"allOf": [{"$ref": "#/$defs/stageBase"}, {"properties": {"stage": {"const": "OPEN_INSTALL"}}}]},
+    "stagePermission": {"allOf": [{"$ref": "#/$defs/stageBase"}, {"properties": {"stage": {"const": "PERMISSION"}}}]},
+    "stageStorage": {"allOf": [{"$ref": "#/$defs/stageBase"}, {"properties": {"stage": {"const": "STORAGE_CHOICE"}}}]},
+    "stageAccount": {"allOf": [{"$ref": "#/$defs/stageBase"}, {"properties": {"stage": {"const": "OPTIONAL_ACCOUNT"}}}]},
+    "stageKey": {"allOf": [{"$ref": "#/$defs/stageBase"}, {"properties": {"stage": {"const": "OPTIONAL_KEY"}}}]},
+    "stageInput": {"allOf": [{"$ref": "#/$defs/stageBase"}, {"properties": {"stage": {"const": "INPUT"}}}]},
+    "stageResolve": {"allOf": [{"$ref": "#/$defs/stageBase"}, {"properties": {"stage": {"const": "CAPABILITY_RESOLVE"}}}]},
+    "stageExecute": {"allOf": [{"$ref": "#/$defs/stageBase"}, {"properties": {"stage": {"const": "EXECUTE"}}}]},
+    "stageVerify": {"allOf": [{"$ref": "#/$defs/stageBase"}, {"properties": {"stage": {"const": "VERIFY_ACCEPT"}}}]},
+    "stageSave": {"allOf": [{"$ref": "#/$defs/stageBase"}, {"properties": {"stage": {"const": "SAVE_REOPEN"}}}]},
+    "stageShare": {"allOf": [{"$ref": "#/$defs/stageBase"}, {"properties": {"stage": {"const": "SHARE_OR_REUSE"}}}]},
+    "frictionVector": {
+      "type": "object", "additionalProperties": false,
+      "required": ["discovery", "trust", "install", "hardware", "storage_network", "permission_credential", "learning", "creation_time_to_value", "reuse_recovery"],
+      "properties": {
+        "discovery": {"type": ["number", "null"], "minimum": 0},
+        "trust": {"type": ["number", "null"], "minimum": 0},
+        "install": {"type": ["number", "null"], "minimum": 0},
+        "hardware": {"type": ["number", "null"], "minimum": 0},
+        "storage_network": {"type": ["number", "null"], "minimum": 0},
+        "permission_credential": {"type": ["number", "null"], "minimum": 0},
+        "learning": {"type": ["number", "null"], "minimum": 0},
+        "creation_time_to_value": {"type": ["number", "null"], "minimum": 0},
+        "reuse_recovery": {"type": ["number", "null"], "minimum": 0}
+      }
+    },
+    "weights": {
+      "type": "object", "additionalProperties": false,
+      "required": ["discovery", "trust", "install", "hardware", "storage_network", "permission_credential", "learning", "creation_time_to_value", "reuse_recovery"],
+      "properties": {
+        "discovery": {"type": "number", "minimum": 0},
+        "trust": {"type": "number", "minimum": 0},
+        "install": {"type": "number", "minimum": 0},
+        "hardware": {"type": "number", "minimum": 0},
+        "storage_network": {"type": "number", "minimum": 0},
+        "permission_credential": {"type": "number", "minimum": 0},
+        "learning": {"type": "number", "minimum": 0},
+        "creation_time_to_value": {"type": "number", "minimum": 0},
+        "reuse_recovery": {"type": "number", "minimum": 0}
+      }
+    }
+  }
+}
