@@ -1,4 +1,6 @@
 import unittest
+from dataclasses import dataclass
+from enum import Enum
 
 from tools.aura_adopt.external_service_intent_bridge import (
     IntentBridgeError,
@@ -159,6 +161,29 @@ class CrossCloudIntentTests(unittest.TestCase):
         d=model(); d["decision_digest"]=D4
         c=compile_external_service_intent_plan(storage(),d)
         self.assertNotEqual(a["plan_digest"],c["plan_digest"])
+
+    def test_dataclass_model_projection_is_composable(self):
+        class D(str, Enum):
+            LOCAL_ROUTE_READY = "LOCAL_ROUTE_READY"
+        @dataclass(frozen=True)
+        class O:
+            provider_ref: str = ""
+        @dataclass(frozen=True)
+        class Decision:
+            schema: str = "CapabilityEscalationDecisionV1"
+            decision_digest: str = D2
+            disposition: D = D.LOCAL_ROUTE_READY
+            earned_action_classes: tuple[str, ...] = ()
+            options: tuple[O, ...] = ()
+            credential_prompt_performed: bool = False
+            credential_collected: bool = False
+            model_download_started: bool = False
+            provider_call_made: bool = False
+            payment_performed: bool = False
+            effect_authorized: bool = False
+            execution_proven: bool = False
+        got=compile_external_service_intent_plan(storage(), Decision())
+        self.assertEqual(got["disposition"], "NO_EXTERNAL_SERVICE_ACTIONS")
 
     def test_every_effect_flag_remains_false(self):
         got=compile_external_service_intent_plan(
