@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788128449,
+  "generated_at_unix": 1788129362,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1648,
+    "repo_file_count": 1651,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1625,6 +1625,7 @@
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_bughound_blind_discovery.py",
       "tests/test_bughound_envelope_lint.py",
+      "tests/test_bughound_resource_settlement.py",
       "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_bughound_trust_boundary_seed.py",
       "tests/test_huggingface_space_deployment.py",
@@ -1637,7 +1638,9 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/bughound/blind_discovery.py",
+      "tools/bughound/blind_oracle_provenance.py",
       "tools/bughound/envelope_lint.py",
+      "tools/bughound/resource_settlement.py",
       "tools/bughound/seedlab_benchmark.py",
       "tools/bughound/trust_boundary_seed.py",
       "tools/construction_demo_assets/README.md",
@@ -1764,15 +1767,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1648,
-      "bytes": 26489446,
-      "tokens_est": 6612713,
+      "files": 1651,
+      "bytes": 26515216,
+      "tokens_est": 6619157,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1005,
+        "python_module": 1008,
         "schema_or_lexicon": 272,
         "support_file": 49
       }
@@ -3914,6 +3917,22 @@
         "signature_hash": "707d518dafca1a42"
       },
       {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 47,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_canonical:b539437596a7bc63",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
+        "file": "tools/bughound/resource_settlement.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 42,
+        "semantic_id": "tools/bughound/resource_settlement.py#function:_canonical:63edbba621d6c799",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
         "file": "tools/bughound/seedlab_benchmark.py",
         "kind": "function",
         "line": 48,
@@ -4370,6 +4389,22 @@
         "end_line": 80,
         "semantic_id": "tools/bughound/blind_discovery.py#function:_digest:e5aecf961e5d32ed",
         "signature_hash": "c978f5ef05fda5cb"
+      },
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_digest:1c24d7372bae1963",
+        "signature_hash": "c978f5ef05fda5cb"
+      },
+      {
+        "file": "tools/bughound/resource_settlement.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 46,
+        "semantic_id": "tools/bughound/resource_settlement.py#function:_digest:0dd22bd614ac7bbc",
+        "signature_hash": "9edcae7e502cc579"
       },
       {
         "file": "tools/bughound/seedlab_benchmark.py",
@@ -14701,6 +14736,22 @@
         "line": 89,
         "end_line": 92,
         "semantic_id": "tools/bughound/blind_discovery.py#function:_text:6cf059358589bf2f",
+        "signature_hash": "a4ea29b9a7789fe0"
+      },
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 65,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_text:e37446d8012b64f5",
+        "signature_hash": "a4ea29b9a7789fe0"
+      },
+      {
+        "file": "tools/bughound/resource_settlement.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 52,
+        "semantic_id": "tools/bughound/resource_settlement.py#function:_text:3817d363cc41478e",
         "signature_hash": "a4ea29b9a7789fe0"
       }
     ],
@@ -157408,6 +157459,156 @@
         "signature_hash": "49954c66936facb3"
       }
     ],
+    "BugHoundResourceSettlementTests": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 184,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#class:BugHoundResourceSettlementTests:1d34725235f41f8b",
+        "signature_hash": "5c3dc2b9b16d8d93"
+      }
+    ],
+    "BugHoundResourceSettlementTests.setUp": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 35,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.setUp:8c7942b6a19f2686",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "BugHoundResourceSettlementTests.observation": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 47,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.observation:e0f86592a0c2431b",
+        "signature_hash": "74e2c6225e0a5ccf"
+      }
+    ],
+    "BugHoundResourceSettlementTests.test_exact_observed_budget_admits_cross_topology_comparison": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 60,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_exact_observed_budget_admits_cross_topology_comparison:fb05b08f2c9028a0",
+        "signature_hash": "80b3cba86d11683c"
+      }
+    ],
+    "BugHoundResourceSettlementTests.test_under_budget_is_valid_when_measured": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 68,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_under_budget_is_valid_when_measured:828a346c4a3e2f93",
+        "signature_hash": "9d7d1c13075351d7"
+      }
+    ],
+    "BugHoundResourceSettlementTests.test_worker_budget_exceeded_blocks_comparison": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 78,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_worker_budget_exceeded_blocks_comparison:fc1d3c9d951eca8b",
+        "signature_hash": "0d4a80c52c71a95a"
+      }
+    ],
+    "BugHoundResourceSettlementTests.test_tool_budget_exceeded_blocks_comparison": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 87,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_tool_budget_exceeded_blocks_comparison:876203e6760c4d3d",
+        "signature_hash": "a435bf7f5b7de23b"
+      }
+    ],
+    "BugHoundResourceSettlementTests.test_plan_digest_mismatch_is_hard_failure": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 96,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_plan_digest_mismatch_is_hard_failure:de77819e8aa9f3ad",
+        "signature_hash": "065437ed2e5d95a4"
+      }
+    ],
+    "BugHoundResourceSettlementTests.test_topology_and_source_generation_mismatch_are_hard_failures": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 112,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_topology_and_source_generation_mismatch_are_hard_failures:f79176b636e8c8c2",
+        "signature_hash": "7238603cf68c4495"
+      }
+    ],
+    "BugHoundResourceSettlementTests.test_score_from_other_match_basis_is_rejected": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 123,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_score_from_other_match_basis_is_rejected:96d0a598d13a171a",
+        "signature_hash": "ea7c96fd14c472f3"
+      }
+    ],
+    "BugHoundResourceSettlementTests.test_stale_nonindependent_or_incomplete_observation_blocks": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 138,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_stale_nonindependent_or_incomplete_observation_blocks:ca8cc996bf1860af",
+        "signature_hash": "a57692483f8df404"
+      }
+    ],
+    "BugHoundResourceSettlementTests.test_duplicate_worker_or_tool_identity_is_rejected": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 146,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_duplicate_worker_or_tool_identity_is_rejected:88a192ba0bf7924a",
+        "signature_hash": "276fc64914d8024d"
+      }
+    ],
+    "BugHoundResourceSettlementTests.test_missing_worker_observation_is_rejected": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 151,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_missing_worker_observation_is_rejected:6f78920e13e27e4c",
+        "signature_hash": "307a100b5a1e98cf"
+      }
+    ],
+    "BugHoundResourceSettlementTests.test_leakage_invalidated_score_cannot_be_rescued_by_good_resource_use": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 174,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_leakage_invalidated_score_cannot_be_rescued_by_good_resource_use:adab1e6c644a7c9c",
+        "signature_hash": "8550b10634208c5b"
+      }
+    ],
+    "BugHoundResourceSettlementTests.test_resource_observation_cannot_widen_authority_or_effect": [
+      {
+        "file": "tests/test_bughound_resource_settlement.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 184,
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_resource_observation_cannot_widen_authority_or_effect:0aedf44bb9b6648b",
+        "signature_hash": "c02c6d80bbd188a9"
+      }
+    ],
     "BugHoundSeedLabTests": [
       {
         "file": "tests/test_bughound_seedlab_benchmark.py",
@@ -158158,6 +158359,96 @@
         "signature_hash": "b63c1653833c86d5"
       }
     ],
+    "_secret_bytes": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 59,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_secret_bytes:0003965224a4a4bd",
+        "signature_hash": "2987109ef4911880"
+      }
+    ],
+    "_resolution_payload": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 96,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_resolution_payload:09cb24704b9514ac",
+        "signature_hash": "58e6ae59f2795a6a"
+      }
+    ],
+    "EvaluatorResolutionEnvelopeV1": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "class",
+        "line": 100,
+        "end_line": 117,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#class:EvaluatorResolutionEnvelopeV1:e8f4bc121aba9f64",
+        "signature_hash": "2f10bfdc5abca35a"
+      }
+    ],
+    "EvaluatorResolutionEnvelopeV1.envelope_digest": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 117,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#method:EvaluatorResolutionEnvelopeV1.envelope_digest:1551a3820d801e45",
+        "signature_hash": "beacbb57b980cab6"
+      }
+    ],
+    "issue_evaluator_resolution_envelope": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 120,
+        "end_line": 149,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:issue_evaluator_resolution_envelope:9846ce1a84d396df",
+        "signature_hash": "350b185a0cc15b8b"
+      }
+    ],
+    "verify_evaluator_resolution_envelope": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 191,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:verify_evaluator_resolution_envelope:95f0dc60f22a2da6",
+        "signature_hash": "f4efa96d2d4d4c10"
+      }
+    ],
+    "ProducerBoundBlindAdjudicationV1": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "class",
+        "line": 195,
+        "end_line": 215,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#class:ProducerBoundBlindAdjudicationV1:58114bcfc65f1487",
+        "signature_hash": "2c2239b835587cde"
+      }
+    ],
+    "ProducerBoundBlindAdjudicationV1.adjudication_digest": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 215,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#method:ProducerBoundBlindAdjudicationV1.adjudication_digest:924115c17e5f16da",
+        "signature_hash": "211dfd30c56a6a43"
+      }
+    ],
+    "adjudicate_producer_bound_blind_finding": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 218,
+        "end_line": 262,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:adjudicate_producer_bound_blind_finding:4575c45535be5eaf",
+        "signature_hash": "3c4105baa83e722c"
+      }
+    ],
     "LintDisposition": [
       {
         "file": "tools/bughound/envelope_lint.py",
@@ -158226,6 +158517,116 @@
         "end_line": 208,
         "semantic_id": "tools/bughound/envelope_lint.py#function:lint_envelope:72a9c9fcfb3c121a",
         "signature_hash": "8d871b696a6b8aaa"
+      }
+    ],
+    "ResourceSettlementError": [
+      {
+        "file": "tools/bughound/resource_settlement.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 29,
+        "semantic_id": "tools/bughound/resource_settlement.py#class:ResourceSettlementError:eb098cfd765ca648",
+        "signature_hash": "c4b80b6af33023db"
+      }
+    ],
+    "ResourceSettlementError.__init__": [
+      {
+        "file": "tools/bughound/resource_settlement.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 29,
+        "semantic_id": "tools/bughound/resource_settlement.py#method:ResourceSettlementError.__init__:7677dcb5c50f9952",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_unique_text_tuple": [
+      {
+        "file": "tools/bughound/resource_settlement.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 63,
+        "semantic_id": "tools/bughound/resource_settlement.py#function:_unique_text_tuple:e0f957a23e30de85",
+        "signature_hash": "14bcb13451913b5e"
+      }
+    ],
+    "MatchedResourceObservationV1": [
+      {
+        "file": "tools/bughound/resource_settlement.py",
+        "kind": "class",
+        "line": 67,
+        "end_line": 116,
+        "semantic_id": "tools/bughound/resource_settlement.py#class:MatchedResourceObservationV1:723871d8f81fe06f",
+        "signature_hash": "1d92ea85553eb25b"
+      }
+    ],
+    "MatchedResourceObservationV1.__post_init__": [
+      {
+        "file": "tools/bughound/resource_settlement.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 104,
+        "semantic_id": "tools/bughound/resource_settlement.py#method:MatchedResourceObservationV1.__post_init__:235c3d6b5d7f9a3d",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "MatchedResourceObservationV1.observed_worker_count": [
+      {
+        "file": "tools/bughound/resource_settlement.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 108,
+        "semantic_id": "tools/bughound/resource_settlement.py#method:MatchedResourceObservationV1.observed_worker_count:c302a32ce377f2f2",
+        "signature_hash": "cbad061399d7c286"
+      }
+    ],
+    "MatchedResourceObservationV1.observed_tool_call_count": [
+      {
+        "file": "tools/bughound/resource_settlement.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 112,
+        "semantic_id": "tools/bughound/resource_settlement.py#method:MatchedResourceObservationV1.observed_tool_call_count:007462ecf1a56d30",
+        "signature_hash": "ce3117dcd7a48f50"
+      }
+    ],
+    "MatchedResourceObservationV1.observation_digest": [
+      {
+        "file": "tools/bughound/resource_settlement.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 116,
+        "semantic_id": "tools/bughound/resource_settlement.py#method:MatchedResourceObservationV1.observation_digest:f33e699ce76cf514",
+        "signature_hash": "28f677c5b8842bca"
+      }
+    ],
+    "MatchedResourceSettlementV1": [
+      {
+        "file": "tools/bughound/resource_settlement.py",
+        "kind": "class",
+        "line": 120,
+        "end_line": 141,
+        "semantic_id": "tools/bughound/resource_settlement.py#class:MatchedResourceSettlementV1:61e4fb45e7011702",
+        "signature_hash": "35de5c8c14d02982"
+      }
+    ],
+    "MatchedResourceSettlementV1.settlement_digest": [
+      {
+        "file": "tools/bughound/resource_settlement.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 141,
+        "semantic_id": "tools/bughound/resource_settlement.py#method:MatchedResourceSettlementV1.settlement_digest:e304c9323e49faee",
+        "signature_hash": "fb47198ed6ed69cb"
+      }
+    ],
+    "settle_matched_resource_use": [
+      {
+        "file": "tools/bughound/resource_settlement.py",
+        "kind": "function",
+        "line": 144,
+        "end_line": 218,
+        "semantic_id": "tools/bughound/resource_settlement.py#function:settle_matched_resource_use:93c875ca2aa55b37",
+        "signature_hash": "4636fac3a04e0d3c"
       }
     ],
     "BenchmarkError": [
@@ -263745,6 +264146,53 @@
       ]
     },
     {
+      "path": "tests/test_bughound_resource_settlement.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8137,
+      "lines": 189,
+      "tokens_est": 2035,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "39cbcae604198398",
+      "vector": [
+        0.046396,
+        0.231979,
+        -0.061443,
+        0.186837,
+        -0.181821,
+        -0.021317,
+        0.239503,
+        0.139187,
+        0.267089,
+        -0.013793,
+        -0.239503,
+        -0.294676,
+        -0.236995,
+        -0.17179,
+        0.013793,
+        0.031349,
+        -0.2069,
+        0.151727,
+        -0.146711,
+        -0.3022,
+        -0.146711,
+        -0.211916,
+        0.191853,
+        -0.036364,
+        0.131664,
+        -0.181821,
+        0.031349,
+        -0.279629,
+        0.239503,
+        -0.001254,
+        0.028841,
+        0.146711
+      ]
+    },
+    {
       "path": "tests/test_bughound_seedlab_benchmark.py",
       "role": "python_module",
       "binary": false,
@@ -264309,6 +264757,53 @@
       ]
     },
     {
+      "path": "tools/bughound/blind_oracle_provenance.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9298,
+      "lines": 263,
+      "tokens_est": 2325,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fd2f781fc2ecac95",
+      "vector": [
+        -0.079247,
+        0.029311,
+        -0.120499,
+        -0.120499,
+        0.187805,
+        -0.113986,
+        0.274651,
+        -0.007599,
+        -0.255111,
+        -0.096616,
+        0.131355,
+        -0.248597,
+        0.265966,
+        0.203003,
+        -0.255111,
+        -0.261624,
+        -0.183463,
+        0.220372,
+        -0.224715,
+        -0.040166,
+        -0.118328,
+        0.083589,
+        -0.00977,
+        0.276822,
+        -0.172607,
+        0.001086,
+        -0.246426,
+        0.131355,
+        -0.064049,
+        -0.205174,
+        -0.189976,
+        0.137868
+      ]
+    },
+    {
       "path": "tools/bughound/envelope_lint.py",
       "role": "python_module",
       "binary": false,
@@ -264353,6 +264848,53 @@
         -0.204037,
         0.153361,
         0.20137
+      ]
+    },
+    {
+      "path": "tools/bughound/resource_settlement.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8335,
+      "lines": 219,
+      "tokens_est": 2084,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "adacedf8b10bb889",
+      "vector": [
+        -0.105361,
+        0.018854,
+        0.069871,
+        -0.273939,
+        0.072089,
+        -0.178559,
+        0.256194,
+        -0.05878,
+        0.100925,
+        0.112016,
+        -0.220704,
+        -0.180778,
+        -0.182996,
+        -0.145287,
+        -0.11867,
+        -0.15416,
+        -0.222922,
+        0.11867,
+        0.202959,
+        -0.129761,
+        0.240667,
+        0.025508,
+        0.169687,
+        -0.256194,
+        0.021072,
+        -0.207395,
+        0.220704,
+        -0.163033,
+        -0.218486,
+        -0.262848,
+        0.278375,
+        0.134197
       ]
     },
     {
@@ -288448,15 +288990,15 @@
     }
   },
   "summary": {
-    "file_count": 1648,
-    "total_bytes": 26489446,
-    "text_tokens_est": 6612713,
+    "file_count": 1651,
+    "total_bytes": 26515216,
+    "text_tokens_est": 6619157,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1005,
+      "python_module": 1008,
       "schema_or_lexicon": 272,
       "support_file": 49
     },
@@ -290092,6 +290634,7 @@
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_bughound_blind_discovery.py",
       "tests/test_bughound_envelope_lint.py",
+      "tests/test_bughound_resource_settlement.py",
       "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_bughound_trust_boundary_seed.py",
       "tests/test_huggingface_space_deployment.py",
@@ -290104,7 +290647,9 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/bughound/blind_discovery.py",
+      "tools/bughound/blind_oracle_provenance.py",
       "tools/bughound/envelope_lint.py",
+      "tools/bughound/resource_settlement.py",
       "tools/bughound/seedlab_benchmark.py",
       "tools/bughound/trust_boundary_seed.py",
       "tools/construction_demo_assets/README.md",
@@ -447595,6 +448140,156 @@
         "file_digest8": "16ed168936bc6c3c"
       },
       {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#class:BugHoundResourceSettlementTests:1d34725235f41f8b",
+        "name": "BugHoundResourceSettlementTests",
+        "kind": "class",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 17,
+        "end_line": 184,
+        "signature_hash": "5c3dc2b9b16d8d93",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.observation:e0f86592a0c2431b",
+        "name": "BugHoundResourceSettlementTests.observation",
+        "kind": "method",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 37,
+        "end_line": 47,
+        "signature_hash": "74e2c6225e0a5ccf",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.setUp:8c7942b6a19f2686",
+        "name": "BugHoundResourceSettlementTests.setUp",
+        "kind": "method",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 18,
+        "end_line": 35,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_duplicate_worker_or_tool_identity_is_rejected:88a192ba0bf7924a",
+        "name": "BugHoundResourceSettlementTests.test_duplicate_worker_or_tool_identity_is_rejected",
+        "kind": "method",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 140,
+        "end_line": 146,
+        "signature_hash": "276fc64914d8024d",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_exact_observed_budget_admits_cross_topology_comparison:fb05b08f2c9028a0",
+        "name": "BugHoundResourceSettlementTests.test_exact_observed_budget_admits_cross_topology_comparison",
+        "kind": "method",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 49,
+        "end_line": 60,
+        "signature_hash": "80b3cba86d11683c",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_leakage_invalidated_score_cannot_be_rescued_by_good_resource_use:adab1e6c644a7c9c",
+        "name": "BugHoundResourceSettlementTests.test_leakage_invalidated_score_cannot_be_rescued_by_good_resource_use",
+        "kind": "method",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 153,
+        "end_line": 174,
+        "signature_hash": "8550b10634208c5b",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_missing_worker_observation_is_rejected:6f78920e13e27e4c",
+        "name": "BugHoundResourceSettlementTests.test_missing_worker_observation_is_rejected",
+        "kind": "method",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 148,
+        "end_line": 151,
+        "signature_hash": "307a100b5a1e98cf",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_plan_digest_mismatch_is_hard_failure:de77819e8aa9f3ad",
+        "name": "BugHoundResourceSettlementTests.test_plan_digest_mismatch_is_hard_failure",
+        "kind": "method",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 89,
+        "end_line": 96,
+        "signature_hash": "065437ed2e5d95a4",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_resource_observation_cannot_widen_authority_or_effect:0aedf44bb9b6648b",
+        "name": "BugHoundResourceSettlementTests.test_resource_observation_cannot_widen_authority_or_effect",
+        "kind": "method",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 176,
+        "end_line": 184,
+        "signature_hash": "c02c6d80bbd188a9",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_score_from_other_match_basis_is_rejected:96d0a598d13a171a",
+        "name": "BugHoundResourceSettlementTests.test_score_from_other_match_basis_is_rejected",
+        "kind": "method",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 114,
+        "end_line": 123,
+        "signature_hash": "ea7c96fd14c472f3",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_stale_nonindependent_or_incomplete_observation_blocks:ca8cc996bf1860af",
+        "name": "BugHoundResourceSettlementTests.test_stale_nonindependent_or_incomplete_observation_blocks",
+        "kind": "method",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 125,
+        "end_line": 138,
+        "signature_hash": "a57692483f8df404",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_tool_budget_exceeded_blocks_comparison:876203e6760c4d3d",
+        "name": "BugHoundResourceSettlementTests.test_tool_budget_exceeded_blocks_comparison",
+        "kind": "method",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 80,
+        "end_line": 87,
+        "signature_hash": "a435bf7f5b7de23b",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_topology_and_source_generation_mismatch_are_hard_failures:f79176b636e8c8c2",
+        "name": "BugHoundResourceSettlementTests.test_topology_and_source_generation_mismatch_are_hard_failures",
+        "kind": "method",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 98,
+        "end_line": 112,
+        "signature_hash": "7238603cf68c4495",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_under_budget_is_valid_when_measured:828a346c4a3e2f93",
+        "name": "BugHoundResourceSettlementTests.test_under_budget_is_valid_when_measured",
+        "kind": "method",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 62,
+        "end_line": 68,
+        "signature_hash": "9d7d1c13075351d7",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
+        "semantic_id": "tests/test_bughound_resource_settlement.py#method:BugHoundResourceSettlementTests.test_worker_budget_exceeded_blocks_comparison:fc1d3c9d951eca8b",
+        "name": "BugHoundResourceSettlementTests.test_worker_budget_exceeded_blocks_comparison",
+        "kind": "method",
+        "file": "tests/test_bughound_resource_settlement.py",
+        "line": 70,
+        "end_line": 78,
+        "signature_hash": "0d4a80c52c71a95a",
+        "file_digest8": "39cbcae604198398"
+      },
+      {
         "semantic_id": "tests/test_bughound_seedlab_benchmark.py#class:BugHoundSeedLabTests:6f8cb762fcb0d1d6",
         "name": "BugHoundSeedLabTests",
         "kind": "class",
@@ -448405,6 +449100,126 @@
         "file_digest8": "ddb8331e73dabc61"
       },
       {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#class:EvaluatorResolutionEnvelopeV1:e8f4bc121aba9f64",
+        "name": "EvaluatorResolutionEnvelopeV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 100,
+        "end_line": 117,
+        "signature_hash": "2f10bfdc5abca35a",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#class:ProducerBoundBlindAdjudicationV1:58114bcfc65f1487",
+        "name": "ProducerBoundBlindAdjudicationV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 195,
+        "end_line": 215,
+        "signature_hash": "2c2239b835587cde",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_canonical:b539437596a7bc63",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 37,
+        "end_line": 47,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_digest:1c24d7372bae1963",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "c978f5ef05fda5cb",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_resolution_payload:09cb24704b9514ac",
+        "name": "_resolution_payload",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 68,
+        "end_line": 96,
+        "signature_hash": "58e6ae59f2795a6a",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_secret_bytes:0003965224a4a4bd",
+        "name": "_secret_bytes",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 54,
+        "end_line": 59,
+        "signature_hash": "2987109ef4911880",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_text:e37446d8012b64f5",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 62,
+        "end_line": 65,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:adjudicate_producer_bound_blind_finding:4575c45535be5eaf",
+        "name": "adjudicate_producer_bound_blind_finding",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 218,
+        "end_line": 262,
+        "signature_hash": "3c4105baa83e722c",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:issue_evaluator_resolution_envelope:9846ce1a84d396df",
+        "name": "issue_evaluator_resolution_envelope",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 120,
+        "end_line": 149,
+        "signature_hash": "350b185a0cc15b8b",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:verify_evaluator_resolution_envelope:95f0dc60f22a2da6",
+        "name": "verify_evaluator_resolution_envelope",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 152,
+        "end_line": 191,
+        "signature_hash": "f4efa96d2d4d4c10",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#method:EvaluatorResolutionEnvelopeV1.envelope_digest:1551a3820d801e45",
+        "name": "EvaluatorResolutionEnvelopeV1.envelope_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 116,
+        "end_line": 117,
+        "signature_hash": "beacbb57b980cab6",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#method:ProducerBoundBlindAdjudicationV1.adjudication_digest:924115c17e5f16da",
+        "name": "ProducerBoundBlindAdjudicationV1.adjudication_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 204,
+        "end_line": 215,
+        "signature_hash": "211dfd30c56a6a43",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
         "semantic_id": "tools/bughound/envelope_lint.py#class:EnvelopeLintReceiptV1:c85fe19b2b7b2cf4",
         "name": "EnvelopeLintReceiptV1",
         "kind": "class",
@@ -448473,6 +449288,146 @@
         "end_line": 71,
         "signature_hash": "1a6a05eb2610184a",
         "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/resource_settlement.py#class:MatchedResourceObservationV1:723871d8f81fe06f",
+        "name": "MatchedResourceObservationV1",
+        "kind": "class",
+        "file": "tools/bughound/resource_settlement.py",
+        "line": 67,
+        "end_line": 116,
+        "signature_hash": "1d92ea85553eb25b",
+        "file_digest8": "adacedf8b10bb889"
+      },
+      {
+        "semantic_id": "tools/bughound/resource_settlement.py#class:MatchedResourceSettlementV1:61e4fb45e7011702",
+        "name": "MatchedResourceSettlementV1",
+        "kind": "class",
+        "file": "tools/bughound/resource_settlement.py",
+        "line": 120,
+        "end_line": 141,
+        "signature_hash": "35de5c8c14d02982",
+        "file_digest8": "adacedf8b10bb889"
+      },
+      {
+        "semantic_id": "tools/bughound/resource_settlement.py#class:ResourceSettlementError:eb098cfd765ca648",
+        "name": "ResourceSettlementError",
+        "kind": "class",
+        "file": "tools/bughound/resource_settlement.py",
+        "line": 25,
+        "end_line": 29,
+        "signature_hash": "c4b80b6af33023db",
+        "file_digest8": "adacedf8b10bb889"
+      },
+      {
+        "semantic_id": "tools/bughound/resource_settlement.py#function:_canonical:63edbba621d6c799",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/bughound/resource_settlement.py",
+        "line": 32,
+        "end_line": 42,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "adacedf8b10bb889"
+      },
+      {
+        "semantic_id": "tools/bughound/resource_settlement.py#function:_digest:0dd22bd614ac7bbc",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/bughound/resource_settlement.py",
+        "line": 45,
+        "end_line": 46,
+        "signature_hash": "9edcae7e502cc579",
+        "file_digest8": "adacedf8b10bb889"
+      },
+      {
+        "semantic_id": "tools/bughound/resource_settlement.py#function:_text:3817d363cc41478e",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/bughound/resource_settlement.py",
+        "line": 49,
+        "end_line": 52,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "adacedf8b10bb889"
+      },
+      {
+        "semantic_id": "tools/bughound/resource_settlement.py#function:_unique_text_tuple:e0f957a23e30de85",
+        "name": "_unique_text_tuple",
+        "kind": "function",
+        "file": "tools/bughound/resource_settlement.py",
+        "line": 55,
+        "end_line": 63,
+        "signature_hash": "14bcb13451913b5e",
+        "file_digest8": "adacedf8b10bb889"
+      },
+      {
+        "semantic_id": "tools/bughound/resource_settlement.py#function:settle_matched_resource_use:93c875ca2aa55b37",
+        "name": "settle_matched_resource_use",
+        "kind": "function",
+        "file": "tools/bughound/resource_settlement.py",
+        "line": 144,
+        "end_line": 218,
+        "signature_hash": "4636fac3a04e0d3c",
+        "file_digest8": "adacedf8b10bb889"
+      },
+      {
+        "semantic_id": "tools/bughound/resource_settlement.py#method:MatchedResourceObservationV1.__post_init__:235c3d6b5d7f9a3d",
+        "name": "MatchedResourceObservationV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/resource_settlement.py",
+        "line": 81,
+        "end_line": 104,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "adacedf8b10bb889"
+      },
+      {
+        "semantic_id": "tools/bughound/resource_settlement.py#method:MatchedResourceObservationV1.observation_digest:f33e699ce76cf514",
+        "name": "MatchedResourceObservationV1.observation_digest",
+        "kind": "method",
+        "file": "tools/bughound/resource_settlement.py",
+        "line": 115,
+        "end_line": 116,
+        "signature_hash": "28f677c5b8842bca",
+        "file_digest8": "adacedf8b10bb889"
+      },
+      {
+        "semantic_id": "tools/bughound/resource_settlement.py#method:MatchedResourceObservationV1.observed_tool_call_count:007462ecf1a56d30",
+        "name": "MatchedResourceObservationV1.observed_tool_call_count",
+        "kind": "method",
+        "file": "tools/bughound/resource_settlement.py",
+        "line": 111,
+        "end_line": 112,
+        "signature_hash": "ce3117dcd7a48f50",
+        "file_digest8": "adacedf8b10bb889"
+      },
+      {
+        "semantic_id": "tools/bughound/resource_settlement.py#method:MatchedResourceObservationV1.observed_worker_count:c302a32ce377f2f2",
+        "name": "MatchedResourceObservationV1.observed_worker_count",
+        "kind": "method",
+        "file": "tools/bughound/resource_settlement.py",
+        "line": 107,
+        "end_line": 108,
+        "signature_hash": "cbad061399d7c286",
+        "file_digest8": "adacedf8b10bb889"
+      },
+      {
+        "semantic_id": "tools/bughound/resource_settlement.py#method:MatchedResourceSettlementV1.settlement_digest:e304c9323e49faee",
+        "name": "MatchedResourceSettlementV1.settlement_digest",
+        "kind": "method",
+        "file": "tools/bughound/resource_settlement.py",
+        "line": 140,
+        "end_line": 141,
+        "signature_hash": "fb47198ed6ed69cb",
+        "file_digest8": "adacedf8b10bb889"
+      },
+      {
+        "semantic_id": "tools/bughound/resource_settlement.py#method:ResourceSettlementError.__init__:7677dcb5c50f9952",
+        "name": "ResourceSettlementError.__init__",
+        "kind": "method",
+        "file": "tools/bughound/resource_settlement.py",
+        "line": 26,
+        "end_line": 29,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "adacedf8b10bb889"
       },
       {
         "semantic_id": "tools/bughound/seedlab_benchmark.py#class:BenchmarkError:cac2d2d6778f17c5",
@@ -450065,7 +451020,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "38b7727ce21eb31824b5106c5d987653",
-    "payload_hash": "dff86332382aa335aecd8ffc565bc937"
+    "record_fingerprint": "3db5861e8eb1ae3e8df3ea3f9bae5368",
+    "payload_hash": "783455afe1f341d5705b7b6504039949"
   }
 }
