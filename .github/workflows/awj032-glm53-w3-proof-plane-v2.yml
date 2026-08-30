@@ -1,0 +1,78 @@
+name: AWJ032 GLM53 W3 proof-plane admission v2
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/glm53_official_mtp_role_source_appraiser.py'
+      - 'tools/awj032/glm53_w3_official_producer_admission.py'
+      - 'tools/awj032/glm53_w3_proof_plane_admission_v2.py'
+      - 'tools/awj032/test_glm53_w3_official_producer_admission.py'
+      - 'tools/awj032/test_glm53_w3_proof_plane_admission_v2.py'
+      - '.github/workflows/awj032-glm53-w3-proof-plane-v2.yml'
+  push:
+    branches:
+      - 'awj032/glm53-w3-proof-plane-admission-v2-20260830'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof-plane:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - name: Compile exact W2/MTP/W3 proof-plane modules
+        run: >-
+          python -m py_compile
+          tools/awj032/glm53_official_w2_observation.py
+          tools/awj032/glm53_official_w2_plan_binding.py
+          tools/awj032/glm53_w3_official_producer_admission.py
+          tools/awj032/glm53_official_mtp_role_source_appraiser.py
+          tools/awj032/glm53_w3_proof_plane_admission_v2.py
+          tools/awj032/test_glm53_w3_official_producer_admission.py
+          tools/awj032/test_glm53_w3_proof_plane_admission_v2.py
+      - name: Run producer-consumption and proof-plane regressions
+        run: >-
+          python -m unittest -v
+          tools.awj032.test_glm53_w3_official_producer_admission
+          tools.awj032.test_glm53_w3_proof_plane_admission_v2
+      - name: Re-observe official immutable MTP source and compose W3 admission
+        run: |
+          python - <<'PY'
+          from tools.awj032.glm53_w3_proof_plane_admission_v2 import evaluate_w3_proof_plane_admission
+          from tools.awj032.test_glm53_w3_official_producer_admission import LowerPlan, metadata, security
+
+          out = evaluate_w3_proof_plane_admission(
+              pager_plan=LowerPlan(),
+              airllm_security_evidence=security(),
+              glm53_metadata_evidence=metadata(),
+          )
+          assert out.status == "ELIGIBLE_FOR_NATIVE_SYNTHETIC_W3_FIXTURE"
+          assert out.blockers == ()
+          assert out.official_mtp_source_evidence_id == "b0803af6fdb7afd0dcdbf7c5b718605658a02534c960d965cfc1729eb4d9d3a2"
+          assert out.official_mtp_source_bundle_id == "7821aa7406174e1ce1c88a8b7280c4ba797508a6eaeecebc4670af2a8de0fc8b"
+          assert out.synthetic_tiny_fixture_admitted is True
+          assert out.official_tensor_payload_admitted is False
+          assert out.runtime_mtp_support_proven is False
+          assert out.g2_admitted is False
+          assert out.authority is False
+          print("W3_PROOF_PLANE_ADMISSION=" + out.logical_id)
+          PY
