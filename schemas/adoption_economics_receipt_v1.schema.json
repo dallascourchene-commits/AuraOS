@@ -1,0 +1,104 @@
+{
+  "$id": "https://aura.invalid/schemas/adoption_economics_receipt_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accepted_value": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_count": {"minimum": 0, "type": ["integer", "null"]},
+        "attempt_count": {"minimum": 0, "type": ["integer", "null"]},
+        "consent_ref": {"type": ["string", "null"]},
+        "evidence_class": {"enum": ["TECHNICAL_SYNTHETIC", "TECHNICAL_EXECUTED", "USER_EXPLICIT", "CONSENTED_STUDY"]},
+        "receipt_ref": {"minLength": 1, "type": "string"},
+        "verifier_ref": {"minLength": 1, "type": "string"}
+      },
+      "required": ["accepted_count", "attempt_count", "evidence_class", "verifier_ref", "receipt_ref", "consent_ref"],
+      "type": "object"
+    },
+    "cohort": {"additionalProperties": {"minLength": 1, "type": "string"}, "minProperties": 1, "type": "object"},
+    "costs": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "currency": {"minLength": 1, "type": "string"},
+          "currentness_ref": {"minLength": 1, "type": "string"},
+          "evidence_class": {"enum": ["BILLED", "MEASURED", "ESTIMATED_WITH_POLICY", "SCENARIO", "UNKNOWN"]},
+          "kind": {"enum": ["ONE_TIME_SETUP", "PROVIDER", "NETWORK_DATA", "LOCAL_ENERGY", "HARDWARE_DEPRECIATION", "SUPPORT_LABOR", "CACHE_INVALIDATION"]},
+          "reason": {"type": ["string", "null"]},
+          "source_generation": {"minLength": 1, "type": "string"},
+          "source_ref": {"minLength": 1, "type": "string"},
+          "status": {"enum": ["KNOWN", "UNKNOWN", "NOT_APPLICABLE"]},
+          "value_microunits": {"minimum": 0, "type": ["integer", "null"]}
+        },
+        "required": ["kind", "status", "value_microunits", "currency", "evidence_class", "source_ref", "source_generation", "currentness_ref", "reason"],
+        "type": "object"
+      },
+      "maxItems": 7,
+      "minItems": 7,
+      "type": "array"
+    },
+    "counterfactual_cpav_microunits": {"minimum": 0, "type": ["number", "null"]},
+    "counterfactual_without_reuse_microunits": {"minimum": 0, "type": ["integer", "null"]},
+    "cpav_microunits": {"minimum": 0, "type": ["number", "null"]},
+    "currency": {"minLength": 1, "type": "string"},
+    "disposition": {"enum": ["PARTIAL_ACCEPTED_VALUE_UNKNOWN", "NO_ACCEPTED_VALUE", "PARTIAL_COST_UNKNOWN_OR_SCENARIO", "RESOLVED_USER", "RESOLVED_TECHNICAL"]},
+    "execution_authorized": {"const": false},
+    "friction_receipt_ref": {"minLength": 1, "type": "string"},
+    "lifecycle_monetary_total_microunits": {"minimum": 0, "type": ["integer", "null"]},
+    "logical_id": {"pattern": "^aecon-[0-9a-f]{64}$", "type": "string"},
+    "measurement_window_ref": {"minLength": 1, "type": "string"},
+    "mission_ref": {"minLength": 1, "type": "string"},
+    "payment_authorized": {"const": false},
+    "provider_authorized": {"const": false},
+    "reuse_evidence": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "avoided_latency_ms": {"minimum": 0, "type": ["integer", "null"]},
+          "avoided_provider_microunits": {"minimum": 0, "type": ["integer", "null"]},
+          "avoided_recompute_units": {"minimum": 0, "type": ["integer", "null"]},
+          "currentness_ref": {"minLength": 1, "type": "string"},
+          "evidence_class": {"enum": ["BILLED", "MEASURED", "ESTIMATED_WITH_POLICY", "SCENARIO", "UNKNOWN"]},
+          "kind": {"enum": ["KV_CACHE", "COORDINATE_MEMORY", "RECIPE", "WORKCAPSULE", "OTHER"]},
+          "principal_scope": {"minLength": 1, "type": "string"},
+          "privacy_isolated": {"type": ["boolean", "null"]},
+          "reason": {"type": ["string", "null"]},
+          "source_current": {"type": ["boolean", "null"]},
+          "source_generation": {"minLength": 1, "type": "string"},
+          "source_ref": {"minLength": 1, "type": "string"},
+          "status": {"enum": ["KNOWN", "UNKNOWN", "NOT_APPLICABLE"]}
+        },
+        "required": ["kind", "status", "source_ref", "source_generation", "currentness_ref", "evidence_class", "principal_scope", "source_current", "privacy_isolated", "avoided_provider_microunits", "avoided_recompute_units", "avoided_latency_ms", "reason"],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "route_evidence": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "artifact_digest": {"minLength": 1, "type": "string"},
+          "artifact_ref": {"minLength": 1, "type": "string"},
+          "currentness_ref": {"minLength": 1, "type": "string"},
+          "evidence_class": {"minLength": 1, "type": "string"},
+          "source_generation": {"minLength": 1, "type": "string"}
+        },
+        "required": ["artifact_ref", "artifact_digest", "source_generation", "currentness_ref", "evidence_class"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "route_id": {"minLength": 1, "type": "string"},
+    "scenario_cost_kinds": {"items": {"enum": ["ONE_TIME_SETUP", "PROVIDER", "NETWORK_DATA", "LOCAL_ENERGY", "HARDWARE_DEPRECIATION", "SUPPORT_LABOR", "CACHE_INVALIDATION"]}, "type": "array", "uniqueItems": true},
+    "schema": {"const": "AdoptionEconomicsReceiptV1"},
+    "unknown_cost_kinds": {"items": {"enum": ["ONE_TIME_SETUP", "PROVIDER", "NETWORK_DATA", "LOCAL_ENERGY", "HARDWARE_DEPRECIATION", "SUPPORT_LABOR", "CACHE_INVALIDATION"]}, "type": "array", "uniqueItems": true},
+    "unresolved_reuse": {"items": {"minLength": 1, "type": "string"}, "type": "array", "uniqueItems": true},
+    "user_cpav_microunits": {"minimum": 0, "type": ["number", "null"]},
+    "validated_avoided_provider_microunits": {"minimum": 0, "type": ["integer", "null"]}
+  },
+  "required": ["schema", "route_id", "mission_ref", "measurement_window_ref", "currency", "cohort", "route_evidence", "friction_receipt_ref", "accepted_value", "costs", "reuse_evidence", "lifecycle_monetary_total_microunits", "cpav_microunits", "user_cpav_microunits", "validated_avoided_provider_microunits", "counterfactual_without_reuse_microunits", "counterfactual_cpav_microunits", "unknown_cost_kinds", "scenario_cost_kinds", "unresolved_reuse", "disposition", "logical_id", "payment_authorized", "provider_authorized", "execution_authorized"],
+  "title": "AdoptionEconomicsReceiptV1",
+  "type": "object"
+}
