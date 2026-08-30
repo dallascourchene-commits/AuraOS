@@ -1,0 +1,29 @@
+name: AURA-ADOPT ZF-10 Adoption Economics
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/adoption_economics.py'
+      - 'tools/aura_adopt/test_adoption_economics.py'
+      - 'schemas/adoption_economics_receipt_v1.schema.json'
+      - '.github/workflows/aura-adopt-zf10-economics.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  zf10:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile economics contract
+        run: python -m py_compile tools/aura_adopt/adoption_economics.py tools/aura_adopt/test_adoption_economics.py
+      - name: Run economics regressions
+        run: python -m unittest -v tools.aura_adopt.test_adoption_economics
+      - name: Parse machine-readable receipt schema
+        run: python -c "import json; json.load(open('schemas/adoption_economics_receipt_v1.schema.json', encoding='utf-8'))"
