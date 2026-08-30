@@ -1,0 +1,26 @@
+:root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: Canvas; color: CanvasText; }
+.shell { width: min(960px, calc(100% - 32px)); margin: 0 auto; padding: 48px 0 72px; }
+header { max-width: 760px; margin-bottom: 28px; }
+.eyebrow { margin: 0 0 10px; font-size: .78rem; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; opacity: .68; }
+h1 { margin: 0; font-size: clamp(2rem, 6vw, 4.5rem); line-height: .98; letter-spacing: -.045em; }
+.lede { max-width: 650px; font-size: 1.08rem; line-height: 1.55; opacity: .78; }
+.card { margin-top: 18px; padding: 22px; border: 1px solid color-mix(in srgb, CanvasText 18%, transparent); border-radius: 18px; background: color-mix(in srgb, Canvas 94%, CanvasText 6%); }
+h2 { margin: 0 0 16px; font-size: 1.05rem; }
+label { display: block; margin: 14px 0 7px; font-weight: 650; }
+input[type="file"], input[type="text"] { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid color-mix(in srgb, CanvasText 24%, transparent); border-radius: 10px; background: Canvas; color: CanvasText; font: inherit; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+button { min-height: 44px; padding: 10px 16px; border: 1px solid color-mix(in srgb, CanvasText 30%, transparent); border-radius: 999px; background: CanvasText; color: Canvas; font: inherit; font-weight: 750; cursor: pointer; }
+button:disabled { opacity: .42; cursor: not-allowed; }
+.status { margin-bottom: 0; min-height: 1.5em; font-size: .92rem; opacity: .8; }
+.preview-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.badge { padding: 4px 9px; border: 1px solid currentColor; border-radius: 999px; font-size: .72rem; font-weight: 800; letter-spacing: .08em; }
+canvas { display: block; width: 100%; height: auto; border-radius: 12px; background: #111; }
+.accept-row { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.accept-row input { width: 20px; height: 20px; }
+.trust summary { cursor: pointer; font-weight: 750; }
+dl { display: grid; grid-template-columns: max-content 1fr; gap: 8px 14px; font-size: .88rem; overflow-wrap: anywhere; }
+dt { font-weight: 750; }
+dd { margin: 0; opacity: .78; }
+@media (max-width: 560px) { .shell { width: min(100% - 20px, 960px); padding-top: 28px; } .card { padding: 16px; border-radius: 14px; } dl { grid-template-columns: 1fr; gap: 2px; } dd { margin-bottom: 8px; } }

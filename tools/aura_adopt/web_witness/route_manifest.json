@@ -1,0 +1,61 @@
+{
+  "schema": "AuraAdoptWebRouteV1",
+  "route_id": "zf01a-local-image-title-card",
+  "build_ref": "aura-adopt-zf01a-static-v1",
+  "base_ref": "PR354@bece539b94096ef54686d900165f11602839eb82",
+  "entry_surface": "ZERO_INSTALL_WEB_PWA",
+  "purpose": "Prove one first-time creator can transform a local image into an accepted downloadable PNG without installing developer/runtime/model tooling or supplying an account/API key.",
+  "required_browser_capabilities": [
+    "File API",
+    "Blob/Object URL",
+    "Canvas 2D",
+    "download attribute"
+  ],
+  "optional_browser_capabilities": [],
+  "required_assets": [
+    {"path": "index.html", "load": "same-origin"},
+    {"path": "style.css", "load": "same-origin"},
+    {"path": "app.js", "load": "same-origin"}
+  ],
+  "remote_dependencies": [],
+  "mandatory_install": false,
+  "mandatory_account": false,
+  "mandatory_api_key": false,
+  "mandatory_model": false,
+  "mandatory_provider_call": false,
+  "telemetry_default": "OFF",
+  "local_media_policy": "USER_SELECTED_MEDIA_REMAINS_BROWSER_LOCAL",
+  "network_after_page_load": "DENIED_BY_CSP_CONNECT_SRC_NONE",
+  "recipe_ref": "aura-adopt-zf01-title-card-v1@sha256:a95b233ff6019fa6a32cc72715c2ba528b80d7d97258e8e6087948d426d3449d",
+  "input": {"kind": "local image", "mime": "image/*", "max_bytes": 8388608, "title_max_chars": 80},
+  "output": {"mime": "image/png", "width": 1280, "height": 720},
+  "accepted_value_criterion": "User explicitly marks the rendered preview useful, then initiates local PNG download.",
+  "friction_receipt": {
+    "schema": "AdoptionFrictionReceiptV1",
+    "compatibility_status": "PROVISIONAL_ZF01_SUPERSET_AWAIT_ZF00B_REDUCER",
+    "content_excluded": true,
+    "credential_values_excluded": true
+  },
+  "failure_routes": {
+    "BROWSER_CAPABILITY_UNAVAILABLE": "DOWNLOAD_APP_OR_ASSISTED_PATH",
+    "INPUT_REQUIRED": "SELECT_LOCAL_IMAGE",
+    "INPUT_MEDIA_TYPE_UNSUPPORTED": "SELECT_SUPPORTED_IMAGE_OR_NEXT_ROUTE",
+    "INPUT_TOO_LARGE": "SELECT_IMAGE_AT_OR_BELOW_8_MIB_OR_NEXT_ROUTE",
+    "IMAGE_DECODE_FAILED": "SELECT_DECODABLE_IMAGE_OR_NEXT_ROUTE",
+    "CANVAS_ENCODE_FAILED": "DOWNLOAD_APP_OR_ASSISTED_PATH"
+  },
+  "authority_ceiling": {
+    "upload_authorized": false,
+    "provider_authorized": false,
+    "telemetry_authorized": false,
+    "public_deployment_proven": false,
+    "background_execution_proven": false
+  },
+  "reopen": [
+    "ZF-00B changes consequence-bearing receipt fields incompatibly",
+    "Objective-1 route compiler changes browser admission semantics incompatibly",
+    "browser File/Canvas/download security or capability semantics change",
+    "measured first-value friction identifies a materially smaller accepted-value route",
+    "Creator Studio recipe ABI changes"
+  ]
+}
