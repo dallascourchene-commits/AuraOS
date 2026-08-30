@@ -1,0 +1,116 @@
+name: AWJ032 GLM53 W3 registered admitted synthetic proof
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/glm53_w3_registered_admitted_synthetic_proof.py'
+      - 'tools/awj032/test_glm53_w3_registered_admitted_synthetic_proof.py'
+      - '.github/workflows/awj032-glm53-w3-registered-admitted-synthetic-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: awj032-glm53-w3-registered-admitted-synthetic-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  registered-admitted-synthetic-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+
+      - name: Materialize exact verified PR406 numerical test generation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR406_SHA: d518e0910a747ab83b6524bdcc49245076a0090c
+        run: |
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR406_SHA"
+          unset AUTH_HEADER
+          test "$(git rev-parse FETCH_HEAD)" = "$PR406_SHA"
+          git show "$PR406_SHA:tools/awj032/test_glm53_w3_native_per_expert_fixture.py" \
+            > tools/awj032/test_glm53_w3_native_per_expert_fixture.py
+          git show "$PR406_SHA:tools/awj032/test_glm53_w3_scale_semantic_oracle.py" \
+            > tools/awj032/test_glm53_w3_scale_semantic_oracle.py
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Compile registered and numerical proof planes
+        run: >-
+          python -m py_compile
+          tools/awj032/glm53_pr340_producer_snapshot_registry.py
+          tools/awj032/glm53_w3_proof_plane_admission_v2.py
+          tools/awj032/glm53_w3_registered_admitted_synthetic_proof.py
+          tools/awj032/test_glm53_w3_official_producer_admission.py
+          tools/awj032/test_glm53_w3_proof_plane_admission_v2.py
+          tools/awj032/test_glm53_w3_native_per_expert_fixture.py
+          tools/awj032/test_glm53_w3_scale_semantic_oracle.py
+          tools/awj032/test_glm53_w3_registered_admitted_synthetic_proof.py
+
+      - name: Replay current registered PR412 admission regressions
+        run: >-
+          python -m unittest -v
+          tools.awj032.test_glm53_w3_official_producer_admission
+          tools.awj032.test_glm53_w3_proof_plane_admission_v2
+
+      - name: Re-observe immutable source and compose current registered proof
+        run: |
+          python - <<'PY'
+          from tools.awj032.glm53_w3_proof_plane_admission_v2 import evaluate_w3_proof_plane_admission
+          from tools.awj032.glm53_w3_registered_admitted_synthetic_proof import compose_registered_native_synthetic_w3_proof
+          from tools.awj032.test_glm53_w3_official_producer_admission import LowerPlan, metadata, security
+
+          admission = evaluate_w3_proof_plane_admission(
+              pager_plan=LowerPlan(),
+              airllm_security_evidence=security(),
+              glm53_metadata_evidence=metadata(),
+          )
+          out = compose_registered_native_synthetic_w3_proof(admission_receipt=admission)
+          assert out.status == "PROVEN_NATIVE_SYNTHETIC_W3_FIXTURE"
+          assert out.blockers == ()
+          assert out.registered_producer_report_proven is True
+          assert out.registered_pr409_source_appraisal_proven is True
+          assert out.w2_producer_consumer_boundary_proven is True
+          assert out.native_synthetic_w3_proven is True
+          assert out.official_tensor_compatibility_proven is False
+          assert out.official_tensor_payload_admitted is False
+          assert out.runtime_mtp_support_proven is False
+          assert out.runtime_execution_admitted is False
+          assert out.checkpoint_payload_admitted is False
+          assert out.g2_admitted is False
+          assert out.provider_effect_admitted is False
+          assert out.quality_proven is False
+          assert out.authority is False
+          print("W3_REGISTERED_ADMITTED_SYNTHETIC_PROOF=" + out.logical_id)
+          PY
+
+      - name: Replay exact PR406 selected-range and scale-semantic proofs
+        run: >-
+          python -m unittest -v
+          tools.awj032.test_glm53_w3_native_per_expert_fixture
+          tools.awj032.test_glm53_w3_scale_semantic_oracle
+
+      - name: Run registered convergence adversarial contracts
+        run: >-
+          python -m unittest -v
+          tools.awj032.test_glm53_w3_registered_admitted_synthetic_proof
