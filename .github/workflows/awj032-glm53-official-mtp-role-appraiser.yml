@@ -1,0 +1,104 @@
+name: AWJ032 GLM53 Official MTP Role Source Appraiser
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_official_mtp_role_source_appraiser.py"
+      - "tools/awj032/test_glm53_official_mtp_role_source_appraiser.py"
+      - ".github/workflows/awj032-glm53-official-mtp-role-appraiser.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: awj032-glm53-official-mtp-role-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  official-source-role:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.12"
+
+      - name: Install focused test dependency
+        run: python -m pip install "pytest>=8.2,<9.0"
+
+      - name: Verify official-source role contract and PR340 integration
+        run: |
+          python -m py_compile tools/awj032/glm53_official_mtp_role_source_appraiser.py
+          python -m pytest -q \
+            tools/awj032/test_glm53_official_mtp_role_source_appraiser.py \
+            tools/awj032/test_glm53_checkpoint_extra_layer_classification.py \
+            tools/awj032/test_glm53_checkpoint_source_binding.py \
+            tools/awj032/test_glm53_checkpoint_layout_probe.py
+
+      - name: Observe immutable official GLM-5.3 MTP source role
+        run: |
+          python - <<'PY'
+          import json
+          from tools.awj032.glm53_official_mtp_role_source_appraiser import (
+              OFFICIAL_INDEX_SHA256,
+              OFFICIAL_MTP_LAYER,
+              OFFICIAL_NUM_HIDDEN_LAYERS,
+              OFFICIAL_NUM_NEXTN_PREDICT_LAYERS,
+              OFFICIAL_REPO,
+              OFFICIAL_REVISION,
+              observe_official_mtp_role,
+          )
+
+          evidence = observe_official_mtp_role()
+          assert evidence.owner_repo == OFFICIAL_REPO
+          assert evidence.immutable_model_revision == OFFICIAL_REVISION
+          assert evidence.index_sha256 == OFFICIAL_INDEX_SHA256
+          assert evidence.num_hidden_layers == OFFICIAL_NUM_HIDDEN_LAYERS == 78
+          assert evidence.num_nextn_predict_layers == OFFICIAL_NUM_NEXTN_PREDICT_LAYERS == 1
+          assert evidence.observed_extra_checkpoint_layer_indices == (OFFICIAL_MTP_LAYER,) == (78,)
+          assert evidence.role == "MTP_NON_DECODER"
+          assert evidence.decoder_pager_membership is False
+          assert any(key.startswith("model.layers.78.eh_proj") for key in evidence.mtp_marker_keys)
+          assert evidence.payload_bytes_read == 0
+          assert evidence.g2_admitted is False
+          assert evidence.runtime_executed is False
+          assert evidence.authority is False
+          print("AURA_OFFICIAL_MTP_ROLE_EVIDENCE=" + json.dumps({
+              "schema": evidence.schema,
+              "owner_repo": evidence.owner_repo,
+              "immutable_model_revision": evidence.immutable_model_revision,
+              "config_raw_sha256": evidence.config_raw_sha256,
+              "config_parsed_sha256": evidence.config_parsed_sha256,
+              "index_sha256": evidence.index_sha256,
+              "index_parsed_sha256": evidence.index_parsed_sha256,
+              "weight_map_digest": evidence.weight_map_digest,
+              "source_bundle_id": evidence.source_bundle_id,
+              "num_hidden_layers": evidence.num_hidden_layers,
+              "num_nextn_predict_layers": evidence.num_nextn_predict_layers,
+              "observed_extra_checkpoint_layer_indices": evidence.observed_extra_checkpoint_layer_indices,
+              "mtp_marker_count": len(evidence.mtp_marker_keys),
+              "role_index": evidence.role_index,
+              "role": evidence.role,
+              "evidence_id": evidence.evidence_id,
+              "payload_bytes_read": 0,
+              "g2_admitted": False,
+              "runtime_executed": False,
+              "authority": False,
+          }, sort_keys=True, separators=(",", ":")))
+          PY
