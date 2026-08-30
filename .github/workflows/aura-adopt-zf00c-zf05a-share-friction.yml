@@ -1,0 +1,38 @@
+name: AURA ADOPT ZF-00C ZF-05A share friction bridge
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/adoption_friction_receipt.py'
+      - 'tools/aura_adopt/browser_friction_adapter.py'
+      - 'tools/aura_adopt/test_browser_friction_adapter.py'
+      - 'tools/aura_adopt/share_friction_adapter.py'
+      - 'tools/aura_adopt/test_share_friction_adapter.py'
+      - '.github/workflows/aura-adopt-zf00c-zf05a-share-friction.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  share-friction-bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile canonical receipt and adapters
+        run: >-
+          python -m py_compile
+          tools/aura_adopt/adoption_friction_receipt.py
+          tools/aura_adopt/browser_friction_adapter.py
+          tools/aura_adopt/test_browser_friction_adapter.py
+          tools/aura_adopt/share_friction_adapter.py
+          tools/aura_adopt/test_share_friction_adapter.py
+      - name: Re-run ZF-00C browser adapter regressions
+        run: python -m unittest tools.aura_adopt.test_browser_friction_adapter
+      - name: Run share/reuse friction regressions
+        run: python -m unittest tools.aura_adopt.test_share_friction_adapter
+      - name: Replay canonical ZF-00 receipt regressions
+        run: python -m unittest tools.aura_adopt.test_adoption_friction_receipt
