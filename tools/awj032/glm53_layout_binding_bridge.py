@@ -1,9 +1,10 @@
 """Fail-closed bridge from GLM-5.3 checkpoint-layout evidence to pager bindings.
 
-G1A integration only.  This module does not open checkpoints, import the model,
-or admit G2.  It consumes a GLM53CheckpointLayoutProbeV1 report plus exact
-safetensors-header evidence and constructs an ExpertSourceBinding only when the
-physical representation is proven compatible with the packed first-axis pager.
+G1A integration only. This module does not open checkpoints, import the model,
+or admit G2. It consumes a GLM53CheckpointLayoutProbeV1 report plus the exact
+pinned index weight-map and safetensors-header evidence, and constructs an
+ExpertSourceBinding only when the physical representation is proven compatible
+with the packed first-axis pager.
 """
 from __future__ import annotations
 
@@ -75,6 +76,7 @@ class PagerSourcePlan:
     binding: ExpertSourceBinding
     probe_logical_id: str
     header_evidence_digest: str
+    weight_map_digest: str
     source_plan_digest: str
     disposition: str = "PACKED_PAGER_BINDING_READY"
     g2_admitted: bool = False
@@ -89,6 +91,7 @@ class PagerSourcePlan:
             "binding_digest": self.binding.digest,
             "probe_logical_id": self.probe_logical_id,
             "header_evidence_digest": self.header_evidence_digest,
+            "weight_map_digest": self.weight_map_digest,
             "source_plan_digest": self.source_plan_digest,
             "g2_admitted": False,
             "large_checkpoint_admitted": False,
@@ -147,16 +150,17 @@ def _layout_residual(layout: str) -> None:
 def compile_pager_source_plan(
     report: Mapping[str, Any],
     *,
+    weight_map: Mapping[str, str],
     headers: Mapping[str, Mapping[str, Any]],
     expected_model_revision: str,
     expected_index_digest: str,
 ) -> PagerSourcePlan:
     """Compile verified metadata/header evidence into the PR #338 pager ABI.
 
-    The function is intentionally stricter than the metadata probe.  An index key
-    alone cannot prove that expert-axis row slicing is lawful; each required
-    weight/scale tensor must have exact header evidence whose first dimension is
-    the routed-expert count and whose shard matches the weight-map assignment.
+    An index key alone cannot prove that expert-axis row slicing is lawful. Each
+    required weight/scale tensor must have exact header evidence whose first
+    dimension is the routed-expert count and whose shard matches the pinned
+    weight-map assignment.
     """
     if report.get("schema") != PROBE_SCHEMA:
         raise LayoutBindingError("PROBE_SCHEMA_MISMATCH")
@@ -166,6 +170,8 @@ def compile_pager_source_plan(
         raise LayoutBindingError("STALE_MODEL_REVISION")
     if index_digest != _text("expected_index_digest", expected_index_digest):
         raise LayoutBindingError("STALE_INDEX_DIGEST")
+    if not isinstance(weight_map, Mapping) or not weight_map:
+        raise LayoutBindingError("WEIGHT_MAP_REQUIRED")
 
     logical_id = _text("probe_logical_id", report.get("logical_id"))
     blockers = report.get("blockers", [])
@@ -201,25 +207,20 @@ def compile_pager_source_plan(
     if len(block) != 2:
         raise LayoutBindingError("INVALID_FP8_BLOCK_SIZE")
 
-    weight_map = report.get("weight_map")
-    if weight_map is not None and not isinstance(weight_map, Mapping):
-        raise LayoutBindingError("INVALID_WEIGHT_MAP")
-
     required_keys = [gate_key, down_key, *scale_map.values()]
     evidence: dict[str, HeaderTensorEvidence] = {}
     for key in required_keys:
+        assigned = weight_map.get(key)
+        if not isinstance(assigned, str) or not assigned:
+            raise LayoutBindingError("WEIGHT_MAP_KEY_MISSING", key)
         raw = headers.get(key)
         if not isinstance(raw, Mapping):
             raise LayoutBindingError("HEADER_EVIDENCE_REQUIRED", key)
         item = HeaderTensorEvidence.from_mapping(key, raw)
         if item.shape[0] != num_experts:
             raise LayoutBindingError("EXPERT_AXIS_HEADER_MISMATCH", key)
-        if weight_map is not None:
-            assigned = weight_map.get(key)
-            if assigned is None:
-                raise LayoutBindingError("WEIGHT_MAP_KEY_MISSING", key)
-            if assigned != item.shard:
-                raise LayoutBindingError("HEADER_SHARD_BINDING_MISMATCH", key)
+        if assigned != item.shard:
+            raise LayoutBindingError("HEADER_SHARD_BINDING_MISMATCH", key)
         evidence[key] = item
 
     evidence_payload = {
@@ -232,10 +233,14 @@ def compile_pager_source_plan(
         for key, item in sorted(evidence.items())
     }
     header_digest = _digest(evidence_payload)
+    weight_map_digest = _digest(dict(sorted((str(k), str(v)) for k, v in weight_map.items())))
     layer_no = layer.get("layer")
     if isinstance(layer_no, bool) or not isinstance(layer_no, int) or layer_no < 0:
         raise LayoutBindingError("INVALID_LAYER_ID")
-    representation = f"GLM53_PACKED_FP8_BLOCK_{block[0]}x{block[1]}:probe={logical_id}:headers={header_digest}"
+    representation = (
+        f"GLM53_PACKED_FP8_BLOCK_{block[0]}x{block[1]}:"
+        f"probe={logical_id}:headers={header_digest}:weight_map={weight_map_digest}"
+    )
     binding = ExpertSourceBinding(
         model_revision=model_revision,
         index_digest=index_digest,
@@ -250,6 +255,7 @@ def compile_pager_source_plan(
         "binding_digest": binding.digest,
         "probe_logical_id": logical_id,
         "header_evidence_digest": header_digest,
+        "weight_map_digest": weight_map_digest,
         "g2_admitted": False,
         "large_checkpoint_admitted": False,
         "runtime_execution_proven": False,
@@ -258,5 +264,6 @@ def compile_pager_source_plan(
         binding=binding,
         probe_logical_id=logical_id,
         header_evidence_digest=header_digest,
+        weight_map_digest=weight_map_digest,
         source_plan_digest=_digest(plan_payload),
     )
