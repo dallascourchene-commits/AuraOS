@@ -13,6 +13,8 @@ MIRROR_LINEAGE_SCHEMA = "ArtifactMirrorLineageV1"
 ALLOWED_EVENT_TYPES = frozenset(
     {"CREATE", "MODIFY", "RENAME", "DELETE", "TOMBSTONE", "ACCEPT", "SUPERSEDE", "MIRROR_REPAIR"}
 )
+LINEAGE_REQUIRED_EVENT_TYPES = frozenset({"RENAME", "DELETE", "TOMBSTONE", "SUPERSEDE"})
+UNKNOWN = "UNKNOWN"
 
 
 class ArtifactEventRefusal(ValueError):
@@ -36,8 +38,23 @@ def _clean_text(name: str, value: object, *, allow_empty: bool = False) -> str:
 
 
 def _canonical_digest(value: Mapping[str, object]) -> str:
-    payload = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False, default=str)
+    try:
+        payload = json.dumps(
+            value,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+            allow_nan=False,
+        )
+    except (TypeError, ValueError) as exc:
+        raise ArtifactEventRefusal("NONCANONICAL_IDENTITY_PAYLOAD") from exc
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _nonnegative_int(name: str, value: object) -> int:
+    if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+        raise ArtifactEventRefusal(f"INVALID_{name.upper()}")
+    return value
 
 
 @dataclass(frozen=True)
@@ -48,14 +65,15 @@ class ArtifactMutationEvent:
     event_type: str
     resource_ref: str
     project_id: str
-    producer_worker_id: str = ""
-    claim_id: str = ""
-    work_order_id: str = ""
-    source_currentness_ref: str = ""
-    observed_at: str = ""
+    producer_worker_id: str = UNKNOWN
+    claim_id: str = UNKNOWN
+    work_order_id: str = UNKNOWN
+    source_currentness_ref: str = UNKNOWN
+    observed_at: str = UNKNOWN
     generation: int = 0
     mirror_fence: str = ""
     prior_artifact_id: str = ""
+    prior_resource_ref: str = ""
     event_id: str = ""
     schema: str = ARTIFACT_EVENT_SCHEMA
 
@@ -71,16 +89,26 @@ class ArtifactMutationEvent:
         if event_type not in ALLOWED_EVENT_TYPES:
             raise ArtifactEventRefusal("UNSUPPORTED_EVENT_TYPE", event_type)
         object.__setattr__(self, "event_type", event_type)
-        if not isinstance(self.generation, int) or isinstance(self.generation, bool) or self.generation < 0:
-            raise ArtifactEventRefusal("INVALID_GENERATION")
+        _nonnegative_int("generation", self.generation)
+
+        # Preserve unknown provenance explicitly rather than silently erasing it.
         for field_name in (
-            "producer_worker_id", "claim_id", "work_order_id", "source_currentness_ref",
-            "observed_at", "mirror_fence", "prior_artifact_id",
+            "producer_worker_id", "claim_id", "work_order_id", "source_currentness_ref", "observed_at"
         ):
+            value = _clean_text(field_name, getattr(self, field_name))
+            object.__setattr__(self, field_name, value)
+        for field_name in ("mirror_fence", "prior_artifact_id", "prior_resource_ref"):
             object.__setattr__(
-                self, field_name,
+                self,
+                field_name,
                 _clean_text(field_name, getattr(self, field_name), allow_empty=True),
             )
+
+        if self.event_type in LINEAGE_REQUIRED_EVENT_TYPES and not (
+            self.prior_artifact_id or self.prior_resource_ref
+        ):
+            raise ArtifactEventRefusal("PRIOR_LINEAGE_REQUIRED", self.event_type)
+
         expected = self.compute_event_id()
         supplied = _clean_text("event_id", self.event_id, allow_empty=True)
         if supplied and supplied != expected:
@@ -105,6 +133,7 @@ class ArtifactMutationEvent:
             "generation": self.generation,
             "mirror_fence": self.mirror_fence,
             "prior_artifact_id": self.prior_artifact_id,
+            "prior_resource_ref": self.prior_resource_ref,
         }
 
     def compute_event_id(self) -> str:
@@ -131,8 +160,7 @@ class ArtifactIdentity:
         if len(digest) != 64 or any(ch not in "0123456789abcdef" for ch in digest):
             raise ArtifactEventRefusal("INVALID_SHA256")
         object.__setattr__(self, "sha256", digest)
-        if not isinstance(self.byte_size, int) or isinstance(self.byte_size, bool) or self.byte_size < 0:
-            raise ArtifactEventRefusal("INVALID_BYTE_SIZE")
+        _nonnegative_int("byte_size", self.byte_size)
         object.__setattr__(self, "mime_type", _clean_text("mime_type", self.mime_type, allow_empty=True))
         ext = _clean_text("extension", self.extension, allow_empty=True).lower()
         if ext and not ext.startswith("."):
@@ -171,50 +199,78 @@ class ArtifactIdentity:
 class FileObservation:
     byte_size: int
     mtime_ns: int
+    observed_monotonic_ns: int
 
     def __post_init__(self) -> None:
-        if not isinstance(self.byte_size, int) or self.byte_size < 0:
-            raise ArtifactEventRefusal("INVALID_OBSERVED_SIZE")
-        if not isinstance(self.mtime_ns, int) or self.mtime_ns < 0:
-            raise ArtifactEventRefusal("INVALID_MTIME_NS")
+        _nonnegative_int("observed_size", self.byte_size)
+        _nonnegative_int("mtime_ns", self.mtime_ns)
+        _nonnegative_int("observed_monotonic_ns", self.observed_monotonic_ns)
 
 
 @dataclass(frozen=True)
 class QuiescenceProof:
     stable_samples: int
+    stable_ns: int
     byte_size: int
     mtime_ns: int
     closed_evidence: bool = False
+    atomic_publish_evidence: bool = False
 
 
 def prove_quiescence(
     observations: Sequence[FileObservation],
     *,
     min_stable_samples: int = 2,
+    min_stable_ns: int,
     closed_evidence: bool = False,
+    atomic_publish_evidence: bool = False,
 ) -> QuiescenceProof:
     """Prove caller-sampled stability; the pure core never sleeps or watches."""
-    if not isinstance(min_stable_samples, int) or min_stable_samples < 2:
+    if not isinstance(min_stable_samples, int) or isinstance(min_stable_samples, bool) or min_stable_samples < 2:
         raise ArtifactEventRefusal("INVALID_STABLE_SAMPLE_REQUIREMENT")
-    if closed_evidence:
+    _nonnegative_int("min_stable_ns", min_stable_ns)
+    if closed_evidence or atomic_publish_evidence:
         if not observations:
             raise ArtifactEventRefusal("QUIESCENCE_OBSERVATION_REQUIRED")
         last = observations[-1]
-        return QuiescenceProof(1, last.byte_size, last.mtime_ns, True)
+        return QuiescenceProof(
+            1,
+            0,
+            last.byte_size,
+            last.mtime_ns,
+            closed_evidence,
+            atomic_publish_evidence,
+        )
     if len(observations) < min_stable_samples:
         raise ArtifactEventRefusal("ARTIFACT_NOT_QUIESCENT")
     tail = observations[-min_stable_samples:]
+    if any(
+        tail[i].observed_monotonic_ns >= tail[i + 1].observed_monotonic_ns
+        for i in range(len(tail) - 1)
+    ):
+        raise ArtifactEventRefusal("QUIESCENCE_OBSERVATION_ORDER_INVALID")
     first = tail[0]
     if any((s.byte_size, s.mtime_ns) != (first.byte_size, first.mtime_ns) for s in tail[1:]):
         raise ArtifactEventRefusal("ARTIFACT_NOT_QUIESCENT")
-    return QuiescenceProof(min_stable_samples, first.byte_size, first.mtime_ns, False)
+    stable_ns = tail[-1].observed_monotonic_ns - tail[0].observed_monotonic_ns
+    if stable_ns < min_stable_ns:
+        raise ArtifactEventRefusal("ARTIFACT_STABILITY_WINDOW_TOO_SHORT")
+    return QuiescenceProof(
+        min_stable_samples,
+        stable_ns,
+        first.byte_size,
+        first.mtime_ns,
+        False,
+        False,
+    )
 
 
 @dataclass(frozen=True)
 class MirrorLineage:
     origin_id: str
+    artifact_generation: int
     surfaces: Tuple[str, ...]
-    generation: int = 0
+    hop_index: int = 0
     max_hops: int = 8
     schema: str = MIRROR_LINEAGE_SCHEMA
 
@@ -222,35 +278,49 @@ class MirrorLineage:
         if self.schema != MIRROR_LINEAGE_SCHEMA:
             raise ArtifactEventRefusal("UNSUPPORTED_MIRROR_SCHEMA")
         object.__setattr__(self, "origin_id", _clean_text("origin_id", self.origin_id))
+        _nonnegative_int("artifact_generation", self.artifact_generation)
         surfaces = tuple(_clean_text("surface", s) for s in self.surfaces)
         if not surfaces:
             raise ArtifactEventRefusal("MIRROR_SURFACE_REQUIRED")
         if len(set(surfaces)) != len(surfaces):
             raise ArtifactEventRefusal("MIRROR_LINEAGE_LOOP")
         object.__setattr__(self, "surfaces", surfaces)
-        if not isinstance(self.generation, int) or self.generation < 0:
-            raise ArtifactEventRefusal("INVALID_GENERATION")
-        if not isinstance(self.max_hops, int) or self.max_hops < 1:
+        _nonnegative_int("hop_index", self.hop_index)
+        if not isinstance(self.max_hops, int) or isinstance(self.max_hops, bool) or self.max_hops < 1:
             raise ArtifactEventRefusal("INVALID_MAX_HOPS")
-        if self.generation != len(surfaces) - 1:
-            raise ArtifactEventRefusal("MIRROR_GENERATION_MISMATCH")
-        if len(surfaces) > self.max_hops + 1:
+        if self.hop_index != len(surfaces) - 1:
+            raise ArtifactEventRefusal("MIRROR_HOP_INDEX_MISMATCH")
+        if self.hop_index > self.max_hops:
             raise ArtifactEventRefusal("MIRROR_MAX_HOPS_EXCEEDED")
 
     @classmethod
-    def start(cls, origin_id: str, source_surface: str, *, max_hops: int = 8) -> "MirrorLineage":
-        return cls(origin_id=origin_id, surfaces=(source_surface,), generation=0, max_hops=max_hops)
+    def start(
+        cls,
+        origin_id: str,
+        source_surface: str,
+        *,
+        artifact_generation: int,
+        max_hops: int = 8,
+    ) -> "MirrorLineage":
+        return cls(
+            origin_id=origin_id,
+            artifact_generation=artifact_generation,
+            surfaces=(source_surface,),
+            hop_index=0,
+            max_hops=max_hops,
+        )
 
     def next_hop(self, target_surface: str) -> "MirrorLineage":
         target = _clean_text("target_surface", target_surface)
         if target in self.surfaces:
             raise ArtifactEventRefusal("MIRROR_LOOP_SUPPRESSED", target)
-        if self.generation >= self.max_hops:
+        if self.hop_index >= self.max_hops:
             raise ArtifactEventRefusal("MIRROR_MAX_HOPS_EXCEEDED")
         return MirrorLineage(
             origin_id=self.origin_id,
+            artifact_generation=self.artifact_generation,
             surfaces=self.surfaces + (target,),
-            generation=self.generation + 1,
+            hop_index=self.hop_index + 1,
             max_hops=self.max_hops,
         )
 
@@ -259,8 +329,9 @@ class MirrorLineage:
         payload = {
             "schema": self.schema,
             "origin_id": self.origin_id,
+            "artifact_generation": self.artifact_generation,
             "surfaces": self.surfaces,
-            "generation": self.generation,
+            "hop_index": self.hop_index,
         }
         return f"mf-{_canonical_digest(payload)[:32]}"
 
@@ -272,6 +343,8 @@ def classify_replay(
     seen_event_ids: Iterable[str] = (),
 ) -> str:
     """Return deterministic pre-effect disposition."""
+    if event.source_currentness_ref == UNKNOWN:
+        return "REBASE"
     if _clean_text("currentness", currentness).upper() != "CURRENT":
         return "REBASE"
     if event.event_id in set(seen_event_ids):
@@ -281,9 +354,17 @@ def classify_replay(
     return "INGEST"
 
 
+def require_prior_lineage(event: ArtifactMutationEvent) -> None:
+    if event.event_type in LINEAGE_REQUIRED_EVENT_TYPES and not (
+        event.prior_artifact_id or event.prior_resource_ref
+    ):
+        raise ArtifactEventRefusal("PRIOR_LINEAGE_REQUIRED", event.event_type)
+
+
 def require_rename_parent(event: ArtifactMutationEvent) -> None:
-    if event.event_type == "RENAME" and not event.prior_artifact_id:
-        raise ArtifactEventRefusal("RENAME_PRIOR_ARTIFACT_REQUIRED")
+    """Compatibility helper retained for staged consumers."""
+    if event.event_type == "RENAME":
+        require_prior_lineage(event)
 
 
 def validate_event_identity_binding(
