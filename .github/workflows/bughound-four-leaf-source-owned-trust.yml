@@ -1,0 +1,96 @@
+name: BugHound four-leaf source-owned candidate trust
+
+on:
+  pull_request:
+    paths:
+      - "tools/bughound/registered_reproduction_gate.py"
+      - "tools/bughound/candidate_evidence_trust_join.py"
+      - "tests/test_bughound_registered_reproduction_gate.py"
+      - "tests/test_bughound_candidate_evidence_trust_join.py"
+      - ".github/workflows/bughound-four-leaf-source-owned-trust.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bughound-four-leaf-source-owned-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  four-leaf-source-owned-trust:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+
+      - name: Compile trust planes
+        run: |
+          python -m py_compile \
+            tools/bughound/registered_reproduction_gate.py \
+            tools/bughound/candidate_evidence_trust_join.py \
+            tests/test_bughound_registered_reproduction_gate.py \
+            tests/test_bughound_candidate_evidence_trust_join.py
+
+      - name: Run full BugHound contracts
+        run: python -m unittest discover -s tests -p "test_bughound_*.py" -v
+
+      - name: Emit test-fixture join and production holds
+        run: |
+          python - <<'PY'
+          from tests.test_bughound_candidate_evidence_trust_join import CandidateEvidenceTrustJoinTests
+          from tools.bughound import registered_reproduction_gate as repro_gate
+          from tools.bughound import candidate_evidence_trust_join as join
+
+          params = set(join.candidate_evidence_trust_parameter_names())
+          assert params == {
+              "mission_input", "candidate", "independent_reproduction",
+              "duplicate", "report_lint", "program",
+          }
+          out = CandidateEvidenceTrustJoinTests().public_admit()
+          assert out.candidate_evidence_trust_proven is True
+          assert out.ready_for_human_review_evidence is True
+          assert out.human_authorization_verified is False
+          assert out.ready_for_human_review is False
+          assert out.live_target_testing_authorized is False
+          assert out.submission_authorized is False
+          assert out.claim_or_payment_authorized is False
+          assert out.external_effect is False
+
+          repro_receipt = repro_gate.independent_reproduction_registry_receipt()
+          leaf_receipt = join.candidate_leaf_registry_receipt()
+          assert repro_receipt.active_record_count == 0
+          assert leaf_receipt.record_digests == ()
+          assert leaf_receipt.duplicate_record_count == 0
+          assert leaf_receipt.report_lint_record_count == 0
+          assert leaf_receipt.program_record_count == 0
+
+          print("BUGHOUND_FOUR_LEAF_TEST_FIXTURE_JOIN=" + out.receipt_digest)
+          print("PUBLIC_PREBUILT_REPRO_ADMISSION_ACCEPTED=false")
+          print("PUBLIC_REGISTRY_LOOKUP_ACCEPTED=false")
+          print("PRODUCTION_REPRODUCTION_RECORDS=0")
+          print("PRODUCTION_DUPLICATE_RECORDS=0")
+          print("PRODUCTION_REPORT_LINT_RECORDS=0")
+          print("PRODUCTION_PROGRAM_RECORDS=0")
+          print("REAL_CANDIDATE_EVIDENCE_TRUST_PROVEN=false")
+          print("HUMAN_AUTHORIZATION_VERIFIED=false")
+          print("SUBMISSION_AUTHORIZED=false")
+          print("CLAIM_OR_PAYMENT_AUTHORIZED=false")
+          PY
