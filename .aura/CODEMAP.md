@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1635
-- **total_bytes**: 26364456
-- **text_tokens_est**: 6581476
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1636
+- **total_bytes**: 26374389
+- **text_tokens_est**: 6583959
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 236, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1635,
+  "repo_file_count": 1636,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1043,6 +1043,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_INTENT_COMPILED_APPLICATION_FABRIC.md",
     "docs/AURA_INTENT_INGESTION.md",
     "docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md",
+    "docs/AURA_LIFECYCLE_SAVINGS_COUNTERFACTUAL_2026-08-29.md",
     "docs/AURA_METRICS_AND_SCALE_SCENARIOS.md",
     "docs/AURA_MODEL_COGNOME_ADAPTIVE_ROUTER.md",
     "docs/AURA_MODEL_COGNOME_MR0_MR1_STATUS.md",
@@ -1775,12 +1776,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1635,
-  "bytes": 26364456,
-  "tokens_est": 6581476,
+  "files": 1636,
+  "bytes": 26374389,
+  "tokens_est": 6583959,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 235,
+    "knowledge_artifact": 236,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 995,
@@ -2009,6 +2010,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_INTENT_COMPILED_APPLICATION_FABRIC.md",
     "docs/AURA_INTENT_INGESTION.md",
     "docs/AURA_INTENT_NATIVE_SPATIAL_WORKSPACE_PR1.md",
+    "docs/AURA_LIFECYCLE_SAVINGS_COUNTERFACTUAL_2026-08-29.md",
     "docs/AURA_METRICS_AND_SCALE_SCENARIOS.md",
     "docs/AURA_MODEL_COGNOME_ADAPTIVE_ROUTER.md",
     "docs/AURA_MODEL_COGNOME_MR0_MR1_STATUS.md",
@@ -2068,8 +2070,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
     "docs/BENCHMARKS.md",
-    "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
-    "docs/DEEPSEEK_COST_CACHE_BENCHMARK_2026-08-29.md"
+    "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md"
   ]
 }
 ```
