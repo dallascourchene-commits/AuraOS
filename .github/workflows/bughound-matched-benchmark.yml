@@ -1,0 +1,36 @@
+name: BugHound Matched Benchmark
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/bughound_foundry_intake.py'
+      - 'tests/test_bughound_foundry_intake.py'
+      - 'scripts/bughound_bugbot_lab.py'
+      - 'tests/test_bughound_bugbot_lab.py'
+      - 'scripts/bughound_matched_benchmark.py'
+      - 'tests/test_bughound_matched_benchmark.py'
+      - '.github/workflows/bughound-matched-benchmark.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  matched-benchmark:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test dependency
+        run: python -m pip install pytest
+      - name: Compile
+        run: python -m py_compile scripts/bughound_foundry_intake.py scripts/bughound_bugbot_lab.py scripts/bughound_matched_benchmark.py
+      - name: Focused tests
+        run: python -m pytest -q tests/test_bughound_foundry_intake.py tests/test_bughound_bugbot_lab.py tests/test_bughound_matched_benchmark.py
+      - name: Emit deterministic benchmark receipt
+        run: python scripts/bughound_matched_benchmark.py
