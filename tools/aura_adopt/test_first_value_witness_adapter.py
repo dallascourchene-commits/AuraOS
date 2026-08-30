@@ -86,7 +86,9 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
             save_mode=bridge.SaveEvidenceMode.SAVE_OBSERVED,
             save_evidence_ref="evidence:save-01", save_artifact_sha256=OUT,
         ))
-        self.assertEqual(afr.StageStatus.UNKNOWN, self.stage(receipt, "SAVE_REOPEN").status)
+        save = self.stage(receipt, "SAVE_REOPEN")
+        self.assertEqual(afr.StageStatus.UNKNOWN, save.status)
+        self.assertIn("EVIDENCE_COMMITMENT:", save.reason)
 
     def test_save_digest_mismatch_fails_closed(self):
         with self.assertRaises(afr.FrictionReceiptError) as ctx:
@@ -100,8 +102,10 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
             save_evidence_ref="evidence:save-01", save_artifact_sha256=OUT,
             reopen_evidence_ref="evidence:reopen-01", reopen_artifact_sha256=OUT,
         ))
-        self.assertEqual(afr.StageStatus.COMPLETED, self.stage(receipt, "SAVE_REOPEN").status)
-        self.assertEqual(2, self.stage(receipt, "SAVE_REOPEN").steps)
+        stage = self.stage(receipt, "SAVE_REOPEN")
+        self.assertEqual(afr.StageStatus.COMPLETED, stage.status)
+        self.assertEqual(2, stage.steps)
+        self.assertTrue(stage.reason.startswith("EVIDENCE_COMMITMENT:"))
 
     def test_reopen_pointer_alone_cannot_complete(self):
         with self.assertRaises(afr.FrictionReceiptError):
@@ -132,27 +136,61 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
                 with self.assertRaises(afr.FrictionReceiptError):
                     observation(**{field: None})
 
-    def test_user_explicit_accept_binds_output_digest(self):
+    def test_user_explicit_accept_uses_privacy_minimal_evidence_commitment(self):
         receipt = compile_receipt(observation(
             acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT,
             acceptance_evidence_ref="evidence:accept-01",
         ))
         self.assertIs(receipt.accepted_value.result, True)
-        self.assertIn(OUT, receipt.accepted_value.verifier)
+        self.assertTrue(receipt.accepted_value.verifier.startswith("EVIDENCE_COMMITMENT:"))
+        self.assertNotIn("evidence:accept-01", receipt.accepted_value.verifier)
         self.assertEqual(afr.StageStatus.COMPLETED, self.stage(receipt, "VERIFY_ACCEPT").status)
 
-    def test_user_explicit_reject_is_preserved_and_bound(self):
+    def test_user_explicit_reject_is_preserved_and_committed(self):
         receipt = compile_receipt(observation(
             acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_REJECT,
             acceptance_evidence_ref="evidence:reject-01",
         ))
         self.assertIs(receipt.accepted_value.result, False)
-        self.assertIn(OUT, receipt.accepted_value.verifier)
+        self.assertTrue(receipt.accepted_value.verifier.startswith("EVIDENCE_COMMITMENT:"))
 
     def test_user_acceptance_without_evidence_ref_fails_closed(self):
         with self.assertRaises(afr.FrictionReceiptError) as ctx:
             observation(acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT)
         self.assertEqual("USER_ACCEPTANCE_EVIDENCE_REF_REQUIRED", ctx.exception.code)
+
+    def test_consequence_evidence_never_pollutes_capability_refs(self):
+        receipt = compile_receipt(
+            observation(
+                acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT,
+                acceptance_evidence_ref="evidence:accept-01",
+                save_mode=bridge.SaveEvidenceMode.REOPEN_OBSERVED,
+                save_evidence_ref="evidence:save-01", save_artifact_sha256=OUT,
+                reopen_evidence_ref="evidence:reopen-01", reopen_artifact_sha256=OUT,
+                share_or_reuse_observed=True,
+                share_or_reuse_evidence_ref="evidence:share-01",
+            ),
+            capability_refs=("capability:creator-canvas-v1",),
+        )
+        self.assertEqual(("capability:creator-canvas-v1",), receipt.capability_refs)
+        serialized = str(receipt.to_dict())
+        for raw_ref in ("evidence:accept-01", "evidence:save-01", "evidence:reopen-01", "evidence:share-01"):
+            self.assertNotIn(raw_ref, serialized)
+
+    def test_evidence_commitment_changes_when_consequence_evidence_changes(self):
+        first = compile_receipt(observation(
+            save_mode=bridge.SaveEvidenceMode.REOPEN_OBSERVED,
+            save_evidence_ref="evidence:save-01", save_artifact_sha256=OUT,
+            reopen_evidence_ref="evidence:reopen-01", reopen_artifact_sha256=OUT,
+        ))
+        second = compile_receipt(observation(
+            save_mode=bridge.SaveEvidenceMode.REOPEN_OBSERVED,
+            save_evidence_ref="evidence:save-02", save_artifact_sha256=OUT,
+            reopen_evidence_ref="evidence:reopen-02", reopen_artifact_sha256=OUT,
+        ))
+        self.assertNotEqual(self.stage(first, "SAVE_REOPEN").reason,
+                            self.stage(second, "SAVE_REOPEN").reason)
+        self.assertNotEqual(first.logical_id, second.logical_id)
 
     def test_trust_is_not_completable_by_pointer_presence(self):
         trust = self.stage(compile_receipt(), "TRUST")
