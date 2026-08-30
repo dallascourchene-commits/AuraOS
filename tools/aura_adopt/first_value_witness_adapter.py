@@ -13,7 +13,8 @@ Evidence law:
   physical consequences. This adapter therefore never emits SAVE_REOPEN=COMPLETED;
   a trusted browser/storage witness resolver must earn that state downstream.
 - Consequence evidence is committed into stage/verifier digests; it is never
-  mislabeled as a capability reference.
+  mislabeled as a capability reference. Public capability refs must use the
+  explicit `capability:` namespace.
 - This adapter cannot complete TRUST; a trust-owner bridge must do that.
 - Causally impossible witness combinations fail closed.
 - UNKNOWN remains UNKNOWN.
@@ -68,6 +69,13 @@ def _ref(value: str | None, code: str = "EVIDENCE_REF_INVALID") -> str:
     lowered = clean.casefold()
     if not _REF_RE.fullmatch(clean) or any(marker in lowered for marker in _SENSITIVE_REF_MARKERS):
         raise FrictionReceiptError(code)
+    return clean
+
+
+def _capability_ref(value: str | None) -> str:
+    clean = _ref(value, "CAPABILITY_REF_INVALID")
+    if not clean.casefold().startswith("capability:"):
+        raise FrictionReceiptError("CAPABILITY_REF_NAMESPACE_REQUIRED")
     return clean
 
 
@@ -333,7 +341,7 @@ def compile_first_value_receipt(
         raise FrictionReceiptError("WITNESS_OBSERVATION_REQUIRED")
 
     recipe = _ref(recipe_ref, "RECIPE_REF_REQUIRED")
-    cap_refs = tuple(_ref(value, "CAPABILITY_REF_INVALID") for value in capability_refs)
+    cap_refs = tuple(_capability_ref(value) for value in capability_refs)
     events: list[StageEvent] = [
         _binary_stage("DISCOVER", observation.opened,
                       blocked_code="WITNESS_NOT_OPENED",
