@@ -3,7 +3,8 @@
 This module does not benchmark the host or touch model weights. It consumes a
 command-bound host measurement record and the preregistered GLM53 expert-I/O
 floor, then calculates truthful reuse requirements for target latency classes.
-Formal G3 admission remains gated on G1 hard-false + G2 tiny-fixture PASS.
+It never admits G3 or G4; it only reports whether inherited G1/G2 prerequisites
+are satisfied and reduces supplied host measurements under an explicit ceiling.
 """
 from __future__ import annotations
 
@@ -142,6 +143,7 @@ def reduce_host_preflight(
     else:
         storage_fit = _number("disk_free_gb", disk_free) >= _number("required_representation_gb", required_storage)
 
+    gate_prereqs = bool(g1_hard_false_proven and g2_tiny_fixture_pass)
     logical = {
         "schema": SCHEMA,
         "measurement": dict(measurement),
@@ -158,12 +160,14 @@ def reduce_host_preflight(
         "storage_fit": storage_fit,
         "g1_hard_false_proven": g1_hard_false_proven,
         "g2_tiny_fixture_pass": g2_tiny_fixture_pass,
-        "g3_formally_admitted": bool(g1_hard_false_proven and g2_tiny_fixture_pass),
+        "g3_gate_prerequisites_satisfied": gate_prereqs,
+        "host_preflight_measurement_reduced": True,
+        "g3_admitted": False,
         "large_checkpoint_admitted": False,
         "g4_admitted": False,
     }
     return {
         **logical,
         "logical_id": _digest(logical),
-        "claim_ceiling": "G3_PREFLIGHT_REDUCER_ONLY_NO_HOST_BENCHMARK_OR_MODEL_WEIGHT_EFFECT",
+        "claim_ceiling": "G3_PREFLIGHT_REDUCER_ONLY_NO_G3_ADMISSION_HOST_BENCHMARK_OR_MODEL_WEIGHT_EFFECT",
     }
