@@ -5,6 +5,8 @@ on:
     paths:
       - 'tools/awj032/glm53_layout_binding_bridge.py'
       - 'tools/awj032/test_glm53_layout_binding_bridge.py'
+      - 'tools/awj032/glm53_source_bound_layout_bridge.py'
+      - 'tools/awj032/test_glm53_source_bound_layout_bridge.py'
       - 'tools/awj032/glm53_packed_expert_pager.py'
       - 'tools/awj032/glm53_per_expert_index_pager.py'
       - 'tools/awj032/glm53_pager_cache_telemetry.py'
@@ -29,9 +31,14 @@ jobs:
           tools/awj032/glm53_per_expert_index_pager.py
           tools/awj032/glm53_pager_cache_telemetry.py
           tools/awj032/glm53_layout_binding_bridge.py
+          tools/awj032/glm53_source_bound_layout_bridge.py
           tools/awj032/test_glm53_layout_binding_bridge.py
+          tools/awj032/test_glm53_source_bound_layout_bridge.py
       - name: Run bridge regressions
-        run: python -m unittest tools.awj032.test_glm53_layout_binding_bridge
+        run: >-
+          python -m unittest
+          tools.awj032.test_glm53_layout_binding_bridge
+          tools.awj032.test_glm53_source_bound_layout_bridge
       - name: Re-run current pager owner regressions
         working-directory: tools/awj032
         run: >-
