@@ -1,0 +1,120 @@
+name: AWJ032 GLM53 PR409 registry-bound appraiser
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_pr340_producer_snapshot.py"
+      - "tools/awj032/glm53_registered_mtp_role_appraiser.py"
+      - "tools/awj032/test_glm53_registered_mtp_role_appraiser.py"
+      - "tools/awj032/glm53_official_mtp_role_source_appraiser.py"
+      - "tools/awj032/test_glm53_official_mtp_role_source_appraiser.py"
+      - ".github/workflows/awj032-glm53-pr409-registry-bound.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: awj032-glm53-pr409-registry-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  registry-bound-appraiser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.12"
+
+      - name: Install focused test dependency
+        run: python -m pip install "pytest>=8.2,<9.0"
+
+      - name: Run source-appraiser and registry regressions
+        run: |
+          python -m py_compile \
+            tools/awj032/glm53_pr340_producer_snapshot.py \
+            tools/awj032/glm53_official_mtp_role_source_appraiser.py \
+            tools/awj032/glm53_registered_mtp_role_appraiser.py \
+            tools/awj032/test_glm53_registered_mtp_role_appraiser.py
+          python -m pytest -q \
+            tools/awj032/test_glm53_official_mtp_role_source_appraiser.py \
+            tools/awj032/test_glm53_registered_mtp_role_appraiser.py \
+            tools/awj032/test_glm53_checkpoint_extra_layer_classification.py \
+            tools/awj032/test_glm53_checkpoint_source_binding.py \
+            tools/awj032/test_glm53_checkpoint_layout_probe.py
+
+      - name: Replay pinned producer from immutable source and consume registry
+        run: |
+          python - <<'PY'
+          import hashlib
+          from urllib.request import Request, urlopen
+
+          from tools.awj032.glm53_checkpoint_source_binding import bind_checkpoint_sources
+          from tools.awj032.glm53_pr340_producer_snapshot import (
+              OFFICIAL_CONFIG_SHA256,
+              OFFICIAL_INDEX_SHA256,
+              OFFICIAL_REVISION,
+              emit_pr340_producer_snapshot,
+          )
+          from tools.awj032.glm53_registered_mtp_role_appraiser import (
+              CANONICAL_PR340_PRODUCER_PIN,
+              verify_and_admit_registered_official_mtp_role,
+          )
+
+          def read(url, ceiling):
+              req = Request(url, headers={"User-Agent": "AuraOS-AWJ032-Registry-Replay/1"})
+              with urlopen(req, timeout=60) as response:
+                  raw = response.read(ceiling + 1)
+              assert len(raw) <= ceiling
+              return raw
+
+          base = f"https://huggingface.co/zai-org/GLM-5.3/resolve/{OFFICIAL_REVISION}"
+          config_raw = read(base + "/config.json?download=true", 2 * 1024 * 1024)
+          index_raw = read(base + "/model.safetensors.index.json?download=true", 16 * 1024 * 1024)
+          assert hashlib.sha256(config_raw).hexdigest() == OFFICIAL_CONFIG_SHA256
+          assert hashlib.sha256(index_raw).hexdigest() == OFFICIAL_INDEX_SHA256
+          sources = bind_checkpoint_sources(
+              model_revision=OFFICIAL_REVISION,
+              config_raw_bytes=config_raw,
+              expected_config_sha256=OFFICIAL_CONFIG_SHA256,
+              index_raw_bytes=index_raw,
+              expected_index_sha256=OFFICIAL_INDEX_SHA256,
+          )
+          pin = CANONICAL_PR340_PRODUCER_PIN
+          snapshot, report = emit_pr340_producer_snapshot(
+              sources,
+              producer_execution_head=pin.producer_execution_head,
+              observation_time="registry-replay-current-observation",
+          )
+          assert snapshot.final_report_digest == pin.final_report_digest
+          assert snapshot.snapshot_digest == pin.snapshot_digest
+          assert snapshot.classification_stage_logical_id == pin.classification_stage_logical_id
+          out = verify_and_admit_registered_official_mtp_role(report)
+          assert out["status"] == "READY_FOR_HEADER_AND_TINY_FIXTURE"
+          assert out["blockers"] == []
+          assert out["pr340_final_report_registry_proven"] is True
+          assert out["pr340_final_report_digest"] == pin.final_report_digest
+          assert out["extra_layer_resolver_provenance_proven"] is True
+          assert out["g2_admitted"] is False
+          assert out["large_checkpoint_admitted"] is False
+          assert out["runtime_execution_proven"] is False
+          print("PR340_REGISTRY_PIN_DIGEST=" + pin.pin_digest)
+          print("PR340_FINAL_REPORT_DIGEST=" + pin.final_report_digest)
+          print("PR340_REGISTRY_RECEIPT=" + pin.registry_receipt_ref)
+          PY
