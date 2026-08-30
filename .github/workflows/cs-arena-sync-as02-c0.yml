@@ -1,0 +1,33 @@
+name: CS Arena Sync AS-02 C0 Repair
+
+on:
+  push:
+    branches:
+      - cs-arena-sync-001/as02-c0-fence-quiescence-repair-20260830
+    paths:
+      - "aura_arena_artifact_event_core.py"
+      - "tests/test_aura_arena_artifact_event_core.py"
+      - ".github/workflows/cs-arena-sync-as02-c0.yml"
+  pull_request:
+    paths:
+      - "aura_arena_artifact_event_core.py"
+      - "tests/test_aura_arena_artifact_event_core.py"
+      - ".github/workflows/cs-arena-sync-as02-c0.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile and run AS-02 core regressions
+        run: |
+          python -m py_compile aura_arena_artifact_event_core.py tests/test_aura_arena_artifact_event_core.py
+          python -m unittest -v tests/test_aura_arena_artifact_event_core.py
