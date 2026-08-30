@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788107197,
+  "generated_at_unix": 1788107744,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1669,
+    "repo_file_count": 1671,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1656,10 +1656,12 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
       "tools/awj032/glm53_packed_expert_pager.py",
+      "tools/awj032/glm53_pager_cache_adapter.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
+      "tools/awj032/test_glm53_pager_cache_adapter.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -1785,15 +1787,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1669,
-      "bytes": 26507713,
-      "tokens_est": 6617323,
+      "files": 1671,
+      "bytes": 26527737,
+      "tokens_est": 6622329,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1016,
+        "python_module": 1018,
         "schema_or_lexicon": 276,
         "support_file": 49
       }
@@ -158521,6 +158523,226 @@
         "signature_hash": "497bb9d082182e47"
       }
     ],
+    "CacheAdapterError": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#class:CacheAdapterError:e0fca836a07dcd8f",
+        "signature_hash": "b2dd76405a2bf3a9"
+      }
+    ],
+    "CacheReceipt": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 40,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#class:CacheReceipt:e384cc95fdcb1f17",
+        "signature_hash": "111f1cd3abd83804"
+      }
+    ],
+    "_Entry": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "class",
+        "line": 44,
+        "end_line": 46,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#class:_Entry:57a243b790adaca6",
+        "signature_hash": "6ff50adaf06b2e52"
+      }
+    ],
+    "_BoundedLRU": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 97,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#class:_BoundedLRU:a6d2b80332060ee7",
+        "signature_hash": "252d522a7f25653d"
+      }
+    ],
+    "_BoundedLRU.__init__": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:_BoundedLRU.__init__:8717dabfa570bf37",
+        "signature_hash": "a6ea7cbabcadb5a4"
+      }
+    ],
+    "_BoundedLRU.entries": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 59,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:_BoundedLRU.entries:b0ed830f6472739b",
+        "signature_hash": "b2c50c9413224dc9"
+      }
+    ],
+    "_BoundedLRU.bytes": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:_BoundedLRU.bytes:8d2bae4195f0ce3e",
+        "signature_hash": "2e0eb38b38029611"
+      }
+    ],
+    "_BoundedLRU.get": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 69,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:_BoundedLRU.get:ad5e5e9c9927cf93",
+        "signature_hash": "ea9a0fd8ada92fa3"
+      }
+    ],
+    "_BoundedLRU.put": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 83,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:_BoundedLRU.put:3ddd36931934e437",
+        "signature_hash": "d3f16533c74ff00e"
+      }
+    ],
+    "_BoundedLRU.evict": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 97,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:_BoundedLRU.evict:2155f31b25e3d357",
+        "signature_hash": "4ec904bba54e4167"
+      }
+    ],
+    "CachedPackedExpertPager": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "class",
+        "line": 103,
+        "end_line": 208,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#class:CachedPackedExpertPager:13dc2c8a2f85e883",
+        "signature_hash": "86c26793ad9c23d8"
+      }
+    ],
+    "CachedPackedExpertPager.__init__": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 119,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPackedExpertPager.__init__:77b7aab8cb26ab6f",
+        "signature_hash": "f767012cbd450ffb"
+      }
+    ],
+    "CachedPackedExpertPager._assert_current": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 123,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPackedExpertPager._assert_current:594c3b826283cdd0",
+        "signature_hash": "d258c4602dfe9c9f"
+      }
+    ],
+    "CachedPackedExpertPager.load_selected": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 200,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPackedExpertPager.load_selected:431849189f38509f",
+        "signature_hash": "fd5747276363a079"
+      }
+    ],
+    "CachedPackedExpertPager.receipt": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 202,
+        "end_line": 205,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPackedExpertPager.receipt:0652d0e27e16e5b9",
+        "signature_hash": "c724ebd1d568bc4d"
+      }
+    ],
+    "CachedPackedExpertPager.evict": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 207,
+        "end_line": 208,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPackedExpertPager.evict:1af72168eec6fc1f",
+        "signature_hash": "4ec904bba54e4167"
+      }
+    ],
+    "CachedPerExpertIndexPager": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "class",
+        "line": 211,
+        "end_line": 311,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#class:CachedPerExpertIndexPager:095a5aa4d855b373",
+        "signature_hash": "47ae64501f040f86"
+      }
+    ],
+    "CachedPerExpertIndexPager.__init__": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 214,
+        "end_line": 227,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPerExpertIndexPager.__init__:0f28e374cbd258b8",
+        "signature_hash": "0722c3e5a67954c2"
+      }
+    ],
+    "CachedPerExpertIndexPager._assert_current": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 229,
+        "end_line": 233,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPerExpertIndexPager._assert_current:ec7c2694ea0ab5ee",
+        "signature_hash": "d258c4602dfe9c9f"
+      }
+    ],
+    "CachedPerExpertIndexPager.load_selected": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 235,
+        "end_line": 303,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPerExpertIndexPager.load_selected:afca8398c7140373",
+        "signature_hash": "fd5747276363a079"
+      }
+    ],
+    "CachedPerExpertIndexPager.receipt": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 305,
+        "end_line": 308,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPerExpertIndexPager.receipt:d836e7d10f5b8d70",
+        "signature_hash": "c724ebd1d568bc4d"
+      }
+    ],
+    "CachedPerExpertIndexPager.evict": [
+      {
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 310,
+        "end_line": 311,
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPerExpertIndexPager.evict:d4f77da86cfff78c",
+        "signature_hash": "4ec904bba54e4167"
+      }
+    ],
     "PerExpertPagerError": [
       {
         "file": "tools/awj032/glm53_per_expert_index_pager.py",
@@ -159291,7 +159513,65 @@
         "signature_hash": "f3ca812646ce458a"
       }
     ],
+    "PackedBackend": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 15,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#class:PackedBackend:8fc759dbdda04b0a",
+        "signature_hash": "c7f6f5872bf1c164"
+      }
+    ],
+    "PackedBackend.__init__": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 11,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:PackedBackend.__init__:d7d9a5458aa9511a",
+        "signature_hash": "be7491c2e7f68d95"
+      }
+    ],
+    "PackedBackend.read_rows": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 15,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:PackedBackend.read_rows:54076df54da04aa3",
+        "signature_hash": "3844ad845259e223"
+      }
+    ],
+    "packed_binding": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 28,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#function:packed_binding:07f2c43c0914cb70",
+        "signature_hash": "2402cfd67ea944d1"
+      }
+    ],
+    "packed_backend": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 37,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#function:packed_backend:ad03346848ac5d40",
+        "signature_hash": "9e68cba90e1e89d3"
+      }
+    ],
     "weight_map": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 47,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#function:weight_map:588a61b1218af50f",
+        "signature_hash": "6e20cc3287586803"
+      },
       {
         "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
         "kind": "function",
@@ -159299,6 +159579,106 @@
         "end_line": 14,
         "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#function:weight_map:a608c6367da174e2",
         "signature_hash": "51ee7e5abf66a8ce"
+      }
+    ],
+    "PerExpertBackend": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#class:PerExpertBackend:e8505c98b8dd3246",
+        "signature_hash": "e5c03720a9534735"
+      }
+    ],
+    "PerExpertBackend.__init__": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:PerExpertBackend.__init__:09e53cc36b106b9a",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "PerExpertBackend.read_tensor": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:PerExpertBackend.read_tensor:775b1e211992cb5b",
+        "signature_hash": "b5e86620f84079e9"
+      }
+    ],
+    "CacheAdapterTests": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "class",
+        "line": 59,
+        "end_line": 169,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#class:CacheAdapterTests:1b7116fa596bbd4e",
+        "signature_hash": "e1390c0cb75aabd0"
+      }
+    ],
+    "CacheAdapterTests.test_packed_cache_hit_avoids_backend_read_and_reports_logical_bytes_only": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 80,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:CacheAdapterTests.test_packed_cache_hit_avoids_backend_read_and_reports_logical_bytes_only:8746c52542721bf7",
+        "signature_hash": "cc6d65a5ee98983f"
+      }
+    ],
+    "CacheAdapterTests.test_packed_lru_budget_and_evict": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 98,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:CacheAdapterTests.test_packed_lru_budget_and_evict:5799ff022f12862b",
+        "signature_hash": "2180238291b33e8a"
+      }
+    ],
+    "CacheAdapterTests.test_packed_stale_source_and_whole_bank_fail_before_cache_use": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 114,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:CacheAdapterTests.test_packed_stale_source_and_whole_bank_fail_before_cache_use:ef24f8aa5d9dd9f5",
+        "signature_hash": "58ce7faea1d920c4"
+      }
+    ],
+    "CacheAdapterTests.test_per_expert_cache_hit_and_lru": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 137,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:CacheAdapterTests.test_per_expert_cache_hit_and_lru:440f227a9c85474a",
+        "signature_hash": "10cc75c43745946f"
+      }
+    ],
+    "CacheAdapterTests.test_per_expert_stale_source_and_whole_bank_fail_before_cache_use": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 156,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:CacheAdapterTests.test_per_expert_stale_source_and_whole_bank_fail_before_cache_use:5805d2461747c1b1",
+        "signature_hash": "b7f12afd6bd68b00"
+      }
+    ],
+    "CacheAdapterTests.test_invalid_logical_size_fails_without_claiming_physical_savings": [
+      {
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 169,
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:CacheAdapterTests.test_invalid_logical_size_fails_without_claiming_physical_savings:d8f13d612e28f3a8",
+        "signature_hash": "3286bcdc32293623"
       }
     ],
     "FakeBackend": [
@@ -170634,9 +171014,9 @@
       "path": ".github/workflows/awj032-glm53-01a-pager.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 1474,
-      "lines": 44,
-      "tokens_est": 369,
+      "bytes": 1736,
+      "lines": 49,
+      "tokens_est": 434,
       "symbol_count": 0,
       "commands": [
         "python -m py_compile",
@@ -170644,47 +171024,47 @@
       ],
       "command_lines": {
         "python -m py_compile": [
-          28
+          30
         ],
         "python -m unittest": [
-          41
+          45
         ]
       },
       "topology": {},
-      "digest8": "6aefdc99a1adc90f",
+      "digest8": "24be43bb3ffdc02c",
       "vector": [
-        -0.308333,
-        0.003715,
-        -0.20927,
-        -0.070582,
-        -0.013621,
-        -0.085442,
-        -0.236512,
-        -0.219176,
-        -0.20184,
-        0.132496,
-        0.236512,
-        0.152309,
-        0.03591,
-        -0.006191,
-        -0.241465,
-        -0.261278,
-        -0.229083,
-        0.20927,
-        0.159739,
-        -0.105254,
-        -0.040863,
-        -0.179551,
-        0.040863,
-        0.219176,
-        -0.13745,
-        0.315762,
-        0.03591,
-        0.026004,
-        -0.229083,
-        0.251372,
-        -0.033434,
-        0.159739
+        0.213028,
+        0.253605,
+        -0.107078,
+        0.183723,
+        0.122857,
+        0.255859,
+        -0.025924,
+        0.032687,
+        -0.271639,
+        0.269385,
+        0.185977,
+        -0.118349,
+        -0.127366,
+        -0.131875,
+        -0.251351,
+        -0.280656,
+        0.280656,
+        0.005636,
+        0.19274,
+        -0.061992,
+        -0.12962,
+        -0.204011,
+        -0.116095,
+        -0.012398,
+        -0.093552,
+        0.071009,
+        -0.174706,
+        0.285165,
+        -0.021416,
+        0.03945,
+        0.224299,
+        -0.149909
       ]
     },
     {
@@ -266223,6 +266603,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_pager_cache_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12256,
+      "lines": 312,
+      "tokens_est": 3064,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0a4266ba4fc71c9c",
+      "vector": [
+        0.001302,
+        0.248735,
+        -0.181017,
+        0.220085,
+        -0.040371,
+        -0.175807,
+        0.207062,
+        -0.003907,
+        -0.287803,
+        -0.196644,
+        -0.282594,
+        0.199248,
+        -0.285199,
+        -0.295617,
+        -0.082043,
+        0.04558,
+        0.201853,
+        -0.194039,
+        -0.071625,
+        0.128925,
+        0.042975,
+        -0.147157,
+        0.048184,
+        0.295617,
+        -0.029952,
+        0.01693,
+        0.222689,
+        0.037766,
+        0.069021,
+        0.118507,
+        0.253944,
+        0.118507
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_per_expert_index_pager.py",
       "role": "python_module",
       "binary": false,
@@ -266408,6 +266835,53 @@
         0.141333,
         -0.182077,
         -0.169344
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_pager_cache_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7506,
+      "lines": 174,
+      "tokens_est": 1877,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "093f046a4f90c47d",
+      "vector": [
+        0.203887,
+        -0.141684,
+        -0.033405,
+        0.070266,
+        -0.141684,
+        0.233836,
+        0.16933,
+        0.102519,
+        -0.033405,
+        0.261482,
+        -0.026494,
+        -0.273001,
+        -0.201583,
+        0.215406,
+        0.28452,
+        0.010367,
+        0.07257,
+        0.054139,
+        -0.134773,
+        0.148595,
+        0.249963,
+        -0.125557,
+        -0.095608,
+        -0.282216,
+        -0.25457,
+        0.226925,
+        0.13938,
+        0.137076,
+        -0.093304,
+        0.07257,
+        -0.28452,
+        0.201583
       ]
     },
     {
@@ -290456,15 +290930,15 @@
     }
   },
   "summary": {
-    "file_count": 1669,
-    "total_bytes": 26507713,
-    "text_tokens_est": 6617323,
+    "file_count": 1671,
+    "total_bytes": 26527737,
+    "text_tokens_est": 6622329,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1016,
+      "python_module": 1018,
       "schema_or_lexicon": 276,
       "support_file": 49
     },
@@ -292131,10 +292605,12 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
       "tools/awj032/glm53_packed_expert_pager.py",
+      "tools/awj032/glm53_pager_cache_adapter.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
+      "tools/awj032/test_glm53_pager_cache_adapter.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -450764,6 +451240,226 @@
         "file_digest8": "38c43b5cb3df1ae2"
       },
       {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#class:CacheAdapterError:e0fca836a07dcd8f",
+        "name": "CacheAdapterError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "b2dd76405a2bf3a9",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#class:CacheReceipt:e384cc95fdcb1f17",
+        "name": "CacheReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 27,
+        "end_line": 40,
+        "signature_hash": "111f1cd3abd83804",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#class:CachedPackedExpertPager:13dc2c8a2f85e883",
+        "name": "CachedPackedExpertPager",
+        "kind": "class",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 103,
+        "end_line": 208,
+        "signature_hash": "86c26793ad9c23d8",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#class:CachedPerExpertIndexPager:095a5aa4d855b373",
+        "name": "CachedPerExpertIndexPager",
+        "kind": "class",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 211,
+        "end_line": 311,
+        "signature_hash": "47ae64501f040f86",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#class:_BoundedLRU:a6d2b80332060ee7",
+        "name": "_BoundedLRU",
+        "kind": "class",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 49,
+        "end_line": 97,
+        "signature_hash": "252d522a7f25653d",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#class:_Entry:57a243b790adaca6",
+        "name": "_Entry",
+        "kind": "class",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 44,
+        "end_line": 46,
+        "signature_hash": "6ff50adaf06b2e52",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPackedExpertPager.__init__:77b7aab8cb26ab6f",
+        "name": "CachedPackedExpertPager.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 106,
+        "end_line": 119,
+        "signature_hash": "f767012cbd450ffb",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPackedExpertPager._assert_current:594c3b826283cdd0",
+        "name": "CachedPackedExpertPager._assert_current",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 121,
+        "end_line": 123,
+        "signature_hash": "d258c4602dfe9c9f",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPackedExpertPager.evict:1af72168eec6fc1f",
+        "name": "CachedPackedExpertPager.evict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 207,
+        "end_line": 208,
+        "signature_hash": "4ec904bba54e4167",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPackedExpertPager.load_selected:431849189f38509f",
+        "name": "CachedPackedExpertPager.load_selected",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 125,
+        "end_line": 200,
+        "signature_hash": "fd5747276363a079",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPackedExpertPager.receipt:0652d0e27e16e5b9",
+        "name": "CachedPackedExpertPager.receipt",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 202,
+        "end_line": 205,
+        "signature_hash": "c724ebd1d568bc4d",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPerExpertIndexPager.__init__:0f28e374cbd258b8",
+        "name": "CachedPerExpertIndexPager.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 214,
+        "end_line": 227,
+        "signature_hash": "0722c3e5a67954c2",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPerExpertIndexPager._assert_current:ec7c2694ea0ab5ee",
+        "name": "CachedPerExpertIndexPager._assert_current",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 229,
+        "end_line": 233,
+        "signature_hash": "d258c4602dfe9c9f",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPerExpertIndexPager.evict:d4f77da86cfff78c",
+        "name": "CachedPerExpertIndexPager.evict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 310,
+        "end_line": 311,
+        "signature_hash": "4ec904bba54e4167",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPerExpertIndexPager.load_selected:afca8398c7140373",
+        "name": "CachedPerExpertIndexPager.load_selected",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 235,
+        "end_line": 303,
+        "signature_hash": "fd5747276363a079",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:CachedPerExpertIndexPager.receipt:d836e7d10f5b8d70",
+        "name": "CachedPerExpertIndexPager.receipt",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 305,
+        "end_line": 308,
+        "signature_hash": "c724ebd1d568bc4d",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:_BoundedLRU.__init__:8717dabfa570bf37",
+        "name": "_BoundedLRU.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 50,
+        "end_line": 55,
+        "signature_hash": "a6ea7cbabcadb5a4",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:_BoundedLRU.bytes:8d2bae4195f0ce3e",
+        "name": "_BoundedLRU.bytes",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 62,
+        "end_line": 63,
+        "signature_hash": "2e0eb38b38029611",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:_BoundedLRU.entries:b0ed830f6472739b",
+        "name": "_BoundedLRU.entries",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 58,
+        "end_line": 59,
+        "signature_hash": "b2c50c9413224dc9",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:_BoundedLRU.evict:2155f31b25e3d357",
+        "name": "_BoundedLRU.evict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 85,
+        "end_line": 97,
+        "signature_hash": "4ec904bba54e4167",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:_BoundedLRU.get:ad5e5e9c9927cf93",
+        "name": "_BoundedLRU.get",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 65,
+        "end_line": 69,
+        "signature_hash": "ea9a0fd8ada92fa3",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pager_cache_adapter.py#method:_BoundedLRU.put:3ddd36931934e437",
+        "name": "_BoundedLRU.put",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pager_cache_adapter.py",
+        "line": 71,
+        "end_line": 83,
+        "signature_hash": "d3f16533c74ff00e",
+        "file_digest8": "0a4266ba4fc71c9c"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:ExpertPhysicalKeys:08b0c347296b7c1a",
         "name": "ExpertPhysicalKeys",
         "kind": "class",
@@ -451582,6 +452278,166 @@
         "end_line": 43,
         "signature_hash": "3844ad845259e223",
         "file_digest8": "81a951675780d117"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#class:CacheAdapterTests:1b7116fa596bbd4e",
+        "name": "CacheAdapterTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 59,
+        "end_line": 169,
+        "signature_hash": "e1390c0cb75aabd0",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#class:PackedBackend:8fc759dbdda04b0a",
+        "name": "PackedBackend",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 8,
+        "end_line": 15,
+        "signature_hash": "c7f6f5872bf1c164",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#class:PerExpertBackend:e8505c98b8dd3246",
+        "name": "PerExpertBackend",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 50,
+        "end_line": 56,
+        "signature_hash": "e5c03720a9534735",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#function:packed_backend:ad03346848ac5d40",
+        "name": "packed_backend",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 31,
+        "end_line": 37,
+        "signature_hash": "9e68cba90e1e89d3",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#function:packed_binding:07f2c43c0914cb70",
+        "name": "packed_binding",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 18,
+        "end_line": 28,
+        "signature_hash": "2402cfd67ea944d1",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#function:weight_map:588a61b1218af50f",
+        "name": "weight_map",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 40,
+        "end_line": 47,
+        "signature_hash": "6e20cc3287586803",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:CacheAdapterTests.test_invalid_logical_size_fails_without_claiming_physical_savings:d8f13d612e28f3a8",
+        "name": "CacheAdapterTests.test_invalid_logical_size_fails_without_claiming_physical_savings",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 158,
+        "end_line": 169,
+        "signature_hash": "3286bcdc32293623",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:CacheAdapterTests.test_packed_cache_hit_avoids_backend_read_and_reports_logical_bytes_only:8746c52542721bf7",
+        "name": "CacheAdapterTests.test_packed_cache_hit_avoids_backend_read_and_reports_logical_bytes_only",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 60,
+        "end_line": 80,
+        "signature_hash": "cc6d65a5ee98983f",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:CacheAdapterTests.test_packed_lru_budget_and_evict:5799ff022f12862b",
+        "name": "CacheAdapterTests.test_packed_lru_budget_and_evict",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 82,
+        "end_line": 98,
+        "signature_hash": "2180238291b33e8a",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:CacheAdapterTests.test_packed_stale_source_and_whole_bank_fail_before_cache_use:ef24f8aa5d9dd9f5",
+        "name": "CacheAdapterTests.test_packed_stale_source_and_whole_bank_fail_before_cache_use",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 100,
+        "end_line": 114,
+        "signature_hash": "58ce7faea1d920c4",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:CacheAdapterTests.test_per_expert_cache_hit_and_lru:440f227a9c85474a",
+        "name": "CacheAdapterTests.test_per_expert_cache_hit_and_lru",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 116,
+        "end_line": 137,
+        "signature_hash": "10cc75c43745946f",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:CacheAdapterTests.test_per_expert_stale_source_and_whole_bank_fail_before_cache_use:5805d2461747c1b1",
+        "name": "CacheAdapterTests.test_per_expert_stale_source_and_whole_bank_fail_before_cache_use",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 139,
+        "end_line": 156,
+        "signature_hash": "b7f12afd6bd68b00",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:PackedBackend.__init__:d7d9a5458aa9511a",
+        "name": "PackedBackend.__init__",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 9,
+        "end_line": 11,
+        "signature_hash": "be7491c2e7f68d95",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:PackedBackend.read_rows:54076df54da04aa3",
+        "name": "PackedBackend.read_rows",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 13,
+        "end_line": 15,
+        "signature_hash": "3844ad845259e223",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:PerExpertBackend.__init__:09e53cc36b106b9a",
+        "name": "PerExpertBackend.__init__",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "093f046a4f90c47d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_pager_cache_adapter.py#method:PerExpertBackend.read_tensor:775b1e211992cb5b",
+        "name": "PerExpertBackend.read_tensor",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_pager_cache_adapter.py",
+        "line": 54,
+        "end_line": 56,
+        "signature_hash": "b5e86620f84079e9",
+        "file_digest8": "093f046a4f90c47d"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#class:FakeBackend:bf8ef4712d835197",
@@ -453064,7 +453920,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "4bbde33839f6e5d2a4779fb70825f034",
-    "payload_hash": "6b180a2c96c78f9a07886e588c4109a9"
+    "record_fingerprint": "45233d1718981c9da69657a7b23a8278",
+    "payload_hash": "35b8807aab7e72d9f2994521118cd5e9"
   }
 }
