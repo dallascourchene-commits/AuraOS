@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788128070,
+  "generated_at_unix": 1788128964,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1655,
+    "repo_file_count": 1657,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1631,6 +1631,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project006/creator_media_arena_adapter.py",
       "tools/project006/creator_media_handoff.py",
       "tools/project006/creator_media_nono_runner.py",
       "tools/project006/drive_command_executor_hook.py",
@@ -1645,6 +1646,7 @@
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py",
+      "tools/project006/test_creator_media_arena_adapter.py",
       "tools/project006/test_creator_media_handoff.py",
       "tools/project006/test_creator_media_nono_runner.py",
       "tools/project006/test_drive_command_executor_hook.py",
@@ -1771,15 +1773,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1655,
-      "bytes": 26524695,
-      "tokens_est": 6621598,
+      "files": 1657,
+      "bytes": 26544951,
+      "tokens_est": 6626662,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1012,
+        "python_module": 1014,
         "schema_or_lexicon": 274,
         "support_file": 49
       }
@@ -4393,6 +4395,22 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 42,
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#function:_digest:24a9dd92fcbbdcd5",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:_digest:6c877e062c1a62d3",
+        "signature_hash": "d42d4b0e624983a0"
       }
     ],
     "_token_proxy": [
@@ -14741,6 +14759,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 51,
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#function:_text:e235d7973508698e",
+        "signature_hash": "8b2f17b53196e6c0"
       }
     ],
     "_bounded": [
@@ -127863,6 +127889,14 @@
         "end_line": 58,
         "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_server.py#function:dispatch:eaa6205818fe39fd",
         "signature_hash": "3783db4dbe37bc98"
+      },
+      {
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 81,
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:dispatch:8d08fda92461c099",
+        "signature_hash": "934650d6d62cf5f9"
       }
     ],
     "test_loopback_origin_is_exact_and_non_loopback_origins_fail_closed": [
@@ -157243,6 +157277,76 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "ArenaMediaAdapterError": [
+      {
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "kind": "class",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#class:ArenaMediaAdapterError:f828790522c7eec8",
+        "signature_hash": "fdef528fa3c511d5"
+      }
+    ],
+    "_reject_provider_control": [
+      {
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 62,
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#function:_reject_provider_control:658c9989f6199ff0",
+        "signature_hash": "9558e02e1923157c"
+      }
+    ],
+    "validate_dispatch": [
+      {
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 130,
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#function:validate_dispatch:25575c5a832abd47",
+        "signature_hash": "2f6a2177d35fd5e4"
+      }
+    ],
+    "ChildResult": [
+      {
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "kind": "class",
+        "line": 134,
+        "end_line": 137,
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#class:ChildResult:4c3462ee25e01942",
+        "signature_hash": "9765709518d2706f"
+      }
+    ],
+    "_default_runner": [
+      {
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 143,
+        "end_line": 152,
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#function:_default_runner:c5c99f09e6cedf47",
+        "signature_hash": "f40cf31ebc6d19f9"
+      }
+    ],
+    "build_nono_argv": [
+      {
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 155,
+        "end_line": 166,
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#function:build_nono_argv:b19eccb0559c9571",
+        "signature_hash": "4d284c7fed401510"
+      }
+    ],
+    "execute_live_media": [
+      {
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 169,
+        "end_line": 207,
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#function:execute_live_media:41d0cb0a63161917",
+        "signature_hash": "704204c71f23fe9d"
+      }
+    ],
     "MediaStatus": [
       {
         "file": "tools/project006/creator_media_handoff.py",
@@ -159293,6 +159397,114 @@
         "signature_hash": "3a93e7dc1b066a3a"
       }
     ],
+    "handoff": [
+      {
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 39,
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:handoff:3a87e87fac08ee81",
+        "signature_hash": "61c44477fae85b2b"
+      },
+      {
+        "file": "tools/project006/test_creator_media_handoff.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 40,
+        "semantic_id": "tools/project006/test_creator_media_handoff.py#function:handoff:682cf6369085985e",
+        "signature_hash": "a113994ff16c4c9f"
+      }
+    ],
+    "test_valid_dispatch_binds_exact_admission": [
+      {
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 84,
+        "end_line": 87,
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:test_valid_dispatch_binds_exact_admission:8fef8c29a05d6e9b",
+        "signature_hash": "8f389de49ec1e874"
+      }
+    ],
+    "test_rejects_forged_spend_reference": [
+      {
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 94,
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:test_rejects_forged_spend_reference:d2649c89e1382ad9",
+        "signature_hash": "06f163679f26851e"
+      }
+    ],
+    "test_rejects_unknown_cost": [
+      {
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 97,
+        "end_line": 101,
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:test_rejects_unknown_cost:e871ea1a9a78ec3e",
+        "signature_hash": "40e71d3a204e2e21"
+      }
+    ],
+    "test_rejects_retry_or_fallback_widening": [
+      {
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 104,
+        "end_line": 108,
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:test_rejects_retry_or_fallback_widening:d2420921715f949a",
+        "signature_hash": "99c2fd605f37e673"
+      }
+    ],
+    "test_rejects_caller_provider_endpoint_control": [
+      {
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 111,
+        "end_line": 115,
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:test_rejects_caller_provider_endpoint_control:c601225ce72419ae",
+        "signature_hash": "8d3927af2b5e1666"
+      }
+    ],
+    "test_executes_only_through_nono_profile_and_returns_receipt": [
+      {
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 118,
+        "end_line": 140,
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:test_executes_only_through_nono_profile_and_returns_receipt:3e6c80dfa47a3a3d",
+        "signature_hash": "296fdc16759a9104"
+      }
+    ],
+    "test_executes_only_through_nono_profile_and_returns_receipt.runner": [
+      {
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 132,
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#method:test_executes_only_through_nono_profile_and_returns_receipt.runner:7e8a01ea5ad3a5ef",
+        "signature_hash": "065e2dbd4f938b67"
+      }
+    ],
+    "test_child_failure_is_redacted": [
+      {
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "kind": "function",
+        "line": 143,
+        "end_line": 148,
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:test_child_failure_is_redacted:287cfa2a5e9f6183",
+        "signature_hash": "24de0d62c29ebba8"
+      }
+    ],
+    "test_child_failure_is_redacted.runner": [
+      {
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "kind": "method",
+        "line": 144,
+        "end_line": 145,
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#method:test_child_failure_is_redacted.runner:11538e5a886805f6",
+        "signature_hash": "065e2dbd4f938b67"
+      }
+    ],
     "FakeTransport.create": [
       {
         "file": "tools/project006/test_creator_media_handoff.py",
@@ -159311,16 +159523,6 @@
         "end_line": 20,
         "semantic_id": "tools/project006/test_creator_media_handoff.py#method:FakeTransport.poll:83a041c5db9e996e",
         "signature_hash": "2cf8630d757cf449"
-      }
-    ],
-    "handoff": [
-      {
-        "file": "tools/project006/test_creator_media_handoff.py",
-        "kind": "function",
-        "line": 23,
-        "end_line": 40,
-        "semantic_id": "tools/project006/test_creator_media_handoff.py#function:handoff:682cf6369085985e",
-        "signature_hash": "a113994ff16c4c9f"
       }
     ],
     "CreatorMediaHandoffTests": [
@@ -161430,6 +161632,16 @@
     "python3 tools/project006/local_runner_preflight.py > wp10-local-runtime-preflight.json": [
       ".github/workflows/project006-local-runtime-preflight.yml"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/project006-local-runtime-preflight.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m pytest": [
+      ".github/workflows/project006-local-runtime-preflight.yml",
+      "USER_GUIDE.md",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md",
+      "docs/README_PRE_ARCHITECT_BENCHMARK.md"
+    ],
     "python -m unittest": [
       ".github/workflows/project006-provider-handoff-integration.yml",
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
@@ -161747,11 +161959,6 @@
     "python3 -m aura_gate_server": [
       "USER_GUIDE.md"
     ],
-    "python3 -m pytest": [
-      "USER_GUIDE.md",
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md",
-      "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
     "python3 -m aura_persistence_cli": [
       "USER_GUIDE.md"
     ],
@@ -161904,9 +162111,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -172989,53 +173193,61 @@
       "path": ".github/workflows/project006-local-runtime-preflight.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 2297,
-      "lines": 57,
-      "tokens_est": 575,
+      "bytes": 7694,
+      "lines": 161,
+      "tokens_est": 1924,
       "symbol_count": 0,
       "commands": [
-        "python3 tools/project006/local_runner_preflight.py > wp10-local-runtime-preflight.json"
+        "python3 tools/project006/local_runner_preflight.py > wp10-local-runtime-preflight.json",
+        "python3 -m py_compile",
+        "python3 -m pytest"
       ],
       "command_lines": {
         "python3 tools/project006/local_runner_preflight.py > wp10-local-runtime-preflight.json": [
-          28
+          35
+        ],
+        "python3 -m py_compile": [
+          73
+        ],
+        "python3 -m pytest": [
+          77
         ]
       },
       "topology": {},
-      "digest8": "254b815ff0b86968",
+      "digest8": "064e67fc58cee716",
       "vector": [
-        -0.116415,
-        0.038805,
-        0.173996,
-        -0.026287,
-        0.006259,
-        0.036301,
-        0.259116,
-        0.083869,
-        -0.204038,
-        -0.276641,
-        -0.016273,
-        -0.224067,
-        0.068847,
-        -0.033798,
-        -0.036301,
-        0.061337,
-        0.246599,
-        -0.148961,
-        0.319201,
-        0.26913,
-        0.041308,
-        -0.081365,
-        0.274137,
-        -0.058833,
-        0.06384,
-        -0.316698,
-        -0.224067,
-        -0.111407,
-        -0.006259,
-        0.241591,
-        -0.259116,
-        0.249102
+        0.045151,
+        0.202601,
+        -0.274379,
+        -0.042836,
+        -0.244278,
+        0.255856,
+        0.209547,
+        0.160923,
+        0.107668,
+        0.04052,
+        -0.019681,
+        0.047466,
+        0.079883,
+        -0.193339,
+        -0.158607,
+        0.225755,
+        0.112299,
+        -0.191023,
+        -0.209547,
+        0.211862,
+        0.114614,
+        0.06599,
+        -0.232701,
+        -0.216493,
+        0.195654,
+        -0.075252,
+        0.160923,
+        0.188708,
+        -0.1725,
+        0.267433,
+        0.246594,
+        -0.158607
       ]
     },
     {
@@ -265414,6 +265626,53 @@
       ]
     },
     {
+      "path": "tools/project006/creator_media_arena_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9747,
+      "lines": 208,
+      "tokens_est": 2437,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8c95ab19f3aae721",
+      "vector": [
+        -0.142451,
+        0.139973,
+        0.08547,
+        0.154838,
+        0.209341,
+        -0.100335,
+        -0.078038,
+        0.204386,
+        -0.092903,
+        0.276231,
+        0.050787,
+        -0.154838,
+        -0.021058,
+        0.29605,
+        -0.303482,
+        0.303482,
+        0.313392,
+        -0.082993,
+        -0.149883,
+        0.065651,
+        0.075561,
+        -0.063174,
+        0.305959,
+        0.001239,
+        0.013626,
+        -0.053264,
+        0.092903,
+        0.196954,
+        0.065651,
+        0.310914,
+        -0.130064,
+        0.199431
+      ]
+    },
+    {
       "path": "tools/project006/creator_media_handoff.py",
       "role": "python_module",
       "binary": false,
@@ -266069,6 +266328,53 @@
         0.16574,
         0.042399,
         -0.140044
+      ]
+    },
+    {
+      "path": "tools/project006/test_creator_media_arena_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5112,
+      "lines": 149,
+      "tokens_est": 1278,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5f9188cda1a55332",
+      "vector": [
+        -0.02337,
+        0.07503,
+        -0.220171,
+        -0.175891,
+        -0.151291,
+        -0.07503,
+        -0.121771,
+        0.202951,
+        0.146371,
+        0.08733,
+        -0.281671,
+        -0.254611,
+        0.276751,
+        0.242311,
+        -0.00615,
+        -0.266911,
+        0.134071,
+        -0.225091,
+        0.08487,
+        -0.04059,
+        0.210331,
+        0.249691,
+        -0.198031,
+        0.146371,
+        0.107011,
+        -0.01845,
+        0.220171,
+        0.06027,
+        -0.08487,
+        -0.242311,
+        -0.271831,
+        -0.04059
       ]
     },
     {
@@ -290164,15 +290470,15 @@
     }
   },
   "summary": {
-    "file_count": 1655,
-    "total_bytes": 26524695,
-    "text_tokens_est": 6621598,
+    "file_count": 1657,
+    "total_bytes": 26544951,
+    "text_tokens_est": 6626662,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1012,
+      "python_module": 1014,
       "schema_or_lexicon": 274,
       "support_file": 49
     },
@@ -291814,6 +292120,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project006/creator_media_arena_adapter.py",
       "tools/project006/creator_media_handoff.py",
       "tools/project006/creator_media_nono_runner.py",
       "tools/project006/drive_command_executor_hook.py",
@@ -291828,6 +292135,7 @@
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py",
+      "tools/project006/test_creator_media_arena_adapter.py",
       "tools/project006/test_creator_media_handoff.py",
       "tools/project006/test_creator_media_nono_runner.py",
       "tools/project006/test_drive_command_executor_hook.py",
@@ -448908,6 +449216,96 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#class:ArenaMediaAdapterError:f828790522c7eec8",
+        "name": "ArenaMediaAdapterError",
+        "kind": "class",
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "fdef528fa3c511d5",
+        "file_digest8": "8c95ab19f3aae721"
+      },
+      {
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#class:ChildResult:4c3462ee25e01942",
+        "name": "ChildResult",
+        "kind": "class",
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "line": 134,
+        "end_line": 137,
+        "signature_hash": "9765709518d2706f",
+        "file_digest8": "8c95ab19f3aae721"
+      },
+      {
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#function:_default_runner:c5c99f09e6cedf47",
+        "name": "_default_runner",
+        "kind": "function",
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "line": 143,
+        "end_line": 152,
+        "signature_hash": "f40cf31ebc6d19f9",
+        "file_digest8": "8c95ab19f3aae721"
+      },
+      {
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#function:_digest:24a9dd92fcbbdcd5",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "line": 40,
+        "end_line": 42,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "8c95ab19f3aae721"
+      },
+      {
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#function:_reject_provider_control:658c9989f6199ff0",
+        "name": "_reject_provider_control",
+        "kind": "function",
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "line": 54,
+        "end_line": 62,
+        "signature_hash": "9558e02e1923157c",
+        "file_digest8": "8c95ab19f3aae721"
+      },
+      {
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#function:_text:e235d7973508698e",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "line": 45,
+        "end_line": 51,
+        "signature_hash": "8b2f17b53196e6c0",
+        "file_digest8": "8c95ab19f3aae721"
+      },
+      {
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#function:build_nono_argv:b19eccb0559c9571",
+        "name": "build_nono_argv",
+        "kind": "function",
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "line": 155,
+        "end_line": 166,
+        "signature_hash": "4d284c7fed401510",
+        "file_digest8": "8c95ab19f3aae721"
+      },
+      {
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#function:execute_live_media:41d0cb0a63161917",
+        "name": "execute_live_media",
+        "kind": "function",
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "line": 169,
+        "end_line": 207,
+        "signature_hash": "704204c71f23fe9d",
+        "file_digest8": "8c95ab19f3aae721"
+      },
+      {
+        "semantic_id": "tools/project006/creator_media_arena_adapter.py#function:validate_dispatch:25575c5a832abd47",
+        "name": "validate_dispatch",
+        "kind": "function",
+        "file": "tools/project006/creator_media_arena_adapter.py",
+        "line": 65,
+        "end_line": 130,
+        "signature_hash": "2f6a2177d35fd5e4",
+        "file_digest8": "8c95ab19f3aae721"
+      },
+      {
         "semantic_id": "tools/project006/creator_media_handoff.py#class:HiggsfieldTransport:380d16bd6113af4d",
         "name": "HiggsfieldTransport",
         "kind": "class",
@@ -451348,6 +451746,126 @@
         "file_digest8": "15701220c113d48b"
       },
       {
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:_digest:6c877e062c1a62d3",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "d42d4b0e624983a0",
+        "file_digest8": "5f9188cda1a55332"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:dispatch:8d08fda92461c099",
+        "name": "dispatch",
+        "kind": "function",
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "line": 42,
+        "end_line": 81,
+        "signature_hash": "934650d6d62cf5f9",
+        "file_digest8": "5f9188cda1a55332"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:handoff:3a87e87fac08ee81",
+        "name": "handoff",
+        "kind": "function",
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "line": 25,
+        "end_line": 39,
+        "signature_hash": "61c44477fae85b2b",
+        "file_digest8": "5f9188cda1a55332"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:test_child_failure_is_redacted:287cfa2a5e9f6183",
+        "name": "test_child_failure_is_redacted",
+        "kind": "function",
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "line": 143,
+        "end_line": 148,
+        "signature_hash": "24de0d62c29ebba8",
+        "file_digest8": "5f9188cda1a55332"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:test_executes_only_through_nono_profile_and_returns_receipt:3e6c80dfa47a3a3d",
+        "name": "test_executes_only_through_nono_profile_and_returns_receipt",
+        "kind": "function",
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "line": 118,
+        "end_line": 140,
+        "signature_hash": "296fdc16759a9104",
+        "file_digest8": "5f9188cda1a55332"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:test_rejects_caller_provider_endpoint_control:c601225ce72419ae",
+        "name": "test_rejects_caller_provider_endpoint_control",
+        "kind": "function",
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "line": 111,
+        "end_line": 115,
+        "signature_hash": "8d3927af2b5e1666",
+        "file_digest8": "5f9188cda1a55332"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:test_rejects_forged_spend_reference:d2649c89e1382ad9",
+        "name": "test_rejects_forged_spend_reference",
+        "kind": "function",
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "line": 90,
+        "end_line": 94,
+        "signature_hash": "06f163679f26851e",
+        "file_digest8": "5f9188cda1a55332"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:test_rejects_retry_or_fallback_widening:d2420921715f949a",
+        "name": "test_rejects_retry_or_fallback_widening",
+        "kind": "function",
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "line": 104,
+        "end_line": 108,
+        "signature_hash": "99c2fd605f37e673",
+        "file_digest8": "5f9188cda1a55332"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:test_rejects_unknown_cost:e871ea1a9a78ec3e",
+        "name": "test_rejects_unknown_cost",
+        "kind": "function",
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "line": 97,
+        "end_line": 101,
+        "signature_hash": "40e71d3a204e2e21",
+        "file_digest8": "5f9188cda1a55332"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#function:test_valid_dispatch_binds_exact_admission:8fef8c29a05d6e9b",
+        "name": "test_valid_dispatch_binds_exact_admission",
+        "kind": "function",
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "line": 84,
+        "end_line": 87,
+        "signature_hash": "8f389de49ec1e874",
+        "file_digest8": "5f9188cda1a55332"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#method:test_child_failure_is_redacted.runner:11538e5a886805f6",
+        "name": "test_child_failure_is_redacted.runner",
+        "kind": "method",
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "line": 144,
+        "end_line": 145,
+        "signature_hash": "065e2dbd4f938b67",
+        "file_digest8": "5f9188cda1a55332"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_arena_adapter.py#method:test_executes_only_through_nono_profile_and_returns_receipt.runner:7e8a01ea5ad3a5ef",
+        "name": "test_executes_only_through_nono_profile_and_returns_receipt.runner",
+        "kind": "method",
+        "file": "tools/project006/test_creator_media_arena_adapter.py",
+        "line": 120,
+        "end_line": 132,
+        "signature_hash": "065e2dbd4f938b67",
+        "file_digest8": "5f9188cda1a55332"
+      },
+      {
         "semantic_id": "tools/project006/test_creator_media_handoff.py#class:CreatorMediaHandoffTests.test_status_url_escape_is_rejected_without_sending_credential.Tx:b28ac81a904399ec",
         "name": "CreatorMediaHandoffTests.test_status_url_escape_is_rejected_without_sending_credential.Tx",
         "kind": "class",
@@ -453258,7 +453776,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "b67ad9d6797beb2ad32e34f5e999ca8b",
-    "payload_hash": "90e396700ce29ea1c84910558ace2840"
+    "record_fingerprint": "5674cd6b3194b94a560d2fa4a0076732",
+    "payload_hash": "910405bd588baa8dcbe08e4e5e0e8be1"
   }
 }
