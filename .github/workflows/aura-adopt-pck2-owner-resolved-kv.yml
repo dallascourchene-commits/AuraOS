@@ -1,0 +1,26 @@
+name: AURA-ADOPT PCK2 Owner-Resolved KV Reuse
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/owner_resolved_persistent_kv_reuse.py'
+      - 'tools/aura_adopt/test_owner_resolved_persistent_kv_reuse.py'
+      - '.github/workflows/aura-adopt-pck2-owner-resolved-kv.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pck2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile PCK2 contract
+        run: python -m py_compile tools/aura_adopt/owner_resolved_persistent_kv_reuse.py tools/aura_adopt/test_owner_resolved_persistent_kv_reuse.py
+      - name: Run PCK2 focused regressions
+        run: python -m unittest -v tools.aura_adopt.test_owner_resolved_persistent_kv_reuse
