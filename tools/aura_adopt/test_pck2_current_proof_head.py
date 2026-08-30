@@ -66,6 +66,30 @@ class PCK2CurrentProofHeadTests(unittest.TestCase):
                 observer_state={"observer:alias": ("og:5", "oc:5")},
             )
 
+    def test_resolver_supersedes_digest_is_canonicalized_before_signing(self):
+        t = target(); e = path(t); c = claim(t, e)
+        rp = resolver_proof(c, supersedes_proof_digest="A" * 64)
+        op = observation_proof(t, e, c)
+        self.assertEqual("a" * 64, rp.supersedes_proof_digest)
+        out = admit_raw(
+            t, c, rp, e, op,
+            {c.claim_digest: (rp.proof_digest,)},
+            {e.path_digest: (op.proof_digest,)},
+        )
+        self.assertTrue(out["transformer_kv_reuse_admissible"])
+
+    def test_observation_supersedes_digest_is_canonicalized_before_signing(self):
+        t = target(); e = path(t); c = claim(t, e)
+        rp = resolver_proof(c)
+        op = observation_proof(t, e, c, supersedes_proof_digest="B" * 64)
+        self.assertEqual("b" * 64, op.supersedes_proof_digest)
+        out = admit_raw(
+            t, c, rp, e, op,
+            {c.claim_digest: (rp.proof_digest,)},
+            {e.path_digest: (op.proof_digest,)},
+        )
+        self.assertTrue(out["transformer_kv_reuse_admissible"])
+
 
 if __name__ == "__main__":
     unittest.main()
