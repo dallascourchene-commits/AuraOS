@@ -14,11 +14,14 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 import hashlib
 import json
+import string
 
 SCHEMA = "BugHoundAuthorityRegistryV2"
 REGISTRY_GENERATION = "BUGHOUND_AUTHORITY_REGISTRY_HOLD_V2"
 LIVE_EFFECT_PLANE = "LIVE_EFFECT_GRANT"
 SANITIZER_PLANE = "SANITIZED_PATTERN"
+_RECORD_SCHEMA = "AuthorityProducerRecordV2"
+_PROOF_PLANES = frozenset({LIVE_EFFECT_PLANE, SANITIZER_PLANE})
 
 
 def _canonical(value: object) -> bytes:
@@ -42,6 +45,26 @@ class AuthorityRegistryError(ValueError):
         self.detail = detail
 
 
+def _required_text(value: object, code: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise AuthorityRegistryError(code)
+    return value.strip()
+
+
+def _optional_text(value: object, code: str) -> str | None:
+    if value is None:
+        return None
+    return _required_text(value, code)
+
+
+def _sha256_hex(value: object) -> str:
+    if not isinstance(value, str) or len(value) != 64:
+        raise AuthorityRegistryError("AUTHORITY_REGISTRY_ARTIFACT_DIGEST_INVALID")
+    if value != value.lower() or any(ch not in string.hexdigits.lower() for ch in value):
+        raise AuthorityRegistryError("AUTHORITY_REGISTRY_ARTIFACT_DIGEST_INVALID")
+    return value
+
+
 @dataclass(frozen=True)
 class AuthorityProducerRecordV2:
     proof_plane: str
@@ -54,7 +77,7 @@ class AuthorityProducerRecordV2:
     reviewer_currentness_ref: str | None = None
     enabled: bool = True
     authority: bool = False
-    schema: str = "AuthorityProducerRecordV2"
+    schema: str = _RECORD_SCHEMA
 
     @property
     def record_digest(self) -> str:
@@ -91,8 +114,46 @@ class AuthorityRegistryReceiptV2:
 AuthorityRegistryReceiptV1 = AuthorityRegistryReceiptV2
 
 
+def _validate_record(record: object) -> AuthorityProducerRecordV2:
+    """Fail closed on malformed or authority-widened canonical trust records."""
+    if not isinstance(record, AuthorityProducerRecordV2):
+        raise AuthorityRegistryError("AUTHORITY_REGISTRY_RECORD_TYPE_INVALID")
+    if record.schema != _RECORD_SCHEMA:
+        raise AuthorityRegistryError("AUTHORITY_REGISTRY_RECORD_SCHEMA_MISMATCH")
+    if record.proof_plane not in _PROOF_PLANES:
+        raise AuthorityRegistryError("AUTHORITY_PROOF_PLANE_UNREGISTERED", str(record.proof_plane))
+
+    _sha256_hex(record.artifact_digest)
+    _required_text(record.producer_ref, "AUTHORITY_REGISTRY_PRODUCER_REF_REQUIRED")
+    _required_text(record.producer_generation, "AUTHORITY_REGISTRY_PRODUCER_GENERATION_REQUIRED")
+    _required_text(record.producer_currentness_ref, "AUTHORITY_REGISTRY_PRODUCER_CURRENTNESS_REQUIRED")
+
+    if type(record.enabled) is not bool:
+        raise AuthorityRegistryError("AUTHORITY_REGISTRY_ENABLED_FLAG_INVALID")
+    if type(record.authority) is not bool or record.authority is not False:
+        raise AuthorityRegistryError("AUTHORITY_REGISTRY_AUTHORITY_WIDENING")
+
+    reviewer_values = (
+        _optional_text(record.reviewer_ref, "AUTHORITY_REGISTRY_REVIEWER_REF_INVALID"),
+        _optional_text(record.reviewer_generation, "AUTHORITY_REGISTRY_REVIEWER_GENERATION_INVALID"),
+        _optional_text(
+            record.reviewer_currentness_ref,
+            "AUTHORITY_REGISTRY_REVIEWER_CURRENTNESS_INVALID",
+        ),
+    )
+    if record.proof_plane == LIVE_EFFECT_PLANE and any(value is not None for value in reviewer_values):
+        raise AuthorityRegistryError("LIVE_EFFECT_REVIEWER_FIELDS_FORBIDDEN")
+    if record.proof_plane == SANITIZER_PLANE and any(value is None for value in reviewer_values):
+        raise AuthorityRegistryError("SANITIZER_REVIEWER_FIELDS_REQUIRED")
+    return record
+
+
+def _validated_records() -> tuple[AuthorityProducerRecordV2, ...]:
+    return tuple(_validate_record(record) for record in _CANONICAL_RECORDS)
+
+
 def authority_registry_receipt() -> AuthorityRegistryReceiptV2:
-    records = tuple(sorted(_CANONICAL_RECORDS, key=lambda record: record.record_digest))
+    records = tuple(sorted(_validated_records(), key=lambda record: record.record_digest))
     return AuthorityRegistryReceiptV2(
         registry_generation=REGISTRY_GENERATION,
         record_digests=tuple(record.record_digest for record in records),
@@ -116,13 +177,22 @@ def resolve_authority_producer(
     reviewer_generation: str | None = None,
     reviewer_currentness_ref: str | None = None,
 ) -> AuthorityProducerRecordV2:
-    """Resolve an exact consequence artifact against repository-owned state.
+    """Resolve an exact consequence artifact against validated repository-owned state.
 
     Producer identity by itself is insufficient because those identifiers are
     public and copyable. The source-owned record must bind the exact artifact
-    digest consumed at the consequence boundary.
+    digest consumed at the consequence boundary. Canonical registry records are
+    themselves validated before they can become a trust root.
     """
-    for record in _CANONICAL_RECORDS:
+    if proof_plane not in _PROOF_PLANES:
+        raise AuthorityRegistryError("AUTHORITY_PROOF_PLANE_UNREGISTERED", proof_plane)
+    _sha256_hex(artifact_digest)
+    _required_text(producer_ref, "AUTHORITY_REGISTRY_PRODUCER_REF_REQUIRED")
+    _required_text(producer_generation, "AUTHORITY_REGISTRY_PRODUCER_GENERATION_REQUIRED")
+    _required_text(producer_currentness_ref, "AUTHORITY_REGISTRY_PRODUCER_CURRENTNESS_REQUIRED")
+
+    records = _validated_records()
+    for record in records:
         if not record.enabled or record.proof_plane != proof_plane:
             continue
         if (
@@ -137,6 +207,4 @@ def resolve_authority_producer(
             return record
     if proof_plane == LIVE_EFFECT_PLANE:
         raise AuthorityRegistryError("LIVE_EFFECT_PRODUCER_TRUST_UNPROVEN")
-    if proof_plane == SANITIZER_PLANE:
-        raise AuthorityRegistryError("SANITIZER_PRODUCER_TRUST_UNPROVEN")
-    raise AuthorityRegistryError("AUTHORITY_PROOF_PLANE_UNREGISTERED", proof_plane)
+    raise AuthorityRegistryError("SANITIZER_PRODUCER_TRUST_UNPROVEN")
