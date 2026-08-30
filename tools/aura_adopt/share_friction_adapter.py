@@ -228,8 +228,6 @@ def project_share_into_browser_friction(
     plan = validate_share_launch_plan(share_launch_plan)
     browser = project_browser_observation(browser_observation)
 
-    # Sharing/reuse of this first-value artifact is only meaningful after explicit
-    # human acceptance. Synthetic technical success cannot be laundered downstream.
     if share_observation.mode in {
         ShareActionMode.USER_SHARE_OBSERVED,
         ShareActionMode.USER_REUSE_OBSERVED,
@@ -286,8 +284,6 @@ def build_browser_share_friction_receipt(
         if friction_vector.get("reuse_recovery") is not None:
             raise ShareFrictionError("REUSE_RECOVERY_FRICTION_REQUIRES_REOPEN")
 
-    # ZF-00 remains the only receipt owner. The capsule/launch identities are
-    # additional provenance refs, not a second receipt identity.
     return build_friction_receipt(
         decision,
         route_id=browser.route_id,
@@ -312,7 +308,4 @@ def build_browser_share_friction_receipt(
         privacy_telemetry_mode="LOCAL_ONLY_NO_TELEMETRY",
         invalidators=invalidators,
         evidence_class="LOCAL_TEST",
-        consent_ref=None,
-        effect_authorized=False,
-        execution_proven=False,
     )
