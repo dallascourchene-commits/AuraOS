@@ -10,6 +10,17 @@ on:
       - "tools/awj032/test_glm53_checkpoint_source_binding.py"
       - "tools/awj032/test_glm53_checkpoint_extra_layer_classification.py"
       - ".github/workflows/awj032-glm53-g1-metadata-contract.yml"
+  push:
+    branches:
+      - "awj032/glm53-checkpoint-layout-probe-20260830"
+    paths:
+      - "tools/awj032/glm53_checkpoint_layout_probe.py"
+      - "tools/awj032/glm53_checkpoint_source_binding.py"
+      - "tools/awj032/glm53_checkpoint_extra_layer_classification.py"
+      - "tools/awj032/test_glm53_checkpoint_layout_probe.py"
+      - "tools/awj032/test_glm53_checkpoint_source_binding.py"
+      - "tools/awj032/test_glm53_checkpoint_extra_layer_classification.py"
+      - ".github/workflows/awj032-glm53-g1-metadata-contract.yml"
   workflow_dispatch:
 
 permissions:
