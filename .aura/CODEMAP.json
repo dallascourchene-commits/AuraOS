@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788111950,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -132,6 +132,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf05a-share-capsule.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1631,6 +1632,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/share_capsule.py",
+      "tools/aura_adopt/test_share_capsule.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26444421,
+      "tokens_est": 6601458,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3895,6 +3898,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 46,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_canonical:d655963d03a64c0d",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4337,6 +4348,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_digest:450101f990eeb5ae",
+        "signature_hash": "514f786724465716"
       }
     ],
     "_token_proxy": [
@@ -8067,6 +8086,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 64,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_sha:7dd9b0badb033e71",
+        "signature_hash": "1f7f7fe2646bf818"
       }
     ],
     "_repo": [
@@ -14713,6 +14740,14 @@
         "end_line": 106,
         "semantic_id": "aura_arena_attempt_archive.py#function:_safe:6db084dcea2c1f77",
         "signature_hash": "f83ad98bde6a94e5"
+      },
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 86,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_safe:310438a4d852079b",
+        "signature_hash": "6016d0f9cd65e624"
       }
     ],
     "_find_first": [
@@ -45613,6 +45648,14 @@
         "end_line": 622,
         "semantic_id": "aura_ephemeral_workspace_contracts.py#function:_strict:7cc638c09d77363b",
         "signature_hash": "83253960fb0c94f9"
+      },
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "function",
+        "line": 89,
+        "end_line": 92,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_strict:d29b0af2995d3044",
+        "signature_hash": "14f3f88ba041962a"
       }
     ],
     "_set_record_digest": [
@@ -157181,6 +157224,496 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "ShareCapsuleError": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 36,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#class:ShareCapsuleError:1d29644a662f9e8e",
+        "signature_hash": "134b312294904b1f"
+      }
+    ],
+    "ShareCapsuleError.__init__": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 36,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:ShareCapsuleError.__init__:b8a447216b0cf5e3",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_ident": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 58,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_ident:d4b824a7e537abc4",
+        "signature_hash": "a5aac84d6e844d15"
+      }
+    ],
+    "EvidenceRef": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "class",
+        "line": 96,
+        "end_line": 107,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#class:EvidenceRef:3be5f58e2999058d",
+        "signature_hash": "89f3e27d1ddaa8c9"
+      }
+    ],
+    "EvidenceRef.__post_init__": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 107,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:EvidenceRef.__post_init__:a6e0b4eded2514f9",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "Attribution": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "class",
+        "line": 111,
+        "end_line": 118,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#class:Attribution:5c0f24063402f56a",
+        "signature_hash": "487c2226a86d50c8"
+      }
+    ],
+    "Attribution.__post_init__": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 118,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:Attribution.__post_init__:d6fe3f7b621c6c4f",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ReferralHop": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "class",
+        "line": 122,
+        "end_line": 131,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#class:ReferralHop:9029b5b12b69f1e8",
+        "signature_hash": "27bb7b23a332e5c9"
+      }
+    ],
+    "ReferralHop.__post_init__": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 131,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:ReferralHop.__post_init__:55bf9d561228605f",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "BindingEvidence": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "class",
+        "line": 135,
+        "end_line": 149,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#class:BindingEvidence:9abdc091e2609881",
+        "signature_hash": "87bd36729de9892b"
+      }
+    ],
+    "BindingEvidence.__post_init__": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 149,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:BindingEvidence.__post_init__:fe6df778ad5bba23",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RouteEvidence": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "class",
+        "line": 153,
+        "end_line": 164,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#class:RouteEvidence:cad3aec447959e0f",
+        "signature_hash": "60a73d5e7f2d606d"
+      }
+    ],
+    "RouteEvidence.__post_init__": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 164,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:RouteEvidence.__post_init__:2662f65a13974341",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ShareCapsule": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "class",
+        "line": 168,
+        "end_line": 255,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#class:ShareCapsule:b38e119bfca556ff",
+        "signature_hash": "578f5a890939d2cb"
+      }
+    ],
+    "ShareCapsule.__post_init__": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "method",
+        "line": 185,
+        "end_line": 224,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:ShareCapsule.__post_init__:465ab78bccd71b8c",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ShareCapsule.canonical_payload": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "method",
+        "line": 226,
+        "end_line": 248,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:ShareCapsule.canonical_payload:54cf997274eb6c59",
+        "signature_hash": "5aac0e95c9ede280"
+      }
+    ],
+    "ShareCapsule.digest": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "method",
+        "line": 251,
+        "end_line": 252,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:ShareCapsule.digest:832939c0354f18ac",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "ShareCapsule.export_json": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "method",
+        "line": 254,
+        "end_line": 255,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:ShareCapsule.export_json:634f19574d833f02",
+        "signature_hash": "fbb7a0e312c8ecc5"
+      }
+    ],
+    "_eref": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "function",
+        "line": 258,
+        "end_line": 265,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_eref:1dbbae7345a26b1b",
+        "signature_hash": "8c6ed1f5d1d722de"
+      }
+    ],
+    "_attrib": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "function",
+        "line": 268,
+        "end_line": 276,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_attrib:c90b67445b90fe25",
+        "signature_hash": "d9a6089a70a0effd"
+      }
+    ],
+    "_hop": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "function",
+        "line": 279,
+        "end_line": 283,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_hop:57adbefc08dfabd3",
+        "signature_hash": "53956897d3242c56"
+      }
+    ],
+    "import_share_capsule_json": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "function",
+        "line": 286,
+        "end_line": 327,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:import_share_capsule_json:86b6d8a2586ccbef",
+        "signature_hash": "a398919c378930c0"
+      }
+    ],
+    "refer_capsule": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "function",
+        "line": 330,
+        "end_line": 362,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:refer_capsule:beaf31cc98afba30",
+        "signature_hash": "cc2a2bcf127507b5"
+      }
+    ],
+    "_binding_blockers": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "function",
+        "line": 365,
+        "end_line": 379,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_binding_blockers:f5c210b6a37ca5c4",
+        "signature_hash": "66fd2c72577ba9f0"
+      }
+    ],
+    "compile_share_launch": [
+      {
+        "file": "tools/aura_adopt/share_capsule.py",
+        "kind": "function",
+        "line": 382,
+        "end_line": 463,
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:compile_share_launch:21ef5a1c8330edc8",
+        "signature_hash": "033795dd5966f2ce"
+      }
+    ],
+    "ShareCapsuleTests": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 248,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#class:ShareCapsuleTests:e335ad67af5b7e7a",
+        "signature_hash": "5f0004e0571357f6"
+      }
+    ],
+    "ShareCapsuleTests.base": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 54,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.base:7b31f26e35ee4d19",
+        "signature_hash": "d5b3905ca19cf058"
+      }
+    ],
+    "ShareCapsuleTests.bindings": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 64,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.bindings:00e7f7c8e0bfdaee",
+        "signature_hash": "350602a321785af9"
+      }
+    ],
+    "ShareCapsuleTests.route": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 67,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.route:df1e63889428c1d8",
+        "signature_hash": "8e7a0298d0e33a0f"
+      }
+    ],
+    "ShareCapsuleTests.test_roundtrip_is_stable": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 73,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_roundtrip_is_stable:bf69b710ebeee936",
+        "signature_hash": "c62f15b164885670"
+      }
+    ],
+    "ShareCapsuleTests.test_attribution_order_does_not_churn_digest": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 79,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_attribution_order_does_not_churn_digest:08f1ebd7e15b8f0c",
+        "signature_hash": "caa946df8bc3d5d3"
+      }
+    ],
+    "ShareCapsuleTests.test_original_creator_attribution_required": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 94,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_original_creator_attribution_required:ef739bf853fda4ce",
+        "signature_hash": "11a44295b12ee2ca"
+      }
+    ],
+    "ShareCapsuleTests.test_sensitive_recipient_identity_rejected": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 100,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_sensitive_recipient_identity_rejected:1a3bc3f9e9943829",
+        "signature_hash": "1b2c81a1f060bb53"
+      }
+    ],
+    "ShareCapsuleTests.test_secret_rejected": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 104,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_secret_rejected:84af9f0b5809b617",
+        "signature_hash": "5ed1c2171bc41fca"
+      }
+    ],
+    "ShareCapsuleTests.test_remote_url_rejected": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 110,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_remote_url_rejected:6ba77feb6d36602b",
+        "signature_hash": "c24a86bd434febd6"
+      }
+    ],
+    "ShareCapsuleTests.test_referral_preserves_creator_parent_and_attribution_evidence": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 131,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_referral_preserves_creator_parent_and_attribution_evidence:30c33bdff25b6ff1",
+        "signature_hash": "975aa98bdd83f3ae"
+      }
+    ],
+    "ShareCapsuleTests.test_self_referral_rejected": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 141,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_self_referral_rejected:6a4250d66caa429c",
+        "signature_hash": "a42926d17521d880"
+      }
+    ],
+    "ShareCapsuleTests.test_duplicate_referrer_rejected": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 158,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_duplicate_referrer_rejected:9d7dcc33288172c0",
+        "signature_hash": "25d6d97ce2139f2e"
+      }
+    ],
+    "ShareCapsuleTests.test_referral_cannot_claim_payment": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 160,
+        "end_line": 162,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_referral_cannot_claim_payment:26cbf7694149ba80",
+        "signature_hash": "4616e22c1cdd2848"
+      }
+    ],
+    "ShareCapsuleTests.test_exact_current_trusted_route_is_user_action_only": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 183,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_exact_current_trusted_route_is_user_action_only:7bbe0a90af2dcfa5",
+        "signature_hash": "1ad8704f43e9fba4"
+      }
+    ],
+    "ShareCapsuleTests.test_wrong_generation_blocks": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 185,
+        "end_line": 189,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_wrong_generation_blocks:0fe4ab532d68ce87",
+        "signature_hash": "1f94d60a0e8cc7bc"
+      }
+    ],
+    "ShareCapsuleTests.test_unknown_currentness_blocks": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 191,
+        "end_line": 197,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_unknown_currentness_blocks:bf53fc72a183caea",
+        "signature_hash": "e9034a53551ce9cb"
+      }
+    ],
+    "ShareCapsuleTests.test_missing_binding_blocks": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 199,
+        "end_line": 203,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_missing_binding_blocks:028e67af5b02a285",
+        "signature_hash": "4473e66acda51287"
+      }
+    ],
+    "ShareCapsuleTests.test_missing_creator_identity_evidence_blocks": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 205,
+        "end_line": 211,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_missing_creator_identity_evidence_blocks:a2d28d18caf1ce3d",
+        "signature_hash": "c9e1c7d18e20e4ea"
+      }
+    ],
+    "ShareCapsuleTests.test_current_identity_reference_never_proves_identity": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 213,
+        "end_line": 218,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_current_identity_reference_never_proves_identity:47de826fd8251637",
+        "signature_hash": "bdbdb512af341afc"
+      }
+    ],
+    "ShareCapsuleTests.test_distribution_trust_unknown_blocks": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 220,
+        "end_line": 224,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_distribution_trust_unknown_blocks:8135818845fea83a",
+        "signature_hash": "2d1d0e4de56c8a06"
+      }
+    ],
+    "ShareCapsuleTests.test_route_unavailable_has_typed_next_surface": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 226,
+        "end_line": 234,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_route_unavailable_has_typed_next_surface:1093e745cd4f0668",
+        "signature_hash": "717b577f64cc6803"
+      }
+    ],
+    "ShareCapsuleTests.test_route_surface_mismatch_blocks": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 236,
+        "end_line": 242,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_route_surface_mismatch_blocks:246ecef6230311c6",
+        "signature_hash": "7ff7c56fcd80d8ef"
+      }
+    ],
+    "ShareCapsuleTests.test_unknown_top_level_field_rejected": [
+      {
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "kind": "method",
+        "line": 244,
+        "end_line": 248,
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_unknown_top_level_field_rejected:fde0127393783a17",
+        "signature_hash": "d0a539914298cd2d"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -167495,6 +168028,53 @@
         0.180531,
         0.255844,
         0.26249
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-adopt-zf05a-share-capsule.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 698,
+      "lines": 26,
+      "tokens_est": 175,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d13e64d84aac726c",
+      "vector": [
+        0.215426,
+        0.190806,
+        0.121869,
+        -0.020927,
+        0.134179,
+        0.141566,
+        0.247432,
+        0.203116,
+        -0.134179,
+        -0.121869,
+        0.126793,
+        -0.077553,
+        -0.301596,
+        0.193268,
+        -0.109559,
+        -0.23266,
+        0.200654,
+        0.161262,
+        -0.050471,
+        0.016003,
+        0.29421,
+        -0.092325,
+        -0.227736,
+        0.144028,
+        -0.052933,
+        0.163724,
+        0.153876,
+        0.176034,
+        0.227736,
+        -0.205578,
+        0.14649,
+        0.274514
       ]
     },
     {
@@ -262648,6 +263228,100 @@
       ]
     },
     {
+      "path": "tools/aura_adopt/share_capsule.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 17985,
+      "lines": 464,
+      "tokens_est": 4497,
+      "symbol_count": 30,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6b2b76d65c62a0f0",
+      "vector": [
+        -0.011541,
+        -0.173109,
+        -0.139537,
+        -0.009442,
+        0.240255,
+        -0.032524,
+        -0.204584,
+        0.229763,
+        0.177306,
+        0.261238,
+        0.013639,
+        -0.20878,
+        -0.200387,
+        0.02413,
+        0.191994,
+        -0.156323,
+        -0.011541,
+        0.112259,
+        0.179404,
+        -0.087079,
+        0.23396,
+        -0.263336,
+        -0.227665,
+        0.254943,
+        -0.244451,
+        0.267533,
+        -0.082883,
+        0.005246,
+        0.152126,
+        -0.229763,
+        -0.141635,
+        0.154225
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/test_share_capsule.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10690,
+      "lines": 253,
+      "tokens_est": 2673,
+      "symbol_count": 24,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3666dc2789e20e8f",
+      "vector": [
+        0.187496,
+        -0.104444,
+        0.041526,
+        0.197563,
+        0.182463,
+        0.169879,
+        0.257965,
+        -0.275582,
+        0.285649,
+        -0.001258,
+        -0.139678,
+        0.298232,
+        0.132128,
+        -0.245381,
+        0.033976,
+        0.023909,
+        -0.039009,
+        -0.003775,
+        0.154779,
+        0.164846,
+        -0.046559,
+        0.290682,
+        0.016359,
+        -0.240348,
+        -0.245381,
+        0.039009,
+        -0.117028,
+        -0.039009,
+        -0.117028,
+        -0.252931,
+        -0.273065,
+        0.111994
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -286646,16 +287320,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26444421,
+    "text_tokens_est": 6601458,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286797,6 +287471,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf05a-share-capsule.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -288296,6 +288971,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/share_capsule.py",
+      "tools/aura_adopt/test_share_capsule.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -445634,6 +446311,546 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#class:Attribution:5c0f24063402f56a",
+        "name": "Attribution",
+        "kind": "class",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 111,
+        "end_line": 118,
+        "signature_hash": "487c2226a86d50c8",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#class:BindingEvidence:9abdc091e2609881",
+        "name": "BindingEvidence",
+        "kind": "class",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 135,
+        "end_line": 149,
+        "signature_hash": "87bd36729de9892b",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#class:EvidenceRef:3be5f58e2999058d",
+        "name": "EvidenceRef",
+        "kind": "class",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 96,
+        "end_line": 107,
+        "signature_hash": "89f3e27d1ddaa8c9",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#class:ReferralHop:9029b5b12b69f1e8",
+        "name": "ReferralHop",
+        "kind": "class",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 122,
+        "end_line": 131,
+        "signature_hash": "27bb7b23a332e5c9",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#class:RouteEvidence:cad3aec447959e0f",
+        "name": "RouteEvidence",
+        "kind": "class",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 153,
+        "end_line": 164,
+        "signature_hash": "60a73d5e7f2d606d",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#class:ShareCapsule:b38e119bfca556ff",
+        "name": "ShareCapsule",
+        "kind": "class",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 168,
+        "end_line": 255,
+        "signature_hash": "578f5a890939d2cb",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#class:ShareCapsuleError:1d29644a662f9e8e",
+        "name": "ShareCapsuleError",
+        "kind": "class",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 32,
+        "end_line": 36,
+        "signature_hash": "134b312294904b1f",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_attrib:c90b67445b90fe25",
+        "name": "_attrib",
+        "kind": "function",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 268,
+        "end_line": 276,
+        "signature_hash": "d9a6089a70a0effd",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_binding_blockers:f5c210b6a37ca5c4",
+        "name": "_binding_blockers",
+        "kind": "function",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 365,
+        "end_line": 379,
+        "signature_hash": "66fd2c72577ba9f0",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_canonical:d655963d03a64c0d",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 39,
+        "end_line": 46,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_digest:450101f990eeb5ae",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_eref:1dbbae7345a26b1b",
+        "name": "_eref",
+        "kind": "function",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 258,
+        "end_line": 265,
+        "signature_hash": "8c6ed1f5d1d722de",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_hop:57adbefc08dfabd3",
+        "name": "_hop",
+        "kind": "function",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 279,
+        "end_line": 283,
+        "signature_hash": "53956897d3242c56",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_ident:d4b824a7e537abc4",
+        "name": "_ident",
+        "kind": "function",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 53,
+        "end_line": 58,
+        "signature_hash": "a5aac84d6e844d15",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_safe:310438a4d852079b",
+        "name": "_safe",
+        "kind": "function",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 67,
+        "end_line": 86,
+        "signature_hash": "6016d0f9cd65e624",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_sha:7dd9b0badb033e71",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 61,
+        "end_line": 64,
+        "signature_hash": "1f7f7fe2646bf818",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:_strict:d29b0af2995d3044",
+        "name": "_strict",
+        "kind": "function",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 89,
+        "end_line": 92,
+        "signature_hash": "14f3f88ba041962a",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:compile_share_launch:21ef5a1c8330edc8",
+        "name": "compile_share_launch",
+        "kind": "function",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 382,
+        "end_line": 463,
+        "signature_hash": "033795dd5966f2ce",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:import_share_capsule_json:86b6d8a2586ccbef",
+        "name": "import_share_capsule_json",
+        "kind": "function",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 286,
+        "end_line": 327,
+        "signature_hash": "a398919c378930c0",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#function:refer_capsule:beaf31cc98afba30",
+        "name": "refer_capsule",
+        "kind": "function",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 330,
+        "end_line": 362,
+        "signature_hash": "cc2a2bcf127507b5",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:Attribution.__post_init__:d6fe3f7b621c6c4f",
+        "name": "Attribution.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 116,
+        "end_line": 118,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:BindingEvidence.__post_init__:fe6df778ad5bba23",
+        "name": "BindingEvidence.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 142,
+        "end_line": 149,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:EvidenceRef.__post_init__:a6e0b4eded2514f9",
+        "name": "EvidenceRef.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 102,
+        "end_line": 107,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:ReferralHop.__post_init__:55bf9d561228605f",
+        "name": "ReferralHop.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 127,
+        "end_line": 131,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:RouteEvidence.__post_init__:2662f65a13974341",
+        "name": "RouteEvidence.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 158,
+        "end_line": 164,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:ShareCapsule.__post_init__:465ab78bccd71b8c",
+        "name": "ShareCapsule.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 185,
+        "end_line": 224,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:ShareCapsule.canonical_payload:54cf997274eb6c59",
+        "name": "ShareCapsule.canonical_payload",
+        "kind": "method",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 226,
+        "end_line": 248,
+        "signature_hash": "5aac0e95c9ede280",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:ShareCapsule.digest:832939c0354f18ac",
+        "name": "ShareCapsule.digest",
+        "kind": "method",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 251,
+        "end_line": 252,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:ShareCapsule.export_json:634f19574d833f02",
+        "name": "ShareCapsule.export_json",
+        "kind": "method",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 254,
+        "end_line": 255,
+        "signature_hash": "fbb7a0e312c8ecc5",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/share_capsule.py#method:ShareCapsuleError.__init__:b8a447216b0cf5e3",
+        "name": "ShareCapsuleError.__init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/share_capsule.py",
+        "line": 33,
+        "end_line": 36,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "6b2b76d65c62a0f0"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#class:ShareCapsuleTests:e335ad67af5b7e7a",
+        "name": "ShareCapsuleTests",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 25,
+        "end_line": 248,
+        "signature_hash": "5f0004e0571357f6",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.base:7b31f26e35ee4d19",
+        "name": "ShareCapsuleTests.base",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 26,
+        "end_line": 54,
+        "signature_hash": "d5b3905ca19cf058",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.bindings:00e7f7c8e0bfdaee",
+        "name": "ShareCapsuleTests.bindings",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 56,
+        "end_line": 64,
+        "signature_hash": "350602a321785af9",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.route:df1e63889428c1d8",
+        "name": "ShareCapsuleTests.route",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 66,
+        "end_line": 67,
+        "signature_hash": "8e7a0298d0e33a0f",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_attribution_order_does_not_churn_digest:08f1ebd7e15b8f0c",
+        "name": "ShareCapsuleTests.test_attribution_order_does_not_churn_digest",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 75,
+        "end_line": 79,
+        "signature_hash": "caa946df8bc3d5d3",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_current_identity_reference_never_proves_identity:47de826fd8251637",
+        "name": "ShareCapsuleTests.test_current_identity_reference_never_proves_identity",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 213,
+        "end_line": 218,
+        "signature_hash": "bdbdb512af341afc",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_distribution_trust_unknown_blocks:8135818845fea83a",
+        "name": "ShareCapsuleTests.test_distribution_trust_unknown_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 220,
+        "end_line": 224,
+        "signature_hash": "2d1d0e4de56c8a06",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_duplicate_referrer_rejected:9d7dcc33288172c0",
+        "name": "ShareCapsuleTests.test_duplicate_referrer_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 143,
+        "end_line": 158,
+        "signature_hash": "25d6d97ce2139f2e",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_exact_current_trusted_route_is_user_action_only:7bbe0a90af2dcfa5",
+        "name": "ShareCapsuleTests.test_exact_current_trusted_route_is_user_action_only",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 164,
+        "end_line": 183,
+        "signature_hash": "1ad8704f43e9fba4",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_missing_binding_blocks:028e67af5b02a285",
+        "name": "ShareCapsuleTests.test_missing_binding_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 199,
+        "end_line": 203,
+        "signature_hash": "4473e66acda51287",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_missing_creator_identity_evidence_blocks:a2d28d18caf1ce3d",
+        "name": "ShareCapsuleTests.test_missing_creator_identity_evidence_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 205,
+        "end_line": 211,
+        "signature_hash": "c9e1c7d18e20e4ea",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_original_creator_attribution_required:ef739bf853fda4ce",
+        "name": "ShareCapsuleTests.test_original_creator_attribution_required",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 81,
+        "end_line": 94,
+        "signature_hash": "11a44295b12ee2ca",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_referral_cannot_claim_payment:26cbf7694149ba80",
+        "name": "ShareCapsuleTests.test_referral_cannot_claim_payment",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 160,
+        "end_line": 162,
+        "signature_hash": "4616e22c1cdd2848",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_referral_preserves_creator_parent_and_attribution_evidence:30c33bdff25b6ff1",
+        "name": "ShareCapsuleTests.test_referral_preserves_creator_parent_and_attribution_evidence",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 112,
+        "end_line": 131,
+        "signature_hash": "975aa98bdd83f3ae",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_remote_url_rejected:6ba77feb6d36602b",
+        "name": "ShareCapsuleTests.test_remote_url_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 106,
+        "end_line": 110,
+        "signature_hash": "c24a86bd434febd6",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_roundtrip_is_stable:bf69b710ebeee936",
+        "name": "ShareCapsuleTests.test_roundtrip_is_stable",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 69,
+        "end_line": 73,
+        "signature_hash": "c62f15b164885670",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_route_surface_mismatch_blocks:246ecef6230311c6",
+        "name": "ShareCapsuleTests.test_route_surface_mismatch_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 236,
+        "end_line": 242,
+        "signature_hash": "7ff7c56fcd80d8ef",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_route_unavailable_has_typed_next_surface:1093e745cd4f0668",
+        "name": "ShareCapsuleTests.test_route_unavailable_has_typed_next_surface",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 226,
+        "end_line": 234,
+        "signature_hash": "717b577f64cc6803",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_secret_rejected:84af9f0b5809b617",
+        "name": "ShareCapsuleTests.test_secret_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 102,
+        "end_line": 104,
+        "signature_hash": "5ed1c2171bc41fca",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_self_referral_rejected:6a4250d66caa429c",
+        "name": "ShareCapsuleTests.test_self_referral_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 133,
+        "end_line": 141,
+        "signature_hash": "a42926d17521d880",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_sensitive_recipient_identity_rejected:1a3bc3f9e9943829",
+        "name": "ShareCapsuleTests.test_sensitive_recipient_identity_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 96,
+        "end_line": 100,
+        "signature_hash": "1b2c81a1f060bb53",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_unknown_currentness_blocks:bf53fc72a183caea",
+        "name": "ShareCapsuleTests.test_unknown_currentness_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 191,
+        "end_line": 197,
+        "signature_hash": "e9034a53551ce9cb",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_unknown_top_level_field_rejected:fde0127393783a17",
+        "name": "ShareCapsuleTests.test_unknown_top_level_field_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 244,
+        "end_line": 248,
+        "signature_hash": "d0a539914298cd2d",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_share_capsule.py#method:ShareCapsuleTests.test_wrong_generation_blocks:0fe4ab532d68ce87",
+        "name": "ShareCapsuleTests.test_wrong_generation_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_share_capsule.py",
+        "line": 185,
+        "end_line": 189,
+        "signature_hash": "1f94d60a0e8cc7bc",
+        "file_digest8": "3666dc2789e20e8f"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +448101,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "73edf36f8d6bbed64db1b9f50321b4b9",
+    "payload_hash": "71f9015502c0eae8c55bcccd0de19b55"
   }
 }
