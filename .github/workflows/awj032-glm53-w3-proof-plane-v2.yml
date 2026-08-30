@@ -1,10 +1,17 @@
-name: AWJ032 GLM53 W3 proof-plane admission v2
+name: AWJ032 GLM53 W3 registered proof-plane admission
 
 on:
   pull_request:
     paths:
-      - 'tools/awj032/glm53_official_mtp_role_source_appraiser.py'
+      - 'tools/awj032/glm53_official_w2_observation.py'
+      - 'tools/awj032/glm53_official_w2_plan_binding.py'
       - 'tools/awj032/glm53_w3_official_producer_admission.py'
+      - 'tools/awj032/glm53_checkpoint_layout_probe.py'
+      - 'tools/awj032/glm53_checkpoint_extra_layer_classification.py'
+      - 'tools/awj032/glm53_checkpoint_source_binding.py'
+      - 'tools/awj032/glm53_pr340_producer_snapshot.py'
+      - 'tools/awj032/glm53_pr340_producer_snapshot_registry.py'
+      - 'tools/awj032/glm53_official_mtp_role_source_appraiser.py'
       - 'tools/awj032/glm53_w3_proof_plane_admission_v2.py'
       - 'tools/awj032/test_glm53_w3_official_producer_admission.py'
       - 'tools/awj032/test_glm53_w3_proof_plane_admission_v2.py'
@@ -18,7 +25,7 @@ permissions:
   contents: read
 
 jobs:
-  proof-plane:
+  registered-proof-plane:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -39,24 +46,30 @@ jobs:
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: '3.12'
-      - name: Compile exact W2/MTP/W3 proof-plane modules
+      - name: Compile registered producer and W3 proof planes
         run: >-
           python -m py_compile
+          tools/awj032/glm53_checkpoint_layout_probe.py
+          tools/awj032/glm53_checkpoint_extra_layer_classification.py
+          tools/awj032/glm53_checkpoint_source_binding.py
+          tools/awj032/glm53_pr340_producer_snapshot.py
+          tools/awj032/glm53_pr340_producer_snapshot_registry.py
+          tools/awj032/glm53_official_mtp_role_source_appraiser.py
           tools/awj032/glm53_official_w2_observation.py
           tools/awj032/glm53_official_w2_plan_binding.py
           tools/awj032/glm53_w3_official_producer_admission.py
-          tools/awj032/glm53_official_mtp_role_source_appraiser.py
           tools/awj032/glm53_w3_proof_plane_admission_v2.py
           tools/awj032/test_glm53_w3_official_producer_admission.py
           tools/awj032/test_glm53_w3_proof_plane_admission_v2.py
-      - name: Run producer-consumption and proof-plane regressions
+      - name: Run producer-consumption and registry regressions
         run: >-
           python -m unittest -v
           tools.awj032.test_glm53_w3_official_producer_admission
           tools.awj032.test_glm53_w3_proof_plane_admission_v2
-      - name: Re-observe official immutable MTP source and compose W3 admission
+      - name: Reproduce registered PR340 plus current PR409 appraisal from immutable source
         run: |
           python - <<'PY'
+          from tools.awj032 import glm53_pr340_producer_snapshot_registry as registry
           from tools.awj032.glm53_w3_proof_plane_admission_v2 import evaluate_w3_proof_plane_admission
           from tools.awj032.test_glm53_w3_official_producer_admission import LowerPlan, metadata, security
 
@@ -67,12 +80,23 @@ jobs:
           )
           assert out.status == "ELIGIBLE_FOR_NATIVE_SYNTHETIC_W3_FIXTURE"
           assert out.blockers == ()
+          assert out.pr340_producer_report_registered is True
+          assert out.pr409_producer_and_source_appraisal_proven is True
+          assert out.pr340_producer_execution_head == registry.PRODUCER_EXECUTION_HEAD
+          assert out.pr340_producer_run_id == registry.PRODUCER_RUN_ID
+          assert out.pr340_producer_job_id == registry.PRODUCER_JOB_ID
+          assert out.pr340_final_report_digest == registry.FINAL_REPORT_DIGEST
+          assert out.pr340_classification_stage_logical_id == registry.CLASSIFICATION_STAGE_LOGICAL_ID
+          assert out.pr340_snapshot_digest == registry.SNAPSHOT_DIGEST
           assert out.official_mtp_source_evidence_id == "b0803af6fdb7afd0dcdbf7c5b718605658a02534c960d965cfc1729eb4d9d3a2"
-          assert out.official_mtp_source_bundle_id == "7821aa7406174e1ce1c88a8b7280c4ba797508a6eaeecebc4670af2a8de0fc8b"
           assert out.synthetic_tiny_fixture_admitted is True
           assert out.official_tensor_payload_admitted is False
           assert out.runtime_mtp_support_proven is False
+          assert out.runtime_execution_admitted is False
+          assert out.checkpoint_payload_admitted is False
+          assert out.provider_effect_admitted is False
           assert out.g2_admitted is False
+          assert out.quality_proven is False
           assert out.authority is False
-          print("W3_PROOF_PLANE_ADMISSION=" + out.logical_id)
+          print("W3_REGISTERED_PROOF_PLANE_RECEIPT=" + out.logical_id)
           PY
