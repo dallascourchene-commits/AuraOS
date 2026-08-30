@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - "tools/bughound/**"
-      - "tests/test_bughound_seedlab_benchmark.py"
+      - "tests/test_bughound_*.py"
       - ".github/workflows/bughound-seedlab.yml"
   workflow_dispatch:
 
@@ -37,7 +37,7 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: "3.12"
-      - name: Run deterministic local contract
+      - name: Run deterministic local BugHound contracts
         run: |
-          python -m py_compile tools/bughound/seedlab_benchmark.py tests/test_bughound_seedlab_benchmark.py
-          python -m unittest -v tests.test_bughound_seedlab_benchmark
+          python -m py_compile tools/bughound/seedlab_benchmark.py tools/bughound/envelope_lint.py tests/test_bughound_seedlab_benchmark.py tests/test_bughound_envelope_lint.py
+          python -m unittest discover -s tests -p "test_bughound_*.py" -v
