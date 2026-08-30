@@ -53,6 +53,34 @@ class SourceBoundLayoutBridgeTests(unittest.TestCase):
         self.assertFalse(plan.g2_admitted)
         self.assertEqual(64, len(plan.source_bound_plan_digest))
 
+    def test_independent_w2_observation_inputs_are_forwarded_to_inner_bridge(self):
+        seen = {}
+
+        def compile_fn(report, **kwargs):
+            seen.update(kwargs)
+            return FakePlan(m.weight_map_digest(kwargs["weight_map"]))
+
+        m.compile_source_bound_pager_source_plan(
+            self.report(),
+            weight_map=self.wm(),
+            headers=None,
+            expected_model_revision="r",
+            expected_index_digest="i",
+            per_expert_header_evidence={"candidate": "envelope"},
+            expected_per_expert_header_repo_id="zai-org/GLM-5.3",
+            expected_per_expert_header_receipt_digest="7" * 40,
+            compile_fn=compile_fn,
+        )
+        self.assertEqual(
+            {"candidate": "envelope"}, seen["per_expert_header_evidence"]
+        )
+        self.assertEqual(
+            "zai-org/GLM-5.3", seen["expected_per_expert_header_repo_id"]
+        )
+        self.assertEqual(
+            "7" * 40, seen["expected_per_expert_header_receipt_digest"]
+        )
+
     def test_unproven_report_rejected(self):
         report = self.report()
         report["source_binding_proven"] = False
