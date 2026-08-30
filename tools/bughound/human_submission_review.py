@@ -1,9 +1,15 @@
 """Pre-effect human review packet for BugHound cash-bounty candidates.
 
 This module closes only the internal handoff from a current cash candidate and
-cash scheduler decision to a compact human-review packet. It deliberately does
-not contain exploit payloads, live-target actions, credentials, submission
-calls, payment claims, or any external-effect authority.
+cash scheduler decision to a compact evidence packet. It deliberately does not
+contain exploit payloads, live-target actions, credentials, submission calls,
+payment claims, or any external-effect authority.
+
+Current upstream PR420 candidate evidence is self-consistency checked but its
+independent-reproduction / duplicate / lint / program-admissibility producer
+trust boundary is not yet independently authenticated. Therefore this adapter
+MUST preserve the lower-plane evidence while marking the packet producer-trust
+blocked. It may not invent a caller-set `trusted=True` escape hatch.
 """
 from __future__ import annotations
 
@@ -21,14 +27,16 @@ from tools.bughound.bounty_mission import (
 from tools.bughound.cash_scheduler import BugHoundCashSchedulerDecisionV1
 
 SCHEMA = "BugHoundCashHumanReviewPacketV1"
-STATUS = "READY_FOR_HUMAN_REVIEW_PACKET"
+STATUS = "HUMAN_REVIEW_PACKET_EVIDENCE_TRUST_REQUIRED"
+UPSTREAM_TRUST_BLOCKER = "UPSTREAM_CANDIDATE_PRODUCER_TRUST_UNPROVEN"
 REVIEW_CHECKS = (
     "CONFIRM_CURRENT_PROGRAM_AND_PAYOUT_RULES",
     "CONFIRM_CURRENT_SCOPE_AND_DISCLOSURE_RULES",
-    "CONFIRM_INDEPENDENT_REPRODUCTION_BINDING",
-    "CONFIRM_DUPLICATE_PRESSURE_AND_PUBLIC_KNOWN_STATE",
-    "CONFIRM_REPORT_QUALITY_AND_CONSERVATIVE_IMPACT",
-    "HUMAN_DECIDES_WHETHER_TO_SUBMIT",
+    "CONFIRM_INDEPENDENT_REPRODUCTION_PRODUCER_AUTHENTICITY",
+    "CONFIRM_DUPLICATE_CHECK_PRODUCER_AND_PUBLIC_KNOWN_STATE",
+    "CONFIRM_REPORT_LINT_PRODUCER_AND_CONSERVATIVE_IMPACT",
+    "CONFIRM_PROGRAM_ADMISSIBILITY_PRODUCER_CURRENTNESS",
+    "HUMAN_DECIDES_WHETHER_TO_SUBMIT_ONLY_AFTER_TRUST_GAPS_CLOSE",
 )
 
 
@@ -77,6 +85,10 @@ class BugHoundCashHumanReviewPacketV1:
     payout_rules_digest: str
     scope_rules_digest: str
     source_currentness_ref: str
+    blockers: tuple[str, ...] = (UPSTREAM_TRUST_BLOCKER,)
+    candidate_producer_trust_proven: bool = False
+    human_authorization_verified: bool = False
+    ready_for_human_review: bool = False
     reviewer_required_checks: tuple[str, ...] = REVIEW_CHECKS
     status: str = STATUS
     live_target_testing_authorized: bool = False
@@ -97,16 +109,19 @@ def compile_cash_bounty_human_review_packet(
     candidate_admission: BugHoundCashCandidateAdmissionReceiptV1,
     scheduler_decision: BugHoundCashSchedulerDecisionV1,
 ) -> BugHoundCashHumanReviewPacketV1:
-    """Compile a digest-only evidence packet for a human submission decision.
+    """Compile a digest-only evidence packet while preserving upstream trust debt.
 
-    The packet is not a submission authorization. It freezes the current
-    program/scope/reproduction/report evidence identities for review and keeps
-    the final disclosure decision outside this module.
+    `READY_FOR_HUMAN_SUBMISSION_REVIEW` from the current PR420 contract is
+    accepted only as lower-plane shape/currentness evidence. The packet is
+    deliberately NOT promoted to human-review-ready because PR420 presently lets
+    the same caller supply both candidate evidence and its expected reproduction
+    identity/digest, and its duplicate/lint/program gates are assertion-shaped.
+    A future producer/registry-bound upstream generation must reopen this module.
     """
     mission = admit_cash_bounty_mission(mission_input)
 
     if candidate_admission.status != "READY_FOR_HUMAN_SUBMISSION_REVIEW":
-        raise ValueError("BUGHOUND_CANDIDATE_NOT_READY_FOR_HUMAN_REVIEW")
+        raise ValueError("BUGHOUND_CANDIDATE_NOT_READY_FOR_LOWER_PLANE_PACKET")
     if candidate_admission.ready_for_human_submission_review is not True:
         raise ValueError("BUGHOUND_CANDIDATE_READY_FLAG_REQUIRED")
     if candidate_admission.blockers:
