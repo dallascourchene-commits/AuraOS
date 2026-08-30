@@ -58,6 +58,12 @@ class NetworkState(str, Enum):
     UNKNOWN = "UNKNOWN"
 
 
+class RemoteExecutionAdmission(str, Enum):
+    NOT_ADMITTED = "NOT_ADMITTED"
+    ADMITTED_BOUNDED = "ADMITTED_BOUNDED"
+    UNKNOWN = "UNKNOWN"
+
+
 class EntrySurface(str, Enum):
     ZERO_INSTALL_WEB_PWA = "ZERO_INSTALL_WEB_PWA"
     NATIVE_ANDROID_APK = "NATIVE_ANDROID_APK"
@@ -71,6 +77,12 @@ class ComputeProfile(str, Enum):
     HYBRID_LOCAL_REMOTE = "HYBRID_LOCAL_REMOTE"
     REMOTE_FREE_FIRST = "REMOTE_FREE_FIRST"
     OFFLINE_DEGRADED = "OFFLINE_DEGRADED"
+
+
+class RouteDisposition(str, Enum):
+    READY_BOUNDED = "READY_BOUNDED"
+    PARTIAL = "PARTIAL"
+    BLOCKED = "BLOCKED"
 
 
 def _nonempty_text(value: Any, code: str) -> str:
@@ -100,10 +112,8 @@ def _digest(domain: str, value: Any) -> str:
 class SourceBindingV1:
     """Opaque binding to upstream normalized evidence.
 
-    The compiler never treats this digest as authentication. It only prevents a route
-    receipt from being silently transplanted onto a different caller-declared evidence
-    snapshot. Verification/attestation of the upstream artifact remains outside this
-    module.
+    This is identity coupling, not authentication or authority. Upstream verification,
+    provider currentness, and permission remain separate controls.
     """
 
     source_generation: str
@@ -112,24 +122,30 @@ class SourceBindingV1:
     host_evidence_digest: str
     capability_evidence_ref: str | None = None
     capability_evidence_digest: str | None = None
+    remote_admission_ref: str | None = None
+    remote_admission_digest: str | None = None
 
     def __post_init__(self) -> None:
-        for value, code in (
-            (self.source_generation, "SOURCE_GENERATION_REQUIRED"),
-            (self.currentness_ref, "CURRENTNESS_REF_REQUIRED"),
-            (self.host_evidence_ref, "HOST_EVIDENCE_REF_REQUIRED"),
-            (self.host_evidence_digest, "HOST_EVIDENCE_DIGEST_REQUIRED"),
+        for name, code in (
+            ("source_generation", "SOURCE_GENERATION_REQUIRED"),
+            ("currentness_ref", "CURRENTNESS_REF_REQUIRED"),
+            ("host_evidence_ref", "HOST_EVIDENCE_REF_REQUIRED"),
+            ("host_evidence_digest", "HOST_EVIDENCE_DIGEST_REQUIRED"),
         ):
-            _nonempty_text(value, code)
-        optional = (
-            (self.capability_evidence_ref, "CAPABILITY_EVIDENCE_REF_INVALID"),
-            (self.capability_evidence_digest, "CAPABILITY_EVIDENCE_DIGEST_INVALID"),
-        )
-        for value, code in optional:
+            object.__setattr__(self, name, _nonempty_text(getattr(self, name), code))
+        for name, code in (
+            ("capability_evidence_ref", "CAPABILITY_EVIDENCE_REF_INVALID"),
+            ("capability_evidence_digest", "CAPABILITY_EVIDENCE_DIGEST_INVALID"),
+            ("remote_admission_ref", "REMOTE_ADMISSION_REF_INVALID"),
+            ("remote_admission_digest", "REMOTE_ADMISSION_DIGEST_INVALID"),
+        ):
+            value = getattr(self, name)
             if value is not None:
-                _nonempty_text(value, code)
+                object.__setattr__(self, name, _nonempty_text(value, code))
         if (self.capability_evidence_ref is None) != (self.capability_evidence_digest is None):
             raise BootstrapError("CAPABILITY_EVIDENCE_BINDING_INCOMPLETE")
+        if (self.remote_admission_ref is None) != (self.remote_admission_digest is None):
+            raise BootstrapError("REMOTE_ADMISSION_BINDING_INCOMPLETE")
 
     def logical(self) -> dict[str, Any]:
         return asdict(self)
@@ -143,9 +159,9 @@ class SourceBindingV1:
 class BootstrapProjectionV1:
     """Route-relevant facts projected from upstream evidence.
 
-    Boolean fields are capability/availability observations only. They grant no
-    permission, authority, network reachability guarantee, provider entitlement, or
-    deployment right.
+    Availability observations never create permission or effect authority. Any compute
+    profile that requires remote execution also requires ``ADMITTED_BOUNDED`` and a
+    remote-admission source binding.
     """
 
     source: SourceBindingV1
@@ -161,12 +177,25 @@ class BootstrapProjectionV1:
     network_state: NetworkState
     free_remote_route_available: bool
     provider_credential_present: bool
+    remote_execution_admission: RemoteExecutionAdmission
     desired_first_capability: str
     schema: str = SCHEMA
 
     def __post_init__(self) -> None:
         if self.schema != SCHEMA:
             raise BootstrapError("BOOTSTRAP_SCHEMA_MISMATCH")
+        if not isinstance(self.source, SourceBindingV1):
+            raise BootstrapError("SOURCE_BINDING_TYPE_REQUIRED")
+        for name, enum_type in (
+            ("user_mode", UserMode),
+            ("platform_class", PlatformClass),
+            ("local_compute_class", LocalComputeClass),
+            ("storage_class", StorageClass),
+            ("network_state", NetworkState),
+            ("remote_execution_admission", RemoteExecutionAdmission),
+        ):
+            if not isinstance(getattr(self, name), enum_type):
+                raise BootstrapError("ENUM_REQUIRED", name)
         for name in (
             "browser_available",
             "native_install_available",
@@ -178,7 +207,14 @@ class BootstrapProjectionV1:
         ):
             if type(getattr(self, name)) is not bool:
                 raise BootstrapError("BOOL_REQUIRED", name)
-        _nonempty_text(self.desired_first_capability, "FIRST_CAPABILITY_REQUIRED")
+        object.__setattr__(
+            self,
+            "desired_first_capability",
+            _nonempty_text(self.desired_first_capability, "FIRST_CAPABILITY_REQUIRED"),
+        )
+        if self.remote_execution_admission is RemoteExecutionAdmission.ADMITTED_BOUNDED:
+            if self.source.remote_admission_ref is None:
+                raise BootstrapError("REMOTE_ADMISSION_SOURCE_BINDING_REQUIRED")
 
     def logical(self) -> dict[str, Any]:
         value = asdict(self)
@@ -187,6 +223,7 @@ class BootstrapProjectionV1:
         value["local_compute_class"] = self.local_compute_class.value
         value["storage_class"] = self.storage_class.value
         value["network_state"] = self.network_state.value
+        value["remote_execution_admission"] = self.remote_execution_admission.value
         return value
 
     @property
@@ -196,8 +233,9 @@ class BootstrapProjectionV1:
 
 @dataclass(frozen=True)
 class FrictionReceiptV1:
-    """Observable/decision-level friction accounting, not a behavioral guarantee."""
+    """Decision-visible user/system burden. Category counts may overlap."""
 
+    required_action_count: int
     install_actions_required: int
     permission_actions_required: int
     credential_actions_required: int
@@ -211,12 +249,8 @@ class FrictionReceiptV1:
 
     @property
     def total_required_actions(self) -> int:
-        return (
-            self.install_actions_required
-            + self.permission_actions_required
-            + self.credential_actions_required
-            + self.model_download_actions_required
-        )
+        """Exact count of declared ``required_actions``, not a category sum."""
+        return self.required_action_count
 
 
 @dataclass(frozen=True)
@@ -224,6 +258,7 @@ class BootstrapReceiptV1:
     schema: str
     projection_digest: str
     source_binding_digest: str
+    disposition: RouteDisposition
     surface: EntrySurface
     compute_profile: ComputeProfile
     first_use_capability: str
@@ -231,6 +266,7 @@ class BootstrapReceiptV1:
     avoided_actions: tuple[str, ...]
     blockers: tuple[str, ...]
     friction: FrictionReceiptV1
+    source_binding_authenticated: bool = False
     installation_performed: bool = False
     permission_granted: bool = False
     provider_call_made: bool = False
@@ -249,6 +285,10 @@ class BootstrapReceiptV1:
             (self.claim_ceiling, "CLAIM_CEILING_REQUIRED"),
         ):
             _nonempty_text(value, code)
+        if not isinstance(self.disposition, RouteDisposition):
+            raise BootstrapError("RECEIPT_DISPOSITION_TYPE_REQUIRED")
+        if self.source_binding_authenticated is not False:
+            raise BootstrapError("SOURCE_BINDING_AUTHENTICATION_MUST_REMAIN_FALSE")
         for name in (
             "installation_performed",
             "permission_granted",
@@ -259,9 +299,14 @@ class BootstrapReceiptV1:
         ):
             if getattr(self, name) is not False:
                 raise BootstrapError("EFFECT_FLAG_MUST_REMAIN_FALSE", name)
+        if self.disposition is RouteDisposition.READY_BOUNDED and self.blockers:
+            raise BootstrapError("READY_RECEIPT_CANNOT_HAVE_BLOCKERS")
+        if self.disposition is RouteDisposition.BLOCKED and not self.blockers:
+            raise BootstrapError("BLOCKED_RECEIPT_REQUIRES_BLOCKER")
 
     def logical(self) -> dict[str, Any]:
         value = asdict(self)
+        value["disposition"] = self.disposition.value
         value["surface"] = self.surface.value
         value["compute_profile"] = self.compute_profile.value
         return value
@@ -277,52 +322,57 @@ def _select_surface(p: BootstrapProjectionV1) -> tuple[EntrySurface, list[str], 
     blockers: list[str] = []
 
     if p.user_mode is UserMode.DEVELOPER and p.cli_available:
-        surface = EntrySurface.DEV_CLI_GITHUB
         required.append("OPEN_GITHUB_OR_AURA_CLI")
         avoided.append("INSTALL_ANDROID_APK")
-        return surface, required, avoided, blockers
+        return EntrySurface.DEV_CLI_GITHUB, required, avoided, blockers
 
-    ordinary_web_fit = p.browser_available and not p.offline_required and not p.background_required
-    if ordinary_web_fit:
-        surface = EntrySurface.ZERO_INSTALL_WEB_PWA
+    if p.browser_available and not p.offline_required and not p.background_required:
         required.append("OPEN_AURA_WEB_ENTRY")
         avoided.extend(("INSTALL_ANDROID_APK", "INSTALL_PYTHON_OR_GIT"))
-        return surface, required, avoided, blockers
+        return EntrySurface.ZERO_INSTALL_WEB_PWA, required, avoided, blockers
 
-    native_fit = (
+    if (
         p.platform_class is PlatformClass.ANDROID
         and p.native_install_available
         and (p.offline_required or p.background_required or not p.browser_available)
-    )
-    if native_fit:
-        surface = EntrySurface.NATIVE_ANDROID_APK
+    ):
         required.append("INSTALL_AURA_ANDROID_APP")
         avoided.append("INSTALL_DEVELOPER_CLI")
         if p.background_required:
             required.append("REQUEST_BACKGROUND_CAPABILITY_IF_PLATFORM_REQUIRES")
-        return surface, required, avoided, blockers
+        return EntrySurface.NATIVE_ANDROID_APK, required, avoided, blockers
 
     if p.browser_available:
-        surface = EntrySurface.ZERO_INSTALL_WEB_PWA
         required.append("OPEN_AURA_WEB_ENTRY")
         avoided.extend(("INSTALL_ANDROID_APK", "INSTALL_PYTHON_OR_GIT"))
         blockers.append("WEB_SURFACE_MAY_NOT_SATISFY_OFFLINE_OR_BACKGROUND_REQUIREMENT")
-        return surface, required, avoided, blockers
+        return EntrySurface.ZERO_INSTALL_WEB_PWA, required, avoided, blockers
 
     if p.cli_available:
-        surface = EntrySurface.DEV_CLI_GITHUB
         required.append("OPEN_GITHUB_OR_AURA_CLI")
         avoided.append("INSTALL_ANDROID_APK")
-        return surface, required, avoided, blockers
+        return EntrySurface.DEV_CLI_GITHUB, required, avoided, blockers
 
     if p.platform_class is PlatformClass.ANDROID and p.native_install_available:
-        surface = EntrySurface.NATIVE_ANDROID_APK
         required.append("INSTALL_AURA_ANDROID_APP")
         avoided.append("INSTALL_DEVELOPER_CLI")
-        return surface, required, avoided, blockers
+        return EntrySurface.NATIVE_ANDROID_APK, required, avoided, blockers
 
     blockers.append("NO_SUPPORTED_ENTRY_SURFACE_PROVEN")
     return EntrySurface.NO_SUPPORTED_SURFACE, required, avoided, blockers
+
+
+def _remote_admitted(p: BootstrapProjectionV1) -> bool:
+    return (
+        p.remote_execution_admission is RemoteExecutionAdmission.ADMITTED_BOUNDED
+        and p.source.remote_admission_ref is not None
+    )
+
+
+def _remote_blocker(p: BootstrapProjectionV1) -> str:
+    if p.remote_execution_admission is RemoteExecutionAdmission.UNKNOWN:
+        return "REMOTE_EXECUTION_ADMISSION_UNKNOWN"
+    return "REMOTE_EXECUTION_NOT_ADMITTED"
 
 
 def _select_compute(
@@ -338,6 +388,9 @@ def _select_compute(
         if p.local_compute_class is LocalComputeClass.CAPABLE and p.storage_class is StorageClass.NORMAL:
             required.append("USE_EXISTING_OR_RESOLVE_LOCAL_RUNTIME")
             return ComputeProfile.FULL_LOCAL, required, avoided, blockers, unknowns
+        if p.storage_class is StorageClass.CRITICAL:
+            blockers.append("LOCAL_STORAGE_CRITICAL_NO_RUNTIME_FIT_PROVEN")
+            return ComputeProfile.OFFLINE_DEGRADED, required, avoided, blockers, unknowns
         if p.local_compute_class in (LocalComputeClass.CAPABLE, LocalComputeClass.CONSTRAINED):
             if p.storage_class is StorageClass.UNKNOWN:
                 unknowns += 1
@@ -364,28 +417,45 @@ def _select_compute(
         and p.free_remote_route_available
         and p.storage_class in (StorageClass.CRITICAL, StorageClass.LOW)
     ):
-        required.append("USE_CURRENT_FREE_REMOTE_ROUTE")
-        avoided.extend(("DOWNLOAD_LOCAL_MODEL", "ENTER_PROVIDER_KEY", "CALL_PAID_PROVIDER"))
-        return ComputeProfile.REMOTE_FREE_FIRST, required, avoided, blockers, unknowns
+        if _remote_admitted(p):
+            required.append("USE_ADMITTED_FREE_REMOTE_ROUTE")
+            avoided.extend(("DOWNLOAD_LOCAL_MODEL", "ENTER_PROVIDER_KEY", "CALL_PAID_PROVIDER"))
+            return ComputeProfile.REMOTE_FREE_FIRST, required, avoided, blockers, unknowns
+        blockers.append(_remote_blocker(p))
+        avoided.extend(("DOWNLOAD_LOCAL_MODEL", "ENTER_PROVIDER_KEY", "CALL_REMOTE_PROVIDER"))
+        return ComputeProfile.OFFLINE_DEGRADED, required, avoided, blockers, unknowns
 
     if p.local_compute_class is LocalComputeClass.CONSTRAINED:
+        if p.storage_class is StorageClass.UNKNOWN:
+            unknowns += 1
+            blockers.append("LOCAL_STORAGE_CAPACITY_UNKNOWN")
+        elif p.storage_class is StorageClass.CRITICAL:
+            blockers.append("LOCAL_STORAGE_CRITICAL_NO_RUNTIME_FIT_PROVEN")
         if p.network_state is NetworkState.ONLINE and p.provider_credential_present:
-            required.append("USE_EXISTING_PROVIDER_CREDENTIAL_WITHOUT_RESTORING_IT")
-            avoided.append("DOWNLOAD_LARGE_LOCAL_MODEL")
-            return ComputeProfile.HYBRID_LOCAL_REMOTE, required, avoided, blockers, unknowns
-        required.append("USE_CONSTRAINED_LOCAL_RUNTIME")
-        avoided.extend(("ENTER_PROVIDER_KEY", "DOWNLOAD_LARGE_LOCAL_MODEL"))
-        return ComputeProfile.CONSTRAINED_LOCAL, required, avoided, blockers, unknowns
+            if _remote_admitted(p):
+                required.append("USE_ADMITTED_EXISTING_PROVIDER_ROUTE")
+                avoided.append("DOWNLOAD_LARGE_LOCAL_MODEL")
+                return ComputeProfile.HYBRID_LOCAL_REMOTE, required, avoided, blockers, unknowns
+            blockers.append(_remote_blocker(p))
+        if p.storage_class in (StorageClass.NORMAL, StorageClass.LOW):
+            required.append("USE_CONSTRAINED_LOCAL_RUNTIME")
+            avoided.extend(("ENTER_PROVIDER_KEY", "DOWNLOAD_LARGE_LOCAL_MODEL"))
+            return ComputeProfile.CONSTRAINED_LOCAL, required, avoided, blockers, unknowns
+        return ComputeProfile.OFFLINE_DEGRADED, required, avoided, blockers, unknowns
 
     if p.network_state is NetworkState.ONLINE and p.free_remote_route_available:
-        required.append("USE_CURRENT_FREE_REMOTE_ROUTE")
-        avoided.extend(("DOWNLOAD_LOCAL_MODEL", "ENTER_PROVIDER_KEY", "CALL_PAID_PROVIDER"))
-        return ComputeProfile.REMOTE_FREE_FIRST, required, avoided, blockers, unknowns
+        if _remote_admitted(p):
+            required.append("USE_ADMITTED_FREE_REMOTE_ROUTE")
+            avoided.extend(("DOWNLOAD_LOCAL_MODEL", "ENTER_PROVIDER_KEY", "CALL_PAID_PROVIDER"))
+            return ComputeProfile.REMOTE_FREE_FIRST, required, avoided, blockers, unknowns
+        blockers.append(_remote_blocker(p))
 
     if p.network_state is NetworkState.ONLINE and p.provider_credential_present:
-        required.append("USE_EXISTING_PROVIDER_CREDENTIAL_WITHOUT_RESTORING_IT")
-        avoided.append("DOWNLOAD_LOCAL_MODEL")
-        return ComputeProfile.HYBRID_LOCAL_REMOTE, required, avoided, blockers, unknowns
+        if _remote_admitted(p):
+            required.append("USE_ADMITTED_EXISTING_PROVIDER_ROUTE")
+            avoided.append("DOWNLOAD_LOCAL_MODEL")
+            return ComputeProfile.HYBRID_LOCAL_REMOTE, required, avoided, blockers, unknowns
+        blockers.append(_remote_blocker(p))
 
     if p.local_compute_class is LocalComputeClass.UNKNOWN:
         unknowns += 1
@@ -393,10 +463,16 @@ def _select_compute(
     if p.storage_class is StorageClass.UNKNOWN:
         unknowns += 1
         blockers.append("LOCAL_STORAGE_CAPACITY_UNKNOWN")
+    if p.storage_class is StorageClass.CRITICAL:
+        blockers.append("LOCAL_STORAGE_CRITICAL_NO_RUNTIME_FIT_PROVEN")
     if p.network_state is NetworkState.UNKNOWN:
         blockers.append("NETWORK_STATE_UNKNOWN")
-    elif p.network_state is NetworkState.ONLINE:
+    elif p.network_state is NetworkState.ONLINE and not (
+        p.free_remote_route_available or p.provider_credential_present
+    ):
         blockers.append("NO_REMOTE_ROUTE_PROVEN")
+    if not blockers:
+        blockers.append("NO_USABLE_COMPUTE_ROUTE_PROVEN")
     return ComputeProfile.OFFLINE_DEGRADED, required, avoided, blockers, unknowns
 
 
@@ -410,19 +486,19 @@ def compile_entry_route(p: BootstrapProjectionV1) -> BootstrapReceiptV1:
     avoided = tuple(dict.fromkeys(s_avoided + c_avoided))
     blockers = tuple(sorted(set(s_blockers + c_blockers)))
 
-    install_count = sum(
-        action in {"INSTALL_AURA_ANDROID_APP", "INSTALL_DEVELOPER_CLI"}
-        for action in required
-    )
-    permission_count = sum(action.startswith("REQUEST_") for action in required)
-    credential_count = sum("ENTER_PROVIDER_KEY" in action for action in required)
-    model_download_count = sum("DOWNLOAD_" in action for action in required)
+    if surface is EntrySurface.NO_SUPPORTED_SURFACE:
+        disposition = RouteDisposition.BLOCKED
+    elif blockers:
+        disposition = RouteDisposition.PARTIAL
+    else:
+        disposition = RouteDisposition.READY_BOUNDED
 
     friction = FrictionReceiptV1(
-        install_actions_required=install_count,
-        permission_actions_required=permission_count,
-        credential_actions_required=credential_count,
-        model_download_actions_required=model_download_count,
+        required_action_count=len(required),
+        install_actions_required=sum(action == "INSTALL_AURA_ANDROID_APP" for action in required),
+        permission_actions_required=sum(action.startswith("REQUEST_") for action in required),
+        credential_actions_required=sum("ENTER_PROVIDER_KEY" in action for action in required),
+        model_download_actions_required=sum("DOWNLOAD_" in action for action in required),
         unsupported_unknown_count=unknowns,
     )
 
@@ -430,9 +506,10 @@ def compile_entry_route(p: BootstrapProjectionV1) -> BootstrapReceiptV1:
         schema=RECEIPT_SCHEMA,
         projection_digest=p.digest,
         source_binding_digest=p.source.digest,
+        disposition=disposition,
         surface=surface,
         compute_profile=compute,
-        first_use_capability=p.desired_first_capability.strip(),
+        first_use_capability=p.desired_first_capability,
         required_actions=required,
         avoided_actions=avoided,
         blockers=blockers,
@@ -450,6 +527,8 @@ __all__ = [
     "LocalComputeClass",
     "NetworkState",
     "PlatformClass",
+    "RemoteExecutionAdmission",
+    "RouteDisposition",
     "SourceBindingV1",
     "StorageClass",
     "UserMode",
