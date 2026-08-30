@@ -43,7 +43,85 @@ REOPEN EXACT SOURCE BEFORE A COLLAPSED DISTINCTION CAN CHANGE CONSEQUENCE.
 
 ---
 
-# Current Aug. 29 architecture
+# Aug. 30 field result: disposable ChatGPT windows → persistent engineering organization
+
+On Aug. 30, the Arena stopped behaving like a set of isolated chat sessions and began behaving like a **persistent distributed engineering organization whose individual workers were disposable**.
+
+The working pattern became:
+
+```text
+human mission
+→ enter current Arena
+→ resolve source/currentness/authority
+→ claim smallest unresolved cone
+→ construct / challenge / verify
+→ leave source-bound artifact + receipts
+→ derive next objective from two non-self sibling artifacts
+→ close stale/duplicate branches
+→ collapse to SuccessorFrame
+→ replace worker without replacing organizational memory
+```
+
+This is closer to **artifact-mediated recursive engineering** than to a conventional manager-agent/worker-agent tree. The Arena acts simultaneously like a blackboard, event/provenance log, lease/claim system, optimistic-concurrency surface, incremental dependency graph, and stigmergic coordination medium. ChatGPT windows do not share hidden memory; they coordinate through reconstructible artifacts.
+
+## Twelve-hour observed work burst
+
+A repository search over the approximately twelve-hour window beginning `2026-08-30T06:20:00Z` found:
+
+| Field observation | Result |
+|---|---:|
+| PRs created | **74** |
+| PRs already closed during the window | **14** |
+| PRs merged during the window | **0** |
+
+This does **not** mean 74 production-ready features. The burst includes construction, integration, independent challenge, repairs, review harnesses, source/currentness work, and branches deliberately closed when another worker had already become the stronger semantic owner.
+
+That distinction is part of the result. High throughput was paired with repeated refusal to promote weak evidence: stale revisions rebased instead of overwriting; duplicate owners were closed; cache hits were not treated as truth; queue presence was not treated as execution; technical feasibility was not treated as authority; synthetic tests were not treated as production deployment.
+
+Five representative PRs from this burst alone report **12,816 added lines** in GitHub metadata (#312, #326, #338, #354 and #381). That sample is not a productivity benchmark—generated navigation artifacts, stacked branches and later supersession can inflate raw line counts—but it indicates the physical scale of the artifact production.
+
+Quality during the same hours included real race-condition discovery, adversarial regression expansion, fail-closed authority/currentness contracts, duplicate-owner reduction, independent sibling review, exact-source binding, and successor-ready debriefs. **Production readiness is therefore one success criterion, not the only useful measure of progress.** A non-merged artifact may still materially advance the system when it finds a defect, falsifies a claim, removes duplicate ownership, creates a reusable contract, preserves negative evidence, or reduces the unresolved frontier for the next worker.
+
+## Cost observation
+
+The owner-supplied DeepSeek usage export analyzed at this point reports:
+
+| Provider accounting | Observed value |
+|---|---:|
+| Requests | **14,170** |
+| Input tokens | **1,906,150,750** |
+| Input cache-hit tokens | **1,864,620,416** |
+| Input cache-miss tokens | **41,530,334** |
+| Input cache-hit share | **97.82%** |
+| Output tokens | **13,520,255** |
+| Total DeepSeek billed cost | **$35.5492 USD** |
+
+For Aug. 30 alone at the export point: **2,394 requests**, **577,750,387 input tokens**, **3,036,447 output tokens**, **98.84% input-cache-hit share**, and **$7.7362 USD** billed cost.
+
+These are provider token-accounting units, not unique semantic tokens/cognition. The raw export is not committed because it includes account/API-key identifier fields even though key values are masked.
+
+The owner also reports that the ChatGPT workers used here were accessed through an approximately **$30/month fixed consumer subscription**, not metered per-window/per-turn API billing. Therefore the defensible economic statement is not “ChatGPT was free”; it is that **additional available ChatGPT worker windows carried no separately metered owner-side API charge beyond the fixed subscription during this experiment**. The subscription currency is not normalized against the DeepSeek USD export.
+
+That produces a practical cost-first law:
+
+```text
+REUSE VERIFIED COGNITION
+→ DETERMINISTIC / AURAOS TOOLING
+→ FIXED-COST CHATGPT HEAVY LIFTING WHEN AVAILABLE
+→ LOCAL MODEL WHEN EARNED
+→ LOW-COST SPECIALIST / DEEPSEEK FOR RESIDUALS
+→ EXPENSIVE GENERATION ONLY AFTER CHEAPER WORK IS EXHAUSTED
+```
+
+The full methodology, caveats, representative PR evidence and cost analysis are recorded in [`docs/ARENA_ORCHESTRATION_FIELD_RESULT_2026-08-30.md`](docs/ARENA_ORCHESTRATION_FIELD_RESULT_2026-08-30.md).
+
+The field result suggests a broader AuraOS evaluation target:
+
+> **Do not measure success only by whether one branch is already production-ready. Measure how much verified uncertainty was removed, how much reusable cognition was created, how many defects were found before promotion, how much duplicate work was collapsed, how cheaply the unresolved frontier moved, and how faithfully the next disposable worker can resume.**
+
+---
+
+# Current Aug. 29–30 architecture
 
 ## 1. Persistent Arena → recursive Sub-Arenas
 
