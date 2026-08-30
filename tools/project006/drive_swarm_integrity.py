@@ -2,11 +2,12 @@
 """Integrity/adequacy checks for Aura provider and physical-swarm receipts.
 
 Transport success is not objective success. These checks are intentionally conservative
-and are designed to prevent refusal text, provider identity contradictions, or a single
-self-triangulating response from being promoted as a valid physical swarm result.
+and are designed to prevent refusal text, provider identity contradictions, metadata route
+mismatches, or a single self-triangulating response from being promoted as a valid
+physical swarm result.
 
-The installed host remains the authority for provider endpoint authentication, request
-IDs, durable idempotency, and effect receipts.
+The installed host remains the authority for authenticated endpoint identity, transport
+request IDs, durable idempotency, billing/accounting identity, and effect receipts.
 """
 from __future__ import annotations
 
@@ -43,17 +44,26 @@ class SwarmIntegrityError(ValueError):
         self.code = code
 
 
+def _identity(value: Any) -> str:
+    """Normalize provider/model identifiers without inventing aliases."""
+    return str(value or "").strip().casefold()
+
+
 def classify_model_output(
     record: Mapping[str, Any],
     *,
     expected_provider: str | None = None,
+    expected_model: str | None = None,
     physical_swarm_expected: bool = False,
 ) -> dict[str, Any]:
     if not isinstance(record, Mapping):
         raise SwarmIntegrityError("TERMINAL_RECORD_NOT_OBJECT")
     text = str(record.get("result") or record.get("response") or "")
     low = " ".join(text.casefold().split())
-    provider = str(record.get("provider") or "").casefold()
+    provider = _identity(record.get("provider"))
+    model = _identity(record.get("model"))
+    expected_provider_norm = _identity(expected_provider)
+    expected_model_norm = _identity(expected_model)
 
     reasons: list[str] = []
     classification = "RESULT_UNVERIFIED"
@@ -62,15 +72,25 @@ def classify_model_output(
         reasons.append("EMPTY_MODEL_OUTPUT")
         classification = "RESULT_INVALID"
 
+    if expected_provider_norm and provider and provider != expected_provider_norm:
+        reasons.append("PROVIDER_METADATA_MISMATCH")
+        classification = "PROVIDER_IDENTITY_MISMATCH"
+
+    if expected_model_norm and model and model != expected_model_norm:
+        reasons.append("MODEL_METADATA_MISMATCH")
+        if classification == "RESULT_UNVERIFIED":
+            classification = "MODEL_IDENTITY_MISMATCH"
+
     if any(marker in low for marker in REFUSAL_MARKERS):
         reasons.append("MODEL_REFUSAL")
-        classification = "MODEL_REFUSAL"
+        if classification == "RESULT_UNVERIFIED":
+            classification = "MODEL_REFUSAL"
 
-    expected = (expected_provider or provider).casefold()
-    if expected == "deepseek" and any(
+    expected_for_text = expected_provider_norm or provider
+    if expected_for_text == "deepseek" and any(
         marker in low for marker in DEEPSEEK_IDENTITY_CONTRADICTIONS
     ):
-        reasons.append("PROVIDER_IDENTITY_MISMATCH")
+        reasons.append("TEXTUAL_PROVIDER_IDENTITY_CONTRADICTION")
         classification = "PROVIDER_IDENTITY_MISMATCH"
 
     role_hits = sum(marker in low for marker in ROLE_SIMULATION_MARKERS)
@@ -86,7 +106,12 @@ def classify_model_output(
         "classification": classification,
         "reasons": reasons,
         "provider_observed": provider or "UNKNOWN",
+        "model_observed": model or "UNKNOWN",
+        "provider_expected": expected_provider_norm or "UNKNOWN",
+        "model_expected": expected_model_norm or "UNKNOWN",
         "text_present": bool(text.strip()),
+        "objective_verification_required": classification
+        == "RESULT_NEEDS_OBJECTIVE_VERIFICATION",
     }
 
 
@@ -96,6 +121,7 @@ def validate_physical_swarm_receipts(
     target_size: int,
     child_receipts: Sequence[Mapping[str, Any]],
     expected_provider: str = "deepseek",
+    expected_model: str | None = None,
 ) -> dict[str, Any]:
     if isinstance(target_size, bool) or not isinstance(target_size, int) or target_size < 1:
         raise SwarmIntegrityError("INVALID_TARGET_SIZE")
@@ -136,6 +162,7 @@ def validate_physical_swarm_receipts(
         check = classify_model_output(
             receipt,
             expected_provider=expected_provider,
+            expected_model=expected_model,
             physical_swarm_expected=False,
         )
         classifications.append(check)
@@ -143,6 +170,7 @@ def validate_physical_swarm_receipts(
             "RESULT_INVALID",
             "MODEL_REFUSAL",
             "PROVIDER_IDENTITY_MISMATCH",
+            "MODEL_IDENTITY_MISMATCH",
         }:
             raise SwarmIntegrityError(check["classification"])
 
@@ -155,6 +183,8 @@ def validate_physical_swarm_receipts(
         "unique_role_count": len(role_ids),
         "unique_attempt_count": len(attempt_ids),
         "unique_provider_request_count": len(provider_request_ids),
+        "expected_provider": _identity(expected_provider) or "UNKNOWN",
+        "expected_model": _identity(expected_model) or "UNKNOWN",
         "all_children_need_objective_verification": all(
             c["classification"] == "RESULT_NEEDS_OBJECTIVE_VERIFICATION"
             for c in classifications
